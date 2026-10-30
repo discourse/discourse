@@ -338,6 +338,62 @@ module(
           );
         });
 
+        test("the breadcrumb tag drop and intersection are separate kinds", async function (assert) {
+          withPluginApi((api) =>
+            api.registerValueTransformer(
+              "select-customizations",
+              ({ value }) => {
+                value.forKind("select-tag-filter", (spec) =>
+                  spec.row((row) => row.classes.push("x-filter"))
+                );
+                value.forKind("select-tag-intersection", (spec) =>
+                  spec.row((row) => row.classes.push("x-intersection"))
+                );
+              }
+            )
+          );
+          const main = { id: 2, name: "ui", slug: "ui" };
+          await render(
+            <template>
+              <div class="single"><BreadCrumbs
+                  @categories={{this.categories}}
+                /></div>
+              <div class="intersection"><BreadCrumbs
+                  @additionalTags={{array "perf"}}
+                  @categories={{this.categories}}
+                  @tag={{main}}
+                /></div>
+            </template>
+          );
+
+          await click(".intersection .tags-intersection-chooser.d-select");
+          const intersectionRows = findAll("[role='option']");
+          assert.true(intersectionRows.length > 0, "the intersection is open");
+          assert.true(
+            intersectionRows.every(
+              (row) =>
+                row.classList.contains("x-intersection") &&
+                !row.classList.contains("x-filter")
+            ),
+            "only the intersection kind reaches the intersection"
+          );
+          await new SelectDriver(
+            ".intersection .tags-intersection-chooser.d-select"
+          ).close();
+
+          await click(".single .tag-drop.d-select");
+          const dropRows = findAll("[role='option']");
+          assert.true(dropRows.length > 0, "the tag drop is open");
+          assert.true(
+            dropRows.every(
+              (row) =>
+                row.classList.contains("x-filter") &&
+                !row.classList.contains("x-intersection")
+            ),
+            "only the filter kind reaches the tag drop"
+          );
+        });
+
         test("breadcrumb intersections keep the main tag first", async function (assert) {
           const main = { id: 2, name: "ui", slug: "translated-ui" };
           await render(

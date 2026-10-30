@@ -31,6 +31,7 @@ import DSelectCategoryFilter from "discourse/ui-kit/select/recipes/categories/d-
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import DSelectTagFilter from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
 import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
+import DSelectTagIntersection from "discourse/ui-kit/select/recipes/tags/d-select-tag-intersection";
 import {
   DEFAULT_SELECT_TEXTS,
   renderSelectText,
@@ -2524,6 +2525,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       DSelectTag,
       DSelectTagFilter,
       DSelectTagGroup,
+      DSelectTagIntersection,
     })) {
       test(`${component} rejects its own removed arguments`, async function (assert) {
         await expectAssertion(

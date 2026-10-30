@@ -113,6 +113,18 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ The tag filter (2026-10-29): the core `caretIcon` replaces its own caret and its
     `caretDownIcon`/`caretUpIcon` kind options, its shortcuts are `@specialItems`, and an empty
     filter holds nothing and shows its placeholder.
+  - ☑ Names (2026-10-30): "Tag"/"Tags" and "Tag group"/"Tag groups" by default, and
+    `@ariaLabelledBy` on all three recipes.
+  - ☑ Held tag groups stay listed, marked selected (2026-10-30).
+  - ☑ No held-name lookup for signed-out visitors (2026-10-30); the list endpoint needs a login.
+  - ☑ The tag drop caps its rows through the engine's `@maxLoaded` and its narrow hint
+    (2026-10-30); the recipe's slice and "more tags" footer are gone. Paging the drop through every
+    tag needs a server change and stays open.
+  - ☑ The intersection is its own recipe, `DSelectTagIntersection` (kind `select-tag-intersection`,
+    2026-10-30), so `DSelectTagFilter` holds one tag and no longer branches on `@multiple`.
+  - ☐ Move search and lookup onto the `Tag` / `TagGroup` models, deferred until those models
+    become TypeScript. `Tag.search` will return plain typed rows, and `Site.topTags` /
+    `categoryTopTags` will replace the source's `topTags`.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
   dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic

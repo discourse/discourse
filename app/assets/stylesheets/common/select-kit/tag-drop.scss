@@ -62,9 +62,10 @@
   font-weight: 700;
 }
 
-// The tag filter's trigger is a short label and its windowed list cannot size the overlay to the
-// longest tag, so the overlay gets a wider floor than the select default.
-.d-select__content.--kind-select-tag-filter {
+// The tag filters' windowed lists cannot size the overlay to the longest tag, so the overlay gets a
+// wider floor than the select default.
+.d-select__content.--kind-select-tag-filter,
+.d-select__content.--kind-select-tag-intersection {
   --d-select-menu-min-width: 16em;
 
   @include viewport.until(sm) {

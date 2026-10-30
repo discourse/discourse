@@ -33,8 +33,8 @@ Paths are relative to the repository root.
     lives at the layer that owns it (navigation belongs to the call site, not to a picker).
     Compatibility with third-party customizations (bridge kinds, legacy root classes) is kept by
     mapping, never by mirroring select-kit's component structure. Decided 2026-10-21. For tags
-    this produced `DSelectTag`, `DSelectTagFilter` and `DSelectTagGroup` (kinds named after the
-    components); each instance keeps its select-kit name(s) through `@legacyKind` for the bridge
+    this produced `DSelectTag`, `DSelectTagFilter`, `DSelectTagIntersection` and `DSelectTagGroup`
+    (kinds named after the components); each instance keeps its select-kit name(s) through `@legacyKind` for the bridge
     and legacy CSS. That match is per instance, so it is narrower than select-kit's class chain:
     only the intersection filter also answers to `mini-tag-chooser`.
 
@@ -349,7 +349,7 @@ customization ports are done.
   | `.is-expanded`, `.is-focused`, `.is-highlighted` on the header | `[aria-expanded="true"]`, `:focus`, `:focus-visible` on the root |
   | `.selected-name` | `.d-tag-drop__selection` (a held tag), `.d-select__placeholder` ("tags") |
   | `.caret-icon`, `.angle-icon` | `.d-select.tag-drop .d-select__caret` (the core `caretIcon` option for the glyph) |
-  | `.select-kit-body` | `.d-select__content.--kind-select-tag-filter` (width: `--d-select-menu-min-width`) |
+  | `.select-kit-body` | `.d-select__content.--kind-select-tag-filter`, or `--kind-select-tag-intersection` for the intersection (width: `--d-select-menu-min-width`) |
   | `.select-kit-collection` | `.d-select__panel` (height: `--d-select-panel-max-height`) |
   | `.select-kit-filter`, `.filter-input` | `.d-select__search`, `.d-select__filter` |
   | `.filter-icon` | `.d-select__search-icon` (`@searchIcon` / the `searchIcon` option for the glyph) |
@@ -443,7 +443,8 @@ Open items need a decision after manual testing; the rest are intended but still
 - [ ] **The breadcrumb tag drop names what it filters.** With nothing filtered it shows "tags"
   as a placeholder and is named "Filter by: tags"; with a tag it reads "Filter by: tags, rock",
   where select-kit read "Filter by: rock". The intersection drop is named the same. Customizations
-  reach the drops through `breadcrumb-tag` and `breadcrumb-tag-intersection`.
+  reach the drops through `breadcrumb-tag` and `breadcrumb-tag-intersection`, or by kind through
+  `select-tag-filter` and `select-tag-intersection`.
 - [ ] **Sorting alphabetically keeps an exact match first.** With `tags_sort_alphabetically` on,
   the client re-sorted the server's results by name, so typing "rock" could list "alpha-rock"
   above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.

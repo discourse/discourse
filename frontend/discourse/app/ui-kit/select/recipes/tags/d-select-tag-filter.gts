@@ -13,7 +13,7 @@ import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
-import SelectTagBase, {
+import {
   type SelectTagTextKey,
   TAG_TEXTS,
 } from "discourse/ui-kit/select/recipes/tags/-internals/select-tag-base";
@@ -48,10 +48,7 @@ type FilterTag = SelectItem & {
   target_tag?: FilterTag;
 };
 
-/**
- * The filter's texts. Both modes declare them, so a customization for the kind applies whatever
- * `@multiple` is.
- */
+/** The filter's texts, above the tag field's. */
 const FILTER_TEXTS: SelectTexts = Object.freeze({
   ariaLabel: { key: "tagging.filter_by_tags_label" },
   placeholder: { key: "tagging.selector_tags" },
@@ -67,15 +64,8 @@ type SelectSignature =
 /** A topic-list filter that leaves navigation to its caller. */
 interface DSelectTagFilterSignature {
   Args: {
-    /** Current tag or shortcut, where none or `ALL_TAGS_ID` filters nothing; multiple mode holds tags in order. */
-    value?:
-      | TagObject
-      | readonly TagObject[]
-      | typeof ALL_TAGS_ID
-      | typeof NO_TAG_ID
-      | null;
-    /** Select several tags for an intersection; defaults to false. */
-    multiple?: boolean;
+    /** Current tag or shortcut, where none or `ALL_TAGS_ID` filters nothing. */
+    value?: TagObject | typeof ALL_TAGS_ID | typeof NO_TAG_ID | null;
     /** Category limiting the available tags. */
     categoryId?: number;
     /** Temporary compatibility aliases for legacy customizations and CSS. */
@@ -84,9 +74,9 @@ interface DSelectTagFilterSignature {
     items?: readonly FilterTag[];
     /** Optional asynchronous source override. */
     load?: SelectSignature["Args"]["load"];
-    /** Receives a full tag row, a shortcut id, or the ordered held tags in multiple mode. */
+    /** Receives a full tag row or a shortcut id. */
     onChange?: (
-      value: TagObject | TagObject[] | typeof ALL_TAGS_ID | typeof NO_TAG_ID
+      value: TagObject | typeof ALL_TAGS_ID | typeof NO_TAG_ID
     ) => void;
     /** Call-site customization identity. */
     identifier?: string;
@@ -106,7 +96,7 @@ interface DSelectTagFilterSignature {
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
-/** Selects tags for a topic list without navigating. */
+/** Selects one tag, or a shortcut, for a topic list without navigating. */
 export default class DSelectTagFilter extends Component<DSelectTagFilterSignature> {
   /** TODO(typescript-pending): Remove the extension when Site declares serialized top tags. */
   @service
@@ -126,11 +116,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     force_lowercase_tags: boolean;
   };
 
-  /** The single drop's texts; it draws tag rows too, so it declares the tag texts as well. */
+  /** The drop's texts; it draws tag rows too, so it declares the tag texts as well. */
   kindTexts: SelectKindTexts = [TAG_TEXTS, FILTER_TEXTS];
-
-  /** The intersection filter's texts, above the tag field's. */
-  multipleKindTexts = FILTER_TEXTS;
 
   constructor(owner: Owner, args: DSelectTagFilterSignature["Args"]) {
     super(owner, args);
@@ -138,12 +125,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   get legacyKind() {
-    return (
-      this.args.legacyKind ??
-      (this.args.multiple
-        ? ["tags-intersection-chooser", "mini-tag-chooser"]
-        : "tag-drop")
-    );
+    return this.args.legacyKind ?? "tag-drop";
   }
 
   /** The legacy tag class, plus `--filtering` while the filter narrows the list. */
@@ -156,7 +138,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   get #tag(): FilterTag | undefined {
     const value = this.args.value;
-    return value && !Array.isArray(value) && typeof value === "object"
+    return value && typeof value === "object"
       ? (value as FilterTag)
       : undefined;
   }
@@ -172,14 +154,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       return NO_TAG_ID;
     }
     return tag?.id || undefined;
-  }
-
-  get localItems() {
-    return this.args.items ? [...this.args.items] : undefined;
-  }
-
-  get multipleValue() {
-    return Array.isArray(this.args.value) ? this.args.value : [];
   }
 
   get loadContext() {
@@ -274,103 +248,55 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     );
   }
 
-  @action
-  onMultipleChange(tags: TagObject[] | TagObject | string[] | string | null) {
-    if (Array.isArray(tags)) {
-      this.args.onChange?.(tags as TagObject[]);
-    }
-  }
-
   <template>
-    {{#if @multiple}}
-      <SelectTagBase
-        ...attributes
-        @ariaLabelledBy={{@ariaLabelledBy}}
-        @categoryId={{@categoryId}}
-        @disabled={{@disabled}}
-        @identifier={{@identifier}}
-        @instanceContext={{@instanceContext}}
-        @items={{this.localItems}}
-        @kind="select-tag-filter"
-        @kindContext={{hash value=@value categoryId=@categoryId}}
-        @kindTexts={{this.multipleKindTexts}}
-        @legacyKind={{this.legacyKind}}
-        @load={{@load}}
-        @multiple={{true}}
-        @onChange={{this.onMultipleChange}}
-        @requirementPlaceholders={{false}}
-        @suppressFooter={{not (has-block "footer")}}
-        @texts={{@texts}}
-        @value={{this.multipleValue}}
-      >
-        <:item as |item options|>
-          {{#if (has-block "item")}}
-            {{yield item options to="item"}}
-          {{else}}
-            <TagOption @item={{item}} @options={{options}} />
-          {{/if}}
-        </:item>
-        <:selection as |item options|>
-          {{#if (has-block "selection")}}
-            {{yield item options to="selection"}}
-          {{else}}
+    {{! TODO (select-kit-replacement-cleanup): Retain the legacy family and filter classes during rollout. }}
+    <DSelect
+      class={{this.rootClass}}
+      ...attributes
+      @ariaLabelledBy={{@ariaLabelledBy}}
+      @caretIcon={{hash closed="angle-right" open="angle-down"}}
+      @disabled={{@disabled}}
+      @identifier={{@identifier}}
+      @instanceContext={{@instanceContext}}
+      @kind="select-tag-filter"
+      @kindContext={{hash value=@value categoryId=@categoryId}}
+      @kindTexts={{this.kindTexts}}
+      @labelField="name"
+      @legacyKind={{this.legacyKind}}
+      @load={{if @load @load this.load}}
+      @loadContext={{this.loadContext}}
+      @maxLoaded={{this.siteSettings.max_tags_in_filter_list}}
+      @onChange={{this.onChange}}
+      @searchIcon="magnifying-glass"
+      @specialItems={{this.specialItems}}
+      @suppressFooter={{not (has-block "footer")}}
+      @texts={{@texts}}
+      @value={{this.heldId}}
+      @valueItems={{this.valueItems}}
+      @variant="button"
+    >
+      <:item as |item options|>
+        {{#if (has-block "item")}}
+          {{yield item options to="item"}}
+        {{else if (this.isShortcut item)}}
+          <span class="d-tag-drop__shortcut">{{tagItemName item}}</span>
+        {{else}}
+          <TagOption @item={{item}} @options={{options}} />
+        {{/if}}
+      </:item>
+      <:selection as |item options|>
+        {{#if (has-block "selection")}}
+          {{yield item options to="selection"}}
+        {{else}}
+          <span class="d-tag-drop__selection">
+            {{~! no whitespace around the tag ~}}
             <TagSelection @item={{item}} />
-          {{/if}}
-        </:selection>
-        <:footer as |state options|>
-          {{yield state options to="footer"}}
-        </:footer>
-      </SelectTagBase>
-    {{else}}
-      {{! TODO (select-kit-replacement-cleanup): Retain the legacy family and filter classes during rollout. }}
-      <DSelect
-        class={{this.rootClass}}
-        ...attributes
-        @ariaLabelledBy={{@ariaLabelledBy}}
-        @caretIcon={{hash closed="angle-right" open="angle-down"}}
-        @disabled={{@disabled}}
-        @identifier={{@identifier}}
-        @instanceContext={{@instanceContext}}
-        @kind="select-tag-filter"
-        @kindContext={{hash value=@value categoryId=@categoryId}}
-        @kindTexts={{this.kindTexts}}
-        @labelField="name"
-        @legacyKind={{this.legacyKind}}
-        @load={{if @load @load this.load}}
-        @loadContext={{this.loadContext}}
-        @maxLoaded={{this.siteSettings.max_tags_in_filter_list}}
-        @onChange={{this.onChange}}
-        @searchIcon="magnifying-glass"
-        @specialItems={{this.specialItems}}
-        @suppressFooter={{not (has-block "footer")}}
-        @texts={{@texts}}
-        @value={{this.heldId}}
-        @valueItems={{this.valueItems}}
-        @variant="button"
-      >
-        <:item as |item options|>
-          {{#if (has-block "item")}}
-            {{yield item options to="item"}}
-          {{else if (this.isShortcut item)}}
-            <span class="d-tag-drop__shortcut">{{tagItemName item}}</span>
-          {{else}}
-            <TagOption @item={{item}} @options={{options}} />
-          {{/if}}
-        </:item>
-        <:selection as |item options|>
-          {{#if (has-block "selection")}}
-            {{yield item options to="selection"}}
-          {{else}}
-            <span class="d-tag-drop__selection">
-              {{~! no whitespace around the tag ~}}
-              <TagSelection @item={{item}} />
-            </span>
-          {{/if}}
-        </:selection>
-        <:footer as |state options|>
-          {{yield state options to="footer"}}
-        </:footer>
-      </DSelect>
-    {{/if}}
+          </span>
+        {{/if}}
+      </:selection>
+      <:footer as |state options|>
+        {{yield state options to="footer"}}
+      </:footer>
+    </DSelect>
   </template>
 }

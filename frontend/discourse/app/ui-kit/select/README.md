@@ -409,10 +409,11 @@ engine keys through `@kindTexts`.
 | `DSelectTagFilter` | `ariaLabel`, `placeholder` | `tagging.filter_by_tags_label`, `tagging.selector_tags` | |
 | | `removeFilter`, `noTags` | `tagging.selector_remove_filter`, `tagging.selector_no_tags` | |
 | | `maxLoaded` | `tagging.filter_to_narrow_tags`, below the first `max_tags_in_filter_list` top tags | |
+| `DSelectTagIntersection` | `ariaLabel`, `placeholder` | `tagging.filter_by_tags_label`, `tagging.selector_tags` | |
 | `DSelectTagGroup` | `ariaLabel` | `tagging.tag_group_label` while it holds at most one, otherwise `tagging.tag_groups_label` | |
 | | `placeholder` | `category.tag_groups_placeholder` | |
 
-`DSelectTagFilter` also takes `DSelectTag`'s keys, under its own. The tag picker's placeholder
+`DSelectTagFilter` and `DSelectTagIntersection` also take `DSelectTag`'s keys, under their own. The tag picker's placeholder
 wrappers are described under [Tag recipes](#tag-recipes).
 
 ## Custom row content
@@ -853,21 +854,24 @@ The tag family has three recipes, split by what the pick is for:
   a site limit of 0 blocks additions while keeping removal. Search options are
   `@categoryId`, `@ignoreRestrictions` (all tags, not only those usable on topics), `@exclude`,
   `@excludeSynonyms`, `@excludeTagsWithSynonyms` and `@suggestRecent`.
-- **`DSelectTagFilter`** (kind `select-tag-filter`) narrows a topic list. Its value is a tag,
-  `NO_TAG_ID`, nothing or `ALL_TAGS_ID` (both filter nothing; the ids are exported by the
-  module), or several tags with `@multiple` for intersections. It is named "Filter by: tags", and
+- **`DSelectTagFilter`** (kind `select-tag-filter`) narrows a topic list by one tag. Its value is
+  a tag, `NO_TAG_ID`, nothing or `ALL_TAGS_ID` (both filter nothing; the ids are exported by the
+  module). It is named "Filter by: tags", and
   with nothing filtered it shows the `placeholder` text, "tags" by default. While browsing it offers the
   "remove filter" (emitting `ALL_TAGS_ID`) and "no tags" shortcuts as `@specialItems`, then the
   top tags, and never navigates: the call site turns the pick into a URL. A single filter clears
   only through its "remove filter" row; Backspace leaves it alone, since a stray key would
-  otherwise change the page. The breadcrumbs pass `breadcrumb-tag` and
-  `breadcrumb-tag-intersection`.
+  otherwise change the page. The breadcrumbs pass `breadcrumb-tag`.
+- **`DSelectTagIntersection`** (kind `select-tag-intersection`) narrows a topic list by several
+  tags. It holds tags in order, searches the tags usable on topics in `@categoryId`, never creates,
+  and never navigates. It is named "Filter by: tags" and shows "tags" with nothing held. The
+  breadcrumbs pass `breadcrumb-tag-intersection`.
 - **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name, one unless
   `@multiple={{true}}`. Held groups stay listed, marked selected.
 
 Without an `ariaLabel` text or `@ariaLabelledBy`, a tag picker is named "Tag", or "Tags" when it
 can hold more than one (a site limit of one counts), and a group picker "Tag group" or "Tag
-groups". The placeholder is only drawn. All three recipes take `@ariaLabelledBy`.
+groups". The placeholder is only drawn. Every tag recipe takes `@ariaLabelledBy`.
 
 Held names resolve when the value changes. Search sends only known numeric ids, and a pending or
 failed name lookup never holds up search; a completed lookup reloads an open list with the
@@ -889,7 +893,7 @@ held, the field after the chips shows the group's remaining count (`requiredTagG
 then the tags the minimum still needs (`minimumRemaining`), then `addMorePlaceholder` ("Add more
 tags…"). A call site's or a customization's `placeholder` replaces only the last step; each step
 has its own key, and a step whose text is `""` hands over to the next. At a tag cap of zero the
-field says nothing more. `DSelectTagFilter` turns the requirement steps off. The panel's
+field says nothing more. `DSelectTagIntersection` turns the requirement steps off. The panel's
 `minimum` line uses progress wording ("1 of 2 required tags selected"), so it never repeats the
 field.
 
