@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
@@ -10,6 +11,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 
 class TestComponent extends Component {
@@ -48,10 +50,54 @@ class TestComponent extends Component {
 module("Integration | ui-kit | DMultiSelect", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("optional footer remains available with no results and can close the menu", async function (assert) {
+    const load = async () => [];
+    let actions = 0;
+    const activate = async (menu) => {
+      await menu.close();
+      actions++;
+    };
+    await render(
+      <template>
+        <DMultiSelect @loadFn={{load}}>
+          <:selection as |item|>{{item.name}}</:selection>
+          <:result as |item|>{{item.name}}</:result>
+          <:footer as |menu|><DButton
+              data-test-footer-action
+              @action={{fn activate menu}}
+              @label="create"
+            /></:footer>
+        </DMultiSelect>
+      </template>
+    );
+    await click(".d-multi-select-trigger");
+    assert
+      .dom(".d-multi-select-menu--with-footer")
+      .exists("marks the menu for footer-specific styling");
+    await fillIn(".d-multi-select__search-input", "nothing");
+    assert
+      .dom(".d-multi-select__search-no-results")
+      .exists("shows empty results");
+    assert
+      .dom(".d-multi-select__footer [data-test-footer-action]")
+      .exists("keeps the footer available");
+    await click("[data-test-footer-action]");
+    assert.strictEqual(actions, 1, "invokes the footer action");
+    assert
+      .dom(".d-multi-select__content")
+      .doesNotExist("closes the picker before proceeding");
+  });
+
   test("filter", async function (assert) {
     await render(<template><TestComponent /></template>);
 
     await click(".d-multi-select-trigger");
+    assert
+      .dom(".d-multi-select__footer")
+      .doesNotExist("omits the footer when no block is supplied");
+    assert
+      .dom(".d-multi-select-menu--with-footer")
+      .doesNotExist("does not apply footer styling without a footer block");
     await fillIn(".d-multi-select__search-input", "bar");
 
     assert.dom(".d-multi-select__result:nth-child(1)").hasText("bar");
