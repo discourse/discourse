@@ -36,6 +36,21 @@ after_initialize do
     { use_new_show_route: true },
   )
 
+  add_api_key_scope(
+    :gamification,
+    {
+      read_score_events: {
+        actions: %w[discourse_gamification/admin_gamification_score_event#show],
+      },
+      create_score_events: {
+        actions: %w[discourse_gamification/admin_gamification_score_event#create],
+      },
+      update_score_events: {
+        actions: %w[discourse_gamification/admin_gamification_score_event#update],
+      },
+    },
+  )
+
   require_relative "jobs/scheduled/update_scores_for_ten_days"
   require_relative "jobs/scheduled/update_scores_for_today"
   require_relative "jobs/regular/recalculate_scores"
