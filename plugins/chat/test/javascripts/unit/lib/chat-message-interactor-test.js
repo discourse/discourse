@@ -5,8 +5,10 @@ import {
   logIn,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 
 module("Unit | chat-message-interactor", function (hooks) {
   setupTest(hooks);
@@ -215,5 +217,35 @@ module("Unit | chat-message-interactor", function (hooks) {
       interactor.secondaryActions.some(({ id }) => id === "restore"),
       "restore action stays hidden for non-moderators"
     );
+  });
+
+  test("canReply is true in channel context", function (assert) {
+    const channel = this.chatFabricators.channel();
+    channel.currentUserMembership = UserChatChannelMembership.create({
+      following: true,
+    });
+    const message = this.chatFabricators.message({ channel });
+    const interactor = new ChatMessageInteractor(
+      getOwner(this),
+      message,
+      "channel"
+    );
+
+    assert.true(interactor.canReply, "reply is available in channel context");
+  });
+
+  test("canReply is true in thread context", function (assert) {
+    const channel = this.chatFabricators.channel();
+    channel.currentUserMembership = UserChatChannelMembership.create({
+      following: true,
+    });
+    const message = this.chatFabricators.message({ channel });
+    const interactor = new ChatMessageInteractor(
+      getOwner(this),
+      message,
+      MESSAGE_CONTEXT_THREAD
+    );
+
+    assert.true(interactor.canReply, "reply is available in thread context");
   });
 });
