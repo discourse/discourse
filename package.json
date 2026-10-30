@@ -8,7 +8,7 @@
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.3.1",
     "@glint/ember-tsc": "^1.11.6",
-    "@glint/tsserver-plugin": "^2.7.9",
+    "@glint/tsserver-plugin": "^2.7.15",
     "@rdil/parallel-prettier": "^3.0.0",
     "concurrently": "^10.0.6",
     "ember-content-mapper": "^0.3.1",
@@ -23,7 +23,7 @@
     "postcss-value-parser": "^4.2.0",
     "prettier": "3.8.1",
     "stylelint": "17.5.0",
-    "typescript": "7.1.0-dev.20260930.4"
+    "typescript": "7.1.0-dev.20261023.1"
   },
   "scripts": {
     "prepare": "pnpm types:generate",
