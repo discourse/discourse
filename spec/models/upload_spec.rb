@@ -262,6 +262,57 @@ RSpec.describe Upload do
     expect(upload.thumbnail_height).to eq(500)
   end
 
+  describe "#fix_dimensions!" do
+    shared_examples "SVG dimension repair" do |expected_zero_dimensions|
+      it "persists SVG dimensions and thumbnail dimensions" do
+        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+        file = file_from_fixtures("tiny.svg")
+        upload.update!(url: Discourse.store.store_upload(file, upload))
+
+        upload.fix_dimensions!
+
+        expect(
+          upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
+        ).to eq("width" => 115, "height" => 86, "thumbnail_width" => 115, "thumbnail_height" => 86)
+      end
+
+      it "stores the detected dimensions for a zero-sized SVG" do
+        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+        file = file_from_fixtures("zero_sized.svg")
+        upload.update!(url: Discourse.store.store_upload(file, upload))
+
+        upload.fix_dimensions!
+
+        expect([upload.reload.width, upload.height]).to eq(expected_zero_dimensions)
+        expect([upload.thumbnail_width, upload.thumbnail_height]).to eq(expected_zero_dimensions)
+      end
+
+      it "stores zero dimensions when SVG dimension detection fails" do
+        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+        file = file_from_contents("invalid SVG", "invalid.svg")
+        upload.update!(url: Discourse.store.store_upload(file, upload))
+
+        upload.fix_dimensions!
+
+        expect(
+          upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
+        ).to eq("width" => 0, "height" => 0, "thumbnail_width" => 0, "thumbnail_height" => 0)
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "SVG dimension repair", [120, 90]
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "SVG dimension repair", [0, 0]
+    end
+  end
+
   it "dimension calculation returns nil on missing image" do
     SiteSetting.max_image_megapixels = 85
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
@@ -930,6 +981,18 @@ RSpec.describe Upload do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
     let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
+    let(:tiny_image) do
+      upload = Fabricate(:upload, extension: "png")
+      file = file_from_fixtures("cropped.png")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
+    let(:ico_image) do
+      upload = Fabricate(:upload, extension: "ico")
+      file = file_from_fixtures("smallest.ico")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -951,7 +1014,9 @@ RSpec.describe Upload do
       upload
     end
 
-    it "correctly identifies and stores an image's dominant color" do
+    it "correctly identifies and stores an image's dominant color with ImageMagick" do
+      global_setting :enable_vips_image_processing, false
+
       expect(white_image.dominant_color).to eq(nil)
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
       expect(white_image.dominant_color).to eq("FFFFFF")
@@ -967,6 +1032,46 @@ RSpec.describe Upload do
       # EF is closer to F00 than F0
       expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
       expect(high_color_image.dominant_color).to eq("009FEF")
+
+      uncached_tiny_color = tiny_image.dominant_color
+
+      expect(uncached_tiny_color).to eq(nil)
+
+      calculated_tiny_color = tiny_image.dominant_color(calculate_if_missing: true)
+
+      expect(calculated_tiny_color).to eq("524F40")
+
+      cached_tiny_color = tiny_image.dominant_color
+
+      expect(cached_tiny_color).to eq(calculated_tiny_color)
+    end
+
+    it "uses libvips to calculate the dominant color when enabled" do
+      global_setting :enable_vips_image_processing, true
+
+      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("565342")
+    end
+
+    it "normalizes a 16-bit dominant color when libvips is enabled" do
+      global_setting :enable_vips_image_processing, true
+
+      color = high_color_image.dominant_color(calculate_if_missing: true)
+
+      expect(color).to eq("00A0F0")
+      expect(high_color_image.dominant_color).to eq(color)
+    end
+
+    it "stores an empty dominant color for ICO images" do
+      expect(ico_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(ico_image.dominant_color).to eq("")
+    end
+
+    it "stores an empty dominant color after image processing fails" do
+      global_setting :enable_vips_image_processing, true
+      DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error).then.returns("FFFFFF")
+
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
     end
 
     it "can be backfilled" do
@@ -1015,16 +1120,23 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
-    it "correctly handles unparsable ImageMagick output" do
+    it "raises when ImageMagick returns an invalid dominant color" do
+      global_setting :enable_vips_image_processing, false
       ImageMagick.stubs(:magick).returns("someinvalidoutput")
 
       expect(invalid_image.dominant_color).to eq(nil)
-
       expect { invalid_image.dominant_color(calculate_if_missing: true) }.to raise_error(
         /Calculated dominant color but unable to parse output/,
       )
-
       expect(invalid_image.dominant_color).to eq(nil)
+    end
+
+    it "stores an empty string for an invalid dominant color response" do
+      global_setting :enable_vips_image_processing, true
+      DiscourseVips.stubs(:dominant_color).returns("invalid")
+
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file is too large to download" do
@@ -1058,6 +1170,22 @@ RSpec.describe Upload do
       )
 
       expect { u.update!(dominant_color: "abcd") }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  describe "#target_jpeg_image_quality" do
+    let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
+
+    it "returns nil when the target quality is higher than the source quality" do
+      target_quality = upload.target_jpeg_image_quality(local_path, 100)
+
+      expect(target_quality).to eq(nil)
+    end
+
+    it "returns the target quality when it is lower than the source quality" do
+      target_quality = upload.target_jpeg_image_quality(local_path, 10)
+
+      expect(target_quality).to eq(10)
     end
   end
 

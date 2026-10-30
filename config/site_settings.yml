@@ -3567,6 +3567,9 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
+  instrument_image_processing:
+    default: false
+    hidden: true
   warn_critical_js_deprecations:
     default: true
     client: true

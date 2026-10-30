@@ -75,6 +75,23 @@ RSpec.describe UserAvatar do
     end
 
     describe "when failing" do
+      it "preserves the selected gravatar when an ICO response is rejected" do
+        user.update!(uploaded_avatar: upload)
+        avatar.update!(gravatar_upload: upload)
+        stub_request(:get, %r{\Ahttps://www\.gravatar\.com/avatar/}).to_return(
+          status: 200,
+          body: File.binread(Rails.root.join("spec/fixtures/images/smallest.ico")),
+          headers: {
+            "Content-Type" => "image/x-icon",
+          },
+        )
+
+        expect { avatar.update_gravatar! }.not_to change(Upload, :count)
+
+        expect(avatar.reload.gravatar_upload_id).to eq(upload.id)
+        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+      end
+
       it "always update 'last_gravatar_download_attempt'" do
         freeze_time
 
