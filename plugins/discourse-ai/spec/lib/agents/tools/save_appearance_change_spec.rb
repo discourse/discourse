@@ -120,7 +120,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     expect(appearance_change.light_color_scheme.resolved_colors).to include(
       "tertiary" => palettes.light["tertiary"],
     )
-    expect(result).to eq(
+    expect(result).to match(
       status: "success",
       appearance_change_id: appearance_change.id,
       name: "Acme",
