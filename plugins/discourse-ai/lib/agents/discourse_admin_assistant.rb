@@ -43,6 +43,8 @@ module DiscourseAi
           Tools::ActivateAppearanceChange,
           Tools::RevertAppearanceChange,
           Tools::ListAppearanceChanges,
+          Tools::ThemeAppHandoff,
+          Tools::EnableMcpThemeAccess,
         ]
 
         DiscoursePluginRegistry.apply_modifier(:admin_assistant_tools, base_tools, self).uniq
