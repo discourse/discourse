@@ -50,6 +50,14 @@ module("Unit | Service | tag-utils", function (hooks) {
     );
   });
 
+  test("createContentFromInput cleans like the server", function (assert) {
+    assert.strictEqual(
+      this.tagUtils.createContentFromInput("rock🎸"),
+      "rock",
+      "an emoji is removed, as clean_tag does"
+    );
+  });
+
   test("sortSearchResults keeps usable tags before disabled ones when sorting alphabetically", function (assert) {
     this.tagUtils.siteSettings.tags_sort_alphabetically = true;
 

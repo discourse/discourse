@@ -161,7 +161,10 @@ export function topTags<T>({
   );
 }
 
-/** Keeps tag creation normalization aligned with the server's clean_tag rules. */
+/**
+ * Cleans a typed name the way the server's `clean_tag` does, step for step, so a created tag is
+ * stored as shown. `tests/fixtures/tag-clean-parity.json` pins both sides.
+ */
 export function cleanTagName(
   input: string,
   siteSettings: {
@@ -169,14 +172,21 @@ export function cleanTagName(
     force_lowercase_tags: boolean;
   }
 ): string {
-  input = input
-    .trim()
-    .replace(/\s+/g, "-")
+  if (siteSettings.force_lowercase_tags) {
+    input = input.toLowerCase();
+  }
+  const cleaned = input
+    // Ruby's strip removes only ASCII whitespace and NUL; other spaces become dashes below.
+    .replace(/^[\0\t\n\v\f\r ]+|[\0\t\n\v\f\r ]+$/g, "")
+    .replace(/\p{White_Space}+/gu, "-")
+    // Ruby's [[:word:][:punct:]], whose punctuation includes these ASCII symbols.
+    .replace(/[^\p{L}\p{M}\p{Nd}\p{Pc}\p{P}$+<=>^`|~]+/gu, "")
     .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=%\\`^\s|\{\}"<>]+/g, "")
-    .replace(/-{2,}/g, "-")
-    .substring(0, siteSettings.max_tag_length)
+    .replace(/-{2,}/g, "-");
+  return Array.from(cleaned)
+    .slice(0, siteSettings.max_tag_length)
+    .join("")
     .replace(/^\.+|\.+$/g, "");
-  return siteSettings.force_lowercase_tags ? input.toLowerCase() : input;
 }
 
 /** Sorts enabled and disabled groups separately, or preserves the original array and order. */

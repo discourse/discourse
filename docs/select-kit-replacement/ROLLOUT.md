@@ -408,11 +408,18 @@ Open items need a decision after manual testing; the rest are intended but still
   composer's read-only category in its sorted place; it is now a disabled row above the list in
   both modes, as it already was on lazy sites.
 - [ ] **Pickers are named by their caption.** Select-kit left the caption beside a picker
-  unassociated. Category pickers with a caption are now named by it; on mobile the modal is still
-  named by `@ariaLabel` alone.
+  unassociated. Category pickers with a caption are now named by it, on the trigger, the panel
+  and the mobile modal.
 - [ ] **Reopening the chooser cancels a pending pick.** A row that picks asynchronously (a
   suggestion request, for example) is cancelled when the list reopens, by a later pick, or when
   the control goes away. The legacy chooser applied the result unless the value had changed.
+
+**Tags** (recorded 2026-10-29)
+
+- [ ] **A created tag is shown as the server will store it.** The create row and pasted names
+  used to keep emoji, symbols and zero-width characters, and cut long names in UTF-16 units, so
+  "Create rock🎸" saved `rock`. Both controls now clean names exactly as the server does, in
+  select-kit too (`tests/fixtures/tag-clean-parity.json`).
 
 ## Category call sites
 

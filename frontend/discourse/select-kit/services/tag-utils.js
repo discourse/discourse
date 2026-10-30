@@ -3,6 +3,7 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
+import { cleanTagName } from "discourse/lib/tag-source";
 import { i18n } from "discourse-i18n";
 
 export default class TagUtils extends Service {
@@ -79,19 +80,6 @@ export default class TagUtils extends Service {
   }
 
   createContentFromInput(input) {
-    // See lib/discourse_tagging#clean_tag.
-    input = input
-      .trim()
-      .replace(/\s+/g, "-")
-      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=%\\`^\s|\{\}"<>]+/g, "")
-      .replace(/-{2,}/g, "-")
-      .substring(0, this.siteSettings.max_tag_length)
-      .replace(/^\.+|\.+$/g, "");
-
-    if (this.siteSettings.force_lowercase_tags) {
-      input = input.toLowerCase();
-    }
-
-    return input;
+    return cleanTagName(input, this.siteSettings);
   }
 }

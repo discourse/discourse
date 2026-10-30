@@ -10,6 +10,7 @@ import {
   sortTagRows,
   topTags,
 } from "discourse/lib/tag-source";
+import cleanParity from "discourse/tests/fixtures/tag-clean-parity.json";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 const SETTINGS = {
@@ -145,6 +146,19 @@ module("Unit | lib | tag-source", function (hooks) {
     );
     assert.strictEqual(cleanTagName("..dots..", SETTINGS), "dots");
   });
+
+  for (const row of cleanParity.cases) {
+    test(`cleanTagName parity: ${row.name}`, function (assert) {
+      const settings = { ...cleanParity.settings };
+      for (const key of Object.keys(settings)) {
+        if (key in row) {
+          settings[key] = row[key];
+        }
+      }
+
+      assert.strictEqual(cleanTagName(row.input, settings), row.expected);
+    });
+  }
 
   test("findTagIdsByNames resolves names to ids, cached", async function (assert) {
     const requests = [];
