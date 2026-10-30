@@ -14,6 +14,9 @@ class ThemesInstallTask
           counts[:skipped] += 1
         elsif installer.update
           log << "#{name}: is already installed. Updating from remote."
+          installer.skipped_components.each do |component|
+            log << "#{name}: couldn't install component #{component[:url]}: #{component[:error]}"
+          end
           counts[:updated] += 1
         else
           log << "#{name}: is already installed, but there was an error updating from remote."
@@ -71,6 +74,10 @@ class ThemesInstallTask
       )
     @theme.set_default! if @options.fetch(:default, false)
     add_component_to_all_themes
+  end
+
+  def skipped_components
+    @remote_theme.skipped_child_components
   end
 
   def update

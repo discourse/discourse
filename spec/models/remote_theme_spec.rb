@@ -815,6 +815,63 @@ RSpec.describe RemoteTheme do
         expect(parent_theme.reload.child_themes).to be_empty
       end
 
+      it "installs the child components listed in about.json" do
+        linked_url = "https://github.com/discourse/linked.git"
+        linked =
+          Fabricate(
+            :theme,
+            component: true,
+            remote_theme: Fabricate(:remote_theme, remote_url: linked_url),
+          )
+        new_repo = setup_git_repo("about.json" => { name: "New", component: true }.to_json)
+        new_url = MockGitImporter.register("https://github.com/discourse/new.git", new_repo)
+        theme.update!(child_theme_ids: [linked.id])
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [linked_url, new_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload.child_themes.map(&:name)).to contain_exactly(linked.name, "New")
+      ensure
+        FileUtils.rm_rf(new_repo)
+      end
+
+      it "finishes the installation without the child components that can't be installed" do
+        child_url = "https://github.com/discourse/private-child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme.skipped_child_components).to contain_exactly(
+          url: child_url,
+          error: I18n.t("themes.import_error.git"),
+        )
+        expect(remote_theme.reload).not_to be_placeholder
+        expect(theme.reload.child_themes).to be_empty
+      end
+
+      it "finishes the installation when a child component fails unexpectedly" do
+        child_url = "https://github.com/discourse/child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+        RemoteTheme.stubs(:import_theme).raises(Theme::SettingsMigrationError, "boom")
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme.skipped_child_components).to contain_exactly(
+          url: child_url,
+          error: "boom",
+        )
+        expect(remote_theme.reload).not_to be_placeholder
+      end
+
       it "keeps everything when the theme can't become a component" do
         child_component = Fabricate(:theme, component: true)
         theme.update!(child_theme_ids: [child_component.id])

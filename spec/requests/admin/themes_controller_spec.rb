@@ -1181,6 +1181,28 @@ RSpec.describe Admin::ThemesController do
         expect(response.parsed_body["errors"].first).to eq("error message")
       end
 
+      it "finishes a placeholder without a child component that is a theme" do
+        child_repo = setup_git_repo("about.json" => { name: "Not a component" }.to_json)
+        child_url = MockGitImporter.register("https://github.com/discourse/child.git", child_repo)
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url))
+
+        put "/admin/themes/#{theme.id}.json", params: { theme: { remote_update: true } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["skipped_components"]).to contain_exactly(
+          include("url" => child_url),
+        )
+        expect(theme.remote_theme.reload).not_to be_placeholder
+        expect(theme.reload.child_themes).to be_empty
+        expect(RemoteTheme.where(remote_url: child_url)).not_to exist
+      ensure
+        FileUtils.rm_rf(child_repo)
+      end
+
       it "returns the right error message" do
         theme.update!(component: true)
 
@@ -1800,6 +1822,23 @@ RSpec.describe Admin::ThemesController do
         expect(response.status).to eq(200)
         expect(theme.reload).to have_attributes(name: "comp", component: true)
         expect(theme.remote_theme.local_version).to be_present
+      end
+
+      it "returns the components it couldn't install when finishing a placeholder" do
+        missing_url = "https://github.com/discourse/missing.git"
+        add_to_git_repo(
+          other_repo,
+          "about.json" => { name: "other-theme", components: [missing_url] }.to_json,
+        )
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url))
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["skipped_components"]).to contain_exactly(
+          "url" => missing_url,
+          "error" => I18n.t("themes.import_error.git"),
+        )
       end
 
       it "refuses to turn the default theme into a component" do

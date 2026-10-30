@@ -212,6 +212,10 @@ class RemoteTheme < ActiveRecord::Base
     remote_url.present? && local_version.blank?
   end
 
+  def skipped_child_components
+    @skipped_child_components || []
+  end
+
   def update_remote_version
     return unless is_git?
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
@@ -297,11 +301,15 @@ class RemoteTheme < ActiveRecord::Base
       raise ImportError, err.message
     end
 
-    if placeholder? || refresh_name_and_type
+    # Captured before saving, which sets local_version and reloads the theme
+    was_placeholder = placeholder?
+    new_theme = theme.new_record?
+
+    if was_placeholder || refresh_name_and_type
       theme.name = theme_info["name"]
       theme.component = [true, "true"].include?(theme_info["component"])
     end
-    theme.child_components = theme_info["components"].presence || [] if placeholder?
+    theme.child_components = theme_info["components"].presence || [] if was_placeholder
 
     METADATA_PROPERTIES.each { |property| public_send(:"#{property}=", theme_info[property.to_s]) }
 
@@ -414,6 +422,14 @@ class RemoteTheme < ActiveRecord::Base
       transaction_block.call
     else
       transaction(&transaction_block)
+    end
+
+    # A new theme installed them when it was created. A child may need repository access of its own,
+    # so failing to install one must not block finishing, nor hold the caller's transaction open.
+    if was_placeholder && !new_theme && theme.errors.empty?
+      DB.after_commit do
+        @skipped_child_components = theme.update_child_components(skip_failures: true)
+      end
     end
 
     theme.theme_modifier_set.save! if theme.theme_modifier_set.refresh_theme_setting_modifiers

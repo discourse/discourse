@@ -199,17 +199,26 @@ class Theme < ActiveRecord::Base
     Rails.env.development?
   end
 
-  def update_child_components
-    return if component? || child_components.blank? || skip_child_components_update
+  # Returns the child components that couldn't be installed
+  def update_child_components(skip_failures: false)
+    return [] if component? || child_components.blank? || skip_child_components_update
 
+    skipped = []
     linked_urls = child_themes.joins(:remote_theme).pluck("remote_themes.remote_url").to_set
     child_components.each do |url|
       url = ThemeStore::GitImporter.new(url.strip).url
       next if linked_urls.include?(url)
       theme = RemoteTheme.find_by(remote_url: url)&.theme
+      imported = theme.nil?
       theme ||= RemoteTheme.import_theme(url, user)
       child_themes << theme
+    rescue StandardError => e
+      # A child that can't be linked must not stay installed on its own
+      theme.destroy if imported && theme&.persisted?
+      raise if !skip_failures
+      skipped << { url:, error: e.message }
     end
+    skipped
   end
 
   def load_all_extra_js
