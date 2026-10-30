@@ -64,9 +64,21 @@ module Chat
 
       if chat_message.deleted_at?
         build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree)
-        build_action(actions, :agree_and_keep_deleted, icon: "thumbs-up", bundle: agree)
+        build_action(
+          actions,
+          :agree_and_keep_deleted,
+          icon: "thumbs-up",
+          bundle: agree,
+          dsa_classification_required: true,
+        )
       else
-        build_action(actions, :agree_and_delete, icon: "trash-can", bundle: agree)
+        build_action(
+          actions,
+          :agree_and_delete,
+          icon: "trash-can",
+          bundle: agree,
+          dsa_classification_required: true,
+        )
         build_action(actions, :agree_and_keep_message, icon: "far-eye", bundle: agree)
       end
 
@@ -77,6 +89,7 @@ module Chat
           icon: "ban",
           bundle: agree,
           client_action: "suspend",
+          dsa_classification_required: true,
         )
         build_action(
           actions,
@@ -84,6 +97,7 @@ module Chat
           icon: "microphone-slash",
           bundle: agree,
           client_action: "silence",
+          dsa_classification_required: true,
         )
       end
 
@@ -103,7 +117,13 @@ module Chat
       build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
       unless chat_message.deleted_at?
-        build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
+        build_action(
+          actions,
+          :delete_and_agree,
+          icon: "trash-can",
+          bundle: disagree_bundle,
+          dsa_classification_required: true,
+        )
       end
 
       build_unsilence_action(actions, guardian)

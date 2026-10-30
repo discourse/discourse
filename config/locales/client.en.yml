@@ -1020,6 +1020,10 @@ en:
       saving: "Saving…"
       saved: "Classification saved"
     review:
+      continue_to_editor: "Continue to editor"
+      moderation_steps:
+        label: "Moderation steps"
+        action: "Action details"
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"

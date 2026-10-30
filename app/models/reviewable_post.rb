@@ -57,18 +57,34 @@ class ReviewablePost < Reviewable
 
     if post.trashed?
       if can_penalize
-        build_action(actions, :reject_and_keep_deleted, icon: "trash-can", bundle: reject)
+        build_action(
+          actions,
+          :reject_and_keep_deleted,
+          icon: "trash-can",
+          bundle: reject,
+          dsa_classification_required: true,
+        )
       else
-        actions.add(:reject_and_keep_deleted, bundle: reject) do |a|
+        actions.add(
+          :reject_and_keep_deleted,
+          bundle: reject,
+          dsa_classification_required: true,
+        ) do |a|
           a.icon = "trash-can"
           a.label = "reviewables.actions.reject_and_keep_deleted_standalone.title"
         end
       end
     elsif guardian.can_delete_post_or_topic?(post)
       if can_penalize
-        build_action(actions, :reject_and_delete, icon: "trash-can", bundle: reject)
+        build_action(
+          actions,
+          :reject_and_delete,
+          icon: "trash-can",
+          bundle: reject,
+          dsa_classification_required: true,
+        )
       else
-        actions.add(:reject_and_delete, bundle: reject) do |a|
+        actions.add(:reject_and_delete, bundle: reject, dsa_classification_required: true) do |a|
           a.icon = "trash-can"
           a.label = "reviewables.actions.reject_and_delete_standalone.title"
         end
@@ -80,6 +96,7 @@ class ReviewablePost < Reviewable
       bundle: reject,
       silence: :reject_and_silence,
       suspend: :reject_and_suspend,
+      dsa_classification_required: true,
     )
   end
 

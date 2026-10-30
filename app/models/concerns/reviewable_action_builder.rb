@@ -54,9 +54,10 @@ module ReviewableActionBuilder
     confirm: false,
     require_reject_reason: false,
     secondary: false,
+    dsa_classification_required: false,
     source: nil
   )
-    actions.add(id, bundle:, secondary:) do |action|
+    actions.add(id, bundle:, secondary:, dsa_classification_required:) do |action|
       source ||= type_source
       if source == "core"
         prefix = "reviewables.actions.#{id}"
@@ -80,15 +81,36 @@ module ReviewableActionBuilder
     nil
   end
 
-  def build_penalty_actions(actions, bundle:, silence:, suspend:, user: target_user)
+  def build_penalty_actions(
+    actions,
+    bundle:,
+    silence:,
+    suspend:,
+    user: target_user,
+    dsa_classification_required: false
+  )
     return if user.blank? || !guardian.can_suspend?(user)
 
     if !user.silenced?
-      build_action(actions, silence, icon: "microphone-slash", bundle:, client_action: "silence")
+      build_action(
+        actions,
+        silence,
+        icon: "microphone-slash",
+        bundle:,
+        client_action: "silence",
+        dsa_classification_required:,
+      )
     end
 
     if !user.suspended?
-      build_action(actions, suspend, icon: "ban", bundle:, client_action: "suspend")
+      build_action(
+        actions,
+        suspend,
+        icon: "ban",
+        bundle:,
+        client_action: "suspend",
+        dsa_classification_required:,
+      )
     end
   end
 

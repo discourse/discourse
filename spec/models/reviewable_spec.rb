@@ -663,6 +663,70 @@ RSpec.describe Reviewable, type: :model do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
 
+    context "with DSA classification" do
+      fab!(:admin)
+      fab!(:post)
+
+      fab!(:reviewable) do
+        Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+      end
+
+      let(:classification) do
+        {
+          community_rule: {
+            "ground" => "Be respectful",
+            "explanation" => "Personal attacks are not allowed.",
+          },
+          category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+        }
+      end
+
+      before { SiteSetting.dsa_reporting_enabled = true }
+
+      it "classifies the moderation decision and records the acting staff member in its note" do
+        result = reviewable.perform(admin, :delete_and_agree, dsa_classification: classification)
+
+        expect(result).to be_success
+        expect(reviewable.reload).to be_approved
+        expect(post.reload).to be_trashed
+        expect(reviewable.dsa_statement_of_records.sole).to have_attributes(
+          status: "ready",
+          classified_by_id: admin.id,
+          payload:
+            include(
+              "incompatible_content_ground" => classification[:community_rule]["ground"],
+              "incompatible_content_explanation" => classification[:community_rule]["explanation"],
+              "category" => classification[:category],
+            ),
+        )
+        expect(reviewable.reviewable_notes.sole).to have_attributes(
+          user: admin,
+          content: <<~TEXT.chomp,
+            Classified this moderation decision for DSA reporting.
+            Community rule: Be respectful
+            Category: Other violation of terms and conditions
+          TEXT
+        )
+      end
+
+      it "rolls back moderation and classification when the classification note cannot be saved" do
+        TranslationOverride.upsert!(
+          "en",
+          "dsa_statements.classification_note",
+          "x" * (ReviewableNote::MAX_CONTENT_LENGTH + 1),
+        )
+
+        expect {
+          reviewable.perform(admin, :delete_and_agree, dsa_classification: classification)
+        }.to raise_error(ActiveRecord::RecordInvalid)
+
+        expect(reviewable.reload).to be_pending
+        expect(post.reload).not_to be_trashed
+        expect(reviewable.dsa_statement_of_records).to be_empty
+        expect(reviewable.reviewable_notes).to be_empty
+      end
+    end
+
     it "hides actions and denies execution for an inaccessible target" do
       reviewable = Fabricate(:reviewable_flagged_post)
       private_category = Fabricate(:private_category, group: Fabricate(:group))
