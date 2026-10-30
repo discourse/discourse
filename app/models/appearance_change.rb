@@ -121,9 +121,14 @@ class AppearanceChange < ActiveRecord::Base
     errors.add(:site_settings, :invalid) if (site_settings.keys - SITE_SETTING_NAMES).present?
   end
 
+  # Anything edited since the change was saved belongs to whoever edited it.
+  def edited_since_saved?(record)
+    record.updated_at > created_at
+  end
+
   def disposable_theme?
-    !theme.default? && !theme.user_selectable? && theme.theme_fields.none? &&
-      theme.child_theme_relation.none? &&
+    !edited_since_saved?(theme) && !theme.default? && !theme.user_selectable? &&
+      theme.theme_fields.none? && theme.child_theme_relation.none? &&
       AppearanceChange.where(
         "previous_state -> 'site_settings' ->> 'default_theme_id' = ?",
         theme.id.to_s,
@@ -131,7 +136,7 @@ class AppearanceChange < ActiveRecord::Base
   end
 
   def disposable_palette?(palette)
-    !palette.user_selectable? &&
+    !edited_since_saved?(palette) && !palette.user_selectable? &&
       Theme.where("color_scheme_id = :id OR dark_color_scheme_id = :id", id: palette.id).none? &&
       AppearanceChange.where(
         "previous_state ->> 'color_scheme_id' = :id OR previous_state ->> 'dark_color_scheme_id' = :id",

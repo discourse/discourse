@@ -12,6 +12,7 @@ module DiscourseAi
           can_create_theme: "themes_unavailable",
           local_themes_allowed: "themes_unavailable",
           can_create_color_scheme: "palettes_unavailable",
+          can_create_needed_palettes: "palettes_unavailable",
           can_edit_theme: "theme_not_editable",
           not_applied: "already_live",
           applied: "not_live",

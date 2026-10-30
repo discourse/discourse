@@ -110,6 +110,23 @@ RSpec.describe AppearanceChange::DraftExistingPalettes do
         )
         expect { described_class.call(params:, **dependencies) }.not_to change { ColorScheme.count }
       end
+
+      context "when a plugin restricts palette creation" do
+        let(:plugin) { Plugin::Instance.new }
+        let(:modifier) { proc { false } }
+
+        before { plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier) }
+
+        after do
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin,
+            :user_guardian_can_create_color_scheme,
+            &modifier
+          )
+        end
+
+        it { is_expected.to fail_a_policy(:can_create_needed_palettes) }
+      end
     end
   end
 end
