@@ -473,7 +473,7 @@ export default class Composer extends RestModel {
       };
 
       if (this.site.lazy_load_categories) {
-        Category.asyncFindById(categoryId!).then(applyTemplate);
+        Category.asyncFindById(categoryId!).then(applyTemplate, () => {});
       } else {
         applyTemplate();
       }
@@ -1828,6 +1828,15 @@ export default class Composer extends RestModel {
     // Ensure additional draft fields are set
     Object.keys(_add_draft_fields).forEach((f) => {
       this.set(_add_draft_fields[f], opts[f]);
+    });
+
+    promise = promise.then(async () => {
+      const { categoryId } = this;
+      if (!this.canCategorize || !categoryId) {
+        return;
+      }
+
+      await Category.asyncFindById(categoryId).catch(() => {});
     });
 
     return promise.finally(() => {
