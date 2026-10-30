@@ -65,25 +65,24 @@ class Admin::ThemesController < Admin::AdminController
         return
       end
 
+      branch = params[:branch]
+      private_key =
+        params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
+
+      if params[:public_key].present? && private_key.blank?
+        return render_json_error I18n.t("themes.import_error.ssh_key_gone")
+      end
+      if params[:placeholder] && private_key.blank?
+        return render_json_error I18n.t("themes.import_error.git_authentication")
+      end
+
       hijack do
-        branch = params[:branch] ? params[:branch] : nil
-        private_key =
-          params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
-        if params[:public_key].present? && private_key.blank?
-          return render_json_error I18n.t("themes.import_error.ssh_key_gone")
-        end
-
-        if params[:placeholder]
-          if private_key.blank?
-            return render_json_error I18n.t("themes.import_error.git_authentication")
-          end
-
-          @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
-          return render json: serialize_data(@theme, ThemeSerializer), status: :created
-        end
-
         @theme =
-          RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
+          if params[:placeholder]
+            create_remote_theme_placeholder(remote, branch:, private_key:)
+          else
+            RemoteTheme.import_theme(remote, theme_user, private_key:, branch:)
+          end
         render json: serialize_data(@theme, ThemeSerializer), status: :created
       rescue RemoteTheme::ImportError => e
         if params[:force]
@@ -385,15 +384,15 @@ class Admin::ThemesController < Admin::AdminController
       )
     end
 
+    private_key = nil
+    if params[:public_key].present?
+      private_key = Discourse.redis.get("ssh_key_#{params[:public_key]}")
+      return render_json_error I18n.t("themes.import_error.ssh_key_gone") if private_key.blank?
+    end
+
     theme_id = @theme.id
 
     hijack do
-      private_key = nil
-      if params[:public_key].present?
-        private_key = Discourse.redis.get("ssh_key_#{params[:public_key]}")
-        return render_json_error I18n.t("themes.import_error.ssh_key_gone") if private_key.blank?
-      end
-
       theme = Theme.include_relations.find(theme_id)
       remote_theme = theme.remote_theme
 
