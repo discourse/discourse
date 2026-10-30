@@ -267,10 +267,13 @@ export default class MoveToTopic extends Component {
                 />
 
                 {{#if this.canTagMessages}}
-                  <label>{{i18n "tagging.tags"}}</label>
+                  <label id="move-to-topic-message-tags-label">
+                    {{~i18n "tagging.tags"~}}
+                  </label>
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectTag
+                      @ariaLabelledBy="move-to-topic-message-tags-label"
                       @multiple={{true}}
                       @onChange={{this.updateTags}}
                       @value={{this.tags}}
@@ -452,10 +455,13 @@ export default class MoveToTopic extends Component {
 
                 {{#if this.canAddTags}}
                   <div class="control-group">
-                    <label>{{i18n "tagging.tags"}}</label>
+                    <label id="move-to-topic-new-topic-tags-label">
+                      {{~i18n "tagging.tags"~}}
+                    </label>
                     {{! TODO (select-kit-replacement-cleanup) }}
                     {{#if this.siteSettings.enable_new_select_controls}}
                       <DSelectTag
+                        @ariaLabelledBy="move-to-topic-new-topic-tags-label"
                         @categoryId={{this.categoryId}}
                         @multiple={{true}}
                         @onChange={{this.updateTags}}
@@ -505,10 +511,13 @@ export default class MoveToTopic extends Component {
                 />
 
                 {{#if this.canTagMessages}}
-                  <label>{{i18n "tagging.tags"}}</label>
+                  <label id="move-to-topic-split-message-tags-label">
+                    {{~i18n "tagging.tags"~}}
+                  </label>
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectTag
+                      @ariaLabelledBy="move-to-topic-split-message-tags-label"
                       @multiple={{true}}
                       @onChange={{this.updateTags}}
                       @value={{this.tags}}

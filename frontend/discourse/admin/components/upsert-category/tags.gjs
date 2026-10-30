@@ -145,6 +145,7 @@ export default class UpsertCategoryTags extends Component {
                     @multiple={{false}}
                     @onChange={{fn this.onSingleTagGroupFieldChange field}}
                     @texts={{hash
+                      ariaLabel=field.title
                       placeholder=(i18n
                         "category.required_tag_group.placeholder"
                       )

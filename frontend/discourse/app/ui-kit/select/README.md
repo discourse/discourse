@@ -398,7 +398,8 @@ engine keys through `@kindTexts`.
 | `DSelectCategoryFilter` | `ariaLabel` | `categories.filter_by_categories_label` / `filter_by_subcategories_label` | |
 | | `placeholder` | `categories.categories_label` / `subcategories_label` | |
 | | `removeFilter`, `noSubcategories` | `categories.remove_filter`, `categories.no_subcategories` | |
-| `DSelectTag` | `placeholder` | `tagging.choose_for_topic` | |
+| `DSelectTag` | `ariaLabel` | `tagging.tag` while it holds at most one, otherwise `tagging.tags` | |
+| | `placeholder` | `tagging.choose_for_topic` | |
 | | `addMorePlaceholder` | the `addMoreTags` text | `selected`, `minimum`, `maximum` |
 | | `addMoreTags` | `tagging.add_more_tags` | |
 | | `minimum`, `maximum` | `tagging.required_tags_progress`, `tagging.max_tags_reached` | as the engine's |
@@ -407,7 +408,8 @@ engine keys through `@kindTexts`.
 | | `tagCountBadge`, `tagCount` | `tagging.tag_count_badge` (drawn), `tagging.tag_count_hidden` (spoken) | `count` |
 | `DSelectTagFilter` | `ariaLabel`, `placeholder` | `tagging.filter_by_tags_label`, `tagging.selector_tags` | |
 | | `removeFilter`, `noTags`, `filterForMore` | `tagging.selector_remove_filter`, `tagging.selector_no_tags`, `select_kit.components.filter_for_more` | |
-| `DSelectTagGroup` | `placeholder` | `category.tag_groups_placeholder` | |
+| `DSelectTagGroup` | `ariaLabel` | `tagging.tag_group_label` while it holds at most one, otherwise `tagging.tag_groups_label` | |
+| | `placeholder` | `category.tag_groups_placeholder` | |
 
 `DSelectTagFilter` also takes `DSelectTag`'s keys, under its own. The tag picker's placeholder
 wrappers are described under [Tag recipes](#tag-recipes).
@@ -861,6 +863,10 @@ The tag family has three recipes, split by what the pick is for:
   `breadcrumb-tag-intersection`.
 - **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name, one unless
   `@multiple={{true}}`.
+
+Without an `ariaLabel` text or `@ariaLabelledBy`, a tag picker is named "Tag", or "Tags" when it
+can hold more than one (a site limit of one counts), and a group picker "Tag group" or "Tag
+groups". The placeholder is only drawn. All three recipes take `@ariaLabelledBy`.
 
 Held names resolve when the value changes. Search sends only known numeric ids, and a pending or
 failed name lookup never holds up search; a completed lookup reloads an open list with the

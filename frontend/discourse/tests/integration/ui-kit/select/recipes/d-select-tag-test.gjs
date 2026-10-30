@@ -17,6 +17,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetTagSourceCache } from "discourse/lib/tag-source";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -479,6 +480,77 @@ module(
         assert
           .dom(".d-select__panel input")
           .exists("the search is in the panel");
+      });
+    });
+
+    module("default names", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        this.siteSettings.tagging_enabled = true;
+        this.siteSettings.max_tags_per_topic = 5;
+        this.siteSettings.max_tag_search_results = 5;
+      });
+
+      test("a single picker is named Tag, not by its placeholder", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(<template><DSelectTag /></template>);
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("tagging.tag")
+        );
+      });
+
+      test("a multiple picker is named Tags", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(<template><DSelectTag @multiple={{true}} /></template>);
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("tagging.tags")
+        );
+      });
+
+      test("a multiple picker that holds one tag is named Tag", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template><DSelectTag @maximum={{1}} @multiple={{true}} /></template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("tagging.tag")
+        );
+      });
+
+      test("a multiple picker on a site that allows one tag is named Tag", async function (assert) {
+        this.siteSettings.max_tags_per_topic = 1;
+        const accessibleName = await loadAccessibleName();
+
+        await render(<template><DSelectTag @multiple={{true}} /></template>);
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("tagging.tag")
+        );
+      });
+
+      test("@ariaLabelledBy names it after a visible caption", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <span id="tag-caption">Topic labels</span>
+            <DSelectTag @ariaLabelledBy="tag-caption" @multiple={{true}} />
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          "Topic labels"
+        );
       });
     });
 

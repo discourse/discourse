@@ -378,6 +378,7 @@ export default class RssPollingFeedForm extends Component {
                       @maximum={{false}}
                       @multiple={{true}}
                       @onChange={{field.set}}
+                      @texts={{hash ariaLabel=field.title}}
                       @value={{field.value}}
                     />
                   {{else}}

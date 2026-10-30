@@ -184,7 +184,7 @@ export default class WatchedWordForm extends Component {
 
       {{#if this.canTag}}
         <div class="watched-word-input">
-          <label for="watched-tag">{{i18n
+          <label for="watched-tag" id="watched-tag-label">{{i18n
               "admin.watched_words.form.tag_label"
             }}</label>
           {{! TODO (select-kit-replacement-cleanup) }}
@@ -192,6 +192,7 @@ export default class WatchedWordForm extends Component {
             <DSelectTag
               class="watched-word-input-field"
               @allowCreate={{true}}
+              @ariaLabelledBy="watched-tag-label"
               @disabled={{this.formSubmitted}}
               @id="watched-tag"
               @ignoreRestrictions={{true}}

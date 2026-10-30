@@ -162,10 +162,13 @@ export default class ChatToTopicSelector extends Component {
           {{/if}}
 
           {{#if this.canAddTags}}
-            <label>{{i18n "tagging.tags"}}</label>
+            <label id="chat-to-topic-new-topic-tags-label">
+              {{~i18n "tagging.tags"~}}
+            </label>
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectTag
+                @ariaLabelledBy="chat-to-topic-new-topic-tags-label"
                 @categoryId={{this.categoryId}}
                 @multiple={{true}}
                 @onChange={{this.changeTags}}
@@ -209,10 +212,13 @@ export default class ChatToTopicSelector extends Component {
           />
 
           {{#if this.canTagMessages}}
-            <label>{{i18n "tagging.tags"}}</label>
+            <label id="chat-to-topic-new-message-tags-label">
+              {{~i18n "tagging.tags"~}}
+            </label>
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectTag
+                @ariaLabelledBy="chat-to-topic-new-message-tags-label"
                 @multiple={{true}}
                 @onChange={{this.changeTags}}
                 @value={{this.tags}}

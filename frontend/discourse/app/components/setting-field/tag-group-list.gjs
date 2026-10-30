@@ -30,6 +30,7 @@ export default class SettingFieldTagGroupList extends Component {
           @multiple={{true}}
           @onChange={{this.onChange}}
           @texts={{hash
+            ariaLabel=@field.title
             placeholder=(i18n "category.required_tag_group.placeholder")
           }}
           @value={{this.selectedTagGroups}}

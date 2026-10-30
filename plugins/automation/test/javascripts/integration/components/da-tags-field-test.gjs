@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
-import { click, render } from "@ember/test-helpers";
+import { click, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -107,6 +108,23 @@ module("Integration | Component | DaTagsField", function (hooks) {
       );
 
       assert.strictEqual(this.field.metadata.value, undefined);
+    });
+
+    test("the picker is named by the field's label", async function (assert) {
+      const nameOf = await loadAccessibleName();
+      await render(
+        <template>
+          <AutomationField
+            @automation={{this.automation}}
+            @field={{this.field}}
+          />
+        </template>
+      );
+
+      assert.strictEqual(
+        nameOf(find(".tags-field [role='combobox']")),
+        find(".tags-field .control-label span").textContent.trim()
+      );
     });
   });
 });

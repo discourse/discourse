@@ -37,6 +37,7 @@ export default class SettingFieldTagList extends Component {
           @maximum={{false}}
           @multiple={{true}}
           @onChange={{this.onNamesChange}}
+          @texts={{hash ariaLabel=@field.title}}
           @value={{this.selectedTags}}
         />
       {{else}}

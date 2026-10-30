@@ -6335,6 +6335,9 @@ en:
       selector_remove_filter: "remove filter"
       filter_by_tags_label: "Filter by: tags"
       tags: "Tags"
+      tag: "Tag"
+      tag_groups_label: "Tag groups"
+      tag_group_label: "Tag group"
       tag_count_hidden:
         one: "%{count} topic"
         other: "%{count} topics"

@@ -34,6 +34,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     <SelectTagBase
       ...attributes
       @allowCreate={{@allowCreate}}
+      @ariaLabelledBy={{@ariaLabelledBy}}
       @categoryId={{@categoryId}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}

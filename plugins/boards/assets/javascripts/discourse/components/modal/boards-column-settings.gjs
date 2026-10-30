@@ -206,6 +206,7 @@ export default class BoardsColumnSettings extends Component {
                       @legacyKind="mini-tag-chooser"
                       @multiple={{false}}
                       @onChange={{fn this.onSingleTagChange field}}
+                      @texts={{hash ariaLabel=field.title}}
                       @value={{data.tag_name}}
                     />
                   {{else}}

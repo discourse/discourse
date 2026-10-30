@@ -27,6 +27,7 @@ export default class TagGroupList extends Component {
           @multiple={{true}}
           @onChange={{this.onTagGroupChange}}
           @texts={{hash
+            ariaLabel=@label
             placeholder=(i18n "category.required_tag_group.placeholder")
           }}
           @value={{this.selectedTagGroups}}

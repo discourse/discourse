@@ -16,11 +16,14 @@ const Tags = <template>
       <label class="control-label">{{i18n "user.tag_settings"}}</label>
 
       <div class="controls tracking-controls tracking-controls__watched-tags">
-        <label>{{dIcon "d-watching" class="icon watching"}}
-          {{i18n "user.watched_tags"}}</label>
+        <label id="user-watched-tags-label">
+          {{~dIcon "d-watching" class="icon watching"}}
+          {{i18n "user.watched_tags"~}}
+        </label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectTag
+            @ariaLabelledBy="user-watched-tags-label"
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}
@@ -44,11 +47,14 @@ const Tags = <template>
       <div class="instructions">{{i18n "user.watched_tags_instructions"}}</div>
 
       <div class="controls tracking-controls tracking-controls__tracked-tags">
-        <label>{{dIcon "d-tracking" class="icon tracking"}}
-          {{i18n "user.tracked_tags"}}</label>
+        <label id="user-tracked-tags-label">
+          {{~dIcon "d-tracking" class="icon tracking"}}
+          {{i18n "user.tracked_tags"~}}
+        </label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectTag
+            @ariaLabelledBy="user-tracked-tags-label"
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}
@@ -74,11 +80,14 @@ const Tags = <template>
       <div
         class="controls tracking-controls tracking-controls__watched-first-post-tags"
       >
-        <label>{{dIcon "d-watching-first" class="icon watching-first-post"}}
-          {{i18n "user.watched_first_post_tags"}}</label>
+        <label id="user-watched-first-post-tags-label">
+          {{~dIcon "d-watching-first" class="icon watching-first-post"}}
+          {{i18n "user.watched_first_post_tags"~}}
+        </label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectTag
+            @ariaLabelledBy="user-watched-first-post-tags-label"
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}
@@ -104,11 +113,14 @@ const Tags = <template>
       </div>
 
       <div class="controls tracking-controls tracking-controls__muted-tags">
-        <label>{{dIcon "d-muted" class="icon muted"}}
-          {{i18n "user.muted_tags"}}</label>
+        <label id="user-muted-tags-label">
+          {{~dIcon "d-muted" class="icon muted"}}
+          {{i18n "user.muted_tags"~}}
+        </label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectTag
+            @ariaLabelledBy="user-muted-tags-label"
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}

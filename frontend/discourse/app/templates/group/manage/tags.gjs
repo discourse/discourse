@@ -28,12 +28,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-watching"}}
-        {{i18n "groups.notifications.watching.title"}}</label>
+      <label id="group-watching-tags-label">
+        {{~dIcon "d-watching"}}
+        {{i18n "groups.notifications.watching.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectTag
+          @ariaLabelledBy="group-watching-tags-label"
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
@@ -59,12 +62,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-tracking"}}
-        {{i18n "groups.notifications.tracking.title"}}</label>
+      <label id="group-tracking-tags-label">
+        {{~dIcon "d-tracking"}}
+        {{i18n "groups.notifications.tracking.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectTag
+          @ariaLabelledBy="group-tracking-tags-label"
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
@@ -90,12 +96,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-watching-first"}}
-        {{i18n "groups.notifications.watching_first_post.title"}}</label>
+      <label id="group-watching-first-post-tags-label">
+        {{~dIcon "d-watching-first"}}
+        {{i18n "groups.notifications.watching_first_post.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectTag
+          @ariaLabelledBy="group-watching-first-post-tags-label"
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
@@ -129,12 +138,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-regular"}}
-        {{i18n "groups.notifications.regular.title"}}</label>
+      <label id="group-regular-tags-label">
+        {{~dIcon "d-regular"}}
+        {{i18n "groups.notifications.regular.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectTag
+          @ariaLabelledBy="group-regular-tags-label"
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
@@ -160,12 +172,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-muted"}}
-        {{i18n "groups.notifications.muted.title"}}</label>
+      <label id="group-muted-tags-label">
+        {{~dIcon "d-muted"}}
+        {{i18n "groups.notifications.muted.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectTag
+          @ariaLabelledBy="group-muted-tags-label"
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}

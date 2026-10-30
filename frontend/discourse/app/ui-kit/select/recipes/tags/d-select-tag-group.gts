@@ -15,11 +15,7 @@ import type {
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-
-/** The group picker's texts. */
-const TAG_GROUP_TEXTS: SelectTexts = Object.freeze({
-  placeholder: { key: "category.tag_groups_placeholder" },
-});
+import { i18n } from "discourse-i18n";
 
 /** Engine arguments shared by group chooser callers. */
 type SelectSignature =
@@ -30,7 +26,7 @@ interface DSelectTagGroupSignature {
   Args: {
     /** Held tag group names. */
     value?: readonly string[] | string | null;
-    /** Multiple selection defaults to true. */
+    /** Holds several groups; defaults to one, as DSelect does. */
     multiple?: boolean;
     /** Temporary compatibility aliases for legacy customizations and CSS. */
     legacyKind?: SelectSignature["Args"]["legacyKind"];
@@ -54,6 +50,8 @@ interface DSelectTagGroupSignature {
     disabled?: boolean;
     /** External label target. */
     id?: string;
+    /** Ids of visible captions that name the control, replacing the default name. */
+    ariaLabelledBy?: string;
     /** Call-site customization identity. */
     identifier?: string;
     /** Call-site customization data. */
@@ -75,7 +73,14 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     max_tag_search_results: number;
   };
 
-  kindTexts = TAG_GROUP_TEXTS;
+  /** The picker's texts: "Tag group" while it holds at most one, otherwise "Tag groups". */
+  kindTexts: SelectTexts = {
+    ariaLabel: (_values, context) =>
+      context.multiple && this.args.maximum !== 1
+        ? i18n("tagging.tag_groups_label")
+        : i18n("tagging.tag_group_label"),
+    placeholder: { key: "category.tag_groups_placeholder" },
+  };
 
   constructor(owner: Owner, args: DSelectTagGroupSignature["Args"]) {
     super(owner, args);
@@ -141,6 +146,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     {{! TODO (select-kit-replacement-cleanup): Retain the legacy family classes during rollout. }}
     <DSelect
       ...attributes
+      @ariaLabelledBy={{@ariaLabelledBy}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @icon={{@icon}}

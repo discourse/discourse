@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
@@ -43,6 +44,7 @@ export default class TagsControl extends Component {
           @legacyKind="mini-tag-chooser"
           @multiple={{true}}
           @onChange={{this.handleChange}}
+          @texts={{hash ariaLabel=@field.title}}
           @value={{tagValue @field.value}}
         />
       {{else}}

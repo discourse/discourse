@@ -38,6 +38,7 @@ export default class TagsField extends BaseField {
               @maximum={{false}}
               @multiple={{true}}
               @onChange={{this.onChangeTags}}
+              @texts={{hash ariaLabel=@label}}
               @value={{readonly @field.metadata.value}}
             />
           {{else}}

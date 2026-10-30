@@ -528,9 +528,6 @@ export default class ComposerContainer extends Component {
                               @multiple={{true}}
                               @onChange={{fn (mut this.composer.model.tags)}}
                               @suggestRecent={{true}}
-                              @texts={{hash
-                                ariaLabel=(i18n "tagging.choose_for_topic")
-                              }}
                               @value={{this.composer.model.tags}}
                             />
                           {{else}}

@@ -1,9 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
-import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  findAll,
+  render,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import TagGroupList from "discourse/admin/components/site-settings/tag-group-list";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetTagSourceCache } from "discourse/lib/tag-source";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -167,6 +174,71 @@ module(
         assert
           .dom(".single-host .d-select__trigger")
           .doesNotIncludeText("Unknown item");
+      });
+    });
+
+    module("default names", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        this.siteSettings.tagging_enabled = true;
+        this.siteSettings.max_tag_search_results = 5;
+      });
+
+      test("a single picker is named Tag group", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(<template><DSelectTagGroup /></template>);
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("tagging.tag_group_label")
+        );
+      });
+
+      test("a multiple picker is named Tag groups", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template><DSelectTagGroup @multiple={{true}} /></template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("tagging.tag_groups_label")
+        );
+      });
+
+      test("a multiple picker that holds one group is named Tag group", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <DSelectTagGroup @maximum={{1}} @multiple={{true}} />
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("tagging.tag_group_label")
+        );
+      });
+
+      test("@ariaLabelledBy names it after a visible caption", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <span id="group-caption">Required groups</span>
+            <DSelectTagGroup
+              @ariaLabelledBy="group-caption"
+              @multiple={{true}}
+            />
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          "Required groups"
+        );
       });
     });
 

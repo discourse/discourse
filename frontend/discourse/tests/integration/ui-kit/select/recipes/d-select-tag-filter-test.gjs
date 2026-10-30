@@ -12,6 +12,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetTagSourceCache } from "discourse/lib/tag-source";
 import DiscourseURL from "discourse/lib/url";
@@ -637,6 +638,34 @@ module(
         this.siteSettings.max_tags_in_filter_list = 30;
         this.siteSettings.max_tag_search_results = 5;
         this.site.set("top_tags", TOP_TAGS);
+      });
+
+      test("@ariaLabelledBy names it after a visible caption, single or multiple", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <span id="filter-caption">Narrow by tag</span>
+            <div class="single"><DSelectTagFilter
+                @ariaLabelledBy="filter-caption"
+              /></div>
+            <div class="multiple"><DSelectTagFilter
+                @ariaLabelledBy="filter-caption"
+                @multiple={{true}}
+              /></div>
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find(".single .d-select")),
+          "Narrow by tag",
+          "the single drop's trigger"
+        );
+        assert.strictEqual(
+          accessibleName(find(".multiple [role='combobox']")),
+          "Narrow by tag",
+          "the multiple drop's field"
+        );
       });
 
       test("an empty filter is named for what it filters and shows tags as its placeholder", async function (assert) {

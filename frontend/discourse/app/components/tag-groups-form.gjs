@@ -158,11 +158,14 @@ export default class TagGroupsForm extends Component {
     </section>
 
     <section class="group-tags-list">
-      <label>{{i18n "tagging.groups.tags_label"}}</label><br />
+      <label id="tag-group-tags-label">
+        {{~i18n "tagging.groups.tags_label"~}}
+      </label><br />
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectTag
           @allowCreate={{true}}
+          @ariaLabelledBy="tag-group-tags-label"
           @excludeSynonyms={{true}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
@@ -188,12 +191,15 @@ export default class TagGroupsForm extends Component {
     </section>
 
     <section class="parent-tag-section">
-      <label>{{i18n "tagging.groups.parent_tag_label"}}</label>
+      <label id="tag-group-parent-tag-label">
+        {{~i18n "tagging.groups.parent_tag_label"~}}
+      </label>
       <div>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectTag
             @allowCreate={{true}}
+            @ariaLabelledBy="tag-group-parent-tag-label"
             @excludeSynonyms={{true}}
             @ignoreRestrictions={{true}}
             @multiple={{false}}

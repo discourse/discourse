@@ -102,6 +102,8 @@ interface DSelectTagFilterSignature {
     >;
     /** Prevent opening or selecting. */
     disabled?: boolean;
+    /** Ids of visible captions that name the control, replacing "Filter by: tags". */
+    ariaLabelledBy?: string;
   };
   Element: HTMLElement;
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
@@ -295,6 +297,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     {{#if @multiple}}
       <SelectTagBase
         ...attributes
+        @ariaLabelledBy={{@ariaLabelledBy}}
         @categoryId={{@categoryId}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}
@@ -335,6 +338,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       <DSelect
         class={{this.rootClass}}
         ...attributes
+        @ariaLabelledBy={{@ariaLabelledBy}}
         @caretIcon={{hash closed="angle-right" open="angle-down"}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}

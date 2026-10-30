@@ -243,6 +243,10 @@ function displayedOptionNames() {
   );
 }
 
+async function selectCategoryWithNewControls() {
+  await dSelect(".category-chooser").select(2);
+}
+
 async function openTemplatesPanel() {
   await click(".toolbar-menu__options-trigger");
   await click(`button[title="${i18n("templates.insert_template")}"]`);
@@ -265,7 +269,7 @@ acceptance("discourse-templates | new select controls", function (needs) {
     await visit("/");
 
     await click("#create-topic");
-    await selectCategory();
+    await selectCategoryWithNewControls();
     await openTemplatesPanel();
 
     assert
@@ -299,7 +303,7 @@ acceptance("discourse-templates | new select controls", function (needs) {
     await visit("/");
 
     await click("#create-topic");
-    await selectCategory();
+    await selectCategoryWithNewControls();
     await openTemplatesPanel();
 
     const tagDrop = dSelect(".templates-filter-bar .tag-drop");
@@ -329,7 +333,7 @@ acceptance("discourse-templates | new select controls", function (needs) {
     await visit("/");
 
     await click("#create-topic");
-    await selectCategory();
+    await selectCategoryWithNewControls();
     await openTemplatesPanel();
 
     const tagDrop = dSelect(".templates-filter-bar .tag-drop");
@@ -340,7 +344,7 @@ acceptance("discourse-templates | new select controls", function (needs) {
     await click("#reply-control .toggle-save-and-close");
 
     await click("#create-topic");
-    await selectCategory();
+    await selectCategoryWithNewControls();
     await openTemplatesPanel();
     assert
       .dom(".templates-list .template-item")

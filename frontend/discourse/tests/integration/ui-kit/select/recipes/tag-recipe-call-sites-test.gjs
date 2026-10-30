@@ -1,13 +1,18 @@
 import { array } from "@ember/helper";
-import { click, findAll, render, settled } from "@ember/test-helpers";
+import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import SchemaSettingField from "discourse/admin/components/schema-setting/field";
+import SiteSettingComponent from "discourse/admin/components/site-setting";
 import SiteSettingTagList from "discourse/admin/components/site-settings/tag-list";
+import SiteSetting from "discourse/admin/models/site-setting";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import Form from "discourse/components/form";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import TagSettings from "discourse/components/tag-settings";
 import UserPreferencesTags from "discourse/components/user-preferences/tags";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import GroupManageTags from "discourse/templates/group/manage/tags";
@@ -439,5 +444,168 @@ module(
         });
       }
     );
+
+    module("names", function (nameHooks) {
+      nameHooks.beforeEach(async function () {
+        this.siteSettings.enable_new_select_controls = true;
+        this.siteSettings.tagging_enabled = true;
+        this.siteSettings.max_tags_per_topic = 5;
+        stubSearch();
+        pretender.get("/tag_groups/filter/search", () =>
+          response({ results: [] })
+        );
+        this.nameOf = await loadAccessibleName();
+      });
+
+      /** Asserts the picker in `container` is named by the caption found there. */
+      function assertNamedByCaption(assert, nameOf, container, caption) {
+        const control = container.querySelector("[role='combobox']");
+        assert.strictEqual(
+          nameOf(control),
+          container.querySelector(caption).textContent.trim(),
+          container.className
+        );
+      }
+
+      test("each preferences tag list is named by its caption", async function (assert) {
+        const model = {
+          watched_tags: [],
+          tracked_tags: [],
+          watching_first_post_tags: [],
+          muted_tags: [],
+          set() {},
+        };
+        const siteSettings = this.siteSettings;
+        await render(
+          <template>
+            <UserPreferencesTags
+              @model={{model}}
+              @siteSettings={{siteSettings}}
+            />
+          </template>
+        );
+
+        const lists = findAll(".tracking-controls");
+        assert.strictEqual(lists.length, 4);
+        for (const list of lists) {
+          assertNamedByCaption(assert, this.nameOf, list, "label");
+        }
+      });
+
+      test("each group tag list is named by its caption", async function (assert) {
+        const controller = {
+          siteSettings: this.siteSettings,
+          selectedTags: [],
+          model: {
+            watching_tags: [],
+            tracking_tags: [],
+            watching_first_post_tags: [],
+            regular_tags: [],
+            muted_tags: [],
+            set() {},
+          },
+        };
+        await render(
+          <template><GroupManageTags @controller={{controller}} /></template>
+        );
+
+        const groups = findAll(".control-group").filter((group) =>
+          group.querySelector(".d-select")
+        );
+        assert.strictEqual(groups.length, 5);
+        for (const group of groups) {
+          assertNamedByCaption(assert, this.nameOf, group, "label");
+        }
+      });
+
+      test("the tag synonyms form field is named by its title", async function (assert) {
+        const tag = {
+          id: 1,
+          name: "alpha",
+          slug: "alpha",
+          synonyms: [],
+          can_admin: false,
+        };
+        await render(
+          <template>
+            <TagSettings @selectedTab="general" @tag={{tag}} />
+          </template>
+        );
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".form-kit__field[data-name='synonyms']"),
+          ".form-kit__container-title > span"
+        );
+      });
+
+      for (const type of ["tag_list", "tag_group_list"]) {
+        test(`a ${type} site setting is named by its heading`, async function (assert) {
+          const setting = SiteSetting.create({
+            category: "foo",
+            default: "",
+            description: "",
+            humanized_name: "Picked here",
+            setting: "picked_here",
+            type,
+            value: "",
+          });
+          await render(
+            <template><SiteSettingComponent @setting={{setting}} /></template>
+          );
+
+          assert.strictEqual(
+            this.nameOf(find(".setting [role='combobox']")),
+            "Picked here"
+          );
+        });
+
+        test(`a ${type} form field is named by its title`, async function (assert) {
+          const definition = { key: "picked", label: "Picked here", type };
+          await render(
+            <template>
+              <Form as |form|>
+                <SettingDefinitionField
+                  @definition={{definition}}
+                  @form={{form}}
+                />
+              </Form>
+            </template>
+          );
+
+          assertNamedByCaption(
+            assert,
+            this.nameOf,
+            find(".form-kit__field"),
+            ".form-kit__container-title > span"
+          );
+        });
+      }
+
+      test("a tags schema field is named by its label", async function (assert) {
+        const setting = {};
+        const spec = { type: "tags" };
+        const noop = () => {};
+        await render(
+          <template>
+            <SchemaSettingField
+              @label="Picked here"
+              @name="picked"
+              @onValueChange={{noop}}
+              @setting={{setting}}
+              @spec={{spec}}
+            />
+          </template>
+        );
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".schema-field"),
+          ".schema-field__label"
+        );
+      });
+    });
   }
 );

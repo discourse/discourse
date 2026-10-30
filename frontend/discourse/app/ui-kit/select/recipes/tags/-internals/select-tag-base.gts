@@ -43,6 +43,7 @@ import type {
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
+import { i18n } from "discourse-i18n";
 
 /** The texts a tag picker accepts: the engine's and the tag recipe's. */
 export type SelectTagTextKey =
@@ -136,6 +137,8 @@ export interface SelectTagBaseSignature {
     invalid?: boolean;
     /** Id of the combobox element, for an external label. */
     id?: string;
+    /** Ids of visible captions that name the control, replacing the default name. */
+    ariaLabelledBy?: string;
     /**
      * The field's texts, over the tag defaults. A `placeholder` replaces only the prompt: a
      * required group or a minimum still leads it, each worded through its own key.
@@ -237,6 +240,14 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       );
     }
   });
+
+  /** The control's name: "Tag" while it holds at most one, otherwise "Tags". */
+  #nameTexts: SelectTexts = {
+    ariaLabel: (_values, context) =>
+      context.multiple && this.maximum !== 1
+        ? i18n("tagging.tags")
+        : i18n("tagging.tag"),
+  };
 
   #resolutionKey: string | undefined;
   @tracked private _loadedItems: SelectItem[] = [];
@@ -364,7 +375,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
   }
 
   get kindTexts(): SelectKindTexts {
-    return [TAG_TEXTS, this.args.kindTexts ?? {}];
+    return [TAG_TEXTS, this.#nameTexts, this.args.kindTexts ?? {}];
   }
 
   /** The first unmet required group, as the blank search for the current context reported it. */
@@ -564,6 +575,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       class={{@kind}}
       ...attributes
       @allowCreate={{this.allowCreate}}
+      @ariaLabelledBy={{@ariaLabelledBy}}
       @createItem={{this.createItem}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}

@@ -34,6 +34,7 @@ export default class TagList extends Component {
           @maximum={{false}}
           @multiple={{true}}
           @onChange={{this.changeSelectedNames}}
+          @texts={{hash ariaLabel=@label}}
           @value={{this.selectedTags}}
         />
       {{else}}

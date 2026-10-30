@@ -412,6 +412,7 @@ export default class TagSettings extends Component {
                   @multiple={{true}}
                   @onChange={{this.handleSynonymChange}}
                   @texts={{hash
+                    ariaLabel=field.title
                     placeholder=(i18n
                       "tagging.settings.add_synonym_placeholder"
                     )

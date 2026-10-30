@@ -52,7 +52,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     - ☑ Category pickers with a caption are named by it (2026-10-29). `@ariaLabelledBy` points at a
       caption that has an id; FormKit fields, site settings and schema fields pass their
       caption's text as `@ariaLabel`. Still open:
-      - ☐ Tag pickers.
+      - ☑ Tag pickers (2026-10-30). The same rule; ROLLOUT "Tag call sites" lists each site. A
+        picker with no caption is named "Tag", "Tags", "Tag group" or "Tag groups".
       - ☑ The panel and the mobile modal are named by the caption too (2026-10-29). Float-kit
         gained an `ariaLabelledBy` option, beside `ariaLabel`, that both modal paths and the
         positioned body honour. Before, both read "Options".

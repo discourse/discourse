@@ -1,3 +1,4 @@
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
@@ -38,6 +39,7 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
         @maximum={{this.max}}
         @multiple={{true}}
         @onChange={{this.onNamesInput}}
+        @texts={{hash ariaLabel=@label}}
         @value={{this.value}}
       />
     {{else}}

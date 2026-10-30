@@ -230,6 +230,7 @@ export default class EditRule extends Component {
                     @multiple={{true}}
                     @onChange={{this.onTagsChange}}
                     @texts={{hash
+                      ariaLabel=field.title
                       placeholder=(i18n "chat_integration.all_tags")
                     }}
                     @value={{this.tags}}

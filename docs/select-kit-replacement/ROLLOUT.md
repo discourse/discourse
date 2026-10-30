@@ -322,6 +322,11 @@ customization ports are done.
     new). With nothing filtered it holds nothing and shows "tags" (`tagging.selector_tags`) as its
     placeholder, overridable with a `placeholder` text from the call site or a customization; the
     intersection drop shows the same instead of "Optional tags…".
+  - Tags, 2026-10-30: a tag picker with no caption is named "Tag" (`tagging.tag`, new) or
+    "Tags" (`tagging.tags`) when it can hold more than one, and a tag group picker "Tag group"
+    (`tagging.tag_group_label`, new) or "Tag groups" (`tagging.tag_groups_label`, new). Before,
+    they read "Options". The composer's tag field is named "Tags" instead of "Optional tags…",
+    which stays its placeholder.
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
   to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each
@@ -462,6 +467,17 @@ Open items need a decision after manual testing; the rest are intended but still
   a blank search, so it is unknown before the list first opens, and stale after the value or the
   composer category changes while the list is closed. The placeholder then falls back to the
   minimum or the prompt.
+
+## Tag call sites
+
+Tag pickers follow the category rule. A caption that has, or can take, an id is passed as
+`@ariaLabelledBy`: preferences, group tag settings, the tag group form, move to topic, chat to
+topic and watched words (whose `<label for>` named nothing). FormKit fields and containers pass
+their title as the `ariaLabel` text, the site setting and schema controls their `@label`, and the
+automation tags field its label, which has no id. The composer, topic edit, the review queue's
+tag field, the breadcrumb drops and the templates filter have no caption and keep the recipe
+default. The tag settings title drop and advanced search keep the names they had, because they
+say more than the caption beside them.
 
 ## Category call sites
 

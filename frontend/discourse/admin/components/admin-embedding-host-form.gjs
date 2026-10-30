@@ -134,6 +134,7 @@ export default class AdminEmbeddingHostForm extends Component {
                       @multiple={{true}}
                       @onChange={{field.set}}
                       @texts={{hash
+                        ariaLabel=field.title
                         placeholder=(i18n "category.tags_placeholder")
                       }}
                       @value={{field.value}}

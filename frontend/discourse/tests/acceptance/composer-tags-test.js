@@ -3,10 +3,12 @@ import {
   click,
   currentURL,
   fillIn,
+  settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import Category from "discourse/models/category";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
@@ -235,6 +237,30 @@ acceptance("Composer - Tags (new select controls)", function (needs) {
     await visit("/new-topic?tags=public");
 
     assert.dom(".tags-input .d-select").hasAttribute("data-name", "public");
+  });
+
+  test("the tag field is named Tags, and its placeholder carries the requirement", async function (assert) {
+    const nameOf = await loadAccessibleName();
+    await visit("/");
+    await click("#create-topic");
+    const input = ".tags-input [role='combobox']";
+
+    assert.strictEqual(nameOf(document.querySelector(input)), "Tags");
+    assert
+      .dom(input)
+      .hasAttribute("placeholder", i18n("tagging.choose_for_topic"));
+
+    Category.findById(2).set("minimum_required_tags", 1);
+    getOwner(this).lookup("service:composer").model.set("categoryId", 2);
+    await settled();
+
+    assert.strictEqual(nameOf(document.querySelector(input)), "Tags");
+    assert
+      .dom(input)
+      .hasAttribute(
+        "placeholder",
+        i18n("tagging.choose_for_topic_required", { count: 1 })
+      );
   });
 });
 
