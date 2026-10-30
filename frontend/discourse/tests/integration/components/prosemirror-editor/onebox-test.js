@@ -155,6 +155,23 @@ module(
       assert.strictEqual(toasts.activeToasts.length, 1);
     });
 
+    test("saves an inline onebox URL unescaped", async function (assert) {
+      const url = "http://www.example.com/~user/has-title.html";
+      const [editor] = await setupRichEditor(assert, "see x here");
+      const { view } = editor;
+
+      view.dispatch(
+        view.state.tr.replaceWith(
+          5,
+          6,
+          view.state.schema.nodes.onebox_inline.create({ url, title: "Title" })
+        )
+      );
+      await settled();
+
+      assert.strictEqual(editor.value, `see ${url} here`);
+    });
+
     test("saves the bracket after a bare link unescaped", async function (assert) {
       pretender.get("/inline-onebox", () => [
         200,

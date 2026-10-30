@@ -146,7 +146,7 @@ const extension = {
         state.write(" ");
       }
 
-      state.text(node.attrs.url);
+      state.text(node.attrs.url, false);
 
       const nextSibling =
         parent.childCount > index + 1 ? parent.child(index + 1) : null;
