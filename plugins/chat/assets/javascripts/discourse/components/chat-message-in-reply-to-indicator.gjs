@@ -1,47 +1,41 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatEmojiAvatar from "./chat-emoji-avatar.gjs";
 import ChatUserAvatar from "./chat-user-avatar.gjs";
 
 export default class ChatMessageInReplyToIndicator extends Component {
-  get route() {
-    if (this.hasThread) {
-      return "chat.channel.thread";
-    } else {
-      return "chat.channel.near-message";
+  @cached
+  get link() {
+    const { message, context } = this.args;
+    if (context === MESSAGE_CONTEXT_THREAD) {
+      return {
+        route: "chat.channel.thread.near-message",
+        model: [...message.thread.routeModels, message.inReplyTo.id],
+      };
     }
-  }
-
-  get model() {
-    if (this.hasThread) {
-      return [
-        ...this.args.message.channel.routeModels,
-        this.args.message.thread.id,
-      ];
-    } else {
-      return [
-        ...this.args.message.channel.routeModels,
-        this.args.message.inReplyTo.id,
-      ];
+    if (message?.channel?.threadingEnabled && message?.thread?.id) {
+      return {
+        route: "chat.channel.thread",
+        model: [...message.thread.routeModels],
+      };
     }
-  }
-
-  get hasThread() {
-    return (
-      this.args.message?.channel?.threadingEnabled &&
-      this.args.message?.thread?.id
-    );
+    return {
+      route: "chat.channel.near-message",
+      model: [...message.channel.routeModels, message.inReplyTo.id],
+    };
   }
 
   <template>
     {{#if @message.inReplyTo}}
       <LinkTo
         class="chat-reply is-direct-reply"
-        @models={{this.model}}
-        @route={{this.route}}
+        @models={{this.link.model}}
+        @route={{this.link.route}}
       >
         {{dIcon "share" title="chat.in_reply_to"}}
 
