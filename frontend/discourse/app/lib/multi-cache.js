@@ -21,8 +21,6 @@ export class MultiCache {
   }
 
   async fetch(ids) {
-    this.fetchTimes = [this.fetchTimes[this.fetchTimes.length - 1], new Date()];
-
     const notFound = [];
     ids = uniqueItemsFromArray(ids);
 
@@ -33,6 +31,7 @@ export class MultiCache {
     }
 
     if (notFound.length !== 0) {
+      this.fetchTimes = [this.fetchTimes.at(-1), new Date()];
       const request = this.cb(notFound);
 
       for (const id of notFound) {
