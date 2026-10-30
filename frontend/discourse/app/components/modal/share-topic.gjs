@@ -95,10 +95,8 @@ export default class ShareTopicModal extends Component {
   }
 
   @action
-  replyAsNewTopic() {
-    const postStream = this.topic.postStream;
-    const postId = this.post?.id || postStream.findPostIdForPostNumber(1);
-    const post = postStream.findLoadedPost(postId);
+  async replyAsNewTopic() {
+    const post = this.post || (await this.topic.firstPost());
     const topicController = getOwner(this).lookup("controller:topic");
     topicController.actions.replyAsNewTopic.call(topicController, post);
     this.closeModal();

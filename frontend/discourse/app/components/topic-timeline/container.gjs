@@ -281,29 +281,19 @@ export default class TopicTimelineScrollArea extends Component {
     this.current = this.clamp(this.scrollPosition, 1, this.total);
     const daysAgo = postStream.closestDaysAgoFor(this.current);
 
-    let date;
-    if (daysAgo === undefined) {
-      const post = postStream.posts.find(
-        (p) => p.id === postStream.stream[this.current]
-      );
-
-      if (post) {
-        date = new Date(post.created_at);
-      }
-    } else if (daysAgo !== null) {
-      date = new Date();
-      date.setDate(date.getDate() - daysAgo || 0);
-    } else {
-      date = null;
-    }
-
-    this.date = date;
+    this.date =
+      daysAgo === undefined
+        ? null
+        : moment().subtract(daysAgo, "days").toDate();
 
     const lastReadNumber = topic.last_read_post_number;
     const lastReadId = topic.last_read_post_id;
 
     if (lastReadId && lastReadNumber) {
-      const idx = postStream.stream.indexOf(lastReadId) + 1;
+      const idx = postStream.progressIndexOfPostId({
+        id: lastReadId,
+        post_number: lastReadNumber,
+      });
       this.lastRead = idx;
       this.lastReadPercentage = this._percentFor(topic, idx);
     }

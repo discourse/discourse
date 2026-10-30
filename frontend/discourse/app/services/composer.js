@@ -1094,9 +1094,10 @@ export default class ComposerService extends Service {
     const postStream = this.get("topic.postStream");
     let postId = this.get("model.post.id");
 
-    // If there is no current post, use the first post id from the stream
     if (!postId && postStream) {
-      postId = postStream.firstPostId;
+      postId =
+        postStream.findPostIdForPostNumber(1) ??
+        (await this.get("topic").firstPost()).id;
     }
 
     // If we're editing a post, fetch the reply when importing a quote

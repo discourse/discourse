@@ -49,16 +49,26 @@ export default class TopicProgress extends Component {
     );
   }
 
-  @computed("progressPosition", "topic.last_read_post_id")
+  @computed(
+    "progressPosition",
+    "topic.last_read_post_id",
+    "topic.last_read_post_number",
+    "postStream.filteredPostsCount"
+  )
   get showBackButton() {
     if (!this.topic?.last_read_post_id) {
       return;
     }
 
-    const stream = this.get("postStream.stream");
-    const readPos = stream.indexOf(this.topic?.last_read_post_id) || 0;
+    const readPos = this.postStream.progressIndexOfPostId({
+      id: this.topic.last_read_post_id,
+      post_number: this.topic.last_read_post_number,
+    });
 
-    return readPos < stream.length - 1 && readPos > this.progressPosition;
+    return (
+      readPos < this.postStream.filteredPostsCount &&
+      readPos > this.progressPosition + 1
+    );
   }
 
   @computed("_streamPercentage")
