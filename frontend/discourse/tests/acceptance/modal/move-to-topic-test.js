@@ -84,11 +84,15 @@ acceptance("Modal - move-to-topic", function (needs) {
 
     await fillIn("#split-topic-name", "A new topic");
 
-    assert.dom(".split-new-topic-form .d-select").exists("renders DSelect");
+    assert
+      .dom(".split-new-topic-form .d-select.select-tag")
+      .exists("renders DSelect");
     assert
       .dom(".choose-topic-modal .select-kit.tag-chooser")
       .doesNotExist("replaces the legacy tag chooser");
-    await dSelect(".split-new-topic-form .d-select").selectByName("monkey");
+    await dSelect(".split-new-topic-form .d-select.select-tag").selectByName(
+      "monkey"
+    );
 
     let data;
     pretender.post("/t/280/move-posts", (request) => {

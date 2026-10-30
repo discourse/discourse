@@ -112,8 +112,11 @@ acceptance("Tag Groups", function (needs) {
     await parent.close();
     await parent.open();
     assert
-      .dom('[role="option"][data-name="cat"]')
-      .hasAttribute("aria-disabled", "true", "prevents a second parent tag");
+      .dom('[role="listbox"]')
+      .doesNotHaveAttribute(
+        "aria-multiselectable",
+        "a second parent tag replaces the first"
+      );
     await parent.close();
     await click(".tag-group-content .btn.btn-primary");
 
