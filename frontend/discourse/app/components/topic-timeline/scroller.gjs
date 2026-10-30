@@ -10,9 +10,9 @@ import { i18n } from "discourse-i18n";
 export default class TopicTimelineScroller extends Component {
   style = trustHTML(`height: ${SCROLLER_HEIGHT}px`);
 
-  get repliesShort() {
-    return i18n(`topic.timeline.replies_short`, {
-      current: this.args.current,
+  get totalLabel() {
+    return i18n("topic.timeline.replies_short", {
+      current: "",
       total: this.args.total,
     });
   }
@@ -41,7 +41,8 @@ export default class TopicTimelineScroller extends Component {
       {{/unless}}
       <div class="timeline-scroller-content">
         <div class="timeline-replies">
-          {{this.repliesShort}}
+          <span>{{@current}}</span>
+          <span>{{this.totalLabel}}</span>
         </div>
         {{#if @date}}
           <div class="timeline-ago">
