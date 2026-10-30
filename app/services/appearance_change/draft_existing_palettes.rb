@@ -21,6 +21,7 @@ class AppearanceChange::DraftExistingPalettes
   model :theme
   policy :can_edit_theme
   policy :palettes_available_to_theme
+  policy :can_create_needed_palettes
 
   transaction do
     model :light_color_scheme, :resolve_light_color_scheme
@@ -47,6 +48,14 @@ class AppearanceChange::DraftExistingPalettes
         ColorScheme.where(id: palette_id, theme_id: [nil, theme.id]).exists?
       end
     end
+  end
+
+  # Choosing a built-in palette for the first time saves it.
+  def can_create_needed_palettes(params:, guardian:)
+    guardian.can_create_color_scheme? ||
+      [params.light_palette_id, params.dark_palette_id].none? do |palette_id|
+        DesignWizard::Action::ResolvePalette.creates_palette?(palette_id)
+      end
   end
 
   def resolve_light_color_scheme(params:)
