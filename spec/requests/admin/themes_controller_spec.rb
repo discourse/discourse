@@ -317,6 +317,33 @@ RSpec.describe Admin::ThemesController do
         )
       end
 
+      it "creates a private component placeholder" do
+        Discourse.redis.setex("ssh_key_public_key", 1.hour, "private_key")
+
+        post "/admin/themes/import.json",
+             params: {
+               remote: "git@github.com:discourse/private-component.git",
+               public_key: "public_key",
+               placeholder: true,
+               component: true,
+             }
+
+        expect(response.status).to eq(201)
+        expect(Theme.last.component).to eq(true)
+      end
+
+      it "can force install a component" do
+        post "/admin/themes/import.json",
+             params: {
+               remote: "git@github.com:discourse/discourse-inexistent-component.git",
+               force: true,
+               component: true,
+             }
+
+        expect(response.status).to eq(201)
+        expect(Theme.last.component).to eq(true)
+      end
+
       it "rolls back the remote theme when placeholder creation fails" do
         Discourse.redis.setex("ssh_key_public_key", 1.hour, "private_key")
         Theme.stubs(:create!).raises(ActiveRecord::RecordInvalid.new(Theme.new))
