@@ -1697,7 +1697,6 @@ en:
         empty_title: "No output yet"
         no_data_yet: "No output yet. Add sample data to test this node manually."
         no_data_no_edit: "No output data."
-        loading_editor: "Loading editor…"
         invalid_json: "Invalid JSON"
         invalid_json_empty: "JSON cannot be empty."
         invalid_shape_not_array: "Pinned data must be an array of items."

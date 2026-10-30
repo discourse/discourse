@@ -139,26 +139,19 @@ table.group-reports {
   .editor-panel {
     flex: 1 0 50%;
 
-    .ace-wrapper {
+    // Long lines scroll inside the editor instead of squeezing the schema.
+    min-width: 0;
+
+    .code-editor {
       --min-height: unset;
       min-height: var(--min-height);
-      position: relative;
       height: 100%;
       width: 100%;
-      box-sizing: border-box;
       border: none;
 
       @include viewport.until(sm) {
         --min-height: 300px;
       }
-    }
-
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
     }
   }
 
@@ -611,15 +604,10 @@ table.group-reports {
   .query-new__sql-editor {
     margin-bottom: 1.5em;
 
-    .ace-wrapper,
-    .ace-wrapper > .loading-container {
-      width: 100%;
-    }
-
     // the grippie lets the editor grow; give it a sensible starting height
-    .ace {
-      min-height: 200px;
+    .code-editor {
       width: 100%;
+      height: 200px;
     }
   }
 

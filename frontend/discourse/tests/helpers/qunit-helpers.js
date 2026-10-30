@@ -47,6 +47,7 @@ import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-he
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { resetCategoryTagSearchCache } from "discourse/lib/category-tag-search";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import { clearRegisteredCodeEditorLanguages } from "discourse/lib/code-editor-languages";
 import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { resetDeferredClassModifications } from "discourse/lib/deferred-class-modifications";
@@ -260,6 +261,7 @@ export function testCleanup(container, app) {
   clearDesktopNotificationHandlers();
   clearPluginDocumentTitleCounters();
   cleanUpHashtagTypeClasses();
+  clearRegisteredCodeEditorLanguages();
   resetLastEditNotificationClick();
   clearAuthMethods();
   setTestPresence(true);

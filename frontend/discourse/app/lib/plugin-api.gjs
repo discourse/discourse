@@ -59,6 +59,7 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
@@ -3411,6 +3412,27 @@ class _PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Registers a language shortcut for code editors, so a field can ask for it
+   * by name through the `language` argument.
+   *
+   * The loader is called the first time something asks for the language, and
+   * its module's default export receives the editor's modules and returns the
+   * extensions to apply.
+   *
+   * ```
+   * api.registerCodeEditorLanguage("toml", () =>
+   *   import("discourse/plugins/my-plugin/discourse/lib/toml-language")
+   * );
+   * ```
+   *
+   * @param {string} name - The name a field refers to the language by.
+   * @param {import("discourse/lib/code-editor-languages").CodeEditorLanguageLoader} loader - Returns a promise for the module.
+   */
+  registerCodeEditorLanguage(name, loader) {
+    registerCodeEditorLanguage(name, loader);
   }
 
   /**

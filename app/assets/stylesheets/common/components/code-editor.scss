@@ -1,0 +1,236 @@
+.code-editor {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid var(--primary-400);
+
+  // No overflow clip: touch devices place the completion popup inside.
+  border-radius: var(--d-input-border-radius);
+  background: var(--secondary);
+
+  // Flex rather than percentage heights, so a host that only sets a
+  // min-height still gets a full-size editor instead of a dead strip.
+  > .loading-container,
+  .codemirror-editor {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .grippie {
+    background: var(--primary-low);
+    border-top: 1px solid var(--primary-400);
+
+    &::before {
+      border-top: 3px double var(--primary-medium);
+    }
+  }
+
+  .cm-editor {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: transparent;
+    color: var(--primary);
+
+    // Code reads left to right whatever the UI language.
+
+    /*! rtl:ignore */
+    direction: ltr;
+
+    &.cm-focused {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -1px;
+    }
+  }
+
+  .cm-scroller {
+    overflow: auto;
+    font-family: var(--d-font-family--monospace), monospace;
+    font-size: var(--font-down-1);
+    line-height: 1.5;
+  }
+
+  .cm-content {
+    caret-color: var(--primary);
+  }
+
+  .cm-panels,
+  .cm-textfield,
+  .cm-button {
+    background: var(--secondary);
+    color: var(--primary);
+  }
+
+  .cm-panels-bottom {
+    border-top-color: var(--primary-low-mid);
+  }
+
+  .cm-textfield,
+  .cm-button {
+    border-color: var(--primary-low-mid);
+  }
+
+  .cm-cursor {
+    border-left-color: var(--primary);
+  }
+
+  .cm-selectionBackground {
+    background: var(--tertiary-low) !important;
+  }
+
+  // Translucent, because the line sits above the drawn selection.
+  .cm-activeLine {
+    background: rgb(var(--primary-rgb), 0.04);
+  }
+
+  .cm-selectionMatch {
+    background: rgb(var(--tertiary-rgb), 0.2);
+  }
+
+  .cm-editor.cm-focused .cm-matchingBracket {
+    background: rgb(var(--tertiary-rgb), 0.25);
+    outline: 1px solid rgb(var(--tertiary-rgb), 0.5);
+  }
+
+  .cm-editor.cm-focused .cm-nonmatchingBracket {
+    background: var(--danger-low);
+  }
+
+  .cm-foldPlaceholder {
+    background: var(--primary-low);
+    border-color: var(--primary-low-mid);
+    color: var(--primary-medium);
+  }
+
+  .cm-foldGutter .cm-gutterElement {
+    cursor: pointer;
+    color: var(--primary-medium);
+  }
+
+  // Opaque, because text scrolled sideways passes under the pinned gutter.
+  .cm-gutters {
+    border: 0;
+    background: var(--secondary);
+    color: var(--primary-low-mid);
+  }
+
+  .cm-activeLineGutter {
+    background: transparent;
+    color: var(--primary-medium);
+  }
+
+  // The editor's base theme only styles tooltips for light mode.
+  .cm-tooltip {
+    z-index: z("dropdown");
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .cm-tooltip-autocomplete > ul {
+    font-family: var(--d-font-family--monospace), monospace;
+
+    > li {
+      padding: 1px 0.4em;
+      color: var(--primary);
+    }
+
+    > li[aria-selected] {
+      background: var(--tertiary-low);
+      color: var(--primary);
+    }
+  }
+
+  .cm-completionDetail {
+    color: var(--primary-medium);
+    font-style: normal;
+  }
+
+  .cm-completionMatchedText {
+    color: var(--tertiary);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .cm-diagnostic {
+    color: var(--primary);
+  }
+
+  .cm-diagnostic-warning {
+    border-left-color: var(--highlight-medium);
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.5;
+
+    .cm-scroller {
+      cursor: not-allowed;
+    }
+
+    .cm-activeLine,
+    .cm-activeLineGutter {
+      background: transparent;
+    }
+  }
+
+  // Syntax palette. Named by role rather than by any one language, so every
+  // shortcut lands somewhere sensible.
+  .cm-hl-keyword,
+  .cm-hl-control {
+    color: var(--tertiary);
+  }
+
+  .cm-hl-name,
+  .cm-hl-property,
+  .cm-hl-tag {
+    color: var(--primary-high);
+  }
+
+  .cm-hl-function,
+  .cm-hl-type {
+    color: var(--tertiary-hover);
+  }
+
+  .cm-hl-string,
+  .cm-hl-number {
+    color: var(--success);
+  }
+
+  .cm-hl-atom,
+  .cm-hl-meta {
+    color: var(--tertiary);
+  }
+
+  .cm-hl-comment {
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  .cm-hl-punctuation,
+  .cm-hl-bracket {
+    color: var(--primary);
+  }
+
+  .cm-hl-link {
+    color: var(--tertiary);
+    text-decoration: underline;
+  }
+
+  .cm-hl-invalid {
+    color: var(--danger);
+  }
+
+  .cm-hl-heading,
+  .cm-hl-strong {
+    font-weight: 700;
+  }
+
+  .cm-hl-emphasis {
+    font-style: italic;
+  }
+}

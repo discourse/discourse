@@ -144,7 +144,7 @@ module PageObjects
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
         when "code"
-          component.find(".ace_text-input", visible: :all).fill_in(with: value)
+          PageObjects::Components::CodeEditor.new(component).set_input(value)
         else
           raise "Unsupported control type: #{control_type}"
         end
