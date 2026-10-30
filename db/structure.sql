@@ -23510,6 +23510,13 @@ CREATE INDEX index_poll_votes_on_user_id ON public.poll_votes USING btree (user_
 
 
 --
+-- Name: index_polls_on_close_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_polls_on_close_at ON public.polls USING btree (close_at) WHERE ((status = 0) AND (close_at IS NOT NULL));
+
+
+--
 -- Name: index_polls_on_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26166,6 +26173,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261030140032'),
+('20261030125744'),
 ('20261029021723'),
 ('20261021180718'),
 ('20261021180714'),

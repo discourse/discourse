@@ -36,31 +36,18 @@ RSpec.describe PostsController do
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end
 
-    it "schedules auto-close job" do
-      freeze_time
-      name = "auto_close"
+    it "saves the poll's close time" do
       close_date = 1.month.from_now.round
 
-      expect do
-        post :create,
-             params: {
-               title: title,
-               raw: "[poll name=#{name} close=#{close_date.iso8601}]\n- A\n- B\n[/poll]",
-             },
-             format: :json
-      end.to change { Jobs::ClosePoll.jobs.size }.by(1) & change { Poll.count }.by(1)
+      post :create,
+           params: {
+             title: title,
+             raw: "[poll close=#{close_date.iso8601}]\n- A\n- B\n[/poll]",
+           },
+           format: :json
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      post_id = json["id"]
-
-      expect(Poll.find_by(post_id: post_id).close_at).to eq_time(close_date)
-
-      job = Jobs::ClosePoll.jobs.first
-      job_args = job["args"].first
-
-      expect(job_args["post_id"]).to eq(post_id)
-      expect(job_args["poll_name"]).to eq(name)
+      expect(Poll.find_by(post_id: response.parsed_body["id"]).close_at).to eq_time(close_date)
     end
 
     it "requires different options" do

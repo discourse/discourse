@@ -20,11 +20,33 @@ class Poll < ActiveRecord::Base
   validates :max, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
   validates :step, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
 
+  # Must be longer than the interval of Jobs::SchedulePollClosures.
+  IMMINENT_CLOSURE_WINDOW = 30.minutes
+
   attr_writer :voters_count
   attr_accessor :has_voted
   attr_accessor :serialized_voters_cache
 
   after_initialize { @has_voted = {} }
+
+  after_commit on: %i[create update] do
+    if saved_change_to_close_at? || saved_change_to_status?
+      Poll.where(id:).schedule_imminent_closures
+    end
+  end
+
+  def self.schedule_imminent_closures
+    where(status: :open, close_at: ..IMMINENT_CLOSURE_WINDOW.from_now)
+      .joins(post: :topic)
+      .where(posts: { deleted_at: nil }, topics: { archived: false })
+      .find_each do |poll|
+        close_at = poll.close_at.to_i
+        key = "poll_close_scheduled:#{poll.id}:#{close_at}"
+        next if !Discourse.redis.set(key, 1, nx: true, ex: IMMINENT_CLOSURE_WINDOW + 1.minute)
+
+        Jobs.enqueue_at(poll.close_at, :close_poll, poll_id: poll.id, close_at:)
+      end
+  end
 
   def reload(options = nil)
     @has_voted = {}
@@ -124,6 +146,7 @@ end
 #
 # Indexes
 #
+#  index_polls_on_close_at          (close_at) WHERE ((status = 0) AND (close_at IS NOT NULL))
 #  index_polls_on_post_id           (post_id)
 #  index_polls_on_post_id_and_name  (post_id,name) UNIQUE
 #

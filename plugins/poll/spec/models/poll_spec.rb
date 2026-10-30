@@ -96,4 +96,104 @@ RSpec.describe DiscoursePoll::Poll do
     post = Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]")
     expect { post.save! }.not_to raise_error
   end
+
+  describe ".schedule_imminent_closures" do
+    # `update_columns` bypasses the after_commit scheduling.
+    fab!(:poll)
+
+    before { freeze_time(Time.zone.now.beginning_of_minute) }
+
+    def close_job_args(poll)
+      { poll_id: poll.id, close_at: poll.close_at.to_i }
+    end
+
+    it "schedules a poll that closes within the window for its close time" do
+      poll.update_columns(close_at: 20.minutes.from_now)
+
+      Poll.schedule_imminent_closures
+
+      expect_job_enqueued(job: :close_poll, args: close_job_args(poll), at: poll.close_at)
+    end
+
+    it "schedules an overdue poll to close right away" do
+      poll.update_columns(close_at: 1.hour.ago)
+
+      Poll.schedule_imminent_closures
+
+      expect_job_enqueued(job: :close_poll, args: close_job_args(poll), at: Time.zone.now)
+    end
+
+    it "schedules each poll once" do
+      poll.update_columns(close_at: 20.minutes.from_now)
+
+      expect { 2.times { Poll.schedule_imminent_closures } }.to change {
+        Jobs::ClosePoll.jobs.size
+      }.by(1)
+    end
+
+    it "skips polls that close later, are closed, or have no close time" do
+      poll.update_columns(close_at: 1.hour.from_now)
+      Fabricate(:poll, close_at: 1.minute.from_now, status: :closed)
+      Fabricate(:poll, close_at: nil)
+
+      expect { Poll.schedule_imminent_closures }.not_to change { Jobs::ClosePoll.jobs.size }
+    end
+
+    it "skips polls on deleted posts and in archived topics" do
+      poll.update_columns(close_at: 1.minute.from_now)
+      poll.post.trash!
+      archived_poll = Fabricate(:poll)
+      archived_poll.update_columns(close_at: 1.minute.from_now)
+      archived_poll.post.topic.update!(archived: true)
+
+      expect { Poll.schedule_imminent_closures }.not_to change { Jobs::ClosePoll.jobs.size }
+    end
+  end
+
+  describe "saving a poll" do
+    before { freeze_time(Time.zone.now.beginning_of_minute) }
+
+    it "schedules the closure of a poll that closes soon" do
+      poll = Fabricate(:poll, close_at: 5.minutes.from_now)
+
+      expect_job_enqueued(
+        job: :close_poll,
+        args: {
+          poll_id: poll.id,
+          close_at: poll.close_at.to_i,
+        },
+        at: poll.close_at,
+      )
+    end
+
+    it "schedules the closure again when the close time changes" do
+      poll = Fabricate(:poll, close_at: 5.minutes.from_now)
+
+      poll.update!(close_at: 10.minutes.from_now)
+
+      expect_job_enqueued(
+        job: :close_poll,
+        args: {
+          poll_id: poll.id,
+          close_at: poll.close_at.to_i,
+        },
+        at: poll.close_at,
+      )
+    end
+
+    it "schedules the closure of a reopened poll that closes soon" do
+      poll = Fabricate(:poll, close_at: 5.minutes.from_now, status: :closed)
+
+      poll.update!(status: :open)
+
+      expect_job_enqueued(
+        job: :close_poll,
+        args: {
+          poll_id: poll.id,
+          close_at: poll.close_at.to_i,
+        },
+        at: poll.close_at,
+      )
+    end
+  end
 end

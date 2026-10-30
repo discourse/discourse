@@ -29,6 +29,7 @@ after_initialize do
   require_relative "app/serializers/poll_option_serializer"
   require_relative "app/serializers/poll_serializer"
   require_relative "jobs/regular/close_poll"
+  require_relative "jobs/scheduled/schedule_poll_closures"
   require_relative "lib/poll"
   require_relative "lib/ranked_choice"
   require_relative "lib/polls_updater"
@@ -131,8 +132,6 @@ after_initialize do
   end
 
   on(:post_created) do |post, _opts, _user|
-    DiscoursePoll::Poll.schedule_jobs(post)
-
     next if post.is_first_post?
     next if post.custom_fields[DiscoursePoll::HAS_POLLS].blank?
 
