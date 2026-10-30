@@ -10,48 +10,32 @@ import ChatUserAvatar from "./chat-user-avatar.gjs";
 
 export default class ChatMessageInReplyToIndicator extends Component {
   @cached
-  get linkTarget() {
-    if (this.args.context === MESSAGE_CONTEXT_THREAD) {
-      return "thread-near-message";
+  get link() {
+    const { message, context } = this.args;
+    if (context === MESSAGE_CONTEXT_THREAD) {
+      return {
+        route: "chat.channel.thread.near-message",
+        model: [...message.thread.routeModels, message.inReplyTo.id],
+      };
     }
-    if (
-      this.args.message?.channel?.threadingEnabled &&
-      this.args.message?.thread?.id
-    ) {
-      return "thread";
+    if (message?.channel?.threadingEnabled && message?.thread?.id) {
+      return {
+        route: "chat.channel.thread",
+        model: [...message.thread.routeModels],
+      };
     }
-    return "channel-near-message";
-  }
-
-  get route() {
-    switch (this.linkTarget) {
-      case "thread-near-message":
-        return "chat.channel.thread.near-message";
-      case "thread":
-        return "chat.channel.thread";
-      default:
-        return "chat.channel.near-message";
-    }
-  }
-
-  get model() {
-    const { message } = this.args;
-    switch (this.linkTarget) {
-      case "thread-near-message":
-        return [...message.thread.routeModels, message.inReplyTo.id];
-      case "thread":
-        return [...message.thread.routeModels];
-      default:
-        return [...message.channel.routeModels, message.inReplyTo.id];
-    }
+    return {
+      route: "chat.channel.near-message",
+      model: [...message.channel.routeModels, message.inReplyTo.id],
+    };
   }
 
   <template>
     {{#if @message.inReplyTo}}
       <LinkTo
         class="chat-reply is-direct-reply"
-        @models={{this.model}}
-        @route={{this.route}}
+        @models={{this.link.model}}
+        @route={{this.link.route}}
       >
         {{dIcon "share" title="chat.in_reply_to"}}
 

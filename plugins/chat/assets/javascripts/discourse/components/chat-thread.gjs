@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -105,6 +106,13 @@ export default class ChatThread extends Component {
       this.chatThreadComposer.focus();
     }
     this.loadMessages();
+  }
+
+  @action
+  onTargetMessageIdChange(_el, targetMessageId) {
+    if (targetMessageId) {
+      this.highlightOrFetchMessage(targetMessageId);
+    }
   }
 
   @action
@@ -494,6 +502,7 @@ export default class ChatThread extends Component {
       .sendMessage(this.args.thread.channel.id, {
         cooked: stagedMessage.cooked,
         message: stagedMessage.message,
+        in_reply_to_id: stagedMessage.inReplyTo?.id ?? null,
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
         staged_id: stagedMessage.id,
         thread_id: this.args.thread.id,
@@ -601,6 +610,7 @@ export default class ChatThread extends Component {
       }}
       data-id={{@thread.id}}
       {{didInsert this.setup}}
+      {{didUpdate this.onTargetMessageIdChange @targetMessageId}}
       {{willDestroy this.teardown}}
     >
       <ChatMessagesScroller

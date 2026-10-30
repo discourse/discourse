@@ -2,7 +2,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatComposer from "../../chat-composer.gjs";
 
 export default class ChatComposerThread extends ChatComposer {
@@ -60,6 +59,9 @@ export default class ChatComposerThread extends ChatComposer {
 
   @action
   resetDraft() {
+    if (this.draft) {
+      this.draft.editing = false;
+    }
     this.args.thread.resetDraft(this.currentUser);
   }
 
@@ -68,19 +70,15 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   handleEscape(event) {
-    if (this.draft?.inReplyTo) {
+    if (this.draft.editing) {
       event.stopPropagation();
-      this.draft.inReplyTo = null;
+      this.resetDraft();
       return;
     }
 
-    if (this.draft.editing) {
+    if (this.draft?.inReplyTo) {
       event.stopPropagation();
-      this.args.thread.draft = ChatMessage.createDraftMessage(
-        this.args.thread.channel,
-        { user: this.currentUser, thread: this.args.thread }
-      );
-
+      this.draft.inReplyTo = null;
       return;
     }
 
