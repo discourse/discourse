@@ -4488,6 +4488,9 @@ nl:
           one: "Weet je zeker dat je deze berichten wilt samenvoegen?"
           other: "Weet je zeker dat je deze %{count} berichten wilt samenvoegen?"
       revisions:
+        visibility:
+          hidden:
+            title: "Verborgen"
         locale:
           no_locale_set: "Geen taal ingesteld"
           locale_removed: "Taal verwijderd"
@@ -4496,9 +4499,6 @@ nl:
           previous: "Vorige revisie"
           next: "Volgende revisie"
           last: "Laatste revisie"
-          hide: "Revisie verbergen"
-          show: "Revisie weergeven"
-          destroy: "Revisies verwijderen"
           destroy_confirm: "Weet je zeker dat je alle revisies van dit bericht wilt verwijderen? Deze actie is permanent."
           revert: "Revisie %{revision} herstellen"
           edit_wiki: "Wiki bewerken"
@@ -6374,18 +6374,10 @@ nl:
           anonymous_human: "Anoniem"
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard bijgewerkt:"
-        discourse_last_updated: "Discourse bijgewerkt:"
         version: "Versie"
         up_to_date: "Je bent helemaal bij!"
         updates_available: "Er zijn updates beschikbaar."
-        please_update: "Werk bij!"
-        no_check_performed: "Er is niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
-        stale_data: "Er is de laatste tijd niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
         version_check_pending: "Zo te zien heb je onlangs bijgewerkt. Fantastisch!"
-        installed_version: "Geïnstalleerd"
-        github: "GitHub"
-        problems_found: "Advies op basis van je huidige website-instellingen"
         dismiss_notice: "Negeren"
         new_features:
           title: "Wat is er nieuw?"
@@ -6393,16 +6385,7 @@ nl:
           no_new_features_found: "Er zijn geen items in de feed of je geselecteerde filter heeft geen resultaten geretourneerd. Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>de Discourse Releases-site</a>."
           no_new_features_error: "Er is een fout opgetreden bij het laden van de feed. Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>de Discourse Releases-site</a>."
           learn_more: "Meer informatie..."
-        last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
-        no_problems: "Er zijn geen problemen gevonden."
-        moderators: "Moderators:"
-        admins: "Beheerders:"
-        silenced: "Gedempt:"
-        suspended: "Geschorst:"
-        private_messages_short: "PB's"
-        private_messages_title: "Berichten"
-        mobile_title: "Mobiel"
         space_used: "%{usedSize} gebruikt"
         space_used_and_free: "%{usedSize} (%{freeSize} vrij)"
         uploads: "Uploads"
@@ -6411,20 +6394,7 @@ nl:
           one: "%{count} back-up op %{location}"
           other: "%{count} back-ups op %{location}"
         lastest_backup: "Nieuwste: %{date}"
-        traffic_short: "Verkeer"
-        traffic: "Toepassingswebverzoeken"
-        page_views: "Paginaweergaven"
-        page_views_short: "Paginaweergaven"
-        show_traffic_report: "Gedetailleerd verkeersrapport weergeven"
-        community_health: Status van community
-        moderators_activity: Moderatoractiviteit
         whats_new_in_discourse: Wat is er nieuw in Discourse?
-        activity_metrics: Activiteitgegevens
-        all_reports: "Alle rapporten"
-        general_tab: "Algemeen"
-        moderation_tab: "Moderatie"
-        security_tab: "Beveiliging"
-        reports_tab: "Rapporten"
         report_filter_any: "alles"
         disabled: Uitgeschakeld
         timeout_error: Sorry, de query duurt te lang. Kies een korter interval.
@@ -6465,7 +6435,6 @@ nl:
             title: "Systeem"
             status: "Status"
             discourse_updated: "Discourse bijgewerkt"
-            dashboard_updated: "Dashboard bijgewerkt"
         reports_section:
           header_action: "Beheren"
           no_data: "Geen gegevens om weer te geven"
@@ -6480,11 +6449,6 @@ nl:
             anonymous: "Anoniem"
             crawlers: "Crawlers"
           crawler_learn_more: "Meer info"
-        period:
-          last_7_days: "Afgelopen 7 dagen"
-          last_30_days: "Afgelopen 30 dagen"
-          last_3_months: "Afgelopen 3 maanden"
-          custom: "Aangepast"
         reports:
           trend_title: "%{percent} wijziging. Momenteel %{current}, was %{prev} in voorgaande periode."
           percent_change_tooltip: "%{percent} verandering."
@@ -6529,9 +6493,6 @@ nl:
               one: "%{count} bericht"
               other: "%{count} berichten"
             deselect: "%{name} deselecteren"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Zoeken in logs</a>'
-            disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
           average_chart_label: Gemiddelden worden weergegeven, niet totalen
           sort_button: "Sorteren op %{column}"
           sort_button_current: "Gesorteerd op %{column}, %{direction}"
@@ -6715,7 +6676,6 @@ nl:
               list: Geef de nieuwste berichten en privéberichten weer. RSS wordt ook ondersteund.
             revisions:
               read: "Download de nieuwste of een specifieke revisie."
-              modify: "Revisies verbergen, weergeven of terugdraaien."
               permanently_delete: "Verwijder een revisie permanent."
             tags:
               list: Geef tags weer.
@@ -8211,7 +8171,6 @@ nl:
           no_constructive_purpose: "Geen constructief doel voor hun acties, anders dan het creëren van onenigheid binnen de community"
           custom: "Aangepast…"
         suspend_message: "E-mailbericht"
-        suspend_message_placeholder: "Optioneel kun je meer informatie over de schorsing geven, wat naar de gebruiker wordt gestuurd via e-mail."
         suspended_by: "Geschorst door"
         silence_reason: "Reden"
         silenced_by: "Gedempt door"
@@ -8220,7 +8179,6 @@ nl:
         silence_reason_title: "Reden van dempen"
         silence_reason_placeholder: "Reden van dempen"
         silence_message: "E-mailbericht"
-        silence_message_placeholder: "(laat leeg om standaardbericht te sturen)"
         suspended_until: "(tot %{until})"
         suspend_forever: "Voor altijd schorsen"
         cant_suspend: "Deze gebruiker kan niet worden geschorst."

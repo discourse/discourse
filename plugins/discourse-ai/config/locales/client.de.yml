@@ -1439,10 +1439,7 @@ de:
           streaming_below: "Neuer Inhalt unten"
           editing_post: "Beitrag wird bearbeitet "
       sentiments:
-        dashboard:
-          title: "Stimmung"
         sidebar:
-          overview: "Stimmungsübersicht"
           analysis: "Stimmungsanalyse"
         sentiment_analysis:
           share_chart: "Link zur Tabelle kopieren"

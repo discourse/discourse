@@ -1589,10 +1589,7 @@ ar:
           streaming_below: "محتوى جديد بالأسفل"
           editing_post: "تعديل المنشور"
       sentiments:
-        dashboard:
-          title: "المشاعر"
         sidebar:
-          overview: "نظرة عامة على المشاعر"
           analysis: "تحليل المشاعر"
         sentiment_analysis:
           share_chart: "نسخ الرابط إلى الرسم البياني"

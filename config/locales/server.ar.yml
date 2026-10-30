@@ -2972,9 +2972,6 @@ ar:
     enable_user_status: "السماح للمستخدمين بتحديد رسالة حالة مخصَّصة (رمز تعبيري + وصف)"
     enable_user_tips: "تفعيل نصائح المستخدم الجديدة التي توضِّح الميزات الرئيسية للمستخدمين"
     short_title: "سيُستخدم العنوان المختصر على الشاشة الرئيسية للمستخدم، أو في مشغّل التطبيقات، أو في أماكن أخرى قد تكون المساحة فيها محدودة. يجب أن يقتصر العنوان على 12 حرفًا. يرجى ملاحظة أن تغيير هذا العنوان قد يؤدي إلى ظهور رسالة لمستخدمي تطبيق الويب التقدمي (PWA) تطلب منهم تحديث التطبيق أو إلغاء تثبيته."
-    dashboard_hidden_reports: "السماح بإخفاء التقارير المحدَّدة من لوحة المعلومات"
-    dashboard_visible_tabs: "اختيار علامات التبويب المرئية في لوحة المعلومات"
-    dashboard_general_tab_activity_metrics: "اختيار التقارير التي سيتم عرضها كمقاييس للنشاط في علامة التبويب \"عام\""
     gravatar_enabled: "تفعيل خدمة <a href='https://gravatar.com/'>Gravatar</a> لصور الحسابات الشخصية للمستخدمين. سيؤدي إيقاف هذا إلى منع المستخدمين من تغيير صورهم إلى Gravatar، ولكنه لن يؤثر في من يستخدمها بالفعل."
     gravatar_name: "تحديد اسم مقدِّم خدمة Gravatar. يُستخدَم هذا الاسم عادةً لتحديد المصدر الذي يوفِّر صور Gravatar الرمزية للموقع."
     gravatar_base_url: "تحديد عنوان URL للوصول إلى واجهة برمجة تطبيقات مقدِّم خدمة Gravatar. يُعد هذا الإعداد بالغ الأهمية لتحويل عناوين البريد الإلكتروني إلى عناوين URL لـ Gravatar حيث يتم تخزين صور الرمزية."
@@ -6020,6 +6017,27 @@ ar:
   onebox:
     discourse:
       event_all_day: "طوال اليوم"
+      recurrence:
+        every_day: "كل يوم"
+        every_weekday: "كل أيام الأسبوع"
+        every_week: "كل %{weekday}"
+        every_two_weeks: "%{weekday} كل أسبوعين"
+        every_four_weeks: "%{weekday} كل أربعة أسابيع"
+        every_month: "%{ordinal} %{weekday} من كل شهر"
+        ordinals:
+          first: "أول"
+          second: "ثاني"
+          third: "ثالث"
+          fourth: "رابع"
+          last: "آخر"
+        weekdays:
+          sunday: "الأحد"
+          monday: "الاثنين"
+          tuesday: "الثلاثاء"
+          wednesday: "الأربعاء"
+          thursday: "الخميس"
+          friday: "الجمعة"
+          saturday: "السبت"
       user_joined_community: "تاريخ الانضمام: %{date}"
     google_meet:
       title: "اجتماع Google Meet"

@@ -2176,6 +2176,9 @@ th:
         confirm:
           other: "คุณแน่ใจหรือว่าต้องการลบ %{count}โพสต์นี้"
       revisions:
+        visibility:
+          hidden:
+            title: "ถูกซ่อน"
         controls:
           edit_post: "แก้ไขโพสต์"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong> / %{total}"
@@ -2860,28 +2863,14 @@ th:
         version: "เวอร์ชัน"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
         updates_available: "มีการอัปเดต"
-        installed_version: "ติดตั้งแล้ว"
-        github: "กิตฮับ"
         dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
-        last_checked: "ตรวจล่าสุด"
         refresh_problems: "รีเฟรช"
-        no_problems: "ไม่พบปัญหา"
-        moderators: "ผู้ดูแล:"
-        admins: "แอดมิน:"
-        suspended: "ถูกระงับชั่วคราว:"
-        private_messages_short: "ข้อความ"
-        private_messages_title: "ข้อความ"
-        mobile_title: "โทรศัพท์"
         space_used_and_free: "%{usedSize}(%{freeSize}ฟรี)"
         uploads: "อัปโหลด"
         backups: "สำรองข้อมูล"
         lastest_backup: "ล่าสุด: %{date}"
-        traffic_short: "การจราจร"
-        moderators_activity: กิจกรรมของผู้ดูแลระบบ
-        general_tab: "ทั่วไป"
-        security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
         sections:
@@ -2916,9 +2905,6 @@ th:
           series:
             anonymous: "ไม่ระบุชื่อ"
           crawler_learn_more: "เรียนรู้เพิ่มเติม"
-        period:
-          last_7_days: "7 วันที่ผ่านมา"
-          last_30_days: "30 วันที่ผ่านมา"
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"

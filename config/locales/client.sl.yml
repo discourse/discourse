@@ -3013,13 +3013,14 @@ sl:
           few: "Ali ste prepričani da hočete izbrisati te %{count} prispevke?"
           other: "Ali ste prepričani da hočete izbrisati teh %{count} prispevkov?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skrito"
         controls:
           first: "Prva verzija"
           previous: "Prejšnja revizija"
           next: "Naslednja verzija"
           last: "Zadnja verzija"
-          hide: "Skrij verzije"
-          show: "Prikaži verzije"
           edit_wiki: "Uredi wiki"
           edit_post: "Uredi prispevek"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3980,29 +3981,13 @@ sl:
           anonymous_human: "Anonimni"
       dashboard:
         title: "Nadzorna plošča"
-        last_updated: "Nadzorna plošča posodobljena:"
-        discourse_last_updated: "Discourse posodobljen:"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
         updates_available: "Posodobitve so na voljo."
-        no_check_performed: "Preverjanje posodobitev se ni izvedlo. Preverite da sidekiq teče."
-        stale_data: "Zadnje čase se preverjanje posodobitev ni izvedlo. Preverite ali se sidekiq izvaja."
-        installed_version: "Nameščeno"
-        github: "GitHub"
-        problems_found: "Nekaj priporočil glede na vaše trenutne nastavitve strani"
         dismiss_notice: "Prezri"
         new_features:
           learn_more: "Več o tem..."
-        last_checked: "Nazadnje preverjeno"
         refresh_problems: "Osveži"
-        no_problems: "Nismo našli problemov."
-        moderators: "Moderatorji:"
-        admins: "Administratorji:"
-        silenced: "Utišan:"
-        suspended: "Suspendirani:"
-        private_messages_short: "ZS"
-        private_messages_title: "Zasebna sporočila"
-        mobile_title: "Mobilni"
         space_used: "%{usedSize} uporabljeno"
         space_used_and_free: "%{usedSize} (%{freeSize} prosto)"
         uploads: "Prenosi"
@@ -4013,20 +3998,7 @@ sl:
           few: "%{count} varnostne kopije na %{location}"
           other: "%{count} varnostnih kopij na %{location}"
         lastest_backup: "Zadnja: %{date}"
-        traffic_short: "Promet"
-        traffic: "Spletne zahteve aplikacije"
-        page_views: "Ogledov strani"
-        page_views_short: "Ogledov strani"
-        show_traffic_report: "Pokaži podrobno poročilo prometa"
-        community_health: Stanje skupnosti
-        moderators_activity: Aktivnosti moderatorjev
         whats_new_in_discourse: Kaj je novega v Discourse?
-        activity_metrics: Metrike aktivnosti
-        all_reports: "Vsa poročila"
-        general_tab: "Splošno"
-        moderation_tab: "Moderiranje"
-        security_tab: "Varnost"
-        reports_tab: "Poročila"
         report_filter_any: "katerokoli"
         disabled: Onemogočeno
         timeout_error: Poizvedba traja predolgo - izberite krajši interval.
@@ -4062,7 +4034,6 @@ sl:
             title: "Sistem"
             status: "Status"
             discourse_updated: "Discourse posodobljen"
-            dashboard_updated: "Nadzorna plošča posodobljena"
         reports_section:
           header_action: "Upravljaj"
           no_data: "Ni podatkov za prikaz"
@@ -4074,10 +4045,6 @@ sl:
           series:
             anonymous: "Anonimni"
           crawler_learn_more: "Več o tem"
-        period:
-          last_7_days: "Zadnjih 7 dni"
-          last_30_days: "Zadnjih 30 dni"
-          custom: "Po meri"
         reports:
           trend_title: "%{percent} sprememba. Trenutno %{current}, je bilo %{prev} v prejšnjem obdobju."
           today: "Danes"
@@ -4112,8 +4079,6 @@ sl:
               two: "%{count} prispevka"
               few: "%{count} prispevki"
               other: "%{count} prispevkov"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnik iskanj</a>'
           sort_button: "Razvrsti po %{column}"
           sort_ascending: "naraščajoče"
           sort_descending: "padajoče"
@@ -4730,7 +4695,6 @@ sl:
           not_listening_to_staff: "Ni upošteval povratnih informacij osebja"
           consuming_staff_time: "Porabljal nesorazmerno količino časa osebja"
         suspend_message: "E-sporočilo za uporabnika"
-        suspend_message_placeholder: "Po potrebi napišite več informacij o razlogih za suspendiranje, ki bodo poslani uporabniku v e-sporočilu."
         suspended_by: "Suspendiran od"
         silence_reason: "Razlog"
         silenced_by: "Utišan od"
@@ -4738,7 +4702,6 @@ sl:
         silence_duration: "Za kako dolgo bo uporabnik utišan?"
         silence_reason_placeholder: "Razlog za utišanje"
         silence_message: "E-sporočilo za uporabnika"
-        silence_message_placeholder: "(pustite prazno, če hočete poslati privzeto sporočilo)"
         suspended_until: "(do %{until})"
         cant_suspend: "Ta uporabnik ne more biti suspendiran."
         penalty_post_actions: "Kaj bi rad naredil/a z asociiranim prispevkom?"

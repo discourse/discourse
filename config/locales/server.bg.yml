@@ -1417,6 +1417,15 @@ bg:
     graph_title: "Брой търсения"
   onebox:
     discourse:
+      recurrence:
+        weekdays:
+          sunday: "Неделя"
+          monday: "Понеделник"
+          tuesday: "Вторник"
+          wednesday: "Сряда"
+          thursday: "Четвъртък"
+          friday: "Петък"
+          saturday: "Събота"
       user_joined_community: "Присъединен на %{date}"
     google_meet:
       meeting_code: "Код:"

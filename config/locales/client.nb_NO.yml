@@ -3589,14 +3589,14 @@ nb_NO:
           one: "Er du sikker på at du vil slå sammen disse innleggene?"
           other: "Er du sikker på at du vil slå sammen disse %{count} innleggene?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skjult"
         controls:
           first: "Første versjon"
           previous: "Forrige versjon"
           next: "Neste versjon"
           last: "Siste versjon"
-          hide: "Skjul versjon"
-          show: "Vis versjon"
-          destroy: "Slett versjoner"
           destroy_confirm: "Er du sikker på at du vil slette alle versjoner på dette innlegget? Denne handlingen er permanent."
           revert: "Gå tilbake til versjon %{revision}"
           edit_wiki: "Rediger wiki"
@@ -4585,29 +4585,13 @@ nb_NO:
           anonymous_human: "Anonym"
       dashboard:
         title: "Dashbord"
-        last_updated: "Dashbord oppdatert:"
-        discourse_last_updated: "Diskurs oppdatert:"
         version: "Versjon"
         up_to_date: "Du har den seneste versjonen!"
         updates_available: "Oppdateringer er tilgjengelige."
-        no_check_performed: "En sjekk for oppdateringer har ikke blitt utført. Verifiser at sidekiq kjører."
-        stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."
-        installed_version: "Installert"
-        github: "GitHub"
-        problems_found: "Noen råd basert på gjeldende sideinnstillinger"
         dismiss_notice: "Ignorer"
         new_features:
           learn_more: "Finn ut mer..."
-        last_checked: "Sist sjekket"
         refresh_problems: "Last inn siden på nytt"
-        no_problems: "Ingen problemer ble funnet."
-        moderators: "Moderatorer:"
-        admins: "Adminer:"
-        silenced: "Dempet:"
-        suspended: "Utestengt:"
-        private_messages_short: "Meldinger"
-        private_messages_title: "Meldinger"
-        mobile_title: "Mobil"
         space_used: "%{usedSize} brukt"
         space_used_and_free: "%{usedSize} (%{freeSize} er ledig)"
         uploads: "Opplastinger"
@@ -4616,20 +4600,7 @@ nb_NO:
           one: "%{count} sikkerhetskopi på %{location}"
           other: "%{count} sikkerhetskopier %{location}"
         lastest_backup: "Siste: %{date}"
-        traffic_short: "Trafikk"
-        traffic: "Applikasjon webforespørsler"
-        page_views: "Sidevisninger"
-        page_views_short: "Sidevisninger"
-        show_traffic_report: "Vis detaljert trafikkrapport"
-        community_health: Samfunnshelse
-        moderators_activity: Moderatoraktivitet
         whats_new_in_discourse: Hva er nytt i Discourse?
-        activity_metrics: Aktivitetsmåling
-        all_reports: "Alle rapporter"
-        general_tab: "Generelt"
-        moderation_tab: "Moderering"
-        security_tab: "Sikkerhet"
-        reports_tab: "Rapporter"
         report_filter_any: "alle"
         disabled: Deaktivert
         timeout_error: Beklager, spørringen tar for lang tid, vennligst velg et kortere tidsrom
@@ -4665,7 +4636,6 @@ nb_NO:
             title: "System"
             status: "Status"
             discourse_updated: "Diskurs oppdatert"
-            dashboard_updated: "Dashbord oppdatert"
         reports_section:
           header_action: "Behandle"
           no_data: "Ingen data å vise"
@@ -4677,10 +4647,6 @@ nb_NO:
           series:
             anonymous: "Anonym"
           crawler_learn_more: "Finn ut mer"
-        period:
-          last_7_days: "Siste 7 dager"
-          last_30_days: "Siste 30 dager"
-          custom: "Egendefinert"
         reports:
           trend_title: "%{percent} endring. Nåværende %{current}, var %{prev} i forrige periode."
           today: "I dag"
@@ -4711,9 +4677,6 @@ nb_NO:
             posts_count:
               one: "%{count} innlegg"
               other: "%{count} innlegg"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Logg for søk</a>'
-            disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
           sort_button: "Sorter etter %{column}"
           sort_ascending: "stigende"
           sort_descending: "synkende"
@@ -5542,7 +5505,6 @@ nb_NO:
         suspend_reason: "Begrunnelse"
         suspend_reason_title: "Bannlysningsgrunn"
         suspend_message: "E-postmelding"
-        suspend_message_placeholder: "Alternativt, kan du detaljere bannlysningen og det vil bli sendt per e-post til brukeren."
         suspended_by: "Utestengt av"
         silence_reason: "Grunn"
         silenced_by: "Dempet av"
@@ -5550,7 +5512,6 @@ nb_NO:
         silence_duration: "Hvor lenge skal brukeren dempes?"
         silence_reason_placeholder: "Årsak til demping"
         silence_message: "E-postmelding"
-        silence_message_placeholder: "(la stå tom for forvalgt melding)"
         suspended_until: "(til %{until})"
         cant_suspend: "Brukeren kan ikke utestenges."
         penalty_post_actions: "Hva ønsker du å gjøre med det assosierte innlegg"

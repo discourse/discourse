@@ -4367,6 +4367,9 @@ ug:
           one: "يازمىنى راستتىنلا بىرلەشتۈرەمسىز؟"
           other: "%{count} يازمىنى راستتىنلا بىرلەشتۈرەمسىز؟"
       revisions:
+        visibility:
+          hidden:
+            title: "يوشۇرۇن"
         locale:
           no_locale_set: "تىل تەڭشىكى يوق"
           locale_removed: "تىل چىقىرىۋېتىلدى"
@@ -4375,9 +4378,6 @@ ug:
           previous: "ئالدىنقى تۈزىتىش"
           next: "كېيىنكى تۈزىتىش"
           last: "ئاخىرقى تۈزىتىش"
-          hide: "تۈزىتىشنى يوشۇر"
-          show: "تۈزىتىشنى كۆرسەت"
-          destroy: "تۈزىتىشنى ئۆچۈر"
           destroy_confirm: "بۇ يازمىدىكى بارلىق تۈزىتىشنى راستتىنلا ئۆچۈرەمسىز؟ بۇ مەشغۇلات مەڭگۈلۈك."
           revert: "%{revision} تۈزىتىشكە ئەسلىگە قايتۇر"
           edit_wiki: "ۋىكى تەھرىر"
@@ -6111,33 +6111,16 @@ ug:
           anonymous_human: "نامسىز"
       dashboard:
         title: "باشقۇرۇش تاختا"
-        last_updated: "باشقۇرۇش تاختا يېڭىلاندى:"
-        discourse_last_updated: "Discourse يېڭىلاندى:"
         version: "نەشرى"
         up_to_date: "سىزنىڭ ئەڭ يېڭى نەشرى!"
         updates_available: "يېڭىلانما بار."
-        please_update: "يېڭىلاڭ!"
-        no_check_performed: "يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."
-        stale_data: "يېقىندا يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."
         version_check_pending: "يېقىندا يېڭىلىغان ئوخشايسىز. قالتىس!"
-        installed_version: "ئورنىتىلدى"
-        github: "GitHub"
-        problems_found: "نۆۋەتتىكى تور بېكىتىڭىزنىڭ تەڭشىكى ئاساسىدىكى بەزى مەسلىھەتلەر"
         dismiss_notice: "پەرۋا قىلما"
         new_features:
           title: "يېڭىلىق?"
           subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «مول بىلىم» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
           learn_more: "مول بىلىم…"
-        last_checked: "ئاخىرقى تەكشۈرۈلگەن ۋاقىت"
         refresh_problems: "يېڭىلا"
-        no_problems: "ھېچقانداق مەسىلە بايقالمىدى."
-        moderators: "رىياسەتچى:"
-        admins: "باشقۇرغۇچى:"
-        silenced: "سۈكۈتتە:"
-        suspended: "توختىتىلغان:"
-        private_messages_short: "ئۇچۇر"
-        private_messages_title: "ئۇچۇر"
-        mobile_title: "كۆچمە"
         space_used: "%{usedSize} ئىشلىتىلدى"
         space_used_and_free: "%{usedSize} (%{freeSize} بوش)"
         uploads: "يۈكلەنمە"
@@ -6146,20 +6129,7 @@ ug:
           one: "%{location} دىكى %{count} زاپاس"
           other: "%{location} دىكى %{count} زاپاس"
         lastest_backup: "ئاخىرقى: %{date}"
-        traffic_short: "ئېقىم"
-        traffic: "پىروگرامما تور تەلىپى"
-        page_views: "بەت كۆرۈلۈشى"
-        page_views_short: "بەت كۆرۈلۈشى"
-        show_traffic_report: "تەپسىلىي ئېقىم دوكلاتىنى كۆرسىتىدۇ"
-        community_health: جامائەت ساغلاملىقى
-        moderators_activity: رىياسەتچى پائالىيىتى
         whats_new_in_discourse: Discourse تا قانداق يېڭىلىقلار بار؟
-        activity_metrics: پائالىيەت كۆرسەتكۈچى
-        all_reports: "بارلىق دوكلات"
-        general_tab: "ئادەتتىكى"
-        moderation_tab: "رىياسەتچىلىك"
-        security_tab: "بىخەتەرلىك"
-        reports_tab: "دوكلات"
         report_filter_any: "خالىغان"
         disabled: چەكلەندى
         timeout_error: كەچۈرۈڭ ، سۈرۈشتۈرۈش بەك ئۇزۇن بولۇپ كەتتى، قىسقىراق ئارىلىقنى تاللاڭ
@@ -6199,7 +6169,6 @@ ug:
             title: "سىستېما"
             status: "ھالەت"
             discourse_updated: "Discourse يېڭىلاندى"
-            dashboard_updated: "باشقۇرۇش تاختا يېڭىلاندى"
         reports_section:
           header_action: "باشقۇرۇش"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
@@ -6214,9 +6183,6 @@ ug:
             anonymous: "نامسىز"
             crawlers: "ئۆمىلىگۈچ"
           crawler_learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
-        period:
-          last_3_months: "ئۆتكەن 3 ئاي"
-          custom: "ئىختىيارى"
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
           percent_change_tooltip: "%{percent} ئۆزگەردى."
@@ -6259,9 +6225,6 @@ ug:
               one: "%{count} يازما"
               other: "%{count} يازما"
             deselect: "%{name} نى تاللىما"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">ئىزدەش خاتىرىسى</a>'
-            disabled: 'ۋەزىيەت ئىزدەش دوكلاتى چەكلەنگەن. سانلىق مەلۇمات توپلاشتا <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">خاتىرە ئىزدەش سۈرۈشتۈرۈشى</a> قوزغىتىلىدۇ.'
           sort_button: "%{column} بويىچە تەرتىپلە"
           sort_ascending: "ئۆسكۈچى"
           sort_descending: "كېمەيگۈچى"
@@ -6441,7 +6404,6 @@ ug:
               list: ئاخىرقى يازما ۋە شەخسىي يازما تىزىمىنى كۆرسىتىدۇ. RSS نىمۇ قوللايدۇ.
             revisions:
               read: "ئاخىرقى ياكى بەلگىلەنگەن تۈزىتىلمىگە ئېرىشىدۇ."
-              modify: "تۈزىتىلمىنى يوشۇرۇپ، كۆرسىتىپ ياكى ئەسلىگە قايتۇرىدۇ."
               permanently_delete: "تۈزىتىلمىنى مەڭگۈلۈك ئۆچۈرىدۇ."
             tags:
               list: بەلگە تىزىمىنى كۆرسىتىدۇ.
@@ -7902,7 +7864,6 @@ ug:
           no_constructive_purpose: "جامائەت ئارىسىدا پەرقلىق قاراش پەيدا قىلغاندىن باشقا، بۇ ئىشلەتكۈچىنىڭ قىلمىشىنىڭ ھېچقانداق ئىجابىي مەقسىتى يوق"
           custom: "ئىختىيارى…"
         suspend_message: "ئېلخەت ئۇچۇرى"
-        suspend_message_placeholder: "تاللاشچان، توختىتىش ھەققىدە تېخىمۇ كۆپ ئۇچۇر تەمىنلەيدۇ ھەمدە ئۇنى ئىشلەتكۈچىگە ئېلخەتتە يوللايدۇ."
         suspended_by: "توختاتقۇچى"
         silence_reason: "سەۋەبى"
         silenced_by: "ئۈنسىزلىگۈچى"
@@ -7911,7 +7872,6 @@ ug:
         silence_reason_title: "ئۈنسىز قىلىش سەۋەبى"
         silence_reason_placeholder: "سۈكۈت قىلىش سەۋەبى"
         silence_message: "ئېلخەت ئۇچۇرى"
-        silence_message_placeholder: "(كۆڭۈلدىكى ئۇچۇرنى ئەۋەتىشتە بوش قالدۇرۇلىدۇ)"
         suspended_until: "(%{until} غىچە)"
         suspend_forever: "مەڭگۈلۈك توختات"
         cant_suspend: "بۇ ئىشلەتكۈچىنى توختاتقىلى بولمايدۇ."

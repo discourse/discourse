@@ -3807,14 +3807,14 @@ fa_IR:
           one: "آیا مطمئن هستید که می‌خواهید این نوشته‌ها را ادغام کنید؟"
           other: "آیا مطمئن هستید که می‌خواهید این %{count} نوشته را ادغام کنید؟"
       revisions:
+        visibility:
+          hidden:
+            title: "مخفی"
         controls:
           first: "بازبینی نخست"
           previous: "بازبینی قبلی"
           next: "بازبینی بعدی"
           last: "بازبینی آخر"
-          hide: "مخفی کردن بازبینی"
-          show: "نمایش بازبینی"
-          destroy: "ویرایش‌ها را حذف کنید"
           destroy_confirm: "آیا مطمئن هستید که می‌خواهید تمام ویرایش‌های این پست را حذف کنید؟ این عمل دائمی است."
           revert: "بازگشت به ویرایش %{revision}"
           edit_wiki: "ویرایش دانشنامه"
@@ -5182,33 +5182,16 @@ fa_IR:
           anonymous_human: "ناشناس"
       dashboard:
         title: "پیشخوان"
-        last_updated: "داشبورد بروزرسانی شد:"
-        discourse_last_updated: "دیسکورس بروزرسانی شد:"
         version: "نسخه"
         up_to_date: "شما به روز هستید!"
         updates_available: "بروز رسانی در درسترس است."
-        please_update: "لطفا ارتقا دهید!"
-        no_check_performed: "بررسی برای بروزرسانی انجام نشد. از اجرای sidekiq اطمینان حاصل کنید."
-        stale_data: "بررسی برای بروزرسانی اخیراً انجام نگرفته است. از اجرای sidekiq اطمینان حاصل کنید."
         version_check_pending: "گویا به‌تازگی به‌روز کرده‌اید. عالیه!"
-        installed_version: "نصب"
-        github: "گیت‌هاب"
-        problems_found: "چند توصیه بر اساس تنظیمات فعلی سایت شما"
         dismiss_notice: "چشم پوشی"
         new_features:
           title: "چه چیزی جدید شده؟"
           subtitle: "ما همیشه در حال انتشار ویژگی ها و بهبودهای جدید هستیم. این صفحه نکات برجسته را پوشش می‌دهد، اما می‌توانید روی «بیشتر بدانید» کلیک کنید تا یادداشت‌های انتشار گسترده را ببینید."
           learn_more: "بیشتر بدانید..."
-        last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
-        no_problems: "هیچ مشکلات پیدا نشد."
-        moderators: "ناظران:"
-        admins: "مدیران ارشد:"
-        silenced: "ساکت شده"
-        suspended: "تعلیق شده:"
-        private_messages_short: "پیام‌ها"
-        private_messages_title: "پیام‌ها"
-        mobile_title: "موبایل"
         space_used: "%{usedSize} استفاده شده"
         space_used_and_free: "%{usedSize} (%{freeSize} آزاد)"
         uploads: "بارگذاری‌ها"
@@ -5217,20 +5200,7 @@ fa_IR:
           one: "%{count} پشتیبانی در %{location}"
           other: "%{count} پشتیبانی در %{location}"
         lastest_backup: "جدیدترین: %{date}"
-        traffic_short: "ترافیک"
-        traffic: "درخواست های نرم افزار وب"
-        page_views: "بازدید"
-        page_views_short: "بازدید"
-        show_traffic_report: "نمایش دقیق گزارش ترافیک"
-        community_health: سلامتی انجمن
-        moderators_activity: فعالیت ناظران
         whats_new_in_discourse: چه چیز‌هایی در دیسکورس جدید است؟
-        activity_metrics: معیارهای فعالیت
-        all_reports: "تمامی گزارشات"
-        general_tab: "عمومی"
-        moderation_tab: "نظارت"
-        security_tab: "امنیت"
-        reports_tab: "گزارشات"
         report_filter_any: "هر"
         disabled: غیرفعال
         timeout_error: با عرض پوزش، پرس و جو خیلی طول می کشد، لطفا فاصله کوتاه تری را انتخاب کنید
@@ -5269,7 +5239,6 @@ fa_IR:
             title: "سیستم"
             status: "وضعیت"
             discourse_updated: "دیسکورس بروزرسانی شد"
-            dashboard_updated: "داشبورد بروزرسانی شد"
         reports_section:
           header_action: "مدیریت"
           modal:
@@ -5281,10 +5250,6 @@ fa_IR:
             anonymous: "ناشناس"
             crawlers: "خزنده‌ها"
           crawler_learn_more: "بیشتر بدانید"
-        period:
-          last_7_days: "۷ روز گذشته"
-          last_30_days: "۳۰ روز گذشته"
-          custom: "سفارشی"
         reports:
           percent_change_tooltip: "%{percent} تغییر."
           percent_change_tooltip_previous_value:
@@ -5325,9 +5290,6 @@ fa_IR:
             posts_count:
               one: "%{count} فرسته"
               other: "%{count} نوشته"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">سوابق جستجو</a>'
-            disabled: 'گزارش جستجوی پرطرفدار غیرفعال است. برای جمع‌آوری داده‌ها، <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ درخواست‌های جستجو</a> را فعال کنید.'
           sort_button: "مرتب‌سازی براساس %{column}"
           sort_ascending: "صعودی"
           sort_descending: "نزولی"
@@ -5502,7 +5464,6 @@ fa_IR:
               list: لیست آخرین پست ها و پست های خصوصی. RSS نیز پشتیبانی می شود.
             revisions:
               read: "آخرین نسخه یا یک ویرایش خاص را دریافت کنید."
-              modify: "پنهان کردن، نمایش یا بازگرداندن نسخه‌ها."
               permanently_delete: "یک نسخه را برای همیشه حذف کنید."
             tags:
               list: فهرست برچسب‌ها.
@@ -6780,7 +6741,6 @@ fa_IR:
           no_constructive_purpose: "هیچ هدف سازنده‌ای از اقدامات آنها جز ایجاد اختلاف در انجمن وجود ندارد"
           custom: "سفارشی…"
         suspend_message: "پیام ایمیل"
-        suspend_message_placeholder: "به صورت اختیاری اطلاعات بیشتری درمورد تعلیق ارائه دهید تا به رایانامه کاربر ارسال شود."
         suspended_by: "تعلیق شده توسط"
         silence_reason: "دلیل"
         silenced_by: "ساکت شده توسط"
@@ -6789,7 +6749,6 @@ fa_IR:
         silence_reason_title: "دلیل سکوت"
         silence_reason_placeholder: "دلیل سکوت"
         silence_message: "پیام ایمیل"
-        silence_message_placeholder: "(برای ارسال پیام پیش فرض، خالی بگذارید)"
         suspended_until: "(تا %{until})"
         suspend_forever: "تعلیق برای همیشه"
         cant_suspend: "این کاربر نمی‌تواند معلق شود."

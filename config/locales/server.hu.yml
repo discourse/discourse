@@ -2433,9 +2433,6 @@ hu:
     enable_user_status: "A felhasználók egyéni állapotüzenetet állíthatnak be (emoji + leírás)."
     enable_user_tips: "Új felhasználói tippek engedélyezése, amelyek ismertetik a legfontosabb funkciókat a felhasználók számára."
     short_title: "A rövid cím a felhasználó kezdőképernyőjén, az alkalmazásindítóban vagy más olyan helyeken jelenik meg, ahol korlátozott a rendelkezésre álló hely. Legfeljebb 12 karakterből állhat. Vegye figyelembe, hogy a cím módosítása után a PWA-felhasználók egy értesítést kaphatnak, amely az alkalmazás frissítésére vagy eltávolítására kéri őket."
-    dashboard_hidden_reports: "Engedélyezze a megadott jelentések elrejtését a vezérlőpulton."
-    dashboard_visible_tabs: "Válassza ki, hogy a vezérlőpult mely lapjai legyenek láthatóak."
-    dashboard_general_tab_activity_metrics: "Válassza ki azokat a jelentéseket, amelyek aktivitási mutatóként jelenjenek meg az általános fülön."
     gravatar_enabled: "A <a href='https://gravatar.com/'>Gravatar</a> szolgáltatás használata a felhasználói avatarokhoz. Ennek letiltása megakadályozza, hogy a felhasználók Gravatarra váltsanak, de nem érinti azokat a felhasználókat, akik már jelenleg is azt használják."
     gravatar_name: "Adja meg a Gravatar szolgáltató nevét. Ezt a nevet általában a Gravatar avatarokat biztosító forrás azonosítására használják a webhelyen."
     gravatar_base_url: "Adja meg a Gravatar szolgáltató API-jának elérési URL-jét. Ez a beállítás kulcsfontosságú az e-mail címek Gravatar URL-é alakításához, ahol az avatar képek tárolva vannak."
@@ -4715,6 +4712,19 @@ hu:
     graph_title: "Keresés száma"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Naponta"
+        every_weekday: "Minden hétköznap"
+        ordinals:
+          last: "legutóbbi"
+        weekdays:
+          sunday: "Vasárnap"
+          monday: "Hétfő"
+          tuesday: "Kedd"
+          wednesday: "Szerda"
+          thursday: "Csütörtök"
+          friday: "Péntek"
+          saturday: "Szombat"
       user_joined_community: "Csatlakozott %{date}"
     google_meet:
       meeting_code: "Kód:"
