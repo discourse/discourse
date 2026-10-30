@@ -351,6 +351,8 @@ de:
         topic_id: "Themen-ID"
     discourse_post_event:
       new_event: "Neues Ereignis"
+      onebox:
+        all_day: "Ganztägig"
       notifications:
         before_event_reminder: "Ein Ereignis beginnt in Kürze"
         after_event_reminder: "Ein Ereignis wurde beendet"

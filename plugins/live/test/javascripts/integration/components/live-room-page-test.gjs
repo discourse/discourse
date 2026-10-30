@@ -60,6 +60,10 @@ class LiveWebrtcStub extends Service {
     return false;
   }
 
+  isRecordingLocally() {
+    return false;
+  }
+
   setWatching() {}
   join() {}
   leave() {}

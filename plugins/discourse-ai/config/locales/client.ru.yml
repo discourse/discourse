@@ -1141,10 +1141,7 @@ ru:
           scroll_to_bottom: "Прокрутка вниз"
           editing_post: "Редактирование поста"
       sentiments:
-        dashboard:
-          title: "Настроение"
         sidebar:
-          overview: "Обзор настроений"
           analysis: "Анализ настроений"
         sentiment_analysis:
           share_chart: "Копировать ссылку на диаграмму"

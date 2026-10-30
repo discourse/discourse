@@ -15,5 +15,13 @@ module DiscourseWorkflows
     def first_post_id
       object.first_post&.id
     end
+
+    def include_fancy_title_localized?
+      true
+    end
+
+    def include_locale?
+      true
+    end
   end
 end

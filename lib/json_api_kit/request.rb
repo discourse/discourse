@@ -22,9 +22,13 @@ module JsonApiKit
 
     def including = @including ||= Paths.new(params[:include])
 
-    def for_sideload(paths) = { fields:, include: paths }
+    def for_sideload(paths, through:)
+      { fields:, include: paths }.merge(
+        params.fetch(:forwarded_filters, {}).fetch(through.to_s, {}).symbolize_keys,
+      )
+    end
 
-    def page = @page ||= Page::Requested.for(anchoring:, **paging)
+    def page = page_params
 
     def anchoring = @anchoring ||= Anchoring.for(page_params[:anchor])
 
@@ -33,17 +37,5 @@ module JsonApiKit
     private
 
     attr_reader :params, :page_params
-
-    def paging
-      page_params
-        .except(:item_cursors, :anchor)
-        .merge(after: cursor(:after), before: cursor(:before))
-        .compact
-    end
-
-    def cursor(name)
-      return unless page_params[name]
-      Pagination::Cursor.parse(page_params[name])
-    end
   end
 end

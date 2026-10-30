@@ -42,7 +42,10 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-dashboard-report-renderer",
+  "admin-new-bot-options",
+  "admin-onboarding-banner-location",
   "admin-onboarding-start-posting-options",
+  "admin-onboarding-steps",
   "admin-plugin-icon",
   "admin-reports-show-query-params",
   "admin-theme-card-show-full-controls",

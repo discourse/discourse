@@ -477,8 +477,11 @@ RSpec.describe Admin::ApiController do
         get "/admin/api/keys/scopes.json"
 
         scopes = response.parsed_body["scopes"]
+        # Plugins loaded in the same run add their own resources.
+        plugin_resources =
+          DiscoursePluginRegistry.api_key_scope_mappings.flat_map { it.keys.map(&:to_s) }
 
-        expect(scopes.keys).to contain_exactly(
+        expect(scopes.keys - plugin_resources).to contain_exactly(
           "topics",
           "users",
           "email",

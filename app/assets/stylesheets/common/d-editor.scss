@@ -315,14 +315,12 @@
 
 .d-editor-button-bar__wrap {
   position: relative;
+  flex-shrink: 0;
   min-width: 0;
   overflow: clip;
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
-
-  :where(body:not(.uc-enable-composer-redesign) &) {
-    margin-inline: var(--space-2);
-  }
+  margin-inline: var(--space-2);
 }
 
 .d-editor-button-bar {

@@ -2,7 +2,7 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "15"
+  EMOJI_VERSION = "16"
 
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
@@ -13,7 +13,7 @@ class Emoji
 
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable, :group, :created_by
+  attr_accessor :name, :url, :tonable, :animated, :group, :created_by
 
   # The cached `url` is the raw upload/asset URL. CDN conversion is applied
   # lazily here (and in EmojiSerializer) so that changing the S3/asset CDN
@@ -81,6 +81,14 @@ class Emoji
     tonable_emojis_db
   end
 
+  # Only some standard emojis are animated; those that are, are in every tone.
+  def self.animated_emojis
+    @animated_emojis ||=
+      Dir
+        .glob("*.avif", base: File.join(DiscourseEmojis.path_for_emojis, "noto_animated"))
+        .to_set { File.basename(_1, ".avif") }
+  end
+
   def self.normalize_name(name)
     match = name.match(/\A:?(.+?)(?::t([1-6]))?:?\z/)
     [match[1], match[2]&.to_i]
@@ -132,6 +140,7 @@ class Emoji
     Emoji.new.tap do |e|
       e.name = name
       e.tonable = Emoji.tonable_emojis.include?(name)
+      e.animated = Emoji.animated_emojis.include?(name)
       e.url = Emoji.url_for(filename)
       e.group = group
     end

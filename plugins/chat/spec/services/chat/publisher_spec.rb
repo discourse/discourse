@@ -273,6 +273,57 @@ describe Chat::Publisher do
         )
       end
 
+      [false, true].each do |enabled|
+        it "bounds logged-in category delivery by chat eligibility with granular permissions #{enabled}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+          category = Fabricate(:category, permissions: { logged_in_users: :full })
+          restricted_channel = Fabricate(:category_channel, chatable: category)
+          message = Fabricate(:chat_message, chat_channel: restricted_channel)
+          chat_group = Fabricate(:group)
+          SiteSetting.chat_allowed_groups = chat_group.id
+          user = Fabricate(:user)
+          user_group_ids = [
+            Group::AUTO_GROUPS[:trust_level_0],
+            Group::AUTO_GROUPS[:logged_in_users],
+          ]
+
+          published_message =
+            MessageBus
+              .track_publish(described_class.root_message_bus_channel(restricted_channel.id)) do
+                described_class.publish_new!(restricted_channel, message, staged_id)
+              end
+              .first
+
+          expect(published_message.group_ids).to contain_exactly(
+            *Chat::CategoryChannel::STAFF_GROUP_IDS.map do |group_id|
+              "chat-restricted-category-group-#{group_id}"
+            end,
+            "chat-restricted-category-group-#{Group::AUTO_GROUPS[:logged_in_users]}",
+          )
+          expect(
+            MessageBus::Client.new(
+              client_id: "chat-disallowed",
+              user_id: user.id,
+              group_ids: Chat.message_bus_group_ids_for(user_group_ids),
+              message_bus: MessageBus,
+            ).allowed?(published_message),
+          ).to eq(false)
+          expect(
+            MessageBus::Client.new(
+              client_id: "chat-allowed",
+              user_id: user.id,
+              group_ids: Chat.message_bus_group_ids_for(user_group_ids + [chat_group.id]),
+              message_bus: MessageBus,
+            ).allowed?(published_message),
+          ).to eq(true)
+          expect(
+            MessageBus::Client.new(client_id: "anonymous", message_bus: MessageBus).allowed?(
+              published_message,
+            ),
+          ).to eq(false)
+        end
+      end
+
       it "publishes to trust level 0 when chat is allowed for everyone" do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
 

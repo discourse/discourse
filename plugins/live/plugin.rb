@@ -150,6 +150,8 @@ after_initialize do
     include_condition: -> { scope.can_start_live_call? },
   ) { scope.can_call_live_user?(object) }
 
+  add_to_serializer(:current_user, :live_can_record_locally) { scope.can_record_live_locally? }
+
   # Lets the client decide whether to render the rooms sidebar for anonymous
   # visitors without exposing the configured group ids.
   add_to_serializer(:site, :live_public_access) { scope.live_public_access? }
@@ -176,6 +178,7 @@ after_initialize do
   end
 
   add_to_serializer(:site, :live_reaction_emojis) { Live::Reactions.emojis }
+  add_to_serializer(:site, :live_reactions_allow_any_emoji) { Live::Reactions.allow_any_emoji? }
 
   Live::DefaultRoomSeeder.ensure! if SiteSetting.live_enabled?
   Live::AgentBot.ensure! if SiteSetting.live_enabled?

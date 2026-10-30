@@ -65,13 +65,13 @@ RSpec.describe Dsa::SubmitNotice do
     context "with verification fields" do
       subject(:contract) { described_class.new(notice:, token: "a" * 64) }
 
-      it { is_expected.to validate_presence_of(:token) }
+      it { is_expected.to allow_values(nil, "").for(:token) }
       it { is_expected.to validate_length_of(:token).is_equal_to(64) }
     end
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
     fab!(:group)
@@ -83,16 +83,68 @@ RSpec.describe Dsa::SubmitNotice do
       pending_token
     end
     let(:params) { { notice:, token: } }
+    let(:dependencies) { { guardian: Guardian.new } }
 
     before do
       SiteSetting.dsa_notice_group = group.id.to_s
       group.add(admin)
     end
 
-    context "when the token is invalid" do
-      let(:token) { nil }
+    context "when the token is malformed" do
+      let(:token) { "invalid" }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when an anonymous reporter has no verification token" do
+      let(:token) { nil }
+
+      it { is_expected.to fail_to_find_a_model(:verification) }
+    end
+
+    context "when a signed in reporter uses their confirmed account email" do
+      fab!(:reporter, :user)
+
+      let(:dependencies) { { guardian: reporter.guardian } }
+      let(:token) { nil }
+
+      before do
+        reporter.activate
+        notice[:email] = " #{reporter.email.upcase} "
+      end
+
+      it "accepts the report without an email verification token" do
+        expect(result).to run_successfully
+        expect(result.notice.email).to eq(reporter.email)
+      end
+    end
+
+    context "when a signed in reporter uses another email without a token" do
+      fab!(:reporter, :user)
+
+      let(:dependencies) { { guardian: reporter.guardian } }
+      let(:token) { nil }
+
+      before { reporter.activate }
+
+      it { is_expected.to fail_to_find_a_model(:verification) }
+    end
+
+    context "when an anonymous mode reporter uses their shadow account email without a token" do
+      fab!(:reporter) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+      let(:dependencies) { { guardian: shadow.guardian } }
+      let(:shadow) { AnonymousShadowCreator.get(reporter) }
+      let(:token) { nil }
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+        notice[:email] = shadow.email
+        SiteSetting.allow_anonymous_mode = false
+      end
+
+      it { is_expected.to fail_to_find_a_model(:verification) }
     end
 
     context "when the verification has expired" do
@@ -112,7 +164,7 @@ RSpec.describe Dsa::SubmitNotice do
     end
 
     context "when the verification has already been used" do
-      before { described_class.call(params:) }
+      before { described_class.call(params:, **dependencies) }
 
       it "creates no duplicate notice" do
         expect { result }.not_to change(Dsa::Notice, :count)

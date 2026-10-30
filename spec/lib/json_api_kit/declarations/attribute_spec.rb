@@ -73,20 +73,4 @@ RSpec.describe JsonApiKit::Declarations::Attribute do
       end
     end
   end
-
-  describe "#column_for" do
-    subject(:column) { attribute.column_for(JsonApiKit::Schema.new(Topic)) }
-
-    it "returns the column the field reads" do
-      expect(column).to eq(:title)
-    end
-
-    context "when the attribute declares a value of its own" do
-      subject(:attribute) { described_class.new(:slug) { |record| record.title.parameterize } }
-
-      it "returns no column" do
-        expect(column).to be_nil
-      end
-    end
-  end
 end

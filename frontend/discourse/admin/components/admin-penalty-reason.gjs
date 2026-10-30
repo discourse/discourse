@@ -98,7 +98,13 @@ export default class AdminPenaltyReason extends Component {
       <label>{{i18n "admin.user.suspend_message"}}</label>
       <textarea
         class="suspend-message"
-        placeholder={{i18n "admin.user.suspend_message_placeholder"}}
+        placeholder={{i18n
+          (if
+            (eq @penaltyType "silence")
+            "admin.user.silence_message_placeholder"
+            "admin.user.suspend_message_placeholder"
+          )
+        }}
         value={{@message}}
         {{on "input" (withEventValue @onChangeMessage)}}
       />

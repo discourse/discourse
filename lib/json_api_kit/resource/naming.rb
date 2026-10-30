@@ -31,7 +31,7 @@ module JsonApiKit
           self.declared_model = declaration
         end
 
-        def schema = Schema.new(model)
+        def schema = adapter.schema(self)
 
         def type(declaration = nil)
           return declared_type || inferred_type unless declaration
@@ -58,15 +58,17 @@ module JsonApiKit
         end
 
         def no_model(model)
-          "#{self}: no model is named #{model.to_s.camelize}, declare it with `model SomeModel`"
+          "Cannot resolve model #{model.to_s.camelize} for #{self}. Declare `model SomeModel`."
         end
 
         def nothing_to_infer_from
-          "#{inspect} is not named after what it exposes: declare `model SomeModel` and `type :things`"
+          "Cannot infer a model or resource type from #{inspect}. " \
+            "Declare `model SomeModel` and `type :things`."
         end
       end
 
-      delegate :model, :schema, :type, :namespace, to: :class
+      delegate :model, :type, :namespace, to: :class
+      delegate :schema, to: :adapter
     end
   end
 end

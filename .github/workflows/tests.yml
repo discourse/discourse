@@ -15,8 +15,8 @@ on:
       - release/*
 
 concurrency:
-  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -361,7 +361,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
       - name: Prepare JS deprecation reports
         if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
@@ -415,7 +415,7 @@ jobs:
 
   deprecation-report:
     name: JS deprecation report
-    if: always() && github.repository == 'discourse/discourse' && needs.build.result != 'skipped'
+    if: ${{ !cancelled() && github.repository == 'discourse/discourse' && needs.build.result != 'skipped' }}
     runs-on: ubuntu-latest
     needs: build
     permissions:

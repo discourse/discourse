@@ -122,12 +122,15 @@ en:
       node_unavailable:
         requires_ai: "Requires the AI plugin to be enabled"
         requires_decision_model: "Requires a decision model"
+        requires_ai_translation: "Requires AI translation to be configured"
       nodes:
         "action:ai_agent": "AI Agent"
         "action:classify": "Classify"
+        "trigger:post_locale_detected": "Post language detected"
       node_descriptions:
         "action:ai_agent": "Run an AI agent to process data or generate content"
         "action:classify": "Ask a decision model questions about each item"
+        "trigger:post_locale_detected": "Fires when the language of a new or edited post is detected"
     discourse_automation:
       scriptables:
         llm_report:
@@ -901,6 +904,9 @@ en:
             finite: "Payloads kept %{detailed} days, summaries %{summary} days, then deleted"
 
       ai_agent:
+        new_bot_option:
+          label: "AI agent"
+          description: "Creates the bot together with its language model, prompt, tools, and permissions."
         ai_tools: "Tools"
         native_tools_help: "Provider-native tools, such as web search or page fetch, appear when \"Always use default language model\" is enabled and the selected default language model supports them."
         mcp_servers: "MCP servers"
@@ -1872,10 +1878,7 @@ en:
           streaming_below: "New content below"
           editing_post: "Editing post"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Sentiment overview"
           analysis: "Sentiment analysis"
         sentiment_analysis:
           share_chart: "Copy link to chart"

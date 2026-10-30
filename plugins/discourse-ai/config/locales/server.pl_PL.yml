@@ -183,6 +183,7 @@ pl_PL:
     ai_ask_ai_keyword_search_enabled: "Przeszukaj forum według słów kluczowych, aby znaleźć odpowiedzi na pytanie Zapytaj AI."
     ai_ask_ai_semantic_search_enabled: "Przeszukaj forum semantycznie, aby znaleźć odpowiedzi na pytanie Zapytaj AI. Wymaga osadzenia."
     ai_ask_ai_search_categories: "Przeszukuj tylko te kategorie i ich podkategorie, aby znaleźć odpowiedzi na pytania Zapytaj AI. Wiadomości osobiste nadal będą przeszukiwane, gdy o nie zapytasz. Pozostaw puste, aby przeszukać wszystkie kategorie."
+    ai_ask_ai_endorsed_reply_groups: "Udzielaj też funkcji Zapytaj AI jednej odpowiedzi z każdego tematu bez zaakceptowanej odpowiedzi. Odpowiedzi polubione przez autora tematu są wyświetlane jako pierwsze, następnie odpowiedzi autora, które polubili inni, a na końcu odpowiedzi polubione przez członków tych grup. Pracownicy społeczności, w których swobodnie lajkują posty, mogą chcieć zawęzić grupę. Pozostaw puste pole, aby wyłączyć tę opcję."
     ai_ask_ai_search_max_age_days: "Szukaj odpowiedzi na Zapytaj AI tylko we wpisach utworzonych w ciągu tej liczby dni. Ustaw 0, aby wyszukiwać posty z dowolnego wieku."
     ai_ask_ai_external_sources: "Niestandardowe narzędzia Zapytaj AI przeszukują forum równolegle z nim. Każde z nich jest wywoływane wraz z zapytaniem użytkownika i musi zwrócić listę wyników, każdy z tytułem, adresem URL http(s) oraz opcjonalnie opisem, treścią i adresem published_at. Zapytania są wysyłane do wszystkich usług, do których wywołują te narzędzia."
     ai_ask_ai_external_sources_timeout: "Sekundy, gdy Zapytaj AI czeka na wszystkie zewnętrzne źródła, przeszukane jednocześnie, zanim odpowie, nie uruchamiając tych, które są już aktywne. Wlicza się to do 20 sekund, które może zająć zapytanie Zapytaj AI, więc dłuższe oczekiwanie pozostawia mniej czasu na napisanie odpowiedzi."
@@ -500,6 +501,10 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      sources:
+        historical: "AI Discourse"
+        spam_detection: "Wykrywanie spamu"
+        plugin_disabled: "Wtyczka AI wyłączona"
       search_discourse_navigation:
         not_allowed: "Nie masz uprawnień do wyszukiwania w celach administracyjnych."
         invalid_query: "Wprowadź zapytanie wyszukiwania składające się z 1 do %{max} znaków."

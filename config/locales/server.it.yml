@@ -2369,9 +2369,6 @@ it:
     sitemap_page_size: "Numero di URL da includere in ciascuna pagina della mappa del sito. Massimo 50.000"
     enable_user_status: "Consenti agli utenti di impostare un messaggio di stato personalizzato (emoji + descrizione)."
     enable_user_tips: "Abilita i nuovi suggerimenti per utenti che descrivono le funzionalità chiave per gli utenti"
-    dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
-    dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
-    dashboard_general_tab_activity_metrics: "Scegli i report da visualizzare come metriche di attività nella scheda generale."
     gravatar_name: "Specifica il nome del fornitore di servizi Gravatar. Questo nome serve generalmente a identificare la sorgente che fornisce al sito gli avatar Gravatar."
     gravatar_base_url: "Definisci l'URL di accesso all'API del provider di Gravatar. Questa impostazione è necessaria per convertire gli indirizzi email negli URL di Gravatar presso cui verranno archiviate le immagini degli avatar."
     share_quote_buttons: "Determina quali elementi appaiono nel widget di condivisione citazioni e in quale ordine."
@@ -4448,6 +4445,19 @@ it:
     graph_title: "Conteggio Ricerche"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Ogni giorno"
+        every_weekday: "Ogni giorno feriale"
+        ordinals:
+          last: "ultimo"
+        weekdays:
+          sunday: "domenica"
+          monday: "lunedi"
+          tuesday: "martedì"
+          wednesday: "mercoledì"
+          thursday: "giovedi"
+          friday: "venerdì"
+          saturday: "sabato"
       user_joined_community: "Iscrizione: %{date}"
     google_meet:
       meeting_code: "Codice:"

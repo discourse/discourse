@@ -61,6 +61,14 @@ en:
             declined: "Last right-click: declined, the browser took it"
         multi_select:
           title: "Multi select"
+          choose_item: "Choose an item"
+          create_item: "Create an item"
+          footer_empty_title: "Footer with no results"
+          footer_empty_description: "The footer action remains available when there are no matching results."
+          footer_empty_try_this: "Open the menu and search for an item. The footer stays visible."
+          footer_scroll_title: "Footer with a long result list"
+          footer_scroll_description: "The result list scrolls independently from the footer action."
+          footer_scroll_try_this: "Open the menu and scroll the results. The footer remains in place."
         reorderable_list:
           title: "Reorderable list"
           groups:

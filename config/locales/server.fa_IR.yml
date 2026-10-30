@@ -2849,6 +2849,19 @@ fa_IR:
                 label: "خصوصی"
   onebox:
     discourse:
+      recurrence:
+        every_day: "هر روز"
+        every_weekday: "هر هفته"
+        ordinals:
+          last: "آخرین"
+        weekdays:
+          sunday: "یک‌شنبه"
+          monday: "دوشنبه"
+          tuesday: "سه‌شنبه"
+          wednesday: "چهار شنبه"
+          thursday: "پنج‌شنبه"
+          friday: "جمعه"
+          saturday: "شنبه"
       user_joined_community: "در %{date} عضو شدن"
     google_meet:
       meeting_code: "کد:"

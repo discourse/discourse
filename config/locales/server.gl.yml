@@ -1746,9 +1746,6 @@ gl:
     push_notifications_icon: "A icona da insignia aparece na esquina da notificación. Recoméndase un PNG monocromático de 96x96 con transparencia."
     base_font: "Tipo de letra base para empregar na maioría dos textos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--font-family»."
     heading_font: "Tipo de letra para usar nos títulos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--heading-font-family»."
-    dashboard_hidden_reports: "Permitir agochar os informes específicos do panel de control."
-    dashboard_visible_tabs: "Escolla que lapelas do panel son visíbeis."
-    dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
     share_quote_buttons: "Determinar que elementos aparecen no trebello de compartir cota e a súa orde."
     share_quote_visibility: "Determine cando amosar os botóns de compartir cota: nunca, só para usuarios anónimos ou para todos os usuarios. "
     errors:
@@ -3445,6 +3442,19 @@ gl:
   search_logs:
     graph_title: "Análise das buscas"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Todos os días"
+        ordinals:
+          last: "último"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Luns"
+          tuesday: "Martes"
+          wednesday: "Mércores"
+          thursday: "Xoves"
+          friday: "Venres"
+          saturday: "Sábado"
     google_meet:
       meeting_code: "Código:"
     github:

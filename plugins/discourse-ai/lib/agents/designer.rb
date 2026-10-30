@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class Designer < Agent
+      def thinking_effort
+        "low"
+      end
+
       def tools
         # Only include image tools if custom image generation tools are configured
         if Tools::Tool.available_custom_image_tools.present?

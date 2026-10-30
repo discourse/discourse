@@ -14,14 +14,14 @@ RSpec.describe JsonApiKit::Linkage::ToMany do
   end
   let(:record) do
     JsonApiKit::Record.new(
-      JsonApiKit::Pagination::Row.new(record: topic, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic, segment: nil),
       resource.fields(guardian:),
       type: "topics",
     )
   end
   let(:records) { [record] }
-  let(:next_page) { JsonApiKit::Pagination::Cursor.new([2]) }
-  let(:previous_page) { JsonApiKit::Pagination::Cursor.new([1]) }
+  let(:next_page) { JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new([2]) }
+  let(:previous_page) { JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new([1]) }
   let(:page) { JsonApiKit::Records::Page.new(JsonApiKit::Records.new(records), next_page) }
 
   describe "#collapse" do

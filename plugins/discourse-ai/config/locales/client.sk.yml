@@ -933,10 +933,7 @@ sk:
           uploads_in_progress: "Nemožno odoslať, keď prebieha nahrávanie"
           scroll_to_bottom: "Prejdite nadol"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Prehľad nálad"
           analysis: "Analýza nálad"
         sentiment_analysis:
           share_chart: "Skopírujte odkaz na graf"

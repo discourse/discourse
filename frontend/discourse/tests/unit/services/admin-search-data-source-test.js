@@ -321,7 +321,7 @@ module(
         name: "root",
       };
       let link = {
-        route: "admin.dashboard.general",
+        route: "admin.dashboard",
       };
       let formatter = new PageLinkFormatter(this.router, navMapSection, link);
       assert.deepEqual(formatter.format().url, "/admin");
@@ -393,7 +393,7 @@ module(
       let link = {
         label: "admin.config.flags.title",
         description: "admin.config.flags.header_description",
-        route: "admin.dashboard.general",
+        route: "admin.dashboard",
         keywords: "admin.config.flags.keywords",
       };
 

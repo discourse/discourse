@@ -6,6 +6,7 @@
 }
 
 @mixin onebox-shadow($thickness) {
+  $thickness: var(--onebox-shadow-width, #{$thickness});
   border: 0;
   margin-inline: $thickness;
   box-shadow:
@@ -172,7 +173,12 @@ aside.onebox {
       color: var(--tertiary);
     }
 
-    img:not(.avatar, .onebox-avatar-inline, .emoji) {
+    img:not(
+      .avatar,
+      .onebox-avatar-inline,
+      .emoji,
+      .discourse-event-onebox__image
+    ) {
       max-height: 170px;
       max-width: 20%;
       height: auto;
@@ -327,6 +333,226 @@ aside.onebox {
         content: svg-uri(
           '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
         );
+      }
+    }
+  }
+}
+
+// The color, ratio and height are set client-side from the image when they're known. The frame is
+// 16:9 at most, but never taller than the image itself, so small or very wide images don't sit in
+// large bars.
+@mixin letterboxed-event-image {
+  background: var(--event-onebox-image-color, var(--primary-very-low));
+  height: min(
+    calc(100cqi * 9 / 16),
+    calc(100cqi * var(--event-onebox-image-ratio, 1)),
+    var(--event-onebox-image-height, 100cqi)
+  );
+
+  // Shrinks images that don't fit, but never enlarges small ones
+  object-fit: scale-down;
+  object-position: center;
+}
+
+aside.onebox:has(.discourse-event-onebox) {
+  container: event-onebox / inline-size;
+}
+
+.discourse-event-onebox {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-4);
+
+  &__media {
+    align-self: start;
+    height: 5rem;
+    overflow: hidden;
+    position: relative;
+    width: 5rem;
+
+    &:not(:has(.discourse-event-onebox__image)) {
+      height: auto;
+      width: auto;
+
+      .discourse-event-onebox__date {
+        position: static;
+      }
+    }
+  }
+
+  &__image.thumbnail {
+    float: none;
+    height: 100%;
+    margin: 0;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+
+    // Only affects images taller than their box, where the subject tends to sit high
+    object-position: 50% 0;
+    width: 100%;
+  }
+
+  &__date {
+    align-items: center;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    display: flex;
+    flex-direction: column;
+    height: 3em;
+    inset: 0;
+    justify-content: center;
+    margin: auto;
+    padding: 0;
+    position: absolute;
+    width: 3em;
+  }
+
+  &__month {
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  &__day {
+    font-size: var(--font-up-1);
+    font-weight: 400;
+    text-align: center;
+  }
+
+  &__content {
+    min-width: 0;
+  }
+
+  &__time,
+  &__recurrence {
+    align-items: center;
+    display: flex;
+    gap: var(--space-2);
+
+    .d-icon {
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
+      flex: 0 0 auto;
+    }
+  }
+
+  &__time {
+    margin-block: var(--space-3) var(--space-1);
+  }
+
+  &__recurrence {
+    margin-block-end: var(--space-1);
+  }
+
+  &__description {
+    align-items: flex-start;
+    display: flex;
+    gap: var(--space-2);
+    overflow-wrap: anywhere;
+
+    .d-icon {
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
+      flex: 0 0 auto;
+      margin-top: 0.2em;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &.--banner-image {
+    container-type: inline-size;
+
+    // Lets the image span the full width above the date and content
+    .discourse-event-onebox__media {
+      display: contents;
+    }
+
+    // Matches the event widget's 16:9 image. The height is derived from the width rather than
+    // set with aspect-ratio, which cooked images carry inline from their dimensions.
+    .discourse-event-onebox__image.thumbnail {
+      border-radius: var(--d-border-radius);
+      grid-column: 1 / -1;
+      height: calc(100cqi * 9 / 16);
+    }
+
+    .discourse-event-onebox__date {
+      margin: 0;
+      position: static;
+    }
+  }
+
+  &.--letterboxed-image .discourse-event-onebox__image.thumbnail {
+    @include letterboxed-event-image;
+  }
+
+  &.--portrait-image {
+    // Flattens both wrappers so the date can sit beside the title while the image keeps its own column
+    grid-template:
+      "image date title" auto
+      "image time time" auto
+      "image recurrence recurrence" auto
+      "image description description" auto
+      "image . ." 1fr / 8rem auto minmax(0, 1fr);
+    row-gap: 0;
+
+    .discourse-event-onebox__media,
+    .discourse-event-onebox__content {
+      display: contents;
+    }
+
+    // Shows a 2:3 poster whole; anything taller is cropped from the bottom
+    .discourse-event-onebox__image.thumbnail {
+      border-radius: var(--d-border-radius);
+      grid-area: image;
+      height: auto;
+      max-height: 12rem;
+    }
+
+    .discourse-event-onebox__date {
+      grid-area: date;
+      margin: 0;
+      position: static;
+    }
+
+    .title-wrapper {
+      align-self: center;
+      grid-area: title;
+    }
+
+    .discourse-event-onebox__time {
+      grid-area: time;
+    }
+
+    .discourse-event-onebox__recurrence {
+      grid-area: recurrence;
+    }
+
+    .discourse-event-onebox__description {
+      grid-area: description;
+    }
+
+    // Two columns leave too little room for long titles in narrow spaces like phones or the chat
+    // drawer, so the image goes above, letterboxed into the same 16:9 frame as banner images
+    @container event-onebox (width < 30rem) {
+      container-type: inline-size;
+      grid-template:
+        "image image" auto
+        "date title" auto
+        ". time" auto
+        ". recurrence" auto
+        ". description" auto / auto minmax(0, 1fr);
+
+      .discourse-event-onebox__image.thumbnail {
+        @include letterboxed-event-image;
+        margin-bottom: var(--space-4);
+        max-height: none;
       }
     }
   }
@@ -550,6 +776,7 @@ aside.onebox.github-onebox {
   --github-onebox-header-background: var(--primary-very-low);
   --onebox-border-color: light-dark(#d1d9e0, #3d444d);
   --onebox-shadow-color: transparent;
+  --onebox-shadow-width: 1px;
   container: github-onebox / inline-size;
   padding: 0;
   overflow: hidden;
@@ -570,7 +797,7 @@ aside.onebox.github-onebox {
   &.githubpullrequest.--github-open {
     --github-onebox-status-color: var(--primary-high);
 
-    .github-onebox__label svg {
+    .github-onebox__label {
       color: light-dark(#1a7f37, #3fb950);
     }
   }
@@ -610,7 +837,8 @@ aside.onebox.github-onebox {
   }
 
   > .source.github-onebox__header {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(max-content, 1fr);
     gap: 0.5em 1em;
     margin: 0;
     padding: 0.5em 1em;
@@ -633,13 +861,15 @@ aside.onebox.github-onebox {
   }
 
   .github-onebox__label {
+    grid-area: 1 / 2;
+    justify-self: end;
     color: var(--github-onebox-status-color);
     font-weight: var(--token-font-weight-semibold);
+    white-space: nowrap;
   }
 
   .github-onebox__repo[href] {
-    max-width: min(20rem, 50%);
-    margin-inline-start: auto;
+    grid-area: 1 / 1;
     color: var(--primary);
 
     > span {
@@ -661,7 +891,11 @@ aside.onebox.github-onebox {
   }
 
   @container github-onebox (width < 28rem) {
-    .github-onebox__repo {
+    > .source.github-onebox__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .github-onebox__label {
       gap: 0;
 
       > span {
@@ -1065,7 +1299,8 @@ aside.onebox.xkcd .onebox-body img {
 // allowlistedgeneric twitter labels
 .onebox.allowlistedgeneric,
 .onebox.whitelistedgeneric,
-.onebox.discoursetopic {
+.onebox.discoursetopic,
+.onebox.discoursetopic_with_event {
   .label1,
   .label2 {
     color: var(--primary-med-or-secondary-med);
@@ -1107,7 +1342,8 @@ aside.onebox.xkcd .onebox-body img {
   }
 }
 
-.onebox.discoursetopic {
+.onebox.discoursetopic,
+.onebox.discoursetopic_with_event {
   h3 {
     width: 100%;
     margin-bottom: 0.2rem !important;

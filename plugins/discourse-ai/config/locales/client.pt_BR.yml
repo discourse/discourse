@@ -1097,10 +1097,7 @@ pt_BR:
           scroll_to_bottom: "Rolar para a parte inferior"
           editing_post: "Editando postagem"
       sentiments:
-        dashboard:
-          title: "Sentimento"
         sidebar:
-          overview: "Visão geral de sentimento"
           analysis: "Análise de sentimento"
         sentiment_analysis:
           share_chart: "Copiar link para o gráfico"

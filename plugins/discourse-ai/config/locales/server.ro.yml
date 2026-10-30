@@ -39,6 +39,8 @@ ro:
     spam_detection:
       logging_subject: "Detectare spam"
     ai_bot:
+      sources:
+        spam_detection: "Detectare spam"
       navigation:
         settings:
           title: "Setări site"

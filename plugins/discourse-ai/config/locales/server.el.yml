@@ -40,6 +40,9 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Ανίχνευση spam"
       navigation:
         settings:
           title: "Ρυθμίσεις ιστότοπου"

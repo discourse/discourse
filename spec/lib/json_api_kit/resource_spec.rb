@@ -305,7 +305,7 @@ RSpec.describe JsonApiKit::Resource do
             sort :created_at
             default_sort created_at: :sideways
           end
-        }.to raise_error(ArgumentError, /unknown direction: sideways/)
+        }.to raise_error(ArgumentError, /Unknown sort direction: :sideways/)
       end
     end
   end
@@ -354,7 +354,7 @@ RSpec.describe JsonApiKit::Resource do
       let(:historical_ordering) { { created_at: :sideways } }
 
       it "rejects the ordering" do
-        expect { ordering }.to raise_error(ArgumentError, /unknown direction: sideways/)
+        expect { ordering }.to raise_error(ArgumentError, /Unknown sort direction: :sideways/)
       end
     end
   end
@@ -684,13 +684,18 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".all" do
-    before { allow(JsonApiKit::Query::Collection).to receive(:new) }
+    let(:instance) { topic_resource.new(guardian:) }
+    let(:adapter) { instance.adapter }
+
+    before do
+      allow(topic_resource).to receive(:new).and_return(instance)
+      allow(adapter).to receive(:all)
+    end
 
     it "builds a listing for the request a caller sends" do
       topic_resource.all({ sort: { created_at: :asc } }, guardian:)
 
-      expect(JsonApiKit::Query::Collection).to have_received(:new).with(
-        an_instance_of(topic_resource),
+      expect(adapter).to have_received(:all).with(
         an_object_having_attributes(ordering: { "created_at" => :asc }, guardian:),
         scoped_to: nil,
       )
@@ -701,7 +706,7 @@ RSpec.describe JsonApiKit::Resource do
       fab!(:second_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 2)) }
 
       before do
-        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        allow(topic_resource).to receive(:new).and_call_original
         topic_resource.default_sort created_at: :asc
       end
 
@@ -714,14 +719,19 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".find" do
-    before { allow(JsonApiKit::Query::Individual).to receive(:new) }
+    let(:instance) { topic_resource.new(guardian:) }
+    let(:adapter) { instance.adapter }
+
+    before do
+      allow(topic_resource).to receive(:new).and_return(instance)
+      allow(adapter).to receive(:find)
+    end
 
     it "resolves the default ordering before constructing the request" do
       topic_resource.find(12, guardian:)
 
-      expect(JsonApiKit::Query::Individual).to have_received(:new).with(
-        an_instance_of(topic_resource),
-        an_object_having_attributes(ordering: { "ran_at" => :desc }, guardian:),
+      expect(adapter).to have_received(:find).with(
+        an_object_having_attributes(id: 12, ordering: { "ran_at" => :desc }, guardian:),
       )
     end
   end
@@ -744,6 +754,62 @@ RSpec.describe JsonApiKit::Resource do
     context "when no column of the order allows null" do
       it "orders the listing in one segment" do
         expect(topic_resource.order("created_at" => :desc).segments.size).to eq(1)
+      end
+    end
+  end
+
+  describe ".related_resource" do
+    subject(:related_resource) { topic_resource.related_resource(name) }
+
+    let(:name) { :user }
+
+    it "returns the declared resource class" do
+      expect(related_resource).to eq(user_resource)
+    end
+
+    context "when the relationship is not declared" do
+      let(:name) { :missing }
+
+      it "raises a missing lookup error" do
+        expect { related_resource }.to raise_error(KeyError, /missing/)
+      end
+    end
+  end
+
+  describe "#related_resource" do
+    subject(:related_resource) { instance.related_resource(:user) }
+
+    let(:instance) { topic_resource.new(guardian:) }
+
+    it "reuses the resource from the request" do
+      expect(related_resource).to equal(instance.resource_for(user_resource))
+    end
+  end
+
+  describe "#resource_for" do
+    subject(:instance) { topic_resource.new(guardian:, edition:) }
+
+    let(:edition) { JsonApiKit::Edition.new([]) }
+    let(:related_resource) { instance.resource_for(user_resource) }
+
+    it "builds the requested resource in the request context", :aggregate_failures do
+      expect(related_resource).to be_a(user_resource)
+      expect(related_resource).to have_attributes(guardian:, edition:)
+    end
+
+    it "reuses the requested resource" do
+      expect(instance.resource_for(user_resource)).to equal(related_resource)
+    end
+
+    it "reuses the owner through related resources" do
+      expect(related_resource.resource_for(topic_resource)).to equal(instance)
+    end
+
+    context "when another request builds its resources" do
+      let(:other_instance) { topic_resource.new(guardian:, edition:) }
+
+      it "creates an independent resource" do
+        expect(other_instance.resource_for(user_resource)).not_to equal(related_resource)
       end
     end
   end

@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def response_format
         # Abstaining first avoids streaming an answer that would be retracted;
         # the short title and then the answer follow so both stream early.

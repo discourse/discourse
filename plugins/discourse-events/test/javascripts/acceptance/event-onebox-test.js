@@ -5,8 +5,9 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Event onebox", function (needs) {
-  needs.user();
+  needs.user({ has_chat_enabled: true });
   needs.settings({
+    chat_enabled: true,
     discourse_events_enabled: true,
     discourse_post_event_enabled: true,
     enable_markdown_linkify: true,
@@ -33,6 +34,64 @@ acceptance("Event onebox", function (needs) {
     topicJson = cloneJSON(topicFixtures["/t/280/1.json"]);
   });
   needs.pretender((server, helper) => {
+    server.get("/chat/api/me/channels", () =>
+      helper.response({
+        direct_message_channels: [],
+        public_channels: [
+          {
+            id: 11,
+            title: "Events",
+            chatable_id: 1,
+            chatable_type: "Category",
+            meta: { message_bus_last_ids: {} },
+            current_user_membership: {
+              following: true,
+              last_read_message_id: 2,
+            },
+            chatable: { id: 1, color: "0088CC", name: "Events" },
+          },
+        ],
+        meta: { message_bus_last_ids: {} },
+        tracking: {
+          channel_tracking: {
+            11: { unread_count: 0, mention_count: 0 },
+          },
+          thread_tracking: {},
+        },
+      })
+    );
+    server.get("/chat/api/channels/11/messages", () =>
+      helper.response({
+        messages: [
+          {
+            id: 1,
+            message: "Event topic",
+            cooked: `
+              <aside class="quote" data-topic="123" data-post="1">
+                <div class="title">Event topic</div>
+                <blockquote>Board game night</blockquote>
+              </aside>
+            `,
+            created_at: "2026-09-01T10:00:00.000Z",
+            user: { id: 5, username: "bob" },
+          },
+          {
+            id: 2,
+            message: "Ordinary topic",
+            cooked: `
+              <aside class="quote" data-topic="124" data-post="1">
+                <div class="title">Ordinary topic</div>
+                <blockquote>Preview text</blockquote>
+              </aside>
+            `,
+            created_at: "2026-09-01T10:01:00.000Z",
+            user: { id: 5, username: "bob" },
+          },
+        ],
+        meta: { can_delete_self: true },
+      })
+    );
+    server.post("/chat/api/channels/11/drafts", () => helper.response({}));
     server.get("/t/280.json", () => helper.response(topicJson));
     server.get("/t/280/:post_number.json", () => helper.response(topicJson));
     server.get("/discourse-post-event/events/900", () =>
@@ -149,6 +208,27 @@ acceptance("Event onebox", function (needs) {
       .includesText(
         "Preview text",
         "ordinary topic previews retain core rendering"
+      );
+  });
+
+  test("event topics show the interactive event card in chat", async function (assert) {
+    await visit("/chat/c/events/11");
+    await waitFor(".discourse-post-event-onebox .discourse-post-event-widget");
+
+    assert
+      .dom(".discourse-post-event-onebox .event-date .day")
+      .exists("the chat card renders the event date");
+    assert
+      .dom(".discourse-post-event-onebox .name")
+      .hasText(event.name, "the chat card links to the event");
+    assert
+      .dom(".discourse-post-event-onebox .going-button")
+      .exists("the chat card keeps its RSVP controls");
+    assert
+      .dom('aside.quote[data-topic="124"]')
+      .includesText(
+        "Preview text",
+        "ordinary topic oneboxes retain core rendering"
       );
   });
 });
