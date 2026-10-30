@@ -173,8 +173,7 @@ export default class ReviewableItem extends Component {
     return (
       (reviewable?.created_from_flag &&
         reviewable?.status === PENDING &&
-        (this.claimOptional ||
-          (this.claimRequired && reviewable?.claimed_by !== null))) ||
+        (!this.claimRequired || reviewable?.claimed_by !== null)) ||
       this.isAiReviewable
     );
   }
@@ -203,13 +202,6 @@ export default class ReviewableItem extends Component {
         reviewable?.claimed_by?.automatic) &&
       !!this.topicId &&
       reviewable?.status === PENDING
-    );
-  }
-
-  get claimOptional() {
-    return (
-      !this.claimEnabled ||
-      this.siteSettings?.reviewable_claiming === "optional"
     );
   }
 

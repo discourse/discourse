@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .dsa-classification {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -47,24 +49,61 @@
   margin-inline-end: auto;
 }
 
+.dsa-moderation-action__user {
+  white-space: nowrap;
+  vertical-align: baseline;
+
+  .avatar {
+    margin-right: var(--space-1);
+  }
+}
+
+html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
+  z-index: z("modal", "popover");
+}
+
 .dsa-moderation-steps {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
+  gap: 0 var(--space-2);
   list-style: none;
-  margin: 0 0 var(--space-5);
-  padding: 0 0 var(--space-3);
-  border-block-end: 1px solid var(--primary-low);
+  margin: 0;
+  padding: var(--space-2) var(--space-6);
+  border-block-end: 1px solid var(--content-border-color);
   color: var(--primary-medium);
 
+  @include viewport.until(sm) {
+    font-size: var(--font-down-1);
+  }
+
+  li {
+    display: flex;
+    gap: 0 var(--space-2);
+    align-items: center;
+  }
+
   .d-icon {
-    margin-inline-end: var(--space-4);
     color: var(--primary-medium);
     font-weight: normal;
+    font-size: var(--font-down-1);
   }
 
   .--current {
     color: var(--primary);
     font-weight: bold;
+  }
+
+  &__back.btn {
+    min-height: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+
+    &:hover,
+    &:focus-visible {
+      background: transparent;
+      color: var(--primary);
+    }
   }
 }

@@ -2,8 +2,13 @@ import Component from "@glimmer/component";
 import Form from "discourse/components/form";
 import { i18n } from "discourse-i18n";
 
+export function defaultClassification(options) {
+  const rules = options?.community_rules;
+  return rules?.length === 1 ? { community_rule: rules[0].id } : {};
+}
+
 export default class DsaModerationDetails extends Component {
-  formData = {};
+  formData = defaultClassification(this.args.options);
 
   <template>
     <Form

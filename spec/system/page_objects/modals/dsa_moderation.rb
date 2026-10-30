@@ -22,6 +22,10 @@ module PageObjects
         within(full_modal_selector) { click_button("Continue", exact: true) }
       end
 
+      def click_previous_step
+        within(full_modal_selector) { find(".dsa-moderation-steps__back").click }
+      end
+
       def has_disabled_continue?
         within(full_modal_selector) { has_button?("Continue", exact: true, disabled: true) }
       end
@@ -42,16 +46,18 @@ module PageObjects
         within(full_modal_selector) { click_button(label, exact: true) }
       end
 
-      def has_action_title?(title)
-        has_css?("#{full_modal_selector} .d-modal__title-text", text: title, exact_text: true)
+      def has_steps?(*labels)
+        has_css?("#{full_modal_selector} .dsa-moderation-steps li", count: labels.size) &&
+          labels.each_with_index.all? do |label, index|
+            has_css?(
+              "#{full_modal_selector} .dsa-moderation-steps li:nth-child(#{index + 1})",
+              text: label,
+            )
+          end
       end
 
-      def has_single_classification_step?
-        has_css?(
-          "#{full_modal_selector} .dsa-moderation-steps li:only-child[aria-current='step']",
-          text: I18n.t("js.dsa_statements.title"),
-          count: 1,
-        )
+      def has_action_title?(title)
+        has_css?("#{full_modal_selector} .d-modal__title-text", text: title, exact_text: true)
       end
 
       def has_classification?
@@ -59,7 +65,22 @@ module PageObjects
       end
 
       def has_confirmation_prompt?(message)
-        within(full_modal_selector) { has_text?(message) }
+        within(full_modal_selector) { has_text?(message, normalize_ws: true) }
+      end
+
+      def has_prompt_user?(username)
+        has_css?(
+          "#{full_modal_selector} .dsa-moderation-action__user[aria-label='#{username}']",
+          text: username,
+        )
+      end
+
+      def open_prompt_user_card
+        find("#{full_modal_selector} .dsa-moderation-action__user").click
+      end
+
+      def click_user_card
+        find("[data-identifier='usercard'] .card-content").click
       end
 
       def has_selected_category?(category)

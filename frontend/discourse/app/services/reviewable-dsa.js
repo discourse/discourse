@@ -35,6 +35,7 @@ export default class ReviewableDsa extends Service {
           model: {
             action,
             options,
+            reviewable,
             perform: (classification) =>
               perform({ ...data, ...classification }),
           },

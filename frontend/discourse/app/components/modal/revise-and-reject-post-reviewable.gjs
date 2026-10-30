@@ -79,6 +79,9 @@ export default class ReviseAndRejectPostReviewable extends Component {
         @closeModal={{@closeModal}}
         @title={{i18n "review.revise_and_reject_post.title"}}
       >
+        <:belowHeader>
+          <flow.Steps @disabled={{this.submitting}} />
+        </:belowHeader>
         <:body>
           <flow.Body>
             <div class="revise-and-reject-reviewable__queued-post">

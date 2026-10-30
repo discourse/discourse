@@ -181,6 +181,9 @@ export default class PenalizeUser extends Component {
         @flash={{this.flash}}
         @title={{i18n this.modalTitle}}
       >
+        <:belowHeader>
+          <flow.Steps @disabled={{this.penalizing}} />
+        </:belowHeader>
         <:body>
           <flow.Body>
             {{#if this.canPenalize}}

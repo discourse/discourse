@@ -69,6 +69,15 @@ describe "Classifying reviewable moderation" do
 
     expect(modal).to have_selected_category(category)
 
+    modal.click_previous_step
+
+    expect(modal).to have_focused_step("Action details")
+    expect(penalty_modal).to have_suspend_reason("Repeated personal attacks.")
+
+    modal.continue
+
+    expect(modal).to have_selected_category(category)
+
     modal.close
 
     expect(dialog).to be_open
@@ -100,6 +109,39 @@ describe "Classifying reviewable moderation" do
     expect(admin_user_page).to have_suspension_reason("Repeated personal attacks.")
   end
 
+  it "labels the first step as a confirmation when the action only prompts" do
+    post = Fabricate(:post, topic: topic, reply_count: 1)
+    reviewable =
+      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic: topic)
+
+    review_page.visit_reviewable(reviewable)
+    review_page.select_bundled_action(reviewable, "post-delete_and_agree_replies", bundle_index: 1)
+
+    expect(modal).to have_steps("Confirm action", "DSA classification")
+
+    modal.continue
+    modal.click_previous_step
+
+    expect(modal).to have_focused_step("Confirm action")
+  end
+
+  it "shows the avatar and username of the user being deleted" do
+    reviewable = Fabricate(:reviewable_queued_post)
+
+    review_page.visit_reviewable(reviewable)
+    review_page.select_bundled_action(reviewable, "delete_user")
+
+    username = reviewable.target_created_by.username
+
+    expect(modal).to have_confirmation_prompt("Are you sure you want to delete #{username}?")
+    expect(modal).to have_prompt_user(username)
+
+    modal.open_prompt_user_card
+    modal.click_user_card
+
+    expect(modal).to be_open
+  end
+
   it "classifies before editing, handling the review only after the edit is saved" do
     post = topic.first_post
     reviewable =
@@ -108,7 +150,8 @@ describe "Classifying reviewable moderation" do
     review_page.visit_reviewable(reviewable)
     review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
 
-    expect(modal).to have_action_title("DSA classification")
+    expect(modal).to have_action_title("Edit post")
+    expect(modal).to have_steps("DSA classification", "Edit post")
 
     modal.select_rule(rule[:ground])
     modal.select_category(category)
