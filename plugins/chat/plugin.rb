@@ -679,6 +679,7 @@ after_initialize do
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,
     limited_pretty_text_markdown_rules: Chat::Message::MARKDOWN_IT_RULES,
+    onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
     hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
   }
 

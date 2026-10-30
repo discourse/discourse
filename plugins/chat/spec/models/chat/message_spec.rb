@@ -613,6 +613,16 @@ describe Chat::Message do
       )
     end
 
+    it "ignores max_oneboxes_per_post" do
+      SiteSetting.max_oneboxes_per_post = 0
+
+      cooked = described_class.cook("https://www.example.com")
+
+      expect(cooked).to eq(
+        "<p><a href=\"https://www.example.com\" class=\"onebox\" target=\"_blank\" rel=\"noopener nofollow ugc\">https://www.example.com</a></p>",
+      )
+    end
+
     it "supports emoji plugin" do
       cooked = described_class.cook(":grin:")
 

@@ -216,6 +216,7 @@ export default class ChatMessage {
       hashtagTypesInPriorityOrder:
         site.hashtag_configurations?.["chat-composer"],
       hashtagIcons: site.hashtag_icons,
+      oneboxLimit: site.markdown_additional_options?.chat?.onebox_limit,
     };
   }
 
