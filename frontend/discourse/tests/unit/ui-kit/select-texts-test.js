@@ -14,7 +14,7 @@ import {
   DEFAULT_SELECT_TEXTS,
   renderSelectText,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const LOCALES = {
   placeholder: "placeholder",
@@ -461,6 +461,29 @@ module("Unit | ui-kit | select | texts", function (hooks) {
       );
     });
   }
+});
+
+module("Unit | ui-kit | select | texts | locale", function () {
+  test("texts that show a count are plural keys", function (assert) {
+    for (const key of [
+      "d_select.label_with_count",
+      "d_select.selected_count",
+      "d_select.items_added",
+      "d_select.min_chars",
+      "d_select.max_reached",
+      "d_select.min_not_reached",
+    ]) {
+      assert.deepEqual(
+        Object.keys(I18n.lookup(key) ?? {}).sort(),
+        ["one", "other"],
+        `${key} has one and other forms`
+      );
+    }
+  });
+
+  test("the unused expand text is gone", function (assert) {
+    assert.strictEqual(I18n.lookup("d_select.expand"), undefined);
+  });
 });
 
 module("Unit | ui-kit | select | texts | fallback", function (hooks) {

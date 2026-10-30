@@ -3551,7 +3551,9 @@ en:
       no_results: "No results found"
       label: "Options"
       label_with_value: "%{label}, %{value}"
-      label_with_count: "%{label}, %{count} selected"
+      label_with_count:
+        one: "%{label}, %{count} selected"
+        other: "%{label}, %{count} selected"
       footer_label: "Actions"
       clear: "Clear selection"
       selection_cleared: "Selection cleared"
@@ -3589,7 +3591,6 @@ en:
       bulk_add_summary: "%{added}, %{not_added}"
       all_already_selected: "All already selected"
       item_removed: "Removed %{item}"
-      expand: "Show options"
       load_error: "Couldn't load results."
       retry: "Retry"
       unresolved_value: "Unknown item (%{value})"
@@ -6337,6 +6338,7 @@ en:
       tag_count_hidden:
         one: "%{count} topic"
         other: "%{count} topics"
+      tag_count_badge: "x%{count}"
       choose_for_topic: "Optional tags…"
       choose_for_topic_required:
         one: "Select at least %{count} tag…"
@@ -6344,6 +6346,20 @@ en:
       choose_for_topic_required_group:
         one: "Select %{count} tag from '%{name}'…"
         other: "Select %{count} tags from '%{name}'…"
+      choose_more_required_group:
+        one: "Select %{count} more tag from '%{name}'…"
+        other: "Select %{count} more tags from '%{name}'…"
+      choose_more_required:
+        one: "Select at least %{count} more tag…"
+        other: "Select at least %{count} more tags…"
+      add_more_tags: "Add more tags…"
+      required_tags_progress:
+        one: "%{selected} of %{count} required tag selected"
+        other: "%{selected} of %{count} required tags selected"
+      max_tags_reached:
+        one: "You can only select %{count} tag. Remove one to add another."
+        other: "You can only select %{count} tags. Remove one to add another."
+      filter_to_narrow_tags: "Showing the first tags only. Keep typing to narrow them down."
       info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."

@@ -24,7 +24,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import { paste as pasteTags } from "discourse/tests/helpers/qunit-helpers";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const ROWS = [
   { id: 1, name: "bug", text: "bug", count: 4 },
@@ -964,6 +964,26 @@ module(
         assert
           .dom(".discourse-tag .discourse-tag-count")
           .doesNotExist("count is outside the tag name");
+      });
+
+      test("the drawn tag count comes from a translation", async function (assert) {
+        pretender.get("/tags/list.json", () => response({ list_tags: [] }));
+        pretender.get("/tags/filter/search", () =>
+          response({ results: [{ id: 1, name: "rock", count: 12 }] })
+        );
+        const tagging = I18n.translations[I18n.locale].js.tagging;
+        const original = tagging.tag_count_badge;
+        tagging.tag_count_badge = "%{count} uses";
+        try {
+          await render(<template><DSelectTag @multiple={{true}} /></template>);
+          await new DSelect().open();
+
+          assert
+            .dom("[role='option'] .discourse-tag-count")
+            .hasText("12 uses", "a translator can reword or reorder the badge");
+        } finally {
+          tagging.tag_count_badge = original;
+        }
       });
 
       test("required-group guidance persists through describedBy and follows category context", async function (assert) {

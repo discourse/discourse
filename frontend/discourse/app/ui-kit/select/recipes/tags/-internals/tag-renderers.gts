@@ -1,5 +1,4 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
-import { concat } from "@ember/helper";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
@@ -48,7 +47,7 @@ export const TagOption: TemplateOnlyComponent<{
       {{dDiscourseTag @item.name noHref=true tagName="span"}}
       {{#if @item.count}}
         <span aria-hidden="true" class="discourse-tag-count">
-          {{~concat "x" (tagCount @item)~}}
+          {{~i18n "tagging.tag_count_badge" count=(tagCount @item)~}}
         </span>
         <span class="sr-only">
           {{~i18n "tagging.tag_count_hidden" count=(tagCount @item)~}}
