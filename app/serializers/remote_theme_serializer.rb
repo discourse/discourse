@@ -14,6 +14,7 @@ class RemoteThemeSerializer < ApplicationSerializer
              :github_diff_link,
              :last_error_text,
              :is_git?,
+             :placeholder?,
              :license_url,
              :about_url,
              :authors,
