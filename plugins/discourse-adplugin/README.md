@@ -192,7 +192,7 @@ To disable ads in certain categories, add them to the "no ads for categories" se
 
 #### DFP / GAM per-category targeting
 
-For Google Ad Manager (DFP), you can serve a different ad unit, keywords, and GTM taxonomy per category — configured from **Admin → Plugins → Discourse Ad Plugin → DFP / GAM** (or as per-category custom fields). Categories left unconfigured fall back to the site-wide `dfp_*_code` ad unit. See [docs/README.md](docs/README.md) for setup and local testing.
+For Google Ad Manager (DFP), you can serve a different ad unit, keywords, and GTM taxonomy per category — configured from **Admin → Plugins → Discourse Ad Plugin → DFP / GAM**. Categories left unconfigured fall back to the site-wide `dfp_*_code` ad unit. See [docs/README.md](docs/README.md) for setup and local testing.
 
 ### Tags
 

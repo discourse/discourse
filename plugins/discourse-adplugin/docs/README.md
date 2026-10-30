@@ -121,8 +121,7 @@ For each placement the plugin resolves, in priority order, the first match:
 
 1. `dfp-ad-config` value transformer registered by a theme component/plugin (if any).
 2. The plugin dashboard's per-category setting.
-3. Legacy category custom fields, when present.
-4. The site settings (`dfp_publisher_id` + `dfp_*_code`).
+3. The site settings (`dfp_publisher_id` + `dfp_*_code`).
 
 Keywords (`gam_keywords`) are merged into the slot targeting over any configured
 `dfp_target_*` values, and `discourse-category` is always set to the category's leaf slug
@@ -145,8 +144,7 @@ at slot-creation time — a plain refresh would keep the old one).
 
 Power users can override or extend the resolved ad config from a theme component. The
 transformer receives the current `value` and a `context` with `placement`,
-`categorySlug`, `categoryPath`, `categoryId`, `routeName`, `customFields`, and
-`categoryConfig`:
+`categorySlug`, `categoryPath`, `categoryId`, `routeName`, and `categoryConfig`:
 
 ```js
 import { apiInitializer } from "discourse/lib/api";
@@ -174,5 +172,5 @@ dashboard configuration above apply.
 bin/qunit --standalone plugins/discourse-adplugin/test/javascripts/
 ```
 
-Covers `dfpConfig` resolution (site settings, legacy category custom fields, dashboard
-configuration, and transformers), the configuration UI, and DFP advertising behaviour.
+Covers `dfpConfig` resolution (site settings, dashboard configuration, and
+transformers), the configuration UI, and DFP advertising behaviour.

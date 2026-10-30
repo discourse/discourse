@@ -160,15 +160,15 @@ function getWidthAndHeight(placement, settings, isMobile) {
 }
 
 /**
- * Applies per-category GAM configuration stored in category custom fields.
+ * Applies a category's per-category GAM settings over a resolved config.
  *
  * A category can define `gam_adunit` (full GPT ad unit path) and `gam_keywords`
- * (comma separated) via the category settings UI. Values override the configured
+ * (comma separated) in the plugin dashboard. Values override the configured
  * `dfp_*` settings and are themselves overridable through the `dfp-ad-config`
  * value transformer.
  */
-export function applyCategoryCustomFields(config, customFields) {
-  const fields = customFields || {};
+export function applyCategoryConfig(config, categoryConfig) {
+  const fields = categoryConfig || {};
   const gamAdUnit = fields.gam_adunit;
   const gamKeywords = fields.gam_keywords;
 
@@ -194,11 +194,11 @@ export function applyCategoryCustomFields(config, customFields) {
 /**
  * Resolves the ad unit path and targeting for a placement.
  *
- * Resolution happens in order: the configured `dfp_*` settings, then any
- * per-category `gam_adunit`/`gam_keywords` custom fields, then the centralized
- * per-category settings from the plugin dashboard (`context.categoryConfig`),
- * then any `dfp-ad-config` value transformer registered by a theme component
- * or plugin. `adUnitPath` is the full GPT ad unit (e.g. `/6355419/Travel`).
+ * Resolution happens in order: the configured `dfp_*` settings, then the
+ * per-category `gam_adunit`/`gam_keywords` from the plugin dashboard
+ * (`context.categoryConfig`), then any `dfp-ad-config` value transformer
+ * registered by a theme component or plugin. `adUnitPath` is the full GPT ad
+ * unit (e.g. `/6355419/Travel`).
  */
 export function dfpConfig(placement, settings, isMobile, context) {
   const config = isMobile
@@ -216,11 +216,7 @@ export function dfpConfig(placement, settings, isMobile, context) {
     ),
   };
 
-  let resolved = applyCategoryCustomFields(
-    settingsConfig,
-    context.customFields
-  );
-  resolved = applyCategoryCustomFields(resolved, context.categoryConfig);
+  const resolved = applyCategoryConfig(settingsConfig, context.categoryConfig);
 
   let overrides = {};
   try {
@@ -542,7 +538,6 @@ export default class GoogleDfpAd extends AdComponent {
       categoryPath: this.currentCategoryPath,
       categoryId: this.currentCategoryId,
       routeName: this.currentRouteName,
-      customFields: this.currentCategoryCustomFields || {},
       categoryConfig: this.currentCategoryDfpConfig || {},
     };
   }

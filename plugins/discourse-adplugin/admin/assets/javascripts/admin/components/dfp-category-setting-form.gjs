@@ -9,8 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { i18n } from "discourse-i18n";
-
-const PATH = "/admin/plugins/pluginad/dfp_category_settings";
+import { DFP_CATEGORY_SETTINGS_PATH as PATH } from "../lib/dfp-settings.js";
 
 export default class DfpCategorySettingForm extends Component {
   @service router;

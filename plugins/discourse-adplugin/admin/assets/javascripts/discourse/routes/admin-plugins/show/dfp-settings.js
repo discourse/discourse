@@ -2,8 +2,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
-
-const PATH = "/admin/plugins/pluginad/dfp_category_settings";
+import { DFP_CATEGORY_SETTINGS_PATH as PATH } from "../../../../admin/lib/dfp-settings.js";
 
 export default class AdminPluginsShowDfpSettings extends DiscourseRoute {
   async model() {

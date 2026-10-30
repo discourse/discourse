@@ -79,17 +79,6 @@ export default class AdComponent extends Component {
     return slugs;
   }
 
-  @computed(
-    "router.currentRoute.attributes.category",
-    "router.currentRoute.parent.attributes.category"
-  )
-  get currentCategoryCustomFields() {
-    return (
-      this.router?.currentRoute?.attributes?.category ||
-      this.router?.currentRoute?.parent?.attributes?.category
-    )?.custom_fields;
-  }
-
   @computed("currentCategoryId", "site.dfp_category_settings")
   get currentCategoryDfpConfig() {
     return this.site?.get("dfp_category_settings")?.[

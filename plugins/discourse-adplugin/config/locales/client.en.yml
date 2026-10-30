@@ -8,11 +8,6 @@ en:
       gam_keywords_placeholder: "Comma separated, e.g. travel,europe"
       gtm_taxonomy: "GTM taxonomy"
       gtm_taxonomy_placeholder: "e.g. travel/europe/france/paris"
-      gam_category_settings:
-        title: "GAM / DFP"
-        legacy_description: "The plugin uses these legacy GAM fields when the matching dashboard field is blank. GTM taxonomy is retained for existing integrations."
-        dashboard_override: "Non-empty GAM values in the dashboard configuration take precedence over the matching fields below. Blank dashboard fields still use these legacy values."
-        dashboard_link: "Edit dashboard configuration."
   admin_js:
     admin:
       site_settings:

@@ -72,10 +72,6 @@ after_initialize do
     AdPlugin::DfpCategorySetting.site_settings_for(scope)
   end
 
-  register_preloaded_category_custom_fields "gam_adunit"
-  register_preloaded_category_custom_fields "gam_keywords"
-  register_preloaded_category_custom_fields "gtm_taxonomy"
-
   add_to_serializer :site, :house_creatives do
     AdPlugin::HouseAdSetting.settings_and_ads(for_anons: scope.anonymous?, scope: scope)
   end

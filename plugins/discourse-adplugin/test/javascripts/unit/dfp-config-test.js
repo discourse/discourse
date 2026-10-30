@@ -16,7 +16,6 @@ function context(overrides = {}) {
     categoryPath: ["travel", "paris"],
     categoryId: 41,
     routeName: "discovery.category",
-    customFields: {},
     categoryConfig: {},
     ...overrides,
   };
@@ -46,13 +45,13 @@ module("Unit | Lib | dfp-config", function (hooks) {
     );
   });
 
-  test("uses category custom fields when present", function (assert) {
+  test("uses the dashboard config when present", function (assert) {
     const config = dfpConfig(
       "topic-list-top",
       SETTINGS,
       false,
       context({
-        customFields: {
+        categoryConfig: {
           gam_adunit: "/6355419/Travel/Europe/France/Paris",
           gam_keywords: "travel, europe",
         },
@@ -67,20 +66,19 @@ module("Unit | Lib | dfp-config", function (hooks) {
 
     assert.deepEqual(
       config.targeting,
-      {
-        gam_keywords: ["travel", "europe"],
-        "discourse-category": "paris",
-      },
+      { gam_keywords: ["travel", "europe"], "discourse-category": "paris" },
       "gam_keywords override the dfp_target_* values"
     );
   });
 
-  test("falls back to settings when a category has no gam fields", function (assert) {
+  test("ignores a dashboard config that sets no ad fields", function (assert) {
     const config = dfpConfig(
       "topic-list-top",
       SETTINGS,
       false,
-      context({ customFields: { gtm_taxonomy: "travel/europe/france/paris" } })
+      context({
+        categoryConfig: { gtm_taxonomy: "travel/europe/france/paris" },
+      })
     );
 
     assert.strictEqual(config.adUnitPath, "/6355419/Travel");
@@ -88,41 +86,11 @@ module("Unit | Lib | dfp-config", function (hooks) {
     assert.deepEqual(
       config.targeting,
       { gam_keywords: ["red", "blue"], "discourse-category": "paris" },
-      "non-gam custom fields do not affect the ad config"
+      "non-GAM fields do not affect the ad config"
     );
   });
 
-  test("prefers centralized plugin settings over category custom fields", function (assert) {
-    const config = dfpConfig(
-      "topic-list-top",
-      SETTINGS,
-      false,
-      context({
-        customFields: {
-          gam_adunit: "/6355419/Travel/Custom",
-          gam_keywords: "custom,keywords",
-        },
-        categoryConfig: {
-          gam_adunit: "/6355419/Travel/Europe/France/Paris",
-          gam_keywords: "travel, europe",
-        },
-      })
-    );
-
-    assert.strictEqual(
-      config.adUnitPath,
-      "/6355419/Travel/Europe/France/Paris",
-      "the centralized plugin configuration wins"
-    );
-
-    assert.deepEqual(
-      config.targeting,
-      { gam_keywords: ["travel", "europe"], "discourse-category": "paris" },
-      "centralized keywords replace category custom field keywords"
-    );
-  });
-
-  test("applies overrides from a registered transformer", function (assert) {
+  test("the transformer overrides the dashboard config", function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer(
         "dfp-ad-config",
@@ -130,8 +98,8 @@ module("Unit | Lib | dfp-config", function (hooks) {
           if (ctx.categorySlug === "paris") {
             return {
               ...value,
-              adUnitPath: "/6355419/Travel/Europe/France/Paris",
-              targeting: { gam_keywords: ["travel", "europe"] },
+              adUnitPath: "/6355419/Travel/Transformer",
+              targeting: { gam_keywords: ["custom"] },
             };
           }
 
@@ -145,22 +113,22 @@ module("Unit | Lib | dfp-config", function (hooks) {
       SETTINGS,
       false,
       context({
-        customFields: {
-          gam_adunit: "/6355419/Travel/Other",
-          gam_keywords: "from,fields",
+        categoryConfig: {
+          gam_adunit: "/6355419/Travel/Europe/France/Paris",
+          gam_keywords: "travel, europe",
         },
       })
     );
 
     assert.strictEqual(
       config.adUnitPath,
-      "/6355419/Travel/Europe/France/Paris",
-      "the transformer wins over category custom fields"
+      "/6355419/Travel/Transformer",
+      "the transformer wins over the dashboard config"
     );
 
     assert.deepEqual(
       config.targeting,
-      { gam_keywords: ["travel", "europe"], "discourse-category": "paris" },
+      { gam_keywords: ["custom"], "discourse-category": "paris" },
       "transformer targeting replaces the resolved values"
     );
   });

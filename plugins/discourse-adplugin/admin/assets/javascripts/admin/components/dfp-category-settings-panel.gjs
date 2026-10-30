@@ -7,8 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
-
-const PATH = "/admin/plugins/pluginad/dfp_category_settings";
+import { DFP_CATEGORY_SETTINGS_PATH as PATH } from "../lib/dfp-settings.js";
 
 export default class DfpCategorySettingsPanel extends Component {
   @service dialog;
