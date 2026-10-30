@@ -3,19 +3,38 @@
 module JsonApiKit
   class Request
     class Inputs
-      def initialize(query:, body:, resource:)
+      delegate :query_parameters,
+               :raw_post,
+               :request_method,
+               :path_parameters,
+               to: :request,
+               private: true
+
+      def initialize(request, resource:)
+        @request = request
         @resource = resource
-        @raw_body = body
-        @query = verify(Input::Individual.new(query, resource:, edition: resource.edition))
+        @query =
+          verify(Input::Individual.new(query_parameters, resource:, edition: resource.edition))
       end
 
       attr_reader :query
 
-      def body = @body ||= verify(Body.parse(raw_body, resource:))
+      def body = @body ||= verify(parse_body)
 
       private
 
-      attr_reader :resource, :raw_body
+      attr_reader :request, :resource
+
+      def id = path_parameters[:id]
+
+      def parse_body
+        case request_method
+        when "PATCH"
+          Body::Update.parse(raw_post, resource:, id:)
+        else
+          Body.parse(raw_post, resource:)
+        end
+      end
 
       def verify(input)
         raise Invalid.new(input.refusals) if input.invalid?
