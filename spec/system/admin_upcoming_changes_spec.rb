@@ -34,11 +34,9 @@ describe "Admin upcoming changes" do
 
     upcoming_changes_page.visit
 
-    expect(upcoming_changes_page).to have_change(
-      change_name,
-      description: "hide these reasons from public view by default",
-    )
     change_item = upcoming_changes_page.change_item(change_name)
+    expect(change_item).to have_text(SiteSettings::LabelFormatter.humanized_name(change_name))
+    expect(change_item).to have_text("hide these reasons from public view by default")
     ["Hide suspension reasons", "Hide silencing reasons"].each do |label|
       expect(change_item.find_item(change_name)).to have_link(
         label,
