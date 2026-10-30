@@ -35,3 +35,20 @@ module AdPlugin
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: ad_plugin_dfp_category_settings
+#
+#  id           :bigint           not null, primary key
+#  gam_adunit   :string
+#  gam_keywords :string
+#  gtm_taxonomy :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  category_id  :integer          not null
+#
+# Indexes
+#
+#  index_ad_plugin_dfp_category_settings_on_category_id  (category_id) UNIQUE
+#
