@@ -190,7 +190,9 @@ module(
         );
         await click(".edit-link-options");
 
-        const select = new DSelect(".form-kit__field-custom .d-select");
+        const select = new DSelect(
+          ".form-kit__field[data-name='inviteToGroups'] .d-select"
+        );
         await select.open();
         assert.deepEqual(
           findAll("[role='option']").map((row) => row.dataset.value),
@@ -216,7 +218,9 @@ module(
 
         assert.strictEqual(
           accessibleName(
-            find(".form-kit__field-custom .d-select [role='combobox']")
+            find(
+              ".form-kit__field[data-name='inviteToGroups'] [role='combobox']"
+            )
           ),
           i18n("user.invited.invite.add_to_groups")
         );
