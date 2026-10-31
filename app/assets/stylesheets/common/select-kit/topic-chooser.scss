@@ -18,14 +18,22 @@
 
   .topic-statuses {
     flex: none;
+
+    &:empty {
+      display: none;
+    }
   }
 
   &__title {
+    flex: 1 1 0;
     min-width: 0;
     overflow-wrap: anywhere;
   }
 
   &__category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
     flex-basis: 100%;
     font-size: var(--font-down-1);
   }

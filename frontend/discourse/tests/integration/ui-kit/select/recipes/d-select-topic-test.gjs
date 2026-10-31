@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
-import { click, fillIn, findAll, render } from "@ember/test-helpers";
+import { click, fillIn, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -182,6 +182,73 @@ module(
       assert
         .dom(".d-topic-option__category", plain)
         .doesNotExist("a topic without a known category draws none");
+    });
+
+    test("sets a subcategory's badge apart from its parent's", async function (assert) {
+      const subcategory = this.owner
+        .lookup("service:site")
+        .categories.find((category) => category.parent_category_id);
+      stubTopicSearch([{ ...TOPICS[0], category_id: subcategory.id }]);
+
+      await render(<template><DSelectTopic /></template>);
+      const select = new DSelect();
+      await select.open();
+      await select.search("dogs");
+
+      const badges = find("[role='option'] .d-topic-option__category");
+      const [parent, child] = [
+        ...badges.querySelectorAll(".badge-category__wrapper"),
+      ].map((badge) => badge.getBoundingClientRect());
+      // The test container is scaled, so measure in CSS pixels.
+      const scale = badges.getBoundingClientRect().width / badges.offsetWidth;
+      const gap = (child.left - parent.right) / scale;
+      const halfEm = parseFloat(getComputedStyle(badges).fontSize) / 2;
+      assert.true(
+        gap >= halfEm - 0.5,
+        `the badges are ${gap}px apart, half an em is ${halfEm}px`
+      );
+    });
+
+    test("lines a title up with its category, and keeps a long one beside the status icons", async function (assert) {
+      const category = this.owner.lookup("service:site").categories[0];
+      const long = "Closed birds ".repeat(20).trim();
+      stubTopicSearch([
+        {
+          id: 9,
+          title: "Open birds",
+          fancy_title: "Open birds",
+          category_id: category.id,
+        },
+        { ...TOPICS[2], title: long, fancy_title: long },
+      ]);
+
+      // A list draws in place, so its width can be held to a narrow panel's.
+      await render(
+        <template>
+          <div style="width: 300px"><DSelectTopicList /></div>
+        </template>
+      );
+      await fillIn(".d-select.--list input[type='search']", "birds");
+
+      const [open, closed] = findAll("[role='option']");
+      const box = (selector, row) =>
+        row.querySelector(selector).getBoundingClientRect();
+      assert.strictEqual(
+        box(".d-topic-option__title", open).left,
+        box(".d-topic-option__category", open).left,
+        "a topic without a status starts its title where its category starts"
+      );
+      const title = box(".d-topic-option__title", closed);
+      const statuses = box(".topic-statuses", closed);
+      assert.true(statuses.width > 0, "the closed topic shows its status");
+      assert.true(
+        title.top < statuses.bottom,
+        `a long title starts on the status icons' line (title top ${title.top}, icons end at ${statuses.bottom})`
+      );
+      assert.true(
+        title.left >= statuses.right,
+        `a long title starts after the status icons (title left ${title.left}, icons end at ${statuses.right})`
+      );
     });
 
     test("names itself for one topic or several, and invites a title, URL or id", async function (assert) {
