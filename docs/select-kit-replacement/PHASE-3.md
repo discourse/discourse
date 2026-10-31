@@ -180,8 +180,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     modal, not yet traced.
   - ☑ SCSS parity, flag-on system specs, and the visual review across themes, color modes and
     phone width (2026-10-31).
-  - ☐ The screen-reader pass: recipient chips (user, group and email type words), a pick-one
-    field and a FormKit field's description.
+  - ☑ VoiceOver pass (2026-10-31, macOS, Chrome): recipient chips read their type word
+    ("moderators Group", "someone@example.com Email", a user chip has none) and the removal hint;
+    rows read username, name and position; the about page's pick-one user and group fields read
+    their name, placeholder and FormKit description.
 - ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
   handoff.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
