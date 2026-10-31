@@ -1387,7 +1387,7 @@ class UsersController < ApplicationController
         if usernames.blank?
           Group.search_groups(term, groups: groups, sort: :auto)
         else
-          groups.where(name: usernames).limit(limit)
+          groups.where("lower(groups.name) IN (?)", usernames).limit(limit)
         end
 
       to_render[:groups] = groups.map { |m| { name: m.name, full_name: m.full_name } }

@@ -1,6 +1,9 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import userSearch from "discourse/lib/user-search";
+import userSearch, {
+  findUsersByUsernames,
+  searchUsers,
+} from "discourse/lib/user-search";
 import pretender, {
   middlewareRateLimit,
   response,
@@ -463,5 +466,260 @@ module("Unit | Utility | user-search", function (hooks) {
       originalKeys.length,
       "Second call should have all original properties"
     );
+  });
+
+  module("searchUsers", function () {
+    test("sends one request per call and types the ranked rows", async function (assert) {
+      const terms = [];
+      pretender.get("/u/search/users", (request) => {
+        terms.push(request.queryParams.term);
+        return response({
+          users: [
+            { username: "testing", name: "Testing User" },
+            { username: "test", name: "Test User" },
+          ],
+          groups: [{ name: "testers", full_name: "Testers" }],
+        });
+      });
+
+      await searchUsers({ term: "test", groups: "visible" });
+      const rows = await searchUsers({ term: "test", groups: "visible" });
+
+      assert.deepEqual(terms, ["test", "test"], "nothing is cached");
+      assert.deepEqual(
+        rows.map((row) => [row.type, row.value]),
+        [
+          ["user", "test"],
+          ["user", "testing"],
+          ["group", "testers"],
+        ],
+        "rows keep the autocomplete ranking"
+      );
+      assert.strictEqual(rows[2].full_name, "Testers");
+    });
+
+    test("searches without a leading @", async function (assert) {
+      const terms = [];
+      pretender.get("/u/search/users", (request) => {
+        terms.push(request.queryParams.term);
+        return response({ users: [] });
+      });
+
+      await searchUsers({ term: "@sam" });
+
+      assert.deepEqual(terms, ["sam"]);
+    });
+
+    test("answers a promise of no rows without a request for a skipped term", async function (assert) {
+      let requests = 0;
+      pretender.get("/u/search/users", () => {
+        requests++;
+        return response({ users: [{ username: "sam" }] });
+      });
+
+      for (const term of ["sam;", "", "sam@example.com"]) {
+        const answer = searchUsers({ term });
+        assert.strictEqual(
+          typeof answer.then,
+          "function",
+          `"${term}" answers a promise`
+        );
+        assert.deepEqual(await answer, [], `"${term}" has no rows`);
+      }
+      assert.strictEqual(requests, 0);
+    });
+
+    test("lists an empty query when a topic or category scopes it", async function (assert) {
+      const rows = await searchUsers({ term: "", categoryId: 1 });
+
+      assert.deepEqual(
+        rows.map((row) => row.value),
+        ["category_1"]
+      );
+    });
+
+    test("excludes names in any case and still fills the limit", async function (assert) {
+      pretender.get("/u/search/users", () =>
+        response({
+          users: ["Sam", "sa1", "sa2", "sa3", "sa4", "sa5", "sa6"].map(
+            (username) => ({ username })
+          ),
+          groups: [{ name: "Sales" }],
+        })
+      );
+
+      const rows = await searchUsers({
+        term: "sa",
+        groups: "visible",
+        exclude: ["sam", "SALES"],
+      });
+
+      assert.deepEqual(
+        rows.map((row) => row.value),
+        ["sa1", "sa2", "sa3", "sa4", "sa5", "sa6"]
+      );
+    });
+
+    test("offers a typed email only when emails are on", async function (assert) {
+      pretender.get("/u/search/users", () => response({ users: [] }));
+
+      const rows = await searchUsers({ term: "sam@example.com", emails: true });
+
+      assert.deepEqual(rows, [
+        { type: "email", value: "sam@example.com", email: "sam@example.com" },
+      ]);
+    });
+
+    test("asks for groups in the given scope only", async function (assert) {
+      const sent = [];
+      pretender.get("/u/search/users", (request) => {
+        sent.push(
+          Object.keys(request.queryParams)
+            .filter((key) => key.startsWith("include_"))
+            .map((key) => `${key}=${request.queryParams[key]}`)
+        );
+        return response({ users: [] });
+      });
+
+      await searchUsers({ term: "sam" });
+      await searchUsers({ term: "sam", groups: "visible" });
+      await searchUsers({ term: "sam", groups: "mentionable" });
+      await searchUsers({ term: "sam", groups: "messageable" });
+      await searchUsers({ term: "sam", includeStaged: true });
+
+      assert.deepEqual(sent, [
+        [],
+        ["include_groups=true"],
+        ["include_mentionable_groups=true"],
+        ["include_messageable_groups=true"],
+        ["include_staged_users=true"],
+      ]);
+    });
+
+    test("sends only the search options that are set", async function (assert) {
+      let params;
+      pretender.get("/u/search/users", (request) => {
+        params = request.queryParams;
+        return response({ users: [] });
+      });
+
+      await searchUsers({
+        term: "sam",
+        topicId: 7,
+        searchOptions: { canReview: true, assignableGroups: undefined },
+      });
+
+      assert.deepEqual(params, {
+        term: "sam",
+        topic_id: "7",
+        limit: "6",
+        can_review: "true",
+      });
+    });
+
+    test("rejects while the advertised rate limit wait is running", async function (assert) {
+      let requests = 0;
+      pretender.get("/u/search/users", () => {
+        requests++;
+        return middlewareRateLimit(60);
+      });
+
+      await assert.rejects(searchUsers({ term: "ratelimited" }));
+      await assert.rejects(searchUsers({ term: "ratelimitedtoo" }));
+      assert.strictEqual(requests, 1, "the wait holds the second request");
+
+      let result = await userSearch({ term: "ratelimitedthree" });
+      assert.strictEqual(
+        result,
+        CANCELLED_STATUS,
+        "autocomplete waits for the same window"
+      );
+      assert.strictEqual(requests, 1);
+    });
+  });
+
+  module("findUsersByUsernames", function () {
+    test("looks held names up in one request, keyed by the asked spelling", async function (assert) {
+      const sent = [];
+      pretender.get("/u/search/users", (request) => {
+        sent.push(request.queryParams);
+        return response({
+          users: [
+            { username: "Sam", name: "Sam Saffron" },
+            { username: "bob" },
+          ],
+          groups: [{ name: "Team" }, { name: "Sam" }],
+        });
+      });
+
+      const rows = await findUsersByUsernames(
+        ["SAM", "bob", "team", "ghost", "x@example.com"],
+        { groups: "messageable" }
+      );
+
+      assert.deepEqual(sent, [
+        {
+          usernames: "SAM,bob,team,ghost",
+          include_messageable_groups: "true",
+        },
+      ]);
+      assert.deepEqual(
+        rows.map((row) => [row.type, row.value]),
+        [
+          ["user", "SAM"],
+          ["user", "bob"],
+          ["group", "team"],
+        ],
+        "a username wins over a group of the same name, and unknown names are left out"
+      );
+      assert.strictEqual(rows[0].username, "Sam");
+      assert.strictEqual(rows[0].name, "Sam Saffron");
+    });
+
+    test("leaves groups out unless asked and makes no request for emails alone", async function (assert) {
+      const sent = [];
+      pretender.get("/u/search/users", (request) => {
+        sent.push(request.queryParams);
+        return response({ users: [], groups: [{ name: "team" }] });
+      });
+
+      assert.deepEqual(await findUsersByUsernames(["team"]), []);
+      assert.deepEqual(await findUsersByUsernames(["x@example.com"]), []);
+      assert.deepEqual(sent, [{ usernames: "team" }]);
+    });
+
+    test("resolves more names than one request holds", async function (assert) {
+      const sizes = [];
+      pretender.get("/u/search/users", (request) => {
+        const usernames = request.queryParams.usernames.split(",");
+        sizes.push(usernames.length);
+        return response({ users: usernames.map((username) => ({ username })) });
+      });
+
+      const names = Array.from({ length: 51 }, (_, i) => `user${i}`);
+      const rows = await findUsersByUsernames(names);
+
+      assert.deepEqual(sizes, [50, 1]);
+      assert.deepEqual(
+        rows.map((row) => row.value),
+        names
+      );
+    });
+
+    test("ignores the search rate limit wait", async function (assert) {
+      pretender.get("/u/search/users", (request) =>
+        request.queryParams.usernames
+          ? response({ users: [{ username: "sam" }] })
+          : middlewareRateLimit(60)
+      );
+
+      await assert.rejects(searchUsers({ term: "ratelimited" }));
+      const rows = await findUsersByUsernames(["sam"]);
+
+      assert.deepEqual(
+        rows.map((row) => row.value),
+        ["sam"]
+      );
+    });
   });
 });
