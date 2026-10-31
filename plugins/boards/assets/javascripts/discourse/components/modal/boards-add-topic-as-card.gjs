@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import TopicStatus from "discourse/components/topic-status";
@@ -16,9 +18,15 @@ import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import DSelectTopicList from "discourse/ui-kit/select/recipes/topics/d-select-topic-list";
 import { i18n } from "discourse-i18n";
 
+/** The list holds nothing: a pick adds a card and closes the modal. */
+const NO_TOPICS = Object.freeze([]);
+
 export default class BoardsAddTopicAsCard extends Component {
+  @service siteSettings;
+
   @tracked selectedRow = -1;
   @tracked searchResults = [];
   @tracked searchLoading = false;
@@ -85,6 +93,10 @@ export default class BoardsAddTopicAsCard extends Component {
 
   @action
   keyDown(event) {
+    // TODO (select-kit-replacement-cleanup): The topic list handles its own keys.
+    if (this.siteSettings.enable_new_select_controls) {
+      return;
+    }
     switch (event.key) {
       case "ArrowDown":
         this.highlightRow(event, "down");
@@ -120,6 +132,9 @@ export default class BoardsAddTopicAsCard extends Component {
 
   @action
   mouseDown(event) {
+    if (this.siteSettings.enable_new_select_controls) {
+      return;
+    }
     if (!event.target.closest(".inputs")) {
       this.searchResults = [];
     }
@@ -132,6 +147,15 @@ export default class BoardsAddTopicAsCard extends Component {
       event.stopPropagation();
       this.selectTopic(event.target.closest(".search-link"));
     }
+  }
+
+  @action
+  addPickedTopic(_topicIds, [topic]) {
+    this.args.model.onAddTopicAsCard({
+      topicId: topic.id,
+      title: topic.fancy_title,
+    });
+    this.args.closeModal();
   }
 
   @action
@@ -192,66 +216,81 @@ export default class BoardsAddTopicAsCard extends Component {
       {{on "mousedown" this.mouseDown}}
     >
       <:body>
-        <div class="inputs">
-          <Form
-            @data={{this.data}}
-            @onRegisterApi={{this.registerApi}}
-            @onSubmit={{this.onFormSubmit}}
-            as |form|
-          >
-            <form.Field
-              @format="full"
-              @name="topicSearch"
-              @onSet={{this.search}}
-              @title={{i18n "boards.board.topic_search_placeholder"}}
-              @type="input"
-              as |field|
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy search after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectTopicList
+            @archetype={{null}}
+            @onChange={{this.addPickedTopic}}
+            @texts={{hash
+              ariaLabel=(i18n "boards.board.topic_search_placeholder")
+              searchPlaceholder=(i18n "boards.board.topic_search_placeholder")
+            }}
+            @value={{NO_TOPICS}}
+          />
+        {{else}}
+          <div class="inputs">
+            <Form
+              @data={{this.data}}
+              @onRegisterApi={{this.registerApi}}
+              @onSubmit={{this.onFormSubmit}}
+              as |form|
             >
-              <field.Control
-                autofocus="autofocus"
-                class="topic-search-input"
-                placeholder={{i18n "boards.board.topic_search_placeholder"}}
-              />
-            </form.Field>
+              <form.Field
+                @format="full"
+                @name="topicSearch"
+                @onSet={{this.search}}
+                @title={{i18n "boards.board.topic_search_placeholder"}}
+                @type="input"
+                as |field|
+              >
+                <field.Control
+                  autofocus="autofocus"
+                  class="topic-search-input"
+                  placeholder={{i18n "boards.board.topic_search_placeholder"}}
+                />
+              </form.Field>
 
-            {{#if this.searchLoading}}
-              {{dLoadingSpinner}}
-            {{/if}}
+              {{#if this.searchLoading}}
+                {{dLoadingSpinner}}
+              {{/if}}
 
-            {{#if this.searchResults}}
-              <div class="internal-link-results">
-                {{#each this.searchResults as |result|}}
-                  <a
-                    class="search-link"
-                    data-title={{result.fancy_title}}
-                    data-topic-id={{result.id}}
-                    href={{result.url}}
-                    {{on "click" this.topicClick}}
-                  >
-                    <TopicStatus @disableActions={{true}} @topic={{result}} />
-                    {{dReplaceEmoji result.title}}
-                    <div class="search-category">
-                      {{#if result.category.parentCategory}}
-                        {{dCategoryLink result.category.parentCategory}}
-                      {{/if}}
-                      {{dCategoryLink result.category hideParent=true}}
-                      {{dDiscourseTags result}}
-                    </div>
-                  </a>
-                {{/each}}
-              </div>
-            {{/if}}
-          </Form>
-        </div>
+              {{#if this.searchResults}}
+                <div class="internal-link-results">
+                  {{#each this.searchResults as |result|}}
+                    <a
+                      class="search-link"
+                      data-title={{result.fancy_title}}
+                      data-topic-id={{result.id}}
+                      href={{result.url}}
+                      {{on "click" this.topicClick}}
+                    >
+                      <TopicStatus @disableActions={{true}} @topic={{result}} />
+                      {{dReplaceEmoji result.title}}
+                      <div class="search-category">
+                        {{#if result.category.parentCategory}}
+                          {{dCategoryLink result.category.parentCategory}}
+                        {{/if}}
+                        {{dCategoryLink result.category hideParent=true}}
+                        {{dDiscourseTags result}}
+                      </div>
+                    </a>
+                  {{/each}}
+                </div>
+              {{/if}}
+            </Form>
+          </div>
+        {{/if}}
       </:body>
 
       <:footer>
-        <DButton
-          class="btn-primary"
-          type="submit"
-          @action={{this.formApi.submit}}
-          @label="boards.board.add_topic_as_card"
-        />
+        {{#unless this.siteSettings.enable_new_select_controls}}
+          <DButton
+            class="btn-primary"
+            type="submit"
+            @action={{this.formApi.submit}}
+            @label="boards.board.add_topic_as_card"
+          />
+        {{/unless}}
         <DButton
           class="btn-transparent"
           @action={{@closeModal}}
