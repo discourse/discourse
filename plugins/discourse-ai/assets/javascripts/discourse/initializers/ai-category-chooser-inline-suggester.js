@@ -150,10 +150,6 @@ async function applyNewSuggestion(control, context, { toasts, a11y }) {
 function initInlineCategorySuggester(api) {
   const currentUser = api.getCurrentUser();
   const siteSettings = api.container.lookup("service:site-settings");
-  const services = {
-    toasts: api.container.lookup("service:toasts"),
-    a11y: api.container.lookup("service:a11y"),
-  };
 
   api.registerValueTransformer(
     "select-customizations",
@@ -177,8 +173,12 @@ function initInlineCategorySuggester(api) {
                 name: i18n("discourse_ai.ai_helper.choose"),
                 icon: "discourse-sparkles",
                 sticky: true,
+                // Looked up on use: resolving them at boot would pin them before tests can stub them.
                 onSelect: (select) =>
-                  applyNewSuggestion(select, context, services),
+                  applyNewSuggestion(select, context, {
+                    toasts: api.container.lookup("service:toasts"),
+                    a11y: api.container.lookup("service:a11y"),
+                  }),
               },
               ...items,
             ];
