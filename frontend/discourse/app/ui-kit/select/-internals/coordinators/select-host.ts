@@ -53,6 +53,7 @@ export interface SelectHostArgs
       | "loadContext"
       | "filterBy"
       | "valueField"
+      | "normalizeKey"
       | "labelField"
       | "valueItems"
       | "resolveValue"
@@ -215,6 +216,7 @@ export default class SelectHost {
       onReloadList: () => this.announcer.reloadList(),
       filterBy: this.#options.getArgs().filterBy,
       valueField: this.#options.getArgs().valueField,
+      normalizeKey: this.#options.getArgs().normalizeKey,
       labelField: this.#options.getArgs().labelField,
       // Passed only when the consumer actually declared the arg. An arg that is present but
       // still empty is the late-arrival pattern mid-flight; withholding the reader entirely is

@@ -165,6 +165,37 @@ module(
       assert.deepEqual(onChange.lastCall.args[0], ["support", "sales"]);
     });
 
+    test("matches held names to groups in any case", async function (assert) {
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelectGroup
+            @emit="names"
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array "Support" "sales"}}
+          />
+        </template>
+      );
+      assert
+        .dom(".d-select__chip")
+        .exists({ count: 2 }, "a held name resolves to its group");
+
+      const select = new DSelect();
+      await select.open();
+      assert
+        .dom(optionNamed("Support crew"))
+        .hasAttribute("aria-selected", "true", "the group's row is selected");
+
+      await click(optionNamed("Support crew"));
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        ["sales"],
+        "picking the row removes the held name instead of adding a second one"
+      );
+    });
+
     test("lists the call site's own groups instead of the site's", async function (assert) {
       const groups = [{ id: 40, name: "partners", full_name: "Partners" }];
 

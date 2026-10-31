@@ -561,6 +561,15 @@ export interface SelectEngineOptions {
   /** Field holding an item's value. Defaults to `"id"`. */
   valueField?: string;
 
+  /**
+   * Maps an id's string form to the key that decides whether two ids are the same option.
+   * Without it, ids are the same only when their string forms match exactly, so `"sam"` and
+   * `"Sam"` are two options. Pass one when the domain matches ids loosely, for example a
+   * lowercasing one for usernames. Matching, de-duplication and held-value resolution use the
+   * key; emitted values keep the spelling they arrived with. Read once, at construction.
+   */
+  normalizeKey?: (key: string) => string;
+
   /** Field holding an item's label. Defaults to `"name"`. */
   labelField?: string;
 

@@ -1269,6 +1269,92 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
   });
+
+  module("value equality (normalizeKey)", function () {
+    const lowercase = (key) => key.toLowerCase();
+
+    test("ids differing only in case are different options by default", function (assert) {
+      const { engine } = controlled({ multiple: true, value: ["sam", "Sam"] });
+      assert.deepEqual([...engine.value], ["sam", "Sam"], "both are held");
+      assert.false(
+        controlled({ value: "sam" }).engine.isSelected({ id: "Sam" }),
+        "a held id selects only its exact spelling"
+      );
+    });
+
+    test("ids with the same normalized key are the same option", function (assert) {
+      const { engine } = controlled({ value: "sam", normalizeKey: lowercase });
+      assert.true(
+        engine.isSelected({ id: "Sam" }),
+        "a row spelled differently is the held option"
+      );
+      assert.false(
+        engine.isSelected({ id: "sammy" }),
+        "a different id still is not selected"
+      );
+    });
+
+    test("receives the string form of every id", function (assert) {
+      const keys = [];
+      const { engine } = controlled({
+        value: 5,
+        normalizeKey: (key) => {
+          keys.push(key);
+          return key;
+        },
+      });
+      assert.true(
+        engine.isSelected({ id: "5" }),
+        "numeric and string ids still match"
+      );
+      assert.true(keys.length > 0, "the normalizer is used");
+      assert.true(
+        keys.every((key) => typeof key === "string"),
+        "the normalizer only sees strings"
+      );
+    });
+
+    test("deselects a held id through a row spelled differently", function (assert) {
+      const { engine, changes } = controlled({
+        multiple: true,
+        normalizeKey: lowercase,
+        value: ["sam", "bob"],
+      });
+      engine.toggle({ id: "Sam" });
+      assert.deepEqual(
+        changes.at(-1)[0],
+        ["bob"],
+        "toggling the row removes the held spelling instead of adding a second one"
+      );
+    });
+
+    test("collapses held ids with the same key, keeping the first spelling", function (assert) {
+      const { engine } = controlled({
+        multiple: true,
+        normalizeKey: lowercase,
+        value: ["Sam", "sam", "bob", "SAM"],
+      });
+      assert.deepEqual([...engine.value], ["Sam", "bob"]);
+    });
+
+    test("emits a picked item's own spelling", function (assert) {
+      const { engine, changes } = controlled({
+        multiple: true,
+        normalizeKey: lowercase,
+        value: ["bob"],
+      });
+      engine.select({ id: "Sam" });
+      assert.deepEqual(changes.at(-1)[0], ["bob", "Sam"]);
+    });
+
+    test("resolves a held id from an item spelled differently", function (assert) {
+      const engine = new SelectEngine({
+        items: [{ id: "Sam", name: "Sam Smith" }],
+        normalizeKey: lowercase,
+      });
+      assert.strictEqual(engine.resolveSelection("sam")?.name, "Sam Smith");
+    });
+  });
 });
 
 // aria-setsize describes the complete set, never the mounted window, and never the -1

@@ -240,6 +240,45 @@ module(
       assert.dom(optionNamed("bob")).hasAttribute("aria-selected", "true");
     });
 
+    test("matches held names to rows in any case", async function (assert) {
+      stubUserSearch();
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelectUser
+            @includeGroups="visible"
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array "sam" "TEAM"}}
+          />
+        </template>
+      );
+      const select = new DSelect();
+      await select.open();
+      await select.search("sam");
+
+      assert
+        .dom(optionNamed("Sam Saffron"))
+        .hasAttribute("aria-selected", "true", "a held user's row is selected");
+
+      await click(optionNamed("Sam Saffron"));
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        ["TEAM"],
+        "picking the row removes the held name instead of adding a second one"
+      );
+
+      await select.search("team");
+      assert
+        .dom(optionNamed("The Team"))
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "a held group's row is selected"
+        );
+    });
+
     test("leaves excluded names and, when asked, the current user out", async function (assert) {
       stubUserSearch();
       const state = new (class {

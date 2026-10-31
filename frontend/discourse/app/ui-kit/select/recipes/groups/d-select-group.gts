@@ -75,6 +75,11 @@ interface DSelectGroupSignature {
   Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
+/** Group names are one option in any case, as the server matches them; ids are unaffected. */
+function caseInsensitiveKey(key: string): string {
+  return key.toLowerCase();
+}
+
 /** Picks from the site's groups, filtered locally. */
 export default class DSelectGroup extends Component<DSelectGroupSignature> {
   @service declare site: Site;
@@ -153,6 +158,7 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}
+      @normalizeKey={{caseInsensitiveKey}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}
       @suppressFooter={{not (has-block "footer")}}

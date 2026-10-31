@@ -121,6 +121,8 @@ export interface DSelectSignature {
     loadContext?: SelectEngineOptions["loadContext"];
     filterBy?: SelectEngineOptions["filterBy"];
     valueField?: string;
+    /** Maps an id to the key that decides identity, such as a lowercasing one for usernames. Ids match exactly without it. Read once. */
+    normalizeKey?: SelectEngineOptions["normalizeKey"];
     labelField?: string;
     valueItems?: SelectEngineOptions["valueItems"];
     resolveValue?: SelectEngineOptions["resolveValue"];

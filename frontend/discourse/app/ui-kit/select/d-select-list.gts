@@ -61,6 +61,8 @@ interface DSelectListSignature {
     filterBy?: SelectHostArgs["filterBy"];
     /** Identity field; omit for object values. */
     valueField?: string;
+    /** Maps an id to the key that decides identity; ids match exactly without it. Read once. */
+    normalizeKey?: SelectHostArgs["normalizeKey"];
     /** Fallback display-label field. */
     labelField?: string;
     /** Already resolved held items. */

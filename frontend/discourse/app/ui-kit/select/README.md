@@ -858,6 +858,11 @@ Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
 - `@multiple` defaults to `false`. A recipe forwards it; it never flips the default.
 - `@valueItems` gives items for held ids already in hand; `@resolveValues` resolves the rest,
   synchronously or not. The engine normalizes `@value`'s shape and the emitted ids' types.
+- Two ids are the same option when their string forms match, so `5` and `"5"` match but `"sam"`
+  and `"Sam"` don't. A domain whose ids match loosely passes `@normalizeKey`, such as a
+  lowercasing one for usernames. It applies to selection, de-duplication and held-value
+  resolution; emitted values keep their own spelling. Most domains need exact keys, so it has
+  no default.
 - `@specialItems` adds recipe-owned rows ahead of the source's, from a snapshot of the filter
   and value. They are not de-duplicated against the source, so the source must leave them out.
 - `@noneRow` adds the single-select "none" row, worded by the `noneLabel` text; `@maximum` and `@minimum` cap the selection
@@ -1047,6 +1052,8 @@ The people family has two recipes, one per data source:
   - `@showStatus` shows each user's status in the rows.
   - Held names are looked up together, in one request per value change, and keep the
     spelling they were given. A name nothing resolves stays as typed, with no `type`.
+  - Names match in any case, as the server matches them: a held `sam` marks the `Sam` row
+    selected, and picking that row removes it rather than adding a second chip.
   - With `@multiple`, pasting a list that has a comma, a newline or an `@` adds every name in
     it at once. The list is split on commas and whitespace, and a leading `@` is dropped. A
     single plain name is typed as usual.
@@ -1058,7 +1065,8 @@ The people family has two recipes, one per data source:
   name and a string id can't be told apart. `@automatic={{false}}` and `@everyone={{false}}`
   leave those groups out, `@exclude` lists group ids never offered, and `@only` lists the only
   ones offered. `@items` replaces the site's groups for a call site with its own list (the
-  `@items` exception, as with `DSelectTagFilter`); the other filters still apply.
+  `@items` exception, as with `DSelectTagFilter`); the other filters still apply. Held names
+  match their groups in any case.
 
 Without an `ariaLabel` text or `@ariaLabelledBy`, a user picker is named for what it offers,
 one whole string per case ("User", "User or group", "User or email", "User, group or email"),

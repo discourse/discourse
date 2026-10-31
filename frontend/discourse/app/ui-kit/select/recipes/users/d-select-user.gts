@@ -113,6 +113,11 @@ interface DSelectUserSignature {
   Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
+/** Usernames, group names and addresses are one option in any case, as the server matches them. */
+function caseInsensitiveKey(key: string): string {
+  return key.toLowerCase();
+}
+
 /**
  * Picks users, and groups or addresses when asked, from the server's user search. Held names
  * are looked up together, and keep the spelling they were given.
@@ -348,6 +353,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @maxVisibleChips={{@maxVisibleChips}}
       @minChars={{this.minChars}}
       @multiple={{@multiple}}
+      @normalizeKey={{caseInsensitiveKey}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}
       @parsePaste={{if @multiple this.parsePaste}}

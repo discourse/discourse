@@ -512,10 +512,10 @@ Open items need a decision after manual testing; the rest are intended but still
   results while the user search was rate limited; the new picker shows its load error.
 - [ ] **Dropped options:** `filterIcon`, `useHeaderFilter`, `tabindex` and custom caret icons.
   The change owner modal no longer focuses the picker when it opens.
-- [ ] **Known gap: case in held names.** Held values are keyed as given, so a held `sam` and the
-  server's `Sam` are two values. Held lookups and `@exclude` match any case, but a list loaded
-  before `sam` was held shows `Sam` unmarked, and picking it adds a second chip (an engine key
-  normalizer is the proposed fix).
+- [ ] **Names match in any case.** The server matches usernames and group names in any case.
+  Legacy compared them exactly, so a held `sam` left the `Sam` row offered, and picking it
+  added a second value. The new pickers mark that row selected, and picking it removes the
+  held name. Values keep the spelling they were given.
 - [ ] **Unchanged legacy bugs, logged for separate fixes:** the composer's `hasGroups` reads
   `length` on a `Set`, so it is always false (`composer-user-selector.gjs`); merge users leaves
   the merge button enabled after the picker is cleared (`merge-users-prompt.gjs`); and the invite

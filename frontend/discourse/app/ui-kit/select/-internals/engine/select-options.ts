@@ -65,6 +65,7 @@ export default class SelectOptionsView {
   #readKindTextWrappers?: SelectEngineOptions["getKindTextWrappers"];
   #kindTextWrappers?: SelectEngineOptions["kindTextWrappers"];
   #valueField: string;
+  #normalizeKey?: SelectEngineOptions["normalizeKey"];
   #labelField: string;
   // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
   // right now. Those are different: an empty-but-declared arg is the late-arrival pattern
@@ -130,6 +131,7 @@ export default class SelectOptionsView {
     this.#readKindTextWrappers = opts.getKindTextWrappers;
     this.#kindTextWrappers = opts.kindTextWrappers;
     this.#valueField = opts.valueField ?? "id";
+    this.#normalizeKey = opts.normalizeKey;
     this.#labelField = opts.labelField ?? "name";
     // Values are unique by contract (selection identity, row keys), so grouping by the value
     // field deterministically yields one group per row. This certain misuse fails loudly; a
@@ -409,10 +411,16 @@ export default class SelectOptionsView {
     this.#readResolvedOptions = read;
   }
 
-  // Two ids denote the same option iff their string forms match, so a bound "5" selects
-  // item id 5 (and vice-versa). Nullish never matches an id.
+  /**
+   * Two ids denote the same option iff their string forms match after `normalizeKey`, so a
+   * bound "5" selects item id 5 (and vice-versa). Nullish never matches an id.
+   */
   valueKey(value: SelectItemId): string | null {
-    return value == null ? null : String(value);
+    if (value == null) {
+      return null;
+    }
+    const key = String(value);
+    return this.#normalizeKey ? this.#normalizeKey(key) : key;
   }
 
   /** Removes duplicate normalized ids while preserving first-occurrence order. */

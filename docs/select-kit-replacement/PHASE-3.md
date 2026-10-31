@@ -173,7 +173,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     assign's assignee picker (open on render, suggestions on an empty query, its own search
     URL) and category groups (values that can't be removed), `DAccessControlGranteeChooser`
     (with the ui-kit wrappers below) and the workflows group field (wave 5).
-  - ☐ Held names are case sensitive in the engine's keys; a key normalizer needs approval.
+  - ☑ Held names match in any case, through the engine's opt-in `normalizeKey` (2026-10-31).
   - ☐ `addUserSearchOption` reaches only the legacy pickers; the new ones take `searchOptions`
     through a customization.
   - ☐ Boards modals: a "ResizeObserver loop" error with `DSelectUser` in the column settings
