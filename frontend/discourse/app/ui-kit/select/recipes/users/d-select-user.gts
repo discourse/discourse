@@ -136,8 +136,12 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     assertNoRemovedTextArgs("DSelectUser", args);
   }
 
+  /**
+   * Both select-kit names, because the email, group and user chooser extended the user chooser
+   * and answered to both.
+   */
   get legacyKind() {
-    return this.args.legacyKind ?? "user-chooser";
+    return this.args.legacyKind ?? ["user-chooser", "email-group-user-chooser"];
   }
 
   /** Every input of the search; nested search options compare by their content. */

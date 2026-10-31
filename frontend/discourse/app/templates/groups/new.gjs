@@ -7,6 +7,7 @@ import GroupsFormProfileFields from "discourse/components/groups-form-profile-fi
 import bodyClass from "discourse/helpers/body-class";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -23,31 +24,69 @@ export default <template>
         @model={{@controller.model}}
       >
         <div class="control-group">
-          <label class="control-label" for="owner-selector">{{i18n
-              "admin.groups.add_owners"
-            }}</label>
+          <label
+            class="control-label"
+            for="owner-selector"
+            id="owner-selector-label"
+          >{{i18n "admin.groups.add_owners"}}</label>
 
-          <EmailGroupUserChooser
-            class="input-xxlarge"
-            @id="owner-selector"
-            @onChange={{@controller.updateOwnerUsernames}}
-            @options={{hash filterPlaceholder="groups.selector_placeholder"}}
-            @value={{@controller.splitOwnerUsernames}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+          {{#if @controller.siteSettings.enable_new_select_controls}}
+            <DSelectUser
+              class="input-xxlarge"
+              @ariaLabelledBy="owner-selector-label"
+              @id="owner-selector"
+              @multiple={{true}}
+              @onChange={{@controller.updateOwnerUsernames}}
+              @texts={{hash
+                placeholder=(i18n "groups.selector_placeholder")
+                searchPlaceholder=(i18n "groups.selector_placeholder")
+              }}
+              @value={{@controller.splitOwnerUsernames}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+            <EmailGroupUserChooser
+              class="input-xxlarge"
+              @id="owner-selector"
+              @onChange={{@controller.updateOwnerUsernames}}
+              @options={{hash filterPlaceholder="groups.selector_placeholder"}}
+              @value={{@controller.splitOwnerUsernames}}
+            />
+          {{/if}}
         </div>
 
         <div class="control-group">
-          <label class="control-label" for="member-selector">{{i18n
-              "groups.members.title"
-            }}</label>
+          <label
+            class="control-label"
+            for="member-selector"
+            id="member-selector-label"
+          >{{i18n "groups.members.title"}}</label>
 
-          <EmailGroupUserChooser
-            class="input-xxlarge"
-            @id="member-selector"
-            @onChange={{@controller.updateUsernames}}
-            @options={{hash filterPlaceholder="groups.selector_placeholder"}}
-            @value={{@controller.splitUsernames}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+          {{#if @controller.siteSettings.enable_new_select_controls}}
+            <DSelectUser
+              class="input-xxlarge"
+              @ariaLabelledBy="member-selector-label"
+              @id="member-selector"
+              @multiple={{true}}
+              @onChange={{@controller.updateUsernames}}
+              @texts={{hash
+                placeholder=(i18n "groups.selector_placeholder")
+                searchPlaceholder=(i18n "groups.selector_placeholder")
+              }}
+              @value={{@controller.splitUsernames}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+            <EmailGroupUserChooser
+              class="input-xxlarge"
+              @id="member-selector"
+              @onChange={{@controller.updateUsernames}}
+              @options={{hash filterPlaceholder="groups.selector_placeholder"}}
+              @value={{@controller.splitUsernames}}
+            />
+          {{/if}}
         </div>
       </GroupsFormProfileFields>
 

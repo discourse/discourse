@@ -11,11 +11,13 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class GroupAddMembers extends Component {
   @service currentUser;
   @service router;
+  @service siteSettings;
 
   @tracked loading = false;
   @tracked setOwner = false;
@@ -95,7 +97,41 @@ export default class GroupAddMembers extends Component {
               )
             }}</p>
           <div class="input-group">
-            {{#if this.currentUser.can_invite_to_forum}}
+            {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+            {{#if
+              (and
+                this.currentUser.can_invite_to_forum
+                this.siteSettings.enable_new_select_controls
+              )
+            }}
+              <DSelectUser
+                @emails={{true}}
+                @multiple={{true}}
+                @onChange={{this.setUsernamesAndEmails}}
+                @texts={{hash
+                  placeholder=(i18n
+                    "groups.add_members.usernames_or_emails_placeholder"
+                  )
+                  searchPlaceholder=(i18n
+                    "groups.add_members.usernames_or_emails_placeholder"
+                  )
+                }}
+                @value={{this.usernamesAndEmails}}
+              />
+            {{else if this.siteSettings.enable_new_select_controls}}
+              <DSelectUser
+                @multiple={{true}}
+                @onChange={{this.setUsernamesAndEmails}}
+                @texts={{hash
+                  placeholder=(i18n "groups.add_members.usernames_placeholder")
+                  searchPlaceholder=(i18n
+                    "groups.add_members.usernames_placeholder"
+                  )
+                }}
+                @value={{this.usernamesAndEmails}}
+              />
+            {{else if this.currentUser.can_invite_to_forum}}
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy pickers after rollout. }}
               <EmailGroupUserChooser
                 @onChange={{this.setUsernamesAndEmails}}
                 @options={{hash

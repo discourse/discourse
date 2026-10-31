@@ -20,6 +20,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class CreateInvite extends Component {
@@ -493,12 +494,28 @@ export default class CreateInvite extends Component {
                 as |field|
               >
                 <field.Control>
-                  <GroupChooser
-                    @content={{this.allGroups}}
-                    @labelProperty="name"
-                    @onChange={{field.set}}
-                    @value={{field.value}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectGroup
+                      @automatic={{false}}
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
+                      @id={{field.id}}
+                      @invalid={{if field.error true false}}
+                      @multiple={{true}}
+                      @onChange={{field.set}}
+                      @texts={{hash ariaLabel=field.title}}
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+                    <GroupChooser
+                      @content={{this.allGroups}}
+                      @labelProperty="name"
+                      @onChange={{field.set}}
+                      @value={{field.value}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
             {{/if}}

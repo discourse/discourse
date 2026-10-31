@@ -520,23 +520,25 @@ module(
       assert.deepEqual(requests, [], "a special value is never looked up");
     });
 
-    test("carries the legacy classes it replaces", async function (assert) {
+    test("carries both legacy names, since the old choosers answered to both", async function (assert) {
       stubUserSearch();
 
       await render(
         <template>
           <DSelectUser class="a" />
-          <DSelectUser
-            class="b"
-            @legacyKind={{array "user-chooser" "email-group-user-chooser"}}
-          />
+          <DSelectUser class="b" @legacyKind="user-chooser" />
         </template>
       );
 
       assert.dom(".a.d-select").hasClass("user-chooser");
-      assert.dom(".a.d-select").doesNotHaveClass("email-group-user-chooser");
+      assert.dom(".a.d-select").hasClass("email-group-user-chooser");
       assert.dom(".b.d-select").hasClass("user-chooser");
-      assert.dom(".b.d-select").hasClass("email-group-user-chooser");
+      assert
+        .dom(".b.d-select")
+        .doesNotHaveClass(
+          "email-group-user-chooser",
+          "a call site can narrow it"
+        );
     });
   }
 );

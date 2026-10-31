@@ -23,6 +23,7 @@ import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
@@ -207,6 +208,11 @@ export default class MoveToTopic extends Component {
   }
 
   @action
+  updateParticipants(participants) {
+    this.participants = participants;
+  }
+
+  @action
   newTopicSelected(topic) {
     this.selectedTopic = topic;
   }
@@ -310,11 +316,25 @@ export default class MoveToTopic extends Component {
               />
 
               <label>{{i18n "topic.move_to_new_message.participants"}}</label>
-              <EmailGroupUserChooser
-                class="participant-selector"
-                @onChange={{fn (mut this.participants)}}
-                @value={{this.participants}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectUser
+                  class="participant-selector"
+                  @multiple={{true}}
+                  @onChange={{this.updateParticipants}}
+                  @texts={{hash
+                    ariaLabel=(i18n "topic.move_to_new_message.participants")
+                  }}
+                  @value={{this.participants}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                <EmailGroupUserChooser
+                  class="participant-selector"
+                  @onChange={{fn (mut this.participants)}}
+                  @value={{this.participants}}
+                />
+              {{/if}}
 
               {{#if this.selectedTopic}}
                 <hr />
