@@ -758,6 +758,11 @@ variant's filter. Return `null` or `undefined` to leave native paste untouched (
 for a single token), or an array of items to prevent native paste and call `selectMany`.
 An accepted array clears the original query, including when the batch adds nothing.
 
+Without `@parsePaste`, a multi-select parses pastes itself, as select-kit did: two or more
+`|`-separated names are matched against the rows the source knows (every `@items` row, or the
+rows `@load` has returned so far), by value or by label ignoring case. A name with no row is
+created where `@allowCreate` allows it, and is skipped otherwise. A single name pastes as text.
+
 ```gjs
 <DSelect
   @items={{this.items}}

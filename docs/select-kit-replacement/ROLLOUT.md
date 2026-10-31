@@ -442,6 +442,10 @@ Open items need a decision after manual testing; the rest are intended but still
 - [ ] **Reopening the chooser cancels a pending pick.** A row that picks asynchronously (a
   suggestion request, for example) is cancelled when the list reopens, by a later pick, or when
   the control goes away. The legacy chooser applied the result unless the value had changed.
+- [ ] **Pasting several names works in every multi-select.** As in select-kit, pasting
+  `Apple|Cherry` adds the rows the list has loaded with those values or names, and creates the
+  rest where creation is allowed. Names now match ignoring case. A call site's `@parsePaste`
+  replaces this.
 
 **Tags** (recorded 2026-10-29)
 

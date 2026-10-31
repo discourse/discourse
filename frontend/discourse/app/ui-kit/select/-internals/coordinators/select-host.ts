@@ -392,12 +392,15 @@ export default class SelectHost {
   @action
   handlePaste(event: ClipboardEvent): void | Promise<void> {
     const args = this.#options.getArgs();
-    if (this.#options.getPresenter().isLocked || !args.parsePaste) {
+    const parsePaste =
+      args.parsePaste ??
+      (this.engine.multiple ? this.engine.parsePaste : undefined);
+    if (this.#options.getPresenter().isLocked || !parsePaste) {
       return;
     }
     const session = this.#options.session();
     const query = this.engine.queryKey;
-    const result = args.parsePaste(
+    const result = parsePaste(
       event.clipboardData?.getData("text/plain") ?? "",
       {
         filter: this.engine.filter,

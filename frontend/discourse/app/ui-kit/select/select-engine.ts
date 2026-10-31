@@ -1499,6 +1499,51 @@ export default class SelectEngine {
   }
 
   /**
+   * The paste parser a multi-select uses when the call site passes none. Two or more
+   * `|`-separated names are matched against the rows the source knows, by value or by label
+   * ignoring case, and a name with no row is created where creation is allowed. Anything else
+   * is left to the browser.
+   *
+   * @param text - The pasted plain text.
+   */
+  @bind
+  parsePaste(text: string): SelectItem[] | null {
+    const names = text
+      .split("|")
+      .map((name) => name.trim())
+      .filter(Boolean);
+    if (names.length < 2) {
+      return null;
+    }
+    const options = this.#options;
+    const rows = this.#source.knownRows().filter((row) => !row.onSelect);
+    const allowCreate = options.allowCreate;
+    return names
+      .map((name) => {
+        const term = name.toLowerCase();
+        const row =
+          rows.find(
+            (item) => options.valueKey(options.itemValue(item)) === name
+          ) ??
+          rows.find(
+            (item) =>
+              String(options.itemLabel(item) ?? "").toLowerCase() === term
+          );
+        if (row) {
+          return row;
+        }
+        const creates =
+          typeof allowCreate === "function"
+            ? allowCreate(name, rows, this.resolvedOptions)
+            : !!allowCreate;
+        return creates && options.createItem
+          ? options.createItem(name, this.resolvedOptions)
+          : undefined;
+      })
+      .filter((item): item is SelectItem => item !== undefined);
+  }
+
+  /**
    * Resets the source and forces a re-fetch even when the filter is unchanged. Also
    * drops failed value-resolution fallbacks so they are attempted again; successful items
    * stay cached.

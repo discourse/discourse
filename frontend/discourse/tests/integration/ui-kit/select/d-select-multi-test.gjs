@@ -1225,6 +1225,174 @@ module(
   }
 );
 
+module(
+  "Integration | ui-kit | select | DSelect (default paste)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("a multi-select adds the pipe-separated names it lists", async function (assert) {
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "x");
+      const event = paste("[role='combobox']", "Apple|Cherry");
+      await settled();
+
+      assert.true(event.defaultPrevented, "the paste is consumed");
+      assert.deepEqual(onChange.lastCall.args[0], [1, 3]);
+      assert.dom("[role='combobox']").hasValue("", "the query is cleared");
+    });
+
+    test("a pasted name matches a label ignoring case, or a value", async function (assert) {
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      paste("[role='combobox']", "apple|3");
+      await settled();
+
+      assert.deepEqual(onChange.lastCall.args[0], [1, 3]);
+    });
+
+    test("a single name is pasted as text", async function (assert) {
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      const event = paste("[role='combobox']", "Apple");
+      await settled();
+
+      assert.false(event.defaultPrevented, "default paste proceeds");
+      assert.true(onChange.notCalled);
+    });
+
+    test("a name the select doesn't list is skipped unless creation is allowed", async function (assert) {
+      const onChange = sinon.spy();
+      const createItem = (name) => ({ id: `new:${name}`, name });
+      const allowCreate = tracked(false);
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{allowCreate.value}}
+            @createItem={{createItem}}
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      paste("[role='combobox']", "Apple|Kiwi");
+      await settled();
+      assert.deepEqual(onChange.lastCall.args[0], [1], "Kiwi is skipped");
+
+      allowCreate.value = true;
+      await settled();
+      paste("[role='combobox']", "Cherry|Kiwi");
+      await settled();
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        [3, "new:Kiwi"],
+        "Kiwi is created"
+      );
+    });
+
+    test("a server source matches the rows it has loaded", async function (assert) {
+      const onChange = sinon.spy();
+      const load = async () => FRUIT;
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      paste("[role='combobox']", "Banana|Cherry");
+      await settled();
+
+      assert.deepEqual(onChange.lastCall.args[0], [2, 3]);
+    });
+
+    test("a single-select leaves pastes alone", async function (assert) {
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @onChange={{onChange}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      const event = paste("[role='combobox']", "Apple|Cherry");
+      await settled();
+
+      assert.false(event.defaultPrevented, "default paste proceeds");
+      assert.true(onChange.notCalled);
+    });
+
+    test("a call site's parser replaces the default", async function (assert) {
+      const onChange = sinon.spy();
+      const parsePaste = () => null;
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      const event = paste("[role='combobox']", "Apple|Cherry");
+      await settled();
+
+      assert.false(event.defaultPrevented, "the parser declined it");
+      assert.true(onChange.notCalled);
+    });
+  }
+);
+
 /** A controlled multi host for the strip tests. */
 class StripHost extends Component {
   @tracked value = this.args.value ?? [];
