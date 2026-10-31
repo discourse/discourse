@@ -1,6 +1,7 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PollUiBuilder from "discourse/plugins/poll/discourse/components/modal/poll-ui-builder";
 
@@ -344,6 +345,30 @@ module("Component | PollUiBuilder", function (hooks) {
       results[results.length - 1],
       "[poll type=regular results=always public=false chartType=bar groups=custom_group]\n* a\n* b\n[/poll]\n",
       "has groups"
+    );
+  });
+
+  test("with the new select controls, limits voting to the picked groups", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const results = await setupBuilder();
+
+    await fillIn(".poll-option-value input", "a");
+    await click(".poll-option-add");
+    await fillIn(".poll-option-value:nth-of-type(2) input", "b");
+    await click(".advanced-mode-btn");
+
+    const groups = dSelect(".poll-allowed-groups .d-select");
+    await groups.open();
+    assert
+      .dom(".d-select__option[data-name='everyone']")
+      .doesNotExist("everyone is not offered");
+    await groups.selectByName("custom_group");
+    await groups.close();
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[results.length - 1],
+      "[poll type=regular results=always public=true chartType=bar groups=custom_group]\n* a\n* b\n[/poll]\n"
     );
   });
 
