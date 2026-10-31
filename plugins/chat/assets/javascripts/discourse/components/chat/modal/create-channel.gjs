@@ -326,7 +326,11 @@ export default class ChatModalCreateChannel extends Component {
               {{#if this.siteSettings.enable_new_select_controls}}
                 <DSelectCategory
                   class="category-chooser"
+                  @describedBy={{field.describedBy}}
+                  @disabled={{field.disabled}}
                   @emit="ids"
+                  @id={{field.id}}
+                  @invalid={{if field.error true false}}
                   @onChange={{field.set}}
                   @permission="create"
                   @texts={{hash

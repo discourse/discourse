@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -53,5 +53,31 @@ module("Integration | Component | HouseAdForm", function (hooks) {
     await formKit().submit();
 
     assert.deepEqual(body["group_ids[]"], ["10", "11"]);
+  });
+
+  test("with the new select controls, the categories picker is described by the field's description", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const model = {
+      id: 3,
+      name: "Ad",
+      html: "<p>Ad</p>",
+      categories: [],
+      groups: [],
+      routes: [],
+    };
+    const houseAds = [model];
+
+    await render(
+      <template>
+        <HouseAdForm @houseAds={{houseAds}} @model={{model}} />
+      </template>
+    );
+
+    const description = find(
+      "[data-name='categories'] .form-kit__container-description"
+    );
+    assert
+      .dom("[data-name='categories'] [role='combobox']")
+      .hasAttribute("aria-describedby", new RegExp(description.id));
   });
 });

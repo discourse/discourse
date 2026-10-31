@@ -92,6 +92,10 @@ export default class ActorControl extends Component {
             <DSelectUser
               class="workflows-actor-control__user"
               @clearable={{true}}
+              @describedBy={{@field.describedBy}}
+              @disabled={{@field.disabled}}
+              @id={{@field.id}}
+              @invalid={{if @field.error true false}}
               @onChange={{legacyPickOne this.handleUserChange}}
               @texts={{hash ariaLabel=@field.title}}
               @value={{this.username}}

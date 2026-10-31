@@ -23,7 +23,10 @@ export default class CategoryIdInput extends Component {
         <DSelectCategory
           class="category-chooser"
           name={{@info.identifier}}
+          @describedBy={{@field.describedBy}}
+          @disabled={{@field.disabled}}
           @emit="ids"
+          @invalid={{if @field.error true false}}
           @noneRow={{true}}
           @onChange={{@field.set}}
           @permission="create"

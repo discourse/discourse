@@ -908,9 +908,13 @@ export default class UpsertCategoryGeneral extends Component {
               <DSelectCategory
                 class="category-chooser"
                 @clearable={{true}}
+                @describedBy={{field.describedBy}}
                 @descriptions={{false}}
+                @disabled={{field.disabled}}
                 @emit="ids"
                 @exclude={{if @category.id (array @category.id)}}
+                @id={{field.id}}
+                @invalid={{if field.error true false}}
                 @onChange={{field.set}}
                 @permission="see"
                 @subcategories={{this.allowSubCategoriesAsParent}}

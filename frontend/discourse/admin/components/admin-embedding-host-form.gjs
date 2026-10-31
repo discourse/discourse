@@ -104,7 +104,11 @@ export default class AdminEmbeddingHostForm extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectCategory
                       class="category-chooser admin-embedding-host-form__category"
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
                       @emit="ids"
+                      @id={{field.id}}
+                      @invalid={{if field.error true false}}
                       @onChange={{field.set}}
                       @permission="create"
                       @texts={{hash ariaLabel=field.title}}
@@ -130,8 +134,12 @@ export default class AdminEmbeddingHostForm extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectTag
                       class="admin-embedding-host-form__tags"
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
                       @excludeSynonyms={{true}}
+                      @id={{field.id}}
                       @ignoreRestrictions={{true}}
+                      @invalid={{if field.error true false}}
                       @maximum={{false}}
                       @multiple={{true}}
                       @onChange={{field.set}}

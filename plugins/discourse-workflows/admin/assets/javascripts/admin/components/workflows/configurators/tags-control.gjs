@@ -40,7 +40,11 @@ export default class TagsControl extends Component {
         {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
         <DSelectTag
           @allowCreate={{true}}
+          @describedBy={{@field.describedBy}}
+          @disabled={{@field.disabled}}
           @emit="names"
+          @id={{@field.id}}
+          @invalid={{if @field.error true false}}
           @legacyKind="mini-tag-chooser"
           @multiple={{true}}
           @onChange={{this.handleChange}}

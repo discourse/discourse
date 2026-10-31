@@ -17,7 +17,11 @@ export default class FormFieldSelectExample extends Component {
       >
         <field.Control>
           <DSelect
+            @describedBy={{field.describedBy}}
+            @disabled={{field.disabled}}
+            @id={{field.id}}
             @identifier="sg-form-locale"
+            @invalid={{if field.error true false}}
             @items={{LOCALES}}
             @onChange={{field.set}}
             @value={{field.value}}
@@ -33,7 +37,11 @@ export default class FormFieldSelectExample extends Component {
       >
         <field.Control>
           <DSelect
+            @describedBy={{field.describedBy}}
+            @disabled={{field.disabled}}
+            @id={{field.id}}
             @identifier="sg-form-locales"
+            @invalid={{if field.error true false}}
             @items={{LOCALES}}
             @multiple={{true}}
             @onChange={{field.set}}

@@ -142,7 +142,10 @@ export default class UpsertCategoryTags extends Component {
                 {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
                 {{#if this.siteSettings.enable_new_select_controls}}
                   <DSelectTagGroup
+                    @describedBy={{field.describedBy}}
                     @disabled={{field.disabled}}
+                    @id={{field.id}}
+                    @invalid={{if field.error true false}}
                     @multiple={{false}}
                     @onChange={{fn this.onSingleTagGroupFieldChange field}}
                     @texts={{hash

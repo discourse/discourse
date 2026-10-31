@@ -53,6 +53,10 @@ export default class UserControl extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectUser
           @clearable={{not this.multiple}}
+          @describedBy={{@field.describedBy}}
+          @disabled={{@field.disabled}}
+          @id={{@field.id}}
+          @invalid={{if @field.error true false}}
           @multiple={{this.multiple}}
           @onChange={{if
             this.multiple

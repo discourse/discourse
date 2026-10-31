@@ -106,6 +106,10 @@ export default <template>
         >
           <field.Control>
             <DSelectTag
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
               @multiple={{true}}
               @onChange={{field.set}}
               @value={{field.value}}

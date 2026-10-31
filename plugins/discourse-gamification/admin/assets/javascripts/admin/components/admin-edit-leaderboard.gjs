@@ -374,6 +374,10 @@ export default class AdminEditLeaderboard extends Component {
                       {{#if this.siteSettings.enable_new_select_controls}}
                         <DSelectCategory
                           class="category-selector"
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
                           @multiple={{true}}
                           @onChange={{fn this.onCategoryChange field.set}}
                           @texts={{hash ariaLabel=field.title}}

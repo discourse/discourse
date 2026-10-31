@@ -28,7 +28,11 @@ export default class UserOrGroupControl extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectUser
           @clearable={{true}}
+          @describedBy={{@field.describedBy}}
+          @disabled={{@field.disabled}}
+          @id={{@field.id}}
           @includeGroups="visible"
+          @invalid={{if @field.error true false}}
           @onChange={{legacyPickOne this.handleChange}}
           @texts={{hash ariaLabel=@field.title}}
           @value={{if @field.value @field.value null}}

@@ -362,7 +362,11 @@ export default class RssPollingFeedForm extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectCategory
                       class="category-chooser rss-polling-feed-form__category"
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
                       @emit="ids"
+                      @id={{field.id}}
+                      @invalid={{if field.error true false}}
                       @onChange={{fn this.categoryChanged field}}
                       @permission="create"
                       @texts={{hash ariaLabel=field.title}}
@@ -391,8 +395,12 @@ export default class RssPollingFeedForm extends Component {
                     <DSelectTag
                       class="rss-polling-feed-form__tags"
                       @allowCreate={{false}}
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
                       @emit="names"
+                      @id={{field.id}}
                       @ignoreRestrictions={{true}}
+                      @invalid={{if field.error true false}}
                       @maximum={{false}}
                       @multiple={{true}}
                       @onChange={{field.set}}
