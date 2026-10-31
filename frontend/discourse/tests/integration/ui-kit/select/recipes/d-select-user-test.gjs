@@ -520,6 +520,23 @@ module(
       assert.deepEqual(requests, [], "a special value is never looked up");
     });
 
+    test("lists a call site's special rows before anything is typed, then above the matches", async function (assert) {
+      const requests = stubUserSearch();
+      const special = () => [{ id: "author", name: "Topic author" }];
+
+      await render(
+        <template><DSelectUser @specialItems={{special}} /></template>
+      );
+      const select = new DSelect();
+      await select.open();
+
+      assert.deepEqual(optionValues(), ["author"]);
+      assert.deepEqual(requests, [], "an empty query sends nothing");
+
+      await select.search("bo");
+      assert.deepEqual(optionValues(), ["author", "bob"]);
+    });
+
     test("carries both legacy names, since the old choosers answered to both", async function (assert) {
       stubUserSearch();
 

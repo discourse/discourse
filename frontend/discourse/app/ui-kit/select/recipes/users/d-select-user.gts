@@ -158,9 +158,11 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     };
   }
 
-  /** A topic or category lists its users before anything is typed. */
+  /** A topic or category lists its users, and a call site its special rows, before anything is typed. */
   get minChars() {
-    return this.args.topicId || this.args.categoryId ? 0 : 1;
+    return this.args.topicId || this.args.categoryId || this.args.specialItems
+      ? 0
+      : 1;
   }
 
   get selectedValue() {
