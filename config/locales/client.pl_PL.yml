@@ -8,6 +8,7 @@ pl_PL:
   js:
     dsa_notice:
       choice_title: "To nielegalne"
+      choice_description: "Prześlij szczegółowy raport wyjaśniający, dlaczego ta treść jest nielegalna."
       go_back: "Cofnij"
       title: "Zgłoś nielegalną treść"
       content_url: "Dokładny adres URL treści"
@@ -16,6 +17,7 @@ pl_PL:
       name: "Imię i nazwisko lub nazwa organizacji"
       email: "Adres e-mail"
       declaration_section: "Oświadczenie"
+      declaration: "Szczerze wierzę, że fakty i twierdzenia zawarte w tym raporcie są prawdziwe i kompletne"
       submit: "Prześlij zgłoszenie"
       get_email_code: "Pobierz kod przez e-mail"
       resend_email_code: "Wyślij ponownie kod"
@@ -1888,6 +1890,7 @@ pl_PL:
       optional: (opcjonalne)
     user:
       said: "%{username}:"
+      bot_account: "Zautomatyzowane konto"
       profile: "Profil"
       profile_possessive: "profil %{username}"
       mute: "Wycisz"
@@ -5629,6 +5632,20 @@ pl_PL:
       revisions:
         diff_too_complex: "Ta edycja zmieniła zbyt dużą część wpisu na raz, więc nie można jej wyświetlić."
         diff_hidden: "Część historii edycji tego wpisu została ukryta, dlatego tej edycji nie można wyświetlić."
+        unlisted:
+          label: "Niewymienione"
+          description: "Ta edycja jest pomijana podczas przeglądania historii edycji, ale jej treść jest nadal publiczna."
+        show_all_edits: "Pokaż wszystkie edycje"
+        visibility:
+          listed:
+            title: "Wymienione"
+            description: "Wyświetlane podczas przeglądania historii edycji."
+          unlisted:
+            title: "Niewymienione"
+            description: "Pominięto podczas przeglądania historii edycji."
+          hidden:
+            title: "Ukryte"
+            description: "Usunięto z historii edycji publicznych wraz z różnicami obok."
         locale:
           no_locale_set: "Nie ustawiono języka"
           locale_removed: "Język usunięty"
@@ -5639,9 +5656,7 @@ pl_PL:
           previous: "Poprzednia wersja"
           next: "Następna wersja"
           last: "Ostatnia wersja"
-          hide: "Ukryj tę wersję"
-          show: "Pokaż tę wersję"
-          destroy: "Usuń wersje"
+          destroy: "Usuń wszystkie wersje"
           destroy_confirm: "Czy na pewno chcesz usunąć wszystkie wersje tego posta? Ta czynność jest trwała."
           revert: "Przywróć wersję %{revision}"
           edit_wiki: "Edytuj Wiki"
@@ -5718,7 +5733,7 @@ pl_PL:
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
-      choose: "Kategoria&hellip;"
+      choose: "Kategoria…"
       edit: "Edytuj"
       edit_title: "Edytuj tę kategorię"
       edit_dialog_title: "Edytuj: %{categoryName}"
@@ -8060,8 +8075,6 @@ pl_PL:
           combined: "Wyniki obejmują ostatnie %{limit} odsłon, począwszy od %{pageviewLimitDate} o %{pageviewLimitTime}. Wcześniejsze odsłony w wybranym zakresie dat nie są uwzględniane; dane dotyczące odsłon sprzed %{date} nie są już dostępne."
       dashboard:
         title: "Panel"
-        last_updated: "Panel zaktualizowany:"
-        discourse_last_updated: "Discourse zaktualizowane:"
         version: "Wersja"
         up_to_date: "Wersja aktualna!"
         up_to_date_newer_commits:
@@ -8070,21 +8083,13 @@ pl_PL:
           many: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
           other: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
         updates_available: "Aktualizacje są dostępne."
-        please_update: "Koniecznie zaktualizuj!"
-        no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."
-        stale_data: "Sprawdzanie dostępności aktualizacji nie było ostatnio wykonywane. Sprawdź czy działa sidekiq."
         version_check_pending: "Wygląda na to, że ostatnio była wykonana aktualizacja. Fantastycznie!"
-        installed_version: "Zainstalowana"
-        latest_version: "Dostępny"
-        github: "GitHub"
         commit_on_github: "Wyświetl zatwierdzenie %{sha} na GitHubie"
-        changelog: "Dziennik zmian"
         commits_ahead:
           one: "Wprowadzono %{count} dodatkową zmianę od początku tej serii wydań"
           few: "Wprowadzono %{count} dodatkowe zmiany od początku tej serii wydań"
           many: "Wprowadzono %{count} dodatkowych zmian od początku tej serii wydań"
           other: "Wprowadzono %{count} dodatkowych zmian od początku tej serii wydań"
-        problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         dismiss_notice: "Ignoruj"
         site_advice:
           title:
@@ -8098,16 +8103,7 @@ pl_PL:
           no_new_features_found: "Brak elementów w kanale lub wybrany filtr nie zwrócił żadnych wyników. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć na <a href='%{url}' target='_blank'>stronie Discourse Releases</a>."
           no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć na <a href='%{url}' target='_blank'>stronie Discourse Releases</a>."
           learn_more: "Dowiedz się więcej..."
-        last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
-        no_problems: "Nie znaleziono problemów."
-        moderators: "Moderatorzy:"
-        admins: "Administratorzy:"
-        silenced: "Wyciszeni:"
-        suspended: "Zawieszeni:"
-        private_messages_short: "Wiad."
-        private_messages_title: "Wiadomości"
-        mobile_title: "Mobile"
         space_used: "%{usedSize} użyty"
         space_used_and_free: "%{usedSize}(%{freeSize} wolne)"
         uploads: "Pliki"
@@ -8118,20 +8114,7 @@ pl_PL:
           many: "%{count} kopii zapasowych w %{location}"
           other: "%{count} kopii zapasowych w %{location}"
         lastest_backup: "Ostatnie: %{date}"
-        traffic_short: "Ruch"
-        traffic: "Zapytania do aplikacji"
-        page_views: "Wyświetlenia strony"
-        page_views_short: "Wyświetlenia strony"
-        show_traffic_report: "Pokaż szczegółowy raport ruchu"
-        community_health: Zdrowie społeczności
-        moderators_activity: Aktywność moderatorów
         whats_new_in_discourse: Co nowego w Discourse?
-        activity_metrics: Metryka aktywności
-        all_reports: "Wszystkie zgłoszenia"
-        general_tab: "Ogólne"
-        moderation_tab: "Moderacja"
-        security_tab: "Bezpieczeństwo"
-        reports_tab: "Zgłoszenia"
         report_filter_any: "każdy"
         disabled: Wyłączony
         timeout_error: Przepraszamy, to wykonanie tego zapytania trwa za długo, wybierz proszę krótszy interwał
@@ -8383,7 +8366,6 @@ pl_PL:
             latest_backup: "Najnowsza kopia zapasowa %{date}"
             manage_backups: "Zarządzaj kopiami zapasowymi"
             discourse_updated: "Discourse zaktualizowano"
-            dashboard_updated: "Panel zaktualizowano"
         reports_section:
           header_action: "Zarządzaj"
           description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
@@ -8502,12 +8484,6 @@ pl_PL:
             crawlers: "Boty indeksujące"
           see_details: "Zobacz szczegóły"
           crawler_learn_more: "Dowiedz się więcej"
-        period:
-          last_7_days: "Ostatnie 7 dni"
-          last_30_days: "Ostatnie 30 dni"
-          last_3_months: "Ostatnie 3 miesiące"
-          custom: "Niestandardowy"
-          custom_range: "%{start} — %{end}"
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
           percent_change_tooltip: "%{percent} zmiany."
@@ -8564,9 +8540,6 @@ pl_PL:
               other: "%{count} wpisów"
             deselect: "Odznacz %{name}"
             fetch_error: "Nie udało się załadować użytkowników tej grupy."
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
-            disabled: 'Raport wyszukiwań zyskujących popularność jest wyłączony. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dziennik zapytań wyszukiwarki</a>, aby zbierać dane.'
           average_chart_label: Wyświetlanie średnich, a nie sum
           sort_button: "Sortuj według %{column}"
           sort_button_current: "Posortowane według %{column}, %{direction}"
@@ -8757,7 +8730,7 @@ pl_PL:
               list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
             revisions:
               read: "Pobierz najnowszą lub określoną wersję."
-              modify: "Ukryj, pokaż lub przywróć wersje."
+              modify: "Ukryj, pokaż, usuń z listy, wypisz ponownie lub przywróć wersje."
               permanently_delete: "Trwale usuń wersję."
             tags:
               list: Lista tagów.
@@ -9901,6 +9874,7 @@ pl_PL:
             permanently_delete_post_revisions: "trwale usuń wersje wpisu"
             mcp_client_updated: "aktualizacja klienta MCP OAuth"
             delete_user: "usunięcie użytkownika"
+            create_bot: "Utwórz bota"
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
             change_site_setting: "zmiana ustawień serwisu"
@@ -10307,6 +10281,7 @@ pl_PL:
           suspended: "Zawieszeni"
           silenced: "Wyciszeni"
           staged: "Etapowi"
+          bots: "Boty"
         activation_filter:
           label: "Status aktywacji"
           all: "Wszyscy użytkownicy"
@@ -10317,6 +10292,24 @@ pl_PL:
           bot: "Konta botów"
           all: "Wszystkie konta"
         approved: "Zatwierdzony?"
+        source: "Źródło"
+        bots:
+          new: "Nowy bot"
+          new_options:
+            bot:
+              label: "Bot ogólnego przeznaczenia"
+              description: "Konto do integracji, webhooków lub automatycznego publikowania za pośrednictwem interfejsu API."
+          back: "Powrót do botów"
+          help: "Boty to konta użytkowników, które nie mogą się logować w celu integracji i automatycznego publikowania."
+          generate_api_key: "Wygeneruj klucz API"
+          generate_api_key_description: "Potrzebne tylko dla usług zewnętrznych, które działają jako ten bot. Wtyczki Discourse nie wymagają tego."
+          scope_mode_description: "Klucz ma uprawnienia wyłącznie tego bota."
+          name: "Nazwa"
+          username: "Nazwa użytkownika"
+          trust_level: "Poziom zaufania"
+          create: "Utwórz bota"
+          created: "Bot @%{username} został utworzony."
+          created_by: "Utworzone przez @%{username}"
         titles:
           active: "Aktywni użytkownicy"
           new: "Nowi użytkownicy"
@@ -10332,6 +10325,7 @@ pl_PL:
           silenced: "Wyciszeni użytkownicy"
           suspended: "Zawieszeni użytkownicy"
           staged: "Użytkownicy etapowi"
+          bots: "Boty"
         not_verified: "Niezweryfikowany"
         check_email:
           title: "Wyświetl adres email tego użytkownika"
@@ -10343,6 +10337,8 @@ pl_PL:
           title: "Usuń wszystkie powiązane konta dla tego użytkownika"
           text: "Usuń powiązane konta"
       user:
+        account_type: "Typ konta"
+        bot: "Bot"
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika %{error}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika %{error}"
         suspend_duration: "Zawieś użytkownika do:"
@@ -10358,7 +10354,7 @@ pl_PL:
           no_constructive_purpose: "Nie ma żadnego konstruktywnego celu dla swoich działań z wyjątkiem tworzenia kłótni wewnątrz społeczności."
           custom: "Niestandardowe…"
         suspend_message: "Wiadomość Email"
-        suspend_message_placeholder: "Ewentualnie podaj więcej informacji o zawieszeniu użytkownika, a zostaną wysłane do niego poprzez email."
+        suspend_message_placeholder: "Opcjonalnie możesz podać więcej informacji na temat tej czynności. Zostaną one dołączone do wiadomości e-mail wysłanej do zawieszonego użytkownika."
         suspended_by: "Zawieszony przez"
         silence_reason: "Powód"
         silenced_by: "Wyciszony przez"
@@ -10369,7 +10365,7 @@ pl_PL:
         silence_reason_title: "Powód wyciszenia"
         silence_reason_placeholder: "Powód wyciszenia"
         silence_message: "Wiadomość Email"
-        silence_message_placeholder: "(zostaw puste aby wysłać domyślną wiadomość)"
+        silence_message_placeholder: "Opcjonalnie podaj więcej informacji na temat tej czynności. Zostaną one dołączone do wiadomości e-mail wysłanej do uciszonego użytkownika."
         suspended_until: "(do %{until})"
         suspend_forever: "Zawieś na zawsze"
         cant_suspend: "Nie można zawiesić tego użytkownika."

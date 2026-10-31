@@ -661,6 +661,9 @@ en:
       title: "Customize your site"
       subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
+      step_progress: "Step %{current}/%{total}"
+      minimize: "Minimize design wizard"
+      restore: "Restore design wizard"
       save: "Save and finish"
       back: "Back"
       next: "Next"
@@ -1812,6 +1815,7 @@ en:
 
     user:
       said: "%{username}:"
+      bot_account: "Automated account"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
       mute: "Mute"
@@ -3527,6 +3531,8 @@ en:
     filter_controls:
       reset: "Reset"
       toggle: "Toggle dropdown filters"
+      sort_label: "Sort by"
+      sort_trigger_label: "Sort by: %{sort}"
 
     d_icon_grid_picker:
       select_icon: "Select icon"
@@ -5493,6 +5499,20 @@ en:
       revisions:
         diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
         diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
+        unlisted:
+          label: "Unlisted"
+          description: "This edit is skipped when browsing the edit history, but its content is still public."
+        show_all_edits: "Show all edits"
+        visibility:
+          listed:
+            title: "Listed"
+            description: "Shown when browsing the edit history."
+          unlisted:
+            title: "Unlisted"
+            description: "Skipped when browsing the edit history."
+          hidden:
+            title: "Hidden"
+            description: "Removed from the public edit history, along with the diffs next to it."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -5503,9 +5523,7 @@ en:
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
-          hide: "Hide revision"
-          show: "Show revision"
-          destroy: "Delete revisions"
+          destroy: "Delete all revisions"
           destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
@@ -7093,6 +7111,10 @@ en:
           impact_role_staff: "Staff"
           impact_role_all_members: "All members"
           impact_role_developers: "Developers"
+        sort:
+          recently_updated: "Recently updated"
+          status: "Status"
+          name: "Name"
 
       config:
         about:
@@ -7908,27 +7930,17 @@ en:
           combined: "Results include the most recent %{limit} pageviews, beginning %{pageviewLimitDate} at %{pageviewLimitTime}. Earlier pageviews in the selected date range are not included; pageview data before %{date} is no longer available."
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard updated:"
-        discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
         up_to_date_newer_commits:
           one: "You're on the most recent release, but %{count} new change is available."
           other: "You're on the most recent release, but %{count} new changes are available."
         updates_available: "Updates are available."
-        please_update: "Please update!"
-        no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you updated recently. Fantastic!"
-        installed_version: "Installed"
-        latest_version: "Available"
-        github: "GitHub"
         commit_on_github: "View commit %{sha} on GitHub"
-        changelog: "Changelog"
         commits_ahead:
           one: "Running %{count} additional change since the start of this release series"
           other: "Running %{count} additional changes since the start of this release series"
-        problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
         site_advice:
           title:
@@ -7941,16 +7953,7 @@ en:
           no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
           learn_more: "Learn more..."
 
-        last_checked: "Last checked"
         refresh_problems: "Refresh"
-        no_problems: "No problems were found."
-        moderators: "Moderators:"
-        admins: "Admins:"
-        silenced: "Silenced:"
-        suspended: "Suspended:"
-        private_messages_short: "Msgs"
-        private_messages_title: "Messages"
-        mobile_title: "Mobile"
         space_used: "%{usedSize} used"
         space_used_and_free: "%{usedSize} (%{freeSize} free)"
         uploads: "Uploads"
@@ -7959,20 +7962,7 @@ en:
           one: "%{count} backup on %{location}"
           other: "%{count} backups on %{location}"
         lastest_backup: "Latest: %{date}"
-        traffic_short: "Traffic"
-        traffic: "Application web requests"
-        page_views: "Pageviews"
-        page_views_short: "Pageviews"
-        show_traffic_report: "Show Detailed Traffic Report"
-        community_health: Community health
-        moderators_activity: Moderators activity
         whats_new_in_discourse: What’s new in Discourse?
-        activity_metrics: Activity Metrics
-        all_reports: "All reports"
-        general_tab: "General"
-        moderation_tab: "Moderation"
-        security_tab: "Security"
-        reports_tab: "Reports"
         report_filter_any: "any"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
@@ -8211,7 +8201,6 @@ en:
             latest_backup: "Latest backup %{date}"
             manage_backups: "Manage backups"
             discourse_updated: "Discourse updated"
-            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
@@ -8323,12 +8312,6 @@ en:
             crawlers: "Crawlers"
           see_details: "See details"
           crawler_learn_more: "Learn more"
-        period:
-          last_7_days: "Last 7 days"
-          last_30_days: "Last 30 days"
-          last_3_months: "Last 3 months"
-          custom: "Custom"
-          custom_range: "%{start} – %{end}"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -8376,9 +8359,6 @@ en:
               other: "%{count} posts"
             deselect: "Deselect %{name}"
             fetch_error: "Couldn't load users for this group."
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
-            disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
           average_chart_label: Showing averages, not totals
           sort_button: "Sort by %{column}"
           sort_button_current: "Sorted by %{column}, %{direction}"
@@ -8566,7 +8546,7 @@ en:
               list: List latest posts and private posts. RSS is also supported.
             revisions:
               read: "Get the latest or a specific revision."
-              modify: "Hide, show, or revert revisions."
+              modify: "Hide, show, unlist, relist, or revert revisions."
               permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.
@@ -8858,11 +8838,9 @@ en:
           site_contact_group_help: |
             The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
-          your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
+          your_organization_description: "Details about who operates this site and under which jurisdiction."
           company_name: "Name"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
@@ -9705,6 +9683,7 @@ en:
             permanently_delete_post_revisions: "permanently delete post revisions"
             mcp_client_updated: "update MCP OAuth client"
             delete_user: "delete user"
+            create_bot: "Create bot"
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
@@ -10101,6 +10080,7 @@ en:
           suspended: "Suspended"
           silenced: "Silenced"
           staged: "Staged"
+          bots: "Bots"
         activation_filter:
           label: "Activation status"
           all: "All users"
@@ -10111,6 +10091,24 @@ en:
           bot: "Bot accounts"
           all: "All accounts"
         approved: "Approved?"
+        source: "Source"
+        bots:
+          new: "New bot"
+          new_options:
+            bot:
+              label: "General-purpose bot"
+              description: "An account for integrations, webhooks, or automated posting through the API."
+          back: "Back to bots"
+          help: "Bots are user accounts that can't log in, for integrations and automated posting."
+          generate_api_key: "Generate API key"
+          generate_api_key_description: "Only needed for external services that act as this bot. Discourse plugins don't need one."
+          scope_mode_description: "The key only has this bot's permissions."
+          name: "Name"
+          username: "Username"
+          trust_level: "Trust level"
+          create: "Create bot"
+          created: "Bot @%{username} created."
+          created_by: "Created by @%{username}"
         titles:
           active: "Active users"
           new: "New users"
@@ -10126,6 +10124,7 @@ en:
           silenced: "Silenced users"
           suspended: "Suspended users"
           staged: "Staged users"
+          bots: "Bots"
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"
@@ -10138,6 +10137,8 @@ en:
           text: "Delete associated accounts"
 
       user:
+        account_type: "Account type"
+        bot: "Bot"
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
         suspend_duration: "Suspend user until:"
@@ -10153,7 +10154,7 @@ en:
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
           custom: "Custom…"
         suspend_message: "Email Message"
-        suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
+        suspend_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the suspended user."
         suspended_by: "Suspended by"
         silence_reason: "Reason"
         silenced_by: "Silenced By"
@@ -10164,7 +10165,7 @@ en:
         silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
         silence_message: "Email Message"
-        silence_message_placeholder: "(leave blank to send default message)"
+        silence_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the silenced user."
         suspended_until: "(until %{until})"
         suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
@@ -10248,10 +10249,10 @@ en:
         like_count: Likes Given / Received
         last_100_days: "in the last 100 days"
         private_topics_count: Personal Messages
-        posts_read_count: Posts Read
-        post_count: Posts Created
+        posts_read_count: Posts read
+        post_count: Posts created
         second_factor_enabled: Two-Factor Authentication Enabled
-        topics_entered: Topics Viewed
+        topics_entered: Topics viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         warnings_received_count: Warnings Received

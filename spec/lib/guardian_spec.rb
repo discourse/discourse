@@ -714,6 +714,19 @@ RSpec.describe Guardian do
         it "returns true when archetype is unchanged" do
           expect(Guardian.new(user).can_change_archetype?(topic, topic.archetype)).to eq(true)
         end
+
+        it "does not allow anyone to change archetype to an unregistered one" do
+          expect(Guardian.new(user).can_change_archetype?(topic, "unknown")).to eq(false)
+          expect(Guardian.new(admin).can_change_archetype?(topic, "unknown")).to eq(false)
+        end
+
+        it "allows changing archetype to one registered by a plugin" do
+          Archetype.register("plugin_archetype")
+
+          expect(Guardian.new(user).can_change_archetype?(topic, "plugin_archetype")).to eq(true)
+        ensure
+          Archetype.deregister("plugin_archetype")
+        end
       end
 
       it "respects category group moderator settings" do

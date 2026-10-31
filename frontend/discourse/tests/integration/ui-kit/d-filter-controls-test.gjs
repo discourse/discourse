@@ -1249,4 +1249,170 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       "each toggle reports the resulting expanded state"
     );
   });
+
+  module("sorting", function (nestedHooks) {
+    const SORT_OPTIONS = [
+      {
+        label: "Newest",
+        value: "newest",
+        compareFn: (a, b) => b.id - a.id,
+      },
+      {
+        label: "Name",
+        value: "name",
+        compareFn: (a, b) => a.name.localeCompare(b.name),
+      },
+      { label: "Server", value: "server" },
+    ];
+
+    nestedHooks.beforeEach(function () {
+      this.data = SAMPLE_DATA;
+      this.sortOptions = SORT_OPTIONS;
+    });
+
+    function itemOrder() {
+      return [...document.querySelectorAll(".item")].map((item) =>
+        Number(item.dataset.id)
+      );
+    }
+
+    async function chooseSort(value) {
+      await click(".d-filter-controls__sort-trigger");
+      await click(`.d-filter-controls__sort-option[data-sort='${value}']`);
+    }
+
+    const Example = <template>
+      <DFilterControls
+        @array={{@data}}
+        @dropdownOptions={{SAMPLE_DROPDOWN_OPTIONS}}
+        @onSortChange={{@onSortChange}}
+        @sortOptions={{@sortOptions}}
+        @sortQueryParam={{@sortQueryParam}}
+      >
+        <:content as |filteredData|>
+          {{#each filteredData as |item|}}
+            <div class="item" data-id={{item.id}}>{{item.name}}</div>
+          {{/each}}
+        </:content>
+      </DFilterControls>
+    </template>;
+
+    test("sorts filtered items by the first option by default", async function (assert) {
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Newest");
+      assert.deepEqual(itemOrder(), [3, 2, 1]);
+
+      await select(".d-filter-controls__dropdown", "feature");
+      assert.deepEqual(itemOrder(), [3, 1]);
+    });
+
+    test("changes the sort from the menu", async function (assert) {
+      const changes = [];
+      this.onSortChange = (value) => changes.push(value);
+
+      await render(
+        <template>
+          <Example
+            @data={{this.data}}
+            @onSortChange={{this.onSortChange}}
+            @sortOptions={{this.sortOptions}}
+          />
+        </template>
+      );
+
+      await chooseSort("name");
+
+      assert.deepEqual(changes, ["name"]);
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+      assert
+        .dom(".d-filter-controls__sort-trigger")
+        .hasAttribute("aria-label", "Sort by: Name");
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+
+      await click(".d-filter-controls__sort-trigger");
+      assert
+        .dom(".d-filter-controls__sort-option[data-sort='name']")
+        .hasAttribute("aria-current", "true");
+      assert
+        .dom(".d-filter-controls__sort-option[data-sort='newest']")
+        .doesNotHaveAttribute("aria-current");
+    });
+
+    test("keeps the given order for an option without compareFn", async function (assert) {
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      await chooseSort("server");
+
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+    });
+
+    test("doesn't show a menu for a single option", async function (assert) {
+      this.sortOptions = SORT_OPTIONS.slice(0, 1);
+
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      assert.dom(".d-filter-controls__sort-trigger").doesNotExist();
+    });
+
+    test("keeps the sort when filters are reset", async function (assert) {
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      await chooseSort("name");
+      await select(".d-filter-controls__dropdown", "feature");
+      await click(".d-filter-controls__reset");
+
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+    });
+
+    test("follows the URL and ignores values that aren't options", async function (assert) {
+      this.owner.unregister("service:router");
+      this.owner.register("service:router", RouterStub);
+      const router = this.owner.lookup("service:router");
+      router.currentURL = "/admin/example?sort=name";
+
+      await render(
+        <template>
+          <Example
+            @data={{this.data}}
+            @sortOptions={{this.sortOptions}}
+            @sortQueryParam="sort"
+          />
+        </template>
+      );
+
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+
+      router.changeURL("/admin/example?sort=bogus");
+      await settled();
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Newest");
+      assert.deepEqual(itemOrder(), [3, 2, 1]);
+
+      router.changeURL("/admin/example?sort=name");
+      await settled();
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+
+      router.changeURL("/admin/example?sort=constructor");
+      await settled();
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Newest");
+    });
+  });
 });

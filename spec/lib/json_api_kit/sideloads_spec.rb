@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Sideloads do
-  subject(:sideloads) { described_class.for(relationships, paths:, rows:, request:, schema:) }
+  subject(:sideloads) do
+    described_class.for(relationships, paths:, rows:, request:, resource: owner_resource)
+  end
 
   fab!(:author, :user)
   fab!(:category) { Fabricate(:category, name: "Where the topic sits") }
@@ -38,7 +40,9 @@ RSpec.describe JsonApiKit::Sideloads do
     ]
   end
   let(:paths) { JsonApiKit::Paths.new(nil) }
-  let(:rows) { [JsonApiKit::Pagination::Row.new(record: topic, segment: nil)] }
+  let(:rows) do
+    [JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic, segment: nil)]
+  end
   let(:request) do
     JsonApiKit::Request::Collection.new(
       {},
@@ -46,7 +50,14 @@ RSpec.describe JsonApiKit::Sideloads do
       edition: JsonApiKit::Edition.current,
     )
   end
-  let(:schema) { JsonApiKit::Schema.new(Topic) }
+  let(:owner_resource) do
+    Class
+      .new(JsonApiKit::Resource) do
+        model Topic
+        type :topics
+      end
+      .new(guardian: request.guardian, edition: request.edition)
+  end
 
   describe "#linkage_for" do
     subject(:linkage) { sideloads.linkage_for(rows.first) }

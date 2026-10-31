@@ -20,6 +20,7 @@ $dw-primary-very-high: #434343;
 $dw-button-default-border: #d3d3d3;
 
 .design-wizard,
+.design-wizard__restore,
 .design-wizard__font-select-content {
   --primary: #{$dw-primary};
   --secondary: #{$dw-secondary};
@@ -151,16 +152,68 @@ $dw-button-default-border: #d3d3d3;
     animation: none;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 0.25s ease;
+
+    &.--minimized {
+      transition:
+        transform 0.25s ease,
+        visibility 0s 0.25s;
+    }
+  }
+
+  &.--minimized {
+    transform: translateY(100%);
+    visibility: hidden;
+  }
+
   // a theme preview replaces the page; the panel is waiting for that to land
   &.--busy .design-wizard__sections {
     opacity: 0.6;
     pointer-events: none;
   }
 
-  &__close {
+  &__panel-actions {
     position: absolute;
     inset-block-start: var(--space-2);
     inset-inline-end: var(--space-2);
+    display: flex;
+  }
+
+  &__restore {
+    position: fixed;
+    z-index: z("design-wizard");
+    inset-block-end: var(--space-4);
+    inset-inline-end: var(--space-4);
+    display: flex;
+    gap: var(--space-3);
+    max-width: calc(100vw - var(--space-4) * 2);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--d-border-radius-large);
+    box-shadow: var(--shadow-card);
+
+    @include viewport.until(sm) {
+      inset-block-end: 0;
+      inset-inline: 0;
+      width: 100%;
+      max-width: none;
+      padding-block-end: max(var(--space-3), env(safe-area-inset-bottom));
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+  }
+
+  &__restore-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__restore-progress {
+    flex-shrink: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
   }
 
   &__content {
@@ -178,6 +231,7 @@ $dw-button-default-border: #d3d3d3;
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+    padding-inline-end: 4em;
 
     h2 {
       margin: 0;
@@ -315,10 +369,7 @@ $dw-button-default-border: #d3d3d3;
     position: relative;
     display: flex;
     align-items: center;
-
-    // matches the serialized screenshot size, so the box is reserved at the
-    // right shape before the image lands and the card never reflows
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 8 / 5;
     overflow: hidden;
     background: var(--primary-very-low);
     border: 1px solid var(--content-border-color);
@@ -347,7 +398,7 @@ $dw-button-default-border: #d3d3d3;
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 
     /*! rtl:ignore */
     object-position: top left;

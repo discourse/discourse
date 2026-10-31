@@ -86,7 +86,9 @@ RSpec.describe TopicsFilter do
       expect(filtered_topic_ids("event-after:#{1.day.from_now.to_date}")).to contain_exactly(
         upcoming_topic.id,
       )
-      expect(filtered_topic_ids("event-before:#{Date.current}")).to contain_exactly(past_topic.id)
+      expect(
+        filtered_topic_ids("event-before:#{ongoing_event.original_starts_at.to_date}"),
+      ).to contain_exactly(past_topic.id)
       expect(
         filtered_topic_ids(
           "event-after:#{2.days.ago.to_date} event-before:#{1.day.from_now.to_date}",

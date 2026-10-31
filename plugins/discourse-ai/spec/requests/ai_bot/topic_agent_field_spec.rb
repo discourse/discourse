@@ -249,7 +249,7 @@ RSpec.describe "AI agent topic custom field" do
     it "rejects a direct PM to a legacy LLM user" do
       legacy_user =
         User.new(
-          id: DiscourseAi::BotUser.next_id,
+          id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id,
           username: "retired_model",
           email: "retired-model@example.invalid",
           active: true,

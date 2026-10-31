@@ -160,3 +160,33 @@
     }
   }
 }
+
+.fk-d-menu.d-multi-select-menu--with-footer .fk-d-menu__inner-content {
+  overflow-x: clip;
+}
+
+.d-multi-select__content.--with-footer {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  max-height: calc(100dvh - 2rem);
+  overflow: hidden;
+
+  .d-multi-select__search-results {
+    flex: 0 1 auto;
+    height: auto;
+    max-height: min(18rem, 40dvh);
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    > .d-multi-select__result {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.d-multi-select__footer {
+  background: var(--secondary);
+  flex-shrink: 0;
+}

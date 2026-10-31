@@ -1520,10 +1520,7 @@ zh_TW:
           streaming_below: "下方新增內容"
           editing_post: "正在編輯貼文"
       sentiments:
-        dashboard:
-          title: "情緒"
         sidebar:
-          overview: "情緒概述"
           analysis: "情緒分析"
         sentiment_analysis:
           share_chart: "復制圖表連結"

@@ -588,7 +588,7 @@ class Middleware::RequestTracker
     is_html_request = headers["Content-Type"]&.include?("text/html")
     is_ajax_request = request.xhr?
 
-    # This Discourse-Track-View request header is set in `lib/ajax.js`,
+    # This Discourse-Track-View request header is set in `lib/ajax.ts`,
     # whenever the user navigates between Ember routes, to indicate a
     # browser page view.
     env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]

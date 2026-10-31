@@ -36,6 +36,49 @@ describe Chat::Api::CategoryChatablesController do
         expect(response.parsed_body["private"]).to eq(true)
       end
 
+      [false, true].each do |enabled|
+        it "counts logged-in category members regardless of granular permissions #{enabled}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+          member = Fabricate(:user)
+          group.add(member)
+          private_category.update!(
+            permissions: {
+              :logged_in_users => :create_post,
+              group.name => :full,
+            },
+          )
+
+          get "/chat/api/category-chatables/#{private_category.id}/permissions"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "members_count" => User.real.count,
+            "private" => true,
+          )
+          expect(response.parsed_body["allowed_groups"]).to contain_exactly(
+            "@logged_in_users",
+            "@#{group.name}",
+          )
+        end
+      end
+
+      it "excludes a read-only logged-in grant from channel participation" do
+        member = Fabricate(:user)
+        group.add(member)
+        private_category.update!(
+          permissions: {
+            :logged_in_users => :readonly,
+            group.name => :full,
+          },
+        )
+
+        get "/chat/api/category-chatables/#{private_category.id}/permissions"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include("members_count" => 1, "private" => true)
+        expect(response.parsed_body["allowed_groups"]).to eq(["@#{group.name}"])
+      end
+
       it "doesn't return group names from other categories" do
         a_member = Fabricate(:user)
         group_2 = Fabricate(:group)

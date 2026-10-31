@@ -122,6 +122,42 @@ RSpec.describe DraftsController do
       expect(Draft.get(user, "xyz", 0)).to eq(%q({"my":"data"}))
     end
 
+    it "triggers a draft_saved event" do
+      sign_in(user)
+
+      events =
+        DiscourseEvent.track_events(:draft_saved) do
+          post "/drafts.json",
+               params: {
+                 draft_key: "xyz",
+                 data: { reply: "Magic words" }.to_json,
+                 sequence: 0,
+               }
+        end
+
+      expect(events).to contain_exactly(
+        { event_name: :draft_saved, params: [user, "xyz", { "reply" => "Magic words" }] },
+      )
+    end
+
+    it "does not trigger a draft_saved event when the save fails" do
+      sign_in(user)
+      Draft.set(user, "xyz", 0, { reply: "first" }.to_json)
+
+      events =
+        DiscourseEvent.track_events(:draft_saved) do
+          post "/drafts.json",
+               params: {
+                 draft_key: "xyz",
+                 data: { reply: "x" }.to_json,
+                 sequence: 5,
+               }
+        end
+
+      expect(response.status).to eq(409)
+      expect(events).to be_empty
+    end
+
     it "returns 404 when the key is missing" do
       sign_in(Fabricate(:user))
       post "/drafts.json", params: { data: { my: "data" }.to_json, sequence: 0 }

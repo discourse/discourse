@@ -256,7 +256,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     if (filter && !this.args.items) {
       const result = await searchTags(filter, {
         context: { everyTag: true, categoryId: this.args.categoryId },
-        signal: opts.signal,
         siteSettings: this.siteSettings,
       });
       return this.#keyed(result.items);

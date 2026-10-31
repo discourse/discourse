@@ -1,5 +1,23 @@
 # **Discourse Gamification** Plugin
 
+## Scoped API keys
+
+To award points without granting a global API key, create a **Granular** API key
+for a **Single user** who is an admin and select only
+`gamification: create_score_events`. Send the key in the `Api-Key` header when
+calling `POST /admin/plugins/gamification/score_events.json` with `user_id`, `date`,
+`points`, and optionally `description` and `category_id`.
+
+The score events API provides independent scopes:
+
+- `gamification: read_score_events`: `GET /admin/plugins/gamification/score_events.json`
+- `gamification: create_score_events`: `POST /admin/plugins/gamification/score_events.json`
+- `gamification: update_score_events`: `PUT /admin/plugins/gamification/score_events.json`
+
+These scopes do not grant access to other admin operations or bypass the admin-user
+requirement. The create scope allows both awarding and deducting points, so treat
+its key as a sensitive credential.
+
 ## Category-scoped leaderboards
 
 A leaderboard with its own nonempty **Scorable categories** list counts only

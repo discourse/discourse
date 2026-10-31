@@ -2,14 +2,13 @@
 
 RSpec.describe JsonApiKit::Declarations::Fields do
   subject(:fields) do
-    described_class.for(names, guardian:, attributes:, relationships:, schema:, type: "topics")
+    described_class.for(names, guardian:, attributes:, relationships:, type: "topics")
   end
 
   let(:guardian) { Guardian.new }
 
   fab!(:topic) { Fabricate(:topic, title: "A record read as its fields", closed: false) }
 
-  let(:schema) { JsonApiKit::Schema.new(Topic) }
   let(:users_resource) { Class.new(JsonApiKit::Resource) { type :users } }
   let(:attributes) do
     [
@@ -29,7 +28,10 @@ RSpec.describe JsonApiKit::Declarations::Fields do
       end
 
       it "raises a collision" do
-        expect { fields }.to raise_error(described_class::Collision, /title/)
+        expect { fields }.to raise_error(
+          described_class::Collision,
+          "Duplicate field names: title.",
+        )
       end
     end
 
@@ -42,7 +44,10 @@ RSpec.describe JsonApiKit::Declarations::Fields do
       end
 
       it "raises a collision" do
-        expect { fields }.to raise_error(described_class::Collision, /title/)
+        expect { fields }.to raise_error(
+          described_class::Collision,
+          "Duplicate field names: title.",
+        )
       end
     end
 
@@ -55,7 +60,10 @@ RSpec.describe JsonApiKit::Declarations::Fields do
       end
 
       it "raises a collision" do
-        expect { fields }.to raise_error(described_class::Collision, /id, type/)
+        expect { fields }.to raise_error(
+          described_class::Collision,
+          "Cannot declare reserved field names: id, type.",
+        )
       end
     end
   end
@@ -120,30 +128,6 @@ RSpec.describe JsonApiKit::Declarations::Fields do
 
       it "holds that relationship" do
         expect(user_relationships.map(&:name)).to eq(%w[user])
-      end
-    end
-  end
-
-  describe "#columns" do
-    subject(:columns) { fields.columns }
-
-    it "returns every column" do
-      expect(columns).to eq(JsonApiKit::Columns.all)
-    end
-
-    context "when the fieldset holds one field" do
-      let(:names) { %w[title] }
-
-      it "returns the column of each one" do
-        expect(columns).to eq(JsonApiKit::Columns.for(%i[title]))
-      end
-    end
-
-    context "when the fieldset is empty" do
-      let(:names) { [] }
-
-      it "returns no column" do
-        expect(columns).to eq(JsonApiKit::Columns.for([]))
       end
     end
   end

@@ -5,7 +5,11 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
   let(:params) { {} }
   let(:glossary) { JsonApiKit::Glossary.kit }
-  let(:cursor) { JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 0, 12]).to_s }
+  let(:cursor) do
+    JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new(
+      [resource.order({}).digest, 0, 12],
+    ).to_s
+  end
   let(:related) do
     Class.new(JsonApiKit::Resource) do
       model User
@@ -14,18 +18,28 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
   end
   let(:resource) do
     users = related
-    Class.new(JsonApiKit::Resource) do
-      has_one :user, resource: users
-      model Topic
-      type :topics
-      sort :created_at
-      sort :title
-      filter :title
-      anchor :id
-      anchor :title
-      page max: 50
-      anchor(:first_unread) { |topics, _guardian| topics }
-    end
+    Class
+      .new(JsonApiKit::Resource) do
+        has_one :user, resource: users
+        model Topic
+        type :topics
+        sort :created_at
+        sort :title
+        filter :title
+        anchor :id
+        anchor :title
+        page max: 50
+        anchor(:first_unread) { |topics, _guardian| topics }
+      end
+      .new(guardian: Guardian.new)
+  end
+  let(:unbacked_resource) do
+    Class
+      .new(JsonApiKit::Resource) do
+        adapter JsonApiKit::Adapter
+        type :examples
+      end
+      .new(guardian: Guardian.new)
   end
 
   describe ".for" do
@@ -59,7 +73,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     context "when a parameter is unknown" do
       let(:params) { { sorts: { created_at: :asc } } }
 
-      it "adds an error on the parameter" do
+      it "adds an error on the parameter", :aggregate_failures do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:sorts)
       end
@@ -68,7 +82,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     context "when a page parameter is unknown" do
       let(:params) { { page: { sise: 2 } } }
 
-      it "adds an error under the parameter it came in" do
+      it "adds an error for the nested parameter", :aggregate_failures do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:"page.sise")
       end
@@ -103,7 +117,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     context "when a cursor comes with the sort" do
       let(:params) { { sort: { title: :asc }, page: { after: cursor } } }
 
-      it "checks the cursor against that sort" do
+      it "checks the cursor against that sort", :aggregate_failures do
         expect(contract).to be_invalid
         expect(contract.errors).to be_of_kind(:"page.after", :unreadable_cursor)
       end
@@ -213,6 +227,15 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
       it { is_expected.to validate_presence_of(:anchor) }
     end
+
+    context "when the adapter has no anchor implementation" do
+      let(:resource) { unbacked_resource }
+      let(:params) { { page: { anchor: { unknown: 12 } } } }
+
+      it "reports the undeclared anchor" do
+        expect(contract.errors).to be_of_kind(:"page.anchor", :no_such_name)
+      end
+    end
   end
 
   describe "Pagination" do
@@ -220,10 +243,14 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     let(:params) { { page: {} } }
     let(:cursor_not_matching_segment) do
-      JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 7, 12]).to_s
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new(
+        [resource.order({}).digest, 7, 12],
+      ).to_s
     end
     let(:cursor_not_matching_length) do
-      JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 0]).to_s
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new(
+        [resource.order({}).digest, 0],
+      ).to_s
     end
 
     before { contract.valid? }
@@ -267,7 +294,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     context "when the page is not a valid object" do
       let(:params) { { page: "big" } }
 
-      it { expect(contract).not_to be_valid }
+      it { expect(contract).to be_invalid }
     end
 
     context "when page[after] is present" do
@@ -280,6 +307,16 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
       let(:params) { { page: { before: cursor } } }
 
       it { is_expected.to validate_absence_of(:after) }
+    end
+
+    context "when the adapter has no cursor implementation" do
+      let(:resource) { unbacked_resource }
+      let(:cursor) { JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new([12]).to_s }
+      let(:params) { { page: { after: cursor } } }
+
+      it "reports the unsupported cursor" do
+        expect(contract.errors).to be_of_kind(:"page.after", :unreadable_cursor)
+      end
     end
   end
 

@@ -8,10 +8,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-// matches ThemeScreenshotThumbnails, so the card reserves the right box
-// before the image arrives
 const SCREENSHOT_WIDTH = 800;
-const SCREENSHOT_HEIGHT = 450;
+const SCREENSHOT_HEIGHT = 500;
 
 class ThemeCard extends Component {
   @service interfaceColor;

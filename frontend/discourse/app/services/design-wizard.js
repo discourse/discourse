@@ -52,6 +52,7 @@ export default class DesignWizardService extends Service {
   @service siteSettings;
 
   @tracked active = false;
+  @tracked minimized = false;
   @tracked data;
   @tracked themeId;
   @tracked colorMode = "light";
@@ -149,7 +150,8 @@ export default class DesignWizardService extends Service {
   get #selectionsPayload() {
     return {
       theme_id: this.themeId,
-      light_palette_id: this.selectedPair?.light?.id,
+      light_palette_id:
+        this.selectedPair?.light?.id ?? this.selectedPair?.dark?.id,
       dark_palette_id: this.selectedPair?.dark?.id,
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
@@ -375,6 +377,12 @@ export default class DesignWizardService extends Service {
     this.#persistState();
   }
 
+  setMinimized(minimized) {
+    this.minimized = minimized;
+    this.animateEntrance = false;
+    this.#persistState();
+  }
+
   setStepIndex(stepIndex) {
     this.stepIndex = stepIndex;
     this.#persistState();
@@ -580,6 +588,7 @@ export default class DesignWizardService extends Service {
   }
 
   #reset() {
+    this.minimized = false;
     this.source = SOURCE_ONBOARDING;
     this.returnUrl = undefined;
     this.progressSaved = false;
@@ -626,6 +635,7 @@ export default class DesignWizardService extends Service {
   }
 
   #initFromData() {
+    this.minimized = false;
     // a custom default theme isn't offered by the wizard, so nothing is
     // preselected and the page keeps rendering it until a theme is chosen
     const preselectedTheme =
@@ -652,15 +662,24 @@ export default class DesignWizardService extends Service {
   }
 
   #restore(stored) {
+    this.minimized = stored.minimized ?? false;
     this.source = stored.source ?? SOURCE_ONBOARDING;
     this.returnUrl = stored.returnUrl;
     this.progressSaved = stored.progressSaved ?? false;
     this.#snapshot = stored.snapshot;
-    this.#originalHomepageSettings =
+    if (this.#snapshot) {
+      this.#snapshot.homepage_settings = this.#availableHomepageSettings(
+        this.#snapshot.homepage_settings
+      );
+      if (!this.#supportedHomepages.includes(this.#snapshot.homepage)) {
+        this.#snapshot.homepage = null;
+      }
+    }
+    this.#originalHomepageSettings = this.#availableHomepageSettings(
       stored.originalHomepageSettings ??
-      stored.snapshot?.homepage_settings ??
-      this.data.homepage_settings ??
-      {};
+        stored.snapshot?.homepage_settings ??
+        this.data.homepage_settings
+    );
     // the intro is only ever shown once, before the first selection
     this.showIntro = false;
     this.themeId = stored.themeId;
@@ -669,10 +688,12 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
-    this.homepage =
-      stored.homepage ?? this.#supportedHomepage(this.data.homepage);
-    this.homepageSettings =
-      stored.homepageSettings ?? this.data.homepage_settings ?? {};
+    this.homepage = this.#supportedHomepage(
+      stored.homepage ?? this.data.homepage
+    );
+    this.homepageSettings = this.#availableHomepageSettings(
+      stored.homepageSettings ?? this.data.homepage_settings
+    );
     this.categoryPageStyle =
       stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
     this.welcomeBanner =
@@ -686,10 +707,20 @@ export default class DesignWizardService extends Service {
     this.stepIndex = 0;
   }
 
+  #availableHomepageSettings(settings) {
+    // A preview reload can resume after the available homepage options changed.
+    return Object.fromEntries(
+      Object.entries(settings ?? {}).filter(([name]) =>
+        Object.hasOwn(this.data.homepage_settings ?? {}, name)
+      )
+    );
+  }
+
   #persistState() {
     this.keyValueStore.set({
       key: STATE_KEY,
       value: JSON.stringify({
+        minimized: this.minimized,
         themeId: this.themeId,
         selectedPairKeys: [...this.selectedPairKeys.entries()],
         colorMode: this.colorMode,

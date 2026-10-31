@@ -18,6 +18,28 @@ module("Integration | ui-kit | dElement", function (hooks) {
     assert.dom(".probe").hasTagName("ul");
   });
 
+  test("heading shortcuts render the bare heading with caller attributes", async function (assert) {
+    const Heading = dElement("h2");
+
+    assert.strictEqual(dElement("h2"), Heading, "one wrapper per tag");
+    assert.notStrictEqual(dElement("h3"), Heading, "a wrapper for each level");
+
+    await render(
+      <template>
+        <Heading aria-label="Accessible title" class="probe" id="heading">
+          Body
+        </Heading>
+      </template>
+    );
+
+    assert
+      .dom("h2#heading")
+      .doesNotHaveClass("ember-view", "renders the shortcut, not the fallback");
+    assert.dom("h2#heading").hasClass("probe");
+    assert.dom("h2#heading").hasAria("label", "Accessible title");
+    assert.dom("h2#heading").hasText("Body", "no element wraps the content");
+  });
+
   test("an unlisted tag falls back to a wrapper for that tag", async function (assert) {
     const Tag = dElement("section");
 

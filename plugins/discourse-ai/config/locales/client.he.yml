@@ -991,10 +991,7 @@ he:
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
           editing_post: "רשומה נערכת"
       sentiments:
-        dashboard:
-          title: "רגש"
         sidebar:
-          overview: "סקירת הבעה"
           analysis: "ניתוח הבעות"
         sentiment_analysis:
           share_chart: "העתקת קישור לתרשים"

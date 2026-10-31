@@ -8,30 +8,10 @@ RSpec.describe JsonApiKit::Request do
   let(:params) { {} }
   let(:guardian) { Guardian.new }
 
-  describe "#scope" do
-    subject(:scope) { request.scope(from: Topic.all) }
-
-    fab!(:topic) { Fabricate(:topic, title: "The row an id names") }
-
-    it "returns every row on offer" do
-      expect(scope).to eq(Topic.all.to_a)
-    end
-
-    context "when a caller asks for one record" do
-      subject(:request) do
-        described_class::Individual.new(params, guardian:, edition: JsonApiKit::Edition.current)
-      end
-
-      let(:params) { { id: topic.id } }
-
-      it "returns only the row with that id" do
-        expect(scope).to eq([topic])
-      end
-    end
-  end
-
   describe "#for_sideload" do
-    subject(:for_sideload) { request.for_sideload(JsonApiKit::Paths.new(%w[groups])) }
+    subject(:for_sideload) do
+      request.for_sideload(JsonApiKit::Paths.new(%w[groups]), through: "user")
+    end
 
     let(:params) do
       {
@@ -165,42 +145,10 @@ RSpec.describe JsonApiKit::Request do
   end
 
   describe "#page" do
-    subject(:page) { request.page }
+    let(:params) { { page: { size: 2, after: "opaque-cursor" } } }
 
-    it "returns the page at the start of the listing" do
-      expect(page).to be_a(JsonApiKit::Page::Requested::First)
-    end
-
-    context "when the page holds an after cursor" do
-      let(:params) { { page: { after: JsonApiKit::Pagination::Cursor.new([12]).to_s } } }
-
-      it "returns the page that carries on from it" do
-        expect(page).to be_a(JsonApiKit::Page::Requested::After)
-      end
-    end
-
-    context "when the page holds a before cursor" do
-      let(:params) { { page: { before: JsonApiKit::Pagination::Cursor.new([12]).to_s } } }
-
-      it "returns the page before it" do
-        expect(page).to be_a(JsonApiKit::Page::Requested::Before)
-      end
-    end
-
-    context "when the cursor cannot be read" do
-      let(:params) { { page: { after: "not a cursor" } } }
-
-      it "refuses the request" do
-        expect { page }.to raise_error(ArgumentError)
-      end
-    end
-
-    context "when there is an anchor parameter" do
-      let(:params) { { page: { anchor: { id: 12 } } } }
-
-      it "returns the page around it" do
-        expect(page).to be_a(JsonApiKit::Page::Requested::Around)
-      end
+    it "preserves the pagination parameters for the adapter" do
+      expect(request.page).to eq(size: 2, after: "opaque-cursor")
     end
   end
 

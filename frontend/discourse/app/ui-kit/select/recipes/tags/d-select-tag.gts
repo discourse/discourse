@@ -513,7 +513,6 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
         ...context,
         prioritizeRecentTags: filter ? undefined : context.prioritizeRecentTags,
       },
-      signal: opts.signal,
       siteSettings: this.siteSettings,
     });
     if (!opts.signal?.aborted && !this.isDestroying) {

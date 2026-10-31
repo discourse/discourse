@@ -2464,9 +2464,6 @@ tr_TR:
     enable_user_status: "Kullanıcıların özel durum mesajı (emoji + açıklama) ayarlamalarına izin verin."
     enable_user_tips: "Kullanıcılara temel özellikleri açıklayan yeni kullanıcı ipuçlarını etkinleştirin"
     short_title: "Kısa başlık, kullanıcının ana ekranında, başlatıcıda veya alanın sınırlı olabileceği diğer yerlerde kullanılacaktır. 12 karakterle sınırlı olmalıdır. Bu başlığı değiştirmek, PWA kullanıcılarına uygulamayı güncellemeleri veya kaldırmaları için bir uyarı gönderebilir."
-    dashboard_hidden_reports: "Belirtilen raporların panodan gizlenmesine izin verin."
-    dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
-    dashboard_general_tab_activity_metrics: "Genel sekmesinde aktivite metrikleri olarak görüntülenecek raporları seçin."
     gravatar_enabled: "Kullanıcı avatarları için <a href='https://gravatar.com/'>Gravatar</a> hizmetini kullanın. Bu özelliği devre dışı bırakmak, kullanıcıların avatarları için Gravatar'a geçmelerini engeller, ancak halihazırda bu hizmeti kullanan kullanıcıları etkilemez."
     gravatar_name: "Gravatar hizmet sağlayıcısının adını belirtin. Bu ad genellikle siteye Gravatar avatarları sağlayan kaynağı tanımlamak için kullanılır."
     gravatar_base_url: "Gravatar sağlayıcısının API'sine erişmek için URL'yi belirtin. Bu ayar, e-posta adreslerini avatar görüntülerinin depolandığı Gravatar URL'lerine dönüştürmek için kritik öneme sahiptir."
@@ -4924,6 +4921,19 @@ tr_TR:
     graph_title: "Arama Sayısı"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Her gün"
+        every_weekday: "Hafta içi her gün"
+        ordinals:
+          last: "son"
+        weekdays:
+          sunday: "Pazar"
+          monday: "Pazartesi"
+          tuesday: "Salı"
+          wednesday: "Çarşamba"
+          thursday: "Perşembe"
+          friday: "Cuma"
+          saturday: "Cumartesi"
       user_joined_community: "%{date} tarihinde katıldı"
     google_meet:
       meeting_code: "Kod:"

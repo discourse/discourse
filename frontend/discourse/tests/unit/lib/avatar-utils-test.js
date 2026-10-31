@@ -88,6 +88,26 @@ module("Unit | Utilities", function (hooks) {
       "it doesn't render avatars for invalid avatar template"
     );
 
+    assert.strictEqual(
+      avatarImg({
+        avatarTemplate,
+        size: "tiny",
+        alt: "evilest trout",
+      }),
+      "<img alt='evilest trout' width='24' height='24' src='/path/to/avatar/48.png' class='avatar'>",
+      "it sets alt text if supplied"
+    );
+
+    assert.strictEqual(
+      avatarImg({
+        avatarTemplate,
+        size: "tiny",
+        alt: "<script>alert('x')</script>",
+      }),
+      "<img alt='&lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;' width='24' height='24' src='/path/to/avatar/48.png' class='avatar'>",
+      "it escapes the alt text"
+    );
+
     setDevicePixelRatio(oldRatio);
   });
 });

@@ -2340,9 +2340,6 @@ cs:
     heading_font: "Písmo, které se má použít pro nadpisy na webu. Motivy toto mohou přepsat pomocí vlastní vlastnosti CSS `--heading-font-family`."
     enable_user_status: "Umožnit uživatelům nastavit si vlastní stavovou zprávu (emoji + popis)."
     enable_user_tips: "Povolit tipy pro nové uživatele, které jim popisují klíčové funkce"
-    dashboard_hidden_reports: "Povolit skrytí zadaných sestav z nástěnky"
-    dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
-    dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     gravatar_name: "Zadejte název poskytovatele služby Gravatar. Tento název se obvykle používá k identifikaci zdroje, který webu poskytuje avatary Gravatar."
     gravatar_base_url: "Zadejte adresu URL pro přístup k rozhraní API poskytovatele Gravatar. Toto nastavení je rozhodující pro převod e-mailových adres na adresy URL služby Gravatar, kde jsou uloženy obrázky avatarů."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
@@ -4342,6 +4339,19 @@ cs:
                 label: "Ano, noví členové musí být schváleni moderátory"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Každý den"
+        every_weekday: "Každý den v týdnu"
+        ordinals:
+          last: "poslední"
+        weekdays:
+          sunday: "Neděle"
+          monday: "Pondělí"
+          tuesday: "Úterý"
+          wednesday: "Středa"
+          thursday: "Čtvrtek"
+          friday: "Pátek"
+          saturday: "Sobota"
       user_joined_community: "Připojil/a se %{date}"
     google_meet:
       meeting_code: "Kód:"

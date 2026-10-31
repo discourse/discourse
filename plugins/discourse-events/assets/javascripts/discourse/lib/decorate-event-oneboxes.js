@@ -3,23 +3,42 @@ import { i18n } from "discourse-i18n";
 
 const HEX_COLOR = /^[0-9a-f]{6}$/i;
 
-export default function decorateEventOneboxes(element, timezone) {
+/**
+ * @param {Element} element
+ * @param {string} timezone - the viewer's timezone
+ * @param {Object} [occurrences] - current occurrences of recurring events, keyed by
+ *   onebox source URL, for oneboxes whose cooked occurrence has passed
+ */
+export default function decorateEventOneboxes(
+  element,
+  timezone,
+  occurrences = {}
+) {
   element.querySelectorAll(".discourse-event-onebox").forEach((onebox) => {
     applyImageStyles(onebox);
 
+    const src = onebox.closest("aside.onebox")?.dataset.oneboxSrc;
+    const occurrence = (src && occurrences?.[src]) || {
+      starts_at: onebox.dataset.eventStartsAt,
+      ends_at: onebox.dataset.eventEndsAt,
+    };
+
     const allDay = onebox.dataset.eventAllDay === "true";
-    const startsAt = parseDate(onebox.dataset.eventStartsAt, {
-      allDay,
-      timezone,
-    });
+    let startsAt = parseDate(occurrence.starts_at, allDay);
     if (!startsAt?.isValid()) {
       return;
     }
 
-    const endsAt = parseDate(onebox.dataset.eventEndsAt, {
-      allDay,
-      timezone,
-    });
+    let endsAt = parseDate(occurrence.ends_at, allDay);
+
+    onebox
+      .querySelector(".discourse-event-onebox__date")
+      ?.setAttribute("datetime", occurrence.starts_at);
+
+    if (!allDay) {
+      startsAt = startsAt.tz(timezone);
+      endsAt = endsAt?.tz(timezone);
+    }
 
     onebox.querySelector(".discourse-event-onebox__month").textContent =
       startsAt.format("MMM");
@@ -70,15 +89,23 @@ function formatTimed(startsAt, endsAt, timezone) {
     value = `${value} → ${endsAt.format(format)}`;
   }
 
-  return `${value} (${timezone})`;
+  return `${value} (${timezoneLabel(startsAt, timezone)})`;
 }
 
-function parseDate(value, { allDay, timezone }) {
+// Zones without a common abbreviation format as a bare offset like "-03", so the location reads better
+function timezoneLabel(date, timezone) {
+  const abbreviation = date.format("z");
+  if (!/^[+-]/.test(abbreviation)) {
+    return abbreviation;
+  }
+
+  return timezone.split("/").pop().replaceAll("_", " ");
+}
+
+function parseDate(value, allDay) {
   if (!value) {
     return null;
   }
 
-  return allDay
-    ? moment(value, "YYYY-MM-DD", true)
-    : moment.parseZone(value).tz(timezone);
+  return allDay ? moment(value, "YYYY-MM-DD", true) : moment.parseZone(value);
 }

@@ -2703,6 +2703,17 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Kiekvieną dieną"
+        weekdays:
+          sunday: "Sekmadienis"
+          monday: "Pirmadienis"
+          tuesday: "Antradienis"
+          wednesday: "Trečiadienis"
+          thursday: "Ketvirtadienis"
+          friday: "Penktadienis"
+          saturday: "Šeštadienis"
     google_meet:
       meeting_code: "Kodas:"
     github:

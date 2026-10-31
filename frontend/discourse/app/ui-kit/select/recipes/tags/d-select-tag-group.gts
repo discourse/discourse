@@ -11,7 +11,6 @@ import DSelect from "discourse/ui-kit/select/d-select";
 import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
   SelectCoreTexts,
-  SelectLoadOptions,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -128,9 +127,8 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
   }
 
   @action
-  async _load(filter: string, opts: SelectLoadOptions) {
+  async _load(filter: string) {
     return await searchTagGroups(filter, {
-      signal: opts.signal,
       siteSettings: this.siteSettings,
     });
   }

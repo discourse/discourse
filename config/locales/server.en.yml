@@ -852,6 +852,7 @@ en:
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
   reverted_to_version: "reverted to version #%{version}"
+  cannot_unlist_hidden_revision: "A hidden revision can't be unlisted. Show it first, then unlist it."
   cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts in this topic is not currently allowed during slow mode."
 
   excerpt_image: "image"
@@ -1158,6 +1159,7 @@ en:
         one: "Description is too long (maximum is %{count} character)."
         other: "Description is too long (maximum is %{count} characters)."
       special_category_permissions: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
+      anonymous_permissions_not_supported: "Use the everyone group to allow anonymous users to access a category."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -3149,7 +3151,7 @@ en:
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or personal messages on a daily basis."
     default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
-    company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
+    company_name: "Name of your company or organization."
     company_url: "Website URL for your company or organization. Optional."
     governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
     city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
@@ -3174,9 +3176,6 @@ en:
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
 
-    dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
-    dashboard_visible_tabs: "Choose which dashboard tabs are visible."
-    dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
     site_traffic_explorer_event_limit: "Controls the maximum number of recent pageviews the Site Traffic Explorer processes. Higher limits cover more traffic but may take longer to load or time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
@@ -6407,6 +6406,28 @@ en:
   onebox:
     discourse:
       event_all_day: "All day"
+      recurrence:
+        every_day: "Every day"
+        every_weekday: "Every weekday"
+        every_week: "Every %{weekday}"
+        every_two_weeks: "Every other %{weekday}"
+        every_four_weeks: "Every 4 weeks on %{weekday}"
+        every_month: "The %{ordinal} %{weekday} of every month"
+        until: "%{recurrence} until %{date}"
+        ordinals:
+          first: "first"
+          second: "second"
+          third: "third"
+          fourth: "fourth"
+          last: "last"
+        weekdays:
+          sunday: "Sunday"
+          monday: "Monday"
+          tuesday: "Tuesday"
+          wednesday: "Wednesday"
+          thursday: "Thursday"
+          friday: "Friday"
+          saturday: "Saturday"
       user_joined_community: "Joined %{date}"
     google_meet:
       title: "Google Meet meeting"

@@ -71,6 +71,66 @@ RSpec.describe CategorySerializer do
       category.save!
     end
 
+    context "with logged-in permissions" do
+      [false, true].each do |enabled|
+        it "preserves grants through saves and flag toggles with granular permissions initially #{enabled}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+          %i[readonly create_post full].each do |permission|
+            category.update!(permissions: { logged_in_users: permission })
+            SiteSetting.granular_anonymous_and_logged_in_groups_permissions = !enabled
+            json = described_class.new(category, scope: admin.guardian, root: false).as_json
+
+            expect(json[:group_permissions]).to eq(
+              [
+                {
+                  permission_type: CategoryGroup.permission_types[permission],
+                  group_name: "logged_in_users",
+                  group_id: Group::AUTO_GROUPS[:logged_in_users],
+                },
+              ],
+            )
+            category.update!(
+              name: "Renamed category",
+              permissions:
+                json[:group_permissions].to_h do |grant|
+                  [grant[:group_name], grant[:permission_type]]
+                end,
+            )
+            SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+            expect(category.reload.permissions_params).to eq(
+              "logged_in_users" => CategoryGroup.permission_types[permission],
+            )
+            expect(category.read_restricted).to eq(true)
+          end
+        end
+      end
+
+      it "keeps an existing unsupported anonymous grant visible instead of synthesizing public access" do
+        category.category_groups.destroy_all
+        category.update!(read_restricted: false)
+        Fabricate(
+          :category_group,
+          category: category,
+          group: Group[:anonymous_users],
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+
+        json = described_class.new(category, scope: admin.guardian, root: false).as_json
+
+        expect(json[:group_permissions]).to eq(
+          [
+            {
+              permission_type: CategoryGroup.permission_types[:readonly],
+              group_name: "anonymous_users",
+              group_id: Group::AUTO_GROUPS[:anonymous_users],
+            },
+          ],
+        )
+      end
+    end
+
     it "does not include the attribute for an anon user" do
       json = described_class.new(category, scope: Guardian.new, root: false).as_json
 
@@ -113,6 +173,30 @@ RSpec.describe CategorySerializer do
           },
         ],
       )
+    end
+  end
+
+  describe "permission groups" do
+    [false, true].each do |enabled|
+      it "offers category groups independently of granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+        json = described_class.new(category, scope: admin.guardian, root: false).as_json
+
+        expect(json[:permission_groups]).to include(
+          { id: Group::AUTO_GROUPS[:everyone], name: Group[:everyone].name },
+          { id: Group::AUTO_GROUPS[:logged_in_users], name: Group[:logged_in_users].name },
+        )
+        expect(json[:permission_groups].pluck(:id)).not_to include(
+          Group::AUTO_GROUPS[:anonymous_users],
+        )
+      end
+    end
+
+    it "omits editor group choices for regular users" do
+      json = described_class.new(category, scope: user.guardian, root: false).as_json
+
+      expect(json).not_to have_key(:permission_groups)
     end
   end
 

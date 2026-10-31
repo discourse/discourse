@@ -94,9 +94,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
           }}
         />
       </form.Field>
-      <form.Alert @type="info">
-        {{i18n "admin.config_areas.about.company_name_warning"}}
-      </form.Alert>
 
       <form.Field
         @format="large"

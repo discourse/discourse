@@ -52,12 +52,10 @@ export async function searchTags(
   {
     context,
     limit,
-    signal,
     siteSettings,
   }: {
     context: TagSearchContext;
     limit?: number;
-    signal?: AbortSignal;
     siteSettings: {
       max_tag_search_results: number;
       tags_sort_alphabetically?: boolean;
@@ -72,7 +70,6 @@ export async function searchTags(
     forbidden_message?: string;
     required_tag_group?: TagSearchResult["requiredTagGroup"];
   } = await ajax("/tags/filter/search", {
-    signal,
     data: {
       q: filter,
       limit: Math.min(
@@ -114,16 +111,13 @@ export async function searchTagGroups(
   filter: string,
   {
     siteSettings,
-    signal,
   }: {
     siteSettings: { max_tag_search_results: number };
-    signal?: AbortSignal;
   }
 ): Promise<Array<{ id: string; name: string }>> {
   const result: { results: Array<{ name: string }> } = await ajax(
     "/tag_groups/filter/search",
     {
-      signal,
       data: { q: filter, limit: siteSettings.max_tag_search_results },
     }
   );

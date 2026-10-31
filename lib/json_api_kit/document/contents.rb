@@ -10,6 +10,8 @@ module JsonApiKit
 
       def primary = @primary ||= identities.map { merged_records.fetch(it) }
 
+      def primary_record = primary.first
+
       def related = @related ||= merged_records.except(*identities).values
 
       private

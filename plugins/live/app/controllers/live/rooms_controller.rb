@@ -15,7 +15,7 @@ module Live
     # flood every participant's MessageBus.
     REACTIONS_PER_USER = 15 # per 10 seconds
 
-    STATE_FIELDS = %i[muted deafened video screen watching transcribing]
+    STATE_FIELDS = %i[muted deafened video screen watching transcribing recording_locally]
 
     # Anonymous visitors may browse the directory; the guardian still limits the
     # listing to public rooms, and only when access is open to everyone.
@@ -487,6 +487,11 @@ module Live
         end
       end
 
+      if params.key?(:recording_locally) && bool.cast(params[:recording_locally]) &&
+           !guardian.can_record_live_locally?
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.local_recording_not_allowed"))
+      end
+
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)
       previous_metadata = metadata.dup
       metadata[:is_muted] = bool.cast(params[:muted]) if params.key?(:muted)
@@ -495,6 +500,9 @@ module Live
       metadata[:is_screen_sharing] = bool.cast(params[:screen]) if params.key?(:screen)
       metadata[:watching_video] = bool.cast(params[:watching]) if params.key?(:watching)
       metadata[:is_transcribing] = bool.cast(params[:transcribing]) if params.key?(:transcribing)
+      if params.key?(:recording_locally)
+        metadata[:is_recording_locally] = bool.cast(params[:recording_locally])
+      end
 
       # A request that changes nothing must not become a full-roster
       # rebroadcast to every participant.

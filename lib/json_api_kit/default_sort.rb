@@ -7,7 +7,7 @@ module JsonApiKit
     def initialize(type, ordering)
       @type = type.to_s
       @ordering = ordering.to_h.transform_keys(&:to_s).freeze
-      @ordering.each_value { Pagination::Direction.for(it) }
+      @ordering.each_value { Declarations::Sort.verify_direction!(it) }
     end
 
     def convert_names(&conversion)
