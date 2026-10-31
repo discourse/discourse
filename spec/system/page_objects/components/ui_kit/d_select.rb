@@ -167,16 +167,48 @@ module PageObjects
 
         def option_values
           open_for_value
-          panel = linked_panel_selector
-          values = {}
-          each_option_window(panel) do
-            values.merge!(page.evaluate_script(<<~JS, find(panel)).to_h)
-              Array.from(arguments[0].querySelectorAll('[role="option"][data-value]'),
-                option => [Number(option.dataset.index), option.dataset.value])
-            JS
-            false
-          end
-          values.sort.map(&:last)
+          panel = find(linked_panel_selector)
+          # Walks every window in the browser: a round trip per window is too slow for long lists.
+          values = page.evaluate_async_script(<<~JS, panel)
+            const [panel, done] = arguments;
+            const viewport = panel.querySelector(".d-virtual-list");
+            const values = new Map();
+            const finish = () => done([...values].sort(([a], [b]) => a - b).map(([, value]) => value));
+            // Returns how far to scroll so the last rendered row (overscan included) comes to the
+            // top, which skips no row.
+            const collect = () => {
+              let last;
+              for (const option of panel.querySelectorAll('[role="option"][data-value]')) {
+                values.set(Number(option.dataset.index), option.dataset.value);
+                if (!last || Number(option.dataset.index) > Number(last.dataset.index)) {
+                  last = option;
+                }
+              }
+              const offset = last
+                ? last.getBoundingClientRect().top - viewport?.getBoundingClientRect().top
+                : 0;
+              return Math.max(offset, viewport?.clientHeight ?? 0);
+            };
+            const settle = () =>
+              new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            (async () => {
+              if (!viewport) {
+                collect();
+                return finish();
+              }
+              viewport.scrollTop = 0;
+              await settle();
+              for (;;) {
+                const before = viewport.scrollTop;
+                viewport.scrollTop = before + collect();
+                await settle();
+                if (viewport.scrollTop === before) {
+                  return finish();
+                }
+              }
+            })();
+          JS
+          values
         end
 
         def has_selected_value?(value)
