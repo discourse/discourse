@@ -34,21 +34,28 @@ import type {
   SelectItem,
   SelectItemRow,
   SelectKindTexts,
+  SelectLoadOptions,
   SelectTextWrapper,
+  SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
 /** Live state yielded to the list's `:listHeader` and `:footer` blocks. */
 export type SelectListState = SelectPanelState;
 
-/** Public API for a persistent multi-select with an optional static list body. */
+/** Public API for a persistent select with an optional static list body. */
 interface DSelectListSignature {
   Args: {
-    /** Controlled held values; this component always selects multiple items. */
-    value?: readonly unknown[];
-    /** Receives the replacement values, resolved items and change metadata. */
+    /**
+     * Whether the list holds several values (the default) or one. With `false` a pick replaces
+     * the held value, `@value` is one value or `null`, and `@onChange` receives one item.
+     */
+    multiple?: boolean;
+    /** Controlled held values: an array, or one value or `null` when `@multiple` is false. */
+    value?: SelectValue;
+    /** Receives the replacement value or values, resolved item or items and change metadata. */
     onChange?: (
-      next: unknown[],
-      items: SelectItem[],
+      next: SelectValue,
+      items: SelectItem[] | SelectItem | null,
       change: Parameters<NonNullable<SelectHostArgs["onChange"]>>[2]
     ) => void;
     /** Local options, or a function of resolved options. */
@@ -187,7 +194,7 @@ interface DSelectListSignature {
   };
 }
 
-/** Always-open searchable multi-select; focus and dismissal belong to its containing panel. */
+/** Always-open searchable select; focus and dismissal belong to its containing panel. */
 export default class DSelectList extends Component<DSelectListSignature> {
   @service declare a11y: A11yService;
   @service declare capabilities: CapabilitiesService;
@@ -199,7 +206,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
     getA11y: () => this.a11y,
     getArgs: () => ({ ...this.args, onChange: this.handleChange }),
     getPresenter: () => this.presenter,
-    getMultiple: () => true,
+    getMultiple: () => this.multiple,
     isLive: () => !this.isDestroying,
     session: () => this.interaction.session,
     clearQuery: () => this.engine.setFilter(""),
@@ -209,6 +216,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
     isStaticModal: () => false,
     shouldSuppressEntryCount: () => false,
     canReport: () => this.interaction.canReport(),
+    speaksSinglePick: () => true,
   });
 
   engine = this.host.engine;
@@ -251,7 +259,11 @@ export default class DSelectList extends Component<DSelectListSignature> {
   get heldSelection(): TrackedAsyncData<
     readonly SelectDescriptor[] | undefined
   > {
-    return new TrackedAsyncData(this.host.resolveMulti(this.args.value));
+    return new TrackedAsyncData(this.resolveHeld(this.args.value));
+  }
+
+  get multiple(): boolean {
+    return this.args.multiple ?? true;
   }
 
   get listboxId(): string {
@@ -276,8 +288,31 @@ export default class DSelectList extends Component<DSelectListSignature> {
       NonNullable<SelectHostArgs["onChange"]>
     >
   ): void {
-    // The host engine is always multi; narrow its arity-union at this boundary.
-    this.args.onChange?.(next as unknown[], items as SelectItem[], change);
+    this.args.onChange?.(next, items, change);
+  }
+
+  /** Resolves the held value to chip descriptors, one chip for a single held value. */
+  @action
+  resolveHeld(
+    value: unknown,
+    opts?: SelectLoadOptions
+  ):
+    | readonly SelectDescriptor[]
+    | Promise<readonly SelectDescriptor[] | undefined>
+    | undefined {
+    if (this.multiple) {
+      return this.host.resolveMulti(value, opts);
+    }
+    const held = this.engine.resolveSelection(value as SelectValue, opts) as
+      | SelectItem
+      | Promise<SelectItem | undefined>
+      | undefined;
+    if (held instanceof Promise) {
+      return held.then((item) =>
+        item === undefined ? undefined : this.engine.describeItems([item])
+      );
+    }
+    return held === undefined ? undefined : this.engine.describeItems([held]);
   }
 
   <template>
@@ -337,7 +372,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @listboxId={{this.listboxId}}
         @loadListContent={{this.host.loadListContent}}
         @locked={{this.presenter.isLocked}}
-        @multiple={{true}}
+        @multiple={{this.multiple}}
         @onOptionMousedown={{this.interaction.preventPointerBlur}}
         @onRegisterListbox={{this.interaction.registerListbox}}
         @onRegisterRoving={{this.interaction.registerRoving}}
@@ -346,7 +381,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @presenter={{this.presenter}}
         @renderOptions={{this.renderOptions}}
         @reportsActive={{this.interaction.focused}}
-        @resolveSelection={{this.host.resolveMulti}}
+        @resolveSelection={{this.resolveHeld}}
         @selectedIcon={{@selectedIcon}}
         @state={{hash
           filter=this.engine.filter

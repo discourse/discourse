@@ -1296,8 +1296,14 @@ by mechanism.
 ## DSelectList
 
 Use `DSelectList` for a persistent search and selection surface inside a panel, or for
-several independent selects inside one `DMenu`. It is always multi: pass an array to
-`@value` and replace it with the array from `@onChange(next, items, change)`. It shares
+several independent selects inside one `DMenu`. It is multi by default: pass an array to
+`@value` and replace it with the array from `@onChange(next, items, change)`. With
+`@multiple={{false}}` it holds one value: `@value` is that value or `null`, a pick replaces it
+and `@onChange` receives the new value and its item, or `null` when the held chip is removed.
+The held item still shows as a chip in the search field, its row stays marked selected, and
+pressing that row again changes nothing. `@maximum` keeps its multi meaning, so a list that
+must hold one value at a time uses this mode rather than `@maximum={{1}}`, which refuses a
+second pick until the first is removed. It shares
 DSelect's sources, creation, paste parsing, customizations, selection limits and value
 resolution. It has no trigger, overlay lifecycle callbacks or mobile modal.
 
@@ -1346,7 +1352,8 @@ including a `DMenu`.
 Automatic cursor entry needs focus inside the root, a query and room below the cap.
 Blur clears the cursor and pending jumps while preserving the query; returning with
 a query re-seeds it. List-state speech is restricted to the focused select, with a
-second ownership check for deferred reports. Adds and removals always speak. Empty
+second ownership check for deferred reports. Adds and removals always speak, and so does a
+single list's pick ("Selected Apple"), since no trigger reads the new value back. Empty
 and error content remains visible while unfocused without live-region roles. An
 empty query with no rows renders and speaks no empty-result message.
 

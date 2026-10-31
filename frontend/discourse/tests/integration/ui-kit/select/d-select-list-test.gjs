@@ -22,6 +22,7 @@ import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
 import {
@@ -1983,6 +1984,147 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         assert.true(box.top >= view.top - 1, "the row's top is visible");
       });
     }
+  });
+
+  module("single", function () {
+    /** A single list over the fruit, recording every change it emits. */
+    async function renderSingle(held, extra = {}) {
+      const changes = [];
+      const setHeld = (next, item) => {
+        changes.push([next, item?.name]);
+        held.value = next;
+      };
+      await render(
+        <template>
+          <DSelectList
+            @items={{FRUIT}}
+            @multiple={{false}}
+            @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
+            @value={{held.value}}
+            @virtualized={{extra.virtualized}}
+          />
+        </template>
+      );
+      return changes;
+    }
+
+    test("a pressed row replaces the held value", async function (assert) {
+      const held = tracked(1);
+      const changes = await renderSingle(held);
+
+      await click(rows()[1]);
+
+      assert.deepEqual(changes, [[2, "Banana"]], "emits the value and item");
+      assert.deepEqual(
+        chips().map((chip) => chip.dataset.name),
+        ["Banana"],
+        "the field holds only the new item"
+      );
+      assert.deepEqual(
+        rows().map((row) => row.getAttribute("aria-selected")),
+        ["false", "true", "false", "false"],
+        "only the new row reads as selected"
+      );
+      assert.dom(root()).hasAttribute("data-value", "2");
+    });
+
+    test("Enter on the active row replaces the held value", async function (assert) {
+      const held = tracked(1);
+      const changes = await renderSingle(held);
+
+      await focus(input());
+      await type("cher");
+      await triggerKeyEvent(input(), "keydown", "Enter");
+
+      assert.deepEqual(changes, [[3, "Cherry"]]);
+      assert.strictEqual(
+        document.activeElement,
+        input(),
+        "focus stays in the search"
+      );
+    });
+
+    test("pressing the held row keeps it", async function (assert) {
+      const held = tracked(2);
+      const changes = await renderSingle(held);
+
+      await click(rows()[1]);
+
+      assert.deepEqual(changes, [], "nothing changes");
+      assert.dom(rows()[1]).hasAria("selected", "true");
+    });
+
+    test("removing the held chip emits null", async function (assert) {
+      const held = tracked(2);
+      const changes = await renderSingle(held);
+
+      await click(chipButtons()[0]);
+
+      assert.deepEqual(changes, [[null, undefined]]);
+      assert.strictEqual(chips().length, 0, "the field is empty");
+    });
+
+    test("Backspace on an empty query removes the held item and says so", async function (assert) {
+      const held = tracked(2);
+      const changes = await renderSingle(held);
+
+      await focus(input());
+      await triggerKeyEvent(input(), "keydown", "Backspace");
+
+      assert.deepEqual(changes, [[null, undefined]]);
+      assert.true(
+        this.announce.calledWithMatch(sinon.match("Selection cleared")),
+        "the removal is announced"
+      );
+    });
+
+    test("a pick is spoken, as there is no trigger to read it back", async function (assert) {
+      const held = tracked(null);
+      await renderSingle(held);
+
+      this.announce.resetHistory();
+      await click(rows()[0]);
+
+      const spoken = this.announce.getCalls().map((call) => call.args[0]);
+      assert.true(
+        spoken.includes("Selected Apple"),
+        `the pick is spoken: ${spoken.join(" | ")}`
+      );
+    });
+
+    test("dSelect() picks and removes on a single list", async function (assert) {
+      const held = tracked(1);
+      const changes = await renderSingle(held);
+      const select = dSelect(".d-select.--list");
+
+      await select.selectByName("Date");
+      await select.remove(4);
+
+      assert.deepEqual(changes, [
+        [4, "Date"],
+        [null, undefined],
+      ]);
+    });
+
+    test("the listbox allows one selection in either body", async function (assert) {
+      const held = tracked(null);
+      const virtualized = tracked(true);
+      await renderSingle(held, {
+        get virtualized() {
+          return virtualized.value;
+        },
+      });
+
+      assert.dom(listbox()).doesNotHaveAttribute("aria-multiselectable");
+
+      virtualized.value = false;
+      await settled();
+
+      assert
+        .dom(listbox())
+        .doesNotHaveAttribute("aria-multiselectable", "static body too");
+    });
   });
 
   module("customizations and bridge", function (nested) {

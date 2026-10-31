@@ -218,7 +218,7 @@ export default class SelectListInteraction {
     }
     handleFieldKeydown(event, {
       engine: this.#engine,
-      multiple: true,
+      multiple: this.#engine.multiple,
       locked: this.#presenter.isLocked,
       clearActive: () => this.#clearCursor(),
       navigateToSelection: (keyEvent) => {

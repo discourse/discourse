@@ -121,6 +121,8 @@ export interface SelectHostOptions {
   isStaticModal: () => boolean;
   /** Whether cursor entry already conveys the result count. */
   shouldSuppressEntryCount: () => boolean;
+  /** Whether a single-select pick is spoken, as no trigger reads it back. Defaults to false. */
+  speaksSinglePick?: () => boolean;
 }
 
 /** Owns source, selection and list wiring shared by select components. */
@@ -270,6 +272,7 @@ export default class SelectHost {
       getShouldSuppressEntryCount: () =>
         this.#options.shouldSuppressEntryCount(),
       isRevealDue: () => this.feedback.showRevealPlaceholder,
+      speaksSinglePick: this.#options.speaksSinglePick,
     });
     associateDestroyableChild(this, this.engine);
     associateDestroyableChild(this, this.feedback);

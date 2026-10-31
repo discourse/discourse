@@ -44,6 +44,8 @@ interface SelectAnnouncerOptions {
    * "loading more" report follows the same signal, so it is spoken in the render that draws them.
    */
   isRevealDue?: () => boolean;
+  /** Whether a single-select pick is spoken, for a select with no trigger to read it back. */
+  speaksSinglePick?: () => boolean;
 }
 
 interface ValueChangedOptions {
@@ -62,6 +64,7 @@ export default class SelectAnnouncer {
   #getShouldSuppressEntryCount: () => boolean;
   #isRevealDue: () => boolean;
   #reannounceActive: () => boolean;
+  #speaksSinglePick: () => boolean;
 
   // Deduping on the message rather than a count keeps a change silent whenever it does not
   // change what the message says.
@@ -106,6 +109,7 @@ export default class SelectAnnouncer {
     reannounceActive,
     getShouldSuppressEntryCount,
     isRevealDue = () => false,
+    speaksSinglePick = () => false,
   }: SelectAnnouncerOptions) {
     this.#a11y = a11y;
     this.#canReport = canReport;
@@ -114,6 +118,7 @@ export default class SelectAnnouncer {
     this.#reannounceActive = reannounceActive;
     this.#getShouldSuppressEntryCount = getShouldSuppressEntryCount;
     this.#isRevealDue = isRevealDue;
+    this.#speaksSinglePick = speaksSinglePick;
     registerDestructor(this, () => this.cancelPending());
   }
 
@@ -508,6 +513,15 @@ export default class SelectAnnouncer {
       // trigger's name changes, and a name change on an already-focused element is not reliably
       // re-read. So the one single-select transition that needs saying out loud is this one.
       this.#say(this.#engine.text("selectionCleared"));
+    } else if (nextValues != null && this.#speaksSinglePick()) {
+      const item = this.#engine.resolveSingleSync(nextValues);
+      this.#say(
+        this.#engine.text("itemSelected", {
+          item: item
+            ? this.#engine.getSelectionLabel(item)
+            : String(nextValues),
+        })
+      );
     } else if (origin && nextValues != null) {
       const item = this.#engine.resolveSingleSync(nextValues);
       if (item) {

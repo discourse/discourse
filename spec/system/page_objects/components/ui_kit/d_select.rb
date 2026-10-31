@@ -51,7 +51,7 @@ module PageObjects
           element.matches_css?(".d-select", wait: 0) ? element : element.ancestor(".d-select")
         end
 
-        # Persistent lists are always multi and have no trigger to open.
+        # Persistent lists have no trigger to open.
         def list?
           trigger.matches_css?(".d-select.--list", wait: 0)
         end
@@ -59,7 +59,14 @@ module PageObjects
         # `wait: 0` for the same reason as `press_in_controller`: a predicate on an
         # already-resolved node, where waiting would only delay a legitimate `false`.
         def multiple?
-          list? || trigger.matches_css?(".--multiple", wait: 0)
+          # A list is multi unless its listbox allows one selection.
+          if list?
+            return(
+              trigger.has_no_css?("[role='listbox']:not([aria-multiselectable='true'])", wait: 0)
+            )
+          end
+
+          trigger.matches_css?(".--multiple", wait: 0)
         end
 
         # Opens through the trigger itself rather than the query input — the `button` and
