@@ -52,6 +52,9 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
+      - name: Test core RSpec selection
+        run: node --test .github/scripts/select-rspec.test.cjs
+
       - name: Bundler checksums
         if: ${{ !cancelled() }}
         shell: bash

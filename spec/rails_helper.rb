@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative "../script/ci/rspec_mapping" if ENV["COLLECT_RSPEC_MAPPING"] == "1"
+require_relative "../script/ci/rspec_selection_audit" if ENV["RSPEC_SELECTION_AUDIT"] == "1"
+
 if ENV["COVERAGE"]
   require "simplecov"
   if ENV["TEST_ENV_NUMBER"]

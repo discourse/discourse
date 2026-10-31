@@ -124,6 +124,7 @@ gem "digest", require: false
 gem "goldiloader"
 
 group :test do
+  gem "gitlab-crystalball", "~> 1.1.3", require: false
   gem "capybara", require: false
   gem "webmock", require: false
   gem "simplecov", require: false
