@@ -240,6 +240,28 @@ module(
       assert.dom(optionNamed("bob")).hasAttribute("aria-selected", "true");
     });
 
+    test("a held user's avatar keeps the trigger as tall as plain text", async function (assert) {
+      stubUserSearch();
+
+      await render(
+        <template>
+          <DSelectUser class="with-avatar" @value="bob" />
+          <DSelectUser class="plain" @value="ghost" />
+        </template>
+      );
+
+      assert
+        .dom(".with-avatar img.avatar")
+        .exists("the known user draws an avatar");
+      const withAvatar = find(".d-select.with-avatar").getBoundingClientRect()
+        .height;
+      const plain = find(".d-select.plain").getBoundingClientRect().height;
+      assert.true(
+        Math.abs(withAvatar - plain) < 1,
+        `the avatar trigger is ${withAvatar}px, the plain one ${plain}px`
+      );
+    });
+
     test("matches held names to rows in any case", async function (assert) {
       stubUserSearch();
       const onChange = sinon.spy();

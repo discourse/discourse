@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "User and group recipe migration" do
+  include ThemeScreenshotMarker
+
   with_select_controls(true)
 
   fab!(:admin)
@@ -18,10 +20,22 @@ describe "User and group recipe migration" do
 
     recipients = PageObjects::Components::UiKit::DSelect.at("#reply-control .d-select.user-chooser")
     recipients.search(recipient.username)
+    screenshot_marker(label: "d-select-user-rows", only: :desktop)
     recipients.select_value(recipient.username)
     recipients.search(team.name)
     recipients.select_value(team.name)
     recipients.close
+    screenshot_marker(label: "d-select-user-chips", only: :desktop)
+
+    first_chip_bottom =
+      page.evaluate_script(
+        "document.querySelector('#reply-control .d-select__chip').getBoundingClientRect().bottom",
+      )
+    input_top =
+      page.evaluate_script(
+        "document.querySelector('#private-message-users').getBoundingClientRect().top",
+      )
+    expect(input_top).to be < first_chip_bottom, "the query input shares the chips' row"
 
     composer.fill_title("A message for the picked recipients")
     composer.fill_content("Hello to the user and the group that were picked")
@@ -40,6 +54,7 @@ describe "User and group recipe migration" do
     flagged_user =
       PageObjects::Components::UiKit::DSelect.at("#review-filter-user-label ~ .d-select")
     flagged_user.search(recipient.username)
+    screenshot_marker(label: "d-select-user-review-filter", only: :desktop)
     flagged_user.select_value(recipient.username)
     find(".reviewable-filters .refresh").click
 
@@ -58,6 +73,7 @@ describe "User and group recipe migration" do
     group = PageObjects::Components::UiKit::DSelect.at("#{section} .d-select.group-chooser")
     group.search(team.name)
     group.select_value(team.id)
+    screenshot_marker(label: "d-select-user-group-triggers", only: :desktop)
 
     config_area.contact_information_section.submit
     expect(config_area.contact_information_section).to have_saved_successfully

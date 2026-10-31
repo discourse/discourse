@@ -674,7 +674,9 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
 
-      #private-message-users,
+      // TODO (select-kit-replacement-cleanup): Drop the id with select-kit. The new select
+      // control puts it on its query input, which must keep sharing the chips' row.
+      #private-message-users:not(.d-select__input),
       .users-input {
         width: 100%;
         flex: 0 0 auto;

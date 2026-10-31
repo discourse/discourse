@@ -36,6 +36,12 @@
 }
 
 .d-user-option {
+  // A chip or trigger keeps the height of its text.
+  &.--selection .avatar {
+    width: 1lh;
+    height: 1lh;
+  }
+
   &__username {
     color: var(--primary);
     white-space: nowrap;
