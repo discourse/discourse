@@ -66,15 +66,22 @@ export default class SelectListInteraction {
   #focusCheck?: ReturnType<typeof schedule>;
   #destroyed = false;
 
+  /** A modal focuses its first field while it renders, and that render reads this state. */
   #handleFocusIn = (event: FocusEvent): void => {
-    if (!this.focused) {
-      this.usesDirectFocus = isTouchScreenReader(this.#platform);
-    }
-    this.focused = true;
-    this.inputFocused = event.target === this.filterInput;
-    if (!this.inputFocused) {
-      this.#clearCursor();
-    }
+    const inputFocused = event.target === this.filterInput;
+    schedule("afterRender", () => {
+      if (this.#destroyed) {
+        return;
+      }
+      if (!this.focused) {
+        this.usesDirectFocus = isTouchScreenReader(this.#platform);
+      }
+      this.focused = true;
+      this.inputFocused = inputFocused;
+      if (!this.inputFocused) {
+        this.#clearCursor();
+      }
+    });
   };
 
   /** Removed chips can report null relatedTarget before their replacement takes focus. */

@@ -422,7 +422,11 @@ export default class DModal extends Component<DModalSignature> {
       event.preventDefault();
     }
 
-    if (event.key === "Escape" && this.dismissable) {
+    if (
+      event.key === "Escape" &&
+      this.dismissable &&
+      !this.#focusedSearchClaimsEscape()
+    ) {
       event.stopPropagation();
       this.closeModal(CLOSE_INITIATED_BY_ESC);
     }
@@ -513,6 +517,19 @@ export default class DModal extends Component<DModalSignature> {
         (id) =>
           id && document.getElementById(id)?.getAttribute("role") === "listbox"
       );
+  }
+
+  /**
+   * A search field that holds text clears it on Escape, as browsers do, so the first Escape
+   * empties the search and only the next one closes the modal.
+   */
+  #focusedSearchClaimsEscape() {
+    const field = document.activeElement;
+    return (
+      field instanceof HTMLInputElement &&
+      field.type === "search" &&
+      field.value !== ""
+    );
   }
 
   #animateBackdropOpacity(position: number) {

@@ -18,6 +18,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DSelect from "discourse/ui-kit/select/d-select";
+import DSelectList from "discourse/ui-kit/select/d-select-list";
 
 const FRUITS = [
   { id: 1, name: "Apple" },
@@ -936,6 +937,72 @@ module("Integration | ui-kit | DModal", function (hooks) {
 
       assert.deepEqual(this.selected, [1], "Enter picks the option");
       assert.false(this.actionCalled, "the modal does not submit as well");
+    });
+  });
+
+  module("escape in a DSelectList", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      this.closed = 0;
+      this.closeModal = () => this.closed++;
+      this.onChange = () => {};
+    });
+
+    test("Escape with a query clears it and keeps the modal open", async function (assert) {
+      await render(
+        <template>
+          <DModal @closeModal={{this.closeModal}} @inline={{true}}>
+            <:body>
+              <DSelectList @items={{FRUITS}} @onChange={{this.onChange}} />
+            </:body>
+          </DModal>
+        </template>
+      );
+      const search = ".d-select.--list input[type='search']";
+
+      await fillIn(search, "app");
+      await triggerKeyEvent(search, "keydown", "Escape");
+
+      assert.dom(search).hasValue("", "the query is cleared");
+      assert.strictEqual(this.closed, 0, "the modal stays open");
+
+      await triggerKeyEvent(search, "keydown", "Escape");
+
+      assert.strictEqual(
+        this.closed,
+        1,
+        "an empty query leaves Escape to the modal"
+      );
+    });
+
+    test("Escape in a plain text field with text still closes the modal", async function (assert) {
+      await render(
+        <template>
+          <DModal @closeModal={{this.closeModal}} @inline={{true}}>
+            <:body><input class="plain" type="text" /></:body>
+          </DModal>
+        </template>
+      );
+
+      await fillIn(".plain", "draft");
+      await triggerKeyEvent(".plain", "keydown", "Escape");
+
+      assert.strictEqual(this.closed, 1);
+    });
+
+    test("a list that is the modal's first field takes focus as the modal opens", async function (assert) {
+      await render(
+        <template>
+          <DModal @closeModal={{this.closeModal}} @inline={{true}}>
+            <:body>
+              <DSelectList @items={{FRUITS}} @onChange={{this.onChange}} />
+            </:body>
+          </DModal>
+        </template>
+      );
+
+      assert
+        .dom(".d-select.--list input[type='search']")
+        .isFocused("the search field holds focus");
     });
   });
 
