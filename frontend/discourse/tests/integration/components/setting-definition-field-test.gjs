@@ -978,7 +978,6 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
   });
   test("tag_list round-trips names with the new select controls", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
-    pretender.get("/tags/list.json", () => response({ list_tags: [] }));
 
     await render(
       <template>

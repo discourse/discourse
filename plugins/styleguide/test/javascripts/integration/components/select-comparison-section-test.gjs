@@ -29,7 +29,6 @@ module("Styleguide | Integration | select comparison", function (hooks) {
   hooks.beforeEach(function () {
     this.siteSettings.tagging_enabled = true;
     pretender.get("/tags/filter/search", () => response({ results: [] }));
-    pretender.get("/tags/list.json", () => response({ list_tags: [] }));
     pretender.get("/tag_groups/filter/search", () => response({ results: [] }));
     this.routeTo = sinon.stub(DiscourseURL, "routeTo");
     this.routeToUrl = sinon.stub(DiscourseURL, "routeToUrl");

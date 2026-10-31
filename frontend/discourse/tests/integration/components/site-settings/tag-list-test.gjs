@@ -3,7 +3,6 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import TagList from "discourse/admin/components/site-settings/tag-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -74,7 +73,6 @@ module(
 
     hooks.beforeEach(function () {
       this.siteSettings.enable_new_select_controls = true;
-      pretender.get("/tags/list.json", () => response({ list_tags: [] }));
     });
 
     test("selecting a tag reports the tag name", async function (assert) {

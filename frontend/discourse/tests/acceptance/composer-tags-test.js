@@ -186,7 +186,6 @@ acceptance("Composer - Tags (new select controls)", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => helper.response([]));
-    server.get("/tags/list.json", () => helper.response({ list_tags: [] }));
     server.get("/tags/list", () =>
       helper.response({
         list_tags: [
@@ -382,7 +381,6 @@ acceptance("Composer - Tags (compact on mobile)", function (needs) {
   needs.mobileView();
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => helper.response([]));
-    server.get("/tags/list.json", () => helper.response({ list_tags: [] }));
     server.get("/tags/list", () =>
       helper.response({
         list_tags: [

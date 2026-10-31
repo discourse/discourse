@@ -33,7 +33,6 @@ const ROWS = [
 function stubSearch(rows = ROWS, extra = {}) {
   const requests = [];
   // Name-only held or blocked tags are resolved to ids through the list endpoint.
-  pretender.get("/tags/list.json", () => response({ list_tags: [] }));
   pretender.get("/tags/filter/search", (request) => {
     requests.push(request.queryParams);
     const q = request.queryParams.q ?? "";

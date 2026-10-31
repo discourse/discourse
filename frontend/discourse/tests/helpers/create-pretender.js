@@ -298,8 +298,6 @@ export function applyDefaultHandlers() {
 
   pretender.delete("/bookmarks/:id", () => response({}));
 
-  pretender.get("/tags/list.json", () => response({ list_tags: [] }));
-
   pretender.get("/tags/filter/search", (request) => {
     const responseBody = {
       results: [

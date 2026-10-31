@@ -34,8 +34,6 @@ const ROWS = [
 /** Stubs tag search, recording each request's query params. */
 function stubSearch(rows = ROWS, extra = {}) {
   const requests = [];
-  // Name-only held or blocked tags are resolved to ids through the list endpoint.
-  pretender.get("/tags/list.json", () => response({ list_tags: [] }));
   pretender.get("/tags/filter/search", (request) => {
     requests.push(request.queryParams);
     const q = request.queryParams.q ?? "";
@@ -756,9 +754,6 @@ module(
         this.siteSettings.max_tag_search_results = 5;
         this.siteSettings.max_tag_length = 30;
         this.siteSettings.force_lowercase_tags = true;
-        pretender.get("/tags/list.json", () =>
-          response({ list_tags: [{ id: 3, name: "excluded" }] })
-        );
         pretender.get("/tags/filter/search", () =>
           response({
             results: [
@@ -937,12 +932,7 @@ module(
       });
 
       test("never looks held names up", async function (assert) {
-        stubSearch();
-        let lookups = 0;
-        pretender.get("/tags/list.json", () => {
-          lookups++;
-          return response({ list_tags: [] });
-        });
+        const requests = stubSearch();
         const held = [
           { id: 1, name: "alpha", slug: "alpha" },
           { name: "rock" },
@@ -956,7 +946,11 @@ module(
         await click(".d-select__trigger");
         await fillIn("[role='combobox']", "bu");
 
-        assert.strictEqual(lookups, 0, "no lookup, signed in");
+        assert.deepEqual(
+          requests.filter((params) => params["names[]"] ?? params.names),
+          [],
+          "no lookup, signed in"
+        );
         assert.dom(".d-select__chip[data-name='rock']").exists();
       });
 

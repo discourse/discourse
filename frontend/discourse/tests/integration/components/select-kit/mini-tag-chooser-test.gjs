@@ -490,7 +490,6 @@ module(
       this.shippedMigrated = [...MIGRATED_SELECT_KIT_MODULES];
       MIGRATED_SELECT_KIT_MODULES.clear();
       this.siteSettings.enable_new_select_controls = true;
-      pretender.get("/tags/list.json", () => response({ list_tags: [] }));
     });
 
     hooks.afterEach(function () {

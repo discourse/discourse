@@ -306,9 +306,6 @@ module(
         this.siteSettings.max_tag_search_results = 5;
         this.siteSettings.max_tag_length = 30;
         this.siteSettings.force_lowercase_tags = true;
-        pretender.get("/tags/list.json", () =>
-          response({ list_tags: [{ id: 3, name: "excluded" }] })
-        );
         pretender.get("/tags/filter/search", () =>
           response({
             results: [
