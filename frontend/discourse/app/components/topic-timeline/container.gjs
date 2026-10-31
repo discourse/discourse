@@ -699,7 +699,7 @@ export default class TopicTimelineScrollArea extends Component {
           {{/if}}
         {{/if}}
 
-        {{#if @fullscreen}}
+        {{#if (and @fullscreen @jumpToPostPrompt)}}
           <DButton
             class="timeline-open-jump-to-post-prompt-btn jump-to-post"
             title={{i18n "topic.progress.jump_prompt_long"}}
