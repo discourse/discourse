@@ -1041,6 +1041,54 @@ module(
           .doesNotExist();
       });
 
+      test("a description keeps the gap between a row's ancestor badges", async function (assert) {
+        Site.current().updateCategories([
+          { id: 9810, name: "Gapparent", slug: "gapparent", permission: 1 },
+          {
+            id: 9811,
+            name: "Gapchild described",
+            slug: "gapchild-described",
+            parent_category_id: 9810,
+            permission: 1,
+            description_text: "A description",
+          },
+          {
+            id: 9812,
+            name: "Gapchild plain",
+            slug: "gapchild-plain",
+            parent_category_id: 9810,
+            permission: 1,
+          },
+        ]);
+
+        await render(<template><Host @multiple={{false}} /></template>);
+        await select().open();
+        await select().search("gapchild");
+
+        const gap = (id) => {
+          const [parent, own] = [
+            ...optionFor(id).querySelectorAll(".badge-category__wrapper"),
+          ].map((badge) => badge.getBoundingClientRect());
+          return own.left - parent.right;
+        };
+        assert
+          .dom(".d-select__option-description", optionFor(9811))
+          .exists("the row draws its description");
+        assert.true(gap(9812) > 0, "the plain row sets its badges apart");
+        assert.true(
+          Math.abs(gap(9811) - gap(9812)) < 0.5,
+          `the described row's badges keep that gap (${gap(9811)} vs ${gap(9812)})`
+        );
+
+        for (const id of [9811, 9812]) {
+          optionFor(id).style.setProperty("--d-select-option-gap", "2em");
+        }
+        assert.true(
+          Math.abs(gap(9811) - gap(9812)) < 0.5,
+          `and follow the rows' spacing (${gap(9811)} vs ${gap(9812)})`
+        );
+      });
+
       test("descriptions never render markup and are cut at 200 characters", async function (assert) {
         Site.current().updateCategories([
           {

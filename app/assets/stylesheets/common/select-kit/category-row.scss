@@ -36,6 +36,15 @@
   }
 }
 
+// A described row wraps its badges in a label, which the row's own gap no longer reaches.
+.d-select__content:is(.--kind-select-category, .--kind-select-category-filter)
+  .d-select__option-content
+  > :first-child {
+  display: flex;
+  align-items: center;
+  gap: var(--d-select-option-gap);
+}
+
 // The family footer has no checkbox, so it is inset by one to line up with the rows.
 .d-select__content.--kind-select-category .d-select__option.--action-footer {
   padding-inline-start: calc(

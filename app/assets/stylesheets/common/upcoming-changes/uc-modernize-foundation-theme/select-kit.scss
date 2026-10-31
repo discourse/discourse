@@ -8,7 +8,8 @@
   }
 
   .list-controls .combo-box .combo-box-header,
-  .list-controls .d-select:is(.category-drop, .tag-drop) {
+  .list-controls .d-select.category-drop,
+  .list-controls .d-select.tag-drop {
     &:hover {
       background-color: var(--primary-100);
     }
@@ -32,16 +33,18 @@
   }
 
   .d-tag-drop__selection,
-  .d-select:is(.category-drop, .tag-drop)
-    :is(.d-select__placeholder, .d-select__caret) {
+  .d-select.category-drop :is(.d-select__placeholder, .d-select__caret),
+  .d-select.tag-drop :is(.d-select__placeholder, .d-select__caret) {
     color: var(--primary);
   }
 
-  .d-select:is(.category-drop, .tag-drop) .d-select__caret {
+  .d-select.category-drop .d-select__caret,
+  .d-select.tag-drop .d-select__caret {
     font-size: var(--font-down-1);
   }
 
-  .d-select:is(.category-drop, .tag-drop).d-select__trigger {
+  .d-select.category-drop.d-select__trigger,
+  .d-select.tag-drop.d-select__trigger {
     &[aria-expanded="true"],
     &:focus,
     &:active {
