@@ -210,11 +210,17 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     field, site setting, move to topic, boards): category badges now sit apart, titles line up
     with their category, and boards' list is a single choice (2026-10-31). The workflows field
     and feature-topic list were not looked at in the browser.
-  - ☐ VoiceOver pass on the invite field and the move-to-topic list: VoiceOver refused
-    AppleScript queries on 2026-10-31 (-1728 with the setting on), so no speech was captured.
-    The accessibility tree reads as expected: the invite field is named by its title and
-    described by its placeholder and FormKit description, and options are named by title then
-    category.
+  - ☑ VoiceOver pass (2026-10-31, macOS, Chrome). The move-to-topic list reads its label,
+    placeholder and role, each row's title, category and position ("… Mathematics Calculus
+    (2 of 4)"), and "selected" on a pick. The invite field reads its name, placeholder,
+    description and role, and the picked topic as the list closes.
+  - ☐ **Finding: a DSelect panel opened inside a DModal is silent.** Arrowing through the invite
+    field's results speaks nothing. The panel is portaled outside the modal, which is an
+    `aria-modal` dialog, so Chrome leaves the listbox and its options out of the accessibility
+    tree (ignored reason `activeAriaModalDialog`). This holds for every DSelect trigger in a
+    modal, not only topics; select-kit rendered its list inline, so it did not have it. Lists
+    rendered inside the modal (`DSelectList`) are read. Needs a decision on where floats opened
+    from a modal render.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
   `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.
