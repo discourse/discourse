@@ -7,8 +7,13 @@ import Form from "discourse/components/form";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DAccessControl from "discourse/ui-kit/d-access-control";
 import DAccessControlField from "discourse/ui-kit/d-access-control-field";
@@ -1123,6 +1128,39 @@ module("Integration | Component | DAccessControl", function (hooks) {
         i18n("access_control.manage.access_permission_editor"),
         "uses the mandatory permission"
       );
+  });
+
+  test("with the new select controls, the grantee chooser reports no legacy render", async function (assert) {
+    disableRaiseOnDeprecation();
+    const counter = sinon.stub(DeprecationCounter.prototype, "incrementCount");
+    this.siteSettings.enable_new_select_controls = true;
+    const state = controlledState();
+
+    try {
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+    } finally {
+      enableRaiseOnDeprecation();
+    }
+
+    assert.dom(".d-access-control__chooser").exists();
+    assert.strictEqual(
+      counter
+        .getCalls()
+        .filter(
+          (call) =>
+            call.args[0] === "discourse.select-kit-rollout.legacy-render"
+        ).length,
+      0,
+      "the chooser stays on select-kit until the access control item moves"
+    );
   });
 });
 

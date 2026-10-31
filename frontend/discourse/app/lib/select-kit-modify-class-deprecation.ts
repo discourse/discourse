@@ -39,6 +39,13 @@ export const MIGRATED_SELECT_KIT_MODULES = new Set<string>([
   "tag-group-chooser",
   "tag-row",
   "tags-intersection-chooser",
+
+  "email-group-user-chooser",
+  "email-group-user-chooser-filter",
+  "email-group-user-chooser-row",
+  "group-chooser",
+  "user-chooser",
+  "user-chooser/user-row",
 ]);
 
 const selectKitModules = compatModules as Record<
