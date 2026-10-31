@@ -5,13 +5,16 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 import DurationSelector from "../ai-quota-duration-selector.gjs";
 
 export default class AiLlmQuotaModal extends Component {
   @service site;
+  @service siteSettings;
 
   get availableGroups() {
     const existingQuotaGroupIds =
@@ -99,12 +102,28 @@ export default class AiLlmQuotaModal extends Component {
             as |field|
           >
             <field.Control>
-              <GroupChooser
-                @content={{this.availableGroups}}
-                @onChange={{fn this.setGroupId field}}
-                @options={{hash maximum=1}}
-                @value={{data.group_id}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectGroup
+                  @clearable={{true}}
+                  @describedBy={{field.describedBy}}
+                  @disabled={{field.disabled}}
+                  @id={{field.id}}
+                  @invalid={{if field.error true false}}
+                  @items={{this.availableGroups}}
+                  @onChange={{legacyPickOne (fn this.setGroupId field)}}
+                  @texts={{hash ariaLabel=field.title}}
+                  @value={{data.group_id}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                <GroupChooser
+                  @content={{this.availableGroups}}
+                  @onChange={{fn this.setGroupId field}}
+                  @options={{hash maximum=1}}
+                  @value={{data.group_id}}
+                />
+              {{/if}}
             </field.Control>
           </form.Field>
 
