@@ -22,6 +22,8 @@ import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
  * @param {number} [options.topicCount] - topics in the category.
  * @param {boolean} [options.hasSubcategories] - append the "+ Subcategories" note.
  * @param {boolean} [options.readOnly] - mark the category as one that cannot be posted in.
+ * @param {boolean} [options.decorativeEmoji] - draw the emoji with an empty alt and no title, so
+ *   its code is not read before the name.
  */
 export default function dCategoryBadge(cat, options = {}) {
   return categoryLinkHTML(cat, {
@@ -36,6 +38,7 @@ export default function dCategoryBadge(cat, options = {}) {
     topicCount: options.topicCount,
     hasSubcategories: options.hasSubcategories,
     readOnly: options.readOnly,
+    decorativeEmoji: options.decorativeEmoji,
     link: isPresent(options.link) ? options.link : false,
   });
 }

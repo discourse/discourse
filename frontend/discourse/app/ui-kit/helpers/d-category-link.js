@@ -41,6 +41,8 @@ import { i18n } from "discourse-i18n";
  * @property {number} [topicCount] Topic count displayed after the badge.
  * @property {boolean} [hasSubcategories] Whether to display the subcategory indicator.
  * @property {boolean} [readOnly] Whether to display the read-only indicator.
+ * @property {boolean} [decorativeEmoji] Draws the emoji with an empty alt and no title, for a
+ *   badge whose name is read on its own, so its emoji's code is not read before the name.
  */
 
 let _renderer = defaultCategoryLinkRenderer;
@@ -154,6 +156,9 @@ export function categoryLinkHTML(category, options) {
     if (options.readOnly) {
       categoryOptions.readOnly = options.readOnly;
     }
+    if (options.decorativeEmoji) {
+      categoryOptions.decorativeEmoji = true;
+    }
   }
   return trustHTML(categoryBadgeHTML(category, categoryOptions));
 }
@@ -223,8 +228,11 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (opts.styleType === "emoji" && opts.emoji) {
-    // Decorative: the name follows, and the emoji's code would be read before it.
-    html += dEmoji(opts.emoji, { alt: "", skipTitle: true }) ?? "";
+    html +=
+      dEmoji(
+        opts.emoji,
+        opts.decorativeEmoji ? { alt: "", skipTitle: true } : undefined
+      ) ?? "";
   }
 
   // not ideal as we have to call it manually and we pass a fake category object

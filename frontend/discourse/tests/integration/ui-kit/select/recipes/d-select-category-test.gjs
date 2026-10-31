@@ -218,6 +218,39 @@ module(
           .doesNotExist("every row reaches it with its state");
       });
 
+      test("a category's emoji is decoration in rows and the selection", async function (assert) {
+        const category = Site.current().categories.find(
+          (c) => !c.parent_category_id
+        );
+        category.style_type = "emoji";
+        category.emoji = "rocket";
+        const emojiIn = (scope) =>
+          find(`${scope} [data-category-id='${category.id}'] img.emoji`);
+
+        await render(
+          <template><DSelectCategory @value={{category.id}} /></template>
+        );
+        const held = emojiIn(".d-select");
+        assert.strictEqual(
+          held?.getAttribute("alt"),
+          "",
+          "the selection's emoji has an empty alt"
+        );
+        assert.false(
+          held.hasAttribute("title"),
+          "the selection's emoji has no title"
+        );
+
+        await dSelect().open();
+        const row = emojiIn("[role='option']");
+        assert.strictEqual(
+          row?.getAttribute("alt"),
+          "",
+          "the row's emoji has an empty alt"
+        );
+        assert.false(row.hasAttribute("title"), "the row's emoji has no title");
+      });
+
       test("a single picker is named Category, not by its placeholder", async function (assert) {
         const accessibleName = await loadAccessibleName();
 

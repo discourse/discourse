@@ -85,6 +85,7 @@ export const CategoryBadge: TemplateOnlyComponent<{
         category
         allowUncategorized=true
         ancestors=(if @ancestors category.predecessors)
+        decorativeEmoji=true
         hasSubcategories=@family
         hideParent=true
         readOnly=@item.disabled

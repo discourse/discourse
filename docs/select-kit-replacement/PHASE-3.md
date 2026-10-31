@@ -60,8 +60,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       - ☑ Pickers with no caption are named "Category", or "Categories" when they can hold more
         than one (2026-10-29). Before, the placeholder was the name ("All categories, <name>"),
         and a multiple picker with no placeholder read "Options".
-    - ☑ Emoji-style category badges draw the emoji as decoration (2026-10-29); VoiceOver reads
-      the name alone.
+    - ☑ Emoji-style category badges in the category pickers draw the emoji as decoration
+      (2026-10-29); VoiceOver reads the name alone. Other badges keep the emoji's alt and title
+      (`decorativeEmoji` opts in, 2026-10-31): other pickers, such as an emoji picker, need
+      the emoji named.
     - ☑ The mobile panel's search field lines up with the rows' content (2026-10-29).
   - ☐ **Follow-ups from the category cycle (2026-10-28):**
     - ☐ **Name ui-kit's spoken-only labels `@ariaLabel`, outside this branch** (2026-10-29).

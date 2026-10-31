@@ -140,7 +140,7 @@ module("Unit | Utility | category-badge", function (hooks) {
     );
   });
 
-  test("emoji style draws the emoji as decoration beside the name", function (assert) {
+  test("emoji style names the emoji by default", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", {
       name: "hello",
@@ -153,8 +153,39 @@ module("Unit | Utility | category-badge", function (hooks) {
       "img.emoji"
     );
 
-    assert.strictEqual(emoji.getAttribute("alt"), "", "has an empty alt");
-    assert.false(emoji.hasAttribute("title"), "has no title");
+    assert.strictEqual(emoji.getAttribute("alt"), "wave", "keeps its alt");
+    assert.strictEqual(emoji.getAttribute("title"), "wave", "keeps its title");
+  });
+
+  test("decorativeEmoji draws the emoji as decoration beside the name", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const parent = store.createRecord("category", {
+      name: "parent",
+      id: 122,
+      style_type: "emoji",
+      emoji: "rocket",
+    });
+    const category = store.createRecord("category", {
+      name: "hello",
+      id: 123,
+      style_type: "emoji",
+      emoji: "wave",
+    });
+
+    const emojis = [
+      ...domFromString(
+        categoryBadgeHTML(category, {
+          decorativeEmoji: true,
+          ancestors: [parent],
+        })
+      ),
+    ].flatMap((node) => [...node.querySelectorAll("img.emoji")]);
+
+    assert.strictEqual(emojis.length, 2, "the ancestor's emoji is drawn too");
+    for (const emoji of emojis) {
+      assert.strictEqual(emoji.getAttribute("alt"), "", "has an empty alt");
+      assert.false(emoji.hasAttribute("title"), "has no title");
+    }
   });
 
   test("emoji style falls back to square when emoji are disabled", function (assert) {
