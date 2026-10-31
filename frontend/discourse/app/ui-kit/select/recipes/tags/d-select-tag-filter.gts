@@ -27,7 +27,6 @@ import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/
 import {
   renderSelectText,
   type SelectItem,
-  type SelectKindTexts,
   type SelectLoadOptions,
   type SelectResolvedOptions,
   type SelectSnapshot,
@@ -131,16 +130,14 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
    * The filter's texts, over the tag texts it draws its rows with. Both modes declare them, so a
    * customization for the kind applies whatever `@multiple` is.
    */
-  kindTexts: SelectKindTexts = [
-    TAG_TEXTS,
-    {
-      ariaLabel: i18n("tagging.filter_by_tags_label"),
-      placeholder: i18n("tagging.selector_tags"),
-      removeFilter: i18n("tagging.selector_remove_filter"),
-      noTags: i18n("tagging.selector_no_tags"),
-      maxLoaded: i18n("tagging.filter_to_narrow_tags"),
-    },
-  ];
+  kindTexts: SelectTexts = {
+    ...TAG_TEXTS,
+    ariaLabel: i18n("tagging.filter_by_tags_label"),
+    placeholder: i18n("tagging.selector_tags"),
+    removeFilter: i18n("tagging.selector_remove_filter"),
+    noTags: i18n("tagging.selector_no_tags"),
+    maxLoaded: i18n("tagging.filter_to_narrow_tags"),
+  };
 
   constructor(owner: Owner, args: DSelectTagFilterSignature["Args"]) {
     super(owner, args);

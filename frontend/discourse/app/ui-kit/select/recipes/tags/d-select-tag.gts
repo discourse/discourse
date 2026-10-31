@@ -41,7 +41,6 @@ import {
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
   SelectItem,
-  SelectKindTexts,
   SelectLoadOptions,
   SelectResolvedOptions,
   SelectTexts,
@@ -139,6 +138,15 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     prioritize_recently_used_tags: boolean;
   };
 
+  /** The tag texts, named "Tag" while the field holds at most one, otherwise "Tags". */
+  kindTexts: SelectTexts = {
+    ...TAG_TEXTS,
+    ariaLabel: (_values, context) =>
+      context.multiple && this.maximum !== 1
+        ? i18n("tagging.tags")
+        : i18n("tagging.tag"),
+  };
+
   /**
    * The requirement steps lead the placeholder: the required group, then the minimum, then the
    * prompt every layer set. A step whose text is empty hands over to the next.
@@ -204,14 +212,6 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       );
     }
   });
-
-  /** The control's name: "Tag" while it holds at most one, otherwise "Tags". */
-  #nameTexts: SelectTexts = {
-    ariaLabel: (_values, context) =>
-      context.multiple && this.maximum !== 1
-        ? i18n("tagging.tags")
-        : i18n("tagging.tag"),
-  };
 
   #resolutionKey: string | undefined;
   @tracked private _loadedItems: SelectItem[] = [];
@@ -336,10 +336,6 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
           : (this.args.items ?? []);
       return this.#prepareItems(items ?? []);
     };
-  }
-
-  get kindTexts(): SelectKindTexts {
-    return [TAG_TEXTS, this.#nameTexts];
   }
 
   /** The first unmet required group, as the blank search for the current context reported it. */

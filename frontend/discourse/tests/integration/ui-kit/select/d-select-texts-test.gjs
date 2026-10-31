@@ -1422,12 +1422,18 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       );
       await mount({
         kindTexts: [
-          { placeholder: "inner", innerText: "inner text", shared: "inner" },
+          {
+            placeholder: "inner",
+            innerText: "inner text",
+            shared: "inner",
+            deferred: "inner kept",
+          },
           {
             placeholder: (_values, context) =>
               `outer(${context.text("placeholder")})`,
             outerText: "outer text",
             shared: "outer",
+            deferred: () => undefined,
           },
         ],
       });
@@ -1446,6 +1452,11 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         ),
         ["inner text", "outer text", "outer"],
         "every layer declares its keys, and the outer one wins"
+      );
+      assert.strictEqual(
+        renderSelectText(options.value, "deferred"),
+        "inner kept",
+        "an outer function returning undefined hands back to the inner layer"
       );
     });
 

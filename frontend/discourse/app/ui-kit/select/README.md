@@ -308,10 +308,24 @@ A computed value that is `""` when unset needs `|| undefined` to keep the defaul
 From lowest to highest, per entry:
 
 1. the engine's default (`DEFAULT_SELECT_TEXTS`);
-2. the recipe's `@kindTexts` (a recipe built on another passes a list, lowest first);
+2. the recipe's `@kindTexts`, one object or a list of layers, lowest first (see below);
 3. the call site's `@texts`;
 4. the `texts` key of `options` customizations: `forAll`, then `forKind`, then `forIdentifier`,
    each in registration order (`spec.options(() => ({ texts: { noResults: "…" } }))`).
+
+A recipe built on another can pass `@kindTexts` as a list, inner recipe first. Each layer stays
+separate, so a function in the outer layer can build on the inner one: `context.text(ownKey)`
+reads the inner entry for the same key, and returning `null` or `undefined` hands the key back
+to it. A spread (`{ ...INNER_TEXTS, placeholder: … }`) replaces the inner entry, so both of those
+reach the engine's default instead. When every outer entry simply replaces the inner one, as in
+the tag recipes, a spread is simpler and renders the same.
+
+```js
+kindTexts = [
+  INNER_TEXTS,
+  { placeholder: (values, context) => `${context.text("placeholder")} (optional)` },
+];
+```
 
 A customization's callback reads the merged entries so far as `current.texts`. A recipe's
 `@kindTextWrappers` get the final say over a key, after every layer (see

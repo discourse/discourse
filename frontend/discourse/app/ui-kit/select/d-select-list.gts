@@ -108,8 +108,9 @@ interface DSelectListSignature {
      */
     texts?: SelectCoreTexts;
     /**
-     * A recipe's texts: defaults for engine texts and its own. A recipe built on another passes a
-     * list, lowest first. Requires `@kind`; the recipe's own keys are fixed at construction.
+     * A recipe's texts: defaults for engine texts and its own. A recipe built on another may pass
+     * a list, lowest first, so its functions can read or defer to the inner recipe's entries (see
+     * `SelectKindTexts`). Requires `@kind`; the recipe's own keys are fixed at construction.
      */
     kindTexts?: SelectKindTexts;
     /**

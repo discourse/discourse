@@ -416,8 +416,9 @@ export interface SelectEngineOptions {
 
   /**
    * The recipe's texts: defaults for engine texts and the texts it declares. A recipe built on
-   * another passes a list, lowest first. Its non-engine keys are fixed at construction. Requires
-   * `kind`.
+   * another may pass a list, lowest first, so its functions can read or defer to the inner
+   * recipe's entries (see {@link SelectKindTexts}). Its non-engine keys are fixed at
+   * construction. Requires `kind`.
    */
   kindTexts?: SelectKindTexts;
 

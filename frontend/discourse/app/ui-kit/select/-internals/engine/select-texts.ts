@@ -49,8 +49,15 @@ export type SelectTexts<K extends string = string> = Readonly<
 >;
 
 /**
- * A recipe's texts: one layer, or a list of layers, lowest first, for a recipe built on another.
- * Within the list, a function's own key reads the layer before it.
+ * A recipe's texts: one layer, or a list of layers, lowest first.
+ *
+ * A list keeps each layer separate, so a function in a higher layer can build on the layer before
+ * it: `context.text(ownKey)` reads that layer's entry for the same key, and returning `null` or
+ * `undefined` hands the key back to it. Spreading the layers into one object loses both, because
+ * the higher entry replaces the lower one, so they reach the engine's default instead. Pass a list
+ * when a recipe built on another decorates or defers to the inner recipe's texts; when every
+ * higher entry simply replaces the lower one, a spread object is simpler and renders the same.
+ * Every layer's non-engine keys are declared.
  */
 export type SelectKindTexts = SelectTexts | readonly SelectTexts[];
 
