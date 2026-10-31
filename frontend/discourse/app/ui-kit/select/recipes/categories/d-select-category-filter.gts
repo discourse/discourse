@@ -96,8 +96,8 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
           ? "categories.subcategories_label"
           : "categories.categories_label"
       ),
-    removeFilter: { key: "categories.remove_filter" },
-    noSubcategories: { key: "categories.no_subcategories" },
+    removeFilter: { translationKey: "categories.remove_filter" },
+    noSubcategories: { translationKey: "categories.no_subcategories" },
   };
 
   constructor(owner: Owner, args: DSelectCategoryFilterSignature["Args"]) {

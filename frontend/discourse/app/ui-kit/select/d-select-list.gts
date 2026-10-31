@@ -102,9 +102,9 @@ interface DSelectListSignature {
     /** Declares live recipe options; core option keys remain reserved. */
     kindOptions?: Record<string, unknown>;
     /**
-     * Every text the select draws or speaks, by key: a translated string, `{ key }` for a
-     * translation, or a function of the text's values. Each entry merges over the recipe's and
-     * the engine's defaults; `""` means the place shows nothing.
+     * Every text the select draws or speaks, by key: a translated string, `{ translationKey }`
+     * for a translation, or a function of the text's values. Each entry merges over the recipe's
+     * and the engine's defaults; `""` means the place shows nothing.
      */
     texts?: SelectCoreTexts;
     /**

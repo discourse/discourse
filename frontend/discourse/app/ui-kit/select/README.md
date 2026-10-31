@@ -271,14 +271,16 @@ every other:
 
 Every text accepts the same three forms:
 
-- **A translated string**, used as given. In a template, a fixed text is `(i18n "my_theme.fruit_empty")`.
-- **A translation key**, `(hash key="my_theme.results")` in a template or `{ key }` in
-  JavaScript. The engine fills the message with the text's values, so plurals and word order stay
-  right. Use it for a text the engine passes values to; a fixed text reads better with `i18n`. A plain string that is itself a translation key warns in development, because a
-  `DButton @label` habit would show the key.
+- **A translated string**, used as given. In a template, a fixed text is
+  `(i18n "my_theme.fruit_empty")`.
+- **A translation key**, `(hash translationKey="my_theme.results")` in a template or
+  `{ translationKey }` in JavaScript. The engine fills the message with the text's values, so
+  plurals and word order stay right. Use it for a text the engine passes values to; a fixed text
+  reads better with `i18n`. A plain string that is itself a translation key warns in development,
+  because a `DButton @label` habit would show the key.
 - **A function** `(values, context) => string`. It returns `""` for no text, or `null` or
   `undefined` to hand back to the layer below. A text that needs a value the engine doesn't pass
-  uses a function that closes over its own state; there is no `{ key, values }` form.
+  uses a function that closes over its own state; there is no `{ translationKey, values }` form.
 
 The values are named after the default translation's placeholders (`item`, `label`, `value`,
 `count`, `added`, `not_added`), and `count` is always a number. Extra values are harmless, since a
@@ -335,7 +337,7 @@ Asserts: an unknown key in `@texts`, `forKind` or `forIdentifier`, a wrong entry
 containing `%{`, a failing function or a cycle, an empty required text, `@kindTexts` without
 `@kind`, and a recipe key that matches an engine key except for case. In `forAll`, a key that
 differs from a known text only in case asserts; any other unknown key warns once overall, because
-it may belong to a kind that isn't on the page. Warnings, once per key per select: a `{ key }`
+it may belong to a kind that isn't on the page. Warnings, once per key per select: a `{ translationKey }`
 missing from the locale, and a plain string that is a translation key. Production drops an
 unknown key silently.
 

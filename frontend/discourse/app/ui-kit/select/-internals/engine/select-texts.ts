@@ -27,7 +27,7 @@ export interface SelectTextContext {
  */
 export type SelectText =
   | string
-  | { readonly key: string }
+  | { readonly translationKey: string }
   | ((
       values: SelectTextValues,
       context: SelectTextContext
@@ -128,7 +128,7 @@ export const DEFAULT_SELECT_TEXTS: Readonly<
   ...(Object.fromEntries(
     Object.entries(LOCALE_KEYS).map(([name, key]) => [
       name,
-      Object.freeze({ key: `d_select.${key}` }),
+      Object.freeze({ translationKey: `d_select.${key}` }),
     ])
   ) as Record<keyof typeof LOCALE_KEYS, SelectText>),
 });
@@ -403,13 +403,13 @@ export class SelectTextResolver {
       if (entry.includes("%{")) {
         this.#invalid(
           key,
-          `DSelect: text "${key}" contains an unexpanded "%{" placeholder; pass { key } to translate it`
+          `DSelect: text "${key}" contains an unexpanded "%{" placeholder; pass { translationKey } to translate it`
         );
         return undefined;
       }
       if (TRANSLATION_KEY.test(entry) && I18n.lookup(entry) !== undefined) {
         this.#options.notices.warn(
-          `DSelect: text "${key}" is the translation key "${entry}" given as a string; it is shown as is. Pass { key: "${entry}" } to translate it.`,
+          `DSelect: text "${key}" is the translation key "${entry}" given as a string; it is shown as is. Pass { translationKey: "${entry}" } to translate it.`,
           "discourse.d-select.texts-translation-key-as-string",
           key
         );
@@ -434,18 +434,22 @@ export class SelectTextResolver {
       entry &&
       typeof entry === "object" &&
       !Array.isArray(entry) &&
-      typeof (entry as { key?: unknown }).key === "string"
+      typeof (entry as { translationKey?: unknown }).translationKey === "string"
     ) {
-      return this.#translate(key, (entry as { key: string }).key, values);
+      return this.#translate(
+        key,
+        (entry as { translationKey: string }).translationKey,
+        values
+      );
     }
     this.#invalid(
       key,
-      `DSelect: text "${key}" must be a string, { key } or a function, got ${Array.isArray(entry) ? "an array" : typeof entry}`
+      `DSelect: text "${key}" must be a string, { translationKey } or a function, got ${Array.isArray(entry) ? "an array" : typeof entry}`
     );
     return undefined;
   }
 
-  /** Translates a `{ key }` entry, catching a message that needs a value the text doesn't pass. */
+  /** Translates a `{ translationKey }` entry, catching a message that needs a value the text doesn't pass. */
   #translate(key: string, locale: string, values: object): string | undefined {
     if (I18n.lookup(locale) === undefined) {
       this.#options.notices.warn(

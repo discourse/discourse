@@ -54,11 +54,11 @@ type FilterTag = SelectItem & {
  * kind applies whatever `@multiple` is.
  */
 const FILTER_TEXTS: SelectTexts = Object.freeze({
-  ariaLabel: { key: "tagging.filter_by_tags_label" },
-  placeholder: { key: "tagging.selector_tags" },
-  removeFilter: { key: "tagging.selector_remove_filter" },
-  noTags: { key: "tagging.selector_no_tags" },
-  maxLoaded: { key: "tagging.filter_to_narrow_tags" },
+  ariaLabel: { translationKey: "tagging.filter_by_tags_label" },
+  placeholder: { translationKey: "tagging.selector_tags" },
+  removeFilter: { translationKey: "tagging.selector_remove_filter" },
+  noTags: { translationKey: "tagging.selector_no_tags" },
+  maxLoaded: { translationKey: "tagging.filter_to_narrow_tags" },
 });
 
 /** The single filter's caret, pointing right while closed. */

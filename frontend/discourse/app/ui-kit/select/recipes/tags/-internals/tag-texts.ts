@@ -21,13 +21,17 @@ export type SelectTagTextKey =
  */
 export const TAG_TEXTS: SelectTexts = Object.freeze({
   addMorePlaceholder: (_values, context) => context.text("addMoreTags"),
-  minimum: { key: "tagging.required_tags_progress" },
-  maximum: { key: "tagging.max_tags_reached" },
-  requiredTagGroup: { key: "tagging.choose_for_topic_required_group" },
-  requiredTagGroupRemaining: { key: "tagging.choose_more_required_group" },
-  minimumPlaceholder: { key: "tagging.choose_for_topic_required" },
-  minimumRemaining: { key: "tagging.choose_more_required" },
-  addMoreTags: { key: "tagging.add_more_tags" },
-  tagCountBadge: { key: "tagging.tag_count_badge" },
-  tagCount: { key: "tagging.tag_count_hidden" },
+  minimum: { translationKey: "tagging.required_tags_progress" },
+  maximum: { translationKey: "tagging.max_tags_reached" },
+  requiredTagGroup: {
+    translationKey: "tagging.choose_for_topic_required_group",
+  },
+  requiredTagGroupRemaining: {
+    translationKey: "tagging.choose_more_required_group",
+  },
+  minimumPlaceholder: { translationKey: "tagging.choose_for_topic_required" },
+  minimumRemaining: { translationKey: "tagging.choose_more_required" },
+  addMoreTags: { translationKey: "tagging.add_more_tags" },
+  tagCountBadge: { translationKey: "tagging.tag_count_badge" },
+  tagCount: { translationKey: "tagging.tag_count_hidden" },
 });

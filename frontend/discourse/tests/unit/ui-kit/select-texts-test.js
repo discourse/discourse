@@ -185,7 +185,7 @@ module("Unit | ui-kit | select | texts", function (hooks) {
         keys.map((key) => [
           key,
           form === "translation"
-            ? { key: "d_select.retry" }
+            ? { translationKey: "d_select.retry" }
             : form === "function"
               ? () => `custom ${key}`
               : `custom ${key}`,
@@ -204,7 +204,9 @@ module("Unit | ui-kit | select | texts", function (hooks) {
 
   test("translation objects receive interpolation values and plural counts", async function (assert) {
     const options = await snapshot(this, {
-      kindTexts: { recipeText: { key: "d_select.items_added" } },
+      kindTexts: {
+        recipeText: { translationKey: "d_select.items_added" },
+      },
     });
     for (const count of [1, 3]) {
       assert.strictEqual(

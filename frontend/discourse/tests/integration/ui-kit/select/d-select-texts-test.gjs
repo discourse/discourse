@@ -2595,7 +2595,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     for (const [name, entry, id] of [
       [
         "missing translation",
-        { key: "d_select.missing_for_texts_test" },
+        { translationKey: "d_select.missing_for_texts_test" },
         "discourse.d-select.texts-missing-translation",
       ],
       [
@@ -2674,8 +2674,9 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       ["number entry", 42],
       ["boolean entry", false],
       ["array entry", ["text"]],
-      ["object without key", {}],
-      ["translation object with a non-string key", { key: 42 }],
+      ["object without a translation key", {}],
+      ["translation object with a non-string key", { translationKey: 42 }],
+      ["translation key under another name", { key: "d_select.placeholder" }],
       ["unexpanded interpolation string", "Choose %{count}"],
       [
         "throwing function",
@@ -2745,7 +2746,10 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     test("rejects a translation missing its required interpolation values", async function (assert) {
       await expectAssertion(
         assert,
-        () => mount({ texts: { placeholder: { key: "d_select.item_added" } } }),
+        () =>
+          mount({
+            texts: { placeholder: { translationKey: "d_select.item_added" } },
+          }),
         /item|placeholder|interpol/i
       );
     });
