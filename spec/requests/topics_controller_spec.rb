@@ -6664,6 +6664,161 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "#lookup" do
+    fab!(:muted_category, :category)
+    fab!(:muted_tag, :tag)
+    fab!(:public_topic) { Fabricate(:topic, category:, title: "A public topic to look up") }
+    fab!(:topic_in_muted_category) { Fabricate(:topic, category: muted_category) }
+    fab!(:topic_with_muted_tag) { Fabricate(:topic, tags: [muted_tag]) }
+    fab!(:muted_topic, :topic)
+    fab!(:staff_topic) { Fabricate(:topic, category: staff_category) }
+    fab!(:message_with_user) { Fabricate(:private_message_topic, recipient: user) }
+    fab!(:deleted_topic) { Fabricate(:topic, deleted_at: 1.day.ago) }
+
+    let(:topic_ids) { [public_topic.id] }
+    let(:looked_up_ids) { response.parsed_body["topics"].map { it["id"] } }
+
+    def lookup
+      get "/topics/lookup.json", params: { topic_ids: }
+    end
+
+    context "when signed in" do
+      before do
+        sign_in(user)
+        CategoryUser.set_notification_level_for_category(
+          user,
+          CategoryUser.notification_levels[:muted],
+          muted_category.id,
+        )
+        TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
+        TopicUser.change(
+          user.id,
+          muted_topic.id,
+          notification_level: TopicUser.notification_levels[:muted],
+        )
+      end
+
+      it "answers each topic in the shape of a search result" do
+        lookup
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topics"]).to contain_exactly(
+          include(
+            "id" => public_topic.id,
+            "title" => "A public topic to look up",
+            "category_id" => category.id,
+          ),
+        )
+      end
+
+      context "with topics the user muted" do
+        let(:topic_ids) { [topic_in_muted_category.id, topic_with_muted_tag.id, muted_topic.id] }
+
+        it "still answers them" do
+          lookup
+
+          expect(looked_up_ids).to contain_exactly(*topic_ids)
+        end
+      end
+
+      context "with topics the user cannot see" do
+        let(:topic_ids) do
+          [public_topic.id, staff_topic.id, pm.id, deleted_topic.id, Topic.maximum(:id) + 1]
+        end
+
+        it "leaves them out" do
+          lookup
+
+          expect(response.status).to eq(200)
+          expect(looked_up_ids).to contain_exactly(public_topic.id)
+        end
+      end
+
+      context "with a message the user takes part in" do
+        let(:topic_ids) { [message_with_user.id] }
+
+        it "answers it" do
+          lookup
+
+          expect(looked_up_ids).to contain_exactly(message_with_user.id)
+        end
+      end
+
+      context "with an unlisted topic" do
+        let(:topic_ids) { [invisible_topic.id] }
+
+        it "answers it, as a link to it would open it" do
+          lookup
+
+          expect(looked_up_ids).to contain_exactly(invisible_topic.id)
+        end
+      end
+
+      context "with ids given as a comma-separated string" do
+        let(:topic_ids) { "#{public_topic.id},#{muted_topic.id}" }
+
+        it "answers each of them" do
+          lookup
+
+          expect(looked_up_ids).to contain_exactly(public_topic.id, muted_topic.id)
+        end
+      end
+
+      context "without ids" do
+        let(:topic_ids) { [] }
+
+        it "is a bad request" do
+          lookup
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      context "with an id that is not a number" do
+        let(:topic_ids) { [public_topic.id, "latest"] }
+
+        it "is a bad request" do
+          lookup
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      context "with more ids than one lookup allows" do
+        let(:topic_ids) { (1..(Topic::LookupByIds::MAX_TOPIC_IDS + 1)).to_a }
+
+        it "is a bad request" do
+          lookup
+
+          expect(response.status).to eq(400)
+        end
+      end
+    end
+
+    context "when signed in as an admin" do
+      let(:topic_ids) { [staff_topic.id, pm.id] }
+
+      before { sign_in(admin) }
+
+      it "answers every topic that exists" do
+        lookup
+
+        expect(looked_up_ids).to contain_exactly(staff_topic.id, pm.id)
+      end
+    end
+
+    context "when signed out" do
+      let(:topic_ids) { [public_topic.id, staff_topic.id, message_with_user.id] }
+
+      it "answers only public topics" do
+        lookup
+
+        expect(response.status).to eq(200)
+        expect(looked_up_ids).to contain_exactly(public_topic.id)
+      end
+    end
+  end
+
   describe "#excerpts" do
     it "can correctly get excerpts" do
       first_post =

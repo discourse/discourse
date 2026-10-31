@@ -576,6 +576,17 @@ class TopicsController < ApplicationController
     render json: result
   end
 
+  def lookup
+    Topic::LookupByIds.call(service_params) do
+      on_success do |topics:|
+        render_serialized(topics, SearchTopicListItemSerializer, root: :topics)
+      end
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 400)
+      end
+    end
+  end
+
   def status
     params.require(:status)
     params.require(:enabled)

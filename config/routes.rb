@@ -1563,6 +1563,7 @@ Discourse::Application.routes.draw do
     resources :similar_topics, only: [:index]
 
     get "topics/feature_stats"
+    get "topics/lookup"
 
     scope "/topics", username: RouteFormat.username do
       get "created-by/:username" => "list#topics_by",
