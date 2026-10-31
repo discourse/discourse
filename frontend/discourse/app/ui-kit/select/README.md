@@ -457,9 +457,14 @@ also yield the select's resolved options as their last parameter, so a recipe ca
 extensions override (see [Recipes](#recipes)).
 
 `:groupHeader` and `:groupFooter` draw every header and footer row, text or action, and `:item`
-never receives one, so `:item` stays about records. Tell the kinds apart by `onSelect`, which only
-an action row carries; both carry `groupKey`, so one block can draw group-specific content for
-either. `@groupHeader` (the builder) and `<:groupHeader>` (the block) share a name across separate
+never receives one. Tell the kinds apart by `onSelect`, which only an action row carries; both
+carry `groupKey`, so one block can draw group-specific content for either.
+
+`:item` draws every other option row, including the create row and action rows such as a
+recipe's shortcuts. A block that draws records must handle both. The create row is the item
+`@createItem` returns, so mark it there (the tag recipe sets `isNew`) and have the block name what
+it creates, as the `createItem` text does. An action row carries `onSelect`. A recipe that passes
+its caller's `:item` through hands it those rows too. `@groupHeader` (the builder) and `<:groupHeader>` (the block) share a name across separate
 namespaces, and `<:groupFooter>` is unrelated to the panel's `<:footer>`.
 
 ### Blocks that interact
