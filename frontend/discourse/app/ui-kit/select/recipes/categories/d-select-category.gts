@@ -8,7 +8,9 @@ import { continueWith } from "discourse/lib/continue-with";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
-import DSelect from "discourse/ui-kit/select/d-select";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
 import {
   CategoryBadge,
   categoryItem,
@@ -17,7 +19,6 @@ import type {
   CategoryItem,
   CategorySettings,
   CategoryValue,
-  SelectSignature,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   renderSelectText,
@@ -35,7 +36,7 @@ import { i18n } from "discourse-i18n";
 /** Category picker arguments and the engine's forwarded presentation contract. */
 interface DSelectCategorySignature {
   Args: Pick<
-    SelectSignature["Args"],
+    DSelectSignature["Args"],
     | "maximum"
     | "clearable"
     | "disabled"
@@ -96,7 +97,7 @@ interface DSelectCategorySignature {
     selectDescendants?: boolean;
   };
   Element: HTMLElement;
-  Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
 /**

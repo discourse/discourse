@@ -9,7 +9,9 @@ import { continueWith } from "discourse/lib/continue-with";
 import Category from "discourse/models/category";
 import type User from "discourse/models/user";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
-import DSelect from "discourse/ui-kit/select/d-select";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
 import {
   CategoryBadge,
   categoryItem,
@@ -17,7 +19,6 @@ import {
 import type {
   CategoryItem,
   CategorySettings,
-  SelectSignature,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   renderSelectText,
@@ -68,14 +69,14 @@ interface DSelectCategoryFilterSignature {
       value: Category | typeof ALL_CATEGORIES_ID | typeof NO_CATEGORIES_ID
     ) => void;
     /** Temporary compatibility identity; defaults to category-drop. */
-    legacyKind?: SelectSignature["Args"]["legacyKind"];
+    legacyKind?: DSelectSignature["Args"]["legacyKind"];
     /** Call-site customization identity. */
     identifier?: string;
     /** Call-site state exposed to customizations. */
     instanceContext?: object;
   };
   Element: HTMLElement;
-  Blocks: Pick<SelectSignature["Blocks"], "item" | "selection">;
+  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection">;
 }
 
 /** Narrows a topic list by category, leaving navigation to its caller. */

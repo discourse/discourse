@@ -13,7 +13,9 @@ import {
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
-import DSelect from "discourse/ui-kit/select/d-select";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
 import {
   tagItemName,
   TagOption,
@@ -56,10 +58,6 @@ function nameKey(tag: { name: string; original_name?: string }) {
   return storedName(tag).toLowerCase();
 }
 
-/** Engine blocks and source overrides shared with callers. */
-type SelectSignature =
-  DSelect extends Component<infer Signature> ? Signature : never;
-
 /** A topic-list filter that leaves navigation to its caller. */
 interface DSelectTagFilterSignature {
   Args: {
@@ -78,7 +76,7 @@ interface DSelectTagFilterSignature {
     /** Category limiting the available tags. */
     categoryId?: number;
     /** Temporary compatibility aliases for legacy customizations and CSS. */
-    legacyKind?: SelectSignature["Args"]["legacyKind"];
+    legacyKind?: DSelectSignature["Args"]["legacyKind"];
     /** Local tags replacing the site's top tags and server search. */
     items?: readonly FilterTag[];
     /** Receives a full tag row or a shortcut id; with `@multiple`, the held tags in order. */
@@ -100,7 +98,7 @@ interface DSelectTagFilterSignature {
     ariaLabelledBy?: string;
   };
   Element: HTMLElement;
-  Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
 /** Selects a tag, a shortcut or, with `@multiple`, several tags for a topic list without navigating. */

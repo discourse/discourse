@@ -57,7 +57,8 @@ export type { SelectVariant } from "discourse/ui-kit/select/-internals/coordinat
 
 export type { SelectPasteContext } from "discourse/ui-kit/select/-internals/coordinators/select-host";
 
-interface DSelectSignature {
+/** DSelect's arguments and blocks, which recipes reuse for the ones they forward. */
+export interface DSelectSignature {
   Args: {
     value?: SelectValue;
     multiple?: boolean;

@@ -1,12 +1,6 @@
-import type Component from "@glimmer/component";
 import type Category from "discourse/models/category";
 import type SiteSettingsService from "discourse/services/site-settings";
-import type DSelect from "discourse/ui-kit/select/d-select";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
-
-/** Engine arguments and blocks forwarded by category recipes. */
-export type SelectSignature =
-  DSelect extends Component<infer Signature> ? Signature : never;
 
 /** A held category identity, normalized to its numeric site key. */
 export type CategoryValue = Category | number | string;

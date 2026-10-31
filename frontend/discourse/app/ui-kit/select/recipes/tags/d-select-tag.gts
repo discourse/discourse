@@ -23,7 +23,9 @@ import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
-import DSelect from "discourse/ui-kit/select/d-select";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
 import {
   TagOption,
   TagSelection,
@@ -49,10 +51,6 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
-
-/** The engine's public arguments and yielded blocks. */
-type SelectSignature =
-  DSelect extends Component<infer Signature> ? Signature : never;
 
 /** The tag field's arguments; consumers keep their original held tag shapes. */
 interface DSelectTagSignature {
@@ -84,9 +82,9 @@ interface DSelectTagSignature {
     /** Omitted uses the site limit; false removes the cap. */
     maximum?: number | false;
     /** Temporary compatibility aliases for legacy customizations and CSS. */
-    legacyKind?: SelectSignature["Args"]["legacyKind"];
+    legacyKind?: DSelectSignature["Args"]["legacyKind"];
     /** Trigger presentation. */
-    variant?: SelectSignature["Args"]["variant"];
+    variant?: DSelectSignature["Args"]["variant"];
     /** Advisory minimum, shown in the field's placeholder until it's met. */
     minimum?: number;
     /** Receives selected tags in the consumer's shape. */
@@ -114,7 +112,7 @@ interface DSelectTagSignature {
     describedBy?: string;
   };
   Element: HTMLElement;
-  Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
 /** Picks tags to store, as tag objects or, with `@emit="names"`, stored names. */

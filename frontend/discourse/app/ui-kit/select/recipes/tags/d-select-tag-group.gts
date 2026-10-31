@@ -7,7 +7,9 @@ import { makeArray } from "discourse/lib/helpers";
 import { searchTagGroups } from "discourse/lib/tag-source";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
-import DSelect from "discourse/ui-kit/select/d-select";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
 import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
   SelectCoreTexts,
@@ -15,10 +17,6 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
-
-/** Engine arguments shared by group chooser callers. */
-type SelectSignature =
-  DSelect extends Component<infer Signature> ? Signature : never;
 
 /** Name-valued tag groups with single or multiple selection. */
 interface DSelectTagGroupSignature {
@@ -28,7 +26,7 @@ interface DSelectTagGroupSignature {
     /** Holds several groups; defaults to one, as DSelect does. */
     multiple?: boolean;
     /** Temporary compatibility aliases for legacy customizations and CSS. */
-    legacyKind?: SelectSignature["Args"]["legacyKind"];
+    legacyKind?: DSelectSignature["Args"]["legacyKind"];
     /** Receives the selected group names in order. */
     onChange?: (names: string[] | string | null) => void;
     /** Maximum number of selected groups. */
@@ -36,7 +34,7 @@ interface DSelectTagGroupSignature {
     /** The picker's texts, over its defaults. */
     texts?: SelectCoreTexts;
     /** Trigger presentation. */
-    variant?: SelectSignature["Args"]["variant"];
+    variant?: DSelectSignature["Args"]["variant"];
     /** Maximum visible chips before the count badge. */
     maxVisibleChips?: number;
     /** Icon displayed at the start of the trigger. */
@@ -57,7 +55,7 @@ interface DSelectTagGroupSignature {
     instanceContext?: object;
   };
   Element: HTMLElement;
-  Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
 /** Searches tag groups; held groups stay listed, marked selected. */
