@@ -309,6 +309,13 @@ export default class ComposerEditor extends Component {
     });
   }
 
+  get mentionValidationContext() {
+    return {
+      topicId: this.get("composer.model.topic.id"),
+      allowedNames: this.get("composer.model.targetRecipients")?.split(","),
+    };
+  }
+
   @observes("composer.focusTarget")
   setFocus() {
     if (this.composer.focusTarget === "editor") {
@@ -618,7 +625,11 @@ export default class ComposerEditor extends Component {
   }
 
   _renderMentions(preview) {
-    const unseen = linkSeenMentions(preview, this.siteSettings);
+    const unseen = linkSeenMentions(
+      preview,
+      this.siteSettings,
+      this.mentionValidationContext
+    );
     if (unseen.length > 0) {
       this._renderUnseenMentions(preview, unseen);
     } else {
@@ -631,10 +642,13 @@ export default class ComposerEditor extends Component {
   _renderUnseenMentions(preview, unseen) {
     fetchUnseenMentions({
       names: unseen,
-      topicId: this.get("composer.model.topic.id"),
-      allowedNames: this.get("composer.model.targetRecipients")?.split(","),
+      ...this.mentionValidationContext,
     }).then((response) => {
-      linkSeenMentions(preview, this.siteSettings);
+      linkSeenMentions(
+        preview,
+        this.siteSettings,
+        this.mentionValidationContext
+      );
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
       this._warnHereMention(response.here_count);
