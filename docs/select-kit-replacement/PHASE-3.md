@@ -206,7 +206,15 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     and boards' "Add topic as card"; `topic-chooser` and `topic-row` report legacy renders.
   - ☑ A focused list search with text keeps Escape from closing its modal.
   - ☑ SCSS parity and flag-on system specs (site setting, invite, boards).
-  - ☐ Visual review and VoiceOver pass.
+  - ☑ Visual review across Foundation and Horizon, light and dark, and phone width (invite
+    field, site setting, move to topic, boards): category badges now sit apart, titles line up
+    with their category, and boards' list is a single choice (2026-10-31). The workflows field
+    and feature-topic list were not looked at in the browser.
+  - ☐ VoiceOver pass on the invite field and the move-to-topic list: VoiceOver refused
+    AppleScript queries on 2026-10-31 (-1728 with the setting on), so no speech was captured.
+    The accessibility tree reads as expected: the invite field is named by its title and
+    described by its placeholder and FormKit description, and options are named by title then
+    category.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
   `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.
