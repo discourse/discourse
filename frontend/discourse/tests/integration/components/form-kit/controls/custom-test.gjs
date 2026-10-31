@@ -1,7 +1,9 @@
-import { render } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { ITEMS } from "discourse/tests/helpers/d-select-hosts";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -32,6 +34,65 @@ module(
 
       assert.dom(".form-kit__container-title").hasText("Foo (optional)");
       assert.dom(".form-kit__container-description").hasText("Bar");
+    });
+
+    test("a menu opened from the control keeps its own width", async function (assert) {
+      await render(
+        <template>
+          <div style="position: relative; width: 1200px">
+            <Form as |form|>
+              <form.Field
+                @name="fruit"
+                @title="Fruit"
+                @type="custom"
+                as |field|
+              >
+                <field.Control>
+                  <DSelect @items={{ITEMS}} />
+                </field.Control>
+              </form.Field>
+            </Form>
+          </div>
+        </template>
+      );
+      await dSelect().open();
+
+      const trigger = dSelect().element().getBoundingClientRect().width;
+      const menu = document
+        .querySelector(".d-select__content")
+        .getBoundingClientRect().width;
+      assert.true(
+        Math.abs(menu - trigger) < 1,
+        `the menu matches its trigger (${menu} vs ${trigger}), not the whole container`
+      );
+    });
+
+    test("a tooltip opened from the control keeps its own width", async function (assert) {
+      await render(
+        <template>
+          <div style="position: relative; width: 1200px">
+            <Form as |form|>
+              <form.Field @name="hint" @title="Hint" @type="custom" as |field|>
+                <field.Control>
+                  <DTooltip @content="Hi" @icon="circle-info" />
+                </field.Control>
+              </form.Field>
+            </Form>
+          </div>
+        </template>
+      );
+      await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
+
+      const control = document
+        .querySelector(".form-kit__control-custom")
+        .getBoundingClientRect().width;
+      const tooltip = document
+        .querySelector(".fk-d-tooltip__content")
+        .getBoundingClientRect().width;
+      assert.true(
+        tooltip < control,
+        `the tooltip fits its text (${tooltip}), not the control (${control})`
+      );
     });
 
     test("form helpers drive a DSelect field", async function (assert) {
