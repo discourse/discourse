@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin User Page" do
+  with_select_controls(false)
+
   fab!(:current_user, :admin)
 
   let(:admin_users_page) { PageObjects::Pages::AdminUsers.new }

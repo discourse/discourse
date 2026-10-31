@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Creating Invites" do
+  with_select_controls(false)
+
   fab!(:group)
   fab!(:user) { Fabricate(:user, groups: [group]) }
   fab!(:topic) { Fabricate(:post).topic }

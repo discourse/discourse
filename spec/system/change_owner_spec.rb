@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Change Owner Modal" do
+  with_select_controls(false)
+
   fab!(:post) { Fabricate(:post, raw: "This is some post to change owner for") }
   fab!(:other_user, :user)
   fab!(:admin)

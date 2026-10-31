@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Simplified Category Creation" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:group)
   fab!(:category)

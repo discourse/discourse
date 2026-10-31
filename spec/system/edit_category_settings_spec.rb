@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Edit Category Settings" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:category)
 
