@@ -477,6 +477,18 @@ Open items need a decision after manual testing; the rest are intended but still
   which needs a login, so signed-out visitors got a 403 on every change. It now browses the top
   tags and searches every tag, as the single tag drop does, with no cap and no name lookup.
 
+**Tag and category styling** (decided 2026-10-31, after the stylesheet audit)
+
+- [ ] **Tag group rows are plain text.** Select-kit drew each group as a tag pill; a group isn't a
+  tag, so DSelect draws its name.
+- [ ] **Category descriptions use the subtle text token,** darker than select-kit's
+  `--primary-medium`, as in every DSelect row.
+- [ ] **The redesigned composer keeps the focus ring while a list is open.** Select-kit hid the
+  category and tag fields' outline then.
+- [ ] **Small spacing differences:** multi-select category rows set the topic count 0.5em apart
+  (select-kit: 0.25em), "+ Subcategories" is one size larger, and the drops' shortcut rows are
+  normal weight on mobile (select-kit meant to do the same, but its rule lost on specificity).
+
 **Texts** (recorded 2026-10-30)
 
 - [ ] **`""` means no text.** An empty text at any layer now leaves its place out (no
