@@ -243,7 +243,7 @@ acceptance("Modal - move-to-topic", function (needs) {
     await click(".selected-posts .move-to-topic");
     await click(".choose-topic-modal .radios #move-to-existing-message");
     await fillIn(".choose-topic-modal #choose-message-title", "Topic");
-    await click(".choose-topic-modal .existing-message:first-of-type input");
+    await click(".choose-topic-modal .choose-message [role='option']");
 
     assert
       .dom(".choose-topic-modal .select-kit.email-group-user-chooser")

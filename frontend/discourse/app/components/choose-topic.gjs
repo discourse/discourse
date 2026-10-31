@@ -1,15 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import TopicStatus from "discourse/components/topic-status";
 import { searchForTerm } from "discourse/lib/search";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import DSelectTopicList from "discourse/ui-kit/select/recipes/topics/d-select-topic-list";
 import { i18n } from "discourse-i18n";
 
 // args:
@@ -21,8 +23,15 @@ import { i18n } from "discourse-i18n";
 // label
 // loadOnInit
 export default class ChooseTopic extends Component {
+  @service siteSettings;
+
   /** @type {string | null} */
   @tracked topicTitle = null;
+
+  /** The topic being worked on, which is never offered. */
+  get excludedTopicIds() {
+    return this.args.currentTopicId ? [this.args.currentTopicId] : [];
+  }
 
   async initialSearch() {
     const results = await searchForTerm(this.args.additionalFilters);
@@ -111,71 +120,96 @@ export default class ChooseTopic extends Component {
     this.args.topicChangedCallback(topic);
   }
 
+  @action
+  onChangeTopic(_topicId, topic) {
+    this.chooseTopic(topic);
+  }
+
   <template>
-    <div class="choose-topic">
-      <label for="choose-topic-title">
-        <span>{{i18n (or @label "choose_topic.title.search")}}</span>
-      </label>
-
-      <input
-        id="choose-topic-title"
-        placeholder={{i18n "choose_topic.title.placeholder"}}
-        type="text"
-        {{on "keydown" this.ignoreEnter}}
-        {{on "input" this.onTopicTitleChange}}
-      />
-
-      <div class="choose-topic__search-results">
-        <DAsyncContent
-          @asyncData={{this.loadTopics}}
-          @context={{this.topicTitle}}
-          @debounce={{true}}
-        >
-          <:loading>
-            {{i18n "loading"}}
-          </:loading>
-
-          <:empty>
-            {{#if this.topicTitle}}
-              {{i18n "choose_topic.none_found"}}
-            {{else}}
-              {{! ensure the paragraph has the same height as the loading message to prevent layout shift }}
-              &nbsp;
-            {{/if}}
-          </:empty>
-
-          <:content as |topics|>
-            <div class="choose-topic-list" role="radiogroup">
-              {{#each topics as |t|}}
-                <div class="controls existing-topic">
-                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                  <label class="radio">
-                    <input
-                      checked={{eq t.id @selectedTopicId}}
-                      id={{concat "choose-topic-" t.id}}
-                      name="choose_topic_id"
-                      type="radio"
-                      {{on "click" (fn this.chooseTopic t)}}
-                    />
-                    <TopicStatus @disableActions={{true}} @topic={{t}} />
-                    <span class="topic-title">
-                      {{dReplaceEmoji t.title}}
-                    </span>
-                    <span class="topic-categories">
-                      {{dBoundCategoryLink
-                        t.category
-                        ancestors=t.category.predecessors
-                        hideParent=true
-                        link=false
-                      }}
-                    </span>
-                  </label>
-                </div>
-              {{/each}}
-            </div>
-          </:content>
-        </DAsyncContent>
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy search after rollout. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <div class="choose-topic">
+        <label for="choose-topic-title">
+          <span>{{i18n (or @label "choose_topic.title.search")}}</span>
+        </label>
+        <DSelectTopicList
+          @additionalFilters={{@additionalFilters}}
+          @exclude={{this.excludedTopicIds}}
+          @id="choose-topic-title"
+          @multiple={{false}}
+          @onChange={{this.onChangeTopic}}
+          @texts={{hash
+            ariaLabel=(i18n (or @label "choose_topic.title.search"))
+          }}
+          @value={{@selectedTopicId}}
+        />
       </div>
-    </div>
+    {{else}}
+      <div class="choose-topic">
+        <label for="choose-topic-title">
+          <span>{{i18n (or @label "choose_topic.title.search")}}</span>
+        </label>
+
+        <input
+          id="choose-topic-title"
+          placeholder={{i18n "choose_topic.title.placeholder"}}
+          type="text"
+          {{on "keydown" this.ignoreEnter}}
+          {{on "input" this.onTopicTitleChange}}
+        />
+
+        <div class="choose-topic__search-results">
+          <DAsyncContent
+            @asyncData={{this.loadTopics}}
+            @context={{this.topicTitle}}
+            @debounce={{true}}
+          >
+            <:loading>
+              {{i18n "loading"}}
+            </:loading>
+
+            <:empty>
+              {{#if this.topicTitle}}
+                {{i18n "choose_topic.none_found"}}
+              {{else}}
+                {{! ensure the paragraph has the same height as the loading message to prevent layout shift }}
+                &nbsp;
+              {{/if}}
+            </:empty>
+
+            <:content as |topics|>
+              <div class="choose-topic-list" role="radiogroup">
+                {{#each topics as |t|}}
+                  <div class="controls existing-topic">
+                    {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+                    <label class="radio">
+                      <input
+                        checked={{eq t.id @selectedTopicId}}
+                        id={{concat "choose-topic-" t.id}}
+                        name="choose_topic_id"
+                        type="radio"
+                        {{on "click" (fn this.chooseTopic t)}}
+                      />
+                      <TopicStatus @disableActions={{true}} @topic={{t}} />
+                      <span class="topic-title">
+                        {{dReplaceEmoji t.title}}
+                      </span>
+                      <span class="topic-categories">
+                        {{dBoundCategoryLink
+                          t.category
+                          ancestors=t.category.predecessors
+                          hideParent=true
+                          link=false
+                        }}
+                      </span>
+                    </label>
+                  </div>
+                {{/each}}
+              </div>
+            </:content>
+          </DAsyncContent>
+        </div>
+      </div>
+    {{/if}}
   </template>
 }

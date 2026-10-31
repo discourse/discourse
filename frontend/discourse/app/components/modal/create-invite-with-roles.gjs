@@ -30,6 +30,7 @@ import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 
 const FORM = "form";
@@ -516,7 +517,7 @@ export default class CreateInviteWithRoles extends Component {
 
   @action
   onChangeTopic(fieldSet, topicId, topic) {
-    this.topics = [topic];
+    this.topics = topic ? [topic] : [];
     fieldSet(topicId);
   }
 
@@ -893,12 +894,29 @@ export default class CreateInviteWithRoles extends Component {
                     as |field|
                   >
                     <field.Control>
-                      <TopicChooser
-                        @content={{this.topics}}
-                        @onChange={{fn this.onChangeTopic field.set}}
-                        @options={{hash additionalFilters="status:public"}}
-                        @value={{field.value}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectTopic
+                          @additionalFilters="status:public"
+                          @clearable={{true}}
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @onChange={{fn this.onChangeTopic field.set}}
+                          @texts={{hash ariaLabel=field.title}}
+                          @topics={{this.topics}}
+                          @value={{field.value}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+                        <TopicChooser
+                          @content={{this.topics}}
+                          @onChange={{fn this.onChangeTopic field.set}}
+                          @options={{hash additionalFilters="status:public"}}
+                          @value={{field.value}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                 {{/if}}

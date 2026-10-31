@@ -43,10 +43,10 @@ export async function searchTopics(
     []) as unknown as SelectItem[];
 }
 
-/** Looks the held topic ids up together; an id that is not a number never reaches the server. */
+/** Looks the held topic ids up together; anything but a topic id never reaches the server. */
 export async function findHeldTopics(
   values: SelectItemId[]
 ): Promise<SelectItem[]> {
-  const ids = values.map(Number).filter(Number.isInteger);
+  const ids = values.map(Number).filter((id) => Number.isInteger(id) && id > 0);
   return (await Topic.findByIds(ids)) as unknown as SelectItem[];
 }
