@@ -46,6 +46,9 @@ export const MIGRATED_SELECT_KIT_MODULES = new Set<string>([
   "group-chooser",
   "user-chooser",
   "user-chooser/user-row",
+
+  "topic-chooser",
+  "topic-row",
 ]);
 
 const selectKitModules = compatModules as Record<
