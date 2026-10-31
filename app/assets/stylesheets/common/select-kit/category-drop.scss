@@ -105,6 +105,16 @@
   }
 }
 
+.d-select.category-drop {
+  .badge-category__wrapper {
+    max-width: 260px;
+  }
+
+  :is(.d-select__placeholder, .d-select__caret) {
+    color: var(--primary-high);
+  }
+}
+
 .d-select.category-drop.d-select__trigger {
   &[aria-expanded="true"],
   &:focus,

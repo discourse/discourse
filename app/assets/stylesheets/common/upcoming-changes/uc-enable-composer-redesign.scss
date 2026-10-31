@@ -180,7 +180,8 @@
     }
 
     .select-kit.combo-box .select-kit-header,
-    .select-kit.multi-select .multi-select-header {
+    .select-kit.multi-select .multi-select-header,
+    .d-select.category-chooser {
       border: 0;
       padding: var(--space-3) var(--space-4);
       border-radius: 0;

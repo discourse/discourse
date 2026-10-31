@@ -96,7 +96,8 @@
     .edit-category__wrapper {
       flex: 1 1 5%;
 
-      .select-kit.combo-box.category-chooser {
+      .select-kit.combo-box.category-chooser,
+      .d-select.category-chooser {
         width: 100%;
         height: 100%;
       }

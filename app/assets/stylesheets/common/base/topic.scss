@@ -284,7 +284,8 @@
       min-width: 0; // allows category name to shrink to fit narrow screens
     }
 
-    .select-kit.combo-box.category-chooser {
+    .select-kit.combo-box.category-chooser,
+    .d-select.category-chooser {
       width: 100%;
       height: 100%;
     }

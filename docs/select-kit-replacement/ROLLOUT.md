@@ -369,10 +369,10 @@ customization ports are done.
 
   | Legacy selector (category pickers) | DSelect equivalent |
   |---|---|
-  | `.select-kit.category-chooser`, `.category-selector`, `.multiple-categories-selector`, `.category-drop` | `.d-select` with the same class (the root; for the drop it is also the trigger) |
+  | `.select-kit.category-chooser`, `.category-selector`, `.multiple-categories-selector`, `.category-drop` | `.d-select` with the same class. The root is also the trigger, so write `.d-select.category-chooser.d-select__trigger`, never `.category-chooser .d-select__trigger` |
   | The 300px default width of `.select-kit.combo-box` and `.select-kit.multi-select` | None: DSelect fills its container, so the call site sets a width |
-  | `.category-drop-header`, `.select-kit.category-drop.has-selection` | `.d-select.category-drop` itself; there is no selection modifier yet, so this is a gap |
-  | `.selected-name` on the drop | `.d-category-filter__selection` |
+  | `.category-drop-header`, `.select-kit.category-drop.has-selection` | `.d-select.category-drop` itself, with `--filtering` while a category is picked |
+  | `.selected-name` on the drop | `.d-select__value`, or `.d-select__placeholder` on the empty level |
   | `.select-kit-body` | `.d-select__content.--kind-select-category` or `.--kind-select-category-filter` |
   | `.select-kit-row.category-row` | `.d-select__option`; the badge is the option label, with no `.category-status` wrapper |
   | `.category-row .category-desc` | `.d-select__option-description` |

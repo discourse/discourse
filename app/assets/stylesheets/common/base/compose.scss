@@ -376,6 +376,10 @@ html.composer-open:not(.has-full-page-chat) {
         text-overflow: ellipsis;
       }
 
+      &.d-select__trigger {
+        color: var(--primary-high);
+      }
+
       .select-kit-body {
         max-width: 450px;
       }
@@ -474,7 +478,7 @@ html.composer-open:not(.has-full-page-chat) {
       width: 100%;
 
       .select-kit-header,
-      .d-select__trigger {
+      &.d-select__trigger {
         color: var(--primary-high);
       }
     }

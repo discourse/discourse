@@ -125,7 +125,7 @@
   }
 
   .select-kit,
-  .d-select.tag-chooser {
+  .d-select:is(.category-chooser, .tag-chooser) {
     width: 100%;
   }
 }
