@@ -1024,6 +1024,50 @@ select-kit components pass their own: advanced search passes
 `search-advanced-category-chooser` with `category-chooser`, and former multiple selectors pass
 `multiple-categories-selector`.
 
+#### User and group recipes
+
+The people family has two recipes, one per data source:
+
+- **`DSelectUser`** (kind `select-user`) picks users from the server's user search, and groups
+  or email addresses when asked. `@value` takes usernames, group names or addresses, as one
+  string or an array; it holds one unless `@multiple={{true}}`. `@onChange` emits the held
+  values and their items, whose `type` (`"user"`, `"group"` or `"email"`) tells them apart:
+  arrays when multiple, otherwise one value or `null`. The rules:
+  - `@includeGroups` offers groups: the visible ones (`"visible"`), those the user can mention
+    (`"mentionable"`) or those they can message (`"messageable"`). `@emails` offers a valid
+    typed address as a row.
+  - `@exclude` lists usernames and group names never offered, in any case.
+    `@excludeCurrentUser` adds the current user. `@includeStaged` includes staged users.
+  - `@topicId` or `@categoryId` scope the search, and list that topic's or category's users
+    before anything is typed. Otherwise a search starts at the first character, unless the
+    call site passes `@specialItems`, which are listed on open and then above the matches.
+  - `@searchOptions` adds search parameters: camelCase keys are sent snake_cased, and unset
+    keys are not sent. Customizations override it as the `searchOptions` option; the value is
+    replaced, not merged, so an extension spreads `current.searchOptions`.
+  - `@showStatus` shows each user's status in the rows.
+  - Held names are looked up together, in one request per value change, and keep the
+    spelling they were given. A name nothing resolves stays as typed, with no `type`.
+  - With `@multiple`, pasting a list that has a comma, a newline or an `@` adds every name in
+    it at once. The list is split on commas and whitespace, and a leading `@` is dropped. A
+    single plain name is typed as usual.
+  - Rows show the avatar, the username (through `formatUsername`) and the name. In a list that
+    mixes users with groups or addresses, groups get a group icon and addresses an envelope,
+    and chips speak a type word after a group or an address (`groupType`, `emailType`).
+- **`DSelectGroup`** (kind `select-group`) picks from the site's groups, filtered locally.
+  `@value` and `@onChange` use group ids, or names with `@emit="names"`; both follow it, since a
+  name and a string id can't be told apart. `@automatic={{false}}` and `@everyone={{false}}`
+  leave those groups out, `@exclude` lists group ids never offered, and `@only` lists the only
+  ones offered. `@items` replaces the site's groups for a call site with its own list (the
+  `@items` exception, as with `DSelectTagFilter`); the other filters still apply.
+
+Without an `ariaLabel` text or `@ariaLabelledBy`, a user picker is named for what it offers,
+one whole string per case ("User", "User or group", "User or email", "User, group or email"),
+plural when it can hold more than one. A group picker is named "Group" or "Groups".
+
+Until cleanup, `DSelectUser` defaults `@legacyKind` to both `user-chooser` and
+`email-group-user-chooser`, since the second extended the first and answered to both, and
+`DSelectGroup` to `group-chooser`.
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 

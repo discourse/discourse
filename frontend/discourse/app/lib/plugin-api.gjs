@@ -2711,6 +2711,10 @@ class _PluginApi {
    *   )
    * }}
    * ```
+   *
+   * The registered key reaches only the select-kit pickers. With the new select controls, a
+   * `DSelectUser` call site passes `@searchOptions={{hash adminsOnly=true}}`, or a customization
+   * sets the `searchOptions` option.
    */
   addUserSearchOption(value) {
     CUSTOM_USER_SEARCH_OPTIONS.push(value);

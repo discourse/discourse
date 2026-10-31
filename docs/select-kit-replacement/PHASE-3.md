@@ -164,6 +164,21 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 
 - ☐ **User family:** user, email-group-user and group choosers on a shared user-search recipe,
   with `addUserSearchOption` and `customSearchOptions`; rewrite `DAccessControlGranteeChooser`.
+  - ☑ `DSelectUser` over a plain `searchUsers()` and a batched `findUsersByUsernames()`, and
+    `DSelectGroup` over the site's groups (2026-10-31). Held group names resolve in any case on
+    the server.
+  - ☑ Call sites in core and the bundled plugins branch on the flag and write the legacy
+    shapes; the family's modules report legacy renders.
+  - ☐ Sites that need what the engine lacks stay on select-kit, opted out of the notice:
+    assign's assignee picker (open on render, suggestions on an empty query, its own search
+    URL) and category groups (values that can't be removed), `DAccessControlGranteeChooser`
+    (with the ui-kit wrappers below) and the workflows group field (wave 5).
+  - ☐ Held names are case sensitive in the engine's keys; a key normalizer needs approval.
+  - ☐ `addUserSearchOption` reaches only the legacy pickers; the new ones take `searchOptions`
+    through a customization.
+  - ☐ Boards modals: a "ResizeObserver loop" error with `DSelectUser` in the column settings
+    modal, not yet traced.
+  - ☐ SCSS parity, flag-on system specs and the screen-reader pass.
 - ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
   handoff.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.

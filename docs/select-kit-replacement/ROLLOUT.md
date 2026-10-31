@@ -259,6 +259,13 @@ customization ports are done.
   and wizard pickers. The ui-kit wrappers move together as one family:
   `d-time-input`, `d-relative-time-picker`, `d-future-date-input` with its
   `FutureDateInputSelector`, and `d-access-control`.
+  Status 2026-10-31: the user family has joined through `DSelectUser` and `DSelectGroup`. Four
+  sites stay on select-kit, opted out of the legacy-render notice, until the engine covers what
+  they need: assign's assignee picker (opens on render, suggests on an empty query, uses its own
+  search URL), assign's category groups (held values that can't be removed),
+  `DAccessControlGranteeChooser` (moves with `d-access-control`) and the workflows group field
+  (wave 5). `addUserSearchOption` reaches only the legacy pickers; extensions set
+  `searchOptions` through a customization instead.
 - **Wave 3, menu-shaped value selects and action menus.** The group dropdown and value-type
   `DropdownSelectBox` uses become `DSelect`; action menus become `DMenu`. Customer ports for the
   live patches on direct `DropdownSelectBox` invocations (caret icons and hidden titles) land here.
@@ -489,6 +496,32 @@ Open items need a decision after manual testing; the rest are intended but still
   (select-kit: 0.25em), "+ Subcategories" is one size larger, and the drops' shortcut rows are
   normal weight on mobile (select-kit meant to do the same, but its rule lost on specificity).
 
+**Users and groups** (recorded 2026-10-31)
+
+- [ ] **Pickers that hold one are single selects.** Select-kit capped a multi-select at one
+  (`maximum=1`), so it drew a chip and passed an array. These sites now render a single select
+  with a typeahead trigger. Their handlers still receive the one-item array they expect, through
+  `legacyPickOne`, so stored values are unchanged.
+- [ ] **Held users stay listed.** Select-kit left held usernames out of the results; the new
+  pickers list them, marked selected, as every DSelect does.
+- [ ] **Unset search options are not sent.** Select-kit sent every registered custom search key,
+  set or not. `DSelectUser` sends only the keys a call site or a customization sets.
+- [ ] **A call site's special rows show on open.** Automation's context rows used to appear only
+  after typing. They are now listed before anything is typed, then above the matches.
+- [ ] **Searching while rate limited shows the error state.** Select-kit silently showed no
+  results while the user search was rate limited; the new picker shows its load error.
+- [ ] **Dropped options:** `filterIcon`, `useHeaderFilter`, `tabindex` and custom caret icons.
+  The change owner modal no longer focuses the picker when it opens.
+- [ ] **Known gap: case in held names.** Held values are keyed as given, so a held `sam` and the
+  server's `Sam` are two values. Held lookups and `@exclude` match any case, but a list loaded
+  before `sam` was held shows `Sam` unmarked, and picking it adds a second chip (an engine key
+  normalizer is the proposed fix).
+- [ ] **Unchanged legacy bugs, logged for separate fixes:** the composer's `hasGroups` reads
+  `length` on a `Set`, so it is always false (`composer-user-selector.gjs`); merge users leaves
+  the merge button enabled after the picker is cleared (`merge-users-prompt.gjs`); and the invite
+  panel's group picker is unreachable, because its only caller is the PM participants modal and
+  `showGroups` requires a non-PM invite (`invite-panel.gjs`). Both branches are converted anyway.
+
 **Texts** (recorded 2026-10-30)
 
 - [ ] **`""` means no text.** An empty text at any layer now leaves its place out (no
@@ -554,6 +587,27 @@ or destroying the control aborts its signal.
 The migrated-module reporting set now includes the category chooser, selector, multiple selector,
 advanced-search chooser, category drop with its header and more collection, category row and
 selected category choice.
+
+## User and group call sites
+
+User, email-group-user and group pickers branch to `DSelectUser` and `DSelectGroup` while
+`enable_new_select_controls` is on. Each new branch writes what the legacy one wrote: a site
+whose picker held one item renders a single select and wraps its handler in `legacyPickOne`, so
+the handler still receives a one-item array. The composer recipients and the invite panel, which
+read `isGroup`, also accept the item's `type`; assign's assignee picker, the third reader, stays
+on select-kit. Option names map as follows: `filterPlaceholder` and `none` become the
+`searchPlaceholder` and `placeholder` texts, `includeGroups` with `includeMessageableGroups`
+becomes `@includeGroups`, `customSearchOptions` becomes `@searchOptions`, and automation's
+`modifyContent` contexts become `@specialItems`. Sites with their own group list (automation,
+category access and moderation, admin MCP, the AI agent editor and LLM quotas, data explorer,
+policy and the styleguide) pass `@items`.
+
+A caption with an id is passed as `@ariaLabelledBy`. FormKit custom fields pass the field's
+`id`, `describedBy`, error state and `disabled`, with their title as the `ariaLabel` text, so a
+field's description and errors reach the picker.
+
+The migrated-module reporting set now includes `user-chooser` with its row,
+`email-group-user-chooser` with its row and filter, and `group-chooser`.
 
 ## Porting lessons
 
