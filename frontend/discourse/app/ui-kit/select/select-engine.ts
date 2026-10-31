@@ -1090,6 +1090,14 @@ export default class SelectEngine {
   }
 
   /**
+   * Whether a paste is resolving. The open list shows its loading state meanwhile, so no row
+   * can be picked, and the held chips stay drawn.
+   */
+  get pastePending(): boolean {
+    return this.#selectionUpdates.pastePending;
+  }
+
+  /**
    * Read-only handles the `modifySelectKit` compat bridge needs to build its facade
    * (owner, a live element accessor, a teardown check). Supplied by the component; not
    * part of the consumer-facing API.
@@ -1323,10 +1331,11 @@ export default class SelectEngine {
     | Promise<SelectItem[]>
     | Promise<void>
     | undefined {
-    return (
-      this.#selectionUpdates.done ??
-      this.#valueResolver.resolveSelection(value, opts)
-    );
+    // A paste only adds to the held items, so they stay drawn while it resolves.
+    const done = this.#selectionUpdates.pastePending
+      ? undefined
+      : this.#selectionUpdates.done;
+    return done ?? this.#valueResolver.resolveSelection(value, opts);
   }
 
   /**
@@ -1476,11 +1485,17 @@ export default class SelectEngine {
     this.#selectionUpdates.supersede();
   }
 
-  /** Runs event-time work with a scope owned by this update. */
+  /**
+   * Runs event-time work with a scope owned by this update.
+   *
+   * @param work - The update's work.
+   * @param opts - `paste` marks the update as a paste (see `pastePending`).
+   */
   update(
-    work: (scope: SelectUpdateScope) => void | Promise<void>
+    work: (scope: SelectUpdateScope) => void | Promise<void>,
+    opts?: { paste?: boolean }
   ): Promise<void> {
-    return this.#selectionUpdates.update(work);
+    return this.#selectionUpdates.update(work, opts);
   }
 
   /**

@@ -775,6 +775,11 @@ synchronous parsers. Query cleanup rechecks the scope after middleware and only 
 same query in the same open session. Newer typing is preserved even if the batch still lands.
 An asynchronous nullish result makes no selection change and leaves the query intact.
 
+While a promise is pending, the open list shows its loading state, so no row can be picked
+even if the user types; the typed text stays. The held chips stay drawn, followed by one
+placeholder chip (`engine.pastePending`). Removing a chip, like any other selection change,
+cancels the paste. Other asynchronous updates still draw every chip as a placeholder.
+
 ### Recipes
 
 A recipe is a specialized `DSelect` for one kind of value, such as categories or tags. Recipes are

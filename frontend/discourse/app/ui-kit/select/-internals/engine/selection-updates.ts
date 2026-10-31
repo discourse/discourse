@@ -32,6 +32,9 @@ export type SelectionOrigin = (
 export class UpdateRecord {
   readonly done: Promise<void>;
   readonly scope: SelectUpdateScope;
+
+  /** Adds pasted items, so the open list holds its rows back until it ends. */
+  readonly paste: boolean;
   keys: Set<string>;
   asynchronous = false;
   ended = false;
@@ -39,8 +42,13 @@ export class UpdateRecord {
   #controller = new AbortController();
   #resolve!: () => void;
 
-  constructor(key: string, scope: (record: UpdateRecord) => SelectUpdateScope) {
+  constructor(
+    key: string,
+    scope: (record: UpdateRecord) => SelectUpdateScope,
+    paste = false
+  ) {
     this.keys = new Set([key]);
+    this.paste = paste;
     this.done = new Promise((resolve) => (this.#resolve = resolve));
     this.scope = scope(this);
   }
@@ -88,6 +96,11 @@ export default class SelectionUpdates {
     return !isDestroying(this.#engine) && this.#state.update !== null;
   }
 
+  /** Whether the pending update is a paste. */
+  get pastePending(): boolean {
+    return this.pending && !!this.#state.update?.paste;
+  }
+
   handleIntent(origin?: SelectionOrigin): void {
     if (!origin?.record || origin.record !== this.#current) {
       this.supersede();
@@ -123,14 +136,17 @@ export default class SelectionUpdates {
   }
 
   update(
-    work: (scope: SelectUpdateScope) => void | Promise<void>
+    work: (scope: SelectUpdateScope) => void | Promise<void>,
+    { paste = false }: { paste?: boolean } = {}
   ): Promise<void> {
     if (isDestroying(this.#engine)) {
       return Promise.resolve();
     }
     this.supersede();
-    const record = new UpdateRecord(this.#valueKey(this.#actions.value), (r) =>
-      this.#scope(r)
+    const record = new UpdateRecord(
+      this.#valueKey(this.#actions.value),
+      (r) => this.#scope(r),
+      paste
     );
     this.#current = record;
 

@@ -11,6 +11,7 @@ import {
   render,
   settled,
   triggerKeyEvent,
+  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -1046,7 +1047,7 @@ module(
       assert.true(onChange.notCalled);
     });
 
-    test("an async parse is superseded by a hand pick", async function (assert) {
+    test("the open list shows as loading while a paste resolves, so no row can be picked", async function (assert) {
       const parsed = deferred();
       const onChange = sinon.spy();
       const parsePaste = () => parsed.promise;
@@ -1066,7 +1067,20 @@ module(
       await dSelect().open();
       try {
         paste(".d-select__filter", "Apple|Cherry");
-        optionNamed("Banana").click();
+        await waitFor(".d-select__listbox--loading", { timeout: 2000 });
+        assert
+          .dom("[role='option']")
+          .doesNotExist("the rows give way to loading placeholders");
+        assert
+          .dom(".d-select__listbox--loading")
+          .hasAttribute("aria-busy", "true");
+        find(".d-select__filter").dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key: "Enter",
+            bubbles: true,
+            cancelable: true,
+          })
+        );
       } finally {
         parsed.resolve([FRUIT[0], FRUIT[2]]);
         await settled();
@@ -1074,8 +1088,114 @@ module(
 
       assert.deepEqual(
         onChange.args.map(([value]) => value),
-        [[2]],
-        "only the hand pick lands"
+        [[1, 3]],
+        "only the paste lands"
+      );
+      assert.dom("[role='option']").exists("the rows come back");
+    });
+
+    test("typing while a paste resolves keeps the list loading and the typed text", async function (assert) {
+      const parsed = deferred();
+      const onChange = sinon.spy();
+      const parsePaste = () => parsed.promise;
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{(array)}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      try {
+        paste(".d-select__filter", "Apple|Cherry");
+        await waitFor(".d-select__listbox--loading", { timeout: 2000 });
+        const input = find(".d-select__filter");
+        input.value = "Ban";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        // Past the shortened test debounce, so the typed query would have loaded by now.
+        await new Promise((done) => setTimeout(done, 100));
+        assert
+          .dom("[role='option']")
+          .doesNotExist("the typed query's rows stay hidden");
+      } finally {
+        parsed.resolve([FRUIT[0], FRUIT[2]]);
+        await settled();
+      }
+
+      assert.deepEqual(onChange.lastCall.args[0], [1, 3]);
+      assert.dom(".d-select__filter").hasValue("Ban", "the typed text stays");
+      assert.dom(optionNamed("Banana")).exists("its rows show once it lands");
+    });
+
+    test("held chips stay while a paste resolves, followed by one placeholder", async function (assert) {
+      const parsed = deferred();
+      const parsePaste = () => parsed.promise;
+      const held = [2];
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @parsePaste={{parsePaste}}
+            @value={{held}}
+          />
+        </template>
+      );
+      try {
+        paste("[role='combobox']", "Apple|Cherry");
+        await waitFor(".d-select__pending-icon", { timeout: 2000 });
+        assert
+          .dom(".d-select__chip")
+          .exists({ count: 2 }, "the held chip and one placeholder");
+        assert
+          .dom(".d-select__chip:first-child .d-select__chip-label")
+          .hasText("Banana", "the held chip is still drawn");
+        assert
+          .dom(".d-select__chip:last-child .d-skeleton")
+          .exists("the placeholder comes after it");
+      } finally {
+        parsed.resolve([FRUIT[0], FRUIT[2]]);
+        await settled();
+      }
+    });
+
+    test("removing a chip while a paste resolves cancels the paste", async function (assert) {
+      const parsed = deferred();
+      const onChange = sinon.spy();
+      const parsePaste = () => parsed.promise;
+      const held = [2];
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{held}}
+          />
+        </template>
+      );
+      try {
+        paste("[role='combobox']", "Apple|Cherry");
+        await waitFor(".d-select__pending-icon", { timeout: 2000 });
+        find(".d-select__chip-remove").click();
+      } finally {
+        parsed.resolve([FRUIT[0], FRUIT[2]]);
+        await settled();
+      }
+
+      assert.deepEqual(
+        onChange.args.map(([value]) => value),
+        [[]],
+        "only the removal lands"
       );
     });
 

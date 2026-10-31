@@ -233,6 +233,15 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       : (chips ?? []).slice(0, this.args.presenter.maxVisibleChips);
   }
 
+  /** Whether a placeholder chip follows the held ones while a paste resolves, within the visible chips. */
+  @action
+  showsPasteChip(chips: readonly unknown[] | undefined): boolean {
+    return (
+      this.args.engine.pastePending &&
+      this.visibleChips([...(chips ?? []), null]).length > (chips?.length ?? 0)
+    );
+  }
+
   /** Converts a held item's id to its chip attribute value. */
   chipValue(chip: SelectDescriptor): string {
     return String(chip.value ?? "");
@@ -468,6 +477,15 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                 {{/if}}
               </li>
             {{/each}}
+            {{#if (this.showsPasteChip chips)}}
+              <li class="d-select__chip">
+                {{#if @hasSelectionLoadingBlock}}
+                  {{yield to="selectionLoading"}}
+                {{else}}
+                  <DSkeleton @variant="text" @width="6ch" />
+                {{/if}}
+              </li>
+            {{/if}}
           </:content>
         </DAsyncContent>
       </ul>

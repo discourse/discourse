@@ -409,26 +409,31 @@ export default class SelectHost {
       return;
     }
     event.preventDefault();
-    return this.engine.control.update((scope) => {
-      const apply = (items: readonly SelectItemModel[] | null | undefined) => {
-        if (items == null || !scope.current) {
-          return;
+    return this.engine.update(
+      (scope) => {
+        const apply = (
+          items: readonly SelectItemModel[] | null | undefined
+        ) => {
+          if (items == null || !scope.current) {
+            return;
+          }
+          scope.selectMany(items);
+          // Middleware may synchronously replace the selection intent or edit the query.
+          if (
+            scope.current &&
+            this.#options.session() === session &&
+            this.engine.queryKey === query
+          ) {
+            this.announcer.suppressCount();
+            this.#options.clearQuery();
+          }
+        };
+        if (result instanceof Promise) {
+          return result.then(apply);
         }
-        scope.selectMany(items);
-        // Middleware may synchronously replace the selection intent or edit the query.
-        if (
-          scope.current &&
-          this.#options.session() === session &&
-          this.engine.queryKey === query
-        ) {
-          this.announcer.suppressCount();
-          this.#options.clearQuery();
-        }
-      };
-      if (result instanceof Promise) {
-        return result.then(apply);
-      }
-      apply(result);
-    });
+        apply(result);
+      },
+      { paste: true }
+    );
   }
 }
