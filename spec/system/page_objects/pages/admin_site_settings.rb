@@ -133,8 +133,12 @@ module PageObjects
 
       def has_overridden_topic_setting?(setting_name, value: nil)
         setting_field = find_setting(setting_name, overridden: true)
-        return setting_field.find(".selected-name")["data-value"] == value.to_s if value
-        true
+        return true if !value
+        # TODO (select-kit-replacement-cleanup): Keep only the new control once rollout completes.
+        if setting_field.has_css?(".d-select", wait: 0)
+          return setting_field.has_css?(".d-select[data-value='#{value}']")
+        end
+        setting_field.find(".selected-name")["data-value"] == value.to_s
       end
 
       def has_no_overridden_setting?(setting_name)
