@@ -87,13 +87,13 @@ export default class TopicControl extends Component {
   }
 
   @action
-  setTopicIds(topicIds) {
+  handleChange(topicIds, topics) {
+    this.selectedTopics = makeArray(topics);
     this.args.field.set(topicIds);
   }
 
   @action
-  handleChange(topicIds, topics) {
-    this.selectedTopics = makeArray(topics);
+  setTopicIds(topicIds) {
     this.args.field.set(topicIds);
   }
 

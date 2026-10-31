@@ -23,6 +23,11 @@ export default class ChooseMessage extends Component {
   }
 
   @action
+  onChangeMessage(_topicId, message) {
+    this.args.setSelectedTopicId(message);
+  }
+
+  @action
   async search(title) {
     next(() => this.args.setSelectedTopicId(null)); // clear existing selection
 
@@ -50,11 +55,6 @@ export default class ChooseMessage extends Component {
   @action
   setSearchTerm(evt) {
     this.messageTitle = evt.target.value;
-  }
-
-  @action
-  onChangeMessage(_topicId, message) {
-    this.args.setSelectedTopicId(message);
   }
 
   <template>

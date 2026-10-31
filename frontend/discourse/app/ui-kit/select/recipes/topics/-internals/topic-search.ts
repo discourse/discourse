@@ -7,9 +7,9 @@ import type {
 } from "discourse/ui-kit/select/select-engine";
 
 /**
- * Searches topics as the topic chooser always has: nothing without a term or filters; with a
- * term, titles, a pasted URL or an id, restricted to the archetype when one is given. The topic
- * models are the select's items, as both lookups answer them.
+ * Searches topics: nothing without a term or filters; with a term, titles, a pasted URL or an
+ * id, restricted to the archetype when one is given. The topic models are the select's items,
+ * as both lookups answer them.
  */
 export async function searchTopics(
   filter: string,
@@ -27,10 +27,11 @@ export async function searchTopics(
     return [];
   }
 
+  const typeFilter =
+    archetype === "private_message" ? "private_messages" : "topic";
   const params = filter
     ? {
-        typeFilter:
-          archetype === "private_message" ? "private_messages" : "topic",
+        typeFilter,
         restrictToArchetype: archetype ?? undefined,
         searchForId: true,
       }
