@@ -9,9 +9,12 @@ import CreateInvite from "discourse/components/modal/create-invite";
 import GroupAddMembers from "discourse/components/modal/group-add-members";
 import IgnoreDurationModal from "discourse/components/modal/ignore-duration-with-username";
 import ModalContainer from "discourse/components/modal-container";
+import ReviewFilters from "discourse/components/review-filters";
+import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import loadAccessibleName from "discourse/lib/load-accessible-name";
 import DiscourseURL from "discourse/lib/url";
 import GroupsNew from "discourse/templates/groups/new";
+import PreferencesUsers from "discourse/templates/preferences/users";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, {
   parsePostData,
@@ -314,6 +317,135 @@ module(
 
         await select.open();
         await select.search("evil");
+        assert.dom("[role='option']").doesNotExist();
+      });
+    });
+
+    module("review filters", function () {
+      test("each person filter is named by its label and hands its handler an array", async function (assert) {
+        this.siteSettings.reviewable_claiming = "optional";
+        const requests = stubUserSearch();
+        const accessibleName = await loadAccessibleName();
+        const siteSettings = this.siteSettings;
+        const controller = new (class {
+          @tracked filterClaimedBy;
+          @tracked filterUsername;
+          siteSettings = siteSettings;
+          filtersExpanded = true;
+          updateFilterClaimedBy = sinon.spy(
+            (selected) => (this.filterClaimedBy = selected[0])
+          );
+          updateFilterFlaggedBy = sinon.spy();
+          updateFilterReviewedBy = sinon.spy();
+          updateFilterUsername = sinon.spy(
+            (selected) => (this.filterUsername = selected[0])
+          );
+        })();
+
+        await render(
+          <template><ReviewFilters @controller={{controller}} /></template>
+        );
+        const pickers = findAll(".reviewable-filter .d-select.user-chooser");
+        assert.deepEqual(
+          pickers.map((picker) =>
+            accessibleName(picker.querySelector("[role='combobox']") ?? picker)
+          ),
+          [
+            i18n("review.filtered_claimed_by"),
+            i18n("review.filtered_flagged_by"),
+            i18n("review.filtered_reviewed_by"),
+            i18n("review.filtered_user"),
+          ]
+        );
+
+        const claimedBy = new DSelect(".claimed-by .d-select");
+        await pick(claimedBy, "bo", "bob");
+        assert.strictEqual(requests.at(-1).can_review, "true");
+        assert.deepEqual(controller.updateFilterClaimedBy.lastCall.args[0], [
+          "bob",
+        ]);
+        await claimedBy.clear();
+        assert.deepEqual(controller.updateFilterClaimedBy.lastCall.args[0], []);
+
+        await pick(new DSelect(".user-selector"), "al", "alice");
+        assert.strictEqual(
+          requests.at(-1).can_review,
+          undefined,
+          "only the claimed-by filter limits the search to reviewers"
+        );
+        assert.deepEqual(controller.updateFilterUsername.lastCall.args[0], [
+          "alice",
+        ]);
+      });
+    });
+
+    module("advanced search", function () {
+      test("a picked author writes the @ filter, and clearing removes it", async function (assert) {
+        stubUserSearch();
+        const accessibleName = await loadAccessibleName();
+        const state = new (class {
+          @tracked term = "";
+        })();
+        const change = (term) => (state.term = term);
+
+        await render(
+          <template>
+            <SearchAdvancedOptions
+              @expandFilters={{true}}
+              @onChangeSearchTerm={{change}}
+              @searchTerm={{state.term}}
+            />
+          </template>
+        );
+        const picker = ".advanced-search-posted-by .d-select";
+        assert.strictEqual(
+          accessibleName(find(`${picker} [role='combobox']`) ?? find(picker)),
+          i18n("search.advanced.posted_by.aria_label")
+        );
+
+        const select = new DSelect(picker);
+        await pick(select, "bo", "bob");
+        assert.strictEqual(state.term.trim(), "@bob");
+
+        await select.clear();
+        assert.strictEqual(state.term.trim(), "");
+      });
+    });
+
+    module("user preferences", function () {
+      test("muted and allowed users write usernames and leave the current user out", async function (assert) {
+        stubUserSearch();
+        const controller = {
+          siteSettings: this.siteSettings,
+          model: {
+            can_mute_users: true,
+            can_send_private_messages: true,
+            user_option: {},
+          },
+          allowPmUsersEnabled: true,
+          mutedUsernames: [],
+          allowedPmUsernames: [],
+          onChangeMutedUsernames: sinon.spy(),
+          onChangeAllowedPmUsernames: sinon.spy(),
+        };
+
+        await render(
+          <template><PreferencesUsers @controller={{controller}} /></template>
+        );
+        const muted = new DSelect(".user-mute .d-select");
+        await pick(muted, "bo", "bob");
+        assert.deepEqual(controller.onChangeMutedUsernames.lastCall.args[0], [
+          "bob",
+        ]);
+
+        const allowed = new DSelect(".user-allow-pm .d-select");
+        await pick(allowed, "al", "alice");
+        assert.deepEqual(
+          controller.onChangeAllowedPmUsernames.lastCall.args[0],
+          ["alice"]
+        );
+
+        await allowed.search("evil");
         assert.dom("[role='option']").doesNotExist();
       });
     });

@@ -9,6 +9,7 @@ import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -22,6 +23,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -983,18 +985,34 @@ export default class SearchAdvancedOptions extends Component {
                 {{i18n "search.advanced.posted_by.label"}}
               </label>
               <div class="controls">
-                <UserChooser
-                  @id="search-posted-by"
-                  @onChange={{this.onChangeSearchTermForUsername}}
-                  @options={{hash
-                    headerAriaLabel=(i18n
-                      "search.advanced.posted_by.aria_label"
-                    )
-                    maximum=1
-                    excludeCurrentUser=false
-                  }}
-                  @value={{this.searchedTerms.username}}
-                />
+                {{! TODO (select-kit-replacement-cleanup) }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectUser
+                    @clearable={{true}}
+                    @id="search-posted-by"
+                    @onChange={{legacyPickOne
+                      this.onChangeSearchTermForUsername
+                    }}
+                    @texts={{hash
+                      ariaLabel=(i18n "search.advanced.posted_by.aria_label")
+                    }}
+                    @value={{this.searchedTerms.username}}
+                  />
+                {{else}}
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  <UserChooser
+                    @id="search-posted-by"
+                    @onChange={{this.onChangeSearchTermForUsername}}
+                    @options={{hash
+                      headerAriaLabel=(i18n
+                        "search.advanced.posted_by.aria_label"
+                      )
+                      maximum=1
+                      excludeCurrentUser=false
+                    }}
+                    @value={{this.searchedTerms.username}}
+                  />
+                {{/if}}
               </div>
             </div>
 

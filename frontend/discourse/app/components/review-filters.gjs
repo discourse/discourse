@@ -1,12 +1,14 @@
 import { fn, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -50,19 +52,31 @@ export default <template>
 
       {{#unless (eq @controller.siteSettings.reviewable_claiming "disabled")}}
         <div class="reviewable-filter topic-filter claimed-by">
-          <label class="filter-label">
+          <label class="filter-label" id="review-filter-claimed-by-label">
             {{i18n "review.filtered_claimed_by"}}
           </label>
-          <EmailGroupUserChooser
-            @onChange={{@controller.updateFilterClaimedBy}}
-            @options={{hash
-              maximum=1
-              excludeCurrentUser=false
-              fullWidthWrap=true
-              customSearchOptions=(hash canReview=true)
-            }}
-            @value={{@controller.filterClaimedBy}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if @controller.siteSettings.enable_new_select_controls}}
+            <DSelectUser
+              @ariaLabelledBy="review-filter-claimed-by-label"
+              @clearable={{true}}
+              @onChange={{legacyPickOne @controller.updateFilterClaimedBy}}
+              @searchOptions={{hash canReview=true}}
+              @value={{@controller.filterClaimedBy}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <EmailGroupUserChooser
+              @onChange={{@controller.updateFilterClaimedBy}}
+              @options={{hash
+                maximum=1
+                excludeCurrentUser=false
+                fullWidthWrap=true
+                customSearchOptions=(hash canReview=true)
+              }}
+              @value={{@controller.filterClaimedBy}}
+            />
+          {{/if}}
         </div>
       {{/unless}}
 
@@ -118,49 +132,83 @@ export default <template>
       </div>
 
       <div class="reviewable-filter topic-filter">
-        <label class="filter-label">
+        <label class="filter-label" id="review-filter-flagged-by-label">
           {{i18n "review.filtered_flagged_by"}}
         </label>
-        <EmailGroupUserChooser
-          @onChange={{@controller.updateFilterFlaggedBy}}
-          @options={{hash
-            maximum=1
-            excludeCurrentUser=false
-            fullWidthWrap=true
-          }}
-          @value={{@controller.filterFlaggedBy}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          <DSelectUser
+            @ariaLabelledBy="review-filter-flagged-by-label"
+            @clearable={{true}}
+            @onChange={{legacyPickOne @controller.updateFilterFlaggedBy}}
+            @value={{@controller.filterFlaggedBy}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <EmailGroupUserChooser
+            @onChange={{@controller.updateFilterFlaggedBy}}
+            @options={{hash
+              maximum=1
+              excludeCurrentUser=false
+              fullWidthWrap=true
+            }}
+            @value={{@controller.filterFlaggedBy}}
+          />
+        {{/if}}
       </div>
 
       <div class="reviewable-filter topic-filter">
-        <label class="filter-label">
+        <label class="filter-label" id="review-filter-reviewed-by-label">
           {{i18n "review.filtered_reviewed_by"}}
         </label>
-        <EmailGroupUserChooser
-          @onChange={{@controller.updateFilterReviewedBy}}
-          @options={{hash
-            maximum=1
-            excludeCurrentUser=false
-            fullWidthWrap=true
-          }}
-          @value={{@controller.filterReviewedBy}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          <DSelectUser
+            @ariaLabelledBy="review-filter-reviewed-by-label"
+            @clearable={{true}}
+            @onChange={{legacyPickOne @controller.updateFilterReviewedBy}}
+            @value={{@controller.filterReviewedBy}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <EmailGroupUserChooser
+            @onChange={{@controller.updateFilterReviewedBy}}
+            @options={{hash
+              maximum=1
+              excludeCurrentUser=false
+              fullWidthWrap=true
+            }}
+            @value={{@controller.filterReviewedBy}}
+          />
+        {{/if}}
       </div>
 
       <div class="reviewable-filter topic-filter">
-        <label class="filter-label">
+        <label class="filter-label" id="review-filter-user-label">
           {{i18n "review.filtered_user"}}
         </label>
-        <EmailGroupUserChooser
-          class="user-selector"
-          @onChange={{@controller.updateFilterUsername}}
-          @options={{hash
-            maximum=1
-            excludeCurrentUser=false
-            fullWidthWrap=true
-          }}
-          @value={{@controller.filterUsername}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          <DSelectUser
+            class="user-selector"
+            @ariaLabelledBy="review-filter-user-label"
+            @clearable={{true}}
+            @onChange={{legacyPickOne @controller.updateFilterUsername}}
+            @value={{@controller.filterUsername}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <EmailGroupUserChooser
+            class="user-selector"
+            @onChange={{@controller.updateFilterUsername}}
+            @options={{hash
+              maximum=1
+              excludeCurrentUser=false
+              fullWidthWrap=true
+            }}
+            @value={{@controller.filterUsername}}
+          />
+        {{/if}}
       </div>
 
       {{#if @controller.filterTopic}}
