@@ -266,6 +266,9 @@ customization ports are done.
   `DAccessControlGranteeChooser` (moves with `d-access-control`) and the workflows group field
   (wave 5). `addUserSearchOption` reaches only the legacy pickers; extensions set
   `searchOptions` through a customization instead.
+  The topic pickers joined the same day: `DSelectTopic` for form fields, and `DSelectTopicList`
+  for the lists inside modals (move to topic or message, feature topic, chat to topic, boards'
+  "Add topic as card"). Held topics are looked up through `GET /topics/lookup`.
 - **Wave 3, menu-shaped value selects and action menus.** The group dropdown and value-type
   `DropdownSelectBox` uses become `DSelect`; action menus become `DMenu`. Customer ports for the
   live patches on direct `DropdownSelectBox` invocations (caret icons and hidden titles) land here.
@@ -525,6 +528,26 @@ Open items need a decision after manual testing; the rest are intended but still
   the review queue's "Flagged user" picker is half width with a right border in both modes
   (`uc-enable-composer-redesign.scss`).
 
+**Topics** (recorded 2026-10-31)
+
+- [ ] **Held topics ignore mutes.** A held topic is looked up by id through `/topics/lookup`,
+  which answers every topic the viewer can see, muted or not. The site setting field used to
+  load the whole topic; the workflows field ran one id search per held topic.
+- [ ] **Held topics stay listed.** The workflows field left held topics out of the results; the
+  new picker lists them, marked selected.
+- [ ] **Topic fields invite a search.** An empty topic field reads "Type a topic title, URL or
+  ID" (messages: "Type a message title, URL or ID").
+- [ ] **The modal lists no longer pick for the user.** Move to topic or message, feature topic
+  and chat to topic used to pick a lone result on their own, and cleared the held topic while
+  typing. A topic is now held only when picked, and stays held while searching again.
+- [ ] **"Add topic as card" (boards):** a search starts at one character (was four), the submit
+  button is gone because a pick adds the card, a pasted URL or path resolves through the id
+  search (a relative path used to search its text), and Escape clears the search before it
+  closes the modal.
+- [ ] **Escape in a modal's search field** clears the text first; the next Escape closes the
+  modal. This holds for every focused `input[type="search"]` inside a DModal, not only the
+  topic lists.
+
 **Texts** (recorded 2026-10-30)
 
 - [ ] **`""` means no text.** An empty text at any layer now leaves its place out (no
@@ -611,6 +634,23 @@ field's description and errors reach the picker.
 
 The migrated-module reporting set now includes `user-chooser` with its row,
 `email-group-user-chooser` with its row and filter, and `group-chooser`.
+
+## Topic call sites
+
+Topic pickers branch to `DSelectTopic` and `DSelectTopicList` while `enable_new_select_controls`
+is on. Ids are emitted as numbers, with the topics. The site setting writes the picked id, or
+`null` when cleared; both invite modals pass the invite's topic as `@topics`, so the held topic
+needs no lookup, and keep `additionalFilters="status:public"`. `ChooseTopic` and `ChooseMessage`
+branch inside the two components, so their callers are unchanged: the current topic is passed as
+`@exclude`, `loadOnInit` becomes listing on render (as `@additionalFilters` alone does), and
+`topicChangedCallback` still receives the topic. Workflows passes `@archetype={{null}}`, since its
+search was never limited to regular topics, and its unavailable-topic text as `unresolved`.
+Boards' "Add topic as card" holds nothing: a pick adds the card and closes the modal.
+
+`@archetype` replaces the legacy hard-coded `restrictToArchetype: "regular"`. It defaults to
+`"regular"`, takes `"private_message"` for messages, and `null` searches every topic.
+
+The migrated-module reporting set now includes `topic-chooser` and `topic-row`.
 
 ## Porting lessons
 

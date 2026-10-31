@@ -125,8 +125,8 @@
   }
 
   #split-topic-name,
-  #choose-topic-title,
-  #choose-message-title {
+  input[type="text"]#choose-topic-title,
+  input[type="text"]#choose-message-title {
     width: 100%;
   }
 

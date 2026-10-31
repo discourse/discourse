@@ -427,6 +427,9 @@ engine keys through `@kindTexts`.
 | | `maxLoaded` | `tagging.filter_to_narrow_tags`, below the first `max_tags_in_filter_list` top tags | |
 | `DSelectTagGroup` | `ariaLabel` | `tagging.tag_group_label` while it holds at most one, otherwise `tagging.tag_groups_label` | |
 | | `placeholder` | the engine's; the category's allowed tag groups field passes `category.tag_groups_placeholder` | |
+| `DSelectTopic`, `DSelectTopicList` | `ariaLabel` | `select_topic.topic` while it holds at most one, otherwise `select_topic.topics`; `select_topic.message` / `messages` for messages | |
+| | `placeholder` (`DSelectTopic`), `searchPlaceholder` | `select_topic.search_placeholder`, or `select_topic.message_search_placeholder` for messages | |
+| | `unresolved` | `select_topic.unresolved` | `id` |
 
 `DSelectTagFilter` also takes `DSelectTag`'s keys, under its own. The tag picker's placeholder
 wrappers are described under [Tag recipes](#tag-recipes).
@@ -1075,6 +1078,37 @@ plural when it can hold more than one. A group picker is named "Group" or "Group
 Until cleanup, `DSelectUser` defaults `@legacyKind` to both `user-chooser` and
 `email-group-user-chooser`, since the second extended the first and answered to both, and
 `DSelectGroup` to `group-chooser`.
+
+#### Topic recipes
+
+The topic family has two recipes over one source, the site search, with shared rows, texts and
+held lookups in `recipes/topics/-internals/`:
+
+- **`DSelectTopic`** (kind `select-topic`) is the trigger form, for form fields. `@value` takes
+  topic ids; it holds one unless `@multiple={{true}}`. `@onChange` emits numeric ids and the
+  topics: arrays when multiple, otherwise one id or `null`.
+- **`DSelectTopicList`** (kind `select-topic-list`) is the same source over `DSelectList`, for a
+  panel or modal that picks without a trigger. It is multiple unless `@multiple={{false}}`, and
+  `@exclude` lists topic ids never offered, such as the topic being worked on.
+
+Both search as the topic chooser did:
+
+- Nothing is searched until a term is typed. `@additionalFilters` (such as `status:public`)
+  joins every query, and lists topics before anything is typed.
+- A term also finds a topic by its id or a pasted URL or path on this site
+  (`search_for_id`). `@archetype` restricts a typed search to regular topics (the default) or
+  messages (`"private_message"`); `@archetype={{null}}` searches every topic the term finds.
+- Held ids are looked up together through `Topic.findByIds` (`GET /topics/lookup`), which
+  answers every topic the viewer can see, muted or not, unlike a topic list. `@topics` passes
+  topics already in hand, which need no lookup. A held id nothing answers for is named by the
+  `unresolved` text, "Topic #%{id}".
+- Rows show the topic's status icons, its title with emoji, and its category badge with its
+  parents. Held items show the title.
+
+Without an `ariaLabel` text or `@ariaLabelledBy`, a topic picker is named "Topic" or "Topics",
+or "Message" or "Messages" for messages. Its field invites a title, URL or ID, since a topic is
+found only by searching. Until cleanup, `DSelectTopic` defaults `@legacyKind` to
+`topic-chooser`; the list, which replaces controls that were never select-kit, has none.
 
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.

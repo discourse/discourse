@@ -196,6 +196,17 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     their name, placeholder and FormKit description.
 - ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
   handoff.
+  - ☑ `DSelectTopic` and `DSelectTopicList` over the site search, with held topics looked up
+    together through a new read-only `GET /topics/lookup` (`Topic::LookupByIds`, at most 50
+    ids, visibility through the guardian, mutes ignored) and `Topic.findByIds` (2026-10-31).
+  - ☑ `DSelectList` takes `@multiple={{false}}`: a pick replaces the held item, Backspace
+    clears it, and the pick is announced.
+  - ☑ Call sites in core and the bundled plugins branch on the flag: the site setting, both
+    invite modals, `ChooseTopic` and `ChooseMessage` (five callers), the workflows topic field
+    and boards' "Add topic as card"; `topic-chooser` and `topic-row` report legacy renders.
+  - ☑ A focused list search with text keeps Escape from closing its modal.
+  - ☑ SCSS parity and flag-on system specs (site setting, invite, boards).
+  - ☐ Visual review and VoiceOver pass.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
   `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.

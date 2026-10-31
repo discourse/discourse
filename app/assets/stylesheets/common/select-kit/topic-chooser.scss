@@ -1,3 +1,4 @@
+// TODO (select-kit-replacement-cleanup): Remove with the legacy topic chooser.
 .select-kit {
   &.combo-box {
     &.topic-chooser {
@@ -5,5 +6,27 @@
         display: initial;
       }
     }
+  }
+}
+
+.d-topic-option {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.25em;
+  min-width: 0;
+
+  .topic-statuses {
+    flex: none;
+  }
+
+  &__title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__category {
+    flex-basis: 100%;
+    font-size: var(--font-down-1);
   }
 }
