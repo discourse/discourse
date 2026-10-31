@@ -1,13 +1,18 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import BaseField from "./da-base-field.gjs";
 import DAFieldDescription from "./da-field-description.gjs";
 import DAFieldLabel from "./da-field-label.gjs";
 
 export default class GroupField extends BaseField {
+  @service siteSettings;
+
   @tracked allGroups = [];
 
   <template>
@@ -16,13 +21,26 @@ export default class GroupField extends BaseField {
         <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
-          <GroupChooser
-            @content={{this.allGroups}}
-            @labelProperty="name"
-            @onChange={{this.setGroupField}}
-            @options={{hash maximum=1 disabled=@field.isDisabled}}
-            @value={{@field.metadata.value}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @clearable={{true}}
+              @disabled={{@field.isDisabled}}
+              @items={{this.allGroups}}
+              @onChange={{legacyPickOne this.setGroupField}}
+              @texts={{hash ariaLabel=@label}}
+              @value={{@field.metadata.value}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.allGroups}}
+              @labelProperty="name"
+              @onChange={{this.setGroupField}}
+              @options={{hash maximum=1 disabled=@field.isDisabled}}
+              @value={{@field.metadata.value}}
+            />
+          {{/if}}
 
           <DAFieldDescription @description={{@description}} />
         </div>

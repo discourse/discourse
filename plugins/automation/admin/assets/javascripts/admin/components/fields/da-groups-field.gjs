@@ -1,14 +1,18 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import BaseField from "./da-base-field.gjs";
 import DAFieldDescription from "./da-field-description.gjs";
 import DAFieldLabel from "./da-field-label.gjs";
 
 export default class GroupsField extends BaseField {
+  @service siteSettings;
+
   @tracked allGroups = [];
 
   constructor() {
@@ -44,13 +48,27 @@ export default class GroupsField extends BaseField {
         <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
-          <GroupChooser
-            @content={{this.allGroups}}
-            @labelProperty="name"
-            @onChange={{this.setGroupField}}
-            @options={{hash maximum=this.maximum disabled=@field.isDisabled}}
-            @value={{readonly @field.metadata.value}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @disabled={{@field.isDisabled}}
+              @items={{this.allGroups}}
+              @maximum={{this.maximum}}
+              @multiple={{true}}
+              @onChange={{this.setGroupField}}
+              @texts={{hash ariaLabel=@label}}
+              @value={{@field.metadata.value}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.allGroups}}
+              @labelProperty="name"
+              @onChange={{this.setGroupField}}
+              @options={{hash maximum=this.maximum disabled=@field.isDisabled}}
+              @value={{readonly @field.metadata.value}}
+            />
+          {{/if}}
 
           <DAFieldDescription @description={{@description}} />
         </div>
