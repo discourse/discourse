@@ -183,7 +183,6 @@ export const RECIPE_TEXT_KEYS: ReadonlySet<string> = new Set([
  * TODO (select-kit-rework-merge): A migration net for this branch's own call sites only;
  * DSelect never shipped these names. Remove this map, `assertNoRemovedTextArgs` and its callers,
  * the two checks in `customizations.ts`, and the "removed text names" tests before merging.
- * `DSelectTag` is a class only to run the check, so it goes back to a template-only component.
  */
 export const REMOVED_TEXT_NAMES: Readonly<Record<string, string>> =
   Object.freeze({
