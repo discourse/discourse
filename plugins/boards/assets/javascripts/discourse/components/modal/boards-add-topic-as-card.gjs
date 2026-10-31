@@ -21,9 +21,6 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import DSelectTopicList from "discourse/ui-kit/select/recipes/topics/d-select-topic-list";
 import { i18n } from "discourse-i18n";
 
-/** The list holds nothing: a pick adds a card and closes the modal. */
-const NO_TOPICS = Object.freeze([]);
-
 export default class BoardsAddTopicAsCard extends Component {
   @service siteSettings;
 
@@ -150,7 +147,7 @@ export default class BoardsAddTopicAsCard extends Component {
   }
 
   @action
-  addPickedTopic(_topicIds, [topic]) {
+  addPickedTopic(_topicId, topic) {
     this.args.model.onAddTopicAsCard({
       topicId: topic.id,
       title: topic.fancy_title,
@@ -218,14 +215,16 @@ export default class BoardsAddTopicAsCard extends Component {
       <:body>
         {{! TODO (select-kit-replacement-cleanup): Remove the legacy search after rollout. }}
         {{#if this.siteSettings.enable_new_select_controls}}
+          {{! The list holds nothing: a pick adds a card and closes the modal. }}
           <DSelectTopicList
             @archetype={{null}}
+            @multiple={{false}}
             @onChange={{this.addPickedTopic}}
             @texts={{hash
               ariaLabel=(i18n "boards.board.topic_search_placeholder")
               searchPlaceholder=(i18n "boards.board.topic_search_placeholder")
             }}
-            @value={{NO_TOPICS}}
+            @value={{null}}
           />
         {{else}}
           <div class="inputs">

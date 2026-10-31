@@ -133,6 +133,17 @@ module(
         .doesNotExist("an empty search leaves Escape to the modal");
     });
 
+    test("offers the topics as a single choice", async function (assert) {
+      await fillIn(SEARCH, "o");
+
+      assert
+        .dom(`${MODAL} [role='listbox']`)
+        .doesNotHaveAttribute("aria-multiselectable");
+      assert
+        .dom(`${MODAL} [role='option'] input[type='checkbox']`)
+        .doesNotExist();
+    });
+
     test("needs no submit button, since a pick adds the card", async function (assert) {
       assert.dom(`${MODAL} .d-modal__footer .btn-primary`).doesNotExist();
       assert.dom(`${MODAL} .d-modal__footer .btn-transparent`).exists();
