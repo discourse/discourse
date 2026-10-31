@@ -1,8 +1,8 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import type { CategoryItem } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
-import type { CategoryItem } from "./category-types.ts";
 
 /** A row's description: the category's plain-text description, cut to 200 characters. */
 export function categoryDescription(category: Category): string | undefined {

@@ -25,7 +25,6 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import { paste as pasteTags } from "discourse/tests/helpers/qunit-helpers";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
-import { renderSelectText } from "discourse/ui-kit/select/select-engine";
 import I18n, { i18n } from "discourse-i18n";
 
 const ROWS = [
@@ -37,10 +36,19 @@ const ROWS = [
 /** Stubs tag search, recording each request's query params. */
 function stubSearch(rows = ROWS, extra = {}) {
   const requests = [];
-  // Name-only held or blocked tags are resolved to ids through the list endpoint.
-  pretender.get("/tags/list.json", () => response({ list_tags: [] }));
   pretender.get("/tags/filter/search", (request) => {
     requests.push(request.queryParams);
+    const names = requestedNames(request);
+    if (names.length) {
+      // Disabled rows stand for tags the field doesn't allow, which a name lookup reports.
+      const named = rows.filter((row) =>
+        names.includes(row.name.toLowerCase())
+      );
+      return response({
+        results: named.filter((row) => !row.disabled),
+        forbidden_names: named.filter((row) => row.disabled).map((r) => r.name),
+      });
+    }
     const q = request.queryParams.q ?? "";
     return response({
       results: rows.filter((row) => row.name.includes(q)),
@@ -48,6 +56,13 @@ function stubSearch(rows = ROWS, extra = {}) {
     });
   });
   return requests;
+}
+
+/** The names a tag lookup asked for, lowercased; a search asks for none. */
+function requestedNames(request) {
+  return []
+    .concat(request.queryParams["names[]"] ?? request.queryParams.names ?? [])
+    .map((name) => name.toLowerCase());
 }
 
 /** The tag field's prompt, or `null` while it shows none. */
@@ -60,7 +75,6 @@ function prompt() {
  * `min` of them are held, as the server does. With `blankOnly`, only a blank term reports it.
  */
 function stubRequiredGroup({ min = 2, blankOnly = false } = {}) {
-  pretender.get("/tags/list.json", () => response({ list_tags: [] }));
   pretender.get("/tags/filter/search", (request) => {
     const q = request.queryParams.q ?? "";
     const selected = [].concat(
@@ -821,17 +835,23 @@ module(
       test("resolves name-only held and blocked tags before opening and after value changes", async function (assert) {
         const lookups = [];
         const searches = [];
-        pretender.get("/tags/list.json", (request) => {
-          lookups.push(request.queryParams.only_tags);
-          return response({
-            list_tags: [
-              { id: lookups.length === 1 ? 12 : 13, name: "localized" },
-            ],
-          });
-        });
+        const ids = { held: 12, replacement: 13 };
         pretender.get("/tags/filter/search", (request) => {
-          searches.push(request.queryParams);
-          return response({ results: [] });
+          const names = requestedNames(request);
+          if (!names.length) {
+            searches.push(request.queryParams);
+            return response({ results: [] });
+          }
+          lookups.push(names.join(","));
+          return response({
+            results: names
+              .filter((name) => ids[name])
+              .map((name) => ({
+                id: ids[name],
+                name: "localized",
+                original_name: name,
+              })),
+          });
         });
         const tags = tracked([{ name: "held" }]);
         const onChange = () => {};
@@ -848,7 +868,7 @@ module(
         assert.deepEqual(
           lookups,
           ["blocked,held"],
-          "names resolve while closed"
+          "names resolve while closed, in one request"
         );
         assert.strictEqual(
           searches.length,
@@ -870,8 +890,8 @@ module(
         await settled();
         assert.deepEqual(
           lookups,
-          ["blocked,held", "blocked,replacement"],
-          "replacement resolves without opening"
+          ["blocked,held", "replacement"],
+          "only the new name is looked up; a name with no tag isn't asked again"
         );
         await select.open();
         assert.deepEqual(
@@ -888,17 +908,33 @@ module(
         let lookup;
         const searches = [];
         pretender.get(
-          "/tags/list.json",
+          "/tags/filter/search",
           (request) => {
-            lookup = request;
-            return response({ list_tags: [{ id: 12, name: "localized" }] });
+            if (requestedNames(request).length) {
+              lookup = request;
+              return response({
+                results: [{ id: 12, name: "localized", original_name: "held" }],
+              });
+            }
+            searches.push(request);
+            return response({ results: [{ id: 1, name: "available" }] });
           },
           true
         );
-        pretender.get("/tags/filter/search", (request) => {
-          searches.push(request.queryParams);
-          return response({ results: [{ id: 1, name: "available" }] });
-        });
+        const answered = new Set();
+        const answerSearches = () =>
+          searches
+            .filter((request) => !answered.has(request))
+            .forEach((request) => {
+              answered.add(request);
+              pretender.resolve(request);
+            });
+        const selectedIds = (request) =>
+          [].concat(
+            request.queryParams["selected_tag_ids[]"] ??
+              request.queryParams.selected_tag_ids ??
+              []
+          );
         const onChange = () => {};
         const rendering = render(
           <template>
@@ -915,8 +951,12 @@ module(
           await waitUntil(() => lookup);
           find(".d-select__trigger").click();
           await waitUntil(() => searches.length);
+          answerSearches();
           typing = fillIn("[role='combobox']", "available");
-          await waitUntil(() => searches.some(({ q }) => q === "available"));
+          await waitUntil(() =>
+            searches.some(({ queryParams }) => queryParams.q === "available")
+          );
+          answerSearches();
           await waitUntil(() => find("[role='option']"));
           assert
             .dom("[role='option']")
@@ -924,25 +964,22 @@ module(
               "available",
               "search results render while the lookup is still pending"
             );
-          const selectedIds =
-            searches.at(-1)["selected_tag_ids[]"] ??
-            searches.at(-1).selected_tag_ids;
           assert.deepEqual(
-            selectedIds,
+            selectedIds(searches.at(-1)),
             ["9"],
             "known ids are sent without unresolved names"
           );
-        } finally {
+          const before = searches.length;
           pretender.resolve(lookup);
+          await waitUntil(() => searches.length > before);
+          answerSearches();
+        } finally {
           await rendering;
           await typing;
           await settled();
         }
         assert.deepEqual(
-          (
-            searches.at(-1)["selected_tag_ids[]"] ??
-            searches.at(-1).selected_tag_ids
-          ).sort(),
+          selectedIds(searches.at(-1)).sort(),
           ["12", "9"],
           "settling the lookup reloads the open search with resolved ids"
         );
@@ -950,10 +987,10 @@ module(
 
       test("failed name resolution leaves unresolved names out and searching available", async function (assert) {
         const searches = [];
-        pretender.get("/tags/list.json", () =>
-          response(500, { errors: ["Lookup failed"] })
-        );
         pretender.get("/tags/filter/search", (request) => {
+          if (requestedNames(request).length) {
+            return response(500, { errors: ["Lookup failed"] });
+          }
           searches.push(request.queryParams);
           return response({ results: [{ id: 1, name: "available" }] });
         });
@@ -985,8 +1022,54 @@ module(
         );
       });
 
+      test("a tag held by name is keyed by its id once looked up, before the list opens", async function (assert) {
+        stubSearch();
+        const held = ["bug"];
+        await render(
+          <template>
+            <DSelectTag @emit="names" @multiple={{true}} @value={{held}} />
+          </template>
+        );
+
+        assert
+          .dom(".d-select__chip")
+          .hasAttribute("data-value", "1", "the chip holds the tag's id");
+      });
+
+      test("a tag held by name takes its id from a search, so its row is the held value", async function (assert) {
+        pretender.get("/tags/filter/search", (request) =>
+          requestedNames(request).length
+            ? response(500, { errors: ["Lookup failed"] })
+            : response({ results: ROWS })
+        );
+        const onChange = sinon.spy();
+        const held = ["bug"];
+        await render(
+          <template>
+            <SelectTagHost
+              @emit="names"
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+
+        await click(".d-select__trigger");
+        await fillIn("[role='combobox']", "ui");
+        await fillIn("[role='combobox']", "");
+        assert
+          .dom(optionNamed("bug"))
+          .hasAttribute("aria-selected", "true", "its row shows as held");
+        await click(optionNamed("bug"));
+        assert.deepEqual(
+          onChange.lastCall.args[0],
+          [],
+          "picking the row removes the held tag instead of adding it again"
+        );
+      });
+
       test("creation checks cleaned stored and held names case-insensitively", async function (assert) {
-        pretender.get("/tags/list.json", () => response({ list_tags: [] }));
         pretender.get("/tags/filter/search", () =>
           response({
             results: [
@@ -1027,7 +1110,6 @@ module(
       });
 
       test("blocked names ignore case and disabled reasons remain visible", async function (assert) {
-        pretender.get("/tags/list.json", () => response({ list_tags: [] }));
         pretender.get("/tags/filter/search", () =>
           response({
             results: [
@@ -1071,7 +1153,6 @@ module(
       });
 
       test("the drawn tag count comes from a translation", async function (assert) {
-        pretender.get("/tags/list.json", () => response({ list_tags: [] }));
         pretender.get("/tags/filter/search", () =>
           response({ results: [{ id: 1, name: "rock", count: 12 }] })
         );
@@ -1457,19 +1538,18 @@ module(
         this.siteSettings.force_lowercase_tags = true;
       });
 
-      test("pipe paste preserves loaded tags and respects creation permission", async function (assert) {
+      test("pipe paste finds existing tags and respects creation permission", async function (assert) {
         const rows = [
           { id: 12, name: "Alpha", count: 4 },
           { id: 13, name: "Beta", count: 2 },
         ];
-        const load = async () => ({ items: rows, total: rows.length });
+        stubSearch(rows);
         const tags = tracked([]);
         const onChange = sinon.spy((next) => (tags.value = next));
         await render(
           <template>
             <DSelectTag
               @allowCreate={{true}}
-              @load={{load}}
               @multiple={{true}}
               @onChange={{onChange}}
               @value={{tags.value}}
@@ -1498,7 +1578,7 @@ module(
             { id: "fresh-tag", name: "fresh-tag", isNew: true },
             rows[1],
           ],
-          "trimmed names reuse loaded rows case-insensitively and create only unknown tags"
+          "trimmed names find existing tags case-insensitively and create only unknown tags"
         );
 
         const single = await paste(" just-one | ");
@@ -1521,9 +1601,179 @@ module(
           "without creation permission only the existing rows are selected"
         );
       });
+
+      test("pasted names the list hasn't loaded are found by search", async function (assert) {
+        const requests = stubSearch();
+        const onChange = sinon.spy();
+        await render(
+          <template>
+            <SelectTagHost
+              @allowCreate={{true}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+
+        await pasteTags("[role='combobox']", "BUG|ui");
+
+        assert.deepEqual(
+          onChange.lastCall.args[0].map((tag) => [tag.id, tag.name, tag.isNew]),
+          [
+            [1, "bug", undefined],
+            [2, "ui", undefined],
+          ],
+          "existing tags are added as themselves, never as new tags"
+        );
+        const lookups = requests.filter(
+          (params) => params["names[]"] ?? params.names
+        );
+        assert.strictEqual(
+          lookups.length,
+          1,
+          "one request resolves every name"
+        );
+        assert.deepEqual(
+          [].concat(lookups[0]["names[]"] ?? lookups[0].names),
+          ["bug", "ui"],
+          "it asks for the cleaned names"
+        );
+        assert.strictEqual(lookups[0].q, undefined, "it sends no search term");
+      });
+
+      test("pasted names are found while the open list answers another query", async function (assert) {
+        stubSearch();
+        const onChange = sinon.spy();
+        this.site.set("can_create_tag", false);
+        await render(
+          <template>
+            <SelectTagHost @multiple={{true}} @onChange={{onChange}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+        await fillIn("[role='combobox']", "pe");
+
+        await pasteTags("[role='combobox']", "bug|ui");
+
+        assert.deepEqual(
+          onChange.lastCall.args[0].map((tag) => tag.id),
+          [1, 2],
+          "names outside the typed query are added without creation permission"
+        );
+      });
+
+      test("a pasted held tag isn't added again", async function (assert) {
+        stubSearch();
+        const onChange = sinon.spy();
+        const held = [{ id: 1, name: "bug" }];
+        await render(
+          <template>
+            <SelectTagHost
+              @allowCreate={{true}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+
+        await pasteTags("[role='combobox']", "Bug|ui");
+
+        assert.deepEqual(
+          onChange.lastCall.args[0].map((tag) => tag.id),
+          [1, 2],
+          "the held tag stays once"
+        );
+        assert.dom(".d-select__chip").exists({ count: 2 });
+      });
+
+      test("a tag held by name shares its key with the server's row", async function (assert) {
+        stubSearch();
+        const onChange = sinon.spy();
+        const held = ["bug"];
+        await render(
+          <template>
+            <SelectTagHost
+              @allowCreate={{true}}
+              @emit="names"
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+
+        await pasteTags("[role='combobox']", "BUG|ui");
+        assert.deepEqual(
+          onChange.lastCall.args[0],
+          ["bug", "ui"],
+          "the held name is not added again"
+        );
+
+        await click(".d-select__trigger");
+        assert
+          .dom(optionNamed("bug"))
+          .hasAttribute("aria-selected", "true", "its row shows as held");
+      });
+
+      test("a pasted name with no tag is created only where creation is allowed", async function (assert) {
+        stubSearch();
+        const onChange = sinon.spy();
+        const allowCreate = tracked(false);
+        await render(
+          <template>
+            <DSelectTag
+              @allowCreate={{allowCreate.value}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+
+        await pasteTags("[role='combobox']", "bug|made-up");
+        assert.deepEqual(
+          onChange.lastCall.args[0].map((tag) => tag.name),
+          ["bug"],
+          "without creation the unknown name is skipped"
+        );
+
+        allowCreate.value = true;
+        await settled();
+        await pasteTags("[role='combobox']", "bug|made-up");
+        assert.deepEqual(
+          onChange.lastCall.args[0].map((tag) => [tag.name, tag.isNew]),
+          [
+            ["bug", undefined],
+            ["made-up", true],
+          ],
+          "with creation it becomes a new tag"
+        );
+      });
+
+      test("a pasted name the field doesn't allow is neither added nor created", async function (assert) {
+        stubSearch([...ROWS, { id: 4, name: "locked", disabled: true }]);
+        const onChange = sinon.spy();
+        await render(
+          <template>
+            <SelectTagHost
+              @allowCreate={{true}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+
+        await pasteTags("[role='combobox']", "bug|locked");
+
+        assert.deepEqual(
+          onChange.lastCall.args[0].map((tag) => tag.name),
+          ["bug"],
+          "the tag is neither added nor created"
+        );
+      });
     });
 
-    module("stored names, local sources and site caps", function (nestedHooks) {
+    module("stored names and site caps", function (nestedHooks) {
       nestedHooks.beforeEach(function () {
         resetTagSourceCache();
         this.site.set("can_create_tag", true);
@@ -1531,9 +1781,6 @@ module(
         this.siteSettings.max_tag_search_results = 5;
         this.siteSettings.max_tag_length = 30;
         this.siteSettings.force_lowercase_tags = true;
-        pretender.get("/tags/list.json", () =>
-          response({ list_tags: [{ id: 3, name: "excluded" }] })
-        );
         pretender.get("/tags/filter/search", () =>
           response({
             results: [
@@ -1691,54 +1938,6 @@ module(
         assert.deepEqual(value.value, [], "chips remain removable");
       });
 
-      test("local tag sources match held names and exclude translated rows without requests", async function (assert) {
-        const requests = sinon.spy();
-        pretender.get("/tags/filter/search", () => {
-          requests();
-          return response({ results: [] });
-        });
-        const items = [
-          { id: 1, name: "戦略", original_name: "strategy" },
-          { id: 2, name: "other" },
-          { id: 3, name: "除外", original_name: "excluded" },
-        ];
-        const onChange = sinon.spy();
-        await render(
-          <template>
-            <DSelectTag
-              @exclude={{array "excluded"}}
-              @items={{items}}
-              @multiple={{false}}
-              @onChange={{onChange}}
-              @value="STRATEGY"
-            />
-          </template>
-        );
-        await click(".d-select__trigger");
-        const translated = findAll("[role='option']").find((row) =>
-          row.textContent.includes("戦略")
-        );
-        assert
-          .dom(translated)
-          .hasAttribute(
-            "aria-selected",
-            "true",
-            "a local stored name matches too"
-          );
-        assert
-          .dom("[role='option']")
-          .exists({ count: 2 }, "excluded translated rows are absent");
-        await click(translated);
-        assert.false(
-          onChange.called,
-          "re-picking a local held name is unchanged"
-        );
-        assert.false(
-          requests.called,
-          "a local source never searches the server"
-        );
-      });
-
       test("a zero site cap disables only unselected rows, including held names", async function (assert) {
         this.siteSettings.max_tags_per_topic = 0;
         const value = tracked(["STRATEGY"]);
@@ -1775,53 +1974,7 @@ module(
         assert.deepEqual(value.value, [], "selected rows can be removed");
       });
 
-      test("custom loaders still apply exclusion and the zero site cap", async function (assert) {
-        this.siteSettings.max_tags_per_topic = 0;
-        const load = sinon.spy(async () => ({
-          items: [
-            { id: 1, name: "戦略", original_name: "strategy" },
-            { id: 2, name: "other" },
-            { id: 3, name: "除外", original_name: "excluded" },
-          ],
-          hasMore: false,
-        }));
-        const onChange = sinon.spy();
-        const held = ["STRATEGY"];
-        await render(
-          <template>
-            <DSelectTag
-              @exclude={{array "excluded"}}
-              @load={{load}}
-              @multiple={{true}}
-              @onChange={{onChange}}
-              @value={{held}}
-            />
-          </template>
-        );
-        await click(".d-select__trigger");
-        assert.true(load.called, "the override is used");
-        assert
-          .dom("[role='option']")
-          .exists({ count: 2 }, "exclusion applies to override rows");
-        const other = findAll("[role='option']").find((row) =>
-          row.textContent.includes("other")
-        );
-        assert
-          .dom(other)
-          .hasAttribute(
-            "aria-disabled",
-            "true",
-            "the zero site cap applies to override rows"
-          );
-        await click(other);
-        assert.false(
-          onChange.called,
-          "an override cannot bypass the zero site cap"
-        );
-      });
-
-      test("local creation needs both permissions and does not recreate excluded tags", async function (assert) {
-        const items = [];
+      test("creation does not recreate excluded tags", async function (assert) {
         const excluded = ["excluded"];
         const onChange = sinon.spy();
         await render(
@@ -1829,7 +1982,6 @@ module(
             <DSelectTag
               @allowCreate={{true}}
               @exclude={{excluded}}
-              @items={{items}}
               @multiple={{true}}
               @onChange={{onChange}}
             />
@@ -1843,7 +1995,7 @@ module(
         await fillIn("[role='combobox']", "newtag");
         assert
           .dom("[role='option'].--create")
-          .exists("local sources can create with both permissions");
+          .exists("another name can still be created");
         await click("[role='option'].--create");
         assert.deepEqual(
           onChange.lastCall.args[0],
@@ -1875,62 +2027,6 @@ module(
           onChange.lastCall.args[0],
           { id: "newtag", name: "newtag", isNew: true },
           "one new tag object is emitted"
-        );
-      });
-
-      test("functional local sources receive options and match stored names", async function (assert) {
-        const requests = sinon.spy();
-        pretender.get("/tags/filter/search", () => {
-          requests();
-          return response({ results: [] });
-        });
-        const rows = [
-          { id: 1, name: "戦略", original_name: "strategy" },
-          { id: 2, name: "other" },
-        ];
-        const items = sinon.spy(() => rows);
-        const onChange = sinon.spy();
-        await render(
-          <template>
-            <DSelectTag
-              @emit="names"
-              @items={{items}}
-              @multiple={{false}}
-              @onChange={{onChange}}
-              @texts={{hash ariaLabel="Functional tags"}}
-              @value="STRATEGY"
-            />
-          </template>
-        );
-        await click(".d-select__trigger");
-        const translated = findAll("[role='option']").find((row) =>
-          row.textContent.includes("戦略")
-        );
-        assert
-          .dom(translated)
-          .hasAttribute(
-            "aria-selected",
-            "true",
-            "functional sources match stored names"
-          );
-        assert.strictEqual(
-          renderSelectText(items.lastCall.args[0], "ariaLabel"),
-          "Functional tags",
-          "resolved presentation options reach the source"
-        );
-        await fillIn("[role='combobox']", "other");
-        assert
-          .dom("[role='option']")
-          .exists({ count: 1 }, "functional rows are filtered locally");
-        await click("[role='option']");
-        assert.strictEqual(
-          onChange.lastCall.args[0],
-          "other",
-          "names mode emits a single name"
-        );
-        assert.false(
-          requests.called,
-          "functional local sources never search the server"
         );
       });
     });

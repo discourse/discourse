@@ -782,8 +782,11 @@ meant to live in `ui-kit/select/recipes/`. Recipes in this directory are the dom
 exception to the kit's domain-free primitives. A recipe:
 
 - sets `@kind`, and passes `@kindContext` with its raw state;
-- forwards the call site's `@identifier`, `@instanceContext`, `@items`, `@load` and `@onChange`,
-  and its `:item`, `:selection` and `:footer` blocks;
+- forwards the call site's `@identifier`, `@instanceContext` and `@onChange`, and its `:item`,
+  `:selection` and `:footer` blocks;
+- owns its source: it takes no `@items` or `@load`, because its rules (exclusion, caps, held
+  lookups) apply to the rows it loads. A customization changes the rows through `spec.load` or
+  `spec.content`;
 - passes `@suppressFooter={{not (has-block "footer")}}` with a forwarded `:footer`. A forwarded
   block always counts as passed, so without it every recipe panel ends in an empty footer;
 - never sets its own `@identifier`, which would take the call-site tier away from its callers.
@@ -878,7 +881,8 @@ The tag family has three recipes, split by what the pick is for:
   only through its "remove filter" row; Backspace leaves it alone, since a stray key would
   otherwise change the page. With `@multiple` it holds tags in order and matches them to rows by
   name, since an intersection URL holds them by name; it browses and searches as the single
-  filter does, with no shortcuts, no tag cap and no name lookup. The breadcrumbs pass
+  filter does, with no shortcuts, no tag cap and no name lookup. `@items` replaces the top tags
+  and the server search with the caller's own tags. The breadcrumbs pass
   `breadcrumb-tag` and `breadcrumb-tag-intersection`.
 - **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name, one unless
   `@multiple={{true}}`. Held groups stay listed, marked selected.
@@ -887,9 +891,17 @@ Without an `ariaLabel` text or `@ariaLabelledBy`, a tag picker is named "Tag", o
 can hold more than one (a site limit of one counts), and a group picker "Tag group" or "Tag
 groups". The placeholder is only drawn. Every tag recipe takes `@ariaLabelledBy`.
 
-Held names resolve when the value changes. Search sends only known numeric ids, and a pending or
-failed name lookup never holds up search; a completed lookup reloads an open list with the
-resolved ids. Signed out, nothing is looked up, because the lookup endpoint needs a login.
+Tags are keyed by id. A tag held by name takes its id once the session knows it: every search
+and lookup records the ids of the tags it returns by stored name, and held names nobody has
+returned yet are looked up in one request when the value changes (`/tags/filter/search` with
+`names[]`). Until then a held name keeps a name key, and search sends only the ids it knows. A
+pending or failed lookup never holds up search; a completed one re-keys the held names and
+reloads an open list. Signed out, nothing is looked up.
+
+Pasting two or more names separated by `|` adds them at once. Held tags pass through and are
+announced as already held. The other names are looked up in one request that applies the
+field's rules: a tag the field doesn't allow is skipped, and a name with no tag becomes a new tag
+where creation is allowed. An unmet required tag group doesn't block a paste.
 
 Until cleanup, each recipe sets a default `@legacyKind` (`tag-chooser`, `tag-drop` or
 `tags-intersection-chooser` with `mini-tag-chooser`, and `tag-group-chooser` with

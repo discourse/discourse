@@ -5,10 +5,20 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import { service } from "@ember/service";
+import { continueWith } from "discourse/lib/continue-with";
 import Category from "discourse/models/category";
 import type User from "discourse/models/user";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
+import {
+  CategoryBadge,
+  categoryItem,
+} from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
+import type {
+  CategoryItem,
+  CategorySettings,
+  SelectSignature,
+} from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   renderSelectText,
   type SelectCoreTextKey,
@@ -21,13 +31,6 @@ import {
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
-import { CategoryBadge, categoryItem } from "./category-renderers.gts";
-import type {
-  CategoryItem,
-  CategorySettings,
-  SelectSignature,
-} from "./category-types.ts";
-import { continueWith } from "./continue-with.ts";
 
 /** Shortcut for removing the category filter. */
 export const ALL_CATEGORIES_ID = "all-categories";
@@ -47,8 +50,6 @@ interface DSelectCategoryFilterSignature {
       | null;
     /** Parent whose direct children are being browsed. */
     parentCategory?: Category;
-    /** Owns rows, order and paging in place of the model's search. */
-    load?: SelectSignature["Args"]["load"];
     /** Holds the no-subcategories filter while no category is held. */
     noSubcategories?: boolean;
     /** Omits the shortcut back to every category. */
@@ -179,9 +180,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     query: string,
     opts: SelectLoadOptions
   ): SelectLoadResult | Promise<SelectLoadResult> {
-    if (this.args.load) {
-      return this.args.load(query, opts);
-    }
     const search = Category.searchCategories(query, {
       includeAncestors: true,
       includeUncategorized: this.#uncategorized,

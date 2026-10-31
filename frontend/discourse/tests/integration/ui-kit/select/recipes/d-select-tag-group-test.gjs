@@ -328,25 +328,20 @@ module(
 
       test("group single selection clears to null and forwards blocks and identity", async function (assert) {
         const value = tracked("Local area");
-        const requests = sinon.spy();
-        pretender.get("/tag_groups/filter/search", () => {
-          requests();
-          return response({ results: [{ name: "Server group" }] });
-        });
+        pretender.get("/tag_groups/filter/search", () =>
+          response({
+            results: [{ name: "Local area" }, { name: "Local kind" }],
+          })
+        );
         const onChange = (next) => {
           value.value = next;
         };
-        const items = [
-          { id: "Local area", name: "Local area" },
-          { id: "Local kind", name: "Local kind" },
-        ];
         await render(
           <template>
             <DSelectTagGroup
               @id="groups-field"
               @identifier="groups"
               @instanceContext={{hash field="groups"}}
-              @items={{items}}
               @multiple={{false}}
               @onChange={{onChange}}
               @texts={{hash ariaLabel="Groups"}}
@@ -379,8 +374,7 @@ module(
         await click(".d-select__trigger");
         assert
           .dom(".custom-item")
-          .exists({ count: 2 }, "local item blocks are forwarded");
-        assert.false(requests.called, "local groups never search the server");
+          .exists({ count: 2 }, "item blocks are forwarded");
         assert
           .dom(".custom-footer")
           .hasText("Footer", "footer block is forwarded");

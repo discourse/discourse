@@ -487,35 +487,32 @@ module(
       });
 
       test("toggling editing updates the shortcuts without reloading the level", async function (assert) {
-        const items = topLevel();
-        const value = items[0];
+        const value = topLevel()[0];
         const editing = tracked(false);
-        let loads = 0;
-        const load = () => {
-          loads++;
-          return items.map((category) => ({
-            id: category.id,
-            name: category.name,
-          }));
-        };
+        const search = sinon.spy(Category, "searchCategories");
 
         await render(
           <template>
             <DSelectCategoryFilter
               @editing={{editing.value}}
-              @load={{load}}
               @value={{value}}
             />
           </template>
         );
         await select().open();
         assert.dom(optionFor(ALL_CATEGORIES_ID)).exists();
+        const loads = search.callCount;
 
         editing.value = true;
         await settled();
 
         assert.dom(optionFor(ALL_CATEGORIES_ID)).doesNotExist();
-        assert.strictEqual(loads, 1, "the level is not asked again");
+        assert.strictEqual(
+          search.callCount,
+          loads,
+          "the level is not asked again"
+        );
+        search.restore();
       });
 
       test("editing offers no shortcut back to every category", async function (assert) {
@@ -999,50 +996,6 @@ module(
         );
       });
 
-      test("filter source replacement preserves rows and paging", async function (assert) {
-        enableVirtualization();
-        try {
-          const rows = Site.current().categories.map((category) => ({
-            id: category.id,
-            name: category.name,
-          }));
-          const cursors = [];
-          const load = (_query, { cursor }) => {
-            cursors.push(cursor);
-            return {
-              items: cursor ? rows.slice(20) : rows.slice(0, 20),
-              total: rows.length,
-              hasMore: !cursor,
-              cursor: "tail",
-            };
-          };
-          await render(
-            <template>
-              <DSelectCategoryFilter @load={{load}} @uncategorized={{true}} />
-            </template>
-          );
-          await dSelect().open();
-          const list = find(".d-virtual-list");
-          list.scrollTop = list.scrollHeight;
-          await triggerEvent(list, "scroll");
-          await settledAfterFrame();
-          assert.deepEqual(
-            cursors,
-            [undefined, "tail"],
-            "the source's cursor reaches its next request"
-          );
-          // Measured rows can outgrow the estimate, so read on to the new end as a reader would.
-          list.scrollTop = list.scrollHeight;
-          await triggerEvent(list, "scroll");
-          await settledAfterFrame();
-          assert
-            .dom(`[role='option'][data-value='${rows.at(-1).id}']`)
-            .exists("the final source row is reachable");
-        } finally {
-          disableVirtualization();
-        }
-      });
-
       test("anonymous filter users see decoded descriptions", async function (assert) {
         this.owner.unregister("service:current-user");
         this.owner.register("service:current-user", null, {
@@ -1056,18 +1009,22 @@ module(
       });
 
       test("a picked row the site does not know is listed but emits nothing and warns", async function (assert) {
-        const load = () => [{ id: 99001, name: "Caller category" }];
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-category-filter", (spec) =>
+              spec.load(() => () => [{ id: 99001, name: "Custom category" }])
+            );
+          })
+        );
         const onChange = sinon.spy();
         const warn = sinon.stub(console, "warn");
         await render(
-          <template>
-            <DSelectCategoryFilter @load={{load}} @onChange={{onChange}} />
-          </template>
+          <template><DSelectCategoryFilter @onChange={{onChange}} /></template>
         );
         await dSelect().open();
         assert
           .dom("[role='option'][data-value='99001']")
-          .includesText("Caller category", "the caller's row is listed");
+          .includesText("Custom category", "the customization's row is listed");
 
         await click("[role='option'][data-value='99001']");
 

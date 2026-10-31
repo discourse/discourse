@@ -458,6 +458,12 @@ Open items need a decision after manual testing; the rest are intended but still
   above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.
 - [ ] **Held tag groups stay listed.** The legacy tag group chooser left held groups out of its
   results; the new picker lists them, marked selected, as every DSelect does.
+- [ ] **Pasted tags follow the field's rules.** Select-kit added each pasted name it hadn't
+  loaded as a plain name, without checking that the tag exists, that the field allows it, or that
+  the user may create tags, so the server only rejected them on save. Pasted names are now looked
+  up in one request: existing tags are added, tags the field doesn't allow are skipped, and a
+  name with no tag is created only where creation is allowed. An unmet required tag group
+  doesn't block a paste; the topic's own validation still asks for it.
 - [ ] **The tag drop says to keep typing.** It lists the first `max_tags_in_filter_list` tags,
   browsing or searching, and below them shows "Showing the first tags only. Keep typing to narrow
   them down." where select-kit had a "Filter for more…" footer that searching never showed.

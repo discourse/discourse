@@ -4,10 +4,21 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import { service } from "@ember/service";
+import { continueWith } from "discourse/lib/continue-with";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
+import {
+  CategoryBadge,
+  categoryItem,
+} from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
+import type {
+  CategoryItem,
+  CategorySettings,
+  CategoryValue,
+  SelectSignature,
+} from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   renderSelectText,
   type SelectControl,
@@ -20,14 +31,6 @@ import {
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
-import { CategoryBadge, categoryItem } from "./category-renderers.gts";
-import type {
-  CategoryItem,
-  CategorySettings,
-  CategoryValue,
-  SelectSignature,
-} from "./category-types.ts";
-import { continueWith } from "./continue-with.ts";
 
 /** Category picker arguments and the engine's forwarded presentation contract. */
 interface DSelectCategorySignature {
@@ -91,8 +94,6 @@ interface DSelectCategorySignature {
      * that adds the category and every level below it; defaults to multiple mode.
      */
     selectDescendants?: boolean;
-    /** Replaces the list source; its rows get no pinned rows and no family footers. */
-    load?: SelectSignature["Args"]["load"];
   };
   Element: HTMLElement;
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
@@ -232,9 +233,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         onSelect: (control) => control.clear(),
       });
     }
-    if (!this.args.load) {
-      rows.push(...this.#pinned(snapshot.filter, options));
-    }
+    rows.push(...this.#pinned(snapshot.filter, options));
     return rows;
   }
 
@@ -409,7 +408,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       }}
       @kindTexts={{this.kindTexts}}
       @legacyKind={{this.legacyKind}}
-      @load={{if @load @load this.load}}
+      @load={{this.load}}
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @multiple={{@multiple}}

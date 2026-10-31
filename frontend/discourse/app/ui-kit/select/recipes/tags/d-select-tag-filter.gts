@@ -27,7 +27,6 @@ import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/
 import {
   renderSelectText,
   type SelectItem,
-  type SelectLoadOptions,
   type SelectResolvedOptions,
   type SelectSnapshot,
   type SelectTexts,
@@ -82,8 +81,6 @@ interface DSelectTagFilterSignature {
     legacyKind?: SelectSignature["Args"]["legacyKind"];
     /** Local tags replacing the site's top tags and server search. */
     items?: readonly FilterTag[];
-    /** Optional asynchronous source override. */
-    load?: SelectSignature["Args"]["load"];
     /** Receives a full tag row or a shortcut id; with `@multiple`, the held tags in order. */
     onChange?: (
       value: TagObject | TagObject[] | typeof ALL_TAGS_ID | typeof NO_TAG_ID
@@ -199,11 +196,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return this.args.multiple ? "nameKey" : "id";
   }
 
-  /** A caller's loader, unless several are held: then its rows are keyed by name too. */
-  get source() {
-    return this.args.load && !this.args.multiple ? this.args.load : this.load;
-  }
-
   get caretIcon() {
     return this.args.multiple ? undefined : DROP_CARET;
   }
@@ -244,13 +236,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   @action
-  async load(filter: string, opts: SelectLoadOptions) {
-    if (this.args.load) {
-      const result = await this.args.load(filter, opts);
-      return Array.isArray(result)
-        ? this.#keyed(result as FilterTag[])
-        : { ...result, items: this.#keyed(result.items as FilterTag[]) };
-    }
+  async load(filter: string) {
     if (filter && !this.args.items) {
       const result = await searchTags(filter, {
         context: { everyTag: true, categoryId: this.args.categoryId },
@@ -357,7 +343,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @kindTexts={{this.kindTexts}}
       @labelField="name"
       @legacyKind={{this.legacyKind}}
-      @load={{this.source}}
+      @load={{this.load}}
       @loadContext={{this.loadContext}}
       @maxLoaded={{this.siteSettings.max_tags_in_filter_list}}
       @multiple={{@multiple}}

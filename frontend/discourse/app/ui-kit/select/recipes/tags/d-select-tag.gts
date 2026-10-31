@@ -7,10 +7,13 @@ import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
 import {
   cleanTagName,
-  findTagIdsByNames,
+  findTagsByNames,
+  knownTagId,
+  resolveTagNames,
   searchTags,
   storedName,
   type TagSearchContext,
@@ -20,9 +23,7 @@ import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
-import DSelect, {
-  type SelectPasteContext,
-} from "discourse/ui-kit/select/d-select";
+import DSelect from "discourse/ui-kit/select/d-select";
 import {
   TagOption,
   TagSelection,
@@ -92,10 +93,6 @@ interface DSelectTagSignature {
     onChange?: (
       tags: TagObject[] | TagObject | string[] | string | null
     ) => void;
-    /** Optional local source forwarded to the engine. */
-    items?: SelectSignature["Args"]["items"];
-    /** Optional source override forwarded to the engine. */
-    load?: SelectSignature["Args"]["load"];
     /** Prevents opening the control or changing its selection. */
     disabled?: boolean;
     /** Icon displayed at the start of the trigger. */
@@ -195,28 +192,18 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       return;
     }
     this.#resolutionKey = key;
-    // The list endpoint needs a login; signed out, held names are searched without their ids.
+    // Signed out, held names are searched without their ids, as select-kit did.
     if (names.length && this.currentUser) {
-      void waitForPromise(findTagIdsByNames(names)).then(
-        (ids) => {
-          if (!this.isDestroying && this.#resolutionKey === key) {
-            this._resolvedNames = { key, ids: [...ids] };
-          }
-        },
-        () => {
-          // A later value change can retry; unresolved names never enter the context.
-          if (this.#resolutionKey === key) {
-            this.#resolutionKey = undefined;
-          }
+      void waitForPromise(resolveTagNames(names)).catch(() => {
+        // A later value change can retry; unresolved names never enter the context.
+        if (this.#resolutionKey === key) {
+          this.#resolutionKey = undefined;
         }
-      );
+      });
     }
   });
 
   #resolutionKey: string | undefined;
-  @tracked private _loadedItems: SelectItem[] = [];
-
-  @tracked private _resolvedNames: { key: string; ids: number[] } | undefined;
 
   @tracked private _validation = new Map<string, TagSearchResult>();
 
@@ -281,9 +268,10 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
 
   @cached
   get loadContext() {
-    const { ids, key } = this._selectionInputs;
-    const resolved =
-      this._resolvedNames?.key === key ? this._resolvedNames.ids : [];
+    const { ids, names } = this._selectionInputs;
+    const resolved = names
+      .map((name) => knownTagId(name))
+      .filter((id) => id !== undefined);
     return {
       categoryId: this.args.categoryId,
       everyTag: this.args.ignoreRestrictions,
@@ -317,27 +305,6 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     return this.#tags.map((tag) => this.#itemForTag(tag));
   }
 
-  get sourceLoad() {
-    return this.args.load ||
-      !this.args.items ||
-      typeof this.args.items === "function"
-      ? this._load
-      : undefined;
-  }
-
-  get localItems(): SelectSignature["Args"]["items"] {
-    if (this.sourceLoad || !this.args.items) {
-      return undefined;
-    }
-    return (options) => {
-      const items =
-        typeof this.args.items === "function"
-          ? this.args.items(options)
-          : (this.args.items ?? []);
-      return this.#prepareItems(items ?? []);
-    };
-  }
-
   /** The first unmet required group, as the blank search for the current context reported it. */
   get #requiredGroup() {
     return this._validation.get(this.#validationKey(this.loadContext, ""))
@@ -358,7 +325,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     return !!(
       this.#creationAllowed &&
       name &&
-      (validation || this.args.items || this.args.load) &&
+      validation &&
       !validation?.forbidden &&
       !this.#excludedNames.has(name.toLowerCase()) &&
       (typeof maximum !== "number" || this.#tags.length < maximum) &&
@@ -380,8 +347,13 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     return { ...createTagItem(cleanTagName(filter, this.siteSettings)) };
   }
 
+  /**
+   * Splits a pasted list on `|`. Held tags are passed through, so the engine reports them as
+   * already held, and every other name is resolved in one lookup that applies the field's rules.
+   * A name with no tag becomes a new one where creation is allowed.
+   */
   @action
-  parsePaste(text: string, { options }: SelectPasteContext) {
+  parsePaste(text: string) {
     const names = text
       .split("|")
       .map((name) => name.trim())
@@ -389,26 +361,60 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     if (names.length < 2) {
       return null;
     }
-    const items =
-      (typeof this.args.items === "function"
-        ? this.args.items(options)
-        : this.args.items) ?? this._loadedItems;
-    return names.flatMap((name) => {
-      if (this.#excludedNames.has(name.toLowerCase())) {
-        return [];
-      }
-      const existing = items.find(
-        (item) =>
-          this.#storedItemName(item).toLowerCase() === name.toLowerCase()
-      );
-      if (existing) {
-        return [existing];
-      }
+    const held = new Map(
+      this.#tags.map((tag) => [
+        storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase(),
+        this.#itemForTag(tag),
+      ])
+    );
+    const pasted = new Map<string, string>();
+    for (const name of names) {
       const cleaned = cleanTagName(name, this.siteSettings);
-      return this.#creationAllowed && cleaned && !this.#zeroCap
-        ? [this.createItem(cleaned)]
-        : [];
-    });
+      const lower = cleaned.toLowerCase();
+      if (cleaned && !this.#excludedNames.has(lower) && !pasted.has(lower)) {
+        pasted.set(lower, cleaned);
+      }
+    }
+    const toItems = (
+      rows: SelectItem[],
+      forbiddenNames: readonly string[] = []
+    ) => {
+      const found = new Map(
+        this.#prepareItems(rows).map((row) => [
+          this.#storedItemName(row).toLowerCase(),
+          row,
+        ])
+      );
+      const forbidden = new Set(
+        forbiddenNames.map((name) => name.toLowerCase())
+      );
+      return [...pasted].flatMap(([lower, name]): SelectItem[] => {
+        const row = held.get(lower) ?? found.get(lower);
+        if (row) {
+          return row.disabled ? [] : [row];
+        }
+        return this.#creationAllowed && !forbidden.has(lower)
+          ? [this.createItem(name)]
+          : [];
+      });
+    };
+    const lookup = [...pasted]
+      .filter(([lower]) => !held.has(lower))
+      .map(([, name]) => name);
+    if (!lookup.length) {
+      return toItems([]);
+    }
+    return findTagsByNames(lookup, { context: this.loadContext }).then(
+      ({ items, forbiddenNames }) =>
+        toItems(
+          items.map((item) => ({ ...item })),
+          forbiddenNames
+        ),
+      (error: unknown) => {
+        popupAjaxError(error);
+        return null;
+      }
+    );
   }
 
   @action
@@ -421,7 +427,11 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     }
     const held = this.#tags.map((tag) => {
       const item = this.#itemForTag(tag);
-      return typeof tag === "object" ? tag : { ...item, name: tag };
+      if (typeof tag === "string") {
+        return { ...item, name: tag };
+      }
+      // A held object keeps its identity unless its id came from a lookup.
+      return tagKey(tag) === item.id ? tag : { ...tag, id: item.id };
     });
     const tags = emitTags(keys, {
       held,
@@ -431,78 +441,9 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
   }
 
-  #itemForTag(
-    tag: TagObject | string
-  ): SelectItem & { id: TagKey; name: string } {
-    if (typeof tag === "string") {
-      const items =
-        Array.isArray(this.args.items) && !this.args.load
-          ? this.args.items
-          : this._loadedItems;
-      const loaded = items.find(
-        (row) => this.#storedItemName(row).toLowerCase() === tag.toLowerCase()
-      );
-      if (loaded) {
-        return loaded as SelectItem & { id: TagKey; name: string };
-      }
-    }
-    return { ...(typeof tag === "object" ? tag : {}), ...tagItem(tag) };
-  }
-
-  #prepareItems(items: SelectItem[]) {
-    const excluded = this.#excludedNames;
-    return items
-      .filter((item) => !excluded.has(this.#storedItemName(item).toLowerCase()))
-      .map((item) =>
-        this.#zeroCap && !this.#isHeld(item)
-          ? { ...item, disabled: true }
-          : item
-      );
-  }
-
-  #isHeld(item: SelectItem) {
-    return this.#tags.some((tag) =>
-      typeof tag === "string"
-        ? tag.toLowerCase() === this.#storedItemName(item).toLowerCase()
-        : tagKey(tag) === item.id
-    );
-  }
-
-  #storedItemName(item: SelectItem) {
-    return storedName({
-      name: String(item.name ?? ""),
-      original_name:
-        typeof item.original_name === "string" ? item.original_name : undefined,
-    });
-  }
-
-  #validationKey(context: TagSearchContext, term: string) {
-    return JSON.stringify([context, term]);
-  }
-
+  /** Keys a held tag by its id, taking a held name's id from the session's lookups. */
   @action
-  private async _load(filter: string, opts: SelectLoadOptions) {
-    if (this.args.load) {
-      const result = await this.args.load(filter, opts);
-      const items = this.#prepareItems(
-        Array.isArray(result) ? result : result.items
-      );
-      if (!opts.signal?.aborted && !this.isDestroying) {
-        this._loadedItems = opts.offset
-          ? [...this._loadedItems, ...items]
-          : items;
-      }
-      return Array.isArray(result) ? items : { ...result, items };
-    }
-    if (typeof this.args.items === "function" && opts.options) {
-      const items = this.#prepareItems(this.args.items(opts.options) ?? []);
-      this._loadedItems = items;
-      return items.filter((item) =>
-        String(item.name ?? "")
-          .toLowerCase()
-          .includes(filter.toLowerCase())
-      );
-    }
+  async load(filter: string, opts: SelectLoadOptions) {
     const context: TagSearchContext = opts.context ?? {};
     const result = await searchTags(filter, {
       context: {
@@ -519,13 +460,54 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       );
       this._validation = validation;
     }
-    const items = this.#prepareItems(result.items.map((item) => ({ ...item })));
-    if (!opts.signal?.aborted && !this.isDestroying) {
-      this._loadedItems = opts.offset
-        ? [...this._loadedItems, ...items]
-        : items;
+    return this.#prepareItems(result.items.map((item) => ({ ...item })));
+  }
+
+  #itemForTag(
+    tag: TagObject | string
+  ): SelectItem & { id: TagKey; name: string } {
+    const item = { ...(typeof tag === "object" ? tag : {}), ...tagItem(tag) };
+    if (typeof item.id === "number" || item.isNew) {
+      return item;
     }
-    return items;
+    const id = knownTagId(
+      storedName(typeof tag === "string" ? { name: tag } : tag)
+    );
+    return id === undefined ? item : { ...item, id };
+  }
+
+  #prepareItems(items: SelectItem[]) {
+    const excluded = this.#excludedNames;
+    return items
+      .filter((item) => !excluded.has(this.#storedItemName(item).toLowerCase()))
+      .map((item) =>
+        this.#zeroCap && !this.#isHeld(item)
+          ? { ...item, disabled: true }
+          : item
+      );
+  }
+
+  #isHeld(item: SelectItem) {
+    const name = this.#storedItemName(item).toLowerCase();
+    return this.#tags.some(
+      (tag) =>
+        this.#itemForTag(tag).id === item.id ||
+        storedName(
+          typeof tag === "string" ? { name: tag } : tag
+        ).toLowerCase() === name
+    );
+  }
+
+  #storedItemName(item: SelectItem) {
+    return storedName({
+      name: String(item.name ?? ""),
+      original_name:
+        typeof item.original_name === "string" ? item.original_name : undefined,
+    });
+  }
+
+  #validationKey(context: TagSearchContext, term: string) {
+    return JSON.stringify([context, term]);
   }
 
   <template>
@@ -543,14 +525,13 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @invalid={{@invalid}}
-      @items={{this.localItems}}
       @kind="select-tag"
       @kindContext={{hash value=@value categoryId=@categoryId exclude=@exclude}}
       @kindTexts={{this.kindTexts}}
       @kindTextWrappers={{this.kindTextWrappers}}
       @labelField="name"
       @legacyKind={{if @legacyKind @legacyKind "tag-chooser"}}
-      @load={{this.sourceLoad}}
+      @load={{this.load}}
       @loadContext={{this.loadContext}}
       @maximum={{this.maximum}}
       @maxVisibleChips={{@maxVisibleChips}}

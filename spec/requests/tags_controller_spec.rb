@@ -2180,6 +2180,93 @@ RSpec.describe TagsController do
                          SiteSetting.max_tag_search_results
       end
 
+      context "with names" do
+        fab!(:alpha) { Fabricate(:tag, name: "alpha") }
+        fab!(:beta) { Fabricate(:tag, name: "beta") }
+        fab!(:gamma) { Fabricate(:tag, name: "gamma") }
+
+        it "returns only the named tags, matched ignoring case" do
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[ALPHA beta missing],
+                filterForInput: true,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(
+            "alpha",
+            "beta",
+          )
+          expect(response.parsed_body["forbidden_names"]).to eq([])
+        end
+
+        it "returns more named tags than one search page holds" do
+          SiteSetting.max_tag_search_results = 1
+
+          get "/tags/filter/search.json", params: { names: %w[alpha beta gamma], limit: 1 }
+
+          expect(response.parsed_body["results"].size).to eq(3)
+        end
+
+        it "reports the named tags that exist but the field doesn't allow" do
+          restricted = Fabricate(:tag, name: "restricted")
+          Fabricate(:category, tags: [restricted])
+
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[alpha restricted missing],
+                categoryId: category.id,
+                filterForInput: true,
+              }
+
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to eq(["alpha"])
+          expect(response.parsed_body["forbidden_names"]).to eq(["restricted"])
+        end
+
+        it "leaves held tags out of both lists" do
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[alpha beta],
+                filterForInput: true,
+                selected_tag_ids: [alpha.id],
+              }
+
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to eq(["beta"])
+          expect(response.parsed_body["forbidden_names"]).to eq([])
+        end
+
+        it "allows tags outside an unmet required group, which later picks can still meet" do
+          tag_group = Fabricate(:tag_group, tags: [gamma])
+          crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)
+          required = Fabricate(:category, category_required_tag_groups: [crtg])
+          sign_in(user)
+
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[alpha gamma],
+                categoryId: required.id,
+                filterForInput: true,
+              }
+
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(
+            "alpha",
+            "gamma",
+          )
+        end
+
+        it "refuses a search term alongside names" do
+          get "/tags/filter/search.json", params: { names: %w[alpha], q: "beta" }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "refuses more than a hundred names" do
+          get "/tags/filter/search.json", params: { names: (1..101).map { |i| "tag#{i}" } }
+
+          expect(response.status).to eq(400)
+        end
+      end
+
       it "counts the required group's remaining tags from the held ones" do
         member = Fabricate(:tag)
         other_member = Fabricate(:tag)

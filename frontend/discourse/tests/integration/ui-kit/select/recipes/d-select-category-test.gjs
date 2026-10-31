@@ -1896,28 +1896,6 @@ module(
         }
       });
 
-      test("a replaceable synchronous source emits its site's Category", async function (assert) {
-        const category = Category.findById(1);
-        const load = () => [{ id: category.id, name: category.name }];
-        const onChange = sinon.spy();
-        await render(
-          <template>
-            <DSelectCategory
-              @load={{load}}
-              @multiple={{false}}
-              @onChange={{onChange}}
-            />
-          </template>
-        );
-        await dSelect().open();
-        await click("[role='option'][data-value='1']");
-        assert.strictEqual(
-          onChange.lastCall?.args[0],
-          category,
-          "source replacement preserves category emission"
-        );
-      });
-
       test("uncategorized is ignored when the site has none", async function (assert) {
         Site.current().set("uncategorized_category_id", null);
         await render(

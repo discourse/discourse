@@ -3,8 +3,9 @@ import { module, test } from "qunit";
 import * as tagSource from "discourse/lib/tag-source";
 import {
   cleanTagName,
-  findTagIdsByNames,
+  knownTagId,
   resetTagSourceCache,
+  resolveTagNames,
   searchTagGroups,
   searchTags,
   sortTagRows,
@@ -202,44 +203,83 @@ module("Unit | lib | tag-source", function (hooks) {
     });
   }
 
-  test("findTagIdsByNames resolves names to ids, cached", async function (assert) {
+  test("resolveTagNames looks unknown names up once and remembers their ids", async function (assert) {
     const requests = [];
-    pretender.get("/tags/list.json", (request) => {
-      requests.push(request.queryParams.only_tags);
+    pretender.get("/tags/filter/search", (request) => {
+      requests.push(request.queryParams);
       return response({
-        list_tags: [
-          { id: 4, name: "Localized A" },
+        results: [
+          { id: 4, name: "Localized A", original_name: "a" },
           { id: 8, name: "b" },
         ],
       });
     });
 
-    const ids = await findTagIdsByNames(["A", "b", "missing"]);
+    await resolveTagNames(["A", "b", "missing", "B"]);
     assert.deepEqual(
-      [...ids].sort(),
-      [4, 8],
-      "ids are returned as a set, names ignored"
+      [].concat(requests[0]["names[]"] ?? requests[0].names),
+      ["a", "b", "missing"],
+      "one request asks for each name once, lowercased"
     );
+    assert.strictEqual(requests[0].q, undefined, "it sends no search term");
+    assert.strictEqual(
+      knownTagId("A"),
+      4,
+      "a translated tag by its stored name"
+    );
+    assert.strictEqual(knownTagId("b"), 8);
+    assert.strictEqual(knownTagId("missing"), undefined);
 
-    await findTagIdsByNames(["b", "missing", "A"]);
+    await resolveTagNames(["b", "MISSING", "a"]);
     assert.strictEqual(
       requests.length,
       1,
-      "the same names are cached in any order"
+      "known names and misses are not asked again"
     );
+
+    resetTagSourceCache();
+    assert.strictEqual(knownTagId("b"), undefined, "reset forgets the ids");
+    await resolveTagNames(["missing"]);
+    assert.strictEqual(requests.length, 2, "and the misses");
   });
 
-  test("findTagIdsByNames chunks at the endpoint's page size", async function (assert) {
-    const requests = [];
-    pretender.get("/tags/list.json", (request) => {
-      requests.push(request.queryParams.only_tags.split(",").length);
-      return response({ list_tags: [] });
+  test("resolveTagNames sends no request without names", async function (assert) {
+    let requests = 0;
+    pretender.get("/tags/filter/search", () => {
+      requests++;
+      return response({ results: [] });
     });
 
-    const names = Array.from({ length: 60 }, (_, i) => `t${i}`);
-    await findTagIdsByNames(names);
+    await resolveTagNames([]);
 
-    assert.deepEqual(requests, [51, 9]);
+    assert.strictEqual(requests, 0);
+  });
+
+  test("resolveTagNames splits at the endpoint's limit of 100 names", async function (assert) {
+    const requests = [];
+    pretender.get("/tags/filter/search", (request) => {
+      requests.push(
+        [].concat(request.queryParams["names[]"] ?? request.queryParams.names)
+          .length
+      );
+      return response({ results: [] });
+    });
+
+    await resolveTagNames(Array.from({ length: 130 }, (_, i) => `t${i}`));
+
+    assert.deepEqual(requests, [100, 30]);
+  });
+
+  test("a search remembers the ids of the tags it returns, by stored name", async function (assert) {
+    pretender.get("/tags/filter/search", () =>
+      response({
+        results: [{ id: 1, name: "戦略", original_name: "strategy" }],
+      })
+    );
+
+    await searchTags("", { context: {}, siteSettings: SETTINGS });
+
+    assert.strictEqual(knownTagId("Strategy"), 1);
   });
 
   test("searchTagGroups keys groups by name", async function (assert) {

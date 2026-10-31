@@ -1,3 +1,4 @@
+import { trackedMap } from "@ember/reactive/collections";
 import { ajax } from "discourse/lib/ajax";
 
 /** A server tag row with the optional reason that prevents selection. */
@@ -36,7 +37,20 @@ export interface TagSearchResult {
   } | null;
 }
 
-const tagIdsByNames = new Map<string, Promise<Set<number>>>();
+/** The server's limit on names in one lookup. */
+const MAX_LOOKUP_NAMES = 100;
+
+/**
+ * Ids by lowercased stored name, from every lookup and search this session. Tracked, so a value
+ * keyed by a held name re-keys by id once the id is known.
+ */
+const tagIdsByName = trackedMap<string, number>();
+
+/** Lowercased names a lookup found no tag for, so they are not asked for again. */
+const missingNames = new Set<string>();
+
+/** Lookups in flight, by lowercased name. */
+const pendingNames = new Map<string, Promise<void>>();
 
 /** Returns the stored tag name when the displayed name is translated. */
 export function storedName(row: {
@@ -90,6 +104,7 @@ export async function searchTags(
         : {}),
     },
   });
+  rememberTagIds(result.results);
   const items = result.results.map((row) =>
     row.disabled ? { ...row, description: row.title } : row
   );
@@ -103,6 +118,39 @@ export async function searchTags(
     forbidden: result.forbidden,
     forbiddenMessage: result.forbidden_message,
     requiredTagGroup: result.required_tag_group,
+  };
+}
+
+/**
+ * Finds the named tags the context allows, in one request for at most the server's 100
+ * names. `forbiddenNames` lists names that exist but aren't allowed there; any other missing
+ * name has no tag.
+ */
+export async function findTagsByNames(
+  names: readonly string[],
+  { context }: { context: TagSearchContext }
+): Promise<{ items: TagRow[]; forbiddenNames: string[] }> {
+  const result: { results: TagRow[]; forbidden_names?: string[] } = await ajax(
+    "/tags/filter/search",
+    {
+      data: {
+        names: names.slice(0, MAX_LOOKUP_NAMES),
+        categoryId: context.categoryId,
+        selected_tag_ids: context.selectedTagIds?.slice(0, 100),
+        ...(!context.everyTag ? { filterForInput: true } : {}),
+        ...(context.excludeSynonyms !== undefined
+          ? { excludeSynonyms: context.excludeSynonyms }
+          : {}),
+        ...(context.excludeHasSynonyms !== undefined
+          ? { excludeHasSynonyms: context.excludeHasSynonyms }
+          : {}),
+      },
+    }
+  );
+  rememberTagIds(result.results);
+  return {
+    items: result.results,
+    forbiddenNames: result.forbidden_names ?? [],
   };
 }
 
@@ -124,30 +172,39 @@ export async function searchTagGroups(
   return result.results.map(({ name }) => ({ id: name, name }));
 }
 
-/** Resolves a name set to ids; localized response names must never be matched to input names. */
-export async function findTagIdsByNames(
-  names: readonly string[]
-): Promise<Set<number>> {
-  const normalized = [
-    ...new Set(names.map((name) => name.toLowerCase())),
-  ].sort();
-  if (!normalized.length) {
-    return new Set();
+/** The id of a tag known by its stored name, from any lookup or search this session. */
+export function knownTagId(name: string): number | undefined {
+  return tagIdsByName.get(name.toLowerCase());
+}
+
+/**
+ * Looks up the ids of stored names not yet known, in one request per 100 names. Any visible tag
+ * resolves, whatever field asks; read the ids with {@link knownTagId}.
+ */
+export async function resolveTagNames(names: readonly string[]): Promise<void> {
+  const unknown = [...new Set(names.map((name) => name.toLowerCase()))].filter(
+    (name) =>
+      !tagIdsByName.has(name) &&
+      !missingNames.has(name) &&
+      !pendingNames.has(name)
+  );
+  const requests = [];
+  for (let offset = 0; offset < unknown.length; offset += MAX_LOOKUP_NAMES) {
+    const chunk = unknown.slice(offset, offset + MAX_LOOKUP_NAMES);
+    const request = lookUpNames(chunk).finally(() => {
+      for (const name of chunk) {
+        if (pendingNames.get(name) === request) {
+          pendingNames.delete(name);
+        }
+      }
+    });
+    chunk.forEach((name) => pendingNames.set(name, request));
+    requests.push(request);
   }
-  const key = JSON.stringify(normalized);
-  let pending = tagIdsByNames.get(key);
-  if (!pending) {
-    pending = resolveTagIds(normalized);
-    tagIdsByNames.set(key, pending);
-  }
-  try {
-    return new Set(await pending);
-  } catch (error) {
-    if (tagIdsByNames.get(key) === pending) {
-      tagIdsByNames.delete(key);
-    }
-    throw error;
-  }
+  const inFlight = names
+    .map((name) => pendingNames.get(name.toLowerCase()))
+    .filter((request) => request !== undefined);
+  await Promise.all(new Set([...requests, ...inFlight]));
 }
 
 /** Returns category top tags when available, otherwise the site's top tags. */
@@ -214,27 +271,32 @@ export function sortTagRows<
   ];
 }
 
-/** Clears both successful name resolutions and cached misses. */
+/** Forgets every known id and cached miss. */
 export function resetTagSourceCache(): void {
-  tagIdsByNames.clear();
+  tagIdsByName.clear();
+  missingNames.clear();
+  pendingNames.clear();
 }
 
-/** Splits name lookups at the list endpoint's page size to avoid silently losing ids. */
-async function resolveTagIds(names: string[]): Promise<Set<number>> {
-  const ids = new Set<number>();
-  for (let offset = 0; offset < names.length; offset += 51) {
-    const result: { list_tags: Array<{ id: number | string }> } = await ajax(
-      "/tags/list.json",
-      {
-        data: { only_tags: names.slice(offset, offset + 51).join(",") },
-      }
-    );
-    for (const tag of result.list_tags) {
-      const id = Number(tag.id);
-      if (Number.isInteger(id) && id > 0) {
-        ids.add(id);
-      }
+/** Records the id of every row by its stored name. */
+function rememberTagIds(rows: readonly TagRow[]): void {
+  for (const row of rows) {
+    const name = storedName(row).toLowerCase();
+    if (tagIdsByName.get(name) !== row.id) {
+      tagIdsByName.set(name, row.id);
     }
   }
-  return ids;
+}
+
+/** Looks a chunk of names up and records which have a tag. */
+async function lookUpNames(names: string[]): Promise<void> {
+  const result: { results: TagRow[] } = await ajax("/tags/filter/search", {
+    data: { names },
+  });
+  rememberTagIds(result.results);
+  for (const name of names) {
+    if (!tagIdsByName.has(name)) {
+      missingNames.add(name);
+    }
+  }
 }

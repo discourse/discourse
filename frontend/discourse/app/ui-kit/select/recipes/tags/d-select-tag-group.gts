@@ -55,10 +55,6 @@ interface DSelectTagGroupSignature {
     identifier?: string;
     /** Call-site customization data. */
     instanceContext?: object;
-    /** Optional local source. */
-    items?: SelectSignature["Args"]["items"];
-    /** Optional asynchronous source override. */
-    load?: SelectSignature["Args"]["load"];
   };
   Element: HTMLElement;
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
@@ -93,13 +89,6 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     return this.args.legacyKind ?? ["tag-group-chooser", "tag-chooser"];
   }
 
-  get sourceLoad() {
-    if (this.args.load) {
-      return this.args.load;
-    }
-    return this.args.items ? undefined : this._load;
-  }
-
   get valueItems() {
     return this.#value.map((name) => ({ id: name, name }));
   }
@@ -126,7 +115,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
   }
 
   @action
-  async _load(filter: string) {
+  async load(filter: string) {
     return await searchTagGroups(filter, {
       siteSettings: this.siteSettings,
     });
@@ -144,13 +133,12 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @invalid={{@invalid}}
-      @items={{@items}}
       @kind="select-tag-group"
       @kindContext={{hash value=@value}}
       @kindTexts={{this.kindTexts}}
       @labelField="name"
       @legacyKind={{this.legacyKind}}
-      @load={{this.sourceLoad}}
+      @load={{this.load}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}

@@ -407,9 +407,10 @@ class TagsController < ::ApplicationController
     end
 
     Tags::Search.call(service_params) do
-      on_success do |tags:, forbidden:, forbidden_message:, required_tag_group:, remaining_required_tag_count:|
+      on_success do |tags:, forbidden:, forbidden_message:, forbidden_names:, required_tag_group:, remaining_required_tag_count:|
         json_response = { results: tags }
         json_response[:forbidden] = forbidden if forbidden
+        json_response[:forbidden_names] = forbidden_names if forbidden_names
         json_response[:forbidden_message] = forbidden_message if forbidden_message
         if required_tag_group
           json_response[:required_tag_group] = required_tag_group.merge(

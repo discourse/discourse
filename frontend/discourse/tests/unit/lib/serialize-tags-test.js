@@ -1,11 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { serializeTags } from "discourse/lib/serialize-tags";
-import {
-  findTagIdsByNames,
-  resetTagSourceCache,
-  searchTags,
-} from "discourse/lib/tag-source";
+import { resetTagSourceCache, searchTags } from "discourse/lib/tag-source";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { tagKey } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 
@@ -158,30 +154,6 @@ module(
         [1, 2, 3, 4],
         "recent order is retained"
       );
-    });
-
-    test("name lookup caches normalized sets including misses until reset", async function (assert) {
-      let requests = 0;
-      pretender.get("/tags/list.json", () => {
-        requests++;
-        return response({ list_tags: [] });
-      });
-      assert.deepEqual(
-        [...(await findTagIdsByNames([]))],
-        [],
-        "empty names resolve to no ids"
-      );
-      assert.strictEqual(requests, 0, "empty names do not request");
-      await findTagIdsByNames(["Missing", "OTHER", "Missing"]);
-      await findTagIdsByNames(["other", "MISSING"]);
-      assert.strictEqual(
-        requests,
-        1,
-        "case, duplicates, order and misses share a cache entry"
-      );
-      resetTagSourceCache();
-      await findTagIdsByNames(["missing", "other"]);
-      assert.strictEqual(requests, 2, "reset clears cached misses");
     });
   }
 );
