@@ -10,6 +10,7 @@ import {
 import { test } from "qunit";
 import loadAccessibleName from "discourse/lib/load-accessible-name";
 import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
@@ -263,6 +264,118 @@ acceptance("Composer - Tags (new select controls)", function (needs) {
       );
   });
 });
+
+/** The draft data the composer would save: its tags and category. */
+function draftTagsAndCategory(owner) {
+  const { tags, categoryId } = owner
+    .lookup("service:composer")
+    .model.serializeDraftData();
+  return { tags, categoryId };
+}
+
+/** Opens a new-topic draft holding tags and a category, as reopening a saved draft does. */
+async function openDraft(owner, draft) {
+  await owner.lookup("service:composer").open({
+    action: Composer.CREATE_TOPIC,
+    draftKey: "new_topic",
+    draftSequence: 0,
+    draft: JSON.stringify({
+      action: Composer.CREATE_TOPIC,
+      archetypeId: "regular",
+      title: "A draft from the other mode",
+      reply: "Its body",
+      ...draft,
+    }),
+  });
+}
+
+const SAVED = {
+  tags: [{ id: 1, name: "monkey" }, { name: "brandnew" }],
+  categoryId: 2,
+};
+
+acceptance(
+  "Composer - Tags and category in both select modes",
+  function (needs) {
+    needs.user();
+    needs.site({ can_tag_topics: true, can_create_tag: true });
+    needs.settings({ allow_uncategorized_topics: true, tagging_enabled: true });
+
+    test("the legacy controls save an existing tag, a new tag and a category", async function (assert) {
+      this.siteSettings.enable_new_select_controls = false;
+      await visit("/");
+      await click("#create-topic");
+
+      const tags = selectKit(".mini-tag-chooser");
+      await tags.expand();
+      await tags.selectRowByName("monkey");
+      await tags.fillInFilter("brandnew");
+      await tags.selectRowByValue("brandnew");
+      const category = selectKit(".category-chooser");
+      await category.expand();
+      await category.selectRowByValue(2);
+
+      assert.deepEqual(draftTagsAndCategory(getOwner(this)), SAVED);
+    });
+
+    test("the new controls save the same draft data", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      await visit("/");
+      await click("#create-topic");
+
+      await dSelect(".tags-input .d-select").selectByName("monkey");
+      await dSelect(".tags-input .d-select").search("brandnew");
+      await triggerKeyEvent(
+        ".tags-input [role='combobox']",
+        "keydown",
+        "Enter"
+      );
+      await dSelect(".category-input .d-select").select(2);
+
+      assert.deepEqual(draftTagsAndCategory(getOwner(this)), SAVED);
+    });
+
+    test("the legacy controls reopen a draft and keep its tags", async function (assert) {
+      this.siteSettings.enable_new_select_controls = false;
+      await visit("/");
+      await openDraft(getOwner(this), SAVED);
+
+      assert.strictEqual(
+        selectKit(".mini-tag-chooser").header().name(),
+        "monkey,brandnew",
+        "the held tags show"
+      );
+      assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
+
+      const tags = selectKit(".mini-tag-chooser");
+      await tags.expand();
+      await tags.selectRowByName("gazelle");
+
+      assert.deepEqual(draftTagsAndCategory(getOwner(this)), {
+        tags: [...SAVED.tags, { id: 2, name: "gazelle" }],
+        categoryId: 2,
+      });
+    });
+
+    test("the new controls reopen a draft and keep its tags", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      await visit("/");
+      await openDraft(getOwner(this), SAVED);
+
+      assert
+        .dom(".tags-input .d-select")
+        .hasAttribute("data-name", "monkey,brandnew", "the held tags show");
+      assert.dom(".category-input .d-select").hasAttribute("data-value", "2");
+
+      await dSelect(".tags-input .d-select").selectByName("gazelle");
+
+      assert.deepEqual(draftTagsAndCategory(getOwner(this)), {
+        tags: [...SAVED.tags, { id: 2, name: "gazelle" }],
+        categoryId: 2,
+      });
+    });
+  }
+);
 
 acceptance("Composer - Tags (compact on mobile)", function (needs) {
   needs.user();

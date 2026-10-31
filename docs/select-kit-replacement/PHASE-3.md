@@ -141,8 +141,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ **Selection strip** in the mobile modal, and the modal's accessible name.
   - ☑ **Compact and overflow** (`@maxVisibleChips`); display-only chips on button, static and
     mobile triggers.
-- ☐ **Composer:** tag and category pickers write the same `model.tags` / category shape in both
-  modes; drafts round-trip across modes.
+- ☑ **Composer:** tag and category pickers write the same `model.tags` / category shape in both
+  modes; drafts round-trip across modes (2026-10-31). Both modes save identical draft data for an
+  existing tag, a created tag and a category, and each reopens the other's draft and keeps its
+  tags (`composer-tags-test.js`, "Composer - Tags and category in both select modes").
 - ☐ **discourse-ai** suggesters and the customer `modifySelectKit` plugin work through the bridge.
   The tag and category suggesters now use `select-customizations` on the composer and topic-edit
   identifiers instead of the bridge.
