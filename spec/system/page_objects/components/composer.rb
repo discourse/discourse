@@ -459,6 +459,16 @@ module PageObjects
       end
 
       def select_pm_user(username)
+        # TODO (select-kit-replacement-cleanup): Keep only the new control once rollout completes.
+        if page.has_css?("#{@composer_id} .d-select.user-chooser", wait: 0)
+          recipients =
+            PageObjects::Components::UiKit::DSelect.at("#{@composer_id} .d-select.user-chooser")
+          recipients.search(username)
+          recipients.select_value(username)
+          recipients.close
+          return
+        end
+
         select_kit = PageObjects::Components::SelectKit.new("#private-message-users")
         select_kit.expand
         select_kit.search(username)
