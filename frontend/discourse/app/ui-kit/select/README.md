@@ -426,7 +426,7 @@ engine keys through `@kindTexts`.
 | | `removeFilter`, `noTags` | `tagging.selector_remove_filter`, `tagging.selector_no_tags` | |
 | | `maxLoaded` | `tagging.filter_to_narrow_tags`, below the first `max_tags_in_filter_list` top tags | |
 | `DSelectTagGroup` | `ariaLabel` | `tagging.tag_group_label` while it holds at most one, otherwise `tagging.tag_groups_label` | |
-| | `placeholder` | `category.tag_groups_placeholder` | |
+| | `placeholder` | the engine's; the category's allowed tag groups field passes `category.tag_groups_placeholder` | |
 
 `DSelectTagFilter` also takes `DSelectTag`'s keys, under its own. The tag picker's placeholder
 wrappers are described under [Tag recipes](#tag-recipes).

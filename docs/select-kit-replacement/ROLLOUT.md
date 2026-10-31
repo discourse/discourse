@@ -332,6 +332,10 @@ customization ports are done.
     topic and message fields of move to topic and chat to topic. Every other tag picker shows the
     select's own "Add…", or "Select…" when it holds one tag. Before, every tag picker said
     "Optional tags…", as select-kit's did.
+  - Tag groups, 2026-10-30: "(Optional) list of allowed tag groups"
+    (`category.tag_groups_placeholder`) is now passed only by the category's allowed tag groups
+    field. Other tag group pickers show the select's own "Add…" or "Select…", or the prompt their
+    call site passes.
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
   to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each

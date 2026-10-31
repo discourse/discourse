@@ -85,6 +85,7 @@ export default class UpsertCategoryTags extends Component {
           @id="category-allowed-tag-groups"
           @multiple={{true}}
           @onChange={{this.onAllowedTagGroupsChange}}
+          @texts={{hash placeholder=(i18n "category.tag_groups_placeholder")}}
           @value={{this.allowedTagGroups}}
         />
       {{else}}

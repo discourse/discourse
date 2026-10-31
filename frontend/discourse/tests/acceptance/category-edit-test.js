@@ -103,6 +103,17 @@ acceptance("Category Edit", function (needs) {
       .exists("save banner stays visible when collection is emptied");
   });
 
+  test("the allowed tag groups field prompts for an optional list", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/c/bug/edit/tags");
+
+    assert
+      .dom(
+        "#category-allowed-tag-groups[role='combobox'], #category-allowed-tag-groups [role='combobox']"
+      )
+      .hasAttribute("placeholder", i18n("category.tag_groups_placeholder"));
+  });
+
   test("Editing allowed tags and tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 

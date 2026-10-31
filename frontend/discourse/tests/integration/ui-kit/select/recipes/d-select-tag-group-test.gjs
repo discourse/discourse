@@ -262,7 +262,7 @@ module(
     });
 
     module("texts", function () {
-      test("the placeholder defaults to tag groups, and @texts or a customization replaces it", async function (assert) {
+      test("the placeholder defaults to the select's own, and @texts or a customization replaces it", async function (assert) {
         stubGroupSearch();
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
@@ -288,7 +288,7 @@ module(
 
         assert
           .dom(".default [role='combobox']")
-          .hasAttribute("placeholder", i18n("category.tag_groups_placeholder"));
+          .hasAttribute("placeholder", i18n("d_select.add_placeholder"));
         assert
           .dom(".call-site [role='combobox']")
           .hasAttribute("placeholder", "Pick groups");
