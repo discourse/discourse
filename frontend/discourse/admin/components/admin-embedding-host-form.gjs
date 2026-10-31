@@ -8,11 +8,13 @@ import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-ca
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class AdminEmbeddingHostForm extends Component {
@@ -163,12 +165,28 @@ export default class AdminEmbeddingHostForm extends Component {
                 as |field|
               >
                 <field.Control>
-                  <UserChooser
-                    class="admin-embedding-host-form__post_author"
-                    @onChange={{field.set}}
-                    @options={{hash maximum=1 excludeCurrentUser=false}}
-                    @value={{field.value}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectUser
+                      class="admin-embedding-host-form__post_author"
+                      @clearable={{true}}
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
+                      @id={{field.id}}
+                      @invalid={{if field.error true false}}
+                      @onChange={{legacyPickOne field.set}}
+                      @texts={{hash ariaLabel=field.title}}
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <UserChooser
+                      class="admin-embedding-host-form__post_author"
+                      @onChange={{field.set}}
+                      @options={{hash maximum=1 excludeCurrentUser=false}}
+                      @value={{field.value}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
 

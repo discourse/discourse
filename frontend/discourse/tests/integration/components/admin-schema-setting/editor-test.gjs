@@ -18,6 +18,7 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -1018,6 +1019,49 @@ module(
         groupsSelector.rowByValue("2").exists(),
         "moderators is in the list"
       );
+    });
+
+    test("input fields of type groups filter disallowed groups with the new controls", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      this.site.groups = [
+        { id: 0, name: "everyone" },
+        { id: 1, name: "admins" },
+        { id: 2, name: "moderators" },
+        { id: 3, name: "staff" },
+      ];
+
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "something",
+          properties: {
+            group_ids: {
+              type: "groups",
+              disallowed_groups: "0|1",
+              validations: { max: 1 },
+            },
+          },
+        },
+        value: [{ group_ids: [] }],
+      });
+
+      await renderEditor(setting);
+      const groups = new DSelect(
+        `${inputFields.fields.group_ids.selector} .d-select`
+      );
+      await groups.open();
+
+      assert.deepEqual(
+        [...document.querySelectorAll("[role='option']")].map(
+          (row) => row.dataset.value
+        ),
+        ["2", "3"],
+        "everyone and admins are not offered"
+      );
+
+      await click("[role='option'][data-value='2']");
+      assert
+        .dom("[role='option'][data-value='3']")
+        .hasAttribute("aria-disabled", "true", "the maximum is respected");
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {

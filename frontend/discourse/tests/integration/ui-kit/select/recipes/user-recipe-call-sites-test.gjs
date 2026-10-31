@@ -2,6 +2,11 @@ import { tracked } from "@glimmer/tracking";
 import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import AboutContactInformation from "discourse/admin/components/admin-config-area-cards/about/contact-information";
+import AboutExtraGroups from "discourse/admin/components/admin-config-area-cards/about/extra-groups";
+import AdminConfigAreasApiKeysNew from "discourse/admin/components/admin-config-areas/api-keys-new";
+import AdminEmbeddingHostForm from "discourse/admin/components/admin-embedding-host-form";
+import EmbeddingPostsAndTopics from "discourse/admin/templates/admin-embedding/posts-and-topics";
 import ComposerUserSelector from "discourse/components/composer-user-selector";
 import InvitePanel from "discourse/components/invite-panel";
 import ChangeOwnerModal from "discourse/components/modal/change-owner";
@@ -21,6 +26,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { i18n } from "discourse-i18n";
 
 const USERS = [
@@ -447,6 +453,164 @@ module(
 
         await allowed.search("evil");
         assert.dom("[role='option']").doesNotExist();
+      });
+    });
+
+    module("admin embedding", function () {
+      test("the default author is stored as a one-item list", async function (assert) {
+        stubUserSearch();
+        const controller = {
+          siteSettings: this.siteSettings,
+          formData: { embed_by_username: ["alice"] },
+          save: sinon.spy(),
+        };
+
+        await render(
+          <template>
+            <EmbeddingPostsAndTopics @controller={{controller}} />
+          </template>
+        );
+        const picker =
+          ".admin-embedding-posts-and-topics-form__embed_by_username";
+        assert.dom(picker).hasAttribute("data-value", "alice");
+
+        await pick(new DSelect(picker), "bo", "bob");
+        await formKit().submit();
+
+        assert.deepEqual(controller.save.lastCall.args[0].embed_by_username, [
+          "bob",
+        ]);
+      });
+
+      test("a host's post author is saved as a username", async function (assert) {
+        stubUserSearch();
+        sinon.stub(this.owner.lookup("service:router"), "transitionTo");
+        const host = this.owner
+          .lookup("service:store")
+          .createRecord("embeddable-host", {
+            host: "example.com",
+            user: "alice",
+          });
+        const save = sinon.stub(host, "save").resolves();
+
+        await render(
+          <template><AdminEmbeddingHostForm @host={{host}} /></template>
+        );
+        const picker = new DSelect(".admin-embedding-host-form__post_author");
+        await pick(picker, "bo", "bob");
+        await formKit().submit();
+        assert.strictEqual(save.lastCall.args[0].user, "bob");
+
+        await picker.clear();
+        await formKit().submit();
+        assert.strictEqual(save.lastCall.args[0].user, undefined);
+      });
+    });
+
+    module("admin API keys", function () {
+      test("a single-user key is created for the picked username", async function (assert) {
+        stubUserSearch();
+        pretender.get("/admin/api/keys/scopes.json", () =>
+          response({ scopes: {} })
+        );
+        let data;
+        pretender.post("/admin/api/keys", (request) => {
+          data = JSON.parse(request.requestBody);
+          return response({ key: { id: 1, key: "abc" } });
+        });
+
+        await render(<template><AdminConfigAreasApiKeysNew /></template>);
+        await formKit().field("description").fillIn("A key");
+        await formKit().field("user_mode").select("single");
+        await pick(
+          new DSelect(".form-kit__field-custom .d-select"),
+          "bo",
+          "bob"
+        );
+        await formKit().submit();
+
+        assert.strictEqual(data.key.username, "bob");
+      });
+    });
+
+    module("admin about page", function () {
+      test("the contact user and group are saved as single values", async function (assert) {
+        stubUserSearch();
+        this.owner.lookup("service:site").groups = [
+          { id: 10, name: "support" },
+          { id: 11, name: "design" },
+        ];
+        let data;
+        pretender.put("/admin/config/about.json", (request) => {
+          data = parsePostData(request.requestBody);
+          return response({});
+        });
+        const setting = (value) => ({ value });
+        const contactInformation = {
+          communityOwner: setting(""),
+          contactEmail: setting(""),
+          contactURL: setting(""),
+          contactGroupName: setting(""),
+          contactUsername: setting(""),
+        };
+        const noop = () => {};
+
+        await render(
+          <template>
+            <AboutContactInformation
+              @contactInformation={{contactInformation}}
+              @isDefaultLocale={{true}}
+              @setGlobalSavingStatus={{noop}}
+            />
+          </template>
+        );
+        const [user, group] = findAll(".form-kit__field-custom .d-select");
+        await pick(new DSelect(user), "bo", "bob");
+        await new DSelect(group).open();
+        await click(optionNamed("design"));
+        await formKit().submit();
+
+        assert.strictEqual(data.contact_information.contact_username, "bob");
+        assert.strictEqual(data.contact_information.contact_group_name, "11");
+      });
+
+      test("extra groups are saved as a list of ids", async function (assert) {
+        this.owner.lookup("service:site").groups = [
+          { id: 10, name: "support" },
+          { id: 11, name: "design" },
+        ];
+        let data;
+        pretender.put("/admin/config/about.json", (request) => {
+          data = parsePostData(request.requestBody);
+          return response({});
+        });
+        const setting = (value) => ({ value });
+        const extraGroups = {
+          aboutPageExtraGroups: setting("10"),
+          aboutPageExtraGroupsInitialMembers: setting(4),
+          aboutPageExtraGroupsOrder: {
+            value: "order_of_creation",
+            choices: [],
+          },
+          aboutPageExtraGroupsShowDescription: setting("false"),
+        };
+        const noop = () => {};
+
+        await render(
+          <template>
+            <AboutExtraGroups
+              @extraGroups={{extraGroups}}
+              @setGlobalSavingStatus={{noop}}
+            />
+          </template>
+        );
+        const select = new DSelect(".form-kit__field-custom .d-select");
+        assert.dom(".d-select__chip", select.element()).includesText("support");
+        await select.open();
+        await click(optionNamed("design"));
+        await formKit().submit();
+
+        assert.strictEqual(data.extra_groups.groups, "10|11");
       });
     });
   }

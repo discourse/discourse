@@ -619,6 +619,11 @@ export default class AdminUserIndexController extends Controller {
   }
 
   @action
+  updateCustomGroupIds(groupIds) {
+    this.customGroupIdsBuffer = groupIds;
+  }
+
+  @action
   savePrimaryGroup() {
     const primaryGroupId = this.get("model.primary_group_id");
     const path = `/admin/users/${this.get("model.id")}/primary_group`;

@@ -14,6 +14,7 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
@@ -263,20 +264,42 @@ export default class TagGroupsForm extends Component {
           @value="visible"
         />
 
-        <label class="radio" for="visible-permission">
+        <label
+          class="radio"
+          for="visible-permission"
+          id="visible-permission-label"
+        >
           {{i18n "tagging.groups.usable_only_by_groups"}}
         </label>
 
         <div class="group-access-control">
-          <GroupChooser
-            @content={{this.allGroups}}
-            @labelProperty="name"
-            @onChange={{this.setPermissionsGroups}}
-            @options={{hash
-              filterPlaceholder="tagging.groups.select_groups_placeholder"
-            }}
-            @value={{this.selectedGroupIds}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @ariaLabelledBy="visible-permission-label"
+              @everyone={{false}}
+              @multiple={{true}}
+              @onChange={{this.setPermissionsGroups}}
+              @texts={{hash
+                placeholder=(i18n "tagging.groups.select_groups_placeholder")
+                searchPlaceholder=(i18n
+                  "tagging.groups.select_groups_placeholder"
+                )
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.allGroups}}
+              @labelProperty="name"
+              @onChange={{this.setPermissionsGroups}}
+              @options={{hash
+                filterPlaceholder="tagging.groups.select_groups_placeholder"
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{/if}}
         </div>
       </div>
       <div class="group-visibility-option">
@@ -288,20 +311,42 @@ export default class TagGroupsForm extends Component {
           @value="private"
         />
 
-        <label class="radio" for="private-permission">
+        <label
+          class="radio"
+          for="private-permission"
+          id="private-permission-label"
+        >
           {{i18n "tagging.groups.visible_only_to_groups"}}
         </label>
 
         <div class="group-access-control">
-          <GroupChooser
-            @content={{this.allGroups}}
-            @labelProperty="name"
-            @onChange={{this.setPermissionsGroups}}
-            @options={{hash
-              filterPlaceholder="tagging.groups.select_groups_placeholder"
-            }}
-            @value={{this.selectedGroupIds}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @ariaLabelledBy="private-permission-label"
+              @everyone={{false}}
+              @multiple={{true}}
+              @onChange={{this.setPermissionsGroups}}
+              @texts={{hash
+                placeholder=(i18n "tagging.groups.select_groups_placeholder")
+                searchPlaceholder=(i18n
+                  "tagging.groups.select_groups_placeholder"
+                )
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.allGroups}}
+              @labelProperty="name"
+              @onChange={{this.setPermissionsGroups}}
+              @options={{hash
+                filterPlaceholder="tagging.groups.select_groups_placeholder"
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{/if}}
         </div>
       </div>
     </section>

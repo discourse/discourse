@@ -1,16 +1,25 @@
 import { click, fillIn, visit, waitUntil } from "@ember/test-helpers";
 import { test } from "qunit";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - email-preview", function (needs) {
   needs.user();
+  let digestRequests = [];
+  needs.hooks.beforeEach(() => (digestRequests = []));
   needs.pretender((server, helper) => {
-    server.get("/admin/email/preview-digest.json", () =>
-      helper.response(200, {
-        html_content: "<span>Hello world</span>",
-        text_content: "<span>Not actually html</span>",
+    server.get("/u/search/users", () =>
+      helper.response({
+        users: [{ username: "bob", name: "Bob", avatar_template: "/a/{size}" }],
       })
     );
+    server.get("/admin/email/preview-digest.json", (request) => {
+      digestRequests.push(request.queryParams);
+      return helper.response(200, {
+        html_content: "<span>Hello world</span>",
+        text_content: "<span>Not actually html</span>",
+      });
+    });
   });
 
   test("preview rendering", async function (assert) {
@@ -60,5 +69,17 @@ acceptance("Admin - email-preview", function (needs) {
     assert
       .dom(".email-preview-digest .controls .btn-default")
       .isNotDisabled("send button is enabled once an email address is entered");
+  });
+
+  test("previews the digest for a picked user with the new controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/admin/email/preview-digest");
+
+    const user = dSelect(".email-preview .d-select");
+    await user.search("bo");
+    await user.selectByName("bob");
+    await click(".digest-refresh-button");
+
+    assert.strictEqual(digestRequests.at(-1).username, "bob");
   });
 });

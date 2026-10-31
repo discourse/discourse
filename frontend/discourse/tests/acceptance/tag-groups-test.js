@@ -95,7 +95,7 @@ acceptance("Tag Groups", function (needs) {
     await visit("/tag_groups/42");
 
     assert
-      .dom(".tag-group-content .d-select")
+      .dom(".group-tags-list .d-select, .parent-tag-section .d-select")
       .exists({ count: 2 }, "both tag controls render DSelect");
     assert
       .dom(".tag-group-content .select-kit.tag-chooser")
@@ -158,5 +158,30 @@ acceptance("Tag Groups", function (needs) {
     assert
       .dom("a.tag-groups--back")
       .hasAttribute("href", "/forum/tags", "supports subfolder");
+  });
+
+  test("tag group permissions save the picked groups with the new controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/tag_groups/42");
+    await click("#visible-permission");
+
+    assert
+      .dom(".tag-group-content .select-kit.group-chooser")
+      .doesNotExist("replaces the legacy group choosers");
+    const groups = dSelect(".group-access-control .d-select");
+    await groups.open();
+    assert
+      .dom("[role='option'][data-value='0']")
+      .doesNotExist("everyone isn't offered");
+    await groups.selectByName("staff");
+    await groups.selectByName("trust_level_1");
+    await groups.close();
+    await click(".tag-group-content .btn.btn-primary");
+
+    assert.deepEqual(
+      savedTagGroup.permissions,
+      { 0: 3, 3: 1, 11: 1 },
+      "the picked groups can use the tags, everyone else only sees them"
+    );
   });
 });
