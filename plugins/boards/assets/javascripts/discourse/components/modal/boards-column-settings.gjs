@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -14,6 +15,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import {
   ASSIGNED_OPTIONS,
@@ -297,11 +299,26 @@ export default class BoardsColumnSettings extends Component {
                       @value={{assignedMode data.move_to_assigned}}
                     />
                     {{#if (eq (assignedMode data.move_to_assigned) "_user")}}
-                      <EmailGroupUserChooser
-                        @onChange={{fn this.onAssignedUserChange field}}
-                        @options={{hash maximum=1}}
-                        @value={{assignedUserValue data.move_to_assigned}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectUser
+                          @clearable={{true}}
+                          @onChange={{legacyPickOne
+                            (fn this.onAssignedUserChange field)
+                          }}
+                          @texts={{hash
+                            ariaLabel=(i18n "boards.board.assigned_to")
+                          }}
+                          @value={{assignedUserValue data.move_to_assigned}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup) }}
+                        <EmailGroupUserChooser
+                          @onChange={{fn this.onAssignedUserChange field}}
+                          @options={{hash maximum=1}}
+                          @value={{assignedUserValue data.move_to_assigned}}
+                        />
+                      {{/if}}
                     {{/if}}
                   </field.Control>
                 </form.Field>
