@@ -823,7 +823,11 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     assert
       .dom(".typeahead input[role='combobox']")
       .hasAttribute("id", "lang", "the typeahead carries them on its input")
-      .hasAttribute("aria-describedby", "hint")
+      .hasAttribute(
+        "aria-describedby",
+        /^\S+-placeholder hint$/,
+        "after the copy of its placeholder"
+      )
       .hasAttribute("aria-invalid", "true");
     assert
       .dom(".static[role='combobox']")
