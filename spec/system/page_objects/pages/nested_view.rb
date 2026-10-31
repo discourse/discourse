@@ -451,7 +451,7 @@ module PageObjects
       end
 
       def fill_in_topic_title(title)
-        find(".edit-topic-title input#edit-title").fill_in(with: title)
+        find(".edit-topic-title #edit-title").fill_in(with: title)
         self
       end
 
