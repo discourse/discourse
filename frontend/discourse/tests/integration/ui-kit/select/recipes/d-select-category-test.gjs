@@ -1041,6 +1041,39 @@ module(
           .doesNotExist();
       });
 
+      test("an action row draws its icon before its label", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-category", (spec) =>
+              spec.content((items) => [
+                {
+                  id: "suggest",
+                  name: "Suggest a category",
+                  icon: "discourse-sparkles",
+                  sticky: true,
+                  onSelect() {},
+                },
+                ...items,
+              ])
+            );
+          })
+        );
+
+        await render(<template><Host @multiple={{false}} /></template>);
+        await select().open();
+
+        const row = find("[role='option'][data-value='suggest']");
+        assert
+          .dom(".d-icon-discourse-sparkles", row)
+          .exists("the row draws the item's icon");
+        assert.dom(row).hasText("Suggest a category");
+        assert.strictEqual(
+          row.querySelector(".d-icon-discourse-sparkles").parentElement,
+          row,
+          "the icon sits beside the label in the row"
+        );
+      });
+
       test("a description keeps the gap between a row's ancestor badges", async function (assert) {
         Site.current().updateCategories([
           { id: 9810, name: "Gapparent", slug: "gapparent", permission: 1 },

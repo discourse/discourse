@@ -1,6 +1,7 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { CategoryItem } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
 
@@ -28,8 +29,8 @@ export function categoryItem(
 }
 
 /**
- * The category a row renders as a badge. Action rows render their label instead, except a
- * family footer, which draws its own category.
+ * The category a row renders as a badge. Action rows render their icon and label instead,
+ * except a family footer, which draws its own category.
  */
 function record(item: SelectItem, family?: boolean): Category | undefined {
   if (item.onSelect && !family) {
@@ -44,6 +45,11 @@ function record(item: SelectItem, family?: boolean): Category | undefined {
 /** Narrows shortcut and action labels for templates. */
 function name(item: SelectItem): string {
   return String(item.name ?? "");
+}
+
+/** Narrows optional action icons at the rendering boundary. */
+function actionIcon(item: SelectItem): string | undefined {
+  return typeof item.icon === "string" ? item.icon : undefined;
 }
 
 /** Topic counts are confined to options. */
@@ -85,6 +91,7 @@ export const CategoryBadge: TemplateOnlyComponent<{
         topicCount=(topicCount category @counts @countSubcategories)
       }}
     {{else}}
+      {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
       {{name @item}}
     {{/if}}
   {{/let}}
