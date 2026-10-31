@@ -78,7 +78,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       context.multiple && this.args.maximum !== 1
         ? i18n("tagging.tag_groups_label")
         : i18n("tagging.tag_group_label"),
-    placeholder: { translationKey: "category.tag_groups_placeholder" },
+    placeholder: i18n("category.tag_groups_placeholder"),
   };
 
   constructor(owner: Owner, args: DSelectTagGroupSignature["Args"]) {

@@ -34,6 +34,7 @@ import {
   type SelectTexts,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
+import { i18n } from "discourse-i18n";
 
 /** Shortcut for clearing a tag filter. */
 export const ALL_TAGS_ID = "all-tags";
@@ -48,18 +49,6 @@ type FilterTag = SelectItem & {
   slug?: string;
   target_tag?: FilterTag;
 };
-
-/**
- * The filter's texts, above the tag field's. Both modes declare them, so a customization for the
- * kind applies whatever `@multiple` is.
- */
-const FILTER_TEXTS: SelectTexts = Object.freeze({
-  ariaLabel: { translationKey: "tagging.filter_by_tags_label" },
-  placeholder: { translationKey: "tagging.selector_tags" },
-  removeFilter: { translationKey: "tagging.selector_remove_filter" },
-  noTags: { translationKey: "tagging.selector_no_tags" },
-  maxLoaded: { translationKey: "tagging.filter_to_narrow_tags" },
-});
 
 /** The single filter's caret, pointing right while closed. */
 const DROP_CARET = Object.freeze({ closed: "angle-right", open: "angle-down" });
@@ -138,8 +127,20 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     force_lowercase_tags: boolean;
   };
 
-  /** The filter's texts; it draws tag rows too, so it declares the tag texts as well. */
-  kindTexts: SelectKindTexts = [TAG_TEXTS, FILTER_TEXTS];
+  /**
+   * The filter's texts, over the tag texts it draws its rows with. Both modes declare them, so a
+   * customization for the kind applies whatever `@multiple` is.
+   */
+  kindTexts: SelectKindTexts = [
+    TAG_TEXTS,
+    {
+      ariaLabel: i18n("tagging.filter_by_tags_label"),
+      placeholder: i18n("tagging.selector_tags"),
+      removeFilter: i18n("tagging.selector_remove_filter"),
+      noTags: i18n("tagging.selector_no_tags"),
+      maxLoaded: i18n("tagging.filter_to_narrow_tags"),
+    },
+  ];
 
   constructor(owner: Owner, args: DSelectTagFilterSignature["Args"]) {
     super(owner, args);

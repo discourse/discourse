@@ -116,9 +116,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         : i18n("categories.category"),
     placeholder: (_values, context) =>
       context.multiple ? undefined : this.#singlePlaceholder,
-    readOnlyDescription: {
-      translationKey: "category_row.read_only_description",
-    },
+    readOnlyDescription: i18n("category_row.read_only_description"),
     // The badge draws no count of zero, so neither does the label.
     familyFooter: ({ category, count }) =>
       count
