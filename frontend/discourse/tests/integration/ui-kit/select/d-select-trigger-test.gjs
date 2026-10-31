@@ -1596,6 +1596,41 @@ module(
       );
     });
 
+    test("wrapped chip rows sit more than 24px apart whatever the type's line height", async function (assert) {
+      forceMobile();
+      const items = Array.from({ length: 40 }, (_, id) => ({
+        id,
+        name: `Held item ${id}`,
+      }));
+      const value = items.map((item) => item.id);
+      await render(
+        <template>
+          <SupplementalStripHost @items={{items}} @value={{value}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const strip = find(".d-select__panel .d-select__chips");
+      // An 18px line at 16px, as some fonts give for a normal line height, puts the 24px
+      // remove targets of neighbouring rows edge to edge on a 0.375em gap.
+      strip.style.fontSize = "16px";
+      strip.style.lineHeight = "18px";
+      const chip = strip.querySelector(".d-select__chip");
+      const scale = chip.getBoundingClientRect().height / chip.offsetHeight;
+      const tops = [
+        ...new Set(
+          [...strip.querySelectorAll(".d-select__chip")].map(
+            (each) => each.getBoundingClientRect().top / scale
+          )
+        ),
+      ].sort((a, b) => a - b);
+
+      assert.true(tops.length > 1, "the chips wrap");
+      assert.true(
+        tops[1] - tops[0] > 24,
+        `rows are ${tops[1] - tops[0]}px apart`
+      );
+    });
+
     test("chip focus suppresses the active option's second indicator", async function (assert) {
       forceMobile();
       await render(

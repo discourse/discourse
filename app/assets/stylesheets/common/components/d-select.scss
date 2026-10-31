@@ -668,8 +668,9 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 
-  // Rows sit more than 24px apart so the remove targets below never overlap between rows.
-  row-gap: 0.375em;
+  // Rows sit more than 24px apart so the remove targets below never meet between rows. A chip
+  // is one line tall, and a font's normal line can be short enough that 0.375em alone falls short.
+  row-gap: max(0.375em, calc(25px - 1lh));
 
   &:focus-within {
     @include default-focus;
