@@ -521,6 +521,9 @@ Open items need a decision after manual testing; the rest are intended but still
   the merge button enabled after the picker is cleared (`merge-users-prompt.gjs`); and the invite
   panel's group picker is unreachable, because its only caller is the PM participants modal and
   `showGroups` requires a non-PM invite (`invite-panel.gjs`). Both branches are converted anyway.
+  With the redesigned composer on, its `.user-selector` rules are not scoped to the composer, so
+  the review queue's "Flagged user" picker is half width with a right border in both modes
+  (`uc-enable-composer-redesign.scss`).
 
 **Texts** (recorded 2026-10-30)
 
