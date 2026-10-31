@@ -240,6 +240,11 @@ admin tables and chat. The component this replaces rendered its list inline and 
 `position: fixed` by default on desktop, per-call-site strategy overrides, a `transform`
 containing-block hack on one table container, and a recurring tail of "dropdown is cut off" fixes.
 
+Inside a modal dialog the panel renders in the dialog's own outlet instead (`DModal` provides
+one, marked `data-float-outlet`). Browsers leave everything outside an open `aria-modal` dialog
+out of the accessibility tree, so a panel in the page's portal would be silent to a screen
+reader.
+
 Rendering near the trigger (float-kit's `portalOutletElement`) was evaluated and rejected. It
 would make the tab order correct for free, since the panel would be adjacent in document order,
 but it re-acquires exactly that clipping tax. The cost is paid instead by `@inlineTabOrder`, which

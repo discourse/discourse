@@ -392,6 +392,12 @@ customization ports are done.
   | `.selected-choice-category` | `.d-select__chip` |
   | `.category-drop-footer` | No equivalent: the new drop has no footer |
 
+- **Menus opened from a modal render inside it.** float-kit menus whose trigger sits in a
+  modal dialog now render in the dialog's outlet, not `#d-menu-portals`, for every menu, not
+  only DSelect. Third-party CSS keyed on `#d-menu-portals` stops reaching those menus: one
+  theme colors `#d-menu-portals .btn-default`, and one plugin raises the portal's z-index (the
+  composer, not a modal, so unaffected). Recorded 2026-10-31.
+
 ## Behaviour changes to compare by hand
 
 Differences from select-kit to try side by side (flag on and off) before a family is promoted.

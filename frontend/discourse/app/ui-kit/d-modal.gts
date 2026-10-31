@@ -749,6 +749,9 @@ export default class DModal extends Component<DModalSignature> {
 
           {{yield to="belowFooter"}}
         </div>
+        {{! Menus opened from the dialog render here: content outside an open modal dialog is
+          left out of the accessibility tree. }}
+        <div class="d-modal__float-outlet" data-float-outlet></div>
       </this.dynamicElement>
       {{#unless @inline}}
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}

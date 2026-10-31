@@ -214,13 +214,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     placeholder and role, each row's title, category and position ("… Mathematics Calculus
     (2 of 4)"), and "selected" on a pick. The invite field reads its name, placeholder,
     description and role, and the picked topic as the list closes.
-  - ☐ **Finding: a DSelect panel opened inside a DModal is silent.** Arrowing through the invite
-    field's results speaks nothing. The panel is portaled outside the modal, which is an
-    `aria-modal` dialog, so Chrome leaves the listbox and its options out of the accessibility
-    tree (ignored reason `activeAriaModalDialog`). This holds for every DSelect trigger in a
-    modal, not only topics; select-kit rendered its list inline, so it did not have it. Lists
-    rendered inside the modal (`DSelectList`) are read. Needs a decision on where floats opened
-    from a modal render.
+  - ☑ **A DSelect panel opened inside a DModal was silent.** The panel was portaled outside the
+    modal, an `aria-modal` dialog, so Chrome left the listbox out of the accessibility tree
+    (ignored reason `activeAriaModalDialog`). Every float-kit menu opened from a modal now renders
+    in an outlet the dialog provides (2026-10-31); VoiceOver then reads each row with its
+    position and the pick. Tooltips stay in the page's portal: `aria-describedby` reaches them
+    across the boundary.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
   `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.

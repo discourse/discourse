@@ -1578,4 +1578,76 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
         "scrolling the nearest scrollable ancestor closes the menu"
       );
   });
+
+  module("inside a modal dialog", function () {
+    test("renders within the dialog, where assistive technology can reach it", async function (assert) {
+      await render(
+        <template>
+          <DMenus />
+          <DModal @inline={{true}} @title="Manage">
+            <:body>
+              <DMenu
+                @content="content"
+                @identifier="in-modal"
+                @inline={{false}}
+                @label="Open"
+              />
+            </:body>
+          </DModal>
+        </template>
+      );
+      await click(".fk-d-menu__trigger");
+
+      assert
+        .dom("[aria-modal='true'] .fk-d-menu[data-identifier='in-modal']")
+        .exists("the menu is inside the modal dialog");
+      assert
+        .dom("#d-menu-portals .fk-d-menu")
+        .doesNotExist("nothing renders in the page's menu portal");
+    });
+
+    test("takes pointer events there, though the dialog lets them through", async function (assert) {
+      await render(
+        <template>
+          <DMenus />
+          <DModal @inline={{true}} @title="Manage">
+            <:body>
+              <DMenu
+                @content="content"
+                @identifier="in-modal"
+                @inline={{false}}
+                @label="Open"
+              />
+            </:body>
+          </DModal>
+        </template>
+      );
+      await click(".fk-d-menu__trigger");
+
+      assert.strictEqual(
+        getComputedStyle(find(".fk-d-menu[data-identifier='in-modal']"))
+          .pointerEvents,
+        "auto"
+      );
+    });
+
+    test("a menu outside any modal still renders in the page's menu portal", async function (assert) {
+      await render(
+        <template>
+          <DMenus />
+          <DMenu
+            @content="content"
+            @identifier="outside"
+            @inline={{false}}
+            @label="Open"
+          />
+        </template>
+      );
+      await click(".fk-d-menu__trigger");
+
+      assert
+        .dom("#d-menu-portals .fk-d-menu[data-identifier='outside']")
+        .exists();
+    });
+  });
 });
