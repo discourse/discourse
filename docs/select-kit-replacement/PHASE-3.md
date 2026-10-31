@@ -178,7 +178,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     through a customization.
   - ☐ Boards modals: a "ResizeObserver loop" error with `DSelectUser` in the column settings
     modal, not yet traced.
-  - ☐ SCSS parity, flag-on system specs and the screen-reader pass.
+  - ☑ SCSS parity, flag-on system specs, and the visual review across themes, color modes and
+    phone width (2026-10-31).
+  - ☐ The screen-reader pass: recipient chips (user, group and email type words), a pick-one
+    field and a FormKit field's description.
 - ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
   handoff.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
