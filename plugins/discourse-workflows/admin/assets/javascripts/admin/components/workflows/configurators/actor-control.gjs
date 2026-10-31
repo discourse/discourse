@@ -2,8 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import {
   ACTOR_KIND,
@@ -23,6 +26,8 @@ const KIND_OPTIONS = [
 ];
 
 export default class ActorControl extends Component {
+  @service siteSettings;
+
   @tracked kind = actorKindForValue(this.args.field.value);
 
   get kindOptions() {
@@ -82,12 +87,24 @@ export default class ActorControl extends Component {
         />
 
         {{#if this.showUserChooser}}
-          <UserChooser
-            class="workflows-actor-control__user"
-            @onChange={{this.handleUserChange}}
-            @options={{hash maximum=1 excludeCurrentUser=false}}
-            @value={{this.username}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectUser
+              class="workflows-actor-control__user"
+              @clearable={{true}}
+              @onChange={{legacyPickOne this.handleUserChange}}
+              @texts={{hash ariaLabel=@field.title}}
+              @value={{this.username}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <UserChooser
+              class="workflows-actor-control__user"
+              @onChange={{this.handleUserChange}}
+              @options={{hash maximum=1 excludeCurrentUser=false}}
+              @value={{this.username}}
+            />
+          {{/if}}
         {{/if}}
       </div>
     </ExpressionWrapper>
