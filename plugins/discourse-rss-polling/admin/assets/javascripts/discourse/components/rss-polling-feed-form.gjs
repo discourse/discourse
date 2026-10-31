@@ -9,6 +9,7 @@ import Form from "discourse/components/form";
 import DButtonTooltip from "discourse/float-kit/components/d-button-tooltip";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import { isHttpUrl } from "discourse/lib/url";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
@@ -18,6 +19,7 @@ import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import RssPollingFeedItemList from "discourse/plugins/discourse-rss-polling/discourse/components/rss-polling-feed-item-list";
 import {
@@ -323,12 +325,28 @@ export default class RssPollingFeedForm extends Component {
                 as |field|
               >
                 <field.Control>
-                  <UserChooser
-                    class="rss-polling-feed-form__author"
-                    @onChange={{field.set}}
-                    @options={{hash maximum=1 excludeCurrentUser=false}}
-                    @value={{field.value}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectUser
+                      class="rss-polling-feed-form__author"
+                      @clearable={{true}}
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
+                      @id={{field.id}}
+                      @invalid={{if field.error true false}}
+                      @onChange={{legacyPickOne field.set}}
+                      @texts={{hash ariaLabel=field.title}}
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <UserChooser
+                      class="rss-polling-feed-form__author"
+                      @onChange={{field.set}}
+                      @options={{hash maximum=1 excludeCurrentUser=false}}
+                      @value={{field.value}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
 

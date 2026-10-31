@@ -11,6 +11,7 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DTextarea from "discourse/ui-kit/d-textarea";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -104,14 +105,29 @@ export default class QueriesEdit extends Component {
             <:content>
               <div class="query-edit__metadata-fields">
                 <div class="query-edit__metadata-field">
-                  <span class="query-edit__metadata-label">
+                  <span
+                    class="query-edit__metadata-label"
+                    id="query-edit-allow-groups-label"
+                  >
                     {{i18n "explorer.allow_groups"}}
                   </span>
-                  <GroupChooser
-                    @content={{@controller.groupOptions}}
-                    @onChange={{@controller.updateGroupIds}}
-                    @value={{@controller.model.group_ids}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if @controller.siteSettings.enable_new_select_controls}}
+                    <DSelectGroup
+                      @ariaLabelledBy="query-edit-allow-groups-label"
+                      @items={{@controller.groupOptions}}
+                      @multiple={{true}}
+                      @onChange={{@controller.updateGroupIds}}
+                      @value={{@controller.model.group_ids}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <GroupChooser
+                      @content={{@controller.groupOptions}}
+                      @onChange={{@controller.updateGroupIds}}
+                      @value={{@controller.model.group_ids}}
+                    />
+                  {{/if}}
                 </div>
 
                 <div class="query-edit__metadata-field">
