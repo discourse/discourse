@@ -956,8 +956,8 @@ chain then falls back to the minimum or the prompt. The server counts the group'
 against the ids the search sends (at most 100), so tags held by name are missing from the count
 until their names resolve.
 
-The default tag row renders new items with the `createItem` text (`d_select.create_item`). A custom `:item` block
-owns that wording too; use the item's `isNew` flag to distinguish creation from existing tags.
+The default tag row draws the create row with the `createItem` text (`d_select.create_item`). A custom `:item` block
+owns that wording too; its third parameter's `row.create` tells the create row from existing tags.
 
 #### Category recipes
 

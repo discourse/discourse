@@ -550,7 +550,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
         {{#if (has-block "item")}}
           {{yield item options row to="item"}}
         {{else}}
-          <TagOption @item={{item}} @options={{options}} />
+          <TagOption @item={{item}} @options={{options}} @row={{row}} />
         {{/if}}
       </:item>
       <:selection as |item options|>

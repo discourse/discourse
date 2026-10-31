@@ -4,6 +4,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   renderSelectText,
   type SelectItem,
+  type SelectItemRow,
   type SelectResolvedOptions,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -69,12 +70,14 @@ export const TagOption: TemplateOnlyComponent<{
     item: SelectItem;
     /** The select's resolved options, which carry its texts. */
     options?: SelectResolvedOptions;
+    /** The row's state, which says whether it's the create row. */
+    row: SelectItemRow;
   };
 }> = <template>
   {{#if @item.onSelect}}
     {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
     {{tagItemName @item}}
-  {{else if @item.isNew}}
+  {{else if @row.create}}
     {{rowText @options "createItem" (createValues @item)}}
   {{else}}
     <span class="d-tag-option">

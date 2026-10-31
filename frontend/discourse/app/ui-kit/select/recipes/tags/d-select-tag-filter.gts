@@ -363,7 +363,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         {{else if (this.isShortcut item)}}
           <span class="d-tag-drop__shortcut">{{tagItemName item}}</span>
         {{else}}
-          <TagOption @item={{item}} @options={{options}} />
+          <TagOption @item={{item}} @options={{options}} @row={{row}} />
         {{/if}}
       </:item>
       <:selection as |item options|>

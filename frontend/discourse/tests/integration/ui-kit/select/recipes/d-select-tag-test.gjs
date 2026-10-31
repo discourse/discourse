@@ -1521,6 +1521,26 @@ module(
         assert.dom(optionNamed("New tag fresh")).exists("the create row");
       });
 
+      test("only the create row draws the create text", async function (assert) {
+        stubSearch([{ id: 7, name: "fresh", count: 3, isNew: true }]);
+
+        await render(
+          <template>
+            <DSelectTag @allowCreate={{true}} @multiple={{true}} />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+        await select.search("fre");
+
+        assert
+          .dom(".d-tag-option", optionNamed("fresh"))
+          .exists("a listed tag draws as a tag whatever its data says");
+        assert
+          .dom("[role='option'].--create")
+          .hasText("Create “fre”", "the create row draws the create text");
+      });
+
       test("at a zero tag cap the field keeps its prompt", async function (assert) {
         stubSearch();
         this.siteSettings.max_tags_per_topic = 0;
