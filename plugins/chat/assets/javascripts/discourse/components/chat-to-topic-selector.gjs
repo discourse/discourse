@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -172,6 +172,7 @@ export default class ChatToTopicSelector extends Component {
                 @categoryId={{this.categoryId}}
                 @multiple={{true}}
                 @onChange={{this.changeTags}}
+                @texts={{hash placeholder=(i18n "tagging.choose_for_topic")}}
                 @value={{this.tags}}
               />
             {{else}}
@@ -221,6 +222,7 @@ export default class ChatToTopicSelector extends Component {
                 @ariaLabelledBy="chat-to-topic-new-message-tags-label"
                 @multiple={{true}}
                 @onChange={{this.changeTags}}
+                @texts={{hash placeholder=(i18n "tagging.choose_for_topic")}}
                 @value={{this.tags}}
               />
             {{else}}

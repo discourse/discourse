@@ -8,6 +8,7 @@ import SiteSettingTagList from "discourse/admin/components/site-settings/tag-lis
 import SiteSetting from "discourse/admin/models/site-setting";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import Form from "discourse/components/form";
+import ReviewableFieldTags from "discourse/components/reviewable-field-tags";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
 import TagSettings from "discourse/components/tag-settings";
@@ -535,6 +536,36 @@ module(
         for (const list of lists) {
           assertNamedByCaption(assert, this.nameOf, list, "label");
         }
+      });
+
+      test("a field that sets a topic's tags prompts for optional tags, other lists keep the select's own prompt", async function (assert) {
+        const model = {
+          watched_tags: [],
+          tracked_tags: [],
+          watching_first_post_tags: [],
+          muted_tags: [],
+          set() {},
+        };
+        const siteSettings = this.siteSettings;
+        const none = [];
+        await render(
+          <template>
+            <div class="review-field">
+              <ReviewableFieldTags @value={{none}} />
+            </div>
+            <UserPreferencesTags
+              @model={{model}}
+              @siteSettings={{siteSettings}}
+            />
+          </template>
+        );
+
+        assert
+          .dom(".review-field .d-select__input")
+          .hasAttribute("placeholder", i18n("tagging.choose_for_topic"));
+        assert
+          .dom(".tracking-controls .d-select__input")
+          .hasAttribute("placeholder", i18n("d_select.add_placeholder"));
       });
 
       test("each group tag list is named by its caption", async function (assert) {

@@ -15,11 +15,11 @@ export type SelectTagTextKey =
   | "tagCount";
 
 /**
- * The tag texts. The placeholder is the prompt the requirement steps fall back to, and the panel's
- * minimum line counts progress so it never repeats the field's "Select at least…".
+ * The tag texts. The prompt stays the select's own, so a call site words it for its context; the
+ * requirement steps come before it, and the panel's minimum line counts progress so it never
+ * repeats the field's "Select at least…".
  */
 export const TAG_TEXTS: SelectTexts = Object.freeze({
-  placeholder: { key: "tagging.choose_for_topic" },
   addMorePlaceholder: (_values, context) => context.text("addMoreTags"),
   minimum: { key: "tagging.required_tags_progress" },
   maximum: { key: "tagging.max_tags_reached" },

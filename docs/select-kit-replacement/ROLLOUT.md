@@ -327,6 +327,11 @@ customization ports are done.
     (`tagging.tag_group_label`, new) or "Tag groups" (`tagging.tag_groups_label`, new). Before,
     they read "Options". The composer's tag field is named "Tags" instead of "Optional tags…",
     which stays its placeholder.
+  - Tags, 2026-10-30: "Optional tags…" (`tagging.choose_for_topic`) is now passed only by the
+    fields that set a topic's tags: the composer, topic editing, the review queue, and the new
+    topic and message fields of move to topic and chat to topic. Every other tag picker shows the
+    select's own "Add…", or "Select…" when it holds one tag. Before, every tag picker said
+    "Optional tags…", as select-kit's did.
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
   to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each
@@ -465,7 +470,8 @@ Open items need a decision after manual testing; the rest are intended but still
   default. Required texts, such as names and button labels, still fall back.
 - [ ] **The tag requirement moved into the field.** The line DSelect drew under the tag picker
   ("Select at least 2 tags") is gone; select-kit never had it. The placeholder says it instead:
-  the required tag group, then the minimum, then "Optional tags…". With tags held, the field
+  the required tag group, then the minimum, then the field's own prompt ("Optional tags…" on
+  topic fields). With tags held, the field
   after the chips keeps saying what is missing ("Select 1 more tag from 'Genre'…"), then "Add more
   tags…". The mobile modal's field says the same. The closed mobile trigger still shows only the
   chips or the count.

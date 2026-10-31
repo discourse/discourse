@@ -1202,6 +1202,20 @@ module(
         this.siteSettings.max_tag_length = 20;
       });
 
+      test("with no requirement, the field prompts with the select's own text", async function (assert) {
+        stubSearch();
+        const multiple = tracked(true);
+
+        await render(
+          <template><DSelectTag @multiple={{multiple.value}} /></template>
+        );
+        assert.strictEqual(prompt(), i18n("d_select.add_placeholder"));
+
+        multiple.value = false;
+        await settled();
+        assert.strictEqual(prompt(), i18n("d_select.placeholder"));
+      });
+
       test("with tags held, the field counts the tags still needed, then invites more, then stops at the cap", async function (assert) {
         stubSearch();
         const held = tracked([{ id: 1, name: "bug" }]);
@@ -1321,7 +1335,7 @@ module(
         await settled();
         assert.strictEqual(
           prompt(),
-          i18n("tagging.choose_for_topic"),
+          i18n("d_select.add_placeholder"),
           "an empty step hands over to the next"
         );
       });
@@ -1431,7 +1445,7 @@ module(
           <template><DSelectTag @minimum={{1}} @multiple={{true}} /></template>
         );
 
-        assert.strictEqual(prompt(), i18n("tagging.choose_for_topic"));
+        assert.strictEqual(prompt(), i18n("d_select.add_placeholder"));
       });
     });
 

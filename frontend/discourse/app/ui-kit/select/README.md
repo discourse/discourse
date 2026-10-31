@@ -271,10 +271,10 @@ every other:
 
 Every text accepts the same three forms:
 
-- **A translated string**, used as given.
-- **A translation key**, `(hash key="my_theme.fruit_empty")` in a template or `{ key }` in
+- **A translated string**, used as given. In a template, a fixed text is `(i18n "my_theme.fruit_empty")`.
+- **A translation key**, `(hash key="my_theme.results")` in a template or `{ key }` in
   JavaScript. The engine fills the message with the text's values, so plurals and word order stay
-  right. A plain string that is itself a translation key warns in development, because a
+  right. Use it for a text the engine passes values to; a fixed text reads better with `i18n`. A plain string that is itself a translation key warns in development, because a
   `DButton @label` habit would show the key.
 - **A function** `(values, context) => string`. It returns `""` for no text, or `null` or
   `undefined` to hand back to the layer below. A text that needs a value the engine doesn't pass
@@ -399,7 +399,7 @@ engine keys through `@kindTexts`.
 | | `placeholder` | `categories.categories_label` / `subcategories_label` | |
 | | `removeFilter`, `noSubcategories` | `categories.remove_filter`, `categories.no_subcategories` | |
 | `DSelectTag` | `ariaLabel` | `tagging.tag` while it holds at most one, otherwise `tagging.tags` | |
-| | `placeholder` | `tagging.choose_for_topic` | |
+| | `placeholder` | the engine's; fields that set a topic's tags pass `tagging.choose_for_topic` | |
 | | `addMorePlaceholder` | the `addMoreTags` text | `selected`, `minimum`, `maximum` |
 | | `addMoreTags` | `tagging.add_more_tags` | |
 | | `minimum`, `maximum` | `tagging.required_tags_progress`, `tagging.max_tags_reached` | as the engine's |

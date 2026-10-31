@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import { i18n } from "discourse-i18n";
 
 export default class ReviewableFieldTags extends Component {
   @service siteSettings;
@@ -37,6 +38,7 @@ export default class ReviewableFieldTags extends Component {
         @legacyKind="mini-tag-chooser"
         @multiple={{true}}
         @onChange={{this.onChange}}
+        @texts={{hash placeholder=(i18n "tagging.choose_for_topic")}}
         @value={{this.value}}
       />
     {{else}}

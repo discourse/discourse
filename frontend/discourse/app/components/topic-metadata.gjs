@@ -8,6 +8,7 @@ import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import { i18n } from "discourse-i18n";
 
 export default class TopicMetadata extends Component {
   @service siteSettings;
@@ -59,6 +60,7 @@ export default class TopicMetadata extends Component {
               @multiple={{true}}
               @onChange={{@topicTagsChanged}}
               @suggestRecent={{true}}
+              @texts={{hash placeholder=(i18n "tagging.choose_for_topic")}}
               @value={{@buffered.tags}}
             />
           {{else}}

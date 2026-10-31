@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -276,6 +276,9 @@ export default class MoveToTopic extends Component {
                       @ariaLabelledBy="move-to-topic-message-tags-label"
                       @multiple={{true}}
                       @onChange={{this.updateTags}}
+                      @texts={{hash
+                        placeholder=(i18n "tagging.choose_for_topic")
+                      }}
                       @value={{this.tags}}
                     />
                   {{else}}
@@ -465,6 +468,9 @@ export default class MoveToTopic extends Component {
                         @categoryId={{this.categoryId}}
                         @multiple={{true}}
                         @onChange={{this.updateTags}}
+                        @texts={{hash
+                          placeholder=(i18n "tagging.choose_for_topic")
+                        }}
                         @value={{this.tags}}
                       />
                     {{else}}
@@ -520,6 +526,9 @@ export default class MoveToTopic extends Component {
                       @ariaLabelledBy="move-to-topic-split-message-tags-label"
                       @multiple={{true}}
                       @onChange={{this.updateTags}}
+                      @texts={{hash
+                        placeholder=(i18n "tagging.choose_for_topic")
+                      }}
                       @value={{this.tags}}
                     />
                   {{else}}
