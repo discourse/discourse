@@ -3549,6 +3549,22 @@ en:
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"
 
+    select_user:
+      user: "User"
+      users: "Users"
+      user_or_group: "User or group"
+      users_or_groups: "Users or groups"
+      user_or_email: "User or email"
+      users_or_emails: "Users or emails"
+      user_group_or_email: "User, group or email"
+      users_groups_or_emails: "Users, groups or emails"
+      group_type: "Group"
+      email_type: "Email"
+
+    select_group:
+      group: "Group"
+      groups: "Groups"
+
     d_select:
       create_item: "Create “%{label}”"
       placeholder: "Select…"
