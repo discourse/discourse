@@ -208,8 +208,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ SCSS parity and flag-on system specs (site setting, invite, boards).
   - ☑ Visual review across Foundation and Horizon, light and dark, and phone width (invite
     field, site setting, move to topic, boards): category badges now sit apart, titles line up
-    with their category, and boards' list is a single choice (2026-10-31). The workflows field
-    and feature-topic list were not looked at in the browser.
+    with their category, and boards' list is a single choice (2026-10-31). Also the workflows
+    topic filter (held topics resolved, list in the node editor's modal) and the feature-topic
+    list (public topics on open, as before), light and dark.
   - ☑ VoiceOver pass (2026-10-31, macOS, Chrome). The move-to-topic list reads its label,
     placeholder and role, each row's title, category and position ("… Mathematics Calculus
     (2 of 4)"), and "selected" on a pick. The invite field reads its name, placeholder,
