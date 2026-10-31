@@ -282,6 +282,7 @@ class PostRevisor
   # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
   # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
   # @option opts [Boolean] :silent Don't send notifications to user
+  # @option opts [Boolean] :skip_post_alert Do not enqueue a post alert for this revision
   # @option opts [Boolean] :hidden Force the created revision to be hidden from non-staff users
   # @option opts [String] :expected_raw Reject the revision if the post changed before persistence
   # @option opts [String] :preserve_cooked_token Identifies a client that already rendered the change
@@ -886,7 +887,7 @@ class PostRevisor
   end
 
   def alert_users(old_raw)
-    return if @editor.id == Discourse::SYSTEM_USER_ID
+    return if @editor.id == Discourse::SYSTEM_USER_ID || @opts[:skip_post_alert]
 
     added_mentions =
       if old_raw == @post.raw

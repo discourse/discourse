@@ -14,13 +14,21 @@ module DiscourseEvents
       end
 
       @events =
-        DiscourseEvents::Events::Finder.search(current_user, search_params).includes(
-          :event_dates,
-          :image_upload,
-          post: {
-            topic: %i[tags category],
-          },
+        DiscourseEvents::Events::Finder
+          .search(current_user, search_params)
+          .includes(:event_dates, :image_upload, post: { topic: %i[tags category] })
+          .to_a
+
+      # Expansion and serialization read this field for each recurring Event.
+      # Preload it in one query instead of loading Topic custom fields per Event.
+      recurring_topics =
+        @events.filter_map { |event| event.post&.topic if event.recurring? }.uniq(&:id)
+      if recurring_topics.present?
+        Topic.preload_custom_fields(
+          recurring_topics,
+          [Events::Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD],
         )
+      end
 
       respond_to do |format|
         format.ics do

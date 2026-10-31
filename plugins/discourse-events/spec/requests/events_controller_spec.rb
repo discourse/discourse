@@ -30,6 +30,51 @@ module DiscourseEvents::Events
         expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
       end
 
+      %w[reuse_topic create_next_topic].each do |topic_mode|
+        it "avoids N+1 queries for recurring events in #{topic_mode} mode" do
+          SiteSetting.discourse_post_event_recurring_topic_mode = topic_mode
+
+          # Warm up route/serializer caches before measuring query counts.
+          get "/discourse-post-event/events.json"
+
+          create_recurring_event =
+            lambda do |days|
+              starts_at = days.days.from_now.change(sec: 0)
+              event =
+                Fabricate(
+                  :event,
+                  original_starts_at: starts_at,
+                  original_ends_at: starts_at + 1.hour,
+                  recurrence: "every_week",
+                )
+
+              topic = event.post.topic
+              topic.custom_fields[
+                DiscourseEvents::Events::Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+              ] = (starts_at - 7.days).iso8601
+              topic.save_custom_fields
+            end
+
+          create_recurring_event.call(1)
+          queries_with_1_event = track_sql_queries { get "/discourse-post-event/events.json" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["events"].length).to eq(1)
+
+          create_recurring_event.call(2)
+          create_recurring_event.call(3)
+          queries_with_3_events = track_sql_queries { get "/discourse-post-event/events.json" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["events"].length).to eq(3)
+          expect(
+            response.parsed_body["events"].all? do |event|
+              event["recurrence_anchor_starts_at"].present?
+            end,
+          ).to eq(true)
+
+          expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
+        end
+      end
+
       it "excludes deleted events" do
         active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
         active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)

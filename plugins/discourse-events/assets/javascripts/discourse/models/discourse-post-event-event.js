@@ -105,6 +105,7 @@ export default class DiscoursePostEventEvent {
   @tracked atCapacity;
   @tracked recurrenceUntil;
   @tracked recurrence;
+  @tracked recurrenceAnchorStartsAt;
   @tracked customFields;
   @tracked channel;
   @tracked imageUpload;
@@ -155,6 +156,7 @@ export default class DiscoursePostEventEvent {
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
+    this.recurrenceAnchorStartsAt = args.recurrence_anchor_starts_at;
     this.recurrenceUntil = args.recurrence_until;
     this.canUpdateAttendance = args.can_update_attendance;
     this.canActOnDiscoursePostEvent = args.can_act_on_discourse_post_event;
@@ -293,6 +295,7 @@ export default class DiscoursePostEventEvent {
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;
     this.recurrence = event.recurrence;
+    this.recurrenceAnchorStartsAt = event.recurrenceAnchorStartsAt;
     this.recurrenceUntil = event.recurrenceUntil;
     this.canUpdateAttendance = event.canUpdateAttendance;
     this.canActOnDiscoursePostEvent = event.canActOnDiscoursePostEvent;

@@ -257,6 +257,47 @@ describe PrettyText do
 
           expect(result).to include("The fourth Thursday of every month")
         end
+
+        it "labels a timed successor using its inherited monthly recurrence anchor" do
+          post =
+            create_post_with_event(user_1, 'recurrence="every_month"', Time.utc(2027, 4, 26, 17))
+          anchor = Time.utc(2027, 3, 29, 17)
+
+          post.topic.custom_fields[
+            DiscourseEvents::Events::Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+          ] = anchor.iso8601
+          post.topic.save_custom_fields
+
+          expect(post.reload.event.recurrence_anchor_starts_at).to eq_time(anchor)
+          result = PrettyText.format_for_email(PrettyText.cook(post.raw), post)
+
+          expect(result).to include("April 26, 2027 5:00 PM (UTC)")
+          expect(result).to include("The last Monday of every month")
+          expect(result).not_to include("The fourth Monday of every month")
+        end
+
+        it "labels an all-day successor using its inherited monthly recurrence anchor" do
+          post =
+            PostCreator.create!(
+              user_1,
+              title: "Last Monday all-day successor",
+              raw:
+                '[event start="2027-04-26" all-day="true" recurrence="every_month"]' + "\n[/event]",
+            ).reload
+          anchor = Time.utc(2027, 3, 29)
+
+          post.topic.custom_fields[
+            DiscourseEvents::Events::Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+          ] = anchor.iso8601
+          post.topic.save_custom_fields
+
+          expect(post.reload.event.recurrence_anchor_starts_at).to eq_time(anchor)
+          result = PrettyText.format_for_email(PrettyText.cook(post.raw), post)
+
+          expect(result).to include("April 26, 2027")
+          expect(result).to include("The last Monday of every month")
+          expect(result).not_to include("The fourth Monday of every month")
+        end
       end
 
       context "when the event is closed" do
