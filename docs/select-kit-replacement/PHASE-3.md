@@ -176,8 +176,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ Held names match in any case, through the engine's opt-in `normalizeKey` (2026-10-31).
   - ☐ `addUserSearchOption` reaches only the legacy pickers; the new ones take `searchOptions`
     through a customization.
-  - ☐ Boards modals: a "ResizeObserver loop" error with `DSelectUser` in the column settings
-    modal, not yet traced.
+  - ☑ Boards modals: the "ResizeObserver loop" error was a test-only effect. A list rendered in
+    place (as under tests) made the modal scroll, and FormKit stretched it to the control's
+    width; the stylesheet now lets a menu or tooltip size itself, and the test stylesheet keeps
+    the modal's scrollbar gutter while a list is open (2026-10-31).
+  - ☑ Enter in a button-variant select's panel filter no longer also submits the modal
+    (2026-10-31).
   - ☑ SCSS parity, flag-on system specs, and the visual review across themes, color modes and
     phone width (2026-10-31).
   - ☑ VoiceOver pass (2026-10-31, macOS, Chrome): recipient chips read their type word
