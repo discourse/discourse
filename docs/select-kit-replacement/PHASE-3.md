@@ -186,6 +186,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     (2026-10-31).
   - ☑ SCSS parity, flag-on system specs, and the visual review across themes, color modes and
     phone width (2026-10-31).
+  - ☐ `user_preferences_tracking_spec.rb` (new controls, "hides tags chosen in another level")
+    failed its first CI run twice and passed on retry; six local runs pass. Both failures logged
+    the virtual list's zero-height warning, which also printed in local qunit runs that timed
+    out. Not reproduced, cause unknown (2026-10-31).
   - ☑ VoiceOver pass (2026-10-31, macOS, Chrome): recipient chips read their type word
     ("moderators Group", "someone@example.com Email", a user chip has none) and the removal hint;
     rows read username, name and position; the about page's pick-one user and group fields read
