@@ -930,9 +930,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
       );
 
       await click(".d-select__trigger");
-      await fillIn("[role='combobox']", "app");
-      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
-      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      await fillIn(".d-select__filter", "app");
+      await triggerKeyEvent(".d-select__filter", "keydown", "ArrowDown");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Enter");
 
       assert.deepEqual(this.selected, [1], "Enter picks the option");
       assert.false(this.actionCalled, "the modal does not submit as well");

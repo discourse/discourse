@@ -466,7 +466,8 @@ export default class DModal extends Component<DModalSignature> {
       document.activeElement?.closest("form") ||
       document.activeElement?.closest(ENTER_HANDLING_CONTROLS) ||
       document.activeElement?.closest(".select-kit") ||
-      this.#focusedComboboxClaimsEnter()
+      this.#focusedComboboxClaimsEnter() ||
+      this.#focusedListFieldClaimsEnter()
     ) {
       return false;
     }
@@ -490,6 +491,28 @@ export default class DModal extends Component<DModalSignature> {
       combobox instanceof HTMLTextAreaElement;
 
     return !isTextEntry || combobox.getAttribute("aria-expanded") === "true";
+  }
+
+  /**
+   * A search field that drives a listbox it controls (`aria-autocomplete` with
+   * `aria-controls`, but no combobox role) picks the active option on Enter
+   * while that listbox is rendered.
+   */
+  #focusedListFieldClaimsEnter() {
+    const field = document.activeElement;
+    if (
+      !(field instanceof HTMLInputElement) ||
+      !field.hasAttribute("aria-autocomplete")
+    ) {
+      return false;
+    }
+
+    return (field.getAttribute("aria-controls") ?? "")
+      .split(/\s+/)
+      .some(
+        (id) =>
+          id && document.getElementById(id)?.getAttribute("role") === "listbox"
+      );
   }
 
   #animateBackdropOpacity(position: number) {
