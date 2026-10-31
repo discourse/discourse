@@ -20,3 +20,59 @@
     }
   }
 }
+
+.d-user-option,
+.d-group-option,
+.d-email-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+
+  .avatar,
+  .d-icon {
+    flex: none;
+  }
+}
+
+.d-user-option {
+  // A chip or trigger keeps the height of its text.
+  &.--selection .avatar {
+    width: 1lh;
+    height: 1lh;
+  }
+
+  &__username {
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  &__name {
+    min-width: 0;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+
+    @include ellipsis;
+  }
+
+  &__status {
+    flex: none;
+    display: inline-flex;
+
+    .emoji {
+      width: 1em;
+      height: 1em;
+    }
+  }
+
+  &__decorations:empty {
+    display: none;
+  }
+}
+
+.d-group-option__name,
+.d-email-option__address {
+  min-width: 0;
+
+  @include ellipsis;
+}

@@ -1,12 +1,16 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { setPrefix } from "discourse/lib/get-url";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Tag Groups", function (needs) {
+  let savedTagGroup;
+
   needs.user();
   needs.settings({ tagging_enabled: true });
+  needs.hooks.beforeEach(() => (savedTagGroup = null));
   needs.pretender((server, helper) => {
     const tagGroups = {
       tag_group: {
@@ -20,6 +24,11 @@ acceptance("Tag Groups", function (needs) {
     };
 
     server.post("/tag_groups", () => helper.response(tagGroups));
+    server.get("/tag_groups/42", () => helper.response(tagGroups));
+    server.put("/tag_groups/42", (request) => {
+      savedTagGroup = JSON.parse(request.requestBody).tag_group;
+      return helper.response(tagGroups);
+    });
     server.get("/forum/tag_groups", () =>
       helper.response({ tag_groups: [tagGroups.tag_group] })
     );
@@ -81,6 +90,67 @@ acceptance("Tag Groups", function (needs) {
       .exists("tag group is saved and displayed in the sidebar");
   });
 
+  test("saves tags and a single parent tag with the new controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/tag_groups/42");
+
+    assert
+      .dom(".group-tags-list .d-select, .parent-tag-section .d-select")
+      .exists({ count: 2 }, "both tag controls render DSelect");
+    assert
+      .dom(".tag-group-content .select-kit.tag-chooser")
+      .doesNotExist("replaces both legacy tag choosers");
+
+    const tags = dSelect(".group-tags-list .d-select");
+    await tags.selectByName("gazelle");
+    await tags.close();
+    const parent = dSelect(".parent-tag-section .d-select");
+    await parent.selectByName("dog");
+    assert
+      .dom(".parent-tag-section .d-select")
+      .hasAttribute("data-name", "dog", "holds one parent tag");
+    await parent.close();
+    await parent.open();
+    assert
+      .dom('[role="listbox"]')
+      .doesNotHaveAttribute(
+        "aria-multiselectable",
+        "a second parent tag replaces the first"
+      );
+    await parent.close();
+    await click(".tag-group-content .btn.btn-primary");
+
+    assert.deepEqual(
+      savedTagGroup.tags,
+      [
+        { id: 1, name: "monkey" },
+        { id: 2, name: "gazelle" },
+      ],
+      "preserves held tags and serializes the added tag"
+    );
+    assert.deepEqual(
+      savedTagGroup.parent_tag,
+      [{ id: 3, name: "dog" }],
+      "saves the parent in the legacy shape"
+    );
+  });
+
+  test("saves the chosen parent tag", async function (assert) {
+    await visit("/tag_groups/42");
+
+    const parentTag = selectKit(".parent-tag-section .tag-chooser");
+    await parentTag.expand();
+    await parentTag.selectRowByName("dog");
+
+    await click(".tag-group-content .btn.btn-primary");
+
+    assert.deepEqual(
+      savedTagGroup.parent_tag,
+      [{ id: 3, name: "dog" }],
+      "saves the chosen tag as the parent tag"
+    );
+  });
+
   test("going back to tags supports subfolder", async function (assert) {
     setPrefix("/forum");
 
@@ -88,5 +158,30 @@ acceptance("Tag Groups", function (needs) {
     assert
       .dom("a.tag-groups--back")
       .hasAttribute("href", "/forum/tags", "supports subfolder");
+  });
+
+  test("tag group permissions save the picked groups with the new controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/tag_groups/42");
+    await click("#visible-permission");
+
+    assert
+      .dom(".tag-group-content .select-kit.group-chooser")
+      .doesNotExist("replaces the legacy group choosers");
+    const groups = dSelect(".group-access-control .d-select");
+    await groups.open();
+    assert
+      .dom("[role='option'][data-value='0']")
+      .doesNotExist("everyone isn't offered");
+    await groups.selectByName("staff");
+    await groups.selectByName("trust_level_1");
+    await groups.close();
+    await click(".tag-group-content .btn.btn-primary");
+
+    assert.deepEqual(
+      savedTagGroup.permissions,
+      { 0: 3, 3: 1, 11: 1 },
+      "the picked groups can use the tags, everyone else only sees them"
+    );
   });
 });

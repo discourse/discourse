@@ -29,6 +29,26 @@ RSpec.describe "Admin AI agent configuration" do
     expect(page).to have_select("Forced tool strategy", selected: "Apply to all replies")
   end
 
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    fab!(:group) { Fabricate(:group, name: "researchers") }
+
+    it "saves the picked allowed groups" do
+      agent = Fabricate(:ai_agent, allowed_group_ids: [])
+      agent_editor_page.visit_edit(agent)
+
+      groups = PageObjects::Components::UiKit::DSelect.at("#control-allowed_group_ids .d-select")
+      groups.search("research")
+      groups.select_name("researchers")
+      groups.close
+      form.submit
+
+      expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+      expect(agent.reload.allowed_group_ids).to eq([group.id])
+    end
+  end
+
   it "allows creation of a agent" do
     visit "/admin/plugins/discourse-ai/ai-agents"
 

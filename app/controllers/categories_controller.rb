@@ -483,6 +483,14 @@ class CategoriesController < ApplicationController
       else
         false
       end
+    only_postable =
+      if params[:only_postable].present?
+        ActiveModel::Type::Boolean.new.cast(params[:only_postable])
+      else
+        false
+      end
+    reject_indirectly_muted =
+      guardian.user && ActiveModel::Type::Boolean.new.cast(params[:reject_indirectly_muted])
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
@@ -495,24 +503,13 @@ class CategoriesController < ApplicationController
         end
       )
     page = [1, params[:page].to_i].max
+    offset = (page - 1) * limit
+    # Each ordering applies only where the client asks for it, so other callers keep today's order.
+    group_families = term.present? && ActiveModel::Type::Boolean.new.cast(params[:group_families])
+    tree_order = params[:tree_order].presence_in(%w[topics position]) if term.blank?
 
-    categories = Category.secured(guardian)
-
-    if term.present?
-      words = []
-      term.scan(/\S+/) do |word|
-        words << word
-        break if words.size >= MAX_CATEGORY_SEARCH_WORDS
-      end
-
-      words.each do |word|
-        categories =
-          categories.where(
-            "#{Category.normalize_sql("name")} ILIKE #{Category.normalize_sql("?")}",
-            "%#{word}%",
-          )
-      end
-    end
+    visible = Category.secured(guardian)
+    categories = visible
 
     categories =
       (
@@ -530,9 +527,50 @@ class CategoriesController < ApplicationController
 
     categories = categories.where.not(id: reject_category_ids) if reject_category_ids
 
+    if reject_indirectly_muted
+      categories =
+        categories.where.not(Arel.sql(CategoryUser.indirectly_muted_condition(guardian.user)))
+    end
+
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 
+    categories = categories.topic_create_allowed(guardian) if only_postable
+
+    eligible = categories
+
+    if term.present?
+      words = []
+      term.scan(/\S+/) do |word|
+        words << word
+        break if words.size >= MAX_CATEGORY_SEARCH_WORDS
+      end
+
+      # Wildcards are escaped after normalization, which can turn a character into `%` or `_`.
+      literal_pattern =
+        "'%' || replace(replace(replace(#{Category.normalize_sql("?")}, '\\', '\\\\'), '%', '\\%'), '_', '\\_') || '%'"
+      words.each do |word|
+        categories =
+          categories.where("#{Category.normalize_sql("name")} ILIKE #{literal_pattern}", word)
+      end
+    end
+
     categories_count = categories.count
+
+    ranking = [
+      "starts_with(#{Category.normalize_sql("categories.name")}, #{Category.normalize_sql(ActiveRecord::Base.connection.quote(term))}) DESC",
+      "categories.parent_category_id IS NULL DESC",
+      "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+      "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+      "categories.id ASC",
+    ]
+
+    if group_families
+      family_keys = family_ordered_page(visible, eligible, categories, ranking, limit, offset)
+      page_ids = family_keys.keys
+    elsif tree_order
+      page_ids =
+        tree_ordered_page(visible, categories, tree_order, prioritized_category_id, limit, offset)
+    end
 
     categories =
       categories
@@ -546,15 +584,14 @@ class CategoriesController < ApplicationController
         )
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
-        .order(
-          "starts_with(#{Category.normalize_sql("categories.name")}, #{Category.normalize_sql(ActiveRecord::Base.connection.quote(term))}) DESC",
-          "categories.parent_category_id IS NULL DESC",
-          "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
-          "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
-          "categories.id ASC",
-        )
-        .limit(limit)
-        .offset((page - 1) * limit)
+
+    categories =
+      if page_ids
+        records = categories.where(id: page_ids).index_by(&:id)
+        page_ids.map { |id| records[id] }
+      else
+        categories.order(*ranking).limit(limit).offset(offset)
+      end
 
     if Site.preloaded_category_custom_fields.present?
       Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
@@ -566,6 +603,7 @@ class CategoriesController < ApplicationController
       categories_count: categories_count,
       categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
     }
+    response[:family_keys] = family_keys if group_families
 
     if include_ancestors
       ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
@@ -577,6 +615,103 @@ class CategoriesController < ApplicationController
   end
 
   private
+
+  # Orders the matched categories so that each family's rows are consecutive, ranked by the
+  # family's best-ranked member, and returns the requested page as `{ id => family key }`. A
+  # family is a category with an eligible descendant, which is a category that passes every
+  # filter except the term, reached only through visible categories. Nesting is capped at three
+  # levels, so two hops reach every descendant.
+  def family_ordered_page(visible, eligible, matched, ranking, limit, offset)
+    eligible_parents = eligible.where.not(parent_category_id: nil).select(:parent_category_id)
+    second_hop =
+      visible
+        .where.not(parent_category_id: nil)
+        .where(id: eligible_parents)
+        .select(:parent_category_id)
+    families =
+      visible.where(
+        "categories.id IN (#{eligible_parents.to_sql} UNION #{second_hop.to_sql})",
+      ).select(:id)
+    ranked =
+      matched.select(
+        "categories.id, categories.parent_category_id, ROW_NUMBER() OVER (ORDER BY #{ranking.join(", ")}) AS search_rank",
+      )
+
+    DB.query(<<~SQL).to_h { |row| [row.id, row.family_key] }
+      WITH families AS (#{families.to_sql}),
+      keyed AS (
+        SELECT
+          ranked.id,
+          ranked.search_rank,
+          CASE
+            WHEN ranked.id IN (SELECT id FROM families) THEN ranked.id
+            WHEN ranked.parent_category_id IN (SELECT id FROM families)
+              THEN ranked.parent_category_id
+          END AS family_key
+        FROM (#{ranked.to_sql}) ranked
+      )
+      SELECT id, family_key
+      FROM (
+        SELECT keyed.*, MIN(search_rank) OVER (PARTITION BY COALESCE(family_key, -id)) AS family_rank
+        FROM keyed
+      ) grouped
+      ORDER BY family_rank, id IS NOT DISTINCT FROM family_key DESC, search_rank
+      LIMIT #{limit.to_i} OFFSET #{offset.to_i}
+    SQL
+  end
+
+  # Returns the requested page's ids in tree order: each category right after its parent, with
+  # siblings by topic count or by position. The tree is built over every visible category, so
+  # filters only remove rows, and a category whose parent is hidden sorts as a root. Nesting is
+  # capped at three levels, so a path is at most a grandparent's, a parent's and its own rank.
+  def tree_ordered_page(visible, matched, tree_order, prioritized_category_id, limit, offset)
+    sibling_order =
+      if tree_order == "topics"
+        "topic_count DESC, position ASC NULLS LAST, id ASC"
+      else
+        "position ASC NULLS LAST, id ASC"
+      end
+    priority =
+      if prioritized_category_id
+        "path[1] IS NOT DISTINCT FROM (SELECT path[1] FROM tree WHERE id = #{prioritized_category_id.to_i}) DESC,"
+      end
+
+    DB.query_single(<<~SQL)
+      WITH visible AS (
+        #{visible.select(:id, :parent_category_id, :topic_count, :position).to_sql}
+      ),
+      siblings AS (
+        SELECT
+          id,
+          effective_parent,
+          ROW_NUMBER() OVER (PARTITION BY effective_parent ORDER BY #{sibling_order}) AS sibling_rank
+        FROM (
+          SELECT
+            visible.*,
+            CASE
+              WHEN parent_category_id IN (SELECT id FROM visible) THEN parent_category_id
+            END AS effective_parent
+          FROM visible
+        ) parented
+      ),
+      tree AS (
+        SELECT
+          node.id,
+          array_remove(
+            ARRAY[grandparent.sibling_rank, parent.sibling_rank, node.sibling_rank],
+            NULL
+          ) AS path
+        FROM siblings node
+        LEFT JOIN siblings parent ON parent.id = node.effective_parent
+        LEFT JOIN siblings grandparent ON grandparent.id = parent.effective_parent
+      )
+      SELECT id
+      FROM tree
+      WHERE id IN (#{matched.select(:id).to_sql})
+      ORDER BY #{priority} path
+      LIMIT #{limit.to_i} OFFSET #{offset.to_i}
+    SQL
+  end
 
   def merge_pending_custom_fields!(category, pending_custom_fields)
     pending_custom_fields&.each do |key, value|

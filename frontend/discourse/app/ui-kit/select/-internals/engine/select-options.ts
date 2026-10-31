@@ -1,0 +1,466 @@
+import { DEBUG } from "@glimmer/env";
+import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
+import { assert, warn } from "@ember/debug";
+import type {
+  SelectPresentationArgs,
+  SelectResolvedOptions,
+} from "discourse/ui-kit/select/-internals/engine/customizations";
+import {
+  renderSelectText,
+  type SelectTexts,
+} from "discourse/ui-kit/select/-internals/engine/select-texts";
+import type {
+  SelectEngineOptions,
+  SelectItem,
+  SelectItemId,
+  SelectLegacyContext,
+  SelectLoadOptions,
+  SelectLoadResult,
+  SelectValue,
+  SelectValueItemsBuilder,
+} from "discourse/ui-kit/select/select-engine";
+
+/** The default `kindContext` and `instanceContext` data when none was provided. */
+const EMPTY_CONTEXT: object = Object.freeze({});
+
+/**
+ * The engine's live view over its constructor options. Each reactive input is exposed as a
+ * getter that reads its thunk on every access (so a runtime change to the wired `@arg`
+ * propagates) and falls back to the static option, then the default. Also hosts the pure
+ * field-driven helpers (`valueKey`, `itemValue`, `itemLabel`, `dedupeValues`) so every
+ * collaborator applies `valueField`/`labelField` identically.
+ */
+export default class SelectOptionsView {
+  #hideSelected?: boolean;
+  #readHideSelected?: SelectEngineOptions["getHideSelected"];
+  #readMultiple?: SelectEngineOptions["getMultiple"];
+  #readLocked?: SelectEngineOptions["getLocked"];
+  #multiple?: SelectEngineOptions["multiple"];
+  #kind?: string;
+  #identifier?: string;
+  #readKindContext?: SelectEngineOptions["getKindContext"];
+  #readInstanceContext?: SelectEngineOptions["getInstanceContext"];
+  #readMinChars?: SelectEngineOptions["getMinChars"];
+  #minChars?: SelectEngineOptions["minChars"];
+  #readMaxLoaded?: SelectEngineOptions["getMaxLoaded"];
+  #maxLoaded?: SelectEngineOptions["maxLoaded"];
+  #readMaximum?: SelectEngineOptions["getMaximum"];
+  #maximum?: SelectEngineOptions["maximum"];
+  #hasWarnedMaximum = false;
+  #readMinimum?: SelectEngineOptions["getMinimum"];
+  #minimum?: SelectEngineOptions["minimum"];
+
+  /** Raw presentation inputs, kept separate from downstream lock and selection readers. */
+  #readPresentationOptions?: SelectEngineOptions["getOptions"];
+
+  /** Attached after customization setup and before source validation. */
+  #readResolvedOptions?: () => SelectResolvedOptions;
+
+  /** Raw recipe values remain upstream of option resolution. */
+  #readKindOptions?: SelectEngineOptions["getKindOptions"];
+  #kindOptions?: SelectEngineOptions["kindOptions"];
+  #readTexts?: SelectEngineOptions["getTexts"];
+  #readKindTexts?: SelectEngineOptions["getKindTexts"];
+  #kindTexts?: SelectEngineOptions["kindTexts"];
+  #readKindTextWrappers?: SelectEngineOptions["getKindTextWrappers"];
+  #kindTextWrappers?: SelectEngineOptions["kindTextWrappers"];
+  #valueField: string;
+  #normalizeKey?: SelectEngineOptions["normalizeKey"];
+  #labelField: string;
+  // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
+  // right now. Those are different: an empty-but-declared arg is the late-arrival pattern
+  // mid-flight, and the misconfiguration assert must not fire on it.
+  #valueItemsDeclared: boolean;
+  #filterBy?: SelectEngineOptions["filterBy"];
+  #items?: SelectEngineOptions["items"];
+  #load?: (
+    filter: string,
+    opts: SelectLoadOptions
+  ) => SelectLoadResult | Promise<SelectLoadResult>;
+  #readValueItems?: SelectEngineOptions["getValueItems"];
+  #builtValueItems = new WeakMap<
+    SelectValueItemsBuilder,
+    WeakMap<object, ReturnType<typeof createCache<SelectItem | SelectItem[]>>>
+  >();
+  #valueItems?: SelectEngineOptions["valueItems"];
+  #resolveValue?: SelectEngineOptions["resolveValue"];
+  #resolveValues?: SelectEngineOptions["resolveValues"];
+  #readAllowCreate?: SelectEngineOptions["getAllowCreate"];
+  #allowCreate?: SelectEngineOptions["allowCreate"];
+  #createItem?: SelectEngineOptions["createItem"];
+  #createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
+  #specialItems?: SelectEngineOptions["specialItems"];
+  #groupBy?: SelectEngineOptions["groupBy"];
+  #groupDividers: boolean;
+  #groupHeader?: SelectEngineOptions["groupHeader"];
+  #groupFooter?: SelectEngineOptions["groupFooter"];
+  #readCloseOnSelect: boolean | undefined;
+  #onChange?: SelectEngineOptions["onChange"];
+  #onReconfirm?: SelectEngineOptions["onReconfirm"];
+  #onBulkUnchanged?: SelectEngineOptions["onBulkUnchanged"];
+  #onUpdateStart?: SelectEngineOptions["onUpdateStart"];
+  #requestClose?: SelectEngineOptions["requestClose"];
+  #readValue: () => SelectValue;
+  #isAsync: boolean;
+  #legacy: SelectLegacyContext | null;
+
+  constructor(opts: SelectEngineOptions) {
+    this.#readMultiple = opts.getMultiple;
+    this.#hideSelected = opts.hideSelected;
+    this.#readHideSelected = opts.getHideSelected;
+    this.#readLocked = opts.getLocked;
+    this.#multiple = opts.multiple;
+    this.#kind = opts.kind;
+    this.#identifier = opts.identifier;
+    this.#readKindContext = opts.getKindContext;
+    this.#readInstanceContext = opts.getInstanceContext;
+    this.#readMinChars = opts.getMinChars;
+    this.#minChars = opts.minChars;
+    this.#readMaxLoaded = opts.getMaxLoaded;
+    this.#maxLoaded = opts.maxLoaded;
+    this.#readMaximum = opts.getMaximum;
+    this.#maximum = opts.maximum;
+    this.#readMinimum = opts.getMinimum;
+    this.#minimum = opts.minimum;
+    this.#readPresentationOptions = opts.getOptions;
+    this.#readKindOptions = opts.getKindOptions;
+    this.#kindOptions = opts.kindOptions;
+    this.#readTexts = opts.getTexts;
+    this.#readKindTexts = opts.getKindTexts;
+    this.#kindTexts = opts.kindTexts;
+    this.#readKindTextWrappers = opts.getKindTextWrappers;
+    this.#kindTextWrappers = opts.kindTextWrappers;
+    this.#valueField = opts.valueField ?? "id";
+    this.#normalizeKey = opts.normalizeKey;
+    this.#labelField = opts.labelField ?? "name";
+    // Values are unique by contract (selection identity, row keys), so grouping by the value
+    // field deterministically yields one group per row. This certain misuse fails loudly; a
+    // function `groupBy` can express the same mapping, but its outcome has no static tell.
+    assert(
+      `DSelect: \`@groupBy\` ("${String(opts.groupBy)}") is the value field, so every row ` +
+        `would become its own group. Group by a coarser key.`,
+      typeof opts.groupBy !== "string" || opts.groupBy !== this.#valueField
+    );
+    this.#filterBy = opts.filterBy;
+    this.#items = opts.items;
+    this.#load = opts.load;
+    this.#readValueItems = opts.getValueItems;
+    this.#valueItems = opts.valueItems;
+    this.#valueItemsDeclared =
+      opts.getValueItems != null || opts.valueItems != null;
+    this.#resolveValue = opts.resolveValue;
+    this.#resolveValues = opts.resolveValues;
+    this.#readAllowCreate = opts.getAllowCreate;
+    this.#allowCreate = opts.allowCreate;
+    this.#createItem = opts.createItem;
+    this.#createUnresolvedItem = opts.createUnresolvedItem;
+    this.#specialItems = opts.specialItems;
+    this.#groupBy = opts.groupBy;
+    this.#groupDividers = opts.groupDividers ?? true;
+    this.#groupHeader = opts.groupHeader;
+    this.#groupFooter = opts.groupFooter;
+    // Kept raw (not defaulted here): `closeOnSelect` re-derives `!multiple` live, so a
+    // runtime `multiple` flip flips the default close behavior with it.
+    this.#readCloseOnSelect = opts.closeOnSelect;
+    this.#onChange = opts.onChange;
+    this.#onReconfirm = opts.onReconfirm;
+    this.#onBulkUnchanged = opts.onBulkUnchanged;
+    this.#onUpdateStart = opts.onUpdateStart;
+    this.#requestClose = opts.requestClose;
+    this.#legacy = opts.legacy ?? null;
+    // The controlled value is read live via this thunk, so the engine reflects the
+    // parent's `@value` without storing any selection of its own.
+    this.#readValue = opts.getValue ?? (() => null);
+    this.#isAsync = typeof opts.load === "function";
+  }
+
+  /** Whether composed options omit the held selection. */
+  get hideSelected(): boolean {
+    return this.#readHideSelected?.() ?? this.#hideSelected ?? false;
+  }
+
+  get multiple(): boolean {
+    return this.#readMultiple?.() ?? this.#multiple ?? false;
+  }
+
+  get locked(): boolean {
+    return this.#readLocked?.() ?? false;
+  }
+
+  get minChars(): number {
+    return this.#readMinChars?.() ?? this.#minChars ?? 0;
+  }
+
+  get maxLoaded(): number | undefined {
+    return this.#readMaxLoaded?.() ?? this.#maxLoaded;
+  }
+
+  /** The single-select none row's label, or `null` while the row is off or the select is multiple. */
+  get noneLabel(): string | null {
+    const options = this.#readResolvedOptions?.();
+    if (this.multiple || !options?.noneRow) {
+      return null;
+    }
+    return renderSelectText(options, "noneLabel");
+  }
+
+  /** The call site's live presentation args, before customizations. */
+  get presentationOptions(): Readonly<SelectPresentationArgs> {
+    return this.#readPresentationOptions?.() ?? {};
+  }
+
+  /** The call site's live texts. */
+  get texts(): SelectTexts | undefined {
+    return this.#readTexts?.();
+  }
+
+  /** The recipe's live texts; the customization registry captures their initial keys. */
+  get kindTexts(): SelectEngineOptions["kindTexts"] {
+    return this.#readKindTexts ? this.#readKindTexts() : this.#kindTexts;
+  }
+
+  /** The recipe's live text wrappers; their initial keys are captured at construction. */
+  get kindTextWrappers(): SelectEngineOptions["kindTextWrappers"] {
+    return this.#readKindTextWrappers
+      ? this.#readKindTextWrappers()
+      : this.#kindTextWrappers;
+  }
+
+  /** Live recipe base values; the customization registry captures their initial keys. */
+  get kindOptions(): Record<string, unknown> | undefined {
+    return this.#readKindOptions ? this.#readKindOptions() : this.#kindOptions;
+  }
+
+  /** The engine's immutable core and recipe snapshot, for downstream consumers only. */
+  get resolvedOptions(): SelectResolvedOptions {
+    return this.#readResolvedOptions!();
+  }
+
+  /** Multi-only; false, numbers below one, and NaN normalize to no cap. */
+  get maximum(): number | null {
+    const raw = this.#readMaximum?.() ?? this.#maximum;
+    if (
+      DEBUG &&
+      !this.#hasWarnedMaximum &&
+      typeof raw === "number" &&
+      !(raw >= 1)
+    ) {
+      this.#hasWarnedMaximum = true;
+      warn(
+        "DSelect: @maximum below 1 or NaN means no cap. Use @maximum={{false}} for no cap.",
+        false,
+        { id: "discourse.d-select.maximum-below-one" }
+      );
+    }
+    if (!this.multiple) {
+      return null;
+    }
+    return typeof raw === "number" && raw >= 1 ? Math.floor(raw) : null;
+  }
+
+  get minimum(): number {
+    if (!this.multiple) {
+      return 0;
+    }
+    const raw = this.#readMinimum?.() ?? this.#minimum;
+    return raw != null && raw >= 1 ? Math.floor(raw) : 0;
+  }
+
+  get valueItems(): SelectItem | SelectItem[] | undefined {
+    const items = this.#readValueItems?.() ?? this.#valueItems;
+    if (typeof items !== "function") {
+      return items;
+    }
+    // Built once per builder and options snapshot. The cache keeps tracking what the builder
+    // reads, so a change there rebuilds it even while the snapshot stays the same.
+    const options = this.#readResolvedOptions!();
+    let bySnapshot = this.#builtValueItems.get(items);
+    if (!bySnapshot) {
+      bySnapshot = new WeakMap();
+      this.#builtValueItems.set(items, bySnapshot);
+    }
+    let cache = bySnapshot.get(options);
+    if (!cache) {
+      cache = createCache(() => items(options));
+      bySnapshot.set(options, cache);
+    }
+    return getValue(cache);
+  }
+
+  get allowCreate(): SelectEngineOptions["allowCreate"] {
+    return this.#readAllowCreate?.() ?? this.#allowCreate;
+  }
+
+  // Defaults to `!multiple`, re-derived live so a runtime `multiple` flip flips it too.
+  get closeOnSelect(): boolean {
+    return this.#readCloseOnSelect ?? !this.multiple;
+  }
+
+  /** The recipe or family name captured at construction. */
+  get kind(): string | undefined {
+    return this.#kind;
+  }
+
+  /** The call-site name captured at construction. */
+  get identifier(): string | undefined {
+    return this.#identifier;
+  }
+
+  get kindContext(): object {
+    return this.#readKindContext?.() ?? EMPTY_CONTEXT;
+  }
+
+  get instanceContext(): object {
+    return this.#readInstanceContext?.() ?? EMPTY_CONTEXT;
+  }
+
+  get valueField(): string {
+    return this.#valueField;
+  }
+
+  get labelField(): string {
+    return this.#labelField;
+  }
+
+  get valueItemsDeclared(): boolean {
+    return this.#valueItemsDeclared;
+  }
+
+  get filterBy(): SelectEngineOptions["filterBy"] {
+    return this.#filterBy;
+  }
+
+  get items(): SelectEngineOptions["items"] {
+    return this.#items;
+  }
+
+  get load(): SelectEngineOptions["load"] {
+    return this.#load;
+  }
+
+  get resolveValue(): SelectEngineOptions["resolveValue"] {
+    return this.#resolveValue;
+  }
+
+  get resolveValues(): SelectEngineOptions["resolveValues"] {
+    return this.#resolveValues;
+  }
+
+  get createItem(): SelectEngineOptions["createItem"] {
+    return this.#createItem;
+  }
+
+  get createUnresolvedItem(): SelectEngineOptions["createUnresolvedItem"] {
+    return this.#createUnresolvedItem;
+  }
+
+  get specialItems(): SelectEngineOptions["specialItems"] {
+    return this.#specialItems;
+  }
+
+  get groupBy(): SelectEngineOptions["groupBy"] {
+    return this.#groupBy;
+  }
+
+  get groupDividers(): boolean {
+    return this.#groupDividers;
+  }
+
+  get groupHeader(): SelectEngineOptions["groupHeader"] {
+    return this.#groupHeader;
+  }
+
+  get groupFooter(): SelectEngineOptions["groupFooter"] {
+    return this.#groupFooter;
+  }
+
+  get onChange(): SelectEngineOptions["onChange"] {
+    return this.#onChange;
+  }
+
+  get onReconfirm(): SelectEngineOptions["onReconfirm"] {
+    return this.#onReconfirm;
+  }
+
+  get onBulkUnchanged(): SelectEngineOptions["onBulkUnchanged"] {
+    return this.#onBulkUnchanged;
+  }
+
+  get onUpdateStart(): SelectEngineOptions["onUpdateStart"] {
+    return this.#onUpdateStart;
+  }
+
+  get requestClose(): SelectEngineOptions["requestClose"] {
+    return this.#requestClose;
+  }
+
+  get value(): SelectValue {
+    return this.#readValue();
+  }
+
+  get isAsync(): boolean {
+    return this.#isAsync;
+  }
+
+  get legacy(): SelectLegacyContext | null {
+    return this.#legacy;
+  }
+
+  /** Connects engine-owned resolution without making raw option reads depend on it. */
+  attachResolvedOptions(read: () => SelectResolvedOptions): void {
+    this.#readResolvedOptions = read;
+  }
+
+  /**
+   * Two ids denote the same option iff their string forms match after `normalizeKey`, so a
+   * bound "5" selects item id 5 (and vice-versa). Nullish never matches an id.
+   */
+  valueKey(value: SelectItemId): string | null {
+    if (value == null) {
+      return null;
+    }
+    const key = String(value);
+    return this.#normalizeKey ? this.#normalizeKey(key) : key;
+  }
+
+  /** Removes duplicate normalized ids while preserving first-occurrence order. */
+  dedupeValues(values: SelectItemId[]): SelectItemId[] {
+    const seen = new Set<string | null>();
+    return values.filter((value) => {
+      const key = this.valueKey(value);
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  }
+
+  /**
+   * Reads a value in single mode. Turning `@multiple` off can leave the parent holding an array,
+   * which is read without rewriting the parent's value: empty is no value and one id carries
+   * over. More than one is a consumer mistake, so it asserts; production keeps the first.
+   *
+   * @param raw - The bound value.
+   * @returns The single held id, or `null`.
+   */
+  singleValue(raw: SelectValue | undefined): SelectItemId | null {
+    if (!Array.isArray(raw)) {
+      return raw ?? null;
+    }
+    assert(
+      `DSelect: a single-select is holding ${raw.length} values. Pass a single value (or ` +
+        `none) to \`@value\` when turning \`@multiple\` off.`,
+      raw.length <= 1
+    );
+    return raw[0] ?? null;
+  }
+
+  itemValue(item: SelectItem | null | undefined): SelectItemId {
+    return item?.[this.#valueField];
+  }
+
+  itemLabel(item: SelectItem | null | undefined): unknown {
+    return item?.[this.#labelField];
+  }
+}

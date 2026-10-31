@@ -491,26 +491,53 @@ export function applyValueTransformer<
   for (let i = 0; i < transformerPoolSize; i++) {
     const valueCallback = transformers[i];
 
-    try {
-      const value = valueCallback({ value: newValue, context });
-
-      if (!mutable) {
-        newValue = value;
-      }
-    } catch (error) {
-      document.dispatchEvent(
-        new CustomEvent("discourse-error", {
-          detail: { messageKey: "broken_transformer_alert", error },
-        })
-      );
-
-      if (isTesting() && !skipApplyExceptionOnTests) {
-        throw error;
-      }
-    }
+    const previousValue = newValue;
+    newValue = withTransformerErrorHandling(
+      () => {
+        const value = valueCallback({ value: previousValue, context });
+        return mutable ? previousValue : value;
+      },
+      () => previousValue
+    );
   }
 
   return newValue;
+}
+
+/**
+ * Runs an extension callback with transformer error reporting and test rethrowing.
+ * Callers handle asynchronous rejections by passing their rejection handler here.
+ *
+ * @param callback - The extension code to run.
+ * @param fallback - Supplies the result when the callback throws outside tests.
+ * @internal
+ */
+export function withTransformerErrorHandling<T>(
+  callback: () => T
+): T | undefined;
+export function withTransformerErrorHandling<T, F>(
+  callback: () => T,
+  fallback: () => F
+): T | F;
+export function withTransformerErrorHandling<T, F>(
+  callback: () => T,
+  fallback?: () => F
+): T | F | undefined {
+  try {
+    return callback();
+  } catch (error) {
+    document.dispatchEvent(
+      new CustomEvent("discourse-error", {
+        detail: { messageKey: "broken_transformer_alert", error },
+      })
+    );
+
+    if (isTesting() && !skipApplyExceptionOnTests) {
+      throw error;
+    }
+
+    return fallback?.();
+  }
 }
 
 /**

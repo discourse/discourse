@@ -56,11 +56,20 @@ module PageObjects
       end
 
       def category_filter
-        PageObjects::Components::SelectKit.new(CATEGORY_FILTER)
+        selector = CATEGORY_FILTER
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def has_selected_category?(category)
-        page.has_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        if category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          has_css?("#{CATEGORY_FILTER} .d-select__chip[data-value='#{category.id}']")
+        else
+          page.has_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        end
       end
 
       def has_group?(name)

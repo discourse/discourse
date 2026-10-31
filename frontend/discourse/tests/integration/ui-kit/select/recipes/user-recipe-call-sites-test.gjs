@@ -1,0 +1,617 @@
+import { tracked } from "@glimmer/tracking";
+import { click, find, findAll, render, settled } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import AboutContactInformation from "discourse/admin/components/admin-config-area-cards/about/contact-information";
+import AboutExtraGroups from "discourse/admin/components/admin-config-area-cards/about/extra-groups";
+import AdminConfigAreasApiKeysNew from "discourse/admin/components/admin-config-areas/api-keys-new";
+import AdminEmbeddingHostForm from "discourse/admin/components/admin-embedding-host-form";
+import EmbeddingPostsAndTopics from "discourse/admin/templates/admin-embedding/posts-and-topics";
+import ComposerUserSelector from "discourse/components/composer-user-selector";
+import InvitePanel from "discourse/components/invite-panel";
+import ChangeOwnerModal from "discourse/components/modal/change-owner";
+import CreateInvite from "discourse/components/modal/create-invite";
+import GroupAddMembers from "discourse/components/modal/group-add-members";
+import IgnoreDurationModal from "discourse/components/modal/ignore-duration-with-username";
+import ModalContainer from "discourse/components/modal-container";
+import ReviewFilters from "discourse/components/review-filters";
+import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
+import DiscourseURL from "discourse/lib/url";
+import GroupsNew from "discourse/templates/groups/new";
+import PreferencesUsers from "discourse/templates/preferences/users";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
+import { DSelect } from "discourse/tests/helpers/d-select-helper";
+import formKit from "discourse/tests/helpers/form-kit-helper";
+import { i18n } from "discourse-i18n";
+
+const USERS = [
+  { username: "bob", name: "Bob Ross", avatar_template: "/a/bob/{size}.png" },
+  { username: "alice", name: "Alice", avatar_template: "/a/a/{size}.png" },
+  { username: "eviltrout", name: "Robin", avatar_template: "/a/e/{size}.png" },
+];
+
+const GROUPS = [{ name: "team", full_name: "The Team" }];
+
+const GROUP_FLAGS = [
+  "include_groups",
+  "include_mentionable_groups",
+  "include_messageable_groups",
+];
+
+/**
+ * Answers user search like the server: by `term`, or by exact `usernames`, with groups only
+ * when an include flag is sent. Records every request's params.
+ */
+function stubUserSearch() {
+  const requests = [];
+  pretender.get("/u/search/users", (request) => {
+    const params = request.queryParams;
+    requests.push(params);
+    const withGroups = GROUP_FLAGS.some((flag) => params[flag] === "true");
+    if (params.usernames) {
+      const names = params.usernames.split(",").map((n) => n.toLowerCase());
+      return response({
+        users: USERS.filter((u) => names.includes(u.username)),
+        groups: withGroups ? GROUPS.filter((g) => names.includes(g.name)) : [],
+      });
+    }
+    const term = (params.term ?? "").toLowerCase();
+    return response({
+      users: USERS.filter((u) => u.username.includes(term)),
+      groups: withGroups ? GROUPS.filter((g) => g.name.includes(term)) : [],
+    });
+  });
+  return requests;
+}
+
+/** The option whose text includes `text`. */
+function optionNamed(text) {
+  return findAll("[role='option']").find((row) =>
+    row.textContent.includes(text)
+  );
+}
+
+/** Shows `modal` with `model` the way the app does, in the modal container. */
+async function showModal(owner, modal, model) {
+  await render(<template><ModalContainer /></template>);
+  owner.lookup("service:modal").show(modal, { model });
+  await settled();
+}
+
+/** Opens `select`, types `term` and picks the row showing `text`. */
+async function pick(select, term, text = term) {
+  await select.open();
+  await select.search(term);
+  await click(optionNamed(text));
+}
+
+module(
+  "Integration | ui-kit | select | recipes | user call sites",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    module("composer recipients", function () {
+      test("writes picked users and groups as recipients, and remembers the groups", async function (assert) {
+        const requests = stubUserSearch();
+        const state = new (class {
+          @tracked recipients = "";
+        })();
+        let selector;
+        class Probe extends ComposerUserSelector {
+          didInsertElement() {
+            super.didInsertElement(...arguments);
+            selector = this;
+          }
+        }
+
+        await render(
+          <template>
+            <Probe @recipients={{state.recipients}} @topicId={{12}} />
+          </template>
+        );
+        assert.dom(".d-select").exists();
+        assert.dom(".select-kit").doesNotExist();
+
+        const select = new DSelect();
+        await pick(select, "bo", "bob");
+        await select.search("te");
+        await click(optionNamed("team"));
+
+        assert.strictEqual(state.recipients, "bob,team");
+        assert.deepEqual(selector._groups, ["team"], "the group is kept");
+        assert.strictEqual(requests.at(-1).include_messageable_groups, "true");
+        assert.strictEqual(requests.at(-1).topic_id, "12");
+      });
+
+      test("focuses the recipients picker when it is the focus target", async function (assert) {
+        stubUserSearch();
+
+        await render(
+          <template><ComposerUserSelector @focusTarget="usernames" /></template>
+        );
+
+        assert.dom(".d-select [role='combobox']").isFocused();
+      });
+    });
+
+    module("invite panel", function () {
+      test("an address or a user enables the invite, clearing disables it", async function (assert) {
+        stubUserSearch();
+        const user = this.owner.lookup("service:store").createRecord("user", {
+          details: { can_invite_via_email: true },
+        });
+
+        await render(
+          <template><InvitePanel @inviteModel={{user}} /></template>
+        );
+        assert.dom(".d-select.invite-user-input").exists();
+        assert.dom(".select-kit").doesNotExist();
+        const select = new DSelect(".invite-user-input");
+        assert.dom(".send-invite").isDisabled();
+
+        await pick(select, "eviltrout@example.com");
+        assert.dom(".send-invite").isEnabled();
+
+        await select.clear();
+        assert.dom(".send-invite").isDisabled();
+
+        await pick(select, "bo", "bob");
+        assert.dom(".send-invite").isEnabled();
+      });
+    });
+
+    module("create invite", function () {
+      test("sends the picked groups' ids, offering only groups people join by hand", async function (assert) {
+        this.currentUser.set("moderator", true);
+        this.owner.lookup("service:site").groups = [
+          { id: 1, name: "admins", automatic: true },
+          { id: 10, name: "support", automatic: false },
+        ];
+        let data;
+        pretender.post("/invites", (request) => {
+          data = parsePostData(request.requestBody);
+          return response({ id: 5, link: "http://example.com/invites/x" });
+        });
+        const model = {};
+
+        await render(
+          <template>
+            <CreateInvite @inline={{true}} @model={{model}} />
+          </template>
+        );
+        await click(".edit-link-options");
+
+        const select = new DSelect(".form-kit__field-custom .d-select");
+        await select.open();
+        assert.deepEqual(
+          findAll("[role='option']").map((row) => row.dataset.value),
+          ["10"]
+        );
+        await click(optionNamed("support"));
+        await click(".save-invite");
+
+        assert.deepEqual(data["group_ids[]"], ["10"]);
+      });
+
+      test("names the group field after its title", async function (assert) {
+        this.currentUser.set("moderator", true);
+        const accessibleName = await loadAccessibleName();
+        const model = {};
+
+        await render(
+          <template>
+            <CreateInvite @inline={{true}} @model={{model}} />
+          </template>
+        );
+        await click(".edit-link-options");
+
+        assert.strictEqual(
+          accessibleName(
+            find(".form-kit__field-custom .d-select [role='combobox']")
+          ),
+          i18n("user.invited.invite.add_to_groups")
+        );
+      });
+    });
+
+    module("group add members", function () {
+      test("splits picked users and typed addresses", async function (assert) {
+        stubUserSearch();
+        this.currentUser.set("can_invite_to_forum", true);
+        sinon.stub(this.owner.lookup("service:router"), "transitionTo");
+        const group = { name: "team", addMembers: sinon.stub().resolves() };
+
+        await showModal(this.owner, GroupAddMembers, group);
+        const select = new DSelect(".group-add-members .d-select");
+        await pick(select, "bo", "bob");
+        await pick(select, "new@example.com");
+        await click(".add");
+
+        assert.deepEqual(group.addMembers.lastCall.args, [
+          "bob",
+          true,
+          true,
+          "new@example.com",
+        ]);
+      });
+    });
+
+    module("new group", function () {
+      test("owner and member pickers are named by their labels and write usernames", async function (assert) {
+        stubUserSearch();
+        const accessibleName = await loadAccessibleName();
+        const controller = {
+          siteSettings: this.siteSettings,
+          model: { visibility_level: 0 },
+          splitOwnerUsernames: [],
+          splitUsernames: [],
+          updateOwnerUsernames: sinon.spy(),
+          updateUsernames: sinon.spy(),
+        };
+
+        await render(
+          <template><GroupsNew @controller={{controller}} /></template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("#owner-selector")),
+          i18n("admin.groups.add_owners")
+        );
+        assert.strictEqual(
+          accessibleName(find("#member-selector")),
+          i18n("groups.members.title")
+        );
+
+        await pick(new DSelect(".d-select:has(#member-selector)"), "bo", "bob");
+        assert.deepEqual(controller.updateUsernames.lastCall.args[0], ["bob"]);
+      });
+    });
+
+    module("change owner", function () {
+      test("sends the picked username, and clearing disables the change", async function (assert) {
+        stubUserSearch();
+        sinon.stub(DiscourseURL, "routeTo");
+        let data;
+        pretender.post("/t/7/change-owner", (request) => {
+          data = parsePostData(request.requestBody);
+          return response({});
+        });
+        const model = {
+          topic: { id: 7, url: "/t/x/7" },
+          selectedPostIds: [3],
+          selectedPostsCount: 1,
+          deselectAll() {},
+        };
+
+        await showModal(this.owner, ChangeOwnerModal, model);
+        const select = new DSelect();
+        await pick(select, "bo", "bob");
+        assert.dom(".change-ownership-modal .btn-primary").isEnabled();
+
+        await select.clear();
+        assert.dom(".change-ownership-modal .btn-primary").isDisabled();
+
+        await pick(select, "al", "alice");
+        await click(".change-ownership-modal .btn-primary");
+
+        assert.strictEqual(data.username, "alice");
+      });
+    });
+
+    module("ignore", function () {
+      test("holds the picked username, clearing empties it, and the current user isn't offered", async function (assert) {
+        stubUserSearch();
+        const model = { actingUser: this.currentUser };
+
+        await showModal(this.owner, IgnoreDurationModal, model);
+        const picker = ".tracking-controls .d-select";
+        const select = new DSelect(picker);
+        await pick(select, "bo", "bob");
+        assert.dom(picker).hasAttribute("data-value", "bob");
+
+        await select.clear();
+        assert.dom(picker).hasAttribute("data-value", "");
+
+        await select.open();
+        await select.search("evil");
+        assert.dom("[role='option']").doesNotExist();
+      });
+    });
+
+    module("review filters", function () {
+      test("each person filter is named by its label and hands its handler an array", async function (assert) {
+        this.siteSettings.reviewable_claiming = "optional";
+        const requests = stubUserSearch();
+        const accessibleName = await loadAccessibleName();
+        const siteSettings = this.siteSettings;
+        const controller = new (class {
+          @tracked filterClaimedBy;
+          @tracked filterUsername;
+          siteSettings = siteSettings;
+          filtersExpanded = true;
+          updateFilterClaimedBy = sinon.spy(
+            (selected) => (this.filterClaimedBy = selected[0])
+          );
+          updateFilterFlaggedBy = sinon.spy();
+          updateFilterReviewedBy = sinon.spy();
+          updateFilterUsername = sinon.spy(
+            (selected) => (this.filterUsername = selected[0])
+          );
+        })();
+
+        await render(
+          <template><ReviewFilters @controller={{controller}} /></template>
+        );
+        const pickers = findAll(".reviewable-filter .d-select.user-chooser");
+        assert.deepEqual(
+          pickers.map((picker) =>
+            accessibleName(picker.querySelector("[role='combobox']") ?? picker)
+          ),
+          [
+            i18n("review.filtered_claimed_by"),
+            i18n("review.filtered_flagged_by"),
+            i18n("review.filtered_reviewed_by"),
+            i18n("review.filtered_user"),
+          ]
+        );
+
+        const claimedBy = new DSelect(".claimed-by .d-select");
+        await pick(claimedBy, "bo", "bob");
+        assert.strictEqual(requests.at(-1).can_review, "true");
+        assert.deepEqual(controller.updateFilterClaimedBy.lastCall.args[0], [
+          "bob",
+        ]);
+        await claimedBy.clear();
+        assert.deepEqual(controller.updateFilterClaimedBy.lastCall.args[0], []);
+
+        await pick(new DSelect(".user-selector"), "al", "alice");
+        assert.strictEqual(
+          requests.at(-1).can_review,
+          undefined,
+          "only the claimed-by filter limits the search to reviewers"
+        );
+        assert.deepEqual(controller.updateFilterUsername.lastCall.args[0], [
+          "alice",
+        ]);
+      });
+    });
+
+    module("advanced search", function () {
+      test("a picked author writes the @ filter, and clearing removes it", async function (assert) {
+        stubUserSearch();
+        const accessibleName = await loadAccessibleName();
+        const state = new (class {
+          @tracked term = "";
+        })();
+        const change = (term) => (state.term = term);
+
+        await render(
+          <template>
+            <SearchAdvancedOptions
+              @expandFilters={{true}}
+              @onChangeSearchTerm={{change}}
+              @searchTerm={{state.term}}
+            />
+          </template>
+        );
+        const picker = ".advanced-search-posted-by .d-select";
+        assert.strictEqual(
+          accessibleName(find(`${picker} [role='combobox']`) ?? find(picker)),
+          i18n("search.advanced.posted_by.aria_label")
+        );
+
+        const select = new DSelect(picker);
+        await pick(select, "bo", "bob");
+        assert.strictEqual(state.term.trim(), "@bob");
+
+        await select.clear();
+        assert.strictEqual(state.term.trim(), "");
+      });
+    });
+
+    module("user preferences", function () {
+      test("muted and allowed users write usernames and leave the current user out", async function (assert) {
+        stubUserSearch();
+        const controller = {
+          siteSettings: this.siteSettings,
+          model: {
+            can_mute_users: true,
+            can_send_private_messages: true,
+            user_option: {},
+          },
+          allowPmUsersEnabled: true,
+          mutedUsernames: [],
+          allowedPmUsernames: [],
+          onChangeMutedUsernames: sinon.spy(),
+          onChangeAllowedPmUsernames: sinon.spy(),
+        };
+
+        await render(
+          <template><PreferencesUsers @controller={{controller}} /></template>
+        );
+        const muted = new DSelect(".user-mute .d-select");
+        await pick(muted, "bo", "bob");
+        assert.deepEqual(controller.onChangeMutedUsernames.lastCall.args[0], [
+          "bob",
+        ]);
+
+        const allowed = new DSelect(".user-allow-pm .d-select");
+        await pick(allowed, "al", "alice");
+        assert.deepEqual(
+          controller.onChangeAllowedPmUsernames.lastCall.args[0],
+          ["alice"]
+        );
+
+        await allowed.search("evil");
+        assert.dom("[role='option']").doesNotExist();
+      });
+    });
+
+    module("admin embedding", function () {
+      test("the default author is stored as a one-item list", async function (assert) {
+        stubUserSearch();
+        const controller = {
+          siteSettings: this.siteSettings,
+          formData: { embed_by_username: ["alice"] },
+          save: sinon.spy(),
+        };
+
+        await render(
+          <template>
+            <EmbeddingPostsAndTopics @controller={{controller}} />
+          </template>
+        );
+        const picker =
+          ".admin-embedding-posts-and-topics-form__embed_by_username";
+        assert.dom(picker).hasAttribute("data-value", "alice");
+
+        await pick(new DSelect(picker), "bo", "bob");
+        await formKit().submit();
+
+        assert.deepEqual(controller.save.lastCall.args[0].embed_by_username, [
+          "bob",
+        ]);
+      });
+
+      test("a host's post author is saved as a username", async function (assert) {
+        stubUserSearch();
+        sinon.stub(this.owner.lookup("service:router"), "transitionTo");
+        const host = this.owner
+          .lookup("service:store")
+          .createRecord("embeddable-host", {
+            host: "example.com",
+            user: "alice",
+          });
+        const save = sinon.stub(host, "save").resolves();
+
+        await render(
+          <template><AdminEmbeddingHostForm @host={{host}} /></template>
+        );
+        const picker = new DSelect(".admin-embedding-host-form__post_author");
+        await pick(picker, "bo", "bob");
+        await formKit().submit();
+        assert.strictEqual(save.lastCall.args[0].user, "bob");
+
+        await picker.clear();
+        await formKit().submit();
+        assert.strictEqual(save.lastCall.args[0].user, undefined);
+      });
+    });
+
+    module("admin API keys", function () {
+      test("a single-user key is created for the picked username", async function (assert) {
+        stubUserSearch();
+        pretender.get("/admin/api/keys/scopes.json", () =>
+          response({ scopes: {} })
+        );
+        let data;
+        pretender.post("/admin/api/keys", (request) => {
+          data = JSON.parse(request.requestBody);
+          return response({ key: { id: 1, key: "abc" } });
+        });
+
+        await render(<template><AdminConfigAreasApiKeysNew /></template>);
+        await formKit().field("description").fillIn("A key");
+        await formKit().field("user_mode").select("single");
+        await pick(
+          new DSelect(".form-kit__field-custom .d-select"),
+          "bo",
+          "bob"
+        );
+        await formKit().submit();
+
+        assert.strictEqual(data.key.username, "bob");
+      });
+    });
+
+    module("admin about page", function () {
+      test("the contact user and group are saved as single values", async function (assert) {
+        stubUserSearch();
+        this.owner.lookup("service:site").groups = [
+          { id: 10, name: "support" },
+          { id: 11, name: "design" },
+        ];
+        let data;
+        pretender.put("/admin/config/about.json", (request) => {
+          data = parsePostData(request.requestBody);
+          return response({});
+        });
+        const setting = (value) => ({ value });
+        const contactInformation = {
+          communityOwner: setting(""),
+          contactEmail: setting(""),
+          contactURL: setting(""),
+          contactGroupName: setting(""),
+          contactUsername: setting(""),
+        };
+        const noop = () => {};
+
+        await render(
+          <template>
+            <AboutContactInformation
+              @contactInformation={{contactInformation}}
+              @isDefaultLocale={{true}}
+              @setGlobalSavingStatus={{noop}}
+            />
+          </template>
+        );
+        const [user, group] = findAll(".form-kit__field-custom .d-select");
+        await pick(new DSelect(user), "bo", "bob");
+        await new DSelect(group).open();
+        await click(optionNamed("design"));
+        await formKit().submit();
+
+        assert.strictEqual(data.contact_information.contact_username, "bob");
+        assert.strictEqual(data.contact_information.contact_group_name, "11");
+      });
+
+      test("extra groups are saved as a list of ids", async function (assert) {
+        this.owner.lookup("service:site").groups = [
+          { id: 10, name: "support" },
+          { id: 11, name: "design" },
+        ];
+        let data;
+        pretender.put("/admin/config/about.json", (request) => {
+          data = parsePostData(request.requestBody);
+          return response({});
+        });
+        const setting = (value) => ({ value });
+        const extraGroups = {
+          aboutPageExtraGroups: setting("10"),
+          aboutPageExtraGroupsInitialMembers: setting(4),
+          aboutPageExtraGroupsOrder: {
+            value: "order_of_creation",
+            choices: [],
+          },
+          aboutPageExtraGroupsShowDescription: setting("false"),
+        };
+        const noop = () => {};
+
+        await render(
+          <template>
+            <AboutExtraGroups
+              @extraGroups={{extraGroups}}
+              @setGlobalSavingStatus={{noop}}
+            />
+          </template>
+        );
+        const select = new DSelect(".form-kit__field-custom .d-select");
+        assert.dom(".d-select__chip", select.element()).includesText("support");
+        await select.open();
+        await click(optionNamed("design"));
+        await formKit().submit();
+
+        assert.strictEqual(data.extra_groups.groups, "10|11");
+      });
+    });
+  }
+);

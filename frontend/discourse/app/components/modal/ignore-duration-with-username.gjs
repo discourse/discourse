@@ -5,6 +5,7 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import User from "discourse/models/user";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -13,10 +14,12 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class IgnoreDurationModal extends Component {
   @service currentUser;
+  @service siteSettings;
 
   @tracked flash;
 
@@ -93,11 +96,22 @@ export default class IgnoreDurationModal extends Component {
               {{i18n
                 "user.user_notifications.ignore_duration_username"
               }}</label>
-            <EmailGroupUserChooser
-              @onChange={{this.updateIgnoredUsername}}
-              @options={{hash excludeCurrentUser=true maximum=1}}
-              @value={{this.ignoredUsername}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectUser
+                @clearable={{true}}
+                @excludeCurrentUser={{true}}
+                @onChange={{legacyPickOne this.updateIgnoredUsername}}
+                @value={{this.ignoredUsername}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <EmailGroupUserChooser
+                @onChange={{this.updateIgnoredUsername}}
+                @options={{hash excludeCurrentUser=true maximum=1}}
+                @value={{this.ignoredUsername}}
+              />
+            {{/if}}
           </div>
         {{/if}}
         <DFutureDateInput

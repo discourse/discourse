@@ -6,6 +6,7 @@ import SettingDefinitionField from "discourse/components/setting-definition-fiel
 import Site from "discourse/models/site";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -974,5 +975,27 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
         "the localized name is composed with the native name"
       );
     assert.form().field("default_locale").hasValue("fr");
+  });
+  test("tag_list round-trips names with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_tags="dog|cat"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash key="my_tags" type="tag_list" label="My tags"}}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_tags}}</span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_tags'] .d-select";
+    assert.dom(control).hasAttribute("data-name", "dog,cat");
+
+    await dSelect(control).selectByName("monkey");
+
+    assert.dom(".value-probe").hasText("dog|cat|monkey");
   });
 });

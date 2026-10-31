@@ -63,6 +63,11 @@ function userGranteeResult(user, isDisabled = false) {
   excludeGroupNameWhenMatchingFullName: true,
 })
 export default class DAccessControlGranteeChooser extends EmailGroupUserChooser {
+  /**
+   * TODO (select-kit-replacement-cleanup): Remove once the access control moves to the new
+   * select controls; until then this core chooser is not a third-party render.
+   */
+  skipLegacyRenderDeprecation = true;
   valueProperty = "value";
 
   async search(filter = "") {

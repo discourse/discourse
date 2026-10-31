@@ -1,0 +1,721 @@
+import { getOwner } from "@ember/owner";
+import { click, find, findAll, render, settled } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import ActivityByCategory from "discourse/admin/components/dashboard/engagement/activity-by-category";
+import ReportFilterCategory from "discourse/admin/components/report-filters/category";
+import ReportFilterCategoryList from "discourse/admin/components/report-filters/category-list";
+import SchemaSettingField from "discourse/admin/components/schema-setting/field";
+import SiteSettingComponent from "discourse/admin/components/site-setting";
+import SiteSettingCategoryList from "discourse/admin/components/site-settings/category-list";
+import SiteSetting from "discourse/admin/models/site-setting";
+import BreadCrumbs from "discourse/components/bread-crumbs";
+import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
+import ModalContainer from "discourse/components/modal-container";
+import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
+import UserPreferencesCategories from "discourse/components/user-preferences/categories";
+import Form from "discourse/form-kit/components/fk/form";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { MIGRATED_SELECT_KIT_MODULES } from "discourse/lib/select-kit-modify-class-deprecation";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import Site from "discourse/models/site";
+import GroupManageCategories from "discourse/templates/group/manage/categories";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { DSelect as SelectDriver } from "discourse/tests/helpers/d-select-helper";
+import {
+  ALL_CATEGORIES_ID,
+  NO_CATEGORIES_ID,
+} from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
+import { i18n } from "discourse-i18n";
+
+const TOP = ".category-breadcrumb__category-selector";
+const SUB = ".category-breadcrumb__subcategory-selector";
+
+/** Values of the mounted options of the open panel, in order. */
+function optionValues() {
+  return findAll("[role='option'][data-value]").map(
+    (option) => option.dataset.value
+  );
+}
+
+/** Opens the breadcrumb drop matching `selector` and picks the row for `value`. */
+async function pick(selector, value) {
+  await click(`${selector}.d-select, ${selector} .d-select`);
+  await click(`[role='option'][data-value='${value}']`);
+}
+
+module(
+  "Integration | ui-kit | select | recipes | category call sites",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+      this.categories = Site.current().categories;
+      this.routeTo = sinon.stub(DiscourseURL, "routeTo");
+      this.routeToUrl = sinon.stub(DiscourseURL, "routeToUrl");
+    });
+
+    module("breadcrumbs", function () {
+      test("a top-level pick routes to the category", async function (assert) {
+        await render(
+          <template><BreadCrumbs @categories={{this.categories}} /></template>
+        );
+        await pick(TOP, 1);
+
+        assert.true(this.routeToUrl.calledOnceWithExactly("/c/bug/1"));
+      });
+
+      test("a lazy subcategory level asks the server once as its categories arrive", async function (assert) {
+        Site.current().set("lazy_load_categories", true);
+        const category = Category.findById(2);
+        const requests = [];
+        pretender.post("/categories/search", () => {
+          requests.push(true);
+          return response({
+            categories_count: 2,
+            categories: [
+              {
+                id: 9701,
+                name: "Lazy child A",
+                slug: "lazy-a",
+                parent_category_id: 2,
+                permission: 1,
+              },
+              {
+                id: 9702,
+                name: "Lazy child B",
+                slug: "lazy-b",
+                parent_category_id: 2,
+                permission: 1,
+              },
+            ],
+            ancestors: [
+              {
+                id: 2,
+                name: category.name,
+                slug: category.slug,
+                permission: 1,
+              },
+            ],
+          });
+        });
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await click(`${SUB}.d-select, ${SUB} .d-select`);
+
+        assert.deepEqual(optionValues().slice(-2), ["9701", "9702"]);
+        assert.strictEqual(requests.length, 1);
+      });
+
+      test("a subcategory pick routes under its parent", async function (assert) {
+        const category = Category.findById(2);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await pick(SUB, 26);
+
+        assert.true(
+          this.routeToUrl.calledOnceWithExactly("/c/feature/spec/26")
+        );
+      });
+
+      test("no subcategories routes to the parent's own topics", async function (assert) {
+        const category = Category.findById(2);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await pick(SUB, NO_CATEGORIES_ID);
+
+        assert.true(this.routeToUrl.calledOnceWithExactly("/c/feature/2/none"));
+      });
+
+      test("removing a subcategory filter returns to the parent", async function (assert) {
+        const category = Category.findById(26);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await pick(SUB, ALL_CATEGORIES_ID);
+
+        assert.true(this.routeToUrl.calledOnceWithExactly("/c/feature/2"));
+      });
+
+      test("a parent that lists no subcategories by default is asked for all of them", async function (assert) {
+        const category = Category.findById(26);
+        const parent = category.parentCategory;
+        const previous = parent.default_list_filter;
+        parent.set("default_list_filter", "none");
+        try {
+          await render(
+            <template>
+              <BreadCrumbs
+                @categories={{this.categories}}
+                @category={{category}}
+              />
+            </template>
+          );
+          await pick(SUB, ALL_CATEGORIES_ID);
+
+          assert.true(
+            this.routeToUrl.calledOnceWithExactly("/c/feature/2/all")
+          );
+        } finally {
+          parent.set("default_list_filter", previous);
+        }
+      });
+
+      test("leaving a no-subcategories list includes subcategories again", async function (assert) {
+        const category = Category.findById(2);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+              @noSubcategories={{true}}
+            />
+          </template>
+        );
+        await pick(TOP, 1);
+
+        assert.true(this.routeToUrl.calledOnceWithExactly("/c/bug/1"));
+      });
+
+      test("customizations reach the breadcrumbs' category drops by identifier", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forIdentifier("breadcrumb-category", (spec) =>
+              spec.options(() => ({
+                texts: { placeholder: "breadcrumb level" },
+              }))
+            );
+          })
+        );
+        await render(
+          <template><BreadCrumbs @categories={{this.categories}} /></template>
+        );
+
+        assert.dom(`${TOP} .d-select__placeholder`).hasText("breadcrumb level");
+      });
+
+      test("removing the filter at the top level routes home", async function (assert) {
+        const category = Category.findById(1);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await pick(TOP, ALL_CATEGORIES_ID);
+
+        assert.true(this.routeToUrl.calledOnceWithExactly("/"));
+      });
+
+      test("the current tag stays in the route", async function (assert) {
+        const tag = { id: 7, name: "monkey", slug: "monkey" };
+        await render(
+          <template>
+            <BreadCrumbs @categories={{this.categories}} @tag={{tag}} />
+          </template>
+        );
+        await pick(TOP, 1);
+
+        assert.true(
+          this.routeToUrl.calledOnceWithExactly("/tags/c/bug/1/monkey/7")
+        );
+      });
+
+      test("while editing a category a pick opens the same settings tab", async function (assert) {
+        const category = Category.findById(1);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+              @editingCategory={{true}}
+              @editingCategoryTab="settings"
+            />
+          </template>
+        );
+        await pick(TOP, 3);
+
+        assert.true(
+          this.routeToUrl.calledOnceWithExactly("/c/meta/edit/settings")
+        );
+      });
+
+      test("a subcategory drop leaves out categories muted through their parent", async function (assert) {
+        this.owner
+          .lookup("service:current-user")
+          .set("indirectly_muted_category_ids", [28]);
+        const category = Category.findById(7);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await click(`${SUB}.d-select, ${SUB} .d-select`);
+
+        assert.true(
+          optionValues().includes("27"),
+          "an unmuted child is listed"
+        );
+        assert.false(optionValues().includes("28"), "a muted child is not");
+      });
+
+      test("a lazy subcategory drop asks the server to leave out muted categories", async function (assert) {
+        Site.current().set("lazy_load_categories", true);
+        const requests = [];
+        pretender.post("/categories/search", (request) => {
+          requests.push(new URLSearchParams(request.requestBody));
+          return response({
+            categories: [],
+            ancestors: [],
+            categories_count: 0,
+          });
+        });
+        const category = Category.findById(7);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await click(`${SUB}.d-select, ${SUB} .d-select`);
+
+        assert.strictEqual(requests.at(-1)?.get("parent_category_id"), "7");
+        assert.strictEqual(
+          requests.at(-1)?.get("reject_indirectly_muted"),
+          "true"
+        );
+      });
+    });
+
+    module("notification levels", function () {
+      test("a preferences list offers its own held categories but not another list's", async function (assert) {
+        const model = {
+          watchedCategories: [Category.findById(1)],
+          trackedCategories: [Category.findById(2)],
+          watchedFirstPostCategories: [],
+          mutedCategories: [],
+        };
+        const selected = [
+          ...model.watchedCategories,
+          ...model.trackedCategories,
+        ];
+        await render(
+          <template>
+            <UserPreferencesCategories
+              @model={{model}}
+              @selectedCategories={{selected}}
+              @siteSettings={{this.siteSettings}}
+            />
+          </template>
+        );
+        await click(".tracking-controls__watched-categories .d-select");
+        assert.true(optionValues().includes("1"), "its own category is listed");
+        assert.false(
+          optionValues().includes("2"),
+          "the tracked category is not offered"
+        );
+      });
+
+      test("picking a searched category on a lazy site fetches nothing again", async function (assert) {
+        Site.current().set("lazy_load_categories", true);
+        pretender.post("/categories/search", () =>
+          response({
+            categories_count: 1,
+            categories: [{ id: 9960, name: "Searched pick", slug: "pick9960" }],
+            ancestors: [],
+          })
+        );
+        let finds = 0;
+        pretender.get("/categories/find", () => {
+          finds++;
+          return response({ categories: [] });
+        });
+        const warn = sinon.stub(console, "warn");
+        const user = this.owner.lookup("service:store").createRecord("user", {
+          watched_category_ids: [],
+          tracked_category_ids: [],
+          watched_first_post_category_ids: [],
+          regular_category_ids: [],
+          muted_category_ids: [],
+        });
+        const selected = [];
+
+        try {
+          await render(
+            <template>
+              <UserPreferencesCategories
+                @model={{user}}
+                @selectedCategories={{selected}}
+                @siteSettings={{this.siteSettings}}
+              />
+            </template>
+          );
+          const picker = new SelectDriver(
+            ".tracking-controls__watched-categories .d-select"
+          );
+          await picker.open();
+          await picker.search("Searched");
+          await click("[role='option'][data-value='9960']");
+
+          assert.deepEqual(user.watched_category_ids, [9960]);
+          assert.strictEqual(finds, 0, "the picked category is not fetched");
+          assert.false(
+            warn.calledWithMatch(/Multiple calls to Category.asyncFindByIds/),
+            "no repeated lookups"
+          );
+        } finally {
+          warn.restore();
+        }
+      });
+
+      test("a group list offers its own held categories but not another list's", async function (assert) {
+        const model = {
+          watchingCategories: [Category.findById(1)],
+          trackingCategories: [Category.findById(2)],
+        };
+        const controller = {
+          model,
+          selectedCategories: [Category.findById(1), Category.findById(2)],
+          siteSettings: this.siteSettings,
+        };
+        await render(
+          <template>
+            <GroupManageCategories @controller={{controller}} />
+          </template>
+        );
+        await click(".control-group:nth-of-type(2) .d-select");
+        assert.true(optionValues().includes("1"), "its own category is listed");
+        assert.false(
+          optionValues().includes("2"),
+          "the tracking category is not offered"
+        );
+      });
+    });
+
+    module("names", function (nameHooks) {
+      nameHooks.beforeEach(async function () {
+        this.nameOf = await loadAccessibleName();
+      });
+
+      /** Asserts the picker in `container` is named by the caption found there. */
+      function assertNamedByCaption(assert, nameOf, container, caption) {
+        const control = container.querySelector("[role='combobox']");
+        assert.strictEqual(
+          nameOf(control),
+          container.querySelector(caption).textContent.trim(),
+          container.className
+        );
+      }
+
+      for (const muteAll of [false, true]) {
+        test(`each preferences list is named by its caption (mute all: ${muteAll})`, async function (assert) {
+          this.siteSettings.mute_all_categories_by_default = muteAll;
+          const model = {
+            watchedCategories: [],
+            trackedCategories: [],
+            watchedFirstPostCategories: [],
+            regularCategories: [],
+            mutedCategories: [],
+          };
+          const selected = [];
+          await render(
+            <template>
+              <UserPreferencesCategories
+                @model={{model}}
+                @selectedCategories={{selected}}
+                @siteSettings={{this.siteSettings}}
+              />
+            </template>
+          );
+
+          const lists = findAll(".tracking-controls");
+          assert.strictEqual(lists.length, 4);
+          for (const list of lists) {
+            assertNamedByCaption(assert, this.nameOf, list, "label");
+          }
+        });
+      }
+
+      test("each group list is named by its caption", async function (assert) {
+        const controller = {
+          model: {},
+          selectedCategories: [],
+          siteSettings: this.siteSettings,
+        };
+        await render(
+          <template>
+            <GroupManageCategories @controller={{controller}} />
+          </template>
+        );
+
+        const groups = findAll(".control-group").filter((group) =>
+          group.querySelector(".d-select")
+        );
+        assert.strictEqual(groups.length, 5);
+        for (const group of groups) {
+          assertNamedByCaption(assert, this.nameOf, group, "label");
+        }
+      });
+
+      test("advanced search's category picker is named by its caption", async function (assert) {
+        const noop = () => {};
+        await render(
+          <template>
+            <SearchAdvancedOptions
+              @expandFilters={{true}}
+              @onChangeSearchTerm={{noop}}
+              @searchTerm=""
+            />
+          </template>
+        );
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".advanced-search-category"),
+          ".control-label"
+        );
+      });
+
+      for (const type of ["category", "category_list"]) {
+        test(`a ${type} form field is named by its title`, async function (assert) {
+          const definition = { key: "picked", label: "Picked here", type };
+          await render(
+            <template>
+              <Form as |form|>
+                <SettingDefinitionField
+                  @definition={{definition}}
+                  @form={{form}}
+                />
+              </Form>
+            </template>
+          );
+
+          assertNamedByCaption(
+            assert,
+            this.nameOf,
+            find(".form-kit__field"),
+            ".form-kit__container-title > span"
+          );
+        });
+      }
+
+      test("a category list site setting is named by its heading", async function (assert) {
+        const setting = SiteSetting.create({
+          category: "foo",
+          default: "",
+          description: "",
+          humanized_name: "Picked here",
+          setting: "picked_here",
+          type: "category_list",
+          value: "",
+        });
+        await render(
+          <template><SiteSettingComponent @setting={{setting}} /></template>
+        );
+
+        assert.strictEqual(
+          this.nameOf(find(".setting [role='combobox']")),
+          "Picked here"
+        );
+      });
+
+      test("a categories schema field is named by its label", async function (assert) {
+        const setting = {};
+        const spec = { type: "categories" };
+        const noop = () => {};
+        await render(
+          <template>
+            <SchemaSettingField
+              @label="Picked here"
+              @name="picked"
+              @onValueChange={{noop}}
+              @setting={{setting}}
+              @spec={{spec}}
+            />
+          </template>
+        );
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".schema-field"),
+          ".schema-field__label"
+        );
+      });
+
+      for (const [kind, Filter, name] of [
+        ["category", ReportFilterCategory, "categories.category"],
+        ["category list", ReportFilterCategoryList, "categories.categories"],
+      ]) {
+        test(`a report's ${kind} filter is named for what it filters`, async function (assert) {
+          const filter = { id: "category" };
+          const noop = () => {};
+          await render(
+            <template>
+              <Filter @applyFilter={{noop}} @filter={{filter}} />
+            </template>
+          );
+
+          assert.strictEqual(
+            this.nameOf(find("[role='combobox']")),
+            i18n(name)
+          );
+        });
+      }
+
+      test("the dashboard's activity by category filter is named for what it filters", async function (assert) {
+        const activity = { total: 0, rows: [] };
+        const start = new Date("2026-04-01");
+        const end = new Date("2026-04-30");
+        await render(
+          <template>
+            <ActivityByCategory
+              @activity={{activity}}
+              @endDate={{end}}
+              @startDate={{start}}
+            />
+          </template>
+        );
+
+        assert.strictEqual(
+          this.nameOf(find(".db-activity [role='combobox']")),
+          i18n("categories.categories")
+        );
+      });
+
+      test("the bulk category change is named by its description", async function (assert) {
+        await render(<template><ModalContainer /></template>);
+        getOwner(this)
+          .lookup("service:modal")
+          .show(BulkTopicActions, {
+            model: {
+              action: "update-category",
+              bulkSelectHelper: { selected: [], toggleBulkSelect() {} },
+              description: "Move them here:",
+              title: "Update category",
+            },
+          });
+        await settled();
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".d-modal"),
+          ".topic-bulk-actions-modal__description"
+        );
+      });
+    });
+
+    module("settings and search", function () {
+      test("a category list setting stores ids joined by pipes", async function (assert) {
+        const change = sinon.spy();
+        await render(
+          <template>
+            <SiteSettingCategoryList
+              @changeValueCallback={{change}}
+              @value="1|2"
+            />
+          </template>
+        );
+        await click(".d-select__trigger");
+        await click("[role='option'][data-value='3']");
+
+        assert.true(change.calledOnceWithExactly("1|2|3"));
+      });
+
+      test("advanced search filters by the picked category", async function (assert) {
+        const change = sinon.spy();
+        await render(
+          <template>
+            <SearchAdvancedOptions
+              @expandFilters={{true}}
+              @onChangeSearchTerm={{change}}
+              @searchTerm=""
+            />
+          </template>
+        );
+        await new SelectDriver("#search-in-category").select(26);
+
+        assert.strictEqual(change.lastCall.args[0].trim(), "#feature:spec");
+      });
+
+      test("advanced search offers categories the user cannot post in", async function (assert) {
+        Site.current().updateCategories([
+          {
+            id: 9901,
+            name: "Readable only",
+            slug: "readable",
+            permission: null,
+          },
+        ]);
+        const change = sinon.spy();
+        await render(
+          <template>
+            <SearchAdvancedOptions
+              @expandFilters={{true}}
+              @onChangeSearchTerm={{change}}
+              @searchTerm=""
+            />
+          </template>
+        );
+        await new SelectDriver("#search-in-category").search("readable");
+
+        assert.deepEqual(optionValues(), ["9901"]);
+      });
+    });
+
+    module("customizations", function () {
+      test("patches on the category pickers are reported once their call sites migrate", function (assert) {
+        for (const path of [
+          "category-chooser",
+          "category-drop",
+          "category-drop/category-drop-header",
+          "category-drop-more-collection",
+          "category-row",
+          "category-selector",
+          "multiple-categories-selector",
+          "search-advanced-category-chooser",
+          "selected-choice-category",
+        ]) {
+          assert.true(MIGRATED_SELECT_KIT_MODULES.has(path), path);
+        }
+      });
+    });
+  }
+);

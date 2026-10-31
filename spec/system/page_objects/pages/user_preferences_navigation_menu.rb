@@ -9,8 +9,15 @@ module PageObjects
       end
 
       def has_navigation_menu_categories_preference?(*categories)
-        category_selector_header = page.find(".category-selector .select-kit-header-wrapper")
-        category_selector_header.has_content?(categories.map(&:name).join(", "))
+        selector = ".category-selector"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector).has_selected_names?(
+            *categories.map(&:name),
+          )
+        else
+          category_selector_header = page.find("#{selector} .select-kit-header-wrapper")
+          category_selector_header.has_content?(categories.map(&:name).join(", "))
+        end
       end
 
       def has_navigation_menu_tags_preference?(*tags)

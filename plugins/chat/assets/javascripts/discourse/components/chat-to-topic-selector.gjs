@@ -1,7 +1,8 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { fn } from "@ember/helper";
-import { computed, set } from "@ember/object";
+import { fn, hash } from "@ember/helper";
+import { action, computed, set } from "@ember/object";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
@@ -9,6 +10,8 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 export const NEW_TOPIC_SELECTION = "new_topic";
@@ -17,6 +20,8 @@ export const NEW_MESSAGE_SELECTION = "new_message";
 
 @tagName("")
 export default class ChatToTopicSelector extends Component {
+  @service siteSettings;
+
   newTopicSelection = NEW_TOPIC_SELECTION;
   existingTopicSelection = EXISTING_TOPIC_SELECTION;
   newMessageSelection = NEW_MESSAGE_SELECTION;
@@ -77,6 +82,11 @@ export default class ChatToTopicSelector extends Component {
     return trustHTML(this.instructionLabels[NEW_MESSAGE_SELECTION]);
   }
 
+  @action
+  changeTags(tags) {
+    this.set("tags", tags);
+  }
+
   <template>
     <div class="chat-to-topic-selector" ...attributes>
       <div class="radios">
@@ -127,22 +137,53 @@ export default class ChatToTopicSelector extends Component {
             @value={{this.topicTitle}}
           />
 
-          <label>{{i18n "categories.category"}}</label>
+          <label id="new-topic-category-selector-label">
+            {{~i18n "categories.category"~}}
+          </label>
 
-          <CategoryChooser
-            class="small"
-            @id="new-topic-category-selector"
-            @onChange={{fn (mut this.categoryId)}}
-            @value={{this.categoryId}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-chooser small"
+              @ariaLabelledBy="new-topic-category-selector-label"
+              @emit="ids"
+              @id="new-topic-category-selector"
+              @onChange={{fn (mut this.categoryId)}}
+              @permission="create"
+              @value={{this.categoryId}}
+            />
+          {{else}}
+            <CategoryChooser
+              class="small"
+              @id="new-topic-category-selector"
+              @onChange={{fn (mut this.categoryId)}}
+              @value={{this.categoryId}}
+            />
+          {{/if}}
 
           {{#if this.canAddTags}}
-            <label>{{i18n "tagging.tags"}}</label>
-            <TagChooser
-              @categoryId={{this.categoryId}}
-              @filterable={{true}}
-              @tags={{this.tags}}
-            />
+            <label id="chat-to-topic-new-topic-tags-label">
+              {{~i18n "tagging.tags"~}}
+            </label>
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectTag
+                @ariaLabelledBy="chat-to-topic-new-topic-tags-label"
+                @categoryId={{this.categoryId}}
+                @multiple={{true}}
+                @onChange={{this.changeTags}}
+                @texts={{hash placeholder=(i18n "tagging.choose_for_topic")}}
+                @value={{this.tags}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <TagChooser
+                @categoryId={{this.categoryId}}
+                @filterable={{true}}
+                @onChange={{this.changeTags}}
+                @tags={{this.tags}}
+              />
+            {{/if}}
           {{/if}}
         </form>
       {{/if}}
@@ -172,8 +213,26 @@ export default class ChatToTopicSelector extends Component {
           />
 
           {{#if this.canTagMessages}}
-            <label>{{i18n "tagging.tags"}}</label>
-            <TagChooser @filterable={{true}} @tags={{this.tags}} />
+            <label id="chat-to-topic-new-message-tags-label">
+              {{~i18n "tagging.tags"~}}
+            </label>
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectTag
+                @ariaLabelledBy="chat-to-topic-new-message-tags-label"
+                @multiple={{true}}
+                @onChange={{this.changeTags}}
+                @texts={{hash placeholder=(i18n "tagging.choose_for_topic")}}
+                @value={{this.tags}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <TagChooser
+                @filterable={{true}}
+                @onChange={{this.changeTags}}
+                @tags={{this.tags}}
+              />
+            {{/if}}
           {{/if}}
         </form>
       {{/if}}

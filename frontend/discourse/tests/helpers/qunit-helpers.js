@@ -75,6 +75,7 @@ import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-but
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
+import { resetSelectKitLegacyRenderNotices } from "discourse/lib/select-kit-modify-class-deprecation";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
@@ -92,6 +93,7 @@ import {
 } from "discourse/lib/user-presence";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { destroyUserStatuses } from "discourse/lib/user-status-on-autocomplete";
+import Category from "discourse/models/category";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
@@ -101,6 +103,7 @@ import Site from "discourse/models/site";
 import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
+import { clearCallbacks as clearSelectKitCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { noteKeyboardEvidence } from "discourse/services/capabilities";
 import {
@@ -124,8 +127,10 @@ import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
+import { resetSelectTextNotices } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import I18n from "discourse-i18n";
 import { setupDNativeSelectAssertions } from "./d-native-select-assertions.js";
+import { setupDSelectAssertions } from "./d-select-assertions.ts";
 import { setupFormKitAssertions } from "./form-kit-assertions.js";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions.js";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper.js";
@@ -228,6 +233,8 @@ export function testCleanup(container, app) {
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetDeferredClassModifications();
+  resetSelectKitLegacyRenderNotices();
+  resetSelectTextNotices();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -239,6 +246,7 @@ export function testCleanup(container, app) {
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
   resetCategoryTagSearchCache();
+  Category.clearAsyncSearchCache();
   destroyUserStatuses();
   resetHighestReadCache();
   resetCardClickListenerSelector();
@@ -290,6 +298,7 @@ export function testCleanup(container, app) {
   clearAdditionalUserNavSidebarLinks();
   resetAdminPluginConfigNav();
   resetTransformers();
+  clearSelectKitCallbacks();
   rollbackAllPrepends();
   clearAboutPageActivities();
   clearPluginHeaderActionComponents();
@@ -517,6 +526,7 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 
 setupFormKitAssertions();
 setupDNativeSelectAssertions();
+setupDSelectAssertions();
 setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {
@@ -725,3 +735,15 @@ export function normalizeHtml(html) {
 }
 
 export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };
+
+/**
+ * Waits one animation frame, then for everything `settled` tracks.
+ *
+ * `settled` does not await frames, so work a browser schedules for the next frame (a coalesced
+ * pointer move, a ResizeObserver report) has not landed when it returns. Await this between an
+ * action and any assertion about work that arrives on the next frame.
+ */
+export async function settledAfterFrame() {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  await settled();
+}

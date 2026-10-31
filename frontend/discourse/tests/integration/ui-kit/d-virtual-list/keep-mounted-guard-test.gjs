@@ -12,14 +12,14 @@ const ROW_PX = 40;
 const VIEWPORT_PX = 320;
 
 // Derived from the geometry, never from the rendered array's own length: an oracle
-// built out of that length accepts a single row as "contiguous from the pinned
+// built out of that length accepts a single row as "contiguous from the kept-mounted
 // index", which is the exact gap these tests exist to catch.
 const MIN_MOUNTED_ROWS = Math.ceil(VIEWPORT_PX / ROW_PX);
 
 const estimate = () => ROW_PX;
 
 /**
- * Asserts that the mounted rows are the pinned index followed by an unbroken run
+ * Asserts that the mounted rows are the kept-mounted index followed by an unbroken run
  * tall enough to fill the viewport.
  *
  * Three assertions rather than one `deepEqual`, so a failure names which property
@@ -37,7 +37,7 @@ function assertCoversViewportFromZero(assert, indices, label) {
   assert.strictEqual(
     indices[0],
     0,
-    `${label}: the run starts at the pinned row`
+    `${label}: the run starts at the kept-mounted row`
   );
   assert.deepEqual(
     indices,
@@ -65,12 +65,12 @@ async function scrollTo(top) {
   await triggerEvent(element, "scroll");
 }
 
-// Guards the wall around @pinnedIndices callback output: garbage extras must be
+// Guards the wall around @keepMounted callback output: garbage extras must be
 // inert rather than indexing the engine's measurements with a fractional/NaN key
 // (which pushes `undefined` and crashes the state signature), and a stale engine
 // scroll offset must not open holes between forced indices and the window.
 module(
-  "Integration | ui-kit | DVirtualList | pinned index guard",
+  "Integration | ui-kit | DVirtualList | keep-mounted guard",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -84,7 +84,7 @@ module(
 
     test("garbage callback output is inert and does not crash", async function (assert) {
       const items = buildRows(100);
-      const garbagePins = () => [1.5, -2, 1000, Number.NaN];
+      const garbageIndices = () => [1.5, -2, 1000, Number.NaN];
 
       await render(
         <template>
@@ -98,8 +98,8 @@ module(
           <DVirtualList
             @estimateSize={{estimate}}
             @items={{items}}
+            @keepMounted={{garbageIndices}}
             @overscan={{0}}
-            @pinnedIndices={{garbagePins}}
             as |item|
           >
             <div class="row" style="height: 40px">{{item.text}}</div>
@@ -114,7 +114,7 @@ module(
         .exists("the list renders without crashing on garbage extras");
       assert
         .dom(".d-virtual-list__item[data-index='1']")
-        .doesNotExist("a fractional index pins nothing");
+        .doesNotExist("a fractional index keeps nothing mounted");
       assert
         .dom(".d-virtual-list__item[data-index='0']")
         .doesNotExist("no valid extra means no off-window row");
@@ -122,14 +122,14 @@ module(
 
     // Regression for a reported gap: filtering a large list down to a single match
     // and then widening the filter (e.g. "1356" → backspace → "135") left a visible
-    // hole right after the active row. The active row is pinned, and the engine had
+    // hole right after the active row. The active row is kept mounted, and the engine had
     // kept the scroll offset from before the filter shrank the list, so it computed
-    // a window far down while the pin force-rendered the active row at the top —
+    // a window far down while keepMounted force-rendered the active row at the top —
     // the rows between were never mounted. The window must track the element's
     // real (browser-clamped) offset after the set changes, leaving no gap.
-    test("a pinned row leaves no gap after the item set shrinks then grows", async function (assert) {
+    test("a kept-mounted row leaves no gap after the item set shrinks then grows", async function (assert) {
       const items = tracked(buildRows(30));
-      const pinFirst = () => [0];
+      const keepFirst = () => [0];
 
       await render(
         <template>
@@ -143,8 +143,8 @@ module(
           <DVirtualList
             @estimateSize={{estimate}}
             @items={{items.value}}
+            @keepMounted={{keepFirst}}
             @key="id"
-            @pinnedIndices={{pinFirst}}
             as |item|
           >
             <div class="row" style="height: 40px">{{item.text}}</div>
@@ -152,7 +152,7 @@ module(
         </template>
       );
 
-      // Scroll away from the pinned row, then filter down to a single match and
+      // Scroll away from the kept-mounted row, then filter down to a single match and
       // widen it again — the sequence that stranded the stale offset.
       await scrollTo(ROW_PX * 8);
       items.value = buildRows(1);
@@ -168,12 +168,12 @@ module(
     });
 
     // A callback can force SEVERAL off-window indices at once, so a stale offset
-    // has more than one forced row to open holes against. The pins must all stay
+    // has more than one forced row to open holes against. The kept rows must all stay
     // mounted while scrolled away, and a shrink→grow must leave no hole between
-    // any pin and the window.
-    test("multiple pinned rows stay mounted and leave no gaps after shrink then grow", async function (assert) {
+    // any kept row and the window.
+    test("multiple kept-mounted rows stay mounted and leave no gaps after shrink then grow", async function (assert) {
       const items = tracked(buildRows(60));
-      const pinPair = () => [0, 3];
+      const keepPair = () => [0, 3];
 
       await render(
         <template>
@@ -187,9 +187,9 @@ module(
           <DVirtualList
             @estimateSize={{estimate}}
             @items={{items.value}}
+            @keepMounted={{keepPair}}
             @key="id"
             @overscan={{0}}
-            @pinnedIndices={{pinPair}}
             as |item|
           >
             <div class="row" style="height: 40px">{{item.text}}</div>
@@ -202,19 +202,19 @@ module(
       const indices = renderedIndices();
       assert.true(
         indices.includes(0),
-        `the first pinned row stays mounted outside the window (got [${indices}])`
+        `the first kept-mounted row stays mounted outside the window (got [${indices}])`
       );
       assert.true(
         indices.includes(3),
-        `the second pinned row stays mounted outside the window (got [${indices}])`
+        `the second kept-mounted row stays mounted outside the window (got [${indices}])`
       );
       assert.false(
         indices.includes(1),
-        "the first row between the pins is not dragged along"
+        "the first row between the kept rows is not dragged along"
       );
       assert.false(
         indices.includes(2),
-        "the second row between the pins is not dragged along"
+        "the second row between the kept rows is not dragged along"
       );
 
       items.value = buildRows(1);
@@ -225,7 +225,7 @@ module(
       assertCoversViewportFromZero(
         assert,
         renderedIndices(),
-        "across both pins after the shrink and regrow"
+        "across both kept rows after the shrink and regrow"
       );
     });
   }

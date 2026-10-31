@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin About Config Area Page" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:image_upload)
 

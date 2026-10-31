@@ -236,6 +236,7 @@
 
     .input-large,
     .select-kit,
+    .d-select:is(.category-chooser, .category-selector, .tag-chooser),
     .d-date-time-input {
       width: 300px;
 

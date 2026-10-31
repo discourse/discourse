@@ -7,10 +7,12 @@ import { extractError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 export default class ConvertToPublicTopic extends Component {
   @service appEvents;
+  @service siteSettings;
 
   @tracked publicCategoryId;
   @tracked saving = false;
@@ -42,13 +44,25 @@ export default class ConvertToPublicTopic extends Component {
       @title={{i18n "topic.make_public.title"}}
     >
       <:body>
-        <div class="instructions">
+        <div class="instructions" id="make-public-category-label">
           {{i18n "topic.make_public.choose_category"}}
         </div>
-        <CategoryChooser
-          @onChange={{fn (mut this.publicCategoryId)}}
-          @value={{this.publicCategoryId}}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="category-chooser"
+            @ariaLabelledBy="make-public-category-label"
+            @emit="ids"
+            @onChange={{fn (mut this.publicCategoryId)}}
+            @permission="create"
+            @value={{this.publicCategoryId}}
+          />
+        {{else}}
+          <CategoryChooser
+            @onChange={{fn (mut this.publicCategoryId)}}
+            @value={{this.publicCategoryId}}
+          />
+        {{/if}}
       </:body>
       <:footer>
         <DButton

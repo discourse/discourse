@@ -2,6 +2,7 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import PolicyBuilderForm from "discourse/plugins/discourse-policy/discourse/components/policy-builder-form";
@@ -85,6 +86,46 @@ module(
         addUsersToGroup: "team",
         private: true,
       });
+    });
+
+    test("with the new select controls, submits the picked group names", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      this.set("data", { groups: "admins", reminder: null, version: 1 });
+
+      await render(
+        <template>
+          <PolicyBuilderForm
+            @data={{this.data}}
+            @onRegisterApi={{this.onRegisterApi}}
+            @onSubmit={{this.onSubmit}}
+          />
+        </template>
+      );
+
+      const groups = dSelect(".policy-builder-form__groups .d-select");
+      await groups.open();
+      assert
+        .dom(".d-select__option[data-name='everyone']")
+        .doesNotExist("everyone is not offered");
+      await groups.selectByName("team");
+      await groups.close();
+
+      const addGroups = dSelect(
+        ".policy-builder-form__add-users-to-group .d-select"
+      );
+      await addGroups.open();
+      assert
+        .dom(".d-select__option[data-name='moderators']")
+        .doesNotExist("automatic groups are not offered");
+      await addGroups.selectByName("team");
+      await addGroups.close();
+
+      await fillIn("input[name='accept']", "foo");
+      await fillIn("input[name='revoke']", "bar");
+      await this.formApi.submit();
+
+      assert.strictEqual(this.submittedData.groups, "admins,team");
+      assert.strictEqual(this.submittedData.addUsersToGroup, "team");
     });
 
     test("does not submit invalid form data", async function (assert) {

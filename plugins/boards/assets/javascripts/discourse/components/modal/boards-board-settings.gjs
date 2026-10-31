@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -14,6 +14,7 @@ import CategorySelector from "discourse/select-kit/components/category-selector"
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 import { buildDefaultBoardAcl } from "../../lib/boards-access-control.js";
 import { loadCategories } from "../../lib/boards-categories.js";
@@ -329,10 +330,21 @@ export default class BoardsBoardSettings extends Component {
                       @context={{data.category_ids}}
                     >
                       <:content as |categories|>
-                        <CategorySelector
-                          @categories={{categories}}
-                          @onChange={{fn this.onCategoriesChange field}}
-                        />
+                        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                        {{#if this.siteSettings.enable_new_select_controls}}
+                          <DSelectCategory
+                            class="category-selector"
+                            @multiple={{true}}
+                            @onChange={{fn this.onCategoriesChange field}}
+                            @texts={{hash ariaLabel=field.title}}
+                            @value={{categories}}
+                          />
+                        {{else}}
+                          <CategorySelector
+                            @categories={{categories}}
+                            @onChange={{fn this.onCategoriesChange field}}
+                          />
+                        {{/if}}
                       </:content>
                     </DAsyncContent>
                   </field.Control>

@@ -1,4 +1,14 @@
-import { click, find, focus, render, settled, tab } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import {
+  click,
+  find,
+  focus,
+  render,
+  settled,
+  tab,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ModalContainer from "discourse/components/modal-container";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -6,10 +16,126 @@ import DMenus from "discourse/float-kit/components/d-menus";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
+import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 const CloseMenu = <template>
   <DButton class="close-menu" @action={{@close}}>Close menu</DButton>
 </template>;
+
+module("Integration | ui-kit | Modifier | dTrapTab", function (hooks) {
+  setupRenderingTest(hooks);
+
+  for (const explicitAutofocus of [false, true]) {
+    test(`fix oracle: autofocus runs once with explicit autofocus ${explicitAutofocus}`, async function (assert) {
+      const expanded = tracked(false);
+      const mounted = tracked(true);
+      const preventScroll = tracked(true);
+      const onFocus = () => expanded.value;
+
+      await render(
+        <template>
+          <input class="outside" />
+          {{#if mounted.value}}
+            <div {{dTrapTab preventScroll=preventScroll.value}}>
+              <input
+                autofocus={{explicitAutofocus}}
+                class="first"
+                {{on "focus" onFocus}}
+              />
+              <input class="second" />
+              {{#if expanded.value}}
+                <button class="last" type="button">Last</button>
+              {{/if}}
+            </div>
+          {{/if}}
+        </template>
+      );
+
+      assert
+        .dom(".first")
+        .isFocused("installation autofocuses the first input");
+
+      await focus(".second");
+      expanded.value = true;
+      await settled();
+
+      assert
+        .dom(".second")
+        .isFocused(
+          "a tracked read in the focus handler does not steal focus on update"
+        );
+
+      await triggerKeyEvent(".second", "keydown", "Tab", { shiftKey: true });
+      assert.dom(".second").isFocused("an interior Tab is left to the browser");
+
+      await focus(".last");
+      await triggerKeyEvent(".last", "keydown", "Tab");
+      assert
+        .dom(".first")
+        .isFocused("Tab wraps from a newly rendered last control");
+
+      await focus(".first");
+      await triggerKeyEvent(".first", "keydown", "Tab", { shiftKey: true });
+      assert.dom(".last").isFocused("Shift+Tab still wraps after an update");
+
+      await focus(".outside");
+      preventScroll.value = false;
+      await settled();
+
+      assert
+        .dom(".outside")
+        .isFocused(
+          "an argument update does not autofocus even when focus is outside"
+        );
+
+      mounted.value = false;
+      await settled();
+      mounted.value = true;
+      await settled();
+
+      assert.dom(".first").isFocused("a new trap autofocuses on reopening");
+    });
+  }
+
+  test("fix oracle: enabling autofocus after installation preserves focus", async function (assert) {
+    const autofocus = tracked(false);
+    const preventScroll = tracked(true);
+
+    await render(
+      <template>
+        <input class="outside" />
+        <div
+          {{dTrapTab
+            autofocus=autofocus.value
+            preventScroll=preventScroll.value
+          }}
+        >
+          <input class="first" />
+          <input class="last" />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".first")
+      .isNotFocused("autofocus can be disabled on installation");
+
+    await focus(".outside");
+    autofocus.value = true;
+    preventScroll.value = false;
+    await settled();
+
+    assert
+      .dom(".outside")
+      .isFocused("enabling autofocus does not focus an installed trap");
+
+    await focus(".last");
+    await triggerKeyEvent(".last", "keydown", "Tab");
+    assert
+      .dom(".first")
+      .isFocused("the trap works when initial autofocus is disabled");
+  });
+});
 
 module(
   "Integration | Component | FloatKit | PointerAnchoredMenu",

@@ -1,0 +1,789 @@
+# frozen_string_literal: true
+
+module PageObjects
+  module Components
+    module UiKit
+      # Drives a ui-kit DSelect through its trigger and portaled panel.
+      class DSelect < PageObjects::Components::Base
+        # @param root [String] a CSS selector for the instance's `.d-select__trigger`.
+        # @param panel [String, nil] a CSS selector for the instance's overlay. Without it
+        #   panel lookups fall back to the whole document, which is only correct when a single
+        #   overlay can be open at a time.
+        def initialize(root, panel: nil, root_mode: false)
+          @root = root
+          @panel = panel
+          @root_mode = root_mode
+        end
+
+        # Lazily resolves selectors so the driver survives visits and trigger replacement.
+        def self.at(root_selector)
+          new(root_selector, root_mode: true)
+        end
+
+        # Identifiers reach both CSS attribute selectors (single-quoted) and double-quoted JS
+        # string literals, so anything outside this set could break either. Rejecting is better
+        # than escaping: every real identifier is a slug, and a silently-mangled selector fails
+        # as a confusing timeout rather than an error.
+        SAFE_IDENTIFIER = /\A[-_a-zA-Z0-9]+\z/
+
+        # Scopes an instance by the `@identifier` it passes to `DMenu`. float-kit stamps that
+        # identifier on the trigger *and* on the portaled overlay — on desktop through
+        # `DFloatBody`, on mobile through `DModal` — so the scope reaches both surfaces.
+        #
+        # Note this scopes *lookups*; it does not make every method mobile-capable. `open` still
+        # clicks an input inside the trigger, which on mobile lives in the modal instead — use
+        # `open_trigger` there.
+        def self.by_identifier(identifier)
+          unless SAFE_IDENTIFIER.match?(identifier)
+            raise ArgumentError, "unsafe DSelect identifier: #{identifier.inspect}"
+          end
+
+          new(
+            "[data-identifier='#{identifier}'][data-trigger]",
+            panel: "[data-identifier='#{identifier}'][data-content]",
+          )
+        end
+
+        def trigger
+          element = find(@root)
+          return element unless @root_mode
+
+          element.matches_css?(".d-select", wait: 0) ? element : element.ancestor(".d-select")
+        end
+
+        # Persistent lists are always multi and have no trigger to open.
+        def list?
+          trigger.matches_css?(".d-select.--list", wait: 0)
+        end
+
+        # `wait: 0` for the same reason as `press_in_controller`: a predicate on an
+        # already-resolved node, where waiting would only delay a legitimate `false`.
+        def multiple?
+          list? || trigger.matches_css?(".--multiple", wait: 0)
+        end
+
+        # Opens through the trigger itself rather than the query input — the `button` and
+        # `static` variants have no input to click.
+        def open_trigger
+          return self if list?
+
+          return self if @root_mode && trigger["aria-expanded"] == "true"
+
+          trigger.click
+          self
+        end
+
+        def input
+          trigger.find(list? ? ".d-select__filter" : ".d-select__input")
+        end
+
+        def open
+          if trigger.matches_css?(".--typeahead", wait: 0)
+            input.click
+          else
+            open_trigger
+          end
+          self
+        end
+
+        def expanded?
+          if trigger.matches_css?(".--typeahead", wait: 0)
+            input[:"aria-expanded"] == "true"
+          else
+            trigger[:"aria-expanded"] == "true"
+          end
+        end
+
+        # Prefixes a selector with this instance's overlay, so a page hosting several selects
+        # never reads another one's panel. Falls back to the bare selector when the instance
+        # was built without a panel root.
+        def in_panel(selector)
+          return "#{root_selector} #{selector}" if list?
+
+          return "#{linked_panel_selector} #{selector}" if @root_mode
+
+          @panel ? "#{@panel} #{selector}" : selector
+        end
+
+        def select_value(value)
+          select_hook("value", value)
+        end
+
+        def select_name(name)
+          select_hook("name", name)
+        end
+
+        def search(text)
+          open_for_value
+          filter.fill_in(with: text.to_s)
+          self
+        end
+
+        def close
+          return self if list?
+
+          controller.send_keys(:escape) if trigger["aria-expanded"] == "true"
+          page.assert_selector("#{root_selector}[aria-expanded='false']")
+          self
+        end
+
+        def clear
+          trigger.find(".d-select__clear").click
+          self
+        end
+
+        def remove(value)
+          remove_by("value", value)
+        end
+
+        # Removes a held item by its label, for callers that know a tag's name but not its id.
+        def remove_name(name)
+          remove_by("name", name)
+        end
+
+        def remove_trigger_chip(value)
+          remove_trigger_chip_by("value", value)
+          self
+        end
+
+        def remove_panel_chip(value)
+          remove_panel_chip_by("value", value)
+          self
+        end
+
+        def remove_strip_item(value)
+          remove_strip_item_by("value", value)
+          self
+        end
+
+        def remove_selected_row(value)
+          remove_selected_row_by("value", value)
+          self
+        end
+
+        def value
+          trigger["data-value"]
+        end
+
+        def option_values
+          open_for_value
+          panel = find(linked_panel_selector)
+          # Walks every window in the browser: a round trip per window is too slow for long lists.
+          values = page.evaluate_async_script(<<~JS, panel)
+            const [panel, done] = arguments;
+            const viewport = panel.querySelector(".d-virtual-list");
+            const values = new Map();
+            const finish = () => done([...values].sort(([a], [b]) => a - b).map(([, value]) => value));
+            // Returns how far to scroll so the last rendered row (overscan included) comes to the
+            // top, which skips no row.
+            const collect = () => {
+              let last;
+              for (const option of panel.querySelectorAll('[role="option"][data-value]')) {
+                values.set(Number(option.dataset.index), option.dataset.value);
+                if (!last || Number(option.dataset.index) > Number(last.dataset.index)) {
+                  last = option;
+                }
+              }
+              const offset = last
+                ? last.getBoundingClientRect().top - viewport?.getBoundingClientRect().top
+                : 0;
+              return Math.max(offset, viewport?.clientHeight ?? 0);
+            };
+            const settle = () =>
+              new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            (async () => {
+              if (!viewport) {
+                collect();
+                return finish();
+              }
+              viewport.scrollTop = 0;
+              await settle();
+              for (;;) {
+                const before = viewport.scrollTop;
+                viewport.scrollTop = before + collect();
+                await settle();
+                if (viewport.scrollTop === before) {
+                  return finish();
+                }
+              }
+            })();
+          JS
+          values
+        end
+
+        def has_selected_value?(value)
+          page.has_css?("#{root_selector}#{hook_selector("value", value)}")
+        end
+
+        def has_no_selected_value?(value)
+          page.has_no_css?("#{root_selector}#{hook_selector("value", value)}")
+        end
+
+        def has_selected_name?(name)
+          page.has_css?("#{root_selector}#{hook_selector("name", name)}")
+        end
+
+        def has_no_selected_name?(name)
+          page.has_no_css?("#{root_selector}#{hook_selector("name", name)}")
+        end
+
+        # Order-insensitive match on a multi-select's whole selection. `has_selected_name?`
+        # compares the root's joined `data-name` verbatim, so it only fits a single selection.
+        # Waits because selection labels can resolve a beat after the value is set.
+        def has_selected_names?(*names)
+          expected = names.map(&:to_s).sort
+          page.has_css?(root_selector) do |element|
+            element["data-name"].to_s.split(",").sort == expected
+          end
+        end
+
+        def has_option_value?(value)
+          option_match?("value", value)
+        end
+
+        def has_no_option_value?(value)
+          option_match?("value", value, negative: true)
+        end
+
+        def has_option_name?(name)
+          option_match?("name", name)
+        end
+
+        def has_no_option_name?(name)
+          option_match?("name", name, negative: true)
+        end
+
+        def has_disabled_option?(value)
+          option_match?("value", value, disabled: true)
+        end
+
+        # Whether the open panel marks the option labelled `name` as the current selection.
+        def has_selected_option_name?(name)
+          option_match?("name", name, selected: true)
+        end
+
+        # Checks only the mounted window of the list, which covers every row of a short list.
+        def has_no_selected_option?
+          open_for_value
+          page.has_no_css?("#{linked_panel_selector} [role='option'][aria-selected='true']")
+        end
+
+        # Keeps the `[role='listbox']` ancestor the pre-scoping selector had: a panel may host
+        # consumer markup (a `:footer`, an `:empty` block) that could carry its own option role,
+        # and dropping the ancestor would let it count as a row.
+        def option_selector
+          in_panel("[role='listbox'] [role='option']")
+        end
+
+        def options
+          all(option_selector, minimum: 0)
+        end
+
+        # Single-select: open, filter, and click the matching option (closes the overlay).
+        def select(name)
+          input.click
+          input.send_keys(name)
+          find(option_selector, text: name).click
+          self
+        end
+
+        def chips
+          trigger.all(".d-select__chip", minimum: 0)
+        end
+
+        def chip_labels
+          chips.map { |chip| chip.find(".d-select__chip-label").text }
+        end
+
+        def remove_buttons
+          trigger.all(".d-select__chip-remove", minimum: 0)
+        end
+
+        # Opens the overlay, types a filter, and clicks the matching option. The multi
+        # overlay stays open across an add, so several calls chain without reopening.
+        def add(name)
+          input.click
+          input.send_keys(name)
+          find(
+            in_panel("[role='listbox'][aria-multiselectable='true'] [role='option']"),
+            text: name,
+          ).click
+        end
+
+        def focus_input
+          input.click
+        end
+
+        # Sends keys to whatever element currently holds focus (a chip or the input).
+        def press(*keys)
+          page.send_keys(*keys)
+        end
+
+        # The elements this instance owns live in two disjoint subtrees: the host trigger, and
+        # the portaled overlay. A focus predicate has to accept either, because the typeahead
+        # input sits in the trigger on desktop and inside the modal on mobile.
+        def owned_scopes
+          @panel ? [@root, @panel] : [@root]
+        end
+
+        # A selector matching `descendant:focus` in either subtree this instance owns, as a
+        # single CSS list so one waiting matcher covers both.
+        def owned_focus_selector(descendant)
+          owned_scopes.map { |scope| "#{scope} #{descendant}:focus" }.join(", ")
+        end
+
+        # Whether focus rests on THIS instance's query input.
+        #
+        # A waiting matcher, not a `document.activeElement` sample. The component moves focus
+        # from a runloop callback after the keystroke that triggers it, so reading once races
+        # the very transition being asserted: it passes when the machine is idle and fails under
+        # load, which is exactly the shape of an order-dependent flake.
+        def input_focused?
+          page.has_css?(owned_focus_selector(".d-select__input"))
+        end
+
+        # The waiting negative. `input_focused?` returning false costs a full timeout and cannot
+        # tell "not yet" from "never", so asserting focus is elsewhere needs the absence matcher.
+        def input_blurred?
+          page.has_no_css?(owned_focus_selector(".d-select__input"))
+        end
+
+        # The label of the chip whose remove button holds focus, or nil when no chip takes focus
+        # — the browser-truthful way to assert where roving landed. Waits for the focus move for
+        # the same reason as `input_focused?` before reading the label back.
+        def focused_chip_label
+          return nil unless page.has_css?(owned_focus_selector(".d-select__chip-remove"))
+
+          page.evaluate_script(<<~JS)
+            (function () {
+              const el = document.activeElement;
+              if (!el || !el.classList.contains("d-select__chip-remove")) {
+                return null;
+              }
+              if (!#{owned_scopes.to_json}.some((scope) => el.closest(scope))) {
+                return null;
+              }
+              const chip = el.closest(".d-select__chip");
+              const label = chip && chip.querySelector(".d-select__chip-label");
+              return label ? label.textContent.trim() : null;
+            })()
+          JS
+        end
+
+        def remove_button_tabindexes
+          remove_buttons.map { |button| button[:tabindex] }
+        end
+
+        # The query input for a panel-searchable (`button`) variant, which renders inside the
+        # overlay rather than in the trigger.
+        def panel_input
+          find(in_panel(".d-select__filter"))
+        end
+
+        def panel_input_focused?
+          page.has_css?(owned_focus_selector(".d-select__filter"))
+        end
+
+        # Whether DOM focus rests anywhere in this instance's overlay, the panel itself included.
+        # Waiting matchers rather than an `activeElement` sample, for the reason `input_focused?`
+        # documents: focus moves a beat after the keystroke that causes it.
+        def panel_focused?
+          @panel ? page.has_css?("#{@panel}:focus, #{@panel} :focus") : false
+        end
+
+        def panel_blurred?
+          @panel ? page.has_no_css?("#{@panel}:focus, #{@panel} :focus") : true
+        end
+
+        # Whether focus rests on the windowed list's scroll viewport — the element a browser
+        # with keyboard-focusable scrollers will adopt as a tab stop when the list carries no
+        # focusable descendants of its own. Paired with the waiting negative, since asserting
+        # focus is elsewhere through `has_css?` costs a full timeout on every run.
+        def list_scroller_focused?
+          page.has_css?(in_panel(".d-virtual-list:focus"))
+        end
+
+        def list_scroller_blurred?
+          page.has_no_css?(in_panel(".d-virtual-list:focus"))
+        end
+
+        # The `tabindex` the windowed list's scroll viewport carries, or nil for none.
+        def list_scroller_tabindex
+          find(in_panel(".d-virtual-list"))[:tabindex]
+        end
+
+        def trigger_focused?
+          page.has_css?("#{@root}:focus")
+        end
+
+        # Whether focus rests on a control the consumer yielded into the panel's `:footer`, or on
+        # the error state's retry action. Both live in the portaled panel rather than the trigger,
+        # so they are only reachable once the panel participates in the tab sequence.
+        def footer_control_focused?
+          page.has_css?(in_panel(".d-select__footer button:focus"))
+        end
+
+        def retry_focused?
+          page.has_css?(in_panel(".d-select__retry:focus"))
+        end
+
+        # Whether DOM focus rests anywhere this instance owns — the trigger subtree or the panel.
+        # The waiting negative is the useful direction: it is how a test asserts Tab left the
+        # widget entirely without paying a full timeout for a `has_css?` that will never match.
+        def widget_focused?
+          page.has_css?(owned_scopes.map { |scope| "#{scope}:focus, #{scope} :focus" }.join(", "))
+        end
+
+        def widget_blurred?
+          page.has_no_css?(
+            owned_scopes.map { |scope| "#{scope}:focus, #{scope} :focus" }.join(", "),
+          )
+        end
+
+        # Stamps `data-tab-oracle` on the host-document tab stops immediately before and after
+        # this instance's trigger, so a test can name where Tab *should* land without hard-coding
+        # a neighbouring example's markup.
+        #
+        # Must run while the overlay is CLOSED. The overlay is portaled to the end of the
+        # document, so once open its own controls enumerate as host tab stops and the neighbour
+        # this computes is no longer the one the user would reach.
+        #
+        # Returns the enumeration for the caller to sanity-check, since a page whose trigger has
+        # no following tab stop would satisfy a "focus left the widget" assertion vacuously.
+        def mark_tab_order_oracle
+          page.evaluate_script(<<~JS)
+            (function () {
+              const SELECTOR = [
+                "a[href]",
+                "button:not([disabled])",
+                "input:not([disabled])",
+                "select:not([disabled])",
+                "textarea:not([disabled])",
+                "summary",
+                "[tabindex]:not([tabindex='-1'])",
+              ].join(", ");
+
+              document
+                .querySelectorAll("[data-tab-oracle]")
+                .forEach((el) => el.removeAttribute("data-tab-oracle"));
+
+              const trigger = document.querySelector(#{@root.to_json});
+              if (!trigger) {
+                return null;
+              }
+
+              const tabbables = [...document.querySelectorAll(SELECTOR)].filter((el) => {
+                if (el.closest("[aria-hidden='true']")) {
+                  return false;
+                }
+                return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+              });
+
+              const index = tabbables.indexOf(trigger);
+              if (index === -1) {
+                return null;
+              }
+
+              const before = tabbables[index - 1];
+              const after = tabbables[index + 1];
+              if (before) {
+                before.setAttribute("data-tab-oracle", "before");
+              }
+              if (after) {
+                after.setAttribute("data-tab-oracle", "after");
+              }
+
+              return { hasBefore: !!before, hasAfter: !!after };
+            })()
+          JS
+        end
+
+        def listbox
+          find(in_panel("[role='listbox']"))
+        end
+
+        # Presence predicates for THIS instance's overlay. Asserting on a bare `[role='listbox']`
+        # is both over-broad (any open panel satisfies it) and flaky in the negative direction,
+        # since a document-wide `have_no_css` has to wait out every candidate.
+        def has_listbox?
+          page.has_css?(in_panel("[role='listbox']"))
+        end
+
+        def has_no_listbox?
+          page.has_no_css?(in_panel("[role='listbox']"))
+        end
+
+        def option_count
+          page.assert_selector(in_panel("[role='listbox'], .d-select__empty"))
+          options.size
+        end
+
+        # Whether the "keep filtering" hint is showing, i.e. a paginated source stopped at its
+        # cap with more results behind it. A client source renders in full and never shows it.
+        def narrow_hint?
+          page.has_css?(in_panel(".d-select__narrow"), wait: 0)
+        end
+
+        # The listbox is windowed by `DVirtualList`: only a slice of rows is mounted, so
+        # counting `[role='option']` elements measures the window, not the list. The extent
+        # reached is instead the highest absolute `data-index` currently mounted — scrolling
+        # the window toward the end advances it.
+        def max_loaded_index
+          page.evaluate_script(<<~JS)
+            (function () {
+              const indices = [...document.querySelectorAll("#{option_selector}")]
+                .map((el) => Number(el.dataset.index))
+                .filter((index) => Number.isInteger(index));
+              return indices.length ? Math.max(...indices) : -1;
+            })()
+          JS
+        end
+
+        # Scrolls the listbox itself (never the page): scrolling the virtualized window toward
+        # the end mounts the rows there. For a paginated source, reaching the end band also
+        # trips the next fetch.
+        def scroll_listbox_to_bottom
+          page.execute_script(<<~JS)
+            (function () {
+              const list = document.querySelector(#{in_panel(".d-virtual-list").to_json});
+              list.scrollTop = list.scrollHeight;
+            })()
+          JS
+        end
+
+        # The scroll offset of this instance's windowed viewport — the assertion that scrolling
+        # stayed inside the listbox rather than moving the page.
+        def list_scroll_top
+          page.evaluate_script(<<~JS)
+            (function () {
+              const list = document.querySelector(#{in_panel(".d-virtual-list").to_json});
+              return list ? list.scrollTop : null;
+            })()
+          JS
+        end
+
+        # Scrolls toward the end until the mounted extent reaches `target` (an absolute index)
+        # or stops growing. Each scroll to the bottom advances the window onto deeper rows (for
+        # a paginated source it also trips the next fetch); the window then jumps to the new
+        # bottom, so the wait is for the reachable frontier to advance past where it was — not
+        # for a specific index (that low index is above the new window). A step that fails to
+        # advance the frontier ends the loop (the list end, or a source cap, was reached).
+        def reveal_to_index(target, max_scrolls: 25)
+          max_scrolls.times do
+            before = max_loaded_index
+            break if before >= target
+            scroll_listbox_to_bottom
+            advanced = false
+            20.times do
+              if max_loaded_index > before
+                advanced = true
+                break
+              end
+              sleep 0.1
+            end
+            break unless advanced
+          end
+          max_loaded_index
+        end
+
+        # The absolute `data-index` of the option the combobox controller currently points at
+        # via `aria-activedescendant`, or nil when the descendant is absent or not a mounted
+        # option — the browser-truthful way to assert where a windowed keyboard jump landed.
+        def active_option_index
+          page.evaluate_script(<<~JS)
+            (function () {
+              const root = "#{@root}";
+              const controller =
+                document.querySelector(root + " [role='combobox']") ||
+                document.querySelector(root + "[role='combobox']");
+              const id = controller && controller.getAttribute("aria-activedescendant");
+              const active = id && document.getElementById(id);
+              if (!active || active.getAttribute("role") !== "option") {
+                return null;
+              }
+              const index = Number(active.dataset.index);
+              return Number.isInteger(index) ? index : null;
+            })()
+          JS
+        end
+
+        # Whether DOM focus rests on a mounted listbox option (focus-mode surfaces move real
+        # focus into the list). Distinguishes a landed jump from focus dropped to `<body>`.
+        def focused_option_index
+          page.evaluate_script(<<~JS)
+            (function () {
+              const el = document.activeElement;
+              if (!el || el.getAttribute("role") !== "option") {
+                return null;
+              }
+              if (!#{owned_scopes.to_json}.some((scope) => el.closest(scope))) {
+                return null;
+              }
+              const index = Number(el.dataset.index);
+              return Number.isInteger(index) ? index : null;
+            })()
+          JS
+        end
+
+        # Sends keys to the combobox controller (the trigger input, or the trigger div for a
+        # select-only combobox). The `static` variant puts `role="combobox"` on the trigger root
+        # itself, so a descendant-only lookup would never find it.
+        def press_in_controller(*keys)
+          # `trigger` does the waiting, so by here the element exists and the role question is
+          # about that resolved node — `wait: 0` is correct and not a race. Without it
+          # `matches_css?` waits the full Capybara duration before answering false, which is a
+          # 5s stall on every typeahead (the variant where the role is on a descendant).
+          root = trigger
+          controller =
+            if root.matches_css?("[role='combobox']", wait: 0)
+              root
+            else
+              root.find("[role='combobox']")
+            end
+          controller.send_keys(*keys)
+        end
+
+        # A windowed keyboard jump reconciles asynchronously (scroll, then refocus on the next
+        # runloop), so the active option moves a beat after the keystroke. Polls until the
+        # active index changes away from `previous` and returns it, failing if it never moves.
+        def active_index_after_change(previous, timeout: 5)
+          deadline = Time.now + timeout
+          loop do
+            current = active_option_index
+            return current if current && current != previous
+            raise "the active option never moved from #{previous.inspect}" if Time.now > deadline
+            sleep 0.05
+          end
+        end
+
+        private
+
+        def hook_selector(hook, value)
+          string = value.to_s
+          escaped = string.empty? ? "" : Capybara::Selector::CSS.escape(string)
+          "[data-#{hook}=\"#{escaped}\"]"
+        end
+
+        def root_selector
+          ".d-select#{hook_selector("select-id", trigger["data-select-id"])}"
+        end
+
+        def linked_panel_selector
+          return root_selector if list?
+
+          ".d-select__panel#{hook_selector("select-id", trigger["data-select-id"])}"
+        end
+
+        def open_for_value
+          open_trigger unless trigger["aria-expanded"] == "true"
+          page.assert_selector(linked_panel_selector)
+        end
+
+        def filter
+          trigger.first(list? ? ".d-select__filter" : ".d-select__input", minimum: 0, wait: 0) ||
+            find("#{linked_panel_selector} .d-select__filter")
+        end
+
+        def controller
+          trigger.first(list? ? ".d-select__filter" : ".d-select__input", minimum: 0, wait: 0) ||
+            first("#{linked_panel_selector} .d-select__filter", minimum: 0, wait: 0) || trigger
+        end
+
+        def remove_by(hook, value)
+          case trigger["data-selection-removal"]
+          when "trigger-chips"
+            remove_trigger_chip_by(hook, value)
+          when "panel-chips"
+            remove_panel_chip_by(hook, value)
+          when "strip"
+            remove_strip_item_by(hook, value)
+          when "selected-rows"
+            remove_selected_row_by(hook, value)
+          else
+            raise "unknown selection removal model"
+          end
+          self
+        end
+
+        def remove_trigger_chip_by(hook, value)
+          trigger.find(".d-select__chip#{hook_selector(hook, value)} .d-select__chip-remove").click
+        end
+
+        def remove_panel_chip_by(hook, value)
+          open_for_value
+          find(
+            in_panel(
+              ".d-select__chips.--field .d-select__chip#{hook_selector(hook, value)} .d-select__chip-remove",
+            ),
+          ).click
+        end
+
+        def remove_strip_item_by(hook, value)
+          open_for_value
+          find(
+            in_panel(".d-select__strip-item#{hook_selector(hook, value)} .d-select__strip-remove"),
+          ).click
+        end
+
+        def remove_selected_row_by(hook, value)
+          open_for_value
+          if trigger["data-selection-removal"] != "selected-rows"
+            raise "selected-row removal requires a panel that lists held items only as selected rows"
+          end
+          panel = linked_panel_selector
+          selector = "#{panel} [role='option'][aria-selected='true']#{hook_selector(hook, value)}"
+          page.assert_selector(panel) { option_in_windows?(panel, selector) }
+          find(selector).click
+        end
+
+        def select_hook(hook, value)
+          open_for_value
+          panel = linked_panel_selector
+          selector = "#{panel} [role='option'][data-value]#{hook_selector(hook, value)}"
+          page.assert_selector(panel) { option_in_windows?(panel, selector) }
+          find(selector).click
+          self
+        end
+
+        def option_match?(hook, value, negative: false, disabled: false, selected: false)
+          open_for_value
+          panel = linked_panel_selector
+          selector = "#{panel} [role='option'][data-value]#{hook_selector(hook, value)}"
+          selector += "[aria-disabled='true']" if disabled
+          selector += "[aria-selected='true']" if selected
+          matcher = negative ? :has_no_css? : :has_css?
+          page.public_send(matcher, panel) { option_in_windows?(panel, selector) }
+        end
+
+        def option_in_windows?(panel, selector)
+          return true if page.has_css?(selector, wait: 0)
+
+          each_option_window(panel) { page.has_css?(selector, wait: 0) }
+        end
+
+        # Start at the top so a previous lookup cannot hide earlier, unmounted rows.
+        def each_option_window(panel)
+          viewport = first("#{panel} .d-virtual-list", minimum: 0, wait: 0)
+          scroll_window(viewport, reset: true) if viewport
+          loop do
+            return true if yield
+            break unless viewport && scroll_window(viewport)
+          end
+          false
+        end
+
+        # Wait for scroll-driven rendering before inspecting the next window.
+        def scroll_window(viewport, reset: false)
+          page.evaluate_async_script(<<~JS, viewport, reset)
+            const [viewport, reset, done] = arguments;
+            const before = viewport.scrollTop;
+            viewport.scrollTop = reset ? 0 : before + viewport.clientHeight;
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+              done(viewport.scrollTop !== before);
+            }));
+          JS
+        end
+      end
+    end
+  end
+end

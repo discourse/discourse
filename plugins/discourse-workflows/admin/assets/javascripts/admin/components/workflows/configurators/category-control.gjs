@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import {
   integerIdsFromValue,
   sameIds,
@@ -100,18 +101,51 @@ export default class CategoryControl extends Component {
       @supportsExpression={{@supportsExpression}}
     >
       {{#if this.multiple}}
-        <CategorySelector
-          @categories={{this.selectedCategories}}
-          @onChange={{this.handleMultiChange}}
-          @options={{hash translatedNone=@placeholder}}
-          {{didUpdate this.hydrateSelectedCategories @field.value}}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="category-selector"
+            @describedBy={{@field.describedBy}}
+            @disabled={{@field.disabled}}
+            @id={{@field.id}}
+            @invalid={{if @field.error true false}}
+            @multiple={{true}}
+            @onChange={{this.handleMultiChange}}
+            @texts={{hash ariaLabel=@field.title placeholder=@placeholder}}
+            @value={{this.selectedCategories}}
+            {{didUpdate this.hydrateSelectedCategories @field.value}}
+          />
+        {{else}}
+          <CategorySelector
+            @categories={{this.selectedCategories}}
+            @onChange={{this.handleMultiChange}}
+            @options={{hash translatedNone=@placeholder}}
+            {{didUpdate this.hydrateSelectedCategories @field.value}}
+          />
+        {{/if}}
       {{else}}
-        <CategoryChooser
-          @onChange={{this.handleChange}}
-          @options={{hash clearable=this.clearable}}
-          @value={{if @field.value @field.value null}}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="category-chooser"
+            @clearable={{this.clearable}}
+            @describedBy={{@field.describedBy}}
+            @disabled={{@field.disabled}}
+            @emit="ids"
+            @id={{@field.id}}
+            @invalid={{if @field.error true false}}
+            @onChange={{this.handleChange}}
+            @permission="create"
+            @texts={{hash ariaLabel=@field.title}}
+            @value={{if @field.value @field.value null}}
+          />
+        {{else}}
+          <CategoryChooser
+            @onChange={{this.handleChange}}
+            @options={{hash clearable=this.clearable}}
+            @value={{if @field.value @field.value null}}
+          />
+        {{/if}}
       {{/if}}
     </ExpressionWrapper>
   </template>

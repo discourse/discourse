@@ -1,3 +1,6 @@
+import Form from "discourse/components/form";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import AlertExample from "../../examples/atoms/forms/alert.gjs";
 import alertSource from "../../examples/atoms/forms/alert?source=file";
@@ -92,7 +95,32 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample @code={{tagChooserSource}} @title="TagChooser">
-    <TagChooserExample />
+    {{! TODO (select-kit-replacement-cleanup) }}
+    {{#if @siteSettings.enable_new_select_controls}}
+      <Form as |form|>
+        <form.Field
+          @name="tags"
+          @title={{i18n "tagging.tags"}}
+          @type="custom"
+          as |field|
+        >
+          <field.Control>
+            <DSelectTag
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
+              @multiple={{true}}
+              @onChange={{field.set}}
+              @value={{field.value}}
+            />
+          </field.Control>
+        </form.Field>
+      </Form>
+    {{else}}
+      {{! TODO (select-kit-replacement-cleanup) }}
+      <TagChooserExample />
+    {{/if}}
   </StyleguideExample>
 
   <StyleguideExample @code={{menuSource}} @title="Menu">

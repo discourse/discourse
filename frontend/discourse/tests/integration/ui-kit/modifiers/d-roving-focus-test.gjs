@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import {
   click,
+  find,
   focus,
   render,
   settled,
@@ -3907,3 +3908,279 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 });
+
+module(
+  "Integration | ui-kit | Modifier | dRovingFocus | sticky leading navigation",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("vertical arrows cross a logical gap in either direction with the default orientation", async function (assert) {
+      let api;
+      const register = (value) => (api = value);
+      const jumps = [];
+      const jump = (index, direction) => jumps.push([index, direction]);
+      await render(
+        <template>
+          <input
+            aria-controls="sticky-list"
+            aria-expanded="true"
+            aria-label="Choices"
+            class="controller"
+            role="combobox"
+          />
+          <div
+            id="sticky-list"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".controller"
+              itemSelector="[role=option]"
+              logicalCount=100
+              activeClass="--active"
+              onRegisterApi=register
+              onJump=jump
+            }}
+          >
+            <div data-logical-index="0" id="leading" role="option">Action</div>
+            <div
+              data-logical-index="50"
+              id="window-start"
+              role="option"
+            >Fifty</div>
+            <div data-logical-index="51" id="window-next" role="option">Fifty
+              one</div>
+          </div>
+        </template>
+      );
+      api.focusLogicalIndex(0);
+      await triggerKeyEvent(".controller", "keydown", "ArrowDown");
+      assert.deepEqual(
+        jumps,
+        [[1, "forward"]],
+        "Down requests the missing logical neighbour"
+      );
+      assert
+        .dom(".controller")
+        .hasAttribute(
+          "aria-activedescendant",
+          "leading",
+          "it does not activate the distant mounted row"
+        );
+      api.focusLogicalIndex(50);
+      await triggerKeyEvent(".controller", "keydown", "ArrowUp");
+      assert.deepEqual(
+        jumps,
+        [
+          [1, "forward"],
+          [49, "backward"],
+        ],
+        "Up requests the missing previous neighbour"
+      );
+      await triggerKeyEvent(".controller", "keydown", "ArrowDown");
+      assert
+        .dom(".controller")
+        .hasAttribute(
+          "aria-activedescendant",
+          "window-next",
+          "adjacent mounted rows still navigate directly"
+        );
+    });
+    test("an unhandled gap leaves the arrow available to its surrounding scroller", async function (assert) {
+      let api;
+      const register = (value) => (api = value);
+      await render(
+        <template>
+          <input
+            aria-controls="gap-list"
+            aria-expanded="true"
+            aria-label="Choices"
+            class="gap-controller"
+            role="combobox"
+          />
+          <div
+            id="gap-list"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".gap-controller"
+              itemSelector="[role=option]"
+              logicalCount=100
+              activeClass="--active"
+              onRegisterApi=register
+            }}
+          >
+            <div
+              data-logical-index="0"
+              id="gap-leading"
+              role="option"
+            >Action</div>
+            <div
+              data-logical-index="50"
+              id="gap-window"
+              role="option"
+            >Fifty</div>
+          </div>
+        </template>
+      );
+      api.focusLogicalIndex(0);
+      const event = new KeyboardEvent("keydown", {
+        key: "ArrowDown",
+        bubbles: true,
+        cancelable: true,
+      });
+      find(".gap-controller").dispatchEvent(event);
+      await settled();
+      assert.false(
+        event.defaultPrevented,
+        "a missing neighbour without a jump handler leaves native scrolling available"
+      );
+      assert
+        .dom(".gap-controller")
+        .hasAttribute(
+          "aria-activedescendant",
+          "gap-leading",
+          "the cursor does not skip the missing rows"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | Modifier | dRovingFocus | entry seeds skip disabled items",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const strategy of ["active-descendant", "roving-tabindex"]) {
+      for (const entry of ["first", "selected-or-first", "selected-or-none"]) {
+        test(`${strategy}: ${entry} skips disabled entry candidates but navigation reaches them`, async function (assert) {
+          let api;
+          const register = (value) => (api = value);
+          const reset = tracked(0);
+          const onActivate = sinon.spy();
+
+          await render(
+            <template>
+              <div
+                aria-controls="u1c-list"
+                class="controller"
+                role="combobox"
+                tabindex="0"
+              ></div>
+              <div
+                id="u1c-list"
+                role="listbox"
+                {{dRovingFocus
+                  focusStrategy=strategy
+                  controllerElement=".controller"
+                  orientation="vertical"
+                  disabledItems="focusable"
+                  entryFocus=entry
+                  resetKey=reset.value
+                  itemSelector="[role=option]"
+                  activeClass="--active"
+                  onActivate=onActivate
+                  onRegisterApi=register
+                }}
+              >
+                <button
+                  aria-disabled="true"
+                  aria-selected="true"
+                  class="disabled"
+                  role="option"
+                >Disabled selected</button>
+                <button class="enabled" role="option">Enabled</button>
+                <button aria-disabled="true" class="last" role="option">Disabled
+                  last</button>
+              </div>
+            </template>
+          );
+
+          const enabled = find(".enabled");
+          const expected = entry === "selected-or-none" ? null : enabled;
+          assert.strictEqual(
+            api.currentItem(),
+            expected,
+            "only enabled rows can seed entry"
+          );
+          api.focusElement(enabled);
+          const controller =
+            strategy === "active-descendant" ? find(".controller") : enabled;
+          await triggerKeyEvent(controller, "keydown", "ArrowUp");
+          assert.strictEqual(
+            api.currentItem(),
+            find(".disabled"),
+            "arrows reach the disabled selected row"
+          );
+          await triggerKeyEvent(
+            strategy === "active-descendant" ? controller : find(".disabled"),
+            "keydown",
+            "Enter"
+          );
+          assert.true(
+            onActivate.notCalled,
+            "disabled entry candidates remain inoperable"
+          );
+
+          reset.value++;
+          await settled();
+          assert.strictEqual(
+            strategy === "active-descendant"
+              ? api.currentItem()
+              : find('[role=option][tabindex="0"]'),
+            expected,
+            "reset applies the seed rule again"
+          );
+        });
+      }
+    }
+
+    test("active-descendant: all-disabled results stay seedless until deliberate navigation", async function (assert) {
+      const items = tracked([]);
+      let api;
+      const register = (value) => (api = value);
+      await render(
+        <template>
+          <div
+            aria-controls="u1c-list"
+            class="controller"
+            role="combobox"
+            tabindex="0"
+          ></div>
+          <div
+            id="u1c-list"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".controller"
+              activeClass="--active"
+              disabledItems="focusable"
+              entryFocus="first"
+              itemSelector="[role=option]"
+              itemsKey=items.value
+              onRegisterApi=register
+            }}
+          >
+            {{#each items.value as |item|}}<div
+                aria-disabled="true"
+                role="option"
+              >{{item}}</div>{{/each}}
+          </div>
+        </template>
+      );
+      items.value = ["Unavailable A", "Unavailable B"];
+      await settled();
+      assert.strictEqual(
+        api.currentItem(),
+        null,
+        "async arrival does not seed a disabled row"
+      );
+      await triggerKeyEvent(".controller", "keydown", "ArrowDown");
+      assert
+        .dom(api.currentItem())
+        .hasText(
+          "Unavailable A",
+          "deliberate navigation reaches the first row"
+        );
+    });
+  }
+);

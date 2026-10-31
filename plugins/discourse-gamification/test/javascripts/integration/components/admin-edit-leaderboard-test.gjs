@@ -1,9 +1,10 @@
-import { render } from "@ember/test-helpers";
+import { click, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Category from "discourse/models/category";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import form from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AdminEditLeaderboard from "discourse/plugins/discourse-gamification/admin/components/admin-edit-leaderboard";
@@ -93,6 +94,79 @@ module(
         "4",
         "the period remains weekly"
       );
+    });
+
+    test("with the new select controls, saves the picked group ids", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      this.site.groups = [
+        { id: 0, name: "everyone", automatic: true },
+        { id: 10, name: "support", automatic: false },
+        { id: 11, name: "sales", automatic: false },
+      ];
+      this.leaderboard = GamificationLeaderboard.create({
+        id: 1,
+        name: "Leaderboard",
+        included_groups_ids: [10],
+      });
+
+      const router = this.owner.lookup("service:router");
+      sinon.stub(router, "transitionTo").resolves();
+      sinon.stub(router, "refresh");
+
+      let savedData;
+      pretender.put("/admin/plugins/gamification/leaderboard/1", (request) => {
+        savedData = new URLSearchParams(request.requestBody);
+        return response({ success: true });
+      });
+
+      await render(
+        <template>
+          <AdminEditLeaderboard @leaderboard={{this.leaderboard}} />
+        </template>
+      );
+
+      const included = dSelect("#leaderboard-edit__included-groups");
+      await included.open();
+      assert
+        .dom(".d-select__option[data-name='everyone']")
+        .doesNotExist("everyone is not offered");
+      await included.selectByName("sales");
+      await included.close();
+
+      const excluded = dSelect("#leaderboard-edit__excluded-groups");
+      await excluded.open();
+      await excluded.selectByName("support");
+      await excluded.close();
+
+      await form().submit();
+
+      assert.deepEqual(savedData.getAll("included_groups_ids[]"), ["10", "11"]);
+      assert.deepEqual(savedData.getAll("excluded_groups_ids[]"), ["10"]);
+    });
+
+    test("with the new select controls, the categories picker is described by the field's description", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      this.leaderboard = GamificationLeaderboard.create({
+        id: 1,
+        name: "Leaderboard",
+      });
+
+      await render(
+        <template>
+          <AdminEditLeaderboard @leaderboard={{this.leaderboard}} />
+        </template>
+      );
+
+      await click(
+        ".leaderboard-scoring .admin-config-area-card-section__header-wrapper"
+      );
+
+      const description = find(
+        "[data-name='scorable_category_ids'] .form-kit__container-description"
+      );
+      assert
+        .dom("[data-name='scorable_category_ids'] [role='combobox']")
+        .hasAttribute("aria-describedby", new RegExp(description.id));
     });
   }
 );

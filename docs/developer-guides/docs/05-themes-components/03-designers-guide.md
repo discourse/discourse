@@ -245,6 +245,17 @@ Let's make some changes to this area. To do so, add the following to your `commo
 
 Here we target the `.select-kit-header` to give them each an identical border-radius, as well as a lighter background color.
 
+When the new select controls are enabled, the category and tag filters keep the
+`.d-select.category-drop` and `.d-select.tag-drop` classes during the rollout, and each root is
+also its trigger, `.d-select__trigger`. The overlay is portaled outside the navigation container,
+so target it by kind: `.d-select__content.--kind-select-category-filter` and
+`.d-select__content.--kind-select-tag-filter`. Inside, the category filter's shortcut rows keep
+their `data-value` (`all-categories`, `no-categories`), the tag filter's shortcut rows use
+`.d-tag-drop__shortcut`, and its keep-typing hint is `.d-select__narrow`. Use the theme's color
+variables for both light and dark palettes. Caret customizations target the
+`select-category-filter` or `select-tag-filter` kind through `select-customizations` and return a
+`caretIcon` option, `{ closed, open }`.
+
 Clicking on either of these, opens up a drop down menu.
 
 ![image|350x439](/assets/designers-guide-8.png)

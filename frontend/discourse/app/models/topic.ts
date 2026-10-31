@@ -1552,7 +1552,7 @@ export default class Topic extends RestModel {
   ): globalThis.Promise<{ tags?: TopicTag[] } | null> {
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
-      data: { tags: tags || [] },
+      data: { tags: serializeTags(tags || []) },
     }).then((result: { tags?: TopicTag[] } | null) => {
       if (result?.tags) {
         this.set("tags", result.tags);

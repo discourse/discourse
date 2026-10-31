@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
@@ -9,6 +9,7 @@ import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -20,6 +21,9 @@ import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -121,6 +125,7 @@ export function addAdvancedSearchOptions(options) {
 @tagName("")
 export default class SearchAdvancedOptions extends Component {
   @service appEvents;
+  @service siteSettings;
 
   @tracked isExpanded = false;
   @tracked submittedFilterCount = 0;
@@ -850,15 +855,36 @@ export default class SearchAdvancedOptions extends Component {
             />
 
             <div class="control-group advanced-search-category">
-              <label class="control-label">
+              <label class="control-label" id="search-in-category-label">
                 {{i18n "search.advanced.in_category.label"}}
               </label>
               <div class="controls">
-                <SearchAdvancedCategoryChooser
-                  @id="search-in-category"
-                  @onChange={{this.onChangeSearchTermForCategory}}
-                  @value={{this.searchedTerms.category.id}}
-                />
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectCategory
+                    class="search-advanced-category-chooser category-chooser"
+                    @ariaLabelledBy="search-in-category-label"
+                    @clearable={{true}}
+                    @descriptions={{false}}
+                    @emit="ids"
+                    @id="search-in-category"
+                    @legacyKind={{array
+                      "search-advanced-category-chooser"
+                      "category-chooser"
+                    }}
+                    @onChange={{this.onChangeSearchTermForCategory}}
+                    @permission="see"
+                    @texts={{hash placeholder=(i18n "category.all")}}
+                    @uncategorized={{true}}
+                    @value={{this.searchedTerms.category.id}}
+                  />
+                {{else}}
+                  <SearchAdvancedCategoryChooser
+                    @id="search-in-category"
+                    @onChange={{this.onChangeSearchTermForCategory}}
+                    @value={{this.searchedTerms.category.id}}
+                  />
+                {{/if}}
               </div>
             </div>
 
@@ -868,19 +894,37 @@ export default class SearchAdvancedOptions extends Component {
                   {{i18n "search.advanced.with_tags.label"}}
                 </label>
                 <div class="controls">
-                  <TagChooser
-                    @everyTag={{true}}
-                    @id="search-with-tags"
-                    @onChange={{this.onChangeSearchTermForTags}}
-                    @options={{hash
-                      allowAny=false
-                      headerAriaLabel=(i18n
-                        "search.advanced.with_tags.aria_label"
-                      )
-                    }}
-                    @tags={{this.searchedTerms.tags}}
-                    @unlimitedTagCount={{true}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectTag
+                      @allowCreate={{false}}
+                      @emit="names"
+                      @id="search-with-tags"
+                      @ignoreRestrictions={{true}}
+                      @maximum={{false}}
+                      @multiple={{true}}
+                      @onChange={{this.onChangeSearchTermForTags}}
+                      @texts={{hash
+                        ariaLabel=(i18n "search.advanced.with_tags.aria_label")
+                      }}
+                      @value={{this.searchedTerms.tags}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      @everyTag={{true}}
+                      @id="search-with-tags"
+                      @onChange={{this.onChangeSearchTermForTags}}
+                      @options={{hash
+                        allowAny=false
+                        headerAriaLabel=(i18n
+                          "search.advanced.with_tags.aria_label"
+                        )
+                      }}
+                      @tags={{this.searchedTerms.tags}}
+                      @unlimitedTagCount={{true}}
+                    />
+                  {{/if}}
                   {{#if this.showAllTagsCheckbox}}
                     <section class="field">
                       <label>
@@ -941,18 +985,34 @@ export default class SearchAdvancedOptions extends Component {
                 {{i18n "search.advanced.posted_by.label"}}
               </label>
               <div class="controls">
-                <UserChooser
-                  @id="search-posted-by"
-                  @onChange={{this.onChangeSearchTermForUsername}}
-                  @options={{hash
-                    headerAriaLabel=(i18n
-                      "search.advanced.posted_by.aria_label"
-                    )
-                    maximum=1
-                    excludeCurrentUser=false
-                  }}
-                  @value={{this.searchedTerms.username}}
-                />
+                {{! TODO (select-kit-replacement-cleanup) }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectUser
+                    @clearable={{true}}
+                    @id="search-posted-by"
+                    @onChange={{legacyPickOne
+                      this.onChangeSearchTermForUsername
+                    }}
+                    @texts={{hash
+                      ariaLabel=(i18n "search.advanced.posted_by.aria_label")
+                    }}
+                    @value={{this.searchedTerms.username}}
+                  />
+                {{else}}
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  <UserChooser
+                    @id="search-posted-by"
+                    @onChange={{this.onChangeSearchTermForUsername}}
+                    @options={{hash
+                      headerAriaLabel=(i18n
+                        "search.advanced.posted_by.aria_label"
+                      )
+                      maximum=1
+                      excludeCurrentUser=false
+                    }}
+                    @value={{this.searchedTerms.username}}
+                  />
+                {{/if}}
               </div>
             </div>
 

@@ -1,0 +1,25 @@
+{
+  "settings": { "max_tag_length": 20, "force_lowercase_tags": false },
+  "cases": [
+    { "name": "trims, dashes spaces, drops filter characters", "input": "  Foo Bar!! ", "expected": "Foo-Bar" },
+    { "name": "lowercases when forced", "input": "Foo Bar", "force_lowercase_tags": true, "expected": "foo-bar" },
+    { "name": "keeps case otherwise", "input": "HeLlO", "expected": "HeLlO" },
+    { "name": "cuts to the maximum length", "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "expected": "aaaaaaaaaaaaaaaaaaaa" },
+    { "name": "trims leading and trailing dots", "input": "..dots..", "expected": "dots" },
+    { "name": "keeps inner dots", "input": ".node.js.", "expected": "node.js" },
+    { "name": "collapses repeated dashes", "input": "hello---world", "expected": "hello-world" },
+    { "name": "collapses dashes left by removed characters", "input": "Finances & Accounting", "force_lowercase_tags": true, "expected": "finances-accounting" },
+    { "name": "trims ASCII whitespace", "input": "\tfoo\n", "expected": "foo" },
+    { "name": "dashes an ideographic space", "input": "a　b", "expected": "a-b" },
+    { "name": "keeps CJK letters", "input": "中文 标签", "expected": "中文-标签" },
+    { "name": "keeps combining marks", "input": "café", "expected": "café" },
+    { "name": "removes a byte order mark inside a word", "input": "hel﻿lo", "expected": "hello" },
+    { "name": "removes a zero width space", "input": "a​b", "expected": "ab" },
+    { "name": "dashes a leading no-break space instead of trimming it", "input": " foo", "expected": "-foo" },
+    { "name": "removes an emoji", "input": "rock🎸", "expected": "rock" },
+    { "name": "removes non-ASCII symbols", "input": "a©b€c", "expected": "abc" },
+    { "name": "keeps an ASCII symbol that counts as punctuation", "input": "a~b", "expected": "a~b" },
+    { "name": "counts the maximum length in code points", "input": "𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜", "expected": "𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜𝒜" },
+    { "name": "lowercases before cutting", "input": "İ", "force_lowercase_tags": true, "max_tag_length": 1, "expected": "i" }
+  ]
+}

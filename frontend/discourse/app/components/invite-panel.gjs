@@ -8,12 +8,15 @@ import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import GeneratedInviteLink from "discourse/components/generated-invite-link";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -472,6 +475,11 @@ export default class InvitePanel extends Component {
   }
 
   @action
+  setGroupIds(groupIds) {
+    this.set("groupIds", groupIds);
+  }
+
+  @action
   updateInvitee(selected, content) {
     let invitee = content.find((c) => c.id === selected[0]);
     if (!invitee && content.length) {
@@ -481,7 +489,8 @@ export default class InvitePanel extends Component {
     if (invitee) {
       this.setProperties({
         invitee: invitee.id.trim(),
-        isInviteeGroup: invitee.isGroup || false,
+        // TODO (select-kit-replacement-cleanup): Only `type` remains once select-kit is removed.
+        isInviteeGroup: invitee.isGroup || invitee.type === "group",
       });
     } else {
       this.setProperties({
@@ -511,7 +520,28 @@ export default class InvitePanel extends Component {
           <div class="invite-user-control">
             <label class="instructions">{{this.inviteInstructions}}</label>
             <div class="invite-user-input-wrapper">
-              {{#if this.allowExistingMembers}}
+              {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+              {{#if
+                (and
+                  this.allowExistingMembers
+                  this.siteSettings.enable_new_select_controls
+                )
+              }}
+                <DSelectUser
+                  class="invite-user-input"
+                  @clearable={{true}}
+                  @emails={{this.canInviteViaEmail}}
+                  @excludeCurrentUser={{true}}
+                  @includeGroups={{if this.isPM "messageable"}}
+                  @onChange={{legacyPickOne this.updateInvitee}}
+                  @texts={{hash
+                    placeholder=(i18n this.placeholderKey)
+                    searchPlaceholder=(i18n this.placeholderKey)
+                  }}
+                  @value={{this.invitee}}
+                />
+              {{else if this.allowExistingMembers}}
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
                 <EmailGroupUserChooser
                   class="invite-user-input"
                   @onChange={{this.updateInvitee}}
@@ -547,12 +577,23 @@ export default class InvitePanel extends Component {
               <label class="instructions {{this.showGroupsClass}}">
                 {{i18n "topic.automatically_add_to_groups"}}
               </label>
-              <GroupChooser
-                @content={{this.allGroups}}
-                @labelProperty="name"
-                @onChange={{fn (mut this.groupIds)}}
-                @value={{this.groupIds}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectGroup
+                  @items={{this.allGroups}}
+                  @multiple={{true}}
+                  @onChange={{this.setGroupIds}}
+                  @value={{this.groupIds}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+                <GroupChooser
+                  @content={{this.allGroups}}
+                  @labelProperty="name"
+                  @onChange={{fn (mut this.groupIds)}}
+                  @value={{this.groupIds}}
+                />
+              {{/if}}
             </div>
           {{/if}}
 

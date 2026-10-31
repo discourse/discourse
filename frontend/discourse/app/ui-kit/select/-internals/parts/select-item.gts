@@ -1,0 +1,199 @@
+import Component from "@glimmer/component";
+import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
+import { service } from "@ember/service";
+import type SiteSettingsService from "discourse/services/site-settings";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import type { SelectRowPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
+import SelectEngine, {
+  SelectDescriptor,
+  SelectItem as SelectItemModel,
+} from "discourse/ui-kit/select/select-engine";
+
+interface SelectItemSignature {
+  Args: {
+    engine: SelectEngine;
+    descriptor: SelectDescriptor;
+    multiple?: boolean;
+    selectedIcon?: string;
+    /** Omits the selection marker, for a list that never shows a held row. */
+    hideSelectionMarker?: boolean;
+    /** Additional descriptions, such as the option's group header. */
+    describedBy?: string;
+    /** Stable id of the limit message describing cap-disabled options. */
+    limitId?: string;
+    /**
+     * The roving highlight, driven from `DSelect` tracked state rather than the modifier's
+     * imperative class, so it is rendered by the template and survives a re-render (the
+     * windowed list re-renders rows out from under an out-of-band `classList` mutation).
+     */
+    active?: boolean;
+    /** The last sticky row, which draws the rule under the sticky zone. */
+    stickyEnd?: boolean;
+    /**
+     * When true, the whole control is disabled/read-only and no option may be activated,
+     * regardless of the row's own flag. Closing the overlay on lock is asynchronous (it
+     * awaits the exit animation), so an option can stay clickable for that window — the
+     * lock has to gate the activation itself, not only the close.
+     */
+    locked?: boolean;
+  };
+  Element: HTMLLIElement;
+  Blocks: {
+    default: [SelectItemModel];
+  };
+}
+
+/**
+ * A single listbox option (`<li role="option">`) inside a `DSelect`. Clicking it
+ * routes through the engine's `activate`, which runs an item's `onSelect` callback
+ * (an action item) or toggles its selection — so pointer and keyboard share one path
+ * (the `dRovingFocus` `onActivate` in `DSelect` simply clicks the active element).
+ *
+ * The engine owns `aria-selected` (the chosen-value state); the modifier owns the
+ * roving highlight via `activeClass`. This part is internal to the select family.
+ */
+export default class SelectItem extends Component<SelectItemSignature> {
+  /** TODO(typescript-pending): Remove the extension when the settings factory exposes runtime keys. */
+  @service
+  declare siteSettings: SiteSettingsService & {
+    support_mixed_text_direction: boolean;
+  };
+
+  descriptionId = `d-select-option-description-${guidFor(this)}`;
+  labelId = `d-select-option-label-${guidFor(this)}`;
+
+  /** Descriptor wrappers are rebuilt by the list even when row customization inputs are unchanged. */
+  #presentation?: {
+    engine: SelectEngine;
+    descriptor: SelectDescriptor;
+    cache: ReturnType<typeof createCache<SelectRowPresentation>>;
+  };
+
+  /** Shares classes and title while tracking both callback dependencies and row input changes. */
+  get presentation(): SelectRowPresentation {
+    return this.#resolvePresentation(this.args.engine, this.args.descriptor);
+  }
+
+  /** The option label from the engine's configured label field. */
+  get name(): string {
+    return this.args.engine.getItemLabel(this.args.descriptor.item);
+  }
+
+  get describedBy(): string | undefined {
+    return (
+      [
+        this.args.describedBy,
+        this.args.descriptor.item.description ? this.descriptionId : undefined,
+        this.args.descriptor.flags.capDisabled ? this.args.limitId : undefined,
+      ]
+        .filter(Boolean)
+        .join(" ") || undefined
+    );
+  }
+
+  /** The descriptor id as a DOM attribute, including an empty value for the none row. */
+  get value(): string {
+    return String(this.args.descriptor.value ?? "");
+  }
+
+  /**
+   * Guards pointer activation as well as the modifier's keyboard activation check.
+   */
+  @action
+  handleClick(): void {
+    if (this.args.locked || this.args.descriptor.flags.disabled) {
+      return;
+    }
+    this.args.engine.activate(this.args.descriptor.item);
+  }
+
+  /** Reuses the tracked computation across equivalent list descriptor wrappers. */
+  #resolvePresentation(
+    engine: SelectEngine,
+    descriptor: SelectDescriptor
+  ): SelectRowPresentation {
+    const previous = this.#presentation;
+    if (
+      !previous ||
+      previous.engine !== engine ||
+      previous.descriptor.item !== descriptor.item ||
+      previous.descriptor.flags.selected !== descriptor.flags.selected ||
+      previous.descriptor.flags.disabled !== descriptor.flags.disabled
+    ) {
+      this.#presentation = {
+        engine,
+        descriptor,
+        cache: createCache(() => engine.rowPresentation(descriptor)),
+      };
+    }
+    return getValue(this.#presentation!.cache)!;
+  }
+
+  <template>
+    {{#let this.presentation as |row|}}
+      <li
+        aria-describedby={{this.describedBy}}
+        aria-disabled={{if @descriptor.flags.disabled "true"}}
+        aria-labelledby={{if @descriptor.item.description this.labelId}}
+        aria-selected={{if @descriptor.flags.selected "true" "false"}}
+        class={{dConcatClass
+          "d-select__option"
+          (if @active "--active")
+          (if @descriptor.flags.sticky "--sticky")
+          (if @stickyEnd "--sticky-end")
+          (if @descriptor.flags.selected "--selected")
+          (if @descriptor.flags.__create "--create")
+          (if @descriptor.flags.__none "--none")
+          (if @descriptor.flags.groupHeader "--action-header")
+          (if @descriptor.flags.groupFooter "--action-footer")
+          row.classes
+        }}
+        data-name={{this.name}}
+        data-value={{this.value}}
+        role="option"
+        title={{row.title}}
+        ...attributes
+        {{on "click" this.handleClick}}
+      >
+        {{! Both glyphs stay hidden from assistive tech deliberately: an option row takes its
+        accessible name from its contents, so a screen-reader-only selected label here would land
+        inside every row's name. The row's aria-selected attribute is the state channel.
+
+        A consumer-supplied glyph keeps the show-when-selected behaviour — there is no unselected
+        counterpart to pair it with. }}
+        {{#if @hideSelectionMarker}}
+          {{! A list that leaves held rows out would only ever show the unselected state. }}
+        {{else if @descriptor.flags.action}}
+          {{! An action row never becomes a value, so a marker would claim a state it cannot have. }}
+        {{else if @selectedIcon}}
+          {{dIcon @selectedIcon class="d-select__option-selected-icon"}}
+        {{else if @multiple}}
+          {{! The hollow square pair reads as a checkbox, and the solid variant is absent from
+          the icon sprite. }}
+          {{dIcon
+            (if @descriptor.flags.selected "far-square-check" "far-square")
+            class="d-select__option-selected-icon --checkbox"
+          }}
+        {{/if}}
+        {{#if @descriptor.item.description}}
+          <span class="d-select__option-content">
+            <span id={{this.labelId}}>{{yield @descriptor.item}}</span>
+            <span
+              class="d-select__option-description"
+              dir={{if this.siteSettings.support_mixed_text_direction "auto"}}
+              id={{this.descriptionId}}
+            >
+              {{@descriptor.item.description}}
+            </span>
+          </span>
+        {{else}}
+          {{yield @descriptor.item}}
+        {{/if}}
+      </li>
+    {{/let}}
+  </template>
+}

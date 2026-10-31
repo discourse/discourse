@@ -115,6 +115,68 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
   });
 
+  for (const mobile of [false, true]) {
+    const where = mobile ? "its mobile modal" : "its content";
+
+    test(`@ariaLabelledBy names ${where} by a caption on the page`, async function (assert) {
+      if (mobile) {
+        forceMobile();
+      }
+
+      await render(
+        <template>
+          <span id="menu-caption">Watched</span>
+          <DMenu
+            @ariaLabel="Options"
+            @ariaLabelledBy="menu-caption"
+            @content="content"
+            @identifier="foo"
+            @inline={{true}}
+            @modalForMobile={{true}}
+          />
+        </template>
+      );
+      await open();
+
+      const content = mobile ? ".fk-d-menu-modal" : ".fk-d-menu";
+      assert
+        .dom(`${content}[data-identifier='foo']`)
+        .hasAttribute("aria-labelledby", "menu-caption")
+        .doesNotHaveAttribute("aria-label");
+    });
+
+    test(`the ariaLabelledBy option names ${where} for a menu opened through the service`, async function (assert) {
+      if (mobile) {
+        forceMobile();
+      }
+
+      await render(
+        <template>
+          <span id="menu-caption">Watched</span>
+          <button class="service-trigger" type="button">Open</button>
+          <DMenus />
+          <ModalContainer />
+        </template>
+      );
+      await getOwner(this)
+        .lookup("service:menu")
+        .show(find(".service-trigger"), {
+          ariaLabel: "Options",
+          ariaLabelledBy: "menu-caption",
+          content: "content",
+          identifier: "foo",
+          modalForMobile: true,
+        });
+      await settled();
+
+      const content = mobile ? ".fk-d-menu-modal" : ".fk-d-menu";
+      assert
+        .dom(`${content}[data-identifier='foo']`)
+        .hasAttribute("aria-labelledby", "menu-caption")
+        .doesNotHaveAttribute("aria-label");
+    });
+  }
+
   test("closing a standalone mobile menu cleans up its modal", async function (assert) {
     forceMobile();
 

@@ -47,6 +47,7 @@ export {
   MULTIPLE_POLL_TYPE,
   RANKED_CHOICE_POLL_TYPE,
 } from "discourse/plugins/poll/lib/poll-settings";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 
 const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
@@ -328,6 +329,11 @@ export default class PollUiBuilderModal extends Component {
 
   get disableInsert() {
     return !this.minMaxValueValidation.ok || !this.minNumOfOptionsValidation.ok;
+  }
+
+  @action
+  setPollGroups(groups) {
+    this.pollGroups = groups;
   }
 
   @action
@@ -669,16 +675,30 @@ export default class PollUiBuilderModal extends Component {
             />
           </div>
           <div class="input-group poll-allowed-groups">
-            <label class="input-group-label">{{i18n
-                "poll.ui_builder.poll_groups.label"
-              }}</label>
-            <GroupChooser
-              @content={{this.siteGroups}}
-              @labelProperty="name"
-              @onChange={{fn (mut this.pollGroups)}}
-              @value={{this.pollGroups}}
-              @valueProperty="name"
-            />
+            <label
+              class="input-group-label"
+              id="poll-allowed-groups-label"
+            >{{i18n "poll.ui_builder.poll_groups.label"}}</label>
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectGroup
+                @ariaLabelledBy="poll-allowed-groups-label"
+                @emit="names"
+                @everyone={{false}}
+                @multiple={{true}}
+                @onChange={{this.setPollGroups}}
+                @value={{this.pollGroups}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <GroupChooser
+                @content={{this.siteGroups}}
+                @labelProperty="name"
+                @onChange={{fn (mut this.pollGroups)}}
+                @value={{this.pollGroups}}
+                @valueProperty="name"
+              />
+            {{/if}}
           </div>
 
           <div class="input-group poll-date">

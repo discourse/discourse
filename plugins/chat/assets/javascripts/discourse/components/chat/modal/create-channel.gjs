@@ -15,6 +15,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_HINT = trustHTML(
@@ -321,13 +322,34 @@ export default class ChatModalCreateChannel extends Component {
             as |field|
           >
             <field.Control>
-              <CategoryChooser
-                @onChange={{field.set}}
-                @options={{hash
-                  none="chat.create_channel.choose_category.none"
-                }}
-                @value={{field.value}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectCategory
+                  class="category-chooser"
+                  @describedBy={{field.describedBy}}
+                  @disabled={{field.disabled}}
+                  @emit="ids"
+                  @id={{field.id}}
+                  @invalid={{if field.error true false}}
+                  @onChange={{field.set}}
+                  @permission="create"
+                  @texts={{hash
+                    ariaLabel=field.title
+                    placeholder=(i18n
+                      "chat.create_channel.choose_category.none"
+                    )
+                  }}
+                  @value={{field.value}}
+                />
+              {{else}}
+                <CategoryChooser
+                  @onChange={{field.set}}
+                  @options={{hash
+                    none="chat.create_channel.choose_category.none"
+                  }}
+                  @value={{field.value}}
+                />
+              {{/if}}
 
               {{#if this.categoryPermissionsHint}}
                 <div

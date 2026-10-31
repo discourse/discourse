@@ -21,6 +21,7 @@ import DModal from "discourse/ui-kit/d-modal";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 const _customActions = {};
@@ -30,6 +31,8 @@ export function addBulkDropdownAction(name, customAction) {
 }
 
 export default class BulkTopicActions extends Component {
+  @service siteSettings;
+
   @service toasts;
 
   /** @type {import("@glint/template").ComponentLike | null} */
@@ -508,17 +511,33 @@ export default class BulkTopicActions extends Component {
             </div>
           {{else}}
             {{#if @model.description}}
-              <p class="topic-bulk-actions-modal__description">{{trustHTML
-                  @model.description
-                }}</p>
+              <p
+                class="topic-bulk-actions-modal__description"
+                id="bulk-topic-actions-description"
+              >{{trustHTML @model.description}}</p>
             {{/if}}
 
             {{#if this.isCategoryAction}}
               <p>
-                <CategoryChooser
-                  @onChange={{this.onCategoryChange}}
-                  @value={{this.categoryId}}
-                />
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectCategory
+                    class="category-chooser"
+                    @ariaLabelledBy={{if
+                      @model.description
+                      "bulk-topic-actions-description"
+                    }}
+                    @emit="ids"
+                    @onChange={{this.onCategoryChange}}
+                    @permission="create"
+                    @value={{this.categoryId}}
+                  />
+                {{else}}
+                  <CategoryChooser
+                    @onChange={{this.onCategoryChange}}
+                    @value={{this.categoryId}}
+                  />
+                {{/if}}
               </p>
             {{/if}}
 

@@ -27,6 +27,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import identifySource from "discourse/lib/source-identifier";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { normalize } from "discourse/select-kit/lib/input-utils";
 import {
@@ -102,6 +103,17 @@ import SelectedName from "./selected-name.gjs";
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 export const FILTER_VISIBILITY_THRESHOLD = 10;
+
+/** Warns callers when a fallback writes back to a bound argument. */
+export function deprecateImplicitMutation() {
+  deprecated(
+    "SelectKit implicit mutation is deprecated. Pass an `onChange` handler instead of relying on the selected value being written back.",
+    {
+      id: "discourse.select-kit.implicit-mutation",
+      since: "2026.10.0",
+    }
+  );
+}
 
 function isDocumentRTL() {
   return document.documentElement.classList.contains("rtl");
@@ -234,6 +246,9 @@ export default class SelectKit extends Component {
   singleSelect = false;
   multiSelect = false;
 
+  /** Suppresses migration notices for intentional comparisons of legacy controls. */
+  skipLegacyRenderDeprecation = false;
+
   @protoProp tabindex = 0;
 
   /** @type {unknown[] | null | undefined} */
@@ -273,6 +288,19 @@ export default class SelectKit extends Component {
 
   init() {
     super.init(...arguments);
+
+    // Resolved lazily: the helper's compat modules import subclasses of this base.
+    const {
+      deprecateSelectKitLegacyRender,
+      MIGRATED_SELECT_KIT_MODULES,
+    } = require("discourse/lib/select-kit-modify-class-deprecation");
+    if (
+      MIGRATED_SELECT_KIT_MODULES.size > 0 &&
+      !this.skipLegacyRenderDeprecation
+    ) {
+      // Capture the caller's source before afterRender loses the init stack.
+      deprecateSelectKitLegacyRender(this, identifySource(new Error()));
+    }
 
     this._searchPromise =
       /** @type {Promise<unknown[] | undefined> | null | undefined} */ (null);
@@ -1369,7 +1397,10 @@ export default class SelectKit extends Component {
         onChange:
           this.onSelect ||
           this.actions?.onSelect ||
-          ((value) => this.set("value", value)),
+          ((value) => {
+            deprecateImplicitMutation();
+            return this.set("value", value);
+          }),
       };
     }
   }

@@ -2,11 +2,13 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import DatePickerPast from "discourse/components/date-picker-past";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -23,15 +25,26 @@ export default <template>
           <label for="last-seen">{{i18n "admin.email.last_seen_user"}}</label>
           <DatePickerPast @id="last-seen" @value={{@controller.lastSeen}} />
           <label>{{i18n "admin.email.user"}}:</label>
-          <EmailGroupUserChooser
-            @onChange={{@controller.updateUsername}}
-            @options={{hash
-              maximum=1
-              caretDownIcon="angle-down"
-              caretUpIcon="angle-up"
-            }}
-            @value={{@controller.username}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if @controller.siteSettings.enable_new_select_controls}}
+            <DSelectUser
+              @clearable={{true}}
+              @onChange={{legacyPickOne @controller.updateUsername}}
+              @texts={{hash ariaLabel=(i18n "admin.email.user")}}
+              @value={{@controller.username}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <EmailGroupUserChooser
+              @onChange={{@controller.updateUsername}}
+              @options={{hash
+                maximum=1
+                caretDownIcon="angle-down"
+                caretUpIcon="angle-up"
+              }}
+              @value={{@controller.username}}
+            />
+          {{/if}}
           <DButton
             class="btn-primary digest-refresh-button"
             @action={{@controller.refresh}}

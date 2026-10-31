@@ -36,8 +36,14 @@ module PageObjects
         has_no_css?(".tag-box", text: name)
       end
 
+      # A DSelect driver when the new select controls render the tag drop, a select-kit one
+      # otherwise.
       def tags_dropdown
-        PageObjects::Components::SelectKit.new(".select-kit.tag-drop")
+        if has_css?(".tag-drop") && has_css?(".tag-drop.d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(".tag-drop.d-select")
+        else
+          PageObjects::Components::SelectKit.new(".select-kit.tag-drop")
+        end
       end
     end
   end

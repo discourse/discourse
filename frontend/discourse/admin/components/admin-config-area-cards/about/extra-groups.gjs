@@ -1,16 +1,19 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasAboutExtraGroups extends Component {
   @service site;
   @service toasts;
+  @service siteSettings;
 
   @cached
   get data() {
@@ -71,11 +74,26 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
         as |field|
       >
         <field.Control>
-          <GroupChooser
-            @content={{this.site.groups}}
-            @onChange={{field.set}}
-            @value={{field.value}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
+              @multiple={{true}}
+              @onChange={{field.set}}
+              @texts={{hash ariaLabel=field.title}}
+              @value={{field.value}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.site.groups}}
+              @onChange={{field.set}}
+              @value={{field.value}}
+            />
+          {{/if}}
         </field.Control>
       </form.Field>
 

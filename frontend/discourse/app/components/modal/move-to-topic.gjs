@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -21,11 +21,15 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
   @service currentUser;
   @service site;
+  @service siteSettings;
 
   @tracked topicName;
   @tracked saving = false;
@@ -204,6 +208,11 @@ export default class MoveToTopic extends Component {
   }
 
   @action
+  updateParticipants(participants) {
+    this.participants = participants;
+  }
+
+  @action
   newTopicSelected(topic) {
     this.selectedTopic = topic;
   }
@@ -264,8 +273,27 @@ export default class MoveToTopic extends Component {
                 />
 
                 {{#if this.canTagMessages}}
-                  <label>{{i18n "tagging.tags"}}</label>
-                  <TagChooser @tags={{this.tags}} />
+                  <label id="move-to-topic-message-tags-label">
+                    {{~i18n "tagging.tags"~}}
+                  </label>
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectTag
+                      @ariaLabelledBy="move-to-topic-message-tags-label"
+                      @multiple={{true}}
+                      @onChange={{this.updateTags}}
+                      @texts={{hash
+                        placeholder=(i18n "tagging.choose_for_topic")
+                      }}
+                      @value={{this.tags}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      @onChange={{this.updateTags}}
+                      @tags={{this.tags}}
+                    />
+                  {{/if}}
                 {{/if}}
               </form>
             {{/if}}
@@ -288,11 +316,25 @@ export default class MoveToTopic extends Component {
               />
 
               <label>{{i18n "topic.move_to_new_message.participants"}}</label>
-              <EmailGroupUserChooser
-                class="participant-selector"
-                @onChange={{fn (mut this.participants)}}
-                @value={{this.participants}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectUser
+                  class="participant-selector"
+                  @multiple={{true}}
+                  @onChange={{this.updateParticipants}}
+                  @texts={{hash
+                    ariaLabel=(i18n "topic.move_to_new_message.participants")
+                  }}
+                  @value={{this.participants}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                <EmailGroupUserChooser
+                  class="participant-selector"
+                  @onChange={{fn (mut this.participants)}}
+                  @value={{this.participants}}
+                />
+              {{/if}}
 
               {{#if this.selectedTopic}}
                 <hr />
@@ -405,12 +447,26 @@ export default class MoveToTopic extends Component {
                 </div>
 
                 <div class="control-group">
-                  <label>{{i18n "categories.category"}}</label>
-                  <CategoryChooser
-                    class="small"
-                    @onChange={{fn (mut this.categoryId)}}
-                    @value={{this.categoryId}}
-                  />
+                  <label id="move-to-new-topic-category-label">
+                    {{~i18n "categories.category"~}}
+                  </label>
+                  {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectCategory
+                      class="category-chooser small"
+                      @ariaLabelledBy="move-to-new-topic-category-label"
+                      @emit="ids"
+                      @onChange={{fn (mut this.categoryId)}}
+                      @permission="create"
+                      @value={{this.categoryId}}
+                    />
+                  {{else}}
+                    <CategoryChooser
+                      class="small"
+                      @onChange={{fn (mut this.categoryId)}}
+                      @value={{this.categoryId}}
+                    />
+                  {{/if}}
                   <PluginOutlet
                     @name="split-new-topic-category-after"
                     @outletArgs={{lazyHash
@@ -422,11 +478,29 @@ export default class MoveToTopic extends Component {
 
                 {{#if this.canAddTags}}
                   <div class="control-group">
-                    <label>{{i18n "tagging.tags"}}</label>
-                    <TagChooser
-                      @categoryId={{this.categoryId}}
-                      @tags={{this.tags}}
-                    />
+                    <label id="move-to-topic-new-topic-tags-label">
+                      {{~i18n "tagging.tags"~}}
+                    </label>
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DSelectTag
+                        @ariaLabelledBy="move-to-topic-new-topic-tags-label"
+                        @categoryId={{this.categoryId}}
+                        @multiple={{true}}
+                        @onChange={{this.updateTags}}
+                        @texts={{hash
+                          placeholder=(i18n "tagging.choose_for_topic")
+                        }}
+                        @value={{this.tags}}
+                      />
+                    {{else}}
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      <TagChooser
+                        @categoryId={{this.categoryId}}
+                        @onChange={{this.updateTags}}
+                        @tags={{this.tags}}
+                      />
+                    {{/if}}
                     <PluginOutlet
                       @name="split-new-topic-tag-after"
                       @outletArgs={{lazyHash
@@ -463,8 +537,27 @@ export default class MoveToTopic extends Component {
                 />
 
                 {{#if this.canTagMessages}}
-                  <label>{{i18n "tagging.tags"}}</label>
-                  <TagChooser @tags={{this.tags}} />
+                  <label id="move-to-topic-split-message-tags-label">
+                    {{~i18n "tagging.tags"~}}
+                  </label>
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectTag
+                      @ariaLabelledBy="move-to-topic-split-message-tags-label"
+                      @multiple={{true}}
+                      @onChange={{this.updateTags}}
+                      @texts={{hash
+                        placeholder=(i18n "tagging.choose_for_topic")
+                      }}
+                      @value={{this.tags}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      @onChange={{this.updateTags}}
+                      @tags={{this.tags}}
+                    />
+                  {{/if}}
                 {{/if}}
               </form>
             {{/if}}

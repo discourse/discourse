@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Uploading files in the composer to S3" do
+  with_select_controls(false)
+
   fab!(:current_user, :admin)
   fab!(:other_user) { Fabricate(:user, username: "otherguy") }
 

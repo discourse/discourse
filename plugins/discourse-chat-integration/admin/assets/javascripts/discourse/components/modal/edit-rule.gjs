@@ -9,6 +9,8 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import getTagName from "../../lib/utilities.js";
 import ChannelData from "../channel-data.gjs";
@@ -165,11 +167,26 @@ export default class EditRule extends Component {
               as |field|
             >
               <field.Control>
-                <CategoryChooser
-                  @onChange={{this.onCategoryChange}}
-                  @options={{hash none="chat_integration.all_categories"}}
-                  @value={{this.category_id}}
-                />
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectCategory
+                    class="category-chooser"
+                    @emit="ids"
+                    @onChange={{this.onCategoryChange}}
+                    @permission="create"
+                    @texts={{hash
+                      ariaLabel=field.title
+                      placeholder=(i18n "chat_integration.all_categories")
+                    }}
+                    @value={{this.category_id}}
+                  />
+                {{else}}
+                  <CategoryChooser
+                    @onChange={{this.onCategoryChange}}
+                    @options={{hash none="chat_integration.all_categories"}}
+                    @value={{this.category_id}}
+                  />
+                {{/if}}
               </field.Control>
             </form.Field>
           {{else}}
@@ -205,12 +222,28 @@ export default class EditRule extends Component {
               as |field|
             >
               <field.Control>
-                <TagChooser
-                  @everyTag="true"
-                  @onChange={{this.onTagsChange}}
-                  @options={{hash placeholderKey="chat_integration.all_tags"}}
-                  @tags={{this.tags}}
-                />
+                {{! TODO (select-kit-replacement-cleanup) }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectTag
+                    @emit="names"
+                    @ignoreRestrictions={{true}}
+                    @multiple={{true}}
+                    @onChange={{this.onTagsChange}}
+                    @texts={{hash
+                      ariaLabel=field.title
+                      placeholder=(i18n "chat_integration.all_tags")
+                    }}
+                    @value={{this.tags}}
+                  />
+                {{else}}
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  <TagChooser
+                    @everyTag="true"
+                    @onChange={{this.onTagsChange}}
+                    @options={{hash placeholderKey="chat_integration.all_tags"}}
+                    @tags={{this.tags}}
+                  />
+                {{/if}}
               </field.Control>
             </form.Field>
           {{/if}}

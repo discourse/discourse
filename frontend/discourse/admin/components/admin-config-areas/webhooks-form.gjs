@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import WebhookEventChooser from "discourse/admin/components/webhook-event-chooser";
@@ -13,6 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasWebhookForm extends Component {
@@ -217,10 +218,25 @@ export default class AdminConfigAreasWebhookForm extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <CategorySelector
-                      @categories={{field.value}}
-                      @onChange={{field.set}}
-                    />
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DSelectCategory
+                        class="category-selector"
+                        @describedBy={{field.describedBy}}
+                        @disabled={{field.disabled}}
+                        @id={{field.id}}
+                        @invalid={{if field.error true false}}
+                        @multiple={{true}}
+                        @onChange={{field.set}}
+                        @texts={{hash ariaLabel=field.title}}
+                        @value={{field.value}}
+                      />
+                    {{else}}
+                      <CategorySelector
+                        @categories={{field.value}}
+                        @onChange={{field.set}}
+                      />
+                    {{/if}}
                   </field.Control>
                 </form.Field>
 

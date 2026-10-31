@@ -295,14 +295,7 @@ export function eagerCompleteSearch(term, scopedId) {
   return term === "" && !!scopedId;
 }
 
-export default function userSearch(options) {
-  if (options.term && options.term.length > 0 && options.term[0] === "@") {
-    options.term = options.term.substring(1);
-  }
-
-  const term = options.term || "";
-  const limit = options.limit || 6;
-  const url = options.url || userPath("search/users");
+function buildSearchParams(options, limit) {
   const params = {
     search_context: options.searchContext,
     topic_id: options.topicId,
@@ -321,6 +314,19 @@ export default function userSearch(options) {
   Object.entries(options.customUserSearchOptions || {}).forEach(
     ([key, value]) => (params[camelCaseToSnakeCase(key)] = value)
   );
+
+  return params;
+}
+
+export default function userSearch(options) {
+  if (options.term && options.term.length > 0 && options.term[0] === "@") {
+    options.term = options.term.substring(1);
+  }
+
+  const term = options.term || "";
+  const limit = options.limit || 6;
+  const url = options.url || userPath("search/users");
+  const params = buildSearchParams(options, limit);
 
   if (oldSearch) {
     oldSearch.abort();
@@ -352,6 +358,199 @@ export default function userSearch(options) {
       cancel(clearPromise);
       resolve(organizeResults(r, { ...options, limit }));
     });
+  });
+}
+
+/**
+ * Which groups a search may return, as the server's include flags.
+ * @typedef {"visible" | "mentionable" | "messageable"} UserSearchGroups
+ */
+
+/**
+ * A ranked search or lookup answer: the server's user or group fields, plus `type` and the
+ * `value` a picker holds (the username, the group name, or the address).
+ * @typedef {{ type: "user" | "group" | "email", value: string } & Record<string, unknown>} UserSearchRow
+ */
+
+const GROUP_SCOPE_OPTIONS = {
+  visible: "includeGroups",
+  mentionable: "includeMentionableGroups",
+  messageable: "includeMessageableGroups",
+};
+
+const LOOKUP_BATCH_SIZE = 50;
+
+function definedParams(params) {
+  return Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value !== undefined)
+  );
+}
+
+function groupScopeOptions(groups) {
+  return groups ? { [GROUP_SCOPE_OPTIONS[groups]]: true } : {};
+}
+
+function toRow(result) {
+  if (result.isEmail) {
+    return { type: "email", value: result.username, email: result.username };
+  }
+
+  const fields = { ...result };
+  delete fields.isUser;
+  delete fields.isGroup;
+  delete fields.isMetadataMatch;
+  return result.isGroup
+    ? { ...fields, type: "group", value: fields.name }
+    : { ...fields, type: "user", value: fields.username };
+}
+
+/**
+ * Searches users (and groups or a typed email when asked) for a picker, ranked like
+ * autocomplete. Every call sends its own request: callers debounce and drop superseded answers.
+ * It shares autocomplete's rate limit wait, and rejects while it runs.
+ *
+ * @param {object} options
+ * @param {string} [options.term] - A leading `@` is ignored.
+ * @param {UserSearchGroups} [options.groups] - Leave out for users only.
+ * @param {boolean} [options.emails] - Offers a valid typed address as a row.
+ * @param {string[]} [options.exclude] - Usernames and group names to leave out, in any case.
+ * @param {boolean} [options.includeStaged]
+ * @param {number} [options.topicId] - Scopes the search, and lists an empty query.
+ * @param {number} [options.categoryId] - Scopes the search, and lists an empty query.
+ * @param {Record<string, unknown>} [options.searchOptions] - Extra params; camelCase keys are
+ *   sent snake_cased, and unset ones aren't sent.
+ * @param {string} [options.url]
+ * @param {number} [options.limit]
+ * @returns {Promise<UserSearchRow[]>}
+ */
+export async function searchUsers({
+  term = "",
+  groups,
+  emails = false,
+  exclude = [],
+  includeStaged,
+  topicId,
+  categoryId,
+  searchOptions,
+  url,
+  limit = 6,
+} = {}) {
+  term = term.replace(/^@/, "");
+  if (
+    skipSearch(term, emails) ||
+    (term === "" && !eagerCompleteSearch(term, topicId || categoryId))
+  ) {
+    return [];
+  }
+
+  if (rateLimitedUntil > Date.now()) {
+    throw new Error("User search is rate limited");
+  }
+
+  const params = definedParams(
+    buildSearchParams(
+      {
+        topicId,
+        categoryId,
+        includeStagedUsers: includeStaged,
+        customUserSearchOptions: searchOptions,
+        ...groupScopeOptions(groups),
+      },
+      limit
+    )
+  );
+
+  let response;
+  try {
+    response = await ajax(url || userPath("search/users"), {
+      data: { term, ...params },
+    });
+  } catch (error) {
+    if (isRateLimitError(error)) {
+      rateLimitedUntil = Date.now() + rateLimitWaitSeconds(error) * 1000;
+    }
+    throw error;
+  }
+
+  // Applied before ranking, because ranking cuts to the limit and matches case sensitively.
+  const excluded = new Set(exclude.map((name) => name.toLowerCase()));
+  const results = organizeResults(
+    {
+      users: response.users?.filter(
+        (user) => !excluded.has(user.username.toLowerCase())
+      ),
+      groups: response.groups?.filter(
+        (group) => !excluded.has(group.name.toLowerCase())
+      ),
+    },
+    { term, allowEmails: emails, limit }
+  );
+
+  return results.map(toRow);
+}
+
+/**
+ * Looks held usernames and group names up by exact name, in any case. Each row's `value` is the
+ * spelling asked for. A username wins over a group of the same name; addresses and unknown names
+ * get no row. It ignores the search rate limit wait, since a held value that fails to resolve
+ * stays unresolved.
+ *
+ * @param {string[]} names
+ * @param {object} [options]
+ * @param {UserSearchGroups} [options.groups] - Leave out to look up users only.
+ * @param {boolean} [options.includeStaged]
+ * @param {string} [options.url]
+ * @returns {Promise<UserSearchRow[]>}
+ */
+export async function findUsersByUsernames(
+  names,
+  { groups, includeStaged, url } = {}
+) {
+  const lookups = names.filter((name) => !emailValid(name));
+  if (lookups.length === 0) {
+    return [];
+  }
+
+  const batches = [];
+  for (let i = 0; i < lookups.length; i += LOOKUP_BATCH_SIZE) {
+    batches.push(lookups.slice(i, i + LOOKUP_BATCH_SIZE));
+  }
+
+  const params = definedParams(
+    buildSearchParams({
+      includeStagedUsers: includeStaged,
+      ...groupScopeOptions(groups),
+    })
+  );
+  const responses = await Promise.all(
+    batches.map((batch) =>
+      ajax(url || userPath("search/users"), {
+        data: { usernames: batch.join(","), ...params },
+      })
+    )
+  );
+
+  const users = new Map();
+  const foundGroups = new Map();
+  responses.forEach((response) => {
+    response.users?.forEach((user) =>
+      users.set(user.username.toLowerCase(), user)
+    );
+    if (groups) {
+      response.groups?.forEach((group) =>
+        foundGroups.set(group.name.toLowerCase(), group)
+      );
+    }
+  });
+
+  return lookups.flatMap((name) => {
+    const user = users.get(name.toLowerCase());
+    if (user) {
+      return [{ ...user, type: "user", value: name }];
+    }
+
+    const group = foundGroups.get(name.toLowerCase());
+    return group ? [{ ...group, type: "group", value: name }] : [];
   });
 }
 

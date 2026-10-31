@@ -1,0 +1,236 @@
+import { i18n } from "discourse-i18n";
+import ChipIconsSelectExample from "../../examples/molecules/select/content/chip-icons.gjs";
+import chipIconsSelectSource from "../../examples/molecules/select/content/chip-icons?source=file";
+import ComputedSelectExample from "../../examples/molecules/select/content/computed.gjs";
+import computedSelectSource from "../../examples/molecules/select/content/computed?source=file";
+import DefaultsSelectExample from "../../examples/molecules/select/content/defaults.gjs";
+import defaultsSelectSource from "../../examples/molecules/select/content/defaults?source=file";
+import DividerSelectExample from "../../examples/molecules/select/content/divider.gjs";
+import dividerSelectSource from "../../examples/molecules/select/content/divider?source=file";
+import CustomEmptySelectExample from "../../examples/molecules/select/content/empty.gjs";
+import customEmptySelectSource from "../../examples/molecules/select/content/empty?source=file";
+import CustomErrorSelectExample from "../../examples/molecules/select/content/error.gjs";
+import customErrorSelectSource from "../../examples/molecules/select/content/error?source=file";
+import FooterSelectExample from "../../examples/molecules/select/content/footer.gjs";
+import footerSelectSource from "../../examples/molecules/select/content/footer?source=file";
+import GroupFooterSelectExample from "../../examples/molecules/select/content/group-footer.gjs";
+import groupFooterSelectSource from "../../examples/molecules/select/content/group-footer?source=file";
+import GroupedSelectExample from "../../examples/molecules/select/content/grouped.gjs";
+import groupedSelectSource from "../../examples/molecules/select/content/grouped?source=file";
+import RowIconsSelectExample from "../../examples/molecules/select/content/row-icons.gjs";
+import rowIconsSelectSource from "../../examples/molecules/select/content/row-icons?source=file";
+import SelectionBlockSelectExample from "../../examples/molecules/select/content/selection.gjs";
+import selectionBlockSelectSource from "../../examples/molecules/select/content/selection?source=file";
+import StatusIconSelectExample from "../../examples/molecules/select/content/status-icon.gjs";
+import statusIconSelectSource from "../../examples/molecules/select/content/status-icon?source=file";
+import StickySelectExample from "../../examples/molecules/select/content/sticky.gjs";
+import stickySelectSource from "../../examples/molecules/select/content/sticky?source=file";
+import TopicGlyphSelectExample from "../../examples/molecules/select/content/topic-glyph.gjs";
+import topicGlyphSelectSource from "../../examples/molecules/select/content/topic-glyph?source=file";
+import WholePickerSelectExample from "../../examples/molecules/select/content/whole-picker.gjs";
+import wholePickerSelectSource from "../../examples/molecules/select/content/whole-picker?source=file";
+import StyleguideExample from "../../styleguide-example.gjs";
+
+export default <template>
+  <StyleguideExample
+    @code={{stickySelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.sticky_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.sticky_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.sticky_try_this"}}
+  >
+    <div class="select-examples__control"><StickySelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{defaultsSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.defaults_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.defaults_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.defaults_try_this"}}
+  >
+    <div class="select-examples__control"><DefaultsSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{topicGlyphSelectSource}}
+    @description={{i18n "styleguide.sections.select.content.glyph_description"}}
+    @title={{i18n "styleguide.sections.select.content.glyph_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.glyph_try_this"}}
+  >
+    <div class="select-examples__control"><TopicGlyphSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{rowIconsSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.row_icon_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.row_icon_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.row_icon_try_this"}}
+  >
+    <div class="select-examples__control"><RowIconsSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{chipIconsSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.chip_icon_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.chip_icon_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.chip_icon_try_this"}}
+  >
+    <div class="select-examples__control"><ChipIconsSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{statusIconSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.status_icon_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.status_icon_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.status_icon_try_this"}}
+  >
+    <div class="select-examples__control"><StatusIconSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{computedSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.computed_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.computed_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.computed_try_this"}}
+  >
+    <div class="select-examples__control"><ComputedSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{customEmptySelectSource}}
+    @description={{i18n "styleguide.sections.select.content.empty_description"}}
+    @title={{i18n "styleguide.sections.select.content.empty_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.empty_try_this"}}
+  >
+    <div class="select-examples__control"><CustomEmptySelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{customErrorSelectSource}}
+    @description={{i18n "styleguide.sections.select.content.error_description"}}
+    @title={{i18n "styleguide.sections.select.content.error_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.error_try_this"}}
+  >
+    <div class="select-examples__control"><CustomErrorSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{dividerSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.divided_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.divided_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.divided_try_this"}}
+  >
+    <:default>
+      <div class="select-examples__control"><DividerSelectExample /></div>
+    </:default>
+    <:note>
+      {{~i18n "styleguide.sections.select.content.divided_note"~}}
+    </:note>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{groupedSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.grouped_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.grouped_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.grouped_try_this"}}
+  >
+    <div class="select-examples__control"><GroupedSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{groupFooterSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.group_footer_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.group_footer_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.group_footer_try_this"}}
+  >
+    <div class="select-examples__control"><GroupFooterSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    class="--wide"
+    @code={{selectionBlockSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.selection_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.selection_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.selection_try_this"}}
+  >
+    <div class="select-examples__pair">
+      <div class="select-examples__pair-item">
+        <p class="select-examples__pair-label">
+          {{i18n "styleguide.sections.select.content.selection_single_label"}}
+        </p>
+        <SelectionBlockSelectExample @identifier="sg-selection" />
+      </div>
+      <div class="select-examples__pair-item">
+        <p class="select-examples__pair-label">
+          {{i18n "styleguide.sections.select.content.selection_multi_label"}}
+        </p>
+        <SelectionBlockSelectExample
+          @identifier="sg-content-chips"
+          @multiple={{true}}
+        />
+      </div>
+    </div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    class="--wide"
+    @code={{footerSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.footer_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.footer_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.footer_try_this"}}
+  >
+    <div class="select-examples__triple">
+      <div class="select-examples__pair-item">
+        <p class="select-examples__pair-label">
+          {{i18n "styleguide.sections.select.content.footer_state_items"}}
+        </p>
+        <FooterSelectExample @identifier="sg-footer" @state="items" />
+      </div>
+      <div class="select-examples__pair-item">
+        <p class="select-examples__pair-label">
+          {{i18n "styleguide.sections.select.content.footer_state_empty"}}
+        </p>
+        <FooterSelectExample @identifier="sg-footer-empty" @state="empty" />
+      </div>
+      <div class="select-examples__pair-item">
+        <p class="select-examples__pair-label">
+          {{i18n "styleguide.sections.select.content.footer_state_error"}}
+        </p>
+        <FooterSelectExample @identifier="sg-footer-error" @state="error" />
+      </div>
+    </div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    class="--wide"
+    @code={{wholePickerSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.picker_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.picker_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.picker_try_this"}}
+  >
+    <div class="select-examples__control"><WholePickerSelectExample /></div>
+  </StyleguideExample>
+</template>

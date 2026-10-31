@@ -376,6 +376,10 @@ html.composer-open:not(.has-full-page-chat) {
         text-overflow: ellipsis;
       }
 
+      &.d-select__trigger {
+        color: var(--primary-high);
+      }
+
       .select-kit-body {
         max-width: 450px;
       }
@@ -462,6 +466,7 @@ html.composer-open:not(.has-full-page-chat) {
     position: relative;
     margin: 0 0 0.5em 0;
     flex-grow: 1;
+    min-width: 0;
 
     @include viewport.until(sm) {
       width: 100%;
@@ -472,7 +477,8 @@ html.composer-open:not(.has-full-page-chat) {
       z-index: z("composer", "dropdown");
       width: 100%;
 
-      .select-kit-header {
+      .select-kit-header,
+      &.d-select__trigger {
         color: var(--primary-high);
       }
     }
@@ -668,7 +674,9 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
 
-      #private-message-users,
+      // TODO (select-kit-replacement-cleanup): Drop the id with select-kit. The new select
+      // control puts it on its query input, which must keep sharing the chips' row.
+      #private-message-users:not(.d-select__input),
       .users-input {
         width: 100%;
         flex: 0 0 auto;

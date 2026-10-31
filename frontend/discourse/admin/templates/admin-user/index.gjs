@@ -18,6 +18,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -709,12 +710,24 @@ export default <template>
       <div class="display-row admin-user__custom-groups">
         <div class="field">{{i18n "admin.groups.custom"}}</div>
         <div class="value">
-          <GroupChooser
-            @content={{@controller.availableGroups}}
-            @labelProperty="name"
-            @onChange={{fn (mut @controller.customGroupIdsBuffer)}}
-            @value={{@controller.customGroupIdsBuffer}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if @controller.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @automatic={{false}}
+              @multiple={{true}}
+              @onChange={{@controller.updateCustomGroupIds}}
+              @texts={{hash ariaLabel=(i18n "admin.groups.custom")}}
+              @value={{@controller.customGroupIdsBuffer}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{@controller.availableGroups}}
+              @labelProperty="name"
+              @onChange={{fn (mut @controller.customGroupIdsBuffer)}}
+              @value={{@controller.customGroupIdsBuffer}}
+            />
+          {{/if}}
         </div>
         {{#if @controller.customGroupsDirty}}
           <div class="controls">

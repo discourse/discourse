@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Tag notification level" do
+  with_select_controls(false)
+
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:notifications_tracking) do
     PageObjects::Components::NotificationsTracking.new(".tag-notifications-tracking")

@@ -2,6 +2,8 @@
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import ParamInputForm, {
@@ -428,5 +430,58 @@ module("Component | ParamInput", function (hooks) {
         datetime: "2038-01-19 03:15",
       });
     });
+  });
+
+  test("with the new select controls, group and user params submit the picked names", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    pretender.get("/u/search/users", () =>
+      response({
+        users: [
+          { username: "bob", name: "Bob", avatar_template: "/a/{size}" },
+          { username: "alice", name: "Alice", avatar_template: "/a/{size}" },
+        ],
+      })
+    );
+    this.setProperties({
+      param_info: ["group_id", "group_list", "user_id", "user_list"].map(
+        (type) => ({ identifier: type, type, default: null, nullable: false })
+      ),
+      initialValues: {},
+      onRegisterApi: ({ submit }) => {
+        this.submit = submit;
+      },
+    });
+
+    await render(
+      <template>
+        <ParamInputForm
+          @initialValues={{this.initialValues}}
+          @onRegisterApi={{this.onRegisterApi}}
+          @paramInfo={{this.param_info}}
+        />
+      </template>
+    );
+    const picker = (name) => dSelect(`[data-name='${name}'] .d-select`);
+
+    await picker("group_id").selectByName("trust_level_2");
+    const groups = picker("group_list");
+    await groups.selectByName("trust_level_2");
+    await groups.selectByName("trust_level_3");
+    await groups.close();
+    const user = picker("user_id");
+    await user.search("bo");
+    await user.selectByName("bob");
+    const users = picker("user_list");
+    await users.search("a");
+    await users.selectByName("alice");
+    await users.search("b");
+    await users.selectByName("bob");
+    await users.close();
+
+    const data = await this.submit();
+    assert.strictEqual(data.group_id, "trust_level_2");
+    assert.strictEqual(data.group_list, "trust_level_2,trust_level_3");
+    assert.strictEqual(data.user_id, "bob");
+    assert.strictEqual(data.user_list, "alice,bob");
   });
 });

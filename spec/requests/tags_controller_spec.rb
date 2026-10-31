@@ -2180,6 +2180,115 @@ RSpec.describe TagsController do
                          SiteSetting.max_tag_search_results
       end
 
+      context "with names" do
+        fab!(:alpha) { Fabricate(:tag, name: "alpha") }
+        fab!(:beta) { Fabricate(:tag, name: "beta") }
+        fab!(:gamma) { Fabricate(:tag, name: "gamma") }
+
+        it "returns only the named tags, matched ignoring case" do
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[ALPHA beta missing],
+                filterForInput: true,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(
+            "alpha",
+            "beta",
+          )
+          expect(response.parsed_body["forbidden_names"]).to eq([])
+        end
+
+        it "returns more named tags than one search page holds" do
+          SiteSetting.max_tag_search_results = 1
+
+          get "/tags/filter/search.json", params: { names: %w[alpha beta gamma], limit: 1 }
+
+          expect(response.parsed_body["results"].size).to eq(3)
+        end
+
+        it "reports the named tags that exist but the field doesn't allow" do
+          restricted = Fabricate(:tag, name: "restricted")
+          Fabricate(:category, tags: [restricted])
+
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[alpha restricted missing],
+                categoryId: category.id,
+                filterForInput: true,
+              }
+
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to eq(["alpha"])
+          expect(response.parsed_body["forbidden_names"]).to eq(["restricted"])
+        end
+
+        it "leaves held tags out of both lists" do
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[alpha beta],
+                filterForInput: true,
+                selected_tag_ids: [alpha.id],
+              }
+
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to eq(["beta"])
+          expect(response.parsed_body["forbidden_names"]).to eq([])
+        end
+
+        it "allows tags outside an unmet required group, which later picks can still meet" do
+          tag_group = Fabricate(:tag_group, tags: [gamma])
+          crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)
+          required = Fabricate(:category, category_required_tag_groups: [crtg])
+          sign_in(user)
+
+          get "/tags/filter/search.json",
+              params: {
+                names: %w[alpha gamma],
+                categoryId: required.id,
+                filterForInput: true,
+              }
+
+          expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(
+            "alpha",
+            "gamma",
+          )
+        end
+
+        it "refuses a search term alongside names" do
+          get "/tags/filter/search.json", params: { names: %w[alpha], q: "beta" }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "refuses more than a hundred names" do
+          get "/tags/filter/search.json", params: { names: (1..101).map { |i| "tag#{i}" } }
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      it "counts the required group's remaining tags from the held ones" do
+        member = Fabricate(:tag)
+        other_member = Fabricate(:tag)
+        unrelated = Fabricate(:tag)
+        tag_group = Fabricate(:tag_group, tags: [member, other_member, Fabricate(:tag)])
+        crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 2)
+        category = Fabricate(:category, category_required_tag_groups: [crtg])
+
+        get "/tags/filter/search.json",
+            params: {
+              q: "",
+              categoryId: category.id,
+              filterForInput: true,
+              selected_tag_ids: [member.id, unrelated.id],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["required_tag_group"]).to eq(
+          { "name" => tag_group.name, "min_count" => 2, "remaining_count" => 1 },
+        )
+      end
+
       it "includes required tag group information" do
         tag1 = Fabricate(:tag)
         tag2 = Fabricate(:tag)
@@ -2200,7 +2309,7 @@ RSpec.describe TagsController do
           tag2.name,
         )
         expect(response.parsed_body["required_tag_group"]).to eq(
-          { "name" => tag_group.name, "min_count" => crtg.min_count },
+          { "name" => tag_group.name, "min_count" => crtg.min_count, "remaining_count" => 1 },
         )
 
         get "/tags/filter/search.json",
@@ -2255,6 +2364,59 @@ RSpec.describe TagsController do
           expect(response.parsed_body["results"]).to include(
             include("name" => "strategy", "id" => tag.id),
           )
+        end
+
+        it "adds the stored name as original_name when the name shown is a translation" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "ja", name: "戦略")
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          expect(response.status).to eq(200)
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "戦略", "original_name" => "strategy")
+        end
+
+        it "omits original_name when the name shown is not a translation" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "de", name: "stratégie")
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).not_to have_key("original_name")
+        end
+
+        it "omits original_name for a tag in another locale that has no translation" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "strategy")
+          expect(row).not_to have_key("original_name")
+        end
+
+        it "omits original_name when the translation equals the stored name" do
+          tag = Fabricate(:tag, name: "design", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "ja", name: "design")
+
+          get "/tags/filter/search.json", params: { q: "des" }
+
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "design")
+          expect(row).not_to have_key("original_name")
+        end
+
+        it "adds original_name to the tag index rows the same way" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "ja", name: "戦略")
+
+          get "/tags.json"
+
+          expect(response.status).to eq(200)
+          row = response.parsed_body["tags"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "戦略", "original_name" => "strategy")
         end
       end
     end

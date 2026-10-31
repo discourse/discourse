@@ -11,11 +11,17 @@
     align-items: center;
     gap: var(--space-2);
 
+    .d-select.multiple-categories-selector {
+      width: 300px;
+      max-width: 100%;
+    }
+
     @include container.until(sm, db-activity) {
       flex-direction: column;
       align-items: flex-start;
 
-      .select-kit.multi-select.multiple-categories-selector {
+      .select-kit.multi-select.multiple-categories-selector,
+      .d-select.multiple-categories-selector {
         max-width: none;
         width: 100%;
       }
@@ -130,11 +136,17 @@
     flex-grow: 1;
     min-width: 0;
 
+    .d-select.multiple-categories-selector {
+      width: 300px;
+      max-width: 100%;
+    }
+
     @include container.until(sm, db-whos-posting) {
       width: 100%;
       align-items: flex-start;
 
-      .select-kit.multi-select.multiple-categories-selector {
+      .select-kit.multi-select.multiple-categories-selector,
+      .d-select.multiple-categories-selector {
         max-width: none;
         width: 100%;
       }

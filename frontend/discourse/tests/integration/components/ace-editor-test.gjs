@@ -12,9 +12,9 @@ import sinon from "sinon";
 import AceEditor from "discourse/components/ace-editor";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
 import {
   dragPointer,
-  settleGestureFrame,
   stubPointerCapture,
 } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
@@ -340,7 +340,7 @@ module("Integration | Component | AceEditor", function (hooks) {
       clientY: 167,
       pointerId: 1,
     });
-    await settleGestureFrame();
+    await settledAfterFrame();
     assert
       .dom(editor)
       .hasClass("clear-transitions", "clears transitions on the first move");

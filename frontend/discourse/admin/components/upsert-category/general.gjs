@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn, hash } from "@ember/helper";
+import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -40,6 +40,8 @@ import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 const DISCUSSION_TYPE_ID = "discussion";
@@ -901,21 +903,45 @@ export default class UpsertCategoryGeneral extends Component {
           as |field|
         >
           <field.Control>
-            <CategoryChooser
-              @onChange={{field.set}}
-              @options={{hash
-                allowSubCategories=this.allowSubCategoriesAsParent
-                allowRestrictedCategories=true
-                allowUncategorized=false
-                excludeCategoryId=@category.id
-                none="category.none_subcategory_text"
-                clearable=true
-                caretUpIcon="chevron-up"
-                caretDownIcon="chevron-down"
-                displayCategoryDescription=false
-              }}
-              @value={{@transientData.parent_category_id}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectCategory
+                class="category-chooser"
+                @clearable={{true}}
+                @describedBy={{field.describedBy}}
+                @descriptions={{false}}
+                @disabled={{field.disabled}}
+                @emit="ids"
+                @exclude={{if @category.id (array @category.id)}}
+                @id={{field.id}}
+                @invalid={{if field.error true false}}
+                @onChange={{field.set}}
+                @permission="see"
+                @subcategories={{this.allowSubCategoriesAsParent}}
+                @texts={{hash
+                  ariaLabel=field.title
+                  placeholder=(i18n "category.none_subcategory_text")
+                }}
+                @uncategorized={{false}}
+                @value={{@transientData.parent_category_id}}
+              />
+            {{else}}
+              <CategoryChooser
+                @onChange={{field.set}}
+                @options={{hash
+                  allowSubCategories=this.allowSubCategoriesAsParent
+                  allowRestrictedCategories=true
+                  allowUncategorized=false
+                  excludeCategoryId=@category.id
+                  none="category.none_subcategory_text"
+                  clearable=true
+                  caretUpIcon="chevron-up"
+                  caretDownIcon="chevron-down"
+                  displayCategoryDescription=false
+                }}
+                @value={{@transientData.parent_category_id}}
+              />
+            {{/if}}
           </field.Control>
         </@form.Field>
       {{/unless}}
@@ -981,12 +1007,29 @@ export default class UpsertCategoryGeneral extends Component {
                   @format="max"
                   @title={{i18n "category.visibility.which_groups_can_access"}}
                 >
-                  <GroupChooser
-                    @content={{this.availableAccessGroups}}
-                    @onChange={{this.onChangeAccessGroups}}
-                    @options={{hash disabled=this.isParentRestricted}}
-                    @value={{this.accessGroups}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectGroup
+                      @disabled={{this.isParentRestricted}}
+                      @items={{this.availableAccessGroups}}
+                      @multiple={{true}}
+                      @onChange={{this.onChangeAccessGroups}}
+                      @texts={{hash
+                        ariaLabel=(i18n
+                          "category.visibility.which_groups_can_access"
+                        )
+                      }}
+                      @value={{this.accessGroups}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <GroupChooser
+                      @content={{this.availableAccessGroups}}
+                      @onChange={{this.onChangeAccessGroups}}
+                      @options={{hash disabled=this.isParentRestricted}}
+                      @value={{this.accessGroups}}
+                    />
+                  {{/if}}
                   {{! eslint-disable ember/template-no-invalid-interactive }}
                   <span
                     class="category-permission-hint"

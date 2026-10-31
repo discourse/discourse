@@ -1,0 +1,4603 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { array, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
+import {
+  click,
+  fillIn,
+  find,
+  findAll,
+  focus,
+  render,
+  settled,
+  triggerEvent,
+  triggerKeyEvent,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import DMenu from "discourse/float-kit/components/d-menu";
+import { forceMobile } from "discourse/lib/mobile";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
+import {
+  DefaultHost,
+  Host,
+  ITEMS,
+} from "discourse/tests/helpers/d-select-hosts";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
+import SelectItem from "discourse/ui-kit/select/-internals/parts/select-item";
+import DSelect from "discourse/ui-kit/select/d-select";
+import SelectEngine, {
+  renderSelectText,
+} from "discourse/ui-kit/select/select-engine";
+import { i18n } from "discourse-i18n";
+
+module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("trigger frame preserves the DOM structure across variants", async function (assert) {
+    await render(
+      <template>
+        <DSelect class="frame-typeahead" @items={{ITEMS}} @value={{1}} />
+        <DSelect
+          class="frame-multi"
+          @items={{ITEMS}}
+          @multiple={{true}}
+          @value={{array 1 2}}
+        />
+        <DSelect
+          class="frame-button"
+          @items={{ITEMS}}
+          @value={{1}}
+          @variant="button"
+        />
+        <DSelect
+          class="frame-static"
+          @items={{ITEMS}}
+          @value={{1}}
+          @variant="static"
+        />
+      </template>
+    );
+
+    const variants = [
+      ["typeahead", ".frame-typeahead", ".d-select__input"],
+      ["multi", ".frame-multi", ".d-select__chips"],
+      ["button", ".frame-button", ".d-select__value"],
+      ["static", ".frame-static", ".d-select__value"],
+    ];
+
+    for (const [name, triggerSelector, middleSelector] of variants) {
+      const trigger = find(triggerSelector);
+      const caret = find(`${triggerSelector} .d-select__caret`);
+
+      assert
+        .dom(`${triggerSelector} .d-select__caret`)
+        .exists({ count: 1 }, `${name} renders exactly one caret`);
+      assert.strictEqual(
+        trigger.lastElementChild,
+        caret,
+        `${name} renders the caret as the trigger's last element child`
+      );
+      assert
+        .dom(`${triggerSelector} > ${middleSelector}`)
+        .exists(
+          { count: 1 },
+          `${name} keeps its variant middle as a direct trigger child`
+        );
+    }
+  });
+
+  test("empty variants use the same field height", async function (assert) {
+    await render(
+      <template>
+        <DSelect class="layout-typeahead" @items={{ITEMS}} />
+        <DSelect class="layout-button" @items={{ITEMS}} @variant="button" />
+        <DSelect class="layout-static" @items={{ITEMS}} @variant="static" />
+        <DSelect class="layout-multi" @items={{ITEMS}} @multiple={{true}} />
+      </template>
+    );
+
+    const heights = [
+      ".layout-typeahead.d-select__trigger",
+      ".layout-button.d-select__trigger",
+      ".layout-static.d-select__trigger",
+      ".layout-multi.d-select__trigger",
+    ].map((selector) => find(selector).getBoundingClientRect().height);
+
+    assert.deepEqual(
+      heights,
+      Array(heights.length).fill(heights[0]),
+      "every empty variant uses the typeahead field height"
+    );
+
+    const insets = [
+      [".layout-typeahead.d-select__trigger", ".d-select__input"],
+      [".layout-button.d-select__trigger", ".d-select__placeholder"],
+      [".layout-static.d-select__trigger", ".d-select__placeholder"],
+      [".layout-multi.d-select__trigger", ".d-select__input"],
+    ].map(([triggerSelector, contentSelector]) => {
+      const trigger = find(triggerSelector);
+      const content = trigger.querySelector(contentSelector);
+      return (
+        content.getBoundingClientRect().left -
+        trigger.getBoundingClientRect().left
+      );
+    });
+
+    assert.deepEqual(
+      insets,
+      Array(insets.length).fill(insets[0]),
+      "every empty variant uses the typeahead field inset"
+    );
+
+    const typeaheadInput = find(
+      ".layout-typeahead.d-select__trigger .d-select__input"
+    );
+    const colors = [
+      getComputedStyle(typeaheadInput, "::placeholder").color,
+      getComputedStyle(
+        find(".layout-button.d-select__trigger .d-select__placeholder")
+      ).color,
+      getComputedStyle(
+        find(".layout-static.d-select__trigger .d-select__placeholder")
+      ).color,
+      getComputedStyle(
+        find(".layout-multi.d-select__trigger .d-select__input"),
+        "::placeholder"
+      ).color,
+    ];
+
+    assert.deepEqual(
+      colors,
+      Array(colors.length).fill(colors[0]),
+      "every empty variant uses the typeahead placeholder color"
+    );
+  });
+
+  test("the dropdown content fills the matched trigger width", async function (assert) {
+    await render(
+      <template>
+        <div style="width: 24rem;">
+          <DSelect @items={{ITEMS}} @variant="button" />
+        </div>
+      </template>
+    );
+    await click(".d-select__trigger");
+
+    const triggerWidth =
+      find(".d-select__trigger").getBoundingClientRect().width;
+
+    const innerContent = find(".fk-d-menu__inner-content");
+    assert.strictEqual(
+      innerContent.getBoundingClientRect().width,
+      triggerWidth,
+      "the visible dropdown surface fills the trigger width"
+    );
+    assert.true(
+      find(".d-select__panel").getBoundingClientRect().width >=
+        triggerWidth - 2,
+      "the dropdown panel fills the surface within its border"
+    );
+  });
+
+  test("a trigger wider than the menu's default max width still gets a matching dropdown", async function (assert) {
+    await render(
+      <template>
+        <div style="width: 500px;">
+          <DSelect @items={{ITEMS}} @variant="button" />
+        </div>
+      </template>
+    );
+    await click(".d-select__trigger");
+
+    assert.strictEqual(
+      find(".fk-d-menu__inner-content").getBoundingClientRect().width,
+      find(".d-select__trigger").getBoundingClientRect().width,
+      "the dropdown is as wide as the trigger, not capped at 400px"
+    );
+  });
+});
+
+module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("the trigger is a combobox input, present before opening", async function (assert) {
+    await render(<template><Host /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .exists("the trigger itself is the combobox input")
+      .hasAttribute("aria-autocomplete", "list")
+      .hasAttribute("aria-expanded", "false", "closed until opened")
+      .hasAttribute(
+        "aria-label",
+        "Options",
+        "the input has an accessible name"
+      );
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "placeholder",
+        "Pick one",
+        "the input shows the placeholder"
+      );
+    assert.dom("[role='listbox']").doesNotExist("closed on render");
+  });
+
+  test("the empty trigger renders as one input field", async function (assert) {
+    await render(<template><Host /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "placeholder",
+        "Pick one",
+        "the input owns the placeholder"
+      );
+    assert
+      .dom(".d-select__placeholder")
+      .doesNotExist("no separate placeholder sits beside the input");
+
+    const inputStyle = getComputedStyle(find("[role='combobox']"));
+    assert.strictEqual(
+      inputStyle.borderTopStyle,
+      "none",
+      "the inner input does not draw a second border"
+    );
+    assert.strictEqual(
+      inputStyle.backgroundColor,
+      "rgba(0, 0, 0, 0)",
+      "the inner input does not draw a second background"
+    );
+    assert.strictEqual(
+      inputStyle.marginBottom,
+      "0px",
+      "the inner input does not enlarge the composite field"
+    );
+  });
+
+  test("falls back to the label field when presentation blocks are omitted", async function (assert) {
+    await render(<template><DefaultHost @value={{2}} /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the selected label is the input value");
+
+    await focus("[role='combobox']");
+    const input = find("[role='combobox']");
+    assert.deepEqual(
+      [input.selectionStart, input.selectionEnd],
+      [0, 6],
+      "focusing selects the fallback label"
+    );
+
+    await fillIn("[role='combobox']", "cherry");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 1 }, "the fallback input becomes the query")
+      .hasText("Cherry pie", "options also fall back to the label field");
+
+    await fillIn("[role='combobox']", "");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("", "an emptied query stays in editing mode");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "closing restores the selected label");
+  });
+
+  test("selects a numeric-id item from a string-bound value", async function (assert) {
+    // A bound value often arrives as a string (site settings, query params) against
+    // numeric option ids; it must still resolve and display the selection.
+    await render(<template><DefaultHost @value="2" /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the string value '2' selects the numeric-id item");
+  });
+
+  test("renders and selects a @valueField list that has no id field", async function (assert) {
+    const items = [
+      { slug: "apple", name: "Apple" },
+      { slug: "banana", name: "Banana" },
+    ];
+
+    await render(
+      <template>
+        <DSelect @items={{items}} @value="banana" @valueField="slug" />
+      </template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the id-less selection resolves via @valueField");
+
+    await click("[role='combobox']");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 2 }, "both id-less rows render (keyed by @valueField)");
+    assert
+      .dom("[role='option'][aria-selected='true']")
+      .hasText("Banana", "the row matching @value is flagged selected");
+  });
+
+  test("custom blocks override label-field fallbacks independently", async function (assert) {
+    const items = [
+      { id: 1, title: "First" },
+      { id: 2, title: "Second" },
+    ];
+
+    await render(
+      <template>
+        <DSelect
+          @items={{items}}
+          @labelField="title"
+          @texts={{hash placeholder="Pick one"}}
+          @value={{1}}
+        >
+          <:selection as |item|><strong>{{item.title}}</strong></:selection>
+        </DSelect>
+      </template>
+    );
+
+    assert
+      .dom(".d-select__presentation strong")
+      .hasText("First", "the supplied selection block wins");
+
+    await click("[role='combobox']");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 2 }, "the omitted item block uses the fallback")
+      .hasText("First", "the fallback reads the custom label field");
+  });
+
+  test("emptying the query and closing restores the selection", async function (assert) {
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <button class="outside" type="button">outside</button>
+      </template>
+    );
+
+    await fillIn("[role='combobox']", "ban");
+    await fillIn("[role='combobox']", "");
+    assert
+      .dom(".d-select__presentation")
+      .doesNotExist("hidden while the field is focused");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert
+      .dom("[role='combobox']")
+      .hasValue(
+        "Apple",
+        "closing restores the selected label in the focused input"
+      );
+
+    await focus(".outside");
+    assert
+      .dom(".d-select__presentation")
+      .hasText("Apple", "leaving the field restores the custom resting markup");
+  });
+
+  test("a custom selection shows the editable label whenever the field is focused", async function (assert) {
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <button class="outside" type="button">outside</button>
+      </template>
+    );
+
+    // Resting (unfocused): the custom markup shows and the input is empty.
+    assert.dom(".d-select__presentation").hasText("Apple");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("", "the input is empty while at rest");
+
+    // Focusing with the keyboard — WITHOUT opening the menu — swaps the custom markup for the
+    // editable label, selected for overtype. This is the same state a click produces, so Tab
+    // and click behave alike rather than showing an empty input on one path and the label on
+    // the other.
+    await focus("[role='combobox']");
+    assert
+      .dom("[role='listbox']")
+      .doesNotExist("focus alone does not open the menu");
+    assert
+      .dom(".d-select__presentation")
+      .doesNotExist("the custom markup is hidden while the field is focused");
+    const input = find("[role='combobox']");
+    assert.dom(input).hasValue("Apple", "the label fills the input on focus");
+    assert.deepEqual(
+      [input.selectionStart, input.selectionEnd],
+      [0, "Apple".length],
+      "the label is selected so the first keystroke overtypes it"
+    );
+
+    // Overtyping the selection filters cleanly instead of appending to the label (fillIn can't
+    // express this — it overwrites the whole value).
+    input.setRangeText("ban", input.selectionStart, input.selectionEnd, "end");
+    input.dispatchEvent(new InputEvent("input"));
+    await settled();
+    assert.dom("[role='option']").exists({ count: 1 }).hasText("Banana");
+
+    // Moving focus out of the widget restores the custom resting markup.
+    await focus(".outside");
+    assert.dom(".d-select__presentation").hasText("Apple");
+  });
+
+  test("a resting custom selection is described to assistive tech", async function (assert) {
+    // A `:selection` block empties the input's value at rest and shows the markup in a sibling
+    // span, so without an explicit association the control reads as an empty combobox while the
+    // eye sees a selection. The span is the input's description; the label stays the field name.
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <button class="outside" type="button">outside</button>
+      </template>
+    );
+
+    // Asserted against the span's real id rather than merely "some description exists", so a
+    // dangling reference to a missing element cannot pass.
+    const presentation = find(".d-select__presentation");
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "aria-describedby",
+        presentation.id,
+        "the resting input points at the visible selection markup"
+      );
+    assert
+      .dom(presentation)
+      .hasText("Apple", "so the selection is conveyed, not just displayed");
+
+    // Once focused the label moves into the input itself, so the description would double it.
+    await focus("[role='combobox']");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Apple")
+      .doesNotHaveAttribute(
+        "aria-describedby",
+        "the description drops away once the value is in the input"
+      );
+  });
+
+  // The caret is part of the trigger and is the obvious thing to click to open a closed control.
+  // It worked from cold and then silently did nothing once the input already held focus — which
+  // is every use after the first — because the press blurred the input and the resulting focus
+  // churn swallowed the open. Both paths are covered; the warm one is the regression.
+  test("the caret opens the panel whether or not the input already has focus", async function (assert) {
+    await render(
+      <template>
+        <Host />
+        <button class="outside" type="button">outside</button>
+      </template>
+    );
+
+    await click(".d-select__caret");
+    assert
+      .dom("[role='listbox']")
+      .exists("cold: the caret opens a closed panel");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert.dom("[role='listbox']").doesNotExist();
+    assert
+      .dom("[role='combobox']")
+      .isFocused("Escape leaves focus in the input — the warm state");
+
+    await click(".d-select__caret");
+    assert
+      .dom("[role='listbox']")
+      .exists("warm: the caret still opens rather than doing nothing");
+  });
+
+  test("a select without a selection block needs no description", async function (assert) {
+    await render(
+      <template><DSelect @items={{ITEMS}} @value={{1}} /></template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Apple", "the label is the input's own value")
+      .doesNotHaveAttribute("aria-describedby");
+  });
+
+  test("clicking outside the field reverts a custom selection to its resting markup", async function (assert) {
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <div class="outside">outside</div>
+      </template>
+    );
+
+    await click("[role='combobox']");
+    assert
+      .dom(".d-select__presentation")
+      .doesNotExist("the editable label shows while the field is active");
+
+    // A pointer press on empty space outside the widget ends the interaction and restores the
+    // custom markup, even though the browser would otherwise leave focus on the input.
+    await triggerEvent(".outside", "pointerdown");
+    assert
+      .dom(".d-select__presentation")
+      .hasText("Apple", "clicking outside restores the resting markup");
+  });
+
+  test("does not open on focus; opens on ArrowDown, on click, and on typing", async function (assert) {
+    await render(<template><Host /></template>);
+
+    await focus("[role='combobox']");
+    assert.dom("[role='listbox']").doesNotExist("bare focus never opens");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+    assert.dom("[role='listbox']").exists("ArrowDown opens");
+    assert.dom("[role='combobox']").hasAttribute("aria-expanded", "true");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert.dom("[role='listbox']").doesNotExist("Escape closes");
+
+    await click("[role='combobox']");
+    assert.dom("[role='listbox']").exists("click opens");
+  });
+
+  test("typing filters, and the query drives the list", async function (assert) {
+    await render(<template><Host /></template>);
+
+    await fillIn("[role='combobox']", "ban");
+    assert.dom("[role='listbox']").exists("typing opens the list");
+    assert.dom("[role='option']").exists({ count: 1 });
+    assert.dom("[role='option']").hasText("Banana");
+
+    // A term with a space must filter (the space isn't swallowed by keyboard nav).
+    await fillIn("[role='combobox']", "cherry p");
+    assert.dom("[role='option']").hasText("Cherry pie");
+  });
+
+  test("auto-highlights the first match and re-seeds as the query changes", async function (assert) {
+    await render(<template><Host /></template>);
+
+    await fillIn("[role='combobox']", "a");
+    const active = document.querySelector("[role='option'].--active");
+    assert.dom(active).hasText("Apple", "the first match is highlighted");
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "aria-activedescendant",
+        active.id,
+        "aria-activedescendant points at the highlighted option"
+      );
+
+    await fillIn("[role='combobox']", "cherry");
+    assert
+      .dom("[role='option'].--active")
+      .hasText("Cherry pie", "the highlight re-seeds to the new first match");
+  });
+
+  test("turning @multiple off keeps a single held value as the label", async function (assert) {
+    class FlipHost extends Component {
+      @tracked multiple = true;
+
+      @action
+      flip() {
+        this.multiple = false;
+      }
+
+      <template>
+        <button
+          class="flip"
+          type="button"
+          {{on "click" this.flip}}
+        >flip</button>
+        <DSelect
+          @identifier="test-select"
+          @items={{ITEMS}}
+          @multiple={{this.multiple}}
+          @value={{array 2}}
+        />
+      </template>
+    }
+
+    await render(<template><FlipHost /></template>);
+    await click(".flip");
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the input shows the held value's label");
+  });
+
+  test("auto-highlight skips a disabled first match", async function (assert) {
+    const items = [
+      { id: 1, name: "Apple", disabled: true },
+      { id: 2, name: "Apricot" },
+    ];
+
+    await render(
+      <template>
+        <DSelect @identifier="test-select" @items={{items}} />
+      </template>
+    );
+    await fillIn("[role='combobox']", "ap");
+
+    assert
+      .dom("[role='option'].--active")
+      .hasText("Apricot", "the first enabled match is highlighted");
+  });
+
+  // Pressing the label or the caret blurs the input without moving focus anywhere, and the
+  // menu must survive that. Only focus that lands outside the widget closes it.
+  test("focus leaving the input closes the menu only when it lands outside the widget", async function (assert) {
+    await render(
+      <template>
+        <button class="outside-btn" type="button">outside</button>
+        <Host />
+      </template>
+    );
+    await click("[role='combobox']");
+
+    await triggerEvent("[role='combobox']", "focusout", {
+      relatedTarget: null,
+    });
+    assert
+      .dom("[role='listbox']")
+      .exists("a blur with no focus target keeps the menu open");
+
+    await triggerEvent("[role='combobox']", "focusout", {
+      relatedTarget: find(".outside-btn"),
+    });
+    assert
+      .dom("[role='listbox']")
+      .doesNotExist("focus moving to an outside control closes the menu");
+  });
+
+  // The typeahead keeps focus in its input while an option is pressed, so the input does not
+  // blur-close the menu before the click lands. Other variants have no input to protect.
+  test("pressing an option keeps focus in the input only for the typeahead", async function (assert) {
+    const pressOption = () => {
+      const event = new MouseEvent("mousedown", {
+        bubbles: true,
+        cancelable: true,
+      });
+      find("[role='option']").dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+    assert.true(pressOption(), "the typeahead cancels the focus change");
+
+    await render(<template><Host @variant="button" /></template>);
+    await click(".d-select__trigger");
+    assert.false(pressOption(), "the button variant leaves the press alone");
+  });
+
+  test("Enter selects the highlighted option without an ArrowDown, and closes", async function (assert) {
+    await render(<template><Host /></template>);
+    await fillIn("[role='combobox']", "app");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+    assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Apple", "the chosen option fills the focused input");
+  });
+
+  test("focus stays in the input while navigating with the arrows", async function (assert) {
+    await render(<template><Host /></template>);
+    await fillIn("[role='combobox']", "");
+    await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+
+    assert.strictEqual(
+      document.activeElement.getAttribute("role"),
+      "combobox",
+      "the input keeps focus during navigation (active mode)"
+    );
+  });
+
+  test("Escape resets the query so the next open starts clean", async function (assert) {
+    await render(<template><Host /></template>);
+    await fillIn("[role='combobox']", "ban");
+    assert.dom("[role='option']").exists({ count: 1 });
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    await click("[role='combobox']");
+
+    assert.dom("[role='combobox']").hasValue("", "the query was reset");
+    assert.dom("[role='option']").exists({ count: 3 }, "the full list is back");
+  });
+
+  test("moving focus to another field (Tab-out) closes it", async function (assert) {
+    await render(
+      <template>
+        <Host />
+        <button class="outside" type="button">outside</button>
+      </template>
+    );
+    await click("[role='combobox']");
+    assert.dom("[role='listbox']").exists();
+
+    // Focus moving to a focusable element outside the widget closes it. (A bare blur with
+    // no outside focus target does not; a truly-outside pointer click is handled below.)
+    await focus(".outside");
+    assert.dom("[role='listbox']").doesNotExist("Tab-out closes");
+  });
+
+  test("clicking a non-focusable element outside closes it", async function (assert) {
+    await render(
+      <template>
+        <Host />
+        <div class="outside">outside</div>
+      </template>
+    );
+    await click("[role='combobox']");
+    assert.dom("[role='listbox']").exists();
+
+    // close-on-click-outside listens for a document `pointerdown` (not `click`), matching
+    // float-kit's own dismiss tests; our `untriggers=[]` config must not break it.
+    await triggerEvent(".outside", "pointerdown");
+    assert.dom("[role='listbox']").doesNotExist("click-outside closes");
+  });
+
+  test("pointer: clicking an option selects it and closes", async function (assert) {
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+    await click("[role='option'][aria-selected='false']");
+
+    assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Apple", "the chosen option fills the focused input");
+  });
+
+  test("clicking anywhere on the trigger (caret/label) opens and focuses the input", async function (assert) {
+    await render(<template><Host @value={{1}} /></template>);
+    assert.dom(".d-select__presentation").hasText("Apple");
+
+    // The whole trigger is the open target, not just the narrow input strip.
+    await click(".d-select__caret");
+    assert.dom("[role='listbox']").exists("clicking the caret opens the menu");
+    assert.strictEqual(
+      document.activeElement.getAttribute("role"),
+      "combobox",
+      "focus lands in the query input"
+    );
+  });
+
+  test("clicking the trigger while open does not toggle it closed", async function (assert) {
+    await render(<template><Host @value={{1}} /></template>);
+    await click("[role='combobox']");
+    assert.dom("[role='listbox']").exists();
+
+    // Clicking a non-focusable trigger region (the caret) while open must not blur-close
+    // or toggle it shut.
+    await click(".d-select__caret");
+    assert
+      .dom("[role='listbox']")
+      .exists("stays open after clicking the caret");
+  });
+
+  test("a preset value resolves to its label with no fetch (client source)", async function (assert) {
+    await render(<template><Host @value={{2}} /></template>);
+    assert
+      .dom(".d-select__presentation")
+      .hasText("Banana", "the saved id resolves from the client list");
+  });
+
+  test("marks the selected option with aria-selected", async function (assert) {
+    await render(<template><Host @value={{1}} /></template>);
+    await click("[role='combobox']");
+    assert
+      .dom("[role='option'][aria-selected='true']")
+      .hasText("Apple", "the current value's option is aria-selected");
+  });
+
+  test("shows an empty status and never a role=alert for no matches", async function (assert) {
+    await render(<template><Host /></template>);
+    await fillIn("[role='combobox']", "zzzz");
+
+    assert.dom(".d-select__empty[role='status']").exists("polite empty status");
+    assert
+      .dom("[role='alert']")
+      .doesNotExist("counts/empties are announced politely, never assertively");
+  });
+
+  // Two announcements racing for one voice. A seeded row is announced with its position in the
+  // set ("1 of 15", from aria-posinset/aria-setsize), so a live-region count fired at the same
+  // moment restates it through a second channel — and assistive tech speaks one and drops the
+  // other. Observed against VoiceOver: the open that spoke the count never spoke the row, and the
+  // open that spoke the row never spoke the count, alternating between opens.
+  test("opening does not announce a count when it seeds a cursor", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host @variant="static" /></template>);
+    await click("[role='combobox']");
+
+    assert
+      .dom("[role='option'].--active")
+      .exists("opening seeds the cursor on a row");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "the row's own position carries the count, so nothing is announced over it"
+    );
+  });
+
+  test("opening announces the count when no cursor is seeded", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host @variant="button" /></template>);
+    await click(".d-select__trigger");
+
+    assert
+      .dom("[role='option'].--active")
+      .doesNotExist("the button variant waits for the reader to move");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      1,
+      "with no row spoken, the count is the only thing describing the list"
+    );
+  });
+
+  // The same collision as opening, at the other trigger: a query change re-seeds the cursor (the
+  // roving modifier resets on the resolved filter), so the new first match announces itself with
+  // its own position while the count describes the same set. The reader heard "2 results" and
+  // never heard the match, then arrowed onto the second row wondering where the first went.
+  test("narrowing does not announce a count when it moves the cursor", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+    announce.resetHistory();
+
+    await fillIn("[role='combobox']", "an");
+
+    assert
+      .dom("[role='option'].--active")
+      .hasText("Banana", "the match is the cursor's new home")
+      .hasAttribute("aria-posinset", "1")
+      .hasAttribute("aria-setsize", "1", "and it carries the set size itself");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "the row describes the narrowed set, so no count is announced over it"
+    );
+  });
+
+  // Between the two cases above sits the one that needs neither answer. Narrowing three matches
+  // to two keeps the cursor on the same row, so no row announces itself — but that row now
+  // reports "1 of 2" where it reported "1 of 3", and nothing re-reads it. A count would say the
+  // size and not the match. Asking for the row again says both, so the cursor is dropped and
+  // restored a tick later; re-asserting the same value is a no-op no reader can observe.
+  test("narrowing that leaves the cursor put asks for the row again", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+
+    const input = find("[role='combobox']");
+    assert
+      .dom(input)
+      .hasAttribute("aria-activedescendant", /.+/, "opening seeds the cursor");
+
+    // The restore lands within the runloop `fillIn` awaits, so the attribute is back by the time
+    // any assertion runs. Only a mutation record can show it was ever gone: a `null` oldValue on
+    // a set means the attribute was absent immediately before it.
+    const cleared = [];
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        if (record.oldValue === null) {
+          cleared.push(record);
+        }
+      }
+    });
+    observer.observe(input, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ["aria-activedescendant"],
+    });
+
+    const before = input.getAttribute("aria-activedescendant");
+    await fillIn("[role='combobox']", "a");
+    observer.disconnect();
+
+    assert
+      .dom("[role='option'].--active")
+      .hasText("Apple", "the same row is still the cursor's home")
+      .hasAttribute("aria-setsize", "2", "in a set that just changed size");
+    assert.strictEqual(
+      input.getAttribute("aria-activedescendant"),
+      before,
+      "and the cursor is pointing at it again once the dust settles"
+    );
+    assert.strictEqual(
+      cleared.length,
+      1,
+      "the cursor was dropped and restored, so the row is read again"
+    );
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "the row reports the new set, so no count is announced over it"
+    );
+  });
+
+  // The third case: a query that lands on exactly the set it already had. There is nothing to
+  // report and no honest way to report it — announcing the unchanged count is audible only when
+  // the live region's clear timer happens to have fired since it was last spoken, so it comes and
+  // goes with the reader's typing rhythm. That erratic re-announcement is the original complaint,
+  // and it was heard again on a build that did announce here. The typed character is echoed by the
+  // screen reader itself, so the keystroke is never in doubt.
+  test("a new query with unchanged results says nothing", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+
+    await fillIn("[role='combobox']", "an");
+    const active = find("[role='option'].--active");
+    const input = find("[role='combobox']");
+    const pointedAt = input.getAttribute("aria-activedescendant");
+    // Only the second query is under test; the first one legitimately reports itself.
+    announce.resetHistory();
+
+    // Counting mutations would prove nothing: the roving modifier re-asserts the same id on every
+    // query, and re-asserting an unchanged value is the no-op that leaves this case silent. A
+    // `null` oldValue is the thing to look for — it means the attribute was absent just before,
+    // which only a deliberate drop-and-restore does.
+    let cursorDropped = 0;
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        if (record.oldValue === null) {
+          cursorDropped++;
+        }
+      }
+    });
+    observer.observe(input, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ["aria-activedescendant"],
+    });
+
+    await fillIn("[role='combobox']", "ana");
+    observer.disconnect();
+
+    assert.strictEqual(
+      find("[role='option'].--active"),
+      active,
+      "the same row still holds the cursor"
+    );
+    assert.strictEqual(
+      input.getAttribute("aria-activedescendant"),
+      pointedAt,
+      "pointing where it already pointed"
+    );
+    // Both channels have to be silent, not just the count: re-reading the row would repeat what
+    // the reader heard a keystroke ago, and it is the same row in the same set.
+    assert.strictEqual(cursorDropped, 0, "the row is not read again");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "and no count is announced over the silence"
+    );
+  });
+
+  test("an empty result set is announced politely, not left to role=status", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await fillIn("[role='combobox']", "a");
+    await fillIn("[role='combobox']", "zzzz");
+
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      1,
+      "landing on no matches announces through the a11y service"
+    );
+
+    await fillIn("[role='combobox']", "ban");
+    // Recovering from empty remounts the listbox and seeds a cursor, so the match reaches the
+    // reader as the row itself — "Banana, 1 of 1" — rather than as a count announced over it.
+    assert
+      .dom("[role='option'].--active")
+      .hasAttribute("aria-posinset", "1")
+      .hasAttribute(
+        "aria-setsize",
+        "1",
+        "the match describes itself and its set"
+      );
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.results_count", { count: 1 }), "polite")
+        .callCount,
+      0,
+      "recovery is carried by the row, not by a count over it"
+    );
+
+    await fillIn("[role='combobox']", "zzzz");
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      2,
+      "re-entering the empty state announces again"
+    );
+  });
+
+  // `DAsyncContent` reports `mode: "content"` for both the resolved and the retained-pending
+  // phase, so the empty node stays mounted across two successive empty queries. A
+  // `didInsert`-only announcement announces the first and is then silent forever; only the
+  // `didUpdate` on the resolved filter catches the second.
+  test("a second empty query re-announces even though the empty node never remounts", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+
+    await fillIn("[role='combobox']", "zzzz");
+    const emptyNode = find(".d-select__empty");
+
+    await fillIn("[role='combobox']", "yyyy");
+
+    assert.strictEqual(
+      find(".d-select__empty"),
+      emptyNode,
+      "the empty node is the same element across both queries (no remount to ride on)"
+    );
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      2,
+      "each empty query announces its own result"
+    );
+  });
+
+  test("mid-composition input does not open or filter (IME)", async function (assert) {
+    await render(<template><Host /></template>);
+    const input = document.querySelector("[role='combobox']");
+
+    input.value = "ban";
+    input.dispatchEvent(new InputEvent("input", { isComposing: true }));
+    assert
+      .dom("[role='listbox']")
+      .doesNotExist("a half-composed query neither opens nor filters");
+
+    input.dispatchEvent(new CompositionEvent("compositionend"));
+    await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 1 }, "committing the composition filters");
+    assert.dom("[role='option']").hasText("Banana");
+  });
+});
+
+module(
+  "Integration | ui-kit | select | DSelect (typeahead, mobile)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      forceMobile();
+    });
+
+    test("tapping the trigger opens a modal that hosts the focused query input", async function (assert) {
+      await render(<template><Host /></template>);
+
+      // On mobile the trigger holds no input of its own; tapping the trigger opens the modal.
+      assert
+        .dom(".d-select__trigger [role='combobox']")
+        .doesNotExist("no query input in the closed mobile trigger");
+
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".fk-d-menu-modal .d-select__filter")
+        .exists("the query input renders inside the modal");
+      assert.strictEqual(
+        document.activeElement,
+        find(".fk-d-menu-modal .d-select__filter"),
+        "the modal input is focused on open"
+      );
+
+      await fillIn(".fk-d-menu-modal .d-select__filter", "ban");
+      assert.dom("[role='option']").exists({ count: 1 });
+      assert.dom("[role='option']").hasText("Banana");
+    });
+
+    test("the closed trigger uses the default selection label", async function (assert) {
+      await render(<template><DefaultHost @value={{2}} /></template>);
+
+      assert
+        .dom(".d-select__presentation")
+        .hasText("Banana", "mobile has the same block-free fallback");
+    });
+
+    test("the closed root is a focusable button naming the field and its value", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @items={{ITEMS}}
+            @texts={{hash ariaLabel="Fruit"}}
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .hasAttribute("role", "button")
+        .hasAria("haspopup", "dialog", "it opens a dialog")
+        .hasAria("expanded", "false")
+        .hasAria("label", "Fruit, Banana")
+        .hasAttribute("tabindex", "0", "it is a tab stop");
+
+      await focus(".kt");
+      assert.dom(".kt").isFocused("it takes keyboard focus");
+    });
+
+    for (const [key, name] of [
+      ["Enter", "Enter"],
+      [" ", "Space"],
+      ["ArrowDown", "ArrowDown"],
+    ]) {
+      test(`${name} opens the modal with focus in its query input`, async function (assert) {
+        await render(
+          <template><DSelect class="kt" @items={{ITEMS}} /></template>
+        );
+
+        await focus(".kt");
+        await triggerKeyEvent(".kt", "keydown", key);
+
+        assert.dom(".fk-d-menu-modal").exists("the modal opens");
+        assert
+          .dom(".fk-d-menu-modal .d-select__filter")
+          .isFocused("focus lands in the modal's query input");
+      });
+    }
+
+    test("Escape closes the modal and returns focus to the root", async function (assert) {
+      await render(
+        <template><DSelect class="kt" @items={{ITEMS}} /></template>
+      );
+
+      await focus(".kt");
+      await triggerKeyEvent(".kt", "keydown", "Enter");
+      await triggerKeyEvent(
+        ".fk-d-menu-modal .d-select__filter",
+        "keydown",
+        "Escape"
+      );
+
+      assert.dom(".fk-d-menu-modal").doesNotExist("the modal closes");
+      assert.dom(".kt").isFocused("focus returns to the trigger");
+    });
+
+    test("a disabled root is announced unavailable and stays shut", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @disabled={{true}}
+            @items={{ITEMS}}
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .hasAttribute("role", "button")
+        .hasAria("disabled", "true")
+        .doesNotHaveAttribute("tabindex", "disabled leaves the tab order");
+
+      await triggerKeyEvent(".kt", "keydown", "Enter");
+      assert.dom(".fk-d-menu-modal").doesNotExist("Enter opens nothing");
+    });
+
+    test("a readonly root stays focusable, is announced unavailable, and stays shut", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @items={{ITEMS}}
+            @readonly={{true}}
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .hasAttribute("tabindex", "0", "readonly stays focusable")
+        .hasAria("disabled", "true", "a button has no readonly state")
+        .doesNotHaveAttribute("aria-readonly");
+
+      await focus(".kt");
+      await triggerKeyEvent(".kt", "keydown", "Enter");
+      assert.dom(".fk-d-menu-modal").doesNotExist("Enter opens nothing");
+    });
+
+    test("the field's id, description and invalid state land on the root", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @describedBy="fruit-help"
+            @id="fruit-field"
+            @invalid={{true}}
+            @items={{ITEMS}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("#fruit-field")
+        .exists({ count: 1 }, "one element owns the id");
+      assert
+        .dom(".kt")
+        .hasAttribute("id", "fruit-field")
+        .hasAria("invalid", "true");
+      assert.true(
+        find(".kt")
+          .getAttribute("aria-describedby")
+          ?.split(" ")
+          .includes("fruit-help"),
+        "the field description describes the root"
+      );
+    });
+
+    test("a multi root is a focusable button with display-only chips", async function (assert) {
+      await render(
+        <template>
+          <DefaultHost @multiple={{true}} @value={{array 1 2}} />
+        </template>
+      );
+
+      assert
+        .dom(".d-select")
+        .hasAttribute("role", "button")
+        .hasAttribute("tabindex", "0");
+      assert
+        .dom(".d-select__trigger button.d-select__chip-remove")
+        .doesNotExist("no remove buttons are nested in the button root");
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Enter");
+      assert.dom(".fk-d-menu-modal").exists("Enter on the root opens");
+    });
+
+    test("icon-only and control styling stay off a mobile typeahead", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @icon="gear"
+            @iconOnly={{true}}
+            @items={{ITEMS}}
+            @texts={{hash ariaLabel="Settings"}}
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert.dom(".kt").doesNotHaveClass("--icon-only");
+      assert.dom(".kt").doesNotHaveClass("--control");
+    });
+
+    test("ArrowUp opens the modal and focuses its query input", async function (assert) {
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "ArrowUp");
+
+      assert.dom(".fk-d-menu-modal").exists("ArrowUp opens the modal");
+      assert
+        .dom(".fk-d-menu-modal .d-select__filter")
+        .isFocused("the modal query takes focus");
+    });
+
+    test("aria-controls references the listbox only while open", async function (assert) {
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute(
+          "aria-controls",
+          "a closed root has no reference"
+        );
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Enter");
+
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "aria-controls",
+          find(".fk-d-menu-modal [role='listbox']").id,
+          "the open root references its rendered listbox"
+        );
+
+      await triggerKeyEvent(
+        ".fk-d-menu-modal .d-select__filter",
+        "keydown",
+        "Escape"
+      );
+
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute("aria-controls", "closing removes the reference");
+    });
+
+    for (const multiple of [false, true]) {
+      for (const key of ["Backspace", "Delete"]) {
+        test(`${key} clears the closed ${multiple ? "multi" : "single"} root without a clear button`, async function (assert) {
+          const value = tracked(multiple ? [1, 2] : 2);
+          const onChange = (next) => (value.value = next);
+
+          await render(
+            <template>
+              <DSelect
+                @clearable={{false}}
+                @items={{ITEMS}}
+                @multiple={{multiple}}
+                @onChange={{onChange}}
+                @value={{value.value}}
+              />
+            </template>
+          );
+
+          assert
+            .dom(".d-select__clear")
+            .doesNotExist(
+              "keyboard clearing is independent of the clear button"
+            );
+
+          await focus(".d-select");
+          await triggerKeyEvent(".d-select", "keydown", key);
+
+          assert.deepEqual(
+            value.value,
+            multiple ? [] : null,
+            "the entire selection is cleared"
+          );
+          assert.dom(".d-select").isFocused("focus stays on the trigger");
+          assert
+            .dom(".fk-d-menu-modal")
+            .doesNotExist("clearing does not open the modal");
+        });
+      }
+    }
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (typeahead, desktop root)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("a desktop typeahead root stays a plain wrapper around its input", async function (assert) {
+      await render(
+        <template>
+          <DSelect class="kt" @id="fruit-field" @items={{ITEMS}} />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .doesNotHaveAttribute("role")
+        .doesNotHaveAttribute("tabindex")
+        .doesNotHaveAttribute("id");
+      assert
+        .dom(".kt [role='combobox']")
+        .hasAttribute("id", "fruit-field", "the input keeps the field id");
+    });
+
+    test("icon-only stays off a desktop typeahead", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @icon="gear"
+            @iconOnly={{true}}
+            @items={{ITEMS}}
+            @texts={{hash ariaLabel="Settings"}}
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert.dom(".kt").doesNotHaveClass("--icon-only");
+      assert.dom(".kt").doesNotHaveClass("--control");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (button variant)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("opens into a search field + listbox with wired ids", async function (assert) {
+      await render(<template><Host @variant="button" /></template>);
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".d-select__filter")
+        .exists("the panel filter is a search field");
+      assert
+        .dom(".d-select__filter")
+        .hasAttribute("aria-autocomplete", "list")
+        .doesNotHaveAttribute("role")
+        .hasAttribute("type", "search")
+        .doesNotHaveAttribute("aria-expanded");
+      assert.dom("[role='listbox']").exists("results are a listbox");
+      assert.dom("[role='option']").exists({ count: 3 }, "one option per item");
+
+      const listboxId = document
+        .querySelector("[role='listbox']")
+        .getAttribute("id");
+      assert
+        .dom(".d-select__filter")
+        .hasAttribute(
+          "aria-controls",
+          listboxId,
+          "aria-controls points at the listbox"
+        );
+    });
+
+    test("the trigger is a disclosure button that opens from the keyboard", async function (assert) {
+      await render(<template><Host @variant="button" /></template>);
+
+      // The button variant's in-panel filter is a search field, so its trigger is a
+      // role="button" disclosure (not a second combobox), focusable and keyboard-openable.
+      assert
+        .dom(".d-select__trigger")
+        .hasAttribute("role", "button", "the trigger is a disclosure button")
+        .hasAttribute(
+          "aria-haspopup",
+          "dialog",
+          "haspopup names the popup container, which is a dialog holding the filter and the list"
+        )
+        .hasAttribute("tabindex", "0", "the trigger is focusable")
+        .hasAttribute("aria-expanded", "false");
+
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
+      assert.dom("[role='listbox']").exists("Enter opens the list");
+      assert.dom(".d-select__trigger").hasAttribute("aria-expanded", "true");
+    });
+
+    test("Space and click independently activate the disclosure", async function (assert) {
+      await render(<template><Host @variant="button" /></template>);
+
+      assert
+        .dom(".d-select__trigger")
+        .hasAttribute(
+          "role",
+          "button",
+          "the disclosure role is on the trigger"
+        );
+
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", " ");
+      assert.dom("[role='listbox']").exists("Space opens the disclosure");
+
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+      assert.dom("[role='listbox']").doesNotExist("Escape closes it again");
+
+      await click(".d-select__trigger");
+      assert.dom("[role='listbox']").exists("click opens the disclosure");
+    });
+
+    test("filters as you type, and spaces reach the filter", async function (assert) {
+      await render(<template><Host @variant="button" /></template>);
+      await click(".d-select__trigger");
+
+      await fillIn(".d-select__filter", "ban");
+      assert.dom("[role='option']").exists({ count: 1 });
+      assert.dom("[role='option']").hasText("Banana");
+
+      await fillIn(".d-select__filter", "cherry p");
+      assert.dom("[role='option']").hasText("Cherry pie");
+    });
+
+    test("keyboard: ArrowDown + Enter selects the highlighted option and closes", async function (assert) {
+      await render(<template><Host @variant="button" /></template>);
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "app");
+
+      await triggerKeyEvent(".d-select__filter", "keydown", "ArrowDown");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Enter");
+
+      assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
+      assert
+        .dom(".d-select__value")
+        .hasText("Apple", "the trigger shows the pick");
+    });
+
+    test("pointer: clicking an option selects it and closes", async function (assert) {
+      await render(<template><Host @variant="button" /></template>);
+      await click(".d-select__trigger");
+      await click("[role='option'][aria-selected='false']");
+
+      assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
+      assert.dom(".d-select__value").exists("the trigger shows the selection");
+    });
+
+    test("uses default labels when presentation blocks are omitted", async function (assert) {
+      await render(
+        <template><DefaultHost @value={{2}} @variant="button" /></template>
+      );
+
+      assert
+        .dom(".d-select__value")
+        .hasText("Banana", "the button trigger uses the selection fallback");
+
+      await click(".d-select__trigger");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 3 }, "the block-free button renders every option")
+        .hasText("Apple", "option rows use the item fallback");
+    });
+
+    // Here the query lives in the panel, detached from the trigger that displays the value — the
+    // shape every comparable library clears on close. It used to survive, because the reset was
+    // gated on the typeahead variant, so reopening presented a list still narrowed by a term the
+    // reader had moved on from and could no longer see a reason for.
+    test("closing clears the panel filter so the next open starts whole", async function (assert) {
+      await render(
+        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+      );
+
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ban");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 1 }, "the query narrows the list while open");
+
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+      await click(".d-select__trigger");
+
+      // Both halves matter: clearing only the visible input would leave the engine still
+      // filtering, so the row count is what proves the query itself is gone.
+      assert
+        .dom(".d-select__filter")
+        .hasValue("", "the filter input reopens empty");
+      assert
+        .dom("[role='option']")
+        .exists({ count: ITEMS.length }, "and the whole list is back");
+    });
+  }
+);
+
+module("Integration | ui-kit | select | DSelect popup role", function (hooks) {
+  setupRenderingTest(hooks);
+
+  // A select-only combobox sends the reader to a listbox, and its panel holds nothing else — no
+  // query input, no other widget. Wrapping that listbox in a dialog puts a container between the
+  // combobox and the options it points at, which is not the structure APG describes and is the
+  // one structural difference from implementations that voice the selected state correctly.
+  test("a select-only panel does not wrap its listbox in a dialog", async function (assert) {
+    await render(<template><Host @variant="static" /></template>);
+    await click("[role='combobox']");
+
+    assert.dom("[role='listbox']").exists("the list is open");
+    assert
+      .dom(".d-select__content")
+      .hasAttribute(
+        "role",
+        "none",
+        "the panel is a presentational container, not a dialog"
+      );
+    assert
+      .dom("[role='dialog']")
+      .doesNotExist("nothing between the combobox and its options is a dialog");
+  });
+
+  // A typeahead is the same shape for the same reason: its query input lives in the trigger, so
+  // the panel holds nothing but the list either. The criterion is whether the panel owns a
+  // controller of its own, not which variant produced it.
+  test("a typeahead panel does not wrap its listbox in a dialog", async function (assert) {
+    await render(<template><Host /></template>);
+    await click(".d-select__input");
+
+    assert.dom("[role='listbox']").exists("the list is open");
+    assert
+      .dom(".d-select__filter")
+      .doesNotExist("the query input is in the trigger, not the panel");
+    assert
+      .dom(".d-select__content")
+      .hasAttribute(
+        "role",
+        "none",
+        "the panel is a presentational container, not a dialog"
+      );
+    assert
+      .dom("[role='dialog']")
+      .doesNotExist("nothing between the combobox and its options is a dialog");
+  });
+
+  // The other half of the rule: a panel that holds a query input as well as the list IS a
+  // disclosure onto a composite surface, and `aria-haspopup="dialog"` on its trigger promises
+  // exactly that. Removing the role there would make the promise false.
+  test("a panel with a query input keeps its dialog role", async function (assert) {
+    await render(<template><Host @variant="button" /></template>);
+    await click(".d-select__trigger");
+
+    assert.dom("[role='listbox']").exists("the list is open");
+    assert
+      .dom(".d-select__content")
+      .hasAttribute(
+        "role",
+        "dialog",
+        "a searchable panel stays a dialog, matching aria-haspopup"
+      );
+  });
+});
+
+module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("the trigger itself is a select-only combobox (no filter input)", async function (assert) {
+    await render(<template><Host @variant="static" /></template>);
+
+    // WAI-ARIA Select-Only Combobox: the focusable trigger IS the combobox, so there is
+    // no separate filter input; the role/haspopup/tabindex live on the trigger.
+    assert
+      .dom(".d-select__trigger")
+      .hasAttribute("role", "combobox", "the trigger is the combobox")
+      .hasAttribute("aria-haspopup", "listbox")
+      .hasAttribute("tabindex", "0", "the trigger is focusable")
+      .hasAttribute("aria-expanded", "false");
+    assert
+      .dom("input[role='combobox']")
+      .doesNotExist("no filter input — the trigger is the combobox");
+
+    await click(".d-select__trigger");
+
+    assert.dom("[role='listbox']").exists();
+    assert.dom("[role='option']").exists({ count: 3 });
+
+    const listboxId = document.querySelector("[role='listbox']").id;
+    assert
+      .dom(".d-select__trigger")
+      .hasAttribute("aria-expanded", "true")
+      .hasAttribute(
+        "aria-controls",
+        listboxId,
+        "aria-controls points at the open listbox"
+      );
+
+    await click("[role='option']");
+    assert.dom("[role='listbox']").doesNotExist("selecting closes (single)");
+    assert.dom(".d-select__value").hasText("Apple");
+  });
+
+  test("opens from the keyboard and keeps focus on the trigger", async function (assert) {
+    await render(<template><Host @variant="static" /></template>);
+
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "ArrowDown");
+
+    assert.dom("[role='listbox']").exists("ArrowDown opens the list");
+    // Select-only combobox: focus stays on the trigger (active-descendant), never moves
+    // into the listbox.
+    assert
+      .dom(".d-select__trigger")
+      .isFocused("focus stays on the combobox trigger");
+    assert
+      .dom("[role='option'][tabindex='0']")
+      .doesNotExist(
+        "options are not roving tab stops (active-descendant mode)"
+      );
+  });
+
+  test("keyboard opening activates the first option through aria-activedescendant", async function (assert) {
+    await render(<template><Host @variant="static" /></template>);
+
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
+
+    const firstOptionId = find("[role='option']").id;
+    assert
+      .dom(".d-select__trigger")
+      .hasAttribute(
+        "aria-activedescendant",
+        firstOptionId,
+        "Enter activates the first option on open"
+      );
+    assert
+      .dom("[role='option']")
+      .hasClass("--active", "the active option has the visual active state");
+
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Escape");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "ArrowDown");
+
+    assert
+      .dom(".d-select__trigger")
+      .hasAttribute(
+        "aria-activedescendant",
+        find("[role='option']").id,
+        "ArrowDown also activates the first option on open"
+      );
+  });
+
+  test("keyboard opening skips a disabled first option", async function (assert) {
+    const items = [
+      { id: 1, name: "Apple", disabled: true },
+      { id: 2, name: "Banana" },
+    ];
+
+    await render(
+      <template>
+        <DSelect @identifier="test-select" @items={{items}} @variant="static" />
+      </template>
+    );
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
+
+    assert
+      .dom(".d-select__trigger")
+      .hasAttribute(
+        "aria-activedescendant",
+        findAll("[role='option']")[1].id,
+        "the cursor lands on the first enabled option"
+      );
+  });
+
+  test("keyboard lifecycle gates aria-controls and restores trigger focus", async function (assert) {
+    await render(<template><Host @variant="static" /></template>);
+
+    assert
+      .dom(".d-select__trigger")
+      .hasAttribute("role", "combobox", "the trigger is the select controller")
+      .doesNotHaveAttribute(
+        "aria-controls",
+        "a closed trigger does not reference an unrendered listbox"
+      );
+
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
+
+    const listbox = find("[role='listbox']");
+    assert
+      .dom(".d-select__trigger")
+      .isFocused("Enter leaves DOM focus on the trigger")
+      .hasAttribute(
+        "aria-controls",
+        listbox.id,
+        "the open trigger references the rendered listbox"
+      );
+    assert
+      .dom("[role='option'][tabindex='0']")
+      .doesNotExist("listbox options never become tab stops");
+
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Escape");
+    assert.dom("[role='listbox']").doesNotExist("Escape closes the listbox");
+    assert
+      .dom(".d-select__trigger")
+      .isFocused("closing restores focus to the trigger")
+      .doesNotHaveAttribute(
+        "aria-controls",
+        "closing removes the stale listbox reference"
+      );
+
+    await triggerKeyEvent(".d-select__trigger", "keydown", "ArrowDown");
+    assert.dom("[role='listbox']").exists("ArrowDown reopens the listbox");
+    assert
+      .dom(".d-select__trigger")
+      .isFocused("ArrowDown also leaves focus on the trigger");
+  });
+
+  test("uses default labels when presentation blocks are omitted", async function (assert) {
+    await render(
+      <template><DefaultHost @value={{2}} @variant="static" /></template>
+    );
+
+    assert
+      .dom(".d-select__value")
+      .hasText("Banana", "the static trigger uses the selection fallback");
+
+    await click(".d-select__trigger");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 3 }, "the block-free static select renders every option")
+      .hasText("Apple", "option rows use the item fallback");
+  });
+});
+
+module(
+  "Integration | ui-kit | select | DSelect (static, mobile)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      forceMobile();
+    });
+
+    test("opening moves DOM focus into the modal's roving option list", async function (assert) {
+      await render(<template><Host @variant="static" /></template>);
+
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
+
+      assert
+        .dom(".fk-d-menu-modal")
+        .exists("the static select renders in a mobile modal");
+
+      const options = findAll(".fk-d-menu-modal [role='option']");
+      assert.strictEqual(
+        document.activeElement,
+        options[0],
+        "real DOM focus moves to the first option inside the modal"
+      );
+      assert
+        .dom(options[0])
+        .hasAttribute(
+          "tabindex",
+          "0",
+          "the focused option is the roving tab stop"
+        );
+      assert
+        .dom(options[1])
+        .hasAttribute(
+          "tabindex",
+          "-1",
+          "the remaining options are not tab stops"
+        );
+      assert
+        .dom(".d-select__trigger")
+        .isNotFocused("focus is not stranded on the trigger outside the modal")
+        .doesNotHaveAttribute(
+          "aria-activedescendant",
+          "focus mode does not use the out-of-modal trigger as a controller"
+        );
+    });
+  }
+);
+
+module("Integration | ui-kit | select | menu modal decision", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("the menu service decision drives DMenu's mobile rendering", async function (assert) {
+    const menu = getOwner(this).lookup("service:menu");
+
+    assert.false(
+      menu.shouldRenderInModal(true),
+      "modalForMobile stays inline on desktop"
+    );
+
+    forceMobile();
+
+    assert.true(
+      menu.shouldRenderInModal(true),
+      "modalForMobile selects the modal path on mobile"
+    );
+
+    await render(
+      <template>
+        <DMenu
+          @content="Menu content"
+          @identifier="modal-decision"
+          @inline={{true}}
+          @label="Open menu"
+          @modalForMobile={{true}}
+        />
+      </template>
+    );
+    await click("[data-identifier='modal-decision']");
+
+    assert
+      .dom(".fk-d-menu-modal[data-identifier='modal-decision']")
+      .hasText(
+        "Menu content",
+        "DMenu still follows the service decision and renders its modal"
+      );
+  });
+});
+
+module(
+  "Integration | ui-kit | select | DSelect (input throttle)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("a query below @minChars shows a keep-typing hint and renders no list, skeleton, or source call", async function (assert) {
+      let loadCalls = 0;
+      const load = (filter) => {
+        loadCalls++;
+        return ITEMS.filter((item) =>
+          item.name.toLowerCase().includes(filter.toLowerCase())
+        );
+      };
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @load={{load}}
+            @minChars={{3}}
+            @texts={{hash placeholder="Search"}}
+          />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "ap");
+
+      assert
+        .dom(".d-select__min-chars")
+        .exists("a short query shows the keep-typing hint")
+        .hasText(
+          "Keep typing 1 more character…",
+          "the hint counts the remaining characters"
+        );
+      assert
+        .dom("[role='listbox']")
+        .doesNotExist("no list renders below the threshold");
+      assert
+        .dom(".d-select__skeleton")
+        .doesNotExist("no loading skeleton flashes below the threshold");
+      assert.strictEqual(
+        loadCalls,
+        0,
+        "the source is never called below the threshold"
+      );
+    });
+
+    test("reaching @minChars renders the list and calls the source", async function (assert) {
+      let loadCalls = 0;
+      const load = (filter) => {
+        loadCalls++;
+        return ITEMS.filter((item) =>
+          item.name.toLowerCase().includes(filter.toLowerCase())
+        );
+      };
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @load={{load}}
+            @minChars={{3}}
+            @texts={{hash placeholder="Search"}}
+          />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "app");
+      await waitFor("[role='listbox']");
+
+      assert
+        .dom(".d-select__min-chars")
+        .doesNotExist("at the threshold the hint is gone");
+      assert
+        .dom("[role='listbox']")
+        .exists("the list renders once the query is long enough");
+      assert.true(
+        loadCalls > 0,
+        "the source is called at or above the threshold"
+      );
+    });
+
+    test("dropping back below @minChars restores the keep-typing hint", async function (assert) {
+      const load = () => ITEMS;
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @load={{load}}
+            @minChars={{3}}
+            @texts={{hash placeholder="Search"}}
+          />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "app");
+      await waitFor("[role='listbox']");
+      assert.dom("[role='listbox']").exists("a long enough query lists");
+
+      await fillIn("[role='combobox']", "ap");
+      assert
+        .dom("[role='listbox']")
+        .doesNotExist("shrinking below the threshold hides the list");
+      assert
+        .dom(".d-select__min-chars")
+        .exists("and restores the keep-typing hint");
+    });
+
+    test("@minChars defaults to 0, searching on any input", async function (assert) {
+      const load = () => ITEMS;
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @load={{load}}
+            @texts={{hash placeholder="Search"}}
+          />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "a");
+      await waitFor("[role='listbox']");
+
+      assert
+        .dom(".d-select__min-chars")
+        .doesNotExist("no threshold means no hint");
+      assert
+        .dom("[role='listbox']")
+        .exists("a single character already searches");
+    });
+
+    test("a client source renders instantly with no skeleton (debounce defaults off)", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      await click(".d-select__trigger");
+
+      assert
+        .dom("[role='listbox']")
+        .exists("the client list renders immediately");
+      assert
+        .dom(".d-select__skeleton")
+        .doesNotExist("a synchronous source flashes no loading skeleton");
+    });
+
+    test("an empty query is below @minChars: the hint shows and the source is not called", async function (assert) {
+      const filters = [];
+      const load = (filter) => {
+        filters.push(filter);
+        return ITEMS;
+      };
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @load={{load}} @minChars={{3}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+
+      assert
+        .dom(".d-select__min-chars")
+        .exists(
+          "an empty query is below the minimum, so the hint shows on open"
+        )
+        .hasText(
+          "Keep typing 3 more characters…",
+          "the hint counts from the full minimum"
+        );
+      assert
+        .dom("[role='listbox']")
+        .doesNotExist("no list flashes on open below the minimum");
+      assert.strictEqual(
+        filters.length,
+        0,
+        "the source is not called for a below-minimum empty query"
+      );
+    });
+
+    test("a chosen typeahead value hides the input placeholder", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @texts={{hash placeholder="Choose an option"}}
+            @value={{1}}
+          >
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
+          </DSelect>
+        </template>
+      );
+
+      assert
+        .dom(".d-select__presentation")
+        .hasText("Apple", "the selection presentation shows the chosen value");
+      assert.strictEqual(
+        find("[role='combobox']").placeholder,
+        "",
+        "the input shows no placeholder next to an already-chosen value"
+      );
+    });
+
+    test("@debounce={{false}} never enters a loading state", async function (assert) {
+      const filters = [];
+      const load = (filter) => {
+        filters.push(filter);
+        return ITEMS.filter((item) =>
+          item.name.toLowerCase().includes(filter.toLowerCase())
+        );
+      };
+
+      await render(
+        <template>
+          <DSelect
+            @debounce={{false}}
+            @identifier="test-select"
+            @load={{load}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ban");
+
+      assert
+        .dom(".d-select__skeleton")
+        .doesNotExist("an explicit false never enters a loading state");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 1 }, "the re-filtered result renders")
+        .hasText("Banana", "the latest synchronous result is shown");
+      assert.strictEqual(
+        filters.at(-1),
+        "ban",
+        "false is preserved instead of falling back to the async-source default"
+      );
+    });
+
+    test("a create-enabled select offers no create row below @minChars", async function (assert) {
+      const createItem = (filter) => ({
+        id: filter,
+        name: filter,
+        __create: true,
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @minChars={{3}}
+          />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "xy");
+
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("the synthetic create item is not built below threshold");
+      assert
+        .dom(".d-select__min-chars")
+        .hasText(
+          "Keep typing 1 more character…",
+          "the threshold hint replaces all list items"
+        );
+    });
+
+    test("a create-enabled select offers a create row when the source has no matches", async function (assert) {
+      const createItem = (filter) => ({
+        id: filter,
+        name: filter,
+        __create: true,
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @identifier="test-select"
+            @items={{ITEMS}}
+          />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "dragonfruit");
+
+      assert
+        .dom("[role='option'].--create")
+        .exists("the synthetic create row replaces the raw empty state")
+        .hasText("Create “dragonfruit”", "the row names the proposed value");
+      assert
+        .dom(".d-select__empty")
+        .doesNotExist("the final list is not treated as empty");
+    });
+
+    test("mobile typeahead renders the @minChars hint inside its modal", async function (assert) {
+      forceMobile();
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+        </template>
+      );
+
+      await click(".d-select__trigger");
+      await fillIn(".fk-d-menu-modal .d-select__filter", "ap");
+
+      assert
+        .dom(".fk-d-menu-modal .d-select__min-chars[role='status']")
+        .hasText(
+          "Keep typing 1 more character…",
+          "the mobile modal contains the visible status hint"
+        );
+      assert
+        .dom(".fk-d-menu-modal [role='listbox']")
+        .doesNotExist("the modal list is gated below threshold");
+    });
+
+    test("the same remaining @minChars count is not announced twice", async function (assert) {
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "a");
+      await fillIn("[role='combobox']", "b");
+
+      assert.strictEqual(
+        announce.withArgs("Keep typing 2 more characters…", "polite").callCount,
+        1,
+        "changing the query without changing the remaining count stays silent"
+      );
+    });
+
+    test("below @minChars the combobox advertises no listbox reference", async function (assert) {
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "ap");
+
+      assert
+        .dom(".d-select__min-chars")
+        .exists("the keep-typing hint is shown below threshold");
+      assert
+        .dom("[role='combobox']")
+        .doesNotHaveAttribute(
+          "aria-controls",
+          "no dangling aria-controls while no listbox is rendered"
+        )
+        .doesNotHaveAttribute(
+          "aria-owns",
+          "no dangling aria-owns while no listbox is rendered"
+        );
+    });
+
+    test("the button panel filter advertises no listbox below @minChars", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @minChars={{3}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ap");
+
+      assert
+        .dom(".d-select__filter")
+        .doesNotHaveAttribute(
+          "aria-controls",
+          "the panel filter drops its listbox reference below threshold"
+        );
+    });
+
+    test("@debounce={{true}} on a client source renders without crashing", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @debounce={{true}}
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ban");
+      await waitFor("[role='option']");
+
+      assert
+        .dom("[role='option']")
+        .exists(
+          { count: 1 },
+          "a forced-debounce synchronous source resolves through the promise path"
+        )
+        .hasText("Banana", "and shows the filtered result");
+    });
+
+    test("re-entering below @minChars announces the hint again", async function (assert) {
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "a");
+      await fillIn("[role='combobox']", "app");
+      await fillIn("[role='combobox']", "a");
+
+      assert.strictEqual(
+        announce.withArgs("Keep typing 2 more characters…", "polite").callCount,
+        2,
+        "leaving and re-entering the below-threshold state re-announces the hint"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (passthrough + empty block)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("@onShow and @onClose compose with the internal open/close handling", async function (assert) {
+      let shown = 0;
+      let closed = 0;
+      const onShow = () => shown++;
+      const onClose = () => closed++;
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @onClose={{onClose}}
+            @onShow={{onShow}}
+          />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      assert.strictEqual(shown, 1, "the consumer @onShow fires on open");
+
+      await fillIn("[role='combobox']", "ban");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      assert.strictEqual(closed, 1, "the consumer @onClose fires on close");
+
+      // The internal typeahead reset must survive composition: reopening starts from a cleared
+      // query, so the full list is back rather than the previous "ban" filter.
+      await click("[role='combobox']");
+      assert
+        .dom("[role='option']")
+        .exists(
+          { count: ITEMS.length },
+          "the internal query reset still runs alongside the consumer @onClose"
+        );
+    });
+
+    test("a consumer :empty block replaces the default text but keeps the status live-region", async function (assert) {
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}}>
+            <:empty><span class="custom-empty">No luck</span></:empty>
+          </DSelect>
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "zzzz");
+
+      assert
+        .dom(".custom-empty")
+        .exists("the consumer empty block renders for no matches");
+      assert
+        .dom("[role='status'] .custom-empty")
+        .exists("the custom empty content stays inside a live-region status");
+      assert
+        .dom(".d-select__empty")
+        .doesNotContainText(
+          "No results found",
+          "the default no-results text is replaced by the consumer content"
+        );
+    });
+
+    test("@onShow fires once per open even if the open trigger is clicked again", async function (assert) {
+      let shown = 0;
+      const onShow = () => shown++;
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @onShow={{onShow}}
+          />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      await click("[role='combobox']");
+
+      assert.strictEqual(
+        shown,
+        1,
+        "clicking the already-open trigger does not re-fire @onShow"
+      );
+    });
+
+    test("without an :empty block the default no-results still shows", async function (assert) {
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}} />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "zzzz");
+
+      assert
+        .dom(".d-select__empty")
+        .exists("the built-in no-results status remains the default");
+    });
+
+    test("@placement forwards to the overlay positioning", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @placement="bottom-end"
+          />
+        </template>
+      );
+
+      await click("[role='combobox']");
+
+      assert
+        .dom("[data-placement]")
+        .hasAttribute(
+          "data-placement",
+          "bottom-end",
+          "the custom placement reaches floating-ui (default would be bottom-start)"
+        );
+    });
+
+    test("@offset forwards to the overlay positioning", async function (assert) {
+      // A large offset pushes the overlay well clear of the trigger; the exact pixel gap is
+      // clamped by floating-ui's viewport math in the tiny test fixture, so this asserts the
+      // offset visibly increases the spacing rather than a brittle exact value. The default
+      // gap (offset 10) is only a few pixels.
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}} @offset={{200}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+
+      assert
+        .dom("[data-placement]")
+        .hasAttribute(
+          "data-placement",
+          "bottom-start",
+          "the overlay stays below the trigger, so the gap reflects the offset"
+        );
+      const trigger = find(".d-select__trigger").getBoundingClientRect();
+      const content = find("[data-placement]").getBoundingClientRect();
+      assert.true(
+        content.top - trigger.bottom > 40,
+        "the custom offset pushes the overlay well below the trigger (default gap is a few px)"
+      );
+    });
+
+    test("an @onShow that mutates state does not disturb the open (deferred past positioning)", async function (assert) {
+      class ReproHost extends Component {
+        @tracked count = 0;
+        @tracked value = null;
+
+        @action
+        onChange(v) {
+          this.value = v;
+        }
+
+        @action
+        onShow() {
+          this.count++;
+        }
+
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @onChange={{this.onChange}}
+            @onShow={{this.onShow}}
+            @value={{this.value}}
+          />
+          <p class="repro-count">{{this.count}}</p>
+        </template>
+      }
+
+      await render(<template><ReproHost /></template>);
+      await click("[role='combobox']");
+
+      assert
+        .dom(".repro-count")
+        .hasText("1", "the consumer @onShow still runs (once, after settling)");
+      assert.strictEqual(
+        document.activeElement,
+        find("[role='combobox']"),
+        "the query input keeps focus through the open"
+      );
+      assert
+        .dom("[role='listbox']")
+        .exists("the overlay is open and its listbox rendered");
+    });
+
+    test("@onShow and @onClose fire once for button and static variants", async function (assert) {
+      const buttonOnShow = sinon.spy();
+      const buttonOnClose = sinon.spy();
+      const staticOnShow = sinon.spy();
+      const staticOnClose = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            class="callback-button"
+            @items={{ITEMS}}
+            @onClose={{buttonOnClose}}
+            @onShow={{buttonOnShow}}
+            @variant="button"
+          />
+          <DSelect
+            class="callback-static"
+            @items={{ITEMS}}
+            @onClose={{staticOnClose}}
+            @onShow={{staticOnShow}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      await click(".callback-button");
+      assert.true(buttonOnShow.calledOnce, "button reports one open");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+      assert.true(buttonOnClose.calledOnce, "button reports one close");
+
+      await click(".callback-static");
+      assert.true(staticOnShow.calledOnce, "static reports one open");
+      await triggerKeyEvent(".callback-static", "keydown", "Escape");
+      assert.true(staticOnClose.calledOnce, "static reports one close");
+    });
+
+    test("an async source resolving to an empty array renders the consumer :empty block", async function (assert) {
+      const load = () => Promise.resolve([]);
+
+      await render(
+        <template>
+          <DSelect
+            @debounce={{false}}
+            @identifier="test-select"
+            @load={{load}}
+            @variant="button"
+          >
+            <:empty><span class="async-empty">No remote matches</span></:empty>
+          </DSelect>
+        </template>
+      );
+
+      await click(".d-select__trigger");
+      await waitFor(".async-empty");
+
+      assert
+        .dom(".async-empty")
+        .hasText(
+          "No remote matches",
+          "the resolved empty response reaches the named block"
+        );
+    });
+
+    test("the consumer :empty block stays hidden while results are available", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @variant="button">
+            <:empty><span class="unexpected-empty">No matches</span></:empty>
+          </DSelect>
+        </template>
+      );
+
+      await click(".d-select__trigger");
+
+      assert
+        .dom("[role='option']")
+        .exists({ count: ITEMS.length }, "available results render normally");
+      assert
+        .dom(".unexpected-empty")
+        .doesNotExist("the empty block is not rendered alongside results");
+    });
+
+    test("@placement and @offset preserve the mobile modal path", async function (assert) {
+      forceMobile();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @offset={{200}}
+            @placement="top-end"
+            @variant="button"
+          />
+        </template>
+      );
+
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".fk-d-menu-modal")
+        .exists("the select still opens in a modal");
+      assert
+        .dom(".fk-d-menu-modal [role='option']")
+        .exists({ count: ITEMS.length }, "the modal still renders the list");
+      assert
+        .dom("[data-placement]")
+        .doesNotExist("the modal does not enter the floating-position path");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (overlay scroll)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("auto-highlighting the first option on open does not call scrollIntoView", async function (assert) {
+      // The overlay is portalled and positioned by floating-ui asynchronously. A synchronous
+      // `@items` source renders the options immediately, before that positioning, so the
+      // first option is still at the portal root (top of page). `scrollIntoView` on it would
+      // scroll the whole page there; the roving highlight must scroll within the listbox only.
+      const spy = sinon.spy(HTMLElement.prototype, "scrollIntoView");
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{ITEMS}} />
+        </template>
+      );
+      spy.resetHistory();
+
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='option'].--active")
+        .exists("the first option is auto-highlighted on open");
+      assert.false(
+        spy.called,
+        "the highlight is scrolled within the listbox, not via scrollIntoView (which scrolls the portalled overlay's page position)"
+      );
+    });
+
+    test("opening with a value activates the selected option and scrolls to it", async function (assert) {
+      const many = Array.from({ length: 40 }, (_, i) => ({
+        id: i + 1,
+        name: `Item ${i + 1}`,
+      }));
+      const spy = sinon.spy(HTMLElement.prototype, "scrollIntoView");
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{many}} @value={{30}} />
+        </template>
+      );
+      spy.resetHistory();
+
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          "Item 30",
+          "the cursor is restored to the user's choice, not the first row"
+        );
+      assert.true(
+        find(".d-virtual-list").scrollTop > 0,
+        "and the list viewport is scrolled to it"
+      );
+      assert.false(
+        spy.called,
+        "scrolled within the list viewport, never via scrollIntoView"
+      );
+    });
+
+    test("opening with a value while filtering activates the first match, not the selection", async function (assert) {
+      const many = Array.from({ length: 40 }, (_, i) => ({
+        id: i + 1,
+        name: `Item ${i + 1}`,
+      }));
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{many}} @value={{30}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "Item 1");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          "Item 1",
+          "Enter should take the best match for what was typed"
+        );
+    });
+
+    test("shortening the query re-seeds the cursor to the top of the widened list", async function (assert) {
+      const many = Array.from({ length: 40 }, (_, i) => ({
+        id: i + 1,
+        name: `Item ${i + 1}`,
+      }));
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{many}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "Item 12");
+      assert.dom("[role='option'].--active").hasText("Item 12");
+
+      // Widening keeps the previously-active row in the set (unlike narrowing, where it drops
+      // out and the cursor re-seeds for free). Tracking that survivor leaves the cursor deep in
+      // the new list and pins the viewport there, so the rows the shortened query just added
+      // above it are scrolled out of sight and the re-query looks like it never happened.
+      await fillIn("[role='combobox']", "Item 1");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          "Item 1",
+          "the cursor moves to the first row of the new result set"
+        );
+      assert.strictEqual(
+        find(".d-virtual-list").scrollTop,
+        0,
+        "and the list is scrolled to the top so the newly-matching rows are visible"
+      );
+    });
+
+    test("keyboard navigation scrolls an off-screen option into view within the listbox", async function (assert) {
+      const many = Array.from({ length: 40 }, (_, i) => ({
+        id: i + 1,
+        name: `Item ${i + 1}`,
+      }));
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @items={{many}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      // The scroll viewport is the DVirtualList wrapper around the listbox; the listbox ul
+      // itself is the (non-scrolling) sizer.
+      const viewport = find(".d-virtual-list");
+      assert.strictEqual(
+        viewport.scrollTop,
+        0,
+        "the list starts at the top with the first option highlighted"
+      );
+
+      for (let i = 0; i < 20; i++) {
+        await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      }
+
+      assert.true(
+        viewport.scrollTop > 0,
+        "arrowing down scrolls the active option into view inside the list viewport"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (review fixes)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("reopening a select clears a previous roving highlight", async function (assert) {
+      // A button select does not auto-highlight on open, so the roving highlight is only ever
+      // seeded by navigation. The highlight is rendered from tracked state (`activeOptionKey`);
+      // if it were not cleared on close, a reopened list would render a stale `--active` with
+      // no matching aria-activedescendant.
+      await render(
+        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+      );
+
+      await click(".d-select__trigger");
+      assert
+        .dom("[role='option'].--active")
+        .doesNotExist("a button select opens with no highlight");
+
+      await triggerKeyEvent(".d-select__filter", "keydown", "ArrowDown");
+      assert
+        .dom("[role='option'].--active")
+        .exists("arrowing down seeds the highlight");
+
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+      await click(".d-select__trigger");
+      assert
+        .dom("[role='option'].--active")
+        .doesNotExist("reopening does not restore the stale highlight");
+    });
+
+    test("the static and button control roots carry the accessible name from @label", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="lbl-static"
+            @items={{ITEMS}}
+            @texts={{hash ariaLabel="Category"}}
+            @value={{1}}
+            @variant="static"
+          >
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
+          </DSelect>
+          <DSelect
+            class="lbl-button"
+            @items={{ITEMS}}
+            @texts={{hash ariaLabel="Category"}}
+            @value={{1}}
+            @variant="button"
+          >
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
+          </DSelect>
+        </template>
+      );
+
+      // Both roots hold a value here, and an author-supplied name replaces name-from-contents —
+      // so naming them "Category" alone left the chosen value unspeakable. The name composes the
+      // field with its current value; see the (control trigger naming) module for the empty case.
+      assert
+        .dom(".lbl-static[role='combobox']")
+        .hasAria(
+          "label",
+          "Category, Apple",
+          "the static combobox root names the field and its value"
+        );
+      assert
+        .dom(".lbl-button[role='button']")
+        .hasAria(
+          "label",
+          "Category, Apple",
+          "the button disclosure root names the field and its value"
+        );
+    });
+
+    test("a readonly button variant is announced aria-disabled (buttons have no readonly)", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="ro-btn"
+            @items={{ITEMS}}
+            @readonly={{true}}
+            @value={{1}}
+            @variant="button"
+          >
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
+          </DSelect>
+        </template>
+      );
+
+      assert
+        .dom(".ro-btn")
+        .hasAria(
+          "disabled",
+          "true",
+          "a readonly button announces its unavailable state via aria-disabled"
+        )
+        .doesNotHaveAttribute(
+          "aria-readonly",
+          "aria-readonly is not valid on a button role"
+        );
+    });
+
+    test("locking a control while it is open closes the overlay", async function (assert) {
+      class LockHost extends Component {
+        @tracked locked = false;
+
+        @action
+        lock() {
+          this.locked = true;
+        }
+
+        <template>
+          <button class="do-lock" type="button" {{on "click" this.lock}}>
+            lock
+          </button>
+          <DSelect
+            @disabled={{this.locked}}
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @value={{1}}
+            @variant="static"
+          >
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
+          </DSelect>
+        </template>
+      }
+
+      await render(<template><LockHost /></template>);
+
+      await click("[role='combobox']");
+      assert.dom("[role='listbox']").exists("the control opens");
+
+      await click(".do-lock");
+      assert
+        .dom("[role='listbox']")
+        .doesNotExist(
+          "becoming disabled while open closes the overlay so its content can't be used"
+        );
+    });
+
+    test("a locked option ignores activation until it is unlocked", async function (assert) {
+      // Closing the overlay on lock is async (it awaits the exit animation), so an option
+      // stays mounted and clickable for that window. The lock must therefore gate the
+      // activation itself — the single path pointer and keyboard share — not only the close.
+      const state = trackedObject({ value: null });
+      const engine = new SelectEngine({
+        getValue: () => state.value,
+        onChange: (next) => (state.value = next),
+      });
+      const descriptor = engine.buildItems(ITEMS)[1];
+
+      class LockedItemHost extends Component {
+        @tracked locked = true;
+
+        @action
+        unlock() {
+          this.locked = false;
+        }
+
+        <template>
+          <button class="do-unlock" type="button" {{on "click" this.unlock}}>
+            unlock
+          </button>
+          <ul role="listbox">
+            <SelectItem
+              @descriptor={{descriptor}}
+              @engine={{engine}}
+              @locked={{this.locked}}
+            >
+              {{descriptor.item.name}}
+            </SelectItem>
+          </ul>
+        </template>
+      }
+
+      await render(<template><LockedItemHost /></template>);
+
+      await click("[role='option']");
+      assert.strictEqual(
+        state.value,
+        null,
+        "activating a locked option does not change the value"
+      );
+
+      await click(".do-unlock");
+      await click("[role='option']");
+      assert.strictEqual(
+        state.value,
+        2,
+        "the same option activates once the lock is lifted"
+      );
+    });
+
+    test("multi-select removes the last chip on Backspace only, never Delete", async function (assert) {
+      class MultiDeleteHost extends Component {
+        @tracked value = [1, 2];
+
+        @action
+        onChange(v) {
+          this.value = v;
+        }
+
+        <template>
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @onChange={{this.onChange}}
+            @value={{this.value}}
+          >
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
+          </DSelect>
+        </template>
+      }
+
+      await render(<template><MultiDeleteHost /></template>);
+      assert.dom(".d-select__chip").exists({ count: 2 }, "two chips to start");
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Delete");
+      assert
+        .dom(".d-select__chip")
+        .exists(
+          { count: 2 },
+          "Delete (forward-delete) leaves the chips: nothing sits after the caret"
+        );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Backspace");
+      assert
+        .dom(".d-select__chip")
+        .exists(
+          { count: 1 },
+          "Backspace deletes backward toward the chip before the caret, the token-input convention"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (re-selection)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    test("Enter on the restored selection closes without emitting a change", async function (assert) {
+      // Restoring the cursor to the selected option makes Enter the first keystroke after
+      // opening. Leaving it inert (no change, no close) would read as a broken control.
+      let changes = 0;
+      const onChange = () => changes++;
+
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @onChange={{onChange}} @value={{2}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      assert.dom("[role='option'].--active").hasText("Banana");
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.dom("[role='listbox']").doesNotExist("the overlay closes");
+      assert.strictEqual(changes, 0, "re-picking the same value emits nothing");
+    });
+
+    test("clicking the already-selected option closes without emitting a change", async function (assert) {
+      // Enter and the pointer share one activation path, so they must agree.
+      let changes = 0;
+      const onChange = () => changes++;
+
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @onChange={{onChange}} @value={{2}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      await click("[role='option'].--active");
+
+      assert.dom("[role='listbox']").doesNotExist("the overlay closes");
+      assert.strictEqual(changes, 0, "no change is emitted");
+    });
+
+    test("selecting the current value while closed does not steal focus", async function (assert) {
+      // The compat bridge lets a consumer dismiss the overlay, await a request, and only then
+      // call select() — by which time the user has moved on. Closing an already-closed menu
+      // would focus its trigger and pull them back.
+      let selectKit;
+      withPluginApi((api) => {
+        api.modifySelectKit("test-select").prependContent(() => ({
+          id: "act",
+          name: "Act now",
+          onSelect: (facade) => (selectKit = facade),
+        }));
+      });
+
+      await render(
+        <template>
+          <input class="elsewhere" />
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @kind="test-select"
+            @value={{2}}
+          />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      // An action row captures the facade without selecting or closing.
+      await click("[role='option']");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      assert.dom("[role='listbox']").doesNotExist("the overlay is closed");
+
+      await focus(".elsewhere");
+      selectKit.select(2, { id: 2, name: "Banana" });
+      await settled();
+
+      assert.dom(".elsewhere").isFocused("focus stays where the user put it");
+    });
+  }
+);
+
+module("Integration | ui-kit | select | DSelect (refilter)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  // Mirrors the styleguide's paginated source: a large set, pages, and a declared total, so the
+  // windowed list and the page accumulator are both in play. Reported symptom: type "123", get
+  // its rows, press backspace, and the list keeps showing the rows for "123".
+  const ALL = Array.from({ length: 5000 }, (_, i) => ({
+    id: i + 1,
+    name: `Option ${i + 1}`,
+  }));
+
+  function pagedLoad(queries) {
+    return (filter, { offset = 0, limit = 50 } = {}) => {
+      queries.push(filter);
+      const matched = filter
+        ? ALL.filter((item) => item.name.includes(filter))
+        : ALL;
+      return Promise.resolve({
+        items: matched.slice(offset, offset + limit),
+        total: matched.length,
+      });
+    };
+  }
+
+  test("re-queries a paginated source when the query is shortened", async function (assert) {
+    const queries = [];
+    const load = pagedLoad(queries);
+
+    await render(<template><DSelect @load={{load}} /></template>);
+
+    await fillIn("[role='combobox']", "123");
+
+    const longQueryRows = findAll("[role='option']").length;
+    assert.true(longQueryRows > 0, "the longer query renders its matches");
+
+    // A real deletion, not `fillIn`: the browser fires keydown, mutates the value, then fires
+    // input. `fillIn` skips the keydown, and DSelect has Backspace handling on that path.
+    const input = find("[role='combobox']");
+    await triggerKeyEvent(input, "keydown", "Backspace");
+    input.value = "12";
+    await triggerEvent(input, "input");
+
+    assert.deepEqual(
+      queries,
+      ["123", "12"],
+      "shortening the query issues a new request"
+    );
+    // "12" matches strictly more of the set than "123" does, so an unchanged row count is the
+    // tell that the list is still showing the previous query's results.
+    assert.true(
+      findAll("[role='option']").length > longQueryRows,
+      "the list re-renders for the shortened query rather than keeping the old rows"
+    );
+  });
+});
+
+module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
+  setupRenderingTest(hooks);
+
+  function option(text) {
+    return findAll("[role='option']").find(
+      (element) => element.textContent.trim() === text
+    );
+  }
+
+  test("options carry their value and name", async function (assert) {
+    await render(<template><DSelect @items={{ITEMS}} /></template>);
+    await click("[role='combobox']");
+
+    assert
+      .dom(option("Banana"))
+      .hasAttribute("data-value", "2", "the value is the id as a string")
+      .hasAttribute("data-name", "Banana", "the name is the label");
+    assert.deepEqual(
+      findAll("[role='option']").map((element) => element.dataset.value),
+      ["1", "2", "3"],
+      "every option carries one"
+    );
+  });
+
+  test("the none row has an empty value", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @noneRow={{true}}
+          @texts={{hash noneLabel="None"}}
+        />
+      </template>
+    );
+    await click("[role='combobox']");
+
+    assert
+      .dom("[role='option'].--none")
+      .hasAttribute("data-value", "")
+      .hasAttribute("data-name", "None");
+  });
+
+  test("a create row carries the typed text as its value", async function (assert) {
+    const createItem = (filter) => ({
+      id: filter,
+      name: filter,
+      __create: true,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @items={{ITEMS}}
+        />
+      </template>
+    );
+    await click("[role='combobox']");
+    await fillIn("[role='combobox']", "kiwi");
+
+    assert
+      .dom("[role='option'].--create")
+      .hasAttribute("data-value", "kiwi")
+      .hasAttribute("data-name", "kiwi");
+  });
+
+  test("the root carries the held value and name", async function (assert) {
+    await render(
+      <template>
+        <div class="held"><DSelect @items={{ITEMS}} @value={{2}} /></div>
+        <div class="empty"><DSelect @items={{ITEMS}} /></div>
+      </template>
+    );
+
+    assert
+      .dom(".held .d-select")
+      .hasAttribute("data-value", "2")
+      .hasAttribute("data-name", "Banana");
+    assert
+      .dom(".empty .d-select")
+      .hasAttribute("data-value", "", "nothing held reads as empty")
+      .hasAttribute("data-name", "");
+  });
+
+  test("a multi-select root and its chips carry the held values", async function (assert) {
+    const held = [1, 3];
+
+    await render(
+      <template>
+        <DSelect @items={{ITEMS}} @multiple={{true}} @value={{held}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "1,3", "ids joined with commas")
+      .hasAttribute("data-name", "Apple,Cherry pie", "labels joined too");
+    assert.deepEqual(
+      findAll(".d-select__chip").map((chip) => [
+        chip.dataset.value,
+        chip.dataset.name,
+      ]),
+      [
+        ["1", "Apple"],
+        ["3", "Cherry pie"],
+      ],
+      "each chip carries its own value and name"
+    );
+  });
+
+  test("an unresolved held id keeps its id and fallback name", async function (assert) {
+    const createUnresolvedItem = (value) => ({
+      id: value,
+      name: `Missing ${value}`,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @createUnresolvedItem={{createUnresolvedItem}}
+          @items={{ITEMS}}
+          @value={{99}}
+          @variant="static"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "99")
+      .hasAttribute("data-name", "Missing 99");
+  });
+
+  test("the root's hooks follow the value", async function (assert) {
+    const held = tracked(1);
+
+    await render(
+      <template><DSelect @items={{ITEMS}} @value={{held.value}} /></template>
+    );
+    assert.dom(".d-select").hasAttribute("data-value", "1");
+
+    held.value = 3;
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "3")
+      .hasAttribute("data-name", "Cherry pie");
+  });
+
+  test("the root and its panel share a link that is unique per select", async function (assert) {
+    await render(
+      <template>
+        <div class="first"><DSelect @items={{ITEMS}} /></div>
+        <div class="second"><DSelect @items={{ITEMS}} /></div>
+      </template>
+    );
+    const first = find(".first .d-select").dataset.selectId;
+    const second = find(".second .d-select").dataset.selectId;
+
+    assert.true(!!first, "the root carries a link while closed");
+    assert.notStrictEqual(first, second, "each select has its own");
+    assert
+      .dom(".d-select__panel")
+      .doesNotExist("no panel is mounted while closed");
+
+    await click(".first [role='combobox']");
+    assert
+      .dom(`.d-select__panel[data-select-id='${first}']`)
+      .exists("the open panel carries the same link");
+  });
+
+  test("the panel carries the link in its empty, error and below-minimum states", async function (assert) {
+    const failing = () => Promise.reject(new Error("load failed"));
+
+    await render(
+      <template>
+        <div class="empty"><DSelect @items={{ITEMS}} /></div>
+        <div class="error">
+          <DSelect @debounce={{false}} @load={{failing}} @variant="button" />
+        </div>
+        <div class="minimum"><DSelect @items={{ITEMS}} @minChars={{2}} /></div>
+      </template>
+    );
+
+    for (const [host, open] of [
+      [
+        "empty",
+        async () => {
+          await click(".empty [role='combobox']");
+          await fillIn(".empty [role='combobox']", "zzz");
+        },
+      ],
+      ["error", () => click(".error .d-select__trigger")],
+      ["minimum", () => click(".minimum [role='combobox']")],
+    ]) {
+      await open();
+      const link = find(`.${host} .d-select`).dataset.selectId;
+      assert
+        .dom(`.d-select__panel[data-select-id='${link}']`)
+        .exists(`the ${host} panel carries the link`);
+    }
+  });
+
+  test("the mobile modal's panel carries the link", async function (assert) {
+    forceMobile();
+
+    await render(<template><DSelect @items={{ITEMS}} /></template>);
+    await click(".d-select__trigger");
+    const link = find(".d-select").dataset.selectId;
+
+    assert
+      .dom(`.d-select__panel[data-select-id='${link}']`)
+      .exists("the panel inside the modal carries the link");
+  });
+
+  test("custom fields preserve falsy ids and labels across options, chips and the root", async function (assert) {
+    const items = [
+      { key: 0, title: "Zero" },
+      { key: false, title: "False" },
+    ];
+    const held = tracked([false, 0]);
+
+    await render(
+      <template>
+        <DSelect
+          @items={{items}}
+          @labelField="title"
+          @multiple={{true}}
+          @value={{held.value}}
+          @valueField="key"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "false,0", "held order is preserved");
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "False,Zero",
+        "custom labels follow held order"
+      );
+    assert.deepEqual(
+      findAll(".d-select__chip").map((chip) => [
+        chip.dataset.value,
+        chip.dataset.name,
+      ]),
+      [
+        ["false", "False"],
+        ["0", "Zero"],
+      ],
+      "chips use the configured fields"
+    );
+    await click("[role='combobox']");
+    assert.deepEqual(
+      findAll("[role='option']").map((row) => [
+        row.dataset.value,
+        row.dataset.name,
+      ]),
+      [
+        ["0", "Zero"],
+        ["false", "False"],
+      ],
+      "option hooks stringify falsy ids"
+    );
+
+    held.value = [0, false];
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "0,false", "reordering updates the ids");
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-name", "Zero,False", "reordering updates the names");
+    held.value = [];
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-value",
+        "",
+        "empty multi retains its value attribute"
+      );
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-name", "", "empty multi retains its name attribute");
+  });
+
+  test("synchronous fallbacks and late value items share the selection label", async function (assert) {
+    const items = tracked([]);
+    const resolveValues = sinon.spy(() => []);
+    const createUnresolvedItem = (id) => ({ id, name: `Missing ${id}` });
+    const held = [99, 1];
+
+    await render(
+      <template>
+        <DSelect
+          @createUnresolvedItem={{createUnresolvedItem}}
+          @items={{ITEMS}}
+          @multiple={{true}}
+          @resolveValues={{resolveValues}}
+          @value={{held}}
+          @valueItems={{items.value}}
+        />
+      </template>
+    );
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "99,1", "unresolved ids stay held");
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "Missing 99,Apple",
+        "the root reads the synchronous fallback"
+      );
+    assert
+      .dom(".d-select__chip")
+      .hasAttribute(
+        "data-name",
+        "Missing 99",
+        "the unresolved chip shares its label"
+      );
+    assert.strictEqual(
+      resolveValues.callCount,
+      1,
+      "root hooks do not resolve a second time"
+    );
+
+    items.value = [{ id: 99, name: "Found" }];
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "Found,Apple",
+        "late value items update the root"
+      );
+    assert
+      .dom(".d-select__chip")
+      .hasAttribute("data-name", "Found", "late value items update the chip");
+    assert.strictEqual(
+      resolveValues.callCount,
+      1,
+      "late labels require no extra resolver call"
+    );
+  });
+
+  test("async labels update hooks without extra resolution and skeleton chips have no item hooks", async function (assert) {
+    let complete;
+    const response = new Promise((resolve) => {
+      complete = resolve;
+    });
+    const resolveValues = sinon.spy(() => response);
+    const rendering = render(
+      <template>
+        <DSelect
+          @multiple={{true}}
+          @resolveValues={{resolveValues}}
+          @value={{array 7 8}}
+        />
+      </template>
+    );
+    try {
+      await waitFor(".d-select__chip .d-skeleton");
+      assert
+        .dom(".d-select")
+        .hasAttribute("data-value", "7,8", "pending ids remain available");
+      assert
+        .dom(".d-select__chip")
+        .exists({ count: 2 }, "pending selections render skeleton chips");
+      assert
+        .dom(".d-select__chip[data-value]")
+        .doesNotExist("skeletons have no value hook");
+      assert
+        .dom(".d-select__chip[data-name]")
+        .doesNotExist("skeletons have no name hook");
+      assert.strictEqual(
+        resolveValues.callCount,
+        1,
+        "only the trigger starts resolution"
+      );
+    } finally {
+      complete([
+        { id: 8, name: "Eight" },
+        { id: 7, name: "Seven" },
+      ]);
+      await rendering;
+    }
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "Seven,Eight",
+        "async labels follow held order"
+      );
+    assert.deepEqual(
+      findAll(".d-select__chip").map((chip) => [
+        chip.dataset.value,
+        chip.dataset.name,
+      ]),
+      [
+        ["7", "Seven"],
+        ["8", "Eight"],
+      ],
+      "resolved chips carry item hooks"
+    );
+    await click("[role='combobox']");
+    assert.strictEqual(
+      resolveValues.callCount,
+      1,
+      "opening does not refetch labels for hooks"
+    );
+  });
+
+  test("default unresolved labels match the displayed selection", async function (assert) {
+    await render(
+      <template>
+        <DSelect @items={{ITEMS}} @value={{99}} @variant="static" />
+      </template>
+    );
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        find(".d-select__unresolved").textContent.trim(),
+        "the default fallback uses the engine selection label"
+      );
+  });
+
+  test("the panel link survives closing, reopening and loading", async function (assert) {
+    let complete;
+    const load = sinon.stub();
+    load.onFirstCall().returns(
+      new Promise((resolve) => {
+        complete = resolve;
+      })
+    );
+    load.returns([]);
+    await render(
+      <template>
+        <DSelect @debounce={{false}} @load={{load}} @variant="button" />
+      </template>
+    );
+    const link = find(".d-select").dataset.selectId;
+    const opening = click(".d-select__trigger");
+    try {
+      await waitFor(".d-select__skeleton");
+      assert
+        .dom(".d-select__panel")
+        .hasAttribute(
+          "data-select-id",
+          link,
+          "the loading panel has the root link"
+        );
+    } finally {
+      complete([]);
+      await opening;
+    }
+    await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+    assert.dom(".d-select__panel").doesNotExist("closing unmounts the panel");
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-select-id", link, "closing preserves root identity");
+    await click(".d-select__trigger");
+    assert
+      .dom(".d-select__panel")
+      .hasAttribute(
+        "data-select-id",
+        link,
+        "reopening preserves the panel link"
+      );
+  });
+});
+
+module(
+  "Integration | ui-kit | select | DSelect test helpers",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /** Runs `check` with the assert context's results captured instead of recorded. */
+    function captured(assert, check) {
+      const results = [];
+      const original = assert.pushResult;
+      assert.pushResult = (result) => results.push(result);
+      try {
+        check();
+      } finally {
+        assert.pushResult = original;
+      }
+      return results;
+    }
+
+    const SECTIONED = [
+      { id: 1, name: "Apple", section: "fruit" },
+      { id: 2, name: "Beet", section: "root" },
+      { id: 3, name: "Cherry pie", section: "fruit" },
+    ];
+
+    module("actions", function () {
+      for (const variant of ["typeahead", "button", "static"]) {
+        test(`open and close a ${variant} select`, async function (assert) {
+          await render(
+            <template>
+              <DSelect @items={{ITEMS}} @variant={{variant}} />
+            </template>
+          );
+          const select = dSelect(".d-select");
+
+          await select.open();
+          assert.dom("[role='listbox']").exists("open shows the list");
+          assert.dom(".d-select").hasAttribute("aria-expanded", "true");
+
+          await select.close();
+          assert.dom("[role='listbox']").doesNotExist("close hides it");
+          assert.dom(".d-select").hasAttribute("aria-expanded", "false");
+        });
+      }
+
+      test("select picks a row by value, scoped to its own select", async function (assert) {
+        const first = sinon.spy();
+        const second = sinon.spy();
+
+        await render(
+          <template>
+            <div class="first">
+              <DSelect @items={{ITEMS}} @onChange={{first}} />
+            </div>
+            <div class="second">
+              <DSelect @items={{ITEMS}} @onChange={{second}} />
+            </div>
+          </template>
+        );
+
+        await dSelect(".second .d-select").select(3);
+
+        assert.true(second.calledOnceWith(3), "the second select changed");
+        assert.false(first.called, "the first did not");
+      });
+
+      test("select opens a closed select first", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <DSelect @items={{ITEMS}} @onChange={{onChange}} />
+          </template>
+        );
+        await dSelect(".d-select").select(2);
+
+        assert.true(onChange.calledOnceWith(2));
+      });
+
+      test("selectByName and selectByIndex", async function (assert) {
+        const onChange = sinon.spy();
+        const groupHeader = (key) => key;
+
+        await render(
+          <template>
+            <DSelect
+              @groupBy="section"
+              @groupHeader={{groupHeader}}
+              @items={{SECTIONED}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+        const select = dSelect(".d-select");
+
+        await select.selectByName("Beet");
+        assert.strictEqual(onChange.lastCall.args[0], 2, "by name");
+
+        await select.selectByIndex(1);
+        assert.strictEqual(
+          onChange.lastCall.args[0],
+          3,
+          "by option index, skipping group headers"
+        );
+      });
+
+      test("search replaces a typeahead's held label instead of appending to it", async function (assert) {
+        await render(<template><Host @value={{2}} /></template>);
+        const select = dSelect(".d-select");
+
+        await select.search("cher");
+
+        assert.deepEqual(
+          findAll("[role='option']").map((option) => option.dataset.value),
+          ["3"],
+          "only the typed query filters the list"
+        );
+      });
+
+      test("search uses the panel filter on a button select", async function (assert) {
+        await render(
+          <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        );
+
+        await dSelect(".d-select").search("ban");
+
+        assert.dom(".d-select__filter").hasValue("ban");
+        assert.deepEqual(
+          findAll("[role='option']").map((option) => option.dataset.value),
+          ["2"]
+        );
+      });
+
+      test("actions work in the mobile modal", async function (assert) {
+        forceMobile();
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <DSelect @items={{ITEMS}} @onChange={{onChange}} />
+          </template>
+        );
+        const select = dSelect(".d-select");
+
+        await select.search("ban");
+        await select.select(2);
+
+        assert.true(onChange.calledOnceWith(2));
+      });
+
+      test("remove takes a chip off a multi-select", async function (assert) {
+        const onChange = sinon.spy();
+        const held = [1, 3];
+
+        await render(
+          <template>
+            <DSelect
+              @items={{ITEMS}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+        await dSelect(".d-select").remove(1);
+
+        assert.deepEqual(onChange.lastCall.args[0], [3]);
+      });
+
+      test("clear empties the selection", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <DSelect
+              @clearable={{true}}
+              @items={{ITEMS}}
+              @onChange={{onChange}}
+              @value={{2}}
+              @variant="static"
+            />
+          </template>
+        );
+        await dSelect(".d-select").clear();
+
+        assert.strictEqual(onChange.lastCall.args[0], null);
+      });
+
+      test("a typeahead resolves from the id on its input, and an element works as a root", async function (assert) {
+        await render(
+          <template>
+            <DSelect @id="fruit-picker" @items={{ITEMS}} @value={{2}} />
+          </template>
+        );
+
+        assert.strictEqual(
+          dSelect("#fruit-picker").element(),
+          find(".d-select"),
+          "the id on the inner input resolves to the select"
+        );
+        assert.strictEqual(
+          dSelect(find(".d-select")).element(),
+          find(".d-select"),
+          "an element is used as is"
+        );
+      });
+    });
+
+    module("assertions", function () {
+      test("selection checks pass on the held state", async function (assert) {
+        await render(
+          <template>
+            <div class="held"><DSelect @items={{ITEMS}} @value={{2}} /></div>
+            <div class="empty">
+              <DSelect @items={{ITEMS}} @variant="button" />
+            </div>
+          </template>
+        );
+
+        assert.dSelect(".held .d-select").hasValue("2");
+        assert.dSelect(".held .d-select").hasName("Banana");
+        assert.dSelect(".held .d-select").hasLabel("Banana");
+        assert.dSelect(".empty .d-select").hasNoSelection();
+      });
+
+      test("selection checks fail with a message that names the select", async function (assert) {
+        await render(
+          <template><DSelect @items={{ITEMS}} @value={{2}} /></template>
+        );
+
+        const results = captured(assert, () => {
+          assert.dSelect(".d-select").hasValue("3");
+          assert.dSelect(".d-select").hasName("Cherry pie");
+          assert.dSelect(".d-select").hasLabel("Cherry pie");
+          assert.dSelect(".d-select").hasNoSelection();
+        });
+
+        assert.strictEqual(results.length, 4, "each check records one result");
+        for (const result of results) {
+          assert.false(result.result, `fails: ${result.message}`);
+          assert.true(
+            result.message.includes(".d-select"),
+            `names the select: ${result.message}`
+          );
+        }
+      });
+
+      test("option checks read the open panel", async function (assert) {
+        const items = [...ITEMS, { id: 4, name: "Durian", disabled: true }];
+
+        await render(
+          <template><DSelect @items={{items}} @value={{2}} /></template>
+        );
+        await dSelect(".d-select").open();
+
+        assert.dSelect(".d-select").hasOption(1);
+        assert.dSelect(".d-select").hasNoOption(9);
+        assert.dSelect(".d-select").hasOptionName("Cherry pie");
+        assert.dSelect(".d-select").hasSelectedOption(2);
+        assert.dSelect(".d-select").hasDisabledOption(4);
+        assert.dSelect(".d-select").hasOptions([1, 2, 3, 4]);
+
+        const results = captured(assert, () => {
+          assert.dSelect(".d-select").hasOption(9);
+          assert.dSelect(".d-select").hasNoOption(1);
+          assert.dSelect(".d-select").hasOptionName("Kiwi");
+          assert.dSelect(".d-select").hasSelectedOption(1);
+          assert.dSelect(".d-select").hasDisabledOption(1);
+          assert.dSelect(".d-select").hasOptions([1, 2, 3]);
+        });
+        assert.deepEqual(
+          results.map((result) => result.result),
+          [false, false, false, false, false, false],
+          "each wrong expectation fails"
+        );
+      });
+
+      test("option checks fail on a closed select instead of opening it", async function (assert) {
+        await render(<template><DSelect @items={{ITEMS}} /></template>);
+
+        const results = captured(assert, () =>
+          assert.dSelect(".d-select").hasOption(1)
+        );
+
+        assert.false(results[0].result, "the check fails");
+        assert.true(
+          /closed/i.test(results[0].message),
+          `and says the select is closed: ${results[0].message}`
+        );
+        assert
+          .dom("[role='listbox']")
+          .doesNotExist("it did not open the select");
+      });
+
+      test("option checks are scoped to their own select", async function (assert) {
+        const other = [{ id: 9, name: "Other" }];
+
+        await render(
+          <template>
+            <div class="first"><DSelect @items={{ITEMS}} /></div>
+            <div class="second"><DSelect @items={{other}} /></div>
+          </template>
+        );
+        await dSelect(".first .d-select").open();
+        assert.dSelect(".first .d-select").hasOptions([1, 2, 3]);
+
+        // Opening the second select dismisses the first, so only one panel is open.
+        await dSelect(".second .d-select").open();
+        assert.dSelect(".second .d-select").hasOptions([9]);
+
+        const results = captured(assert, () =>
+          assert.dSelect(".first .d-select").hasOptions([9])
+        );
+        assert.false(
+          results[0].result,
+          "the first select never reads the other select's panel"
+        );
+        assert.true(
+          /closed/i.test(results[0].message),
+          `it reports itself closed: ${results[0].message}`
+        );
+      });
+
+      test("state checks", async function (assert) {
+        await render(
+          <template>
+            <div class="locked">
+              <DSelect @disabled={{true}} @items={{ITEMS}} />
+            </div>
+            <div class="clearable">
+              <DSelect
+                @clearable={{true}}
+                @items={{ITEMS}}
+                @value={{1}}
+                @variant="static"
+              />
+            </div>
+          </template>
+        );
+
+        assert.dSelect(".locked .d-select").isDisabled();
+        assert.dSelect(".locked .d-select").isClosed();
+        assert.dSelect(".clearable .d-select").hasClear();
+
+        await dSelect(".clearable .d-select").open();
+        assert.dSelect(".clearable .d-select").isOpen();
+
+        const results = captured(assert, () => {
+          assert.dSelect(".clearable .d-select").isDisabled();
+          assert.dSelect(".clearable .d-select").isClosed();
+          assert.dSelect(".locked .d-select").isOpen();
+          assert.dSelect(".locked .d-select").hasClear();
+        });
+        assert.deepEqual(
+          results.map((result) => result.result),
+          [false, false, false, false],
+          "each wrong expectation fails"
+        );
+      });
+    });
+
+    for (const variant of ["typeahead", "button", "static"]) {
+      test(`repeated open and close are harmless for ${variant}`, async function (assert) {
+        await render(
+          <template><DSelect @items={{ITEMS}} @variant={{variant}} /></template>
+        );
+        const select = dSelect();
+        await select.close();
+        await select.open();
+        await select.open();
+        assert.dSelect().isOpen();
+        await select.close();
+        await select.close();
+        assert.dSelect().isClosed();
+      });
+    }
+
+    test("close works on mobile", async function (assert) {
+      forceMobile();
+      await render(
+        <template><DSelect @items={{ITEMS}} @value={{2}} /></template>
+      );
+      const select = dSelect();
+      assert.dSelect().hasLabel("Banana");
+      await select.search("ban");
+      assert.dSelect().hasOptions([2]);
+      await select.close();
+      assert.dSelect().isClosed();
+      assert.dom(".d-select__panel").doesNotExist("the modal panel unmounts");
+    });
+
+    test("every closed option check records one named failure", async function (assert) {
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      const results = [];
+      const original = assert.pushResult;
+      assert.pushResult = (result) => results.push(result);
+      try {
+        const select = assert.dSelect(find(".d-select"));
+        select.hasOption(1);
+        select.hasNoOption(9);
+        select.hasOptionName("Apple");
+        select.hasSelectedOption(1);
+        select.hasDisabledOption(1);
+        select.hasOptions([]);
+      } finally {
+        assert.pushResult = original;
+      }
+      assert.strictEqual(results.length, 6, "one result per check");
+      for (const result of results) {
+        assert.false(
+          result.result,
+          "closed checks fail even for absence or an empty list"
+        );
+        assert.true(
+          /closed/i.test(result.message),
+          "the message explains the closed state"
+        );
+        assert.true(
+          result.message.includes("d-select"),
+          "the message describes the element"
+        );
+      }
+      assert.dom(".d-select__panel").doesNotExist("no check opened the select");
+    });
+
+    test("hook matching accepts CSS punctuation and reads visible button labels", async function (assert) {
+      const value = 'a"[b]\\c';
+      const name = 'A "quoted" [label]';
+      const items = [
+        { id: value, name },
+        { id: 2, name: "Other" },
+      ];
+      await render(
+        <template>
+          <DefaultHost @items={{items}} @value={{value}} @variant="button" />
+        </template>
+      );
+      assert.dSelect().hasValue(value);
+      assert.dSelect().hasName(name);
+      assert.dSelect().hasLabel(name);
+      await dSelect().open();
+      assert.dSelect().hasOption(value);
+      assert.dSelect().hasOptionName(name);
+      await dSelect().select(2);
+      assert.dSelect().hasValue("2");
+      await dSelect().selectByName(name);
+      assert.dSelect().hasValue(value);
+      await dSelect().select(2);
+      await dSelect().select(value);
+      assert.dSelect().hasValue(value);
+    });
+
+    test("a closed sibling never borrows the open select's panel", async function (assert) {
+      const other = [{ id: 9, name: "Other" }];
+      await render(
+        <template>
+          <div class="first"><DSelect @items={{ITEMS}} /></div>
+          <div class="second"><DSelect @items={{other}} /></div>
+        </template>
+      );
+      await dSelect(".first .d-select").open();
+      assert.dSelect(".first .d-select").hasOptions([1, 2, 3]);
+      await dSelect(".second .d-select").open();
+      assert.dSelect(".second .d-select").hasOptions([9]);
+      assert
+        .dom(".first .d-select")
+        .hasAttribute(
+          "aria-expanded",
+          "false",
+          "clicking the sibling dismisses the first select"
+        );
+      const results = [];
+      const original = assert.pushResult;
+      assert.pushResult = (result) => results.push(result);
+      try {
+        assert.dSelect(".first .d-select").hasOptions([9]);
+      } finally {
+        assert.pushResult = original;
+      }
+      assert.strictEqual(results.length, 1, "one failed check is recorded");
+      assert.false(
+        results[0].result,
+        "the sibling's options cannot satisfy the check"
+      );
+      assert.true(
+        /closed/i.test(results[0].message),
+        "the missing linked panel means closed"
+      );
+    });
+
+    test("labels read custom visible content rather than the name hook", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @value={{2}} @variant="button">
+            <:selection>Chosen fruit</:selection>
+          </DSelect>
+        </template>
+      );
+      assert.dSelect().hasName("Banana");
+      assert.dSelect().hasLabel("Chosen fruit");
+    });
+  }
+);
+
+/** A promise whose settlement the test controls. */
+function deferredLoad() {
+  let resolve;
+  const promise = new Promise((done) => (resolve = done));
+  return { promise, resolve };
+}
+
+/** A create item named only by the typed text; the engine supplies the "Create" wording. */
+const createTyped = (filter) => ({ id: filter, name: filter, __create: true });
+
+/** A create item whose id can never collide with a source row's id. */
+const createKeyed = (filter) => ({
+  id: `new:${filter}`,
+  name: filter,
+  __create: true,
+});
+
+module(
+  "Integration | ui-kit | select | DSelect create row placement",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("the create row leads the source rows", async function (assert) {
+      const items = [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Apricot" },
+      ];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{items}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "ap");
+
+      const options = findAll("[role='option']");
+      assert.dom(options[0]).hasClass("--create", "create is the first option");
+      assert
+        .dom(options[0])
+        .hasAttribute("aria-posinset", "1")
+        .hasAttribute("aria-setsize", "3");
+      assert
+        .dom(options[2])
+        .hasAttribute("aria-posinset", "3", "source rows follow");
+    });
+
+    test("Enter after a partial match creates the typed text", async function (assert) {
+      const onChange = sinon.spy();
+      const items = [{ id: 1, name: "Apple" }];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{items}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "ap");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.strictEqual(
+        onChange.lastCall?.args[0],
+        "new:ap",
+        "as legacy does"
+      );
+    });
+
+    test("the create row says Create once, then the typed text", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{ITEMS}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "dragonfruit");
+
+      const text = find("[role='option'].--create").textContent.trim();
+      assert.true(/^Create\b/.test(text), `starts with Create: ${text}`);
+      assert.true(text.includes("dragonfruit"), "names the typed text");
+      assert.strictEqual(text.match(/Create/g).length, 1, "says Create once");
+    });
+
+    test("a number id does not block creating the same text", async function (assert) {
+      const items = [{ id: 5, name: "Room 5" }];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{items}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "5");
+
+      assert
+        .dom("[role='option'].--create")
+        .exists("a tag named 5 is not tag id 5");
+    });
+
+    test("a create item whose key collides with a row is not offered", async function (assert) {
+      const items = [{ id: 5, name: "Room 5" }];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createTyped}}
+            @items={{items}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "5");
+
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("two rows can never share one key");
+    });
+
+    test("a label match still blocks create", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{ITEMS}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "apple");
+
+      assert.dom("[role='option'].--create").doesNotExist();
+    });
+
+    test("while a query is pending the create row matches the rows shown", async function (assert) {
+      const pending = deferredLoad();
+      const asked = [];
+      const allowCreate = sinon.spy(() => true);
+      const load = (filter) => {
+        asked.push(filter);
+        return filter === "apx" ? pending.promise : [{ id: 1, name: "Apple" }];
+      };
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{allowCreate}}
+            @createItem={{createKeyed}}
+            @load={{load}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "ap");
+      assert.dom("[role='option'].--create").includesText("ap");
+
+      const typing = fillIn("[role='combobox']", "apx");
+      try {
+        await waitUntil(() => asked.includes("apx"));
+        assert
+          .dom("[role='option'].--create")
+          .exists("the create row stays while loading");
+        assert.false(
+          find("[role='option'].--create").textContent.includes("apx"),
+          "it still offers the shown query's text"
+        );
+        assert.false(
+          allowCreate.args.some(([filter]) => filter === "apx"),
+          "allowCreate is not asked about the pending text"
+        );
+      } finally {
+        pending.resolve([]);
+        await typing;
+        await settled();
+      }
+
+      assert
+        .dom("[role='option'].--create")
+        .includesText("apx", "once settled it offers the new text");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (@searchIcon)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("searchIcon trails the panel search field and stays decorative", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @searchIcon="magnifying-glass"
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const input = find(".d-select__panel .d-select__filter");
+      const icon = find(".d-select__panel .d-icon-magnifying-glass");
+      assert.dom(icon).exists("the icon renders in the panel");
+      assert.dom(icon).hasAttribute("aria-hidden", "true");
+      assert.strictEqual(
+        input.compareDocumentPosition(icon),
+        Node.DOCUMENT_POSITION_FOLLOWING,
+        "the icon follows the field"
+      );
+      const field = input.getBoundingClientRect();
+      const glyph = icon.getBoundingClientRect();
+      assert.true(
+        glyph.left > field.left + field.width / 2,
+        "the icon sits in the trailing half of the field"
+      );
+      assert.true(
+        glyph.right <= field.right,
+        "the icon stays inside the field"
+      );
+      const fieldMiddle = field.top + field.height / 2;
+      const glyphMiddle = glyph.top + glyph.height / 2;
+      assert.true(
+        Math.abs(fieldMiddle - glyphMiddle) <= 1,
+        `the icon is vertically centered on the field (off by ${glyphMiddle - fieldMiddle}px)`
+      );
+    });
+
+    test("kind modifier: the overlay names its kind for styling", async function (assert) {
+      await render(
+        <template><DSelect @items={{ITEMS}} @kind="fruit" /></template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom(".d-select__content").hasClass("--kind-fruit");
+    });
+
+    test("searchIcon is absent unless asked for", async function (assert) {
+      await render(
+        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+      );
+      await click(".d-select__trigger");
+
+      assert.dom(".d-select__panel .d-select__filter").exists("panel is open");
+      assert.dom(".d-select__panel .d-icon").doesNotExist("no search icon");
+    });
+
+    test("searchIcon trails the panel chips search field", async function (assert) {
+      const held = [ITEMS[0].id];
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @panelChips={{true}}
+            @searchIcon="magnifying-glass"
+            @value={{held}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const field = find(".d-select__panel .d-select__chips");
+      const input = find(".d-select__panel .d-select__filter");
+      const icon = find(".d-select__panel .d-icon-magnifying-glass");
+      assert.dom(icon).exists("the icon renders in the chips field");
+      assert.dom(icon).hasAttribute("aria-hidden", "true");
+      assert.strictEqual(
+        input.compareDocumentPosition(icon),
+        Node.DOCUMENT_POSITION_FOLLOWING,
+        "the icon follows the input"
+      );
+      assert.true(field.contains(icon), "the icon sits inside the chips field");
+    });
+
+    test("searchIcon never decorates a desktop typeahead trigger", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @searchIcon="magnifying-glass" />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom("[role='listbox']").exists("the panel is open");
+      assert.dom(".d-icon-magnifying-glass").doesNotExist();
+    });
+
+    test("searchIcon trails the mobile typeahead modal's search field", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @searchIcon="magnifying-glass" />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".fk-d-menu-modal .d-select__filter")
+        .exists("the modal has its search field");
+      assert
+        .dom(".fk-d-menu-modal .d-icon-magnifying-glass")
+        .hasAttribute("aria-hidden", "true");
+      const field = find(".fk-d-menu-modal .d-select__filter");
+      const search = find(".fk-d-menu-modal .d-select__search");
+      assert.strictEqual(
+        field.offsetWidth,
+        search.offsetWidth,
+        "the field fills the search row"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (@valueItems builder)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("a builder receives the resolved options, so a held label follows a customized text", async function (assert) {
+      const label = tracked("No fruit");
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forIdentifier("held-builder", (spec) =>
+            spec.options(() => ({ texts: { heldName: label.value } }))
+          )
+        )
+      );
+      const kindTexts = { heldName: "none" };
+      const calls = [];
+      const valueItems = (options) => {
+        calls.push(options);
+        return [{ id: "none", name: renderSelectText(options, "heldName") }];
+      };
+      await render(
+        <template>
+          <DSelect
+            @identifier="held-builder"
+            @items={{ITEMS}}
+            @kind="held-builder-kind"
+            @kindTexts={{kindTexts}}
+            @value="none"
+            @valueItems={{valueItems}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__trigger").hasAttribute("data-name", "No fruit");
+      const built = calls.length;
+
+      await click(".d-select__trigger");
+      await click(".d-select__trigger");
+      assert.strictEqual(
+        calls.length,
+        built,
+        "an unchanged snapshot reuses the built items"
+      );
+
+      label.value = "Nothing picked";
+      await settled();
+      assert
+        .dom(".d-select__trigger")
+        .hasAttribute(
+          "data-name",
+          "Nothing picked",
+          "a changed text rebuilds the held item"
+        );
+    });
+  }
+);

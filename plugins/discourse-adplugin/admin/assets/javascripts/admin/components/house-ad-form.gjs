@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
@@ -8,6 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 import HouseAdsRouteSelector from "./house-ads-route-selector.gjs";
 import Preview from "./modal/preview.gjs";
@@ -218,10 +220,25 @@ export default class HouseAdForm extends Component {
         as |field|
       >
         <field.Control>
-          <CategorySelector
-            @categories={{field.value}}
-            @onChange={{field.set}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-selector"
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
+              @multiple={{true}}
+              @onChange={{field.set}}
+              @texts={{hash ariaLabel=field.title}}
+              @value={{field.value}}
+            />
+          {{else}}
+            <CategorySelector
+              @categories={{field.value}}
+              @onChange={{field.set}}
+            />
+          {{/if}}
         </field.Control>
       </form.Field>
 
@@ -256,11 +273,26 @@ export default class HouseAdForm extends Component {
         as |field|
       >
         <field.Control>
-          <GroupChooser
-            @content={{this.site.groups}}
-            @onChange={{field.set}}
-            @value={{field.value}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
+              @multiple={{true}}
+              @onChange={{field.set}}
+              @texts={{hash ariaLabel=field.title}}
+              @value={{field.value}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.site.groups}}
+              @onChange={{field.set}}
+              @value={{field.value}}
+            />
+          {{/if}}
         </field.Control>
       </form.Field>
 

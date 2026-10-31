@@ -30,7 +30,7 @@ function layoutOffset(element: HTMLElement) {
  * in the computed style, so it is resolved here against the scrollport. A
  * `calc()` that mixes units cannot be parsed and counts as zero.
  */
-function padding(value: string, scrollport: number) {
+export function padding(value: string, scrollport: number) {
   const parsed = Number.parseFloat(value);
   if (!Number.isFinite(parsed)) {
     return 0;

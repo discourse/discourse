@@ -420,6 +420,7 @@ en:
     skip_to_last_reply: "Skip to last reply"
     skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
+    a11y_announcement_separator: ". "
 
     reorder:
       announcement: "Moved %{label} to position %{position} of %{total}"
@@ -1737,6 +1738,8 @@ en:
     categories:
       categories_label: "categories"
       subcategories_label: "subcategories"
+      filter_by_categories_label: "Filter by: categories"
+      filter_by_subcategories_label: "Filter by: subcategories"
       no_subcategories: "no subcategories"
       remove_filter: "remove filter"
       plus_more_count:
@@ -1744,6 +1747,7 @@ en:
         other: "+%{count} more"
       view_all: "view all"
       category: "Category"
+      categories: "Categories"
       category_list: "Display category list"
       reorder:
         title: "Reorder Categories"
@@ -3544,6 +3548,88 @@ en:
       favorites: "Favorites"
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"
+
+    select_user:
+      user: "User"
+      users: "Users"
+      user_or_group: "User or group"
+      users_or_groups: "Users or groups"
+      user_or_email: "User or email"
+      users_or_emails: "Users or emails"
+      user_group_or_email: "User, group or email"
+      users_groups_or_emails: "Users, groups or emails"
+      group_type: "Group"
+      email_type: "Email"
+
+    select_group:
+      group: "Group"
+      groups: "Groups"
+
+    d_select:
+      create_item: "Create “%{label}”"
+      placeholder: "Select…"
+      add_placeholder: "Add…"
+      search_placeholder: "Search…"
+      no_results: "No results found"
+      label: "Options"
+      label_with_value: "%{label}, %{value}"
+      label_with_count:
+        one: "%{label}, %{count} selected"
+        other: "%{label}, %{count} selected"
+      footer_label: "Actions"
+      clear: "Clear selection"
+      selection_cleared: "Selection cleared"
+      clear_all: "Clear all"
+      min_chars:
+        one: "Keep typing %{count} more character…"
+        other: "Keep typing %{count} more characters…"
+      max_reached:
+        one: "You can only select %{count} item. Remove one to add another."
+        other: "You can only select %{count} items. Remove one to add another."
+      min_not_reached:
+        one: "Select at least %{count} item."
+        other: "Select at least %{count} items."
+      remove_hint: "Press Backspace or Delete to remove"
+      selected_items: "Selected items"
+      selected_items_list: "Selected items"
+      remove_item: "Remove %{item}"
+      chips_hint: "Press Left arrow to reach selected items."
+      selected_items_hint: "Selected items are listed when you open the list."
+      selected_count:
+        one: "%{count} selected"
+        other: "%{count} selected"
+      updating_selection: "Updating selection…"
+      item_selected: "Selected %{item}"
+      item_added: "Added %{item}"
+      items_added:
+        one: "%{count} added"
+        other: "%{count} added"
+      items_not_added_held:
+        one: "%{count} not added: already selected"
+        other: "%{count} not added: already selected"
+      items_not_added_limit:
+        one: "%{count} not added: over the limit"
+        other: "%{count} not added: over the limit"
+      bulk_add_summary: "%{added}, %{not_added}"
+      all_already_selected: "All already selected"
+      item_removed: "Removed %{item}"
+      load_error: "Couldn't load results."
+      retry: "Retry"
+      unresolved_value: "Unknown item (%{value})"
+      results_count:
+        one: "%{count} result"
+        other: "%{count} results"
+      results_loaded:
+        one: "%{count} result loaded"
+        other: "%{count} results loaded"
+      filter_to_narrow: "Showing the first results only. Keep typing to narrow them down."
+      still_loading: "Still loading…"
+      loading_more: "Loading more results…"
+      loading_complete: "More results loaded"
+      compact_count: "%{count}"
+      more_chips: "+%{count}"
+      none: "None"
+      loading: "Loading…"
 
     shared_drafts:
       title: "Shared Drafts"
@@ -5536,6 +5622,10 @@ en:
         login_to_set_languages: "Log in to set more languages"
 
     category:
+      select_with_subcategories: "%{category} and all subcategories"
+      select_with_subcategories_count:
+        one: "%{category} (%{count} topic) and all subcategories"
+        other: "%{category} (%{count} topics) and all subcategories"
       none: "(no category)"
       all: "All categories"
       choose: "Category…"
@@ -6277,14 +6367,36 @@ en:
       selector_tags: "tags"
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
+      filter_by_tags_label: "Filter by: tags"
       tags: "Tags"
+      tag: "Tag"
+      tag_groups_label: "Tag groups"
+      tag_group_label: "Tag group"
+      tag_count_hidden:
+        one: "%{count} topic"
+        other: "%{count} topics"
+      tag_count_badge: "x%{count}"
       choose_for_topic: "Optional tags…"
       choose_for_topic_required:
-        one: "select at least %{count} tag…"
-        other: "select at least %{count} tags…"
+        one: "Select at least %{count} tag…"
+        other: "Select at least %{count} tags…"
       choose_for_topic_required_group:
-        one: "select %{count} tag from '%{name}'…"
-        other: "select %{count} tags from '%{name}'…"
+        one: "Select %{count} tag from '%{name}'…"
+        other: "Select %{count} tags from '%{name}'…"
+      choose_more_required_group:
+        one: "Select %{count} more tag from '%{name}'…"
+        other: "Select %{count} more tags from '%{name}'…"
+      choose_more_required:
+        one: "Select at least %{count} more tag…"
+        other: "Select at least %{count} more tags…"
+      add_more_tags: "Add more tags…"
+      required_tags_progress:
+        one: "%{selected} of %{count} required tag selected"
+        other: "%{selected} of %{count} required tags selected"
+      max_tags_reached:
+        one: "You can only select %{count} tag. Remove one to add another."
+        other: "You can only select %{count} tags. Remove one to add another."
+      filter_to_narrow_tags: "Showing the first tags only. Keep typing to narrow them down."
       info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."

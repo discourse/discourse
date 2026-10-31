@@ -6,6 +6,7 @@ import DiscourseURL from "discourse/lib/url";
 import pretender, {
   fixturesByUrl,
 } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -101,6 +102,17 @@ acceptance("Category Edit", function (needs) {
     assert
       .dom(".admin-changes-banner")
       .exists("save banner stays visible when collection is emptied");
+  });
+
+  test("the allowed tag groups field prompts for an optional list", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/c/bug/edit/tags");
+
+    assert
+      .dom(
+        "#category-allowed-tag-groups[role='combobox'], #category-allowed-tag-groups [role='combobox']"
+      )
+      .hasAttribute("placeholder", i18n("category.tag_groups_placeholder"));
   });
 
   test("Editing allowed tags and tag groups", async function (assert) {
@@ -255,6 +267,59 @@ acceptance("Category Edit", function (needs) {
       .doesNotExist(
         "subcategory list style isn't visible for child categories"
       );
+  });
+
+  test("moderating and posting review groups save group ids with the new controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.siteSettings.enable_category_group_moderation = true;
+    const category = cloneJSON(fixturesByUrl["/c/1/show.json"]).category;
+    category.category_setting = {
+      ...category.category_setting,
+      topic_posting_review_mode: "no_one_except",
+    };
+    pretender.get("/c/bug/find_by_slug.json", () => [
+      200,
+      { "Content-Type": "application/json" },
+      { category },
+    ]);
+
+    await visit("/c/bug/edit/moderation");
+    assert
+      .dom(".select-kit.group-chooser")
+      .doesNotExist("replaces the legacy group choosers");
+
+    const moderating = dSelect(".d-select.group-chooser");
+    await moderating.selectByName("trust_level_1");
+    await moderating.close();
+    const postingReview = dSelect(".d-select.posting-review-group-chooser");
+    await postingReview.selectByName("staff");
+    await postingReview.close();
+    await click(".admin-changes-banner .btn-primary");
+
+    const payload = latestCategorySavePayload();
+    assert.deepEqual(payload.moderating_group_ids, [11]);
+    assert.deepEqual(payload.topic_posting_review_group_ids, [3]);
+  });
+
+  test("restricting access saves the picked groups with the new controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await visit("/c/bug/edit");
+    await click("input.form-kit__control-radio[value='group_restricted']");
+    const access = dSelect(".d-select.group-chooser");
+    await access.open();
+    assert
+      .dom("[role='option'][data-value='0']")
+      .doesNotExist("everyone isn't offered");
+    await access.selectByName("staff");
+    await access.close();
+    await click(".admin-changes-banner .btn-primary");
+
+    assert.deepEqual(
+      latestCategorySavePayload().permissions,
+      { staff: 1 },
+      "the picked group gets full access"
+    );
   });
 });
 

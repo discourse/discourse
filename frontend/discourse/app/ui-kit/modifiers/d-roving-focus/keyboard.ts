@@ -134,7 +134,7 @@ export default class KeyboardRouter {
           return;
         }
         const delta = key === "ArrowRight" ? 1 : -1;
-        outcome = this.#applyStep(
+        outcome = this.#stepOutcome(
           "horizontal",
           delta,
           cells,
@@ -142,6 +142,7 @@ export default class KeyboardRouter {
           columns,
           context
         );
+        outcome = this.#applyOutcome(outcome, cells, context);
         if (outcome.kind === "group-edge") {
           this.#emitBoundary(delta, "horizontal", current, event, config);
           return;
@@ -161,7 +162,7 @@ export default class KeyboardRouter {
           return;
         }
         const direction = key === "ArrowDown" ? 1 : -1;
-        outcome = this.#applyStep(
+        outcome = this.#stepOutcome(
           "vertical",
           direction,
           cells,
@@ -169,6 +170,33 @@ export default class KeyboardRouter {
           columns,
           context
         );
+        const currentLogical = this.#knownLogicalIndex(cells[current]);
+        const nextLogical =
+          outcome.kind === "move"
+            ? this.#knownLogicalIndex(cells[outcome.index])
+            : undefined;
+        if (
+          columns === 1 &&
+          config.logicalCount != null &&
+          currentLogical != null &&
+          nextLogical != null
+        ) {
+          const neighbour = currentLogical + direction;
+          if (
+            neighbour >= 0 &&
+            neighbour < config.logicalCount &&
+            nextLogical !== neighbour
+          ) {
+            this.#jump(
+              neighbour,
+              direction > 0 ? "forward" : "backward",
+              event,
+              context
+            );
+            return;
+          }
+        }
+        outcome = this.#applyOutcome(outcome, cells, context);
         if (outcome.kind === "group-edge") {
           this.#emitBoundary(direction, "vertical", current, event, config);
           return;
@@ -177,7 +205,12 @@ export default class KeyboardRouter {
       }
       case "Home":
         if (config.logicalCount != null) {
-          this.#jump(0, "backward", event, context);
+          if (config.onJump) {
+            event.preventDefault();
+            config.onJump(0, "backward");
+          } else {
+            this.#jump(0, "backward", event, context);
+          }
           return;
         }
         outcome = this.#applyOutcome(
@@ -263,10 +296,10 @@ export default class KeyboardRouter {
   }
 
   /**
-   * Runs one step and commits a landing. Travels the row axis whenever there is no cursor yet,
+   * Computes one step. Travels the row axis whenever there is no cursor yet,
    * because the column walk has no anchor to count from.
    */
-  #applyStep(
+  #stepOutcome(
     axis: DRovingFocusAxis,
     delta: 1 | -1,
     cells: HTMLElement[],
@@ -289,7 +322,7 @@ export default class KeyboardRouter {
         : stepRow(current, delta, cells, columns, config.wrap, (cell) =>
             scope.isNavigable(cell)
           );
-    return this.#applyOutcome(outcome, cells, context);
+    return outcome;
   }
 
   #applyOutcome(
@@ -362,18 +395,22 @@ export default class KeyboardRouter {
     }
   }
 
+  /** Reads an explicit logical position without treating unstamped rows as neighbours. */
+  #knownLogicalIndex(element: HTMLElement | undefined): number | undefined {
+    const value = element?.dataset.logicalIndex ?? element?.dataset.index;
+    if (value === undefined || value.trim() === "") {
+      return undefined;
+    }
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+
   /**
    * The absolute index a mounted row stands for, falling back to its position when the consumer
    * stamps neither attribute, which is what a non-windowed group looks like.
    */
   #logicalIndex(cells: HTMLElement[], current: number): number {
-    const element = cells[current];
-    const value = element?.dataset.logicalIndex ?? element?.dataset.index;
-    if (value === undefined) {
-      return current;
-    }
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : current;
+    return this.#knownLogicalIndex(cells[current]) ?? current;
   }
 
   /**

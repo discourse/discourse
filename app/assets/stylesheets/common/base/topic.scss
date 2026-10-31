@@ -284,7 +284,8 @@
       min-width: 0; // allows category name to shrink to fit narrow screens
     }
 
-    .select-kit.combo-box.category-chooser {
+    .select-kit.combo-box.category-chooser,
+    .d-select.category-chooser {
       width: 100%;
       height: 100%;
     }
@@ -301,7 +302,8 @@
       width: 100%;
     }
 
-    .select-kit-header--filter {
+    .select-kit-header--filter,
+    .d-select__chips {
       flex-wrap: nowrap; // forces the whole input to wrap if needed, rather than individual tags
       min-width: 0;
 
@@ -314,7 +316,8 @@
       }
     }
 
-    .multi-select-filter {
+    .multi-select-filter,
+    .d-select__input {
       flex-shrink: 0;
       min-width: 2em; // always provide a minimal space for input
     }

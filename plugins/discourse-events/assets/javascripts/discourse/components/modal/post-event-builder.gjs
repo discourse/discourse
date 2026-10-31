@@ -18,6 +18,7 @@ import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-s
 import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import { MAX_HOSTS } from "../../lib/constants.js";
 import { recurrenceContext } from "../../lib/event-recurrence.js";
@@ -1079,11 +1080,27 @@ export default class PostEventBuilder extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <UserChooser
-                      @onChange={{field.set}}
-                      @options={{hash maximum=MAX_HOSTS}}
-                      @value={{field.value}}
-                    />
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DSelectUser
+                        @describedBy={{field.describedBy}}
+                        @disabled={{field.disabled}}
+                        @id={{field.id}}
+                        @invalid={{if field.error true false}}
+                        @maximum={{MAX_HOSTS}}
+                        @multiple={{true}}
+                        @onChange={{field.set}}
+                        @texts={{hash ariaLabel=field.title}}
+                        @value={{field.value}}
+                      />
+                    {{else}}
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      <UserChooser
+                        @onChange={{field.set}}
+                        @options={{hash maximum=MAX_HOSTS}}
+                        @value={{field.value}}
+                      />
+                    {{/if}}
                   </field.Control>
                 </form.Field>
 

@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
@@ -24,6 +24,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 import AiAgentCollapsableExample from "discourse/plugins/discourse-ai/discourse/components/ai-agent-example";
 import AiAgentToolOptions from "discourse/plugins/discourse-ai/discourse/components/ai-agent-tool-options";
@@ -808,11 +809,27 @@ export default class AgentEditor extends Component {
           as |field|
         >
           <field.Control>
-            <GroupChooser
-              @content={{this.allGroups}}
-              @onChange={{field.set}}
-              @value={{data.allowed_group_ids}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectGroup
+                @describedBy={{field.describedBy}}
+                @disabled={{field.disabled}}
+                @id={{field.id}}
+                @invalid={{if field.error true false}}
+                @items={{this.allGroups}}
+                @multiple={{true}}
+                @onChange={{field.set}}
+                @texts={{hash ariaLabel=field.title}}
+                @value={{data.allowed_group_ids}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <GroupChooser
+                @content={{this.allGroups}}
+                @onChange={{field.set}}
+                @value={{data.allowed_group_ids}}
+              />
+            {{/if}}
           </field.Control>
         </form.Field>
 

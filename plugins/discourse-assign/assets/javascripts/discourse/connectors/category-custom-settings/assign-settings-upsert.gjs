@@ -88,10 +88,12 @@ export default class AssignSettingsUpsert extends Component {
             as |field|
           >
             <field.Control>
+              {{! TODO (select-kit-replacement-cleanup): Move to the new select controls once the engine can hold values that can't be removed; until then this picker is not a third-party render. }}
               <GroupChooser
                 @content={{this.assignableGroups}}
                 @mandatoryValues={{this.assignAllowedMandatoryGroupIds}}
                 @onChange={{field.set}}
+                @skipLegacyRenderDeprecation={{true}}
                 @value={{this.additionalAssignAllowedGroupIds}}
               />
             </field.Control>

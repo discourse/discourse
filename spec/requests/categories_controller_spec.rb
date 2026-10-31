@@ -2587,6 +2587,119 @@ RSpec.describe CategoriesController do
         )
       end
     end
+
+    context "with only_postable" do
+      fab!(:group)
+      fab!(:moderator)
+      fab!(:reply_only) do
+        Fabricate(
+          :private_category,
+          group: group,
+          permission_type: CategoryGroup.permission_types[:create_post],
+        )
+      end
+
+      before { group.add(user) }
+
+      def postable_ids(params = {})
+        post "/categories/search.json", params: { term: "" }.merge(params)
+        expect(response.status).to eq(200)
+        response.parsed_body["categories"].map { |c| c["id"] }
+      end
+
+      it "leaves out categories the user can only reply in" do
+        sign_in(user)
+
+        expect(postable_ids).to include(reply_only.id)
+        expect(postable_ids(only_postable: true)).not_to include(reply_only.id)
+        expect(postable_ids(only_postable: true)).to include(category.id, category2.id)
+      end
+
+      it "counts only the postable categories" do
+        sign_in(user)
+
+        post "/categories/search.json", params: { term: "", only_postable: true }
+
+        expect(response.parsed_body["categories_count"]).to eq(
+          response.parsed_body["categories"].size,
+        )
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(reply_only.id)
+      end
+
+      it "keeps Uncategorized for staff when uncategorized topics are disallowed" do
+        SiteSetting.allow_uncategorized_topics = false
+
+        sign_in(user)
+        expect(postable_ids(only_postable: true)).not_to include(
+          SiteSetting.uncategorized_category_id,
+        )
+
+        sign_in(moderator)
+        expect(postable_ids(only_postable: true)).to include(SiteSetting.uncategorized_category_id)
+      end
+
+      it "returns every visible category to an admin" do
+        sign_in(admin)
+
+        expect(postable_ids(only_postable: true)).to include(reply_only.id, category.id)
+      end
+
+      it "returns nothing to an anonymous visitor" do
+        expect(postable_ids(only_postable: true)).to be_empty
+      end
+
+      it "treats false values as absent" do
+        sign_in(user)
+        params = { term: "", select_category_ids: [category.id, reply_only.id] }
+
+        [false, "false", "0"].each do |only_postable|
+          post "/categories/search.json", params: params.merge(only_postable: only_postable)
+
+          expect(response.parsed_body["categories"].map { |row| row["id"] }).to contain_exactly(
+            category.id,
+            reply_only.id,
+          )
+        end
+      end
+
+      it "filters before paginating" do
+        sign_in(user)
+        params = {
+          term: "",
+          only_postable: true,
+          select_category_ids: [category.id, reply_only.id, category2.id],
+          limit: 1,
+        }
+
+        [category, category2].sort_by(&:id)
+          .each_with_index do |expected, index|
+            post "/categories/search.json", params: params.merge(page: index + 1)
+
+            expect(response.parsed_body["categories"].map { |row| row["id"] }).to eq([expected.id])
+            expect(response.parsed_body["categories_count"]).to eq(2)
+          end
+      end
+
+      it "uses topic creation permissions for staged users" do
+        sign_in(Fabricate(:staged))
+
+        post "/categories/search.json",
+             params: {
+               term: "",
+               only_postable: true,
+               select_category_ids: [category.id, reply_only.id],
+             }
+
+        expect(response.parsed_body["categories"].map { |row| row["id"] }).to eq([category.id])
+      end
+
+      it "works in read-only mode" do
+        Discourse.enable_readonly_mode
+        sign_in(user)
+
+        expect(postable_ids(only_postable: true)).not_to include(reply_only.id)
+      end
+    end
   end
 
   describe "#hierarchical_search" do

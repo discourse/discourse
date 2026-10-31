@@ -14,6 +14,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import LiveRoomForm from "discourse/plugins/live/discourse/components/live-room-form";
 import roomIcon from "discourse/plugins/live/discourse/lib/live/room-icon";
@@ -24,6 +25,7 @@ export default class LiveRoomInfoModal extends Component {
   @service liveWebrtc;
   @service router;
   @service toasts;
+  @service siteSettings;
 
   @tracked memberships = [];
   @tracked loading = false;
@@ -371,15 +373,34 @@ export default class LiveRoomInfoModal extends Component {
 
                 <div class="live-room-info-modal__add-member">
                   <div class="live-room-info-modal__add-row">
-                    <UserChooser
-                      class="live-room-info-modal__user-chooser"
-                      @onChange={{this.setSelectedUsernames}}
-                      @options={{hash
-                        excludeCurrentUser=false
-                        filterPlaceholder="live.room_info.members.add_placeholder"
-                      }}
-                      @value={{this.selectedUsernames}}
-                    />
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DSelectUser
+                        class="live-room-info-modal__user-chooser"
+                        @multiple={{true}}
+                        @onChange={{this.setSelectedUsernames}}
+                        @texts={{hash
+                          placeholder=(i18n
+                            "live.room_info.members.add_placeholder"
+                          )
+                          searchPlaceholder=(i18n
+                            "live.room_info.members.add_placeholder"
+                          )
+                        }}
+                        @value={{this.selectedUsernames}}
+                      />
+                    {{else}}
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      <UserChooser
+                        class="live-room-info-modal__user-chooser"
+                        @onChange={{this.setSelectedUsernames}}
+                        @options={{hash
+                          excludeCurrentUser=false
+                          filterPlaceholder="live.room_info.members.add_placeholder"
+                        }}
+                        @value={{this.selectedUsernames}}
+                      />
+                    {{/if}}
                     <ComboBox
                       class="live-room-info-modal__role-chooser"
                       @content={{this.roleOptions}}

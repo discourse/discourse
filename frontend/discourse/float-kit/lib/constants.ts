@@ -104,6 +104,13 @@ export interface TooltipOptions {
    */
   ariaLabel: string | null;
 
+  /**
+   * The id of an element on the page whose text names the float's content, for a name that is
+   * already drawn (a caption beside the trigger). It takes precedence over `ariaLabel` and the
+   * trigger-derived name, on the positioned body and on the mobile modal alike.
+   */
+  ariaLabelledBy: string | null;
+
   /** Whether to render a directional arrow pointing at the trigger. */
   arrow: boolean;
 
@@ -401,6 +408,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
   options: {
     animated: true,
     ariaLabel: null,
+    ariaLabelledBy: null,
     arrow: true,
     beforeTrigger: null,
     closeOnClickOutside: true,
@@ -437,6 +445,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
   options: {
     animated: true,
     ariaLabel: null,
+    ariaLabelledBy: null,
     arrow: false,
     autofocus: false,
     focusTarget: null,

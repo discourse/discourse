@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Navigating with breadcrumbs" do
+  with_select_controls(false)
+
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   fab!(:category1, :category)
@@ -83,6 +85,72 @@ describe "Navigating with breadcrumbs" do
       )
       expect(discovery.topic_list).to have_topics(count: 1)
       expect(discovery.topic_list).to have_topic(c3_topic_tagged)
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    fab!(:tag)
+    fab!(:c1_topic_tagged) { Fabricate(:topic, category: category1, tags: [tag]) }
+    fab!(:c3_topic_tagged) { Fabricate(:topic, category: category3, tags: [tag]) }
+    fab!(:c3_child_topic_tagged) { Fabricate(:topic, category: category3_child, tags: [tag]) }
+
+    it "filters by a tag picked from the new select controls tag drop" do
+      visit("/c/#{category1.id}")
+      expect(discovery.topic_list).to have_topics(count: 2)
+
+      expect(discovery.tag_drop).to have_selected_value("")
+      expect(page).to have_css(
+        ".category-breadcrumb .tag-drop .d-select__placeholder",
+        text: I18n.t("js.tagging.selector_tags"),
+      )
+      discovery.tag_drop.select_name(tag.name)
+
+      expect(page).to have_current_path(
+        "/tags/c/#{category1.slug}/#{category1.id}/#{tag.slug}/#{tag.id}",
+      )
+      expect(discovery.topic_list).to have_topics(count: 1)
+      expect(discovery.topic_list).to have_topic(c1_topic_tagged)
+      expect(discovery.tag_drop).to have_selected_name(tag.name)
+    end
+
+    it "keeps the no-subcategories filter when picking a tag from the new select controls" do
+      visit("/c/#{category3.slug}/#{category3.id}/none")
+      expect(discovery.topic_list).to have_topics(count: 2)
+
+      expect(discovery.subcategory_drop).to have_selected_name("no subcategories")
+      discovery.tag_drop.select_name(tag.name)
+
+      expect(page).to have_current_path(
+        "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.slug}/#{tag.id}",
+      )
+      expect(discovery.topic_list).to have_topics(count: 1)
+      expect(discovery.topic_list).to have_topic(c3_topic_tagged)
+    end
+
+    it "filters to untagged topics with the new select controls no-tags shortcut" do
+      visit("/c/#{category1.id}")
+      expect(discovery.topic_list).to have_topics(count: 2)
+
+      discovery.tag_drop.select_value("no-tags")
+
+      expect(page).to have_current_path("/tags/c/#{category1.slug}/#{category1.id}/none")
+      expect(discovery.topic_list).to have_topics(count: 1)
+      expect(discovery.topic_list).to have_topic(c1_topic)
+      expect(discovery.tag_drop).to have_selected_value("no-tags")
+    end
+
+    it "clears the tag filter with the new select controls all-tags shortcut" do
+      visit("/tags/c/#{category1.slug}/#{category1.id}/#{tag.slug}/#{tag.id}")
+      expect(discovery.topic_list).to have_topics(count: 1)
+      expect(discovery.tag_drop).to have_selected_name(tag.name)
+
+      discovery.tag_drop.select_value("all-tags")
+
+      expect(page).to have_current_path("/c/#{category1.slug}/#{category1.id}")
+      expect(discovery.topic_list).to have_topics(count: 2)
+      expect(discovery.tag_drop).to have_selected_value("")
     end
   end
 

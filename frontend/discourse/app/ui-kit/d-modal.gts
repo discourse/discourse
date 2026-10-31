@@ -465,12 +465,54 @@ export default class DModal extends Component<DModalSignature> {
       (event.target as HTMLElement)?.closest("form") ||
       document.activeElement?.closest("form") ||
       document.activeElement?.closest(ENTER_HANDLING_CONTROLS) ||
-      document.activeElement?.closest(".select-kit")
+      document.activeElement?.closest(".select-kit") ||
+      this.#focusedComboboxClaimsEnter() ||
+      this.#focusedListFieldClaimsEnter()
     ) {
       return false;
     }
 
     return true;
+  }
+
+  /**
+   * A select-only combobox opens or picks on Enter. A text-entry combobox picks
+   * only while its list is open; closed, it is a text field like any other and
+   * the modal keeps the key.
+   */
+  #focusedComboboxClaimsEnter() {
+    const combobox = document.activeElement?.closest('[role="combobox"]');
+    if (!combobox) {
+      return false;
+    }
+
+    const isTextEntry =
+      combobox instanceof HTMLInputElement ||
+      combobox instanceof HTMLTextAreaElement;
+
+    return !isTextEntry || combobox.getAttribute("aria-expanded") === "true";
+  }
+
+  /**
+   * A search field that drives a listbox it controls (`aria-autocomplete` with
+   * `aria-controls`, but no combobox role) picks the active option on Enter
+   * while that listbox is rendered.
+   */
+  #focusedListFieldClaimsEnter() {
+    const field = document.activeElement;
+    if (
+      !(field instanceof HTMLInputElement) ||
+      !field.hasAttribute("aria-autocomplete")
+    ) {
+      return false;
+    }
+
+    return (field.getAttribute("aria-controls") ?? "")
+      .split(/\s+/)
+      .some(
+        (id) =>
+          id && document.getElementById(id)?.getAttribute("role") === "listbox"
+      );
   }
 
   #animateBackdropOpacity(position: number) {

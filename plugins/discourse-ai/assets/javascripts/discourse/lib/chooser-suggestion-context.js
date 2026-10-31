@@ -119,3 +119,18 @@ export function chooserSuggestionContext(component) {
 
   return null;
 }
+
+/** Builds suggestion inputs from a select's call-site models without inspecting the DOM. */
+export function chooserSuggestionContextFromInstance({
+  composer,
+  topic,
+  buffered,
+}) {
+  if (composer) {
+    return new ComposerSuggestionContext({ model: composer });
+  }
+  if (topic) {
+    return new EditTopicSuggestionContext({ model: topic, buffered });
+  }
+  return null;
+}

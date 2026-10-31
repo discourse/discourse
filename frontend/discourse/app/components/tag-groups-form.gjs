@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -14,12 +14,15 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TagGroupsForm extends Component {
   @service dialog;
   @service site;
+  @service siteSettings;
 
   // All but the "everyone" group
   allGroups = this.site.groups.filter(
@@ -57,11 +60,26 @@ export default class TagGroupsForm extends Component {
     return groupIds;
   }
 
+  @computed("buffered.parent_tag")
+  get parentTag() {
+    return this.buffered.get("parent_tag")?.[0] ?? null;
+  }
+
   @action
   setPermissionsGroups(groupIds) {
     let permissions = {};
     groupIds.forEach((id) => (permissions[id] = PermissionType.FULL));
     this.buffered.set("permissions", permissions);
+  }
+
+  @action
+  updateTags(field, tags) {
+    this.buffered.set(field, tags);
+  }
+
+  @action
+  updateParentTag(tag) {
+    this.buffered.set("parent_tag", tag ? [tag] : []);
   }
 
   @action
@@ -141,32 +159,71 @@ export default class TagGroupsForm extends Component {
     </section>
 
     <section class="group-tags-list">
-      <label>{{i18n "tagging.groups.tags_label"}}</label><br />
-      <TagChooser
-        @everyTag={{true}}
-        @excludeSynonyms={{true}}
-        @options={{hash
-          allowAny=true
-          filterPlaceholder="tagging.groups.tags_placeholder"
-        }}
-        @tags={{this.buffered.tags}}
-        @unlimitedTagCount={{true}}
-      />
-    </section>
-
-    <section class="parent-tag-section">
-      <label>{{i18n "tagging.groups.parent_tag_label"}}</label>
-      <div>
+      <label id="tag-group-tags-label">
+        {{~i18n "tagging.groups.tags_label"~}}
+      </label><br />
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelectTag
+          @allowCreate={{true}}
+          @ariaLabelledBy="tag-group-tags-label"
+          @excludeSynonyms={{true}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
+          @multiple={{true}}
+          @onChange={{fn this.updateTags "tags"}}
+          @texts={{hash placeholder=(i18n "tagging.groups.tags_placeholder")}}
+          @value={{this.buffered.tags}}
+        />
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
         <TagChooser
           @everyTag={{true}}
           @excludeSynonyms={{true}}
+          @onChange={{fn this.updateTags "tags"}}
           @options={{hash
             allowAny=true
-            filterPlaceholder="tagging.groups.parent_tag_placeholder"
-            maximum=1
+            filterPlaceholder="tagging.groups.tags_placeholder"
           }}
-          @tags={{this.buffered.parent_tag}}
+          @tags={{this.buffered.tags}}
+          @unlimitedTagCount={{true}}
         />
+      {{/if}}
+    </section>
+
+    <section class="parent-tag-section">
+      <label id="tag-group-parent-tag-label">
+        {{~i18n "tagging.groups.parent_tag_label"~}}
+      </label>
+      <div>
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectTag
+            @allowCreate={{true}}
+            @ariaLabelledBy="tag-group-parent-tag-label"
+            @excludeSynonyms={{true}}
+            @ignoreRestrictions={{true}}
+            @multiple={{false}}
+            @onChange={{this.updateParentTag}}
+            @texts={{hash
+              placeholder=(i18n "tagging.groups.parent_tag_placeholder")
+            }}
+            @value={{this.parentTag}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <TagChooser
+            @everyTag={{true}}
+            @excludeSynonyms={{true}}
+            @onChange={{fn this.updateTags "parent_tag"}}
+            @options={{hash
+              allowAny=true
+              filterPlaceholder="tagging.groups.parent_tag_placeholder"
+              maximum=1
+            }}
+            @tags={{this.buffered.parent_tag}}
+          />
+        {{/if}}
       </div>
       <div class="description">{{i18n
           "tagging.groups.parent_tag_description"
@@ -207,20 +264,42 @@ export default class TagGroupsForm extends Component {
           @value="visible"
         />
 
-        <label class="radio" for="visible-permission">
+        <label
+          class="radio"
+          for="visible-permission"
+          id="visible-permission-label"
+        >
           {{i18n "tagging.groups.usable_only_by_groups"}}
         </label>
 
         <div class="group-access-control">
-          <GroupChooser
-            @content={{this.allGroups}}
-            @labelProperty="name"
-            @onChange={{this.setPermissionsGroups}}
-            @options={{hash
-              filterPlaceholder="tagging.groups.select_groups_placeholder"
-            }}
-            @value={{this.selectedGroupIds}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @ariaLabelledBy="visible-permission-label"
+              @everyone={{false}}
+              @multiple={{true}}
+              @onChange={{this.setPermissionsGroups}}
+              @texts={{hash
+                placeholder=(i18n "tagging.groups.select_groups_placeholder")
+                searchPlaceholder=(i18n
+                  "tagging.groups.select_groups_placeholder"
+                )
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.allGroups}}
+              @labelProperty="name"
+              @onChange={{this.setPermissionsGroups}}
+              @options={{hash
+                filterPlaceholder="tagging.groups.select_groups_placeholder"
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{/if}}
         </div>
       </div>
       <div class="group-visibility-option">
@@ -232,20 +311,42 @@ export default class TagGroupsForm extends Component {
           @value="private"
         />
 
-        <label class="radio" for="private-permission">
+        <label
+          class="radio"
+          for="private-permission"
+          id="private-permission-label"
+        >
           {{i18n "tagging.groups.visible_only_to_groups"}}
         </label>
 
         <div class="group-access-control">
-          <GroupChooser
-            @content={{this.allGroups}}
-            @labelProperty="name"
-            @onChange={{this.setPermissionsGroups}}
-            @options={{hash
-              filterPlaceholder="tagging.groups.select_groups_placeholder"
-            }}
-            @value={{this.selectedGroupIds}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectGroup
+              @ariaLabelledBy="private-permission-label"
+              @everyone={{false}}
+              @multiple={{true}}
+              @onChange={{this.setPermissionsGroups}}
+              @texts={{hash
+                placeholder=(i18n "tagging.groups.select_groups_placeholder")
+                searchPlaceholder=(i18n
+                  "tagging.groups.select_groups_placeholder"
+                )
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <GroupChooser
+              @content={{this.allGroups}}
+              @labelProperty="name"
+              @onChange={{this.setPermissionsGroups}}
+              @options={{hash
+                filterPlaceholder="tagging.groups.select_groups_placeholder"
+              }}
+              @value={{this.selectedGroupIds}}
+            />
+          {{/if}}
         </div>
       </div>
     </section>

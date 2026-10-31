@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Composer" do
+  with_select_controls(false)
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
 
