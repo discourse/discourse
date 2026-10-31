@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
@@ -10,6 +11,7 @@ import { searchForTerm } from "discourse/lib/search";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import TopicRow from "discourse/select-kit/components/topic-row";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 import {
   integerIdsFromValue,
@@ -54,12 +56,22 @@ class TopicSelector extends MultiSelect {
   }
 }
 
+/** Names a stored id whose topic is gone or hidden, so it can still be removed. */
+function unavailableTopic({ id }) {
+  return i18n("discourse_workflows.topic_control.unavailable_topic", { id });
+}
+
 export default class TopicControl extends Component {
+  @service siteSettings;
+
   @tracked selectedTopics = [];
 
   constructor() {
     super(...arguments);
-    this.hydrateSelectedTopics();
+    // TODO (select-kit-replacement-cleanup): The new picker looks stored topics up itself.
+    if (!this.siteSettings.enable_new_select_controls) {
+      this.hydrateSelectedTopics();
+    }
   }
 
   get topicIds() {
@@ -72,6 +84,11 @@ export default class TopicControl extends Component {
     if (!sameIds(this.topicIds, shownIds)) {
       this.#updateSelectedTopics();
     }
+  }
+
+  @action
+  setTopicIds(topicIds) {
+    this.args.field.set(topicIds);
   }
 
   @action
@@ -126,13 +143,25 @@ export default class TopicControl extends Component {
       @session={{@session}}
       @supportsExpression={{@supportsExpression}}
     >
-      <TopicSelector
-        @content={{this.selectedTopics}}
-        @onChange={{this.handleChange}}
-        @options={{hash translatedNone=@placeholder}}
-        @value={{this.topicIds}}
-        {{didUpdate this.hydrateSelectedTopics @field.value}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelectTopic
+          class="topic-selector"
+          @archetype={{null}}
+          @multiple={{true}}
+          @onChange={{this.setTopicIds}}
+          @texts={{hash placeholder=@placeholder unresolved=unavailableTopic}}
+          @value={{this.topicIds}}
+        />
+      {{else}}
+        <TopicSelector
+          @content={{this.selectedTopics}}
+          @onChange={{this.handleChange}}
+          @options={{hash translatedNone=@placeholder}}
+          @value={{this.topicIds}}
+          {{didUpdate this.hydrateSelectedTopics @field.value}}
+        />
+      {{/if}}
     </ExpressionWrapper>
   </template>
 }
