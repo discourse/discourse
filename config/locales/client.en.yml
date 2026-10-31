@@ -3565,6 +3565,15 @@ en:
       group: "Group"
       groups: "Groups"
 
+    select_topic:
+      topic: "Topic"
+      topics: "Topics"
+      message: "Message"
+      messages: "Messages"
+      search_placeholder: "Type a topic title, URL or ID"
+      message_search_placeholder: "Type a message title, URL or ID"
+      unresolved: "Topic #%{id}"
+
     d_select:
       create_item: "Create “%{label}”"
       placeholder: "Select…"
