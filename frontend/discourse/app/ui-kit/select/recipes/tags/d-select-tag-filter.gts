@@ -357,9 +357,9 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @valueItems={{this.valueItems}}
       @variant={{this.variant}}
     >
-      <:item as |item options|>
+      <:item as |item options row|>
         {{#if (has-block "item")}}
-          {{yield item options to="item"}}
+          {{yield item options row to="item"}}
         {{else if (this.isShortcut item)}}
           <span class="d-tag-drop__shortcut">{{tagItemName item}}</span>
         {{else}}

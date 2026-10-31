@@ -9,9 +9,16 @@ import WindowedListCoordinator, {
 } from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
 import SelectItem from "discourse/ui-kit/select/-internals/parts/select-item";
 import SelectEngine, {
+  type SelectDescriptor,
   SelectItem as SelectItemModel,
   selectItemLabel,
+  type SelectItemRow,
 } from "discourse/ui-kit/select/select-engine";
+
+/** The row state the `:item` block receives with its item. */
+function itemRow(option: SelectDescriptor): SelectItemRow {
+  return Object.freeze({ create: !!option.flags.__create });
+}
 
 interface SelectOptionRowSignature {
   Args: {
@@ -55,6 +62,8 @@ interface SelectOptionRowSignature {
     item?: [
       /** The item being rendered. */
       item: SelectItemModel,
+      /** What the row is, beyond its item. */
+      row: SelectItemRow,
     ];
     /** Custom markup for a group header, text or action. */
     groupHeader?: [
@@ -171,7 +180,7 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             {{else if (or option.flags.groupHeader option.flags.groupFooter)}}
               {{selectItemLabel option.item @presenter.labelField}}
             {{else if @hasItemBlock}}
-              {{yield option.item to="item"}}
+              {{yield option.item (itemRow option) to="item"}}
             {{else if option.flags.__create}}
               {{@engine.text
                 "createItem"

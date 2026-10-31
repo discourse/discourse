@@ -422,9 +422,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @value={{this.selectedIds}}
       @variant={{@variant}}
     >
-      <:item as |item options|>
+      <:item as |item options row|>
         {{#if (has-block "item")}}
-          {{yield item options to="item"}}
+          {{yield item options row to="item"}}
         {{else}}
           <CategoryBadge @ancestors={{true}} @counts={{true}} @item={{item}} />
         {{/if}}

@@ -149,9 +149,9 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @valueItems={{this.valueItems}}
       @variant={{@variant}}
     >
-      <:item as |item options|>
+      <:item as |item options row|>
         {{#if (has-block "item")}}
-          {{yield item options to="item"}}
+          {{yield item options row to="item"}}
         {{else}}
           {{tagItemName item}}
         {{/if}}

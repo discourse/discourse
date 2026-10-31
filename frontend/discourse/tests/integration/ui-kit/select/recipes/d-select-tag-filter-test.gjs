@@ -86,6 +86,26 @@ module(
           .doesNotExist("no empty footer region below the list");
       });
 
+      test("the item block receives each row's state", async function (assert) {
+        await render(
+          <template>
+            <DSelectTagFilter>
+              <:item as |item options row|>
+                <span class="custom-row {{if row 'has-row'}}">
+                  {{~item.name~}}
+                </span>
+              </:item>
+            </DSelectTagFilter>
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        assert.dom(".custom-row").exists("the item block draws the rows");
+        assert
+          .dom(".custom-row:not(.has-row)")
+          .doesNotExist("every row reaches it with its state");
+      });
+
       test("a single filter lists its first top tags and says to keep typing for more", async function (assert) {
         this.siteSettings.max_tags_in_filter_list = 1;
         await render(<template><DSelectTagFilter /></template>);

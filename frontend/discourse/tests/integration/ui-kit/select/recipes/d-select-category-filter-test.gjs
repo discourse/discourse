@@ -101,6 +101,26 @@ module(
         );
       });
 
+      test("the item block receives each row's state", async function (assert) {
+        await render(
+          <template>
+            <DSelectCategoryFilter>
+              <:item as |item options row|>
+                <span class="custom-row {{if row 'has-row'}}">
+                  {{~item.name~}}
+                </span>
+              </:item>
+            </DSelectCategoryFilter>
+          </template>
+        );
+        await select().open();
+
+        assert.dom(".custom-row").exists("the item block draws the rows");
+        assert
+          .dom(".custom-row:not(.has-row)")
+          .doesNotExist("every row reaches it with its state");
+      });
+
       test("the caret points right while closed and down while open", async function (assert) {
         await render(<template><DSelectCategoryFilter /></template>);
 

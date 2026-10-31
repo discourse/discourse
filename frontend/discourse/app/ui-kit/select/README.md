@@ -453,18 +453,30 @@ you.
 can render one; the component's retry is shown only when no block is supplied.
 
 `:item`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and `:footer`
-also yield the select's resolved options as their last parameter, so a recipe can render values
-extensions override (see [Recipes](#recipes)).
+also yield the select's resolved options, so a recipe can render values extensions override (see
+[Recipes](#recipes)). It comes after the block's own values, and for `:item` before the row's
+state.
 
 `:groupHeader` and `:groupFooter` draw every header and footer row, text or action, and `:item`
 never receives one. Tell the kinds apart by `onSelect`, which only an action row carries; both
 carry `groupKey`, so one block can draw group-specific content for either.
 
 `:item` draws every other option row, including the create row and action rows such as a
-recipe's shortcuts. A block that draws records must handle both. The create row is the item
-`@createItem` returns, so mark it there (the tag recipe sets `isNew`) and have the block name what
-it creates, as the `createItem` text does. An action row carries `onSelect`. A recipe that passes
-its caller's `:item` through hands it those rows too. `@groupHeader` (the builder) and `<:groupHeader>` (the block) share a name across separate
+recipe's shortcuts, so a block that draws records must handle both. Its third parameter, `row`,
+says what the row is: `row.create` marks the create row, which should name what it creates, as
+the `createItem` text does. An action row carries `onSelect`. A recipe forwards all three
+parameters, so a caller's block can tell the rows apart without knowing the recipe's own item
+fields.
+
+```gjs
+<:item as |item options row|>
+  {{#if row.create}}
+    {{renderSelectText options "createItem" (hash label=item.name)}}
+  {{else}}
+    {{item.name}}
+  {{/if}}
+</:item>
+``` `@groupHeader` (the builder) and `<:groupHeader>` (the block) share a name across separate
 namespaces, and `<:groupFooter>` is unrelated to the panel's `<:footer>`.
 
 ### Blocks that interact

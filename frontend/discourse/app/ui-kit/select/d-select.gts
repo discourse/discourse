@@ -47,6 +47,7 @@ import type {
   SelectDescriptor,
   SelectEngineOptions,
   SelectItem as SelectItemModel,
+  SelectItemRow,
   SelectKindTexts,
   SelectTextWrapper,
   SelectValue,
@@ -309,6 +310,8 @@ interface DSelectSignature {
       item: SelectItemModel,
       /** Resolved core and recipe values. */
       options: SelectResolvedOptions,
+      /** What the row is beyond its item: `create` marks the create row. */
+      row: SelectItemRow,
     ];
     /**
      * Custom markup for the selected item; yields the resolved item. On the button/static
@@ -1019,8 +1022,8 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{/if}}
               {{/if}}
             </:field>
-            <:item as |item options|>
-              {{~yield item options to="item"~}}
+            <:item as |item options row|>
+              {{~yield item options row to="item"~}}
             </:item>
             <:groupHeader as |item options|>
               {{~yield item options to="groupHeader"~}}

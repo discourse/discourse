@@ -129,6 +129,12 @@ export interface SelectItem {
   [key: string]: unknown;
 }
 
+/** What the `:item` block is told about the row it draws, beyond the item itself. */
+export interface SelectItemRow {
+  /** The row creates a new value from the query, as `@createItem` built it. */
+  readonly create: boolean;
+}
+
 /**
  * The normalized render descriptor for one row, computed as the final step before render
  * (see {@link SelectEngine#buildItems}). It carries a stable `key` (never an index; models

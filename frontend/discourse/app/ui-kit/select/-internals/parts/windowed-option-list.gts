@@ -11,6 +11,7 @@ import SelectOptionRow from "discourse/ui-kit/select/-internals/parts/select-opt
 import type { SelectOptionsModifiers } from "discourse/ui-kit/select/-internals/parts/select-options";
 import SelectEngine, {
   SelectItem as SelectItemModel,
+  type SelectItemRow,
 } from "discourse/ui-kit/select/select-engine";
 
 interface WindowedOptionListSignature {
@@ -59,6 +60,8 @@ interface WindowedOptionListSignature {
     item?: [
       /** The item being rendered. */
       item: SelectItemModel,
+      /** What the row is, beyond its item. */
+      row: SelectItemRow,
     ];
     /** Custom markup for a group header. */
     groupHeader?: [
@@ -156,8 +159,8 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
           @presenter={{@presenter}}
           @selectedIcon={{@selectedIcon}}
         >
-          <:item as |item|>
-            {{~yield item to="item"~}}
+          <:item as |item itemRow|>
+            {{~yield item itemRow to="item"~}}
           </:item>
           <:groupHeader as |item|>
             {{~yield item to="groupHeader"~}}

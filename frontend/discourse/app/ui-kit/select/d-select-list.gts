@@ -32,6 +32,7 @@ import type {
   SelectCoreTexts,
   SelectDescriptor,
   SelectItem,
+  SelectItemRow,
   SelectKindTexts,
   SelectTextWrapper,
 } from "discourse/ui-kit/select/select-engine";
@@ -149,6 +150,8 @@ interface DSelectListSignature {
     item?: [
       /** Raw option. */ item: SelectItem,
       /** Resolved options. */ options: SelectResolvedOptions,
+      /** What the row is beyond its item: `create` marks the create row. */
+      row: SelectItemRow,
     ];
     /** Custom held-chip content. */
     selection?: [
@@ -411,8 +414,8 @@ export default class DSelectList extends Component<DSelectListSignature> {
             </:unresolved>
           </MultiChips>
         </:field>
-        <:item as |item options|>
-          {{~yield item options to="item"~}}
+        <:item as |item options row|>
+          {{~yield item options row to="item"~}}
         </:item>
         <:selection as |item options|>
           {{~yield item options to="selection"~}}

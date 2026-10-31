@@ -270,9 +270,9 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @valueItems={{this.valueItems}}
       @variant="button"
     >
-      <:item as |item options|>
+      <:item as |item options row|>
         {{#if (has-block "item")}}
-          {{yield item options to="item"}}
+          {{yield item options row to="item"}}
         {{else}}
           <CategoryBadge
             @ancestors={{not @parentCategory}}

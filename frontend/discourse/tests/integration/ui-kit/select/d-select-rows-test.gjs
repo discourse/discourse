@@ -862,6 +862,32 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
       );
   });
 
+  test("the item block is told which row is the create row", async function (assert) {
+    const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @items={{ITEMS}}
+        >
+          <:item as |item options row|>
+            {{~if row.create (concat "Create " item.name) item.name~}}
+          </:item>
+        </DSelect>
+      </template>
+    );
+    await fillIn("[role='combobox']", "an");
+
+    assert
+      .dom("[role='option'].--create")
+      .hasText("Create an", "the create row knows it is one");
+    assert
+      .dom("[role='option'][data-value='2']")
+      .hasText("Banana", "a record row is not the create row");
+  });
+
   test("the engine supplies create wording for an unmarked item with a configured label", async function (assert) {
     const createItem = (filter) => ({
       code: `new:${filter}`,

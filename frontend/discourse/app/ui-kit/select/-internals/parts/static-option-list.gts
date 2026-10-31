@@ -13,6 +13,7 @@ import SelectOptionRow from "discourse/ui-kit/select/-internals/parts/select-opt
 import type { SelectOptionsModifiers } from "discourse/ui-kit/select/-internals/parts/select-options";
 import SelectEngine, {
   SelectItem as SelectItemModel,
+  type SelectItemRow,
 } from "discourse/ui-kit/select/select-engine";
 
 interface StaticOptionListSignature {
@@ -61,6 +62,8 @@ interface StaticOptionListSignature {
     item?: [
       /** The item being rendered. */
       item: SelectItemModel,
+      /** What the row is, beyond its item. */
+      row: SelectItemRow,
     ];
     /** Custom markup for a group header. */
     groupHeader?: [
@@ -148,8 +151,8 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
             @presenter={{@presenter}}
             @selectedIcon={{@selectedIcon}}
           >
-            <:item as |item|>
-              {{~yield item to="item"~}}
+            <:item as |item row|>
+              {{~yield item row to="item"~}}
             </:item>
           </SelectOptionRow>
         {{/if}}

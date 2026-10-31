@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import {
   click,
   fillIn,
@@ -279,6 +279,59 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
 
       assert.dom(".d-modal").doesNotExist("no modal");
       assert.dom(".d-select.--list [role='listbox']").exists("list in place");
+    });
+
+    test("DSelectList tells the item block which row is the create row", async function (assert) {
+      const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+      await render(
+        <template>
+          <DSelectList
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @items={{FRUIT}}
+            @texts={{hash ariaLabel="Fruit"}}
+          >
+            <:item as |item options row|>
+              {{~if row.create (concat "Create " item.name) item.name~}}
+            </:item>
+          </DSelectList>
+        </template>
+      );
+      await type("an");
+
+      assert
+        .dom(".d-select.--list [role='option'].--create")
+        .hasText("Create an", "the create row knows it is one");
+      assert
+        .dom(".d-select.--list [role='option'][data-value='2']")
+        .hasText("Banana", "a record row is not the create row");
+    });
+
+    test("DSelectList without windowing tells the item block which row is the create row", async function (assert) {
+      const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+      await render(
+        <template>
+          <DSelectList
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @items={{FRUIT}}
+            @texts={{hash ariaLabel="Fruit"}}
+            @virtualized={{false}}
+          >
+            <:item as |item options row|>
+              {{~if row.create (concat "Create " item.name) item.name~}}
+            </:item>
+          </DSelectList>
+        </template>
+      );
+      await type("an");
+
+      assert
+        .dom(".d-select.--list [role='option'].--create")
+        .hasText("Create an", "the create row knows it is one");
+      assert
+        .dom(".d-select.--list [role='option'][data-value='2']")
+        .hasText("Banana", "a record row is not the create row");
     });
 
     test("DSelectList shows held values on the root", async function (assert) {

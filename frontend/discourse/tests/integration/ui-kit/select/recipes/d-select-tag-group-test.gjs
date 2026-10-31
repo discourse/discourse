@@ -351,8 +351,9 @@ module(
               <:selection as |item|>
                 <span class="custom-selection">Selected {{item.name}}</span>
               </:selection>
-              <:item as |item|>
-                <span class="custom-item">Pick {{item.name}}</span>
+              <:item as |item options row|>
+                <span class="custom-item {{if row 'has-row'}}">Pick
+                  {{item.name}}</span>
               </:item>
               <:footer>
                 <span class="custom-footer">Footer</span>
@@ -375,6 +376,9 @@ module(
         assert
           .dom(".custom-item")
           .exists({ count: 2 }, "item blocks are forwarded");
+        assert
+          .dom(".custom-item.has-row")
+          .exists({ count: 2 }, "the item block receives each row's state");
         assert
           .dom(".custom-footer")
           .hasText("Footer", "footer block is forwarded");

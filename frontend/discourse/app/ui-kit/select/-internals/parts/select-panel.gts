@@ -16,6 +16,7 @@ import type WindowedOptionList from "discourse/ui-kit/select/-internals/parts/wi
 import SelectEngine, {
   SelectDescriptor,
   SelectItem,
+  type SelectItemRow,
   SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -169,6 +170,7 @@ interface SelectPanelSignature<State> {
     item?: [
       /** The rendered item. */ item: SelectItem,
       /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** What the row is, beyond its item. */ row: SelectItemRow,
     ];
     /** Custom groupHeader content. */
     groupHeader?: [
@@ -333,8 +335,8 @@ export default class SelectPanel<State> extends Component<
             @selectedIcon={{@selectedIcon}}
             @tabIndex={{@tabIndex}}
           >
-            <:item as |item|>
-              {{~yield item this.resolvedOptions to="item"~}}
+            <:item as |item row|>
+              {{~yield item this.resolvedOptions row to="item"~}}
             </:item>
             <:groupHeader as |item|>
               {{~yield item this.resolvedOptions to="groupHeader"~}}

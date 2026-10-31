@@ -198,6 +198,26 @@ module(
     setupRenderingTest(hooks);
 
     module("kind and values", function () {
+      test("the item block receives each row's state", async function (assert) {
+        await render(
+          <template>
+            <DSelectCategory>
+              <:item as |item options row|>
+                <span class="custom-row {{if row 'has-row'}}">
+                  {{~item.name~}}
+                </span>
+              </:item>
+            </DSelectCategory>
+          </template>
+        );
+        await dSelect().open();
+
+        assert.dom(".custom-row").exists("the item block draws the rows");
+        assert
+          .dom(".custom-row:not(.has-row)")
+          .doesNotExist("every row reaches it with its state");
+      });
+
       test("a single picker is named Category, not by its placeholder", async function (assert) {
         const accessibleName = await loadAccessibleName();
 
