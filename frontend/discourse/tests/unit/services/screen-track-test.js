@@ -65,6 +65,38 @@ module("Unit | Service | screen-track", function (hooks) {
     );
   });
 
+  test("does not track a deleted topic", function (assert) {
+    const tracker = this.owner.lookup("service:screen-track");
+
+    tracker.start(1, {
+      get() {
+        return { deleted: true };
+      },
+    });
+
+    assert.strictEqual(
+      tracker._topicId,
+      undefined,
+      "deleted topic tracking is not started"
+    );
+  });
+
+  test("does not track a post in a deleted topic", function (assert) {
+    const tracker = this.owner.lookup("service:screen-track");
+
+    tracker.start(1, {
+      get(property) {
+        return property === "topic.deleted" ? true : undefined;
+      },
+    });
+
+    assert.strictEqual(
+      tracker._topicId,
+      undefined,
+      "post tracking in a deleted topic is not started"
+    );
+  });
+
   test("appEvent topic:timings-sent is triggered after posting consolidated timings", async function (assert) {
     const tracker = this.owner.lookup("service:screen-track");
     const appEvents = this.owner.lookup("service:app-events");
