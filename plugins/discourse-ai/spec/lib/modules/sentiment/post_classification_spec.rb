@@ -287,6 +287,54 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     end
   end
 
+  describe "#transform_result" do
+    it "handles the standard array of label/score hashes" do
+      result =
+        post_classification.send(
+          :transform_result,
+          [{ label: "positive", score: 0.9 }, { label: "negative", score: 0.1 }],
+        )
+      expect(result).to eq("positive" => 0.9, "negative" => 0.1)
+    end
+
+    it "handles string keys" do
+      result =
+        post_classification.send(:transform_result, [{ "label" => "neutral", "score" => 0.5 }])
+      expect(result).to eq("neutral" => 0.5)
+    end
+
+    it "handles a bare label/score hash" do
+      result = post_classification.send(:transform_result, { label: "positive", score: 0.8 })
+      expect(result).to eq("positive" => 0.8)
+    end
+
+    it "handles a flat label-to-score map" do
+      result = post_classification.send(:transform_result, { "positive" => 0.7, "negative" => 0.3 })
+      expect(result).to eq("positive" => 0.7, "negative" => 0.3)
+    end
+
+    it "handles [label, score] pairs" do
+      result = post_classification.send(:transform_result, [["positive", 0.6]])
+      expect(result).to eq("positive" => 0.6)
+    end
+
+    it "handles nested arrays from batch responses" do
+      result =
+        post_classification.send(
+          :transform_result,
+          [[{ label: "positive", score: 0.9 }, { label: "neutral", score: 0.1 }]],
+        )
+      expect(result).to eq("positive" => 0.9, "neutral" => 0.1)
+    end
+
+    it "raises on entries it cannot interpret" do
+      expect { post_classification.send(:transform_result, [%w[positive]]) }.to raise_error(
+        TypeError,
+        /unexpected sentiment classification entry/,
+      )
+    end
+  end
+
   describe ".backfill_query" do
     it "excludes posts in personal messages" do
       Fabricate(:private_message_post)

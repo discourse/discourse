@@ -408,8 +408,35 @@ module DiscourseAi
 
       def transform_result(result)
         hash_result = {}
-        result.each { |r| hash_result[r[:label]] = r[:score] }
+        normalize_sentiment_result(result, hash_result)
         hash_result
+      end
+
+      # Providers return sentiment either as [{ label:, score: }] (the standard
+      # Hugging Face text-classification shape), or variations such as bare
+      # hashes, flat { label => score } maps, [label, score] pairs, or those
+      # shapes nested in arrays. Normalize all of them into { label => score }.
+      # Genuinely unrecognized entries raise so the failure stays visible
+      # instead of silently producing empty classifications.
+      def normalize_sentiment_result(entry, hash_result)
+        case entry
+        when Array
+          if entry.size == 2 && (entry[0].is_a?(String) || entry[0].is_a?(Symbol)) &&
+               entry[1].is_a?(Numeric)
+            hash_result[entry[0]] = entry[1]
+          else
+            entry.each { |element| normalize_sentiment_result(element, hash_result) }
+          end
+        when Hash
+          label = entry[:label] || entry["label"]
+          if label
+            hash_result[label] = entry[:score] || entry["score"]
+          else
+            entry.each { |key, value| hash_result[key] = value }
+          end
+        else
+          raise TypeError, "unexpected sentiment classification entry: #{entry.inspect}"
+        end
       end
 
       def request_with_agent(classifier, target, content)
