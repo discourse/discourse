@@ -61,6 +61,7 @@ export default class ScreenTrack extends Service {
       topicController?.get("model.deleted") ||
       topicController?.get("topic.deleted")
     ) {
+      this.stop();
       return;
     }
 
