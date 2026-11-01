@@ -70,6 +70,19 @@ RSpec.describe ::Jobs::Base do
     thread.join
   end
 
+  it "survives redis READONLY errors during cluster lock management" do
+    raw_redis = Discourse.redis.without_namespace
+    allow(raw_redis).to receive(:del).and_raise(Redis::ReadOnlyError)
+    allow(raw_redis).to receive(:set).and_raise(Redis::ReadOnlyError)
+
+    expect { ConcurrentJob.clear_cluster_concurrency_lock! }.not_to raise_error
+    expect(ConcurrentJob.acquire_cluster_concurrency_lock!).to eq(false)
+
+    expect(Sidekiq::Queues["default"].size).to eq(0)
+    ConcurrentJob.new.perform({ "test" => 100 })
+    expect(Sidekiq::Queues["default"].size).to eq(1)
+  end
+
   it "handles correct jobs" do
     job = GoodJob.new
     job.perform({})

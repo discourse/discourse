@@ -246,11 +246,15 @@ module Jobs
     end
 
     def self.clear_cluster_concurrency_lock!
-      Discourse.redis.without_namespace.del(cluster_concurrency_redis_key)
+      DiscourseRedis.ignore_readonly do
+        Discourse.redis.without_namespace.del(cluster_concurrency_redis_key)
+      end
     end
 
     def self.acquire_cluster_concurrency_lock!
-      !!Discourse.redis.without_namespace.set(cluster_concurrency_redis_key, 0, nx: true, ex: 120)
+      !!DiscourseRedis.ignore_readonly do
+        Discourse.redis.without_namespace.set(cluster_concurrency_redis_key, 0, nx: true, ex: 120)
+      end
     end
 
     def perform(*args)
@@ -271,7 +275,9 @@ module Jobs
         keepalive_thread =
           Thread.new do
             while parent_thread.alive? && !finished
-              Discourse.redis.without_namespace.expire(cluster_concurrency_redis_key, 120)
+              DiscourseRedis.ignore_readonly do
+                Discourse.redis.without_namespace.expire(cluster_concurrency_redis_key, 120)
+              end
 
               # Sleep for 60 seconds, but wake up every second to check if the job has been completed
               60.times do
