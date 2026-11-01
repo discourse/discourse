@@ -113,6 +113,9 @@ module DiscourseAi
 
       def self.should_scan_post?(post)
         return false if !post.present?
+        # user or topic may be gone by the time the scan job runs (deletion
+        # race); skip instead of raising through the job's rescue and requeue
+        return false if !post.user || !post.topic
         return false if post.user.trust_level > SiteSetting.ai_spam_detection_max_trust_level
         return false if post.topic.private_message?
         return false if post.user.bot?
