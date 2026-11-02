@@ -592,7 +592,7 @@ export default class BlogPublicationPanel extends Component {
                 >{{i18n "blog.panel.preview"}}</a>
                 {{#if this.publication.source_topic_id}}
                   <DButton
-                    class="btn-default blog-publication-panel__reviews"
+                    class="btn-default blog-publication-panel__share-for-review"
                     @action={{this.shareForReview}}
                     @disabled={{this.busy}}
                     @label="blog.panel.share_for_review"

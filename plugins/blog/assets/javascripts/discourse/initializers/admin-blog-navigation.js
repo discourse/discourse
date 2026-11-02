@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import BlogAdminPluginActions from "../components/blog-admin-plugin-actions.gjs";
 
 export default {
   name: "discourse-blog-admin-navigation",
@@ -9,6 +10,7 @@ export default {
     }
     withPluginApi((api) => {
       api.setAdminPluginIcon("blog", "pen-to-square");
+      api.registerPluginHeaderActionComponent("blog", BlogAdminPluginActions);
       api.addAdminPluginConfigurationNav("blog", [
         {
           label: "blog.admin.themes",
