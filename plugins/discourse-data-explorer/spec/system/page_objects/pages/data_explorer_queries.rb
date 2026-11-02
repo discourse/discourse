@@ -25,7 +25,10 @@ module PageObjects
       end
 
       def has_groups?(query, groups)
-        groups.all? { page.has_css?("#{row(query)} .query-group-names a", exact_text: it.name) }
+        expected_names = groups.map(&:name).sort
+        page.has_css?("#{row(query)} .query-group-names") do |element|
+          element.text.split.sort == expected_names
+        end
       end
 
       def has_last_run?(query)
