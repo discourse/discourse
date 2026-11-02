@@ -149,7 +149,7 @@ group :test, :development do
   gem "debug", ">= 1.0.0", require: "debug/prelude"
   gem "rubocop-discourse",
       git: "https://github.com/discourse/rubocop-discourse",
-      ref: "fd5f84e0c8241221a9d566cb1ee59e85976bf650",
+      ref: "d0b1224d6e33dd53484d5ec8c08c74cfbf7c753d",
       require: false
   gem "parallel_tests", require: false
 
