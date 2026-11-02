@@ -21,16 +21,21 @@ describe "Classifying reviewable moderation" do
   end
 
   it "preserves suspension details and classification when navigating back, and leaves the review pending if cancelled" do
+    SiteSetting.reviewable_claiming = "disabled"
     post = Fabricate(:post, topic: topic)
-    reviewable =
-      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic: topic)
+    flagger = Fabricate(:user, trust_level: TrustLevel[3])
+    reviewable = PostActionCreator.create(flagger, post, :inappropriate).reviewable
     penalty_modal = PageObjects::Modals::PenalizeUser.new("suspend")
 
     review_page.visit_reviewable(reviewable)
+
+    expect(review_page).to have_context_question(reviewable, "Is this post inappropriate?")
+
     review_page.select_bundled_action(reviewable, "post-agree_and_suspend", bundle_index: 1)
 
     expect(modal).to have_action_title("Suspend User")
     expect(modal).to have_cancel_button
+    expect(review_page).to have_context_question(reviewable, "Is this post inappropriate?")
 
     penalty_modal.set_future_date("two_weeks")
 
@@ -41,6 +46,7 @@ describe "Classifying reviewable moderation" do
 
     expect(modal).to have_action_title("Suspend User")
     expect(modal).to have_classification
+    expect(modal).to have_selected_rule(rule[:ground])
     expect(modal).to have_focused_step("DSA classification")
     expect(modal).to have_no_cancel_button
 
@@ -48,7 +54,6 @@ describe "Classifying reviewable moderation" do
 
     expect(modal).to have_required_errors
 
-    modal.select_rule(rule[:ground])
     modal.select_category(category)
     modal.close
     dialog = PageObjects::Components::Dialog.new
@@ -92,7 +97,6 @@ describe "Classifying reviewable moderation" do
     penalty_modal.set_future_date("two_weeks")
     penalty_modal.fill_in_suspend_reason("Repeated personal attacks.")
     modal.continue
-    modal.select_rule(rule[:ground])
     modal.select_category(category)
     modal.confirm("Suspend")
 
@@ -126,6 +130,10 @@ describe "Classifying reviewable moderation" do
   end
 
   it "classifies before editing, handling the review only after the edit is saved" do
+    SiteSetting.dsa_community_rules = [
+      rule,
+      { ground: "No advertising", explanation: "Unsolicited advertising is not allowed." },
+    ].to_json
     post = topic.first_post
     reviewable =
       Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic:)
@@ -135,6 +143,7 @@ describe "Classifying reviewable moderation" do
 
     expect(modal).to have_action_title("Edit post")
     expect(modal).to have_steps("DSA classification", "Edit post")
+    expect(modal).to have_selected_rule("Choose a community rule")
 
     modal.select_rule(rule[:ground])
     modal.select_category(category)

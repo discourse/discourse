@@ -68,6 +68,10 @@ module PageObjects
         within(full_modal_selector) { has_text?(message, normalize_ws: true) }
       end
 
+      def has_selected_rule?(ground)
+        within(full_modal_selector) { has_select?("Community rule", selected: ground) }
+      end
+
       def has_selected_category?(category)
         within(full_modal_selector) { has_select?("Category", selected: category) }
       end
