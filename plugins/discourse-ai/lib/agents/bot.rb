@@ -418,7 +418,6 @@ module DiscourseAi
 
                   tool_invocation_budget_exhausted ||=
                     tool_batch_count >= MAX_TOOL_CALLS_PER_COMPLETION ||
-                      spawn_agent_budget_exhausted?(tool, context) ||
                       tool_invocation_budget_exhausted?(context)
 
                   chain_next_response =
@@ -516,21 +515,13 @@ module DiscourseAi
 
       private
 
-      def spawn_agent_budget_exhausted?(tool, context)
-        tool.is_a?(Tools::SpawnAgent) && !context.subagent_execution_state.spawn_available?
-      end
-
       def tool_invocation_budget_exhausted?(context)
         runtime_tools = context.runtime_tools.presence || agent.available_tools
         return false if runtime_tools.empty?
 
         runtime_tools.all? do |tool_class|
-          if tool_class <= Tools::SpawnAgent
-            !context.subagent_execution_state.spawn_available?
-          else
-            limit = agent.options[tool_class].to_h.with_indifferent_access[:max_invocations].to_i
-            context.tool_invocation_limit_reached?(tool_class.name, limit: limit)
-          end
+          limit = agent.options[tool_class].to_h.with_indifferent_access[:max_invocations].to_i
+          context.tool_invocation_limit_reached?(tool_class.name, limit: limit)
         end
       end
 
