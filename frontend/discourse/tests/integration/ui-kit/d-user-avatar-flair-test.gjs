@@ -37,6 +37,13 @@ function setupSiteGroups(that) {
       flair_bg_color: "CC0002",
       flair_color: "FFFFF2",
     },
+    {
+      id: 41,
+      name: "Band Geeks",
+      flair_url: "xmark",
+      flair_bg_color: "123456",
+      flair_color: "B0B0B0",
+    },
   ];
 }
 
@@ -174,6 +181,21 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-xmark").exists("has the svg icon");
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(18, 52, 86)",
+      color: "rgb(176, 176, 176)",
+    });
+  });
+
+  test("avatar flair resolves the selected group", async function (assert) {
+    this.set("args", {
+      flair_group_id: 41,
+    });
+    setupSiteGroups(this);
+
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
+
+    assert.dom("svg.d-icon-xmark").exists();
     assert.dom(".avatar-flair").hasStyle({
       backgroundColor: "rgb(18, 52, 86)",
       color: "rgb(176, 176, 176)",
