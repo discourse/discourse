@@ -5996,7 +5996,11 @@ RSpec.describe UsersController do
         get "/u/#{user1.username}.json"
 
         expect(response.status).to eq(200)
-        serialized_token = response.parsed_body.dig("user", "user_auth_tokens", 0)
+        serialized_token =
+          response
+            .parsed_body
+            .dig("user", "user_auth_tokens")
+            .find { |auth_token| auth_token["id"] == token.id }
         expect(serialized_token["client_ip"]).to eq(token.client_ip.to_s)
       end
     end
