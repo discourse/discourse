@@ -58,15 +58,17 @@ class AppearanceChange < ActiveRecord::Base
     light_color_scheme.present? && dark_color_scheme.present?
   end
 
-  # Whether the site uses the change now: the new theme is the default, or the
-  # palettes are the theme's. A change that also sets fonts only counts once
-  # it has gone live, since the theme can already have the palettes it picks.
+  # A font-bearing change must have gone live and still match the site's
+  # fonts, even when its theme or palettes were already in use.
   def applied?
+    if site_settings.present?
+      return false if previous_state.blank?
+      return false if !site_settings.all? { |name, value| SiteSetting.get(name) == value }
+    end
     return theme.default? if kind_theme?
 
     theme.color_scheme_id == light_color_scheme_id &&
-      theme.dark_color_scheme_id == dark_color_scheme_id &&
-      (site_settings.blank? || previous_state.present?)
+      theme.dark_color_scheme_id == dark_color_scheme_id
   end
 
   # The site settings making the change live sets: its fonts and, for a new

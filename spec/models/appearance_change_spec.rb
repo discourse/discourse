@@ -46,6 +46,42 @@ RSpec.describe AppearanceChange do
       expect(appearance_change.reload.applied?).to eq(true)
     end
 
+    %i[palettes existing_palettes theme].each do |kind|
+      it "checks both current fonts for #{kind} changes" do
+        appearance_change =
+          Fabricate(
+            :appearance_change,
+            kind:,
+            theme:,
+            site_settings: {
+              "base_font" => "lora",
+              "heading_font" => "roboto",
+            },
+            previous_state: {
+              "site_settings" => {
+                "base_font" => "inter",
+                "heading_font" => "inter",
+              },
+            },
+          )
+        theme.update!(
+          color_scheme: appearance_change.light_color_scheme,
+          dark_color_scheme: appearance_change.dark_color_scheme,
+        )
+        theme.set_default! if kind == :theme
+        SiteSetting.base_font = "lora"
+        SiteSetting.heading_font = "roboto"
+        expect(appearance_change.reload).to be_applied
+
+        SiteSetting.heading_font = "inter"
+        expect(appearance_change).not_to be_applied
+
+        SiteSetting.heading_font = "roboto"
+        SiteSetting.base_font = "inter"
+        expect(appearance_change).not_to be_applied
+      end
+    end
+
     it "is only true for palettes that also set fonts once the change has gone live" do
       appearance_change =
         Fabricate(:appearance_change, theme:, site_settings: { "base_font" => "lora" })
@@ -53,6 +89,7 @@ RSpec.describe AppearanceChange do
         color_scheme: appearance_change.light_color_scheme,
         dark_color_scheme: appearance_change.dark_color_scheme,
       )
+      SiteSetting.base_font = "lora"
       expect(appearance_change.reload.applied?).to eq(false)
 
       appearance_change.update!(previous_state: { "site_settings" => { "base_font" => "inter" } })

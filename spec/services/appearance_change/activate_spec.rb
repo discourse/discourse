@@ -102,6 +102,58 @@ RSpec.describe AppearanceChange::Activate do
       end
     end
 
+    %i[existing_palettes theme].each do |kind|
+      it "can reactivate #{kind} changes after another change replaces their fonts" do
+        SiteSetting.base_font = "lora"
+        first =
+          Fabricate(
+            :appearance_change,
+            kind:,
+            theme:,
+            light_color_scheme: light_palette,
+            dark_color_scheme: dark_palette,
+            site_settings: {
+              "base_font" => "lora",
+            },
+          )
+        second =
+          Fabricate(
+            :appearance_change,
+            kind:,
+            theme:,
+            light_color_scheme: light_palette,
+            dark_color_scheme: dark_palette,
+            site_settings: {
+              "base_font" => "roboto",
+            },
+          )
+
+        expect(
+          described_class.call(params: { appearance_change_id: first.id }, **dependencies),
+        ).to run_successfully
+        expect(
+          described_class.call(params: { appearance_change_id: second.id }, **dependencies),
+        ).to run_successfully
+        expect(first.reload).not_to be_applied
+        expect(second.reload).to be_applied
+        expect(
+          AppearanceChange::Revert.call(params: { appearance_change_id: first.id }, **dependencies),
+        ).to fail_a_policy(:applied)
+        expect(SiteSetting.base_font).to eq("roboto")
+
+        expect(
+          described_class.call(params: { appearance_change_id: first.id }, **dependencies),
+        ).to run_successfully
+        expect(SiteSetting.base_font).to eq("lora")
+        expect(first.reload).to be_applied
+        expect(second.reload).not_to be_applied
+        expect(
+          AppearanceChange::Revert.call(params: { appearance_change_id: first.id }, **dependencies),
+        ).to run_successfully
+        expect(SiteSetting.base_font).to eq("roboto")
+      end
+    end
+
     context "with a new theme" do
       fab!(:appearance_change) do
         Fabricate(:theme_appearance_change, site_settings: { "heading_font" => "roboto" })
