@@ -27,7 +27,6 @@ module Migrations
 
         def open
           FileUtils.mkdir_p(File.dirname(@path))
-          # The native statement cache can retain a closed database handle.
           Extralite::Database.new(@path, stmt_cache: false)
         end
 
