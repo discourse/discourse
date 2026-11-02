@@ -21,6 +21,11 @@ RSpec.describe Migrations::Importer::DiscourseDB, :postgres do
     )
   end
 
+  it "materializes query arrays so an unconsumed result doesn't reserve the connection" do
+    database.query_array("SELECT generate_series(1, 10000)")
+    expect(database.query_array("SELECT generate_series(1, 3)")).to eq([1, 2, 3])
+  end
+
   it "provides column metadata and closes partially consumed streams" do
     result = database.query_result("SELECT id, id + 1 FROM generate_series(1, 3) AS rows(id)")
     expect(result.column_count).to eq(2)

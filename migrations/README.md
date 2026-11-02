@@ -53,8 +53,8 @@ the constructor-overlap spec when changing this code.
 
 PostgreSQL queries keep running while workers fork. `Database::PostgresStream` reserves
 the connection until the stream is drained or closed; another query or `close` on the same
-connection raises `BusyError` in the meantime. When you consume a stream with `next` and
-stop early, call `close`.
+connection raises `BusyError` in the meantime. A stream can only be consumed once. When you
+consume it with `next` and stop early, call `close`.
 
 A new driver implements `open`, `configure` and `close`, plus `discard` or
 `validate_fork!` depending on its fork policy, and must pass the shared

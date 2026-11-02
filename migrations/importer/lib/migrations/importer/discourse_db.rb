@@ -98,8 +98,9 @@ module Migrations
         result.column_values(0).map(&:to_sym)
       end
 
+      # Materialized, so an unconsumed result can't keep the connection reserved.
       def query_array(sql, *params)
-        query_result(sql, *params).rows
+        query_result(sql, *params).rows.to_a
       end
 
       def query_result(sql, *params)

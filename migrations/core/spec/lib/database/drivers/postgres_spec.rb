@@ -86,6 +86,19 @@ RSpec.describe Migrations::Database::Drivers::Postgres, :postgres do
     connection&.close
   end
 
+  it "refuses a second pass without touching a newer query" do
+    connection = Migrations::Database::ManagedConnection.open(driver)
+    stream_class = Migrations::Database::PostgresStream
+    consumed = stream_class.new(connection, "SELECT 1", [], arrays: true)
+    expect(consumed.to_a).to eq([1])
+    newer = stream_class.new(connection, "SELECT generate_series(2, 3)", [], arrays: true)
+    expect { consumed.to_a }.to raise_error(stream_class::ConsumedError)
+    expect(newer.to_a).to eq([2, 3])
+  ensure
+    newer&.close
+    connection&.close
+  end
+
   it "yields directly in the caller's fiber while reserving the query's connection" do
     connection = Migrations::Database::ManagedConnection.open(driver)
     stream = Migrations::Database::PostgresStream.new(connection, "SELECT 42", [])

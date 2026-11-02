@@ -7,6 +7,9 @@ module Migrations
     class PostgresStream
       include Enumerable
 
+      class ConsumedError < StandardError
+      end
+
       attr_reader :column_count
 
       def initialize(connection, sql, params, arrays: false)
@@ -38,7 +41,8 @@ module Migrations
       def each(&block)
         return enum_for(:each) unless block
         check_owner!
-        return self if @closed
+        # Silently yielding nothing on a second pass would hide the caller's bug.
+        raise ConsumedError, "A database stream can only be consumed once" if @closed
         if @fiber
           loop { yield self.next }
         else
