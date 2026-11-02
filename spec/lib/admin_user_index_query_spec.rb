@@ -180,9 +180,11 @@ RSpec.describe AdminUserIndexQuery do
   end
 
   describe "staff account types" do
-    fab!(:admin) { Fabricate(:admin, created_at: 2.days.ago) }
-    fab!(:moderator) { Fabricate(:moderator, created_at: 1.day.ago) }
-    fab!(:bot) { Fabricate(:admin, id: -100, created_at: Time.zone.now) }
+    fab!(:admin) { Fabricate(:admin, username: "human_admin", created_at: 2.days.ago) }
+    fab!(:moderator) { Fabricate(:moderator, username: "human_moderator", created_at: 1.day.ago) }
+    fab!(:bot) do
+      Fabricate(:admin, id: -100, username: "automated_staff", created_at: Time.zone.now)
+    end
     fab!(:user)
 
     it "defaults missing or unknown account types to human staff before paginating" do
