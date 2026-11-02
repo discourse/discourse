@@ -88,6 +88,12 @@ export default class DesignWizardService extends Service {
   #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
+  #previewController;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#previewController?.abort();
+  }
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -466,6 +472,7 @@ export default class DesignWizardService extends Service {
     const previewingTheme = this.#currentPreviewThemeId !== null;
     const returnsToAdmin = this.source === SOURCE_ADMIN && !!returnUrl;
 
+    this.#previewController?.abort();
     this.active = false;
     this.#onComplete = undefined;
     this.keyValueStore.remove(STATE_KEY);
@@ -791,6 +798,14 @@ export default class DesignWizardService extends Service {
   }
 
   async #previewSelections() {
+    if (!this.active || this.isDestroying) {
+      return;
+    }
+
+    this.#previewController?.abort();
+    const controller = new AbortController();
+    this.#previewController = controller;
+
     applyPreviewFonts(document, {
       bodyFont: this.bodyFont,
       headingFont: this.headingFont,
@@ -802,7 +817,12 @@ export default class DesignWizardService extends Service {
       try {
         await applyColorScheme(
           { id: paletteId },
-          { replace: true, themeId: this.themeId, mode }
+          {
+            replace: true,
+            themeId: this.themeId,
+            mode,
+            signal: controller.signal,
+          }
         );
       } catch {
         // the manager already reports failures; a failed preview should not
@@ -810,6 +830,8 @@ export default class DesignWizardService extends Service {
       }
     }
 
-    showColorMode(mode);
+    if (!controller.signal.aborted) {
+      showColorMode(mode);
+    }
   }
 }

@@ -291,11 +291,47 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.select_palette("default")
       expect(design_wizard_panel).to have_palette_preview
 
-      design_wizard_panel.close
+      PageObjects::CDP
+        .new
+        .with_paused_request(%r{/color-scheme-stylesheet/}) do |request|
+          design_wizard_panel.select_palette("default", wait_for_requests: false)
+          request.wait
+          design_wizard_panel.close(wait_for_requests: false)
 
-      expect(design_wizard_panel).to be_hidden
+          expect(design_wizard_panel).to be_hidden
+          request.resume
+        end
+
+      page.evaluate_async_script("window.clientSettled(30000).then(arguments[0])")
       expect(design_wizard_panel).to have_no_palette_preview
       expect(banner.step_not_completed?("select_theme")).to eq(true)
+    end
+
+    it "keeps the latest palette when an earlier preview finishes later" do
+      earlier_palette =
+        Fabricate(:color_scheme, name: "Earlier", theme_id: Theme.foundation_theme.id)
+      latest_palette = Fabricate(:color_scheme, name: "Latest", theme_id: Theme.foundation_theme.id)
+
+      visit("/")
+      banner.click_step_action("select_theme")
+      expect(design_wizard_panel).to be_visible
+      design_wizard_panel.next_step
+      design_wizard_panel.select_palette("earlier")
+      expect(design_wizard_panel).to have_palette_preview(earlier_palette)
+
+      PageObjects::CDP
+        .new
+        .with_paused_request(%r{/color-scheme-stylesheet/#{earlier_palette.id}/}) do |request|
+          design_wizard_panel.select_palette("earlier", wait_for_requests: false)
+          request.wait
+          design_wizard_panel.select_palette("latest", wait_for_requests: false)
+
+          expect(design_wizard_panel).to have_palette_preview(latest_palette)
+          request.resume
+        end
+
+      page.evaluate_async_script("window.clientSettled(30000).then(arguments[0])")
+      expect(design_wizard_panel).to have_palette_preview(latest_palette)
     end
 
     it "reflects and turns off palettes members can switch between" do
