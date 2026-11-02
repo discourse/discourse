@@ -660,6 +660,9 @@ en:
       title: "Customize your site"
       subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
+      step_progress: "Step %{current}/%{total}"
+      minimize: "Minimize design wizard"
+      restore: "Restore design wizard"
       save: "Save and finish"
       back: "Back"
       next: "Next"
@@ -3524,6 +3527,8 @@ en:
     filter_controls:
       reset: "Reset"
       toggle: "Toggle dropdown filters"
+      sort_label: "Sort by"
+      sort_trigger_label: "Sort by: %{sort}"
 
     d_icon_grid_picker:
       select_icon: "Select icon"
@@ -7010,6 +7015,10 @@ en:
           impact_role_staff: "Staff"
           impact_role_all_members: "All members"
           impact_role_developers: "Developers"
+        sort:
+          recently_updated: "Recently updated"
+          status: "Status"
+          name: "Name"
 
       config:
         about:
@@ -8733,11 +8742,9 @@ en:
           site_contact_group_help: |
             The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
-          your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
+          your_organization_description: "Details about who operates this site and under which jurisdiction."
           company_name: "Name"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
@@ -10051,7 +10058,7 @@ en:
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
           custom: "Custom…"
         suspend_message: "Email Message"
-        suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
+        suspend_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the suspended user."
         suspended_by: "Suspended by"
         silence_reason: "Reason"
         silenced_by: "Silenced By"
@@ -10062,7 +10069,7 @@ en:
         silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
         silence_message: "Email Message"
-        silence_message_placeholder: "(leave blank to send default message)"
+        silence_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the silenced user."
         suspended_until: "(until %{until})"
         suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."

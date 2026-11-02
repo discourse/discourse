@@ -1475,6 +1475,16 @@ sq:
               private:
                 label: "Private"
   onebox:
+    discourse:
+      recurrence:
+        weekdays:
+          sunday: "E dielë"
+          monday: "E hënë"
+          tuesday: "E martë"
+          wednesday: "E mërkurë"
+          thursday: "E enjte"
+          friday: "E premte"
+          saturday: "E shtunë"
     google_meet:
       meeting_code: "Kodi:"
     github:

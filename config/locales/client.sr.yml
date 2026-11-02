@@ -2318,6 +2318,9 @@ sr:
           inappropriate: "Označili ste ovo kao neprikladno"
           notify_moderators: "Označili ste ovo za moderatore"
       revisions:
+        visibility:
+          hidden:
+            title: "Sakriveno"
         reply_to:
           none: "Nema cilja za odgovor"
         controls:
@@ -2325,8 +2328,6 @@ sr:
           previous: "Prethodna revizija"
           next: "Sedeća revizija"
           last: "Poslednja revizija"
-          hide: "Sakrij reviziju"
-          show: "Prikaži reviziju"
         displays:
           inline:
             title: "Prikaži izvedeni ispis s dodavanjima i oduzimanjima u liniji."
@@ -3031,22 +3032,11 @@ sr:
         version: "Verzija"
         up_to_date: "Imate trenutnu verziju!"
         updates_available: "Ažuriranje je dostupno."
-        no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
-        stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
-        installed_version: "Instalirano"
         dismiss_notice: "Ignoriši"
         new_features:
           learn_more: "Saznaj više..."
-        last_checked: "Zadnje provereno"
         refresh_problems: "Osveži"
-        no_problems: "Nisu pronađeni problemi."
-        moderators: "Moderatori:"
-        admins: "Admini:"
-        suspended: "Suspendovani:"
-        private_messages_title: "Poruke"
         backups: "Sigurnosne kopije"
-        general_tab: "Opšti"
-        security_tab: "Sigurnost"
         loading: "Učitavanje kontrolne table..."
         stable: "stabilan"
         sections:
@@ -3184,12 +3174,6 @@ sr:
             embedded: "Ugrađeni pregledi stranica"
             crawlers: "Pretraživači"
           crawler_learn_more: "Saznaj više"
-        period:
-          last_7_days: "Последњих 7 дана"
-          last_30_days: "Последњих 30 дана"
-          last_3_months: "Poslednja 3 meseca"
-          custom: "Posebna"
-          custom_range: "%{start} — %{end}"
         reports:
           today: "Danas"
           yesterday: "Juče"
@@ -3680,7 +3664,6 @@ sr:
         unsuspend_failed: "Nešto nije u redu, pri ukidanju suspenzije ovog korisnika %{error}"
         suspend_reason_label: "Zažto ga suspendiraš? Ovaj tekst <b>će biti vidljiv svima</b> na korisničkom profilu korisnika, i biće prikazan korisniku kad se pokuša prijaviti. Neka bude kratak."
         suspend_reason: "Razlog"
-        suspend_message_placeholder: "Opciono, pružite više informacija o suspenziji i one će biti poslate e-poštom korisniku."
         suspended_by: "Suspendovan od"
         silence_reason: "Razlog"
         moderator: "Moderator?"

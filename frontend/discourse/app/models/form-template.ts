@@ -10,10 +10,9 @@ export interface FormTemplatePayload {
 
 export default class FormTemplate extends RestModel {
   static async findAll(): Promise<FormTemplatePayload[]> {
-    // TODO(typescript-pending): remove the response assertion when ajax supports typed payloads.
-    const result = (await ajax("/form-templates.json")) as {
+    const result = await ajax<{
       form_templates: FormTemplatePayload[];
-    };
+    }>("/form-templates.json");
     return result.form_templates;
   }
 

@@ -2464,9 +2464,6 @@ nl:
     enable_user_status: "Sta gebruikers toe om een aangepast statusbericht in te stellen (emoji + beschrijving)."
     enable_user_tips: "Schakel nieuwe gebruikerstips in die belangrijke functies beschrijven voor gebruikers"
     short_title: "De korte titel wordt gebruikt op het starscherm van de gebruiker, de launcher of andere plaatsen waar de ruimte beperkt is. De titel moet beperkt zijn tot 12 tekens. Bij het wijzigen van deze titel kunnen gebruikers van de PWA worden gevraagd om de app bij te werken of te verwijderen."
-    dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
-    dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
-    dashboard_general_tab_activity_metrics: "Kies rapporten die als activiteitsgegevens op het algemene tabblad worden weergegeven."
     gravatar_enabled: "Gebruik de <a href='https://gravatar.com/'>Gravatar</a>-service voor gebruikersavatars. Door dit uit te schakelen voorkom je dat gebruikers overschakelen naar Gravatar voor hun avatars en heeft geen invloed op gebruikers die het al gebruiken."
     gravatar_name: "Geef de naam op van de Gravatar-provider. Deze naam wordt meestal gebruikt om de bron te identificeren die Gravatar-avatars aan de site levert."
     gravatar_base_url: "Geef de URL op voor toegang tot de API van de Gravatar-provider. Deze instelling is cruciaal voor het omzetten van e-mailadressen in Gravatar-URL's waar avatarafbeeldingen worden opgeslagen."
@@ -4964,6 +4961,19 @@ nl:
     graph_title: "Aantal zoekopdrachten"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Elke dag"
+        every_weekday: "Elke weekdag"
+        ordinals:
+          last: "afgelopen"
+        weekdays:
+          sunday: "Zondag"
+          monday: "Maandag"
+          tuesday: "Dinsdag"
+          wednesday: "Woensdag"
+          thursday: "Donderdag"
+          friday: "Vrijdag"
+          saturday: "Zaterdag"
       user_joined_community: "Lid sinds %{date}"
     google_meet:
       meeting_code: "Code:"

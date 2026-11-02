@@ -4821,6 +4821,9 @@ ur:
           one: "کیا آپ واقعی ان پوسٹس کا ضم چاہتے ہیں؟"
           other: "کیا آپ واقعی ان %{count} پوسٹس کا ضم چاہتے ہیں؟"
       revisions:
+        visibility:
+          hidden:
+            title: "مخفی"
         locale:
           no_locale_set: "کوئی زبان سیٹ نہیں"
           locale_removed: "زبان ہٹا دی"
@@ -4831,9 +4834,6 @@ ur:
           previous: "پچھلی رَوِیژن"
           next: "اگلی رَوِیژن"
           last: "آخری رَوِیژن"
-          hide: "رَوِیژن چھپائیں"
-          show: "رَوِیژن دکھائیں"
-          destroy: "نظرثانی حذف"
           destroy_confirm: "کیا آپ کو یقین ہے کہ آپ اس پوسٹ پر موجود تمام نظرثانیوں کو حذف کرنا چاہتے ہیں؟ یہ عمل مستقل ہے۔"
           revert: "نظر ثانی %{revision}پر واپس جائیں"
           edit_wiki: "وِیکی میں ترمیم کریں"
@@ -6675,36 +6675,17 @@ ur:
           likely_crawler: "ممکنہ کرالر"
       dashboard:
         title: "ڈَیش بورڈ"
-        last_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا:"
-        discourse_last_updated: "Discourse اَپ ڈیٹ کیا گیا:"
         version: "ورژن"
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
-        please_update: "براہ کرم اپ ڈیٹ کریں!"
-        no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
-        stale_data: "اَپ ڈیٹس کے لئے حال ہی میں چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
         version_check_pending: "ایسا لگتا ہے کہ آپ نے حال ہی میں اپ ڈیٹ کیا ہے۔ لاجواب!"
-        installed_version: "انسٹال کیا ہوا"
-        latest_version: "دستیاب"
-        github: "گٹ ہب"
         commit_on_github: "GitHub پر کمٹ %{sha} دیکھیں"
-        changelog: "تغیراتی کھاتہ"
-        problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
         dismiss_notice: "نظر انداز کریں"
         new_features:
           title: "نیا کیا ہے؟"
           subtitle: "ہم وقتاً فوقتاً نئی خصوصیات اور بہتریاں جاری کر رہے ہیں۔ یہ صفحہ نمایاں نکات کا احاطہ کرتا ہے، لیکن آپ 'مزید جانیں' پر کلک کر کے اجرا کی تفصیلات دیکھ سکتے ہیں"
           learn_more: "مزید جانیں..."
-        last_checked: "آخری دفعہ چیک کیا گیا"
         refresh_problems: "رِیفریش"
-        no_problems: "کوئی مسائل نہیں پائے گئے۔"
-        moderators: "نگران:"
-        admins: "منتظمین:"
-        silenced: "خاموش:"
-        suspended: "معطل کردہ:"
-        private_messages_short: "پغم"
-        private_messages_title: "پیغامات"
-        mobile_title: "موبائل"
         space_used: "%{usedSize} استعمال کیا گیا"
         space_used_and_free: "%{usedSize} (%{freeSize} فارغ)"
         uploads: "اَپ لوڈز"
@@ -6713,20 +6694,7 @@ ur:
           one: "%{location}پر %{count} بیک اپ"
           other: "%{location} پر %{count} بیک اپ"
         lastest_backup: "تازہ ترین: %{date}"
-        traffic_short: "ٹریفک"
-        traffic: "ایپلیکیشن ویب رِیکَویسٹس"
-        page_views: "صفحہ کے مشاہدات"
-        page_views_short: "صفحہ کے مشاہدات"
-        show_traffic_report: "تفصیلی ٹریفک رپورٹ دکھائیں"
-        community_health: کمیونٹی صحت
-        moderators_activity: نگرانوں کی سرگرمی
         whats_new_in_discourse: Discourse میں نیا کیا ہے؟
-        activity_metrics: سرگرمی مَیٹرِکس
-        all_reports: "تمام رپورٹیں"
-        general_tab: "عام"
-        moderation_tab: "ماڈریٹر کا کام"
-        security_tab: "سیکورٹی"
-        reports_tab: "رپورٹیں"
         report_filter_any: "کوئی بھی"
         disabled: غیر فعال
         timeout_error: معذرت، استفسار بہت لمبا ہو گیا ہے، براہ کرم ایک چھوٹا وقفہ منتخب کریں
@@ -6866,7 +6834,6 @@ ur:
             storage: "سٹوریج"
             status: "حیثیت"
             discourse_updated: "Discourse اَپ ڈیٹ کیا گیا"
-            dashboard_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا"
         reports_section:
           header_action: "منتظمی"
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
@@ -6954,11 +6921,6 @@ ur:
             crawlers: "کرالرز"
           see_details: "تفصیلات دیکھیں"
           crawler_learn_more: "مزید جانیں"
-        period:
-          last_7_days: "پچھلے 7 دن"
-          last_30_days: "پچھلے 30 دن"
-          last_3_months: "گزشتہ 3 ماہ"
-          custom: "اپنی مرضی کا"
         reports:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           percent_change_tooltip: "تبدیلی: %{percent}"
@@ -7000,9 +6962,6 @@ ur:
             posts_count:
               one: "%{count} دھاگہ"
               other: "%{count} دھاگے"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">تلاشی کے لاگز</a>'
-            disabled: 'ٹرینڈنگ سرچ رپورٹ غیر فعال ہے۔ ڈیٹا اکٹھا کرنے کے لیے <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ سرچ سوالات</a> کو فعال کریں۔'
           sort_button: "%{column}کے حساب سے ترتیب دیں"
           sort_ascending: "ترتیب صعودی"
           sort_descending: "ترتیب نزولی"
@@ -7182,7 +7141,6 @@ ur:
               list: نئی اور پرائیویٹ پوسٹس دکھائیں۔ آر ایس ایس کی سہولت بھی دستیاب ہے
             revisions:
               read: "جدید ترین یا کسی خاص ترمیم کو حاصل کریں"
-              modify: "ترمیمات کو چھپائیں، دکھائیں یا واپس لوٹائیں"
               permanently_delete: "کسی ترمیم کو مستقل طور پر حذف کریں"
             tags:
               list: ٹیگز کی فہرست بنائیں
@@ -8539,7 +8497,6 @@ ur:
           no_constructive_purpose: "کمیونٹی میں اختلاف پیدا کرنے کے علاوہ ان کے اعمال کا کوئی تعمیری مقصد نہیں"
           custom: "حسب ضرورت…"
         suspend_message: "ای میل پیغام"
-        suspend_message_placeholder: "اختیاریطور پر معطلی کے بارے میں مزید معلومات فراہم کریں اور یہ صارف کو ای میل کر دی جائیں گی۔"
         suspended_by: "کی طرف سے معطل کیا گیا"
         silence_reason: "وجہ"
         silenced_by: "جس نے خاموش کیا"
@@ -8548,7 +8505,6 @@ ur:
         silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
         silence_message: "ای میل پیغام"
-        silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"
         suspended_until: "(%{until} تک)"
         suspend_forever: "ہمیشہ کے لیے معطل کریں"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"

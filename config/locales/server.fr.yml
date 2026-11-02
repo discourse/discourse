@@ -2646,9 +2646,6 @@ fr:
     enable_user_status: "Autorisez les utilisateurs à définir un message d'état personnalisé (émoji + description)."
     enable_user_tips: "Activer les nouveaux conseils d'utilisation qui décrivent les fonctionnalités clés aux utilisateurs"
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, dans le lanceur ou à d'autres endroits où l'espace peut être limité. Il ne doit pas dépasser 12 caractères. Notez que la modification de ce titre peut afficher une invite aux utilisateurs de la PWA leur demandant de mettre à jour ou de désinstaller l'application."
-    dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
-    dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
-    dashboard_general_tab_activity_metrics: "Sélectionnez les rapports à afficher comme indicateurs d'activité dans l'onglet général."
     gravatar_enabled: "Utilise le service <a href='https://gravatar.com/'>Gravatar</a> pour les avatars des utilisateurs. La désactivation de cette option empêchera les utilisateurs de choisir Gravatar pour leur avatar, mais n'aura aucune incidence sur ceux qui l'utilisent déjà."
     gravatar_name: "Spécifiez le nom du fournisseur de services Gravatar. Ce nom est généralement utilisé pour identifier la source fournissant des avatars Gravatar au site."
     gravatar_base_url: "Spécifiez l'URL d'accès à l'API du fournisseur Gravatar. Ce paramètre est essentiel pour convertir les adresses e-mail en URL Gravatar dans lesquelles les images d'avatar sont stockées."
@@ -5376,6 +5373,27 @@ fr:
   onebox:
     discourse:
       event_all_day: "Toute la journée"
+      recurrence:
+        every_day: "Tous les jours"
+        every_weekday: "Chaque jour de la semaine"
+        every_week: "Chaque %{weekday}"
+        every_two_weeks: "Tous les deux %{weekday}"
+        every_four_weeks: "Toutes les 4 semaines le %{weekday}"
+        every_month: "Le %{ordinal} %{weekday} de chaque mois"
+        ordinals:
+          first: "premier"
+          second: "deuxième"
+          third: "troisième"
+          fourth: "quatrième"
+          last: "dernier"
+        weekdays:
+          sunday: "Dimanche"
+          monday: "Lundi"
+          tuesday: "Mardi"
+          wednesday: "Mercredi"
+          thursday: "Jeudi"
+          friday: "Vendredi"
+          saturday: "Samedi"
       user_joined_community: "S'est inscrit(e) le %{date}"
     google_meet:
       title: "Réunion Google Meet"

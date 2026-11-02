@@ -373,15 +373,14 @@ export default class Report extends EmberObject {
     categoryId: number | undefined,
     groupId: number | undefined
   ): Promise<Report> {
-    // TODO(typescript-pending): ajax has no response generic; remove this callback annotation when it does.
-    return ajax("/admin/reports/" + type, {
+    return ajax<{ report: ReportPayload }>("/admin/reports/" + type, {
       data: {
         start_date: startDate,
         end_date: endDate,
         category_id: categoryId,
         group_id: groupId,
       },
-    }).then((json: { report: ReportPayload }) => {
+    }).then((json) => {
       // don’t fill for large multi column tables
       // which are not date based
       const modes = json.report.modes;

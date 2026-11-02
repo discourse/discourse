@@ -128,6 +128,36 @@ RSpec.describe UserStat do
     end
   end
 
+  describe ".update_first_unread" do
+    fab!(:user) { Fabricate(:user, last_seen_at: Time.zone.now) }
+
+    [false, true].each do |enabled|
+      it "includes logged-in pseudogroup topics with granular permissions #{enabled}" do
+        freeze_time
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+        author = Fabricate(:admin)
+        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+        post = create_post(category: category, user: author, created_at: 1.hour.ago)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_post =
+          create_post(category: private_category, user: author, created_at: 2.hours.ago)
+        [post, private_post].each do |unread_post|
+          TopicUser.change(
+            user.id,
+            unread_post.topic_id,
+            last_read_post_number: 0,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
+        end
+
+        UserStat.update_first_unread(1.day.ago)
+
+        expected = post.topic.reload.updated_at
+        expect(user.user_stat.reload.first_unread_at).to eq_time(expected)
+      end
+    end
+  end
+
   describe "ensure consistency!" do
     it "can update first unread" do
       post = create_post

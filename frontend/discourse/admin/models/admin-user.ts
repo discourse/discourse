@@ -76,6 +76,8 @@ export interface AdminUserFields extends UserFields {
   can_disable_second_factor?: boolean;
   can_delete_sso_record?: boolean;
   api_key_count?: number;
+  /** Sent only to admins listing bots, for bots whose creator was recorded. */
+  bot_creator?: { username: string; avatar_template: string; url: string };
   external_ids?: Record<string, string>;
   similar_users_count?: number;
   /** Captures contain only null; accept wrapped, unwrapped and empty export serialization conservatively. */
@@ -199,10 +201,7 @@ export default class AdminUser extends User {
     user_id: string | number,
     opts: { raw?: boolean } | null = { raw: false }
   ): Promise<AdminUserDetails | AdminUser> {
-    // TODO(typescript-pending): ajax has no endpoint contracts; remove when admin user responses are typed.
-    const result = (await ajax(
-      `/admin/users/${user_id}.json`
-    )) as AdminUserDetails;
+    const result = await ajax<AdminUserDetails>(`/admin/users/${user_id}.json`);
     result.loadedDetails = true;
 
     if (Object.hasOwn(result, "groups")) {

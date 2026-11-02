@@ -2376,13 +2376,14 @@ lv:
           notify_moderators: "Jūs ziņojāt par šo moderācijai"
           notify_user: "Jūs nosūtījāt ziņu šim lietotājam"
       revisions:
+        visibility:
+          hidden:
+            title: "Paslēpts"
         controls:
           first: "Pirmā versija"
           previous: "Iepriekšējā versija"
           next: "Nākamā versija"
           last: "Pēdējā versija"
-          hide: "Paslēpt versiju"
-          show: "Parādīt versiju"
           edit_wiki: "Rediģēt wiki"
           edit_post: "Rediģēt ierakstu"
         displays:
@@ -3135,30 +3136,12 @@ lv:
         version: "Versija"
         up_to_date: "Tu seko līdzi laikam!"
         updates_available: "Ir pieejami atjauninājumi."
-        no_check_performed: "Nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
-        stale_data: "Pēdējā laikā nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
-        installed_version: "Uzinstalēts"
-        github: "GitHub"
         dismiss_notice: "Ignorēt"
         new_features:
           learn_more: "Uzzināt vairāk..."
-        last_checked: "Pēdējā pārbaude"
         refresh_problems: "Pārlādēt"
-        no_problems: "Problēmas nav atrastas."
-        moderators: "Moderatori:"
-        admins: "Administratori:"
-        suspended: "Īslaicīgi bloķētie:"
-        private_messages_short: "Ziņas"
-        private_messages_title: "Ziņās"
-        mobile_title: "Mobilais"
         uploads: "Augšupielādes"
         backups: "Rezerves kopijas"
-        traffic_short: "Datu plūsma"
-        page_views: "Lapu skatījumi"
-        page_views_short: "Lapu skatījumi"
-        show_traffic_report: "Parādīt detalizētu ziņojumu par datu plūsmu"
-        general_tab: "Vispārīgi"
-        security_tab: "Drošība"
         report_filter_any: "jebkura"
         disabled: Atslēgt
         sections:
@@ -3193,9 +3176,6 @@ lv:
           series:
             anonymous: "Anonīmi"
           crawler_learn_more: "Uzzināt vairāk"
-        period:
-          last_7_days: "Pēdējās 7 dienas"
-          last_30_days: "Pēdējās 30 dienas"
         reports:
           today: "Šodien"
           yesterday: "Vakar"

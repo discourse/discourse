@@ -12,27 +12,26 @@ module JsonApiKit
         new(names, **declarations)
       end
 
-      def initialize(names, guardian:, attributes:, relationships:, schema:, type:)
+      def initialize(names, guardian:, attributes:, relationships:, type:)
         @names = names
         @guardian = guardian
         @declared_attributes = attributes
         @declared_relationships = relationships
-        @schema = schema
         @type = type
         verify_field_names
       end
 
       def attributes
-        @attributes ||= Attributes.new(pick(declared_attributes), guardian:, schema:, type:)
+        @attributes ||= Attributes.new(pick(declared_attributes), guardian:, type:)
       end
 
       def relationships = Relationships.new(pick(declared_relationships))
 
-      def columns = attributes.columns
+      def all? = false
 
       private
 
-      attr_reader :names, :guardian, :declared_attributes, :declared_relationships, :schema, :type
+      attr_reader :names, :guardian, :declared_attributes, :declared_relationships, :type
 
       def pick(fields) = readable(fields).select { names.include?(it.name) }
 
@@ -50,13 +49,13 @@ module JsonApiKit
       def refuse_reserved_names
         reserved_names = declared_names & RESERVED
         return if reserved_names.empty?
-        raise Collision, "#{reserved_names.join(", ")} says which record this is, not what it holds"
+        raise Collision, "Cannot declare reserved field names: #{reserved_names.join(", ")}."
       end
 
       def refuse_repeated_names
         repeated_names = declared_names.tally.filter_map { |name, count| name if count > 1 }
         return if repeated_names.empty?
-        raise Collision, "#{repeated_names.join(", ")} names two fields"
+        raise Collision, "Duplicate field names: #{repeated_names.join(", ")}."
       end
     end
   end

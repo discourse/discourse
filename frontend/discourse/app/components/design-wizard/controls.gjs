@@ -14,7 +14,7 @@ import WelcomeBannerSection from "discourse/components/design-wizard/welcome-ban
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-const STEPS = ["theme", "colors", "homepage"];
+export const STEPS = ["theme", "colors", "homepage"];
 
 export default class DesignWizardControls extends Component {
   @service designWizard;

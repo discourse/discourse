@@ -24,7 +24,7 @@ Types whose meaning a runtime test can't capture (a generic's resolved type, an 
 
 ## Typing model fields added by plugins
 
-Converted models declare the fields core sends in an interface named after the model: `TopicFields`, `CategoryFields`, `SiteFields` and `UserDraftFields`. A plugin that adds fields, on the server with `add_to_serializer` or on the client with `api.addModelField` or `api.addTrackedTopicProperties`, can declare them by augmenting that interface.
+Each core model declares the fields core sends in an interface named after it, such as `TopicFields`, `PostFields`, `UserFields` or `AdminUserFields`. The model's type extends that interface. A plugin that adds fields, on the server with `add_to_serializer` or on the client with `api.addModelField` or `api.addTrackedTopicProperties`, can declare them by augmenting that interface.
 
 The store has two registries that work the same way. `ModelRegistry` maps a store type name to its model, so `store.find` and `store.createRecord` return that model. `ModelCreateAttrsRegistry` maps a type name to the attributes `createRecord` accepts, for models whose inputs differ from their fields.
 
@@ -48,7 +48,9 @@ declare module "discourse/services/store" {
 
 With this file in place, `topic.sticker_count` is a `number | undefined`, and `store.createRecord("sticker")` returns a `Sticker`.
 
-- Type each field from what the server sends. Make it optional unless every payload that builds the model includes it, and add `| null` when the serializer can return `nil`.
+- Type each field from what the server sends. Make it optional unless every payload that builds the model includes it, and add `| null` when the serializer can return `nil`. A field added with an `include_condition` is optional.
+- Declare only the fields the plugin adds. Redeclaring a core field with a different type is reported as an error.
+- A model the plugin defines follows the same pattern as core: export a `<Model>Fields` interface, merge it into the class with `export default interface <Model> extends <Model>Fields {}`, and register the class in `ModelRegistry`. Core disables the `@typescript-eslint/no-empty-object-type` and `@typescript-eslint/no-unsafe-declaration-merging` rules on the merge lines.
 - The file must be a module, so keep at least one `import type` or an `export {};`. Without one, the `declare module` blocks replace the core modules instead of extending them. Avoid a bare `import "discourse/models/topic";` for this, because it stays in the bundle as a runtime import.
 - Use a `.ts` file, not `.d.ts`. Type checking skips declaration files, so a field that clashes with the type core declares is only reported from a `.ts` file. The file compiles to an empty module.
 - Registry keys and lookup names are matched after the resolver's model name normalization. For example, `postStream`, `post_stream` and `post-stream` match the same key. The exported `NormalizeModelName` type describes this normalization. Keys that normalize to the same name produce a union of their registered types. Names without a matching registration and dynamic strings fall back to `RestModel`. Only the model class lookup is normalized. The identity map and `__type` retain the raw string, and request URLs are still derived from that raw string through the adapter.

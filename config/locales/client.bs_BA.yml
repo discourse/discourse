@@ -2528,13 +2528,14 @@ bs_BA:
           few: "Jeste li sigurni da želite izbrisati one postove %{count}?"
           other: "Jeste li sigurni da želite izbrisati one postove %{count}?"
       revisions:
+        visibility:
+          hidden:
+            title: "Hidden"
         controls:
           first: "First revision"
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
-          hide: "Sakrij reviziju"
-          show: "Show revision"
           revert: "Vrati se na reviziju %{revision}"
           edit_wiki: "Promjni Wiki"
           edit_post: "Izmjeni objavu"
@@ -3414,29 +3415,13 @@ bs_BA:
           anonymous_human: "Anoniman"
       dashboard:
         title: "Dashboard"
-        last_updated: "Nadzorna ploča je ažurirana:"
-        discourse_last_updated: "Diskurs ažuriran:"
         version: "Version"
         up_to_date: "You're up to date!"
         updates_available: "Updates are available."
-        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
-        installed_version: "Installed"
-        github: "GitHub"
-        problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         dismiss_notice: "Zanemari"
         new_features:
           learn_more: "Saznaj više..."
-        last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
-        no_problems: "No problems were found."
-        moderators: "Moderators:"
-        admins: "Admins:"
-        silenced: "Stišano: "
-        suspended: "Suspended:"
-        private_messages_short: "PP"
-        private_messages_title: "Poruke"
-        mobile_title: "Mobilni"
         space_used: "%{usedSize} koristili"
         space_used_and_free: "%{usedSize} (%{freeSize} besplatno)"
         uploads: "uploadi"
@@ -3446,20 +3431,7 @@ bs_BA:
           few: "%{count} sigurnosne kopije na %{location}"
           other: "%{count} sigurnosne kopije na %{location}"
         lastest_backup: "Zadnje: %{date}"
-        traffic_short: "Promet"
-        traffic: "Web zahtjevi za aplikacije"
-        page_views: "Prikazi stranica"
-        page_views_short: "Prikazi stranica"
-        show_traffic_report: "Pokaži detaljan izvještaj prometa"
-        community_health: Zdravlje zajednice
-        moderators_activity: Aktivnost moderatora
         whats_new_in_discourse: Šta je novo u diskursu?
-        activity_metrics: Metrike aktivnosti
-        all_reports: "Svi izvještaji"
-        general_tab: "General"
-        moderation_tab: "Moderacija"
-        security_tab: "Security"
-        reports_tab: "Izvještaji"
         report_filter_any: "bilo koje"
         disabled: Neomogućen
         timeout_error: Nažalost, upit traje predugo, odaberite kraći interval
@@ -3495,7 +3467,6 @@ bs_BA:
             title: "System"
             status: "Status"
             discourse_updated: "Diskurs ažuriran"
-            dashboard_updated: "Nadzorna ploča je ažurirana"
         reports_section:
           header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
@@ -3507,8 +3478,6 @@ bs_BA:
           series:
             anonymous: "Anoniman"
           crawler_learn_more: "Saznaj više"
-        period:
-          custom: "Custom"
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
           today: "Today"
@@ -3541,9 +3510,6 @@ bs_BA:
               one: "%{count} objava"
               few: "%{count} objave"
               other: "%{count} objava"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Pretraživanje dnevnika</a>'
-            disabled: 'Izvješće o pretraživanju trendova je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upite pretraživanja dnevnika</a> za prikupljanje podataka.'
           sort_ascending: "diže se"
           sort_descending: "spužđšta se"
           filters:
@@ -4364,7 +4330,6 @@ bs_BA:
         suspend_reason: "Reason"
         suspend_reason_title: "Razlog suspenzije"
         suspend_message: "Email Message"
-        suspend_message_placeholder: "Opciono, pružite više informacija o suspenziji i on će biti poslan e-poštom korisniku."
         suspended_by: "Suspended by"
         silence_reason: "Reason"
         silenced_by: "Stišao je"
@@ -4372,7 +4337,6 @@ bs_BA:
         silence_duration: "Koliko dugo će korisnik biti ućutkan?"
         silence_reason_placeholder: "Razlog za utišanje"
         silence_message: "Email Poruka"
-        silence_message_placeholder: "(ostavite prazno za slanje zadane poruke)"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."

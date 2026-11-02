@@ -4270,6 +4270,9 @@ hr:
           few: "Jeste li sigurni da želite spojiti %{count} postova?"
           other: "Jeste li sigurni da želite spojiti ovih %{count} objava?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skriveno"
         locale:
           no_locale_set: "Nije postavljen jezik"
           locale_removed: "Jezik uklonjen"
@@ -4278,9 +4281,6 @@ hr:
           previous: "Prethodna revizija"
           next: "Sljedeća revizija"
           last: "Zadnja revizija"
-          hide: "Sakrij reviziju"
-          show: "Pokaži reviziju"
-          destroy: "Izbrišite izmjene"
           destroy_confirm: "Jeste li sigurni da želite izbrisati sve izmjene ove objave? Ova je radnja trajna."
           revert: "Vrati se na reviziju %{revision}"
           edit_wiki: "Uredite Wiki"
@@ -5862,32 +5862,15 @@ hr:
           anonymous_human: "Anonimno"
       dashboard:
         title: "Nadzorna ploča"
-        last_updated: "Nadzorna ploča ažurirana:"
-        discourse_last_updated: "Ažuriran Discourse:"
         version: "Verzija"
         up_to_date: "Imate ažurnu verziju!"
         updates_available: "Dopune su dostupne."
-        please_update: "Molimo ažurirajte!"
-        no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
-        stale_data: "Nije dugo učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
-        installed_version: "Instalirano"
-        github: "GitHub"
-        problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         dismiss_notice: "Zanemari"
         new_features:
           title: "Što je novo?"
           subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."
           learn_more: "Saznajte više..."
-        last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
-        no_problems: "Nisu pronađeni problemi."
-        moderators: "Moderatori:"
-        admins: "Admini:"
-        silenced: "Utišano:"
-        suspended: "Suspendirani:"
-        private_messages_short: "Poruke"
-        private_messages_title: "Poruke"
-        mobile_title: "Mobilni"
         space_used: "%{usedSize} korišteno"
         space_used_and_free: "%{usedSize} (%{freeSize} dostupno)"
         uploads: "Prijenosi"
@@ -5897,20 +5880,7 @@ hr:
           few: "%{count} sigurnosna kopija na %{location}"
           other: "%{count} sigurnosnih kopije na %{location}"
         lastest_backup: "Najnovije: %{date}"
-        traffic_short: "Promet"
-        traffic: "Aplikacijski internetski upiti"
-        page_views: "Pregledi stranica"
-        page_views_short: "Pregledi stranica"
-        show_traffic_report: "Prikaži detaljni izvještaj o prometu"
-        community_health: Zdravlje zajednice
-        moderators_activity: Aktivnost moderatora
         whats_new_in_discourse: Što ima novo u Discourse?
-        activity_metrics: Metrika aktivnosti
-        all_reports: "Sva izvješća"
-        general_tab: "Općenito"
-        moderation_tab: "Moderiranje"
-        security_tab: "Sigurnost"
-        reports_tab: "Izvještaji"
         report_filter_any: "bilo koji"
         disabled: Onemogućeno
         timeout_error: Žao nam je, upit traje predugo, odaberite kraći interval
@@ -5946,7 +5916,6 @@ hr:
             title: "Sistem"
             status: "Statust"
             discourse_updated: "Ažuriran Discourse"
-            dashboard_updated: "Nadzorna ploča ažurirana"
         reports_section:
           header_action: "Upravljanje"
           no_data: "Nema podataka za prikaz"
@@ -5958,11 +5927,6 @@ hr:
           series:
             anonymous: "Anonimno"
           crawler_learn_more: "Saznajte više"
-        period:
-          last_7_days: "Zadnjih 7 dana"
-          last_30_days: "Zadnjih 30 dana"
-          last_3_months: "Posljednjih 3 mjeseci"
-          custom: "Posebna"
         reports:
           trend_title: "%{percent} promjena. Trenutno %{current}, bilo je %{prev} u prethodnom razdoblju."
           today: "Danas"
@@ -5995,9 +5959,6 @@ hr:
               one: "%{count} objava"
               few: "%{count} objava"
               other: "%{count} objava"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnici pretraživanja</a>'
-            disabled: 'Izvješće o pretraživanju u trendu je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upita za pretraživanje dnevnika</a> za prikupljanje podataka.'
           sort_button: "Sortiraj po %{column}"
           sort_ascending: "uzlazno"
           sort_descending: "silazno"
@@ -7200,7 +7161,6 @@ hr:
           no_constructive_purpose: "Njihova djela nemaju konstruktivnu svrhu osim stvaranja neslaganja unutar zajednice"
           custom: "Prilagođeno…"
         suspend_message: "E-mail poruka"
-        suspend_message_placeholder: "Po želji navedite više informacija o suspenziji i ona će biti poslana korisniku e-mailom."
         suspended_by: "Suspendirao/la"
         silence_reason: "Razlog"
         silenced_by: "Utišao/la"
@@ -7208,7 +7168,6 @@ hr:
         silence_duration: "Koliko dugo će korisnik biti utišan?"
         silence_reason_placeholder: "Razlog utišavanja"
         silence_message: "Pošaljite poruku e-mailom"
-        silence_message_placeholder: "(ostavite praznim za slanje standardne poruke)"
         suspended_until: "(do %{until})"
         suspend_forever: "Zauvijek suspendirajte"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."

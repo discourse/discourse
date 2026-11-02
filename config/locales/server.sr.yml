@@ -721,6 +721,12 @@ sr:
               private:
                 label: "Privatna"
   onebox:
+    discourse:
+      recurrence:
+        ordinals:
+          last: "poslednji"
+        weekdays:
+          monday: "Ponedeljak"
     github:
       pr_status:
         open: "Otvori"

@@ -3486,14 +3486,14 @@ sv:
           one: "Är du säker på att du vill slå ihop dessa inlägg?"
           other: "Är du säker på att du vill slå ihop dessa %{count} inlägg?"
       revisions:
+        visibility:
+          hidden:
+            title: "Dold"
         controls:
           first: "Första version"
           previous: "Föregående version"
           next: "Nästa version"
           last: "Senaste versionen"
-          hide: "Göm version"
-          show: "Visa version"
-          destroy: "Ta bort versioner"
           destroy_confirm: "Är du säker på att du vill ta bort alla versioner av det här inlägget? Denna åtgärd är permanent."
           revert: "Återgå till version %{revision}"
           edit_wiki: "Uppdatera Wiki"
@@ -4681,29 +4681,13 @@ sv:
           anonymous_human: "Anonym"
       dashboard:
         title: "Översiktspanel"
-        last_updated: "Översiktspanelen uppdaterad:"
-        discourse_last_updated: "Discourse uppdaterad:"
         version: "Version"
         up_to_date: "Du är aktuell!"
         updates_available: "Uppdateringar är tillgängliga."
-        no_check_performed: "En sökning efter uppdateringar har ej genomförts. Kontrollera att sidekiq körs."
-        stale_data: "En sökning efter uppdateringar har inte genomförts på sistone. Kontrollera att sidekiq körs."
-        installed_version: "Installerad"
-        github: "GitHub"
-        problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Ignorera"
         new_features:
           learn_more: "Läs mer..."
-        last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"
-        no_problems: "Inga problem upptäcktes."
-        moderators: "Moderatorer:"
-        admins: "Administratörer:"
-        silenced: "Tystad:"
-        suspended: "Avstängd:"
-        private_messages_short: "Meddelanden"
-        private_messages_title: "Meddelanden"
-        mobile_title: "Mobil"
         space_used: "%{usedSize} används"
         space_used_and_free: "%{usedSize} (%{freeSize} ledigt)"
         uploads: "Uppladdningar"
@@ -4712,20 +4696,7 @@ sv:
           one: "%{count} reserv på %{location}"
           other: "%{count} reserver på %{location}"
         lastest_backup: "Senaste: %{date}"
-        traffic_short: "Trafik"
-        traffic: "Applikations-webbegäran"
-        page_views: "Sidvisningar"
-        page_views_short: "Sidvisningar"
-        show_traffic_report: "Visa detaljerad trafikrapport"
-        community_health: Gemenskapens hälsa
-        moderators_activity: Moderatorers aktivitet
         whats_new_in_discourse: Vad är nytt i Discourse?
-        activity_metrics: Aktivitetsdata
-        all_reports: "Alla rapporter"
-        general_tab: "Allmänt"
-        moderation_tab: "Moderering"
-        security_tab: "Säkerhet"
-        reports_tab: "Rapporter"
         report_filter_any: "något"
         disabled: Inaktiverad
         timeout_error: Tyvärr tar förfrågan för lång tid, vi ber dig välja ett snävare intervall
@@ -4762,7 +4733,6 @@ sv:
             title: "System"
             status: "Status"
             discourse_updated: "Discourse uppdaterad"
-            dashboard_updated: "Översiktspanelen uppdaterad"
         reports_section:
           header_action: "Hantera"
           no_data: "Ingen data att visa"
@@ -4775,11 +4745,6 @@ sv:
             anonymous: "Anonym"
             crawlers: "Sökrobotar"
           crawler_learn_more: "Läs mer"
-        period:
-          last_7_days: "Senaste 7 dagarna"
-          last_30_days: "Senaste 30 dagarna"
-          last_3_months: "Senaste 3 månaderna"
-          custom: "Anpassad"
         reports:
           trend_title: "%{percent} förändring. Nuvarande %{current}, var %{prev} i tidigare perioden."
           today: "Idag"
@@ -4810,9 +4775,6 @@ sv:
             posts_count:
               one: "%{count} inlägg"
               other: "%{count} inlägg"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Sökloggar</a>'
-            disabled: 'Trendsökrapporten är inaktiverad. Aktivera <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">sökfrågor för loggar</a> för att samla data.'
           sort_button: "Sortera efter %{column}"
           sort_ascending: "stigande"
           sort_descending: "fallande"
@@ -6034,7 +5996,6 @@ sv:
           no_constructive_purpose: "Inget konstruktivt syfte med sina handlingar annat än att skapa oenighet inom forumet"
           custom: "Anpassat…"
         suspend_message: "E-postmeddelande"
-        suspend_message_placeholder: "Valfritt kan du erbjuda mer information om avstängningen som skickas per e-post till användaren."
         suspended_by: "Avstängd av"
         silence_reason: "Anledning"
         silenced_by: "Tystad av"
@@ -6042,7 +6003,6 @@ sv:
         silence_duration: "Hur länge ska användaren vara tystad?"
         silence_reason_placeholder: "Anledning till att tysta"
         silence_message: "E-postmeddelande"
-        silence_message_placeholder: "(lämna tomt för att skicka standardmeddelande)"
         suspended_until: "(till %{until})"
         suspend_forever: "Stäng av för alltid"
         cant_suspend: "Denna användare kan inte uteslutas."

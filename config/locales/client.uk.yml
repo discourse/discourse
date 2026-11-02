@@ -5547,6 +5547,9 @@ uk:
       revisions:
         diff_too_complex: "Ця редакція змінила забагато допису одночасно, тому його не можна показати."
         diff_hidden: "Частина історії редагувань цього допису була прихована, тому це редагування не можна показати."
+        visibility:
+          hidden:
+            title: "Приховано"
         locale:
           no_locale_set: "Мова не встановлена"
           locale_removed: "Мову вилучено"
@@ -5557,9 +5560,6 @@ uk:
           previous: "Попередня версія"
           next: "Наступна версія"
           last: "Остання версія"
-          hide: "Приховати версію"
-          show: "Показати версію"
-          destroy: "Видалити редакції"
           destroy_confirm: "Ви дійсно хочете видалити всі зміни цього повідомлення? Ця дія є незворотною."
           revert: "Повернутися до версії %{revision}"
           edit_wiki: "редагувати Wiki"
@@ -7956,8 +7956,6 @@ uk:
           combined: "Результати включають найновіші %{limit} перегляди сторінок, починаючи з %{pageviewLimitDate} о %{pageviewLimitTime}. Попередні перегляди сторінок у вибраному діапазоні дат не враховуються; дані про перегляди сторінок до %{date} більше недоступні."
       dashboard:
         title: "Майстерня"
-        last_updated: "Інформаційна панель оновлена:"
-        discourse_last_updated: "Discourse оновлений:"
         version: "Версія"
         up_to_date: "У вас остання версія!"
         up_to_date_newer_commits:
@@ -7966,21 +7964,13 @@ uk:
           many: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
           other: "Ви використовуєте найновішу версію, але доступні %{count} нові оновлення."
         updates_available: "Доступні оновлення."
-        please_update: "Будь ласка, оновіть!"
-        no_check_performed: "Не виконано перевірку на наявність оновлень. Перевірте, чи працює sidekiq."
-        stale_data: "Останнім часом не здійснювалось перевірок на наявність оновлень. Перевірте, чи працює sidekiq."
         version_check_pending: "Схоже, ви нещодавно оновилися. Фантастика!"
-        installed_version: "Встановлена"
-        latest_version: "Доступно"
-        github: "GitHub"
         commit_on_github: "Переглянути коміт %{sha} на GitHub"
-        changelog: "Список змін"
         commits_ahead:
           one: "Запуск %{count} додаткової зміни з початку цієї серії релізів"
           few: "Запуск %{count} додаткових змін з початку цієї серії випусків"
           many: "Запуск %{count} додаткових змін з початку цієї серії випусків"
           other: "Запуск %{count} додаткових змін з початку цієї серії випусків"
-        problems_found: "Кілька порад по вашим поточним налаштуванням сайту"
         dismiss_notice: "Ігнорувати"
         site_advice:
           title:
@@ -7994,16 +7984,7 @@ uk:
           no_new_features_found: "У стрічці немає елементів, або вибраний вами фільтр не повернув результатів. Ви можете переглянути попередні анонси нових функцій на <a href='%{url}' target='_blank'>сайті Discourse Releases</a>."
           no_new_features_error: "Сталася помилка під час завантаження стрічки. Ви можете переглянути попередні анонси нових функцій на <a href='%{url}' target='_blank'>сайті Discourse Releases</a>."
           learn_more: "Дізнатися більше…"
-        last_checked: "Остання перевірка"
         refresh_problems: "Оновити"
-        no_problems: "Не виявлено жодних проблем."
-        moderators: "Модератори:"
-        admins: "Адміни:"
-        silenced: "Відключені:"
-        suspended: "Призупинені:"
-        private_messages_short: "Пвдмл"
-        private_messages_title: "Повідомлення"
-        mobile_title: "Мобільний"
         space_used: "%{usedSize} використано"
         space_used_and_free: "%{usedSize} (%{freeSize} вільно)"
         uploads: "Завантажити"
@@ -8014,20 +7995,7 @@ uk:
           many: "%{count} резервні копії @ %{location}"
           other: "%{count} резервні копії @ %{location}"
         lastest_backup: "Останні:%{date}"
-        traffic_short: "Трафік"
-        traffic: "Трафік (веб-запити)"
-        page_views: "Переглядів сторінок"
-        page_views_short: "Переглядів"
-        show_traffic_report: "Розширений звіт по трафіку"
-        community_health: Стан спільноти
-        moderators_activity: Діяльність модераторів
         whats_new_in_discourse: Що нового в Discourse?
-        activity_metrics: Метрики активності
-        all_reports: "Всі звіти"
-        general_tab: "Основне"
-        moderation_tab: "Модерація"
-        security_tab: "Безпека"
-        reports_tab: "Звіти"
         report_filter_any: "будь-який"
         disabled: Відключено
         timeout_error: Вибачте, запит займає надто багато часу. Будь ласка, виберіть коротший інтервал
@@ -8279,7 +8247,6 @@ uk:
             latest_backup: "Остання резервна копія %{date}"
             manage_backups: "Керування резервними копіями"
             discourse_updated: "Discourse оновлений"
-            dashboard_updated: "Інформаційна панель оновлена"
         reports_section:
           header_action: "Керувати"
           description: "Закріпити стандартні звіти або запити Data Explorer, щоб відстежувати, що має значення для вашої спільноти."
@@ -8398,12 +8365,6 @@ uk:
             crawlers: "Сканери"
           see_details: "Див. деталі"
           crawler_learn_more: "Дізнатися більше"
-        period:
-          last_7_days: "Останні 7 днів"
-          last_30_days: "Останні 30 днів"
-          last_3_months: "Останні 3 місяців"
-          custom: "Користувацька"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
           percent_change_tooltip: "%{percent} змін."
@@ -8460,9 +8421,6 @@ uk:
               other: "%{count} дописи"
             deselect: "Зніміть позначку з %{name}"
             fetch_error: "Не вдалося завантажити користувачів для цієї групи."
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Пошукові логи</a>'
-            disabled: 'Звіт про пошукові запити відключено. Включити <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал пошукових запитів</a> для збору даних.'
           average_chart_label: Показані середні показники, а не підсумки
           sort_button: "Сортувати за %{column}"
           sort_button_current: "Відсортовано за %{column}, %{direction}"
@@ -8653,7 +8611,6 @@ uk:
               list: Список останніх публікацій і приватних повідомлень. Також підтримується RSS.
             revisions:
               read: "Отримайте останню або певну версію."
-              modify: "Приховувати, показувати або повернути зміни."
               permanently_delete: "Видалити редакцію назавжди."
             tags:
               list: Список тегів.
@@ -10240,7 +10197,6 @@ uk:
           no_constructive_purpose: "Немає конструктиву його дій, окрім створення розколу у спільноті"
           custom: "Користувацька"
         suspend_message: "Повідомлення пошти"
-        suspend_message_placeholder: "При бажанні, надайте додаткову інформацію про припинення, та вона буде відправлена ​​користувачеві по електронній пошті."
         suspended_by: "Призупинено"
         silence_reason: "Причина"
         silenced_by: "Відключено користувачем"
@@ -10249,7 +10205,6 @@ uk:
         silence_reason_title: "Причина заморожування"
         silence_reason_placeholder: "Причина відключення"
         silence_message: "Повідомлення пошти"
-        silence_message_placeholder: "(Залиште незаповненим, щоб відправити дефолтне повідомлення)"
         suspended_until: "(Поки не буде %{until})"
         suspend_forever: "Призупинити назавжди"
         cant_suspend: "Цього користувача не можна заморозити."

@@ -4816,6 +4816,20 @@ zh_CN:
       revisions:
         diff_too_complex: "此次编辑一次性更改了帖子太多内容，因此无法显示。"
         diff_hidden: "该帖子的部分编辑历史已被隐藏，因此无法显示此次编辑。"
+        unlisted:
+          label: "未列出"
+          description: "当浏览编辑历史记录时，此编辑会被跳过，但其内容仍然是公开的。"
+        show_all_edits: "显示所有编辑"
+        visibility:
+          listed:
+            title: "已列出"
+            description: "浏览编辑历史时显示。"
+          unlisted:
+            title: "未列出"
+            description: "浏览编辑历史时跳过。"
+          hidden:
+            title: "已隐藏"
+            description: "已从公开编辑历史以及旁边的差异中移除。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
@@ -4826,9 +4840,7 @@ zh_CN:
           previous: "上一个修订"
           next: "下一个修订"
           last: "上次修订"
-          hide: "隐藏修订"
-          show: "显示修订"
-          destroy: "删除修订"
+          destroy: "删除所有修订版本"
           destroy_confirm: "确定要删除此帖子的所有修订吗？此操作无法撤消。"
           revert: "还原到修订 %{revision}"
           edit_wiki: "编辑 Wiki"
@@ -7056,25 +7068,15 @@ zh_CN:
           combined: "结果包含最近 %{limit} 次页面浏览量，从 %{pageviewLimitDate} 到 %{pageviewLimitTime}。所选日期范围内的早期页面浏览量不包含在内； %{date} 之前的页面浏览量数据不再可用。"
       dashboard:
         title: "信息中心"
-        last_updated: "信息中心更新："
-        discourse_last_updated: "Discourse 更新："
         version: "版本"
         up_to_date: "您已经是最新版本！"
         up_to_date_newer_commits:
           other: "您当前使用的是最新版本，但有 %{count} 条可用的新更改。"
         updates_available: "有可用的更新。"
-        please_update: "请更新！"
-        no_check_performed: "尚未执行更新检查。确保 sidekiq 正在运行。"
-        stale_data: "最近尚未执行更新检查。确保 sidekiq 正在运行。"
         version_check_pending: "看起来您最近更新了。太棒了！"
-        installed_version: "已安装"
-        latest_version: "可用"
-        github: "GitHub"
         commit_on_github: "在 GitHub 上查看提交 %{sha}"
-        changelog: "更改日志"
         commits_ahead:
           other: "正在运行自此版本系列开始以来的 %{count} 条其他更改"
-        problems_found: "基于您当前站点设置的一些建议"
         dismiss_notice: "忽略"
         site_advice:
           title:
@@ -7085,16 +7087,7 @@ zh_CN:
           no_new_features_found: "Feed 中没有条目，或者您的所选筛选器没有返回结果。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           no_new_features_error: "加载 Feed 时出错。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           learn_more: "了解详情…"
-        last_checked: "上次检查"
         refresh_problems: "刷新"
-        no_problems: "找不到问题。"
-        moderators: "版主："
-        admins: "管理员："
-        silenced: "已禁言："
-        suspended: "已封禁："
-        private_messages_short: "消息"
-        private_messages_title: "消息"
-        mobile_title: "移动"
         space_used: "%{usedSize} 已使用"
         space_used_and_free: "%{usedSize}（%{freeSize} 可用）"
         uploads: "上传"
@@ -7102,20 +7095,7 @@ zh_CN:
         backup_count:
           other: "%{count} 个备份，%{location}"
         lastest_backup: "最新：%{date}"
-        traffic_short: "流量"
-        traffic: "应用程序 Web 请求"
-        page_views: "页面浏览量"
-        page_views_short: "页面浏览量"
-        show_traffic_report: "显示详细的流量报告"
-        community_health: 社区健康状况
-        moderators_activity: 版主活动
         whats_new_in_discourse: Discourse 最新变化
-        activity_metrics: 活动指标
-        all_reports: "所有报告"
-        general_tab: "常规"
-        moderation_tab: "审核"
-        security_tab: "安全性"
-        reports_tab: "报告"
         report_filter_any: "任意"
         disabled: 已禁用
         timeout_error: 抱歉，查询时间过长，请选择更短的时间间隔
@@ -7346,7 +7326,6 @@ zh_CN:
             latest_backup: "最新备份 %{date}"
             manage_backups: "管理备份"
             discourse_updated: "Discourse 已更新"
-            dashboard_updated: "仪表盘已更新"
         reports_section:
           header_action: "管理"
           description: "固定标准报告或数据浏览器查询，以跟踪对您的社区至关重要的内容。"
@@ -7450,12 +7429,6 @@ zh_CN:
             crawlers: "抓取工具"
           see_details: "查看详细信息"
           crawler_learn_more: "了解详情"
-        period:
-          last_7_days: "过去 7 天"
-          last_30_days: "过去 30 天"
-          last_3_months: "过去 3 个月"
-          custom: "自定义"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
           percent_change_tooltip: "%{percent} 变化。"
@@ -7497,9 +7470,6 @@ zh_CN:
               other: "%{count} 个帖子"
             deselect: "取消选择 %{name}"
             fetch_error: "无法加载此组的用户。"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
-            disabled: '趋势搜索报告已禁用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
           average_chart_label: 显示平均数，而不是总数
           sort_button: "按%{column}排序"
           sort_button_current: "按%{column}排序，%{direction}"
@@ -7681,7 +7651,7 @@ zh_CN:
               list: 列出最新帖子和不公开帖子。也支持 RSS。
             revisions:
               read: "获取最新修订或特定修订。"
-              modify: "隐藏、显示或恢复修订。"
+              modify: "隐藏、显示、取消列出、重新列出或还原版本。"
               permanently_delete: "永久删除修订。"
             tags:
               list: 列出标签。
@@ -9231,7 +9201,6 @@ zh_CN:
           no_constructive_purpose: "除了在社区内引起异议外，该用户的行动没有任何建设性的目的"
           custom: "自定义…"
         suspend_message: "电子邮件消息"
-        suspend_message_placeholder: "或者，提供有关封禁的更多信息，它将通过电子邮件发送给用户。"
         suspended_by: "封禁操作者："
         silence_reason: "原因"
         silenced_by: "禁言操作者："
@@ -9240,7 +9209,6 @@ zh_CN:
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "禁言原因"
         silence_message: "电子邮件消息"
-        silence_message_placeholder: "（留空以发送默认消息）"
         suspended_until: "（直到 %{until}）"
         suspend_forever: "永久封禁"
         cant_suspend: "无法封禁此用户。"

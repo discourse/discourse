@@ -1694,8 +1694,6 @@ be:
           previous: "Папярэдняя версія"
           next: "Наступная версія"
           last: "Апошняя версія"
-          hide: "Схаваць версію"
-          show: "Паказаць версію"
         displays:
           inline:
             title: "Паказаць атрыманы вынік з дададзенымі і выдаленымі элементамі ў радку"
@@ -2285,35 +2283,15 @@ be:
           anonymous_human: "ананімны"
       dashboard:
         title: "Панэль кіравання"
-        last_updated: "Панэль кіравання абноўлена:"
         version: "Версія"
         up_to_date: "У вас апошняя версія!"
         updates_available: "Даступны абнаўленні."
-        no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
-        stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
-        installed_version: "Усталяваная"
         dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."
-        last_checked: "Апошняя праверка"
         refresh_problems: "Абнавіць"
-        no_problems: "Праблем не выяўлена."
-        moderators: "Мадэратары:"
-        admins: "Адміністратары:"
-        silenced: "Заглушаныя:"
-        suspended: "Прыпыненыя:"
-        private_messages_short: "Павед."
-        private_messages_title: "Паведамленні"
-        mobile_title: "Мабільны"
         uploads: "Запампоўкі"
         backups: "Рэзервовыя копіі"
-        traffic_short: "Трафік"
-        page_views: "Прагляды старонак"
-        page_views_short: "Прагляды"
-        general_tab: "Агульныя"
-        moderation_tab: "Мадэрацыя"
-        security_tab: "Бяспека"
-        reports_tab: "Справаздачы"
         report_filter_any: "любы"
         disabled: Адключана
         sections:
@@ -2344,7 +2322,6 @@ be:
           system:
             title: "сістэма"
             status: "Статус"
-            dashboard_updated: "Панэль кіравання абноўлена"
         reports_section:
           modal:
             apply: "Прымяніць"

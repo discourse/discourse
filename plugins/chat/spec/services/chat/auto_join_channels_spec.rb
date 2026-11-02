@@ -2,12 +2,39 @@
 
 RSpec.describe Chat::AutoJoinChannels do
   describe ".call" do
-    subject(:result) { described_class.call(params: {}) }
+    subject(:result) { described_class.call(params:) }
 
+    let(:params) { {} }
     let!(:previous_events) { DiscourseEvent.events.dup }
 
     before { DiscourseEvent.events.clear }
     after { previous_events.each { |event, handlers| DiscourseEvent.events[event] = handlers } }
+
+    context "with logged-in category permissions" do
+      fab!(:user) { Fabricate(:user, trust_level: 1, last_seen_at: 5.minutes.ago) }
+
+      let(:params) { { user_id: user.id } }
+
+      before { SiteSetting.chat_enabled = true }
+
+      [false, true].each do |enabled|
+        it "joins channels with posting access regardless of granular permissions #{enabled}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+          channels =
+            %i[readonly create_post full].map do |permission|
+              category = Fabricate(:category, permissions: { logged_in_users: permission })
+              Fabricate(:chat_channel, chatable: category, auto_join_users: true)
+            end
+
+          expect(result).to run_successfully
+
+          expect(user.user_chat_channel_memberships.pluck(:chat_channel_id)).to contain_exactly(
+            channels[1].id,
+            channels[2].id,
+          )
+        end
+      end
+    end
 
     context "when chat is disabled" do
       before { SiteSetting.chat_enabled = false }

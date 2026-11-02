@@ -2,7 +2,7 @@
 
 module JsonApiKit
   class Sideloads
-    def self.for(relationships, paths:, rows:, request:, schema:)
+    def self.for(relationships, paths:, rows:, request:, resource:)
       new(
         relationships.map do |relationship|
           Sideload.new(
@@ -10,7 +10,7 @@ module JsonApiKit
             paths: paths.next_for(relationship.name),
             rows:,
             request:,
-            schema:,
+            owner_resource: resource,
           )
         end,
       )

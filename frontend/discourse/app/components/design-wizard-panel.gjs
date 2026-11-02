@@ -1,11 +1,17 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import DesignWizardControls from "discourse/components/design-wizard/controls";
+import DesignWizardControls, {
+  STEPS,
+} from "discourse/components/design-wizard/controls";
 import { isTesting } from "discourse/lib/environment";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class DesignWizardPanel extends Component {
@@ -13,6 +19,28 @@ export default class DesignWizardPanel extends Component {
   @service dialog;
 
   element;
+
+  get stepProgress() {
+    return i18n("design_wizard.step_progress", {
+      current: this.designWizard.stepIndex + 1,
+      total: STEPS.length,
+    });
+  }
+
+  @action
+  minimize() {
+    this.designWizard.setMinimized(true);
+  }
+
+  @action
+  restore() {
+    this.designWizard.setMinimized(false);
+    schedule("afterRender", () => {
+      this.element
+        ?.querySelector(".design-wizard__minimize")
+        ?.focus({ preventScroll: true });
+    });
+  }
 
   @action
   registerElement(element) {
@@ -83,21 +111,56 @@ export default class DesignWizardPanel extends Component {
   <template>
     {{#if this.designWizard.active}}
       <aside
+        aria-hidden={{if this.designWizard.minimized "true"}}
         aria-labelledby="design-wizard-title"
-        class="design-wizard
-          {{unless this.designWizard.animateEntrance '--no-entrance'}}
-          {{if this.designWizard.applyingTheme '--busy'}}"
+        class={{dConcatClass
+          "design-wizard"
+          (unless this.designWizard.animateEntrance "--no-entrance")
+          (if this.designWizard.applyingTheme "--busy")
+          (if this.designWizard.minimized "--minimized")
+        }}
+        id="design-wizard-panel"
+        inert={{this.designWizard.minimized}}
         ...attributes
         {{didInsert this.registerElement}}
       >
-        <DButton
-          class="btn-transparent design-wizard__close"
-          @action={{this.close}}
-          @icon="xmark"
-          @title="modal.close"
-        />
+        <div class="design-wizard__panel-actions">
+          <DButton
+            class="btn-transparent design-wizard__minimize"
+            @action={{this.minimize}}
+            @disabled={{this.designWizard.applyingTheme}}
+            @icon="minus"
+            @title="design_wizard.minimize"
+          />
+          <DButton
+            class="btn-transparent design-wizard__close"
+            @action={{this.close}}
+            @icon="xmark"
+            @title="modal.close"
+          />
+        </div>
         <DesignWizardControls />
       </aside>
+      {{#if this.designWizard.minimized}}
+        <DButton
+          aria-controls="design-wizard-panel"
+          class="btn-default design-wizard__restore"
+          @action={{this.restore}}
+          @ariaExpanded={{false}}
+          @title="design_wizard.restore"
+          {{dAutoFocus}}
+        >
+          <span class="design-wizard__restore-title">
+            {{i18n "design_wizard.title"}}
+          </span>
+          {{#unless this.designWizard.showIntro}}
+            <span class="design-wizard__restore-progress">
+              {{this.stepProgress}}
+            </span>
+          {{/unless}}
+          {{dIcon "chevron-up"}}
+        </DButton>
+      {{/if}}
     {{/if}}
   </template>
 }

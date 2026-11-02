@@ -5804,6 +5804,9 @@ ar:
       revisions:
         diff_too_complex: "أدى هذا التعديل إلى تغيير جزء كبير من المنشور دفعة واحدة، ولا يمكن عرضه."
         diff_hidden: "تم إخفاء جزء من سجل تعديلات هذا المنشور، لذا لا يمكن عرض هذا التعديل."
+        visibility:
+          hidden:
+            title: "مخفي"
         locale:
           no_locale_set: "لم تُحدد أي لغة بعد"
           locale_removed: "تمت إزالة اللغة"
@@ -5814,9 +5817,6 @@ ar:
           previous: "المراجعة السابقة"
           next: "المراجعة التالية"
           last: "آخر مراجعة"
-          hide: "إخفاء المراجعة"
-          show: "إظهار المراجعة"
-          destroy: "حذف المراجعات"
           destroy_confirm: "هل تريد بالتأكيد حذف كل المراجعات على هذا المنشور؟ هذا الإجراء نهائي."
           revert: "العودة إلى المراجعة %{revision}"
           edit_wiki: "تعديل Wiki"
@@ -8016,8 +8016,6 @@ ar:
           anonymous_human: "مجهول"
       dashboard:
         title: "لوحة المعلومات"
-        last_updated: "تم تحديث لوحة المعلومات:"
-        discourse_last_updated: "تحديث Discourse:"
         version: "الإصدار"
         up_to_date: "أنت على اطِّلاع بآخر المستجدات!"
         up_to_date_newer_commits:
@@ -8028,15 +8026,8 @@ ar:
           many: "أنت على أحدث إصدار، لكن يوجد %{count} تغييرًا متوفرًا."
           other: "أنت على أحدث إصدار، لكن يوجد %{count} تغيير متوفر."
         updates_available: "تتوفَّر تحديثات."
-        please_update: "يُرجى التحديث!"
-        no_check_performed: "لم يتم التحقُّق من وجود تحديثات. تأكَّد أن sidekiq قيد التشغيل."
-        stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
         version_check_pending: "يبدو أنك قمت بالتحديث مؤخرًا. رائع!"
-        installed_version: "مثبَّت"
-        latest_version: "متوفر"
-        github: "GitHub"
         commit_on_github: "عرض الإصدار %{sha} على GitHub"
-        changelog: "سجل التغييرات"
         commits_ahead:
           zero: "لا توجد تغييرات إضافية منذ بدء سلسلة الإصدارات هذه."
           one: "يوجد تغيير واحد إضافي منذ بدء سلسلة الإصدارات هذه."
@@ -8044,7 +8035,6 @@ ar:
           few: "يوجد %{count} تغييرات إضافية منذ بدء سلسلة الإصدارات هذه."
           many: "يوجد %{count} تغييرًا إضافيًا منذ بدء سلسلة الإصدارات هذه."
           other: "يوجد %{count} تغيير إضافي منذ بدء سلسلة الإصدارات هذه."
-        problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         dismiss_notice: "تجاهل"
         site_advice:
           title:
@@ -8060,16 +8050,7 @@ ar:
           no_new_features_found: "لا توجد عناصر في الموجز أو أن عامل التصفية الذي اخترته لم يُظهر أي نتائج. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة على <a href='%{url}' target='_blank'>موقع إصدارات Discourse</a>."
           no_new_features_error: "حدث خطأ أثناء تحميل الموجز. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة في <a href='%{url}' target='_blank'>موقع إصدارات Discourse</a>."
           learn_more: "معرفة المزيد..."
-        last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
-        no_problems: "لم يتم العثور على مشكلات."
-        moderators: "المشرفون:"
-        admins: "المسؤولون:"
-        silenced: "المكتومون:"
-        suspended: "المعلَّقون:"
-        private_messages_short: "الرسائل"
-        private_messages_title: "الرسائل"
-        mobile_title: "الجوَّال"
         space_used: "تم استخدام %{usedSize}"
         space_used_and_free: "%{usedSize} (%{freeSize} فارغة)"
         uploads: "التحميلات"
@@ -8082,20 +8063,7 @@ ar:
           many: "%{count} نسخة احتياطية في %{location}"
           other: "%{count} نسخة احتياطية في %{location}"
         lastest_backup: "تاريخ آخر نسخ احتياطي: %{date}"
-        traffic_short: "الزيارات"
-        traffic: "طلبات الويب للتطبيق"
-        page_views: "مرات عرض الصفحة"
-        page_views_short: "مرات عرض الصفحة"
-        show_traffic_report: "عرض تقرير مفصَّل عن الزيارات"
-        community_health: صحة المجتمع
-        moderators_activity: نشاط المشرفين
         whats_new_in_discourse: ما الجديد في Discourse؟
-        activity_metrics: مقاييس النشاط
-        all_reports: "جميع التقارير"
-        general_tab: "عام"
-        moderation_tab: "الإشراف"
-        security_tab: "الأمان"
-        reports_tab: "التقارير"
         report_filter_any: "أي"
         disabled: متوقفة
         timeout_error: عذرًا، يستغرق الاستعلام وقتًا طويلًا، يُرجى اختيار فترة زمنية أقصر
@@ -8235,7 +8203,6 @@ ar:
             title: "النظام"
             status: "الحالة"
             discourse_updated: "تحديث Discourse"
-            dashboard_updated: "تم تحديث لوحة المعلومات"
         reports_section:
           header_action: "إدارة"
           description: "قم بتثبيت التقارير القياسية أو استعلامات مستكشف البيانات لتتبُّع ما يهم مجتمعك."
@@ -8359,12 +8326,6 @@ ar:
             crawlers: "زاحفات الويب"
           see_details: "عرض التفاصيل"
           crawler_learn_more: "معرفة المزيد"
-        period:
-          last_7_days: "آخر 7 أيام"
-          last_30_days: "آخر 30 يومًا"
-          last_3_months: "آخر 3 أشهر"
-          custom: "مخصَّصة"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "تغيير بنسبة %{percent}. الحالي %{current}، كان %{prev} في فترة سابقة."
           percent_change_tooltip: "تغيير بنسبة %{percent}."
@@ -8428,9 +8389,6 @@ ar:
               few: "منشوران %{count})"
               many: "منشوران %{count})"
               other: "منشوران %{count})"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
-            disabled: 'تقرير عبارات البحث الرائجة متوقف. قم بتفعيل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
           average_chart_label: عرض المتوسطات، وليس الإجمالي
           sort_button: "الترتيب حسب %{column}"
           sort_button_current: "مرتب حسب %{column}، %{direction}"
@@ -8627,7 +8585,6 @@ ar:
               list: إدراج أحدث المنشورات والمنشورات الخاصة. يتم دعم RSS أيضًا.
             revisions:
               read: "الحصول على أحدث إصدار أو إصدار محدَّد"
-              modify: "إخفاء الإصدارات أو إظهارها أو الرجوع فيها"
               permanently_delete: "حذف إصدار نهائيًا"
             tags:
               list: إدراج الوسوم.
@@ -10248,7 +10205,6 @@ ar:
           no_constructive_purpose: "لا يوجد غرض بنَّاء لأفعاله بخلاف خلق المعارضة داخل المجتمع"
           custom: "مخصَّصة…"
         suspend_message: "رسالة إلكترونية"
-        suspend_message_placeholder: "قدِّم المزيد من المعلومات عن التعليق بشكلٍ اختياري وسيتم إرسالها عبر البريد الالكتروني إلى المستخدم."
         suspended_by: "تم التعليق بواسطة"
         silence_reason: "السبب"
         silenced_by: "كتمه"
@@ -10257,7 +10213,6 @@ ar:
         silence_reason_title: "سبب الكتم"
         silence_reason_placeholder: "سبب الكتم"
         silence_message: "رسالة إلكترونية"
-        silence_message_placeholder: "(اتركه فارغا لإرسال الرسالة الافتراضية)"
         suspended_until: "(حتى %{until})"
         suspend_forever: "التعليق للأبد"
         cant_suspend: "لا يمكن تعليق هذا المستخدم."

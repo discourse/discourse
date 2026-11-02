@@ -1775,10 +1775,7 @@ zh_CN:
           streaming_below: "下方新增内容"
           editing_post: "正在编辑帖子"
       sentiments:
-        dashboard:
-          title: "情绪"
         sidebar:
-          overview: "情绪概述"
           analysis: "情绪分析"
         sentiment_analysis:
           share_chart: "复制图表链接"

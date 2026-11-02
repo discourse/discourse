@@ -4013,6 +4013,9 @@ ja:
         confirm:
           other: "これらの %{count} 件の投稿をマージしてよろしいですか？"
       revisions:
+        visibility:
+          hidden:
+            title: "非表示"
         locale:
           no_locale_set: "言語が設定されていません"
           locale_removed: "言語が削除されました"
@@ -4021,9 +4024,6 @@ ja:
           previous: "前のリビジョン"
           next: "次のリビジョン"
           last: "最後のリビジョン"
-          hide: "リビジョンを非表示"
-          show: "リビジョンを表示"
-          destroy: "リビジョンを削除する"
           destroy_confirm: "この投稿のすべてのリビジョンを削除してもよろしいですか？このアクションは永久です。"
           revert: "リビジョン %{revision} に戻す"
           edit_wiki: "ウィキを編集"
@@ -5773,33 +5773,16 @@ ja:
           anonymous_human: "匿名ユーザー"
       dashboard:
         title: "ダッシュボード"
-        last_updated: "ダッシュボードが更新されました:"
-        discourse_last_updated: "Discourse が更新されました:"
         version: "バージョン"
         up_to_date: "最新のバージョンです!"
         updates_available: "アップデートがあります。"
-        please_update: "更新してください！"
-        no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"
-        stale_data: "最近、更新のチェックが行われていません。sidekiq が動作しているか確認してください。"
         version_check_pending: "最近更新したようですね。素晴らしいです！"
-        installed_version: "インストール済み"
-        github: "GitHub"
-        problems_found: "現在のサイト設定に基づいたアドバイス"
         dismiss_notice: "無視"
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
           learn_more: "もっと詳しく..."
-        last_checked: "最終チェック"
         refresh_problems: "更新"
-        no_problems: "問題は見つかりませんでした。"
-        moderators: "モデレーター:"
-        admins: "管理者:"
-        silenced: "投稿禁止:"
-        suspended: "停止中:"
-        private_messages_short: "メッセージ"
-        private_messages_title: "メッセージ"
-        mobile_title: "モバイル"
         space_used: "使用中: %{usedSize}"
         space_used_and_free: "%{usedSize} (未使用: %{freeSize})"
         uploads: "アップロード"
@@ -5807,20 +5790,7 @@ ja:
         backup_count:
           other: "%{location} の %{count} 個のバックアップ"
         lastest_backup: "最新: %{date}"
-        traffic_short: "トラフィック"
-        traffic: "アプリケーション Web リクエスト"
-        page_views: "ページビュー"
-        page_views_short: "ページビュー"
-        show_traffic_report: "詳細なトラフィックレポートを表示"
-        community_health: コミュニティーの健全性
-        moderators_activity: モデレーターのアクティビティ
         whats_new_in_discourse: Discourse の新機能
-        activity_metrics: アクティビティのメトリクス
-        all_reports: "すべてのレポート"
-        general_tab: "一般"
-        moderation_tab: "介入"
-        security_tab: "セキュリティ"
-        reports_tab: "レポート"
         report_filter_any: "すべて"
         disabled: 無効化
         timeout_error: クエリに時間が掛かり過ぎています。より短い間隔を選択してください
@@ -5860,7 +5830,6 @@ ja:
             title: "システム"
             status: "ステータス"
             discourse_updated: "Discourse が更新されました"
-            dashboard_updated: "ダッシュボードが更新されました"
         reports_section:
           header_action: "管理"
           modal:
@@ -5874,11 +5843,6 @@ ja:
             anonymous: "匿名ユーザー"
             crawlers: "クローラー"
           crawler_learn_more: "もっと読む"
-        period:
-          last_7_days: "過去 7 日間"
-          last_30_days: "過去 30 日間"
-          last_3_months: "過去 3 か月"
-          custom: "カスタム"
         reports:
           trend_title: "%{percent} 変更。現在 %{current}、前の期間中 %{prev}。"
           percent_change_tooltip: "%{percent} 変化。"
@@ -5917,9 +5881,6 @@ ja:
             posts_count:
               other: "投稿 %{count} 件"
             deselect: "%{name} を選択解除"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">検索ログ</a>'
-            disabled: 'トレンド検索レポートは無効です。データを収集するには、<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">ログ検索クエリ</a>を有効にしてください。'
           average_chart_label: 合計ではなく平均を表示中
           sort_button: "%{column} で並べ替え"
           sort_button_current: "%{column} の%{direction}で並べ替え済み"
@@ -6099,7 +6060,6 @@ ja:
               list: 最新の投稿と非公開の投稿をリストします。RSS にも対応しています。
             revisions:
               read: "最新または特定のリビジョンを取得します。"
-              modify: "リビジョンを非表示、表示、または元に戻します。"
               permanently_delete: "リビジョンを永久に削除します。"
             tags:
               list: タグをリストします。
@@ -7565,7 +7525,6 @@ ja:
           no_constructive_purpose: "コミュニティー内で異議を唱える以外に建設的な目的がないため"
           custom: "カスタム…"
         suspend_message: "メールメッセージ"
-        suspend_message_placeholder: "必要に応じて、凍結に関する詳細な情報を入力し、ユーザーにメールで送信することができます。"
         suspended_by: "凍結者:"
         silence_reason: "理由"
         silenced_by: "投稿禁止設定者:"
@@ -7574,7 +7533,6 @@ ja:
         silence_reason_title: "投稿禁止の理由"
         silence_reason_placeholder: "投稿禁止の理由"
         silence_message: "メールメッセージ"
-        silence_message_placeholder: "(デフォルトのメッセージを送信する場合は空白のままにします)"
         suspended_until: "(%{until} まで)"
         suspend_forever: "永久に凍結する"
         cant_suspend: "このユーザーを凍結できません。"

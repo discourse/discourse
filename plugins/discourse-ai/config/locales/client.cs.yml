@@ -486,8 +486,6 @@ cs:
           scroll_to_bottom: "Přejít na konec"
           editing_post: "Příspěvek je upravován"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sentiment_analysis:
           filter_types:
             all: "Vše"

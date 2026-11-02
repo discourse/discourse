@@ -2337,9 +2337,6 @@ ja:
     enable_user_status: "ユーザーがカスタムステータスメッセージ (絵文字 + 説明) を設定できるようにする。"
     enable_user_tips: "重要な機能をユーザーに説明する新しいユーザーヒントを有効にする"
     short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所で使用されます。12 文字以内です。このタイトルを変更すると、PWA のユーザーに、アプリの更新またはアンインストールを求めるプロンプトが送信される場合があります。"
-    dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
-    dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
-    dashboard_general_tab_activity_metrics: "アクティビティメトリクスとして一般タブに表示されるレポートを選択します。"
     gravatar_name: "Gravatar サービスプロバイダーの名前を指定します。この名前は通常、Gravatar アバターをサイトに提供するソースを特定するために使用されます。"
     gravatar_base_url: "Gravatar プロバイダーの API にアクセスするための URL を指定します。この設定は、メールアドレスをアバター画像が保存されている Gravatar URL に変換するために重要です。"
     share_quote_buttons: "引用の共有ウィジェットに表示される項目と表示順を決定する。"
@@ -4605,6 +4602,19 @@ ja:
     graph_title: "検索数"
   onebox:
     discourse:
+      recurrence:
+        every_day: "毎日"
+        every_weekday: "すべての平日"
+        ordinals:
+          last: "最終"
+        weekdays:
+          sunday: "日曜日"
+          monday: "月曜日"
+          tuesday: "火曜日"
+          wednesday: "水曜日"
+          thursday: "木曜日"
+          friday: "金曜日"
+          saturday: "土曜日"
       user_joined_community: "%{date} に参加"
     google_meet:
       meeting_code: "コード:"

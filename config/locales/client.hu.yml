@@ -4328,6 +4328,9 @@ hu:
           one: "Biztos, hogy egyesíti ezeket a bejegyzéseket?"
           other: "Biztos, hogy egyesíti ezt a(z) %{count} bejegyzést?"
       revisions:
+        visibility:
+          hidden:
+            title: "Rejtett"
         locale:
           no_locale_set: "Nincs beállítva nyelv"
           locale_removed: "Nyelv eltávolítva"
@@ -4336,9 +4339,6 @@ hu:
           previous: "Előző felülvizsgálat"
           next: "Következő felülvizsgálat"
           last: "Utolsó felülvizsgálat"
-          hide: "Verzió elrejtése"
-          show: "Verzió megjelenítése"
-          destroy: "Verziók törlése"
           destroy_confirm: "Biztos, hogy törli a bejegyzés összes verzióját? Ez a művelet végleges."
           revert: "Visszatérés a(z) %{revision} verzióhoz"
           edit_wiki: "Wiki szerkesztése"
@@ -6176,33 +6176,16 @@ hu:
           anonymous_human: "Névtelen"
       dashboard:
         title: "Vezérlőpult"
-        last_updated: "Az irányítópult frissítve:"
-        discourse_last_updated: "Discourse frissítve:"
         version: "Verzió"
         up_to_date: "A rendszer naprakész!"
         updates_available: "Frissítések érhetőek el!"
-        please_update: "Kérjük, frissítsd!"
-        no_check_performed: "A frissítések ellenőrzése nem történt meg. Győződjön meg arról, hogy a Sidekiq fut."
-        stale_data: "Rég nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
         version_check_pending: "Úgy nézik nem rég frissítettél. Fantasztikus!"
-        installed_version: "Telepítve"
-        github: "GitHub"
-        problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
         dismiss_notice: "Letiltás"
         new_features:
           title: "Újdonságok?"
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
           learn_more: "Tudjon meg többet..."
-        last_checked: "Utoljára ellenőrizve"
         refresh_problems: "Újratöltés"
-        no_problems: "Nem találtunk semmilyen problémát."
-        moderators: "Moderátorok:"
-        admins: "Adminisztrátorok:"
-        silenced: "Hangtalan:"
-        suspended: "Felfüggesztettek:"
-        private_messages_short: "Üzenetek"
-        private_messages_title: "Üzenetek"
-        mobile_title: "Mobiltelefon"
         space_used: "%{usedSize} használva"
         space_used_and_free: "%{usedSize} (%{freeSize} szabad)"
         uploads: "Feltöltések"
@@ -6211,20 +6194,7 @@ hu:
           one: "%{count} biztonsági mentés %{location} oldalon"
           other: "%{count} biztonsági mentés %{location} oldalon"
         lastest_backup: "Legutóbbi: %{date}"
-        traffic_short: "Forgalom"
-        traffic: "Webes kérések alkalmazás"
-        page_views: "Oldalmegtekintések"
-        page_views_short: "Oldalmegtekintések"
-        show_traffic_report: "Részletes forgalom jelentés megtekintése"
-        community_health: Szociális egészség
-        moderators_activity: Moderátorok tevékenysége
         whats_new_in_discourse: Mik a Discourse újdonságai?
-        activity_metrics: Aktivitás
-        all_reports: "Összes bejelentés"
-        general_tab: "Általános"
-        moderation_tab: "Moderálás"
-        security_tab: "Biztonság"
-        reports_tab: "Jelentések"
         report_filter_any: "Bármely"
         disabled: Kikapcsolt
         timeout_error: Sajnos a lekérdezés túl sokáig tart, kérjük, válasszon rövidebb időszakot
@@ -6265,7 +6235,6 @@ hu:
             title: "Rendszer"
             status: "Állapot"
             discourse_updated: "Discourse frissítve"
-            dashboard_updated: "Az irányítópult frissítve"
         reports_section:
           header_action: "Kezelés"
           no_data: "Nincs megjeleníthető adat"
@@ -6278,11 +6247,6 @@ hu:
             anonymous: "Névtelen"
             crawlers: "Keresőrobotok"
           crawler_learn_more: "Tudjon meg többet"
-        period:
-          last_7_days: "Elmúlt 7 nap"
-          last_30_days: "Elmúlt 30 nap"
-          last_3_months: "Elmúlt 3 hónap"
-          custom: "Egyéni"
         reports:
           trend_title: "%{percent} megváltoztatni. Jelenlegi %{current}, volt %{prev} az előző időszakban"
           percent_change_tooltip: "%{percent} változás."
@@ -6326,9 +6290,6 @@ hu:
               one: "%{count} bejegyzés"
               other: "%{count} bejegyzés"
             deselect: "%{name} kijelölésének megszüntetése"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Keresési napló</a>'
-            disabled: 'A trendkeresési jelentés le van tiltva. Engedélyezze a <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">naplózott keresési lekérdezéseket</a> az adatgyűjtéshez.'
           average_chart_label: Átlagokat mutat, nem összesítéseket
           sort_button: "Rendezés %{column} szerint"
           sort_button_current: "Rendezés: %{column}, %{direction}"
@@ -6512,7 +6473,6 @@ hu:
               list: Legutóbbi hozzászólások és privát hozzászólások listája. Az RSS is támogatott.
             revisions:
               read: "A legfrissebb vagy egy adott felülvizsgálat lekérése."
-              modify: "Revíziók elrejtése, megjelenítése vagy visszaállítása."
               permanently_delete: "Felülvizsgálat végleges törlése."
             tags:
               list: Címkék listázása.
@@ -7995,7 +7955,6 @@ hu:
           no_constructive_purpose: "Nincs konstruktív célja a cselekedeteiknek a közösségen belüli elégedetlenségen kívül."
           custom: "Egyéni"
         suspend_message: "E-mail üzenet"
-        suspend_message_placeholder: "Opcionálisan adjon meg további információkat a felfüggesztésről, amit e-mailben elküldünk a felhasználónak."
         suspended_by: "Felfüggesztette:"
         silence_reason: "Indok"
         silenced_by: "Némítva általa"
@@ -8004,7 +7963,6 @@ hu:
         silence_reason_title: "Némítás oka"
         silence_reason_placeholder: "Némítás oka"
         silence_message: "E-mail üzenet"
-        silence_message_placeholder: "(Hagyd üresen hogy az alapértelmezett üzenetet küldje el)"
         suspended_until: "(eddig: %{until})"
         suspend_forever: "Örökre felfüggeszteni"
         cant_suspend: "Ez a felhasználó nem lett felfüggesztve"

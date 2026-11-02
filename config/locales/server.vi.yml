@@ -1425,9 +1425,6 @@ vi:
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
-    dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
-    dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
-    dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
     suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
     enable_composer_redesign: "Bật giao diện khung soạn thảo mới."
     prioritize_recently_used_tags: "Khi thêm thẻ (Tag) lúc tạo hoặc sửa bài viết, hiển thị các thẻ người dùng đã sử dụng gần đây lên đầu danh sách, trước các thẻ phổ biến nhất của diễn đàn."
@@ -2772,6 +2769,18 @@ vi:
                 label: "Riêng tư"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Mỗi ngày"
+        ordinals:
+          last: "cuối cùng"
+        weekdays:
+          sunday: "Chủ Nhật"
+          monday: "Thứ Hai"
+          tuesday: "Thứ Ba"
+          wednesday: "Thứ Tư"
+          thursday: "Thứ Năm"
+          friday: "Thứ Sáu"
+          saturday: "Thứ Bảy"
       user_joined_community: "Tham gia %{date}"
     google_meet:
       meeting_code: "Mã:"
