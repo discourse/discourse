@@ -48,10 +48,12 @@ module Migrations
             raise Lifecycle::UnsafeForkError,
                   "SQLite has an active transaction; cannot reopen it safely"
           end
+
           if attached_databases?(connection)
             raise Lifecycle::UnsafeForkError,
                   "SQLite has an attached database; cannot reopen it safely"
           end
+
           if temporary_schema?(connection)
             raise Lifecycle::UnsafeForkError,
                   "SQLite has a temporary schema; cannot reopen it safely"
