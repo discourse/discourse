@@ -34,6 +34,12 @@ register_homepage(
 )
 
 after_initialize do
+  if defined?(Rack::MiniProfiler)
+    %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
+      Rack::MiniProfiler.config.skip_paths << "#{Discourse.base_path}#{path}"
+    end
+  end
+
   add_to_serializer(:site, :blog_base_url, include_condition: -> { SiteSetting.blog_enabled }) do
     Blog::Configuration.base_url
   end
