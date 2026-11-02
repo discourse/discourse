@@ -47,14 +47,14 @@ according to its driver's fork policy:
 | `:discard` | The child redirects the inherited socket to `/dev/null`, so libpq's Terminate message can't end the parent's session. | PostgreSQL |
 | `:close_reopen` | The connection is closed before the fork and reopened afterwards. Forking raises if it has an open transaction, an attached database or temporary tables. | The converter's run database (`reopenable: true`) |
 
-Opening a connection is serialized with forks because a native constructor can open its
-socket before Ruby gets the handle, and a child forked in between can't discard it. Keep
-the constructor-overlap spec when changing this code.
+Opening a connection cannot overlap with a fork. A native constructor can open its socket
+before Ruby gets the handle, and a child forked in between can't discard it. Keep the
+constructor-overlap spec when changing this code.
 
-PostgreSQL queries keep running while workers fork. `Database::PostgresStream` reserves
-the connection until the stream is drained or closed; another query or `close` on the same
-connection raises `BusyError` in the meantime. A stream can only be consumed once. When you
-consume it with `next` and stop early, call `close`.
+PostgreSQL queries keep running while workers fork. `Database::PostgresStream` keeps the
+connection until all rows are read or the stream is closed. Another query or `close` on
+the same connection raises `BusyError` in the meantime. A stream can only be consumed
+once. When you consume it with `next` and stop early, call `close`.
 
 A new driver implements `open`, `configure` and `close`, plus `discard` or
 `validate_fork!` depending on its fork policy, and must pass the shared
@@ -112,10 +112,10 @@ end
 ```
 
 The framework does the rest. Before forking, it asks the adapter for chunk boundaries
-over the ordered partition key. The coordinator starts up to its allocated worker budget,
-and workers repeatedly claim chunks from a shared queue. For each chunk, a worker reads
-its `[lower, upper)` slice (that's what `partition_slice` expands to) and writes to its own
-SQLite shard. The completed shards are merged back into the run database.
+over the ordered partition key. The coordinator starts no more than the configured number
+of workers. Workers repeatedly claim chunks from a shared queue. For each chunk, a worker
+reads its `[lower, upper)` slice (that's what `partition_slice` expands to) and writes to
+its own SQLite shard. The completed shards are merged back into the run database.
 
 Two things to get right:
 

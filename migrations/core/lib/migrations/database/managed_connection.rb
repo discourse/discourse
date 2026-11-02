@@ -30,7 +30,7 @@ module Migrations
         end
         @pid = Process.pid
         @mutex = Mutex.new
-        @depth = 0
+        @operation_depth = 0
         @state = :closed
         Lifecycle.register(self)
         begin
@@ -44,9 +44,9 @@ module Migrations
 
       def with(&block)
         if close_reopen?
-          Lifecycle.synchronize { with_lease(&block) }
+          Lifecycle.synchronize { with_connection(&block) }
         else
-          with_lease(&block)
+          with_connection(&block)
         end
       end
 
@@ -63,21 +63,21 @@ module Migrations
         unless @state == :open
           raise Lifecycle::UnsafeForkError, "#{@driver.class} connection is #{@state}"
         end
-        if @depth > 0 && @lease_owner == current_owner
+        if @operation_depth > 0 && @operation_owner == current_owner
           raise Lifecycle::UnsafeForkError, "Cannot fork inside an active database operation"
         end
         if @policy == :forbid
           raise Lifecycle::UnsafeForkError,
                 "#{@driver.class} has no approved fork policy; close it before forking"
         end
-        @driver.validate_fork!(@native) if close_reopen?
+        @driver.validate_fork!(@connection) if close_reopen?
       end
 
       def prepare_fork!
         return unless close_reopen?
         begin
-          @driver.close(@native)
-          @native = nil
+          @driver.close(@connection)
+          @connection = nil
           @state = :suspended
         rescue Exception
           @state = :failed
@@ -90,37 +90,36 @@ module Migrations
         begin
           open!
         rescue Exception
-          @driver.close(@native) if @native
-          @native = nil
+          @driver.close(@connection) if @connection
+          @connection = nil
           @state = :failed
           raise
         end
       end
 
       def discard_after_fork!
-        @driver.discard(@native) if @native
-        @native = nil
+        @driver.discard(@connection) if @connection
+        @connection = nil
         @state = :discarded
         @mutex = Mutex.new
-        @depth = 0
+        @operation_depth = 0
       end
 
-      # Streams reserve the protocol once, including between calls to #next.
-      def checkout(owner)
+      def start_operation(owner)
         @mutex.synchronize do
           check_owner!
           raise UnavailableError, "Database connection is #{@state}" unless @state == :open
-          if @depth > 0 && @lease_owner != owner
+          if @operation_depth > 0 && @operation_owner != owner
             raise BusyError, "Database connection already has an active operation"
           end
-          @lease_owner = owner
-          @depth += 1
-          @native
+          @operation_owner = owner
+          @operation_depth += 1
+          @connection
         end
       end
 
-      def checkin
-        @mutex.synchronize { @depth -= 1 }
+      def finish_operation
+        @mutex.synchronize { @operation_depth -= 1 }
       end
 
       private
@@ -134,28 +133,30 @@ module Migrations
       end
 
       def open!
-        @native = @driver.open
-        @driver.configure(@native)
+        @connection = @driver.open
+        @driver.configure(@connection)
         @state = :open
       end
 
       def close!
         @mutex.synchronize do
           check_owner!
-          raise BusyError, "Cannot close a connection with an active operation" if @depth > 0
-          @driver.close(@native) if @native
-          @native = nil
+          if @operation_depth > 0
+            raise BusyError, "Cannot close a connection with an active operation"
+          end
+          @driver.close(@connection) if @connection
+          @connection = nil
           @state = :closed
           Lifecycle.unregister(self)
         end
       end
 
-      def with_lease
-        native = checkout(current_owner)
+      def with_connection
+        connection = start_operation(current_owner)
         begin
-          yield native
+          yield connection
         ensure
-          checkin
+          finish_operation
         end
       end
 

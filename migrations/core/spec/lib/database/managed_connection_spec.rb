@@ -53,7 +53,7 @@ RSpec.describe Migrations::Database::ManagedConnection do
     expect(@connection.with(&:closed?)).to be(false)
   end
 
-  it "holds an operation lease across suspended fibers" do
+  it "keeps an operation active across suspended fibers" do
     @connection = described_class.open(driver)
     fiber = Fiber.new { @connection.with { Fiber.yield :reading } }
     expect(fiber.resume).to eq(:reading)
@@ -90,7 +90,7 @@ RSpec.describe Migrations::Database::ManagedConnection do
     reader&.join
   end
 
-  it "keeps close and unregister inside the lifecycle barrier" do
+  it "keeps close and unregister inside the lifecycle lock" do
     @connection = described_class.open(driver)
     entered, release = Queue.new, Queue.new
     allow(driver).to receive(:close).and_wrap_original do |original, native|

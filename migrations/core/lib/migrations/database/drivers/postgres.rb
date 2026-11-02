@@ -32,8 +32,8 @@ module Migrations
 
         def discard(connection)
           return if connection.finished?
-          # PQfinish writes Terminate. Redirect the descriptor before any native
-          # cleanup can reach the parent's session; redirection failures are fatal.
+          # PQfinish writes Terminate. Redirect the socket first so it cannot close
+          # the parent's session.
           connection.socket_io.reopen(IO::NULL)
         end
       end

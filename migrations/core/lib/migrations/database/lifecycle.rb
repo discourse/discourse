@@ -9,13 +9,13 @@ module Migrations
       class RecoveryError < StandardError
       end
 
-      @gate = LifecycleGate.new
+      @lock = LifecycleLock.new
       @mutex = Mutex.new
       @connections = []
 
       class << self
         def synchronize(&block)
-          @gate.synchronize(&block)
+          @lock.synchronize(&block)
         end
 
         def register(connection)
@@ -31,33 +31,33 @@ module Migrations
         end
 
         def with_fork
-          @gate.exclusive do
+          @lock.exclusive do
             connections = @mutex.synchronize { @connections.dup }
             connections.each(&:validate_fork!)
-            prepared = []
+            prepared_connections = []
             begin
               connections.each do |connection|
-                prepared << connection
+                prepared_connections << connection
                 connection.prepare_fork!
               end
               yield
             ensure
-              errors = []
-              prepared.reverse_each do |connection|
+              restore_errors = []
+              prepared_connections.reverse_each do |connection|
                 connection.restore_after_fork!
               rescue Exception => error
-                errors << error
+                restore_errors << error
               end
-              if errors.any?
+              if restore_errors.any?
                 raise RecoveryError,
-                      "Restoring database connections failed: #{errors.map(&:message).join("; ")}"
+                      "Restoring database connections failed: #{restore_errors.map(&:message).join("; ")}"
               end
             end
           end
         end
 
         def after_fork_child
-          @gate = LifecycleGate.new
+          @lock = LifecycleLock.new
           @mutex = Mutex.new
           @connections.each(&:discard_after_fork!)
           @connections.clear

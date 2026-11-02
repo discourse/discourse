@@ -5,8 +5,8 @@ require "rubocop"
 module RuboCop
   module Cop
     module Migrations
-      # This is advisory: an implicit generator result can be observed through
-      # StopIteration#result, so replacing #yield with #<< is not always safe.
+      # An implicit generator result is available through StopIteration#result.
+      # Replacing #yield with #<< is not always safe.
       class SingleValueYielder < Base
         MSG = "Prefer `<<` for one yielded value unless the consumer's return value is needed."
         RESTRICT_ON_SEND = [:yield].freeze

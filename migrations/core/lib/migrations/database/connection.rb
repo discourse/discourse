@@ -6,8 +6,6 @@ module Migrations
       TRANSACTION_BATCH_SIZE = 1000
       PREPARED_STATEMENT_CACHE_SIZE = 32
 
-      # Only the parent's reopenable database can be suspended during an insert.
-      # Worker shards forbid forks, so their hot path needs no per-row dispatch.
       module ReopenableInserts
         def insert(sql, parameters = [])
           @connection.with { super }
@@ -109,7 +107,6 @@ module Migrations
         @connection.with { |db| db.transaction { yield self } }
       end
 
-      # ATTACH cannot run in the wrapper's batched insert transaction.
       def attach_database(path, name:)
         @connection.with do |db|
           commit_transaction

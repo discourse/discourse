@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module Migrations
-  # All worker forks pass through the database lifecycle barrier. Non-database
-  # resources may additionally invalidate their child-side state with a hook.
   module ForkManager
     BATCHED_FORKS_KEY = :migrations_fork_manager_batched_forks
     private_constant :BATCHED_FORKS_KEY
@@ -29,8 +27,7 @@ module Migrations
             end
           end
         rescue Exception
-          # A partially started batch has no caller to drain its worker pipes.
-          # Reap only our unreaped children; their incomplete shards are discarded.
+          # The caller cannot read worker pipes when starting a batch fails.
           children.each do |pid|
             unless Process.waitpid(pid, Process::WNOHANG)
               Process.kill("KILL", pid)
@@ -64,7 +61,7 @@ module Migrations
               @mutex = Mutex.new
               @after_fork_child_hooks.dup.each(&:call)
             rescue Exception => error
-              # Normal exit could finalize the very handle we failed to discard.
+              # Finalizers could write to the parent's database socket.
               begin
                 STDERR.puts("Worker initialization failed: #{error.class}: #{error.message}")
               ensure

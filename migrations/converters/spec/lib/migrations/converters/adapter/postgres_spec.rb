@@ -70,7 +70,7 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
         connected.pop
         forker = Thread.new { Migrations::ForkManager.fork { exit!(reader.stat.chardev? ? 0 : 1) } }
 
-        # Let the fork either wait for construction or expose the unassigned socket.
+        # Wait until the fork is blocked or has reached Process.fork.
         Thread.pass until forker.stop?
         release << true
         adapter = opener.value

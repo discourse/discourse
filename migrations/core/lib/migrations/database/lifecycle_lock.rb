@@ -2,9 +2,9 @@
 
 module Migrations
   module Database
-    # Operations may overlap, but a fork waits for all lifecycle work and SQLite
-    # operations. Ownership follows the thread so streaming fibers can nest calls.
-    class LifecycleGate
+    # Database operations can run together. Forking waits for all of them to finish.
+    # Nested operations are tracked by thread because streams use fibers.
+    class LifecycleLock
       def initialize
         @mutex = Mutex.new
         @condition = ConditionVariable.new

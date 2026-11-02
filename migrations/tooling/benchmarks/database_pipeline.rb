@@ -128,7 +128,6 @@ module DatabasePipelineBenchmark
       Migrations::Database.migrate(path, migrations_path:)
       shards = Migrations::Conversion::ShardManager.new(canonical_path: path, migrations_path:)
       options = { path: }
-      # The pre-lifecycle implementation has no explicit reopenable option.
       if Migrations::Database::Connection
            .instance_method(:initialize)
            .parameters

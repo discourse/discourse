@@ -2,8 +2,8 @@
 
 module Migrations
   module Database
-    # Reserve the protocol once per query. Block iteration yields directly; only
-    # external iteration needs a Fiber to suspend the native result loop.
+    # A query keeps the connection until all rows are read or the stream is closed.
+    # Block iteration runs in the current fiber. #next uses a separate fiber.
     class PostgresStream
       include Enumerable
 
@@ -14,14 +14,14 @@ module Migrations
 
       def initialize(connection, sql, params, arrays: false)
         @pid = Process.pid
-        @connection = connection
+        @managed_connection = connection
         @arrays = arrays
         @closed = false
-        @native = connection.checkout(self)
+        @postgres_connection = connection.start_operation(self)
         begin
-          @native.send_query_params(sql, params)
-          @native.set_single_row_mode
-          @result = @native.get_result
+          @postgres_connection.send_query_params(sql, params)
+          @postgres_connection.set_single_row_mode
+          @result = @postgres_connection.get_result
           @column_count = @result ? @result.nfields : 0
         rescue Exception
           close
@@ -41,7 +41,6 @@ module Migrations
       def each(&block)
         return enum_for(:each) unless block
         check_owner!
-        # Silently yielding nothing on a second pass would hide the caller's bug.
         raise ConsumedError, "A database stream can only be consumed once" if @closed
         if @fiber
           loop { yield self.next }
@@ -77,7 +76,7 @@ module Migrations
             @result.stream_each(&block)
           end
           @result.clear
-          @result = @native.get_result
+          @result = @postgres_connection.get_result
         end
       ensure
         drain
@@ -85,12 +84,12 @@ module Migrations
 
       def drain
         @result&.clear
-        while (pending = @native.get_result)
+        while (pending = @postgres_connection.get_result)
           pending.clear
         end
       ensure
         @closed = true
-        @connection.checkin
+        @managed_connection.finish_operation
       end
 
       def check_owner!
