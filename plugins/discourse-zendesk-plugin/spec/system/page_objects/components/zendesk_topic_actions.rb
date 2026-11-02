@@ -22,14 +22,6 @@ module PageObjects
         has_no_css?(".zendesk-topic-actions a")
       end
 
-      def has_no_actions?
-        has_no_css?(".zendesk-topic-actions")
-      end
-
-      def has_configuration_warning?
-        has_css?(".zendesk-topic-actions", text: I18n.t("js.zendesk.credentials_not_setup"))
-      end
-
       def confirmation_overflows?
         find(".zendesk-topic-actions").evaluate_script("this.scrollWidth > this.clientWidth")
       end

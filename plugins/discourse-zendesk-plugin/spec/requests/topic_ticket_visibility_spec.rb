@@ -52,6 +52,19 @@ RSpec.describe TopicsController do
       expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_zendesk_url")
     end
 
+    it "exposes completion without ticket details to creation groups" do
+      group.add(user)
+      SiteSetting.zendesk_create_ticket_allowed_groups = group.id.to_s
+      sign_in(user)
+
+      get "/t/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["discourse_zendesk_plugin_has_ticket"]).to eq(true)
+      expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_zendesk_id")
+      expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_zendesk_url")
+    end
+
     it "exposes the ticket link only to viewing groups" do
       group.add(user)
       SiteSetting.zendesk_view_ticket_allowed_groups = group.id.to_s

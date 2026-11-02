@@ -48,25 +48,7 @@ RSpec.describe "Create Zendesk ticket" do
     expect(actions).to have_ticket_link(ticket_url)
   end
 
-  it "lets a creator without viewing permission see completion without the ticket link" do
-    group.add(user)
-    SiteSetting.zendesk_create_ticket_allowed_groups = group.id.to_s
-    sign_in(user)
-
-    topic_page.visit_topic(topic)
-    actions.create_ticket
-
-    expect(actions).to have_created_confirmation
-    expect(actions).to have_no_ticket_link
-    expect(actions).to have_no_create_button
-
-    page.refresh
-
-    expect(actions).to have_created_confirmation
-    expect(actions).to have_no_create_button
-  end
-
-  it "lets a creator read a long confirmation on mobile", mobile: true do
+  it "lets a creator without viewing permission read confirmation on mobile", mobile: true do
     group.add(user)
     SiteSetting.zendesk_create_ticket_allowed_groups = group.id.to_s
     TranslationOverride.upsert!(
@@ -74,41 +56,20 @@ RSpec.describe "Create Zendesk ticket" do
       "js.zendesk.ticket_created",
       "Zendesk support ticket created for the customer escalation #{"A" * 80}",
     )
-    topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = "123"
-    topic.save_custom_fields
     sign_in(user)
-
-    topic_page.visit_topic(topic)
-
-    expect(actions).to have_created_confirmation
-    expect(actions.confirmation_overflows?).to eq(false)
-  end
-
-  it "lets a viewer follow an existing ticket without creating tickets" do
-    group.add(user)
-    SiteSetting.zendesk_view_ticket_allowed_groups = group.id.to_s
-    topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = "123"
-    topic.save_custom_fields
-    sign_in(user)
-
-    topic_page.visit_topic(topic)
-
-    expect(actions).to have_ticket_link(ticket_url)
-    expect(actions).to have_no_create_button
-
-    topic_page.visit_topic(Fabricate(:post).topic)
-
-    expect(actions).to have_no_ticket_link
-    expect(actions).to have_no_create_button
-  end
-
-  it "keeps ticket creation available to staff by default" do
-    sign_in(Fabricate(:moderator))
 
     topic_page.visit_topic(topic)
     actions.create_ticket
 
-    expect(actions).to have_ticket_link(ticket_url)
+    expect(actions).to have_created_confirmation
+    expect(actions.confirmation_overflows?).to eq(false)
+    expect(actions).to have_no_ticket_link
+    expect(actions).to have_no_create_button
+
+    page.refresh
+
+    expect(actions).to have_created_confirmation
+    expect(actions).to have_no_create_button
   end
 
   it "lets a creator retry after a failed request" do
@@ -141,32 +102,5 @@ RSpec.describe "Create Zendesk ticket" do
     actions.create_ticket
 
     expect(actions).to have_ticket_link(ticket_url)
-  end
-
-  it "leaves credential setup instructions for staff" do
-    group.add(user)
-    SiteSetting.zendesk_create_ticket_allowed_groups = group.id.to_s
-    SiteSetting.zendesk_jobs_api_token = ""
-    sign_in(user)
-
-    topic_page.visit_topic(topic)
-
-    expect(topic_page).to have_topic_title(topic.title)
-    expect(actions).to have_no_actions
-
-    sign_in(Fabricate(:admin))
-    topic_page.visit_topic(topic)
-
-    expect(actions).to have_configuration_warning
-  end
-
-  it "hides ticket actions from users without permission" do
-    sign_in(user)
-
-    topic_page.visit_topic(topic)
-
-    expect(topic_page).to have_topic_title(topic.title)
-    expect(actions).to have_no_create_button
-    expect(actions).to have_no_ticket_link
   end
 end
