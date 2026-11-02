@@ -68,6 +68,13 @@ module PageObjects
         self
       end
 
+      def has_notification?(type:, position:, text:)
+        has_css?(
+          "#quick-access-all-notifications .notification.#{type}:nth-child(#{position}) .item-label",
+          text: text,
+        )
+      end
+
       def click_notification_with_href(href_substring)
         locator(".user-menu .notification a[href*='#{href_substring}']").click
         self
