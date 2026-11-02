@@ -113,6 +113,29 @@ describe "Classifying reviewable moderation" do
     expect(admin_user_page).to have_suspension_reason("Repeated personal attacks.")
   end
 
+  it "confirms the author before classifying and deleting their account" do
+    user = Fabricate(:user)
+    flagger = Fabricate(:user, trust_level: TrustLevel[3])
+    reviewable = PostActionCreator.spam(flagger, Fabricate(:post, user:)).reviewable
+
+    review_page.visit_reviewable(reviewable)
+    review_page.delete_user_from_reviewable(reviewable, "post-delete_user", confirm: false)
+
+    expect(modal).to have_confirmation_prompt("Are you sure you want to delete @#{user.username}?")
+    expect(modal).to have_user_link(user)
+    expect(modal).to have_focused_continue
+
+    modal.continue_with_keyboard
+
+    expect(modal).to have_classification
+
+    modal.select_category(category)
+    modal.confirm("Delete user")
+
+    expect(modal).to be_closed
+    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+  end
+
   it "classifies before editing, handling the review only after the edit is saved" do
     SiteSetting.dsa_community_rules = [
       rule,

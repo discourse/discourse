@@ -98,6 +98,9 @@ export interface ReviewableAction {
   button_class: string | null;
   label: string;
   confirm_message?: string;
+  confirm_message_template?: string;
+  confirm_user?: User | null;
+  confirm_user_id?: number;
   confirm_destructive?: boolean;
   description?: string;
   server_action: string | null;

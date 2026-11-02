@@ -38,7 +38,8 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  * </InterpolatedTranslation>
  * ```
  *
- * @param {String} key - The i18n translation key to use
+ * @param {String} [key] - The i18n translation key to use
+ * @param {String} [translatedText] - An already translated string with component placeholders
  * @param {Object} [options] - Hash of options to pass to the i18n function for string interpolation
  */
 export default class DInterpolatedTranslation extends Component {
@@ -66,10 +67,12 @@ export default class DInterpolatedTranslation extends Component {
     const optionsArg = this.args.options || {};
 
     // Find all of the placeholders in the string we're looking at.
-    const message = I18n.findTranslationWithFallback(this.args.key, {
-      ...optionsArg,
-      needsPluralization: typeof optionsArg.count === "number",
-    });
+    const message =
+      this.args.translatedText ??
+      I18n.findTranslationWithFallback(this.args.key, {
+        ...optionsArg,
+        needsPluralization: typeof optionsArg.count === "number",
+      });
     const placeholderAppearance = I18n.findPlaceholders(message);
 
     // We only need to keep the placeholders that aren't being handled by those passed in @options.
@@ -91,10 +94,14 @@ export default class DInterpolatedTranslation extends Component {
       );
     });
 
-    const text = i18n(this.args.key, {
+    const options = {
       ...Object.fromEntries(placeholderKeys),
       ...optionsArg,
-    });
+    };
+    const text =
+      this.args.translatedText != null
+        ? I18n.interpolate(message, options)
+        : i18n(this.args.key, options);
 
     const parts = [];
     let currentIndex = 0;
@@ -170,28 +177,31 @@ export default class DInterpolatedTranslation extends Component {
     }
 
     if (missing.length > 0) {
+      const source = this.args.key
+        ? `key '${this.args.key}'`
+        : `text '${this.args.translatedText}'`;
       DInterpolatedTranslation.log(
-        `Translation error for key '${this.args.key}': ${missing.join(", ")}`,
+        `Translation error for ${source}: ${missing.join(", ")}`,
         I18nMissingInterpolationArgument
       );
     }
   }
 
   <template>
-    {{#let this.textAndPlaceholders as |info|}}
-      {{#each info.parts as |part|}}
-        {{part}}
-      {{/each}}
+    {{~#let this.textAndPlaceholders as |info|~}}
+      {{~#each info.parts as |part|~}}
+        {{~part~}}
+      {{~/each~}}
 
-      {{yield (this.curriedPlaceholderComponent info.elements info.rendered)}}
-      {{this.checkPlaceholders info}}
-    {{/let}}
+      {{~yield (this.curriedPlaceholderComponent info.elements info.rendered)~}}
+      {{~this.checkPlaceholders info~}}
+    {{~/let~}}
 
-    {{#unless (has-block)}}
-      {{DInterpolatedTranslation.log
+    {{~#unless (has-block)~}}
+      {{~DInterpolatedTranslation.log
         "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
-      }}
-    {{/unless}}
+      ~}}
+    {{~/unless~}}
   </template>
 }
 
@@ -239,16 +249,16 @@ class Placeholder extends Component {
   }
 
   <template>
-    {{#each (this.getFromMap @elements @name) as |element|}}
-      {{#in-element element}}
-        {{yield}}
-      {{/in-element}}
-    {{/each}}
+    {{~#each (this.getFromMap @elements @name) as |element|~}}
+      {{~#in-element element~}}
+        {{~yield~}}
+      {{~/in-element~}}
+    {{~/each~}}
 
-    {{#unless (has-block)}}
-      {{DInterpolatedTranslation.log
+    {{~#unless (has-block)~}}
+      {{~DInterpolatedTranslation.log
         "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
-      }}
-    {{/unless}}
+      ~}}
+    {{~/unless~}}
   </template>
 }

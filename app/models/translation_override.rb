@@ -39,6 +39,10 @@ class TranslationOverride < ActiveRecord::Base
     %w[system_messages.welcome_user] => %w[username name name_or_username],
     %w[js.welcome_banner.header] => %w[site_name],
     %w[email_from] => %w[site_name],
+    %w[
+      reviewables.actions.reject_user.delete.confirm
+      reviewables.actions.reject_user.block.confirm
+    ] => %w[username],
   }
 
   include HasSanitizableFields

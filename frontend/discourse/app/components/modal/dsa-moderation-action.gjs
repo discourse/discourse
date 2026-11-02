@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DsaModeration from "discourse/components/dsa-moderation";
+import ReviewableActionConfirmation from "discourse/components/reviewable/action-confirmation";
 import { extractError } from "discourse/lib/ajax-error";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -82,11 +83,12 @@ export default class DsaModerationAction extends Component {
         </:belowHeader>
         <:body>
           <flow.Body>
-            <p>{{@model.action.confirm_message}}</p>
+            <ReviewableActionConfirmation @model={{@model.action}} />
           </flow.Body>
         </:body>
         <:footer>
           <flow.Footer
+            @autofocus={{this.hasActionDetails}}
             @cancel={{if @model.action.confirm_message @closeModal}}
             @cancelDisabled={{this.saving}}
             @disabled={{this.saving}}

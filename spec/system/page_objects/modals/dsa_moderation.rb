@@ -22,6 +22,14 @@ module PageObjects
         within(full_modal_selector) { click_button("Continue", exact: true) }
       end
 
+      def continue_with_keyboard
+        page.send_keys(:enter)
+      end
+
+      def has_focused_continue?
+        has_css?("#{footer_selector} .btn-primary:focus", text: "Continue")
+      end
+
       def click_previous_step
         within(full_modal_selector) { find(".dsa-moderation-steps__back").click }
       end
@@ -66,6 +74,13 @@ module PageObjects
 
       def has_confirmation_prompt?(message)
         within(full_modal_selector) { has_text?(message, normalize_ws: true) }
+      end
+
+      def has_user_link?(user)
+        has_css?(
+          "#{full_modal_selector} a[href='#{user.relative_url}']",
+          text: "@#{user.username}",
+        ) && has_css?("#{full_modal_selector} a[href='#{user.relative_url}'] img.avatar")
       end
 
       def has_selected_rule?(ground)

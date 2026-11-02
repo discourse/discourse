@@ -15,6 +15,11 @@ module PageObjects
         find(".dialog-container").has_content?(content)
       end
 
+      def has_user_link?(user)
+        has_css?(".dialog-container a[href='#{user.relative_url}']", text: "@#{user.username}") &&
+          has_css?(".dialog-container a[href='#{user.relative_url}'] img.avatar")
+      end
+
       def click_yes
         find(".dialog-footer .btn-primary").click
       end

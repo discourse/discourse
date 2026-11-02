@@ -62,7 +62,7 @@ export default class DUserLink extends Component {
       href={{this.href}}
       tabindex={{if this.ariaHidden "-1" "0"}}
     >
-      {{yield}}
+      {{~yield~}}
     </a>
   </template>
 }

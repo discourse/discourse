@@ -724,3 +724,11 @@
     width: 100%;
   }
 }
+
+.reviewable-confirmation-user {
+  white-space: nowrap;
+
+  .avatar {
+    margin-inline-end: 0.25em;
+  }
+}

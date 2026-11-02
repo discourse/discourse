@@ -77,6 +77,7 @@ const Body = <template>
 const Footer = <template>
   {{#if @flow.showContinue}}
     <DButton
+      autofocus={{@autofocus}}
       class="btn-primary"
       @action={{@flow.continue}}
       @disabled={{@disabled}}

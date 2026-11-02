@@ -7,6 +7,7 @@ class ReviewableActionSerializer < ApplicationSerializer
              :button_class,
              :label,
              :confirm_message,
+             :confirm_message_template,
              :confirm_destructive,
              :description,
              :server_action,
@@ -16,13 +17,25 @@ class ReviewableActionSerializer < ApplicationSerializer
              :penalty_effect,
              :dsa_classification_required
 
+  has_one :confirm_user, serializer: BasicUserSerializer, root: "users"
+
   def label
     I18n.t(object.label)
   end
 
   def confirm_message
-    I18n.t(object.confirm_message, **(object.confirm_message_args || {}))
+    I18n.t(object.confirm_message, **confirmation_args)
   end
+
+  def confirm_message_template
+    I18n.t(object.confirm_message, **confirmation_args.merge(user: "%{user}"))
+  end
+
+  def include_confirm_user?
+    object.confirm_user.present?
+  end
+
+  alias_method :include_confirm_message_template?, :include_confirm_user?
 
   def description
     I18n.t(object.description, default: nil)
@@ -62,5 +75,15 @@ class ReviewableActionSerializer < ApplicationSerializer
 
   def include_penalty_effect?
     object.penalty_effect.present?
+  end
+
+  private
+
+  def confirmation_args
+    args = object.confirm_message_args || {}
+    return args unless object.confirm_user
+
+    username = ERB::Util.html_escape(args[:username])
+    args.merge(username: username, user: "@#{username}")
   end
 end

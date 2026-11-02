@@ -970,6 +970,7 @@ class Reviewable < ActiveRecord::Base
       if confirmable
         a.confirm_message = "reviewables.actions.reject_user.delete.confirm"
         a.confirm_message_args = { username: username }
+        a.confirm_user = target_user
         a.confirm_destructive = true
       end
     end
@@ -982,6 +983,7 @@ class Reviewable < ActiveRecord::Base
       if confirmable
         a.confirm_message = "reviewables.actions.reject_user.block.confirm"
         a.confirm_message_args = { username: username }
+        a.confirm_user = target_user
         a.confirm_destructive = true
       end
     end

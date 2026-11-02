@@ -12,6 +12,7 @@ import DsaStatementClassification from "discourse/components/dsa-statement-class
 import DsaClassificationModal from "discourse/components/modal/dsa-classification";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
+import ReviewableActionConfirmation from "discourse/components/reviewable/action-confirmation";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable/help-resources";
 import ReviewableInsights from "discourse/components/reviewable/insights";
@@ -449,7 +450,8 @@ export default class ReviewableItem extends Component {
     if (message) {
       if (await this.#claimReviewable()) {
         const confirmOptions = {
-          message,
+          bodyComponent: ReviewableActionConfirmation,
+          bodyComponentModel: performableAction,
           didConfirm: () => this._performConfirmed(performableAction),
           // Claiming happens before the prompt, so release it if nothing is performed.
           didCancel: () => this.#unclaimAutomaticReviewable(),

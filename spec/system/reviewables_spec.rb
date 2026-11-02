@@ -150,29 +150,41 @@ describe "Reviewables" do
     fab!(:spammer_two, :user)
 
     it "confirms deletion of the author of the reviewable that was acted on" do
-      reviewables = {
-        spammer_one =>
-          PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_one)).reviewable,
-        spammer_two =>
-          PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_two)).reviewable,
-      }
+      first_reviewable =
+        PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_one)).reviewable
+      second_reviewable =
+        PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_two)).reviewable
 
       visit("/review")
+      review_page.delete_user_from_reviewable(
+        first_reviewable,
+        "post-delete_user_block",
+        confirm: false,
+      )
 
-      reviewables.each do |spammer, reviewable|
-        review_page.delete_user_from_reviewable(
-          reviewable,
-          "post-delete_user_block",
-          confirm: false,
-        )
+      expect(dialog).to have_content(
+        "Are you sure you want to delete and block @#{spammer_one.username}?",
+      )
+      expect(dialog).to have_user_link(spammer_one)
 
-        expect(dialog).to have_content(
-          I18n.t("reviewables.actions.reject_user.block.confirm", username: spammer.username),
-        )
+      dialog.click_no
 
-        dialog.click_no
-        expect(dialog).to be_closed
-      end
+      expect(dialog).to be_closed
+
+      review_page.delete_user_from_reviewable(
+        second_reviewable,
+        "post-delete_user_block",
+        confirm: false,
+      )
+
+      expect(dialog).to have_content(
+        "Are you sure you want to delete and block @#{spammer_two.username}?",
+      )
+      expect(dialog).to have_user_link(spammer_two)
+
+      dialog.click_no
+
+      expect(dialog).to be_closed
     end
   end
 

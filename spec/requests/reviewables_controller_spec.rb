@@ -148,17 +148,63 @@ RSpec.describe ReviewablesController do
           json["bundled_actions"].map { |b| b["id"] }.uniq,
         )
 
-        [first, second].each do |reviewable|
-          action = json["actions"].find { |a| a["id"] == "#{reviewable.id}-post-delete_user_block" }
+        first_action =
+          json["actions"].find { |action| action["id"] == "#{first.id}-post-delete_user_block" }
 
-          expect(action["action_name"]).to eq("post-delete_user_block")
-          expect(action["confirm_message"]).to eq(
-            I18n.t(
-              "reviewables.actions.reject_user.block.confirm",
-              username: reviewable.target_created_by.username,
-            ),
-          )
-        end
+        second_action =
+          json["actions"].find { |action| action["id"] == "#{second.id}-post-delete_user_block" }
+
+        expect(first_action["action_name"]).to eq("post-delete_user_block")
+        expect(second_action["action_name"]).to eq("post-delete_user_block")
+        expect(first_action["confirm_message"]).to eq(
+          "Are you sure you want to delete and block @#{first.target_created_by.username}?",
+        )
+        expect(first_action["confirm_message_template"]).to eq(
+          "Are you sure you want to delete and block %{user}?",
+        )
+        expect(second_action["confirm_message"]).to eq(
+          "Are you sure you want to delete and block @#{second.target_created_by.username}?",
+        )
+        expect(second_action["confirm_message_template"]).to eq(
+          "Are you sure you want to delete and block %{user}?",
+        )
+        expect(first_action["confirm_user_id"]).to eq(first.target_created_by_id)
+        expect(second_action["confirm_user_id"]).to eq(second.target_created_by_id)
+      end
+
+      it "supports current and existing account placeholders in customized confirmations" do
+        flagger = Fabricate(:user, trust_level: TrustLevel[3])
+        reviewable = PostActionCreator.spam(flagger, Fabricate(:post)).reviewable
+
+        TranslationOverride.upsert!(
+          "en",
+          "reviewables.actions.reject_user.delete.confirm",
+          "%{user} will be deleted. Continue?",
+        )
+
+        TranslationOverride.upsert!(
+          "en",
+          "reviewables.actions.reject_user.block.confirm",
+          "Delete and block @%{username}?",
+        )
+
+        get "/review.json"
+
+        actions = response.parsed_body["actions"].index_by { |action| action["action_name"] }
+
+        expect(response).to have_http_status(:ok)
+        expect(actions["post-delete_user"]["confirm_message"]).to eq(
+          "@#{reviewable.target_created_by.username} will be deleted. Continue?",
+        )
+        expect(actions["post-delete_user"]["confirm_message_template"]).to eq(
+          "%{user} will be deleted. Continue?",
+        )
+        expect(actions["post-delete_user_block"]["confirm_message"]).to eq(
+          "Delete and block @#{reviewable.target_created_by.username}?",
+        )
+        expect(actions["post-delete_user"]["confirm_user_id"]).to eq(
+          reviewable.target_created_by_id,
+        )
       end
 
       context "with trashed topics and posts" do

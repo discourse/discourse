@@ -379,6 +379,7 @@ class ReviewablesController < ApplicationController
     {
       created_by: "user",
       target_created_by: "user",
+      confirm_user: "user",
       target_deleted_by: "user",
       reviewed_by: "user",
       claimed_by: "claimed_by",

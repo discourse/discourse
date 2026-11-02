@@ -177,15 +177,19 @@ RSpec.describe ReviewableUser, type: :model do
     it "asks for confirmation when no rejection reason is required" do
       reviewable.reviewable_scores.build(user: admin, reason: "suspect_user")
 
-      %i[delete_user delete_user_block].each do |id|
-        action = find_action(id)
+      delete_action = find_action(:delete_user)
 
-        expect(action.confirm_destructive).to eq(true)
-        expect(action.confirm_message_args).to eq(username: reviewable.target.username)
-        expect(I18n.t(action.confirm_message, **action.confirm_message_args)).to include(
-          "@#{reviewable.target.username}",
-        )
-      end
+      expect(delete_action.confirm_destructive).to eq(true)
+      expect(delete_action.confirm_message).to eq("reviewables.actions.reject_user.delete.confirm")
+      expect(delete_action.confirm_message_args).to eq(username: reviewable.target.username)
+      expect(delete_action.confirm_user).to eq(reviewable.target)
+
+      block_action = find_action(:delete_user_block)
+
+      expect(block_action.confirm_destructive).to eq(true)
+      expect(block_action.confirm_message).to eq("reviewables.actions.reject_user.block.confirm")
+      expect(block_action.confirm_message_args).to eq(username: reviewable.target.username)
+      expect(block_action.confirm_user).to eq(reviewable.target)
     end
 
     def find_action(id)
