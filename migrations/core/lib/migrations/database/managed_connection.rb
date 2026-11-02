@@ -15,6 +15,7 @@ module Migrations
       def self.open(driver)
         connection = Lifecycle.synchronize { new(driver) }
         return connection unless block_given?
+
         begin
           yield connection
         ensure
@@ -28,10 +29,12 @@ module Migrations
         unless %i[forbid discard close_reopen].include?(@policy)
           raise ArgumentError, "Unknown fork policy: #{@policy.inspect}"
         end
+
         @pid = Process.pid
         @mutex = Mutex.new
         @operation_depth = 0
         @state = :closed
+
         Lifecycle.register(self)
         begin
           open!
@@ -52,6 +55,7 @@ module Migrations
 
       def close
         return if @state == :discarded
+
         Lifecycle.synchronize { close! }
       end
 
@@ -63,18 +67,22 @@ module Migrations
         unless @state == :open
           raise Lifecycle::UnsafeForkError, "#{@driver.class} connection is #{@state}"
         end
+
         if @operation_depth > 0 && @operation_owner == current_owner
           raise Lifecycle::UnsafeForkError, "Cannot fork inside an active database operation"
         end
+
         if @policy == :forbid
           raise Lifecycle::UnsafeForkError,
                 "#{@driver.class} has no approved fork policy; close it before forking"
         end
+
         @driver.validate_fork!(@connection) if close_reopen?
       end
 
       def prepare_fork!
         return unless close_reopen?
+
         begin
           @driver.close(@connection)
           @connection = nil
@@ -87,6 +95,7 @@ module Migrations
 
       def restore_after_fork!
         return unless @state == :suspended
+
         begin
           open!
         rescue Exception
@@ -109,9 +118,11 @@ module Migrations
         @mutex.synchronize do
           check_owner!
           raise UnavailableError, "Database connection is #{@state}" unless @state == :open
+
           if @operation_depth > 0 && @operation_owner != owner
             raise BusyError, "Database connection already has an active operation"
           end
+
           @operation_owner = owner
           @operation_depth += 1
           @connection
@@ -144,6 +155,7 @@ module Migrations
           if @operation_depth > 0
             raise BusyError, "Cannot close a connection with an active operation"
           end
+
           @driver.close(@connection) if @connection
           @connection = nil
           @state = :closed
@@ -153,6 +165,7 @@ module Migrations
 
       def with_connection
         connection = start_operation(current_owner)
+
         begin
           yield connection
         ensure
