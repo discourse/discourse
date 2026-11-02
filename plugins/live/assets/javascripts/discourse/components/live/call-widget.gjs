@@ -22,6 +22,7 @@ import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveCallControls from "./call-controls.gjs";
+import LiveLocalRecordingMenuItem from "./local-recording-menu-item.gjs";
 import LiveReactionOverlay from "./reaction-overlay.gjs";
 import LiveRecordingBadge from "./recording-badge.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
@@ -790,6 +791,11 @@ export default class LiveCallWidget extends Component {
               <:content as |roomMenu|>
                 <DDropdownMenu as |dropdown|>
                   <LiveInviteAgentButton
+                    @closeMenu={{roomMenu.close}}
+                    @item={{dropdown.item}}
+                    @room={{this.room}}
+                  />
+                  <LiveLocalRecordingMenuItem
                     @closeMenu={{roomMenu.close}}
                     @item={{dropdown.item}}
                     @room={{this.room}}

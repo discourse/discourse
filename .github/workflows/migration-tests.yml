@@ -1,10 +1,17 @@
 name: Migration Tests
 
 on:
+  workflow_call:
+    inputs:
+      collect_mapping:
+        type: boolean
+        default: false
   pull_request:
     paths:
       - ".github/workflows/migration-tests.yml"
       - "migrations/**"
+      - "script/ci/**"
+      - ".github/workflows/test-plan.yml"
   push:
     branches:
       - main
@@ -12,27 +19,40 @@ on:
     paths:
       - ".github/workflows/migration-tests.yml"
       - "migrations/**"
+      - "script/ci/**"
+      - ".github/workflows/test-plan.yml"
 
 concurrency:
-  group: migration-tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
-  cancel-in-progress: true
+  group: migration-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 jobs:
+  selection:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    uses: ./.github/workflows/test-plan.yml
+    with:
+      workflow: migration-tests
+    permissions:
+      contents: read
+      actions: read
+
   tests:
+    needs: selection
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests
     runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: 25
+    timeout-minutes: ${{ inputs.collect_mapping && 360 || needs.selection.outputs.mode == 'audit' && 50 || 25 }}
 
     defaults:
       run:
         shell: bash
 
     env:
+      TEST_MAPPING_COLLECT: ${{ inputs.collect_mapping && '1' || '0' }}
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
@@ -45,6 +65,11 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: test-plan-migration-tests
+          path: tmp/test-plan
 
       - name: Setup Git
         run: |
@@ -88,8 +113,7 @@ jobs:
             # and run after the database is up.
             run: |
               for gem in core tooling converters importer; do
-                echo "== migrations-$gem =="
-                (cd "migrations/$gem" && ../bin/rspec --tag ~rails)
+                ruby script/ci/test_job.rb tmp/test-plan/plan.json tmp/test-plan/catalog.json "migrations-$gem-plain" "tmp/test-results/migrations-$gem-plain"
               done
 
           - name: Create and migrate database
@@ -110,6 +134,25 @@ jobs:
           MIGRATIONS_RAILS: "1"
         run: |
           for gem in core tooling converters importer; do
-            echo "== migrations-$gem (Rails integration) =="
-            (cd "migrations/$gem" && LD_PRELOAD="$RUBY_ALLOCATOR" ../bin/rspec --tag rails)
+            LD_PRELOAD="$RUBY_ALLOCATOR" ruby script/ci/test_job.rb tmp/test-plan/plan.json tmp/test-plan/catalog.json "migrations-$gem-rails" "tmp/test-results/migrations-$gem-rails"
           done
+
+      - name: Publish file selection evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: migration-test-selection
+          path: |
+            tmp/test-results
+            !tmp/test-results/**/raw/**
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Publish latest main mapping
+        if: inputs.collect_mapping && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-mapping-main-migration-tests
+          path: tmp/test-mappings/*.json
+          retention-days: 14
+          if-no-files-found: error

@@ -142,6 +142,43 @@ RSpec.describe AdminUserIndexQuery do
     end
   end
 
+  describe "bots" do
+    fab!(:bot) do
+      Fabricate(:user, id: -100, username: "searchable_bot", email: "searchable_bot@example.com")
+    end
+    fab!(:human) do
+      Fabricate(:user, username: "searchable_human", email: "searchable_human@example.com")
+    end
+    fab!(:zero_id_user) { Fabricate(:user, id: 0) }
+
+    it "lists bot accounts using the bot scope, including non-staff bots" do
+      users = described_class.new(query: "bots").find_users
+
+      expect(users).to match_array(User.bot_users)
+      expect(users).to include(bot, Discourse.system_user, zero_id_user)
+      expect(users).not_to include(human)
+    end
+
+    it "sorts bot activity and creation dates in both directions" do
+      other_bot = Fabricate(:user, id: -102, created_at: 2.days.ago)
+      bot.update!(created_at: 1.day.ago)
+      bot.user_stat.update!(topics_entered: 2, posts_read_count: 4, post_count: 6)
+      other_bot.user_stat.update!(topics_entered: 1, posts_read_count: 3, post_count: 5)
+
+      %w[topics_viewed posts_read posts created].each do |order|
+        params = { query: "bots", filter: "#{bot.username},#{other_bot.username}", order: }
+
+        expect(described_class.new(params).find_users).to eq([bot, other_bot])
+        expect(described_class.new(params.merge(asc: true)).find_users).to eq([other_bot, bot])
+      end
+    end
+
+    it "searches within bot accounts" do
+      expect(described_class.new(query: "bots", filter: bot.username).find_users).to eq([bot])
+      expect(described_class.new(query: "bots", filter: human.username).find_users).to be_empty
+    end
+  end
+
   describe "staff account types" do
     fab!(:admin) { Fabricate(:admin, created_at: 2.days.ago) }
     fab!(:moderator) { Fabricate(:moderator, created_at: 1.day.ago) }
@@ -187,6 +224,130 @@ RSpec.describe AdminUserIndexQuery do
       users = described_class.new(query: "new", account_type: "human").find_users
 
       expect(users).to include(admin, moderator, bot, user, Discourse.system_user)
+    end
+  end
+
+  describe "#bot_creators" do
+    fab!(:admin)
+    fab!(:creator, :admin)
+    fab!(:bot) { Fabricate(:user, id: -1300, username: "creator_page_bot_a") }
+
+    let!(:query) { described_class.new(query: "bots", guardian: admin.guardian) }
+
+    it "selects the earliest exact creation event deterministically when timestamps match" do
+      freeze_time
+      UserHistory.create!(
+        action: UserHistory.actions[:custom_staff],
+        custom_type: "another_event",
+        target_user_id: bot.id,
+        acting_user_id: admin.id,
+      )
+      UserHistory.create!(
+        action: UserHistory.actions[:custom],
+        custom_type: "create_bot",
+        target_user_id: bot.id,
+        acting_user_id: admin.id,
+      )
+      StaffActionLogger.new(creator).log_bot_creation(bot)
+      StaffActionLogger.new(admin).log_bot_creation(bot)
+
+      expect(query.bot_creators([bot.id])).to eq(
+        bot.id => {
+          id: creator.id,
+          username: creator.username,
+          uploaded_avatar_id: creator.uploaded_avatar_id,
+        },
+      )
+    end
+
+    it "omits unknown bots and deleted first actors rather than attributing a later duplicate" do
+      unknown_bot = Fabricate(:user, id: -1301)
+      StaffActionLogger.new(creator).log_bot_creation(bot)
+      StaffActionLogger.new(admin).log_bot_creation(bot)
+      creator.delete
+
+      expect(query.bot_creators([bot.id, unknown_bot.id])).to eq({})
+    end
+
+    it "returns an empty result without querying for empty pages or non-admin guardians" do
+      StaffActionLogger.new(creator).log_bot_creation(bot)
+      moderator = Fabricate(:moderator)
+
+      queries = track_sql_queries { expect(query.bot_creators([])).to eq({}) }
+      expect(queries).to be_empty
+
+      [nil, moderator.guardian].each do |guardian|
+        non_admin_query = described_class.new(query: "bots", guardian: guardian)
+        queries = track_sql_queries { expect(non_admin_query.bot_creators([bot.id])).to eq({}) }
+
+        expect(queries).to be_empty
+      end
+    end
+
+    it "returns only creators for the requested filtered page" do
+      page_bot = Fabricate(:user, id: -1301, username: "creator_page_bot_b")
+      excluded_bot = Fabricate(:user, id: -1302, username: "excluded_bot")
+      [bot, page_bot, excluded_bot].each do |target|
+        StaffActionLogger.new(creator).log_bot_creation(target)
+      end
+      page_query =
+        described_class.new(
+          query: "bots",
+          filter: "creator_page_bot",
+          order: "username",
+          asc: true,
+          page: 2,
+          guardian: admin.guardian,
+        )
+      page_ids = page_query.find_users(1).map(&:id)
+
+      expect(page_ids).to eq([page_bot.id])
+      expect(page_query.bot_creators(page_ids)).to eq(
+        page_bot.id => {
+          id: creator.id,
+          username: creator.username,
+          uploaded_avatar_id: creator.uploaded_avatar_id,
+        },
+      )
+    end
+
+    it "materializes creator data in one query regardless of the number of bots" do
+      StaffActionLogger.new(creator).log_bot_creation(bot)
+      queries_for_one =
+        track_sql_queries do
+          expect(query.bot_creators([bot.id])).to eq(
+            bot.id => {
+              id: creator.id,
+              username: creator.username,
+              uploaded_avatar_id: creator.uploaded_avatar_id,
+            },
+          )
+        end
+      expected_creators = {
+        bot.id => {
+          id: creator.id,
+          username: creator.username,
+          uploaded_avatar_id: creator.uploaded_avatar_id,
+        },
+      }
+      4.times do |index|
+        additional_bot = Fabricate(:user, id: -1301 - index)
+        additional_creator = Fabricate(:admin)
+        StaffActionLogger.new(additional_creator).log_bot_creation(additional_bot)
+        expected_creators[additional_bot.id] = {
+          id: additional_creator.id,
+          username: additional_creator.username,
+          uploaded_avatar_id: additional_creator.uploaded_avatar_id,
+        }
+      end
+
+      queries_for_many =
+        track_sql_queries do
+          expect(query.bot_creators(expected_creators.keys)).to eq(expected_creators)
+        end
+
+      expect(queries_for_one.size).to eq(1)
+      expect(queries_for_many.size).to eq(1)
     end
   end
 

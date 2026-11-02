@@ -252,6 +252,9 @@ ru:
       configuration_missing: "Отсутствует конфигурация AI-системы обнаружения спама. Перед включением добавьте конфигурацию в разделе «Администрирование > Плагины > AI для Discourse > Спам»."
       logging_subject: "Обнаружение спама"
     ai_bot:
+      sources:
+        historical: "AI для Discourse"
+        spam_detection: "Обнаружение спама"
       navigation:
         settings:
           title: "Настройки сайта"

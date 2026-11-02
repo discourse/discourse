@@ -1,6 +1,14 @@
 name: Tests
 
 on:
+  workflow_call:
+    inputs:
+      collect_mapping:
+        type: boolean
+        default: false
+      backend_only:
+        type: boolean
+        default: false
   pull_request:
     paths-ignore:
       - ".github/workflows/migration-tests.yml"
@@ -15,18 +23,29 @@ on:
       - release/*
 
 concurrency:
-  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
-  cancel-in-progress: true
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  selection:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    uses: ./.github/workflows/test-plan.yml
+    with:
+      workflow: tests
+      backend_only: ${{ inputs.backend_only || false }}
     permissions:
       contents: read
       actions: read
-    if: always() && !cancelled() && (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror')
+
+  build:
+    needs: selection
+    permissions:
+      contents: read
+      actions: read
+    if: always() && needs.selection.result == 'success' && needs.selection.outputs.has_tests == 'true' && !cancelled() && (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror')
     name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
@@ -48,7 +67,10 @@ jobs:
           MINIO_DOMAIN: minio.local
     timeout-minutes: >-
       ${{
-        matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
+        inputs.collect_mapping && 360
+        || needs.selection.outputs.mode == 'audit' && matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core') && 60
+        || needs.selection.outputs.mode == 'audit' && 40
+        || matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
         && 30
         || 20
       }}
@@ -58,9 +80,8 @@ jobs:
         shell: bash
 
     env:
-      RSPEC_SELECTION_MODE: ${{ vars.RSPEC_SELECTION_MODE || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'full') || 'select' }}
-      RSPEC_SELECTION_AUDIT_PERCENT: ${{ vars.RSPEC_SELECTION_AUDIT_PERCENT || '10' }}
-      COLLECT_RSPEC_MAPPING: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(fromJSON('["", "select", "audit"]'), vars.RSPEC_SELECTION_MODE) && matrix.target == 'core' && matrix.build_type == 'backend' && '1' || '0' }}
+      TEST_MAPPING_COLLECT: ${{ inputs.collect_mapping && '1' || '0' }}
+      TEST_JOB: ${{ format('{0}-{1}', matrix.target, matrix.build_type) }}
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
@@ -82,28 +103,7 @@ jobs:
     strategy:
       fail-fast: false
 
-      matrix:
-        include:
-          - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
-            build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
-          - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
-            build_type: system
+      matrix: ${{ fromJSON(needs.selection.outputs.matrix) }}
 
     steps:
       - name: Set working directory owner
@@ -126,6 +126,11 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: test-plan-tests
+          path: tmp/test-plan
 
       - name: Setup Git
         run: |
@@ -186,6 +191,14 @@ jobs:
       - name: Checkout official themes
         if: matrix.target == 'themes'
         run: bin/rake themes:clone_all_official themes:pull_compatible_all
+
+      - name: Pin external plugin revisions from test plan
+        if: matrix.target == 'official-plugins' || matrix.target == 'plugins'
+        run: ruby script/ci/test_checkouts.rb tmp/test-plan/catalog.json plugins
+
+      - name: Pin external theme revisions from test plan
+        if: matrix.target == 'themes'
+        run: ruby script/ci/test_checkouts.rb tmp/test-plan/catalog.json themes
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -297,51 +310,6 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         run: find . -name node_modules -type d -prune -not -path './tmp/*' -print0 | xargs -0 rm -rf
 
-      - name: Select core RSpec tests
-        if: github.event_name == 'pull_request' && github.base_ref == 'main' && matrix.build_type == 'backend' && matrix.target == 'core'
-        timeout-minutes: 2
-        continue-on-error: true
-        uses: actions/github-script@v9
-        with:
-          script: |
-            require('node:fs').rmSync('tmp/rspec-mapping/selection.json', { force: true });
-            await require('./.github/scripts/select-rspec.cjs').prepare({ github, context, core });
-
-      - name: Prepare RSpec mapping collection
-        if: env.COLLECT_RSPEC_MAPPING == '1'
-        run: rm -rf tmp/rspec-mapping
-
-      - name: Core RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" ruby script/ci/rspec_selection.rb run
-
-      - name: Publish core RSpec selection report
-        if: always() && matrix.build_type == 'backend' && matrix.target == 'core'
-        uses: actions/upload-artifact@v7
-        with:
-          name: rspec-core-selection-report
-          overwrite: true
-          path: |
-            tmp/rspec-mapping/run.json
-            tmp/rspec-mapping/selection.json
-            tmp/rspec-mapping/execution.json
-          if-no-files-found: ignore
-          retention-days: 14
-
-      - name: Merge core RSpec mappings
-        if: env.COLLECT_RSPEC_MAPPING == '1'
-        run: ruby script/ci/rspec_selection.rb merge
-
-      - name: Publish latest core RSpec mapping
-        if: env.COLLECT_RSPEC_MAPPING == '1'
-        uses: actions/upload-artifact@v7
-        with:
-          name: rspec-core-mapping-main
-          overwrite: true
-          path: tmp/rspec-mapping/mapping.json
-          if-no-files-found: error
-          retention-days: 14
-
       - name: Prepare Chrome environment for QUnit
         if: matrix.build_type == 'frontend'
         run: |
@@ -350,65 +318,38 @@ jobs:
           bus_addr=$(dbus-daemon --session --fork --print-address 2>/dev/null)
           echo "DBUS_SESSION_BUS_ADDRESS=$bus_addr" >> "$GITHUB_ENV"
 
-      - name: Core QUnit
+      - name: Execute planned test files
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" ruby script/ci/test_job.rb tmp/test-plan/plan.json tmp/test-plan/catalog.json "$TEST_JOB" "tmp/test-results/$TEST_JOB"
+
+      - name: Execute planned asset processor files
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        run: ruby script/ci/test_job.rb tmp/test-plan/plan.json tmp/test-plan/catalog.json asset-processor tmp/test-results/asset-processor
 
-      - name: Asset Processor Tests
-        if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        working-directory: frontend/asset-processor
-        run: pnpm test
+      - name: Publish file selection evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-selection-${{ matrix.target }}-${{ matrix.build_type }}
+          path: |
+            tmp/test-results
+            !tmp/test-results/**/raw/**
+          retention-days: 14
+          if-no-files-found: error
 
-      - name: Plugins RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: |
-          LD_PRELOAD="$RUBY_ALLOCATOR" bin/rake plugin:turbo_spec['*','--format=progress --use-runtime-info']
-
-      - name: Plugins QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake 'plugin:qunit[*]'
-
-      - name: Theme QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+      - name: Publish main mapping fragment
+        if: inputs.collect_mapping && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-mapping-fragment-${{ matrix.target }}-${{ matrix.build_type }}
+          path: tmp/test-mappings/*.json
+          retention-days: 2
+          if-no-files-found: error
 
       - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
-
-      - name: Core System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'core'
-        env:
-          CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
-
-      - name: Core Plugins System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
-        env:
-          CHECKOUT_TIMEOUT: 10
-        run: |
-          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system
-
-      - name: Official Plugins System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
-        env:
-          CHECKOUT_TIMEOUT: 10
-        run: |
-          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --format documentation plugins/*/spec/system
-
-      - name: Chat System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'chat'
-        env:
-          CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation plugins/chat/spec/system
-
-      - name: Theme System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'themes'
-        env:
-          CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
       - name: Prepare JS deprecation reports
         if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
@@ -440,7 +381,7 @@ jobs:
             tmp/capybara/*.webm
 
       - name: Save complete RSpec timings
-        if: success() && steps.test-runtime-cache.outputs.cache-hit != 'true' && (matrix.build_type == 'backend' || matrix.build_type == 'system') && !(github.event_name == 'pull_request' && github.base_ref == 'main' && matrix.target == 'core' && matrix.build_type == 'backend')
+        if: ${{ !inputs.collect_mapping && needs.selection.outputs.mode == 'full' && success() && steps.test-runtime-cache.outputs.cache-hit != 'true' && (matrix.build_type == 'backend' || matrix.build_type == 'system') }}
         uses: actions/cache/save@v6
         with:
           path: tmp/turbo_rspec_runtime.log
@@ -448,7 +389,7 @@ jobs:
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
-        if: github.repository == 'discourse/discourse' && github.ref_name == 'main' && env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1'
+        if: ${{ !inputs.collect_mapping && github.repository == 'discourse/discourse' && github.ref_name == 'main' && env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1' }}
         run: |
           if [ -f tmp/turbo_rspec_flaky_tests.json ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -469,7 +410,7 @@ jobs:
 
   deprecation-report:
     name: JS deprecation report
-    if: always() && github.repository == 'discourse/discourse' && needs.build.result != 'skipped'
+    if: ${{ !cancelled() && !inputs.collect_mapping && github.repository == 'discourse/discourse' && needs.build.result != 'skipped' }}
     runs-on: ubuntu-latest
     needs: build
     permissions:
@@ -511,7 +452,7 @@ jobs:
           overwrite: true
 
   merge:
-    if: always() && needs.build.result == 'success' && github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
+    if: always() && !inputs.collect_mapping && needs.build.result == 'success' && github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -581,3 +522,21 @@ jobs:
             --header "Authorization: Bearer $PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" \
             --data-binary "$payload" \
             "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL"
+
+  publish-mapping:
+    needs: build
+    if: inputs.collect_mapping && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: test-mapping-fragment-*
+          path: mappings
+          merge-multiple: true
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: test-mapping-main-tests
+          path: mappings/*.json
+          retention-days: 14
+          if-no-files-found: error

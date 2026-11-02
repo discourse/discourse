@@ -236,7 +236,7 @@ RSpec.describe DiscourseAi::AiBot::ArtifactSharesController do
   end
 
   it "permits the PM creator to share an artifact owned by a detached legacy bot" do
-    legacy_bot = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+    legacy_bot = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
     UserCustomField.create!(
       user: legacy_bot,
       name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD,

@@ -2454,9 +2454,6 @@ es:
     enable_user_status: "Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
     enable_user_tips: "Activar nuevos consejos de usuario que describan las funciones clave a los usuarios"
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio pueda ser limitado. Debe limitarse a 12 caracteres. Ten en cuenta que cambiar este título puede enviar un aviso a los usuarios de la PWA pidiéndoles que actualicen o desinstalen la aplicación."
-    dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
-    dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
-    dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
     gravatar_enabled: "Usa el servicio <a href='https://gravatar.com/'>Gravatar</a> para los avatares de usuario. Desactivar esto evitará que los usuarios cambien a Gravatar para sus avatares, pero no afectará a quienes ya lo usan."
     gravatar_name: "Especifica el nombre del proveedor del servicio Gravatar. Este nombre se utiliza normalmente para identificar la fuente que proporciona avatares Gravatar al sitio."
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
@@ -4870,6 +4867,19 @@ es:
     graph_title: "Análisis de búsquedas"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Cada día"
+        every_weekday: "Todos los días de la semana"
+        ordinals:
+          last: "últimos"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Lunes"
+          tuesday: "Martes"
+          wednesday: "Miércoles"
+          thursday: "Jueves"
+          friday: "Viernes"
+          saturday: "Sábado"
       user_joined_community: "Se unió el %{date}"
     google_meet:
       meeting_code: "Código:"

@@ -1055,10 +1055,7 @@ ja:
           scroll_to_bottom: "一番下にスクロール"
           editing_post: "投稿を編集中"
       sentiments:
-        dashboard:
-          title: "センチメント"
         sidebar:
-          overview: "センチメントの概要"
           analysis: "センチメント分析"
         sentiment_analysis:
           share_chart: "チャートへのリンクをコピー"

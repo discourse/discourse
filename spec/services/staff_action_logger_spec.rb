@@ -47,6 +47,22 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "#log_bot_creation" do
+    fab!(:bot) { Fabricate(:user, id: -1234, trust_level: 2) }
+
+    it "records the actor, bot target, username, and trust level" do
+      expect { logger.log_bot_creation(bot) }.to change(UserHistory, :count).by(1)
+
+      expect(UserHistory.last).to have_attributes(
+        action: UserHistory.actions[:create_bot],
+        acting_user_id: admin.id,
+        target_user_id: bot.id,
+        subject: bot.username,
+        details: "trust_level: #{bot.trust_level}",
+      )
+    end
+  end
+
   describe "#log_assume_access_control_ownership" do
     fab!(:deleted_user, :user)
     fab!(:owner_acl) do

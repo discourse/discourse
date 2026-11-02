@@ -211,6 +211,9 @@ sk:
       configuration_missing: "Chýba konfigurácia detekcie nevyžiadanej pošty AI. Pred povolením pridajte konfiguráciu do \"Admin > Plugins > Discourse AI > Spam\"."
       logging_subject: "Detekcia spamu"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Detekcia spamu"
       navigation:
         settings:
           title: "Nastavenia stránky"

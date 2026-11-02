@@ -318,6 +318,9 @@ nl:
       configuration_missing: "De configuratie voor de AI-spamdetectie ontbreekt. Voeg de configuratie toe via 'Beheer > Plug-ins > Discourse AI > Spam' voordat u deze inschakelt."
       logging_subject: "Spamdetectie"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Spamdetectie"
       navigation:
         settings:
           title: "Site-instellingen"

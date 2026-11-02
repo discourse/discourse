@@ -19,6 +19,9 @@ pt:
         image_generation_custom:
           name: "Personalizar"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Deteção de lixo eletrónico"
       navigation:
         users:
           title: "Utilizadores"

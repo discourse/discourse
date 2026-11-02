@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "io/nonblock"
+
 module TurboTests
   class Runner
     def self.run(opts = {})
@@ -37,7 +39,6 @@ module TurboTests
         seed: seed,
         profile: opts[:profile],
         retry_and_log_flaky_tests: retry_and_log_flaky_tests,
-        selection: opts[:selection],
         execution_plan_path: opts[:execution_plan_path],
       ).run
     end
@@ -51,7 +52,6 @@ module TurboTests
       @seed = opts[:seed]
       @profile = opts[:profile]
       @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
-      @selection = opts[:selection]
       @execution_plan_path = opts[:execution_plan_path]
       @failure_count = 0
 
@@ -68,64 +68,51 @@ module TurboTests
       group_opts = {}
       group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
-      grouping_runtime_log =
-        (
-          if @execution_plan_path && @use_runtime_info && File.file?("tmp/turbo_rspec_runtime.log")
-            File.read("tmp/turbo_rspec_runtime.log")
-          else
-            nil
-          end
-        )
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
-
-      predicted_groups = tests_in_groups
-      predicted_multisite_specs = @files
-      if @selection
-        cohorts = @selection.fetch("cohort_specs")
-        required = @selection.fetch("specs")
-        predicted_groups =
-          tests_in_groups.map { |group| group.intersect?(cohorts) ? group : group & required }
-        predicted_multisite_specs = @selection.fetch("full_multisite") ? @files : @files & required
-        tests_in_groups = predicted_groups unless @selection["audit"] == true
-      end
-      multisite_specs =
-        @selection && @selection["audit"] != true ? predicted_multisite_specs : @files
-      if @selection
-        puts "Predicted RSpec files: #{predicted_groups.flatten.size} regular, #{predicted_multisite_specs.size} multisite"
-      end
-      if @execution_plan_path
-        workers = { "multisite" => multisite_specs }
-        tests_in_groups.each_with_index do |files, index|
-          workers[(index + 1).to_s] = files unless files.empty?
-        end
-        File.write(
-          @execution_plan_path,
-          JSON.generate(
-            revision: ENV["GITHUB_SHA"],
-            grouping_runtime_log: grouping_runtime_log,
-            workers: workers.reject { |_, files| files.empty? },
-            predicted_regular_specs: predicted_groups.flatten,
-            predicted_multisite_specs: predicted_multisite_specs,
-          ),
-        )
-      end
 
       setup_tmp_dir
 
       @reporter.add_formatter(Flaky::FailuresLoggerFormatter.new) if @retry_and_log_flaky_tests
 
-      subprocess_opts = { record_runtime: @use_runtime_info }
+      workers = {}
+      subprocess_opts = { record_runtime: @use_runtime_info, workers: workers }
 
-      start_multisite_subprocess(multisite_specs, **subprocess_opts)
+      start_multisite_subprocess(@files, **subprocess_opts)
 
-      tests_in_groups.each_with_index do |tests, process_id|
-        start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
+      collection_batches =
+        if ENV["COLLECT_TEST_MAPPING"] == "1"
+          batch_size = @files.length.fdiv(@num_processes).ceil.clamp(1, 40)
+          tests_in_groups
+            .flatten
+            .each_slice(batch_size)
+            .each_with_index
+            .map { |tests, index| [index + 1, tests] }
+        end
+      expected_exits = collection_batches ? collection_batches.length + 1 : @num_processes + 1
+
+      if collection_batches
+        @num_processes.times do |index|
+          start_collection_batch(
+            process_id: index + 1,
+            pending_batches: collection_batches,
+            subprocess_opts: subprocess_opts,
+          )
+        end
+      else
+        tests_in_groups.each_with_index do |tests, process_id|
+          start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
+        end
       end
+      write_execution_plan(workers)
 
       @reporter.start
 
-      handle_messages
+      handle_messages(
+        pending_batches: collection_batches,
+        subprocess_opts: subprocess_opts,
+        expected_exits: expected_exits,
+      )
 
       @reporter.finish
 
@@ -177,27 +164,47 @@ module TurboTests
         *Flaky::Manager.potential_flaky_tests,
       ]
 
+      command += ["--seed", @seed.to_s] if @seed
       system(*command)
     end
 
     def start_multisite_subprocess(tests, **opts)
-      start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
-    end
-
-    def start_regular_subprocess(tests, process_id, **opts)
       start_subprocess(
-        { "TEST_ENV_NUMBER" => process_id.to_s },
-        %w[--tag ~type:multisite],
+        { "TEST_MAPPING_PROCESS_ID" => nil },
+        %w[--tag type:multisite],
         tests,
-        process_id,
+        "multisite",
         **opts,
       )
     end
 
-    def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
+    def start_regular_subprocess(tests, process_id, identity: process_id, **opts)
+      start_subprocess(
+        {
+          "TEST_ENV_NUMBER" => process_id.to_s,
+          "TEST_MAPPING_PROCESS_ID" => identity == process_id ? nil : identity.to_s,
+        },
+        %w[--tag ~type:multisite],
+        tests,
+        identity,
+        database_slot: identity == process_id ? nil : process_id,
+        **opts,
+      )
+    end
+
+    def start_subprocess(
+      env,
+      extra_args,
+      tests,
+      process_id,
+      record_runtime:,
+      workers:,
+      database_slot: nil
+    )
       exit_message = {
         type: "exit",
         process_id:,
+        database_slot:,
         start_time: Process.clock_gettime(Process::CLOCK_MONOTONIC),
       }
 
@@ -247,25 +254,42 @@ module TurboTests
 
         stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
         stdin.close
+        pipe_reader = File.open(tmp_filename, File::RDONLY | File::NONBLOCK)
+        pipe_writer = File.open(tmp_filename, File::WRONLY | File::NONBLOCK)
+        pipe_reader.nonblock = false
+        workers[process_id.to_s] = { files: tests, pid: wait_thr.pid }
 
-        @threads << Thread.new do
-          File.open(tmp_filename) do |fd|
-            fd.each_line do |line|
+        reader =
+          Thread.new do
+            pipe_reader.each_line do |line|
               message = JSON.parse(line)
               message = message.symbolize_keys
               message[:process_id] = process_id
               message[:command_string] = command_string
               @messages << message
             end
+          rescue StandardError => error
+            @messages << {
+              type: "message",
+              message: "Could not read test output from process #{process_id}: #{error.message}",
+            }
+            @messages << { type: "error" }
+          ensure
+            pipe_reader.close
           end
-
-          @messages << exit_message
-        end
-
+        @threads << reader
         @threads << start_copy_thread(stdout, STDOUT)
         @threads << start_copy_thread(stderr, STDERR)
 
-        @threads << Thread.new { @messages << { type: "error" } if wait_thr.value.exitstatus != 0 }
+        @threads << Thread.new do
+          status = wait_thr.value
+          pipe_writer.close
+          reader.join
+          @messages << { type: "error" } if status.exitstatus != 0
+          @messages << exit_message
+        ensure
+          pipe_writer.close unless pipe_writer.closed?
+        end
       end
     end
 
@@ -284,7 +308,7 @@ module TurboTests
       end
     end
 
-    def handle_messages
+    def handle_messages(pending_batches:, subprocess_opts:, expected_exits:)
       exited = 0
 
       begin
@@ -337,11 +361,18 @@ module TurboTests
               duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - message[:start_time]
 
               @reporter.message(
-                "[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1}) #{duration.round(2)}s",
+                "[#{message[:process_id]}] DONE (#{exited}/#{expected_exits}) #{duration.round(2)}s",
               )
             end
 
-            break if exited == @num_processes + 1
+            if pending_batches && message[:database_slot]
+              start_collection_batch(
+                process_id: message.fetch(:database_slot),
+                pending_batches: pending_batches,
+                subprocess_opts: subprocess_opts,
+              )
+            end
+            break if exited == expected_exits
           else
             STDERR.puts("Unhandled message in main process: #{message}")
           end
@@ -354,6 +385,26 @@ module TurboTests
 
     def fail_fast_met
       !@fail_fast.nil? && @failure_count >= @fail_fast
+    end
+
+    private
+
+    def write_execution_plan(workers)
+      return unless @execution_plan_path
+      File.write(@execution_plan_path, JSON.generate(revision: ENV["GITHUB_SHA"], workers: workers))
+    end
+
+    def start_collection_batch(process_id:, pending_batches:, subprocess_opts:)
+      batch = pending_batches.shift
+      return unless batch
+      identity, tests = batch
+      start_regular_subprocess(
+        tests,
+        process_id,
+        identity: "#{process_id}-#{identity}",
+        **subprocess_opts,
+      )
+      write_execution_plan(subprocess_opts.fetch(:workers))
     end
   end
 end

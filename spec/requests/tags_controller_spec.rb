@@ -670,6 +670,22 @@ RSpec.describe TagsController do
       )
     end
 
+    it "keeps the page number in the canonical URL on later pages of a tag" do
+      tag_url = "#{Discourse.base_url}/tag/#{tag.slug}/#{tag.id}"
+
+      get "/tag/#{tag.slug}/#{tag.id}?page=2&order=views"
+      expect(response.body).to have_tag(
+        "link",
+        with: {
+          rel: "canonical",
+          href: "#{tag_url}?page=2",
+        },
+      )
+
+      get "/tag/#{tag.slug}/#{tag.id}?page=0"
+      expect(response.body).to have_tag("link", with: { rel: "canonical", href: tag_url })
+    end
+
     it "handles special tag 'none'" do
       SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 

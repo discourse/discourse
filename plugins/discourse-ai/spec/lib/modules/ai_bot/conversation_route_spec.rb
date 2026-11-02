@@ -288,7 +288,7 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
   end
 
   it "treats a request-supplied legacy model recipient as a selectable model request" do
-    legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+    legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
     second_model.update_column(:user_id, legacy_user.id)
 
     route =
@@ -313,6 +313,26 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
       described_class::Error,
       I18n.t("discourse_ai.ai_bot.errors.model_not_selectable"),
     )
+  end
+
+  it "keeps legacy model selection independent from a deactivated recipient account" do
+    legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
+    second_model.update_column(:user_id, legacy_user.id)
+    other_agent = Fabricate(:ai_agent, user: legacy_user)
+    other_agent.update!(enabled: false)
+    expect(legacy_user.reload).not_to be_active
+
+    route =
+      described_class.resolve(
+        authorization_user: user,
+        modality: :personal_message,
+        agent_id: agent.id,
+        recipient_user: legacy_user,
+      )
+
+    expect(route.speaker).to eq(agent.user)
+    expect(route.model).to eq(second_model)
+    expect(route.model_source).to eq(:request)
   end
 
   it "rejects a recipient that does not belong to the selected agent" do

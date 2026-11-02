@@ -6,20 +6,16 @@ export default function wrapTestModulesPlugin() {
     transform: {
       filter: { id: TEST_FILE_RE },
       handler(code, id, { ast, magicString }) {
-        let lastImportEnd = 0;
+        const imports = [];
         for (const node of ast.body) {
           if (node.type === "ImportDeclaration") {
-            lastImportEnd = node.end;
+            imports.push(code.slice(node.start, node.end));
+            magicString.remove(node.start, node.end);
           }
         }
 
-        if (lastImportEnd >= code.length) {
-          return null;
-        }
-
-        magicString.appendLeft(
-          lastImportEnd,
-          "\n\nexport default function () {\n"
+        magicString.prepend(
+          `${imports.join("\n")}\n\nexport default function () {\n`
         );
         magicString.append("\n}\n");
 

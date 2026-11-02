@@ -266,18 +266,18 @@ plugins:
     columns: {}
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
-  boards: 7196f10413674b3c08480ff2aa42b2e8
+  boards: b1410e9ce903ab8c722282afd4cf5b9f
   chat: dfdf8b56a5fcd06326c693011990c36a
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: b47b48ca0392f474aef832b46d5b6bf8
+  discourse-ai: bef93c9c0e061e8e4e766b3d282b0748
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-captcha: 9c98c6231f69399ad711b7ef2b858d87
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: b8a25c2772d05fe6a11716352c88bab8
-  discourse-events: 5d4a88ec24f58c6ea11f53e76a23bfb8
-  discourse-gamification: 633256e241b030fddcc059076f7474f8
+  discourse-events: 44cfd1b6f8656e3effc180ff878ca3a1
+  discourse-gamification: b6ad14b2926a924a92a153ace8477bba
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20
   discourse-lazy-videos: a916a4f265d1cc6f99a3e53f5bcd1e9e
@@ -297,9 +297,9 @@ plugin_checksums:
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 9d0535677407702fa312965e20ac8fcb
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
-  discourse-workflows: af0c2fc0b7e1f38cf57abe16633ab2a1
+  discourse-workflows: 2993cc8b79c67f0b8cd0914850c3ae26
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
-  live: 4dc04fc7516e9509dc986ff3b102572a
+  live: 9e40988abd8cf27026908c0a0effbaed
   poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
 failed_plugins: []

@@ -19,6 +19,7 @@ module SvgSprite
         angles-right
         angles-up
         arrow-down
+        arrow-down-wide-short
         arrow-left
         arrow-right
         arrow-rotate-left

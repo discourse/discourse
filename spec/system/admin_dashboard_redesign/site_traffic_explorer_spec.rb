@@ -6,7 +6,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   let(:traffic) { PageObjects::Pages::AdminSiteTrafficExplorer.new }
 
   before do
-    SiteSetting.dashboard_improvements = true
     SiteSetting.improved_crawler_detection = true
     SiteSetting.use_legacy_pageviews = false
     Discourse.stubs(:current_hostname).returns("test.localhost")

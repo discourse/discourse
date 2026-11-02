@@ -597,6 +597,17 @@ lv:
               private:
                 label: "Privāts"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Katru dienu"
+        weekdays:
+          sunday: "Svētdiena"
+          monday: "Pirmdiena"
+          tuesday: "Otrdiena"
+          wednesday: "Trešdiena"
+          thursday: "Ceturtdiena"
+          friday: "Piektdiena"
+          saturday: "Sestdiena"
     google_meet:
       meeting_code: "Kods:"
     github:

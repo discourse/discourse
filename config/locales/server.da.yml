@@ -3166,6 +3166,20 @@ da:
   search_logs:
     graph_title: "Antal søgninger"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Hver dag"
+        every_weekday: "Hver ugedag"
+        ordinals:
+          last: "sidste"
+        weekdays:
+          sunday: "Søndag"
+          monday: "Mandag"
+          tuesday: "Tirsdag"
+          wednesday: "Onsdag"
+          thursday: "Torsdag"
+          friday: "Fredag"
+          saturday: "Lørdag"
     google_meet:
       meeting_code: "Kode:"
     github:

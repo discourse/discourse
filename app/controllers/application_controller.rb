@@ -266,6 +266,7 @@ class ApplicationController < ActionController::Base
       custom_message: e.custom_message,
       custom_message_params: e.custom_message_params,
       group: e.group,
+      authentication_failed: e.opts[:authentication_failed],
     )
   end
 
@@ -358,20 +359,23 @@ class ApplicationController < ActionController::Base
     }
 
     if show_json_errors
+      authentication_failed = opts[:authentication_failed]
       opts = { type: type, status: status_code }
 
-      with_resolved_locale do
-        # Include error in HTML format for topics#show.
-        if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
-             (
-               request.params[:controller] == "categories" &&
-                 request.params[:action] == "find_by_slug"
-             )
-          opts[:extras] = {
-            title: I18n.t("page_not_found.page_title"),
-            html: build_not_found_page(error_page_opts),
-            group: error_page_opts[:group],
-          }
+      if !authentication_failed
+        with_resolved_locale do
+          # Include error in HTML format for topics#show.
+          if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
+               (
+                 request.params[:controller] == "categories" &&
+                   request.params[:action] == "find_by_slug"
+               )
+            opts[:extras] = {
+              title: I18n.t("page_not_found.page_title"),
+              html: build_not_found_page(error_page_opts),
+              group: error_page_opts[:group],
+            }
+          end
         end
       end
 

@@ -45,6 +45,15 @@
     min-height: 0;
   }
 
+  .dsa-notice__form > .form-kit__errors-summary {
+    align-self: stretch;
+    flex-shrink: 0;
+    width: auto;
+    max-block-size: 50%;
+    overflow-y: auto;
+    margin: var(--space-6) var(--space-6) 0;
+  }
+
   .dsa-notice__actions {
     flex-shrink: 0;
     margin-top: auto;

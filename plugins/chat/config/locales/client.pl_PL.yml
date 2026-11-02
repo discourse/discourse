@@ -47,6 +47,12 @@ pl_PL:
           other: "%{formatted_number} wiadomości czatu"
     chat:
       homepage_option: "Kanał czatu"
+      admin_onboarding:
+        start_posting:
+          title: "Zacznij rozmowę"
+          description: "Wyślij swoją pierwszą wiadomość na kanale nr %{channel}."
+          action: "Napisz wiadomość"
+          completed: "Kontynuuj rozmowę"
       edit_category:
         tab_title: "Czat"
         channel: "Kanał"

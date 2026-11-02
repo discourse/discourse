@@ -239,6 +239,9 @@ he:
       configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
+      sources:
+        historical: "בינה מלאכותית ב־Discourse"
+        spam_detection: "זיהוי זבל"
       navigation:
         settings:
           title: "הגדרות האתר"

@@ -1,148 +1,110 @@
----
-title: RSpec test selection in core CI
-short_title: RSpec test selection
-id: rspec-test-selection
----
+# CI test file selection
 
-Every push to `main` runs the full test matrix. Its core backend job uses
-GitLab Crystalball coverage and described class strategies to map Ruby source
-files to spec files. Capture includes outer context setup, nested contexts and
-shared examples. Ruby File and IO reads record shared file inputs across every
-example group, including integrity specs. Changing an observed input runs the
-full core suite. This protects consumers of cached values, including native
-accessors that execute no covered Ruby lines. Symlink reads record both the link
-and its resolved target. Native extensions and external
-process file reads are outside this instrumentation. The collector does not
-propagate into nested test subprocesses.
+CI prepares a file plan before starting test jobs. The plan identifies the application revision, selected test files, reasons for selecting each file, and the environments that own those files. Jobs receive explicit file lists. Turbo distributes those files without expanding the selection.
 
-The consumer records the expected worker identities and assigned files before
-starting Turbo. Mapping publication requires complete matching worker records.
-The merged `rspec-core-mapping-main` artifact includes its commit, dependencies,
-shared bundle inputs, historical worker memberships and Ruby source structure checks. The newest usable main
-producer is selected by workflow run ID. A failed producer or unreadable archive
-does not replace an older usable artifact.
+The tests workflow covers core and plugin RSpec, five system test environments, core and plugin QUnit, theme QUnit and Vitest. The migration workflow uses the same planner for each migration gem, both without Rails and with Rails integration. Database setup, schema checks, annotations and other mandatory checks keep their existing responsibilities.
 
-The artifact retains the input timing history used to assign its workers. PR
-core preparation restores that history before grouping. This avoids making a
-fresh mapping's worker membership obsolete merely by restoring the newer timings
-produced during its own collection. Selection still handles assignment changes,
-including new specs. Main keeps publishing complete runtime history through the
-existing cache. PR core jobs cannot overwrite it with selected timings.
+## Selection rules
 
-Only the PR core backend job prepares a selection, inside its existing container.
-There is no separate selection runner or dependency that delays other jobs.
-Preparation compares the mapping commit and PR base with the PR merge commit,
-then takes the union of both change sets. It does not wait for an exact base
-mapping. Missing artifacts, preparation failures and invalid plans run the full
-core backend suite.
+A PR that changes only tests runs the added and changed files. A renamed test runs at its destination. Deleted tests do not run. Documentation changes do not add tests. This rule applies to every PR target branch. It does not require a mapping and does not include unrelated changes on main since mapping collection.
 
-The selection starts with mapped consumers, new or modified specs, specs absent
-from the mapping and backend integrity specs. Turbo computes its full current
-worker assignment before selecting complete affected workers. It preserves their
-file lists and database identities. Unchanged mandatory checks can run in their
-original slots without selecting every other spec in those slots. Multisite keeps
-its separate process and full inventory whenever an affected spec seeds a worker,
-including when a deleted setup file leaves no regular candidates. Other test suites retain their
-full commands. PR core timings cannot overwrite complete timing history.
+Ownership validation uses the complete test inventory before routing files to either workflow. Core frontend helpers are application inputs rather than runnable test files, even when their filenames end in `-test.js`.
 
-Locale integrity specs follow their recorded dependencies instead of running on
-every PR. Any locale YAML change runs the full suite, including additions under
-plugins and documentation. This protects the locale directory discovery checks
-while avoiding thousands of unrelated translation examples on frontend PRs.
+For application changes, the planner combines the PR diff with files touched between the mapping producer and the PR base. It traverses recorded source dependencies and selects their test consumers. It also selects tests changed since collection. The mapping can precede or follow the PR base. No job waits for a mapping produced at one exact commit.
 
-A worker can populate a cache in one spec and read it in another without
-executing the producer again. Line coverage alone would miss that dependency,
-especially through native accessors such as `attr_reader`. Test order and worker
-assignment can also change between collection and the PR.
+For example, the cache replay changes a producer from `:original` to `:broken`. The writer stores its value and the reader consumes it. Both specs run, while an unrelated username spec is omitted. This replay uses the real Discourse hooks. More complex application methods can require the full inventory because their effects remain uncertain. In particular, a `UrlHelper` change does not promise a subset.
 
-Selection therefore includes every spec that shared a historical worker with a
-directly affected spec. Turbo then selects complete current workers containing
-those candidates. New, changed and unmapped specs also seed complete current
-workers. The selected files are never redistributed. This protects conditional
-cache warmers that start calling a producer after moving to a different worker.
-It assumes application state is isolated between workers, as required by the
-existing parallel runner.
+A missing mapping, unexplained inventory change, new application file or unverified source change selects the full inventory for the affected environment. Changes to declarations, method signatures, dependency operations, control flow or code executed during initialization require broader execution. Initialization and uncertain effects protect the method that caused them. Other methods in the same file can still use their mapping. Initializers, shared file reads and uncertain state changes also broaden selection. Every selected file records the reason.
 
-Regular worker assignments and retry assignments supply these cohorts. The
-initial multisite process does not seed additional regular workers, because its
-complete context is already retained by full multisite execution. Collection
-records its explicit inclusion tag before examples run to distinguish it from
-retries, which also lack a regular worker number. All processes still contribute
-dependencies, shared inputs and boot fingerprints.
+Examples whose bodies are defined outside the mapped spec sources also protect their producer initialization. Application work outside a test or on another thread is also protected, because execution time alone cannot establish which file initiated it. Ruby request paths served on separate threads can therefore require full system execution.
 
-For example, main runs `[a_spec, c_spec]` in worker 1. `a_spec` calls
-`Producer.values` and fills a cache. `c_spec` finds that cache populated and never
-calls Producer. A later assignment puts `c_spec` with `b_spec` in worker 2, where
-`b_spec` consumes the cached value. Changing Producer includes the old worker's
-`a_spec` and `c_spec`, then both current workers. Selecting only the direct
-consumer's current worker would miss worker 2. This expansion can select most or
-all of the core suite. Measure execution cost rather than direct consumer counts.
+Main always runs every file in each environment.
 
-A complete mapping retains regular worker assignments even for spec files with no runnable root groups. It also identifies those empty files.
-Unchanged empty files remain mandatory without forcing an entire worker. If a
-file gains tests or is absent from the mapping, it seeds a complete current worker.
+## Mapping collection
 
-Unknown Ruby files, Ruby additions or deletions, configuration, dependencies,
-database inputs, test support and unknown data paths run the full core suite.
-Shared JavaScript bundle globs come from the existing PrettyText and asset
-processor bundle definitions. Only explicit documentation, plugin, system spec
-and Discourse frontend code paths are delegated to their existing jobs.
-JSON and other unknown frontend data files are not ignored.
-Observed plugin inputs, such as metadata and locales read by core tests, remain
-shared inputs and require full core execution despite normal plugin delegation.
+A separate main push workflow collects backend and migration RSpec mappings. Required main test jobs run the full suite without tracing. The producer is serialized and checks the latest completed bundles before recording. `TEST_MAPPING_INTERVAL_SECONDS` defaults to `86400`, so busy main branches reuse the last completed mapping while accounting for later changes. Failed collection never replaces a successful bundle. Producer jobs have a separate six hour limit, while required jobs retain their existing limits.
 
-Ruby coverage alone cannot track every constant or generated Rails method.
-Prism structure checks retain declarations and method signatures while removing
-method bodies from a source fingerprint. Methods executed before the first
-example group remain in the fingerprint too. The consumer verifies these checks
-against the checked out source. A changed constant, Rails declaration, method
-signature or boot method therefore runs the full core suite. A changed ordinary
-method body can use the mapped selection. Unsafe intervening changes on `main`
-also cause full execution because the old mapping may no longer describe them.
+The producer collects Crystalball coverage and described class dependencies per test file. A Ruby trace supplements coverage with executed calls, native accessors and block methods. Calls retain source relationships across tests, including writes to a cache defined in another file. Returned mutable containers retain source ownership so indexed cache writes can connect to later readers. Detected unowned state changes and dynamic initialization are treated conservatively.
 
-For example, editing the body of `UrlHelper.normalized_encode` can select its
-recorded consumers. Adding an unmapped model or changing a model validation runs
-the full core suite. This avoids assuming that all consumers are model specs.
+RSpec context fixtures retain their dependencies when copied into nested example groups. Memoized fixture blocks propagate dependencies to their consuming example. Scalar values such as symbols therefore keep their producer relationship even without an object identity. Shared fixture macros that assign and read values through reflection protect their producer initialization and require the full environment when that producer changes.
 
-Ten percent of otherwise selected revisions run the full core suite as an audit.
-The audit reporter records all failing examples and those outside the predicted selection for their regular or multisite process,
-including failures from shared context setup. Collection must include every
-expected worker. Audit observations may include failures later recovered by
-flaky test retries, so distinguish those from reproducible omitted regressions.
+External Ruby module fields are traced during active tests. Executed lines distinguish external assignments from unexecuted branches, while ambiguous statements remain conservative. Runtime instruction loading is treated as loading rather than application data flow. Recorded readers connect to recorded writes regardless of their observed order, because PR execution can use a different seed or file distribution. Boot coverage protects application code used during initialization. Direct dynamic loading and application methods executed during `require` require broader execution. Extra module field tracing stays outside collector infrastructure and unobserved library setup. Previously observed cache writes remain relevant during later library loading.
 
-Preparation uses the existing workflow token with `actions: read`. That
-permission applies to the build matrix job, including its other legs, because
-GitHub does not scope permissions to individual steps. No new secret is needed.
+Ruby support files under spec directories are sources unless they are runnable spec files. Their method calls and code evaluated during loading retain dependency and initialization protection.
 
-Repository variables control new runs:
+Native calls from owned source and test code remain uncertain unless the collector models their effects. Default VM definition callbacks, ordinary loading, known accessors and mutations of tracked builtin containers keep their existing semantics. A tracked hash read with a fixed symbol key and standard default behavior retains its field dependencies. Lookups with a default procedure or an unknown key remain uncertain. Method compatibility also preserves literal types. This protects unknown receiver lookups and process state such as random seeds without depending on a list of mutator names.
 
-| Variable                        | Default  | Behavior                                                                                                                         |
-| ------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `RSPEC_SELECTION_MODE`          | `select` | Use selection and sampled audits. `audit` runs every predicted subset as a full audit. `full` disables selection and collection. |
-| `RSPEC_SELECTION_AUDIT_PERCENT` | `10`     | Integer from 0 to 100. Invalid values select full execution.                                                                     |
+The collector records boot coverage and source structure. A PR can reuse a method body mapping only when the declaration and protected boot code still match. This is a structural check alongside execution tracing.
 
-Fork PRs use full execution when selection mode configuration is unavailable.
-This avoids relying on base repository variables being delivered to fork runs
-for the emergency full control. Same repository PRs default to `select`.
+Published mappings store source names once and encode their dependency sets as numeric references or bitmaps. The producer merges one raw process mapping at a time. The planner follows the recorded callers without rebuilding every graph edge. Large raw process mappings stay in the job workspace and are excluded from uploaded selection evidence.
 
-The `rspec-core-selection-report` artifact contains the prediction and actual
-execution report. Reports include revision, actual mode, selected and available
-regular file counts, multisite inventory, selection duration, CPU time, elapsed
-time, exit status and audit omissions. The execution plan records exact assigned
-and predicted files. Wrapper CPU includes Ruby plan validation and child
-processes, excluding database and Redis services. When cgroup version 2
-metrics are available at the cgroup namespace root, CPU includes all processes in
-that cgroup. This includes database and Redis services in an isolated container.
-Metrics are omitted when the process belongs to a nested visible cgroup, rather
-than accidentally measuring its host's root cgroup. Selection records the same
-scope. Compare allocated runner time as well, since waiting for
-selection holds the runner's capacity. Use these to measure both missed failures and total compute. Count
-tracing and publication on every main run, PR selection, audits, fallbacks and
-retries. A smaller file count alone does not prove savings.
+Regular backend collection runs at most 40 files per Ruby process and reuses the configured database slots only after each process exits. Every batch has a distinct process identity in the execution manifest. The multisite process retains the complete file inventory. Required main runs and PR execution keep their existing file distribution.
 
-Use `audit` for a rollout that observes all PRs before skipping. Investigate every
-reproducible omission and set `full` while correcting a selection defect. The
-local replay harness exercises the actual collector, preparation and consumer
-with disposable Git histories and local artifact transport. GitHub service
-latency and artifact permissions still require CI verification.
-No finite replay matrix proves that all future regressions will be detected.
+Each process writes its mapping and execution record. Publication verifies that every required process role completed with the expected files, revision and environment. In particular, a missing multisite report cannot be hidden by a regular process that loaded the same files.
+
+Frontend and Vitest mappings currently use a conservative strategy for application changes. They support exact selection of changed tests, but do not claim a recorded application dependency graph. An application change without that evidence runs the relevant full inventory. Browser file loaders record registrations and execution so an unselected file cannot silently register tests during bundle loading.
+
+## Artifact reuse
+
+The preparatory job downloads the latest available mapping bundle from a successful completed main push in the mapping producer workflow and matching repository. It validates the producer revision and archive entries. Downloads allow at most 200 MB per ZIP archive and 500 MB per extracted mapping. The extracted limit accommodates combined core graphs, whose captured partial workload exceeds 275 MB while compressing to 12 MB. Failed or unavailable collection leaves selection conservative. No new credential is required. The download uses the workflow's existing `GITHUB_TOKEN` with read permissions.
+
+Official plugin and theme revisions are recorded in the catalog. Consumer jobs pin those revisions, discover their current inventory again and verify the planned environment before execution. Lockfiles, commands, the collection and runner implementation, and relevant external revisions contribute to the environment identity. A collector upgrade invalidates an older mapping. Ordinary application commits retain the same runtime identity.
+
+The producer calls the existing backend and migration workflows with explicit collection inputs. Their plan artifacts have distinct names. Both bundles must come from the same completed successful producer before the freshness gate skips collection. System and frontend environments retain conservative application selection without running an extra traced suite. The producer does not cancel an active collection when later commits land.
+
+## Audit and rollout
+
+`TEST_SELECTION_MODE` defaults to `audit`. Audit runs the full reference inventory and then the candidate selection. Reports show the candidate files, actual files and failures found by the reference but absent from the candidate. A direct attempt to execute an audit candidate as a skipping plan is rejected. When the candidate assignment equals the full reference, the runner validates its metadata and reuses the reference report. It records that reuse and executes the files once. A strict subset still runs separately. Audit jobs have twice their ordinary time budget to accommodate both runs. Required main jobs retain their original budgets.
+
+After validating the recorded scenarios and representative PRs, maintainers can set `TEST_SELECTION_MODE=select`. `TEST_SELECTION_AUDIT_PERCENT` defaults to `10`, so a deterministic sample of PR revisions continues to receive full comparisons. `TEST_SELECTION_MODE=full` disables skipping. Main remains full in every mode.
+
+Reports are published as `test-selection-*` and `migration-test-selection` artifacts. They distinguish assigned, loaded and executed files, missing or unassigned files, missing process roles and failed examples. A mismatch fails the job rather than expanding its selection. Failure lists contain executed examples, so framework fixtures that construct fake failures do not count as regressions.
+
+Turbo retries preserve the plan's seed. Execution reports retain failed attempts while accepting a successful retry that respects the assignment.
+
+A finite replay cannot prove every future Ruby program safe. Full main runs and audit comparisons remain necessary to detect dependency gaps and interactions. A test only PR can introduce shared state pollution that main detects later, even though its PR plan correctly executes only the new test file.
+
+Cache provenance identifies the producing Ruby method as well as the shared field. Coverage still records test dependencies by source file. Structurally compatible source checks compare method body digests and seed the changed methods into the field graph. Collection and planning share definition ordering. Definition changes, unsupported generated code and ambiguous evidence require broader execution.
+
+## Replaying changes locally
+
+Run `bundle exec ruby script/ci/test_selection_lab/run.rb /absolute/disposable/path` from a committed checkout in the existing test environment. The destination must not exist and must be outside the checkout. The harness creates an independent Git repository, verifies that its tracked tree exactly matches the source and retains it for inspection. It shares installed dependencies and disposable test databases with the supplied environment, so serialize it with other test commands.
+
+The initial campaign uses five real core spec files. It collects a baseline and creates separate Git commits for a new spec, a successful Turbo retry, changed spec, documentation, a broken URL helper, a new application file, shared configuration, deletion, rename and a rename combined with the helper change. Expected file sets are specified before selection. Each case executes the candidate and a full reference over that declared inventory, checks exact file execution and compares failures. A failed expectation stops the campaign. The disposable checkout supplies its own Gemfile so repository gems resolve from that snapshot. Additional scenarios pass a producer's scalar value through context hooks, helper methods and memoized fixtures. Four can be mapped precisely, including a compact declaration on one line. They require the writer and reader, omit an unrelated spec, and compare the actual reader failure against the full reference. Three use an eager fixture, a shared fixture macro and an alias of that macro. They verify full execution for the resulting uncertainty about initialization. The final scenario starts a background task in one spec and lets it execute during another. A reference run exposes the regression that running the reader alone would miss. The reflective macro probes use the installed fixture implementation with its adapter that omits database transactions. They do not verify database behavior. This bounded campaign does not stand in for the separate browser, plugin, theme and migration evidence.
+
+### Unobserved effects
+
+An executed call graph does not cover branches that the baseline never entered.
+If a producer feeds a caller with conditional control flow, iteration, exception
+handling, or early exits, its possible effects remain uncertain. Changes to those
+inputs select the full environment. Literal `if false` branches are excluded from
+this uncertainty because their condition cannot depend on a changed producer.
+
+When an application method already has uncertain effects, collection stops detailed value tracking inside that call. It records nested application sources as uncertain instead. For example, changing a producer called inside an unchanged conditional cache writer selects the full environment. That protects dependencies whose detailed value flow was omitted.
+
+For example, changing a producer from `:original` to `:broken` can activate an
+unchanged `if Producer.value == :broken` cache write. Running only the writer
+would pass while a later reader fails. The lab compares both executions and
+requires the reader to remain selected.
+
+Process environment writes also protect their producers conservatively. `ENV`
+is shared process state, so a writer and reader in separate spec files cannot be
+isolated using only the writer's observed calls.
+
+Input dependent lookups and reflective calls have the same uncertainty. For
+example, `writers.fetch(Producer.value).write(value)` can choose a receiver that
+the baseline never invoked. A fixed list of observed callees cannot justify
+omitting its readers.
+
+The audit distinguishes example failures from an incomplete comparison. Its
+artifact records reference and candidate success, known failures outside
+examples, unreported process failures, and whether the comparison completed.
+An empty `missed_failures` array alone does not mean the candidate was safe.
+
+The native lookup replay changes an array index from 0 to 1, redirecting a write into a shared cache. The random state replays change a seed from 1234 to 5678, with the producer defined in application code or a spec helper. The loading replay changes a helper from 3 to 4 and recomputes a constant before tests run. Every replay preserves the reader failure found by its full reference.
+
+External Ruby API calls retain their possible argument sources while native operations run inside them. The runtime call signature covers ordinary and block defined methods. Unavailable generated source remains uncertain, and code installed under plugin gem directories receives the same treatment as other external code. Replays cover application callers and direct spec callers.
+
+Arguments remain possible inputs when a callee mutates a tracked field or container. A framework callback with an unmodeled body also protects its caller inputs. The matcher replay passes a producer value into a custom matcher that changes random state, requiring the otherwise indirect reader to stay selected.
+
+`spec/tasks/test_selection_scenarios_spec.rb` runs the shared state Git replays in normal CI. Execution validation separately checks required skipped specs, loaded files without examples and compilation without execution. The tracker observes the first executed line in a newly compiled spec, rather than tracing every application line. Loaded features and registered example metadata cover cached requires. Empty scripts are recorded directly because they provide no line hook. Loading checks cover owned test paths and inventoried symlink targets. Registered examples outside that set still count as unassigned tests. Temporary fixture code outside the inventory does not become a runnable test solely because its filename ends in `_spec.rb`.

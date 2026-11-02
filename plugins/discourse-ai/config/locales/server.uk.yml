@@ -406,6 +406,9 @@ uk:
       configuration_missing: "Конфігурація виявлення спаму AI відсутня. Додайте конфігурацію в розділі «Адміністратор > Плагіни > Discourse AI > Спам» перед увімкненням."
       logging_subject: "Виявлення спаму"
     ai_bot:
+      sources:
+        historical: "Дискурс ШІ"
+        spam_detection: "Виявлення спаму"
       search_discourse_navigation:
         invalid_query: "Введіть пошуковий запит довжиною від 1 до %{max} символів."
       navigation:

@@ -43,6 +43,9 @@ function deprecationReportGroup() {
 
 class Reporter extends TapReporter {
   failReports = [];
+  executedTestFiles = new Set();
+  executedExamples = 0;
+  registeredExamples = 0;
   deprecationCounts = new Map();
   deprecationCountsByOrigin = new Map();
   deprecationDetails = new Map();
@@ -61,6 +64,15 @@ class Reporter extends TapReporter {
   }
 
   reportMetadata(tag, metadata) {
+    if (tag === "executed-test-file") {
+      this.executedTestFiles.add(metadata.name);
+      this.registeredExamples += metadata.count;
+      return;
+    }
+    if (tag === "framework-test-count") {
+      this.registeredExamples += metadata.count;
+      return;
+    }
     if (tag === "increment-deprecation") {
       const { id, origin } = metadata;
 
@@ -93,6 +105,7 @@ class Reporter extends TapReporter {
   }
 
   report(prefix, data) {
+    this.executedExamples += 1;
     if (data.failed) {
       this.failReports.push([prefix, data, this.id]);
     }
@@ -243,6 +256,29 @@ class Reporter extends TapReporter {
       this.out.write("::endgroup::");
     }
 
+    if (process.env.TEST_EXECUTION_DIRECTORY) {
+      const moduleFiles = JSON.parse(
+        fs.readFileSync(process.env.TEST_EXECUTION_MODULE_MAP, "utf8")
+      );
+      fs.writeFileSync(
+        path.join(
+          process.env.TEST_EXECUTION_DIRECTORY,
+          `qunit-${process.pid}.json`
+        ),
+        JSON.stringify({
+          revision: process.env.GITHUB_SHA,
+          examples: this.executedExamples,
+          registrations_complete:
+            this.registeredExamples === this.executedExamples,
+          failures: this.failReports.map(([, data]) => data.name),
+          modules: [...this.executedTestFiles].sort(),
+          files: [...this.executedTestFiles].map(
+            (name) => moduleFiles[name] || `unmapped:${name}`
+          ),
+        })
+      );
+    }
+
     super.finish();
 
     this.reportDeprecations();
@@ -333,7 +369,10 @@ module.exports.proxies = {};
 
 if (pluginTestPages) {
   module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
-    return `tests?hidepassed&target=${plugin}`;
+    const query = new URLSearchParams(process.env.QUNIT_TEST_QUERY || "");
+    query.set("target", plugin);
+    query.set("hidepassed", "");
+    return `tests?${query}`;
   });
 } else if (themeTestPages) {
   // avoid double-slash in paths

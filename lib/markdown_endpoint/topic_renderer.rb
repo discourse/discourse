@@ -95,8 +95,32 @@ module MarkdownEndpoint
       )
       lines << metadata.join("\\\n")
       lines.concat(["", "</div>", ""])
+      if (description = action_description(post)).present?
+        lines.concat([description, ""])
+      end
       lines << cached_body(cooked, post_url: post.full_url)
       lines.join("\n")
+    end
+
+    def action_description(post)
+      return if post.action_code.blank?
+
+      serializer = PostSerializer.new(post, scope: @guardian, root: false)
+      serializer.topic_view = @topic_view
+      who = serializer.action_code_who
+      description =
+        I18n.t(
+          "js.action_codes.#{serializer.action_code}",
+          who: ERB::Util.html_escape(who.present? ? "@#{who}" : ""),
+          when:
+            ERB::Util.html_escape(
+              I18n.t("js.dates.wrap_on", date: @timestamp.text(post.created_at)),
+            ),
+          path: ERB::Util.html_escape(serializer.action_code_path || @topic.relative_url),
+          default: "",
+        )
+
+      escape_text(Nokogiri::HTML5.fragment(description).text.strip)
     end
 
     def cached_body(cooked, post_url:)

@@ -13,12 +13,7 @@ class AdminDashboardSystem
   end
 
   def build
-    {
-      version: version,
-      storage: storage,
-      discourse_updated_at: Discourse.last_commit_date,
-      dashboard_updated_at: AdminDashboardIndexData.fetch_cached_stats["updated_at"],
-    }
+    { version: version, storage: storage, discourse_updated_at: Discourse.last_commit_date }
   end
 
   private

@@ -210,6 +210,9 @@ fi:
       configuration_missing: "Tekoälyroskapostihavaitsemisen määritys puuttuu. Lisää määritys kohdassa Ylläpito > Lisäosat > Discourse AI > Roskaposti ennen käyttöönottoa."
       logging_subject: "Roskapostin havaitseminen"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Roskapostin havaitseminen"
       navigation:
         settings:
           title: "Sivustoasetukset"

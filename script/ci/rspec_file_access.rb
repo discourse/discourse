@@ -41,8 +41,8 @@ module RspecFileAccess
     end
   end
 
-  def self.enable
-    @root = "#{Dir.pwd}/"
+  def self.enable(root: Dir.pwd)
+    @root = "#{root}/"
     @shared_files = Set.new
     @cache = {}
     @failure = nil

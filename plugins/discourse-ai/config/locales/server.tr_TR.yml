@@ -318,6 +318,9 @@ tr_TR:
       configuration_missing: "YZ spam algılama yapılandırması eksik. Etkinleştirmeden önce \"Yönetici > Eklentiler > Discourse YZ > Spam\" bölümüne yapılandırmayı ekleyin."
       logging_subject: "Spam tespiti"
     ai_bot:
+      sources:
+        historical: "Discourse YZ"
+        spam_detection: "İstenmeyen içerik tespiti"
       navigation:
         settings:
           title: "Site ayarları"

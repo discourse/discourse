@@ -65,6 +65,7 @@ pl_PL:
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
     discourse_events_enabled: "Włącz wtyczkę Wydarzenia Discourse. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
     discourse_post_event_enabled: "Włącza funkcje zdarzeń. Uwaga: wymagane jest również włączenie opcji {{setting:discourse_events_enabled}}."
+    enable_event_schema_for_topics: "Dodaj dane zdarzeń Schema.org do stron tematycznych zdarzeń."
     displayed_invitees_limit: "Ogranicza liczbę zaproszeń wyświetlanych w wydarzeniu."
     display_post_event_date_on_topic_title: "Wyświetla datę wydarzenia po tytule tematu."
     use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."

@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT.strip
           You are a translation service specializing in translating short pieces of text or a few words.

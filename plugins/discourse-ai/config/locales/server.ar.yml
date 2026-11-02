@@ -379,6 +379,9 @@ ar:
       configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكوِّنات الإضافية > Discourse AI > المحتوى العشوائي' قبل التفعيل."
       logging_subject: "اكتشاف المحتوى العشوائي"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "اكتشاف المحتوى العشوائي"
       navigation:
         settings:
           title: "إعدادات الموقع"

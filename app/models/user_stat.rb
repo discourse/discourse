@@ -108,7 +108,8 @@ class UserStat < ActiveRecord::Base
   end
 
   def self.update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+    DB.exec(
+      <<~SQL,
       UPDATE user_stats us
       SET first_unread_at = COALESCE(Y.min_date, :now)
       FROM (
@@ -151,9 +152,10 @@ class UserStat < ActiveRecord::Base
                     (SELECT c2.id
                      FROM categories c2
                      JOIN category_groups cg ON cg.category_id = c2.id
-                     JOIN group_users gu ON gu.user_id = u.id
-                     AND cg.group_id = gu.group_id
-                     WHERE c2.read_restricted ))
+                     WHERE c2.read_restricted AND (
+                       cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = u.id)
+                       OR cg.group_id = :logged_in_users
+                     )))
              AND NOT EXISTS
                (SELECT 1
                 FROM category_users cu
@@ -175,6 +177,11 @@ class UserStat < ActiveRecord::Base
       ) Y
       WHERE Y.user_id = us.user_id
     SQL
+      min_date: last_seen,
+      limit: limit,
+      now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
+      logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
+    )
   end
 
   def self.reset_bounce_scores

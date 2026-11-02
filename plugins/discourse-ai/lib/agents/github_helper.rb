@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class GithubHelper < Agent
+      def thinking_effort
+        "medium"
+      end
+
       def tools
         [
           Tools::GithubFileContent,

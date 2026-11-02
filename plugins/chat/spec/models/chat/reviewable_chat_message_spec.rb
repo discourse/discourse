@@ -29,6 +29,21 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
     expect(notification.url).to eq("/review/#{reviewable.id}")
   end
 
+  describe "#actions_for" do
+    it "requires classification for restrictive chat actions" do
+      reviewable.update!(target_created_by: user)
+
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_delete",
+        "delete_and_agree",
+        "agree_and_suspend",
+        "agree_and_silence",
+      )
+    end
+  end
+
   describe "#perform" do
     it "suspends the author and deletes the flagged message" do
       reviewable.update!(target_created_by: user)
@@ -77,6 +92,30 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect {
           expect(reviewable.perform(moderator, :agree_and_keep_message)).to be_success
         }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "classifies the statement while deleting the flagged message" do
+        result =
+          reviewable.perform(
+            moderator,
+            :agree_and_delete,
+            dsa_classification: {
+              community_rule: {
+                "ground" => "Be respectful",
+                "explanation" => "Personal attacks are not allowed.",
+              },
+              category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+            },
+          )
+
+        expect(result).to be_success
+        expect(chat_message.reload.deleted_at).to be_present
+        expect(reviewable.reload).to be_approved
+
+        statement = reviewable.dsa_statement_of_records.sole
+        expect(statement).to be_ready
+        expect(statement.classified_by_id).to eq(moderator.id)
+        expect(statement.payload).to include("incompatible_content_ground" => "Be respectful")
       end
 
       it "records a statement when agree_and_delete handles the chat message reviewable" do

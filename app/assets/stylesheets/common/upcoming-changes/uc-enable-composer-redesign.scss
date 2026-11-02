@@ -269,7 +269,11 @@
     }
   }
 
-  .d-editor-input {
+  #reply-control .d-editor-button-bar__wrap {
+    margin-inline: 0;
+  }
+
+  #reply-control .d-editor-input {
     padding-inline: var(--space-4) !important;
 
     &:focus-visible {

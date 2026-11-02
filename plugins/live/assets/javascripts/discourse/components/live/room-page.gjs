@@ -34,6 +34,7 @@ import LiveCallControls from "./call-controls.gjs";
 import LiveCallSubmenu from "./call-submenu.gjs";
 import LiveCaptionOverlay from "./caption-overlay.gjs";
 import LiveChatPanel from "./chat-panel.gjs";
+import LiveLocalRecordingMenuItem from "./local-recording-menu-item.gjs";
 import LiveReactionOverlay from "./reaction-overlay.gjs";
 import LiveReactionPicker from "./reaction-picker.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
@@ -700,6 +701,11 @@ export default class LiveRoomPage extends Component {
                 <:content as |roomMenu|>
                   <DDropdownMenu as |dropdown|>
                     <LiveInviteAgentButton
+                      @closeMenu={{roomMenu.close}}
+                      @item={{dropdown.item}}
+                      @room={{this.room}}
+                    />
+                    <LiveLocalRecordingMenuItem
                       @closeMenu={{roomMenu.close}}
                       @item={{dropdown.item}}
                       @room={{this.room}}

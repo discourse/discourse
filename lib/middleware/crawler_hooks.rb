@@ -3,6 +3,8 @@
 module Middleware
   class CrawlerHooks
     NON_LOCALIZABLE_PATH_PREFIXES = %w[/uploads/ /secure-uploads/ /secure-media-uploads/].freeze
+    # Anchors, plus the pagination link tags, which crawlers follow like anchors.
+    LOCALIZABLE_LINK_TAGS = %w[a link[rel='prev'] link[rel='next']].freeze
 
     def initialize(app)
       @app = app
@@ -35,7 +37,7 @@ module Middleware
         html_fragment = Nokogiri::HTML5.parse(response.body)
 
         html_fragment
-          .css("a[href^='/'], a[href^='#{Discourse.base_url}']")
+          .css(localizable_link_selector)
           .each do |link|
             uri = Addressable::URI.parse(link["href"])
             next if non_localizable_path?(uri.path)
@@ -48,6 +50,13 @@ module Middleware
       end
 
       response
+    end
+
+    def localizable_link_selector
+      LOCALIZABLE_LINK_TAGS
+        .product(["/", Discourse.base_url])
+        .map { |tag, prefix| "#{tag}[href^='#{prefix}']" }
+        .join(", ")
     end
 
     def non_localizable_path?(path)

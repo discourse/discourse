@@ -14,11 +14,13 @@ const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
 // how long the tabs wait on the reply's judgements before judging the query alone
 const INTENT_WAIT_MS = 1000;
 
-function findsAsMuch(results, other) {
-  return (
-    Boolean(results) &&
-    (results.posts?.length ?? 0) >= (other?.posts?.length ?? 0)
-  );
+function preservesMatches(results, other) {
+  if (!results) {
+    return false;
+  }
+
+  const postIds = new Set((results.posts ?? []).map((post) => post.id));
+  return (other?.posts ?? []).every((post) => postIds.has(post.id));
 }
 
 /**
@@ -291,12 +293,12 @@ export default class AiSearchSession extends Service {
       return;
     }
 
-    // the rewrite can land first, and stays when it found at least as much
+    // A rewrite can land first, but must retain the original matches.
     const empty = { posts: [], resultTypes: [] };
-    if (!findsAsMuch(this.topicsResults, topics)) {
+    if (!preservesMatches(this.topicsResults, topics)) {
       this.topicsResults = topics ?? empty;
     }
-    if (scopeKey && !findsAsMuch(this.contextResults, context)) {
+    if (scopeKey && !preservesMatches(this.contextResults, context)) {
       this.contextResults = context ?? empty;
     }
 
@@ -398,7 +400,7 @@ export default class AiSearchSession extends Service {
     this.search.results = shown;
   }
 
-  // the rewrite drops filler words, so it is preferred unless it finds less
+  // More results do not guarantee that the original matches survived a rewrite.
   async #applyRewrite(update) {
     const query = this.query;
     const rewritten = update.keyword_query || "";
@@ -415,10 +417,10 @@ export default class AiSearchSession extends Service {
       return;
     }
 
-    if (findsAsMuch(topics, this.topicsResults)) {
+    if (preservesMatches(topics, this.topicsResults)) {
       this.topicsResults = topics;
     }
-    if (scopeKey && findsAsMuch(context, this.contextResults)) {
+    if (scopeKey && preservesMatches(context, this.contextResults)) {
       this.contextResults = context;
     }
     this.#showSelectedResults();

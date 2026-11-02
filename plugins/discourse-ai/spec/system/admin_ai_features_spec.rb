@@ -192,7 +192,7 @@ RSpec.describe "Admin AI features configuration" do
     expect(form).to have_no_field_with_name("ai_sentiment_sentiment_agent")
     expect(form).to have_no_field_with_name("ai_sentiment_sentiment_decision_model")
     expect(form).to have_no_field_with_name("ai_sentiment_model_configs")
-    expect(form.field("ai_sentiment_backfill_maximum_posts_per_hour")).to have_value("2500")
+    expect(form.field("ai_sentiment_backfill_maximum_posts_per_hour")).to have_value("240")
     expect(form.field("ai_sentiment_backfill_post_max_age_days")).to have_value("60")
     form.field("ai_sentiment_backfill_maximum_posts_per_hour").fill_in("120")
     form.field("ai_sentiment_backfill_post_max_age_days").fill_in("0")

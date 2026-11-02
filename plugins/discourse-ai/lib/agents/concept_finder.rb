@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         existing_concepts = DiscourseAi::InferredConcepts::Manager.new.list_concepts(limit: 100)
         existing_concepts_text = ""

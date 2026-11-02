@@ -210,6 +210,9 @@ it:
       configuration_missing: "Nessuna configurazione per il rilevamento IA dello spam trovata. Prima di abilitare l'opzione, aggiungi la configurazione in \"Amministrazione > Plugin > Discourse AI > Spam\"."
       logging_subject: "Rilevamento spam"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Rilevamento spam"
       navigation:
         settings:
           title: "Impostazioni del sito"

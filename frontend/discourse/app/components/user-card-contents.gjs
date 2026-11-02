@@ -479,14 +479,15 @@ export default class UserCardContents extends CardContentsBase {
               }}
             >
               <div class="user-card-avatar-wrapper">
-                <div aria-hidden="true" class="user-card-avatar">
+                <div class="user-card-avatar">
                   {{#if this.contentHidden}}
-                    <span class="card-huge-avatar">{{dBoundAvatar
-                        this.user
-                        "huge"
-                      }}</span>
+                    <span
+                      aria-hidden="true"
+                      class="card-huge-avatar"
+                    >{{dBoundAvatar this.user "huge"}}</span>
                   {{else}}
                     <a
+                      aria-hidden="true"
                       class="card-huge-avatar"
                       href={{this.avatarUrl}}
                       tabindex="-1"

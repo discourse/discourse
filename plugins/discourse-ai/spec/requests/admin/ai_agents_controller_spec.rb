@@ -492,6 +492,24 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "PUT #update" do
+    it "synchronizes the bot account activation when saving the enabled toggle" do
+      bot = ai_agent.create_user!
+
+      [false, true].each do |enabled|
+        put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+            params: {
+              ai_agent: {
+                enabled:,
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(ai_agent.reload.enabled).to eq(enabled)
+        expect(bot.reload.active).to eq(enabled)
+        expect(ai_agent.user_id).to eq(bot.id)
+      end
+    end
+
     context "with scoped api key" do
       it "allows updates with a properly scoped API key" do
         api_key = Fabricate(:api_key, user: admin, created_by: admin)

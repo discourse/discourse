@@ -1729,10 +1729,7 @@ uk:
           streaming_below: "Новий контент нижче"
           editing_post: "Редагування допису"
       sentiments:
-        dashboard:
-          title: "Почуття"
         sidebar:
-          overview: "Огляд настроїв"
           analysis: "Аналіз настроїв"
         sentiment_analysis:
           share_chart: "Копіювати посилання на діаграму"

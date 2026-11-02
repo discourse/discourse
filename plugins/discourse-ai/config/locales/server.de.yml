@@ -367,6 +367,9 @@ de:
       configuration_missing: "Die Konfiguration der KI-Spamerkennung fehlt. Füge die Konfiguration in „Administration > Plug-ins > Discourse KI > Spam“ hinzu, bevor du sie aktivierst."
       logging_subject: "Spam-Erkennung"
     ai_bot:
+      sources:
+        historical: "Discourse KI"
+        spam_detection: "Spam-Erkennung"
       navigation:
         settings:
           title: "Website-Einstellungen"

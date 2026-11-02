@@ -13,20 +13,9 @@ class Admin::DashboardController < Admin::StaffController
                   update_configuration
                   update_section_settings
                 ]
-  before_action :ensure_dashboard_improvements_enabled, only: :traffic
 
   def index
-    if dashboard_improvements?
-      data = dashboard_sections_payload
-    else
-      data = AdminDashboardIndexData.fetch_cached_stats
-
-      if SiteSetting.version_checks?
-        data.merge!(version_check: DiscourseUpdates.check_version.as_json)
-      end
-    end
-
-    render json: data
+    render json: dashboard_sections_payload
   end
 
   def update_configuration
@@ -47,19 +36,6 @@ class Admin::DashboardController < Admin::StaffController
       attrs: params.permit(*(definition&.dig(:permit) || [])),
     )
     head :no_content
-  end
-
-  def moderation
-  end
-
-  def security
-  end
-
-  def reports
-  end
-
-  def general
-    render json: AdminDashboardGeneralData.fetch_cached_stats
   end
 
   def traffic
@@ -104,7 +80,7 @@ class Admin::DashboardController < Admin::StaffController
     data = {
       new_features: new_features_with_permanent_uc,
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
-      release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
+      release_notes_link: release_notes_link,
     }
 
     mark_new_features_as_seen
@@ -235,12 +211,10 @@ class Admin::DashboardController < Admin::StaffController
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
   end
 
-  def ensure_dashboard_improvements_enabled
-    raise Discourse::NotFound if !dashboard_improvements?
-  end
-
-  def dashboard_improvements?
-    UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
+  def release_notes_link
+    days_since_update =
+      Discourse.last_commit_date ? ((DateTime.now - Discourse.last_commit_date) / 1.day).to_i : nil
+    "https://meta.discourse.org/c/announcements/67?tags=release-notes&before=#{days_since_update}"
   end
 
   def parse_reports_items_payload

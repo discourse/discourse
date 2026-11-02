@@ -378,6 +378,9 @@ zh_TW:
       configuration_missing: "缺少 AI 垃圾內容偵測設定。啟用前，請在「管理 > 外掛 > Discourse AI > 垃圾內容」中新增設定。"
       logging_subject: "垃圾內容偵測"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "垃圾內容偵測"
       navigation:
         settings:
           title: "網站設定"

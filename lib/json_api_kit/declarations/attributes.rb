@@ -3,10 +3,13 @@
 module JsonApiKit
   module Declarations
     class Attributes
-      def initialize(attributes, guardian:, schema:, type:)
+      include Enumerable
+
+      delegate :each, to: :attributes
+
+      def initialize(attributes, guardian:, type:)
         @attributes = attributes
         @guardian = guardian
-        @schema = schema
         @type = type
         @field_names = {}
       end
@@ -15,11 +18,9 @@ module JsonApiKit
 
       def values_for(record) = readable(record).to_h { [field_name(it), it.value_for(record)] }
 
-      def columns = Columns.for(attributes.map { it.column_for(schema) })
-
       private
 
-      attr_reader :attributes, :guardian, :schema, :type, :field_names
+      attr_reader :attributes, :guardian, :type, :field_names
 
       def readable(record) = attributes.select { it.readable_for?(guardian, record) }
 

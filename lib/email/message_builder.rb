@@ -211,6 +211,10 @@ module Email
           @template_args[key] = escaped_template_arg(key) if @template_args.key?(key)
         end
 
+        if @opts.key?(:body_topic_title)
+          @template_args[:topic_title] = ERB::Util.html_escape(@opts[:body_topic_title])
+        end
+
         augmented_template_args =
           @template_args.merge(
             optional_re: "",

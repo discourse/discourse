@@ -501,6 +501,10 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      sources:
+        historical: "AI Discourse"
+        spam_detection: "Wykrywanie spamu"
+        plugin_disabled: "Wtyczka AI wyłączona"
       search_discourse_navigation:
         not_allowed: "Nie masz uprawnień do wyszukiwania w celach administracyjnych."
         invalid_query: "Wprowadź zapytanie wyszukiwania składające się z 1 do %{max} znaków."

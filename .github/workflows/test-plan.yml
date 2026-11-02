@@ -1,0 +1,81 @@
+name: Prepare test plan
+
+on:
+  workflow_call:
+    inputs:
+      workflow:
+        required: true
+        type: string
+      backend_only:
+        type: boolean
+        default: false
+    outputs:
+      matrix:
+        value: ${{ jobs.prepare.outputs.matrix }}
+      has_tests:
+        value: ${{ jobs.prepare.outputs.has_tests }}
+      mode:
+        value: ${{ jobs.prepare.outputs.mode }}
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      has_tests: ${{ steps.plan.outputs.has_tests }}
+      mode: ${{ steps.plan.outputs.mode }}
+    env:
+      TEST_MAPPING_BACKEND_ONLY: ${{ inputs.backend_only && '1' || '0' }}
+      LOAD_PLUGINS: "0"
+      TEST_SELECTION_MODE: ${{ vars.TEST_SELECTION_MODE || 'audit' }}
+      TEST_SELECTION_AUDIT_PERCENT: ${{ vars.TEST_SELECTION_AUDIT_PERCENT || '10' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup gems
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+          bundle config set --local path vendor/bundle
+          bundle config set --local deployment true
+          bundle config set --local without development
+          bundle install --jobs 4
+
+      - name: Checkout official plugins and themes for inventory
+        if: inputs.workflow == 'tests'
+        run: bin/rake plugin:install_all_official themes:clone_all_official themes:pull_compatible_all
+
+      - name: Pull compatible plugin versions
+        if: inputs.workflow == 'tests' && github.ref_name != 'main' && github.base_ref != 'main'
+        run: bin/rake plugin:pull_compatible_all
+
+      - name: Fetch latest completed main mapping
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          MAPPING_WORKFLOW: ${{ inputs.workflow }}
+        run: bundle exec ruby script/ci/test_mapping_download.rb tmp/test-plan/mappings "$MAPPING_WORKFLOW"
+
+      - name: Select test files and assign environments
+        id: plan
+        env:
+          MAPPING_WORKFLOW: ${{ inputs.workflow }}
+        run: bundle exec ruby script/ci/test_prepare.rb "$MAPPING_WORKFLOW" tmp/test-plan
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: test-plan-${{ inputs.workflow }}
+          path: |
+            tmp/test-plan/catalog.json
+            tmp/test-plan/plan.json
+            tmp/test-plan/plan.json.reference.json
+          retention-days: 14
+          if-no-files-found: error

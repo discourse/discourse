@@ -9416,7 +9416,9 @@ CREATE TABLE public.post_revisions (
     number integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    hidden boolean DEFAULT false NOT NULL
+    hidden boolean DEFAULT false NOT NULL,
+    unlisted boolean DEFAULT false NOT NULL,
+    CONSTRAINT post_revisions_hidden_unlisted_exclusive CHECK ((NOT (hidden AND unlisted)))
 );
 
 
@@ -26164,6 +26166,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261029021723'),
+('20261021180718'),
+('20261021180714'),
 ('20261021063131'),
 ('20261021063122'),
 ('20261021061850'),

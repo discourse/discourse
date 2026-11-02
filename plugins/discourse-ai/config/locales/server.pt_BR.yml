@@ -278,6 +278,9 @@ pt_BR:
       configuration_missing: "Não foi encontrada a configuração de detecção de spam de IA. Adicione a configuração em \"Administração > Plugins > Discourse AI > Spam\" antes de ativar."
       logging_subject: "Detecção de spam"
     ai_bot:
+      sources:
+        historical: "Discourse IA"
+        spam_detection: "Detecção de spam"
       navigation:
         settings:
           title: "Configurações do site"

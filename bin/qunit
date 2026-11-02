@@ -46,11 +46,13 @@ class QunitRunner
   end
 
   def run
-    if @standalone_mode
-      with_standalone_rails { run_tests }
-    else
-      run_tests
-    end
+    status =
+      if @standalone_mode
+        with_standalone_rails { run_tests }
+      else
+        run_tests
+      end
+    exit status
   end
 
   private
@@ -73,6 +75,8 @@ class QunitRunner
           "--filter FILTER",
           "Run tests matching this filter against \"module: test name\" (case-insensitive substring, or a slash-wrapped regex like /foo/i)",
         ) { |filter| @filter = filter }
+
+        opts.on("--exact-files", "Execute exactly the supplied test files") { @exact_files = true }
 
         opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
 
@@ -245,6 +249,7 @@ class QunitRunner
   end
 
   def run_tests
+    raise "Exact file selection requires files" if @exact_files && @paths.empty?
     if @verbose
       puts "Files to test: #{@test_files.length}"
       puts "  #{@test_files.join("\n  ")}"
@@ -253,9 +258,23 @@ class QunitRunner
     target = resolved_target
     puts "Target: #{target}" if @verbose
 
-    file_path_filter = build_file_path_filter(@paths)
+    unless @exact_files
+      return run_ember_exam(file_path_filter: build_file_path_filter(@paths), filter: @filter)
+    end
 
-    run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
+    batches = @paths.group_by { |path| target_from_path(path) }.values
+    batches = batches.flat_map { |paths| paths.each_slice(20).to_a } unless ENV[
+      "TEST_SELECTION_ALL"
+    ] == "1"
+    batches.each do |paths|
+      @paths = paths
+      @resolved_target = nil
+      @plugin_targets = []
+      detect_plugin_targets!
+      status = run_ember_exam(filter: @filter)
+      return status unless status == 0
+    end
+    0
   end
 
   def run_ember_exam(filter: nil, file_path_filter: nil)
@@ -281,6 +300,15 @@ class QunitRunner
     end
 
     env = {}
+    if @exact_files && ENV["TEST_EXECUTION_DIRECTORY"]
+      path =
+        File.join(
+          ENV.fetch("TEST_EXECUTION_DIRECTORY"),
+          "module-files-#{Process.pid}-#{SecureRandom.hex(4)}.json",
+        )
+      File.write(path, JSON.generate(selected_module_files))
+      env["TEST_EXECUTION_MODULE_MAP"] = path
+    end
     env["LOAD_PLUGINS"] = should_load_plugins? ? "1" : "0"
     env["REPORT_REQUESTS"] = "1" if @report_requests
     env["UNICORN_PORT"] = @rails_port.to_s
@@ -295,6 +323,7 @@ class QunitRunner
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
 
     query = build_query
+    env["QUNIT_TEST_QUERY"] = query if @exact_files
 
     args = []
 
@@ -321,11 +350,11 @@ class QunitRunner
 
     if @dry_run
       puts "[dry-run] tests not executed"
-      exit 0
+      return 0
     end
 
     system(env, *args, chdir: dir)
-    exit $?.exitstatus
+    $?.exitstatus
   end
 
   def convert_to_ember_relative_path(file_path)
@@ -576,12 +605,41 @@ class QunitRunner
     plugin_path?(path) ? "#{relative}/" : "./#{relative}/"
   end
 
+  def selected_module_files
+    if @paths.empty? || @paths.any? { |path| !File.file?(path) }
+      raise "Exact file selection requires files"
+    end
+    @paths.to_h do |path|
+      name =
+        if path.match?(%r{(?:\A|/)themes/[^/]+/test/})
+          raise "Exact theme selection requires a theme ID" unless @theme_id
+          relative = path.split(%r{themes/[^/]+/}).last.sub(/\.(?:js|gjs|ts|gts)\z/, "")
+          "discourse/theme-#{@theme_id}/#{relative}"
+        elsif plugin_path?(File.expand_path(path))
+          convert_to_ember_relative_path(path).sub(/\.(?:js|gjs|ts|gts)\z/, "")
+        else
+          "./#{convert_to_ember_relative_path(path)}"
+        end
+      [name, path]
+    end
+  end
+
+  def exact_module_filter
+    modules = selected_module_files.keys.map { |name| Regexp.escape(name) }
+    filter = "/^(?:#{modules.join("|")})$/"
+    if URI.encode_www_form_component(filter).bytesize > MAX_FILE_PATH_FILTER_LENGTH
+      raise "Exact module filter exceeds the URL limit"
+    end
+    filter
+  end
+
   def build_query
     params = {}
     if @qunit_path
       # Only include seed manually if we're running without ember exam
       params["seed"] = resolved_seed
     end
+    params["modulePath"] = exact_module_filter if @exact_files && ENV["TEST_SELECTION_ALL"] != "1"
     params["module"] = @module if @module
     params["theme_name"] = @theme_name if @theme_name
     params["theme_url"] = @theme_url if @theme_url
@@ -631,11 +689,12 @@ class QunitRunner
   end
 
   def should_load_plugins?
-    resolved_target != "core"
+    !@qunit_path.nil? || resolved_target != "core"
   end
 
   def target_from_paths(paths)
     targets = paths.map { |path| target_from_path(path) }.uniq
+    return targets.join(",") if @exact_files
     if targets.length > 1
       puts "Error: Cannot mix multiple plugin/core targets when running specific files"
       exit 1

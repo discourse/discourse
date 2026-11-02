@@ -491,6 +491,9 @@ zh_CN:
       configuration_missing: "缺少 AI 垃圾信息检测配置。请先在“管理 > 插件 > Discourse AI > 垃圾信息”中添加配置，然后再启用。"
       logging_subject: "垃圾信息检测"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "垃圾内容检测"
       search_discourse_navigation:
         not_allowed: "您无权搜索管理目标。"
         invalid_query: "输入 1 到 %{max} 个字符之间的搜索查询。"

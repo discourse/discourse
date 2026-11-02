@@ -2811,9 +2811,6 @@ zh_CN:
     enable_user_status: "允许用户设置自定义状态消息（表情符号 + 描述）。"
     enable_user_tips: "启用向用户描述关键功能的新用户提示"
     short_title: "简短标题将显示在用户的主屏幕、启动器或其他空间有限的地方。标题长度应限制在 12 个字符以内。请注意，更改此标题可能会向 PWA 用户发送提示，询问他们是更新还是卸载应用。"
-    dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
-    dashboard_visible_tabs: "选择可见的信息中心标签页。"
-    dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
     site_traffic_explorer_event_limit: "控制网站流量分析器处理的近期页面浏览量上限。更高的限制可以覆盖更多流量，但在资源较低的数据库服务器上，加载时间可能会更长，甚至可能超时。"
     gravatar_enabled: "使用 <a href='https://gravatar.com/'>Gravatar</a> 服务制作用户头像。禁用将阻止用户改用 Gravatar 制作头像，但不会影响已使用 Gravatar 的用户。"
     gravatar_name: "指定 Gravatar 服务提供商的名称。此名称通常用于标识向网站提供 Gravatar 头像的来源。"
@@ -5512,6 +5509,27 @@ zh_CN:
   onebox:
     discourse:
       event_all_day: "全天"
+      recurrence:
+        every_day: "每天"
+        every_weekday: "每个工作日"
+        every_week: "每个%{weekday}"
+        every_two_weeks: "每隔一个%{weekday}"
+        every_four_weeks: "每 4 周的%{weekday}"
+        every_month: "每个月的%{ordinal}%{weekday}"
+        ordinals:
+          first: "第一个"
+          second: "第二个"
+          third: "第三个"
+          fourth: "第四个"
+          last: "最后一个"
+        weekdays:
+          sunday: "星期日"
+          monday: "星期一"
+          tuesday: "星期二"
+          wednesday: "星期三"
+          thursday: "星期四"
+          friday: "星期五"
+          saturday: "星期六"
       user_joined_community: "%{date}加入"
     google_meet:
       title: "Google Meet 会议"

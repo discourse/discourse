@@ -4,9 +4,11 @@ module JsonApiKit
   module Declarations
     class Relationship
       class ToOne < Relationship
-        def scoping(association) = association.to_scoping
+        def linkage(records, filtering: {}) = Linkage::ToOne.new(records, filtering:)
 
-        def linkage(records) = Linkage::ToOne.new(records)
+        def related_document = Document::RelatedResource
+
+        def linkage_document = Document::Relationship::ToOne
       end
     end
   end

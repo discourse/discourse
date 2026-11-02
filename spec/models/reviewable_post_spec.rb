@@ -3,6 +3,21 @@
 RSpec.describe ReviewablePost do
   fab!(:admin)
 
+  describe "#actions_for" do
+    it "requires classification for rejecting or restricting the submitted post" do
+      post = Fabricate(:post)
+      reviewable = described_class.queue_for_review(post)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "reject_and_delete",
+        "reject_and_suspend",
+        "reject_and_silence",
+      )
+    end
+  end
+
   describe "#build_actions" do
     let(:post) { Fabricate.build(:post) }
     let(:reviewable) { ReviewablePost.new(target: post, target_created_by: post.user) }

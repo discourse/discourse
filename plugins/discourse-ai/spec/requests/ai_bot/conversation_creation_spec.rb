@@ -123,7 +123,7 @@ RSpec.describe "AI bot conversation creation" do
   end
 
   it "normalizes a legacy model recipient to the General agent" do
-    legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+    legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
     llm_model.update_column(:user_id, legacy_user.id)
     general_agent =
       AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])

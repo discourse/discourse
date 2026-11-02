@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT.strip
           I want you to act as a title generator for written pieces. I will provide you with a text,
