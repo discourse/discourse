@@ -13,6 +13,14 @@ class Admin::EmailController < Admin::AdminController
 
   def test
     params.require(:email_address)
+    ensure_test_email_recipient!(params[:email_address])
+    RateLimiter.new(
+      current_user,
+      "admin-email-test-send",
+      10,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
     begin
       message = TestMailer.send_test(params[:email_address])
       Email::Sender.new(message, :test_message).send
@@ -53,9 +61,17 @@ class Admin::EmailController < Admin::AdminController
     params.require(:last_seen_at)
     params.require(:username)
     params.require(:email)
+    ensure_test_email_recipient!(params[:email])
     user = User.find_by_username(params[:username])
     raise Discourse::InvalidParameters unless user
 
+    RateLimiter.new(
+      current_user,
+      "admin-email-preview-send",
+      10,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
     message, skip_reason =
       UserNotifications.public_send(
         :digest,
@@ -116,6 +132,15 @@ class Admin::EmailController < Admin::AdminController
   end
 
   private
+
+  def ensure_test_email_recipient!(recipient)
+    return if !SiteSetting.restrict_admin_email_test_sends_to_self
+
+    normalized_recipient = recipient.to_s.strip.downcase
+    return if current_user.user_emails.where("lower(email) = ?", normalized_recipient).exists?
+
+    raise Discourse::InvalidParameters.new(I18n.t("email_settings.test_email_restricted"))
+  end
 
   def delivery_settings
     action_mailer_settings.reject { |k, _| k == :password }.map { |k, v| { name: k, value: v } }
