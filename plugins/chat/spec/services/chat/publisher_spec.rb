@@ -273,7 +273,7 @@ describe Chat::Publisher do
         )
       end
 
-      shared_examples "delivering messages to eligible logged in users" do |enabled|
+      shared_examples "delivering messages to eligible logged in users" do |enabled:|
         it "bounds logged-in category delivery by chat eligibility with granular permissions #{enabled}" do
           SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
           category = Fabricate(:category, permissions: { logged_in_users: :full })
@@ -324,8 +324,13 @@ describe Chat::Publisher do
         end
       end
 
-      it_behaves_like "delivering messages to eligible logged in users", false
-      it_behaves_like "delivering messages to eligible logged in users", true
+      context "when granular permissions are disabled" do
+        include_examples "delivering messages to eligible logged in users", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "delivering messages to eligible logged in users", enabled: true
+      end
 
       it "publishes to trust level 0 when chat is allowed for everyone" do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]

@@ -17,7 +17,7 @@ RSpec.describe Chat::AutoLeaveChannels do
 
       before { SiteSetting.chat_enabled = true }
 
-      shared_examples "retaining memberships with logged in posting access" do |enabled|
+      shared_examples "retaining memberships with logged in posting access" do |enabled:|
         it "retains only memberships with posting access regardless of granular permissions #{enabled}" do
           SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
           channels =
@@ -37,8 +37,13 @@ RSpec.describe Chat::AutoLeaveChannels do
         end
       end
 
-      it_behaves_like "retaining memberships with logged in posting access", false
-      it_behaves_like "retaining memberships with logged in posting access", true
+      context "when granular permissions are disabled" do
+        include_examples "retaining memberships with logged in posting access", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "retaining memberships with logged in posting access", enabled: true
+      end
     end
 
     context "when chat is disabled" do

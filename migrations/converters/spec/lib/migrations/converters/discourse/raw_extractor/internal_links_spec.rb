@@ -89,57 +89,61 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # A destination can carry a title, padding, or angle brackets and still be a
     # link core resolves. Missing those left such a link pointing at the source
     # site after the migration. Each of these cooks to href="/t/slug/5".
-    it "defers a topic link written with a title" do
-      link, = link_for("[t](/t/slug/5 \"title\")")
+    context "when a topic link has optional Markdown syntax" do
+      it "defers a topic link written with a title" do
+        link, = link_for("[t](/t/slug/5 \"title\")")
 
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-    end
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+      end
 
-    it "defers a topic link written with a single-quoted title" do
-      link, = link_for("[t](/t/slug/5 'title')")
+      it "defers a topic link written with a single-quoted title" do
+        link, = link_for("[t](/t/slug/5 'title')")
 
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-    end
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+      end
 
-    it "defers a topic link written with a parenthesized title" do
-      link, = link_for("[t](/t/slug/5 (title))")
+      it "defers a topic link written with a parenthesized title" do
+        link, = link_for("[t](/t/slug/5 (title))")
 
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-    end
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+      end
 
-    it "defers a topic link written with padding" do
-      link, = link_for("[t](  /t/slug/5  )")
+      it "defers a topic link written with padding" do
+        link, = link_for("[t](  /t/slug/5  )")
 
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-    end
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+      end
 
-    it "defers a topic link written with angle brackets" do
-      link, = link_for("[t](</t/slug/5>)")
+      it "defers a topic link written with angle brackets" do
+        link, = link_for("[t](</t/slug/5>)")
 
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-    end
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+      end
 
-    it "defers a topic link written with angle brackets and a title" do
-      link, = link_for("[t](</t/slug/5> \"ti\")")
+      it "defers a topic link written with angle brackets and a title" do
+        link, = link_for("[t](</t/slug/5> \"ti\")")
 
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-    end
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+      end
 
-    it "defers a topic link written with an absolute URL and a title" do
-      link, = link_for("[t](https://forum.example.com/t/slug/5 \"ti\")")
+      it "defers a topic link written with an absolute URL and a title" do
+        link, = link_for("[t](https://forum.example.com/t/slug/5 \"ti\")")
 
-      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+      end
     end
 
     # Core builds no link for either of these, so neither may be rewritten.
-    it "leaves [t](/t/slug/5 not-a-title) literal, since core makes no link of it" do
-      expect(extract("[t](/t/slug/5 not-a-title)")).to eq("[t](/t/slug/5 not-a-title)")
-      expect(buffer.links).to be_empty
-    end
+    context "when Markdown does not form a link" do
+      it "leaves [t](/t/slug/5 not-a-title) literal, since core makes no link of it" do
+        expect(extract("[t](/t/slug/5 not-a-title)")).to eq("[t](/t/slug/5 not-a-title)")
+        expect(buffer.links).to be_empty
+      end
 
-    it "leaves [t](/t/slug/5 \"unclosed) literal, since core makes no link of it" do
-      expect(extract("[t](/t/slug/5 \"unclosed)")).to eq("[t](/t/slug/5 \"unclosed)")
-      expect(buffer.links).to be_empty
+      it "leaves [t](/t/slug/5 \"unclosed) literal, since core makes no link of it" do
+        expect(extract("[t](/t/slug/5 \"unclosed)")).to eq("[t](/t/slug/5 \"unclosed)")
+        expect(buffer.links).to be_empty
+      end
     end
 
     it "defers the id-only topic form" do
@@ -240,40 +244,42 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # Categories nest three deep, so the slug path has to survive a third level
     # with the tab tail still coming off it.
-    it "reads a three-level category slug path with no tail" do
-      link, = link_for("[x](/c/gp/parent/child)")
+    context "when category paths have three slug levels" do
+      it "reads a three-level category slug path with no tail" do
+        link, = link_for("[x](/c/gp/parent/child)")
 
-      expect(link).to include(target_name: "gp:parent:child", target_id: nil, target_suffix: nil)
-    end
+        expect(link).to include(target_name: "gp:parent:child", target_id: nil, target_suffix: nil)
+      end
 
-    it "reads a three-level category slug path with a filter tail" do
-      link, = link_for("[x](/c/gp/parent/child/l/latest)")
+      it "reads a three-level category slug path with a filter tail" do
+        link, = link_for("[x](/c/gp/parent/child/l/latest)")
 
-      expect(link).to include(
-        target_name: "gp:parent:child",
-        target_id: nil,
-        target_suffix: "/l/latest",
-      )
-    end
+        expect(link).to include(
+          target_name: "gp:parent:child",
+          target_id: nil,
+          target_suffix: "/l/latest",
+        )
+      end
 
-    it "reads a three-level category slug path with a period tail" do
-      link, = link_for("[x](/c/gp/parent/child/l/top/weekly)")
+      it "reads a three-level category slug path with a period tail" do
+        link, = link_for("[x](/c/gp/parent/child/l/top/weekly)")
 
-      expect(link).to include(
-        target_name: "gp:parent:child",
-        target_id: nil,
-        target_suffix: "/l/top/weekly",
-      )
-    end
+        expect(link).to include(
+          target_name: "gp:parent:child",
+          target_id: nil,
+          target_suffix: "/l/top/weekly",
+        )
+      end
 
-    it "reads a three-level category slug path with a /none tail" do
-      link, = link_for("[x](/c/gp/parent/child/none)")
+      it "reads a three-level category slug path with a /none tail" do
+        link, = link_for("[x](/c/gp/parent/child/none)")
 
-      expect(link).to include(
-        target_name: "gp:parent:child",
-        target_id: nil,
-        target_suffix: "/none",
-      )
+        expect(link).to include(
+          target_name: "gp:parent:child",
+          target_id: nil,
+          target_suffix: "/none",
+        )
+      end
     end
 
     it "reads a three-level category by id, with the tail in the suffix" do
@@ -284,34 +290,36 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # A tag name is a single segment, so anything after it is already suffix —
     # the tab tails that needed guarding on the category routes cost nothing here.
-    it "keeps a filter tail out of a tag name" do
-      link, = link_for("[x](/tag/release/l/latest)")
+    context "when a tag URL has a filter suffix" do
+      it "keeps a filter tail out of a tag name" do
+        link, = link_for("[x](/tag/release/l/latest)")
 
-      expect(link).to include(
-        target_type: enums::LinkTarget::TAG,
-        target_name: "release",
-        target_suffix: "/l/latest",
-      )
-    end
+        expect(link).to include(
+          target_type: enums::LinkTarget::TAG,
+          target_name: "release",
+          target_suffix: "/l/latest",
+        )
+      end
 
-    it "keeps a period tail out of a tag name" do
-      link, = link_for("[x](/tags/release/l/top/weekly)")
+      it "keeps a period tail out of a tag name" do
+        link, = link_for("[x](/tags/release/l/top/weekly)")
 
-      expect(link).to include(
-        target_type: enums::LinkTarget::TAG,
-        target_name: "release",
-        target_suffix: "/l/top/weekly",
-      )
-    end
+        expect(link).to include(
+          target_type: enums::LinkTarget::TAG,
+          target_name: "release",
+          target_suffix: "/l/top/weekly",
+        )
+      end
 
-    it "keeps a /none tail out of a tag name" do
-      link, = link_for("[x](/tag/release/none)")
+      it "keeps a /none tail out of a tag name" do
+        link, = link_for("[x](/tag/release/none)")
 
-      expect(link).to include(
-        target_type: enums::LinkTarget::TAG,
-        target_name: "release",
-        target_suffix: "/none",
-      )
+        expect(link).to include(
+          target_type: enums::LinkTarget::TAG,
+          target_name: "release",
+          target_suffix: "/none",
+        )
+      end
     end
 
     it "keeps a filter tail out of a slugless category link" do
@@ -577,7 +585,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # linkify-it reads the scheme case-insensitively, so core links these too;
     # older forums carried over uppercase schemes.
-    shared_examples "a bare internal link scheme" do |scheme|
+    shared_examples "a bare internal link scheme" do |scheme:|
       it "recognizes a bare link with a #{scheme} scheme" do
         link, = link_for("read #{scheme}://forum.example.com/t/slug/99 now")
 
@@ -595,10 +603,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
     end
 
-    it_behaves_like "a bare internal link scheme", "HTTPS"
-    it_behaves_like "a bare internal link scheme", "Https"
-    it_behaves_like "a bare internal link scheme", "HTTP"
-    it_behaves_like "a bare internal link scheme", "hTTp"
+    context "with the HTTPS URL scheme" do
+      include_examples "a bare internal link scheme", scheme: "HTTPS"
+    end
+
+    context "with the Https URL scheme" do
+      include_examples "a bare internal link scheme", scheme: "Https"
+    end
+
+    context "with the HTTP URL scheme" do
+      include_examples "a bare internal link scheme", scheme: "HTTP"
+    end
+
+    context "with the hTTp URL scheme" do
+      include_examples "a bare internal link scheme", scheme: "hTTp"
+    end
 
     it "recognizes an uppercase scheme with an uppercase host" do
       link, = link_for("read HTTPS://FORUM.EXAMPLE.COM/t/slug/99 now")

@@ -72,7 +72,7 @@ RSpec.describe CategorySerializer do
     end
 
     context "with logged-in permissions" do
-      shared_examples "preserving logged in category grants" do |enabled|
+      shared_examples "preserving logged in category grants" do |enabled:|
         it "preserves grants through saves and flag toggles with granular permissions initially #{enabled}" do
           SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -107,8 +107,13 @@ RSpec.describe CategorySerializer do
         end
       end
 
-      it_behaves_like "preserving logged in category grants", false
-      it_behaves_like "preserving logged in category grants", true
+      context "when granular permissions are disabled" do
+        include_examples "preserving logged in category grants", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "preserving logged in category grants", enabled: true
+      end
 
       it "keeps an existing unsupported anonymous grant visible instead of synthesizing public access" do
         category.category_groups.destroy_all
@@ -180,7 +185,7 @@ RSpec.describe CategorySerializer do
   end
 
   describe "permission groups" do
-    shared_examples "offering category permission groups" do |enabled|
+    shared_examples "offering category permission groups" do |enabled:|
       it "offers category groups independently of granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -196,8 +201,13 @@ RSpec.describe CategorySerializer do
       end
     end
 
-    it_behaves_like "offering category permission groups", false
-    it_behaves_like "offering category permission groups", true
+    context "when granular permissions are disabled" do
+      include_examples "offering category permission groups", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "offering category permission groups", enabled: true
+    end
 
     it "omits editor group choices for regular users" do
       json = described_class.new(category, scope: user.guardian, root: false).as_json

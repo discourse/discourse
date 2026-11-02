@@ -97,7 +97,7 @@ describe "Admin Onboarding Banner" do
       expect(page).to have_css(".log-details-modal", text: "Option ID: plan_categories")
     end
 
-    shared_examples "publishing an onboarding choice" do |option|
+    shared_examples "publishing an onboarding choice" do |option:|
       it "publishes the #{option} choice in its category and records the original option" do
         category = option == "plan_invites" ? staff_category : general_category
         visit("/")
@@ -131,9 +131,17 @@ describe "Admin Onboarding Banner" do
       end
     end
 
-    it_behaves_like "publishing an onboarding choice", "plan_invites"
-    it_behaves_like "publishing an onboarding choice", "introduce_yourself"
-    it_behaves_like "publishing an onboarding choice", "write_your_own"
+    context "when planning forum invitations" do
+      include_examples "publishing an onboarding choice", option: "plan_invites"
+    end
+
+    context "when introducing yourself" do
+      include_examples "publishing an onboarding choice", option: "introduce_yourself"
+    end
+
+    context "when writing a custom onboarding post" do
+      include_examples "publishing an onboarding choice", option: "write_your_own"
+    end
 
     it "does not attribute an unrelated topic to a discarded suggestion" do
       visit("/")

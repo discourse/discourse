@@ -197,36 +197,39 @@ RSpec.describe StaticController do
     end
 
     shared_examples "a configured static information page" do |id:, setting_name:, text:|
-      context "with #{id}" do
-        context "when #{setting_name} site setting is NOT set" do
-          it "renders the #{id} page" do
-            get "/#{id}"
+      context "when #{setting_name} site setting is NOT set" do
+        it "renders the #{id} page" do
+          get "/#{id}"
 
-            expect(response.status).to eq(200)
-            expect(response.body).to include(text)
-          end
+          expect(response.status).to eq(200)
+          expect(response.body).to include(text)
         end
+      end
 
-        context "when #{setting_name} site setting is set" do
-          before { SiteSetting.set(setting_name, "http://example.com/page") }
+      context "when #{setting_name} site setting is set" do
+        before { SiteSetting.set(setting_name, "http://example.com/page") }
 
-          it "redirects to the #{setting_name}" do
-            get "/#{id}"
+        it "redirects to the #{setting_name}" do
+          get "/#{id}"
 
-            expect(response).to redirect_to("http://example.com/page")
-          end
+          expect(response).to redirect_to("http://example.com/page")
         end
       end
     end
 
-    it_behaves_like "a configured static information page",
-                    id: "tos",
-                    setting_name: :tos_url,
-                    text: I18n.t("js.tos")
-    it_behaves_like "a configured static information page",
-                    id: "privacy",
-                    setting_name: :privacy_policy_url,
-                    text: I18n.t("js.privacy")
+    context "for the terms of service page" do
+      include_examples "a configured static information page",
+                       id: "tos",
+                       setting_name: :tos_url,
+                       text: I18n.t("js.tos")
+    end
+
+    context "for the privacy policy page" do
+      include_examples "a configured static information page",
+                       id: "privacy",
+                       setting_name: :privacy_policy_url,
+                       text: I18n.t("js.privacy")
+    end
 
     it "renders the localized guidelines post" do
       SiteSetting.content_localization_enabled = true

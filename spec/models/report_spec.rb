@@ -226,141 +226,182 @@ RSpec.describe Report do
     end
   end
 
-  shared_examples "report totals over time" do |arg|
-    describe "#{arg} report" do
-      pluralized = arg.to_s.pluralize
+  shared_examples "report totals over time" do |report_type:|
+    pluralized = report_type.to_s.pluralize
 
-      let(:report) { Report.find(pluralized) }
+    let(:report) { Report.find(pluralized) }
 
-      context "with no #{pluralized}" do
-        it "returns an empty report" do
-          expect(report.data).to be_blank
-        end
+    context "with no #{pluralized}" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
       end
+    end
 
-      context "with #{pluralized}" do
-        before(:each) do
-          freeze_time_safe
+    context "with #{pluralized}" do
+      before(:each) do
+        freeze_time_safe
 
-          if arg == :flag
-            user = Fabricate(:user, refresh_auto_groups: true)
-            topic = Fabricate(:topic, user: user)
-            builder = ->(dt) do
-              PostActionCreator.create(
-                user,
-                Fabricate(:post, topic: topic, user: user),
-                :spam,
-                created_at: dt,
-              )
-            end
-          elsif arg == :signup
-            builder = ->(dt) { Fabricate(:user, created_at: dt) }
-          else
-            user = Fabricate(:user)
-            factories = { email: :email_log }
-            builder = ->(dt) { Fabricate(factories[arg] || arg, created_at: dt, user: user) }
+        if report_type == :flag
+          user = Fabricate(:user, refresh_auto_groups: true)
+          topic = Fabricate(:topic, user: user)
+          builder = ->(dt) do
+            PostActionCreator.create(
+              user,
+              Fabricate(:post, topic: topic, user: user),
+              :spam,
+              created_at: dt,
+            )
           end
-
-          [
-            DateTime.now,
-            1.hour.ago,
-            1.hour.ago,
-            1.day.ago,
-            2.days.ago,
-            30.days.ago,
-            35.days.ago,
-          ].each(&builder)
+        elsif report_type == :signup
+          builder = ->(dt) { Fabricate(:user, created_at: dt) }
+        else
+          user = Fabricate(:user)
+          factories = { email: :email_log }
+          builder = ->(dt) do
+            Fabricate(factories[report_type] || report_type, created_at: dt, user: user)
+          end
         end
 
-        it "returns today's, total and previous 30 day's data" do
-          expect(report.data.select { |v| v[:x].today? }).to be_present
-          expect(report.total).to eq 7
-          expect(report.prev30Days).to be_present
-        end
+        [
+          DateTime.now,
+          1.hour.ago,
+          1.hour.ago,
+          1.day.ago,
+          2.days.ago,
+          30.days.ago,
+          35.days.ago,
+        ].each(&builder)
+      end
+
+      it "returns today's, total and previous 30 day's data" do
+        expect(report.data.select { |v| v[:x].today? }).to be_present
+        expect(report.total).to eq 7
+        expect(report.prev30Days).to be_present
       end
     end
   end
 
-  it_behaves_like "report totals over time", :signup
-  it_behaves_like "report totals over time", :topic
-  it_behaves_like "report totals over time", :post
-  it_behaves_like "report totals over time", :flag
-  it_behaves_like "report totals over time", :like
-  it_behaves_like "report totals over time", :email
+  context "for signup totals" do
+    include_examples "report totals over time", report_type: :signup
+  end
 
-  shared_examples "a request type report" do |request_type|
-    describe "#{request_type} request reports" do
-      let(:report) do
-        Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
+  context "for topic totals" do
+    include_examples "report totals over time", report_type: :topic
+  end
+
+  context "for post totals" do
+    include_examples "report totals over time", report_type: :post
+  end
+
+  context "for flag totals" do
+    include_examples "report totals over time", report_type: :flag
+  end
+
+  context "for like totals" do
+    include_examples "report totals over time", report_type: :like
+  end
+
+  context "for email totals" do
+    include_examples "report totals over time", report_type: :email
+  end
+
+  shared_examples "a request type report" do |request_type:|
+    let(:report) do
+      Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
+    end
+
+    context "with no #{request_type} records" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with #{request_type}" do
+      before do
+        freeze_time_safe
+        application_requests = [
+          {
+            date: 35.days.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 35,
+          },
+          {
+            date: 7.days.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 8,
+          },
+          { date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1 },
+          {
+            date: 1.day.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 2,
+          },
+          {
+            date: 2.days.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 3,
+          },
+        ]
+        ApplicationRequest.insert_all(application_requests)
       end
 
-      context "with no #{request_type} records" do
-        it "returns an empty report" do
-          expect(report.data).to be_blank
-        end
-      end
+      it "returns a report with data" do
+        # expected number of records
+        expect(report.data.count).to eq 4
 
-      context "with #{request_type}" do
-        before do
-          freeze_time_safe
-          application_requests = [
-            {
-              date: 35.days.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 35,
-            },
-            {
-              date: 7.days.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 8,
-            },
-            { date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1 },
-            {
-              date: 1.day.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 2,
-            },
-            {
-              date: 2.days.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 3,
-            },
-          ]
-          ApplicationRequest.insert_all(application_requests)
-        end
+        # sorts the data from oldest to latest dates
+        expect(report.data[0][:y]).to eq(8) # 7 days ago
+        expect(report.data[1][:y]).to eq(3) # 2 days ago
+        expect(report.data[2][:y]).to eq(2) # 1 day ago
+        expect(report.data[3][:y]).to eq(1) # today
 
-        it "returns a report with data" do
-          # expected number of records
-          expect(report.data.count).to eq 4
+        # today's data
+        expect(report.data.find { |value| value[:x] == Date.today }).to be_present
 
-          # sorts the data from oldest to latest dates
-          expect(report.data[0][:y]).to eq(8) # 7 days ago
-          expect(report.data[1][:y]).to eq(3) # 2 days ago
-          expect(report.data[2][:y]).to eq(2) # 1 day ago
-          expect(report.data[3][:y]).to eq(1) # today
+        # total data
+        expect(report.total).to eq 49
 
-          # today's data
-          expect(report.data.find { |value| value[:x] == Date.today }).to be_present
-
-          # total data
-          expect(report.total).to eq 49
-
-          #previous 30 days of data
-          expect(report.prev30Days).to eq 35
-        end
+        #previous 30 days of data
+        expect(report.prev30Days).to eq 35
       end
     end
   end
 
-  it_behaves_like "a request type report", :http_total
-  it_behaves_like "a request type report", :http_2xx
-  it_behaves_like "a request type report", :http_background
-  it_behaves_like "a request type report", :http_3xx
-  it_behaves_like "a request type report", :http_4xx
-  it_behaves_like "a request type report", :http_5xx
-  it_behaves_like "a request type report", :page_view_crawler
-  it_behaves_like "a request type report", :page_view_logged_in
-  it_behaves_like "a request type report", :page_view_anon
+  context "for http_total request totals" do
+    include_examples "a request type report", request_type: :http_total
+  end
+
+  context "for http_2xx request totals" do
+    include_examples "a request type report", request_type: :http_2xx
+  end
+
+  context "for http_background request totals" do
+    include_examples "a request type report", request_type: :http_background
+  end
+
+  context "for http_3xx request totals" do
+    include_examples "a request type report", request_type: :http_3xx
+  end
+
+  context "for http_4xx request totals" do
+    include_examples "a request type report", request_type: :http_4xx
+  end
+
+  context "for http_5xx request totals" do
+    include_examples "a request type report", request_type: :http_5xx
+  end
+
+  context "for page_view_crawler request totals" do
+    include_examples "a request type report", request_type: :page_view_crawler
+  end
+
+  context "for page_view_logged_in request totals" do
+    include_examples "a request type report", request_type: :page_view_logged_in
+  end
+
+  context "for page_view_anon request totals" do
+    include_examples "a request type report", request_type: :page_view_anon
+  end
 
   describe "page_view_legacy_total_reqs" do
     before do

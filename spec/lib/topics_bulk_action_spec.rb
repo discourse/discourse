@@ -605,48 +605,54 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
-  shared_examples "moderating topics in bulk" do |action|
-    describe action do
-      it "#{action}s topic when user can moderate" do
-        Guardian.any_instance.expects(:can_moderate?).returns(true)
-        Guardian.any_instance.expects(:can_create?).returns(true)
+  shared_examples "moderating topics in bulk" do |action:|
+    it "#{action}s topic when user can moderate" do
+      Guardian.any_instance.expects(:can_moderate?).returns(true)
+      Guardian.any_instance.expects(:can_create?).returns(true)
 
-        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
 
-        expect(topic_ids).to eq([topic.id])
-        topic.reload
-        case action
-        when "close"
-          expect(topic).to be_closed
-        when "archive"
-          expect(topic).to be_archived
-        when "unlist"
-          expect(topic).not_to be_visible
-        end
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      case action
+      when "close"
+        expect(topic).to be_closed
+      when "archive"
+        expect(topic).to be_archived
+      when "unlist"
+        expect(topic).not_to be_visible
       end
+    end
 
-      it "doesn't #{action} topic when user can't moderate" do
-        Guardian.any_instance.expects(:can_moderate?).returns(false)
+    it "doesn't #{action} topic when user can't moderate" do
+      Guardian.any_instance.expects(:can_moderate?).returns(false)
 
-        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
 
-        expect(topic_ids).to be_blank
-        topic.reload
-        case action
-        when "close"
-          expect(topic).not_to be_closed
-        when "archive"
-          expect(topic).not_to be_archived
-        when "unlist"
-          expect(topic).to be_visible
-        end
+      expect(topic_ids).to be_blank
+      topic.reload
+      case action
+      when "close"
+        expect(topic).not_to be_closed
+      when "archive"
+        expect(topic).not_to be_archived
+      when "unlist"
+        expect(topic).to be_visible
       end
     end
   end
 
-  it_behaves_like "moderating topics in bulk", "close"
-  it_behaves_like "moderating topics in bulk", "archive"
-  it_behaves_like "moderating topics in bulk", "unlist"
+  context "when closing topics" do
+    include_examples "moderating topics in bulk", action: "close"
+  end
+
+  context "when archiving topics" do
+    include_examples "moderating topics in bulk", action: "archive"
+  end
+
+  context "when unlisting topics" do
+    include_examples "moderating topics in bulk", action: "unlist"
+  end
 
   describe "reset_bump_dates" do
     it "resets bump date when user can update" do

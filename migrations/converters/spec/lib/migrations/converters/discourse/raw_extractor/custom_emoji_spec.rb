@@ -41,34 +41,36 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # a Unicode punctuation/symbol (`isPunctChar`), and a zero-width space. The
     # cases below are verified against PrettyText in `emoji_parity_spec.rb`; kept
     # here as fixtures so the fast suite pins each one.
-    it "leaves a shortcode after a no-break space literal, like core" do
-      expect(extract("a\u00A0:parrot: b")).to eq("a\u00A0:parrot: b")
-      expect(buffer.emojis).to be_empty
-    end
+    context "when a shortcode follows an unsupported boundary" do
+      it "leaves a shortcode after a no-break space literal, like core" do
+        expect(extract("a\u00A0:parrot: b")).to eq("a\u00A0:parrot: b")
+        expect(buffer.emojis).to be_empty
+      end
 
-    it "leaves a shortcode after a ideographic space literal, like core" do
-      expect(extract("a\u3000:parrot: b")).to eq("a\u3000:parrot: b")
-      expect(buffer.emojis).to be_empty
-    end
+      it "leaves a shortcode after a ideographic space literal, like core" do
+        expect(extract("a\u3000:parrot: b")).to eq("a\u3000:parrot: b")
+        expect(buffer.emojis).to be_empty
+      end
 
-    it "leaves a shortcode after a superscript two literal, like core" do
-      expect(extract("²:parrot: b")).to eq("²:parrot: b")
-      expect(buffer.emojis).to be_empty
-    end
+      it "leaves a shortcode after a superscript two literal, like core" do
+        expect(extract("²:parrot: b")).to eq("²:parrot: b")
+        expect(buffer.emojis).to be_empty
+      end
 
-    it "leaves a shortcode after a vulgar half literal, like core" do
-      expect(extract("½:parrot: b")).to eq("½:parrot: b")
-      expect(buffer.emojis).to be_empty
-    end
+      it "leaves a shortcode after a vulgar half literal, like core" do
+        expect(extract("½:parrot: b")).to eq("½:parrot: b")
+        expect(buffer.emojis).to be_empty
+      end
 
-    it "leaves a shortcode after a soft hyphen literal, like core" do
-      expect(extract("a\u00AD:parrot: b")).to eq("a\u00AD:parrot: b")
-      expect(buffer.emojis).to be_empty
-    end
+      it "leaves a shortcode after a soft hyphen literal, like core" do
+        expect(extract("a\u00AD:parrot: b")).to eq("a\u00AD:parrot: b")
+        expect(buffer.emojis).to be_empty
+      end
 
-    it "leaves a shortcode after a escaping backslash literal, like core" do
-      expect(extract("a\\:parrot: b")).to eq("a\\:parrot: b")
-      expect(buffer.emojis).to be_empty
+      it "leaves a shortcode after a escaping backslash literal, like core" do
+        expect(extract("a\\:parrot: b")).to eq("a\\:parrot: b")
+        expect(buffer.emojis).to be_empty
+      end
     end
 
     it "defers a shortcode after a zero-width space, like core" do

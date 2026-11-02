@@ -1067,40 +1067,49 @@ RSpec.describe PostAlerter do
       end
 
       context "when user is part of conversation" do
-        shared_examples "private message username mention notifications" do |notification_level|
-          context "when notification level is '#{notification_level}'" do
-            before { set_topic_notification_level(alice, pm_topic, notification_level) }
+        shared_examples "private message username mention notifications" do |notification_level:|
+          before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
-            let(:expected_notification) do
-              notification_level == :watching ? :private_message : :mentioned
-            end
+          let(:expected_notification) do
+            notification_level == :watching ? :private_message : :mentioned
+          end
 
-            it "notifies about @username mention" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(
-                alice,
-                expected_notification,
-              )
-            end
+          it "notifies about @username mention" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(
+              alice,
+              expected_notification,
+            )
+          end
 
-            it "notifies about @username mentions by non-human users" do
-              args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(
-                alice,
-                expected_notification,
-              )
-            end
+          it "notifies about @username mentions by non-human users" do
+            args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(
+              alice,
+              expected_notification,
+            )
+          end
 
-            it "notifies about @group mention when allowed user is part of group" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
+          it "notifies about @group mention when allowed user is part of group" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
           end
         end
 
-        it_behaves_like "private message username mention notifications", :watching
-        it_behaves_like "private message username mention notifications", :tracking
-        it_behaves_like "private message username mention notifications", :regular
+        context "when the user is watching the private message" do
+          include_examples "private message username mention notifications",
+                           notification_level: :watching
+        end
+
+        context "when the user is tracking the private message" do
+          include_examples "private message username mention notifications",
+                           notification_level: :tracking
+        end
+
+        context "with regular private message notifications" do
+          include_examples "private message username mention notifications",
+                           notification_level: :regular
+        end
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }
@@ -1151,30 +1160,39 @@ RSpec.describe PostAlerter do
       before { some_group.bulk_add([alice.id, carol.id]) }
 
       context "when group is part of conversation" do
-        shared_examples "private message group mention notifications" do |notification_level|
-          context "when notification level is '#{notification_level}'" do
-            before { set_topic_notification_level(alice, pm_topic, notification_level) }
+        shared_examples "private message group mention notifications" do |notification_level:|
+          before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
-            it "notifies about @group mention" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
+          it "notifies about @group mention" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+          end
 
-            it "notifies about @group mentions by non-human users" do
-              args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
+          it "notifies about @group mentions by non-human users" do
+            args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+          end
 
-            it "notifies about @username mention when user belongs to allowed group" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
-            end
+          it "notifies about @username mention when user belongs to allowed group" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
           end
         end
 
-        it_behaves_like "private message group mention notifications", :watching
-        it_behaves_like "private message group mention notifications", :tracking
-        it_behaves_like "private message group mention notifications", :regular
+        context "when the user is watching the private message" do
+          include_examples "private message group mention notifications",
+                           notification_level: :watching
+        end
+
+        context "when the user is tracking the private message" do
+          include_examples "private message group mention notifications",
+                           notification_level: :tracking
+        end
+
+        context "with regular private message notifications" do
+          include_examples "private message group mention notifications",
+                           notification_level: :regular
+        end
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }

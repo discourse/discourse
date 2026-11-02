@@ -779,39 +779,16 @@ RSpec.describe PostAction do
   end
 
   # flags are already being tested
-  it "prevents concurrent duplicate like actions" do
-    expect(
-      PostActionCreator.new(eviltrout, post, PostActionType.types[:like]).perform,
-    ).to be_success
-    expect(PostActionCreator.new(eviltrout, post, PostActionType.types[:like]).perform).to be_failed
+  all_types_except_flags =
+    PostActionType.types.except(*PostActionType.flag_types_without_additional_message.keys)
+  # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
+  all_types_except_flags.values.each do |action|
+    it "prevents concurrent duplicate #{PostActionType.types.key(action)} actions" do
+      expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
+      expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
+    end
   end
-
-  it "prevents concurrent duplicate notify_user actions" do
-    expect(
-      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_user]).perform,
-    ).to be_success
-    expect(
-      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_user]).perform,
-    ).to be_failed
-  end
-
-  it "prevents concurrent duplicate illegal actions" do
-    expect(
-      PostActionCreator.new(eviltrout, post, PostActionType.types[:illegal]).perform,
-    ).to be_success
-    expect(
-      PostActionCreator.new(eviltrout, post, PostActionType.types[:illegal]).perform,
-    ).to be_failed
-  end
-
-  it "prevents concurrent duplicate notify_moderators actions" do
-    expect(
-      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_moderators]).perform,
-    ).to be_success
-    expect(
-      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_moderators]).perform,
-    ).to be_failed
-  end
+  # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
   describe "messages" do
     it "does not create a message when there is no message" do

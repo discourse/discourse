@@ -1984,58 +1984,57 @@ RSpec.describe UserNotifications do
       end
 
       if invitation
-        shared_examples "an invitation preserving its literal title" do |description:, custom_body:|
-          context "with #{description}" do
-            before do
-              if custom_body
-                TranslationOverride.upsert!(
-                  SiteSetting.default_locale,
-                  "#{mail_template}.text_body_template",
-                  custom_body,
-                )
-                TranslationOverride.upsert!(
-                  SiteSetting.default_locale,
-                  "#{mail_template}.subject_template",
-                  "Invitation: %{topic_title}",
-                )
-              end
-            end
-
-            it "preserves the literal title and invitation link without changing the subject" do
-              title = 'Planning *notes* `draft` [agenda] (updated) \ & <details>'
-              post.topic.update!(title: title)
-              notification.data_hash[:topic_title] = title
-              mail =
-                UserNotifications.public_send(
-                  mail_type,
-                  user,
-                  notification_type: notification_type,
-                  notification_data_hash: notification.data_hash,
-                  post: post,
-                )
-              html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
-
-              expect(mail.subject).to include(title)
-              expect(html.css("a[href='#{post.topic.url}']").map(&:text)).to include(title)
-              expect(html.css("em, code, details")).to be_empty
-              expect(html.text.scan(title).size).to eq(
-                custom_body&.include?("%{topic_title}") ? 2 : 1,
+        shared_examples "an invitation preserving its literal title" do |custom_body:|
+          before do
+            if custom_body
+              TranslationOverride.upsert!(
+                SiteSetting.default_locale,
+                "#{mail_template}.text_body_template",
+                custom_body,
+              )
+              TranslationOverride.upsert!(
+                SiteSetting.default_locale,
+                "#{mail_template}.subject_template",
+                "Invitation: %{topic_title}",
               )
             end
           end
+
+          it "preserves the literal title and invitation link without changing the subject" do
+            title = 'Planning *notes* `draft` [agenda] (updated) \ & <details>'
+            post.topic.update!(title: title)
+            notification.data_hash[:topic_title] = title
+            mail =
+              UserNotifications.public_send(
+                mail_type,
+                user,
+                notification_type: notification_type,
+                notification_data_hash: notification.data_hash,
+                post: post,
+              )
+            html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
+
+            expect(mail.subject).to include(title)
+            expect(html.css("a[href='#{post.topic.url}']").map(&:text)).to include(title)
+            expect(html.css("em, code, details")).to be_empty
+            expect(html.text.scan(title).size).to eq(
+              custom_body&.include?("%{topic_title}") ? 2 : 1,
+            )
+          end
         end
 
-        it_behaves_like "an invitation preserving its literal title",
-                        description: "the default body",
-                        custom_body: nil
+        context "with the default invitation body" do
+          include_examples "an invitation preserving its literal title", custom_body: nil
+        end
 
-        it_behaves_like "an invitation preserving its literal title",
-                        description: "a customized message",
-                        custom_body: "%{message}"
+        context "with a customized invitation message" do
+          include_examples "an invitation preserving its literal title", custom_body: "%{message}"
+        end
 
-        it_behaves_like "an invitation preserving its literal title",
-                        description: "a customized title and message",
-                        custom_body: "%{topic_title}\n\n%{message}"
+        context "with a customized invitation title and message" do
+          include_examples "an invitation preserving its literal title",
+                           custom_body: "%{topic_title}\n\n%{message}"
+        end
       end
 
       context "when customized" do
@@ -2172,7 +2171,7 @@ RSpec.describe UserNotifications do
     fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
     fab!(:invitee, :user)
 
-    shared_examples "escaping HTML in invitation titles" do |destination|
+    shared_examples "escaping HTML in invitation titles" do |destination:|
       it "renders HTML in a #{destination} title as text" do
         post =
           if destination == :private_message
@@ -2202,8 +2201,13 @@ RSpec.describe UserNotifications do
       end
     end
 
-    it_behaves_like "escaping HTML in invitation titles", :private_message
-    it_behaves_like "escaping HTML in invitation titles", :topic
+    context "when the invitation opens a private message" do
+      include_examples "escaping HTML in invitation titles", destination: :private_message
+    end
+
+    context "when the invitation opens a topic" do
+      include_examples "escaping HTML in invitation titles", destination: :topic
+    end
   end
 
   describe "user invited to a private message" do

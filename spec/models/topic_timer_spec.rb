@@ -174,15 +174,14 @@ RSpec.describe TopicTimer, type: :model do
         expect(timer.public_type).to eq(true)
       end
 
-      it "is false for reminder" do
-        timer = Fabricate(:topic_timer, status_type: described_class.types[:reminder])
-        expect(timer.public_type).to be_falsey
+      # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
+      described_class.private_types.keys.each do |private_type|
+        it "is false for #{private_type}" do
+          timer = Fabricate(:topic_timer, status_type: described_class.types[private_type])
+          expect(timer.public_type).to be_falsey
+        end
       end
-
-      it "is false for clear_slow_mode" do
-        timer = Fabricate(:topic_timer, status_type: described_class.types[:clear_slow_mode])
-        expect(timer.public_type).to be_falsey
-      end
+      # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
     end
   end
 

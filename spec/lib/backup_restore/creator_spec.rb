@@ -66,7 +66,7 @@ describe BackupRestore::Creator do
       extracted
     end
 
-    shared_examples "creating a backup with concurrent downloads" do |concurrency|
+    shared_examples "creating a backup with concurrent downloads" do |concurrency:|
       it "downloads files with GET requests and no HEAD requests with #{concurrency} workers" do
         GlobalSetting.stubs(:backup_s3_download_concurrency).returns(concurrency)
         2.times do |index|
@@ -340,8 +340,13 @@ describe BackupRestore::Creator do
       end
     end
 
-    it_behaves_like "creating a backup with concurrent downloads", 1
-    it_behaves_like "creating a backup with concurrent downloads", 4
+    context "with one concurrent download" do
+      include_examples "creating a backup with concurrent downloads", concurrency: 1
+    end
+
+    context "with four concurrent downloads" do
+      include_examples "creating a backup with concurrent downloads", concurrency: 4
+    end
   end
 
   describe "#create_archive" do
@@ -363,7 +368,7 @@ describe BackupRestore::Creator do
       end
     end
 
-    shared_examples "creating a compatible backup archive" do |include_thumbnails|
+    shared_examples "creating a compatible backup archive" do |include_thumbnails:|
       it "creates a compatible gzip archive with thumbnails #{include_thumbnails}" do
         Rails.stubs(:public_path).returns(Pathname.new(@directory))
         SiteSetting.include_thumbnails_in_backups = include_thumbnails
@@ -402,8 +407,13 @@ describe BackupRestore::Creator do
       end
     end
 
-    it_behaves_like "creating a compatible backup archive", true
-    it_behaves_like "creating a compatible backup archive", false
+    context "when thumbnails are included" do
+      include_examples "creating a compatible backup archive", include_thumbnails: true
+    end
+
+    context "when thumbnails are omitted" do
+      include_examples "creating a compatible backup archive", include_thumbnails: false
+    end
 
     it "skips dangling symlinks and still produces a readable backup" do
       File.symlink("missing", File.join(@local_uploads, "dangling"))

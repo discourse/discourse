@@ -405,77 +405,75 @@ RSpec.describe User::CreateBot, ".call" do
     PluginStoreRow.insert_all!(@saved_floors) if @saved_floors.present?
   end
 
-  shared_examples "concurrent bot creation" do |floor|
-    context "with concurrent creation and #{floor ? "an existing" : "no"} allocation floor" do
-      it "creates distinct bots while another creation transaction is still open" do
-        PluginStore.set("core", BotUser::FLOOR_KEY, floor) if floor
-        actor_id = actor.id
-        first_username, second_username = usernames
-        first_started = Queue.new
-        release_first = Queue.new
-        first_result = Queue.new
-        second_result = Queue.new
-        threads = []
-        pool = ActiveRecord::Base.connection_pool
-        service_class = described_class
-        pause_first =
-          lambda do |user|
-            if user.username == first_username
-              first_started << true
-              unless release_first.pop(timeout: 10)
-                raise "Timed out waiting to finish the first bot"
-              end
-            end
+  shared_examples "concurrent bot creation" do |user_id_floor:|
+    it "creates distinct bots while another creation transaction is still open" do
+      PluginStore.set("core", BotUser::FLOOR_KEY, user_id_floor) if user_id_floor
+      actor_id = actor.id
+      first_username, second_username = usernames
+      first_started = Queue.new
+      release_first = Queue.new
+      first_result = Queue.new
+      second_result = Queue.new
+      threads = []
+      pool = ActiveRecord::Base.connection_pool
+      service_class = described_class
+      pause_first =
+        lambda do |user|
+          if user.username == first_username
+            first_started << true
+            raise "Timed out waiting to finish the first bot" unless release_first.pop(timeout: 10)
           end
-        create_bot =
-          lambda do |username, result_queue|
-            pool.with_connection do |connection|
-              connection.execute("SET lock_timeout = '2s'")
-              result_queue << service_class.call(
-                params: {
-                  username: username,
-                },
-                guardian: User.find(actor_id).guardian,
-              )
-            ensure
-              connection.execute("SET lock_timeout = DEFAULT")
-            end
-          rescue => exception
-            result_queue << exception
+        end
+      create_bot =
+        lambda do |username, result_queue|
+          pool.with_connection do |connection|
+            connection.execute("SET lock_timeout = '2s'")
+            result_queue << service_class.call(
+              params: {
+                username: username,
+              },
+              guardian: User.find(actor_id).guardian,
+            )
+          ensure
+            connection.execute("SET lock_timeout = DEFAULT")
           end
-
-        User.set_callback(:create, :before, pause_first)
-        pool.release_connection
-
-        begin
-          threads << Thread.new { create_bot.call(first_username, first_result) }
-          expect(first_started.pop(timeout: 5)).to eq(true)
-          threads << Thread.new { create_bot.call(second_username, second_result) }
-          second_outcome = second_result.pop(timeout: 5)
-          expect(second_outcome).to run_successfully
-        ensure
-          release_first << true
-          threads.each do |thread|
-            thread.kill unless thread.join(5)
-            thread.join
-          end
-          User.skip_callback(:create, :before, pause_first)
+        rescue => exception
+          result_queue << exception
         end
 
-        first_outcome = first_result.pop(timeout: 1)
-        expect(first_outcome).to run_successfully
-        expect(second_outcome.user.id).to be < first_outcome.user.id
-        expect(User.where(username: usernames).pluck(:username)).to contain_exactly(*usernames)
-        expect(
-          UserHistory.where(
-            acting_user_id: actor_id,
-            action: UserHistory.actions[:create_bot],
-          ).count,
-        ).to eq(2)
+      User.set_callback(:create, :before, pause_first)
+      pool.release_connection
+
+      begin
+        threads << Thread.new { create_bot.call(first_username, first_result) }
+        expect(first_started.pop(timeout: 5)).to eq(true)
+        threads << Thread.new { create_bot.call(second_username, second_result) }
+        second_outcome = second_result.pop(timeout: 5)
+        expect(second_outcome).to run_successfully
+      ensure
+        release_first << true
+        threads.each do |thread|
+          thread.kill unless thread.join(5)
+          thread.join
+        end
+        User.skip_callback(:create, :before, pause_first)
       end
+
+      first_outcome = first_result.pop(timeout: 1)
+      expect(first_outcome).to run_successfully
+      expect(second_outcome.user.id).to be < first_outcome.user.id
+      expect(User.where(username: usernames).pluck(:username)).to contain_exactly(*usernames)
+      expect(
+        UserHistory.where(acting_user_id: actor_id, action: UserHistory.actions[:create_bot]).count,
+      ).to eq(2)
     end
   end
 
-  it_behaves_like "concurrent bot creation", nil
-  it_behaves_like "concurrent bot creation", -5000
+  context "with no existing bot ID allocation floor" do
+    include_examples "concurrent bot creation", user_id_floor: nil
+  end
+
+  context "with an existing bot ID allocation floor" do
+    include_examples "concurrent bot creation", user_id_floor: -5000
+  end
 end

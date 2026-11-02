@@ -83,7 +83,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         post
       end
 
-      shared_examples "preserving conversation rounds after failed resume" do |with_checkpoint|
+      shared_examples "preserving conversation rounds after failed resume" do |with_checkpoint:|
         it "preserves both caller rounds and current model turns after failed resume #{with_checkpoint ? "with" : "without"} a checkpoint" do
           topic = history.topic
           calls =
@@ -157,8 +157,14 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         end
       end
 
-      it_behaves_like "preserving conversation rounds after failed resume", false
-      it_behaves_like "preserving conversation rounds after failed resume", true
+      context "when resuming without a checkpoint" do
+        include_examples "preserving conversation rounds after failed resume",
+                         with_checkpoint: false
+      end
+
+      context "when resuming from a checkpoint" do
+        include_examples "preserving conversation rounds after failed resume", with_checkpoint: true
+      end
     end
 
     it "preserves completed caller results when a permission change invalidates the resumed history" do
@@ -200,7 +206,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       expect(Discourse.redis.get(described_class.redis_key(token))).to be_nil
     end
 
-    shared_examples "restoring consumed resume state after history changes" do |invalid_ids|
+    shared_examples "restoring consumed resume state after history changes" do |invalid_ids:|
       it "restores consumed resume state when #{invalid_ids} caller IDs compound a history change" do
         call =
           DiscourseAi::Completions::ToolCall.new(
@@ -262,8 +268,14 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    it_behaves_like "restoring consumed resume state after history changes", :missing
-    it_behaves_like "restoring consumed resume state after history changes", :extra
+    context "when consumed history entries are missing" do
+      include_examples "restoring consumed resume state after history changes",
+                       invalid_ids: :missing
+    end
+
+    context "when history has additional entries" do
+      include_examples "restoring consumed resume state after history changes", invalid_ids: :extra
+    end
 
     it "retains caller results privately if topic access is revoked during suspension" do
       call =
@@ -742,7 +754,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       expect(described_class.resume_state_exists?(token)).to eq(false)
     end
 
-    shared_examples "persisting consumed completions after access revocation" do |failure_stage|
+    shared_examples "persisting consumed completions after access revocation" do |failure_stage:|
       it "persists consumed completions when #{failure_stage} fails after access is revoked" do
         llm.update!(max_prompt_tokens: 16_000)
         ai_agent.update!(max_turn_tokens: 200_000)
@@ -809,8 +821,15 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    it_behaves_like "persisting consumed completions after access revocation", "maintenance"
-    it_behaves_like "persisting consumed completions after access revocation", "final_reply"
+    context "when access is revoked during maintenance" do
+      include_examples "persisting consumed completions after access revocation",
+                       failure_stage: "maintenance"
+    end
+
+    context "when access is revoked during the final reply" do
+      include_examples "persisting consumed completions after access revocation",
+                       failure_stage: "final_reply"
+    end
 
     it "preserves completed results when the execution completion limit blocks required compaction" do
       llm.update!(max_prompt_tokens: 16_000)

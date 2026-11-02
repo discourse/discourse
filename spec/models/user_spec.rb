@@ -4246,9 +4246,9 @@ RSpec.describe User do
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
-    shared_examples "finding secure categories for logged in users" do |enabled|
-      it "includes logged-in pseudogroup categories with granular permissions #{enabled}" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+    context "when granular permissions are disabled" do
+      it "includes logged-in pseudogroup categories with granular permissions false" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
         category = Fabricate(:category, permissions: { logged_in_users: :readonly })
 
         expect(user.secure_category_ids).to eq([category.id])
@@ -4258,8 +4258,17 @@ RSpec.describe User do
       end
     end
 
-    it_behaves_like "finding secure categories for logged in users", false
-    it_behaves_like "finding secure categories for logged in users", true
+    context "when granular permissions are enabled" do
+      it "includes logged-in pseudogroup categories with granular permissions true" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+
+        expect(user.secure_category_ids).to eq([category.id])
+        expect(user.guardian.can_see_category?(category)).to eq(true)
+        expect(Category.secured(user.guardian).exists?(id: category.id)).to eq(true)
+        expect(Category.secured(Guardian.new).exists?(id: category.id)).to eq(false)
+      end
+    end
 
     it "allows admin to see all secure categories" do
       expect(admin.secure_category_ids).to include(private_category.id)

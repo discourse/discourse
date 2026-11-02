@@ -321,26 +321,16 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
-    context "with latest" do
-      it "returns the requested list" do
-        get "/latest"
-        expect(response.status).to eq(200)
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
+    (Discourse.anonymous_filters - [:categories]).each do |filter|
+      context "with #{filter}" do
+        it "returns the requested list" do
+          get "/#{filter}"
+          expect(response.status).to eq(200)
+        end
       end
     end
-
-    context "with top" do
-      it "returns the requested list" do
-        get "/top"
-        expect(response.status).to eq(200)
-      end
-    end
-
-    context "with hot" do
-      it "returns the requested list" do
-        get "/hot"
-        expect(response.status).to eq(200)
-      end
-    end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     it "allows users to filter on a set of topic ids" do
       p = create_post
@@ -1082,41 +1072,15 @@ RSpec.describe ListController do
       expect(response.status).to eq(400)
     end
 
-    it "renders all top RSS" do
-      get "/top.rss?period=all"
-      expect(response.status).to eq(200)
-      expect(response.media_type).to eq("application/rss+xml")
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
+    TopTopic.periods.each do |period|
+      it "renders #{period} top RSS" do
+        get "/top.rss?period=#{period}"
+        expect(response.status).to eq(200)
+        expect(response.media_type).to eq("application/rss+xml")
+      end
     end
-
-    it "renders yearly top RSS" do
-      get "/top.rss?period=yearly"
-      expect(response.status).to eq(200)
-      expect(response.media_type).to eq("application/rss+xml")
-    end
-
-    it "renders quarterly top RSS" do
-      get "/top.rss?period=quarterly"
-      expect(response.status).to eq(200)
-      expect(response.media_type).to eq("application/rss+xml")
-    end
-
-    it "renders monthly top RSS" do
-      get "/top.rss?period=monthly"
-      expect(response.status).to eq(200)
-      expect(response.media_type).to eq("application/rss+xml")
-    end
-
-    it "renders weekly top RSS" do
-      get "/top.rss?period=weekly"
-      expect(response.status).to eq(200)
-      expect(response.media_type).to eq("application/rss+xml")
-    end
-
-    it "renders daily top RSS" do
-      get "/top.rss?period=daily"
-      expect(response.status).to eq(200)
-      expect(response.media_type).to eq("application/rss+xml")
-    end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     describe "RSS feeds ignore current user" do
       fab!(:muted_topic, :topic)
@@ -1876,49 +1840,55 @@ RSpec.describe ListController do
     context "with encoded non-ASCII slugs" do
       before { SiteSetting.slug_generation_method = "encoded" }
 
-      shared_examples "an encoded category slug" do |locale:, old_name:, new_name:|
-        context "with a #{locale} category" do
-          let(:category) { Fabricate(:category, name: old_name) }
-          let!(:old_slug) { category.slug }
+      shared_examples "an encoded category slug" do |old_name:, new_name:|
+        let(:category) { Fabricate(:category, name: old_name) }
+        let!(:old_slug) { category.slug }
 
-          before { category.update!(slug: new_name) }
+        before { category.update!(slug: new_name) }
 
-          it "redirects an outdated slug to the current encoded slug" do
-            get "/c/#{old_slug}/#{category.id}"
+        it "redirects an outdated slug to the current encoded slug" do
+          get "/c/#{old_slug}/#{category.id}"
 
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{CGI.escape(new_name)}/#{category.id}")
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{CGI.escape(new_name)}/#{category.id}")
 
-            get response.location
-            expect(response.status).to eq(200)
-          end
+          get response.location
+          expect(response.status).to eq(200)
+        end
 
-          it "redirects the slug without an id to the URL with the id" do
-            get "/c/#{category.slug}"
+        it "redirects the slug without an id to the URL with the id" do
+          get "/c/#{category.slug}"
 
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
-          end
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
+        end
 
-          it "keeps the filter and the query string" do
-            get "/c/#{old_slug}/#{category.id}/l/latest?page=2"
+        it "keeps the filter and the query string" do
+          get "/c/#{old_slug}/#{category.id}/l/latest?page=2"
 
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}/l/latest?page=2")
-          end
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}/l/latest?page=2")
+        end
 
-          it "keeps the format" do
-            get "/c/#{old_slug}/#{category.id}.json"
+        it "keeps the format" do
+          get "/c/#{old_slug}/#{category.id}.json"
 
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json")
-          end
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json")
         end
       end
 
-      it_behaves_like "an encoded category slug", locale: "zh_CN", old_name: "产品", new_name: "问题"
-      it_behaves_like "an encoded category slug", locale: "zh_TW", old_name: "產品", new_name: "問題"
-      it_behaves_like "an encoded category slug", locale: "ja", old_name: "製品", new_name: "質問"
+      context "with Simplified Chinese category names" do
+        include_examples "an encoded category slug", old_name: "产品", new_name: "问题"
+      end
+
+      context "with Traditional Chinese category names" do
+        include_examples "an encoded category slug", old_name: "產品", new_name: "問題"
+      end
+
+      context "with Japanese category names" do
+        include_examples "an encoded category slug", old_name: "製品", new_name: "質問"
+      end
 
       it "redirects an outdated parent slug for a subcategory" do
         parent = Fabricate(:category, name: "製品")

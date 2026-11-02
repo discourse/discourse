@@ -131,7 +131,7 @@ RSpec.describe UserStat do
   describe ".update_first_unread" do
     fab!(:user) { Fabricate(:user, last_seen_at: Time.zone.now) }
 
-    shared_examples "finding the first unread logged in category topic" do |enabled|
+    shared_examples "finding the first unread logged in category topic" do |enabled:|
       it "includes logged-in pseudogroup topics with granular permissions #{enabled}" do
         freeze_time
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
@@ -157,8 +157,13 @@ RSpec.describe UserStat do
       end
     end
 
-    it_behaves_like "finding the first unread logged in category topic", false
-    it_behaves_like "finding the first unread logged in category topic", true
+    context "when granular permissions are disabled" do
+      include_examples "finding the first unread logged in category topic", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "finding the first unread logged in category topic", enabled: true
+    end
   end
 
   describe "ensure consistency!" do

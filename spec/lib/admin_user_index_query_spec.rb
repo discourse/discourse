@@ -65,77 +65,30 @@ RSpec.describe AdminUserIndexQuery do
   end
 
   describe "no users with trust level" do
-    it "newuser returns no records" do
-      query = ::AdminUserIndexQuery.new(query: "newuser")
-      expect(real_users(query)).to eq([])
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
+    TrustLevel.levels.each do |key, value|
+      it "#{key} returns no records" do
+        query = ::AdminUserIndexQuery.new(query: key.to_s)
+        expect(real_users(query)).to eq([])
+      end
     end
-
-    it "basic returns no records" do
-      query = ::AdminUserIndexQuery.new(query: "basic")
-      expect(real_users(query)).to eq([])
-    end
-
-    it "member returns no records" do
-      query = ::AdminUserIndexQuery.new(query: "member")
-      expect(real_users(query)).to eq([])
-    end
-
-    it "regular returns no records" do
-      query = ::AdminUserIndexQuery.new(query: "regular")
-      expect(real_users(query)).to eq([])
-    end
-
-    it "leader returns no records" do
-      query = ::AdminUserIndexQuery.new(query: "leader")
-      expect(real_users(query)).to eq([])
-    end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   describe "users with trust level" do
-    it "finds user with trust newuser" do
-      user = Fabricate(:user, trust_level: 0)
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
+    TrustLevel.levels.each do |key, value|
+      it "finds user with trust #{key}" do
+        user = Fabricate(:user, trust_level: value)
 
-      Fabricate(:user, trust_level: 1)
+        other_level = TrustLevel.levels.values.find { |level| level != value }
+        Fabricate(:user, trust_level: other_level)
 
-      query = ::AdminUserIndexQuery.new(query: "newuser")
-      expect(real_users(query).to_a).to eq([user])
+        query = ::AdminUserIndexQuery.new(query: key.to_s)
+        expect(real_users(query).to_a).to eq([user])
+      end
     end
-
-    it "finds user with trust basic" do
-      user = Fabricate(:user, trust_level: 1)
-
-      Fabricate(:user, trust_level: 2)
-
-      query = ::AdminUserIndexQuery.new(query: "basic")
-      expect(real_users(query).to_a).to eq([user])
-    end
-
-    it "finds user with trust member" do
-      user = Fabricate(:user, trust_level: 2)
-
-      Fabricate(:user, trust_level: 3)
-
-      query = ::AdminUserIndexQuery.new(query: "member")
-      expect(real_users(query).to_a).to eq([user])
-    end
-
-    it "finds user with trust regular" do
-      user = Fabricate(:user, trust_level: 3)
-
-      Fabricate(:user, trust_level: 4)
-
-      query = ::AdminUserIndexQuery.new(query: "regular")
-      expect(real_users(query).to_a).to eq([user])
-    end
-
-    it "finds user with trust leader" do
-      user = Fabricate(:user, trust_level: 4)
-
-      Fabricate(:user, trust_level: 3)
-
-      query = ::AdminUserIndexQuery.new(query: "leader")
-      expect(real_users(query).to_a).to eq([user])
-    end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   describe "with a pending user" do
@@ -157,7 +110,6 @@ RSpec.describe AdminUserIndexQuery do
           suspended_till: 20.years.from_now,
         )
       end
-
       it "doesn't return the suspended user" do
         query = ::AdminUserIndexQuery.new(query: "pending")
         expect(query.find_users).not_to include(suspended_user)

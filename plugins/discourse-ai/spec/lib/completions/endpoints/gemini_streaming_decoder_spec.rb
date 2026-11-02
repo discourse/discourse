@@ -31,25 +31,33 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
       end
     end
 
-    it_behaves_like "a split event separator",
-                    line_ending: "CRLF",
-                    separator: "\r\n\r\n",
-                    split_position: 1
+    context "with a CRLF separator split at byte 1" do
+      include_examples "a split event separator",
+                       line_ending: "CRLF",
+                       separator: "\r\n\r\n",
+                       split_position: 1
+    end
 
-    it_behaves_like "a split event separator",
-                    line_ending: "CRLF",
-                    separator: "\r\n\r\n",
-                    split_position: 2
+    context "with a CRLF separator split at byte 2" do
+      include_examples "a split event separator",
+                       line_ending: "CRLF",
+                       separator: "\r\n\r\n",
+                       split_position: 2
+    end
 
-    it_behaves_like "a split event separator",
-                    line_ending: "CRLF",
-                    separator: "\r\n\r\n",
-                    split_position: 3
+    context "with a CRLF separator split at byte 3" do
+      include_examples "a split event separator",
+                       line_ending: "CRLF",
+                       separator: "\r\n\r\n",
+                       split_position: 3
+    end
 
-    it_behaves_like "a split event separator",
-                    line_ending: "LF",
-                    separator: "\n\n",
-                    split_position: 1
+    context "with an LF separator split at byte 1" do
+      include_examples "a split event separator",
+                       line_ending: "LF",
+                       separator: "\n\n",
+                       split_position: 1
+    end
 
     it "decodes the same events at every possible chunk boundary" do
       events = [
