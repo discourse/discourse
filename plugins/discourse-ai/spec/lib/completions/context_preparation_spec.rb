@@ -529,17 +529,18 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
     end
 
     it "falls back intact when completion reservation fails softly and drops history on hard overflow" do
+      model.assign_attributes(max_prompt_tokens: 4000, max_output_tokens: 200)
       tracker = DiscourseAi::Completions::TokenUsageTracker.new
       execution = DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
       state =
         DiscourseAi::Agents::SubagentExecutionState.new(
           execution_context: execution,
           root_token_budget: 4000,
+          completion_count: DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1,
         )
-      99.times { state.reserve_completion }
       DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|
         llm = DiscourseAi::Completions::Llm.proxy(model)
-        soft_prompt = history_prompt(repetitions: 600)
+        soft_prompt = history_prompt(repetitions: 60)
         original = soft_prompt.messages.deep_dup
         expect(
           described_class.new(llm, threshold: 20).prepare!(
@@ -549,10 +550,16 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         ).to eq(:skipped)
         expect(soft_prompt.messages).to eq(original)
         expect(soft_prompt.skip_trim).to eq(true)
-        hard_prompt = history_prompt(repetitions: 4000)
-        expect(
-          described_class.new(llm).prepare!(hard_prompt, subagent_execution_state: state),
-        ).to eq(:compressed)
+        hard_prompt = history_prompt(repetitions: 400)
+        logger =
+          track_log_messages do
+            expect(
+              described_class.new(llm).prepare!(hard_prompt, subagent_execution_state: state),
+            ).to eq(:compressed)
+          end
+        expect(logger.warnings).to include(
+          "DiscourseAi: context_preparation reason=history_dropped original_reason=completion_limit dropped_history_messages=4",
+        )
         expect_history_dropped(hard_prompt)
         expect(canned.completions).to eq(0)
         expect(state.reserve_root_final_completion).to eq(true)
