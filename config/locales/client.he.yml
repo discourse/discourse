@@ -445,8 +445,10 @@ he:
       plugin_outlet_debug:
         find_on_github: "איתור ב־GitHub"
         aliases: "כינויים"
+        since: "(מאז %{version})"
       toggle_safe_mode: "הפעלת/כיבוי מצב בטוח"
       toggle_verbose_localization: "הפעלת/כיבוי פירוט תרגום"
+      open_styleguide: "פתיחת מדריך הסגנון"
       disable_dev_tools: "כיבוי כלי פיתוח"
     s3:
       regions:
@@ -584,6 +586,7 @@ he:
         categories: "קטגוריות"
         styles:
           boxes: "תיבות"
+          with_topics: "קטגוריות עם נושאים"
           only: "קטגוריות בלבד"
       welcome_banner:
         enable: "הצגת כרזת קבלת פנים"
@@ -807,6 +810,8 @@ he:
     embed_mode:
       allow_access: "לאפשר גישה"
       continue_as_guest: "להמשיך כאורח/ת"
+      be_first_to_reply: "ממתינים לתגובה הראשונה!"
+      replying_to: "בתגובה ל־%{username}"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
