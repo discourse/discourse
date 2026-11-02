@@ -2296,6 +2296,39 @@ RSpec.describe Admin::ThemesController do
         expect(theme.reload.child_theme_ids).to eq([locked_component.id])
       end
 
+      %w[none merge sync].each do |components|
+        it "blocks type changes removing restricted children when replacing an archive with #{components}" do
+          theme.add_relative_theme!(:child, locked_component)
+
+          post "/admin/themes/import.json",
+               params: {
+                 bundle: archive([], component: true),
+                 theme_id: theme.id,
+                 components:,
+               }
+
+          expect(response.status).to eq(403)
+          expect(theme.reload).not_to be_component
+          expect(theme.child_theme_ids).to eq([locked_component.id])
+        end
+
+        it "blocks type changes removing restricted parents when replacing an archive with #{components}" do
+          component = Fabricate(:theme, component: true)
+          locked_theme.add_relative_theme!(:child, component)
+
+          post "/admin/themes/import.json",
+               params: {
+                 bundle: archive([]),
+                 theme_id: component.id,
+                 components:,
+               }
+
+          expect(response.status).to eq(403)
+          expect(component.reload).to be_component
+          expect(locked_theme.reload.child_theme_ids).to eq([component.id])
+        end
+      end
+
       it "blocks including a restricted component in a theme imported from a repository" do
         repo =
           setup_git_repo(
@@ -2345,6 +2378,46 @@ RSpec.describe Admin::ThemesController do
         expect(theme.reload.child_theme_ids).to be_empty
         expect(other_theme.reload.child_theme_ids).to eq([other_component.id])
       end
+    end
+
+    it "blocks type changes removing restricted children when changing source" do
+      theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url, local_version: "abc"))
+      theme.add_relative_theme!(:child, locked_component)
+      replacement_repo =
+        setup_git_repo("about.json" => { name: "Component", component: true }.to_json)
+      replacement_url =
+        MockGitImporter.register("https://github.com/org/replacement.git", replacement_repo)
+
+      put "/admin/themes/#{theme.id}/source.json", params: { remote_url: replacement_url }
+
+      expect(response.status).to eq(403)
+      expect(theme.reload).not_to be_component
+      expect(theme.child_theme_ids).to eq([locked_component.id])
+      expect(theme.remote_theme.remote_url).to eq(repo_url)
+    ensure
+      FileUtils.rm_rf(replacement_repo) if replacement_repo
+    end
+
+    it "blocks type changes removing restricted parents when changing source" do
+      component =
+        Fabricate(
+          :theme,
+          component: true,
+          remote_theme: RemoteTheme.create!(remote_url: repo_url, local_version: "abc"),
+        )
+      locked_theme.add_relative_theme!(:child, component)
+      replacement_repo = setup_git_repo("about.json" => { name: "Theme" }.to_json)
+      replacement_url =
+        MockGitImporter.register("https://github.com/org/replacement.git", replacement_repo)
+
+      put "/admin/themes/#{component.id}/source.json", params: { remote_url: replacement_url }
+
+      expect(response.status).to eq(403)
+      expect(component.reload).to be_component
+      expect(locked_theme.reload.child_theme_ids).to eq([component.id])
+      expect(component.remote_theme.remote_url).to eq(repo_url)
+    ensure
+      FileUtils.rm_rf(replacement_repo) if replacement_repo
     end
 
     it "blocks dropping a restricted theme's relations by switching or deleting the other side" do

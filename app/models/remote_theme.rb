@@ -121,6 +121,18 @@ class RemoteTheme < ActiveRecord::Base
     raise Discourse::InvalidAccess if !changed.all? { |related| guardian.can_edit_theme?(related) }
   end
 
+  def self.ensure_can_change_type!(guardian, theme)
+    return if guardian.nil? || !theme.will_save_change_to_component?
+
+    if !guardian.can_edit_theme_relations?(
+         theme,
+         child_theme_ids: theme.component? ? [] : nil,
+         parent_theme_ids: theme.component? ? nil : [],
+       )
+      raise Discourse::InvalidAccess
+    end
+  end
+
   def self.component_ids_for(urls)
     Theme.joins(:remote_theme).where(remote_themes: { remote_url: urls }).pluck(:id)
   end
@@ -169,6 +181,7 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     theme.component = theme_info["component"].to_s == "true"
+    ensure_can_change_type!(guardian, theme)
     theme.child_components = theme_info["components"].presence || []
     theme.skip_child_components_update = true if update_components == "none"
     update_children = existing && update_components.present? && update_components != "none"
@@ -358,6 +371,7 @@ class RemoteTheme < ActiveRecord::Base
     if was_placeholder || refresh_name_and_type
       theme.name = theme_info["name"]
       theme.component = [true, "true"].include?(theme_info["component"])
+      self.class.ensure_can_change_type!(guardian, theme)
     end
     if was_placeholder
       theme.child_components = theme_info["components"].presence || []
