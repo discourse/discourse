@@ -28,7 +28,6 @@ module Migrations
         unless %i[forbid discard close_reopen].include?(@policy)
           raise ArgumentError, "Unknown fork policy: #{@policy.inspect}"
         end
-        @quiesce = @policy == :close_reopen
         @pid = Process.pid
         @mutex = Mutex.new
         @depth = 0
@@ -44,7 +43,7 @@ module Migrations
       private_class_method :new
 
       def with(&block)
-        if @quiesce
+        if close_reopen?
           Lifecycle.synchronize { with_lease(&block) }
         else
           with_lease(&block)
@@ -64,18 +63,18 @@ module Migrations
         unless @state == :open
           raise Lifecycle::UnsafeForkError, "#{@driver.class} connection is #{@state}"
         end
-        if @depth > 0 && @lease_owner == (@quiesce ? Thread.current : Fiber.current)
+        if @depth > 0 && @lease_owner == current_owner
           raise Lifecycle::UnsafeForkError, "Cannot fork inside an active database operation"
         end
         if @policy == :forbid
           raise Lifecycle::UnsafeForkError,
                 "#{@driver.class} has no approved fork policy; close it before forking"
         end
-        @driver.validate_fork!(@native) if @policy == :close_reopen
+        @driver.validate_fork!(@native) if close_reopen?
       end
 
       def prepare_fork!
-        return unless @policy == :close_reopen
+        return unless close_reopen?
         begin
           @driver.close(@native)
           @native = nil
@@ -126,6 +125,14 @@ module Migrations
 
       private
 
+      def close_reopen?
+        @policy == :close_reopen
+      end
+
+      def current_owner
+        close_reopen? ? Thread.current : Fiber.current
+      end
+
       def open!
         @native = @driver.open
         @driver.configure(@native)
@@ -144,7 +151,7 @@ module Migrations
       end
 
       def with_lease
-        native = checkout(@quiesce ? Thread.current : Fiber.current)
+        native = checkout(current_owner)
         begin
           yield native
         ensure
