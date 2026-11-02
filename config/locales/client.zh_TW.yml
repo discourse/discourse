@@ -4741,9 +4741,6 @@ zh_TW:
           previous: "上一版"
           next: "下一版"
           last: "最新版"
-          hide: "隱藏修訂紀錄"
-          show: "顯示修訂紀錄"
-          destroy: "刪除修訂"
           destroy_confirm: "您確定要刪除此帖子的所有修訂嗎？此操作是永久性的。"
           revert: "還原至修訂版 %{revision}"
           edit_wiki: "編輯共筆"
@@ -6793,25 +6790,15 @@ zh_TW:
           combined: "結果包含最近 %{limit} 次瀏覽，起始時間為 %{pageviewLimitDate} %{pageviewLimitTime}。不包含所選日期範圍內更早的瀏覽量；%{date} 之前的瀏覽量資料已無法取得。"
       dashboard:
         title: "控制台"
-        last_updated: "儀表板更新："
-        discourse_last_updated: "話語更新："
         version: "版本"
         up_to_date: "你使用的是最新版本!"
         up_to_date_newer_commits:
           other: "你目前使用的是最新版本，但有 %{count} 項新變更可用。"
         updates_available: "有更新可以安裝。"
-        please_update: "請更新！"
-        no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
-        stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         version_check_pending: "看起來您最近更新了。極好的！"
-        installed_version: "已安裝"
-        latest_version: "可用"
-        github: "GitHub"
         commit_on_github: "在 GitHub 上查看提交 %{sha}"
-        changelog: "變更記錄"
         commits_ahead:
           other: "自此版本系列開始後，正在執行另外 %{count} 項變更"
-        problems_found: "根據您現在網站設定的建議"
         dismiss_notice: "忽略"
         site_advice:
           title:
@@ -6822,16 +6809,7 @@ zh_TW:
           no_new_features_found: "摘要中沒有項目，或你選取的篩選條件沒有傳回結果。你可以在 <a href='%{url}' target='_blank'>Discourse Releases 網站</a>查看先前的新功能公告。"
           no_new_features_error: "載入摘要時發生錯誤。你可以在 <a href='%{url}' target='_blank'>Discourse Releases 網站</a>查看先前的新功能公告。"
           learn_more: "了解更多..."
-        last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
-        no_problems: "未發現任何問題。"
-        moderators: "板主："
-        admins: "管理員："
-        silenced: "已靜音："
-        suspended: "已停權:"
-        private_messages_short: "訊息"
-        private_messages_title: "訊息"
-        mobile_title: "行動裝置"
         space_used: "已使用 %{usedSize}"
         space_used_and_free: "%{usedSize}（%{freeSize}自由）"
         uploads: "上傳檔案"
@@ -6839,20 +6817,7 @@ zh_TW:
         backup_count:
           other: "%{count}備份在%{location}"
         lastest_backup: "最新：%{date}"
-        traffic_short: "流量"
-        traffic: "網頁應用程式請求數"
-        page_views: "瀏覽數"
-        page_views_short: "瀏覽數"
-        show_traffic_report: "顯示詳細的流量報表"
-        community_health: 社群健康度
-        moderators_activity: 管理員活動紀錄
         whats_new_in_discourse: Discourse 新增了什麼？
-        activity_metrics: 活動數值
-        all_reports: "所有報告"
-        general_tab: "一般"
-        moderation_tab: "管理"
-        security_tab: "安全性"
-        reports_tab: "報告"
         report_filter_any: "任何"
         disabled: 停用
         timeout_error: 很抱歉，查詢所花的時間太久，請選一個短一點的間隔
@@ -7083,7 +7048,6 @@ zh_TW:
             latest_backup: "上次備份：%{date}"
             manage_backups: "管理備份"
             discourse_updated: "Discourse 已更新"
-            dashboard_updated: "儀表板已更新"
         reports_section:
           header_action: "管理"
           description: "釘選標準報表或 Data Explorer 查詢，以追蹤對社群重要的資訊。"
@@ -7187,12 +7151,6 @@ zh_TW:
             crawlers: "爬蟲"
           see_details: "查看詳情"
           crawler_learn_more: "了解更多"
-        period:
-          last_7_days: "過去 7 天"
-          last_30_days: "過去 30 天"
-          last_3_months: "過去 3 個月"
-          custom: "客製"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
           percent_change_tooltip: "%{percent} 更改。"
@@ -7234,9 +7192,6 @@ zh_TW:
               other: "%{count} 篇貼文"
             deselect: "取消選取 %{name}"
             fetch_error: "無法載入此群組的用戶。"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs"> 搜尋記錄檔 </a>'
-            disabled: '搜尋趨勢已停用，啟用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">搜尋紀錄以</a>收集資料。'
           average_chart_label: 顯示平均值，而非總計
           sort_button: "依 %{column}排序"
           sort_button_current: "依 %{column}、%{direction} 排序"
@@ -7418,7 +7373,6 @@ zh_TW:
               list: 列出最新貼文和私人貼文。也支援 RSS。
             revisions:
               read: "取得最新或特定的修訂版本。"
-              modify: "隱藏、顯示或還原修訂。"
               permanently_delete: "永久刪除修訂。"
             tags:
               list: 列出標籤。
@@ -8947,7 +8901,6 @@ zh_TW:
           no_constructive_purpose: "除了在社區內引起異議外，該使用者的行動沒有任何建設性的目的"
           custom: "自訂…"
         suspend_message: "Email 訊息"
-        suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該使用者。（可選）"
         suspended_by: "將其停權者"
         silence_reason: "原因"
         silenced_by: "已靜音，由"
@@ -8956,7 +8909,6 @@ zh_TW:
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "靜音原因"
         silence_message: "Email 訊息"
-        silence_message_placeholder: "(留白以傳送預設訊息)"
         suspended_until: "(直到%{until})"
         suspend_forever: "永久停權"
         cant_suspend: "這位使用者無法被停權。"

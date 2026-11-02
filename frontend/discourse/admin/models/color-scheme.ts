@@ -77,8 +77,7 @@ export default class ColorScheme extends EmberObject {
 
   static async findAll(): Promise<ColorSchemes> {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const all = (await ajax("/admin/color_schemes")) as ColorSchemePayload[];
+    const all = await ajax<ColorSchemePayload[]>("/admin/color_schemes");
 
     all.forEach((colorScheme) => {
       // The proxy forwards array methods to `content`.
@@ -100,10 +99,7 @@ export default class ColorScheme extends EmberObject {
   }
 
   static async find(id: number | string): Promise<ColorScheme> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const json = (await ajax(
-      `/admin/config/colors/${id}`
-    )) as ColorSchemePayload;
+    const json = await ajax<ColorSchemePayload>(`/admin/config/colors/${id}`);
     return ColorScheme.create({
       id: json.id,
       name: json.name,

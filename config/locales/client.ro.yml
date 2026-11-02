@@ -3193,6 +3193,9 @@ ro:
           few: "Ești sigur că vrei să ștergi acele %{count} postări?"
           other: "Ești sigur că vrei să ștergi acele %{count} postări?"
       revisions:
+        visibility:
+          hidden:
+            title: "Ascuns"
         locale:
           no_locale_set: "Nicio limbă setată"
           locale_removed: "Limbă înlăturată"
@@ -3201,8 +3204,6 @@ ro:
           previous: "Revizie precedentă"
           next: "Următoarea revizie"
           last: "Ultima revizie"
-          hide: "Ascunde revizia"
-          show: "Afișează revizia"
           edit_post: "Modifică postarea"
         displays:
           inline:
@@ -4354,34 +4355,14 @@ ro:
         version: "Versiune"
         up_to_date: "Ești la zi!"
         updates_available: "Sunt disponibile actualizări."
-        no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
-        stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."
-        installed_version: "Instalată"
-        github: "GitHub"
         dismiss_notice: "Ignoră"
         new_features:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
           learn_more: "Află mai multe..."
-        last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
-        no_problems: "Nu a apărut nicio problemă."
-        moderators: "Moderatori:"
-        admins: "Admini:"
-        suspended: "Suspendați:"
-        private_messages_short: "Mesje"
-        private_messages_title: "Mesaje"
-        mobile_title: "Mobil"
         uploads: "Urcări"
         backups: "Copii de siguranță"
-        traffic_short: "Trafic"
-        traffic: "Cereri web"
-        page_views: "Vizualizări"
-        page_views_short: "Vizualizări"
-        show_traffic_report: "Arată raportul detaliat cu privire la trafic"
-        general_tab: "General"
-        security_tab: "Securitate"
-        reports_tab: "Rapoarte"
         report_filter_any: "oricare"
         disabled: Dezactivat
         sections:
@@ -4431,10 +4412,6 @@ ro:
             crawlers: "Crawlere"
           see_details: "Vezi detalii"
           crawler_learn_more: "Află mai multe"
-        period:
-          last_7_days: "Ultimele 7 zile"
-          last_30_days: "Ultimele 30 de zile"
-          custom: "Personalizat"
         reports:
           percent_change_tooltip_previous_value:
             yesterday:
@@ -4572,7 +4549,6 @@ ro:
               recover: Recuperează un articol.
             revisions:
               read: "Ia ultima revizie sau una anumită."
-              modify: "Ascunde, afișează sau anulează reviziile."
               permanently_delete: "Șterge definitiv o revizie."
             logs:
               messages: Listează mesajele din /logs sau obține un anumit mesaj din jurnal.
@@ -5444,7 +5420,6 @@ ro:
         silence_reason: "Motiv"
         silence_modal_title: "Suspendă utilizatorul"
         silence_message: "Mesaj email"
-        silence_message_placeholder: "(lăsați necompletat pentru a trimite mesajul implicit)"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"

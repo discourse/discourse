@@ -20,10 +20,9 @@ export default class UserExport extends RestModel {
   static async findLatest(
     user_id: number | string
   ): Promise<UserExport | undefined> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const result = (await ajax(
-      `/export_csv/latest_user_archive/${user_id}.json`
-    )) as { user_export: UserExportFields & RestPayload } | null;
+    const result = await ajax<{
+      user_export: UserExportFields & RestPayload;
+    } | null>(`/export_csv/latest_user_archive/${user_id}.json`);
     if (result !== null) {
       return UserExport.create(result.user_export);
     }

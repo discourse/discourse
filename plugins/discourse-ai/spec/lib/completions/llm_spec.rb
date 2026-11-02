@@ -191,7 +191,9 @@ RSpec.describe DiscourseAi::Completions::Llm do
         /turn_budget_exhausted/,
       )
       execution.work_budget = DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000)
-      99.times { state.reserve_completion }
+      (DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1).times do
+        expect(state.reserve_completion).to eq(true)
+      end
       expect { llm.generate("Helper", user: user, execution_context: execution) }.to raise_error(
         DiscourseAi::Completions::ContextPreparation::Error,
         /completion_limit/,

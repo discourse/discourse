@@ -64,10 +64,9 @@ export default interface WatchedWord extends WatchedWordFields {}
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class WatchedWord extends EmberObject {
   static async findAll(): Promise<WatchedWordGroup[]> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const list = (await ajax(
+    const list = await ajax<WatchedWordListPayload>(
       "/admin/customize/watched_words.json"
-    )) as WatchedWordListPayload;
+    );
     const actions = {} as Record<WatchedWordAction, WatchedWord[]>;
 
     list.actions.forEach((action) => {

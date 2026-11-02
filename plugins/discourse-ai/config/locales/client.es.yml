@@ -1289,10 +1289,7 @@ es:
           scroll_to_bottom: "Desplazar hacia abajo"
           editing_post: "Editando publicación"
       sentiments:
-        dashboard:
-          title: "Sentimiento"
         sidebar:
-          overview: "Visión general de sentimiento"
           analysis: "Análisis de sentimiento"
         sentiment_analysis:
           share_chart: "Copiar enlace al gráfico"

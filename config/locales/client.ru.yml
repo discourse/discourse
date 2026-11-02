@@ -4817,6 +4817,9 @@ ru:
           many: "Действительно объединить %{count} сообщений?"
           other: "Действительно объединить %{count} сообщения?"
       revisions:
+        visibility:
+          hidden:
+            title: "Скрыто"
         locale:
           no_locale_set: "Язык не установлен"
           locale_removed: "Язык удален"
@@ -4825,9 +4828,6 @@ ru:
           previous: "Предыдущая версия"
           next: "Следующая версия"
           last: "Последняя версия"
-          hide: "Скрыть версию"
-          show: "Показать версию"
-          destroy: "Удалить редакции"
           destroy_confirm: "Действительно удалить все редакции этого сообщения? Это действие отменить нельзя."
           revert: "Откат до версии %{revision}"
           edit_wiki: "Редактировать вики"
@@ -6737,18 +6737,10 @@ ru:
           anonymous_human: "Анонимные просмотры"
       dashboard:
         title: "Панель управления"
-        last_updated: "Панель управления обновлена:"
-        discourse_last_updated: "Discourse обновлён:"
         version: "Версия"
         up_to_date: "Обновлений нет"
         updates_available: "Доступны обновления."
-        please_update: "Обновитесь!"
-        no_check_performed: "Проверка обновлений не производится. Убедитесь, что запущен процесс sidekiq."
-        stale_data: "Проверка обновлений в последнее время не производилась. Убедитесь, что запущен процесс sidekiq."
         version_check_pending: "Вы недавно обновились. Замечательно!"
-        installed_version: "Установленная версия"
-        github: "GitHub"
-        problems_found: "Несколько советов по текущим настройкам сайта"
         dismiss_notice: "Игнорировать"
         new_features:
           title: "Что нового?"
@@ -6756,16 +6748,7 @@ ru:
           no_new_features_found: "В ленте нет элементов, или выбранный вами фильтр не дал результатов. Предыдущие анонсы новых функций можно посмотреть в сообществе Discourse Meta <a href='%{url}' target='_blank'></a>."
           no_new_features_error: "Произошла ошибка при загрузке ленты. Предыдущие анонсы новых функций можно посмотреть на сайте Discourse Releases <a href='%{url}' target='_blank'></a>."
           learn_more: "Подробнее…"
-        last_checked: "Последняя проверка"
         refresh_problems: "Обновить"
-        no_problems: "Проблем не обнаружено."
-        moderators: "Модераторы:"
-        admins: "Администраторы:"
-        silenced: "Замороженные:"
-        suspended: "Заблокированные:"
-        private_messages_short: "Сообщ."
-        private_messages_title: "Сообщений"
-        mobile_title: "Мобильный"
         space_used: "Использовано: %{usedSize}"
         space_used_and_free: "%{usedSize} (свободно: %{freeSize})"
         uploads: "Загрузки"
@@ -6776,20 +6759,7 @@ ru:
           many: "%{count} резервных копий (%{location})"
           other: "%{count} резервной копии (%{location})"
         lastest_backup: "Последняя: %{date}"
-        traffic_short: "Трафик"
-        traffic: "Трафик (веб-запросы)"
-        page_views: "Просмотры"
-        page_views_short: "Просмотры"
-        show_traffic_report: "Расширенный отчёт по трафику"
-        community_health: Состояние сообщества
-        moderators_activity: Активность модераторов
         whats_new_in_discourse: Что нового в Discourse?
-        activity_metrics: Метрики активности
-        all_reports: "Все отчёты"
-        general_tab: "Основное"
-        moderation_tab: "Модерация"
-        security_tab: "Безопасность"
-        reports_tab: "Отчёты"
         report_filter_any: "любой"
         disabled: Отключено
         timeout_error: Запрос занимает слишком много времени. Выберите более короткий интервал.
@@ -6833,7 +6803,6 @@ ru:
             title: "Системные сообщения"
             status: "Статус"
             discourse_updated: "Discourse обновлён"
-            dashboard_updated: "Панель управления обновлена"
         reports_section:
           header_action: "Управление"
           no_data: "Нет данных для отображения"
@@ -6859,11 +6828,6 @@ ru:
             embedded: "Встроенные просмотры страниц"
             crawlers: "Поисковые роботы"
           crawler_learn_more: "Подробнее"
-        period:
-          last_7_days: "За последние 7 дней"
-          last_30_days: "За последние 30 дней"
-          last_3_months: "За последние 3 месяцев"
-          custom: "Другое"
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
           percent_change_tooltip: "Изменение %{percent}."
@@ -6917,9 +6881,6 @@ ru:
               many: "%{count} публикаций"
               other: "%{count} публикаций"
             deselect: "Отменить выбор пользователя %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Журналы поиска</a>'
-            disabled: 'Отчёт о поисковых запросах отключён. Включить <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал поисковых запросов</a> для сбора данных.'
           average_chart_label: Показаны средние значения, а не итоговые суммы.
           sort_button: "Сортировка: %{column}"
           sort_button_current: "Отсортировано по %{column}, %{direction}"
@@ -7109,7 +7070,6 @@ ru:
               list: Вывод списка последних сообщений и личных сообщений. RSS также поддерживается.
             revisions:
               read: "Получение последней или конкретной редакции."
-              modify: "Скрытие, отображение или отмена редакции."
               permanently_delete: "Окончательное удаление редакции."
             tags:
               list: Вывод списка тегов.
@@ -8627,7 +8587,6 @@ ru:
           no_constructive_purpose: "У действий пользователя нет никакой конструктивной цели, кроме внесения раскола в сообщество"
           custom: "Другое…"
         suspend_message: "Письмо на электронную почту"
-        suspend_message_placeholder: "При необходимости предоставьте дополнительную информацию о блокировке, и она будет отправлена пользователю по электронной почте."
         suspended_by: "Кем заблокирован"
         silence_reason: "Причина"
         silenced_by: "Кем заморожен"
@@ -8636,7 +8595,6 @@ ru:
         silence_reason_title: "Причина заморозки"
         silence_reason_placeholder: "Причина заморозки"
         silence_message: "Сообщение на электронную почту"
-        silence_message_placeholder: "(оставьте незаполненным, если необходимо отправить стандартное сообщение)"
         suspended_until: "(блокировка до %{until})"
         suspend_forever: "Бессрочная блокировка"
         cant_suspend: "Этого пользователя нельзя заблокировать."

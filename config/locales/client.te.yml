@@ -3390,9 +3390,6 @@ te:
           previous: "మునుపటి పునర్విమర్శ"
           next: "తదుపరి పునర్విమర్శ"
           last: "చివరి పునర్విమర్శ"
-          hide: "పునర్విమర్శను దాచండి"
-          show: "పునర్విమర్శ చూపండి"
-          destroy: "పునర్విమర్శలను తొలగించండి"
           destroy_confirm: "మీరు ఈ పోస్ట్‌లోని అన్ని పునర్విమర్శలను ఖచ్చితంగా తొలగించాలనుకుంటున్నారా? ఈ చర్య శాశ్వతమైనది."
           revert: "పునర్విమర్శ %{revision}కి మార్చండి"
           edit_wiki: "వికీని సవరించండి"
@@ -4564,29 +4561,13 @@ te:
           anonymous_human: "అనామక"
       dashboard:
         title: "ప్రధాన పేజీ"
-        last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
-        discourse_last_updated: "డిస్కోర్స్ నవీకరించబడింది:"
         version: "సంస్కరణ"
         up_to_date: "మీరు తాజాగా ఉన్నారు! "
         updates_available: "ఉన్నతీకరణలు అందుబాటులో ఉన్నాయి."
-        no_check_performed: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
-        stale_data: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
-        installed_version: "ప్రతిష్టించబడింది"
-        github: "గిట్ హబ్"
-        problems_found: "మీ ప్రస్తుత సైట్ సెట్టింగ్‌ల ఆధారంగా కొన్ని సలహాలు"
         dismiss_notice: "విస్మరించండి"
         new_features:
           learn_more: "మరింత తెలుసుకోండి..."
-        last_checked: "చివరగా సరిచూసినది"
         refresh_problems: "రిఫ్రెష్ చేయండి"
-        no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
-        moderators: "నిర్వాహకులు:"
-        admins: "నిర్వాహకులు:"
-        silenced: "నిశ్శబ్దం చేయబడినవి:"
-        suspended: "సస్పెండయిన:"
-        private_messages_short: "సందేశాలు"
-        private_messages_title: "సందేశాలు"
-        mobile_title: "మొబైల్"
         space_used: "%{usedSize} ఉపయోగించబడింది"
         space_used_and_free: "%{usedSize} (%{freeSize} ఖాళీ స్థలం)"
         uploads: "అప్‌లోడ్‌లు"
@@ -4595,20 +4576,7 @@ te:
           one: "%{location}లో %{count} బ్యాకప్"
           other: "%{location}లో %{count} బ్యాకప్‌లు"
         lastest_backup: "తాజాది: %{date}"
-        traffic_short: "ట్రాఫిక్"
-        traffic: "అనువర్తన జాల రిక్వెస్టులు"
-        page_views: "పేజీవీక్షణలు"
-        page_views_short: "పేజీవీక్షణలు"
-        show_traffic_report: "వివరణాత్మక ట్రాఫిక్ నివేదికను చూపండి"
-        community_health: సంఘం ఆరోగ్యం
-        moderators_activity: మోడరేటర్ల కార్యాచరణ
         whats_new_in_discourse: డిస్కోర్సులో కొత్తది ఏమిటి?
-        activity_metrics: కార్యాచరణ కొలమానాలు
-        all_reports: "అన్ని నివేదికలు"
-        general_tab: "సాధారణ"
-        moderation_tab: "మోడరేషన్"
-        security_tab: "సెక్యూరిటీ"
-        reports_tab: "నివేదికలు"
         report_filter_any: "ఏదైనా"
         disabled: నిలిపివేయబడింది
         timeout_error: క్షమించండి, క్వరీ చాలా సమయం తీసుకుంటోంది. దయచేసి తక్కువ వ్యవధిని ఎంచుకోండి
@@ -4655,9 +4623,6 @@ te:
             anonymous: "అనామక"
             crawlers: "క్రాలర్లు"
           crawler_learn_more: "మరింత తెలుసుకోండి"
-        period:
-          last_3_months: "గత 3 నెలలు"
-          custom: "అనురూప"
         reports:
           trend_title: "%{percent} మార్పు. ప్రస్తుతం %{current}, మునుపటి వ్యవధిలో %{prev} ."
           today: "ఈరోజు"
@@ -4688,9 +4653,6 @@ te:
             posts_count:
               one: "%{count} పోస్ట్"
               other: "%{count} పోస్ట్‌లు"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">శోధన లాగ్‌లు</a>'
-            disabled: 'ట్రెండింగ్ శోధన నివేదిక నిలిపివేయబడింది. డేటాను సేకరించడానికి <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">శోధన పాదాల లాగ్ ను ప్రారంభించండి</a> .'
           sort_button: "%{column} ద్వారా క్రమబద్ధీకరించండి"
           sort_ascending: "ఆరోహణ"
           sort_descending: "అవరోహణ"
@@ -5906,7 +5868,6 @@ te:
           no_constructive_purpose: "సంఘంలో భిన్నాభిప్రాయాలను సృష్టించడం తప్ప వారి చర్యలకు నిర్మాణాత్మక ప్రయోజనం లేదు"
           custom: "అనుకూల…"
         suspend_message: "ఇమెయిల్ సందేశం"
-        suspend_message_placeholder: "ఐచ్ఛికంగా, సస్పెన్షన్ గురించి మరింత సమాచారాన్ని అందించండి మరియు అది సభ్యుడుకు ఇమెయిల్ చేయబడుతుంది."
         suspended_by: "సస్పెండు చేసినవారు"
         silence_reason: "కారణం"
         silenced_by: "చేత నిశ్శబ్దం చేయబడింది"
@@ -5914,7 +5875,6 @@ te:
         silence_duration: "సభ్యుడు ఎంతకాలం నిశ్శబ్దం చేయబడతారు?"
         silence_reason_placeholder: "నిశ్శబ్దం కారణం"
         silence_message: "ఇమెయిల్ సందేశం"
-        silence_message_placeholder: "(డిఫాల్ట్ సందేశాన్ని పంపడానికి ఖాళీగా ఉంచండి)"
         suspended_until: "(%{until} వరకు)"
         suspend_forever: "శాశ్వతంగా నిలిపివేయండి"
         cant_suspend: "ఈ సభ్యుని సస్పెండ్ చేయడం సాధ్యం కాదు."

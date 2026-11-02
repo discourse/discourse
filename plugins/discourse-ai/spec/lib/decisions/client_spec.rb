@@ -595,7 +595,7 @@ RSpec.describe DiscourseAi::Decisions::Client do
       expect(allocation.reload.daily_used).to eq(296)
     end
 
-    it "estimates tokens per question, counting state and images in each, when the provider omits usage" do
+    it "estimates tokens for a single pass over state, images and questions when the provider omits usage" do
       seeded_model.update!(vision_enabled: true)
       stub_request(:post, seeded_model.url).to_return(body: response_body.except(:usage).to_json)
 
@@ -606,12 +606,8 @@ RSpec.describe DiscourseAi::Decisions::Client do
         feature_name: "workflow",
       )
 
-      per_question_floor =
-        described_class::ESTIMATED_TOKENS_PER_IMAGE + described_class::ESTIMATED_TOKENS_PER_QUESTION
-      expect(allocation.reload.daily_used).to be_between(
-        questions.size * per_question_floor,
-        questions.size * (per_question_floor + 20),
-      )
+      floor = described_class::ESTIMATED_TOKENS_PER_IMAGE + described_class::ESTIMATED_PROMPT_TOKENS
+      expect(allocation.reload.daily_used).to be_between(floor, floor + 30)
     end
 
     it "does not deduct credits when the request fails" do

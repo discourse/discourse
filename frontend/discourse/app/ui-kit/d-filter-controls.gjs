@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { resettableTracked } from "discourse/lib/tracked-tools";
@@ -15,9 +16,11 @@ import DiscourseURL, {
   searchParamsFromPath,
 } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
 
 const ResetButton = <template>
   <DButton
@@ -29,6 +32,39 @@ const ResetButton = <template>
     @label={{@label}}
     @title="filter_controls.reset"
   />
+</template>;
+
+const SortMenu = <template>
+  <DMenu
+    @ariaLabel={{i18n "filter_controls.sort_trigger_label" sort=@label}}
+    @icon="arrow-down-wide-short"
+    @identifier="d-filter-controls-sort"
+    @label={{if @showLabel @label}}
+    @modalForMobile={{true}}
+    @placement="bottom-end"
+    @title={{i18n "filter_controls.sort_trigger_label" sort=@label}}
+    @triggerClass="btn-default d-filter-controls__sort-trigger"
+  >
+    <:content as |menu|>
+      <DDropdownMenu as |dropdown|>
+        <dropdown.subheader>
+          {{i18n "filter_controls.sort_label"}}
+        </dropdown.subheader>
+        {{#each @options as |option|}}
+          <dropdown.item>
+            <DButton
+              aria-current={{if (eq option.value @value) "true"}}
+              class="btn-transparent d-filter-controls__sort-option"
+              data-sort={{option.value}}
+              @action={{fn @onChange menu.close option.value}}
+              @suffixIcon={{if (eq option.value @value) "check"}}
+              @translatedLabel={{option.label}}
+            />
+          </dropdown.item>
+        {{/each}}
+      </DDropdownMenu>
+    </:content>
+  </DMenu>
 </template>;
 
 /**
@@ -45,6 +81,11 @@ const ResetButton = <template>
  *                                for nested properties (e.g. "user.name")
  * @param {Array|Object} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
  *                                   want multiple dropdowns, format is: { dropdown1: [...], dropdown2: [...] }
+ * @param {Array} [sortOptions] - Sort menu options. Format: [{value, label, compareFn?}]. The menu shows with
+ *                                 two or more options. Reset leaves the sort in place, as it isn't a filter
+ * @param {String} [defaultSort] - Default sort value, defaults to the first option
+ * @param {String} [sortQueryParam] - Query param that holds a non-default sort
+ * @param {Function} [onSortChange] - Callback for sort changes. Omit compareFn to sort on the server
  * @param {String} [inputPlaceholder] - Placeholder text for search input
  * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
  *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
@@ -73,11 +114,13 @@ const ResetButton = <template>
  */
 
 export default class DFilterControls extends Component {
+  @service capabilities;
   @service router;
 
   @tracked dropdownFilter = "all";
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+  @resettableTracked sort = this.initialSortValue;
   @resettableTracked textFilter = this.initialTextFilterValue;
 
   dropdownFilters = trackedObject();
@@ -124,6 +167,19 @@ export default class DFilterControls extends Component {
     return this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
   }
 
+  get initialSortValue() {
+    const fromUrl =
+      this.args.sortQueryParam && this.showFilters
+        ? this.#validatedUrlValue(
+            this.currentSearchParams,
+            this.args.sortQueryParam,
+            this.sortOptions
+          )
+        : null;
+
+    return fromUrl ?? this.defaultSort;
+  }
+
   get currentSearchParams() {
     // router.currentURL, unlike window.location, is also correct under the
     // test environment's mock location
@@ -157,6 +213,22 @@ export default class DFilterControls extends Component {
 
   get dropdownOptions() {
     return this.args.dropdownOptions || [];
+  }
+
+  get sortOptions() {
+    return this.args.sortOptions ?? [];
+  }
+
+  get defaultSort() {
+    return this.args.defaultSort ?? this.sortOptions[0]?.value;
+  }
+
+  get showSort() {
+    return this.sortOptions.length > 1;
+  }
+
+  get sortLabel() {
+    return this.sortOptions.find((option) => option.value === this.sort)?.label;
   }
 
   get showDropdownFilterToggle() {
@@ -232,7 +304,7 @@ export default class DFilterControls extends Component {
     const hasExternalCallbacks =
       this.args.onTextFilterChange || this.args.onDropdownFilterChange;
     if (hasExternalCallbacks) {
-      return filtered;
+      return this.#sorted(filtered);
     }
 
     if (this.textFilter.length > 0) {
@@ -270,7 +342,7 @@ export default class DFilterControls extends Component {
       }
     }
 
-    return filtered;
+    return this.#sorted(filtered);
   }
 
   get singleDropdownLabel() {
@@ -419,6 +491,20 @@ export default class DFilterControls extends Component {
   }
 
   @action
+  onSortChange(close, value) {
+    this.sort = value;
+
+    if (this.args.sortQueryParam) {
+      this.updateQueryParams({
+        [this.args.sortQueryParam]: value === this.defaultSort ? null : value,
+      });
+    }
+
+    this.args.onSortChange?.(value);
+    close();
+  }
+
+  @action
   async resetFilters() {
     this.textFilter = "";
 
@@ -461,6 +547,14 @@ export default class DFilterControls extends Component {
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
   }
 
+  #sorted(items) {
+    const compareFn = this.sortOptions.find(
+      (option) => option.value === this.sort
+    )?.compareFn;
+
+    return compareFn ? items.sort(compareFn) : items;
+  }
+
   #validatedUrlValue(params, paramName, options) {
     const value = params.get(paramName);
     return value !== null && options.some((option) => option.value === value)
@@ -487,7 +581,9 @@ export default class DFilterControls extends Component {
           @dropdownValue
         }}
       >
-        {{#if (or this.showTextFilter this.showDropdownFilterToggle)}}
+        {{#if
+          (or this.showTextFilter this.showSort this.showDropdownFilterToggle)
+        }}
           <div class="d-filter-controls__inputs">
             {{#if this.showTextFilter}}
               <DFilterInput
@@ -500,6 +596,16 @@ export default class DFilterControls extends Component {
             {{/if}}
 
             {{yield to="inlineFilters"}}
+
+            {{#if this.showSort}}
+              <SortMenu
+                @label={{this.sortLabel}}
+                @onChange={{this.onSortChange}}
+                @options={{this.sortOptions}}
+                @showLabel={{this.capabilities.viewport.sm}}
+                @value={{this.sort}}
+              />
+            {{/if}}
 
             {{#if this.showDropdownFilterToggle}}
               <DButton

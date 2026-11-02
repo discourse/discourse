@@ -2926,14 +2926,14 @@ bg:
           notify_moderators: "Маркирахте това за модерация"
           notify_user: "Изпратихте лично съобщение на този потребител"
       revisions:
+        visibility:
+          hidden:
+            title: "Скрит"
         controls:
           first: "Първа ревизия"
           previous: "Предишна ревизия"
           next: "Следваща ревизия"
           last: "Последна ревизия"
-          hide: "Скрий ревизията"
-          show: "Покажи ревизията"
-          destroy: "Изтриване на ревизии"
           destroy_confirm: "Сигурни ли сте, че искате да изтриете всички ревизии на тази публикация? Това действие е необратимо."
           edit_wiki: "Редактиране на Wiki"
           edit_post: "Редактиране на публикацията"
@@ -3709,28 +3709,11 @@ bg:
         version: "Версия"
         up_to_date: "Вие сте с последна версия!"
         updates_available: "Налична е актуализация."
-        no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
-        stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
-        installed_version: "Инсталирани"
-        github: "GitHub"
         dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."
-        last_checked: "Последна проверка"
         refresh_problems: "Обнови"
-        no_problems: "Не бяха открити проблеми."
-        moderators: "Модератори:"
-        admins: "Админи:"
-        suspended: "Отстранени:"
-        private_messages_short: "Съобщения"
-        private_messages_title: "Съобщения"
-        mobile_title: "Мобилен"
         backups: "Бекъп"
-        traffic_short: "Трафик"
-        traffic: "Приложение уеб заявки"
-        show_traffic_report: "Покажи детайлен репорт на трафика"
-        general_tab: "Основни"
-        security_tab: "Сигурност"
         report_filter_any: "всеки"
         disabled: Деактивирани
         sections:
@@ -3768,10 +3751,6 @@ bg:
           series:
             anonymous: "Анонимен"
           crawler_learn_more: "Научете повече"
-        period:
-          last_7_days: "Последните 7 дни"
-          last_30_days: "Последните 30 дни"
-          custom: "По избор"
         reports:
           today: "Днес"
           yesterday: "Вчера"

@@ -2212,13 +2212,14 @@ et:
           one: "Kas oled sa kindel, et soovid selle postituse kustutada?"
           other: "Kas oled sa kindel, et soovid need %{count} postitust kustutada?"
       revisions:
+        visibility:
+          hidden:
+            title: "Peidetud"
         controls:
           first: "Esimene redaktsioon"
           previous: "Eelmine redaktsioon"
           next: "Järgmine redaktsioon"
           last: "Viimane redaktsioon"
-          hide: "Peida redaktsioon"
-          show: "Näita redaktsiooni"
           edit_wiki: "Muuda vikit"
           edit_post: "Muuda postitust"
         displays:
@@ -3010,39 +3011,15 @@ et:
           anonymous_human: "Anonüümne"
       dashboard:
         title: "Armatuurlaud"
-        last_updated: "Töölauda on uuendatud:"
         version: "Versioon"
         up_to_date: "Oled ajakohane!"
         updates_available: "Uuendused on saadaval."
-        no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et Sidekiq töötab."
-        stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et Sidekiq töötab."
-        installed_version: "Paigaldatud"
-        github: "GitHub"
         dismiss_notice: "Ignoreeri"
         new_features:
           learn_more: "Uuri veel..."
-        last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
-        no_problems: "Probleeme ei tuvastatud."
-        moderators: "Moderaatorid:"
-        admins: "Adminnid:"
-        silenced: "Vaigistatud:"
-        suspended: "Peatatud:"
-        private_messages_short: "Sõnumid"
-        private_messages_title: "Sõnumid"
-        mobile_title: "Mobiil"
         uploads: "Üleslaadimised"
         backups: "Varukoopiad"
-        traffic_short: "Liiklus"
-        traffic: "Rakenduse veebipäringud"
-        page_views: "Vaatamisi"
-        page_views_short: "Vaatamisi"
-        show_traffic_report: "Näita liikluse detailraportit"
-        moderators_activity: Modereerimise tegevus
-        all_reports: "Kõik aruanded"
-        general_tab: "Üldine"
-        moderation_tab: "Modereerimine"
-        security_tab: "Turve"
         report_filter_any: "iga"
         disabled: Välja lülitatud
         sections:
@@ -3071,7 +3048,6 @@ et:
           system:
             title: "Süsteem"
             status: "Staatus"
-            dashboard_updated: "Töölauda on uuendatud"
         reports_section:
           header_action: "Halda"
           no_data: "Pole andmeid, mida näidata"
@@ -3083,8 +3059,6 @@ et:
           series:
             anonymous: "Anonüümne"
           crawler_learn_more: "Uuri veel"
-        period:
-          custom: "Individuaalne"
         reports:
           today: "Täna"
           yesterday: "Eile"

@@ -40,10 +40,9 @@ export default class AdminDashboard extends EmberObject {
       data.end_date = moment(endDate).format("YYYY-MM-DD");
     }
 
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const json = (await ajax("/admin/dashboard.json", {
+    const json = await ajax<AdminDashboardFields>("/admin/dashboard.json", {
       data,
-    })) as AdminDashboardFields;
+    });
     const model = AdminDashboard.create();
 
     model.setProperties({
@@ -56,10 +55,12 @@ export default class AdminDashboard extends EmberObject {
   }
 
   static async fetchProblems(): Promise<AdminDashboard> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const json = (await ajax("/admin/dashboard/problems.json", {
-      type: "POST",
-    })) as { problems: AdminDashboardProblem[] };
+    const json = await ajax<{ problems: AdminDashboardProblem[] }>(
+      "/admin/dashboard/problems.json",
+      {
+        type: "POST",
+      }
+    );
     const model = AdminDashboard.create(json);
 
     model.set("loaded", true);

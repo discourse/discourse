@@ -1439,10 +1439,7 @@ fr:
           streaming_below: "Nouveau contenu ci-dessous"
           editing_post: "Modification de la publication"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Aperçu du sentiment"
           analysis: "Analyse du sentiment"
         sentiment_analysis:
           share_chart: "Copier le lien vers le graphique"

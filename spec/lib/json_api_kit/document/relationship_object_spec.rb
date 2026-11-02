@@ -27,14 +27,14 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
   end
   let(:record) do
     JsonApiKit::Record.new(
-      JsonApiKit::Pagination::Row.new(record: author, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: author, segment: nil),
       users_resource.fields(guardian:),
       type: "users",
     )
   end
   let(:owner) do
     JsonApiKit::Record.new(
-      JsonApiKit::Pagination::Row.new(record: topic, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic, segment: nil),
       topics_resource.fields(guardian:),
       type: "topics",
       namespace:,

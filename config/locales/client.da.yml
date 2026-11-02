@@ -3484,6 +3484,9 @@ da:
           one: "Er du sikker på, at du vil slette dette indlæg?"
           other: "Er du sikker på, at du vil slette disse %{count}indlæg?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skjult"
         locale:
           locale_removed: "Sprog fjernet"
         controls:
@@ -3491,9 +3494,6 @@ da:
           previous: "Forrige udgave"
           next: "Næste udgave"
           last: "Sidste udgave"
-          hide: "Skjul udgave"
-          show: "Vis udgave"
-          destroy: "Slet revisioner"
           revert: "Vend tilbage til revision %{revision}"
           edit_wiki: "Ret Wiki"
           edit_post: "Ret Indlæg"
@@ -4696,32 +4696,15 @@ da:
           anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
-        last_updated: "instrumentbræt opdateret:"
-        discourse_last_updated: "Discourse opdateret:"
         version: "Installeret version"
         up_to_date: "Du kører den seneste version af Discourse."
         updates_available: "Opdatering er tilgængelige."
-        please_update: "Opdatér venligst!"
-        no_check_performed: "Der er ikke blevet søgt efter opdateringer. Kontrollér om sidekiq kører."
-        stale_data: "Der er ikke blevet søgt efter opdateringer på det seneste. Kontrollér om sidekiq kører."
         version_check_pending: "Det ser ud til, at du har opdateret for nylig. Fantastisk!"
-        installed_version: "Installeret"
-        github: "GitHub"
-        problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         dismiss_notice: "Ignorér"
         new_features:
           title: "Hvad er nyt?"
           learn_more: "Lær mere..."
-        last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
-        no_problems: "Ingen problemer fundet."
-        moderators: "Moderatorer:"
-        admins: "Admins:"
-        silenced: "Mådeholdt (silenced):"
-        suspended: "Suspenderet:"
-        private_messages_short: "Beskeder"
-        private_messages_title: "Beskeder"
-        mobile_title: "Mobil"
         space_used: "%{usedSize} brugt"
         space_used_and_free: "%{usedSize} (%{freeSize} fri)"
         uploads: "Overførsler"
@@ -4730,20 +4713,7 @@ da:
           one: "%{count} backup på %{location}"
           other: "%{count} backups på %{location}"
         lastest_backup: "Senest: %{date}"
-        traffic_short: "Trafik"
-        traffic: "Applikation web forespørgsler"
-        page_views: "Sidevisninger"
-        page_views_short: "Sidevisninger"
-        show_traffic_report: "Vist detaljeret trafik rapport"
-        community_health: Fællesskabets sundhed
-        moderators_activity: Moderator aktivitet
         whats_new_in_discourse: Hvad er nyt i Discourse?
-        activity_metrics: Aktivitetsmåling
-        all_reports: "Alle rapporter"
-        general_tab: "Overordnet"
-        moderation_tab: "Moderation"
-        security_tab: "Sikkerhed"
-        reports_tab: "Rapporter"
         report_filter_any: "alle"
         disabled: Deaktiveret
         timeout_error: Beklager, forespørgslen tager for lang tid. Vælg et kortere interval
@@ -4781,7 +4751,6 @@ da:
             title: "System"
             status: "Status"
             discourse_updated: "Discourse opdateret"
-            dashboard_updated: "instrumentbræt opdateret"
         reports_section:
           header_action: "Administrér"
           no_data: "Ingen data at vise"
@@ -4794,11 +4763,6 @@ da:
             anonymous: "Anonym"
             crawlers: "Crawlere"
           crawler_learn_more: "Lær mere"
-        period:
-          last_7_days: "Seneste 7 dage"
-          last_30_days: "Seneste 30 dage"
-          last_3_months: "Seneste 3 måneder"
-          custom: "Tilpasset"
         reports:
           trend_title: "%{percent} ændring. I øjeblikket %{current}, var %{prev} i forrige periode."
           percent_change_tooltip: "%{percent} ændring."
@@ -4830,9 +4794,6 @@ da:
             posts_count:
               one: "%{count} indlæg"
               other: "%{count} indlæg"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Søgninger</a>'
-            disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'
           sort_button: "Sorter efter %{column}"
           sort_ascending: "stigende"
           sort_descending: "faldende"
@@ -6029,7 +5990,6 @@ da:
           no_constructive_purpose: "Intet konstruktivt formål med deres handlinger andet end at skabe uenighed i fællesskabet"
           custom: "Brugerdefineret…"
         suspend_message: "Email Besked"
-        suspend_message_placeholder: "Angiv eventuelt mere information om suspensionen, og den vil blive sendt til brugeren."
         suspended_by: "Suspenderet af"
         silence_reason: "Grund"
         silenced_by: "Mådeholdt (silenced) af"
@@ -6037,7 +5997,6 @@ da:
         silence_duration: "Hvor længe vil brugeren være mådeholdt (silenced)?"
         silence_reason_placeholder: "Årsag for mådeholdenhed (silence)"
         silence_message: "Email Besked"
-        silence_message_placeholder: "(lad være tom for at sende standard besked)"
         suspended_until: "(indtil %{until})"
         cant_suspend: "Denne bruger kan ikke suspenderes."
         delete_posts_failed: "Der opstod et problem med at slette indlægene."

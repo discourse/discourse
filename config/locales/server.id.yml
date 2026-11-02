@@ -1560,6 +1560,18 @@ id:
                 label: "Pribadi"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Setiap hari"
+        ordinals:
+          last: "terakhir"
+        weekdays:
+          sunday: "Minggu"
+          monday: "Senin"
+          tuesday: "Selasa"
+          wednesday: "Rabu"
+          thursday: "Kamis"
+          friday: "Jumat"
+          saturday: "Sabtu"
       user_joined_community: "Bergabung %{date}"
     google_meet:
       meeting_code: "Kode:"

@@ -928,10 +928,7 @@ it:
           uploads_in_progress: "Impossibile caricare mentre sono in corso altri caricamenti"
           scroll_to_bottom: "Scorri fino in fondo"
       sentiments:
-        dashboard:
-          title: "Sentimento"
         sidebar:
-          overview: "Panoramica del sentimento"
           analysis: "Analisi del sentimento"
         sentiment_analysis:
           share_chart: "Copia il link al grafico"

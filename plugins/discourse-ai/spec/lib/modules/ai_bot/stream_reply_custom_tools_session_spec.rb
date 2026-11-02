@@ -631,7 +631,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 96
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 4
       Discourse.redis.set(key, state.to_json)
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["First summary", "Complete summary", call],
@@ -643,7 +643,9 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           ),
         )
       end
-      expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(99)
+      expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(
+        DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1,
+      )
 
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["Final answer at the execution limit", "Test title"],
@@ -682,7 +684,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
       expect(state["prompt"]["messages"].map { |message| message["type"] }).to eq(%w[system user])
-      state["completion_count"] = 98
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 2
       Discourse.redis.set(key, state.to_json)
       summary = "The completed caller action returned useful evidence."
       final = "Final answer using the completed action"
@@ -735,7 +737,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 98
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 2
       Discourse.redis.set(key, state.to_json)
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["Completed caller evidence summarized."],
@@ -778,7 +780,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         end
         key = described_class.redis_key(token)
         state = JSON.parse(Discourse.redis.get(key))
-        state["completion_count"] = 98
+        state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 2
         Discourse.redis.set(key, state.to_json)
         topic = Topic.find(state["topic_id"])
         result = "Completed evidence " * 2000
@@ -804,7 +806,8 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           }.to raise_error(LlmCreditAllocation::CreditLimitExceeded)
         end
         failed_state = JSON.parse(Discourse.redis.get(key))
-        completion_count = failure_stage == "maintenance" ? 99 : 100
+        completion_count = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS
+        completion_count -= 1 if failure_stage == "maintenance"
         expect(failed_state["completion_count"]).to eq(completion_count)
         expect(failed_state["failed_tool_results"]).to eq(
           [{ "tool_call_id" => call.id, "content" => result }],
@@ -844,7 +847,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 99
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1
       Discourse.redis.set(key, state.to_json)
       result = "Completed evidence " * 6000
       DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|
@@ -875,7 +878,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 100
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS
       Discourse.redis.set(key, state.to_json)
       result = "Already completed"
       DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|

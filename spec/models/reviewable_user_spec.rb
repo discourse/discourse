@@ -13,6 +13,30 @@ RSpec.describe ReviewableUser, type: :model do
   describe "#actions_for" do
     fab!(:reviewable)
 
+    it "requires classification for suspect account restrictions and avatar removal" do
+      user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
+      reviewable = Fabricate(:suspect_user_reviewable, target: user)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "delete_user",
+        "delete_user_block",
+        "suspend_user",
+        "silence_user",
+        "remove_avatar",
+      )
+    end
+
+    it "keeps registration approval actions outside classification" do
+      user = Fabricate(:user, approved: false, uploaded_avatar: Fabricate(:upload))
+      reviewable = Fabricate(:reviewable_user, target: user)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required)).to be_empty
+    end
+
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       expect(actions.has?(:approve_user)).to eq(true)
@@ -247,6 +271,53 @@ RSpec.describe ReviewableUser, type: :model do
 
   describe "#perform" do
     fab!(:reviewable)
+
+    it "rejects a registration without creating a statement when classification is supplied" do
+      SiteSetting.dsa_reporting_enabled = true
+      reviewable = Fabricate(:reviewable_user, target: Fabricate(:user, approved: false))
+
+      result =
+        reviewable.perform(
+          admin,
+          :delete_user,
+          reject_reason: "Membership is limited to employees.",
+          dsa_classification: {
+            community_rule: {
+              "ground" => "Be respectful",
+              "explanation" => "No personal attacks.",
+            },
+            category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          },
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_rejected
+      expect(reviewable.dsa_statement_of_records).to be_empty
+    end
+
+    it "classifies avatar removal while leaving the account review pending" do
+      SiteSetting.dsa_reporting_enabled = true
+      user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
+      reviewable = Fabricate(:suspect_user_reviewable, target: user)
+
+      result =
+        reviewable.perform(
+          admin,
+          :remove_avatar,
+          dsa_classification: {
+            community_rule: {
+              "ground" => "Be respectful",
+              "explanation" => "No personal attacks.",
+            },
+            category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          },
+        )
+
+      expect(result).to be_success
+      expect(user.reload.uploaded_avatar_id).to be_nil
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.dsa_statement_of_records.sole).to be_ready
+    end
 
     context "when removing an avatar" do
       fab!(:avatar, :upload)

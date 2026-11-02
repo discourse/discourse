@@ -1107,6 +1107,13 @@ bs_BA:
               private:
                 label: "Privatno"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Svaki dan"
+        ordinals:
+          last: "posljednji"
+        weekdays:
+          monday: "Ponedjeljak"
     google_meet:
       meeting_code: "Šifra:"
     github:

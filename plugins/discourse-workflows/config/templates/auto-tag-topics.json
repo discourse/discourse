@@ -45,7 +45,7 @@
     {
       "id": "topic-tags",
       "type": "action:topic_tags",
-      "typeVersion": "1.0",
+      "typeVersion": "2.0",
       "name": "Topic tags",
       "parameters": {
         "topic_id": "={{ $json.topic.id }} "

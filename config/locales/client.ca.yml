@@ -2517,13 +2517,14 @@ ca:
           one: "Esteu segur que voleu suprimir aquesta publicació?"
           other: "Esteu segur que voleu suprimir aquestes %{count} publicacions?"
       revisions:
+        visibility:
+          hidden:
+            title: "Amagat"
         controls:
           first: "Primera revisió"
           previous: "Revisió anterior"
           next: "Següent revisió"
           last: "Darrera revisió"
-          hide: "Amaga la revisió"
-          show: "Mostra la revisió"
           edit_wiki: "Edita Wiki"
           edit_post: "Edita publicació"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3373,29 +3374,13 @@ ca:
           anonymous_human: "Anònim"
       dashboard:
         title: "Tauler de control"
-        last_updated: "Tauler de control actualitzat:"
-        discourse_last_updated: "Discourse actualitzat"
         version: "Versió"
         up_to_date: "Esteu al dia!"
         updates_available: "Hi ha actualitzacions disponibles."
-        no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
-        stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
-        installed_version: "Instal·lat"
-        github: "GitHub"
-        problems_found: "Uns quants consells basats en la configuració actual del lloc web."
         dismiss_notice: "Ignora"
         new_features:
           learn_more: "Per a saber-ne més..."
-        last_checked: "Comprovat per darrera vegada"
         refresh_problems: "Actualitza"
-        no_problems: "No s'han trobat problemes."
-        moderators: "Moderadors"
-        admins: "Administradors:"
-        silenced: "Silenciats:"
-        suspended: "Suspesos:"
-        private_messages_short: "Mtgs"
-        private_messages_title: "Missatges"
-        mobile_title: "Mòbil"
         space_used: "%{usedSize} usats"
         space_used_and_free: "%{usedSize} (%{freeSize} lliures)"
         uploads: "Càrregues"
@@ -3404,20 +3389,7 @@ ca:
           one: "%{count} còpia de seguretat en %{location}"
           other: "%{count} còpies de seguretat en %{location}"
         lastest_backup: "Més recent: %{date}"
-        traffic_short: "Tràfic"
-        traffic: "Peticions d'aplicacions web"
-        page_views: "Pàgines vistes"
-        page_views_short: "Pàgines vistes"
-        show_traffic_report: "Mostra el report detallat de tràfic"
-        community_health: Salut de la comunitat
-        moderators_activity: Activitat dels moderadors
         whats_new_in_discourse: Què hi ha de nou en Discourse?
-        activity_metrics: Mètrica d'activitats
-        all_reports: "Tots els reports"
-        general_tab: "General"
-        moderation_tab: "Moderació"
-        security_tab: "Seguretat"
-        reports_tab: "Reports"
         report_filter_any: "qualsevol"
         disabled: Desactivat
         timeout_error: Ho sentim, la consulta triga massa. Agafeu un interval més curt.
@@ -3452,7 +3424,6 @@ ca:
           system:
             title: "Sistema"
             status: "Estat"
-            dashboard_updated: "Tauler de control actualitzat"
         reports_section:
           header_action: "Gestiona"
           modal:
@@ -3464,10 +3435,6 @@ ca:
             anonymous: "Anònim"
             crawlers: "Rastrejadors"
           crawler_learn_more: "Per a saber-ne més"
-        period:
-          last_7_days: "Els darrers 7 dies"
-          last_30_days: "Els darrers 30 dies"
-          custom: "Personalitzat"
         reports:
           trend_title: "Canvi del %{percent}. Ara %{current}, era %{prev} en el període anterior."
           today: "Avui"
@@ -3497,9 +3464,6 @@ ca:
             posts_count:
               one: "%{count} publicació"
               other: "%{count} publicacions"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Cerca de registres (logs)</a>'
-            disabled: 'El report de cerca de tendències està desactivat. Habiliteu <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">les consultes de cerca de registres</a> per a recopilar dades.'
           sort_ascending: "ascendent"
           sort_descending: "descendent"
           filters:
@@ -4328,7 +4292,6 @@ ca:
         suspend_reason: "Motiu"
         suspend_reason_title: "Raó de la suspensió"
         suspend_message: "Missatge de correu"
-        suspend_message_placeholder: "Opcionalment, doneu més informació sobre la suspensió i s'enviarà per correu a l'usuari."
         suspended_by: "Suspès per"
         silence_reason: "Motiu"
         silenced_by: "Silenciat per"
@@ -4336,7 +4299,6 @@ ca:
         silence_duration: "Quant de temps estarà silenciat l'usuari?"
         silence_reason_placeholder: "Raó del silenciament"
         silence_message: "Missatge de correu"
-        silence_message_placeholder: "(deixeu-ho en blanc per a enviar el missatge per defecte)"
         suspended_until: "(fins a %{until})"
         cant_suspend: "Aquest usuari no pot ser suspès."
         delete_posts_failed: "Hi ha hagut un problema suprimint les publicacions."

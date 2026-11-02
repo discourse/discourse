@@ -4053,6 +4053,9 @@ fi:
           one: "Oletko varma, että haluat yhdistää nämä viestit?"
           other: "Oletko varma, että haluat yhdistää nämä %{count} viestiä?"
       revisions:
+        visibility:
+          hidden:
+            title: "Piilotettu"
         locale:
           no_locale_set: "Kieltä ei ole asetettu"
           locale_removed: "Kieli poistettu"
@@ -4061,9 +4064,6 @@ fi:
           previous: "Edellinen revisio"
           next: "Seuraava revisio"
           last: "Viimeinen revisio"
-          hide: "Piilota revisio"
-          show: "Näytä revisio"
-          destroy: "Poista revisiot"
           destroy_confirm: "Haluatko varmasti poistaa kaikki tämän viestin revisiot? Tämä toiminto on pysyvä."
           revert: "Palaa revisioon %{revision}"
           edit_wiki: "Muokkaa wikiä"
@@ -5688,33 +5688,16 @@ fi:
           anonymous_human: "Anonyymeja"
       dashboard:
         title: "Hallintapaneeli"
-        last_updated: "Hallintapaneeli päivitetty:"
-        discourse_last_updated: "Discourse päivitetty:"
         version: "Versio"
         up_to_date: "Sivusto on ajan tasalla!"
         updates_available: "Päivityksiä on saatavilla."
-        please_update: "Päivitä!"
-        no_check_performed: "Päivityksiä ei ole tarkistettu. Varmista, että sidekiq on käynnissä."
-        stale_data: "Pävityksiä ei ole tarkistettu viime aikoina. Varmista, että sidekiq on käynnissä."
         version_check_pending: "Näyttää siltä, että olet päivittänyt lähiaikoina. Hienoa!"
-        installed_version: "Asennettu"
-        github: "GitHub"
-        problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         dismiss_notice: "Ohita"
         new_features:
           title: "Mitä uutta?"
           subtitle: "Julkaisemme jatkuvasti uusia ominaisuuksia ja parannuksia. Tämä sivu kattaa kohokohdat, mutta voit katsoa kattavat julkaisutiedot napsauttamalla Lisätietoja."
           learn_more: "Lisätietoja..."
-        last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
-        no_problems: "Ongelmia ei löytynyt."
-        moderators: "Valvojat:"
-        admins: "Ylläpitäjät:"
-        silenced: "Hiljennetty:"
-        suspended: "Hyllytetty:"
-        private_messages_short: "YV:t"
-        private_messages_title: "Viestit"
-        mobile_title: "Mobiili"
         space_used: "%{usedSize} käytetty"
         space_used_and_free: "%{usedSize} (%{freeSize} vapaana)"
         uploads: "Lataukset"
@@ -5723,20 +5706,7 @@ fi:
           one: "%{count} varmuuskopio kohteessa %{location}"
           other: "%{count} varmuuskopiota kohteessa %{location}"
         lastest_backup: "Viimeisin: %{date}"
-        traffic_short: "Liikenne"
-        traffic: "Sovelluksen verkkopyynnöt"
-        page_views: "Sivunkatselut"
-        page_views_short: "Sivunkatselut"
-        show_traffic_report: "Näytä yksityiskohtainen liikenneraportti"
-        community_health: Yhteisön tila
-        moderators_activity: Valvojien toiminta
         whats_new_in_discourse: Uutta Discoursessa
-        activity_metrics: Aktiivisuusmittarit
-        all_reports: "Kaikki raportit"
-        general_tab: "Yleistä"
-        moderation_tab: "Valvonta"
-        security_tab: "Tietoturva"
-        reports_tab: "Raportit"
         report_filter_any: "mikä tahansa"
         disabled: Pois käytöstä
         timeout_error: Kyselyssä kestää liian kauan, valitse lyhyempi ajanjakso
@@ -5775,7 +5745,6 @@ fi:
             title: "Järjestelmä"
             status: "Tila"
             discourse_updated: "Discourse päivitetty"
-            dashboard_updated: "Hallintapaneeli päivitetty"
         reports_section:
           header_action: "Hallitse"
           modal:
@@ -5789,11 +5758,6 @@ fi:
             anonymous: "Anonyymeja"
             crawlers: "Hakurobotit"
           crawler_learn_more: "Lue lisää"
-        period:
-          last_7_days: "Viimeiset 7 päivää"
-          last_30_days: "Viimeiset 30 päivää"
-          last_3_months: "Viimeiset 3 kuukautta"
-          custom: "Mukautettu"
         reports:
           trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
           percent_change_tooltip: "%{percent}:n muutos."
@@ -5836,9 +5800,6 @@ fi:
               one: "ensimmäisen %{count} viestin"
               other: "ensimmäisen %{count} viestin"
             deselect: "Poista käyttäjän %{name} valinta"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
-            disabled: 'Suosittujen hakujen raportti ei ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kirjaa hakukyselyitä</a>.'
           sort_button: "Lajitteluperuste: %{column}"
           sort_ascending: "nouseva"
           sort_descending: "laskeva"
@@ -6017,7 +5978,6 @@ fi:
               list: Listaa viimeisimmät viestit ja yksityisviestit. Myös RSS on tuettu.
             revisions:
               read: "Nouda uusin tai tietty versio."
-              modify: "Piilota, näytä tai palauta versiot."
               permanently_delete: "Poista versio pysyvästi."
             tags:
               list: Listaa tunnisteet.
@@ -7467,7 +7427,6 @@ fi:
           no_constructive_purpose: "Toiminta ei ole rakentavaa, aiheuttaa eripuraa yhteisössä"
           custom: "Mukautettu…"
         suspend_message: "Sähköpostiviesti"
-        suspend_message_placeholder: "Voit halutessasi kertoa enemmän hyllytyksen syystä, jolloin selitys lähetetään käyttäjälle sähköpostitse."
         suspended_by: "Hyllyttäjä"
         silence_reason: "Syy"
         silenced_by: "Hiljentäjä"
@@ -7476,7 +7435,6 @@ fi:
         silence_reason_title: "Hiljennyksen syy"
         silence_reason_placeholder: "Hiljennyksen syy"
         silence_message: "Sähköpostiviesti"
-        silence_message_placeholder: "(jätä tyhjäksi, jos haluat lähettää oletusviestin)"
         suspended_until: "(%{until} asti)"
         suspend_forever: "Hyllytä ikuisesti"
         cant_suspend: "Käyttäjää ei voi hyllyttää."

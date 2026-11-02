@@ -1954,13 +1954,14 @@ sw:
           one: "Je, umeridhia kufuta chapisho hili?"
           other: "Are you sure you want to delete those %{count} posts?"
       revisions:
+        visibility:
+          hidden:
+            title: "Imefichwa"
         controls:
           first: "Sahihisho la kwanza"
           previous: "Sahihisho lililopita"
           next: "Sahihisho linalokuja"
           last: "Sahihisho iliopita"
-          hide: "Ficha sahihisho"
-          show: "Onyesha sahihisho"
           edit_wiki: "Hariri Wiki"
           edit_post: "Hariri Chapisho"
         displays:
@@ -2675,35 +2676,14 @@ sw:
         version: "Toleo"
         up_to_date: "Una toleo la sasa!"
         updates_available: "Masashisho yanapatikana."
-        no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
-        stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
-        installed_version: "Imesanikishwa"
-        github: "GitHub"
         dismiss_notice: "Puuzia"
         new_features:
           learn_more: "Jifunze zaidi..."
-        last_checked: "Mara ya Mwisho imeangaliwa"
         refresh_problems: "Rudisha Tena"
-        no_problems: "Hakuna matatizo yaliyopatikana."
-        moderators: "Wasimamizi:"
-        admins: "Viongozi:"
-        silenced: "Nyamazishwa:"
-        suspended: "Sitishwa:"
-        private_messages_short: "Ujumbe"
-        private_messages_title: "Ujumbe"
-        mobile_title: "Kifaa cha kiganjani"
         uploads: "Upakiaji"
         backups: "Chelezo"
         lastest_backup: "Hivi karibuni: %{date}"
-        traffic_short: "Utembeleaji"
-        page_views: "Ukurasa Umeonwa Mara"
-        page_views_short: "Ukurasa Umeonwa Mara"
-        show_traffic_report: "Onyesha Maelezo ya Ripoti ya Utembeleaji "
-        community_health: Afya ya Jumuiya
         whats_new_in_discourse: Vitu gani ni vipya kwenye Discourse?
-        all_reports: "Ripoti zote"
-        general_tab: "Jumla"
-        security_tab: "Ulinzi"
         report_filter_any: "yoyote"
         disabled: Imezuiwa
         sections:
@@ -2740,8 +2720,6 @@ sw:
           series:
             anonymous: "Asiyejulikana"
           crawler_learn_more: "Jifunze zaidi"
-        period:
-          custom: "Binafsi"
         reports:
           today: "Leo"
           yesterday: "Jana"
@@ -3417,7 +3395,6 @@ sw:
         suspend_reason: "Sababu"
         suspend_reason_title: "Sababu ya kusitisha kwa mda mfupi"
         suspend_message: "Tuma Ujumbe kwa Barua Pepe"
-        suspend_message_placeholder: "Sio lazima, ila unaweza kutoa sababu za ziada kuhusiana na sitisho na itatumwa kwa mtumiaji."
         suspended_by: "Amesitishwa kwa mda mfupi na"
         silence_reason: "Sababu"
         silenced_by: "Amenyamazishwa na"
@@ -3425,7 +3402,6 @@ sw:
         silence_duration: "Mtumiaji atanyamazishwa kwa mda gani?"
         silence_reason_placeholder: "Nyamazisha Sababu"
         silence_message: "Tuma ujumbe kwa Barua Pepe"
-        silence_message_placeholder: "(acha wazi kutuma ujumbe halisi au msingi)"
         suspended_until: "(mpaka %{until})"
         cant_suspend: "Mtumiaji huyu hawezi kusitishwa kwa mda."
         penalty_post_actions: "Ungependa kufanya nini na taarifa shirika?"

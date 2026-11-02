@@ -4696,6 +4696,9 @@ cs:
           many: "Opravdu chcete sloučit těchto %{count} příspěvků?"
           other: "Opravdu chcete sloučit těchto %{count} příspěvků?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skrytý"
         locale:
           no_locale_set: "Není nastaven žádný jazyk"
           locale_removed: "Jazyk odstraněn"
@@ -4704,9 +4707,6 @@ cs:
           previous: "Předchozí revize"
           next: "Další revize"
           last: "Poslední revize"
-          hide: "Skrýt revizi"
-          show: "Zobrazte revizi"
-          destroy: "Odstranit revize"
           destroy_confirm: "Opravdu chcete odstranit všechny revize tohoto příspěvku? Tuto akci nelze zrušit."
           revert: "Vrátit na revizi %{revision}"
           edit_wiki: "Upravit Wiki"
@@ -6596,33 +6596,16 @@ cs:
           anonymous_human: "Anonymní"
       dashboard:
         title: "Nástěnka"
-        last_updated: "Nástěnka aktualizována:"
-        discourse_last_updated: "Discourse aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
         updates_available: "Jsou k dispozici aktualizace."
-        please_update: "Prosím, aktualizujte!"
-        no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby sidekiq."
-        stale_data: "V poslední době neproběhal kontrola aktualizací. Ujistěte se, že běží služby sidekiq."
         version_check_pending: "Zdá se, že jste nedávno aktualizovali. Báječné!"
-        installed_version: "Nainstalováno"
-        github: "GitHub"
-        problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         dismiss_notice: "ignorovat"
         new_features:
           title: "Co je nového?"
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
           learn_more: "Více informací..."
-        last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
-        no_problems: "Nenalezeny žádné problémy."
-        moderators: "Moderátoři:"
-        admins: "Administrátoři:"
-        silenced: "Ztišený:"
-        suspended: "Pozastaveno:"
-        private_messages_short: "Zpráv"
-        private_messages_title: "Zprávy"
-        mobile_title: "Mobilní verze"
         space_used: "Použito %{usedSize}"
         space_used_and_free: "%{usedSize} (%{freeSize} volných)"
         uploads: "Nahrané soubory"
@@ -6633,20 +6616,7 @@ cs:
           many: "%{count} záloh na %{location}"
           other: "%{count} záloh na %{location}"
         lastest_backup: "Poslední: %{date}"
-        traffic_short: "Provoz"
-        traffic: "Webové požadavky na aplikaci"
-        page_views: "Zobrazení stránek"
-        page_views_short: "Zobrazení"
-        show_traffic_report: "Zobrazit detailní zprávu o provozu"
-        community_health: Zdraví komunity
-        moderators_activity: Aktivita moderátorů
         whats_new_in_discourse: Co je v Discourse nového?
-        activity_metrics: Ukazatelé aktivity
-        all_reports: "Všechny sestavy"
-        general_tab: "Základní"
-        moderation_tab: "Moderování"
-        security_tab: "Zabezpečení"
-        reports_tab: "Sestavy"
         report_filter_any: "jakýkoliv"
         disabled: Vypnuto
         timeout_error: Omlouváme se, dotaz trvá příliš dlouho, vyberte prosím kratší interval
@@ -6686,7 +6656,6 @@ cs:
             title: "Systémové soukromé zprávy"
             status: "Stav"
             discourse_updated: "Discourse aktualizován"
-            dashboard_updated: "Nástěnka aktualizována"
         reports_section:
           header_action: "Spravovat"
           no_data: "Žádná data k zobrazení"
@@ -6699,11 +6668,6 @@ cs:
             anonymous: "Anonymní"
             crawlers: "Vyhledávače"
           crawler_learn_more: "Zjistit více"
-        period:
-          last_7_days: "Posledních 7 dní"
-          last_30_days: "Posledních 30 dní"
-          last_3_months: "Posledních 3 měsíců"
-          custom: "Přizpůsobené"
         reports:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
           percent_change_tooltip: "%{percent} změna."
@@ -6757,9 +6721,6 @@ cs:
               many: "%{count} příspěvky"
               other: "%{count} příspěvky"
             deselect: "Zrušit výběr %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Protokol vyhledávání</a>'
-            disabled: 'Přehled trendů vyhledávání je zakázán. Pro shromažďování dat povolte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dotazy na protokol</a>.'
           average_chart_label: Zobrazují se průměry, nikoli součty
           sort_button: "Seřadit podle %{column}"
           sort_button_current: "Seřazeno podle %{column}, %{direction}"
@@ -6948,7 +6909,6 @@ cs:
               list: Seznam nejnovějších příspěvků a soukromých příspěvků. RSS je také podporován.
             revisions:
               read: "Získejte nejnovější nebo konkrétní revizi."
-              modify: "Skrýt, zobrazit nebo vrátit revize."
               permanently_delete: "Trvalé odstranění revize."
             tags:
               list: Seznam značek.
@@ -8458,7 +8418,6 @@ cs:
           no_constructive_purpose: "Jejich akce nemají jiný konstruktivní cíl než vyvolat nesouhlas v komunitě."
           custom: "Vlastní…"
         suspend_message: "e-mailová zpráva"
-        suspend_message_placeholder: "Případě poskytněte více informací o pozastavení, které budou poslány na uživatelův email."
         suspended_by: "Pozastavil/a"
         silence_reason: "Důvod"
         silenced_by: "Ztišený uživatelem"
@@ -8467,7 +8426,6 @@ cs:
         silence_reason_title: "Důvod ztišení"
         silence_reason_placeholder: "Důvod ztišení "
         silence_message: "e-mailová zpráva"
-        silence_message_placeholder: "()"
         suspended_until: "(až %{until})"
         suspend_forever: "Pozastavit navždy"
         cant_suspend: "Tento uživatel nemůže být pozastaven"

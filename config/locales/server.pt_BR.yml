@@ -2434,9 +2434,6 @@ pt_BR:
     enable_user_status: "Permita que usuários(as) definam uma mensagem de status personalizada (emoji + descrição)."
     enable_user_tips: "Ativar novas dicas de usuário que descrevem os principais recursos para os(as) usuários(as)"
     short_title: "O título curto será usado na tela inicial do usuário, no iniciador de aplicativos ou em outros locais onde o espaço seja limitado. Ele deve ter no máximo 12 caracteres. Observe que alterar este título pode enviar uma mensagem aos usuários do PWA solicitando que atualizem ou desinstalem o aplicativo."
-    dashboard_hidden_reports: "Permita que relatórios específicos sejam ocultos no painel de controle."
-    dashboard_visible_tabs: "Escolha quais abas do painel de controle estão visíveis."
-    dashboard_general_tab_activity_metrics: "Escolha relatórios para serem exibidos como métricas de atividade na aba geral."
     gravatar_enabled: "Usar o serviço <a href='https://gravatar.com/'>Gravatar</a> para os avatares dos(as) usuários(as). Desativar impede que os(as) usuários(as) troquem para o Gravatar para obter seus avatares, mas não afeta os(as) usuários(as) que já o usam."
     gravatar_name: "Especifique o nome do provedor de serviço do Gravatar. Geralmente, o nome é usado para identificar a origem dos avatares do Gravatar no site."
     gravatar_base_url: "Especifique a URL para acessar a API do provedor do Gravatar. Esta configuração é fundamental para converter endereços de e-mail em URLs do Gravatar onde as imagens de avatares estão armazenadas."
@@ -4783,6 +4780,19 @@ pt_BR:
     graph_title: "Contagem de pesquisa"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Todos os dias"
+        every_weekday: "Todos os dias da semana"
+        ordinals:
+          last: "último"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Segunda-feira"
+          tuesday: "Terça-feira"
+          wednesday: "Quarta-feira"
+          thursday: "Quinta-feira"
+          friday: "Sexta-feira"
+          saturday: "Sábado"
       user_joined_community: "Juntou-se em %{date}"
     google_meet:
       meeting_code: "Código:"

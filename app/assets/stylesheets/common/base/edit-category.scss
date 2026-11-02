@@ -151,6 +151,57 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
+  .edit-category-tab-topic-template {
+    .select-category-template__info {
+      margin-block: 0.25rem;
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .form-kit__conditional-display {
+    .form-kit__container-content:has(.is-disabled) {
+      // select-kit has pointer-events disabled, so we need to style the parent
+      cursor: not-allowed;
+    }
+  }
+
+  .edit-category-tab-localizations {
+    .btn-default {
+      align-self: start;
+    }
+  }
+
+  .admin-changes-banner {
+    max-width: var(--form-kit-max-input);
+    flex-direction: row-reverse;
+    align-items: center;
+    bottom: var(--powered-by-height, 0);
+
+    @include viewport.until(sm) {
+      &__main-label {
+        display: none;
+      }
+    }
+
+    @include viewport.from(sm) {
+      bottom: calc(var(--powered-by-height, 0px) + var(--space-5));
+
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--powered-by-height, 0px) + var(--space-5)
+        );
+      }
+    }
+
+    .controls {
+      flex-direction: row-reverse;
+      margin-right: auto;
+    }
+  }
+}
+
+.edit-category {
   &__footer {
     grid-area: footer;
 
@@ -203,55 +254,6 @@ $number-input-width: var(--form-kit-small-input);
       .btn {
         width: 100%;
       }
-    }
-  }
-
-  .edit-category-tab-topic-template {
-    .select-category-template__info {
-      margin-block: 0.25rem;
-      font-size: var(--font-down-1);
-    }
-  }
-
-  .form-kit__conditional-display {
-    .form-kit__container-content:has(.is-disabled) {
-      // select-kit has pointer-events disabled, so we need to style the parent
-      cursor: not-allowed;
-    }
-  }
-
-  .edit-category-tab-localizations {
-    .btn-default {
-      align-self: start;
-    }
-  }
-
-  .admin-changes-banner {
-    max-width: var(--form-kit-max-input);
-    flex-direction: row-reverse;
-    align-items: center;
-    bottom: var(--powered-by-height, 0);
-
-    @include viewport.until(sm) {
-      &__main-label {
-        display: none;
-      }
-    }
-
-    @include viewport.from(sm) {
-      bottom: calc(var(--powered-by-height, 0px) + var(--space-5));
-
-      .footer-nav-visible & {
-        bottom: calc(
-          var(--footer-nav-height) + env(safe-area-inset-bottom) +
-            var(--powered-by-height, 0px) + var(--space-5)
-        );
-      }
-    }
-
-    .controls {
-      flex-direction: row-reverse;
-      margin-right: auto;
     }
   }
 }
