@@ -2,16 +2,29 @@
 
 module Migrations
   module Database
-    # A query keeps the connection until all rows are read or the stream is closed.
-    # Block iteration runs in the current fiber. #next uses a separate fiber.
+    # Streams the rows of one query in single-row mode. The query keeps the
+    # connection until all rows are read or the stream is closed, so other queries
+    # on the same connection raise {ManagedConnection::BusyError} in the meantime.
+    # A stream can be consumed once: {#each} runs in the current fiber, {#next}
+    # suspends the result loop in a separate fiber between calls. A caller that
+    # stops early with {#next} has to call {#close}.
     class PostgresStream
       include Enumerable
 
+      # Raised on a second pass over a consumed stream.
       class ConsumedError < StandardError
       end
 
+      # @return [Integer] the number of columns in the result
       attr_reader :column_count
 
+      # Sends the query and marks the connection as busy.
+      # @param connection [ManagedConnection]
+      # @param sql [String] a query with `$1`, `$2`, … placeholders
+      # @param params [Array] the values for the placeholders
+      # @param arrays [Boolean] yield rows as arrays instead of hashes; a single
+      #   column is yielded as its value
+      # @raise [ManagedConnection::BusyError] if the connection is in use
       def initialize(connection, sql, params, arrays: false)
         @pid = Process.pid
         @managed_connection = connection
@@ -29,6 +42,8 @@ module Migrations
         end
       end
 
+      # @return [Hash, Array, Object] the next row
+      # @raise [StopIteration] when all rows are read; the stream is closed by then
       def next
         check_owner!
         raise StopIteration if @closed
@@ -38,6 +53,10 @@ module Migrations
         value
       end
 
+      # Yields every row and closes the stream afterwards, also when the block
+      # raises. Without a block, returns an enumerator over this stream.
+      # @return [self]
+      # @raise [ConsumedError] if the stream was consumed before
       def each(&block)
         return enum_for(:each) unless block
         check_owner!
@@ -52,6 +71,8 @@ module Migrations
         close if block
       end
 
+      # Reads and discards the remaining rows, then releases the connection.
+      # @return [void]
       def close
         check_owner!
         return if @closed

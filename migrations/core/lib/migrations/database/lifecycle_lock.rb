@@ -2,8 +2,11 @@
 
 module Migrations
   module Database
-    # Database operations can run together. Forking waits for all of them to finish.
-    # Nested operations are tracked by thread because streams use fibers.
+    # A readers-writer lock for the fork protocol. {#synchronize} blocks are the
+    # readers and run together. {#exclusive} is the writer: a fork waits for all
+    # readers and blocks new ones until it is done. Readers are counted per thread,
+    # because streams use fibers, and a thread that already holds the lock may nest
+    # readers even while a fork is waiting.
     class LifecycleLock
       def initialize
         @mutex = Mutex.new
@@ -13,6 +16,9 @@ module Migrations
         @waiting_writers = 0
       end
 
+      # @return the block's result
+      # @raise [Lifecycle::UnsafeForkError] when called on the thread that holds
+      #   {#exclusive}
       def synchronize
         thread = Thread.current
         @mutex.synchronize do
@@ -32,6 +38,9 @@ module Migrations
         end
       end
 
+      # @return the block's result
+      # @raise [Lifecycle::UnsafeForkError] when the current thread is inside
+      #   {#synchronize} or already holds the lock
       def exclusive
         thread = Thread.current
         @mutex.synchronize do
