@@ -43,9 +43,9 @@ according to its driver's fork policy:
 
 | Policy | On fork | Used by |
 | --- | --- | --- |
-| `:forbid` (default) | Forking raises while the connection is open. | SQLite in the importer, worker shards and tooling |
-| `:discard` | The child redirects the inherited socket to `/dev/null`, so libpq's Terminate message can't end the parent's session. | PostgreSQL |
-| `:close_reopen` | The connection is closed before the fork and reopened afterwards. Forking raises if it has an open transaction, an attached database or temporary tables. | The converter's run database (`reopenable: true`) |
+| `:forbid_fork` (default) | Forking raises while the connection is open. | SQLite in the importer, worker shards and tooling |
+| `:detach` | The child redirects the inherited socket to `/dev/null`, so libpq's Terminate message can't end the parent's session. | PostgreSQL |
+| `:reopen` | The connection is closed before the fork and reopened afterwards. Forking raises if it has an open transaction, an attached database or temporary tables. | The converter's run database (`reopenable: true`) |
 
 Opening a connection cannot overlap with a fork. A native constructor can open its socket
 before Ruby gets the handle, and a child forked in between can't discard it. Keep the
@@ -56,7 +56,7 @@ connection until all rows are read or the stream is closed. Another query or `cl
 the same connection raises `BusyError` in the meantime. A stream can only be consumed
 once. When you consume it with `next` and stop early, call `close`.
 
-A new driver implements `open`, `configure` and `close`, plus `discard` or
+A new driver implements `open`, `configure` and `close`, plus `detach` or
 `validate_fork!` depending on its fork policy, and must pass the shared
 `a managed database driver` examples. Fork specs have to reap the child and check its exit
 status, because a failing expectation in a child doesn't fail the parent's run.

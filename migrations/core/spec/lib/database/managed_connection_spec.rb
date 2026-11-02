@@ -28,7 +28,10 @@ RSpec.describe Migrations::Database::ManagedConnection do
   it "prohibits forks when the driver has no policy" do
     driver.singleton_class.undef_method(:fork_policy)
     @connection = described_class.open(driver)
-    expect { manager.fork {} }.to raise_error(lifecycle::UnsafeForkError, /no approved fork policy/)
+    expect do manager.fork {} end.to raise_error(
+      lifecycle::UnsafeForkError,
+      /does not allow forks while open/,
+    )
     expect(@connection.with(&:closed?)).to be(false)
   end
 
@@ -160,7 +163,7 @@ RSpec.describe Migrations::Database::ManagedConnection do
 
   [false, true].each do |batched|
     it "restores connections after a failed #{batched ? "batched" : "ordinary"} fork" do
-      driver.fork_policy = :close_reopen
+      driver.fork_policy = :reopen
       @connection = described_class.open(driver)
       allow(Process).to receive(:fork).and_raise(Errno::EAGAIN)
       expect do
@@ -176,9 +179,9 @@ RSpec.describe Migrations::Database::ManagedConnection do
   end
 
   it "restores earlier resources when preparation of another resource fails" do
-    driver.fork_policy = :close_reopen
+    driver.fork_policy = :reopen
     @connection = described_class.open(driver)
-    other_driver = MigrationsLifecycleTestDriver.new(:close_reopen)
+    other_driver = MigrationsLifecycleTestDriver.new(:reopen)
     other = described_class.open(other_driver)
     other_driver.close_error = RuntimeError.new("preparation failed")
     expect { manager.fork {} }.to raise_error("preparation failed")
@@ -190,9 +193,9 @@ RSpec.describe Migrations::Database::ManagedConnection do
   end
 
   it "restores every resource even if another resource cannot reopen" do
-    driver.fork_policy = :close_reopen
+    driver.fork_policy = :reopen
     @connection = described_class.open(driver)
-    other_driver = MigrationsLifecycleTestDriver.new(:close_reopen)
+    other_driver = MigrationsLifecycleTestDriver.new(:reopen)
     other = described_class.open(other_driver)
     expect do
       manager.with_batched_forks { other_driver.open_error = RuntimeError.new("reopen failed") }

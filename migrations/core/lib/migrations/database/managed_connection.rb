@@ -34,8 +34,8 @@ module Migrations
 
       def initialize(driver)
         @driver = driver
-        @policy = driver.respond_to?(:fork_policy) ? driver.fork_policy : :forbid
-        unless %i[forbid detach close_reopen].include?(@policy)
+        @policy = driver.respond_to?(:fork_policy) ? driver.fork_policy : :forbid_fork
+        unless %i[forbid_fork detach reopen].include?(@policy)
           raise ArgumentError, "Unknown fork policy: #{@policy.inspect}"
         end
 
@@ -58,10 +58,10 @@ module Migrations
       # @return the block's result
       # @raise [BusyError] if another thread, fiber or stream is using the connection
       # @raise [UnavailableError] if the connection is not open
-      # @raise [Lifecycle::UnsafeForkError] with `:close_reopen`, when called inside
+      # @raise [Lifecycle::UnsafeForkError] with `:reopen`, when called inside
       #   a fork batch on the forking thread
       def with(&block)
-        if close_reopen?
+        if reopen_after_fork?
           Lifecycle.synchronize { with_connection(&block) }
         else
           with_connection(&block)
@@ -92,17 +92,17 @@ module Migrations
           raise Lifecycle::UnsafeForkError, "Cannot fork inside an active database operation"
         end
 
-        if @policy == :forbid
+        if @policy == :forbid_fork
           raise Lifecycle::UnsafeForkError,
-                "#{@driver.class} has no approved fork policy; close it before forking"
+                "#{@driver.class} does not allow forks while open; close it before forking"
         end
 
-        @driver.validate_fork!(@connection) if close_reopen?
+        @driver.validate_fork!(@connection) if reopen_after_fork?
       end
 
       # @return [void]
       def prepare_fork!
-        return unless close_reopen?
+        return unless reopen_after_fork?
 
         begin
           @driver.close(@connection)
@@ -165,12 +165,12 @@ module Migrations
 
       private
 
-      def close_reopen?
-        @policy == :close_reopen
+      def reopen_after_fork?
+        @policy == :reopen
       end
 
       def current_owner
-        close_reopen? ? Thread.current : Fiber.current
+        reopen_after_fork? ? Thread.current : Fiber.current
       end
 
       def open!

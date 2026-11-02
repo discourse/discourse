@@ -22,7 +22,7 @@ module Migrations
         end
 
         def fork_policy
-          @reopenable ? :close_reopen : :forbid
+          @reopenable ? :reopen : :forbid_fork
         end
 
         def open

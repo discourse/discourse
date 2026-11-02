@@ -9,7 +9,7 @@ class MigrationsLifecycleTestDriver
                 :detach_error
   attr_reader :handles
 
-  def initialize(policy = :forbid)
+  def initialize(policy = :forbid_fork)
     @fork_policy = policy
     @handles = []
   end
