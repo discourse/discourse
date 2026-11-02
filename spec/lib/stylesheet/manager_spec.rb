@@ -688,12 +688,11 @@ RSpec.describe Stylesheet::Manager do
       expect(href).to include("color_definitions_light-default")
     end
 
-    it "does not crash when no default theme is set" do
+    it "keeps cached base scheme filenames in the current locale without a default theme" do
       SiteSetting.default_theme_id = -1
       Stylesheet::Manager.clear_color_scheme_cache!
 
       I18n.with_locale(:ja) { manager.color_scheme_stylesheet_link_tag_href }
-      Scheduler::Defer.do_all_work
 
       href = manager.color_scheme_stylesheet_link_tag_href
 
@@ -792,9 +791,11 @@ RSpec.describe Stylesheet::Manager do
     end
 
     it "includes updated font definitions" do
+      initial_font, updated_font = DiscourseFonts.fonts.values_at(0, 2).map { |font| font[:key] }
+      SiteSetting.base_font = initial_font
       details1 = manager.color_scheme_stylesheet_details(nil, fallback_to_base: true)
 
-      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+      SiteSetting.base_font = updated_font
 
       details2 = manager.color_scheme_stylesheet_details(nil, fallback_to_base: true)
       expect(details1[:new_href]).not_to eq(details2[:new_href])
