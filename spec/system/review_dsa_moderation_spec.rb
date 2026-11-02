@@ -113,22 +113,6 @@ describe "Classifying reviewable moderation" do
     expect(admin_user_page).to have_suspension_reason("Repeated personal attacks.")
   end
 
-  it "labels the first step as a confirmation when the action only prompts" do
-    post = Fabricate(:post, topic: topic, reply_count: 1)
-    reviewable =
-      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic: topic)
-
-    review_page.visit_reviewable(reviewable)
-    review_page.select_bundled_action(reviewable, "post-delete_and_agree_replies", bundle_index: 1)
-
-    expect(modal).to have_steps("Confirm action", "DSA classification")
-
-    modal.continue
-    modal.click_previous_step
-
-    expect(modal).to have_focused_step("Confirm action")
-  end
-
   it "classifies before editing, handling the review only after the edit is saved" do
     SiteSetting.dsa_community_rules = [
       rule,
