@@ -6,7 +6,7 @@ inherit_mode:
     - Exclude
 
 AllCops:
-  TargetRubyVersion: "3.4"
+  TargetRubyVersion: "4.0"
 
 Layout/EmptyLineBetweenDefs:
   Enabled: true
