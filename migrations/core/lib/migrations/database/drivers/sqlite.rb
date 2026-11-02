@@ -42,10 +42,15 @@ module Migrations
         end
 
         def validate_fork!(connection)
-          if connection.transaction_active? ||
-               connection.query_single_splat(
-                 "SELECT COUNT(*) FROM pragma_database_list WHERE name NOT IN ('main', 'temp')",
-               ) > 0 || connection.query_single_splat("SELECT COUNT(*) FROM sqlite_temp_master") > 0
+          if connection.transaction_active? || connection.query_single_splat(<<~SQL) > 0 ||
+                 SELECT COUNT(*)
+                 FROM pragma_database_list
+                 WHERE name NOT IN ('main', 'temp')
+               SQL
+               connection.query_single_splat(<<~SQL) > 0
+                 SELECT COUNT(*)
+                 FROM sqlite_temp_master
+               SQL
             raise Lifecycle::UnsafeForkError,
                   "SQLite has an active transaction, attached database, or temporary schema; cannot reopen it safely"
           end
