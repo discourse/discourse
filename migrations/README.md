@@ -29,222 +29,56 @@ Public converters live in `converters/lib/migrations/converters/`. To run a priv
 (closed-source) converter, put its code in a subdirectory of `private/converters/`
 (or point `MIGRATIONS_PRIVATE_CONVERTERS_PATH` at it).
 
-### Database ownership and fork safety
+### Database connections and fork safety
 
-All database handles in migrations tooling must be opened through
-`Database::ManagedConnection.open(driver)`. The converter and importer share
-`Database::Drivers::Postgres`; SQLite uses `Database::Drivers::Sqlite` through
-`Database::Connection`. `Connection.open_database` also returns a managed wrapper,
-not a native SQLite handle. Close connections explicitly or use a block-scoped factory.
+Open every database handle through `Database::ManagedConnection.open(driver)`. The
+converter's source adapter and the importer use `Database::Drivers::Postgres`; SQLite goes
+through `Database::Connection`, which wraps `Database::Drivers::Sqlite`. A spec makes sure
+native connection constructors only appear in the drivers and raw forks only in
+`ForkManager`.
 
-A driver implements `open`, `configure(handle)`, and `close(handle)`. Its constructor
-must clean up native allocations if it raises before returning a handle. The manager
-owns registration, configuration failure cleanup, operation leases, and removal after
-successful close. A failed close retains the registration so a live handle cannot become
-invisible to the fork coordinator. Ordinary adapter operations use
-`with { |handle| ... }`. PostgreSQL streams reserve the connection with `checkout` and
-release it with `checkin` when drained; never expose that handle to callers.
+Workers are forked through `ForkManager`. Before forking, `Database::Lifecycle` waits for
+connections that are being opened or closed and then handles each open connection
+according to its driver's fork policy:
 
-Registration alone is insufficient: a native constructor can open a socket before
-returning the handle to Ruby. A child forked in that interval cannot find the handle to
-discard it, and later native cleanup can terminate the parent's session. The barrier
-must cover native construction **and assignment**, configuration, and close through
-unregistration. Keep the deterministic constructor-overlap test when changing this code.
-
-Drivers without an explicit policy prohibit forks while their connections are open.
-There is no fallback worker backend. To support forks, implement and test one of:
-
-| Policy | Driver contract | Current use |
+| Policy | On fork | Used by |
 | --- | --- | --- |
-| `:forbid` (default) | Close the connection before starting workers. | General SQLite connections, including importer databases and schema tooling. |
-| `:discard` | `discard(handle)` must neutralize inherited native cleanup without affecting the parent. | PostgreSQL; redirect its socket before libpq can send Terminate. |
-| `:close_reopen` | `validate_fork!(handle)` must reject state that cannot be restored by `open` and `configure`. | Only explicitly reopenable SQLite connections, such as the converter's run database. |
+| `:forbid` (default) | Forking raises while the connection is open. | SQLite in the importer, worker shards and tooling |
+| `:discard` | The child redirects the inherited socket to `/dev/null`, so libpq's Terminate message can't end the parent's session. | PostgreSQL |
+| `:close_reopen` | The connection is closed before the fork and reopened afterwards. Forking raises if it has an open transaction, an attached database or temporary tables. | The converter's run database (`reopenable: true`) |
 
-SQLite connections require `reopenable: true` to opt in. Active transactions, attached
-schemas, and temporary schema objects prevent a fork. The caller must finish its work
-explicitly; forking does not commit transactions. This mode is for run connections whose
-session configuration is defined by the driver, not arbitrary user-managed SQLite
-sessions. Worker shards are opened in their worker and do not opt in. Do not use or call
-SQLite's close API on an inherited live connection; see
-[SQLite's fork guidance](https://www.sqlite.org/howtocorrupt.html#_carrying_an_open_database_connection_across_a_fork_).
+Opening a connection is serialized with forks because a native constructor can open its
+socket before Ruby gets the handle, and a child forked in between can't discard it. Keep
+the constructor-overlap spec when changing this code.
 
-`ForkManager` remains the sole worker-fork entry point. `Database::Lifecycle` owns the
-registry and barrier. Construction and destruction hold shared leases; operations on
-reopenable SQLite connections also hold them. The entire prepare/fork-batch/restore
-interval holds exclusive access. Concurrent PostgreSQL queries can continue while workers
-fork. PostgreSQL reserves its protocol once per stream, preventing another query or close
-until consumption finishes. Opening a connection inside a fork batch raises an error.
+PostgreSQL queries keep running while workers fork. `Database::PostgresStream` reserves
+the connection until the stream is drained or closed; another query or `close` on the same
+connection raises `BusyError` in the meantime. When you consume a stream with `next` and
+stop early, call `close`.
 
-Worker shards and importer SQLite connections prohibit forks for their entire lifetime.
-They therefore need no global operation barrier. Cached inserts execute directly, with
-ownership checks at transaction boundaries and statement preparation; close clears the
-cache. These connections belong to one worker or importer thread, and must not be shared
-for concurrent inserts and close. The converter's reopenable run database retains an
-operation lease around inserts, reads, and merges. Keep that distinction explicit when
-adding a new execution path: do not add locks to every row to protect against a fork that
-the connection's lifetime policy already prohibits.
+A new driver implements `open`, `configure` and `close`, plus `discard` or
+`validate_fork!` depending on its fork policy, and must pass the shared
+`a managed database driver` examples. Fork specs have to reap the child and check its exit
+status, because a failing expectation in a child doesn't fail the parent's run.
 
-Ordinary forks and batches use the same protocol. All policies are validated before
-connections are closed. If preparation or forking fails, every successfully suspended
-connection is restored. Restoration attempts continue even if one fails; failed resources
-remain unavailable. Partially started batches terminate and reap their unreaped workers.
-If child-side discard or another child initialization hook fails, the child exits immediately
-without running worker code or inherited exit handlers. PID checks also reject accidental
-use of inherited connections and streams.
-
-`Database::PostgresStream` is single-pass. On a fresh stream, `each` uses native block
-iteration without a Fiber switch or ownership check per row. Hash and multi-column array
-streams forward the consumer's block directly; single-column array streams unwrap each
-row to its scalar value. Calling `next` creates a Fiber, which subsequent `each` calls
-continue to use. `each` releases its lease and drains pending results on exhaustion,
-early block exit, or an exception. When manually using `next`,
-call `close` if stopping early. Closing a connection with an active operation raises
-`BusyError`; an abandoned stream must not silently release protection while its query is
-still in progress. The source adapter and importer both use this stream implementation.
-
-#### Testing and enforcing adapter contracts
-
-For every new driver, test construction/configuration failure cleanup and its declared
-fork policy. Drivers opting into `:discard` or `:close_reopen` must also pass the shared
-`a managed database driver` examples and test their native discard or restoration
-strategy. A `:forbid` driver must reject forks while open. The lifecycle tests force construction,
-close, and fork interleavings with queues, and exercise failure recovery for ordinary
-forks and batches. Every fork test must reap its child and check its status or transport
-its failure to the parent; assertions raised only in a child do not fail the parent runner.
-
-The core boundary spec parses production Ruby files to restrict known native connection
-constructors to their driver files and raw forks to `ForkManager`. Extend its constructor
-list when adding a database library. This catches accidental bypasses; arbitrary native
-libraries cannot be made fork-safe by inspecting their Ruby wrappers alone. Database
-drivers must not implement their own independent fork hooks.
-
-Real PostgreSQL lifecycle tests run without Rails against a disposable session in an
-existing database (only temporary objects may be created):
+The PostgreSQL specs only create temporary objects. CI runs them against the `postgres`
+database; locally:
 
 ```bash
 cd migrations/core
 PGHOST=/var/run/postgresql MIGRATIONS_POSTGRES_DB=discourse_development ../bin/rspec --tag postgres
 ```
 
-The migration CI job enables these tests against the `postgres` database, alongside the
-real SQLite tests. Verify that removing protection makes regression tests fail. Repeated
-full conversions supplement these deterministic tests; they cannot prove all possible
-interleavings safe.
-
-#### Benchmarking database changes
-
-Use [the database pipeline benchmark](tooling/benchmarks/database_pipeline.rb) for changes
-to drivers, connection wrappers, streaming, or fork coordination. Run the **same script**
-against both revisions using their respective `BUNDLE_GEMFILE`, with the same Ruby,
-PostgreSQL, and storage. Alternate revision order, warm each process before measuring,
-and compare repeated samples of elapsed time and CPU time. CPU includes reaped workers;
-allocation counts cover only the parent. Do not run tests or other benchmarks concurrently.
+When changing drivers, streams or fork handling, compare both revisions with
+`tooling/benchmarks/database_pipeline.rb` (modes: `sqlite`, `stream_hash`, `stream_wide`,
+`stream_array`, `convert`, `convert_inline`, `import`) and, for the importer's COPY path,
+`tooling/benchmarks/copy_rows.rb`. Run the same script against each revision's
+`BUNDLE_GEMFILE`:
 
 ```bash
 BUNDLE_WITH=migrations PGHOST=/var/run/postgresql PGDATABASE=discourse_development \
   ROWS=250000 ROUNDS=7 bundle exec ruby migrations/tooling/benchmarks/database_pipeline.rb convert
 ```
-
-Modes are `sqlite`, `stream_hash`, `stream_wide`, `stream_array`, `convert`,
-`convert_inline`, and `import`. `convert` runs four concurrent steps, each with `ROWS`
-source records, through the actual scheduler, PostgreSQL adapter, processors, worker
-shards, and consolidator. `convert_inline` runs the same steps without forks. `import`
-reads SQLite rows, copies them through the importer's PostgreSQL adapter in 1,000-row
-batches, and writes ID mappings to SQLite between batches. These synthetic pipelines
-check counts and sums, use temporary SQLite files and PostgreSQL temporary tables, and
-leave existing source data unchanged. They isolate database throughput; they do not
-represent markdown processing, uploads, or a complete production-site import.
-
-The initial managed implementation added 8–17% to PostgreSQL stream time and 37% to
-cached SQLite insert time. Mandatory per-row Fiber switching and operation locking were
-removed from these paths. Fork barriers remain around resource lifetime transitions;
-reopenable SQLite operations remain protected. The following snapshot compares
-`81e3b173ad6` against `b33564c4b9e` (the narrow, proven fork fix). It predates the
-`CopyStep` iterator change; that change has a separate comparison below.
-
-Local measurements on Ruby 4.0.9 and pg 1.7.0 over a Unix socket used six alternating
-pairs of measured processes per streaming/converter case and ten pairs for SQLite/COPY.
-Each process warmed up once before its measured run. Times include workload setup and
-verification but exclude Ruby startup.
-
-| Workload | Previous median | Revised median | Change |
-| --- | --- | --- | --- |
-| 1M cached SQLite inserts, 3 columns, 1,000-row transactions, journal off | 567 ms | 567 ms | +0.1% |
-| 1M single-integer PostgreSQL hash rows | 400 ms | 340 ms | −15.0% |
-| 500k PostgreSQL hash rows with ID, username, 500-byte body, category, timestamp | 602 ms | 563 ms | −6.4% |
-| 1M PostgreSQL array rows, ID and username | 377 ms | 333 ms | −11.7% |
-| Four concurrent conversion steps, 1M rows total, including shard merges | 699 ms | 680 ms | −2.6% |
-| Same conversion without forks | 1.557 s | 1.481 s | −4.9% |
-| 1M SQLite rows → PostgreSQL COPY, including SQLite mapping writes | 2.460 s | 2.465 s | +0.2% |
-
-SQLite and COPY elapsed times were indistinguishable within run-to-run variation; paired
-95% intervals included both improvement and regression. SQLite median CPU was unchanged;
-COPY CPU was 1.890 s versus 1.907 s (+0.9%). The measurements did not resolve a small
-difference in SQLite/COPY throughput; overlapping intervals do not prove equivalent
-performance. Re-run the benchmarks when changing these paths, and supplement them with
-a representative real migration when source data is available.
-
-#### Enumerator hot paths and linting
-
-When a block-based iterator already yields the required values, pass the consumer's
-block through (`stream_each(&block)`) instead of forwarding every row through
-`Enumerator.new { |output| ... output << row }`. If row transformation is required,
-a method that uses Ruby's `yield` and returns `enum_for(__method__)` when no block is
-given can preserve laziness while avoiding `Enumerator::Yielder` dispatch. Preserve
-batching, skip markers, progress timing, early-exit cleanup, and return semantics.
-Benchmark the actual consumer: a faster isolated iterator may have little effect on COPY.
-
-The remaining converter chunk Enumerator yields once per claimed chunk. Planning requests
-eight chunks per allocated fork for the shared queue; individual workers may claim more
-or fewer. This is not a per-row hot path. The site-settings source's lazy map
-normalizes embedded upload hashes on a small result set. Both remain unchanged. SQLite
-query methods already forward their blocks to the native driver. The generic database
-pipeline benchmark retains its original forwarding wrapper for reproducible comparisons.
-
-For an actual `Enumerator::Yielder`, prefer `output << row` to `output.yield(row)` when
-yielding one positional value and ignoring the consumer's return value. These are not
-interchangeable aliases: `<<` returns the Yielder, whereas the `yield` method returns the
-consumer's result and accepts multiple/keyword arguments. Ruby's separate
-[implementations](https://github.com/ruby/ruby/blob/master/enumerator.c) explain the
-extra argument handling; the Ruby `yield` keyword is a different mechanism entirely.
-
-`Migrations/SingleValueYielder` in `migrations/.rubocop.yml` warns about single-value
-calls on a named `Enumerator.new` block parameter. It skips recognised explicit uses of
-the return value, multiple arguments, keywords, splats, and shadowed/reassigned parameters. It does **not**
-autocorrect: implicit generator results can still matter through `StopIteration#result`,
-and static analysis cannot prove every receiver or callback contract. Use a local disable
-with an explanation when those semantics are intentional. Ordinary `bin/lint` runs the
-rule for migrations files.
-
-The [Yielder benchmark](tooling/benchmarks/yielder.rb) compares literal `<<` and `.yield`
-calls with alternating order and reports allocations as well as elapsed time. On Ruby
-4.0.9, ten measured pairs after warmup for two million values gave 88 ms for `<<` versus
-139 ms for `.yield` (1.57× as long); `.yield` allocated about one extra object per value.
-This ratio is runtime- and workload-dependent.
-
-The [COPY row benchmark](tooling/benchmarks/copy_rows.rb) exercises the actual `CopyStep`:
-
-```bash
-BUNDLE_WITH=migrations ROWS=1000000 ROUNDS=7 bundle exec ruby migrations/tooling/benchmarks/copy_rows.rb rows
-BUNDLE_WITH=migrations PGHOST=/var/run/postgresql PGDATABASE=discourse_development \
-  ROWS=1000000 ROUNDS=7 bundle exec ruby migrations/tooling/benchmarks/copy_rows.rb copy
-```
-
-The `rows` mode isolates SQLite reading, transformation, and 1,000-row slicing, with
-progress reporting disabled. The `copy` mode also runs normal progress accounting, real
-PostgreSQL COPY, and SQLite mapping writes. Setup/truncation and verification are outside
-the timer. The standalone harness supplies the host's system-user constant without
-booting Rails; database operations use real drivers and temporary data. Run the same
-script against each revision's `BUNDLE_GEMFILE` and alternate revision order.
-
-Comparing `4a9b287a2da` against `81e3b173ad6`, ten alternating pairs of separate processes
-(one warmup and one measured run each, one million rows) measured 322 ms → 285 ms for
-row iteration and 310 ms → 283 ms of CPU time. The full COPY pipeline measured 2.001 s → 1.986 s elapsed
-and 1.111 s → 1.131 s CPU; paired timing intervals included both improvement and
-regression, so there is **no reliable full-COPY speedup claim**. Same-process exploratory
-runs had suggested a small COPY improvement, but it did not reproduce consistently.
-The retained change removes row-forwarding overhead while preserving the existing
-streaming contract; the benefit depends on how much time the consumer spends elsewhere.
 
 ### Partitioning large steps
 
