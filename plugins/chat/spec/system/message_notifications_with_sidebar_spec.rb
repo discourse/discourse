@@ -240,6 +240,11 @@ RSpec.describe "Message notifications - with sidebar" do
           end
 
           it "reorders channels" do
+            current_user.user_option.update!(chat_channel_list_sort_dms: "recent_activity")
+
+            freeze_time(2.minutes.ago) { create_message(channel: dm_channel_2, creator: user_2) }
+            freeze_time(1.minute.ago) { create_message(channel: dm_channel_1, creator: user_1) }
+
             visit("/chat")
 
             expect(page).to have_css(
