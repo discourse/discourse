@@ -36,6 +36,9 @@ jobs:
       TEST_SELECTION_MODE: ${{ vars.TEST_SELECTION_MODE || 'audit' }}
       TEST_SELECTION_AUDIT_PERCENT: ${{ vars.TEST_SELECTION_AUDIT_PERCENT || '10' }}
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
