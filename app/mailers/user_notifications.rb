@@ -445,7 +445,8 @@ class UserNotifications < ActionMailer::Base
           from_alias: I18n.t("user_notifications.digest.from", site_name: Email.site_title),
           subject: I18n.t(subject_key, email_prefix: @email_prefix, date: short_date(Time.now)),
           add_unsubscribe_link: !opts[:skip_unsubscribe_links],
-          unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
+          unsubscribe_url:
+            @unsubscribe_key && "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
           topic_ids: topics_for_digest.map(&:id),
           post_ids: topics_for_digest.filter_map { |topic| topic.first_post&.id },
         }

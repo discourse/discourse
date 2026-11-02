@@ -99,6 +99,8 @@ export default <template>
               <p>{{i18n "admin.email.no_result"}}</p>
             {{else}}
               <iframe
+                referrerpolicy="no-referrer"
+                sandbox=""
                 srcdoc={{@controller.model.html_content}}
                 title={{i18n "admin.email.html_preview"}}
               ></iframe>

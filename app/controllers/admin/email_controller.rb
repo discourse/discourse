@@ -29,8 +29,15 @@ class Admin::EmailController < Admin::AdminController
     user = User.find_by_username(params[:username])
     raise Discourse::InvalidParameters unless user
 
-    renderer = Email::Renderer.new(UserNotifications.digest(user, since: params[:last_seen_at]))
-    render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
+    message =
+      UserNotifications.digest(user, since: params[:last_seen_at], skip_unsubscribe_links: true)
+    if message.body.to_s.blank? && message.text_part&.body.to_s.blank? &&
+         message.html_part&.body.to_s.blank?
+      render json: { html_content: "", text_content: "" }
+    else
+      renderer = Email::Renderer.new(message)
+      render json: { html_content: renderer.html, text_content: renderer.text }
+    end
   end
 
   def advanced_test
