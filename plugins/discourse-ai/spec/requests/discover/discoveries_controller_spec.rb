@@ -194,9 +194,9 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.status).to eq(409)
       end
 
-      it "counts a deferred search and the answer requested from it as one ask" do
+      it "lets the reader request a deferred answer after using every search" do
         RateLimiter.enable
-        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 2) do
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do
           query = "password status:open"
           post "/discourse-ai/discoveries/reply",
                params: {
@@ -205,20 +205,51 @@ describe DiscourseAi::Discover::DiscoveriesController do
                  defer_if_precise: true,
                }
           deferred_ask_log_id = response.parsed_body["ask_log_id"]
+
           post "/discourse-ai/discoveries/reply",
                params: {
                  query:,
                  request_id: SecureRandom.uuid,
                  deferred_ask_log_id:,
                }
+          expect(response.status).to eq(200)
+
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+          expect(response.status).to eq(429)
+
           post "/discourse-ai/discoveries/reply",
                params: {
                  query: "What is Discourse?",
                  request_id: SecureRandom.uuid,
                }
-
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(429)
         end
+      end
+
+      it "returns a 409 when a deferred answer was already requested" do
+        query = "password status:open"
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id:,
+               defer_if_precise: true,
+             }
+        deferred_ask_log_id = response.parsed_body["ask_log_id"]
+        2.times do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+        end
+
+        expect(response.status).to eq(409)
       end
     end
   end

@@ -57,6 +57,8 @@ module DiscourseAi
 
       only_if(:answer_wanted?) do
         only_if(:new_request?) do
+          only_if(:answer_requested_from_search?) { policy :deferred_answer_available }
+
           # A scoped search is judged before its answer is queued, so the answer
           # can leave a scope the search is not about.
           only_if(:scoped?) do
@@ -120,6 +122,18 @@ module DiscourseAi
         !answer_deferred?(params:, guardian:)
       end
 
+      def answer_requested_from_search?(params:)
+        params.deferred_ask_log_id.present?
+      end
+
+      def deferred_answer_available(params:, guardian:)
+        AskAiLog.awaiting_answer(
+          id: params.deferred_ask_log_id,
+          user: guardian.user,
+          query: params.query,
+        ).exists?
+      end
+
       def scoped?(params:)
         params.scope.present?
       end
@@ -135,7 +149,7 @@ module DiscourseAi
         Discoveries.enqueue_reply(
           user: guardian.user,
           scope: judgement&.about_site? ? nil : params.scope,
-          deferred_log: deferred_log(params:, guardian:),
+          deferred_log_id: params.deferred_ask_log_id,
           **params.answer_attributes,
         )
       end
@@ -147,18 +161,8 @@ module DiscourseAi
       def queue_answer(params:, guardian:)
         Discoveries.enqueue_reply(
           user: guardian.user,
-          deferred_log: deferred_log(params:, guardian:),
+          deferred_log_id: params.deferred_ask_log_id,
           **params.answer_attributes,
-        )
-      end
-
-      def deferred_log(params:, guardian:)
-        return if params.deferred_ask_log_id.blank?
-
-        AskAiLog.ask_outcome_skipped.find_by(
-          id: params.deferred_ask_log_id,
-          user: guardian.user,
-          query: params.query,
         )
       end
 

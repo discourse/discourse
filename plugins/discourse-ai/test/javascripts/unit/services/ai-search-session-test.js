@@ -291,4 +291,69 @@ module("Unit | Service | ai-search-session", function (hooks) {
       "scoped keyword results preserve original matches too"
     );
   });
+
+  test("opens on results when a deferred reply lands after the wait but before the results", async function (assert) {
+    const session = this.owner.lookup("service:ai-search-session");
+    const query = "how do I get a refund for my order?";
+    this.owner.lookup("service:search").activeGlobalSearchTerm = query;
+
+    // the reply outlasts the wait for it, and the results outlast the reply
+    pretender.get("/search/query", () => response(searchResults([1])), 1400);
+    pretender.post("/discourse-ai/discoveries/reply", (request) => {
+      const reply = response({
+        request_id: new URLSearchParams(request.requestBody).get("request_id"),
+        ask_log_id: 7,
+        answer_deferred: true,
+      });
+      return new Promise((resolve) => setTimeout(resolve, 1150, reply));
+    });
+    pretender.put("/discourse-ai/discoveries/tabs", () => response({}));
+
+    session.start(query);
+    await waitUntil(() => session.selectedTab, { timeout: 5000 });
+
+    assert.notStrictEqual(
+      session.selectedTab,
+      "ask",
+      "no answer was queued, so the search does not open on one"
+    );
+  });
+
+  test("asks again for a deferred answer whose request failed", async function (assert) {
+    const session = this.owner.lookup("service:ai-search-session");
+    const discoveries = this.owner.lookup("service:discobot-discoveries");
+    const replies = [];
+    this.owner.lookup("service:search").activeGlobalSearchTerm = "in:messages";
+
+    pretender.get("/search/query", () => response(searchResults([1])));
+    pretender.post("/discourse-ai/discoveries/reply", (request) => {
+      const body = new URLSearchParams(request.requestBody);
+      replies.push(Object.fromEntries(body));
+      if (replies.length === 2) {
+        return response(429, {});
+      }
+      return response({
+        request_id: body.get("request_id"),
+        ask_log_id: 7,
+        ...(replies.length === 1 && { answer_deferred: true }),
+      });
+    });
+    pretender.put("/discourse-ai/discoveries/tabs", () => response({}));
+
+    session.start("in:messages");
+    await settled();
+
+    session.selectTab("ask");
+    await waitUntil(() => discoveries.errorMessage);
+    session.selectTab("topics");
+    session.selectTab("ask");
+    await waitUntil(() => replies.length === 3);
+    discoveries.cancelDiscoveryTimeout();
+
+    assert.strictEqual(
+      replies[2].deferred_ask_log_id,
+      "7",
+      "the retry still answers on the search's log"
+    );
+  });
 });

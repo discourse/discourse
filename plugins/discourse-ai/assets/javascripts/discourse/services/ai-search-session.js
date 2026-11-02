@@ -359,7 +359,9 @@ export default class AiSearchSession extends Service {
         searchedAgain,
         intent: reply?.intent,
         prefersResults: reply?.prefers_results,
-        answerDeferred: reply?.answer_deferred,
+        // the reply can land after the wait for it, but before the results
+        answerDeferred:
+          reply?.answer_deferred || this.#deferredAskLogId !== null,
       });
       this.selectedTab = tab;
       log.since = Date.now();
@@ -398,14 +400,19 @@ export default class AiSearchSession extends Service {
     }
   }
 
-  #requestDeferredAnswer() {
+  async #requestDeferredAnswer() {
+    const log = this.#tabLog;
     const deferredAskLogId = this.#deferredAskLogId;
     this.#deferredAskLogId = null;
     this.discoveries.dismissDiscovery();
-    this.discoveries.triggerDiscovery(this.query, {
+    const reply = await this.discoveries.triggerDiscovery(this.query, {
       scope: this.scope?.key,
       deferredAskLogId,
     });
+    // a failed request leaves the answer to be requested again from the tab
+    if (!reply && this.#tabLog === log) {
+      this.#deferredAskLogId = deferredAskLogId;
+    }
   }
 
   #noteAnswerSeen() {

@@ -6,6 +6,10 @@ class AskAiLog < ActiveRecord::Base
   # searches whose answer was left for the reader to request are not asks yet
   scope :asked, -> { where("ask_outcome IS DISTINCT FROM ?", ask_outcomes[:skipped]) }
 
+  # A search whose answer the reader can still request, once.
+  scope :awaiting_answer,
+        ->(id:, user:, query:) { ask_outcome_skipped.where(id:, user:, query: query.to_s.strip) }
+
   def self.for_reports
     group_ids = SiteSetting.ai_ask_ai_report_exclude_groups_map
     return asked if group_ids.empty?

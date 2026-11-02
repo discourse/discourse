@@ -8,15 +8,15 @@ module DiscourseAi
       requires_plugin PLUGIN_NAME
       requires_login
       before_action :check_permissions!
-      before_action :rate_limit_ask, only: :reply, if: -> { params[:request_id].present? }
+      before_action :rate_limit_ask,
+                    only: :reply,
+                    if: -> { params[:request_id].present? && !requests_deferred_answer? }
 
       def reply
         return legacy_reply if params[:request_id].blank?
 
         DiscourseAi::AskAi::Ask.call(service_params) do |result|
-          on_success do |ask_log: nil|
-            # the search that deferred this answer was already counted
-            @ask_rate_limiter.rollback! if ask_log&.answer_requested_at
+          on_success do
             render json: DiscourseAi::AskAi::AskSerializer.new(result, root: false).as_json
           end
           on_failed_contract do |contract|
@@ -32,6 +32,12 @@ module DiscourseAi
             end
           end
           on_failed_policy(:can_ask_ai) { raise Discourse::InvalidAccess }
+          on_failed_policy(:deferred_answer_available) do
+            render_json_error(
+              I18n.t("discourse_ai.ai_bot.discoveries.errors.deferred_answer_unavailable"),
+              status: :conflict,
+            )
+          end
           on_failed_policy(:request_id_matches_query) do
             render_json_error(
               I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
@@ -195,15 +201,23 @@ module DiscourseAi
         %w[recent clear_recent record_tabs].include?(action_name) || params[:request_id].present?
       end
 
+      # the search that deferred this answer was already counted
+      def requests_deferred_answer?
+        params[:deferred_ask_log_id].present? &&
+          AskAiLog.awaiting_answer(
+            id: params[:deferred_ask_log_id],
+            user: current_user,
+            query: params[:query],
+          ).exists?
+      end
+
       def rate_limit_ask
-        @ask_rate_limiter =
-          RateLimiter.new(
-            current_user,
-            "ai_discover_#{current_user.id}",
-            DiscourseAi::Discoveries::ASK_RATE_LIMIT,
-            1.minute,
-          )
-        @ask_rate_limiter.performed!
+        RateLimiter.new(
+          current_user,
+          "ai_discover_#{current_user.id}",
+          DiscourseAi::Discoveries::ASK_RATE_LIMIT,
+          1.minute,
+        ).performed!
       end
 
       def normalized_query

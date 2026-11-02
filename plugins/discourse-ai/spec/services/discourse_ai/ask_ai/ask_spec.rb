@@ -311,25 +311,6 @@ RSpec.describe DiscourseAi::AskAi::Ask do
       end
     end
 
-    context "when a search of only a quoted phrase may defer its answer" do
-      let(:query) { '"slow mode"' }
-      let(:params) { super().merge(defer_if_precise: true) }
-
-      it "logs the search as skipped" do
-        expect_not_enqueued_with(job: :stream_discover_reply) { result }
-        expect(ask_log).to have_attributes(ask_outcome: "skipped")
-      end
-    end
-
-    context "when a question quoting a phrase may defer its answer" do
-      let(:query) { 'what does "slow mode" do' }
-      let(:params) { super().merge(defer_if_precise: true) }
-
-      it "queues the answer" do
-        expect_enqueued_with(job: :stream_discover_reply, args: { request_id: }) { result }
-      end
-    end
-
     context "when a search within the reader's messages may defer its answer" do
       let(:scope) { "messages" }
       let(:params) { super().merge(defer_if_precise: true) }
@@ -390,8 +371,10 @@ RSpec.describe DiscourseAi::AskAi::Ask do
       context "when the log belongs to someone else" do
         before { deferred_log.update!(user: Fabricate(:user)) }
 
-        it "logs a new ask and leaves theirs alone" do
-          expect { result }.to change { AskAiLog.count }.by(1)
+        it { is_expected.to fail_a_policy(:deferred_answer_available) }
+
+        it "leaves their search alone" do
+          result
           expect(deferred_log.reload).to have_attributes(ask_outcome: "skipped")
         end
       end
@@ -399,9 +382,16 @@ RSpec.describe DiscourseAi::AskAi::Ask do
       context "when the log is for a different search" do
         let(:query) { "how do I reset my password" }
 
-        it "logs a new ask and leaves the earlier search alone" do
-          expect { result }.to change { AskAiLog.count }.by(1)
-          expect(deferred_log.reload).to have_attributes(ask_outcome: "skipped")
+        it { is_expected.to fail_a_policy(:deferred_answer_available) }
+      end
+
+      context "when the answer was already requested" do
+        before { deferred_log.update!(ask_outcome: nil, answer_requested_at: Time.current) }
+
+        it { is_expected.to fail_a_policy(:deferred_answer_available) }
+
+        it "does not queue another answer" do
+          expect_not_enqueued_with(job: :stream_discover_reply) { result }
         end
       end
     end

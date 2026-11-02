@@ -181,29 +181,14 @@ module DiscourseAi
 
       # Logs a search whose answer waits for the reader to request it.
       # @return [AskAiLog]
-      def log_deferred_ask(
-        user:,
-        query:,
-        scope: nil,
-        trigger: "",
-        trigger_reason: "",
-        intent_heuristic: ""
-      )
-        AskAiLog.create!(
-          user:,
-          query:,
-          asked_at: Time.current,
-          ask_outcome: :skipped,
-          ask_scope: scope.to_s,
-          ask_trigger: trigger,
-          ask_trigger_reason: trigger_reason,
-          ask_intent_heuristic: intent_heuristic,
-        )
+      def log_deferred_ask(user:, query:, scope: nil, **search)
+        create_ask_log(user:, query:, ask_outcome: :skipped, ask_scope: scope.to_s, **search)
       end
 
       # Queues the answer to a request already bound with `bind_request`.
-      # @param deferred_log [AskAiLog, nil] the search this answer was requested from
-      # @return [AskAiLog] the ask's log
+      # @param deferred_log_id [Integer, nil] the search this answer was requested from
+      # @return [AskAiLog, nil] the ask's log, or nil once that search's answer
+      #   was already requested
       def enqueue_reply(
         user:,
         request_id:,
@@ -212,22 +197,22 @@ module DiscourseAi
         trigger: "",
         trigger_reason: "",
         intent_heuristic: "",
-        deferred_log: nil
+        deferred_log_id: nil
       )
         asked_at = Time.current
-        ask_log = deferred_log
-        if ask_log
-          ask_log.update!(ask_outcome: nil, answer_requested_at: asked_at)
+        if deferred_log_id
+          # claimed in one statement, so parallel requests cannot each answer it
+          claimed =
+            AskAiLog.awaiting_answer(id: deferred_log_id, user:, query:).update_all(
+              ask_outcome: nil,
+              answer_requested_at: asked_at,
+              updated_at: asked_at,
+            )
+          return if claimed.zero?
+          ask_log = AskAiLog.find(deferred_log_id)
         else
           ask_log =
-            AskAiLog.create!(
-              user:,
-              query:,
-              asked_at:,
-              ask_trigger: trigger,
-              ask_trigger_reason: trigger_reason,
-              ask_intent_heuristic: intent_heuristic,
-            )
+            create_ask_log(user:, query:, asked_at:, trigger:, trigger_reason:, intent_heuristic:)
         end
         settings = result_settings(user)
         Jobs.enqueue(
@@ -394,6 +379,26 @@ module DiscourseAi
       end
 
       private
+
+      def create_ask_log(
+        user:,
+        query:,
+        asked_at: Time.current,
+        trigger: "",
+        trigger_reason: "",
+        intent_heuristic: "",
+        **attributes
+      )
+        AskAiLog.create!(
+          user:,
+          query:,
+          asked_at:,
+          ask_trigger: trigger,
+          ask_trigger_reason: trigger_reason,
+          ask_intent_heuristic: intent_heuristic,
+          **attributes,
+        )
+      end
 
       def reported_ms(milliseconds)
         milliseconds.to_i.clamp(0, 1.hour.in_milliseconds)
