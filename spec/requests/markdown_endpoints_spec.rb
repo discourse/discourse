@@ -570,15 +570,18 @@ RSpec.describe "Markdown endpoints" do
   end
 
   it "wraps each post's metadata separately from its body with Markdown block boundaries" do
-    reply = Fabricate(:post, topic: topic, user: user, raw: "Another visible body")
+    topic = Fabricate(:topic, user: user, category: category)
+    post = Fabricate(:post, topic: topic, user: user, raw: "Visible body")
+    reply =
+      Fabricate(:post, topic: topic, user: user, raw: "Another visible body", post_number: topic.id)
 
     [
-      "/t/#{topic.slug}/#{topic.id}.md",
-      "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md",
-    ].each do |path|
+      ["/t/#{topic.slug}/#{topic.id}.md", [post, reply]],
+      ["/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md", [reply]],
+    ].each do |path, posts|
       get path
 
-      posts = path.end_with?("/#{reply.post_number}.md") ? [reply] : [post, reply]
+      expect(response).to have_http_status(:ok)
       metadata = response.body.scan(%r{<div class="post-metadata">\n\n(.*?)\n\n</div>}m).flatten
       expect(metadata.size).to eq(posts.size)
       posts
