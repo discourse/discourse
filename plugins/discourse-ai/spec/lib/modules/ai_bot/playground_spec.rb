@@ -1237,6 +1237,51 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         )
       end
 
+      it "shortens approval details that do not fit in a chat message" do
+        target = Fabricate(:user)
+        agent.update!(tools: ["SuspendUser"], require_approval: true)
+        DiscourseAi::Agents::Agent
+          .any_instance
+          .stubs(:stop_chain_on_pending_approval?)
+          .returns(true)
+        DiscourseAi::Agents::Tools::SuspendUser
+          .any_instance
+          .stubs(:approval_details)
+          .returns("Suspension details. " * 50)
+        SiteSetting.chat_maximum_message_length = 200
+
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "suspend_user",
+            id: "suspend",
+            parameters: {
+              username: target.username,
+              duration_days: 3,
+              reason: "spam",
+            },
+          )
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([[tool_call]]) do
+          ChatSDK::Message.create(channel_id: dm_channel.id, raw: "Suspend them", guardian:)
+        end
+
+        approval_message = Chat::Message.where(chat_channel: dm_channel).where.not(blocks: nil).sole
+        reviewable = ReviewableAiToolAction.last
+
+        expect(approval_message.message.length).to be <= 200
+        expect(approval_message.message).to start_with(
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened"),
+        )
+        expect(
+          approval_message.blocks.first["elements"].map { |element| element["action_id"] },
+        ).to eq(
+          %W[
+            ai_tool_approval::approve::#{reviewable.id}
+            ai_tool_approval::reject::#{reviewable.id}
+          ],
+        )
+      end
+
       it "can reply to a chat message" do
         message =
           DiscourseAi::Completions::Llm.with_prepared_responses(["World"]) do

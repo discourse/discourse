@@ -668,6 +668,7 @@ en:
         rejected: "Rejected by @%{username}."
         failed: "Could not complete the action: %{error}"
         unexpected_error: "an unexpected error occurred"
+        details_shortened: "These details were shortened to fit in chat."
       agents:
         forced_default_llm_required: "Select a default language model before requiring this agent to always use it."
         bot_user_unsupported: "This agent is used internally by a feature and cannot have a bot user"
