@@ -12,9 +12,7 @@ module Migrations
 
         def initialize(settings)
           @connection =
-            Database::ManagedConnection.open(
-              Database::Drivers::Postgres.new(settings, field_names: :symbol, quiet: true),
-            )
+            Database::ManagedConnection.open(Database::Drivers::Postgres.new(settings, quiet: true))
         end
 
         def exec(sql)

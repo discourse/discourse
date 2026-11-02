@@ -8,11 +8,9 @@ module Migrations
       # PostgreSQL connections stay open while workers are forked.
       class Postgres
         # @param settings [Hash] the connection parameters for `PG::Connection.new`
-        # @param field_names [Symbol] `:string` or `:symbol`, the key type of result hashes
         # @param quiet [Boolean] whether to suppress notices from the server
-        def initialize(settings, field_names: :string, quiet: false)
+        def initialize(settings, quiet: false)
           @settings = settings
-          @field_names = field_names
           @quiet = quiet
         end
 
@@ -26,7 +24,7 @@ module Migrations
 
         def configure(connection)
           connection.type_map_for_results = PG::BasicTypeMapForResults.new(connection)
-          connection.field_name_type = @field_names
+          connection.field_name_type = :symbol
           connection.exec("SET client_min_messages TO WARNING") if @quiet
         end
 

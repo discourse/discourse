@@ -148,7 +148,7 @@ module Migrations
         SQL
 
         result = @connection.with { |connection| connection.exec_params(sql, [table_name]).to_a }
-        column_type_map = result.to_h { |row| [row["name"].to_sym, row["pg_type"]] }
+        column_type_map = result.to_h { |row| [row[:name].to_sym, row[:pg_type]] }
 
         encoders =
           column_names.map do |column_name|

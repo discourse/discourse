@@ -10,6 +10,14 @@ RSpec.describe Migrations::Database::Drivers::Postgres, :postgres do
 
   it_behaves_like "a managed database driver"
 
+  it "uses symbol keys for result hashes" do
+    connection = Migrations::Database::ManagedConnection.open(driver)
+
+    expect(connection.with { |native| native.exec("SELECT 42 AS answer").first }).to eq(answer: 42)
+  ensure
+    connection&.close
+  end
+
   it "keeps the original parent session alive when construction overlaps a worker fork" do
     connected, release = Queue.new, Queue.new
     allow(PG::Connection).to receive(:new).and_wrap_original do |original, *args|
