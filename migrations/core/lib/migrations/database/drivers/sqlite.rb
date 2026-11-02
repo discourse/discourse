@@ -27,6 +27,8 @@ module Migrations
 
         def open
           FileUtils.mkdir_p(File.dirname(@path))
+          # Extralite 3.1.0 does not finalize cached statements on close. This can
+          # leave the WAL unflushed.
           Extralite::Database.new(@path, stmt_cache: false)
         end
 
