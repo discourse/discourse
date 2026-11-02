@@ -42,15 +42,8 @@ module Migrations
         end
 
         def validate_fork!(connection)
-          if connection.transaction_active? || connection.query_single_splat(<<~SQL) > 0 ||
-                 SELECT COUNT(*)
-                 FROM pragma_database_list
-                 WHERE name NOT IN ('main', 'temp')
-               SQL
-               connection.query_single_splat(<<~SQL) > 0
-                 SELECT COUNT(*)
-                 FROM sqlite_temp_master
-               SQL
+          if connection.transaction_active? || attached_database?(connection) ||
+               temporary_schema?(connection)
             raise Lifecycle::UnsafeForkError,
                   "SQLite has an active transaction, attached database, or temporary schema; cannot reopen it safely"
           end
@@ -59,6 +52,23 @@ module Migrations
         def close(connection)
           @statement_cache&.clear
           connection.close unless connection.closed?
+        end
+
+        private
+
+        def attached_database?(connection)
+          connection.query_single_splat(<<~SQL) > 0
+            SELECT COUNT(*)
+            FROM pragma_database_list
+            WHERE name NOT IN ('main', 'temp')
+          SQL
+        end
+
+        def temporary_schema?(connection)
+          connection.query_single_splat(<<~SQL) > 0
+            SELECT COUNT(*)
+            FROM sqlite_temp_master
+          SQL
         end
       end
     end
