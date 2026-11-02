@@ -5045,7 +5045,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "site_setting_default,staff"
       learn_more_url: "https://meta.discourse.org/t/-/414354"
       permanent_warning: false
