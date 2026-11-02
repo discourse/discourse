@@ -117,7 +117,7 @@ RSpec.describe "Chat | composer | channel" do
     it "highlights the message" do
       chat_page.visit_channel(channel_1)
 
-      page.find(".chat-reply").click
+      locator(".chat-reply").click
 
       expect(channel_page.messages).to have_message(id: message_1.id, highlighted: true)
     end
