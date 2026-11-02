@@ -1,5 +1,6 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn as typeInto, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -54,6 +55,7 @@ acceptance("Blog publication panel", function (needs) {
   });
 
   test("publishes the current draft in one step", async function (assert) {
+    publication.active_review_links = 2;
     pretender.post("/blog-editor/publications/280/publish.json", (request) => {
       assert.false(
         new URLSearchParams(request.requestBody).has("revision_id"),
@@ -74,19 +76,31 @@ acceptance("Blog publication panel", function (needs) {
       .dom(`${PANEL}__badge`)
       .hasText("Draft", "a never-published draft is labelled");
     assert
-      .dom(`${PANEL}__meta a`)
+      .dom(`${PANEL}__future-url`)
       .hasText(
         "blog.example.com/an-unfinished-story",
         "the future article address is shown"
       );
     assert
+      .dom(`${PANEL}__meta a`)
+      .doesNotExist("the future address is not linked before it exists");
+    assert
       .dom(`${PANEL}__publish`)
-      .hasText("Publish", "publishing is the primary action");
+      .hasText("Publish now", "publishing is the primary action");
+    const toasts = this.owner.lookup("service:toasts");
+    const toastSpy = sinon.spy(toasts.success);
+    sinon.replaceGetter(toasts, "success", () => toastSpy);
     await click(`${PANEL}__publish`);
     assert
       .dom(".dialog-body")
       .includesText("stay private", "the privacy boundary is explained");
     await click(".dialog-footer .btn-primary");
+    assert.true(
+      toastSpy.calledWithMatch({
+        data: { message: sinon.match("Its 2 preview links were closed.") },
+      }),
+      "closing the draft's preview links is announced"
+    );
     assert
       .dom(`${PANEL}__badge`)
       .hasText("Live", "the panel reflects the release");
@@ -128,10 +142,10 @@ acceptance("Blog publication panel", function (needs) {
       .includesText("3 edits since", "the amount of drift is shown");
     assert
       .dom(`${PANEL}__changed`)
-      .hasText("Changed: body, excerpt", "changed fields are listed");
+      .hasText("Changed: Body, excerpt", "changed fields are listed");
     assert
       .dom(`${PANEL}__publish`)
-      .hasText("Publish correction", "corrections are named explicitly");
+      .hasText("Publish changes", "publishing edits is named explicitly");
     await click(`${PANEL}__toggle-diff`);
     assert
       .dom(`${PANEL}__diff ins`)
@@ -147,6 +161,7 @@ acceptance("Blog publication panel", function (needs) {
     pretender.post("/blog-editor/publications/280/submit.json", () => {
       publication = {
         ...publication,
+        awaiting_approval: true,
         submitted_revision: {
           id: 7,
           preview_url: "/blog-editor/preview/280?revision_id=7",
@@ -163,57 +178,23 @@ acceptance("Blog publication panel", function (needs) {
       .doesNotExist("publisher options are not offered");
     await click(`${PANEL}__publish`);
     assert
-      .dom(`${PANEL}__pending`)
-      .includesText("Revision 7 submitted", "the submission is confirmed");
-    assert
-      .dom(`${PANEL}__approve`)
-      .doesNotExist("approval requires a publisher");
+      .dom(`${PANEL}__badge`)
+      .hasText("Needs approval", "the submission replaces the status");
   });
 
-  test("publishers approve and publish a submitted revision", async function (assert) {
+  test("publishers see a pending submission without a separate approval step", async function (assert) {
+    publication.awaiting_approval = true;
     publication.submitted_revision = {
       id: 7,
       preview_url: "/blog-editor/preview/280?revision_id=7",
     };
-    pretender.post("/blog-editor/publications/280/approve.json", (request) => {
-      assert.step(
-        `approve ${new URLSearchParams(request.requestBody).get("revision_id")}`
-      );
-      publication = {
-        ...publication,
-        approved_revision: publication.submitted_revision,
-      };
-      return response(publication);
-    });
-    pretender.post("/blog-editor/publications/280/publish.json", (request) => {
-      assert.step(
-        `publish ${new URLSearchParams(request.requestBody).get("revision_id")}`
-      );
-      publication = {
-        ...publication,
-        status: "live",
-        published: true,
-        live: true,
-        published_revision_id: 7,
-      };
-      return response(publication);
-    });
     await visit(TOPIC_URL);
     assert
-      .dom(`${PANEL}__pending a`)
-      .hasAttribute(
-        "href",
-        "/blog-editor/preview/280?revision_id=7",
-        "the frozen revision can be previewed"
-      );
-    await click(`${PANEL}__approve`);
-    assert.verifySteps(
-      ["approve 7", "publish 7"],
-      "only the submitted revision is approved and published"
-    );
+      .dom(`${PANEL}__badge`)
+      .hasText("Needs approval", "the request is visible to publishers");
     assert
-      .dom(`${PANEL}__pending`)
-      .doesNotExist("the published revision is no longer pending");
+      .dom(`${PANEL}__publish`)
+      .exists("publishing the draft approves it in one step");
   });
 
   test("schedules the current draft and allows cancellation", async function (assert) {
@@ -283,7 +264,7 @@ acceptance("Blog publication panel", function (needs) {
       .hasText("Scheduled", "the scheduled release is shown");
     assert
       .dom(`${PANEL}__meta`)
-      .includesText("approved by eviltrout", "provenance is shown");
+      .includesText("Approved by eviltrout", "provenance is shown");
     await click(`${PANEL}__cancel-schedule`);
     assert.verifySteps(["cancel"], "the schedule can be cancelled");
     assert
@@ -323,31 +304,109 @@ acceptance("Blog publication panel", function (needs) {
           },
         ],
         more: false,
+        latest_version: 3,
       })
     );
     await visit(TOPIC_URL);
     assert
       .dom(`${PANEL}__reviews-title`)
-      .includesText("2 private feedback", "the feedback count is visible");
-    assert
-      .dom(`${PANEL}__reviews-title`)
-      .includesText("1 active review link", "open links are counted");
+      .includesText("Show feedback", "feedback can be opened");
     assert.dom(`${PANEL}__feedback`).doesNotExist("feedback loads on demand");
     await click(`${PANEL}__toggle-feedback`);
+    assert
+      .dom(`${PANEL}__feedback-entry`)
+      .exists({ count: 1 }, "only feedback on the newest version is shown");
+    assert
+      .dom(`${PANEL}__feedback-entry`)
+      .includesText("Anonymous reviewer", "missing names are labelled")
+      .includesText("Untitled review link", "unlabelled links are named");
+    assert
+      .dom(`${PANEL}__toggle-older-feedback`)
+      .hasText("Show 1 earlier response", "older feedback is offered");
+    await click(`${PANEL}__toggle-older-feedback`);
     assert.dom(`${PANEL}__feedback-entry`).exists({ count: 2 });
     assert
-      .dom(`${PANEL}__feedback-entry:first-child`)
-      .includesText("Anonymous reviewer", "missing names are labelled");
-    assert
-      .dom(`${PANEL}__feedback-entry:last-child`)
+      .dom(`${PANEL}__older-feedback ${PANEL}__feedback-entry`)
       .includesText("Ada", "reviewer names are shown")
-      .includesText("Round one", "the review label is shown")
-      .includesText("Article revision 1", "the reviewed revision is shown");
+      .includesText("Round one", "the review label is shown");
     assert
-      .dom(`${PANEL}__feedback-entry:last-child script`)
+      .dom(`${PANEL}__older-feedback script`)
       .doesNotExist("feedback is rendered as text");
+    assert
+      .dom(`${PANEL}__toggle-older-feedback`)
+      .hasText("Hide earlier responses", "older feedback can be hidden again");
     await click(`${PANEL}__toggle-feedback`);
     assert.dom(`${PANEL}__feedback`).doesNotExist("feedback collapses again");
+  });
+
+  test("starts a new feedback round after publishing", async function (assert) {
+    publication = {
+      ...publication,
+      review_feedback_count: 1,
+      last_published_at: "2026-09-05T10:00:00Z",
+    };
+    pretender.get("/blog-editor/publications/280/feedback.json", () =>
+      response({
+        feedback: [
+          {
+            id: 1,
+            name: "Ada",
+            email: "",
+            message: "Tighten the introduction.",
+            created_at: "2026-09-02T10:00:00Z",
+            review: { id: 8, label: "Round one", post_version: 1 },
+          },
+        ],
+        more: false,
+        latest_version: 1,
+      })
+    );
+    await visit(TOPIC_URL);
+    await click(`${PANEL}__toggle-feedback`);
+    assert
+      .dom(`${PANEL}__no-new-feedback`)
+      .hasText(
+        "No new feedback since the last publish.",
+        "feedback on the published text is not presented as new"
+      );
+    assert
+      .dom(`${PANEL}__feedback-notice`)
+      .doesNotExist("the privacy note waits until feedback is shown");
+    assert
+      .dom(`${PANEL}__toggle-older-feedback`)
+      .hasText("Show 1 earlier response");
+    await click(`${PANEL}__toggle-older-feedback`);
+    assert
+      .dom(`${PANEL}__older-feedback ${PANEL}__feedback-entry`)
+      .includesText("Ada", "earlier feedback stays available");
+    assert
+      .dom(`${PANEL}__feedback-notice`)
+      .doesNotExist("expanding earlier feedback does not shift the list");
+  });
+
+  test("rechecks its status after the title is edited inline", async function (assert) {
+    publication = {
+      ...publication,
+      status: "live",
+      published: true,
+      live: true,
+      draft: false,
+      published_revision_id: 7,
+    };
+    await visit(TOPIC_URL);
+    assert.dom(`${PANEL}__badge`).hasText("Live");
+
+    publication = {
+      ...publication,
+      status: "changes_pending",
+      changes: ["title"],
+    };
+    await click("#topic-title .d-icon-pencil");
+    await typeInto("#edit-title", "A sharper title for the article");
+    await click("#topic-title .submit-edit");
+    assert
+      .dom(`${PANEL}__badge`)
+      .hasText("Changes pending", "the panel updates without a reload");
   });
 
   test("saves article settings without publishing", async function (assert) {
@@ -375,7 +434,7 @@ acceptance("Blog publication panel", function (needs) {
       .hasText("Draft", "saving settings does not publish");
   });
 
-  test("the public discussion topic points at the private working copy", async function (assert) {
+  test("the public discussion topic explains where replies appear", async function (assert) {
     publication = {
       ...publication,
       role: "discussion",
@@ -389,14 +448,14 @@ acceptance("Blog publication panel", function (needs) {
     await visit(TOPIC_URL);
     assert.dom(PANEL).doesNotExist("the full panel stays on the working copy");
     assert
-      .dom(".blog-discussion-banner")
-      .includesText(
-        "which has unpublished changes",
-        "pending corrections are mentioned"
+      .dom(".blog-discussion-banner__text")
+      .hasText(
+        "This is the public discussion, replies here will appear on the blog.",
+        "the banner explains where replies appear"
       );
     assert
       .dom('.blog-discussion-banner a[href="/t/private-working-copy/281"]')
-      .exists("the working copy is linked");
+      .doesNotExist("Edit privately is the way into the working copy");
     assert
       .dom(".blog-discussion-banner__edit")
       .hasText("Edit privately", "editing is redirected to the working copy");
@@ -450,6 +509,6 @@ acceptance("Blog publication panel", function (needs) {
     assert.dom(`${PANEL}__badge`).hasText("Scheduled");
     assert
       .dom(`${PANEL}__changed`)
-      .includesText("body", "drift since the frozen revision is still listed");
+      .includesText("Body", "drift since the frozen revision is still listed");
   });
 });

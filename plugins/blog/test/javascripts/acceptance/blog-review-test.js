@@ -18,6 +18,24 @@ acceptance("Blog review reader", function (needs) {
     );
   });
 
+  test("points readers of a link closed by publishing to the live article", async function (assert) {
+    pretender.get("/blog/review.json", () =>
+      response(404, { published_url: "https://blog.example.com/live-story" })
+    );
+    await visit("/blog/review?review_token=closed-on-publish");
+    assert
+      .dom(".blog-review__published-title")
+      .hasText("This draft has been published");
+    assert
+      .dom(".blog-review__published-link")
+      .hasAttribute(
+        "href",
+        "https://blog.example.com/live-story",
+        "the reader can continue to the public article"
+      );
+    assert.dom(".blog-review__feedback").doesNotExist("feedback is closed");
+  });
+
   test("accepts private feedback without an account or forum chrome", async function (assert) {
     pretender.post("/blog/review/feedback.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
@@ -38,6 +56,9 @@ acceptance("Blog review reader", function (needs) {
     assert
       .dom(".blog-review h1")
       .hasText("A frozen draft", "the frozen title is rendered");
+    assert
+      .dom(".blog-review__badge")
+      .hasText("Draft version 1 for review", "the reviewed revision is named");
     assert
       .dom(".blog-review__article")
       .hasText(
@@ -94,8 +115,8 @@ acceptance("Blog review reader", function (needs) {
     assert
       .dom(".alert-error")
       .includesText(
-        "Ask the editor",
-        "the recipient can request a replacement"
+        "no longer available",
+        "the recipient is told the link no longer works"
       );
   });
 });

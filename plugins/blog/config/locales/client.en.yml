@@ -144,26 +144,23 @@ en:
           scheduled: "Publishes %{date}"
           unpublished: Removed from the blog
         will_publish_to: "Will publish to %{url}"
-        saved: "Saved %{age}"
-        published_as: "Published %{date} as revision %{id}"
+        last_updated: "Last updated %{age}"
+        published_as: "Published on %{date}"
         view_live: View live ↗
         edits_since:
           one: "%{count} edit since"
           other: "%{count} edits since"
-        scheduled_revision: "Revision %{id}, approved by %{user}"
+        scheduled_revision: "Approved by %{user}"
         scheduled_notice: Edits you make now are not included unless you reschedule
         last_published: "Last published %{date}"
         unpublished_notice: The public discussion stays open
         preview: Preview
-        preview_revision: "Preview revision %{id}"
-        share_for_review: Share for review
-        publish: Publish
-        publish_correction: Publish correction
+        preview_scheduled: Preview scheduled version
+        share_for_review: Create preview link
+        share_for_review_hint: Collect private feedback on the draft
+        publish_changes: Publish changes
         publish_now: Publish now
-        publish_now_hint: Copies the article to the blog immediately
-        publish_correction_hint: Replaces the live article immediately
         more_options: More publishing options
-        options: Options
         schedule: Schedule…
         schedule_hint: Pick a date and time
         schedule_title: Schedule publication
@@ -173,14 +170,16 @@ en:
         schedule_submit: Schedule
         submit: Submit for approval
         submit_hint: Ask another publisher to sign off first
-        submitted: "Revision %{id} submitted, awaiting approval"
-        approve_and_publish: "Approve and publish revision %{id}"
+        needs_approval: Needs approval
         unpublish_hint: Remove from the blog; the discussion stays public
         cancel_schedule: Cancel schedule
-        published: "Published — revision %{id} is live on the blog."
+        published: Published — the article is live on the blog.
+        published_closed_links:
+          one: Published — the article is live on the blog. Its preview link was closed.
+          other: Published — the article is live on the blog. Its %{count} preview links were closed.
         publish_confirm: "Publish “%{title}” to the blog now? Only the article is copied; this topic and its replies stay private."
         publish_correction_confirm: "Replace the live article with the current draft? The article keeps its URL and public discussion."
-        changes_title: What changes on the blog
+        changes_title: What changed on the blog
         changed: "Changed: %{fields}"
         change:
           title: title
@@ -189,7 +188,6 @@ en:
           excerpt: excerpt
           featured: featured flag
           published_at: publication date
-          revision: submitted revision
         show_diff: Show diff
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
@@ -197,24 +195,19 @@ en:
         settings_hint: Path, excerpt, date, featured
         feedback:
           none: No private feedback yet
-          count:
-            one: "%{count} private feedback"
-            other: "%{count} private feedback"
-          no_active_links: no active review links
-          active_links:
-            one: "%{count} active review link"
-            other: "%{count} active review links"
-          show: Read feedback
+          show: Show feedback
           hide: Hide feedback
+          show_older:
+            one: Show %{count} earlier response
+            other: Show %{count} earlier responses
+          hide_older: Hide earlier responses
+          no_new: No new feedback since the last publish.
           manage_links: Review links
         discussion:
           live: Live on the blog
           not_live: Not on the blog
-          intro: "This is the public discussion for %{article}."
+          intro: This is the public discussion, replies here will appear on the blog.
           intro_not_live: This topic is not on the blog.
-          working_copy: "Edits go through the %{link}."
-          working_copy_pending: "Edits go through the %{link}, which has unpublished changes."
-          working_copy_link: private working copy
           no_working_copy: Edit privately to prepare changes in a private working copy without touching this topic.
           edit_privately: Edit privately
       review:
@@ -223,28 +216,36 @@ en:
         expires: "Expires %{date}"
         manage: Share for review and feedback
         discard_metadata: Discard unsaved publication settings and share the saved article?
-        sharing_notice: "Create a frozen copy of the saved article for seven days. Anyone with the link can read it and send private feedback, without an account. Later edits are not included. Existing upload URLs are not protected: do not use this for confidential attachments."
-        label: Reviewer or review-round label
-        create: Create seven-day review link
-        copy_notice: Anyone with this link can read the article revision it was created from. Revoke it to stop it working.
-        link: Review link
-        copy: Copy link
+        intro: Anyone with the link can read the draft and leave private feedback.
+        label: Label
+        label_placeholder: For example, editorial round
+        create: Create link
+        untitled: Untitled review link
+        copy: Copy
         copied: Review link copied
-        copy_failed: Copying was blocked by your browser. Select and copy the review link from the field instead.
-        open: Open review
+        copy_failed: "Copying was blocked by your browser. Copy this link instead: %{url}"
+        open: Open
         links: Review links
-        version: "Article revision %{version}"
-        active: Active
-        inactive: Expired or revoked
-        revoke: Revoke link
+        status:
+          active: Active
+          expired: Expired
+          revoked: Revoked
+          published: Closed when published
+          inactive: Inactive
+        expired_on: "Expired %{date}"
+        revoked_on: "Revoked %{date}"
+        closed_on: "Closed %{date}"
+        revoke: Revoke
         revoke_confirm: Revoke this review link? It will immediately stop accepting new views and feedback. Existing feedback stays private and available here.
-        feedback_count: "Feedback (%{count})"
+        feedback_count: "Read feedback (%{count})"
         no_links: No review links yet.
-        feedback_for: "Private feedback on revision %{version}"
-        unverified: Names and email addresses are supplied by reviewers and are not verified. This feedback is never published with the article.
-        no_feedback: No feedback on this review link yet.
-        unavailable: This review link has expired, was revoked, or is no longer available. Ask the editor for a new link.
-        reader_notice: "Draft for review · frozen article revision %{version}. This link can expire or be revoked by the editor."
+        unverified: Private to editors. Names and emails aren't verified.
+        no_feedback: No feedback yet
+        unavailable: This review link has expired, was revoked, or is no longer available.
+        published_title: This draft has been published
+        published_body: The preview link was closed when the article went live.
+        read_article: Read the article
+        reader_badge: "Draft version %{version} for review"
         leave_feedback: Leave feedback
         feedback_privacy: Your feedback is private to the article editors. No account is required. Your name and email are optional; add an email if you would like the editor to contact you.
         message: Feedback
@@ -268,7 +269,8 @@ en:
         status: Status
         published: Published
         replies: Replies
-        scheduled: Scheduled
+        edits_pending: Edits pending
+        edits_need_approval: Edits need approval
         more_actions: More actions
         preview_changes: Preview changes
         view_on_blog: View on blog
@@ -278,8 +280,6 @@ en:
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
-      private_draft: Draft
-      draft_correction: Draft correction
       public_discussion: Public discussion
       not_published: Not on the blog
       preview: Preview

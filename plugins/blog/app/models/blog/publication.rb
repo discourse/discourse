@@ -462,7 +462,7 @@ module ::Blog
       self.published = true
       save!
       paths.find_or_create_by!(path: path)
-      Review.revoke_for_topic!(source.id)
+      Review.revoke_for_topic!(source.id, by_publish: true)
       StaffActionLogger.new(user).log_custom(
         "blog_publish",
         topic_id: discussion_topic_id,

@@ -35,6 +35,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
     post "/blog-editor/publications/#{topic.id}/submit.json"
     expect(response.status).to eq(200)
     revision_id = response.parsed_body.dig("submitted_revision", "id")
+    expect(response.parsed_body["awaiting_approval"]).to eq(true)
     post "/blog-editor/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
     expect(response.status).to eq(403)
     post "/blog-editor/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
@@ -45,6 +46,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
     expect(response.status).to eq(400)
     post "/blog-editor/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)
+    expect(response.parsed_body["awaiting_approval"]).to eq(false)
     first_post.revise(writer, raw: "A newer private edit that has not been submitted or approved.")
     post "/blog-editor/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)

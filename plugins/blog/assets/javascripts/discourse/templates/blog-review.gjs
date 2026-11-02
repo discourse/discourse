@@ -10,7 +10,20 @@ export default <template>
   {{hideApplicationFooter}}
   {{hideScrollableContent "above"}}
   {{hideScrollableContent "below"}}
-  {{#if @model.unavailable}}
+  {{#if @model.publishedUrl}}
+    <section class="blog-review__published">
+      <h1 class="blog-review__published-title">{{i18n
+          "blog.review.published_title"
+        }}</h1>
+      <p class="blog-review__published-body">{{i18n
+          "blog.review.published_body"
+        }}</p>
+      <a
+        class="btn btn-primary blog-review__published-link"
+        href={{@model.publishedUrl}}
+      >{{i18n "blog.review.read_article"}}</a>
+    </section>
+  {{else if @model.unavailable}}
     <DFlashMessage @flash={{i18n "blog.review.unavailable"}} @type="error" />
   {{else}}
     <BlogReview @review={{@model}} />

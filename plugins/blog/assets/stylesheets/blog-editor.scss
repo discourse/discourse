@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .blog-dashboard {
   max-width: 1000px;
   width: 100%;
@@ -19,18 +21,40 @@
     margin-block: var(--space-4);
   }
 
-  &__statuses {
+  &__title-row {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 0.25em 0.75em;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+    margin-bottom: var(--space-1);
+
+    // The pill sits beside the title, so the table's own width cap and spacing would leave a gap.
+    .d-table__overview-link .d-table__overview-name {
+      max-width: none;
+      margin-bottom: 0;
+    }
   }
 
-  &__correction,
+  &__status-column {
+    min-width: 6em;
+
+    @include viewport.from(md) {
+      text-align: center;
+
+      .blog-dashboard__status {
+        margin-inline: auto;
+      }
+    }
+  }
+
+  &__status,
+  &__pending {
+    white-space: nowrap;
+  }
+
   &__excerpt,
   &__published,
-  &__replies,
-  &__scheduled {
+  &__replies {
     color: var(--primary-high);
     font-size: var(--font-down-1);
   }
