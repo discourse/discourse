@@ -147,6 +147,9 @@ RSpec.describe "Message notifications - mobile", mobile: true do
           end
 
           it "reorders channels" do
+            user_1.update!(username: "alice")
+            user_2.update!(username: "zoe")
+
             visit("/chat/direct-messages")
 
             expect(page).to have_css(
