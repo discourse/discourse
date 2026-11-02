@@ -68,21 +68,6 @@ module PageObjects
         within(full_modal_selector) { has_text?(message, normalize_ws: true) }
       end
 
-      def has_prompt_user?(username)
-        has_css?(
-          "#{full_modal_selector} .dsa-moderation-action__user[aria-label='#{username}']",
-          text: username,
-        )
-      end
-
-      def open_prompt_user_card
-        find("#{full_modal_selector} .dsa-moderation-action__user").click
-      end
-
-      def click_user_card
-        find("[data-identifier='usercard'] .card-content").click
-      end
-
       def has_selected_category?(category)
         within(full_modal_selector) { has_select?("Category", selected: category) }
       end

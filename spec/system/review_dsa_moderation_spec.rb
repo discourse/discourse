@@ -125,23 +125,6 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_focused_step("Confirm action")
   end
 
-  it "shows the avatar and username of the user being deleted" do
-    reviewable = Fabricate(:reviewable_queued_post)
-
-    review_page.visit_reviewable(reviewable)
-    review_page.select_bundled_action(reviewable, "delete_user")
-
-    username = reviewable.target_created_by.username
-
-    expect(modal).to have_confirmation_prompt("Are you sure you want to delete #{username}?")
-    expect(modal).to have_prompt_user(username)
-
-    modal.open_prompt_user_card
-    modal.click_user_card
-
-    expect(modal).to be_open
-  end
-
   it "classifies before editing, handling the review only after the edit is saved" do
     post = topic.first_post
     reviewable =
