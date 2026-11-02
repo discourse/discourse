@@ -39,15 +39,23 @@ const BlogThemePreview = <template>
                 "blog.admin.template_not_found"
               }}</select.Option>
           </DNativeSelect>
-          <DNativeSelect
-            aria-label={{i18n "blog.admin.sample_article"}}
-            @includeNone={{false}}
-            @onChange={{editor.selectPreviewArticle}}
-            @value={{editor.selectedArticle}}
-            as |select|
-          >{{#each editor.articleOptions as |article|}}<select.Option
-                @value={{article.id}}
-              >{{article.title}}</select.Option>{{/each}}</DNativeSelect>
+          {{#if (eq editor.previewPage "article")}}
+            <DNativeSelect
+              aria-label={{i18n "blog.admin.sample_article"}}
+              disabled={{not editor.articleOptions.length}}
+              @includeNone={{not editor.articleOptions.length}}
+              @nonePlaceholder={{i18n "blog.admin.no_published_articles"}}
+              @onChange={{editor.selectPreviewArticle}}
+              @value={{editor.selectedArticle}}
+              as |select|
+            >
+              {{#each editor.articleOptions as |article|}}
+                <select.Option @value={{article.id}}>
+                  {{article.title}}
+                </select.Option>
+              {{/each}}
+            </DNativeSelect>
+          {{/if}}
           <DNativeSelect
             aria-label={{i18n "blog.admin.preview_size"}}
             @includeNone={{false}}

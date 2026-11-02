@@ -337,6 +337,11 @@ acceptance("Blog themes and identity", function (needs) {
     );
     await click(".blog-theme-editor__preview-draft");
     assert
+      .dom('select[aria-label="Sample published article"]')
+      .doesNotExist(
+        "the sample article selector is hidden for homepage previews"
+      );
+    assert
       .dom(".blog-theme-preview__frame")
       .hasAttribute(
         "src",
@@ -348,6 +353,9 @@ acceptance("Blog themes and identity", function (needs) {
       .isDisabled("previewing does not commit unsaved changes");
 
     await fillControl('select[aria-label="Page to preview"]', "article");
+    assert
+      .dom('select[aria-label="Sample published article"]')
+      .hasValue("1", "article previews select the available published article");
     assert
       .dom(".blog-theme-preview__frame")
       .hasAttribute(
@@ -399,8 +407,22 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(".blog-theme-preview__frame")
       .exists("without a published article the homepage stands in");
+    assert
+      .dom('select[aria-label="Sample published article"]')
+      .doesNotExist("homepage previews do not need a sample article");
 
     await fillControl('select[aria-label="Page to preview"]', "article");
+    assert
+      .dom('select[aria-label="Sample published article"]')
+      .isDisabled(
+        "the selector is disabled when there are no published articles"
+      );
+    assert
+      .dom('select[aria-label="Sample published article"] option:checked')
+      .hasText(
+        "No published articles",
+        "the empty selector explains why it is unavailable"
+      );
     assert
       .dom(".blog-theme-preview__empty")
       .includesText(
@@ -408,6 +430,11 @@ acceptance("Blog themes and identity", function (needs) {
         "the article page explains what it needs"
       );
     assert.strictEqual(previews, 1, "no preview is requested for that page");
+
+    await fillControl('select[aria-label="Page to preview"]', "index");
+    assert
+      .dom('select[aria-label="Sample published article"]')
+      .doesNotExist("the article selector is hidden again on the homepage");
   });
 
   test("marks customized templates on their tab and names the state above the editor", async function (assert) {

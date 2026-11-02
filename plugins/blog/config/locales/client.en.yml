@@ -41,6 +41,7 @@ en:
         no_variables: No variables match that search.
         insert: Insert
         sample_article: Sample published article
+        no_published_articles: No published articles
         array_value: List
         trusted_html: Trusted HTML
         escaped_text: Escaped value
