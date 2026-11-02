@@ -114,71 +114,7 @@ after_initialize do
     @blog_publication
   end
 
-  blog_routes =
-    proc do
-      get "/" => "blog/articles#index"
-      get "/archive" => "blog/articles#index", :defaults => { archive: true }
-      get "/tag/:tag" => "blog/articles#index"
-      get "/about" => "blog/articles#about"
-      get "/blog-theme.css" => "blog/articles#theme_css", :format => false
-      get "/blog-highlight/:version.js" => "blog/articles#highlight_js", :format => false
-      get "/blog-custom.js" => "blog/articles#theme_js", :format => false
-      get "/feed.xml" => "blog/articles#feed", :defaults => { format: "rss" }, :format => false
-      get "/sitemap" => "blog/articles#sitemap", :format => true, :constraints => { format: :xml }
-    end
-
-  Discourse::Application.routes.prepend do
-    constraints(
-      ->(request) do
-        Blog::Configuration.blog_host?(request) && !Blog::Configuration.asset_path?(request.path)
-      end,
-    ) do
-      get "/session/csrf" => "blog/review_reader#csrf"
-      get "/blog/review" => "blog/review_reader#show"
-      post "/blog/review/feedback" => "blog/review_reader#feedback"
-      get "/review" => redirect { |_, request| request.fullpath.sub("/review", "/blog/review") },
-          :format => false
-      get "/posts" => redirect { "#{Blog::Configuration.base_url}/" }, :format => false
-      %w[/posts.rss /posts.atom].each do |path|
-        get path => redirect { "#{Blog::Configuration.base_url}/feed.xml" }, :format => false
-      end
-      instance_exec(&blog_routes)
-      get "/robots.txt" => "blog/articles#robots", :defaults => { format: "text" }, :format => false
-      get "/*path" => "blog/articles#show", :format => false
-    end
-    scope Blog::Configuration::PATH_PREFIX do
-      constraints(
-        ->(_) { UpcomingChanges.enabled?(:blog_enabled) && !Blog::Configuration.custom_domain? },
-      ) do
-        get "/review" => "blog/review_reader#show"
-        post "/review/feedback" => "blog/review_reader#feedback"
-        instance_exec(&blog_routes)
-        get "/*path" => "blog/articles#show", :format => false
-      end
-      constraints(
-        ->(_) { UpcomingChanges.enabled?(:blog_enabled) && Blog::Configuration.custom_domain? },
-      ) do
-        # Temporary, since a site can drop its custom domain and browsers cache 301s.
-        get "/(*path)" =>
-              redirect(status: 302) { |_, request|
-                path =
-                  request.path_info.delete_prefix(Blog::Configuration::PATH_PREFIX).presence || "/"
-                path += "?#{request.query_string}" if request.query_string.present?
-                "#{Blog::Configuration.base_url}#{path}"
-              },
-            :format => false
-      end
-    end
-    # The themes list is served by Blog::ThemesController, which renders the app for page loads.
-    %w[appearance identity themes/new themes/import/new themes/:id/edit].each do |path|
-      get "/admin/plugins/blog/#{path}" => "admin/plugins#show",
-          :defaults => {
-            plugin_id: "blog",
-          },
-          :constraints => AdminConstraint.new
-    end
-    mount ::Blog::Engine, at: "/"
-  end
+  Discourse::Application.routes.prepend(&Blog::Routes::DRAW)
 
   reloadable_patch { ::TopicView.prepend(Blog::TopicViewExtension) }
 end
