@@ -480,6 +480,97 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".gif_to_webp" do
+    it "converts an animated GIF to animated WebP" do
+      input_path = file_from_fixtures("animated.gif").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.webp")
+
+        described_class.gif_to_webp(input_path:, output_path:, quality: 80, timeout: 20)
+
+        expect(FastImage.type(output_path)).to eq(:webp)
+        expect(FastImage.animated?(output_path)).to eq(true)
+      end
+    end
+
+    it "preserves the source without changing it" do
+      input_path = file_from_fixtures("animated.gif").path
+      original_content = File.binread(input_path)
+
+      Dir.mktmpdir do |directory|
+        described_class.gif_to_webp(
+          input_path:,
+          output_path: File.join(directory, "converted.webp"),
+          quality: 80,
+          timeout: 20,
+        )
+
+        expect(File.binread(input_path)).to eq(original_content)
+      end
+    end
+
+    it "encodes at the requested quality" do
+      input_path = file_from_fixtures("animated.gif").path
+
+      Dir.mktmpdir do |directory|
+        lower_quality_path = File.join(directory, "lower-quality.webp")
+        higher_quality_path = File.join(directory, "higher-quality.webp")
+
+        described_class.gif_to_webp(
+          input_path:,
+          output_path: lower_quality_path,
+          quality: 10,
+          timeout: 20,
+        )
+        described_class.gif_to_webp(
+          input_path:,
+          output_path: higher_quality_path,
+          quality: 95,
+          timeout: 20,
+        )
+
+        expect(File.size(lower_quality_path)).to be < File.size(higher_quality_path)
+      end
+    end
+
+    it "rejects non-GIF input" do
+      input_path = file_from_fixtures("logo.png").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.webp")
+
+        expect {
+          described_class.gif_to_webp(input_path:, output_path:, quality: 80, timeout: 20)
+        }.to raise_error(DiscourseVips::InvalidImage)
+
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "records the image-processing operation" do
+      SiteSetting.instrument_image_processing = true
+      input_path = file_from_fixtures("animated.gif").path
+
+      Dir.mktmpdir do |directory|
+        events =
+          DiscourseEvent.track_events(:image_processing_finished) do
+            described_class.gif_to_webp(
+              input_path:,
+              output_path: File.join(directory, "output.webp"),
+              quality: 80,
+              timeout: 20,
+            )
+          end
+
+        expect(events.first[:params].first.except(:duration_seconds)).to eq(
+          operation: "upload_gif_to_webp",
+          success: true,
+        )
+      end
+    end
+  end
+
   describe "worker lifecycle" do
     it "recovers after the worker exits unexpectedly" do
       described_class.version
@@ -897,6 +988,64 @@ RSpec.describe DiscourseVips do
           operation: :optimized_image_downsize,
         )
       }.to raise_error(DiscourseVips::Error, "invalid resize scale")
+    end
+
+    context "when animated: true" do
+      let(:animated_gif_path) { file_from_fixtures("animated.gif").path }
+
+      it "resizes an animated GIF preserving all frames" do
+        output_path = File.join(directory, "output.gif")
+
+        described_class.thumbnail(
+          input_path: animated_gif_path,
+          output_path:,
+          width: 100,
+          height: 100,
+          size: :force,
+          animated: true,
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.size(output_path)).to eq([100, 100])
+        expect(FastImage.animated?(output_path)).to eq(true)
+      end
+
+      it "converts an animated GIF to animated WebP" do
+        output_path = File.join(directory, "output.webp")
+
+        described_class.thumbnail(
+          input_path: animated_gif_path,
+          output_path:,
+          width: 100,
+          height: 100,
+          size: :force,
+          animated: true,
+          output_format: "webp",
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.type(output_path)).to eq(:webp)
+        expect(FastImage.animated?(output_path)).to eq(true)
+      end
+
+      it "scales using per-frame height rather than the full strip height" do
+        output_path = File.join(directory, "output.webp")
+
+        described_class.thumbnail(
+          input_path: animated_gif_path,
+          output_path:,
+          scale: 0.5,
+          animated: true,
+          output_format: "webp",
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.size(output_path)).to eq([160, 160])
+        expect(FastImage.animated?(output_path)).to eq(true)
+      end
     end
   end
 end

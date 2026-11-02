@@ -69,6 +69,8 @@ class DiscourseVipsWorker
         png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "reencode-jpeg"
         reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "gif-to-webp"
+        gif_to_webp(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "svg-to-png"
         svg_to_png(input_path: arguments[0], output_path: arguments[1])
       when "thumbnail"
@@ -87,6 +89,7 @@ class DiscourseVipsWorker
           gravity: arguments[11],
           input_format: arguments[12],
           output_format: arguments[13],
+          animated: arguments[14],
         )
       else
         raise ArgumentError, "unsupported libvips operation"
@@ -241,6 +244,26 @@ class DiscourseVipsWorker
     end
     private_class_method :reencode_jpeg
 
+    def self.gif_to_webp(input_path:, output_path:, quality:)
+      new do
+        block_loaders(allowed: %w[VipsForeignLoadNsgif])
+
+        quality = quality.empty? ? nil : Integer(quality)
+
+        begin
+          image = Vips::Image.gifload(input_path, n: -1)
+          options = {}
+          options[:Q] = quality if quality
+          image.webpsave(output_path, **options)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+
+        nil
+      end
+    end
+    private_class_method :gif_to_webp
+
     def self.save_jpeg(image, input_path:, output_path:, quality:)
       if File.expand_path(input_path) == File.expand_path(output_path) ||
            (File.exist?(output_path) && File.identical?(input_path, output_path))
@@ -311,14 +334,16 @@ class DiscourseVipsWorker
       strip_metadata:,
       gravity:,
       input_format:,
-      output_format:
+      output_format:,
+      animated:
     )
       new do
         raise ArgumentError, "invalid sharpening flag" if !%w[true false].include?(sharpen)
-        if !%w[true false].include?(strip_metadata)
-          raise ArgumentError, "invalid metadata stripping flag"
-        end
+        raise ArgumentError, "invalid metadata stripping flag" if !%w[true false].include?(strip_metadata)
+        raise ArgumentError, "invalid animated flag" if !%w[true false].include?(animated)
+
         quality = quality.empty? ? nil : Integer(quality)
+        animated = animated == "true"
 
         loaders = {
           "jpg" => "VipsForeignLoadJpeg",
@@ -338,7 +363,7 @@ class DiscourseVipsWorker
 
         source =
           begin
-            Vips::Image.new_from_file(input_path)
+            Vips::Image.new_from_file(input_path, **(animated ? { n: -1 } : {}))
           rescue Vips::Error => error
             raise InvalidImage, error.message
           end
@@ -347,13 +372,16 @@ class DiscourseVipsWorker
           width = Integer(width)
           height = Integer(height)
         else
+          source_height =
+            animated && source.get_typeof("n-pages") != 0 ? source.get("page-height") : source.height
+
           max_pixels = max_pixels.empty? ? nil : Integer(max_pixels)
           scale =
             if max_pixels
               raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
 
-              source = source.autorot
-              Math.sqrt(max_pixels.fdiv(source.width * source.height))
+              source = source.autorot unless animated
+              Math.sqrt(max_pixels.fdiv(source.width * source_height))
             else
               Float(scale)
             end
@@ -361,22 +389,26 @@ class DiscourseVipsWorker
 
           if max_pixels
             width = (source.width * scale).floor.clamp(1, max_pixels)
-            height = (source.height * scale).floor.clamp(1, max_pixels)
+            height = (source_height * scale).floor.clamp(1, max_pixels)
           else
-            width = [([source.width, source.height].max * scale).round, 1].max
-            height = width
+            width = height = [([source.width, source_height].max * scale).round, 1].max
           end
         end
 
         image =
-          Vips::Image.thumbnail(
-            input_path,
-            width,
-            height: height,
-            size: size.to_sym,
-            crop: crop.to_sym,
-            output_profile: "srgb",
-          )
+          begin
+            Vips::Image.thumbnail(
+              animated ? "#{input_path}[n=-1]" : input_path,
+              width,
+              height: height,
+              size: size.to_sym,
+              crop: crop.to_sym,
+              output_profile: "srgb",
+            )
+          rescue Vips::Error => error
+            raise InvalidImage, error.message
+          end
+
         image = image.gravity(gravity.to_sym, width, height) if !gravity.empty?
         image = image.sharpen if sharpen == "true"
         options = { strip: strip_metadata == "true" }
