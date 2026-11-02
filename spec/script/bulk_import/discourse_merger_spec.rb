@@ -225,6 +225,10 @@ if merger_dependencies_available
       fab!(:destination_group) { Fabricate(:group, name: "support_team") }
       fab!(:other_group, :group)
 
+      def copied_rows(sql)
+        DB.query_hash(sql).to_h { |row| [row["id"], row["name"]] }
+      end
+
       it "maps same-named source rows onto the destination row and excludes them from the copy" do
         groups = {}
         merger = build_merger(groups:)
@@ -232,10 +236,21 @@ if merger_dependencies_available
           source_returning([{ "id" => other_group.id.to_s, "name" => "Support_Team" }]),
         )
 
-        sql = merger.merge_same_named_rows(Group, groups, where: "automatic = false")
+        sql = nil
+        expect {
+          sql =
+            merger.merge_same_named_rows(
+              Group,
+              groups,
+              where: "automatic = false",
+              max_name_length: 20,
+            )
+        }.to output(
+          /WARNING: merged 1 groups .*: Support_Team\n.*SEPARATE_SAME_NAMED_GROUPS=1/,
+        ).to_stdout
 
         expect(groups).to eq(other_group.id => destination_group.id)
-        copied_ids = DB.query_single(sql.sub(/\ASELECT .* FROM/, "SELECT id FROM"))
+        copied_ids = copied_rows(sql).keys
         expect(copied_ids).to include(destination_group.id)
         expect(copied_ids).not_to include(other_group.id)
         expect(copied_ids).not_to include(*Group::AUTO_GROUPS.values)
@@ -249,10 +264,64 @@ if merger_dependencies_available
           source_returning([{ "id" => "42", "name" => "Something else" }]),
         )
 
-        sql = merger.merge_same_named_rows(TagGroup, tag_groups)
+        sql = nil
+        expect {
+          sql = merger.merge_same_named_rows(TagGroup, tag_groups, max_name_length: 100)
+        }.not_to output.to_stdout
 
         expect(tag_groups).to be_empty
-        expect(DB.query_single(sql.sub(/\ASELECT .* FROM/, "SELECT id FROM"))).to eq([tag_group.id])
+        expect(copied_rows(sql)).to eq(tag_group.id => "Staff only")
+      end
+
+      context "when SEPARATE_SAME_NAMED_GROUPS is enabled" do
+        it "copies same-named source rows under the first free name" do
+          Fabricate(:group, name: "Support_Team_1")
+          groups = {}
+          merger = build_merger(groups:, separate_same_named_groups: true)
+          allow(merger).to receive(:source_raw_connection).and_return(
+            source_returning(
+              [
+                { "id" => other_group.id.to_s, "name" => "Support_Team" },
+                { "id" => "4242", "name" => "support_team_2" },
+              ],
+            ),
+          )
+
+          sql = nil
+          expect {
+            sql =
+              merger.merge_same_named_rows(
+                Group,
+                groups,
+                where: "automatic = false",
+                max_name_length: 20,
+              )
+          }.not_to output.to_stdout
+
+          expect(groups).to be_empty
+          expect(copied_rows(sql)).to include(
+            other_group.id => "Support_Team_3",
+            destination_group.id => "support_team",
+          )
+        end
+
+        it "shortens the name to fit the maximum length" do
+          groups = {}
+          merger = build_merger(groups:, separate_same_named_groups: true)
+          allow(merger).to receive(:source_raw_connection).and_return(
+            source_returning([{ "id" => other_group.id.to_s, "name" => "SUPPORT_TEAM" }]),
+          )
+
+          sql =
+            merger.merge_same_named_rows(
+              Group,
+              groups,
+              where: "automatic = false",
+              max_name_length: 12,
+            )
+
+          expect(copied_rows(sql)[other_group.id]).to eq("SUPPORT_TE_1")
+        end
       end
     end
 

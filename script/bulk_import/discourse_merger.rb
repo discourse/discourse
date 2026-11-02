@@ -16,6 +16,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   #             e.g. https://discourse-cdn-sjc1.com/business4
   # IGNORE_GLOBAL_PINS: (optional) set to 1 to unpin globally pinned topics of the
   #                     site being merged. Category pins are kept.
+  # SEPARATE_SAME_NAMED_GROUPS: (optional) set to 1 to copy groups and tag groups whose
+  #                             name already exists under a new name instead of merging
+  #                             them into the existing ones.
 
   def initialize
     db_password = ENV["DB_PASS"] || "import_password"
@@ -44,6 +47,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     @source_cdn = ENV["SOURCE_CDN"] if ENV["SOURCE_CDN"]
     @ignore_global_pins = ENV["IGNORE_GLOBAL_PINS"] == "1"
+    @separate_same_named_groups = ENV["SEPARATE_SAME_NAMED_GROUPS"] == "1"
 
     local_version = @raw_connection.exec("select max(version) from schema_migrations")
     local_version = local_version.first["max"]
@@ -219,31 +223,76 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       Group,
       mapping: @groups,
       skip_processing: true,
-      select_sql: merge_same_named_rows(Group, @groups, where: "automatic = false"),
+      select_sql:
+        merge_same_named_rows(
+          Group,
+          @groups,
+          where: "automatic = false",
+          max_name_length: SiteSetting.max_username_length,
+        ),
     )
 
     copy_model(GroupUser, skip_if_merged: true)
   end
 
-  # Maps source rows onto destination rows with the same case-insensitive name,
-  # because copying them would violate the unique name index. Returns the SQL
-  # that selects the remaining source rows for copying.
-  def merge_same_named_rows(klass, mapping, where: "TRUE")
+  # Source rows whose case-insensitive name already exists in the destination
+  # would violate the unique name index. Merging them hands their members
+  # whatever the destination row grants, so merges are reported and can be
+  # turned off with SEPARATE_SAME_NAMED_GROUPS, which copies them under a free
+  # name instead. Returns the SQL that selects the source rows to copy.
+  def merge_same_named_rows(klass, mapping, where: "TRUE", max_name_length:)
     existing_ids = klass.unscoped.pluck(:name, :id).to_h { |name, id| [name.downcase, id] }
-    merged_ids = []
+    source_rows =
+      source_raw_connection.exec("SELECT id, name FROM #{klass.table_name} WHERE #{where}").to_a
+    taken_names = Set.new(existing_ids.keys) + source_rows.map { |row| row["name"].downcase }
+    merged_names = {}
+    new_names = {}
 
-    source_raw_connection
-      .exec("SELECT id, name FROM #{klass.table_name} WHERE #{where}")
-      .each do |row|
-        next unless existing_id = existing_ids[row["name"].downcase]
+    source_rows.each do |row|
+      next unless existing_id = existing_ids[row["name"].downcase]
+
+      if @separate_same_named_groups
+        new_names[row["id"].to_i] = free_name(row["name"], taken_names, max_name_length)
+      else
         mapping[row["id"].to_i] = existing_id
-        merged_ids << row["id"].to_i
+        merged_names[row["id"].to_i] = row["name"]
+      end
+    end
+
+    warn_about_merged_rows(klass, merged_names.values) if merged_names.any?
+
+    columns =
+      klass.columns.map do |c|
+        next "\"#{c.name}\"" if c.name != "name" || new_names.empty?
+        whens =
+          new_names.map do |id, name|
+            "WHEN #{id} THEN #{ActiveRecord::Base.connection.quote(name)}"
+          end
+        "CASE id #{whens.join(" ")} ELSE name END AS name"
       end
 
-    sql = +"SELECT #{klass.columns.map { |c| "\"#{c.name}\"" }.join(", ")} FROM #{klass.table_name}"
+    sql = +"SELECT #{columns.join(", ")} FROM #{klass.table_name}"
     sql << " WHERE #{where}"
-    sql << " AND id NOT IN (#{merged_ids.join(", ")})" if merged_ids.any?
+    sql << " AND id NOT IN (#{merged_names.keys.join(", ")})" if merged_names.any?
     sql
+  end
+
+  def free_name(name, taken_names, max_length)
+    (1..).each do |n|
+      suffix = "_#{n}"
+      candidate = "#{name[0, max_length - suffix.length]}#{suffix}"
+      next if taken_names.include?(candidate.downcase)
+
+      taken_names << candidate.downcase
+      return candidate
+    end
+  end
+
+  def warn_about_merged_rows(klass, names)
+    puts "",
+         "WARNING: merged #{names.size} #{klass.table_name.humanize(capitalize: false)} into existing ones with the same name: #{names.join(", ")}",
+         "Their members and permissions are added to the existing ones. Set SEPARATE_SAME_NAMED_GROUPS=1 to copy them under a new name instead.",
+         ""
   end
 
   def category_exists(cat_row)
@@ -454,7 +503,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_model(
       TagGroup,
       mapping: @tag_groups,
-      select_sql: merge_same_named_rows(TagGroup, @tag_groups),
+      select_sql: merge_same_named_rows(TagGroup, @tag_groups, max_name_length: 100),
     )
     [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each { |k| copy_model(k) }
 
