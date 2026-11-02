@@ -831,6 +831,64 @@ RSpec.describe TagsController do
     end
   end
 
+  describe "category_noindex modifier" do
+    fab!(:tag) { Fabricate(:tag, name: "test") }
+    fab!(:topic_in_category) { Fabricate(:topic, category: category, tags: [tag]) }
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_args) { [] }
+    let(:noindex_category_ids) { [] }
+    let(:modifier) do
+      Proc.new do |noindex, modifier_category|
+        modifier_args << [noindex, modifier_category]
+        noindex || noindex_category_ids.include?(modifier_category.id)
+      end
+    end
+
+    before { DiscoursePluginRegistry.register_modifier(plugin, :category_noindex, &modifier) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, :category_noindex, &modifier) }
+
+    it "receives false and the category, and sends no noindex by default" do
+      get "/tags/c/#{category.slug}/#{category.id}/#{tag.slug_for_url}/#{tag.id}",
+          headers: {
+            "HTTP_USER_AGENT" => "Googlebot",
+          }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, category]])
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+
+    it "lets a plugin send noindex on the tag pages within the category" do
+      noindex_category_ids << category.id
+      category_path = "/tags/c/#{category.slug}/#{category.id}"
+
+      [
+        "#{category_path}/#{tag.slug_for_url}/#{tag.id}",
+        "#{category_path}/none/#{tag.slug_for_url}/#{tag.id}",
+        "#{category_path}/#{tag.slug_for_url}/#{tag.id}/l/top",
+        "#{category_path}/#{tag.slug_for_url}/#{tag.id}.json",
+        "#{category_path}/#{tag.name}.json",
+        "/tag/#{tag.slug_for_url}/#{tag.id}.json?category=#{category.id}",
+      ].each do |path|
+        get path, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200), path
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+      end
+    end
+
+    it "is not consulted for tag pages outside a category" do
+      noindex_category_ids << category.id
+
+      get "/tag/#{tag.slug_for_url}/#{tag.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to be_empty
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+  end
+
   describe "#info" do
     fab!(:tag) { Fabricate(:tag, name: "test") }
     let(:synonym) { Fabricate(:tag, name: "synonym", target_tag: tag) }

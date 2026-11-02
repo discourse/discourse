@@ -1002,12 +1002,15 @@ class ApplicationController < ActionController::Base
 
   def add_noindex_header
     if request.get? && !response.headers["X-Robots-Tag"]
-      if SiteSetting.allow_index_in_robots_txt
-        response.headers["X-Robots-Tag"] = "noindex"
-      else
-        response.headers["X-Robots-Tag"] = "noindex, nofollow"
-      end
+      response.headers["X-Robots-Tag"] = noindex_header_value
     end
+  end
+
+  # "noindex", or "noindex, nofollow" when the whole site is kept out of
+  # search engines, so a page-level noindex never drops the site-wide
+  # directive.
+  def noindex_header_value
+    SiteSetting.allow_index_in_robots_txt ? "noindex" : "noindex, nofollow"
   end
 
   def add_noindex_header_to_non_canonical
@@ -1016,6 +1019,23 @@ class ApplicationController < ActionController::Base
          !SiteSetting.allow_indexing_non_canonical_urls
       response.headers["X-Robots-Tag"] ||= "noindex"
     end
+  end
+
+  # Whether search engines are told not to index a topic. Core only keeps
+  # unlisted topics out; the `topic_noindex` modifier receives that decision
+  # and the topic, so a plugin can send noindex for other topics too. It runs
+  # on every request that reaches the controller, so a topic that is flagged
+  # or moved follows once the anonymous cache (one minute) has expired.
+  def topic_noindex?(topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_noindex, !topic.visible, topic)
+  end
+
+  # Whether search engines are told not to index a topic list that loads a
+  # category: its own pages, `?category=` lists and tag pages within it.
+  # Core indexes them all; the `category_noindex` modifier receives `false`
+  # and the category, so a plugin can send noindex for a category.
+  def category_noindex?(category)
+    DiscoursePluginRegistry.apply_modifier(:category_noindex, false, category)
   end
 
   def set_cross_origin_opener_policy_header

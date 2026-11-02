@@ -224,7 +224,7 @@ class TopicsController < ApplicationController
       @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
 
-    response.headers["X-Robots-Tag"] = "noindex" unless @topic_view.topic.visible
+    response.headers["X-Robots-Tag"] = noindex_header_value if topic_noindex?(@topic_view.topic)
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
     # The canonical can be an embedding page, which has no translated versions.
