@@ -81,9 +81,12 @@ class Admin::ThemesController < Admin::AdminController
           if params[:placeholder]
             create_remote_theme_placeholder(remote, branch:, private_key:)
           else
-            RemoteTheme.import_theme(remote, theme_user, private_key:, branch:)
+            RemoteTheme.import_theme(remote, theme_user, private_key:, branch:, guardian:)
           end
         render json: serialize_data(@theme, ThemeSerializer), status: :created
+      rescue Discourse::InvalidAccess
+        # hijacked requests don't go through the usual error handling
+        render_json_error I18n.t("invalid_access"), status: :forbidden
       rescue RemoteTheme::ImportError => e
         if params[:force]
           @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
@@ -103,6 +106,10 @@ class Admin::ThemesController < Admin::AdminController
       update_components = params[:components]
       run_migrations = !params[:skip_migrations]
 
+      if theme_id.present? && (existing_theme = Theme.find_by(id: theme_id))
+        guardian.ensure_can_edit_theme!(existing_theme)
+      end
+
       begin
         @theme =
           RemoteTheme.update_zipped_theme(
@@ -112,6 +119,7 @@ class Admin::ThemesController < Admin::AdminController
             theme_id:,
             update_components:,
             run_migrations:,
+            guardian:,
           )
 
         log_theme_change(nil, @theme)
@@ -178,6 +186,20 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
+    guardian.ensure_can_edit_theme!(@theme)
+    child_theme_ids = theme_params[:child_theme_ids]
+    parent_theme_ids = theme_params[:parent_theme_ids]
+    # switching between theme and component drops the relations on one side
+    case theme_params[:component].to_s
+    when "true"
+      child_theme_ids = [] if !@theme.component?
+    when "false"
+      parent_theme_ids = [] if @theme.component?
+    end
+    if !guardian.can_edit_theme_relations?(@theme, child_theme_ids:, parent_theme_ids:)
+      raise Discourse::InvalidAccess
+    end
+
     original_json = ThemeSerializer.new(@theme, root: false).to_json
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
@@ -214,7 +236,11 @@ class Admin::ThemesController < Admin::AdminController
       skipped_components =
         @theme
           .remote_theme
-          .update_from_remote(raise_if_theme_save_fails: false, raise_on_import_error: true)
+          .update_from_remote(
+            raise_if_theme_save_fails: false,
+            raise_on_import_error: true,
+            guardian:,
+          )
           .skipped_child_components
     else
       @theme.save
@@ -254,6 +280,7 @@ class Admin::ThemesController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:theme) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_theme) { raise Discourse::InvalidAccess }
     end
   end
 
@@ -264,6 +291,7 @@ class Admin::ThemesController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:themes) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_themes) { raise Discourse::InvalidAccess }
     end
   end
 
@@ -304,6 +332,7 @@ class Admin::ThemesController < Admin::AdminController
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
+    guardian.ensure_can_edit_theme!(@theme)
 
     setting_name = params[:name].to_sym
     new_value = params[:value] || nil
@@ -341,6 +370,7 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
       on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_theme) { raise Discourse::InvalidAccess }
       on_failed_policy(:ensure_setting_is_themeable) do
         render_json_error(I18n.t("themes.setting_not_themeable", name: params[:name]), status: 400)
       end
@@ -364,6 +394,7 @@ class Admin::ThemesController < Admin::AdminController
   def update_source
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
+    guardian.ensure_can_edit_theme!(@theme)
     raise Discourse::InvalidParameters.new(:remote_theme) unless @theme.remote_theme&.is_git?
 
     remote_url = params[:remote_url]&.strip
@@ -400,7 +431,11 @@ class Admin::ThemesController < Admin::AdminController
         remote_theme.branch = params[:branch].presence
         remote_theme.private_key = private_key if private_key.present?
 
-        remote_theme.update_from_remote(already_in_transaction: true, refresh_name_and_type: true)
+        remote_theme.update_from_remote(
+          already_in_transaction: true,
+          refresh_name_and_type: true,
+          guardian:,
+        )
 
         if remote_theme.last_error_text.present?
           raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
@@ -410,6 +445,10 @@ class Admin::ThemesController < Admin::AdminController
       log_theme_change(nil, theme.reload)
       render json: theme_json(theme, skipped_components: remote_theme.skipped_child_components),
              status: :ok
+    rescue Discourse::InvalidAccess
+      # hijacked requests don't go through the usual error handling
+      remote_theme.reload
+      render_json_error I18n.t("invalid_access"), status: :forbidden
     rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid, Theme::SettingsMigrationError => e
       remote_theme.reload
       render_json_error e.message

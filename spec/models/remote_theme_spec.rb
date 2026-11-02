@@ -535,6 +535,30 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.first.data_type).to eq(SiteSetting.types[:bool])
       end
 
+      it "creates them while a plugin restricts theme edits" do
+        plugin = Plugin::Instance.new
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "enable_welcome_banner" => false })
+              .to_json,
+        )
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+
+        expect(theme.theme_site_settings.pluck(:name, :value)).to eq([%w[enable_welcome_banner f]])
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
       it "does not remove theme site settings that are no longer in about.json" do
         add_to_git_repo(
           initial_repo,
