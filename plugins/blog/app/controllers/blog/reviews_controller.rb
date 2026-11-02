@@ -48,15 +48,8 @@ module ::Blog
     end
 
     def topic_feedback
-      records =
-        ReviewFeedback
-          .joins(:review)
-          .where(blog_reviews: { topic_id: @topic.id })
-          .includes(:review)
-          .order(id: :desc)
-          .offset(page * 30)
-          .limit(31)
-          .to_a
+      scope = ReviewFeedback.joins(:review).where(blog_reviews: { topic_id: @topic.id })
+      records = scope.includes(:review).order(id: :desc).offset(page * 30).limit(31).to_a
       render json: {
                feedback:
                  records
@@ -67,6 +60,8 @@ module ::Blog
                      )
                    end,
                more: records.length > 30,
+               # Feedback is paginated, so one page can't tell the client which version is newest.
+               latest_version: scope.maximum("blog_reviews.post_version"),
              }
     end
 
@@ -94,10 +89,9 @@ module ::Blog
     end
 
     def entry(review, active: review.accessible?)
-      review.as_json(only: %i[id label title post_version created_at expires_at revoked_at]).merge(
-        active: active,
-        url: (review.url if active),
-      )
+      review.as_json(
+        only: %i[id label title post_version created_at expires_at revoked_at revoked_by_publish],
+      ).merge(active: active, url: (review.url if active))
     end
   end
 end

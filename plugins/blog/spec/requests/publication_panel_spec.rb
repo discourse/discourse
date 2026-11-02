@@ -74,6 +74,7 @@ RSpec.describe "Blog publication panel", type: :request do
 
     older = Blog::Review.issue!(topic: topic, user: admin, label: "Round one")
     newer = Blog::Review.issue!(topic: topic, user: admin)
+    newer.update_columns(post_version: 2)
     older.submit_feedback!(name: "Ada", message: "Tighten the introduction.")
     newer.submit_feedback!(message: "Loving it but the colours hurt.")
     older.revoke!(admin)
@@ -94,6 +95,7 @@ RSpec.describe "Blog publication panel", type: :request do
     expect(feedback.last["review"]).to include("label" => "Round one", "post_version" => 1)
     expect(feedback.last["review"]["revoked_at"]).to be_present
     expect(response.parsed_body["more"]).to be(false)
+    expect(response.parsed_body["latest_version"]).to eq(2)
 
     sign_in(user)
     get "/blog-editor/publications/#{topic.id}/feedback.json"

@@ -63,6 +63,57 @@ RSpec.describe "External draft review", type: :request do
     expect(UserHistory.where(custom_type: "blog_review_create", acting_user_id: admin.id)).to exist
   end
 
+  it "keeps a signed-in editor signed in after opening a review link on the forum host" do
+    SiteSetting.blog_url = ""
+    _review, token = issue_review
+
+    get "https://test.localhost/blog/review", params: { review_token: token }
+    expect(response.status).to eq(200)
+
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
+    expect(response.status).to eq(200)
+  end
+
+  it "boots the review page for a revoked link so it can explain itself" do
+    review, token = issue_review
+    delete "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{review["id"]}.json"
+    sign_out
+
+    get "https://blog.example.com/blog/review", params: { review_token: token }
+    expect(response.status).to eq(404)
+    expect(response.media_type).to eq("text/html")
+    expect(response.body).not_to include(first_post.raw)
+
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
+    expect(response.status).to eq(404)
+  end
+
+  it "closes links on publish and points their readers to the live article" do
+    published_link, published_token = issue_review
+    manual, manual_token = issue_review
+    delete "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{manual["id"]}.json"
+
+    publication = Blog::Publication.for_topic(topic)
+    publication.publish!(admin)
+
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
+    entries = response.parsed_body["reviews"].index_by { |entry| entry["id"] }
+    expect(entries[published_link["id"]]).to include(
+      "revoked_by_publish" => true,
+      "revoked_at" => be_present,
+    )
+    expect(entries[manual["id"]]).to include("revoked_by_publish" => false)
+
+    sign_out
+    get "https://blog.example.com/blog/review.json", params: { review_token: published_token }
+    expect(response.status).to eq(404)
+    expect(response.parsed_body["published_url"]).to eq(publication.reload.url)
+
+    get "https://blog.example.com/blog/review.json", params: { review_token: manual_token }
+    expect(response.status).to eq(404)
+    expect(response.body).not_to include("published_url")
+  end
+
   it "shares a sanitized frozen revision without staff replies or custom code" do
     private_reply =
       Fabricate(

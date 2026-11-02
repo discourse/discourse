@@ -74,6 +74,7 @@
 
   &__meta {
     margin: var(--space-1) 0 0;
+    padding-inline-start: 0.6em;
     color: var(--primary-high);
     font-size: var(--font-down-1);
 
@@ -82,19 +83,27 @@
     }
   }
 
+  &__future-url {
+    display: inline-block;
+    color: var(--primary);
+    max-width: 100%;
+    vertical-align: bottom;
+
+    @include ellipsis;
+  }
+
   &__sep {
     margin-inline: var(--space-1);
   }
 
   &__actions {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: flex-end;
     flex-wrap: wrap;
     gap: var(--space-2);
   }
 
-  &__pending,
   &__changes,
   &__reviews,
   &__error,
@@ -121,19 +130,30 @@
     font-weight: 600;
   }
 
-  &__reviews-links {
-    color: var(--primary-high);
-    font-weight: normal;
+  // Line the labels up with the box edge while keeping the hover background padded.
+  &__toggle-feedback,
+  &__toggle-older-feedback,
+  &__settings-toggle {
+    margin-inline-start: calc(-1 * #{$hpad});
   }
 
-  &__reviews-actions {
-    display: flex;
-    gap: var(--space-1);
+  &__toggle-older-feedback {
+    margin-top: var(--space-2);
   }
 
-  &__feedback-notice {
+  &__manage-reviews {
+    margin-inline-end: calc(-1 * #{$hpad});
+  }
+
+  &__feedback-notice,
+  &__no-new-feedback {
     margin: var(--space-2) 0 0;
     color: var(--primary-high);
+  }
+
+  // Line up with the label of the earlier-responses toggle below, past its chevron.
+  &__no-new-feedback {
+    padding-inline-start: 1.5em;
   }
 
   &__feedback {
@@ -167,17 +187,6 @@
     color: var(--primary);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-  }
-
-  &__pending {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
-    border-radius: var(--d-border-radius);
-    background: var(--tertiary-very-low);
-    font-size: var(--font-down-1);
   }
 
   &__changes {
@@ -230,8 +239,21 @@
     border-top: 1px solid var(--primary-low);
   }
 
+  &__settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__last-updated {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
   &__settings-toggle {
-    padding-inline: 0;
+    font-size: var(--font-down-1);
   }
 
   &__settings-hint {
@@ -244,32 +266,15 @@
     margin-block-start: var(--space-3);
   }
 
-  &__menu-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    text-align: start;
-  }
-
   &__menu-hint {
     color: var(--primary-high);
     font-size: var(--font-down-1);
   }
 
-  &__unpublish {
-    &,
-    .blog-publication-panel__menu-hint {
-      color: var(--danger);
-    }
-  }
-
-  @media (width <= 767px) {
-    grid-template-columns: minmax(0, 1fr);
-
-    &__actions {
-      justify-content: flex-start;
-    }
+  &__menu-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

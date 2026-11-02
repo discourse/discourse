@@ -37,7 +37,10 @@ export default class BlogReviewRoute extends DiscourseRoute {
       return { ...review, token: review_token };
     } catch (error) {
       if ([403, 404].includes(error.jqXHR?.status)) {
-        return { unavailable: true };
+        return {
+          unavailable: true,
+          publishedUrl: error.jqXHR.responseJSON?.published_url,
+        };
       }
       throw error;
     }

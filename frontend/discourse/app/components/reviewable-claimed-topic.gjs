@@ -11,7 +11,10 @@ export default class ReviewableClaimedTopic extends Component {
   @service store;
 
   get enabled() {
-    return this.siteSettings.reviewable_claiming !== "disabled";
+    return (
+      this.siteSettings.reviewable_claiming !== "disabled" ||
+      this.args.claimedBy?.automatic
+    );
   }
 
   @action
@@ -19,6 +22,7 @@ export default class ReviewableClaimedTopic extends Component {
     try {
       await ajax(`/reviewable_claimed_topics/${this.args.topicId}`, {
         type: "DELETE",
+        data: { automatic: this.args.claimedBy?.automatic },
       });
       this.args.onClaim(null);
     } catch (e) {

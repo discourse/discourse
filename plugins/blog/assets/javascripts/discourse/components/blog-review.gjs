@@ -6,6 +6,7 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BlogReview extends Component {
@@ -13,7 +14,9 @@ export default class BlogReview extends Component {
   @tracked unavailable = false;
 
   get expiresAt() {
-    return new Date(this.args.review.expires_at).toLocaleString();
+    return moment(this.args.review.expires_at).format(
+      i18n("dates.long_with_year_no_time")
+    );
   }
 
   get article() {
@@ -47,11 +50,16 @@ export default class BlogReview extends Component {
           @type="error"
         />
       {{else}}
-        <p class="blog-review__notice">{{i18n
-            "blog.review.reader_notice"
-            version=@review.post_version
-          }}
-          {{i18n "blog.review.expires" date=this.expiresAt}}</p>
+        <div class="blog-review__banner">
+          <span class="blog-review__badge">
+            {{dIcon "file-lines"}}
+            {{i18n "blog.review.reader_badge" version=@review.post_version}}
+          </span>
+          <span class="blog-review__expiry">
+            {{dIcon "clock"}}
+            {{i18n "blog.review.expires" date=this.expiresAt}}
+          </span>
+        </div>
         <article>
           <h1>{{@review.title}}</h1>
           <div class="blog-review__article cooked">{{this.article}}</div>
