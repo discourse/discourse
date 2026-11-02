@@ -218,7 +218,7 @@ describe "Tags" do
     let(:composer) { PageObjects::Components::Composer.new }
     let(:mini_tag_chooser) { PageObjects::Components::SelectKit.new(".mini-tag-chooser") }
 
-    it "creates and edits topic / PM tags" do
+    it "creates and edits topic tags with trust level permissions" do
       sign_in(user_tl1)
 
       ## Topic ----
@@ -280,7 +280,9 @@ describe "Tags" do
       topic_page.click_topic_title_submit_edit
 
       expect(topic_page.topic_tags).to include("tag-four")
+    end
 
+    it "creates and edits PM tags with trust level permissions" do
       ## PM ----
 
       # PM - creation with tags fails for TL1 user
