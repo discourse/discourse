@@ -6,6 +6,7 @@ export default {
   name: "discourse-blog",
 
   initialize(container) {
+    const appEvents = container.lookup("service:app-events");
     const settings = container.lookup("service:site-settings");
     if (!settings.blog_enabled) {
       return;
@@ -21,6 +22,15 @@ export default {
         });
       }
       api.renderInOutlet("topic-above-post-stream", BlogPublicationPanel);
+      // Inline title edits don't fire an app event, so tell the panel to recheck its status.
+      api.registerBehaviorTransformer(
+        "topic-controller:finished-editing",
+        async ({ next, context }) => {
+          const result = await next();
+          appEvents.trigger("blog:topic-edited", context.model?.id);
+          return result;
+        }
+      );
     });
   },
 };

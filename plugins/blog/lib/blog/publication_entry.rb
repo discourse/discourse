@@ -60,6 +60,7 @@ module ::Blog
         can_publish: Configuration.publisher?(user),
         review_feedback_count: source ? feedback_count(source) : 0,
         active_review_links: source ? Review.where(topic_id: source.id).unexpired.count : 0,
+        awaiting_approval: awaiting_approval?,
         submitted_revision: revision_entry(publication.submitted_revision),
         approved_revision: revision_entry(publication.approved_revision),
         scheduled_revision: revision_entry(publication.scheduled_revision),
@@ -81,6 +82,13 @@ module ::Blog
         return "discussion"
       end
       "source"
+    end
+
+    # Scheduling submits and approves in one step, so only an unapproved submission is waiting.
+    def awaiting_approval?
+      submitted = publication.submitted_revision_id
+      submitted.present? && submitted != publication.published_revision_id &&
+        submitted != publication.approved_revision_id
     end
 
     def status(changes)

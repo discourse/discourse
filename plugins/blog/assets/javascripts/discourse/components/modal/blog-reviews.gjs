@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
@@ -8,9 +8,59 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
-import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+function shortDate(value) {
+  const date = moment(value);
+  return date.format(
+    i18n(
+      date.isSame(moment(), "year")
+        ? "dates.long_no_year_no_time"
+        : "dates.long_with_year_no_time"
+    )
+  );
+}
+
+function reviewStatus(review) {
+  if (review.active) {
+    return {
+      key: "active",
+      icon: "clock",
+      modifier: "--success",
+      detail: i18n("blog.review.expires", {
+        date: shortDate(review.expires_at),
+      }),
+    };
+  }
+  if (review.revoked_by_publish) {
+    return {
+      key: "published",
+      detail: i18n("blog.review.closed_on", {
+        date: shortDate(review.revoked_at),
+      }),
+    };
+  }
+  if (review.revoked_at) {
+    return {
+      key: "revoked",
+      detail: i18n("blog.review.revoked_on", {
+        date: shortDate(review.revoked_at),
+      }),
+    };
+  }
+  if (new Date(review.expires_at) <= new Date()) {
+    return {
+      key: "expired",
+      detail: i18n("blog.review.expired_on", {
+        date: shortDate(review.expires_at),
+      }),
+    };
+  }
+  return { key: "inactive" };
+}
 
 export default class BlogReviews extends Component {
   @service dialog;
@@ -19,12 +69,9 @@ export default class BlogReviews extends Component {
   @tracked busy = false;
   @tracked reviews = [];
   @tracked more = false;
-  @tracked selectedReview;
-  @tracked feedback = [];
-  @tracked feedbackMore = false;
 
+  #form;
   #page = 0;
-  #feedbackPage = 0;
 
   constructor() {
     super(...arguments);
@@ -35,13 +82,15 @@ export default class BlogReviews extends Component {
     return `/blog-editor/publications/${this.args.model.topicId}/reviews`;
   }
 
-  formatDate(value) {
-    return value ? new Date(value).toLocaleString() : "";
+  @action
+  registerForm(api) {
+    this.#form = api;
   }
 
   @action
   async create(data) {
     if (await this.#request(".json", { type: "POST", data })) {
+      this.#form?.reset();
       this.#page = 0;
       await this.#load();
     }
@@ -55,7 +104,9 @@ export default class BlogReviews extends Component {
         data: { message: i18n("blog.review.copied") },
       });
     } catch {
-      this.dialog.alert({ message: i18n("blog.review.copy_failed") });
+      this.dialog.alert({
+        message: i18n("blog.review.copy_failed", { url: review.url }),
+      });
     }
   }
 
@@ -81,35 +132,8 @@ export default class BlogReviews extends Component {
   }
 
   @action
-  async viewFeedback(review) {
-    const result = await this.#request(`/${review.id}/feedback.json`);
-    if (result) {
-      this.selectedReview = review;
-      if (result.total !== undefined) {
-        this.reviews = this.reviews.map((entry) =>
-          entry.id === review.id
-            ? { ...entry, feedback_count: result.total }
-            : entry
-        );
-      }
-      this.feedback = result.feedback;
-      this.feedbackMore = result.more;
-      this.#feedbackPage = 0;
-    }
-  }
-
-  @action
-  async loadMoreFeedback() {
-    const page = this.#feedbackPage + 1;
-    const result = await this.#request(
-      `/${this.selectedReview.id}/feedback.json`,
-      { data: { page } }
-    );
-    if (result) {
-      this.feedback = [...this.feedback, ...result.feedback];
-      this.feedbackMore = result.more;
-      this.#feedbackPage = page;
-    }
+  showFeedback() {
+    this.args.closeModal({ showFeedback: true });
   }
 
   async #load(page = 0) {
@@ -146,112 +170,134 @@ export default class BlogReviews extends Component {
     >
       <:body>
         {{#if @model.draft}}
-          <DFlashMessage
-            @flash={{i18n "blog.review.sharing_notice"}}
-            @type="warning"
-          />
-          <Form
-            class="blog-reviews__create"
-            @onSubmit={{this.create}}
-            as |form|
-          >
-            <form.Field
-              @format="full"
-              @name="label"
-              @title={{i18n "blog.review.label"}}
-              @type="input"
-              as |field|
-            ><field.Control maxlength="100" /></form.Field>
-            <form.Actions><form.Submit
+          <section class="blog-reviews__new">
+            <p class="blog-reviews__intro">{{i18n "blog.review.intro"}}</p>
+            <Form
+              class="blog-reviews__create"
+              @commitOnSubmit={{false}}
+              @onRegisterApi={{this.registerForm}}
+              @onSubmit={{this.create}}
+              as |form|
+            >
+              <form.Field
+                class="blog-reviews__label-field"
+                @format="full"
+                @name="label"
+                @title={{i18n "blog.review.label"}}
+                @type="input"
+                as |field|
+              ><field.Control
+                  maxlength="100"
+                  placeholder={{i18n "blog.review.label_placeholder"}}
+                /></form.Field>
+              <form.Submit
                 @disabled={{this.busy}}
                 @label="blog.review.create"
-              /></form.Actions>
-          </Form>
-        {{/if}}
-        <h3>{{i18n "blog.review.links"}}</h3>
-        {{#if this.reviews}}
-          <p class="blog-reviews__notice">{{i18n "blog.review.copy_notice"}}</p>
-        {{/if}}
-        {{#each this.reviews key="id" as |review|}}
-          <section class="blog-reviews__entry" data-review-id={{review.id}}>
-            <strong>{{review.label}}</strong>
-            <p>{{i18n
-                "blog.review.expires"
-                date=(this.formatDate review.expires_at)
-              }}</p>
-            <p>{{i18n "blog.review.version" version=review.post_version}}
-              ·
-              {{#if review.active}}{{i18n "blog.review.active"}}{{else}}{{i18n
-                  "blog.review.inactive"
-                }}{{/if}}</p>
-            {{#if review.url}}
-              <div class="blog-reviews__link">
-                <input
-                  aria-label={{i18n "blog.review.link"}}
-                  class="blog-reviews__link-url"
-                  readonly
-                  value={{review.url}}
-                />
-                <DButton
-                  class="blog-reviews__copy"
-                  @action={{fn this.copy review}}
-                  @disabled={{this.busy}}
-                  @icon="copy"
-                  @label="blog.review.copy"
-                />
-                <a
-                  class="blog-reviews__open"
-                  href={{review.url}}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >{{i18n "blog.review.open"}}</a>
-              </div>
-            {{/if}}
-            <DButton
-              class="blog-reviews__feedback-toggle"
-              @action={{fn this.viewFeedback review}}
-              @disabled={{this.busy}}
-              @translatedLabel={{i18n
-                "blog.review.feedback_count"
-                count=review.feedback_count
-              }}
-            />
-            {{#unless review.revoked_at}}
-              <DButton
-                class="blog-reviews__revoke"
-                @action={{fn this.revoke review}}
-                @disabled={{this.busy}}
-                @label="blog.review.revoke"
               />
-            {{/unless}}
+            </Form>
           </section>
-        {{else}}<p>{{i18n "blog.review.no_links"}}</p>{{/each}}
-        {{#if this.more}}<DButton
-            @action={{this.loadMore}}
-            @disabled={{this.busy}}
-            @label="blog.load_more"
-          />{{/if}}
-        {{#if this.selectedReview}}
-          <h3>{{i18n
-              "blog.review.feedback_for"
-              version=this.selectedReview.post_version
-            }}</h3>
-          <p>{{i18n "blog.review.unverified"}}</p>
-          {{#each this.feedback key="id" as |entry|}}
-            <article class="blog-reviews__feedback">
-              <strong>{{or entry.name (i18n "blog.review.anonymous")}}</strong>
-              <span>{{entry.email}}</span>
-              <time datetime={{entry.created_at}}>{{this.formatDate
-                  entry.created_at
-                }}</time>
-              <p>{{entry.message}}</p>
-            </article>
-          {{else}}<p>{{i18n "blog.review.no_feedback"}}</p>{{/each}}
-          {{#if this.feedbackMore}}<DButton
-              @action={{this.loadMoreFeedback}}
-              @disabled={{this.busy}}
-              @label="blog.load_more"
-            />{{/if}}
+        {{/if}}
+
+        {{#if this.reviews}}
+          <section class="blog-reviews__list">
+            <h3 class="blog-reviews__heading">{{i18n "blog.review.links"}}</h3>
+
+            {{#each this.reviews key="id" as |review|}}
+              {{#let (reviewStatus review) as |status|}}
+                <article
+                  class={{dConcatClass
+                    "blog-reviews__entry"
+                    (unless review.active "--inactive")
+                  }}
+                  data-review-id={{review.id}}
+                >
+                  <header class="blog-reviews__entry-header">
+                    <div class="blog-reviews__entry-summary">
+                      <div class="blog-reviews__entry-heading">
+                        <h4 class="blog-reviews__entry-title">{{if
+                            review.label
+                            review.label
+                            (i18n "blog.review.untitled")
+                          }}</h4>
+                        <span
+                          class={{dConcatClass
+                            "blog-reviews__status"
+                            status.modifier
+                          }}
+                        >{{i18n
+                            (concat "blog.review.status." status.key)
+                          }}</span>
+                      </div>
+                      <p class="blog-reviews__entry-meta">
+                        {{#if status.detail}}
+                          <span class="blog-reviews__detail">
+                            {{#if status.icon}}{{dIcon status.icon}}{{/if}}
+                            {{status.detail}}
+                          </span>
+                        {{/if}}
+                        {{#if review.feedback_count}}
+                          <DButton
+                            class="btn-link blog-reviews__feedback-link"
+                            @action={{this.showFeedback}}
+                            @translatedLabel={{i18n
+                              "blog.review.feedback_count"
+                              count=review.feedback_count
+                            }}
+                          />
+                        {{else}}
+                          <span class="blog-reviews__no-feedback">{{i18n
+                              "blog.review.no_feedback"
+                            }}</span>
+                        {{/if}}
+                      </p>
+                    </div>
+                    {{#unless review.revoked_at}}
+                      <div class="blog-reviews__entry-buttons">
+                        {{#if review.url}}
+                          <DButton
+                            class="btn-default btn-small blog-reviews__copy"
+                            @action={{fn this.copy review}}
+                            @disabled={{this.busy}}
+                            @icon="copy"
+                            @label="blog.review.copy"
+                          />
+                          <a
+                            class="btn btn-default btn-small blog-reviews__open"
+                            href={{review.url}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >{{dIcon "up-right-from-square"}}<span
+                              class="d-button-label"
+                            >{{i18n "blog.review.open"}}</span></a>
+                        {{/if}}
+                        <DButton
+                          class="btn-default btn-small blog-reviews__revoke"
+                          @action={{fn this.revoke review}}
+                          @disabled={{this.busy}}
+                          @icon="ban"
+                          @label="blog.review.revoke"
+                        />
+                      </div>
+                    {{/unless}}
+                  </header>
+
+                </article>
+              {{/let}}
+            {{/each}}
+
+            {{#if this.more}}
+              <DButton
+                class="btn-default blog-reviews__load-more"
+                @action={{this.loadMore}}
+                @disabled={{this.busy}}
+                @label="blog.load_more"
+              />
+            {{/if}}
+          </section>
+        {{else}}
+          {{#unless @model.draft}}
+            <p class="blog-reviews__empty">{{i18n "blog.review.no_links"}}</p>
+          {{/unless}}
         {{/if}}
       </:body>
     </DModal>

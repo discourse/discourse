@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -25,6 +25,34 @@ import {
   editorFilters,
   STATUS_OPTIONS,
 } from "discourse/plugins/blog/discourse/lib/blog-editor-filters";
+
+// "Changes pending" is still a live article; the edits are shown as separate pending work.
+function articleState(topic) {
+  return topic.status === "changes_pending" ? "live" : topic.status;
+}
+
+function pendingWork(topic) {
+  if (topic.awaiting_approval) {
+    return i18n(
+      topic.published
+        ? "blog.editor_table.edits_need_approval"
+        : "blog.panel.needs_approval"
+    );
+  }
+  if (topic.status === "changes_pending") {
+    return i18n("blog.editor_table.edits_pending");
+  }
+}
+
+const PendingWork = <template>
+  {{#let (pendingWork @topic) as |pending|}}
+    {{#if pending}}
+      <span class="status-label blog-dashboard__pending">
+        <span class="status-label-text">{{pending}}</span>
+      </span>
+    {{/if}}
+  {{/let}}
+</template>;
 
 export default class BlogDashboard extends Component {
   @service composer;
@@ -249,9 +277,9 @@ export default class BlogDashboard extends Component {
                   <th class="d-table__header-cell">{{i18n
                       "blog.editor_table.article"
                     }}</th>
-                  <th class="d-table__header-cell">{{i18n
-                      "blog.editor_table.status"
-                    }}</th>
+                  <th
+                    class="d-table__header-cell blog-dashboard__status-column"
+                  >{{i18n "blog.editor_table.status"}}</th>
                   <th class="d-table__header-cell">{{i18n
                       "blog.editor_table.published"
                     }}</th>
@@ -269,29 +297,35 @@ export default class BlogDashboard extends Component {
                   >
                     <td class="d-table__cell --overview">
                       {{#if topic.live}}
-                        <a
-                          class="d-table__overview-link"
-                          href={{or topic.discussion_url topic.url}}
-                        >
-                          <div class="d-table__overview-name">{{or
-                              topic.public_title
-                              topic.title
-                            }}</div>
-                        </a>
+                        <div class="blog-dashboard__title-row">
+                          <a
+                            class="d-table__overview-link"
+                            href={{or topic.discussion_url topic.url}}
+                          >
+                            <div class="d-table__overview-name">{{or
+                                topic.public_title
+                                topic.title
+                              }}</div>
+                          </a>
+                          <PendingWork @topic={{topic}} />
+                        </div>
                         {{#if topic.public_excerpt}}
                           <p
                             class="blog-dashboard__excerpt"
                           >{{topic.public_excerpt}}</p>
                         {{/if}}
                       {{else}}
-                        <a
-                          class="d-table__overview-link"
-                          href={{topic.topic_url}}
-                        >
-                          <div
-                            class="d-table__overview-name"
-                          >{{topic.title}}</div>
-                        </a>
+                        <div class="blog-dashboard__title-row">
+                          <a
+                            class="d-table__overview-link"
+                            href={{topic.topic_url}}
+                          >
+                            <div
+                              class="d-table__overview-name"
+                            >{{topic.title}}</div>
+                          </a>
+                          <PendingWork @topic={{topic}} />
+                        </div>
                         {{#if topic.excerpt}}
                           <p
                             class="blog-dashboard__excerpt"
@@ -299,39 +333,27 @@ export default class BlogDashboard extends Component {
                         {{/if}}
                       {{/if}}
                     </td>
-                    <td class="d-table__cell --detail">
+                    <td
+                      class="d-table__cell --detail blog-dashboard__status-column"
+                    >
                       <div class="d-table__mobile-label">{{i18n
                           "blog.editor_table.status"
                         }}</div>
-                      <div class="blog-dashboard__statuses">
+                      {{#let (articleState topic) as |state|}}
                         <div
                           class={{dConcatClass
                             "status-label"
                             "blog-dashboard__status"
-                            (if topic.live "--success")
-                            (unless (or topic.live topic.draft) "--inactive")
+                            (if (eq state "live") "--success")
+                            (if (eq state "unpublished") "--inactive")
                           }}
                         >
                           <div class="status-label-indicator"></div>
-                          <div class="status-label-text">{{#if
-                              topic.draft
-                            }}{{i18n "blog.private_draft"}}{{else if
-                              topic.live
-                            }}{{i18n "blog.published"}}{{else}}{{i18n
-                                "blog.not_published"
-                              }}{{/if}}</div>
+                          <div class="status-label-text">{{i18n
+                              (concat "blog.panel.badge." state)
+                            }}</div>
                         </div>
-                        {{#if topic.scheduled_at}}
-                          <span class="blog-dashboard__scheduled">{{i18n
-                              "blog.editor_table.scheduled"
-                            }}</span>
-                        {{/if}}
-                        {{#if topic.draft_correction}}
-                          <span class="blog-dashboard__correction">{{i18n
-                              "blog.draft_correction"
-                            }}</span>
-                        {{/if}}
-                      </div>
+                      {{/let}}
                     </td>
                     <td
                       class="d-table__cell --detail blog-dashboard__published"

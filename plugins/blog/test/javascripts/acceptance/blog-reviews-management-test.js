@@ -12,10 +12,11 @@ acceptance("Blog review management", function (needs) {
   needs.user({ admin: true });
   needs.settings({ blog_enabled: true });
 
+  let draft;
   let reviews;
   needs.hooks.beforeEach(() => {
     reviews = [];
-    const draft = {
+    draft = {
       id: 280,
       role: "draft",
       status: "draft",
@@ -42,7 +43,10 @@ acceptance("Blog review management", function (needs) {
     );
   });
 
-  test("creates, reads private feedback, and revokes a review link separately from publication", async function (assert) {
+  test("creates and revokes a review link, then hands off to the private feedback list", async function (assert) {
+    pretender.get("/blog-editor/publications/280.json", () =>
+      response({ ...draft, review_feedback_count: 1 })
+    );
     pretender.post("/blog-editor/publications/280/reviews.json", (request) => {
       assert.strictEqual(
         new URLSearchParams(request.requestBody).get("label"),
@@ -55,20 +59,22 @@ acceptance("Blog review management", function (needs) {
         post_version: 1,
         active: true,
         feedback_count: 1,
+        expires_at: "2099-01-08T00:00:00Z",
         url: "https://blog.example.com/blog/review?review_token=secret",
       };
       reviews = [review];
       return response({ review });
     });
-    pretender.get("/blog-editor/publications/280/reviews/1/feedback.json", () =>
+    pretender.get("/blog-editor/publications/280/feedback.json", () =>
       response({
         feedback: [
           {
             id: 1,
             name: "Guest",
             email: "",
-            message: "<script>not executable</script>",
+            message: "Tighten the introduction.",
             created_at: "2030-01-01T00:00:00Z",
+            review: { id: 1, label: "Editorial round", post_version: 1 },
           },
         ],
         more: false,
@@ -87,6 +93,7 @@ acceptance("Blog review management", function (needs) {
       return response(204);
     });
     await visit(TOPIC_URL);
+    await click(".blog-publication-panel__menu-trigger");
     await click(".blog-publication-panel__share-for-review");
     assert
       .dom(".blog-reviews")
@@ -99,10 +106,13 @@ acceptance("Blog review management", function (needs) {
       .fillIn("Editorial round");
     await formKit(".blog-reviews__create").submit();
     assert
-      .dom(".blog-reviews__link-url")
-      .hasValue(
-        "https://blog.example.com/blog/review?review_token=secret",
-        "an issued link stays readable instead of being shown once"
+      .form(".blog-reviews__create")
+      .field("label")
+      .hasValue("", "the label is cleared for the next link");
+    assert
+      .dom(".blog-reviews__copy")
+      .exists(
+        "an issued link stays available to copy instead of being shown once"
       );
     assert
       .dom(".blog-reviews__open")
@@ -110,29 +120,53 @@ acceptance("Blog review management", function (needs) {
         "href",
         "https://blog.example.com/blog/review?review_token=secret"
       );
-    await click(".blog-reviews__feedback-toggle");
-    assert
-      .dom(".blog-reviews__feedback p")
-      .hasText(
-        "<script>not executable</script>",
-        "untrusted feedback is escaped"
-      );
-    assert
-      .dom(".blog-reviews__feedback script")
-      .doesNotExist("feedback never becomes executable HTML");
     await click(".blog-reviews__revoke");
     assert.verifySteps([], "revocation requires confirmation");
     await click(".dialog-footer .btn-primary");
     assert.verifySteps(["revoked"], "the selected grant is revoked");
     assert
-      .dom(".blog-reviews__link")
+      .dom(".blog-reviews__copy")
       .doesNotExist("a revoked link is no longer offered for sharing");
     assert
       .dom('[data-review-id="1"]')
       .includesText(
-        "Expired or revoked",
-        "the old review remains available for private feedback"
+        "Revoked",
+        "the old review remains listed with its feedback"
       );
+    await click(".blog-reviews__feedback-link");
+    assert
+      .dom(".blog-reviews")
+      .doesNotExist("the modal stays focused on links and closes");
+    assert
+      .dom(".blog-publication-panel__feedback-message")
+      .hasText("Tighten the introduction.", "feedback opens in the panel");
+  });
+
+  test("names links that publishing closed", async function (assert) {
+    reviews = [
+      {
+        id: 4,
+        label: "Before launch",
+        post_version: 1,
+        active: false,
+        feedback_count: 0,
+        expires_at: "2099-01-08T00:00:00Z",
+        revoked_at: "2030-01-01T00:00:00Z",
+        revoked_by_publish: true,
+      },
+    ];
+    await visit(TOPIC_URL);
+    await click(".blog-publication-panel__menu-trigger");
+    await click(".blog-publication-panel__share-for-review");
+    assert
+      .dom('[data-review-id="4"] .blog-reviews__status')
+      .hasText(
+        "Closed when published",
+        "publish closures are not shown as revokes"
+      );
+    assert
+      .dom('[data-review-id="4"] .blog-reviews__revoke')
+      .doesNotExist("a closed link cannot be revoked again");
   });
 
   test("asks before discarding unsaved publication settings", async function (assert) {
@@ -141,6 +175,7 @@ acceptance("Blog review management", function (needs) {
     await formKit(".blog-publication-panel__form")
       .field("excerpt")
       .fillIn("Unsaved publication excerpt");
+    await click(".blog-publication-panel__menu-trigger");
     await click(".blog-publication-panel__share-for-review");
     assert
       .dom(".dialog-body")

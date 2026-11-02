@@ -133,7 +133,7 @@ en:
     review:
       page_title: Draft review
       javascript_required: Enable JavaScript to read this shared draft and leave feedback.
-      unavailable: This review link has expired, was revoked, or is no longer available. Ask the editor for a new link.
+      unavailable: This review link has expired, was revoked, or is no longer available.
       limit: This draft already has 20 active review links. Revoke one before creating another.
       feedback_limit: This review has reached its feedback limit. Contact the editor for a new review link.
     editorial:

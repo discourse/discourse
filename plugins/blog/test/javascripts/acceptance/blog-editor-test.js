@@ -38,6 +38,7 @@ acceptance("Blog editor", function (needs) {
       url: "https://blog.example.com/an-unfinished-story",
       excerpt: "",
       featured: false,
+      status: "draft",
       draft: true,
       published: false,
       live: false,
@@ -49,6 +50,7 @@ acceptance("Blog editor", function (needs) {
       ...draft,
       id: 124,
       title: "A published story",
+      status: "live",
       draft: false,
       published: true,
       live: true,
@@ -113,6 +115,7 @@ acceptance("Blog editor", function (needs) {
       url: "https://blog.example.com/live-article",
       discussion_url: "/t/live-article/200",
       source_url: "/t/private-correction/201",
+      status: "changes_pending",
       draft_correction: true,
     };
     await visit("/blog-editor");
@@ -158,25 +161,49 @@ acceptance("Blog editor", function (needs) {
     await click('[data-topic-id="124"] .blog-dashboard__more-actions');
     assert
       .dom('[data-topic-id="124"] .blog-dashboard__status')
-      .hasText(
-        "Published",
-        "corrections do not mark a live article unpublished"
-      );
+      .hasText("Live", "edits do not change the article's own state");
     assert
-      .dom('[data-topic-id="124"] .blog-dashboard__correction')
-      .hasText("Draft correction", "pending editorial changes are identified");
+      .dom('[data-topic-id="124"] .blog-dashboard__pending')
+      .hasText("Edits pending", "unpublished edits are shown separately");
     assert
       .dom('[data-topic-id="123"] .blog-dashboard__status')
       .hasText("Draft", "never-published articles are drafts");
     assert
-      .dom('[data-topic-id="124"] .blog-dashboard__status')
-      .hasClass("--success", "live articles use the success status style");
-    assert
       .dom('[data-topic-id="123"] .blog-dashboard__status')
       .doesNotHaveClass("--success", "drafts use the neutral status style");
+  });
+
+  test("shows a submitted draft's approval request beside its state", async function (assert) {
+    draft = { ...draft, awaiting_approval: true };
+    await visit("/blog-editor");
     assert
-      .dom('[data-topic-id="123"] .blog-dashboard__correction')
-      .doesNotExist("new drafts are not corrections");
+      .dom('[data-topic-id="123"] .blog-dashboard__status')
+      .hasText("Draft", "a submitted draft is still a draft");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__pending')
+      .hasText("Needs approval");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__status')
+      .hasText("Live")
+      .hasClass("--success", "live articles use the success status style");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__pending')
+      .doesNotExist("articles without pending work show one status");
+  });
+
+  test("shows submitted edits on a live article", async function (assert) {
+    published = {
+      ...published,
+      status: "changes_pending",
+      awaiting_approval: true,
+    };
+    await visit("/blog-editor");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__status')
+      .hasText("Live", "the article stays live while edits wait");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__pending')
+      .hasText("Edits need approval");
   });
 
   test("lists status, publication date, replies, and row actions", async function (assert) {
@@ -184,10 +211,11 @@ acceptance("Blog editor", function (needs) {
       ...published,
       discussion_url: "/t/live-article/200",
       scheduled_at: "2026-10-01T10:00:00.000Z",
+      status: "scheduled",
     };
     await visit("/blog-editor");
     assert
-      .dom('[data-topic-id="124"] .blog-dashboard__scheduled')
+      .dom('[data-topic-id="124"] .blog-dashboard__status')
       .hasText("Scheduled", "scheduled releases are identified");
     assert
       .dom('[data-topic-id="124"] .blog-dashboard__published .relative-date')

@@ -2297,7 +2297,8 @@ CREATE TABLE public.blog_reviews (
     revoked_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    token character varying(64)
+    token character varying(64),
+    revoked_by_publish boolean DEFAULT false NOT NULL
 );
 
 
@@ -26508,6 +26509,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261102174233'),
 ('20261030180958'),
 ('20261029021723'),
 ('20261028093149'),
