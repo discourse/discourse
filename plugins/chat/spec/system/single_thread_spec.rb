@@ -36,12 +36,13 @@ describe "Single thread in side panel" do
 
     context "when returning to a thread where last read is not last message" do
       it "scrolls to the correct last read message" do
+        Fabricate.times(30, :chat_message, thread: thread, chat_channel: channel, user: user_2)
         message_1 = Fabricate(:chat_message, thread: thread, chat_channel: channel)
         thread.membership_for(current_user).update!(last_read_message: message_1)
-        messages = Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel)
+        Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel, user: user_2)
         chat_page.visit_thread(thread)
 
-        expect(page).to have_css("[data-id='#{message_1.id}'].-highlighted")
+        expect(thread_page.messages).to have_message_in_viewport(message_1)
       end
     end
 
