@@ -280,6 +280,132 @@ RSpec.describe DiscourseAi::AskAi::Ask do
       end
     end
 
+    context "when a search using operators may defer its answer" do
+      let(:query) { "password reset status:open" }
+      let(:classify_intent) { true }
+      let(:params) { super().merge(defer_if_precise: true) }
+
+      it { is_expected.to run_successfully }
+
+      it "logs the search as skipped, without an answer or a judgement" do
+        expect_not_enqueued_with(job: :stream_discover_reply) { result }
+        expect(ask_log).to have_attributes(
+          ask_outcome: "skipped",
+          ask_trigger: "enter",
+          ask_intent_model: "",
+        )
+        expect(result[:judgement]).to be_nil
+      end
+
+      it "does not remember it as an ask" do
+        result
+        expect(DiscourseAi::Discoveries.recent_asks(user_id: user.id)).to be_empty
+      end
+    end
+
+    context "when a plain search may defer its answer" do
+      let(:params) { super().merge(defer_if_precise: true) }
+
+      it "queues the answer" do
+        expect_enqueued_with(job: :stream_discover_reply, args: { request_id: }) { result }
+      end
+    end
+
+    context "when a search of only a quoted phrase may defer its answer" do
+      let(:query) { '"slow mode"' }
+      let(:params) { super().merge(defer_if_precise: true) }
+
+      it "logs the search as skipped" do
+        expect_not_enqueued_with(job: :stream_discover_reply) { result }
+        expect(ask_log).to have_attributes(ask_outcome: "skipped")
+      end
+    end
+
+    context "when a question quoting a phrase may defer its answer" do
+      let(:query) { 'what does "slow mode" do' }
+      let(:params) { super().merge(defer_if_precise: true) }
+
+      it "queues the answer" do
+        expect_enqueued_with(job: :stream_discover_reply, args: { request_id: }) { result }
+      end
+    end
+
+    context "when a search within the reader's messages may defer its answer" do
+      let(:scope) { "messages" }
+      let(:params) { super().merge(defer_if_precise: true) }
+
+      it "logs the search as skipped with its scope" do
+        expect_not_enqueued_with(job: :stream_discover_reply) { result }
+        expect(ask_log).to have_attributes(ask_outcome: "skipped", ask_scope: "messages")
+      end
+    end
+
+    context "when a search made inside a personal message may defer its answer" do
+      fab!(:private_message) { Fabricate(:private_message_topic, user:) }
+      fab!(:other_private_message, :private_message_topic)
+
+      let(:scope) { "topic:#{private_message.id}" }
+      let(:params) { super().merge(defer_if_precise: true) }
+
+      it "logs the search as skipped" do
+        expect_not_enqueued_with(job: :stream_discover_reply) { result }
+        expect(ask_log).to have_attributes(ask_outcome: "skipped")
+      end
+
+      context "when the reader cannot see that message" do
+        let(:scope) { "topic:#{other_private_message.id}" }
+
+        it "does not reveal it by deferring" do
+          expect_enqueued_with(job: :stream_discover_reply, args: { request_id: }) { result }
+        end
+      end
+    end
+
+    context "when the reader requests an answer deferred by an earlier search" do
+      fab!(:deferred_log) do
+        AskAiLog.create!(
+          user:,
+          query: "password reset status:open",
+          asked_at: 1.minute.ago,
+          ask_outcome: :skipped,
+        )
+      end
+
+      let(:query) { deferred_log.query }
+      let(:params) { super().merge(deferred_ask_log_id: deferred_log.id) }
+
+      it "answers on the search's own log" do
+        freeze_time
+
+        expect { result }.not_to change { AskAiLog.count }
+        expect(deferred_log.reload).to have_attributes(
+          ask_outcome: nil,
+          answer_requested_at: be_within(1.second).of(Time.current),
+        )
+        expect(Jobs::StreamDiscoverReply.jobs.last["args"].first).to include(
+          "ask_ai_log_id" => deferred_log.id,
+        )
+      end
+
+      context "when the log belongs to someone else" do
+        before { deferred_log.update!(user: Fabricate(:user)) }
+
+        it "logs a new ask and leaves theirs alone" do
+          expect { result }.to change { AskAiLog.count }.by(1)
+          expect(deferred_log.reload).to have_attributes(ask_outcome: "skipped")
+        end
+      end
+
+      context "when the log is for a different search" do
+        let(:query) { "how do I reset my password" }
+
+        it "logs a new ask and leaves the earlier search alone" do
+          expect { result }.to change { AskAiLog.count }.by(1)
+          expect(deferred_log.reload).to have_attributes(ask_outcome: "skipped")
+        end
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

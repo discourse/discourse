@@ -14,6 +14,9 @@ module DiscourseAi
       /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/i
     PRIVATE_MESSAGE_FILTER =
       /(?:\A|\s)(?:in:(?:messages|personal|personal-direct|all-pms)|(?:group|personal)_messages:\S+)(?=\s|\z)/i
+    # keeps to the search menu's own check for operators and quoted phrases
+    PRECISE_SEARCH =
+      /\A\s*(?:"[^"]+"\s*)+\z|(?:\A|\s)-?(?:in|status|order|before|after|with|category|categories|tags?|user|group|badge|topic|min_\w+|max_\w+):\S|(?:\A|\s)[#@]\S+/i
     BIND_REQUEST_SCRIPT = <<~LUA
       local existing_query = redis.call("GET", KEYS[1])
       if not existing_query then
@@ -98,6 +101,21 @@ module DiscourseAi
         query.to_s.match?(PRIVATE_MESSAGE_FILTER)
       end
 
+      def precise_search?(query)
+        query.to_s.match?(PRECISE_SEARCH)
+      end
+
+      # Whether answering would send the reader's private messages to the model.
+      def private_search?(query:, scope:, guardian:)
+        return true if private_message_query?(query) || private_message_query?(scope_filter(scope))
+
+        topic_id = scope.to_s[/\Atopic:(\d+)\z/, 1]
+        return false if topic_id.nil?
+
+        # a topic they cannot see stays indistinguishable from any other
+        guardian.can_see_topic?(Topic.private_messages.find_by(id: topic_id))
+      end
+
       # Asked terms are kept apart from SearchLog rather than logged into it:
       # its `search_type` records where a search happened, and the reports group
       # by it. The two lists are merged for display instead.
@@ -161,8 +179,31 @@ module DiscourseAi
           end
       end
 
+      # Logs a search whose answer waits for the reader to request it.
+      # @return [AskAiLog]
+      def log_deferred_ask(
+        user:,
+        query:,
+        scope: nil,
+        trigger: "",
+        trigger_reason: "",
+        intent_heuristic: ""
+      )
+        AskAiLog.create!(
+          user:,
+          query:,
+          asked_at: Time.current,
+          ask_outcome: :skipped,
+          ask_scope: scope.to_s,
+          ask_trigger: trigger,
+          ask_trigger_reason: trigger_reason,
+          ask_intent_heuristic: intent_heuristic,
+        )
+      end
+
       # Queues the answer to a request already bound with `bind_request`.
-      # @return [AskAiLog] the new ask's log
+      # @param deferred_log [AskAiLog, nil] the search this answer was requested from
+      # @return [AskAiLog] the ask's log
       def enqueue_reply(
         user:,
         request_id:,
@@ -170,18 +211,24 @@ module DiscourseAi
         scope: nil,
         trigger: "",
         trigger_reason: "",
-        intent_heuristic: ""
+        intent_heuristic: "",
+        deferred_log: nil
       )
         asked_at = Time.current
-        ask_log =
-          AskAiLog.create!(
-            user:,
-            query:,
-            asked_at:,
-            ask_trigger: trigger,
-            ask_trigger_reason: trigger_reason,
-            ask_intent_heuristic: intent_heuristic,
-          )
+        ask_log = deferred_log
+        if ask_log
+          ask_log.update!(ask_outcome: nil, answer_requested_at: asked_at)
+        else
+          ask_log =
+            AskAiLog.create!(
+              user:,
+              query:,
+              asked_at:,
+              ask_trigger: trigger,
+              ask_trigger_reason: trigger_reason,
+              ask_intent_heuristic: intent_heuristic,
+            )
+        end
         settings = result_settings(user)
         Jobs.enqueue(
           :stream_discover_reply,
@@ -200,15 +247,19 @@ module DiscourseAi
         raise
       end
 
-      # Records which tab the search menu opened an ask on, and the first one the
-      # reader switched to. Each is kept from its first report only.
+      # Records how the reader moved through the search menu's tabs for an ask.
+      # Each event is kept from its first report only.
       def record_tabs(
         user:,
         ask_log_id:,
         opened: nil,
         opened_reason: "",
+        opened_after_ms: 0,
         switched_to: nil,
-        switched_after_ms: 0
+        switched_after_ms: 0,
+        answer_seen_after_ms: nil,
+        clicked_tab: nil,
+        clicked_after_ms: 0
       )
         ask_log = AskAiLog.find_by(id: ask_log_id, user_id: user.id)
         raise Discourse::NotFound if ask_log.nil?
@@ -217,7 +268,11 @@ module DiscourseAi
         if opened.present? && ask_log.ask_tab_opened.blank?
           raise Discourse::InvalidParameters.new(:tab_opened) if SEARCH_TABS.exclude?(opened)
           opened_reason = "" if !opened_reason.to_s.match?(TRIGGER_REASON_PATTERN)
-          updates.merge!(ask_tab_opened: opened, ask_tab_opened_reason: opened_reason.to_s)
+          updates.merge!(
+            ask_tab_opened: opened,
+            ask_tab_opened_reason: opened_reason.to_s,
+            ask_tab_opened_after_ms: reported_ms(opened_after_ms),
+          )
         end
         if switched_to.present? && ask_log.ask_tab_switched_to.blank?
           if SEARCH_TABS.exclude?(switched_to)
@@ -225,7 +280,19 @@ module DiscourseAi
           end
           updates.merge!(
             ask_tab_switched_to: switched_to,
-            ask_tab_switched_after_ms: switched_after_ms.to_i.clamp(0, 1.hour.in_milliseconds),
+            ask_tab_switched_after_ms: reported_ms(switched_after_ms),
+          )
+        end
+        if answer_seen_after_ms.present? && ask_log.ask_answer_seen_after_ms.nil?
+          updates[:ask_answer_seen_after_ms] = reported_ms(answer_seen_after_ms)
+        end
+        if clicked_tab.present? && ask_log.ask_result_clicked_tab.blank?
+          if SEARCH_TABS.exclude?(clicked_tab)
+            raise Discourse::InvalidParameters.new(:result_clicked_tab)
+          end
+          updates.merge!(
+            ask_result_clicked_tab: clicked_tab,
+            ask_result_clicked_after_ms: reported_ms(clicked_after_ms),
           )
         end
         ask_log.update!(updates) if updates.present?
@@ -328,6 +395,10 @@ module DiscourseAi
 
       private
 
+      def reported_ms(milliseconds)
+        milliseconds.to_i.clamp(0, 1.hour.in_milliseconds)
+      end
+
       def leaves_answers?(user)
         opened_on_answer =
           AskAiLog
@@ -345,6 +416,7 @@ module DiscourseAi
 
         returned =
           AskAiLog
+            .asked
             .where(user_id: user.id)
             .where.not(ask_tab_opened: ["", "ask"])
             .order(asked_at: :desc)

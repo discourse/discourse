@@ -14,7 +14,9 @@ module DiscourseAi
         return legacy_reply if params[:request_id].blank?
 
         DiscourseAi::AskAi::Ask.call(service_params) do |result|
-          on_success do
+          on_success do |ask_log: nil|
+            # the search that deferred this answer was already counted
+            @ask_rate_limiter.rollback! if ask_log&.answer_requested_at
             render json: DiscourseAi::AskAi::AskSerializer.new(result, root: false).as_json
           end
           on_failed_contract do |contract|
@@ -60,8 +62,12 @@ module DiscourseAi
           ask_log_id: params.require(:ask_log_id),
           opened: params[:tab_opened].presence,
           opened_reason: params[:tab_opened_reason].to_s,
+          opened_after_ms: params[:tab_opened_after_ms],
           switched_to: params[:tab_switched_to].presence,
           switched_after_ms: params[:tab_switched_after_ms],
+          answer_seen_after_ms: params[:answer_seen_after_ms],
+          clicked_tab: params[:result_clicked_tab].presence,
+          clicked_after_ms: params[:result_clicked_after_ms],
         )
         head :no_content
       end
@@ -190,12 +196,14 @@ module DiscourseAi
       end
 
       def rate_limit_ask
-        RateLimiter.new(
-          current_user,
-          "ai_discover_#{current_user.id}",
-          DiscourseAi::Discoveries::ASK_RATE_LIMIT,
-          1.minute,
-        ).performed!
+        @ask_rate_limiter =
+          RateLimiter.new(
+            current_user,
+            "ai_discover_#{current_user.id}",
+            DiscourseAi::Discoveries::ASK_RATE_LIMIT,
+            1.minute,
+          )
+        @ask_rate_limiter.performed!
       end
 
       def normalized_query

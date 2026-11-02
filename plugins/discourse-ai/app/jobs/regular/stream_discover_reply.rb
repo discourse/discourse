@@ -27,6 +27,8 @@ module Jobs
 
       llm_model_id = ai_agent.default_llm_id.presence || SiteSetting.ai_default_llm_model
       return if (llm_model = LlmModel.find_by(id: llm_model_id)).nil?
+      ask_log&.assign_attributes(ai_agent_id: ai_agent.id, llm_id: llm_model.id)
+      feature_context = ask_log ? { ask_ai_log_id: ask_log.id } : {}
 
       base = { query:, request_id: args[:request_id] }
       queued_at = Float(args[:queued_at], exception: false)
@@ -53,7 +55,7 @@ module Jobs
       publish_update(user, base.merge(done: false, phase: "searching"))
 
       stage = :rewrite
-      rewritten_queries = rewrite_queries(user:, query:, cancel_manager:)
+      rewritten_queries = rewrite_queries(user:, query:, cancel_manager:, feature_context:)
       if ask_log
         ask_log.assign_attributes(
           keyword_query: rewritten_queries.keyword_query,
@@ -107,7 +109,7 @@ module Jobs
       end
       base = base.merge(scope_fallback: true) if retrieval_result.scope_fallback
       if retrieval_result.synthesis_candidates.empty?
-        ask_log.ask_outcome = :no_answer if ask_log
+        ask_log&.assign_attributes(ask_outcome: :no_answer, no_answer_reason: :no_candidates)
         publish_no_answer(user, base)
         return
       end
@@ -116,16 +118,22 @@ module Jobs
       stage = :synthesis
       result_settings = request_result_settings(args, user)
       synthesis =
-        DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
+        DiscourseAi::Discoveries::Synthesis.new(
+          user:,
+          ai_agent:,
+          llm_model:,
+          cancel_manager:,
+          feature_context:,
+        )
       selected_sources = nil
       rejected = false
       discovery_title = ""
       last_published_answer = ""
       last_streamed_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       reject =
-        lambda do
+        lambda do |reason|
           rejected = true
-          ask_log.ask_outcome = :no_answer if ask_log
+          ask_log&.assign_attributes(ask_outcome: :no_answer, no_answer_reason: reason)
           publish_no_answer(user, base)
           cancel_manager.cancel!
         end
@@ -144,7 +152,7 @@ module Jobs
         ) do |update|
           # the cancel monitor already stops this once the request is superseded
           next if rejected || cancel_manager.cancelled?
-          next reject.call if update[:answerable] == false
+          next reject.call(:abstained) if update[:answerable] == false
 
           discovery_title = update[:title].to_s.strip if update[:title].present?
 
@@ -155,7 +163,7 @@ module Jobs
                 update[:source_refs],
                 limit: result_settings[:related_count],
               )
-            next reject.call if selected_sources.empty?
+            next reject.call(:unresolved_sources) if selected_sources.empty?
 
             publish_update(
               user,
@@ -190,10 +198,7 @@ module Jobs
             ),
           )
           if ask_log && ask_log.time_to_first_answer_ms.nil?
-            ask_log.time_to_first_answer_ms = [
-              (Time.current - ask_log.asked_at) * 1000,
-              0,
-            ].max.round
+            ask_log.time_to_first_answer_ms = ask_log.ms_since_answer_requested
           end
         end
 
@@ -244,7 +249,10 @@ module Jobs
           ),
         )
       else
-        ask_log.ask_outcome = :no_answer if ask_log
+        ask_log&.assign_attributes(
+          ask_outcome: :no_answer,
+          no_answer_reason: no_answer_reason(result, final_sources),
+        )
         publish_no_answer(user, base)
       end
     rescue LlmCreditAllocation::CreditLimitExceeded => e
@@ -267,6 +275,8 @@ module Jobs
             ask_log.ask_outcome = :cancelled
           end
         end
+        ask_log.time_to_outcome_ms =
+          ask_log.ms_since_answer_requested if ask_log.ask_outcome_changed?
         ask_log.save! if ask_log.changed?
       end
     end
@@ -385,7 +395,12 @@ module Jobs
       agent if agent && user.in_any_groups?(agent.allowed_group_ids.to_a)
     end
 
-    def rewrite_queries(user:, query:, cancel_manager:)
+    def no_answer_reason(result, sources)
+      return result.no_answer_reason || :abstained if !result.answerable
+      sources.blank? ? :unresolved_sources : :empty_answer
+    end
+
+    def rewrite_queries(user:, query:, cancel_manager:, feature_context:)
       fallback =
         DiscourseAi::Discoveries::QueryRewriter::Result.new(
           keyword_query: query,
@@ -407,6 +422,7 @@ module Jobs
         ai_agent: agent,
         llm_model:,
         cancel_manager:,
+        feature_context:,
       ).call(query)
     end
 
