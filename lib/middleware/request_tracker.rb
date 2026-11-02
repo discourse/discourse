@@ -378,13 +378,15 @@ class Middleware::RequestTracker
 
     MethodProfiler.start
 
-    if SiteSetting.instrument_gc_stat_per_request
-      gc_stat_timing = GCStatInstrumenter.instrument { result = @app.call(env) }
-    else
-      result = @app.call(env)
+    begin
+      if SiteSetting.instrument_gc_stat_per_request
+        gc_stat_timing = GCStatInstrumenter.instrument { result = @app.call(env) }
+      else
+        result = @app.call(env)
+      end
+    ensure
+      info = MethodProfiler.stop
     end
-
-    info = MethodProfiler.stop
 
     # possibly transferred?
     if info && (headers = result[1])
