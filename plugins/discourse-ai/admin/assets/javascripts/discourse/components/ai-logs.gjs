@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { next } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import { ajax } from "discourse/lib/ajax";
@@ -69,6 +69,7 @@ export default class AiLogs extends Component {
   @tracked loadingNewLogs = false;
   keyValueStore = new KeyValueStore("discourse-ai-logs");
 
+  #searchDebounce;
   _requestId = 0;
   _openRequestId = 0;
   _openLogId;
@@ -77,6 +78,7 @@ export default class AiLogs extends Component {
   _pollInFlight = false;
   _pollEpoch = 0;
   _emptyPolls = 0;
+
   _sinceId = 0;
 
   constructor() {
@@ -103,6 +105,7 @@ export default class AiLogs extends Component {
     window.removeEventListener("popstate", this.syncDetailsFromLocation);
     document.removeEventListener("visibilitychange", this.onVisibilityChange);
     clearTimeout(this._pollTimer);
+    cancel(this.#searchDebounce);
     if (this._openLogId) {
       this.modal.close();
     }
@@ -561,7 +564,12 @@ export default class AiLogs extends Component {
     // keep the live-search state in sync with the server's 200-char cap so a
     // long paste surfaces as a truncation instead of a 400 error
     this.searchText = (event.target.value || "").slice(0, MAX_SEARCH_LENGTH);
-    discourseDebounce(this, this.performLiveSearch, {}, INPUT_DELAY);
+    this.#searchDebounce = discourseDebounce(
+      this,
+      this.performLiveSearch,
+      {},
+      INPUT_DELAY
+    );
   }
 
   async performLiveSearch() {
@@ -636,6 +644,7 @@ export default class AiLogs extends Component {
 
   @action
   clearFilters() {
+    cancel(this.#searchDebounce);
     this.selectedPeriod = undefined;
     this.startDate = moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate();
     this.endDate = new Date();

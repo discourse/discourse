@@ -45,6 +45,16 @@ module PageObjects
         self
       end
 
+      def search_and_clear(value)
+        page.execute_script(<<~JS, value.to_s)
+          const input = document.querySelector(".d-filter-controls__input");
+          input.value = arguments[0];
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+          document.querySelector(".d-filter-controls__reset").click();
+        JS
+        self
+      end
+
       def filter_value(key)
         find(".d-filter-controls__dropdown--#{key}").value
       end
