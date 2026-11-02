@@ -15,6 +15,7 @@ module Migrations
         end
 
         def fork_policy
+          # Keep the parent's connection open and discard the inherited handle in each worker.
           :discard
         end
 
