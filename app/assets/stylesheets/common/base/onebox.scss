@@ -890,30 +890,19 @@ aside.onebox.github-onebox {
     }
   }
 
-  &:is(.githubpullrequest, .githubissue, .githubcommit, .githubactions)
-    > .onebox-body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+  &:is(.githubpullrequest, .githubissue, .githubcommit) > .onebox-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "title" "branches" "info" "body";
+    gap: 0;
   }
 
   &.githubactions .github-row {
-    display: contents;
+    display: block;
   }
 
-  .github-info-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    min-width: 0;
-
-    h4 {
-      margin-block-end: var(--space-1);
-    }
-
-    > .github-info {
-      order: 1;
-    }
+  .branches,
+  .labels {
+    margin-block-end: var(--space-1);
   }
 
   .branches {
@@ -935,10 +924,6 @@ aside.onebox.github-onebox {
     code:first-of-type {
       flex: 0 0 auto;
       max-width: 45%;
-    }
-
-    code:last-of-type {
-      flex: 0 1 auto;
     }
   }
 
@@ -986,7 +971,7 @@ aside.onebox.github-onebox {
   }
 
   .github-body-container {
-    margin: 0;
+    margin: var(--space-3) 0 0;
     max-width: 65ch;
     font-family: inherit;
     font-size: var(--font-down-1);
