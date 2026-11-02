@@ -50,13 +50,20 @@ RSpec.describe UserStat do
       like!(Fabricate(:post, user: author, hidden: true))
       DirectoryItem.refresh_period!(:all, force: true)
       directory_counts =
-        UserStat.where(user_id: [liker.id, author.id]).pluck(:likes_given, :likes_received)
+        UserStat
+          .where(user_id: [liker.id, author.id])
+          .order(:user_id)
+          .pluck(:user_id, :likes_given, :likes_received)
+      expect(directory_counts).to contain_exactly([liker.id, 1, 0], [author.id, 0, 1])
       UserStat.where(user_id: [liker.id, author.id]).update_all(likes_given: 9, likes_received: 9)
 
       UserStat.recalculate_likes!([liker.id, author.id])
 
       expect(
-        UserStat.where(user_id: [liker.id, author.id]).pluck(:likes_given, :likes_received),
+        UserStat
+          .where(user_id: [liker.id, author.id])
+          .order(:user_id)
+          .pluck(:user_id, :likes_given, :likes_received),
       ).to eq(directory_counts)
     end
   end
