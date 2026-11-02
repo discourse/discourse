@@ -31,6 +31,32 @@ describe "Admin Users Page" do
     expect(admin_users_page).to have_no_bulk_actions_dropdown
   end
 
+  it "retains the latest search results when an earlier response arrives" do
+    alice = Fabricate(:user, username: "alice")
+    zoe = Fabricate(:user, username: "zoe")
+    admin_users_page.visit
+    expect(admin_users_page).to have_users([alice.id, zoe.id])
+
+    PageObjects::CDP
+      .new
+      .with_paused_request(%r{/admin/users/list/active.json\?.*filter=alice}) do |request|
+        admin_users_page.search(alice.username)
+        request.wait
+        expect(admin_users_page).to have_no_users([alice.id, zoe.id])
+
+        admin_users_page.search(zoe.username)
+        expect(admin_users_page).to have_users([zoe.id])
+
+        request.resume
+        page.driver.with_playwright_page do |browser|
+          browser.evaluate("() => window.clientSettled(30000)")
+        end
+
+        expect(admin_users_page).to have_users([zoe.id])
+        expect(admin_users_page).to have_no_users([alice.id])
+      end
+  end
+
   describe "bulk user delete" do
     let(:confirmation_modal) { PageObjects::Modals::BulkUserDeleteConfirmation.new }
 

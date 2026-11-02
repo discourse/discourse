@@ -51,6 +51,7 @@ export default class AdminUsersListShowController extends Controller {
   lastSelected = null;
 
   #page = 1;
+  #requestId = 0;
 
   #results = trackedArray();
   #canLoadMore = true;
@@ -372,6 +373,7 @@ export default class AdminUsersListShowController extends Controller {
     }
 
     const page = this.#page;
+    const requestId = ++this.#requestId;
     this.refreshing = true;
 
     return AdminUser.findAll(this.query, {
@@ -384,13 +386,19 @@ export default class AdminUsersListShowController extends Controller {
       page,
     })
       .then((result) => {
+        if (requestId !== this.#requestId) {
+          return;
+        }
+
         this.#results[page] = result;
         if (result.length < USERS_PER_PAGE) {
           this.#canLoadMore = false;
         }
       })
       .finally(() => {
-        this.refreshing = false;
+        if (requestId === this.#requestId) {
+          this.refreshing = false;
+        }
       });
   }
 }
