@@ -6,7 +6,7 @@ class MigrationsLifecycleTestDriver
                 :close_error,
                 :open_error,
                 :validate_error,
-                :discard_error
+                :detach_error
   attr_reader :handles
 
   def initialize(policy = :forbid)
@@ -32,8 +32,8 @@ class MigrationsLifecycleTestDriver
     handle.close
   end
 
-  def discard(handle)
-    raise @discard_error if @discard_error
+  def detach(handle)
+    raise @detach_error if @detach_error
     handle.close
   end
 end

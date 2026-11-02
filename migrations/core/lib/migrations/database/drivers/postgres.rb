@@ -15,8 +15,7 @@ module Migrations
         end
 
         def fork_policy
-          # Keep the parent's connection open and discard the inherited handle in each worker.
-          :discard
+          :detach
         end
 
         def open
@@ -33,7 +32,7 @@ module Migrations
           connection.finish unless connection.finished?
         end
 
-        def discard(connection)
+        def detach(connection)
           return if connection.finished?
           # PQfinish writes Terminate. Redirect the socket first so it cannot close
           # the parent's session.

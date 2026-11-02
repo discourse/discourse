@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Database::ManagedConnection do
-  let(:driver) { MigrationsLifecycleTestDriver.new(:discard) }
+  let(:driver) { MigrationsLifecycleTestDriver.new(:detach) }
   let(:lifecycle) { Migrations::Database::Lifecycle }
   let(:manager) { Migrations::ForkManager }
 
@@ -70,7 +70,7 @@ RSpec.describe Migrations::Database::ManagedConnection do
     expect { @connection.with { manager.fork {} } }.to raise_error(lifecycle::UnsafeForkError)
   end
 
-  it "allows forks while another thread reads a discardable connection" do
+  it "allows forks while another thread reads a detachable connection" do
     @connection = described_class.open(driver)
     entered, release = Queue.new, Queue.new
     reader =
@@ -204,9 +204,9 @@ RSpec.describe Migrations::Database::ManagedConnection do
     other&.close
   end
 
-  it "exits without running the worker when native discard fails" do
+  it "exits without running the worker when native detach fails" do
     @connection = described_class.open(driver)
-    driver.discard_error = IOError.new("redirection failed")
+    driver.detach_error = IOError.new("redirection failed")
     _, status = Process.waitpid2(manager.fork { Process.exit!(0) })
     expect(status.exitstatus).to eq(1)
     expect(@connection.with(&:closed?)).to be(false)

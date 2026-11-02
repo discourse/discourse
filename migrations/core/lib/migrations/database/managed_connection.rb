@@ -35,7 +35,7 @@ module Migrations
       def initialize(driver)
         @driver = driver
         @policy = driver.respond_to?(:fork_policy) ? driver.fork_policy : :forbid
-        unless %i[forbid discard close_reopen].include?(@policy)
+        unless %i[forbid detach close_reopen].include?(@policy)
           raise ArgumentError, "Unknown fork policy: #{@policy.inspect}"
         end
 
@@ -130,7 +130,7 @@ module Migrations
 
       # @return [void]
       def discard_after_fork!
-        @driver.discard(@connection) if @connection
+        @driver.detach(@connection) if @connection
         @connection = nil
         @state = :discarded
         @mutex = Mutex.new
