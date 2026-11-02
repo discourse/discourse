@@ -44,10 +44,17 @@ module Migrations
         end
 
         def validate_fork!(connection)
-          if connection.transaction_active? || attached_databases?(connection) ||
-               temporary_schema?(connection)
+          if connection.transaction_active?
             raise Lifecycle::UnsafeForkError,
-                  "SQLite has an active transaction, attached database, or temporary schema; cannot reopen it safely"
+                  "SQLite has an active transaction; cannot reopen it safely"
+          end
+          if attached_databases?(connection)
+            raise Lifecycle::UnsafeForkError,
+                  "SQLite has an attached database; cannot reopen it safely"
+          end
+          if temporary_schema?(connection)
+            raise Lifecycle::UnsafeForkError,
+                  "SQLite has a temporary schema; cannot reopen it safely"
           end
         end
 

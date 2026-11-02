@@ -290,11 +290,13 @@ RSpec.describe Migrations::Database::Connection do
         connection.attach_database(":memory:", name: "attached")
         expect { Migrations::ForkManager.fork {} }.to raise_error(
           Migrations::Database::Lifecycle::UnsafeForkError,
+          /attached database/,
         )
         connection.execute("DETACH DATABASE attached")
         connection.execute("CREATE TEMP TABLE retained (id INTEGER)")
         expect { Migrations::ForkManager.fork {} }.to raise_error(
           Migrations::Database::Lifecycle::UnsafeForkError,
+          /temporary schema/,
         )
         expect(connection.query_value("SELECT COUNT(*) FROM retained")).to eq(0)
       end
