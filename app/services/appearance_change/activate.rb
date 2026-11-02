@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-# Makes a saved appearance change live: gives the theme its palettes, or makes
-# the new theme the default, then applies the change's fonts. It records what
-# it replaces so AppearanceChange::Revert can switch back.
+# Makes a saved appearance change live and records what it replaces so
+# AppearanceChange::Revert can switch back.
 #
-# Site settings are applied after the transaction, the same way the admin
-# config writes them.
+# Apply site settings before assigning palettes and recording activation,
+# so a failed font update leaves the original state intact for a retry.
 class AppearanceChange::Activate
   include Service::Base
 
@@ -20,13 +19,12 @@ class AppearanceChange::Activate
   policy :not_applied
   policy :palettes_exist
   model :replaced_state
+  only_if(:changes_site_settings) { step :apply_site_settings }
 
   transaction do
     only_if(:changes_palettes) { step :assign_palettes }
     step :record_activation
   end
-
-  only_if(:changes_site_settings) { step :apply_site_settings }
 
   private
 

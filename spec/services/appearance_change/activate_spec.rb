@@ -53,6 +53,38 @@ RSpec.describe AppearanceChange::Activate do
       before { SiteSetting.stubs(:shadowed_settings).returns(Set[:base_font]) }
 
       it { is_expected.to fail_a_step(:apply_site_settings) }
+
+      it "leaves the palettes and activation state unchanged" do
+        result
+
+        expect(theme.reload).to have_attributes(
+          color_scheme_id: light_palette.id,
+          dark_color_scheme_id: dark_palette.id,
+        )
+        expect(appearance_change.reload).to have_attributes(previous_state: {}, activated_at: nil)
+      end
+    end
+
+    %i[palettes existing_palettes theme].each do |kind|
+      it "restores the original state after retrying a failed #{kind} activation" do
+        appearance_change.update!(kind:)
+        original_font = SiteSetting.base_font
+        original_default_theme_id = SiteSetting.default_theme_id
+        SiteSetting.stubs(:shadowed_settings).returns(Set[:base_font])
+
+        expect(result).to fail_a_step(:apply_site_settings)
+
+        SiteSetting.unstub(:shadowed_settings)
+        expect(described_class.call(params:, **dependencies)).to run_successfully
+        expect(AppearanceChange::Revert.call(params:, **dependencies)).to run_successfully
+
+        expect(theme.reload).to have_attributes(
+          color_scheme_id: light_palette.id,
+          dark_color_scheme_id: dark_palette.id,
+        )
+        expect(SiteSetting.base_font).to eq(original_font)
+        expect(SiteSetting.default_theme_id).to eq(original_default_theme_id)
+      end
     end
 
     context "when everything's ok" do
