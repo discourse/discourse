@@ -5,6 +5,71 @@ RSpec.describe Admin::EmailController do
   fab!(:moderator)
   fab!(:user)
 
+  shared_examples "restricted and rate-limited admin email sends" do
+    it "allows the admin's primary and secondary addresses when recipient restrictions are enabled" do
+      SiteSetting.restrict_admin_email_test_sends_to_self = true
+      secondary_email = Fabricate(:secondary_email, user: admin)
+
+      [admin.email.upcase, " #{secondary_email.email} "].each do |recipient|
+        post email_send_path, params: email_send_params.merge(recipient_parameter => recipient)
+
+        expect(response.status).to eq(200)
+        expect(ActionMailer::Base.deliveries.last.to.map(&:downcase)).to contain_exactly(
+          recipient.strip.downcase,
+        )
+      end
+    end
+
+    it "rejects other users' addresses and recipient lists when recipient restrictions are enabled" do
+      SiteSetting.restrict_admin_email_test_sends_to_self = true
+      other_admin = Fabricate(:admin)
+
+      [user.email, other_admin.email, "#{admin.email}, #{user.email}"].each do |recipient|
+        expect do
+          post email_send_path, params: email_send_params.merge(recipient_parameter => recipient)
+        end.not_to change { ActionMailer::Base.deliveries.size }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].join).to include(
+          I18n.t("email_settings.test_email_restricted"),
+        )
+      end
+    end
+
+    it "limits each administrator to ten sends per minute" do
+      request_params = email_send_params.merge(recipient_parameter => admin.email)
+      RateLimiter.enable
+
+      expect do
+        10.times do
+          post email_send_path, params: request_params
+          expect(response.status).to eq(200)
+        end
+      end.to change { ActionMailer::Base.deliveries.size }.by(10)
+
+      expect do post email_send_path, params: request_params end.not_to change {
+        ActionMailer::Base.deliveries.size
+      }
+      expect(response.status).to eq(429)
+
+      sign_in(Fabricate(:admin))
+      expect { post email_send_path, params: request_params }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1)
+      expect(response.status).to eq(200)
+
+      sign_in(admin)
+      freeze_time 1.minute.from_now do
+        expect { post email_send_path, params: request_params }.to change {
+          ActionMailer::Base.deliveries.size
+        }.by(1)
+        expect(response.status).to eq(200)
+      end
+    ensure
+      RateLimiter.disable
+    end
+  end
+
   describe "#server_settings" do
     context "when logged in as an admin" do
       before do
@@ -96,7 +161,13 @@ RSpec.describe Admin::EmailController do
 
   describe "#test" do
     context "when logged in as an admin" do
+      let(:email_send_path) { "/admin/email/test.json" }
+      let(:recipient_parameter) { :email_address }
+      let(:email_send_params) { {} }
+
       before { sign_in(admin) }
+
+      include_examples "restricted and rate-limited admin email sends"
 
       it "raises an error without the email parameter" do
         post "/admin/email/test.json"
@@ -273,7 +344,16 @@ RSpec.describe Admin::EmailController do
 
   describe "#send_digest" do
     context "when logged in as an admin" do
+      let(:email_send_path) { "/admin/email/send-digest.json" }
+      let(:recipient_parameter) { :email }
+      let(:email_send_params) do
+        Fabricate(:topic, created_at: 1.day.ago)
+        { last_seen_at: 1.week.ago, username: user.username }
+      end
+
       before { sign_in(admin) }
+
+      include_examples "restricted and rate-limited admin email sends"
 
       it "sends the digest" do
         post "/admin/email/send-digest.json",
