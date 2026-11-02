@@ -358,6 +358,7 @@ describe DiscourseGamification::LeaderboardCachedView do
       context "with 'row_number'" do
         before do
           SiteSetting.score_ranking_strategy = "row_number"
+          DB.exec("SET LOCAL enable_sort = off")
 
           described_class.new(leaderboard).create
         end
