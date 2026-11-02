@@ -596,7 +596,6 @@ en:
         agent_not_allowed: "The requested subagent is not allowed."
         unavailable_agent: "The requested subagent is unavailable or inaccessible."
         missing_model: "The requested subagent has no available language model."
-        call_limit: "The delegation call limit has been reached."
         completion_limit: "The delegation completion limit has been reached."
         token_limit: "The shared turn work allowance or child work allocation has been reached."
         cancelled: "The delegated task was cancelled."
