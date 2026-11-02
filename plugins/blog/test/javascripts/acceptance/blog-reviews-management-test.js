@@ -87,7 +87,7 @@ acceptance("Blog review management", function (needs) {
       return response(204);
     });
     await visit(TOPIC_URL);
-    await click(".blog-publication-panel__reviews");
+    await click(".blog-publication-panel__share-for-review");
     assert
       .dom(".blog-reviews")
       .includesText(
@@ -141,7 +141,7 @@ acceptance("Blog review management", function (needs) {
     await formKit(".blog-publication-panel__form")
       .field("excerpt")
       .fillIn("Unsaved publication excerpt");
-    await click(".blog-publication-panel__reviews");
+    await click(".blog-publication-panel__share-for-review");
     assert
       .dom(".dialog-body")
       .includesText(
