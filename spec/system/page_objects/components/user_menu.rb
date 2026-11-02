@@ -69,7 +69,7 @@ module PageObjects
       end
 
       def click_notification_with_href(href_substring)
-        find(".user-menu .notification a[href*='#{href_substring}']").click
+        locator(".user-menu .notification a[href*='#{href_substring}']").click
         self
       end
 
