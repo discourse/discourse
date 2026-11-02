@@ -21,6 +21,11 @@ RSpec.describe "site" do
 
       produces "application/json"
       response "200", "success response" do
+        before do
+          SiteSetting.tos_url = "/tos"
+          SiteSetting.privacy_policy_url = "/privacy"
+        end
+
         Site.preloaded_category_custom_fields << "no_oddjob"
 
         expected_response_schema = load_spec_schema("site_response")

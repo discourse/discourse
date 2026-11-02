@@ -4,6 +4,12 @@
     "default_archetype": {
       "type": "string"
     },
+    "tos_url": {
+      "type": "string"
+    },
+    "privacy_policy_url": {
+      "type": "string"
+    },
     "notification_types": {
       "type": "object",
       "additionalProperties": false,
