@@ -4,7 +4,7 @@ module ::Blog
   # The editorial view of one article, shared by the editor endpoints and the topic page.
   class PublicationEntry
     def self.for_viewer(topic, user)
-      return unless SiteSetting.blog_enabled
+      return unless UpcomingChanges.enabled?(:blog_enabled)
       return if topic.private_message?
       categories = [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i]
       return if categories.exclude?(topic.category_id)

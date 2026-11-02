@@ -40,9 +40,11 @@ after_initialize do
     end
   end
 
-  add_to_serializer(:site, :blog_base_url, include_condition: -> { SiteSetting.blog_enabled }) do
-    Blog::Configuration.base_url
-  end
+  add_to_serializer(
+    :site,
+    :blog_base_url,
+    include_condition: -> { UpcomingChanges.enabled?(:blog_enabled) },
+  ) { Blog::Configuration.base_url }
   add_to_serializer(:current_user, :can_blog_edit) { Blog::Configuration.contributor?(object) }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
@@ -145,13 +147,17 @@ after_initialize do
       get "/*path" => "blog/articles#show", :format => false
     end
     scope Blog::Configuration::PATH_PREFIX do
-      constraints(->(_) { SiteSetting.blog_enabled && !Blog::Configuration.custom_domain? }) do
+      constraints(
+        ->(_) { UpcomingChanges.enabled?(:blog_enabled) && !Blog::Configuration.custom_domain? },
+      ) do
         get "/review" => "blog/review_reader#show"
         post "/review/feedback" => "blog/review_reader#feedback"
         instance_exec(&blog_routes)
         get "/*path" => "blog/articles#show", :format => false
       end
-      constraints(->(_) { SiteSetting.blog_enabled && Blog::Configuration.custom_domain? }) do
+      constraints(
+        ->(_) { UpcomingChanges.enabled?(:blog_enabled) && Blog::Configuration.custom_domain? },
+      ) do
         # Temporary, since a site can drop its custom domain and browsers cache 301s.
         get "/(*path)" =>
               redirect(status: 302) { |_, request|

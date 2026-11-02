@@ -5,7 +5,7 @@ module ::Jobs
     every 5.minutes
 
     def execute(args = nil)
-      return unless SiteSetting.blog_enabled
+      return unless UpcomingChanges.enabled?(:blog_enabled)
 
       Blog::Publication
         .where("scheduled_at <= ?", Time.current)

@@ -14,7 +14,7 @@ module ::Blog
     private
 
     def blog_http_host?(http_host)
-      return false unless SiteSetting.blog_enabled && Configuration.custom_domain?
+      return false unless UpcomingChanges.enabled?(:blog_enabled) && Configuration.custom_domain?
 
       origin = URI(Configuration.origin)
       return http_host == "#{origin.host}:#{origin.port}" if origin.port != origin.default_port

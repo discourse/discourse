@@ -30,7 +30,8 @@ module ::Blog
     private
 
     def blog_public_topic?(topic)
-      SiteSetting.blog_enabled && topic&.category_id == SiteSetting.blog_category.to_i &&
+      UpcomingChanges.enabled?(:blog_enabled) &&
+        topic&.category_id == SiteSetting.blog_category.to_i &&
         Publication
           .where(discussion_topic_id: topic.id)
           .where.not(published_revision_id: nil)
@@ -38,7 +39,7 @@ module ::Blog
     end
 
     def blog_editorial_topic?(topic)
-      SiteSetting.blog_enabled && topic &&
+      UpcomingChanges.enabled?(:blog_enabled) && topic &&
         topic.category_id == SiteSetting.blog_drafts_category.to_i && !topic.deleted_at &&
         !topic.archived? && !topic.private_message? && topic.category&.topic_id != topic.id &&
         Configuration.contributor?(user) &&

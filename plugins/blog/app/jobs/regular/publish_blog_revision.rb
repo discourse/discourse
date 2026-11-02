@@ -3,7 +3,7 @@
 module ::Jobs
   class PublishBlogRevision < ::Jobs::Base
     def execute(args)
-      return unless SiteSetting.blog_enabled
+      return unless UpcomingChanges.enabled?(:blog_enabled)
 
       publication = Blog::Publication.find_by(id: args[:publication_id])
       publication&.run_schedule!(args[:token])

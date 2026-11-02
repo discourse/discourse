@@ -40,7 +40,7 @@ module ::Blog
     end
 
     def self.blog_host?(request)
-      SiteSetting.blog_enabled && custom_domain? && request.host == URI(origin).host
+      UpcomingChanges.enabled?(:blog_enabled) && custom_domain? && request.host == URI(origin).host
     end
 
     # Whether a public blog page may be served for this request in the current mode.
@@ -55,8 +55,8 @@ module ::Blog
     end
 
     def self.public_enabled?
-      SiteSetting.blog_enabled && !SiteSetting.login_required && !SiteSetting.secure_uploads &&
-        !SiteSetting.prevent_anons_from_downloading_files
+      UpcomingChanges.enabled?(:blog_enabled) && !SiteSetting.login_required &&
+        !SiteSetting.secure_uploads && !SiteSetting.prevent_anons_from_downloading_files
     end
 
     def self.error
@@ -122,7 +122,8 @@ module ::Blog
     end
 
     def self.role_user?(user)
-      SiteSetting.blog_enabled && user&.active? && !user.suspended? && !user.silenced?
+      UpcomingChanges.enabled?(:blog_enabled) && user&.active? && !user.suspended? &&
+        !user.silenced?
     end
     private_class_method :role_user?
 

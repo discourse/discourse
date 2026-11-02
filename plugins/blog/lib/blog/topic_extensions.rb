@@ -4,7 +4,7 @@ module ::Blog
   module TopicExtensions
     def duplicate_title_candidates
       candidates = super
-      return candidates unless SiteSetting.blog_enabled
+      return candidates unless UpcomingChanges.enabled?(:blog_enabled)
 
       publication =
         Blog::Publication

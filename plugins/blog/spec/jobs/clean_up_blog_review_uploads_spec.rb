@@ -10,7 +10,7 @@ RSpec.describe Jobs::CleanUpBlogReviewUploads do
   before { enable_blog!(category: category, drafts: drafts) }
 
   describe "#execute" do
-    it "releases expired review uploads even when the plugin is disabled" do
+    it "retains expired review uploads while disabled and releases them when enabled" do
       upload = Fabricate(:upload, user: admin, created_at: 3.days.ago)
       first_post.update!(
         raw: "![Review image](#{upload.short_url})",
@@ -22,6 +22,11 @@ RSpec.describe Jobs::CleanUpBlogReviewUploads do
       expired.update!(expires_at: 1.second.ago)
       SiteSetting.blog_enabled = false
 
+      described_class.new.execute(nil)
+
+      expect(UploadReference.where(target: expired).pluck(:upload_id)).to eq([upload.id])
+
+      SiteSetting.blog_enabled = true
       described_class.new.execute(nil)
 
       expect(UploadReference.where(target: expired)).not_to exist
