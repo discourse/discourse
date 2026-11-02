@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Thiết kế
+        overridden: Tùy biến
+        insert: Chèn
+        array_value: Danh sách
+        preview_home: Trang chủ
+        preview_archive: Đã lưu trữ
+        desktop: Máy tính để bàn
+        mobile: Điện thoại
+        back_to_themes: Quay lại theme
+        new_theme_short: Theme mới
+        themes: Themes
+        theme_name: Tên chủ đề
+        edit: Sửa
+        activate: Kích hoạt
+        preview: Xem trước
+        import: Nhập
+        export: Xuất
+        active: Hoạt động
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Bản nháp
+        preview: Xem trước
+        publish: Xuất bản
+        options: Tùy chọn
+        change:
+          title: tiêu đề
+          body: thân
+      review:
+        copy: Sao chép link
+        active: Hoạt động
+        message: Phản hồi
+      editor_table:
+        edit: Sửa
+        status: Trạng thái
+        replies: Lượt trả lời
+      drafts: Nháp
+      private_draft: Bản nháp
+      preview: Xem trước
+      unpublish: Hủy xuất bản
+      appearance_link: Ngoại hình

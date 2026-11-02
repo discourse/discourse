@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Дизайн
+        overridden: Другое
+        insert: Вставить
+        array_value: Список
+        preview_home: Главная страница
+        preview_archive: Архивировать
+        desktop: Настольная
+        mobile: Мобильная
+        back_to_themes: Назад к темам
+        new_theme_short: Новая тема
+        themes: тем
+        theme_name: Название темы
+        edit: Изменить
+        activate: Активировать
+        preview: Предпросмотр
+        import: Импорт
+        export: Экспорт
+        active: Активна
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Черновик
+        preview: Предпросмотр
+        publish: Опубликовать
+        options: Варианты
+        change:
+          title: название
+          body: body
+      review:
+        copy: Копировать ссылку
+        active: Активна
+        message: Отзыв
+      editor_table:
+        edit: Изменить
+        status: Статус
+        replies: Ответы
+      drafts: Черновики
+      private_draft: Черновик
+      preview: Предпросмотр
+      unpublish: Отменить публикацию
+      appearance_link: Внешний вид

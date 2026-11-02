@@ -2504,7 +2504,7 @@ sk:
     force_lowercase_tags: "Vynútiť, aby všetky nové značky boli písané výhradne malými písmenami."
     create_post_for_category_and_tag_changes: "Vytvorenie šepkaného príspevku pri zmene kategórie alebo značky témy, vyžaduje, aby boli povolené šepkané príspevky."
     automatically_clean_unused_tags: "Automaticky odstráňte značky, ktoré sa nepoužívajú na žiadne témy alebo osobné správy na dennej báze."
-    company_name: "Názov vašej spoločnosti alebo organizácie. Ak pole ponecháte prázdne, neposkytnú sa žiadne všeobecné zmluvné podmienky ani oznámenie o ochrane osobných údajov."
+    company_name: "Názov vašej spoločnosti alebo organizácie."
     governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
     city_for_disputes: "Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra."
     shared_drafts_category: "Povoľte funkciu Zdieľané koncepty určením kategórie pre koncepty tém. Témy v tejto kategórii budú pre používateľov zo zoznamu tém odstránené."

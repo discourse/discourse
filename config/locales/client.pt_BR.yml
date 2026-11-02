@@ -2992,6 +2992,7 @@ pt_BR:
     filter_controls:
       reset: "Redefinir"
       toggle: "Alternar filtros suspensos"
+      sort_label: "Ordenar por"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
       search_label: "Buscar ícones"
@@ -5733,6 +5734,9 @@ pt_BR:
           impact_role_staff: "Equipe"
           impact_role_all_members: "Todos os membros"
           impact_role_developers: "Desenvolvedores"
+        sort:
+          status: "Status"
+          name: "Nome"
       config:
         about:
           title: "Sobre seu site"
@@ -6854,10 +6858,7 @@ pt_BR:
           site_contact_group_help: |
             O grupo convidado para todas as mensagens pessoais enviadas automaticamente.
           your_organization: "Sua organização"
-          your_organization_description: "Essas informações serão usadas nos Termos de Serviço e Contrato de Privacidade para mostrar que administra o site e a jurisdição em que isso acontece."
           company_name: "Nome"
-          company_name_warning: |
-            Se deixado em branco, os Termos de Serviço ou Aviso de Privacidade padrão não serão fornecidos.
           company_url: "Site"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Lei aplicável"

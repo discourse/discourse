@@ -447,8 +447,10 @@ he:
       plugin_outlet_debug:
         find_on_github: "איתור ב־GitHub"
         aliases: "כינויים"
+        since: "(מאז %{version})"
       toggle_safe_mode: "הפעלת/כיבוי מצב בטוח"
       toggle_verbose_localization: "הפעלת/כיבוי פירוט תרגום"
+      open_styleguide: "פתיחת מדריך הסגנון"
       disable_dev_tools: "כיבוי כלי פיתוח"
     s3:
       regions:
@@ -586,6 +588,7 @@ he:
         categories: "קטגוריות"
         styles:
           boxes: "תיבות"
+          with_topics: "קטגוריות עם נושאים"
           only: "קטגוריות בלבד"
       welcome_banner:
         enable: "הצגת כרזת קבלת פנים"
@@ -809,6 +812,8 @@ he:
     embed_mode:
       allow_access: "לאפשר גישה"
       continue_as_guest: "להמשיך כאורח/ת"
+      be_first_to_reply: "ממתינים לתגובה הראשונה!"
+      replying_to: "בתגובה ל־%{username}"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
@@ -3136,6 +3141,7 @@ he:
       clear: "פינוי המסנן"
     filter_controls:
       reset: "איפוס"
+      sort_label: "מיון לפי"
     d_icon_grid_picker:
       select_icon: "נא לבחור סמל"
       search_placeholder: "חיפוש סמלים…"
@@ -6034,6 +6040,9 @@ he:
           impact_role_staff: "סגל"
           impact_role_all_members: "כל החברים"
           impact_role_developers: "מפתחים"
+        sort:
+          status: "מצב"
+          name: "שם"
       config:
         about:
           title: "על האתר שלך"
@@ -7161,10 +7170,7 @@ he:
           site_contact_group_help: |
             הקבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות אוטומטית.
           your_organization: "הארגון שלך"
-          your_organization_description: "אנו נשתמש במידע זה בתנאי השירות ובהצהרת הפרטיות כדי להראות מי מפעיל את האתר ותחת איזו סמכות שיפוט."
           company_name: "שם"
-          company_name_warning: |
-            אם השדה יישאר ריק, לא יסופקו תנאי שירות או הצהרת פרטיות ראשוניים.
           company_url: "אתר"
           company_url_placeholder: "https://example-co.com"
           governing_law: "החוק המחייב"

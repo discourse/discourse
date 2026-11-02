@@ -2760,6 +2760,7 @@ fi:
       clear: "Tyhjennä suodatin"
     filter_controls:
       reset: "Palauta"
+      sort_label: "Järjestys"
     shared_drafts:
       title: "Jaetut luonnokset"
       notice: "Tämä ketju näkyy vain niille, jotka voivat julkaista jaettuja luonnoksia."
@@ -5222,6 +5223,9 @@ fi:
           impact_role_admins: "Ylläpitäjät"
           impact_role_moderators: "Valvojat"
           impact_role_staff: "Henkilökunta"
+        sort:
+          status: "Tila"
+          name: "Nimi"
       config:
         about:
           title: "Tietoa sivustostasi"
@@ -6259,10 +6263,7 @@ fi:
           site_contact_group_help: |
             Ryhmä, joka saa kutsun kaikkiin automaattisesti lähetettyihin henkilökohtaisiin viesteihin.
           your_organization: "Organisaatiosi"
-          your_organization_description: "Käytämme näitä tietoja käyttöehdoissa ja tietosuojailmoituksessa näyttääksemme, kuka ylläpitää sivustoa ja millä lainkäyttöalueella."
           company_name: "Nimi"
-          company_name_warning: |
-            Jos tämä jätetään tyhjäksi, käyttöehtojen tai tietosuojailmoituksen pohjaa ei tarjota.
           company_url: "Verkkosivusto"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Sovellettava lainsäädäntö"

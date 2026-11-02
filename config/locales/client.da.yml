@@ -2420,6 +2420,7 @@ da:
       clear: "Ryd filter"
     filter_controls:
       reset: "Nulstil"
+      sort_label: "Sorter efter"
     shared_drafts:
       title: "Delte kladder"
       notice: "Dette emne er kun synligt for dem, der kan udgive delte kladder."
@@ -4418,6 +4419,9 @@ da:
           impact_role_admins: "Admins"
           impact_role_moderators: "Moderatorer"
           impact_role_staff: "Personale"
+        sort:
+          status: "Status"
+          name: "Navn"
       config:
         about:
           title: "Om dit websted"

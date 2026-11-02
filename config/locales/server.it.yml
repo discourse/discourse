@@ -2354,7 +2354,7 @@ it:
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
     create_post_for_category_and_tag_changes: "Crea un sussurro quando la categoria o i tag di un argomento cambiano. Richiede che i sussurri siano abilitati."
     automatically_clean_unused_tags: "Elimina automaticamente quotidianamente le etichette che non vengono utilizzate su argomenti o messaggi personali."
-    company_name: "Nome della tua azienda o organizzazione. Se lasciato vuoto, non verranno forniti Termini di servizio o Informativa sulla privacy."
+    company_name: "Nome della tua azienda o organizzazione."
     governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
     city_for_disputes: "Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum."
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."

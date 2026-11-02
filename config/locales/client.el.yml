@@ -2939,6 +2939,7 @@ el:
     filter_controls:
       reset: "Επαναφορά"
       toggle: "Εναλλαγή αναπτυσσόμενων φίλτρων"
+      sort_label: "Ταξινόμηση κατά"
     d_icon_grid_picker:
       select_icon: "Επιλογή εικονιδίου"
       search_label: "Αναζητήστε εικονίδια"
@@ -5828,6 +5829,9 @@ el:
           impact_role_staff: "Συνεργάτες"
           impact_role_all_members: "Όλα τα μέλη"
           impact_role_developers: "Προγραμματιστές"
+        sort:
+          status: "Κατάσταση"
+          name: "Όνομα"
       config:
         about:
           title: "Σχετικά με τον ιστότοπο σας"

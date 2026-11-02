@@ -3057,6 +3057,7 @@ zh_TW:
     filter_controls:
       reset: "重置"
       toggle: "切換下拉式篩選器"
+      sort_label: "排序依據"
     d_icon_grid_picker:
       select_icon: "選擇圖示"
       search_label: "搜尋圖示"
@@ -6162,6 +6163,9 @@ zh_TW:
           impact_role_staff: "管理員"
           impact_role_all_members: "所有成員"
           impact_role_developers: "開發人員"
+        sort:
+          status: "狀態"
+          name: "名稱"
       config:
         about:
           title: "關於您的網站"
@@ -7654,11 +7658,8 @@ zh_TW:
           site_contact_group_help: |
             受邀接收所有自動發送的私人訊息的群組。
           your_organization: "你的組織"
-          your_organization_description: "我們將在《服務條款》和《隱私聲明》中顯示此資訊來表明此網站的運營方和司法管轄區。"
           company_name: "名字"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            如果留空，則不會提供模板服務條款或隱私權通知。
           company_url: "網站"
           company_url_placeholder: "https://example-co.com"
           governing_law: "適用於法律"

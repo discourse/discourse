@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: デザイン
+        overridden: カスタム
+        insert: 挿入
+        array_value: リスト
+        preview_home: ホームページ
+        preview_archive: アーカイブ
+        desktop: デスクトップ
+        mobile: モバイル
+        back_to_themes: テーマに戻る
+        new_theme_short: 新しいテーマ
+        themes: テーマ
+        theme_name: テーマ名
+        edit: 編集
+        activate: アクティベーション
+        preview: プレビュー
+        import: インポート
+        export: エクスポート
+        active: アクティブ
+  js:
+    blog:
+      panel:
+        badge:
+          draft: 下書き
+        preview: プレビュー
+        publish: 公開
+        options: オプション
+        change:
+          title: タイトル
+          body: 本文
+      review:
+        copy: リンクをコピー
+        active: アクティブ
+        message: フィードバック
+      editor_table:
+        edit: 編集
+        status: ステータス
+        replies: 返信
+      drafts: 下書き
+      private_draft: 下書き
+      preview: プレビュー
+      unpublish: 公開を取り消す
+      appearance_link: 外観

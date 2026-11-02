@@ -2321,6 +2321,7 @@ sv:
       default: Anpassa emojis
     filter_controls:
       reset: "Återställ"
+      sort_label: "Sortera efter"
     shared_drafts:
       title: "Delade utkast"
       notice: "Detta ämne är endast synligt för de som kan publicera delade utkast."
@@ -4466,6 +4467,9 @@ sv:
           impact_role_admins: "Administratörer"
           impact_role_moderators: "Moderatorer"
           impact_role_staff: "Personal"
+        sort:
+          status: "Status"
+          name: "Namn"
       config:
         about:
           title: "Om din webbplats"

@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  blog:
+    home: Home
+    posted_by: Wysłane przez
+    permalink: Link bezpośredni
+    time_ago: "%{time} temu"
+    archive: Archiwum
+    about: O stronie
+    community: Społeczność
+    preview: Podgląd
+    search: Szukaj
+    replies:
+      one: "%{count} odpowiedź"
+      few: "%{count} odpowiedzi"
+      many: "%{count} odpowiedzi"
+      other: "%{count} odpowiedzi"

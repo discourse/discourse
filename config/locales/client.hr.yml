@@ -2886,6 +2886,7 @@ hr:
       default: Prilagođeni emojiji
     filter_controls:
       reset: "Resetirati"
+      sort_label: "Sortiraj po"
     shared_drafts:
       title: "Dijeljene skice"
       notice: "Ova je tema vidljiva samo onima koji mogu objaviti zajedničke skice."
@@ -5472,6 +5473,9 @@ hr:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Osoblje"
+        sort:
+          status: "Statust"
+          name: "Ime"
       config:
         about:
           title: "O vašoj web stranici"
@@ -6308,10 +6312,7 @@ hr:
             Korisničko ime osoblja za slanje svih automatiziranih poruka. Ako je ostavljeno prazno, koristit će se zadani račun sustava.
           site_contact_group_help: |
             Grupa koja je pozvana na sve automatski poslane osobne poruke.
-          your_organization_description: "Ove podatke ćemo koristiti u Uvjetima pružanja usluge i Obavijesti o privatnosti kako bismo pokazali tko upravlja stranicom i pod kojom jurisdikcijom."
           company_name: "Ime"
-          company_name_warning: |
-            Ako se ostavi prazno, neće se pružiti standardni Uvjeti pružanja usluge ili Obavijest o privatnosti.
           company_url: "Web stranica"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Mjerodavno pravo i nadležnost"

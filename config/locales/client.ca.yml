@@ -1742,6 +1742,7 @@ ca:
       default: Emojis personalitzats
     filter_controls:
       reset: "Restableix"
+      sort_label: "Ordena per"
     shared_drafts:
       title: "Esborranys compartits"
       destination_category: "Categoria de destinació"
@@ -3177,6 +3178,9 @@ ca:
           impact_role_admins: "Administradors"
           impact_role_moderators: "Moderadors"
           impact_role_staff: "Equip responsable"
+        sort:
+          status: "Estat"
+          name: "Nom"
       config:
         developer:
           title: "Desenvolupador"

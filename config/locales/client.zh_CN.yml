@@ -889,6 +889,11 @@ zh_CN:
       saving: "正在保存…"
       saved: "分类已保存"
     review:
+      continue_to_editor: "继续编辑"
+      moderation_steps:
+        label: "审核步骤"
+        action: "操作详情"
+        confirm: "确认操作"
       show_more: "展开"
       show_less: "收起"
       back_to_queue: "返回队列"
@@ -3142,6 +3147,8 @@ zh_CN:
     filter_controls:
       reset: "重置"
       toggle: "切换下拉筛选器"
+      sort_label: "排序依据"
+      sort_trigger_label: "排序： %{sort}"
     d_icon_grid_picker:
       select_icon: "选择图标"
       search_label: "搜索图标"
@@ -6274,6 +6281,10 @@ zh_CN:
           impact_role_staff: "管理人员"
           impact_role_all_members: "所有成员"
           impact_role_developers: "开发者"
+        sort:
+          recently_updated: "最近更新"
+          status: "状态"
+          name: "名称"
       config:
         about:
           title: "关于您的站点"
@@ -7933,11 +7944,8 @@ zh_CN:
           site_contact_group_help: |
             受邀接收所有自动发送的个人消息的群组。
           your_organization: "您的组织"
-          your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            如果留空，将不提供样板《服务条款》或《隐私声明》。
           company_url: "网站"
           company_url_placeholder: "https://example-co.com"
           governing_law: "适用法律"

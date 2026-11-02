@@ -2448,7 +2448,7 @@ nl:
     create_post_for_category_and_tag_changes: "Maak een fluisterbericht wanneer de categorie of tags van een topic veranderen. Dit vereist dat fluisterberichten ingeschakeld zijn."
     automatically_clean_unused_tags: "Verwijder dagelijks automatisch tags die niet worden gebruikt in topics of persoonlijke berichten."
     default_watched_precedence_over_muted: "Informeer gebruikers over topics in categorieën of tags die ze observeren en die ook horen bij een topic dat ze hebben gedempt."
-    company_name: "Naam van je bedrijf of organisatie. Als je dit veld leeg laat, worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt."
+    company_name: "Naam van je bedrijf of organisatie."
     governing_law: "Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en het Privacybeleid. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet."
     city_for_disputes: "Geef de plaats op die wordt gebruikt als rechtsgebied voor het oplossen van geschillen met betrekking tot het gebruik van dit forum. Deze informatie wordt meestal opgenomen in juridische documenten zoals de Gebruiksvoorwaarden van het forum."
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor medewerkers."

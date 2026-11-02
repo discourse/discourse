@@ -2282,6 +2282,7 @@ hy:
       default: Մասնավոր էմոջիներ
     filter_controls:
       reset: "Վերահաստատե;"
+      sort_label: "Դասավորել ըստ"
     shared_drafts:
       title: "Կիսված Սևագրեր"
       destination_category: "Նպատակային Կատեգորիա"
@@ -3890,6 +3891,9 @@ hy:
           impact_type_other: "Այլ"
           impact_role_moderators: "Մոդերատորներ"
           impact_role_staff: "Անձնակազմ"
+        sort:
+          status: "Ստատուս"
+          name: "Անուն"
       config:
         developer:
           title: "Ծրագրավորող"

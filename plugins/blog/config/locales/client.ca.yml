@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  admin_js:
+    blog:
+      admin:
+        overridden: Personalitzat
+        insert: Insereix
+        preview_home: Pàgina principal
+        preview_archive: Arxiva
+        desktop: Escriptori
+        mobile: Mòbil
+        themes: Aparences
+        theme_name: Nom de l'aparença
+        edit: Edita
+        preview: Previsualitza
+        import: Importa
+        export: Exporta
+        active: Actiu
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Esborrany
+        preview: Previsualitza
+        options: Opcions
+        change:
+          title: títol
+          body: cos
+      review:
+        active: Actiu
+      editor_table:
+        edit: Edita
+        status: Estat
+        replies: Respostes
+      drafts: Esborranys
+      private_draft: Esborrany
+      preview: Previsualitza
+      appearance_link: Aparença
