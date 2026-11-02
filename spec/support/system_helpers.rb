@@ -183,17 +183,19 @@ module SystemHelpers
     expect(page).to have_selector(selector)
 
     js = <<-JS
+      const done = arguments[arguments.length - 1];
       const node = document.querySelector(arguments[0]).childNodes[0];
       const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(node);
       range.setStart(node, arguments[1]);
       range.setEnd(node, arguments[1] + arguments[2]);
+      document.addEventListener("selectionchange", () => done(), { once: true });
       selection.removeAllRanges();
       selection.addRange(range);
     JS
 
-    page.execute_script(js, selector, start, offset)
+    page.evaluate_async_script(js, selector, start, offset)
   end
 
   def current_active_element
