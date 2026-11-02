@@ -46,6 +46,15 @@ RSpec.describe "Path-restricted API key scopes" do
     expect(response.body).not_to include(topic.title)
   end
 
+  it "rejects redundant record selectors outside a restricted path" do
+    api_key = topic_read_key("topic_id" => [topic.id.to_s])
+
+    get "/t/#{topic.id}/posts.json", headers: headers_for(api_key), params: { topic_id: topic.id }
+
+    expect(response.status).to eq(403)
+    expect(response.parsed_body["errors"]).to be_present
+  end
+
   it "allows a matching recognized topic path" do
     api_key = topic_read_key("topic_id" => [topic.id.to_s])
 

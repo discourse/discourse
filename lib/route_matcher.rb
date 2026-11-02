@@ -89,11 +89,16 @@ class RouteMatcher
   def path_params_allowed?(request)
     return true if path_params.nil?
 
+    restricted_params =
+      path_params.select { |param| [allowed_param_values.fetch(param.to_s, [])].flatten.present? }
+    return true if restricted_params.empty?
+
+    return false if path_selector_in_non_path_params?(request)
+
     requested_params = path_params_from_request(request)
 
-    path_params.all? do |param|
+    restricted_params.all? do |param|
       allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
-      next true if allowed_values.blank?
 
       param_alias = param_alias_for(param)
       value_present, value = path_parameter(requested_params, param)
@@ -105,6 +110,16 @@ class RouteMatcher
       requested_value = value_present ? value : alias_value
       scalar_path_value?(requested_value) && allowed_values.include?(requested_value)
     end
+  end
+
+  # Record selection must remain consistent with the restricted path, including
+  # controllers that accept alternative selectors.
+  def path_selector_in_non_path_params?(request)
+    selector_keys =
+      path_params.flat_map { |param| [param.to_s, param_alias_for(param)&.to_s] }.compact.uniq
+
+    non_path_params = request.query_parameters.merge(request.request_parameters)
+    selector_keys.any? { |key| non_path_params.key?(key) }
   end
 
   def param_alias_for(param)

@@ -79,6 +79,9 @@ class ApiKeyScope < ActiveRecord::Base
           recover: {
             actions: %w[posts#recover],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
           list: {
             actions: %w[posts#latest],
@@ -88,6 +91,9 @@ class ApiKeyScope < ActiveRecord::Base
           read: {
             actions: %w[posts#latest_revision posts#revisions],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
           modify: {
             actions: %w[
@@ -98,10 +104,16 @@ class ApiKeyScope < ActiveRecord::Base
               posts#revert
             ],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
           permanently_delete: {
             actions: %w[posts#permanently_delete_revisions],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
         },
         tags: {
