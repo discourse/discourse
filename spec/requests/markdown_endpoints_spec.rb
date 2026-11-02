@@ -463,6 +463,8 @@ RSpec.describe "Markdown endpoints" do
   end
 
   it "renders plugin action translations as text and escapes action targets" do
+    I18n.reload!
+    I18n.locale = :en
     I18n.backend.store_translations(
       :en,
       js: {
