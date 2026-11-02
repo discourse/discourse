@@ -690,6 +690,11 @@ RSpec.describe Stylesheet::Manager do
 
     it "does not crash when no default theme is set" do
       SiteSetting.default_theme_id = -1
+      Stylesheet::Manager.clear_color_scheme_cache!
+
+      I18n.with_locale(:ja) { manager.color_scheme_stylesheet_link_tag_href }
+      Scheduler::Defer.do_all_work
+
       href = manager.color_scheme_stylesheet_link_tag_href
 
       expect(href).to include("color_definitions_light-default")
