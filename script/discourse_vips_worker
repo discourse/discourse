@@ -368,19 +368,20 @@ class DiscourseVipsWorker
             raise InvalidImage, error.message
           end
 
+        source = source.autorot unless animated
+
+        source_height =
+          animated && source.get_typeof("n-pages") != 0 ? source.get("page-height") : source.height
+
         if !width.empty? && !height.empty?
           width = Integer(width)
           height = Integer(height)
         else
-          source_height =
-            animated && source.get_typeof("n-pages") != 0 ? source.get("page-height") : source.height
-
           max_pixels = max_pixels.empty? ? nil : Integer(max_pixels)
           scale =
             if max_pixels
               raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
 
-              source = source.autorot unless animated
               Math.sqrt(max_pixels.fdiv(source.width * source_height))
             else
               Float(scale)
