@@ -1833,6 +1833,7 @@ sr:
       flags: Zastave
     filter_controls:
       reset: "Reset"
+      sort_label: "Sortiraj po"
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
@@ -2863,6 +2864,9 @@ sr:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Osoblje"
+        sort:
+          status: "Status"
+          name: "Ime foruma"
       config:
         developer:
           title: "Programer"

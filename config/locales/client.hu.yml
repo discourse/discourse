@@ -2928,6 +2928,7 @@ hu:
     filter_controls:
       reset: "Alaphelyzetbe állítás"
       toggle: "Legördülő szűrők be- és kikapcsolása"
+      sort_label: "Rendezés"
     shared_drafts:
       title: "Megosztott vázlatok"
       notice: "Ez a téma csak azok számára látható, akik megosztott vázlatokat tehetnek közzé."
@@ -5654,6 +5655,9 @@ hu:
           impact_role_staff: "Stáb"
           impact_role_all_members: "Minden tag"
           impact_role_developers: "Fejlesztők"
+        sort:
+          status: "Állapot"
+          name: "Név"
       config:
         about:
           title: "Az Ön webhelyéről"
@@ -6756,10 +6760,7 @@ hu:
           site_contact_group_help: |
             Egy olyan csoport, amely meghívást kap minden automatikusan elküldött személyes üzenetre.
           your_organization: "Az Ön szervezete"
-          your_organization_description: "Az Általános Szerződési Feltételekben és az Adatvédelmi közleményben szereplő információkat arra használjuk, hogy megmutassuk, ki üzemelteti a webhelyet, és milyen joghatóság alatt."
           company_name: "Név"
-          company_name_warning: |
-            Ha üresen hagyja, akkor a szolgáltatási feltételek vagy az adatvédelmi nyilatkozat nem jelenik meg.
           company_url: "Weboldal"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Irányadó jog"

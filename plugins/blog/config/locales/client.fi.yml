@@ -1,0 +1,51 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    blog:
+      admin:
+        overridden: Mukautettu
+        insert: Lisää
+        array_value: Luettelo
+        preview_home: Aloitussivu
+        preview_archive: Arkistoi
+        desktop: Työpöytä
+        mobile: Mobiili
+        back_to_themes: Takaisin teemoihin
+        new_theme_short: Uusi teema
+        themes: Teemat
+        theme_name: Teeman nimi
+        edit: Muokkaa
+        activate: Aktivoi
+        preview: Esikatselu
+        import: Tuo
+        export: Vie
+        active: Aktiivinen
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Luonnos
+        preview: Esikatselu
+        publish: Julkaise
+        options: Asetukset
+        change:
+          title: otsikko
+          body: leipäteksti
+      review:
+        copy: Kopioi linkki
+        active: Aktiivinen
+        message: Palaute
+      editor_table:
+        edit: Muokkaa
+        status: Tila
+        replies: Vastaukset
+      drafts: Luonnokset
+      private_draft: Luonnos
+      preview: Esikatselu
+      unpublish: Peru julkaisu
+      appearance_link: Ulkoasu

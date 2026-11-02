@@ -892,6 +892,7 @@ sq:
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     auto_close_topics_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një temë përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     default_topics_automatic_unpin: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes, e paracaktuar."
+    company_name: "Emri i shoqërisë ose organizatës suaj."
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."

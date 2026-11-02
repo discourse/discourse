@@ -2295,6 +2295,7 @@ ro:
       clear: "Elimină filtrul"
     filter_controls:
       reset: "Resetare"
+      sort_label: "Sortează după"
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
@@ -3986,6 +3987,9 @@ ro:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Echipa"
+        sort:
+          status: "Stare"
+          name: "Nume"
       config:
         about:
           title: "Despre site-ul tău"
@@ -4688,7 +4692,6 @@ ro:
           site_contact_name_help: |
             Un nume de utilizator al personalului de la care se trimit toate mesajele automate. Dacă este lăsat gol, va fi utilizat contul de sistem implicit.
           your_organization: "Organizația ta"
-          your_organization_description: "Vom utiliza aceste informații în Termenele serviciului și în Notificarea privind confidențialitatea pentru a arăta cine operează site-ul și sub ce jurisdicție."
           company_name: "Nume"
           company_url: "Site web"
           company_url_placeholder: "https://example-co.com"

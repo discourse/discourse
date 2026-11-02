@@ -2047,6 +2047,7 @@ sl:
       default: Emojiji po meri
     filter_controls:
       reset: "Ponastavi"
+      sort_label: "Uredi po"
     shared_drafts:
       title: "Skupni osnutki"
       destination_category: "Ciljna kategorija"
@@ -3798,6 +3799,9 @@ sl:
           impact_role_admins: "Administratorji"
           impact_role_moderators: "Moderatorji"
           impact_role_staff: "Osebje"
+        sort:
+          status: "Status"
+          name: "Ime"
       config:
         developer:
           title: "Razvijalci"

@@ -2471,6 +2471,7 @@ sq:
       default: Emoji të personalizuara
     filter_controls:
       reset: "Rivendosni"
+      sort_label: "Rendit sipas"
     shared_drafts:
       title: "Drafte të përbashkëta"
       notice: "Kjo temë është e dukshme vetëm për ata që mund të publikojnë drafte të përbashkëta."
@@ -4055,6 +4056,9 @@ sq:
           impact_role_admins: "Administratorët"
           impact_role_moderators: "Moderatorë"
           impact_role_staff: "Stafi"
+        sort:
+          status: "Status"
+          name: "Emri"
       config:
         developer:
           title: "Developer"

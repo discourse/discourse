@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  admin_js:
+    blog:
+      admin:
+        overridden: Custom
+        insert: Unesi
+        preview_archive: Arhiva
+        desktop: Desktop
+        mobile: Mobilno
+        themes: Teme
+        theme_name: Ime teme
+        edit: Izmijeni
+        preview: Pregled
+        export: Izvoz
+        active: Active
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Nacrt
+        preview: Pregled
+        options: Opcije
+        change:
+          title: naslov
+          body: tijelo
+      review:
+        active: Active
+      editor_table:
+        edit: Izmijeni
+        status: Status
+        replies: Odgovori
+      drafts: Skice
+      private_draft: Nacrt
+      preview: Pregled
+      appearance_link: Izgled

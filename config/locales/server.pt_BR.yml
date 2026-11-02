@@ -2418,7 +2418,7 @@ pt_BR:
     create_post_for_category_and_tag_changes: "Criar postagem de sussurro quando a categoria ou etiquetas do tópico for alterada. É preciso ativar as publicações de sussurros."
     automatically_clean_unused_tags: "Exclua automaticamente etiquetas que não estão sendo utilizadas em tópicos ou mensagens pessoais todos os dias."
     default_watched_precedence_over_muted: "Notificar os usuários sobre tópicos em categorias ou tags que eles estão acompanhando e que também pertencem a um tópico que eles silenciaram"
-    company_name: "O nome da sua empresa ou organização. Se ficar vazio, não serão fornecidos Termos de Serviço nem Aviso de Privacidade clichês."
+    company_name: "Nome da sua empresa ou organização."
     governing_law: "Especifique a jurisdição que rege os aspectos legais do site, inclusive os Termos de Serviço e a Política de Privacidade. Geralmente é o país onde a empresa que opera o site está registrada ou faz negócios"
     city_for_disputes: "Especifique a cidade que será usada como jurisdição para a resolução de disputas relacionadas ao uso deste fórum. Geralmente essa informação está inclusa nos documentos legais, como os Termos de Serviço do fórum."
     shared_drafts_category: "Ative o recurso Rascunhos compartilhados ao designar uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão bloqueados das listas de tópicos para usuários da equipe."

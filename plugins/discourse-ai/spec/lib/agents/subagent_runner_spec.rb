@@ -333,10 +333,9 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
     expect(agent.runtime_tools(context: context).map(&:name)).not_to include("spawn_agent")
   end
 
-  it "requests a final answer when the shared spawn budget is exhausted" do
-    parent.update!(tools: [["Search", nil, false]])
+  it "keeps delegation available after more than five child runs while shared work remains" do
     spawn_calls =
-      Array.new(DiscourseAi::Agents::SubagentExecutionState::MAX_SPAWN_CALLS) do |index|
+      Array.new(6) do |index|
         DiscourseAi::Completions::ToolCall.new(
           id: "spawn-#{index}",
           name: "spawn_agent",
@@ -362,10 +361,113 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
 
       expect(raw_context.last.first).to eq("Final answer")
       expect(prompts.length).to eq(responses.length)
+      expect(prompts.map(&:tool_choice)).to all(eq(nil))
+      results = raw_context.select { |entry| entry[2] == "tool" && entry[3] == "spawn_agent" }
+      expect(results.map { |entry| JSON.parse(entry.first)["response"] }).to eq(
+        Array.new(6) { |index| "Child result #{index}" },
+      )
+      expect(bot.agent.runtime_tools(context: context).map(&:name)).to include("spawn_agent")
+      expect(context.subagent_execution_state.completion_count).to eq(responses.length)
+      tokenizer = model.to_llm.tokenizer
+      generation_tokens =
+        responses.sum do |response|
+          output = DiscourseAi::Completions::GeneratedOutput.new
+          output << response
+          output.size(tokenizer)
+        end
+      evidence_tokens =
+        results.sum { |entry| tokenizer.size(JSON.parse(entry.first).except("response").to_json) }
+      expect(context.execution_context.work_budget.used).to eq(generation_tokens + evidence_tokens)
+    end
+  end
+
+  it "rejects further delegation when repeated child output exhausts shared work" do
+    child_response = "Child evidence"
+    token_budget = model.to_llm.tokenizer.size(child_response) * 6
+    execution_context = DiscourseAi::Completions::ExecutionContext.new
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution_context,
+        root_token_budget: token_budget,
+      )
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        execution_context: execution_context,
+        subagent_execution_state: state,
+      )
+    runner =
+      described_class.new(
+        parent_agent: parent.class_instance.new,
+        child_id: child.id,
+        prompt: "Check the evidence",
+        context: context,
+        parent_llm: model.to_llm,
+      )
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(Array.new(6, child_response)) do |canned|
+      6.times { expect(runner.run).to include(status: "ok", response: child_response) }
+
+      expect(execution_context.work_budget.used).to eq(token_budget)
+      expect(state.remaining_tokens).to eq(0)
+      expect(runner.run[:error]).to eq(I18n.t("discourse_ai.ai_bot.subagent_errors.token_limit"))
+      expect(canned.completions).to eq(6)
+      expect(state.completion_count).to eq(6)
+    end
+  end
+
+  it "stops repeated failed delegations at the shared completion safety limit" do
+    execution_context = DiscourseAi::Completions::ExecutionContext.new
+    failed_calls =
+      Array.new(7) do |index|
+        DiscourseAi::Completions::ToolCall.new(
+          id: "invalid-spawn-#{index}",
+          name: "spawn_agent",
+          parameters: {
+            agent_id: child.id,
+            prompt: "",
+          },
+        )
+      end
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution_context,
+        root_token_budget: 10_000,
+        completion_count:
+          DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - failed_calls.length - 1,
+      )
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        messages: [{ type: :user, content: "Check the evidence" }],
+        execution_context: execution_context,
+        subagent_execution_state: state,
+      )
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      [*failed_calls, "Unable to complete the delegated work"],
+    ) do |canned, _, prompts|
+      bot = DiscourseAi::Agents::Bot.as(user, agent: parent.class_instance.new, model: model)
+      raw_context = bot.reply(context)
+      results = raw_context.select { |entry| entry[2] == "tool" && entry[3] == "spawn_agent" }
+
+      expect(results.length).to eq(failed_calls.length)
+      expect(results.map { |entry| JSON.parse(entry.first) }).to all(
+        include(
+          "status" => "error",
+          "error" => I18n.t("discourse_ai.ai_bot.subagent_errors.invalid_prompt"),
+        ),
+      )
+      expect(raw_context.last.first).to eq("Unable to complete the delegated work")
+      expect(canned.completions).to eq(failed_calls.length + 1)
+      expect(state.completion_count).to eq(
+        DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS,
+      )
+      expect(state.remaining_tokens).to be > 0
       expect(prompts.last.tool_choice).to eq(:none)
       expect(prompts.last.messages.last).to eq(
         type: :user,
-        content: DiscourseAi::Agents::Bot::TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT,
+        content: DiscourseAi::Agents::Bot::COMPLETION_LIMIT_FINAL_ANSWER_HINT,
       )
     end
   end
@@ -777,7 +879,7 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
     expect(ReviewableAiToolAction.count).to eq(0)
   end
 
-  it "rejects invalid prompts and exhausted calls" do
+  it "rejects oversized prompts and excessive delegation depth" do
     execution_context =
       DiscourseAi::Completions::ExecutionContext.new(
         token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
@@ -815,17 +917,5 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
         parent_llm: DiscourseAi::Completions::Llm.proxy(model),
       ).run
     expect(depth_result[:error]).to eq(I18n.t("discourse_ai.ai_bot.subagent_errors.depth_limit"))
-    context.subagent_depth = 0
-
-    5.times { expect(state.reserve_spawn).to eq(true) }
-    runner =
-      DiscourseAi::Agents::SubagentRunner.new(
-        parent_agent: parent.class_instance.new,
-        child_id: child.id,
-        prompt: "Check this",
-        context: context,
-        parent_llm: DiscourseAi::Completions::Llm.proxy(model),
-      )
-    expect(runner.run[:error]).to eq(I18n.t("discourse_ai.ai_bot.subagent_errors.call_limit"))
   end
 end

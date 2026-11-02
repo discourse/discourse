@@ -317,6 +317,33 @@ RSpec.describe Admin::ThemesController do
         )
       end
 
+      it "creates a private component placeholder" do
+        Discourse.redis.setex("ssh_key_public_key", 1.hour, "private_key")
+
+        post "/admin/themes/import.json",
+             params: {
+               remote: "git@github.com:discourse/private-component.git",
+               public_key: "public_key",
+               placeholder: true,
+               component: true,
+             }
+
+        expect(response.status).to eq(201)
+        expect(Theme.last.component).to eq(true)
+      end
+
+      it "can force install a component" do
+        post "/admin/themes/import.json",
+             params: {
+               remote: "git@github.com:discourse/discourse-inexistent-component.git",
+               force: true,
+               component: true,
+             }
+
+        expect(response.status).to eq(201)
+        expect(Theme.last.component).to eq(true)
+      end
+
       it "rolls back the remote theme when placeholder creation fails" do
         Discourse.redis.setex("ssh_key_public_key", 1.hour, "private_key")
         Theme.stubs(:create!).raises(ActiveRecord::RecordInvalid.new(Theme.new))
@@ -1154,6 +1181,28 @@ RSpec.describe Admin::ThemesController do
         expect(response.parsed_body["errors"].first).to eq("error message")
       end
 
+      it "finishes a placeholder without a child component that is a theme" do
+        child_repo = setup_git_repo("about.json" => { name: "Not a component" }.to_json)
+        child_url = MockGitImporter.register("https://github.com/discourse/child.git", child_repo)
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url))
+
+        put "/admin/themes/#{theme.id}.json", params: { theme: { remote_update: true } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["skipped_components"]).to contain_exactly(
+          include("url" => child_url),
+        )
+        expect(theme.remote_theme.reload).not_to be_placeholder
+        expect(theme.reload.child_themes).to be_empty
+        expect(RemoteTheme.where(remote_url: child_url)).not_to exist
+      ensure
+        FileUtils.rm_rf(child_repo)
+      end
+
       it "returns the right error message" do
         theme.update!(component: true)
 
@@ -1755,6 +1804,52 @@ RSpec.describe Admin::ThemesController do
         theme.reload
         expect(theme.remote_theme.remote_url).to eq(other_repo_url)
         expect(theme.remote_theme.branch).to eq("develop")
+      end
+
+      it "adopts the name and type of the new source without installing its components" do
+        add_to_git_repo(
+          other_repo,
+          "about.json" => {
+            name: "comp",
+            component: true,
+            components: ["https://github.com/discourse/missing.git"],
+          }.to_json,
+        )
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url, local_version: "abc"))
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(200)
+        expect(theme.reload).to have_attributes(name: "comp", component: true)
+        expect(theme.remote_theme.local_version).to be_present
+      end
+
+      it "returns the components it couldn't install when finishing a placeholder" do
+        missing_url = "https://github.com/discourse/missing.git"
+        add_to_git_repo(
+          other_repo,
+          "about.json" => { name: "other-theme", components: [missing_url] }.to_json,
+        )
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url))
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["skipped_components"]).to contain_exactly(
+          "url" => missing_url,
+          "error" => I18n.t("themes.import_error.git"),
+        )
+      end
+
+      it "refuses to turn the default theme into a component" do
+        add_to_git_repo(other_repo, "about.json" => { name: "comp", component: true }.to_json)
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url, local_version: "abc"))
+        theme.set_default!
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(422)
+        expect(theme.reload.component).to eq(false)
       end
 
       it "returns error for non-git theme" do

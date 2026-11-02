@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  admin_js:
+    blog:
+      admin:
+        overridden: ئىختىيارى
+        insert: قىستۇر
+        array_value: تىزىم
+        preview_home: باش بەت
+        preview_archive: ئارخىپ
+        desktop: ئۈستەل يۈزى
+        mobile: كۆچمە
+        back_to_themes: ئۆرنەككە قايت
+        new_theme_short: يېڭى ئۆرنەك
+        themes: ئۆرنەك
+        theme_name: ئۆرنەك ئىسمى
+        edit: تەھرىر
+        activate: ئاكتىپلا
+        preview: ئالدىن كۆزەت
+        export: چىقار
+        active: ئاكتىپ
+  js:
+    blog:
+      panel:
+        badge:
+          draft: دەسلەپكى نۇسخا
+        preview: ئالدىن كۆزەت
+        publish: تارقات
+        options: تاللانما
+        change:
+          title: ئاتاق
+          body: مەزمۇن
+      review:
+        copy: ئۇلانما كۆچۈر
+        active: ئاكتىپ
+        message: قايتۇرما ئىنكاس
+      editor_table:
+        edit: تەھرىر
+        status: ھالەت
+        replies: جاۋاب
+      drafts: دەسلەپكى نۇسخا
+      private_draft: دەسلەپكى نۇسخا
+      preview: ئالدىن كۆزەت
+      unpublish: تارقاتما
+      appearance_link: كۆرۈنۈش

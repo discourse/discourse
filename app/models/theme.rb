@@ -93,8 +93,11 @@ class Theme < ActiveRecord::Base
   validate :component_validations
   validate :validate_theme_fields
 
+  before_validation :reset_attributes_for_type,
+                    if: -> { persisted? && will_save_change_to_component? }
   after_create :update_child_components
   before_update :check_editable_attributes, if: :system?
+  after_update :unlink_relatives_for_type, if: :saved_change_to_component?
   before_destroy :raise_invalid_parameters, if: :system?
 
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
@@ -199,15 +202,34 @@ class Theme < ActiveRecord::Base
     Rails.env.development?
   end
 
-  def update_child_components
-    if !component? && child_components.present? && !skip_child_components_update
-      child_components.each do |url|
-        url = ThemeStore::GitImporter.new(url.strip).url
-        theme = RemoteTheme.find_by(remote_url: url)&.theme
-        theme ||= RemoteTheme.import_theme(url, user)
-        child_themes << theme
-      end
+  def update_child_components(skip_failures: false)
+    return [] if component? || child_components.blank? || skip_child_components_update
+
+    skipped = []
+    linked = false
+    linked_urls = child_themes.joins(:remote_theme).pluck("remote_themes.remote_url").to_set
+
+    child_components.each do |url|
+      url = ThemeStore::GitImporter.new(url.strip).url
+      next if linked_urls.include?(url)
+
+      theme = RemoteTheme.find_by(remote_url: url)&.theme
+      imported = theme.nil?
+      theme ||= RemoteTheme.import_theme(url, user)
+      child_themes << theme
+      linked = true
+    rescue StandardError => e
+      theme.destroy if imported && theme&.persisted?
+      raise if !skip_failures
+      skipped << { url:, error: e.message }
     end
+
+    if linked
+      Theme.clear_cache!
+      notify_theme_change
+    end
+
+    skipped
   end
 
   def load_all_extra_js
@@ -433,13 +455,8 @@ class Theme < ActiveRecord::Base
     return if component
 
     Theme.transaction do
-      self.component = true
-
-      self.color_scheme_id = nil
-      self.user_selectable = false
       Theme.clear_default! if default?
-
-      ChildTheme.where("parent_theme_id = ?", id).destroy_all
+      self.component = true
       save!
     end
   end
@@ -447,12 +464,8 @@ class Theme < ActiveRecord::Base
   def switch_to_theme!
     return unless component
 
-    Theme.transaction do
-      self.enabled = true
-      self.component = false
-      ChildTheme.where("child_theme_id = ?", id).destroy_all
-      save!
-    end
+    self.component = false
+    save!
   end
 
   def self.find_default
@@ -1176,6 +1189,20 @@ class Theme < ActiveRecord::Base
 
   def raise_invalid_parameters
     raise Discourse::InvalidParameters
+  end
+
+  def reset_attributes_for_type
+    if component
+      self.color_scheme_id = nil
+      self.user_selectable = false
+    else
+      self.enabled = true
+    end
+  end
+
+  def unlink_relatives_for_type
+    column = component ? :parent_theme_id : :child_theme_id
+    ChildTheme.where(column => id).delete_all
   end
 end
 

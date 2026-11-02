@@ -2725,6 +2725,7 @@ ja:
     filter_controls:
       reset: "リセット"
       toggle: "ドロップダウンのフィルタを切り替える"
+      sort_label: "並べ替え"
     shared_drafts:
       title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
@@ -5254,6 +5255,9 @@ ja:
           impact_role_staff: "スタッフ"
           impact_role_all_members: "すべてのメンバー"
           impact_role_developers: "開発者"
+        sort:
+          status: "ステータス"
+          name: "名前"
       config:
         about:
           title: "サイトについて"
@@ -6340,10 +6344,7 @@ ja:
           site_contact_group_help: |
             自動的に送信されるすべての個人メッセージに招待されるグループ。
           your_organization: "あなたの組織"
-          your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
-          company_name_warning: |
-            空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
           company_url: "ウェブサイト"
           company_url_placeholder: "https://example-co.com"
           governing_law: "準拠法"

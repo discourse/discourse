@@ -3113,6 +3113,7 @@ de:
     filter_controls:
       reset: "Zurücksetzen"
       toggle: "Dropdowns zum Filtern anzeigen/ausblenden"
+      sort_label: "Sortieren nach"
     d_icon_grid_picker:
       select_icon: "Symbol auswählen"
       search_label: "Symbole durchsuchen"
@@ -6284,6 +6285,9 @@ de:
           impact_role_staff: "Team"
           impact_role_all_members: "Alle Mitglieder"
           impact_role_developers: "Entwickler"
+        sort:
+          status: "Status"
+          name: "Name"
       config:
         about:
           title: "Über deine Website"
@@ -7624,11 +7628,8 @@ de:
           site_contact_group_help: |
             Die Gruppe, die zu allen automatisch versendeten, persönlichen Nachrichten eingeladen wird.
           your_organization: "Deine Organisation"
-          your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
           company_name_placeholder: "Beispiel GmbH"
-          company_name_warning: |
-            Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder eine entsprechende Datenschutzrichtlinie bereitgestellt.
           company_url: "Website"
           company_url_placeholder: "https://beispiel-gmbh.com"
           governing_law: "Anzuwendendes Recht"

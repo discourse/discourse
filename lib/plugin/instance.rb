@@ -987,6 +987,10 @@ class Plugin::Instance
   #
   # This is a very rough initial implementation
   def gem(name, version, opts = {})
+    if metadata.gemfile
+      raise "Plugin #{directory_name} declares its gems in a Gemfile, `gem` can't be mixed with that"
+    end
+
     PluginGem.load(path, name, version, opts)
   end
 
