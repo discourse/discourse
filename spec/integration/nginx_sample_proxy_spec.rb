@@ -16,11 +16,12 @@ RSpec.describe "Nginx sample proxy" do
 
   it "uses the sample config's special routes", :aggregate_failures do
     expect(@proxy.get("/favicon.ico").code).to eq("204")
+    expect(@proxy.get("/srv/status").code).to eq("200")
     expect(@proxy.get("/backups/private.tar.gz").code).to eq("404")
 
-    access_log = @proxy.access_log
-    expect(@proxy.get("/srv/status").code).to eq("200")
-    expect(@proxy.access_log).to eq(access_log)
+    backup_request = "GET /backups/private.tar.gz HTTP/1.1"
+    wait_for(timeout: 5) { @proxy.access_log.include?(backup_request) }
+    expect(@proxy.access_log.lines).to contain_exactly(a_string_including(backup_request))
   end
 
   it "routes dynamic requests through the @discourse fallback", :aggregate_failures do
