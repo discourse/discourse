@@ -2,9 +2,7 @@
 
 module Migrations
   module Database
-    # The registry of open {ManagedConnection}s and the fork protocol for them.
-    # `ForkManager` is the only caller of {.with_fork} and {.after_fork_child};
-    # connections register themselves when they open.
+    # Tracks open database connections and prepares them for forks.
     module Lifecycle
       # Raised when a fork would leave a connection in an unknown state.
       class UnsafeForkError < StandardError
@@ -19,9 +17,7 @@ module Migrations
       @connections = []
 
       class << self
-        # Runs work that a fork must not interrupt: opening or closing a
-        # connection, or an operation on a `:close_reopen` connection. Blocks may
-        # overlap with each other; a pending fork waits for all of them.
+        # A fork waits until all synchronized blocks are finished.
         # @return the block's result
         # @raise [UnsafeForkError] when called inside {.with_fork} on the forking thread
         def synchronize(&block)
@@ -45,15 +41,9 @@ module Migrations
           @mutex.synchronize { @connections.size }
         end
 
-        # Runs a fork batch: waits for {.synchronize} blocks to finish, checks every
-        # connection, closes the `:close_reopen` ones, yields while the forks
-        # happen, and reopens the closed connections afterwards. No connection can
-        # be opened, closed or used with `:close_reopen` until the block returns.
         # @return the block's result
-        # @raise [UnsafeForkError] if a connection cannot be forked, see
-        #   {ManagedConnection#validate_fork!}
-        # @raise [RecoveryError] if a connection could not be reopened; an error
-        #   from the block becomes its cause
+        # @raise [UnsafeForkError] if a connection cannot be forked
+        # @raise [RecoveryError] if a connection cannot be reopened
         def with_fork
           @lock.exclusive do
             connections = @mutex.synchronize { @connections.dup }
@@ -80,8 +70,7 @@ module Migrations
           end
         end
 
-        # Resets the registry in a forked child. Every inherited connection is
-        # discarded, so the child has to open its own.
+        # Discards all inherited connections in a forked worker.
         # @return [void]
         def after_fork_child
           @lock = LifecycleLock.new

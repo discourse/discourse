@@ -2,23 +2,18 @@
 
 module Migrations
   module Database
-    # Streams the rows of one query in single-row mode. The query keeps the
-    # connection until all rows are read or the stream is closed, so other queries
-    # on the same connection raise {ManagedConnection::BusyError} in the meantime.
-    # A stream can be consumed once: {#each} runs in the current fiber, {#next}
-    # suspends the result loop in a separate fiber between calls. A caller that
-    # stops early with {#next} has to call {#close}.
+    # A query keeps the connection until all rows are read or the stream is closed.
+    # Block iteration runs in the current fiber. #next uses a separate fiber.
     class PostgresStream
       include Enumerable
 
-      # Raised on a second pass over a consumed stream.
+      # Raised when a stream is consumed more than once.
       class ConsumedError < StandardError
       end
 
       # @return [Integer] the number of columns in the result
       attr_reader :column_count
 
-      # Sends the query and marks the connection as busy.
       # @param connection [ManagedConnection]
       # @param sql [String] a query with `$1`, `$2`, … placeholders
       # @param params [Array] the values for the placeholders
@@ -53,8 +48,6 @@ module Migrations
         value
       end
 
-      # Yields every row and closes the stream afterwards, also when the block
-      # raises. Without a block, returns an enumerator over this stream.
       # @return [self]
       # @raise [ConsumedError] if the stream was consumed before
       def each(&block)
@@ -71,7 +64,6 @@ module Migrations
         close if block
       end
 
-      # Reads and discards the remaining rows, then releases the connection.
       # @return [void]
       def close
         check_owner!

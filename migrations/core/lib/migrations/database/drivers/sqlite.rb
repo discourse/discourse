@@ -6,16 +6,12 @@ require "fileutils"
 module Migrations
   module Database
     module Drivers
-      # Opens `Extralite::Database` handles for {ManagedConnection}. The fork policy
-      # is `:forbid` unless the database is `reopenable`. A reopenable database is
-      # closed before every fork and opened again afterwards, which is only safe
-      # without an active transaction, attached database or temporary schema.
+      # Reopenable SQLite connections are closed while workers are forked.
       class Sqlite
         # @param path [String] the database file; missing parent directories are
         #   created on open
         # @param journal_mode [String] the SQLite journal mode
-        # @param reopenable [Boolean] whether the database may stay open across
-        #   forks, see above
+        # @param reopenable [Boolean] close and reopen the database around forks
         # @param statement_cache [PreparedStatementCache, nil] cleared on close,
         #   because its statements belong to the closed handle
         def initialize(path:, journal_mode: "wal", reopenable: false, statement_cache: nil)

@@ -2,32 +2,23 @@
 
 module Migrations
   module Database
-    # One native database handle plus the bookkeeping that makes worker forks safe.
-    # The driver opens, configures and closes the handle and names its fork policy;
-    # the README section "Database connections and fork safety" describes the
-    # policies. Every operation runs in {#with}, which marks the handle as busy for
-    # the calling thread or fiber. {Lifecycle} calls the `*_fork!` methods around
-    # each fork. {PostgresStream} uses {#start_operation} and {#finish_operation}
-    # to keep the handle busy between calls to `next`.
+    # Keeps a database connection in a valid state when workers are forked.
     class ManagedConnection
-      # Raised when the connection is not open: it was closed, is suspended for a
-      # fork, failed to reopen, or was discarded in a worker.
+      # Raised when the connection is not open.
       class UnavailableError < StandardError
       end
 
-      # Raised when another thread, fiber or stream has an operation running on
-      # the connection.
+      # Raised when the connection is already in use.
       class BusyError < StandardError
       end
 
-      # Raised in a worker that uses a connection inherited from its parent.
+      # Raised when a worker uses an inherited connection.
       class DiscardedError < UnavailableError
       end
 
-      # Opens a connection. Opening never overlaps with a fork, because a native
-      # constructor can open its socket before Ruby gets the handle.
-      # @param driver [Object] opens and configures the native handle, see
-      #   {Drivers::Postgres} and {Drivers::Sqlite}
+      # Opening cannot overlap with a fork. The connection may exist before the
+      # constructor returns it to Ruby.
+      # @param driver [Object] opens and configures the database connection
       # @yieldparam connection [ManagedConnection] closed when the block returns
       # @return [ManagedConnection] the open connection, or the block's result
       def self.open(driver)
@@ -63,11 +54,7 @@ module Migrations
       end
       private_class_method :new
 
-      # Runs one operation on the native handle. The same thread (`:close_reopen`)
-      # or fiber (other policies) may nest calls; every other caller gets a
-      # {BusyError} until the block returns. With `:close_reopen`, a fork also waits
-      # for the block, because the handle is closed before forking.
-      # @yieldparam connection [Object] the driver's native handle
+      # @yieldparam connection [Object] the driver's database connection
       # @return the block's result
       # @raise [BusyError] if another thread, fiber or stream is using the connection
       # @raise [UnavailableError] if the connection is not open
@@ -81,8 +68,6 @@ module Migrations
         end
       end
 
-      # Closes the native handle. A connection discarded in a worker is already
-      # gone, so closing it does nothing.
       # @return [void]
       # @raise [BusyError] if an operation or stream is still running
       def close
@@ -96,12 +81,8 @@ module Migrations
         @state != :open || @pid != Process.pid
       end
 
-      # Checks that forking is safe for this connection: it must be open, the
-      # forking thread or fiber must not be inside an operation, the policy must
-      # allow forks, and the driver gets to inspect the handle. Called by
-      # {Lifecycle.with_fork} before the forks.
       # @return [void]
-      # @raise [Lifecycle::UnsafeForkError]
+      # @raise [Lifecycle::UnsafeForkError] if the connection cannot be forked
       def validate_fork!
         unless @state == :open
           raise Lifecycle::UnsafeForkError, "#{@driver.class} connection is #{@state}"
@@ -119,9 +100,6 @@ module Migrations
         @driver.validate_fork!(@connection) if close_reopen?
       end
 
-      # Closes the handle before a fork when the policy is `:close_reopen`; other
-      # policies keep it open. The connection is suspended until
-      # {#restore_after_fork!}. Called by {Lifecycle.with_fork}.
       # @return [void]
       def prepare_fork!
         return unless close_reopen?
@@ -136,9 +114,6 @@ module Migrations
         end
       end
 
-      # Reopens a connection that {#prepare_fork!} suspended. If reopening fails,
-      # the connection stays failed and every later operation raises
-      # {UnavailableError}. Called by {Lifecycle.with_fork} after the forks.
       # @return [void]
       def restore_after_fork!
         return unless @state == :suspended
@@ -153,9 +128,6 @@ module Migrations
         end
       end
 
-      # Passes the handle inherited by a forked child to the driver's `discard`, so
-      # the child cannot touch the parent's session. Called by
-      # {Lifecycle.after_fork_child}.
       # @return [void]
       def discard_after_fork!
         @driver.discard(@connection) if @connection
@@ -165,12 +137,9 @@ module Migrations
         @operation_depth = 0
       end
 
-      # Marks the connection as busy for `owner` and returns the native handle.
-      # Streams use this to keep the handle between calls to `next`; everything
-      # else goes through {#with}. Each call needs a matching {#finish_operation}.
       # @param owner [Object] the thread, fiber or stream running the operation;
       #   the same owner may nest operations
-      # @return [Object] the driver's native handle
+      # @return [Object] the driver's database connection
       # @raise [UnavailableError] if the connection is not open
       # @raise [BusyError] if a different owner has an operation running
       # @raise [DiscardedError] in a worker that inherited the connection
@@ -189,7 +158,6 @@ module Migrations
         end
       end
 
-      # Ends an operation started with {#start_operation}.
       # @return [void]
       def finish_operation
         @mutex.synchronize { @operation_depth -= 1 }

@@ -5,9 +5,7 @@ require "pg"
 module Migrations
   module Database
     module Drivers
-      # Opens `PG::Connection` handles for {ManagedConnection}. The fork policy is
-      # `:discard`: queries keep running while workers fork, and a child redirects
-      # its inherited socket to `/dev/null` so it cannot end the parent's session.
+      # PostgreSQL connections stay open while workers are forked.
       class Postgres
         # @param settings [Hash] the connection parameters for `PG::Connection.new`
         # @param field_names [Symbol] `:string` or `:symbol`, the key type of result hashes

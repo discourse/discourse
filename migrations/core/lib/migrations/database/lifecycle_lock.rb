@@ -2,11 +2,8 @@
 
 module Migrations
   module Database
-    # A readers-writer lock for the fork protocol. {#synchronize} blocks are the
-    # readers and run together. {#exclusive} is the writer: a fork waits for all
-    # readers and blocks new ones until it is done. Readers are counted per thread,
-    # because streams use fibers, and a thread that already holds the lock may nest
-    # readers even while a fork is waiting.
+    # Database operations can run together. Forking waits for all of them to finish.
+    # Nested operations are tracked by thread because streams use fibers.
     class LifecycleLock
       def initialize
         @mutex = Mutex.new
