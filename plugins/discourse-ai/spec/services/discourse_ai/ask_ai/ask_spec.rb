@@ -368,6 +368,17 @@ RSpec.describe DiscourseAi::AskAi::Ask do
         )
       end
 
+      context "when the request also asks to defer and to be judged" do
+        let(:classify_intent) { true }
+        let(:params) { super().merge(defer_if_precise: true) }
+
+        it "answers on the search's own log without holding it back again" do
+          expect { result }.not_to change { AskAiLog.count }
+          expect(deferred_log.reload).to have_attributes(answer_requested_at: be_present)
+          expect(result[:judgement]).to be_nil
+        end
+      end
+
       context "when the log belongs to someone else" do
         before { deferred_log.update!(user: Fabricate(:user)) }
 

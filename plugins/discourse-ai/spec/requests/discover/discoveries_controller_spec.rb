@@ -194,6 +194,35 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.status).to eq(409)
       end
 
+      it "charges a request that names a deferred search but asks to defer again once it is used" do
+        RateLimiter.enable
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do
+          query = "password status:open"
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id:,
+                 defer_if_precise: true,
+               }
+          params = {
+            query:,
+            deferred_ask_log_id: response.parsed_body["ask_log_id"],
+            defer_if_precise: true,
+          }
+
+          expect {
+            post "/discourse-ai/discoveries/reply",
+                 params: params.merge(request_id: SecureRandom.uuid)
+          }.not_to change { AskAiLog.count }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to have_key("answer_deferred")
+
+          post "/discourse-ai/discoveries/reply",
+               params: params.merge(request_id: SecureRandom.uuid)
+          expect(response.status).to eq(429)
+        end
+      end
+
       it "lets the reader request a deferred answer after using every search" do
         RateLimiter.enable
         stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do

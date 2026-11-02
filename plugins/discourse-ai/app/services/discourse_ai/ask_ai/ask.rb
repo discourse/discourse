@@ -30,6 +30,13 @@ module DiscourseAi
           self.trigger_reason = trigger_reason.to_s
           self.trigger_reason = "" if !trigger_reason.match?(Discoveries::TRIGGER_REASON_PATTERN)
           self.intent_heuristic = "" if Discoveries::Intent::CHOICES.exclude?(intent_heuristic)
+
+          # Requesting a held-back answer skips the rate limit, so the request
+          # may only claim that answer: never defer again or judge first.
+          if deferred_ask_log_id.present?
+            self.defer_if_precise = false
+            self.classify_intent = false
+          end
         end
 
         validates :query,
