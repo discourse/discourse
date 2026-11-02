@@ -43,7 +43,7 @@ module Migrations
           )
         end
 
-        def validate_fork!(connection)
+        def check_before_fork!(connection)
           if connection.transaction_active?
             raise Lifecycle::UnsafeForkError,
                   "SQLite has an active transaction; cannot reopen it safely"

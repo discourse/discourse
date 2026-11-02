@@ -83,7 +83,7 @@ module Migrations
 
       # @return [void]
       # @raise [Lifecycle::UnsafeForkError] if the connection cannot be forked
-      def validate_fork!
+      def check_before_fork!
         unless @state == :open
           raise Lifecycle::UnsafeForkError, "#{@driver.class} connection is #{@state}"
         end
@@ -97,7 +97,7 @@ module Migrations
                 "#{@driver.class} does not allow forks while open; close it before forking"
         end
 
-        @driver.validate_fork!(@connection) if reopen_after_fork?
+        @driver.check_before_fork!(@connection) if reopen_after_fork?
       end
 
       # @return [void]

@@ -5,7 +5,7 @@ class MigrationsLifecycleTestDriver
                 :configure_error,
                 :close_error,
                 :open_error,
-                :validate_error,
+                :fork_check_error,
                 :detach_error
   attr_reader :handles
 
@@ -23,8 +23,8 @@ class MigrationsLifecycleTestDriver
     raise @configure_error if @configure_error
   end
 
-  def validate_fork!(handle)
-    raise @validate_error if @validate_error
+  def check_before_fork!(handle)
+    raise @fork_check_error if @fork_check_error
   end
 
   def close(handle)

@@ -47,7 +47,7 @@ module Migrations
         def with_fork
           @lock.exclusive do
             connections = @mutex.synchronize { @connections.dup }
-            connections.each(&:validate_fork!)
+            connections.each(&:check_before_fork!)
             prepared_connections = []
             begin
               connections.each do |connection|
