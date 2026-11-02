@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Projekt
+        overridden: Niestandardowy
+        insert: Wstaw
+        array_value: Lista
+        preview_home: Strona główna
+        preview_archive: Archiwum
+        desktop: Komputer
+        mobile: Mobilnie
+        back_to_themes: Powrót do motywów
+        new_theme_short: Nowy motyw
+        themes: Motywy
+        theme_name: Nazwa motywu
+        edit: Edytuj
+        activate: Aktywuj
+        preview: Podgląd
+        import: Import
+        export: Eksport
+        active: Aktywni
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Szkic
+        preview: Podgląd
+        publish: Publikuj
+        options: Opcje
+        submit: Prześlij do zatwierdzenia
+        change:
+          title: tytuł
+          body: treść
+      review:
+        copy: Skopiuj link
+        active: Aktywni
+        revoke: Odwołaj link
+        message: Informacje zwrotne
+      editor_table:
+        edit: Edytuj
+        status: Status
+        replies: Odpowiedzi
+      drafts: Szkice
+      private_draft: Szkic
+      preview: Podgląd
+      unpublish: Cofnij publikację
+      appearance_link: Wygląd

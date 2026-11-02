@@ -1858,6 +1858,7 @@ gl:
       default: Emojis personalizados
     filter_controls:
       reset: "Restabelecer"
+      sort_label: "Ordenar por"
     shared_drafts:
       title: "Borradores compartidos"
       notice: "Este tema só é visíbel para aqueles que poden ver a categoría <b>%{category}</b>."
@@ -3497,6 +3498,9 @@ gl:
           impact_role_admins: "Administradores"
           impact_role_moderators: "Moderadores"
           impact_role_staff: "Equipo"
+        sort:
+          status: "Estado"
+          name: "Nome"
       config:
         developer:
           title: "Desenvolvedor"

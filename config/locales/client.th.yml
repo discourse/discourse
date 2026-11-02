@@ -1499,6 +1499,8 @@ th:
       medium_dark_tone: โทนผิวเข้มปานกลาง
       dark_tone: โทนผิวเข้ม
       default: อีโมจิที่กำหนดเอง
+    filter_controls:
+      sort_label: "เรียงโดย"
     shared_drafts:
       title: "แบบร่างที่ถูกแบ่งปัน"
       publish: "เผยแพร่แบบร่างที่ถูกแบ่งปัน"
@@ -2707,6 +2709,9 @@ th:
           impact_role_admins: "แอดมิน"
           impact_role_moderators: "ผู้ดูแลระบบ"
           impact_role_staff: "ทีมงาน"
+        sort:
+          status: "สถานะ"
+          name: "ชื่อ"
       config:
         developer:
           title: "นักพัฒนา"

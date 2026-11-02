@@ -3617,6 +3617,7 @@ ar:
     filter_controls:
       reset: "إعادة التعيين"
       toggle: "تفعيل/إيقاف عوامل تصفية القائمة المنسدلة"
+      sort_label: "الترتيب حسب"
     d_icon_grid_picker:
       select_icon: "تحديد أيقونة"
       search_label: "بحث عن أيقونات"
@@ -7434,6 +7435,9 @@ ar:
           impact_role_staff: "فريق العمل"
           impact_role_all_members: "جميع الأعضاء"
           impact_role_developers: "المطوّرون"
+        sort:
+          status: "الحالة"
+          name: "الاسم"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -8881,11 +8885,8 @@ ar:
           site_contact_group_help: |
             المجموعة التي تتم دعوتها إلى جميع الرسائل الشخصية التي يتم إرسالها تلقائيًا.
           your_organization: "مؤسستك"
-          your_organization_description: "سنستخدم هذه المعلومات في شروط الخدمة وإشعار الخصوصية لتوضيح المسؤول عن تشغيل الموقع وتحت أي ولاية قضائية."
           company_name: "الاسم"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            إذا تُرك فارغًا، فلن يتم توفير شروط خدمة أو إشعار خصوصية نمطية.
           company_url: "الموقع الإلكتروني"
           company_url_placeholder: "https://example-co.com"
           governing_law: "القانون الحاكم"

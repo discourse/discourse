@@ -2583,7 +2583,6 @@ zh_TW:
     create_post_for_category_and_tag_changes: "主題分類或標籤變更時建立私語貼文；需要啟用私語貼文。"
     automatically_clean_unused_tags: "每天自動刪除未被任何主題或私人訊息使用的標籤。"
     default_watched_precedence_over_muted: "如果使用者監看的分類或標籤中有主題同時屬於其已靜音項目，仍通知使用者"
-    company_name: "公司或組織名稱。若留空，將不提供標準的服務條款或隱私權聲明。"
     company_url: "公司或組織的網站 URL。選填。"
     governing_law: "指定管轄網站法律事項（包括服務條款與隱私權政策）的司法管轄區。通常是營運網站之公司註冊或經營業務所在的國家／地區或州。"
     city_for_disputes: "指定用來作為解決使用此論壇相關爭議之司法管轄區的城市。此資訊通常會包含在論壇服務條款等法律文件中。"

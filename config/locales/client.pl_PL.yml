@@ -682,6 +682,9 @@ pl_PL:
       title: "Dostosuj swoją witrynę"
       subtitle: "Wybierz kolory, czcionki i układ swojej witryny."
       step_label: "Przejdź do kroku %{index}"
+      step_progress: "Krok %{current}/%{total}"
+      minimize: "Kreator minimalizacji projektu"
+      restore: "Kreator przywracania projektu"
       save: "Zapisz i zakończ"
       back: "Wstecz"
       next: "Dalej"
@@ -3589,6 +3592,8 @@ pl_PL:
     filter_controls:
       reset: "Przywróć"
       toggle: "Przełącz filtry rozwijane"
+      sort_label: "Sortuj po"
+      sort_trigger_label: "Sortuj według: %{sort}"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
       search_label: "Szukaj ikon"
@@ -7239,6 +7244,10 @@ pl_PL:
           impact_role_staff: "Zespół"
           impact_role_all_members: "Wszyscy członkowie"
           impact_role_developers: "Deweloperzy"
+        sort:
+          recently_updated: "Ostatnio aktualizowane"
+          status: "Status"
+          name: "Nazwa"
       config:
         about:
           title: "O Twojej witrynie"
@@ -9021,11 +9030,9 @@ pl_PL:
           site_contact_group_help: |
             Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
-          your_organization_description: "Informacje te zostaną wykorzystane w Warunkach korzystania z usługi i Polityce prywatności, aby wskazać, kto zarządza witryną i w ramach jakiej jurysdykcji."
+          your_organization_description: "Szczegóły dotyczące tego, kto zarządza tą witryną i pod jaką jurysdykcją."
           company_name: "Nazwa"
           company_name_placeholder: "PrzykładowaSA"
-          company_name_warning: |
-            Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
           company_url: "Strona internetowa"
           company_url_placeholder: "https://przykładowa-sa.pl"
           governing_law: "Obowiązujące prawo"

@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: تصميم
+        overridden: مخصَّصة
+        insert: إدراج
+        array_value: إدراج
+        preview_home: الصفحة الرئيسية
+        preview_archive: أرشفة
+        desktop: سطح المكتب
+        mobile: الجوَّال
+        back_to_themes: الرجوع إلى قائمة السمات
+        new_theme_short: سمة جديدة
+        themes: السمتان
+        theme_name: اسم السمة
+        edit: تعديل
+        activate: التنشيط
+        preview: معاينة
+        import: استيراد
+        export: تصدير
+        active: نشطة
+  js:
+    blog:
+      panel:
+        badge:
+          draft: مسودة
+        preview: معاينة
+        publish: نشر
+        options: الخيارات
+        change:
+          title: العنوان
+          body: النص الأساسي
+      review:
+        copy: نسخ الرابط
+        active: نشطة
+        message: الملاحظات
+      editor_table:
+        edit: تعديل
+        status: الحالة
+        replies: الردود
+      drafts: المسودات
+      private_draft: مسودة
+      preview: معاينة
+      unpublish: إلغاء النشر
+      appearance_link: المظهر

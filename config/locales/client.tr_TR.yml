@@ -2975,6 +2975,7 @@ tr_TR:
     filter_controls:
       reset: "Sıfırla"
       toggle: "Açılır filtreleri değiştir"
+      sort_label: "Sıralama ölçütü"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
       search_label: "Arama simgeleri"
@@ -5863,6 +5864,9 @@ tr_TR:
           impact_role_staff: "Personel"
           impact_role_all_members: "Tüm üyeler"
           impact_role_developers: "Geliştiriciler"
+        sort:
+          status: "Durum"
+          name: "Ad"
       config:
         about:
           title: "Siteniz hakkında"
@@ -6985,10 +6989,7 @@ tr_TR:
           site_contact_group_help: |
             Otomatik olarak gönderilen tüm kişisel mesajlara davet edilen grup.
           your_organization: "Organizasyonunuz"
-          your_organization_description: "Bu bilgileri, siteyi kimin işlettiğini ve hangi yargı yetkisi kapsamında işlettiğini göstermek için Hizmet Koşulları ve Gizlilik Bildiriminde kullanırız."
           company_name: "Ad"
-          company_name_warning: |
-            Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
           company_url: "Web sitesi"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Geçerli kanun"

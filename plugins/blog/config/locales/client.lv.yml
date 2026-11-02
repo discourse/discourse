@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  admin_js:
+    blog:
+      admin:
+        insert: Ievietot
+        preview_archive: Arhīvs
+        desktop: Personālais dators
+        mobile: Mobilais
+        themes: Dizaini
+        edit: Labot
+        preview: Priekšskatījums
+        import: Importēt
+        export: Eksportēt
+        active: Aktīvs
+  js:
+    blog:
+      panel:
+        preview: Priekšskatījums
+        options: Opcijas
+        change:
+          title: virsraksts
+          body: saturs
+      review:
+        active: Aktīvs
+      editor_table:
+        edit: Labot
+        status: Statuss
+        replies: Atbildes
+      drafts: Melnraksti
+      preview: Priekšskatījums

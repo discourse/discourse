@@ -2460,6 +2460,9 @@ id:
           impact_type_other: "Lainnya"
           impact_role_moderators: "Moderator"
           impact_role_staff: "Staf"
+        sort:
+          status: "Status"
+          name: "Nama"
       config:
         mcp:
           tabs:

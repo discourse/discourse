@@ -2102,6 +2102,7 @@ bg:
       default: Персонализирани емоджи
     filter_controls:
       reset: "Нулиране"
+      sort_label: "Сортирай по"
     shared_drafts:
       title: "Споделени чернови"
       notice: "Тази тема е видима само за тези, които могат да публикуват споделени чернови."
@@ -3535,6 +3536,9 @@ bg:
           impact_role_admins: "Админи"
           impact_role_moderators: "Модератори"
           impact_role_staff: "Персонал"
+        sort:
+          status: "Статус"
+          name: "Име"
       config:
         developer:
           title: "Разработчик"
