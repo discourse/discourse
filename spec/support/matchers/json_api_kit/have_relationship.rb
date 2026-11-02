@@ -45,7 +45,7 @@ module JsonApiKitMatchers
 
     def association_table
       @association_table ||= resource.schema.table_of(name.to_sym)
-    rescue JsonApiKit::Schema::MissingAssociation => error
+    rescue JsonApiKit::Adapters::ActiveRecord::Schema::MissingAssociation => error
       @missing = error.message
       nil
     end

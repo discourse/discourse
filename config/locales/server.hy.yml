@@ -1481,7 +1481,6 @@ hy:
     suppress_overlapping_tags_in_list: "Եթե թեգերը համընկնում են թեմաների վերնագրերի կոնկրետ բառերի, չցուցադրել թեգը"
     force_lowercase_tags: "Պարտադրել, որ բոլոր նոր թեգերը լինեն ամբողջովին փոքրատառ:"
     shared_drafts_category: "Միացնել Կիսված Սևագրեր հատկանիշը՝ կանխորոշելով կատեգորիա թեմաների սևագրերի համար: Այս կատեգորիայի թեմաները կթաքցվեն թեմաների ցանկերից անձնակազմի օգտատերերի համար:"
-    dashboard_general_tab_activity_metrics: "Ընտրել հաշվետվությունները, որոնք կցուցադրվեն որպես ակտիվության չափանիշ ընդհանուր ներդիրում:"
     errors:
       invalid_email: "Անվավեր էլ. հասցե:"
       invalid_username: "Այդ օգտանվամբ օգտատեր չկա:"
@@ -2811,6 +2810,18 @@ hy:
   search_logs:
     graph_title: "Որոնումների Քանակ"
   onebox:
+    discourse:
+      recurrence:
+        ordinals:
+          last: "օգտագործել ամսաթվի և ժամանակի վերջին գրառումը  "
+        weekdays:
+          sunday: "Կիրակի"
+          monday: "Երկուշաբթի"
+          tuesday: "Երեքշաբթի"
+          wednesday: "Չորեքշաբթի"
+          thursday: "Հինգշաբթի"
+          friday: "Ուրբաթ"
+          saturday: "Շաբաթ"
     google_meet:
       meeting_code: "Կոդ:"
     github:

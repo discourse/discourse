@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  blog:
+    home: Aloitus
+    posted_by: Kirjoittaja
+    permalink: Pysyvä linkki
+    time_ago: "%{time} sitten"
+    archive: Arkistoi
+    about: Tietoja
+    community: Yhteisö
+    preview: Esikatselu
+    search: Haku
+    replies:
+      one: "%{count} vastaus"
+      other: "%{count} vastausta"

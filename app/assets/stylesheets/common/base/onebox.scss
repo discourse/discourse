@@ -6,6 +6,7 @@
 }
 
 @mixin onebox-shadow($thickness) {
+  $thickness: var(--onebox-shadow-width, #{$thickness});
   border: 0;
   margin-inline: $thickness;
   box-shadow:
@@ -775,6 +776,7 @@ aside.onebox.github-onebox {
   --github-onebox-header-background: var(--primary-very-low);
   --onebox-border-color: light-dark(#d1d9e0, #3d444d);
   --onebox-shadow-color: transparent;
+  --onebox-shadow-width: 1px;
   container: github-onebox / inline-size;
   padding: 0;
   overflow: hidden;
@@ -795,7 +797,7 @@ aside.onebox.github-onebox {
   &.githubpullrequest.--github-open {
     --github-onebox-status-color: var(--primary-high);
 
-    .github-onebox__label svg {
+    .github-onebox__label {
       color: light-dark(#1a7f37, #3fb950);
     }
   }
@@ -835,7 +837,8 @@ aside.onebox.github-onebox {
   }
 
   > .source.github-onebox__header {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(max-content, 1fr);
     gap: 0.5em 1em;
     margin: 0;
     padding: 0.5em 1em;
@@ -858,13 +861,15 @@ aside.onebox.github-onebox {
   }
 
   .github-onebox__label {
+    grid-area: 1 / 2;
+    justify-self: end;
     color: var(--github-onebox-status-color);
     font-weight: var(--token-font-weight-semibold);
+    white-space: nowrap;
   }
 
   .github-onebox__repo[href] {
-    max-width: min(20rem, 50%);
-    margin-inline-start: auto;
+    grid-area: 1 / 1;
     color: var(--primary);
 
     > span {
@@ -886,7 +891,11 @@ aside.onebox.github-onebox {
   }
 
   @container github-onebox (width < 28rem) {
-    .github-onebox__repo {
+    > .source.github-onebox__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .github-onebox__label {
       gap: 0;
 
       > span {

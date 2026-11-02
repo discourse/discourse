@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  admin_js:
+    blog:
+      admin:
+        overridden: Pasirinktinis
+        insert: Įterpti
+        preview_home: Pagrindinis puslapis
+        preview_archive: Archyvuoti
+        desktop: Darbalaukis
+        mobile: Mobilus
+        themes: Temos
+        theme_name: Temos pavadinimas
+        edit: Redaguoti
+        activate: Aktyvuoti
+        preview: Peržiūrėti
+        import: Importuoti
+        export: Eksportuoti
+        active: Aktyvus
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Juodraštis
+        preview: Peržiūrėti
+        publish: Paskelbti
+        options: Nustatymai
+        submit: Pateikti patvirtinimui
+        change:
+          title: antraštė
+          body: tekstas
+      review:
+        copy: Kopijuoti nuorodą
+        active: Aktyvus
+        revoke: Atšaukti nuorodą
+        message: Atsiliepimai
+      editor_table:
+        edit: Redaguoti
+        status: Statusas
+        replies: Atsakymai
+      drafts: Juodraščiai
+      private_draft: Juodraštis
+      preview: Peržiūrėti
+      unpublish: Atšaukti paskelbimą
+      appearance_link: Išvaizda

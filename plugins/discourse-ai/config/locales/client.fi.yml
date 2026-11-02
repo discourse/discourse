@@ -928,10 +928,7 @@ fi:
           uploads_in_progress: "Lähettäminen ei onnistu, kun latauksia on käynnissä"
           scroll_to_bottom: "Vieritä alas"
       sentiments:
-        dashboard:
-          title: "Sävy"
         sidebar:
-          overview: "Sävyn yleiskatsaus"
           analysis: "Sävyanalyysi"
         sentiment_analysis:
           share_chart: "Kopioi linkki kaavioon"

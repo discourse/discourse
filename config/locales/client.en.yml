@@ -660,6 +660,9 @@ en:
       title: "Customize your site"
       subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
+      step_progress: "Step %{current}/%{total}"
+      minimize: "Minimize design wizard"
+      restore: "Restore design wizard"
       save: "Save and finish"
       back: "Back"
       next: "Next"
@@ -1020,6 +1023,11 @@ en:
       saving: "Saving…"
       saved: "Classification saved"
     review:
+      continue_to_editor: "Continue to editor"
+      moderation_steps:
+        label: "Moderation steps"
+        action: "Action details"
+        confirm: "Confirm action"
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
@@ -3524,6 +3532,8 @@ en:
     filter_controls:
       reset: "Reset"
       toggle: "Toggle dropdown filters"
+      sort_label: "Sort by"
+      sort_trigger_label: "Sort by: %{sort}"
 
     d_icon_grid_picker:
       select_icon: "Select icon"
@@ -3919,6 +3929,7 @@ en:
         link_copied: "Link copied!"
         load_preview: "Load preview"
         preview_failed: "Could not load preview"
+        preview_limit_reached: "This post has reached the maximum number of previews"
 
       onebox_toolbar:
         copy: "Copy link"
@@ -7010,6 +7021,10 @@ en:
           impact_role_staff: "Staff"
           impact_role_all_members: "All members"
           impact_role_developers: "Developers"
+        sort:
+          recently_updated: "Recently updated"
+          status: "Status"
+          name: "Name"
 
       config:
         about:
@@ -8733,11 +8748,9 @@ en:
           site_contact_group_help: |
             The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
-          your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
+          your_organization_description: "Details about who operates this site and under which jurisdiction."
           company_name: "Name"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
@@ -9213,6 +9226,8 @@ en:
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create placeholder"
+          placeholder_type_tip: "Once the installation is finished, the type from the repository's about.json is used."
+          skipped_components: "%{name} is installed, but these components couldn't be installed. Install them from the Components tab, then add them to this theme:"
           about_theme: "About"
           license: "License"
           version: "Version:"

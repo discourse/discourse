@@ -6,14 +6,13 @@ import {
 } from "discourse/components/topic-timeline/container";
 import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
-import BackButton from "./back-button.gjs";
 
 export default class TopicTimelineScroller extends Component {
   style = trustHTML(`height: ${SCROLLER_HEIGHT}px`);
 
-  get repliesShort() {
-    return i18n(`topic.timeline.replies_short`, {
-      current: this.args.current,
+  get totalLabel() {
+    return i18n("topic.timeline.replies_short", {
+      current: "",
       total: this.args.total,
     });
   }
@@ -37,36 +36,22 @@ export default class TopicTimelineScroller extends Component {
         bodyClass="dragging"
       }}
     >
+      {{#unless @fullscreen}}
+        <div class="timeline-handle"></div>
+      {{/unless}}
+      <div class="timeline-scroller-content">
+        <div class="timeline-replies">
+          <span>{{@current}}</span>
+          <span>{{this.totalLabel}}</span>
+        </div>
+        {{#if @date}}
+          <div class="timeline-ago">
+            {{this.timelineAgo}}
+          </div>
+        {{/if}}
+      </div>
       {{#if @fullscreen}}
-        <div class="timeline-scroller-content">
-          <div class="timeline-replies">
-            {{this.repliesShort}}
-          </div>
-          {{#if @date}}
-            <div class="timeline-ago">
-              {{this.timelineAgo}}
-            </div>
-          {{/if}}
-          {{#if (and @showDockedButton (not @dragging))}}
-            <BackButton @onGoBack={{@onGoBack}} />
-          {{/if}}
-        </div>
         <div class="timeline-handle"></div>
-      {{else}}
-        <div class="timeline-handle"></div>
-        <div class="timeline-scroller-content">
-          <div class="timeline-replies">
-            {{this.repliesShort}}
-          </div>
-          {{#if @date}}
-            <div class="timeline-ago">
-              {{this.timelineAgo}}
-            </div>
-          {{/if}}
-          {{#if (and @showDockedButton (not @dragging))}}
-            <BackButton @onGoBack={{@onGoBack}} />
-          {{/if}}
-        </div>
       {{/if}}
     </div>
   </template>

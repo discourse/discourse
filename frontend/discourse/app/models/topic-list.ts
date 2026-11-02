@@ -346,9 +346,8 @@ export default class TopicList extends RestModel {
 
       this.set("loadingMore", true);
 
-      // TODO(typescript-pending): ajax does not publish response types; remove the payload annotation when its response is generic.
-      return ajax({ url: moreUrl }).then(
-        async (result: TopicListEnvelope | undefined) => {
+      return ajax<TopicListEnvelope | undefined>({ url: moreUrl }).then(
+        async (result) => {
           let topicsAdded = 0;
 
           if (result) {
@@ -384,11 +383,10 @@ export default class TopicList extends RestModel {
     try {
       const url = `/${this.filter}.json?topic_ids=${topic_ids.join(",")}`;
 
-      // TODO(typescript-pending): ajax does not publish response types; remove the assertion when its response is generic.
-      const result = (await ajax({
+      const result = await ajax<TopicListEnvelope>({
         url,
         data: this.params,
-      })) as TopicListEnvelope;
+      });
 
       // refresh dupes
       removeValuesFromArray(

@@ -113,6 +113,18 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
     it "returns false for nil posts" do
       expect(described_class.should_scan_post?(nil)).to eq(false)
     end
+
+    it "returns false for posts with a missing user" do
+      post.association(:user).target = nil
+      post.association(:user).loaded!
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
+
+    it "returns false for posts with a missing topic" do
+      post.association(:topic).target = nil
+      post.association(:topic).loaded!
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
   end
 
   describe ".perform_scan" do

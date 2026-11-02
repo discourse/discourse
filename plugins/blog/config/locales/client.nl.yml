@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Ontwerp
+        overridden: Aangepast
+        insert: Invoegen
+        array_value: Lijst
+        preview_home: Startpagina
+        preview_archive: Archief
+        desktop: Desktop
+        mobile: Mobiel
+        back_to_themes: Terug naar thema's
+        new_theme_short: Nieuw thema
+        themes: Thema's
+        theme_name: Themanaam
+        edit: Bewerken
+        activate: Activeren
+        preview: Voorbeeld
+        import: Importeren
+        export: Exporteren
+        active: Actief
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Concept
+        preview: Voorbeeld
+        publish: Publiceren
+        options: Opties
+        change:
+          title: titel
+          body: inhoud
+      review:
+        copy: Link kopiëren
+        active: Actief
+        message: Feedback
+      editor_table:
+        edit: Bewerken
+        status: Status
+        replies: Antwoorden
+      drafts: Concepten
+      private_draft: Concept
+      preview: Voorbeeld
+      unpublish: Depubliceren
+      appearance_link: Vormgeving

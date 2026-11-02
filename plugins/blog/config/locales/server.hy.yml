@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  blog:
+    home: Գլխավոր էջ
+    posted_by: Հրապարակել է՝
+    permalink: Մշտահղում
+    time_ago: "%{time} առաջ"
+    archive: Արխիվ
+    about: Մասին
+    community: Համայնք
+    preview: Նախադիտում
+    search: Որոնում
+    replies:
+      one: "%{count} պատասխան"
+      other: "%{count} պատասխան"

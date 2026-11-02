@@ -424,7 +424,6 @@ zh_TW:
         agent_not_allowed: "不允許使用要求的子代理程式。"
         unavailable_agent: "要求的子代理程式無法使用或無法存取。"
         missing_model: "要求的子代理程式沒有可用的語言模型。"
-        call_limit: "已達委派呼叫次數上限。"
         completion_limit: "已達委派完成次數上限。"
         cancelled: "委派的工作已取消。"
         execution_failed: "委派的工作失敗。"

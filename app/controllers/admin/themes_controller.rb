@@ -65,25 +65,24 @@ class Admin::ThemesController < Admin::AdminController
         return
       end
 
+      branch = params[:branch]
+      private_key =
+        params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
+
+      if params[:public_key].present? && private_key.blank?
+        return render_json_error I18n.t("themes.import_error.ssh_key_gone")
+      end
+      if params[:placeholder] && private_key.blank?
+        return render_json_error I18n.t("themes.import_error.git_authentication")
+      end
+
       hijack do
-        branch = params[:branch] ? params[:branch] : nil
-        private_key =
-          params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
-        if params[:public_key].present? && private_key.blank?
-          return render_json_error I18n.t("themes.import_error.ssh_key_gone")
-        end
-
-        if params[:placeholder]
-          if private_key.blank?
-            return render_json_error I18n.t("themes.import_error.git_authentication")
-          end
-
-          @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
-          return render json: serialize_data(@theme, ThemeSerializer), status: :created
-        end
-
         @theme =
-          RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
+          if params[:placeholder]
+            create_remote_theme_placeholder(remote, branch:, private_key:)
+          else
+            RemoteTheme.import_theme(remote, theme_user, private_key:, branch:)
+          end
         render json: serialize_data(@theme, ThemeSerializer), status: :created
       rescue RemoteTheme::ImportError => e
         if params[:force]
@@ -212,10 +211,11 @@ class Admin::ThemesController < Admin::AdminController
     @theme.remote_theme.update_remote_version if params[:theme][:remote_check]
 
     if params[:theme][:remote_update]
-      @theme.remote_theme.update_from_remote(
-        raise_if_theme_save_fails: false,
-        raise_on_import_error: true,
-      )
+      skipped_components =
+        @theme
+          .remote_theme
+          .update_from_remote(raise_if_theme_save_fails: false, raise_on_import_error: true)
+          .skipped_child_components
     else
       @theme.save
     end
@@ -232,7 +232,7 @@ class Admin::ThemesController < Admin::AdminController
         log_theme_component_disabled if disables_component
         log_theme_component_enabled if enables_component
 
-        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :ok }
+        format.json { render json: theme_json(@theme, skipped_components:), status: :ok }
       else
         format.json do
           error = @theme.errors.full_messages.join(", ").presence
@@ -243,9 +243,7 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
     end
-  rescue RemoteTheme::ImportError => e
-    render_json_error e.message
-  rescue Theme::SettingsMigrationError => e
+  rescue RemoteTheme::ImportError, Theme::SettingsMigrationError => e
     render_json_error e.message
   end
 
@@ -385,15 +383,15 @@ class Admin::ThemesController < Admin::AdminController
       )
     end
 
+    private_key = nil
+    if params[:public_key].present?
+      private_key = Discourse.redis.get("ssh_key_#{params[:public_key]}")
+      return render_json_error I18n.t("themes.import_error.ssh_key_gone") if private_key.blank?
+    end
+
     theme_id = @theme.id
 
     hijack do
-      private_key = nil
-      if params[:public_key].present?
-        private_key = Discourse.redis.get("ssh_key_#{params[:public_key]}")
-        return render_json_error I18n.t("themes.import_error.ssh_key_gone") if private_key.blank?
-      end
-
       theme = Theme.include_relations.find(theme_id)
       remote_theme = theme.remote_theme
 
@@ -401,11 +399,8 @@ class Admin::ThemesController < Admin::AdminController
         remote_theme.remote_url = remote_url
         remote_theme.branch = params[:branch].presence
         remote_theme.private_key = private_key if private_key.present?
-        remote_theme.local_version = nil
-        remote_theme.remote_version = nil
-        remote_theme.commits_behind = nil
 
-        remote_theme.update_from_remote(already_in_transaction: true)
+        remote_theme.update_from_remote(already_in_transaction: true, refresh_name_and_type: true)
 
         if remote_theme.last_error_text.present?
           raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
@@ -413,7 +408,8 @@ class Admin::ThemesController < Admin::AdminController
       end
 
       log_theme_change(nil, theme.reload)
-      render json: serialize_data(theme, ThemeSerializer), status: :ok
+      render json: theme_json(theme, skipped_components: remote_theme.skipped_child_components),
+             status: :ok
     rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid, Theme::SettingsMigrationError => e
       remote_theme.reload
       render_json_error e.message
@@ -421,6 +417,12 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   private
+
+  def theme_json(theme, skipped_components:)
+    json = serialize_data(theme, ThemeSerializer)
+    json[:skipped_components] = skipped_components if skipped_components.present?
+    json
+  end
 
   def create_remote_theme_placeholder(remote, branch:, private_key:)
     Theme.transaction do
@@ -430,6 +432,7 @@ class Admin::ThemesController < Admin::AdminController
       Theme.create!(
         user_id: theme_user&.id || -1,
         name: remote.gsub(/\.git\z/, "").split("/").last,
+        component: params[:component].to_s == "true",
         remote_theme: remote_theme,
       )
     end

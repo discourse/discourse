@@ -1,4 +1,12 @@
-import { click, render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import {
+  click,
+  find,
+  render,
+  rerender,
+  resetOnerror,
+  setupOnerror,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -16,6 +24,124 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
       .dom(".d-page-subheader__title")
       .exists()
       .hasText(i18n("admin.title"));
+  });
+
+  test("the title is an h2 by default", async function (assert) {
+    await render(<template><DPageSubheader @titleLabel="Title" /></template>);
+
+    assert.dom("h2.d-page-subheader__title").exists();
+  });
+
+  test("@titleHeadingLevel picks the heading element", async function (assert) {
+    await render(
+      <template>
+        <DPageSubheader @titleHeadingLevel={{3}} @titleLabel="Title" />
+      </template>
+    );
+
+    assert.dom("h3.d-page-subheader__title").exists();
+    assert
+      .dom("h2.d-page-subheader__title")
+      .doesNotExist("it does not also render the default level");
+  });
+
+  test("a null @titleHeadingLevel falls back to h2", async function (assert) {
+    await render(
+      <template>
+        <DPageSubheader @titleHeadingLevel={{null}} @titleLabel="Title" />
+      </template>
+    );
+
+    assert.dom("h2.d-page-subheader__title").exists();
+  });
+
+  // One test per value: after a render error the app refuses to render again.
+  for (const level of [0, 7, -1, 2.5, "3", NaN]) {
+    const label = typeof level === "string" ? `"${level}"` : String(level);
+
+    test(`@titleHeadingLevel rejects ${label}`, async function (assert) {
+      let raised;
+      setupOnerror((error) => (raised = error));
+
+      try {
+        await render(
+          <template>
+            <DPageSubheader @titleHeadingLevel={{level}} @titleLabel="Title" />
+          </template>
+        );
+      } finally {
+        resetOnerror();
+      }
+
+      assert.true(/must be 1-6/.test(raised?.message));
+    });
+  }
+
+  test("the title keeps its subheader styling at any heading level", async function (assert) {
+    await render(
+      <template>
+        <DPageSubheader @titleLabel="Default" />
+        <DPageSubheader @titleHeadingLevel={{3}} @titleLabel="Nested" />
+      </template>
+    );
+
+    const h2 = getComputedStyle(find("h2.d-page-subheader__title"));
+    const h3 = getComputedStyle(find("h3.d-page-subheader__title"));
+
+    // Pins the stylesheet as loaded: without it both titles would match at
+    // browser defaults and the comparisons below would pass vacuously.
+    assert.strictEqual(h2.marginBottom, "0px");
+    assert.strictEqual(h3.marginBottom, h2.marginBottom, "same margin");
+    assert.strictEqual(h3.fontSize, h2.fontSize, "same font size");
+  });
+
+  test("the title updates in place and survives level changes", async function (assert) {
+    const state = new (class {
+      @tracked level = 2;
+      @tracked title = "First";
+    })();
+
+    await render(
+      <template>
+        <DPageSubheader
+          @titleHeadingLevel={{state.level}}
+          @titleLabel={{state.title}}
+          @titleUrl="#target"
+        />
+      </template>
+    );
+
+    const heading = find("h2.d-page-subheader__title");
+    const link = find(".d-page-subheader__title-link");
+
+    assert
+      .dom(heading)
+      .doesNotHaveClass("ember-view", "renders no classic component wrapper");
+
+    state.title = "Second";
+    await rerender();
+
+    assert.strictEqual(
+      find("h2.d-page-subheader__title"),
+      heading,
+      "keeps the heading node"
+    );
+    assert.strictEqual(
+      find(".d-page-subheader__title-link"),
+      link,
+      "keeps the link node"
+    );
+    assert.dom(link).hasText("Second");
+
+    for (const level of [1, 3, 4, 5, 6, 2]) {
+      state.level = level;
+      await rerender();
+
+      assert.dom(`h${level}.d-page-subheader__title`).exists({ count: 1 });
+      assert
+        .dom(".d-page-subheader__title-link")
+        .hasAttribute("href", "#target", `keeps the link at h${level}`);
+    }
   });
 
   test("no @descriptionLabel", async function (assert) {

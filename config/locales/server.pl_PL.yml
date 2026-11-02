@@ -896,6 +896,7 @@ pl_PL:
   edit_conflict: "Ten wpis został zmieniony przez innego użytkownika i Twoje zmiany nie zostaną zapisane."
   revert_version_same: "Obecna wersja jest taka sama jak w wersja, którą próbujesz przywrócić."
   reverted_to_version: "powrócono do wersji #%{version}"
+  cannot_unlist_hidden_revision: "Ukrytej wersji nie można usunąć z listy. Najpierw ją pokaż, a potem usuń z listy."
   cannot_edit_on_slow_mode: "Ten temat jest w trybie powolnym. Aby zachęcić do przemyślanej, rozważanej dyskusji, edycja starych postów w tym temacie nie jest obecnie dozwolona w trybie powolnym."
   excerpt_image: "zdjęcie"
   bookmarks:
@@ -1195,6 +1196,7 @@ pl_PL:
         many: "Opis jest zbyt długi (maksymalnie %{count} znaków)."
         other: "Opis jest zbyt długi (maksymalnie %{count} znaków)."
       special_category_permissions: "Ta kategoria jest wstępnie zdefiniowana i ustawień zabezpieczeń nie można edytować. Jeśli nie chcesz używać tej kategorii, usuń ją zamiast używać jej ponownie."
+      anonymous_permissions_not_supported: "Użyj grupy wszyscy, aby umożliwić anonimowym użytkownikom dostęp do kategorii."
       permission_conflict: "Grupa posiadająca dostęp do podkategorii musi mieć także dostęp do jej kategorii nadrzędnej. Grupy %{group_names} mają dostęp do jednej z podkategorii, ale nie do grupy nadrzędnej."
       disallowed_topic_tags: "Ten temat zawiera tagi %{tags}, które nie są dozwolone w tej kategorii"
       disallowed_tags_generic: "W tym temacie niedozwolone są tagi."
@@ -3054,7 +3056,7 @@ pl_PL:
     create_post_for_category_and_tag_changes: "Utwórz post szeptany, gdy zmieni się kategoria lub tagi tematu, wymaga włączenia postów szeptanych."
     automatically_clean_unused_tags: "Automatycznie usuwaj tagi, które nie są używane w żadnych tematach ani wiadomościach prywatnych."
     default_watched_precedence_over_muted: "Powiadamiaj użytkowników o tematach w kategoriach lub tagach, które obserwują, a które należą również do wyciszonych przez nich treści"
-    company_name: "Nazwa Twojej firmy lub organizacji. Jeśli pozostawisz to pole puste, nie otrzymasz szablonu warunków świadczenia usług ani informacji o ochronie prywatności."
+    company_name: "Nazwa Twojej firmy lub organizacji."
     company_url: "Adres URL witryny internetowej Twojej firmy lub organizacji. Opcjonalnie."
     governing_law: "Określ jurysdykcję, która reguluje aspekty prawne witryny, w tym Warunki korzystania z usługi i politykę prywatności. Zwykle jest to kraj lub stan, w którym zarejestrowana jest lub prowadzi działalność firma obsługująca witrynę"
     city_for_disputes: "Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum."
@@ -3072,9 +3074,6 @@ pl_PL:
     enable_user_status: "Zezwól użytkownikom na ustawienie niestandardowego statusu (emoji + opis)."
     enable_user_tips: "Włącz nowe wskazówki dla użytkowników, które opisują najważniejsze funkcje witryny"
     short_title: "Krótki tytuł będzie używany na ekranie głównym użytkownika, w programie uruchamiającym lub w innych miejscach, gdzie przestrzeń może być ograniczona. Powinien on mieć maksymalnie 12 znaków. Należy pamiętać, że zmiana tego tytułu może spowodować wyświetlenie monitu dla użytkowników aplikacji PWA z prośbą o zaktualizowanie lub odinstalowanie aplikacji."
-    dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
-    dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
-    dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
     site_traffic_explorer_event_limit: "Kontroluje maksymalną liczbę ostatnich odsłon stron przetwarzanych przez Site Traffic Explorer. Wyższe limity obejmują większy ruch, ale mogą wymagać dłuższego ładowania lub przekroczenia limitu czasu na serwerach baz danych o niższych zasobach."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
@@ -6187,6 +6186,28 @@ pl_PL:
   onebox:
     discourse:
       event_all_day: "Cały dzień"
+      recurrence:
+        every_day: "Codziennie"
+        every_weekday: "Każdego dnia roboczego"
+        every_week: "Co %{weekday}"
+        every_two_weeks: "Co drugi %{weekday}"
+        every_four_weeks: "Co 4 tygodnie w %{weekday}"
+        every_month: "%{ordinal} %{weekday} każdego miesiąca"
+        until: "%{recurrence} do %{date}"
+        ordinals:
+          first: "pierwszy"
+          second: "drugi"
+          third: "trzeci"
+          fourth: "czwarty"
+          last: "ostatni"
+        weekdays:
+          sunday: "Niedziela"
+          monday: "Poniedziałek"
+          tuesday: "Wtorek"
+          wednesday: "Środa"
+          thursday: "Czwartek"
+          friday: "Piątek"
+          saturday: "Sobota"
       user_joined_community: "Dołączył %{date}"
     google_meet:
       title: "Spotkanie w Google Meet"

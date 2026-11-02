@@ -70,6 +70,46 @@ class DsaStatementOfRecord < ActiveRecord::Base
     def classification_enabled?
       SiteSetting.dsa_reporting_enabled && JSON.parse(SiteSetting.dsa_community_rules).present?
     end
+
+    def record!(reviewable:, attributes:, performed_by:, classification: nil)
+      statement =
+        create!(
+          reviewable_id: reviewable.id,
+          payload:
+            attributes.merge(
+              application_date: Date.current.iso8601,
+              territorial_scope: TERRITORIAL_SCOPE,
+              source_type: "SOURCE_VOLUNTARY",
+              decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+            ),
+        )
+
+      if classification
+        statement.classify!(**classification, classified_by: performed_by)
+
+        if Reviewable.exists?(reviewable.id)
+          reviewable.reviewable_notes.create!(
+            user: performed_by,
+            content: statement.classification_note,
+          )
+        end
+      end
+
+      statement
+    end
+  end
+
+  def classification_note
+    I18n.t(
+      "dsa_statements.classification_note",
+      locale: SiteSetting.default_locale,
+      ground: payload.fetch("incompatible_content_ground"),
+      category:
+        I18n.t(
+          "dsa_statements.categories.#{payload.fetch("category")}",
+          locale: SiteSetting.default_locale,
+        ),
+    )
   end
 
   def classify!(community_rule:, category:, classified_by:)

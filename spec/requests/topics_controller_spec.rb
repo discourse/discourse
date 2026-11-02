@@ -7976,6 +7976,82 @@ RSpec.describe TopicsController do
         expect(response.body).to have_tag("a", with: { href: category.url }, text: category.name)
       end
 
+      describe "BreadcrumbList structured data" do
+        def breadcrumb_list_items
+          Nokogiri
+            .HTML5(response.body)
+            .css(
+              "[itemtype='http://schema.org/BreadcrumbList'] > [itemtype='http://schema.org/ListItem']",
+            )
+            .map do |item|
+              name = item.at_css("[itemprop='name']")
+              {
+                position: item.at_css("[itemprop='position']")["content"],
+                name: name["content"] || name.text.strip,
+                item: item.at_css("[itemprop='item']")["href"],
+              }
+            end
+        end
+
+        it "ends with the topic so a topic in a top-level category still has two items" do
+          topic.update!(category: category)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(breadcrumb_list_items).to eq(
+            [
+              { position: "1", name: category.name, item: category.url },
+              { position: "2", name: topic.title, item: topic.url },
+            ],
+          )
+        end
+
+        it "appends the topic after the full category chain" do
+          subcategory = Fabricate(:category, parent_category: category)
+          topic.update!(category: subcategory)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(breadcrumb_list_items).to eq(
+            [
+              { position: "1", name: category.name, item: category.url },
+              { position: "2", name: subcategory.name, item: subcategory.url },
+              { position: "3", name: topic.title, item: topic.url },
+            ],
+          )
+        end
+
+        it "converts emoji in the topic title to unicode" do
+          topic.update!(category: category, title: "Breadcrumbs are great :tada:")
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(breadcrumb_list_items.last[:name]).to eq("Breadcrumbs are great 🎉")
+        end
+
+        it "renders no BreadcrumbList for an uncategorized topic" do
+          topic.update!(category_id: SiteSetting.uncategorized_category_id)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(response.body).not_to have_tag("[itemtype='http://schema.org/BreadcrumbList']")
+        end
+
+        it "keeps the topic out of the og:article:section meta tags" do
+          topic.update!(category: category)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(response.body).to have_tag(
+            "meta[property='og:article:section']",
+            count: 1,
+            with: {
+              content: category.name,
+            },
+          )
+        end
+      end
+
       context "with canonical_url" do
         fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
 

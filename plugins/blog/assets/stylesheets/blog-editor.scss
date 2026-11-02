@@ -1,0 +1,42 @@
+.blog-dashboard {
+  max-width: 1000px;
+  width: 100%;
+  margin-inline: auto;
+  padding-block: 2em;
+
+  // An icon-only trigger is shorter than a labelled button, so size the
+  // header actions to their tallest button and stretch the rest to match.
+  .d-page-header__actions {
+    align-self: center;
+    align-items: stretch;
+  }
+
+  .d-page-action-wrapped-button {
+    display: flex;
+  }
+
+  .d-filter-controls {
+    margin-block: var(--space-4);
+  }
+
+  &__statuses {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25em 0.75em;
+  }
+
+  &__correction,
+  &__excerpt,
+  &__published,
+  &__replies,
+  &__scheduled {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__excerpt {
+    @include line-clamp(2);
+    margin-block: 0.25em 0;
+  }
+}

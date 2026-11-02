@@ -1,6 +1,7 @@
 import {
   click,
   currentURL,
+  find,
   visit,
   waitFor,
   waitUntil,
@@ -114,6 +115,175 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     server.get("/admin/config/site_settings.json", () =>
       helper.response(200, { site_settings: [] })
+    );
+  });
+
+  test("minimizing preserves the preview and selections while browsing", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click(".design-wizard__color-mode:last-child");
+    await click(
+      ".design-wizard__font-group:first-child .design-wizard__font-select"
+    );
+    await click("[data-identifier='design-wizard-base-font'] .body-font-arial");
+
+    const previewLinks = captureColorSchemeLinks();
+    const sections = find(".design-wizard__sections");
+    const savedCount = savedPayloads.length;
+
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(".design-wizard")
+      .hasAttribute("inert", "", "hides controls from keyboard navigation");
+    assert
+      .dom(".design-wizard")
+      .hasAria("hidden", "true", "hides controls from assistive technology");
+    assert
+      .dom(".design-wizard__restore")
+      .isFocused("moves focus to the restore button");
+    assert
+      .dom(".design-wizard__restore")
+      .hasAria("expanded", "false", "exposes the collapsed state");
+    assert
+      .dom(".design-wizard__restore")
+      .includesText("Step 2/3", "shows the current step");
+    assert
+      .dom(".dialog-footer")
+      .doesNotExist("minimizing does not ask about saved changes");
+    assert.strictEqual(
+      savedPayloads.length,
+      savedCount,
+      "minimizing does not save changes"
+    );
+    assert.deepEqual(
+      captureColorSchemeLinks(),
+      previewLinks,
+      "keeps the palette preview applied"
+    );
+
+    await visit("/categories");
+
+    assert
+      .dom(".design-wizard__restore")
+      .exists("keeps the restore button available on another page");
+    await click(".design-wizard__restore");
+
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("removes the restore bar when expanded");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "restores keyboard access");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute(
+        "aria-hidden",
+        "restores access for assistive technology"
+      );
+    assert
+      .dom(".design-wizard__minimize")
+      .isFocused("returns focus to the panel");
+    assert
+      .dom(".design-wizard__color-mode:last-child")
+      .hasAria("pressed", "true", "preserves the color mode selection");
+    assert
+      .dom(".design-wizard__font-group:first-child .design-wizard__font-select")
+      .hasText("Arial", "preserves the unsaved font selection");
+    assert.strictEqual(
+      find(".design-wizard__sections"),
+      sections,
+      "keeps the controls mounted to retain their scroll position"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      savedCount,
+      "restoring does not save changes"
+    );
+    assert.deepEqual(
+      captureColorSchemeLinks(),
+      previewLinks,
+      "restoring keeps the palette preview applied"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("the intro can be minimized and a new run opens expanded", async function (assert) {
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(".design-wizard__restore")
+      .includesText("Customize your site", "labels the way back to the wizard");
+    assert
+      .dom(".design-wizard__restore-progress")
+      .doesNotExist("does not show step progress before the wizard starts");
+
+    await click(".design-wizard__restore");
+    assert.dom(".design-wizard__intro").exists("restores the introduction");
+    await click(".design-wizard__close");
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "a fresh run is expanded");
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("a fresh run has no minimized bar");
+    await click(".design-wizard__close");
+  });
+
+  test("saves a dark-only palette for both system color modes", async function (assert) {
+    wizardData.themes[0].palette_pairs.push({
+      key: "dracula",
+      name: "Dracula",
+      dark_only: true,
+      light: null,
+      dark: {
+        id: -11,
+        name: "Dracula",
+        colors: { primary: "f8f8f2", secondary: "282a36" },
+      },
+    });
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click('[data-pair-key="dracula"]');
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "progress saves Dracula as the default palette for light systems"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "progress saves Dracula for dark systems"
+    );
+
+    await click(".design-wizard__save");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "the final save keeps Dracula as the default palette"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "the final save keeps Dracula for dark systems"
     );
   });
 

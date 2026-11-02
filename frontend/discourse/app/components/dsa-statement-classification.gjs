@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DsaClassificationConfirmation from "discourse/components/dialog-messages/dsa-classification-confirmation";
+import { defaultClassification } from "discourse/components/dsa-moderation-details";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,7 +16,7 @@ export default class DsaStatementClassification extends Component {
 
   @tracked saving = false;
 
-  formData = {};
+  formData = defaultClassification(this.args.classificationOptions);
 
   get classification() {
     return this.args.reviewable.dsa_classification;

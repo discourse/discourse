@@ -45,6 +45,7 @@
     "pnpm": "^12"
   },
   "devDependencies": {
+    "vite": "^8.2.4",
     "vitest": "^5.0.3"
   }
 }
