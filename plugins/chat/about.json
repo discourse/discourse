@@ -12,7 +12,7 @@
       "discourse/components/chat-channel": "discourse/components/api/lazy-chat-channel",
       "discourse/components/chat-skeleton": "discourse/components/chat-skeleton",
       "discourse/components/chat-thread": "discourse/components/api/lazy-chat-thread",
-      "discourse/components/chat/navbar": "discourse/components/chat/navbar",
+      "discourse/components/chat/navbar": "discourse/components/api/lazy-chat-navbar",
       "discourse/models/chat-channel": "discourse/models/chat-channel"
     }
   }
