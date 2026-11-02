@@ -22,7 +22,6 @@ module ::Blog
 end
 
 require_relative "lib/blog/engine"
-require_relative "lib/blog/color_validator"
 
 register_homepage(
   "blog",
