@@ -3,16 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DsaModeration from "discourse/components/dsa-moderation";
 import { extractError } from "discourse/lib/ajax-error";
-import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DModal from "discourse/ui-kit/d-modal";
-import DUserLink from "discourse/ui-kit/d-user-link";
-import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
-
-const USER_PROMPTS = {
-  delete_user: "review.user_prompts.delete",
-  delete_user_block: "review.user_prompts.block",
-};
 
 export default class DsaModerationAction extends Component {
   @tracked flash;
@@ -35,17 +27,6 @@ export default class DsaModerationAction extends Component {
 
   get hasActionDetails() {
     return Boolean(this.args.model.action.confirm_message);
-  }
-
-  get userPromptKey() {
-    return (
-      this.promptUser && USER_PROMPTS[this.args.model.action.server_action]
-    );
-  }
-
-  get promptUser() {
-    const { reviewable } = this.args.model;
-    return reviewable?.target_created_by ?? reviewable?.target_user;
   }
 
   get nextStepLabel() {
@@ -101,25 +82,7 @@ export default class DsaModerationAction extends Component {
         </:belowHeader>
         <:body>
           <flow.Body>
-            <p>
-              {{#if this.userPromptKey}}
-                <DInterpolatedTranslation
-                  @key={{this.userPromptKey}}
-                  as |Placeholder|
-                >
-                  <Placeholder @name="user"><DUserLink
-                      class="dsa-moderation-action__user"
-                      @ariaLabel={{this.promptUser.username}}
-                      @user={{this.promptUser}}
-                    >{{dAvatar
-                        this.promptUser
-                        imageSize="tiny"
-                      }}{{this.promptUser.username}}</DUserLink></Placeholder>
-                </DInterpolatedTranslation>
-              {{else}}
-                {{@model.action.confirm_message}}
-              {{/if}}
-            </p>
+            <p>{{@model.action.confirm_message}}</p>
           </flow.Body>
         </:body>
         <:footer>
