@@ -878,16 +878,127 @@ aside.onebox.github-onebox {
   }
 
   > .onebox-body {
-    padding: 0.8em 1em 1em;
+    padding: var(--space-3) var(--space-4);
+
+    h3,
+    h4 {
+      margin-block: 0 var(--space-2);
+      font-size: var(--font-0);
+      font-weight: var(--token-font-weight-semibold);
+      line-height: var(--line-height-large);
+      overflow-wrap: anywhere;
+    }
   }
 
-  &:is(.githubpullrequest, .githubissue, .githubcommit) > .onebox-body {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "title" "branches" "info" "body";
+  &:is(.githubpullrequest, .githubissue, .githubcommit, .githubactions)
+    > .onebox-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 
   &.githubactions .github-row {
-    display: block;
+    display: contents;
+  }
+
+  .github-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+
+    h4 {
+      margin-block-end: var(--space-1);
+    }
+
+    > .github-info {
+      order: 1;
+    }
+  }
+
+  .branches {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    min-width: 0;
+    font-size: var(--font-down-2);
+    line-height: var(--line-height-large);
+
+    code {
+      min-width: 0;
+      font-size: inherit;
+      border-radius: var(--token-radius-small);
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+
+    code:first-of-type {
+      flex: 0 0 auto;
+      max-width: 45%;
+    }
+
+    code:last-of-type {
+      flex: 0 1 auto;
+    }
+  }
+
+  .github-info {
+    gap: var(--space-1) var(--space-2);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--token-color-text-subtle);
+
+    > div + div {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+
+      &::before {
+        content: "·";
+      }
+    }
+
+    .user a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      color: var(--primary);
+      text-decoration: underline dashed var(--primary-low-mid);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.2em;
+    }
+
+    .lines {
+      font-weight: var(--token-font-weight-regular);
+
+      a {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-1);
+      }
+    }
+  }
+
+  .onebox-avatar-inline {
+    width: var(--space-4);
+    height: var(--space-4);
+    object-fit: cover;
+  }
+
+  .github-body-container {
+    margin: 0;
+    max-width: 65ch;
+    font-family: inherit;
+    font-size: var(--font-down-1);
+    line-height: var(--cooked-line-height);
+    color: var(--token-color-text-default);
+    overflow-wrap: anywhere;
+  }
+
+  .github-repo-description,
+  .label1 {
+    font-size: var(--font-down-1);
+    line-height: var(--cooked-line-height);
   }
 
   @container github-onebox (width < 28rem) {
