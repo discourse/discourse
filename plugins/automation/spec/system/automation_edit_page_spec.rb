@@ -65,8 +65,19 @@ describe "DiscourseAutomation | Edit page" do
       automation.update!(script: "key_value_cats")
       automation_page.visit(automation)
 
-      find(".key-value-field .configure-btn").click
       modal = PageObjects::Modals::Base.new(modal_selector: ".json-schema-editor-modal")
+
+      PageObjects::CDP
+        .new
+        .with_paused_request(%r{/assets/js/jsoneditor-[^/]+\.js}) do |request|
+          find(".key-value-field .configure-btn").click
+          request.wait
+
+          expect(modal).to have_disabled_primary_button
+          request.resume
+        end
+
+      expect(modal).to have_enabled_primary_button
       modal.click_primary_button
 
       expect(modal).to be_closed
