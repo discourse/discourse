@@ -1456,7 +1456,16 @@ CREATE TABLE public.ask_ai_logs (
     ask_tab_switched_after_ms integer DEFAULT 0 NOT NULL,
     ask_scope character varying DEFAULT ''::character varying NOT NULL,
     ask_scope_model character varying DEFAULT ''::character varying NOT NULL,
-    ask_scope_probability double precision DEFAULT 0.0 NOT NULL
+    ask_scope_probability double precision DEFAULT 0.0 NOT NULL,
+    ai_agent_id bigint,
+    llm_id bigint,
+    no_answer_reason integer,
+    time_to_outcome_ms integer,
+    answer_requested_at timestamp(6) without time zone,
+    ask_tab_opened_after_ms integer DEFAULT 0 NOT NULL,
+    ask_answer_seen_after_ms integer,
+    ask_result_clicked_tab character varying DEFAULT ''::character varying NOT NULL,
+    ask_result_clicked_after_ms integer DEFAULT 0 NOT NULL
 );
 
 
@@ -26510,6 +26519,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261102174233'),
+('20261030215104'),
 ('20261030180958'),
 ('20261029021723'),
 ('20261028093149'),

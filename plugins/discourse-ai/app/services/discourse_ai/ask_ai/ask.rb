@@ -3,7 +3,9 @@
 module DiscourseAi
   module AskAi
     # Asks for an AI answer to a search, judging with the decision model which
-    # tab the search should open on, and where the answer should look.
+    # tab the search should open on, and where the answer should look. A search
+    # after precise results or private messages can leave the answer for the
+    # reader to request, so nothing is generated or sent to a model until then.
     class Ask
       include Service::Base
 
@@ -15,6 +17,8 @@ module DiscourseAi
         attribute :trigger_reason, :string
         attribute :intent_heuristic, :string
         attribute :classify_intent, :boolean, default: false
+        attribute :defer_if_precise, :boolean, default: false
+        attribute :deferred_ask_log_id, :integer
 
         # What started a search is only logged, so anything unexpected is
         # dropped rather than refused.
@@ -26,6 +30,13 @@ module DiscourseAi
           self.trigger_reason = trigger_reason.to_s
           self.trigger_reason = "" if !trigger_reason.match?(Discoveries::TRIGGER_REASON_PATTERN)
           self.intent_heuristic = "" if Discoveries::Intent::CHOICES.exclude?(intent_heuristic)
+
+          # Requesting a held-back answer skips the rate limit, so the request
+          # may only claim that answer: never defer again or judge first.
+          if deferred_ask_log_id.present?
+            self.defer_if_precise = false
+            self.classify_intent = false
+          end
         end
 
         validates :query,
@@ -49,25 +60,32 @@ module DiscourseAi
       model :request_status, :claim_request
       policy :request_id_matches_query
 
-      only_if(:new_request?) do
-        # A scoped search is judged before its answer is queued, so the answer
-        # can leave a scope the search is not about.
-        only_if(:scoped?) do
-          model :judgement, :judge_scoped_search, optional: true
-          model :ask_log, :queue_scoped_answer
+      only_if(:answer_deferred?) { only_if(:new_request?) { model :ask_log, :log_deferred_ask } }
+
+      only_if(:answer_wanted?) do
+        only_if(:new_request?) do
+          only_if(:answer_requested_from_search?) { policy :deferred_answer_available }
+
+          # A scoped search is judged before its answer is queued, so the answer
+          # can leave a scope the search is not about.
+          only_if(:scoped?) do
+            model :judgement, :judge_scoped_search, optional: true
+            model :ask_log, :queue_scoped_answer
+          end
+
+          # Otherwise it is judged once the answer is queued, so it does not hold
+          # the answer up.
+          only_if(:site_wide?) do
+            model :ask_log, :queue_answer
+            model :judgement, :judge_search, optional: true
+          end
+
+          only_if(:judgement_worth_logging?) { step :log_judgement }
         end
 
-        # Otherwise it is judged once the answer is queued, so it does not hold
-        # the answer up.
-        only_if(:site_wide?) do
-          model :ask_log, :queue_answer
-          model :judgement, :judge_search, optional: true
-        end
-
-        only_if(:judgement_worth_logging?) { step :log_judgement }
+        step :remember_ask
       end
 
-      step :remember_ask
       model :prefers_results, :look_up_reading_preference, optional: true
 
       private
@@ -92,6 +110,37 @@ module DiscourseAi
         request_status == :created
       end
 
+      def answer_deferred?(params:, guardian:)
+        return if !params.defer_if_precise
+
+        Discoveries.precise_search?(params.query) ||
+          Discoveries.private_search?(query: params.query, scope: params.scope, guardian:)
+      end
+
+      def log_deferred_ask(params:, guardian:)
+        Discoveries.log_deferred_ask(
+          user: guardian.user,
+          scope: params.scope,
+          **params.answer_attributes.except(:request_id),
+        )
+      end
+
+      def answer_wanted?(params:, guardian:)
+        !answer_deferred?(params:, guardian:)
+      end
+
+      def answer_requested_from_search?(params:)
+        params.deferred_ask_log_id.present?
+      end
+
+      def deferred_answer_available(params:, guardian:)
+        AskAiLog.awaiting_answer(
+          id: params.deferred_ask_log_id,
+          user: guardian.user,
+          query: params.query,
+        ).exists?
+      end
+
       def scoped?(params:)
         params.scope.present?
       end
@@ -107,6 +156,7 @@ module DiscourseAi
         Discoveries.enqueue_reply(
           user: guardian.user,
           scope: judgement&.about_site? ? nil : params.scope,
+          deferred_log_id: params.deferred_ask_log_id,
           **params.answer_attributes,
         )
       end
@@ -116,7 +166,11 @@ module DiscourseAi
       end
 
       def queue_answer(params:, guardian:)
-        Discoveries.enqueue_reply(user: guardian.user, **params.answer_attributes)
+        Discoveries.enqueue_reply(
+          user: guardian.user,
+          deferred_log_id: params.deferred_ask_log_id,
+          **params.answer_attributes,
+        )
       end
 
       def judge_search(params:, guardian:)

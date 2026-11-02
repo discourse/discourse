@@ -193,6 +193,93 @@ describe DiscourseAi::Discover::DiscoveriesController do
 
         expect(response.status).to eq(409)
       end
+
+      it "charges a request that names a deferred search but asks to defer again once it is used" do
+        RateLimiter.enable
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do
+          query = "password status:open"
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id:,
+                 defer_if_precise: true,
+               }
+          params = {
+            query:,
+            deferred_ask_log_id: response.parsed_body["ask_log_id"],
+            defer_if_precise: true,
+          }
+
+          expect {
+            post "/discourse-ai/discoveries/reply",
+                 params: params.merge(request_id: SecureRandom.uuid)
+          }.not_to change { AskAiLog.count }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to have_key("answer_deferred")
+
+          post "/discourse-ai/discoveries/reply",
+               params: params.merge(request_id: SecureRandom.uuid)
+          expect(response.status).to eq(429)
+        end
+      end
+
+      it "lets the reader request a deferred answer after using every search" do
+        RateLimiter.enable
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do
+          query = "password status:open"
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id:,
+                 defer_if_precise: true,
+               }
+          deferred_ask_log_id = response.parsed_body["ask_log_id"]
+
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+          expect(response.status).to eq(200)
+
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+          expect(response.status).to eq(429)
+
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "What is Discourse?",
+                 request_id: SecureRandom.uuid,
+               }
+          expect(response.status).to eq(429)
+        end
+      end
+
+      it "returns a 409 when a deferred answer was already requested" do
+        query = "password status:open"
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id:,
+               defer_if_precise: true,
+             }
+        deferred_ask_log_id = response.parsed_body["ask_log_id"]
+        2.times do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+        end
+
+        expect(response.status).to eq(409)
+      end
     end
   end
 
@@ -405,6 +492,54 @@ describe DiscourseAi::Discover::DiscoveriesController do
       expect(response.status).to eq(200)
       expect(response.parsed_body).not_to have_key("intent")
       expect(AskAiLog.last).to have_attributes(ask_intent_heuristic: "", ask_intent_model: "")
+    end
+  end
+
+  describe "#record_tabs timings and result clicks" do
+    fab!(:llm_model)
+    fab!(:ai_agent) do
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm_model.id,
+      )
+    end
+    fab!(:ask_log) { AskAiLog.create!(user:, query: "password reset", asked_at: Time.current) }
+
+    before do
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+    end
+
+    it "records when the tab opened, the answer was seen and a result was opened, keeping each first report" do
+      2.times do |attempt|
+        put "/discourse-ai/discoveries/tabs",
+            params: {
+              ask_log_id: ask_log.id,
+              tab_opened: "ask",
+              tab_opened_after_ms: 900 + attempt,
+              answer_seen_after_ms: 4000 + attempt,
+              result_clicked_tab: "ask",
+              result_clicked_after_ms: 9000 + attempt,
+            }
+      end
+
+      expect(ask_log.reload).to have_attributes(
+        ask_tab_opened_after_ms: 900,
+        ask_answer_seen_after_ms: 4000,
+        ask_result_clicked_tab: "ask",
+        ask_result_clicked_after_ms: 9000,
+      )
+    end
+
+    it "rejects an unknown clicked tab" do
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            result_clicked_tab: "nope",
+          }
+
+      expect(response.status).to eq(400)
     end
   end
 
