@@ -383,7 +383,8 @@ class UploadsController < ApplicationController
 
   # Gifs are not resized on the client and not reduced in size by UploadCreator
   def image_too_big?(file_name, file_size)
-    FileHelper.is_supported_image?(file_name) && File.extname(file_name) == ".gif" &&
+    FileHelper.is_supported_image?(file_name) &&
+      %w[.gif .svg].include?(File.extname(file_name)) &&
       file_size >= SiteSetting.max_image_size_kb.kilobytes
   end
 
