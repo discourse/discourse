@@ -2548,11 +2548,7 @@ RSpec.describe Topic do
     end
 
     it "sets topic status update user to system user if given user is not staff or a TL4 user" do
-      topic.set_or_create_timer(
-        TopicTimer.types[:close],
-        3,
-        by_user: Fabricate.build(:user, id: 444),
-      )
+      topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: user)
       expect(topic.topic_timers.first.user).to eq(Discourse.system_user)
     end
 
