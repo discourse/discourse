@@ -260,6 +260,10 @@ class SearchController < ApplicationController
     return if params[:skip_context] == "true"
 
     search_context = params[:search_context]
+    if search_context && !search_context.is_a?(ActionController::Parameters)
+      raise Discourse::InvalidParameters.new(:search_context)
+    end
+
     unless search_context
       if (context = params[:context]) && (id = params[:context_id])
         search_context = { type: context, id: id, name: id }

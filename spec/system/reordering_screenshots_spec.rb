@@ -23,10 +23,7 @@ describe "Reordering surfaces" do
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  before do
-    SiteSetting.dashboard_improvements = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   [false, true].each do |enabled|
     suffix = enabled ? "on" : "off"

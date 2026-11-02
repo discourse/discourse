@@ -90,7 +90,13 @@ class ApiKeyScope < ActiveRecord::Base
             path_params: %i[post_id],
           },
           modify: {
-            actions: %w[posts#hide_revision posts#show_revision posts#revert],
+            actions: %w[
+              posts#hide_revision
+              posts#show_revision
+              posts#unlist_revision
+              posts#relist_revision
+              posts#revert
+            ],
             path_params: %i[post_id],
           },
           permanently_delete: {
@@ -299,6 +305,24 @@ class ApiKeyScope < ActiveRecord::Base
       ).presence
     end
 
+    def build_from_params(scopes_params)
+      Array(scopes_params).map do |scope_params|
+        raise Discourse::InvalidParameters.new(:scopes) if !scope_params.is_a?(Hash)
+
+        scope_params = scope_params.with_indifferent_access
+        resource, action = scope_params[:scope_id].to_s.split(":")
+        mapping = scope_mappings.dig(resource&.to_sym, action&.to_sym)
+        raise Discourse::InvalidParameters.new(:scopes) if mapping.nil?
+
+        new(
+          resource:,
+          action:,
+          allowed_parameters:
+            allowed_parameters_from(scope_params, restrictable_parameters(mapping)),
+        )
+      end
+    end
+
     def scope_mappings
       plugin_mappings = DiscoursePluginRegistry.api_key_scope_mappings
       return default_mappings if plugin_mappings.empty?
@@ -360,6 +384,17 @@ class ApiKeyScope < ActiveRecord::Base
       methods.each { |method| urls << "* (#{method})" } if methods.present?
 
       urls.to_a
+    end
+
+    private
+
+    def allowed_parameters_from(scope_params, restrictable)
+      return if restrictable.nil?
+
+      scope_params
+        .slice(*restrictable)
+        .compact_blank
+        .transform_values { |value| value.to_s.split(",") }
     end
   end
 

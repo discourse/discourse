@@ -380,6 +380,394 @@ describe DiscourseAi::Discoveries::Retrieval do
     end
   end
 
+  if defined?(DiscourseSolved)
+    describe "#call with solved topics" do
+      fab!(:answer) { Fabricate(:post, topic: topic_1, raw: "Restart the robot to fix it") }
+
+      before do
+        SiteSetting.solved_enabled = true
+        Fabricate(:solved_topic, topic: topic_1, answer_post: answer)
+      end
+
+      def call(lexical)
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { lexical },
+          semantic_retriever: ->(_query) { [] },
+        ).call("robot")
+      end
+
+      it "adds the accepted answer as a passage of a solved topic" do
+        candidates = call([source(post_1), source(post_2)]).candidates
+
+        expect(candidates.first).to include("solved" => true)
+        expect(candidates.first.fetch("passages")).to contain_exactly(
+          include("post_id" => post_1.id),
+          include(
+            "post_id" => answer.id,
+            "post_number" => answer.post_number,
+            "excerpt" => "Restart the robot to fix it",
+            "answer" => true,
+          ),
+        )
+        expect(candidates.second).not_to include("solved")
+      end
+
+      it "marks an accepted answer that retrieval matched instead of repeating it" do
+        candidates = call([source(answer)]).candidates
+
+        expect(candidates.first.fetch("passages")).to contain_exactly(
+          include("post_id" => answer.id, "answer" => true),
+        )
+      end
+
+      it "leaves out an accepted answer the user cannot see" do
+        answer.update!(hidden: true)
+
+        candidates = call([source(post_1)]).candidates
+
+        expect(candidates.first).not_to include("solved")
+        expect(candidates.first.fetch("passages").pluck("post_id")).to eq([post_1.id])
+      end
+
+      it "leaves out accepted answers when solved is disabled" do
+        SiteSetting.solved_enabled = false
+
+        candidates = call([source(post_1)]).candidates
+
+        expect(candidates.first).not_to include("solved")
+        expect(candidates.first.fetch("passages").pluck("post_id")).to eq([post_1.id])
+      end
+    end
+  end
+
+  describe "#call with endorsed replies" do
+    fab!(:moderator)
+    fab!(:liked_reply) { Fabricate(:post, topic: topic_1, raw: "Clear the cache first") }
+    fab!(:author_liked_reply) { Fabricate(:post, topic: topic_1, raw: "Restart the robot") }
+
+    def call(lexical)
+      described_class.new(
+        user:,
+        lexical_retriever: ->(_query) { lexical },
+        semantic_retriever: ->(_query) { [] },
+      ).call("robot")
+    end
+
+    def answer_passages(candidate)
+      candidate.fetch("passages").select { |passage| passage["answer"] }
+    end
+
+    it "adds the reply the topic author liked ahead of more liked ones" do
+      PostActionCreator.like(moderator, liked_reply)
+      PostActionCreator.like(Fabricate(:user), liked_reply)
+      PostActionCreator.like(topic_1.user, author_liked_reply)
+      PostActionCreator.like(moderator, author_liked_reply)
+
+      candidates = call([source(post_1), source(post_2)]).candidates
+
+      expect(answer_passages(candidates.first)).to contain_exactly(
+        include(
+          "post_id" => author_liked_reply.id,
+          "excerpt" => "Restart the robot",
+          "answer" => true,
+        ),
+      )
+      expect(candidates.first).not_to include("solved")
+      expect(answer_passages(candidates.second)).to be_empty
+    end
+
+    it "adds a reply liked only by a member of the endorsing groups" do
+      PostActionCreator.like(moderator, liked_reply)
+      PostActionCreator.like(Fabricate(:user), author_liked_reply)
+
+      candidates = call([source(post_1)]).candidates
+
+      expect(answer_passages(candidates.first)).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
+      )
+    end
+
+    it "adds the topic author's liked follow-up ahead of a group member's like" do
+      follow_up =
+        Fabricate(:post, topic: topic_1, user: topic_1.user, raw: "Fixed it, the cache was stale")
+      PostActionCreator.like(Fabricate(:user), follow_up)
+      PostActionCreator.like(moderator, liked_reply)
+      PostActionCreator.like(Fabricate(:user), liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to contain_exactly(
+        include("post_id" => follow_up.id, "answer" => true),
+      )
+    end
+
+    it "ignores the topic author's liked posts before anyone else replied" do
+      topic = Fabricate(:topic, category:)
+      first_post = Fabricate(:post, topic:, user: topic.user)
+      addendum = Fabricate(:post, topic:, user: topic.user)
+      PostActionCreator.like(Fabricate(:user), addendum)
+
+      expect(answer_passages(call([source(first_post)]).candidates.first)).to be_empty
+    end
+
+    it "marks an endorsed reply that retrieval matched instead of repeating it" do
+      PostActionCreator.like(topic_1.user, liked_reply)
+
+      candidates = call([source(liked_reply)]).candidates
+
+      expect(candidates.first.fetch("passages")).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
+      )
+    end
+
+    it "leaves out replies that are hidden or only liked by others" do
+      PostActionCreator.like(topic_1.user, liked_reply)
+      liked_reply.update!(hidden: true)
+      PostActionCreator.like(Fabricate(:user), author_liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to be_empty
+    end
+
+    it "counts any like when the endorsing groups include everyone" do
+      SiteSetting.ai_ask_ai_endorsed_reply_groups = Group::AUTO_GROUPS[:everyone].to_s
+      PostActionCreator.like(Fabricate(:user), liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
+      )
+    end
+
+    it "adds no replies when no endorsing groups are set" do
+      SiteSetting.ai_ask_ai_endorsed_reply_groups = ""
+      PostActionCreator.like(topic_1.user, liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to be_empty
+    end
+
+    if defined?(DiscourseSolved)
+      it "keeps the accepted answer as a solved topic's only answer" do
+        SiteSetting.solved_enabled = true
+        Fabricate(:solved_topic, topic: topic_1, answer_post: liked_reply)
+        PostActionCreator.like(topic_1.user, author_liked_reply)
+
+        candidate = call([source(post_1)]).candidates.first
+
+        expect(candidate).to include("solved" => true)
+        expect(answer_passages(candidate).pluck("post_id")).to eq([liked_reply.id])
+      end
+    end
+  end
+
+  describe "#call with external sources" do
+    def external_source(name: "Help center", &search)
+      Struct
+        .new(:name, :search) do
+          def call(**queries) = search.call(**queries)
+          def record_outcome(_outcome) = nil
+        end
+        .new(name, search)
+    end
+
+    def external_result(title, url)
+      { "kind" => "external", "source_name" => "Help center", "title" => title, "url" => url }
+    end
+
+    it "fuses external results with the forum's and passes them the prepared queries" do
+      received = nil
+      help_center =
+        external_source do |**queries|
+          received = queries
+          [external_result("Reset guide", "https://kb.example.com/reset")]
+        end
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(post_1)] },
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [help_center],
+        ).call(
+          "how do I reset my password",
+          keyword_query: "reset password",
+          semantic_query: "How can I reset a forgotten password?",
+          locale: "en",
+        )
+
+      expect(received).to eq(
+        query: "how do I reset my password",
+        keyword_query: "reset password",
+        semantic_query: "How can I reset a forgotten password?",
+        locale: "en",
+      )
+      expect(result.candidates.map { |candidate| candidate.values_at("url", "source_ref") }).to eq(
+        [[post_1.relative_url, "source_1"], %w[https://kb.example.com/reset source_2]],
+      )
+    end
+
+    it "keeps the other results when an external source fails or runs out of time" do
+      failing = external_source(name: "Broken") { |**| raise "down" }
+      slow =
+        external_source(name: "Slow") do |**|
+          sleep 2
+          [external_result("Late", "https://kb.example.com/late")]
+        end
+      working = external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+
+      SiteSetting.ai_ask_ai_external_sources_timeout = 1
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [] },
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [failing, slow, working],
+        ).call("docs")
+
+      expect(result.candidates.pluck("url")).to eq(["https://kb.example.com/docs"])
+    end
+
+    it "answers from external sources when the forum's retrieval fails" do
+      help_center =
+        external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+      failing_forum = ->(_query) { raise "embeddings unavailable" }
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: failing_forum,
+          semantic_retriever: failing_forum,
+          external_sources: [help_center],
+        ).call("docs")
+
+      expect(result.candidates.pluck("url")).to eq(["https://kb.example.com/docs"])
+      expect {
+        described_class.new(
+          user:,
+          lexical_retriever: failing_forum,
+          semantic_retriever: failing_forum,
+          external_sources: [external_source { |**| [] }],
+        ).call("docs")
+      }.to raise_error("embeddings unavailable")
+    end
+
+    it "records how each source's search ended" do
+      SiteSetting.ai_ask_ai_external_sources_timeout = 1
+      scripts = {
+        "Fast" => "function invoke() { return []; }",
+        "Slow" => "function invoke() { sleep(3000); return []; }",
+        "Broken" => "function invoke() { throw new Error('down'); }",
+      }
+      tools = scripts.map { |name, script| Fabricate(:ai_tool, name:, script:) }
+
+      described_class.new(
+        user:,
+        lexical_retriever: ->(_query) { [] },
+        semantic_retriever: ->(_query) { [] },
+        external_sources:
+          tools.map { |tool| DiscourseAi::Discoveries::ExternalSource.new(tool, user:) },
+      ).call("docs")
+
+      outcomes =
+        tools.to_h do |tool|
+          counts = DiscourseAi::Discoveries::ExternalSource.outcome_counts(tool.id, hours: 1)
+          [tool.name, counts.select { |_outcome, count| count > 0 }.keys]
+        end
+      expect(outcomes).to eq(
+        "Fast" => %w[succeeded],
+        "Slow" => %w[timed_out],
+        "Broken" => %w[failed],
+      )
+    end
+
+    it "skips external sources once too many are still running" do
+      ai_tool = Fabricate(:ai_tool, script: "function invoke() { return []; }")
+      source = DiscourseAi::Discoveries::ExternalSource.new(ai_tool, user:)
+
+      stub_const(DiscourseAi::Discoveries::ExternalSource, :MAX_IN_FLIGHT, 0) do
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(post_1)] },
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [source],
+        ).call("docs")
+      end
+
+      expect(
+        DiscourseAi::Discoveries::ExternalSource.outcome_counts(ai_tool.id, hours: 1),
+      ).to include("busy" => 1, "succeeded" => 0)
+    end
+
+    it "searches only external sources when the forum's searches are disabled" do
+      SiteSetting.ai_ask_ai_keyword_search_enabled = false
+      SiteSetting.ai_ask_ai_semantic_search_enabled = false
+      lexical_retriever = instance_spy(Proc, call: [source(post_1)])
+      help_center =
+        external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+
+      result =
+        described_class.new(user:, lexical_retriever:, external_sources: [help_center]).call(
+          "docs",
+          scope_filter: "category:#{category.id}",
+        )
+
+      expect(result.candidates.pluck("url")).to eq(["https://kb.example.com/docs"])
+      expect(result.scope_fallback).to be_nil
+      expect(lexical_retriever).not_to have_received(:call)
+    end
+
+    it "searches the whole forum when only external sources match inside the scope" do
+      lexical_retriever = ->(query) { query.include?("category:") ? [] : [source(post_1)] }
+      help_center =
+        external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever:,
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [help_center],
+        ).call("docs", scope_filter: "category:#{category.id}")
+
+      expect(result.candidates.pluck("url")).to contain_exactly(
+        post_1.relative_url,
+        "https://kb.example.com/docs",
+      )
+      expect(result.scope_fallback).to eq(true)
+    end
+  end
+
+  describe "#call with site-set search limits" do
+    it "adds the category and age limits to both retrievals and keeps them when widening a scope" do
+      freeze_time Time.utc(2026, 10, 23)
+      SiteSetting.ai_ask_ai_search_categories = category.id.to_s
+      SiteSetting.ai_ask_ai_search_max_age_days = 30
+      lexical_retriever = instance_spy(Proc, call: [])
+      semantic_retriever = instance_spy(Proc, call: [])
+
+      described_class.new(user:, lexical_retriever:, semantic_retriever:).call(
+        "reset password",
+        scope_filter: "tag:guides",
+      )
+
+      limits = "after:2026-09-23 categories:#{category.id}"
+      expect(lexical_retriever).to have_received(:call).with("reset password tag:guides #{limits}")
+      expect(lexical_retriever).to have_received(:call).with("reset password #{limits}")
+      expect(semantic_retriever).to have_received(:call).with("reset password #{limits}")
+    end
+
+    it "keeps only the age limit for personal message searches" do
+      freeze_time Time.utc(2026, 10, 23)
+      SiteSetting.ai_ask_ai_search_categories = category.id.to_s
+      SiteSetting.ai_ask_ai_search_max_age_days = 30
+      lexical_retriever = instance_spy(Proc, call: [])
+
+      described_class.new(user:, lexical_retriever:, semantic_retriever: ->(_query) { [] }).call(
+        "widget in:messages",
+      )
+
+      expect(lexical_retriever).to have_received(:call).with("widget in:messages after:2026-09-23")
+    end
+  end
+
   describe "#sources_for" do
     it "resolves known source references in the model's order, dropping the rest" do
       retrieval =

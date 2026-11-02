@@ -57,7 +57,6 @@ ru:
     ai_toxicity_flag_threshold_threat: "Угроза"
     ai_toxicity_flag_threshold_sexual_explicit: "Контент сексуального характера"
     ai_toxicity_groups_bypass: "Сообщения пользователей в этих группах не будут оцениваться модулем проверки на токсичность."
-    ai_sentiment_enabled: "Включить модуль оценки настроения."
     ai_sentiment_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля оценки настроения"
     ai_sentiment_inference_service_api_key: "API-ключ для API оценки настроения"
     ai_nsfw_detection_enabled: "Включить модуль проверки на NSFW-контент."
@@ -125,88 +124,60 @@ ru:
       yaxis: "Дата"
     emotion_admiration:
       title: "🤩 Восхищение"
-      description: "Публикации, классифицированные AI по эмоции «восхищение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
       title: "😄 Веселье"
-      description: "Публикации, классифицированные AI по эмоции «веселье» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
       title: "😠 Гнев"
-      description: "Публикации, классифицированные AI по эмоции «гнев» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
       title: "😒 Недовольство"
-      description: "Публикации, классифицированные AI по эмоции «недовольство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
       title: "👍 Одобрение"
-      description: "Публикации, классифицированные AI по эмоции «одобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
       title: "🤗 Забота"
-      description: "Публикации, классифицированные AI по эмоции «забота» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
       title: "😕 Замешательство"
-      description: "Публикации, классифицированные AI по эмоции «замешательство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
       title: "🤔 Любопытство"
-      description: "Публикации, классифицированные AI по эмоции «любопытство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
       title: "😍 Восторг"
-      description: "Публикации, классифицированные AI по эмоции «восторг» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
       title: "😞 Разочарование"
-      description: "Публикации, классифицированные AI по эмоции «разочарование» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
       title: "👎 Неодобрение"
-      description: "Публикации, классифицированные AI по эмоции «неодобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
       title: "🤢 Отвращение"
-      description: "Публикации, классифицированные AI по эмоции «отвращение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
       title: "😳 Смущение"
-      description: "Публикации, классифицированные AI по эмоции «смущение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
       title: "🤪 Волнение"
-      description: "Публикации, классифицированные AI по эмоции «волнение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
       title: "😨 Страх"
-      description: "Публикации, классифицированные AI по эмоции «страх» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
       title: "🙏 Благодарность"
-      description: "Публикации, классифицированные AI по эмоции «благодарность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
       title: "😢 Печаль"
-      description: "Публикации, классифицированные AI по эмоции «печаль» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
       title: "😊 Радость"
-      description: "Публикации, классифицированные AI по эмоции «радость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Любовь'
-      description: "Публикации, классифицированные AI по эмоции «любовь» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
       title: "😰 Тревога"
-      description: "Публикации, классифицированные AI по эмоции «тревога» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
       title: "😐 Нейтральность"
-      description: "Публикации, классифицированные AI по эмоции «нейтральность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
       title: "🌟 Оптимизм"
-      description: "Публикации, классифицированные AI по эмоции «оптимизм» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
       title: "🦁 Гордость"
-      description: "Публикации, классифицированные AI по эмоции «гордость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
       title: "💡 Озарение"
-      description: "Публикации, классифицированные AI по эмоции «озарение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
       title: "😌 Облегчение"
-      description: "Публикации, классифицированные AI по эмоции «облегчение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
       title: "😔 Сожаление"
-      description: "Публикации, классифицированные AI по эмоции «сожаление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
       title: "😭 Грусть"
-      description: "Публикации, классифицированные AI по эмоции «грусть» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
       title: "😲 Удивление"
-      description: "Публикации, классифицированные AI по эмоции «удивление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
       errors:
@@ -281,6 +252,9 @@ ru:
       configuration_missing: "Отсутствует конфигурация AI-системы обнаружения спама. Перед включением добавьте конфигурацию в разделе «Администрирование > Плагины > AI для Discourse > Спам»."
       logging_subject: "Обнаружение спама"
     ai_bot:
+      sources:
+        historical: "AI для Discourse"
+        spam_detection: "Обнаружение спама"
       navigation:
         settings:
           title: "Настройки сайта"

@@ -3,7 +3,9 @@
 module DiscourseWorkflows
   class NodeType
     include NodeErrorHandling
+    include EntitySerializers
     extend NodeTypeDescriptor
+    extend EntitySerializers
 
     TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
 
@@ -90,7 +92,6 @@ module DiscourseWorkflows
       capabilities: {
       },
       output_contracts: [],
-      output_schema_resolver: nil,
       palette_visible: true,
       available: true,
       previewable: false,
@@ -120,6 +121,18 @@ module DiscourseWorkflows
       else
         @description || DESCRIPTION_DEFAULTS
       end
+    end
+
+    def self.deprecated(superseded_by:, changes: {}, description_key: nil, notice_key: nil)
+      @deprecation = { superseded_by:, changes:, description_key:, notice_key: }.compact.freeze
+    end
+
+    def self.deprecation
+      @deprecation
+    end
+
+    def self.deprecated?
+      deprecation.present?
     end
 
     def self.identifier
@@ -203,10 +216,6 @@ module DiscourseWorkflows
 
         Schema.augment(resolved, active_output_extensions(index, configuration))
       end
-    end
-
-    def self.output_schema_resolver
-      description_value(:output_schema_resolver)
     end
 
     def self.output_contracts
@@ -515,62 +524,8 @@ module DiscourseWorkflows
       reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
     end
 
-    def reviewable_data(reviewable)
-      {
-        id: reviewable.id,
-        type: reviewable.type,
-        status: reviewable.status,
-        target_type: reviewable.target_type,
-        target_id: reviewable.target_id,
-        topic_id: reviewable.topic_id,
-        category_id: reviewable.category_id,
-        score: reviewable.score,
-        created_at: reviewable.created_at&.iso8601,
-      }
-    end
-
     def wrap(data, paired_item: nil)
       Item.wrap(data, paired_item:)
-    end
-
-    def serialize_record(
-      record,
-      serializer,
-      scope: Discourse.system_user.guardian,
-      root: false,
-      **opts
-    )
-      MultiJson.load(serializer.new(record, scope:, root:, **opts).to_json).deep_symbolize_keys
-    end
-
-    def serialize_post(
-      post,
-      guardian: Discourse.system_user.guardian,
-      include_raw: true,
-      include_cooked: false
-    )
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_post(
-        post,
-        guardian:,
-        include_raw:,
-        include_cooked:,
-      )
-    end
-
-    def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
-        topic,
-        guardian:,
-        custom_field_names:,
-      )
-    end
-
-    def topic_data(topic, scope: Discourse.system_user.guardian)
-      serialize_record(topic, DiscourseWorkflows::TopicListItemSerializer, scope:)
-    end
-
-    def serialize_user(user, guardian: Discourse.system_user.guardian)
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian:)
     end
 
     def with_paired_item(item, paired_item)

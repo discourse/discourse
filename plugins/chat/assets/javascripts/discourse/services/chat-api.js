@@ -11,6 +11,7 @@ import Collection from "../lib/collection.js";
  * @implements {@ember/service}
  */
 export default class ChatApi extends Service {
+  @service appEvents;
   @service chatChannelsManager;
 
   get #basePath() {
@@ -189,12 +190,22 @@ export default class ChatApi extends Service {
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
-  sendMessage(channelId, data = {}) {
-    return ajax(`/chat/${channelId}`, {
+  async sendMessage(channelId, data = {}) {
+    const response = await ajax(`/chat/${channelId}`, {
       ignoreUnsent: false,
       type: "POST",
       data,
     });
+
+    // a caller that does not await the send can outlive the app in tests
+    if (!this.isDestroying) {
+      this.appEvents.trigger("chat:message-sent", {
+        channelId,
+        messageId: response.message_id,
+      });
+    }
+
+    return response;
   }
 
   /**

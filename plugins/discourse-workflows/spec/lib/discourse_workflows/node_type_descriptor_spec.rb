@@ -36,6 +36,18 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
         "discourse_workflows.node_descriptions.trigger:test_event",
       )
     end
+
+    it "uses the deprecated version's own key without leaking it to its successor" do
+      v1 =
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(name: "trigger:test_event")
+          deprecated(superseded_by: "2.0", description_key: "discourse_workflows.old_event")
+        end
+      v2 = Class.new(v1) { description(superclass.description.merge(version: "2.0")) }
+
+      expect(v1.description_key).to eq("discourse_workflows.old_event")
+      expect(v2.description_key).to eq("discourse_workflows.node_descriptions.trigger:test_event")
+    end
   end
 
   describe "#i18n_prefix" do

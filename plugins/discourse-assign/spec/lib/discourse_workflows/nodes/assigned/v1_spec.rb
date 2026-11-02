@@ -77,7 +77,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Assigned::V1 do
         assigned_to_type: "Group",
       )
       expect(output[:assignment][:assigned_to][:type]).to eq("group")
-      expect(output[:assignment][:assigned_to][:group][:name]).to eq(group.name)
+      expect(output[:assignment][:assigned_to][:group]).to include(
+        name: group.name,
+        user_count: group.user_count,
+      )
+      expect(output[:assignment][:assigned_to][:group]).not_to include(:incoming_email, :bio_raw)
       expect(output[:post][:id]).to eq(topic.first_post.id)
       expect(output).to match_node_output_schema(described_class)
     end

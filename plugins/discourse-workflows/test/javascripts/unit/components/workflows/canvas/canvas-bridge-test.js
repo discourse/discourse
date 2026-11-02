@@ -123,6 +123,31 @@ module("Unit | Canvas Bridge", function (hooks) {
     bridge.destroy();
   });
 
+  test("syncState re-renders a node whose typeVersion changed", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+    const node = {
+      clientId: "n1",
+      type: "trigger:manual",
+      typeVersion: "1.0",
+      position: { x: 0, y: 0 },
+    };
+    await bridge.syncState([node], []);
+
+    const updated = [];
+    const update = bridge.area.update.bind(bridge.area);
+    bridge.area.update = (type, id) => {
+      updated.push(id);
+      return update(type, id);
+    };
+    await bridge.syncState([{ ...node, typeVersion: "2.0" }], []);
+
+    assert.deepEqual(updated, ["n1"]);
+    bridge.destroy();
+  });
+
   test("canvas drag selects nodes inside the selection rectangle", async function (assert) {
     let selectionRect;
     const bridge = await createReteEditor(container, {

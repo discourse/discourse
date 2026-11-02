@@ -53,6 +53,7 @@ sq:
 
         Vizitoni kanalin në %{channel_url} për të provuar përsëri.
   chat:
+    design_wizard_homepage_name: "Biseda"
     deleted_chat_username: deleted
     crawler:
       directory_title: "Kanalet e bisedës"

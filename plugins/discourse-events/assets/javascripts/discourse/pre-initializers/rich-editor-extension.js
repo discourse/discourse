@@ -32,6 +32,7 @@ export const EVENT_ATTRIBUTES = {
   allDay: { default: null },
   image: { default: null },
   hosts: { default: null },
+  recording: { default: null },
 };
 
 /** @returns {RichEditorExtension} */

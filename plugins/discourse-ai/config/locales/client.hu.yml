@@ -84,6 +84,8 @@ hu:
         filters:
           all: "Összes"
           reset: "Alaphelyzetbe állítás"
+        sentiment:
+          enabled: "Bekapcsolva"
         search:
           name: "Keresés"
         embeddings:

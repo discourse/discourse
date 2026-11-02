@@ -52,6 +52,7 @@ sv:
 
         Besök kanalen på %{channel_url} för att försöka igen.
   chat:
+    design_wizard_homepage_name: "Chatt"
     deleted_chat_username: raderat
     crawler:
       directory_title: "Chattkanaler"

@@ -81,6 +81,8 @@ ko:
         filters:
           all: "모두"
           reset: "리셋"
+        sentiment:
+          enabled: "활성화"
         summarization:
           setting_groups:
             settings: "기본 설정"

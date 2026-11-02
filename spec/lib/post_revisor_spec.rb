@@ -726,6 +726,51 @@ describe PostRevisor do
         expect(post.revisions.size).to eq(0)
       end
 
+      it "creates a new version instead of folding an edit into an unlisted revision" do
+        SiteSetting.editing_grace_period = 1.minute
+        SiteSetting.editing_grace_period_max_diff = 100
+
+        post_revisor.revise!(
+          post.user,
+          { raw: "updated body" },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+        )
+        PostRevision.find_by(post:, number: 2).unlist!
+        post_revisor.revise!(
+          post.user,
+          { raw: "updated body again" },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 2.seconds,
+        )
+        post.reload
+
+        expect(post.version).to eq(3)
+        expect(post.public_version).to eq(3)
+        expect(post.revisions.pluck(:number, :unlisted)).to eq([[2, true], [3, false]])
+      end
+
+      it "keeps an unlisted revision when an edit within the grace period reverts it" do
+        SiteSetting.editing_grace_period = 1.minute
+        SiteSetting.editing_grace_period_max_diff = 100
+        original_raw = post.raw
+
+        post_revisor.revise!(
+          post.user,
+          { raw: "updated body" },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+        )
+        PostRevision.find_by(post:, number: 2).unlist!
+        post_revisor.revise!(
+          post.user,
+          { raw: original_raw },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 2.seconds,
+        )
+        post.reload
+
+        expect(post.raw).to eq(original_raw)
+        expect(post.version).to eq(3)
+        expect(post.revisions.pluck(:number, :unlisted)).to eq([[2, true], [3, false]])
+      end
+
       it "does not create a new version for tag-only topic change within grace period when tags unchanged" do
         SiteSetting.tagging_enabled = true
         SiteSetting.editing_grace_period = 1.minute

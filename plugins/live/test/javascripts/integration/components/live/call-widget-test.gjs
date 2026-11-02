@@ -75,6 +75,10 @@ class LiveWebrtcStub extends Service {
     return false;
   }
 
+  isRecordingLocally() {
+    return false;
+  }
+
   remoteStreamFor(roomId, userId) {
     return this.videoStreams.get(`${roomId}:${userId}`);
   }

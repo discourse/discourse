@@ -650,6 +650,28 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "lists posts with their reply_to_post_id" do
+      topic = Fabricate(:topic, category: category, user: user)
+      first_post = Fabricate(:post, topic: topic, user: user, post_number: 1)
+      reply = Fabricate(:post, topic: topic, user: user, post_number: 2, reply_to_post_number: 1)
+
+      result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "topics" => topic.id.to_s,
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+
+      expect(
+        result.to_h do |output_item|
+          output_item.dig("json", "post").values_at("id", "reply_to_post_id")
+        end,
+      ).to eq(first_post.id => nil, reply.id => first_post.id)
+    end
+
     it "lists posts matching the query field" do
       topic = Fabricate(:topic, category: category, user: user, title: "Query field topic")
       matching_post = Fabricate(:post, topic: topic, user: user, post_number: 1, raw: "query body")

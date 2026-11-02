@@ -106,14 +106,15 @@ Keys matching field `@name`s are prepopulated automatically, including nested ob
 
 > :information_source: `@data` is treated as immutable. Edits do not mutate the original object you pass in. If you need to keep some external state in sync while editing, do that explicitly in `@onSet`.
 
-When deriving a form object from a model, prefer a cached getter:
+> :warning: A new `@data` object rebuilds the whole form, discarding focus and unsaved edits. Keep its identity stable while the form is open.
+
+When deriving a form object from a model, build it once in a class field or constructor:
 
 ```js
-@cached
-get formData() {
-  return getProperties(this.model, "foo", "bar", "baz");
-}
+formData = getProperties(this.args.model, "foo", "bar", "baz");
 ```
+
+Avoid getters or `(hash ...)` that recompute while the form is open, e.g. after writing back to the model in `@onSet` or `@onSubmit`. If the model itself can change, re-create the owning component per model, e.g. `{{#each (array @model) as |model|}}`.
 
 **Parameter**
 

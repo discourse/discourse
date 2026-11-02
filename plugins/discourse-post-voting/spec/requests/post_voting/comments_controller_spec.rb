@@ -270,6 +270,62 @@ RSpec.describe PostVoting::CommentsController do
       expect(body["cooked"]).to eq("<p>this is some new raw</p>")
     end
 
+    it "returns 403 when the author is silenced" do
+      UserSilencer.silence(comment.user, Discourse.system_user)
+      sign_in(comment.user)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(403)
+      expect(comment.reload.raw).not_to eq("this is some new raw")
+    end
+
+    it "returns 403 when the author edits a comment on a closed topic" do
+      topic.update!(closed: true)
+      sign_in(comment.user)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(403)
+      expect(comment.reload.raw).not_to eq("this is some new raw")
+    end
+
+    it "returns 403 when the author edits a comment on an archived topic" do
+      topic.update!(archived: true)
+      sign_in(comment.user)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(403)
+      expect(comment.reload.raw).not_to eq("this is some new raw")
+    end
+
+    it "still allows staff to edit a comment on a closed topic" do
+      topic.update!(closed: true)
+      sign_in(admin)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(200)
+      expect(comment.reload.raw).to eq("this is some new raw")
+    end
+
     it "updates the user's own comment and publishes the change" do
       sign_in(comment.user)
 
@@ -402,6 +458,34 @@ RSpec.describe PostVoting::CommentsController do
     fab!(:flagger) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
 
     before { sign_in(flagger) }
+
+    it "requires the DSA form for illegal reports only when DSA reporting is enabled" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect do
+        put "/post_voting/comments/flag.json",
+            params: {
+              comment_id: comment.id,
+              flag_type_id: ReviewableScore.types[:illegal],
+            }
+      end.not_to change(ReviewableScore, :count)
+
+      expect(response).to be_forbidden
+      expect(Reviewable.exists?(target: comment)).to eq(false)
+
+      SiteSetting.dsa_reporting_enabled = false
+
+      put "/post_voting/comments/flag.json",
+          params: {
+            comment_id: comment.id,
+            flag_type_id: ReviewableScore.types[:illegal],
+          }
+
+      expect(response).to be_successful
+      expect(
+        Reviewable.find_by!(target: comment).reviewable_scores.pluck(:reviewable_score_type),
+      ).to eq([ReviewableScore.types[:illegal]])
+    end
 
     it "returns 403 when flagging a comment on an inaccessible post" do
       category.set_permissions(group => :full)

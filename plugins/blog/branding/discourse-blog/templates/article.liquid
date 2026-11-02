@@ -1,0 +1,17 @@
+<article class="discourse-journal__article">
+  <header class="discourse-journal__article-header">
+    <nav class="discourse-journal__breadcrumbs" aria-label="{{ labels.navigation }}"><a href="{{ site.url }}">{{ labels.all_articles }}</a>{% for tag in article.tags %}<span aria-hidden="true">/</span><a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</nav>
+    <h1>{{ article.title }}</h1>
+    {% if article.standfirst %}<p class="discourse-journal__standfirst">{{ article.standfirst }}</p>{% endif %}
+    <div class="discourse-journal__byline">
+      <span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>
+      <div><strong>{{ article.author }}</strong><div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
+    </div>
+    {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
+  </header>
+  <div class="blog-article__body cooked">{{ article.body_html }}</div>
+  <footer class="blog-article__footer">
+    <div class="blog__tags">{% for tag in article.tags %}<a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</div>
+    <a href="{{ article.discussion_url }}">{{ labels.view_topic }} ↗</a>
+  </footer>
+</article>

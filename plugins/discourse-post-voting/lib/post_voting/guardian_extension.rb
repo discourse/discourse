@@ -21,14 +21,15 @@ module PostVoting
 
     def can_edit_comment?(comment)
       return false if !user
-      return true if comment.user_id == user.id
-      return true if is_admin?
-      return true if is_moderator?
-      false
+      return true if is_admin? || is_moderator?
+      return false if comment.user_id != user.id
+      can_create_post_on_topic?(comment.post.topic)
     end
 
     def can_delete_comment?(comment)
-      can_edit_comment?(comment)
+      return false if !user
+      return true if is_admin? || is_moderator?
+      comment.user_id == user.id
     end
 
     def can_flag_post_voting_comments?
@@ -48,6 +49,10 @@ module PostVoting
     end
 
     def can_flag_post_voting_comment_as?(comment, flag_type_id, opts)
+      if flag_type_id == ReviewableScore.types[:illegal] && SiteSetting.dsa_reporting_enabled
+        return false
+      end
+
       return false if !is_staff? && (opts[:take_action] || opts[:queue_for_review])
 
       if flag_type_id == ReviewableScore.types[:notify_user]

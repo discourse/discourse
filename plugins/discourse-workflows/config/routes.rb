@@ -79,6 +79,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/stats/:workflow_id" => "stats#index"
       post "/expressions/evaluate" => "expressions#evaluate"
       post "/node-previews" => "node_previews#create"
+      post "/output-schemas" => "output_schemas#create"
       get "/variables" => "variables#index"
       post "/variables" => "variables#create"
       put "/variables/:id" => "variables#update"
@@ -108,6 +109,7 @@ DiscourseWorkflows::Engine.routes.draw do
   scope "/discourse-workflows", defaults: { format: :json } do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
     post "/trigger-post-button" => "post_button#create"
+    post "/trigger-composer-paused" => "composer_paused#create"
     post "/modal-responses" => "modal_responses#create"
     post "/modal-dismissals" => "modal_dismissals#create"
   end

@@ -141,7 +141,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     assert.strictEqual(
       categoryChooser.header().label(),
-      i18n("category.choose").replace("&hellip;", "…")
+      i18n("category.choose")
     );
     assert.strictEqual(categoryChooser.header().value(), null);
 
@@ -176,7 +176,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     assert.strictEqual(
       categoryChooser.header().label(),
-      i18n("category.choose").replace("&hellip;", "…")
+      i18n("category.choose")
     );
     assert.strictEqual(categoryChooser.header().value(), null);
 
@@ -216,7 +216,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     assert.strictEqual(
       categoryChooser.header().label(),
-      i18n("category.choose").replace("&hellip;", "…")
+      i18n("category.choose")
     );
     assert.strictEqual(categoryChooser.header().value(), null);
 

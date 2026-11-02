@@ -80,11 +80,13 @@ module Boards
       end
 
       group_ids = board.permission_acl.group_ids_with_any_permission(%w[view edit manage])
+      user_ids = board.permission_acl.user_ids_with_any_permission(%w[view edit manage])
       opts = {}
       # Anonymous viewers belong to no group, so a board readable by anonymous
       # users must broadcast to everyone rather than being group-restricted.
-      if group_ids.present? && !group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
-        opts[:group_ids] = group_ids
+      if !group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
+        opts[:group_ids] = group_ids if group_ids.present?
+        opts[:user_ids] = user_ids if user_ids.present?
       end
 
       MessageBus.publish("#{CHANNEL_PREFIX}/#{board.id}", data, opts)

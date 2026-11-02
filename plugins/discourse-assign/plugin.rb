@@ -30,7 +30,9 @@ after_initialize do
       [
         DiscourseWorkflows::Nodes::AssignTopic::V1,
         DiscourseWorkflows::Nodes::Assigned::V1,
+        DiscourseWorkflows::Nodes::Assigned::V2,
         DiscourseWorkflows::Nodes::Unassigned::V1,
+        DiscourseWorkflows::Nodes::Unassigned::V2,
         DiscourseWorkflows::Nodes::CheckAssignment::V1,
       ]
     end

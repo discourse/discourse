@@ -73,7 +73,11 @@ module DiscourseWorkflows
         end
 
         def output
-          { post: post_data(@post), topic: topic_data(@post.topic), user: user_data(@post.user) }
+          {
+            post: serialize_post(@post),
+            topic: serialize_topic_list_item(@post.topic),
+            user: serialize_user(@post.user),
+          }
         end
 
         def matches?(trigger_ctx)
@@ -83,16 +87,6 @@ module DiscourseWorkflows
           return false if !matches_topic_filters?(topic, trigger_ctx)
 
           matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id"))
-        end
-
-        private
-
-        def post_data(post)
-          serialize_post(post)
-        end
-
-        def user_data(user)
-          serialize_user(user)
         end
       end
     end

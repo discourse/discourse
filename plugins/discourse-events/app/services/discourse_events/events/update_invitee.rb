@@ -51,8 +51,12 @@ module DiscourseEvents
         params.status != :going || !event.at_capacity? || invitee.status == Invitee.statuses[:going]
       end
 
-      def update(invitee:, params:)
-        invitee.update_attendance!(params.status, recurring: params.recurring)
+      def update(invitee:, params:, guardian:)
+        invitee.update_attendance!(
+          params.status,
+          recurring: params.recurring,
+          acting_user: guardian.user,
+        )
       end
     end
   end

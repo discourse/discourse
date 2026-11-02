@@ -131,6 +131,52 @@ RSpec.describe Boards::GuardianExtensions do
     end
   end
 
+  describe "owner permissions" do
+    fab!(:board) { Fabricate(:boards_board, created_by: creator, slug: "owned-board") }
+
+    before { SiteSetting.boards_manage_board_allowed_groups = read_group.id.to_s }
+
+    it "grants every permission appropriate to the board state outside the global management groups" do
+      expect(
+        [
+          creator.guardian.can_read_board?(board),
+          creator.guardian.can_write_board?(board),
+          creator.guardian.can_manage_board?(board),
+          creator.guardian.can_destroy_board?(board),
+          creator.guardian.can_archive_board?(board),
+          creator.guardian.can_unarchive_board?(board),
+        ],
+      ).to eq([true, true, true, true, true, false])
+
+      board.update!(archived: true)
+
+      expect(
+        [
+          creator.guardian.can_read_board?(board),
+          creator.guardian.can_write_board?(board),
+          creator.guardian.can_manage_board?(board),
+          creator.guardian.can_destroy_board?(board),
+          creator.guardian.can_archive_board?(board),
+          creator.guardian.can_unarchive_board?(board),
+        ],
+      ).to eq([true, false, false, false, false, true])
+    end
+
+    it "keeps ordinary Manage grants behind the global management group gate" do
+      AccessControlList.find_by!(target: board, permission: "manage").update!(
+        allowed_group_ids: [write_group.id],
+      )
+
+      expect(writer.guardian.can_manage_board?(board)).to eq(false)
+      expect(writer.guardian.can_destroy_board?(board)).to eq(false)
+
+      SiteSetting.boards_manage_board_allowed_groups = write_group.id.to_s
+
+      expect(writer.guardian.can_manage_board?(board)).to eq(true)
+      expect(writer.guardian.can_destroy_board?(board)).to eq(true)
+    end
+  end
+
   describe "archived board permissions" do
     fab!(:board) { Fabricate(:boards_board, slug: "archived-board", archived: true) }
 

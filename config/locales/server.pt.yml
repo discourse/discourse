@@ -2133,13 +2133,28 @@ pt:
               private:
                 label: "Privado"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Diariamente"
+        ordinals:
+          last: "último"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Segunda-feira"
+          tuesday: "Terça-feira"
+          wednesday: "Quarta-feira"
+          thursday: "Quinta-feira"
+          friday: "Sexta-feira"
+          saturday: "Sábado"
     google_meet:
       meeting_code: "Código:"
     github:
       closed: "fechado"
-      status_date:
-        approved: "aprovado"
-        closed: "fechado"
+      pr_status:
+        draft: "Rascunho"
+        open: "Abrir"
+        approved: "Aprovado"
+        closed: "Fechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'

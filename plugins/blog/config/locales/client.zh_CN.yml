@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: 设计
+        overridden: 自定义
+        insert: 插入
+        array_value: 列表
+        preview_home: 首页
+        preview_archive: 归档
+        desktop: 桌面设备
+        mobile: 移动设备
+        back_to_themes: 返回主题
+        new_theme_short: 新主题
+        themes: 主题
+        theme_name: 主题名称
+        edit: 编辑
+        activate: 激活
+        preview: 预览
+        import: 导入
+        export: 导出
+        active: 有效
+  js:
+    blog:
+      panel:
+        badge:
+          draft: 草稿
+        preview: 预览
+        publish: 发布
+        options: 选项
+        submit: 提交审批
+        change:
+          title: 标题
+          body: 正文
+      review:
+        copy: 复制链接
+        active: 有效
+        revoke: 撤销链接
+        message: 反馈
+      editor_table:
+        edit: 编辑
+        status: 状态
+        replies: 回复
+      drafts: 草稿
+      private_draft: 草稿
+      preview: 预览
+      unpublish: 取消发布
+      appearance_link: 外观

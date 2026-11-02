@@ -33,6 +33,13 @@ module PageObjects
         self
       end
 
+      def select_placeholder_type(type)
+        PageObjects::Components::SelectKit.new(
+          "#{MODAL_CLASS} .install-theme-content__placeholder-type .select-kit",
+        ).select_row_by_value(type)
+        self
+      end
+
       def stage_private_theme
         within(MODAL_CLASS) { find(".create-placeholder").click }
       end

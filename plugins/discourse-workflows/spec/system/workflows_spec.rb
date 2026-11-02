@@ -71,6 +71,32 @@ RSpec.describe "Discourse Workflows" do
     expect(editor_page).to have_legacy_topic_tag_fields
   end
 
+  it "upgrades a deprecated node to its latest version" do
+    node_id = "post-edited"
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "trigger:post_edited",
+            "typeVersion" => "1.0",
+            "name" => "Post edited",
+            "parameters" => {
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+    find(".workflows-deprecation-notice__upgrade").click
+
+    expect(editor_page).to have_node_configurator
+    expect(page).to have_no_css(".workflows-deprecation-notice")
+    expect(workflow.reload.nodes.first["typeVersion"]).to eq("2.0")
+  end
+
   it "creates a workflow with condition node" do
     editor_page.visit_new
     editor_page.click_empty_state_add_node

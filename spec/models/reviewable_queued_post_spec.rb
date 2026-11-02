@@ -5,6 +5,23 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:admin)
 
+  describe "#actions_for" do
+    it "requires classification for rejecting queued content or restricting its author" do
+      reviewable = Fabricate(:reviewable_queued_post_topic)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "reject_post",
+        "revise_and_reject_post",
+        "reject_and_suspend",
+        "reject_and_silence",
+        "delete_user",
+        "delete_user_block",
+      )
+    end
+  end
+
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
@@ -635,6 +652,44 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   end
 
   describe "#perform" do
+    it "retains the classified decision when account deletion removes the queued review" do
+      SiteSetting.dsa_reporting_enabled = true
+      recipient = Fabricate(:user)
+      queued =
+        Fabricate(
+          :reviewable_queued_post_topic,
+          created_by: recipient,
+          target_created_by: recipient,
+        )
+      Fabricate(:reviewable_note, reviewable: queued)
+      rule = { "ground" => "Be respectful", "explanation" => "Personal attacks are not allowed." }
+
+      result =
+        queued.perform(
+          admin,
+          :delete_user,
+          dsa_classification: {
+            community_rule: rule,
+            category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          },
+        )
+
+      expect(result).to be_success
+      expect(User.exists?(recipient.id)).to eq(false)
+      expect(Reviewable.exists?(queued.id)).to eq(false)
+      expect(ReviewableNote.where(reviewable_id: queued.id)).to be_empty
+      expect(DsaStatementOfRecord.where(reviewable_id: queued.id).sole).to have_attributes(
+        status: "ready",
+        classified_by_id: admin.id,
+        payload:
+          include(
+            "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+            "incompatible_content_ground" => rule["ground"],
+            "category" => "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          ),
+      )
+    end
+
     context "when the dsa_reporting_enabled site setting is enabled" do
       let(:reviewable) { Fabricate(:reviewable_queued_post) }
 

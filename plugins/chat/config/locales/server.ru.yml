@@ -60,6 +60,7 @@ ru:
 
         Посетите канал %{channel_url} и повторите попытку.
   chat:
+    design_wizard_homepage_name: "Чат"
     deleted_chat_username: удалён
     crawler:
       directory_title: "Каналы чата"

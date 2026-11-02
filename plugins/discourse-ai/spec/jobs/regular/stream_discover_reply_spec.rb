@@ -136,6 +136,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: query,
       semantic_query: query,
+      locale: "en",
     )
     expect(messages).to all(include(query:, request_id:))
     expect(messages.second[:sources]).to eq(
@@ -231,6 +232,53 @@ describe Jobs::StreamDiscoverReply do
     expect(messages.last).to include(candidate_topic_ids:)
   end
 
+  it "publishes and keeps external sources as cards beside the forum's" do
+    external_candidate = {
+      "source_ref" => "source_2",
+      "kind" => "external",
+      "source_id" => 12,
+      "source_name" => "Help center",
+      "title" => "Plugin quickstart",
+      "url" => "https://kb.example.com/plugins",
+      "blurb" => "Build a plugin in five minutes.",
+      "excerpt" => "The full quickstart.",
+      "published_at" => "2026-09-01T00:00:00Z",
+    }
+    result =
+      DiscourseAi::Discoveries::Retrieval::Result.new(candidates: [candidate, external_candidate])
+    allow(retrieval).to receive(:call).and_return(result)
+    allow(retrieval).to receive(:sources_for).and_return([candidate, external_candidate])
+    allow(synthesis).to receive(:call) do |**_, &stream|
+      stream.call(answerable: true, source_refs: %w[source_1 source_2], answer: "Use the skeleton.")
+      DiscourseAi::Discoveries::Synthesis::Result.new(
+        answerable: true,
+        source_refs: %w[source_1 source_2],
+        title: "",
+        answer: "Use the skeleton.",
+      )
+    end
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:)
+        end
+        .map(&:data)
+
+    expect(messages.last).to include(candidate_topic_ids: [source_post.topic_id])
+    expect(messages.last[:sources].last).to eq(
+      kind: "external",
+      title: "Plugin quickstart",
+      url: "https://kb.example.com/plugins",
+      excerpt: "Build a plugin in five minutes.",
+      source_name: "Help center",
+      published_at: "2026-09-01T00:00:00Z",
+    )
+    expect(
+      DiscourseAi::Discoveries.cached_result_for(user:, request_id:)["sources"].pluck("url"),
+    ).to eq([source_post.full_url, "https://kb.example.com/plugins"])
+  end
+
   it "uses the configured rewrite agent's queries for retrieval" do
     query_rewrite_agent.update!(enabled: false)
     allow(query_rewriter).to receive(:call).with(query).and_return(
@@ -247,6 +295,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: "create plugin",
       semantic_query: "how to create a Discourse plugin",
+      locale: "zh_CN",
     )
     expect(synthesis).to have_received(:call).with(
       query:,
@@ -301,6 +350,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: query,
       semantic_query: query,
+      locale: "en",
       scope_filter: "category:7",
     )
     expect(messages.last).to include(phase: "complete", scope_fallback: true)
@@ -316,6 +366,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: query,
       semantic_query: query,
+      locale: "en",
     )
   end
 
@@ -674,6 +725,67 @@ describe Jobs::StreamDiscoverReply do
       )
     end
 
+    it "records what answered and how long the outcome took" do
+      freeze_time
+      ask_log.update!(asked_at: 3.seconds.ago)
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "answered",
+        ai_agent_id: SiteSetting.ai_ask_ai_agent.to_i,
+        llm_id: be_present,
+        time_to_outcome_ms: 3000,
+        no_answer_reason: nil,
+      )
+    end
+
+    it "times a requested answer from the request rather than the search" do
+      freeze_time
+      ask_log.update!(asked_at: 1.minute.ago, answer_requested_at: 2.seconds.ago)
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        time_to_first_answer_ms: 2000,
+        time_to_outcome_ms: 2000,
+      )
+    end
+
+    it "records why the model's reply gave no answer" do
+      allow(synthesis).to receive(:call) do |**_, &stream|
+        stream.call(answerable: false)
+        DiscourseAi::Discoveries::Synthesis::Result.new(
+          answerable: false,
+          source_refs: [],
+          answer: "",
+        )
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "no_answer",
+        no_answer_reason: "abstained",
+      )
+    end
+
+    it "records when none of the model's sources resolve" do
+      allow(retrieval).to receive(:sources_for).and_return([])
+      allow(synthesis).to receive(:call) do |**_, &stream|
+        stream.call(answerable: true, source_refs: %w[source_9], answer: "An answer.")
+        DiscourseAi::Discoveries::Synthesis::Result.new(
+          answerable: true,
+          source_refs: %w[source_9],
+          answer: "An answer.",
+        )
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(no_answer_reason: "unresolved_sources")
+    end
+
     it "records an empty retrieval without inventing an answer latency" do
       allow(retrieval).to receive(:call).and_return(
         DiscourseAi::Discoveries::Retrieval::Result.new(candidates: []),
@@ -683,6 +795,7 @@ describe Jobs::StreamDiscoverReply do
 
       expect(ask_log.reload).to have_attributes(
         ask_outcome: "no_answer",
+        no_answer_reason: "no_candidates",
         candidate_post_ids: [],
         source_post_ids: [],
         answer: nil,
@@ -777,6 +890,30 @@ describe Jobs::StreamDiscoverReply do
         candidate_post_ids: [source_post.id, other_post.id],
         source_post_ids: [source_post.id],
       )
+    end
+
+    it "retains the posts of every passage the model saw" do
+      answer_post = Fabricate(:post, topic: source_post.topic)
+      allow(retrieval).to receive(:call).and_return(
+        DiscourseAi::Discoveries::Retrieval::Result.new(
+          candidates: [
+            candidate.merge(
+              "passages" => [
+                { "post_id" => source_post.id },
+                { "post_id" => answer_post.id, "answer" => true },
+              ],
+            ),
+          ],
+        ),
+      )
+      allow(retrieval).to receive(:sources_for).and_return([])
+      allow(synthesis).to receive(:call).and_return(
+        DiscourseAi::Discoveries::Synthesis::Result.new(answerable: false, source_refs: []),
+      )
+
+      job.execute(args)
+
+      expect(ask_log.reload.candidate_post_ids).to eq([source_post.id, answer_post.id])
     end
 
     it "records retrieval errors before any answer is available" do

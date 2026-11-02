@@ -71,6 +71,32 @@ RSpec.describe AboutController do
         expect(response.parsed_body.dig("about", "description")).to eq("日本語の説明")
       end
 
+      it "localizes JSON responses from Accept-Language for clients classified as crawlers" do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_accept_language_header = true
+        SiteSetting.content_localization_crawler_param = true
+        SiteSetting.content_localization_supported_locales = "ja"
+
+        get "/about.json",
+            headers: {
+              "HTTP_USER_AGENT" => "curl/8.0",
+              "HTTP_ACCEPT_LANGUAGE" => "ja",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq("日本語タイトル")
+
+        get "/about",
+            headers: {
+              "HTTP_USER_AGENT" => "curl/8.0",
+              "HTTP_ACCEPT" => "application/json, text/html;q=0.5",
+              "HTTP_ACCEPT_LANGUAGE" => "ja",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq("日本語タイトル")
+      end
+
       it "falls back to default values when a localized value is blank" do
         SiteSettingLocalization.find_by!(setting_name: "title", locale: "ja").update_column(
           :value,

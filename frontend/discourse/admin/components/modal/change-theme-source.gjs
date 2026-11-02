@@ -95,7 +95,7 @@ export default class ChangeThemeSourceModal extends Component {
         }
       );
 
-      this.args.model.onSuccess?.(result.theme);
+      this.args.model.onSuccess?.(result);
       this.args.closeModal();
     } catch (err) {
       popupAjaxError(err);

@@ -17,6 +17,10 @@
     gap: 0.5rem;
     font-size: var(--font-0);
 
+    @include viewport.until(md) {
+      flex-wrap: wrap;
+    }
+
     @include viewport.from(md) {
       font-size: var(--font-down-1);
     }
@@ -43,7 +47,22 @@
 
   // the real title is an h2, which picks up this spacing inside the topic list
   #list-area &__title {
-    margin: var(--space-5) 0 var(--space-3);
+    @include viewport.from(sm) {
+      margin: var(--space-5) 0 var(--space-3);
+    }
+  }
+
+  // post calendars use a compact toolbar with the title beside the nav buttons
+  .post-calendar & {
+    gap: 0;
+  }
+
+  .post-calendar &__toolbar {
+    padding: 0.25rem;
+
+    @include viewport.until(md) {
+      justify-content: flex-start;
+    }
   }
 
   &__grid,

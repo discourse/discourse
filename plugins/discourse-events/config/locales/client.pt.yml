@@ -56,13 +56,14 @@ pt:
         status: "Estado"
       models:
         event:
-          expired: "Expirado"
           closed: "Fechado"
           status:
             public:
               title: "Público"
             private:
               title: "Privado"
+      recording_modal:
+        save: "Guardar"
       composer:
         url_placeholder: "Adicionar URL"
         reminder:

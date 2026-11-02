@@ -329,14 +329,14 @@ The same pattern works for plugin migrations — just adjust the `require` path 
 
 ## Regenerating structure.sql and annotations
 
-After any schema-altering migration (columns, tables, indexes), regenerate both `db/structure.sql` and model annotations. CI fails if either is stale.
+After every migration change, including data-only migrations:
 
 ```bash
-bin/rake db:dump_structure   # rewrites db/structure.sql from a clean migrated DB
-bin/rake annotate:clean      # rewrites all model annotations (core + bundled plugins)
+bin/rake db:dump_structure        # includes migration versions
+bin/rake db:check_structure_dump  # checks schema, unexpected rows, and advanced sequences
 ```
 
-Both tasks spin up a disposable database and load all bundled plugins, so output is invariant to the local `plugins/` directory. Commit the regenerated files alongside the migration.
+After schema changes, also run `bin/rake annotate:clean`. These tasks use disposable databases with all bundled plugins. Include regenerated files with the migration.
 
 ## Review checklist
 
@@ -353,7 +353,7 @@ Both tasks spin up a disposable database and load all bundled plugins, so output
 11. No application code (models, `SiteSetting`) — query DB directly
 12. `execute` for SQL; `DB.exec`/`DB.query` only when param binding or return values needed
 13. No rows inserted on fresh installs — seed data lives in `db/fixtures/`; inserts that exist only to preserve behavior on upgrades are gated on `Migration::Helpers.existing_site?`
-14. After schema-altering migrations, `bin/rake db:dump_structure` and `bin/rake annotate:clean` were run and the regenerated files committed
+14. Structure dump regenerated and checked for all migrations; annotations regenerated for schema changes
 15. Transaction-disabled migrations (`disable_ddl_transaction!`) contain only the operation that requires it (concurrent index or batched backfill), no other schema changes
 16. Data the new code or its seeds need at boot is changed pre-deploy, and renamed tables get a view with the old name
 17. Pre-deploy migrations don't depend on post-deploy ones (promote those early if needed)

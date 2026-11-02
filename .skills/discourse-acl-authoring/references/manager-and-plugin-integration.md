@@ -1,21 +1,24 @@
-# Manager, Services, and Plugin Integration
+# ACL Replacement and Plugin Integration
 
 Use this reference when writing ACL rows, creating an ACL-backed target model, registering plugin targets, or serializing ACLs from controllers/services.
 
-## AccessControlListManager
+## AccessControlList::Apply
 
-`AccessControlListManager` is the standard write path for replacing a target's ACLs.
+`AccessControlList::Apply` is the standard write path for applying a target's complete ACL configuration. It resolves the registered target internally and replaces ACL rows and writes audit records in a transaction.
 
 ```ruby
-AccessControlListManager.call(
+AccessControlList::Apply.call(
   guardian:,
   params: {
-    target: board,
-    flattened_acl: flattened_acl,
-    owner: Boards::PLUGIN_NAME,
+    acl_target_type: board.class.name,
+    acl_target_id: board.id,
+    acl_entries: flattened_acl,
+    source: Boards::PLUGIN_NAME,
+    initial_owner_user_id: board.created_by_id,
+    owner_user_ids: raw["owner_user_ids"],
   },
 ) do |result|
-  on_success do |previous_permissions:, new_permissions:|
+  on_success do |current_acl:, replacement:|
     # optional history/event work
   end
 
@@ -27,25 +30,33 @@ end
 
 Behavior:
 
-- validates `target` and `owner`
-- fetches previous target permissions
-- injects mandatory ACLs into `flattened_acl`
+- validates the target identity, nested ordinary ACL entries, grantee identities, and `source`
+- resolves the target only from registered ACL target classes
+- reads previous target permissions directly from stored ACL rows
+- resolves `initial_owner_user_id` only when the target has no valid stored owner and creates the initial owner grant from that user
+- preserves existing owners when `owner_user_ids` is omitted; when supplied, treats it as the complete desired owner set
+- allows any valid user to be the initial owner, but requires the actor to be an owner in the currently stored ACL or an admin whenever `owner_user_ids` is supplied; the actor does not need to remain in the requested set
+- validates that every requested owner is a user and at least one owner remains
+- rejects every `owner` entry in `acl_entries`; `owner_user_ids` is the only ownership mutation channel
+- removes owners from lower direct user grants so one grantee does not render multiple ACL rows
+- injects mandatory ACLs into `acl_entries`
 - resolves the target class's `ACL_PERMISSIONS` constant, including inherited declarations; a missing declaration raises `NameError`
 - fails `has_valid_permissions` if any final flattened ACL permission is absent from `ACL_PERMISSIONS.values`
 - fails `has_no_banned_acl` if any final flattened ACL entry matches the target class's `banned_acl`
-- fails `has_at_least_one_acl` if the final ACL list is empty
 - destroys all current ACL rows for the target
 - inserts expanded ACL rows
-- logs a staff action with previous and new permission lookup data
+- logs ordinary permission changes separately from owner additions and removals
 - reloads the target after the transaction so `AclTarget#permission_acl` is rebuilt on the caller's instance
 
-Important: the manager destructively replaces target ACL rows and does not currently authorize the actor itself. Authorize before calling it.
+Important: the service destructively replaces target ACL rows. Authorize ordinary permission changes before calling it; ownership changes are additionally authorized inside the service.
+
+The service's `source` string is ACL row provenance, not target ownership. Pass the authoritative initial target owner's id separately as `initial_owner_user_id`; the service resolves the user model internally when the target has no owner. Use `owner_user_ids` only as the dedicated ownership mutation channel. Omit it to preserve owners and pass the complete desired set when a current owner or admin changes ownership. On an ownerless target, only an admin can supply `owner_user_ids`; a non-admin initial owner must add co-owners in a later call after ownership exists.
 
 ## Write Path Rules
 
-- Call the manager even when the submitted ACL array is empty. Empty means "replace with mandatory ACLs if any"; skipping the manager leaves stale ACLs or creates ACL-less records.
-- Do not mutate ACL rows manually from controllers. Use the manager from a service step.
-- Pass a stable owner string, usually the plugin name constant.
+- Call the replacement service even when the submitted ACL array is empty. Empty means "replace with mandatory ACLs and owners"; skipping it leaves stale ACLs or creates ownerless records.
+- Do not mutate ACL rows manually from controllers. Use the replacement service from a service step.
+- Pass a stable source string, usually the plugin name constant.
 - Keep side effects such as history rows, events, or MessageBus publishes outside the transaction unless they must roll back with the ACL write.
 - When using `Service::Base`, follow `.skills/discourse-service-authoring`.
 
@@ -55,12 +66,13 @@ For new target records with mandatory ACLs:
 
 1. Authorize resource creation with a domain Guardian method.
 2. Create the target.
-3. Call `AccessControlListManager` with `flattened_acl: raw["acl"] || []`.
-4. Fail the service if ACL creation fails.
+3. Call `AccessControlList::Apply` with the target's type and id plus `acl_entries: raw["acl"] || []`.
+4. Pass the authoritative initial user's id as `initial_owner_user_id`; this may be any valid user. Do not trust an owner entry from `raw["acl"]`. Only an admin can also supply `owner_user_ids` while the target is still ownerless.
+5. Fail the service if ACL creation fails.
 
 This ensures mandatory ACL rows are inserted for API callers that omit `acl`.
 
-For update flows, call the manager when ACL params are part of the contract. If ACL updates are optional, distinguish "key omitted" from "key present with empty array" deliberately.
+For update flows, call the replacement service when ACL params are part of the contract. If ACL updates are optional, distinguish "key omitted" from "key present with empty array" deliberately.
 
 ## Plugin Target Registration
 
@@ -132,7 +144,7 @@ The suffixes are `#{target_class.acl_target_key}_user_will_lose_permission` and 
 
 The service evaluates only the proposed ACL. It does not load the target or compare the proposal with persisted ACL rows. `target_id` only selects edit wording when present; omitting it selects creation wording. Treat “loss” as an inference that the authorized editor already holds the configured permission.
 
-This endpoint evaluates the proposed ACL for confirmation UX; it does not authorize access to the target or replace enforcement in the actual write service. Browser confirmation is not passed as proof to `AccessControlListManager`, so an API client can bypass the prompt. If confirmation must be server-enforced, extend the write contract and re-evaluate there before mutation.
+This endpoint evaluates the proposed ACL for confirmation UX; it does not authorize access to the target or replace enforcement in the actual write service. Browser confirmation is not passed as proof to `AccessControlList::Apply`, so an API client can bypass the prompt. If confirmation must be server-enforced, extend the write contract and re-evaluate there before mutation.
 
 ## Serializing Target ACLs
 
@@ -152,22 +164,33 @@ end
 
 Use `TargetClass.with_acl_permission(guardian, permission)` or `TargetClass.with_any_acl_permissions(guardian, permissions)` for index scopes where the user should see targets reachable through ACLs. Use `guardian.target_ids_with_any_acl_permissions(TargetClass, permissions)` only when the id array is the cleaner interface for a custom query.
 
+When an index needs ACL grantee details for every target, flatten one relation for the whole collection and group the result before serialization. Do not query `AccessControlList` from each serializer instance.
+
+```ruby
+owners_by_target_id =
+  AccessControlList
+    .with_permission(targets, Acl::Permissions::OWNER)
+    .flattened_list
+    .group_by { |entry| entry[:target_id] }
+
+serialize_data(targets, TargetSerializer, owners_by_target_id:)
+```
+
+`flattened_list` batch-loads the referenced users and groups. Pass the grouped entries through serializer options so adding targets does not add ACL or grantee queries.
+
 ## Deleted Grantee Cleanup
 
-`Group#clear_acls` and `User#clear_acls` enqueue `Jobs::CleanupAclsForDeleted` after a grantee is destroyed. The job removes the deleted group id from `allowed_group_ids` and/or the deleted user id from `allowed_user_ids`, updates `updated_at`, and deletes ACL rows only when both arrays are empty.
+After the user row is destroyed, `User#reassign_acl_ownership` calls `AccessControlList::ReassignDeletedUserOwnership` synchronously in the destruction transaction, before `clear_acls`. The callback passes `user_id`, `username`, and `deleted_at` (`Time.current`) as a snapshot; the service does not look up the deleted user. The service is restricted to the system actor. It finds every stored owner ACL containing the departing user's ID and chooses one random active, unsuspended real admin other than that user for all targets. If none exists, ownership falls back to the system user.
 
-## Migrations
+The handoff replaces only the departing owner, preserves co-owners and `source`, deduplicates the new owner, and removes their redundant lower direct grants. This specialized write path operates on stored target identities without loading target classes, so disabled plugins do not prevent deletion. Ownership changes and audit records remain in the deletion transaction. Any failure rolls back deletion. Each transferred target gets an `assume_access_control_ownership` staff action with the recipient admin as actor and target user, the ACL target as subject, and snapshot values `deleted_user_id`, `deleted_username`, and ISO 8601 `deleted_at` in context. Quiet deletions still log the ownership handoff.
 
-When migrating legacy permission columns into ACLs:
+`Group#clear_acls` and `User#clear_acls` enqueue `Jobs::CleanupAclsForDeleted` after a grantee is destroyed. The job removes the deleted group id from `allowed_group_ids` and/or the deleted user id from `allowed_user_ids`, updates `updated_at`, and deletes ACL rows only when both arrays are empty. It skips user cleanup when that user ID currently exists, protecting restored records from stale jobs; group cleanup still runs if supplied in the same job.
 
-- Preserve previous semantics intentionally and document any security-tightening changes.
-- Union mandatory ACL values into migrated rows; raw site setting rows may not include `mandatory_values`.
-- Use `Group::AUTO_GROUPS` values or stable numeric IDs only when loading the Rails constants is unsafe in the migration context.
-- Cover blank legacy arrays, customized group lists, and default setting fallbacks in migration specs when possible.
+Users are hard-deleted and have no normal per-account restoration flow. The staged-user CSV import creates accounts with newly assigned database IDs, so it does not reclaim transferred ownership. Anonymization retains the user ID and ownership. User merging deletes the source through `UserDestroyer`, so the same admin handoff applies. This lifecycle prevents new orphaned ownership; it does not backfill targets whose former owner rows were already removed.
 
 ## Current Limitations
 
 - `AccessControlList.expand_list_for_bulk_insert`, `flattened_list`, `preload_allowed`, lookup objects, matching scopes, and cleanup jobs now handle both group and user ACL rows.
-- `DAccessControl` supports user/group search and user grants. Mandatory ACL injection remains group-first; targets with mandatory user grants need explicit UI support.
+- `DAccessControl` supports user/group search and user grants. Persisted owner rows render after mandatory rows without a mandatory badge, with the Owner control disabled unless the actor can manage owners. Class-level mandatory ACL injection remains group-first; targets with other mandatory user grants need explicit UI support.
 - `flattened_list` skips missing groups, missing users, and unknown target classes defensively. Validate group and user IDs at the service/contract boundary where user input enters; do not rely on read-path skipping as data hygiene.
-- The manager has caller-side authorization. Future core work may add a target policy hook; until then, do not expose it directly to untrusted callers.
+- Ordinary permission authorization remains at the caller boundary; the replacement service authorizes ownership changes itself. Do not expose it directly to untrusted callers.

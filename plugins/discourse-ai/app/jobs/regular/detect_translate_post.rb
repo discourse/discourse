@@ -32,9 +32,16 @@ module Jobs
           # the backfill job will handle failures
           return
         end
+
+        return if detected_locale.blank?
+
+        DiscourseEvent.trigger(
+          :post_locale_detected,
+          post,
+          { skip_workflows: args[:skip_workflows] },
+        )
       end
 
-      return if detected_locale.blank?
       locales = DiscourseAi::Translation.locales
       return if locales.blank?
 

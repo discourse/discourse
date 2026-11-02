@@ -1,0 +1,20 @@
+<header class="source github-onebox__header">
+  <span class="github-onebox__label">
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      {{#success}}
+        <path fill-rule="evenodd" d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16Zm3.78-9.72a.751.751 0 0 0-.018-1.042.751.751 0 0 0-1.042-.018L6.75 9.19 5.28 7.72a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042l2 2a.75.75 0 0 0 1.06 0Z"></path>
+      {{/success}}
+      {{#failure}}
+        <path fill-rule="evenodd" d="M2.343 13.657A8 8 0 1 1 13.658 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path>
+      {{/failure}}
+      {{#pending}}
+        <path fill-rule="evenodd" d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+      {{/pending}}
+      {{#unknown}}
+        <path fill-rule="evenodd" d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+      {{/unknown}}
+    </svg>
+    <span>{{#run_number}}{{#success}}{{i18n.header.success}}{{/success}}{{#failure}}{{i18n.header.failure}}{{/failure}}{{#pending}}{{i18n.header.pending}}{{/pending}}{{#unknown}}{{i18n.header.unknown}}{{/unknown}}{{/run_number}}{{^run_number}}{{i18n.header.check_run}}{{/run_number}}</span>
+  </span>
+  {{> github/repository}}
+</header>

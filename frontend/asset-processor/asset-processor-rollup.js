@@ -219,6 +219,12 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            modules: Object.entries(chunk.modules)
+              .map(([id, m]) => ({
+                id: id.startsWith(basePath) ? id.slice(basePath.length) : id,
+                renderedLength: m.renderedLength,
+              }))
+              .sort((a, b) => b.renderedLength - a.renderedLength),
             routeBundles: chunk.isEntry
               ? routeBundlesForEntry(chunk.name)
               : undefined,

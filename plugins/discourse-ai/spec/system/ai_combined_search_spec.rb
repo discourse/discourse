@@ -308,11 +308,13 @@ describe "AI combined search" do
       ask(query)
 
       expect_tab("topics")
-      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
       expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      # counts wait for a tab to open, then show only on the others
+      expect(page).to have_no_css("#{tab("topics")} .ai-search-tabs__count")
 
       # the answer was asked for with the rest, so switching asks nothing more
       select_tab("ask")
+      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
       expect(page).to have_css(".ai-search-answer")
       expect(page).to have_no_css(".search-menu .search-result-topic")
       publish(
@@ -346,6 +348,46 @@ describe "AI combined search" do
           ask_tab_switched_to: "ask",
         )
       end
+    end
+
+    it "records the first result the reader opens" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask(query)
+
+      expect_tab("topics")
+      find(".search-menu .search-result-topic a.search-link", text: topic_1.title).click
+
+      try_until_success do
+        expect(AskAiLog.last).to have_attributes(
+          ask_tab_opened_after_ms: be >= 0,
+          ask_result_clicked_tab: "topics",
+          ask_result_clicked_after_ms: be > 0,
+        )
+      end
+    end
+
+    it "leaves the answer to a search using operators until the reader opens it" do
+      term = "password status:open"
+      visit "/"
+      wait_for_discoveries_channel
+      find("#welcome-banner-search-input").fill_in(with: term)
+      find("#welcome-banner-search-input").send_keys(:enter)
+
+      expect_tab("topics")
+      try_until_success do
+        expect(AskAiLog.find_by(query: term)).to have_attributes(
+          ask_outcome: "skipped",
+          ask_tab_opened: "topics",
+          ask_tab_opened_reason: "syntax",
+        )
+      end
+      expect(request_ids).to be_empty
+
+      select_tab("ask")
+
+      expect(page).to have_css(".ai-search-answer")
+      try_until_success { expect(request_ids.size).to eq(1) }
     end
 
     context "with a decision model judging intent" do
@@ -610,7 +652,7 @@ describe "AI combined search" do
       expect(page).to have_css(tab("context"), text: category.name)
       expect_tab("context")
       expect(scopes.last).to eq("category:#{category.id}")
-      expect(page).to have_css("#{tab("context")} .ai-search-tabs__count", text: "1")
+      expect(page).to have_no_css("#{tab("context")} .ai-search-tabs__count")
       expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "2")
       # the counts hang off the pills rather than widening them
       widths = page.evaluate_script(<<~JS)
@@ -622,6 +664,7 @@ describe "AI combined search" do
 
       select_tab("topics")
       expect(page).to have_css(".search-menu .search-result-topic", text: outside.title)
+      expect(page).to have_css("#{tab("context")} .ai-search-tabs__count", text: "1")
       expect(request_ids.size).to eq(1)
     end
 
@@ -862,7 +905,8 @@ describe "AI combined search" do
     it "opens a query in search syntax on its topics" do
       visit "/"
       wait_for_discoveries_channel
-      ask('"small spaces"')
+      find("#welcome-banner-search-input").fill_in(with: '"small spaces"')
+      find("#welcome-banner-search-input").send_keys(:enter)
 
       expect_tab("topics")
       expect(page).to have_css(

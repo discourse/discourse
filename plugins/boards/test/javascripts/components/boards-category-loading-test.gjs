@@ -46,6 +46,15 @@ module("Integration | Component | Boards category loading", function (hooks) {
     this.owner.lookup("service:modal").containerElement = getRootElement();
     this.fabricators = new BoardsFabricators(this.owner);
     this.board = this.fabricators.board();
+    this.board.acl = [
+      {
+        type: "user",
+        id: this.currentUser.id,
+        permission: "owner",
+        username: this.currentUser.username,
+        display_name: this.currentUser.username,
+      },
+    ];
     this.board.category_ids = [CATEGORY_ID];
     this.board.tag_names = [];
     this.column = this.fabricators.column();

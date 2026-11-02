@@ -115,9 +115,6 @@ end
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
-  get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
-      :constraints => StaffConstraint.new
-
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
     get "/ask-ai-reports/:report_id/subjects/:subject_id/asks" =>
           "discourse_ai/admin/ask_ai_reports#asks",

@@ -228,10 +228,25 @@ require_relative "lib/discourse_events/livestream/allowed_hosts_validator"
 require_relative "lib/discourse_events/livestream/topic_extension"
 require_relative "lib/discourse_events/livestream/chat_channel_extension"
 require_relative "lib/discourse_events/livestream/zoom_url_parser"
-
 Dir
   .glob(File.expand_path("../lib/discourse_events/configuration/*.rb", __FILE__))
   .each { |f| require(f) }
+
+event_schema_markup =
+  lambda do |controller|
+    topic_view = controller.instance_variable_get(:@topic_view)
+    result =
+      DiscourseEvents::Events::BuildSchemaMarkup.call(
+        params: {
+          topic_id: topic_view&.topic&.id,
+        },
+        guardian: controller.guardian,
+      )
+    result[:html] if result.success?
+  end
+
+register_html_builder("server:before-head-close", &event_schema_markup)
+register_html_builder("server:before-head-close-crawler", &event_schema_markup)
 
 after_initialize do
   UserOption.prepend DiscourseEvents::UserOptionExtension
@@ -296,12 +311,16 @@ after_initialize do
   require_relative "app/jobs/regular/discourse_post_event_bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/discourse_post_event/warm_event_onebox"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
+  require_relative "jobs/regular/discourse_post_event/warm_recording_onebox"
+  require_relative "jobs/regular/discourse_post_event/publish_livestream_chat_transcript"
   require_relative "lib/discourse_events/events/chat_channel_sync"
   require_relative "lib/discourse_events/events/email_renderer"
   require_relative "lib/discourse_events/events/excerpt"
   require_relative "lib/discourse_events/events/finder"
   require_relative "lib/discourse_events/events/onebox_data"
+  require_relative "lib/discourse_events/events/onebox_occurrence"
   require_relative "lib/discourse_events/events/parser"
   require_relative "lib/discourse_events/events/validator"
   require_relative "lib/discourse_events/events/export_csv_controller_extension"
@@ -309,9 +328,12 @@ after_initialize do
   require_relative "lib/discourse_events/events/guardian_extensions"
   require_relative "lib/discourse_events/events/post_extension"
   require_relative "lib/discourse_events/events/topic_extension"
+  require_relative "lib/discourse_events/events/topics_filter"
   require_relative "lib/discourse_events/events/rrule_generator"
   require_relative "lib/discourse_events/events/rrule_configurator"
   require_relative "lib/discourse_events/events/web_hook_extension"
+
+  DiscourseEvents::Events::TopicsFilter.register(self)
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
 
@@ -436,6 +458,17 @@ after_initialize do
           {}
         end
       end
+  end
+
+  add_to_serializer(
+    :post,
+    :event_onebox_occurrences,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled && event_onebox_occurrences.present?
+    end,
+  ) do
+    @event_onebox_occurrences ||=
+      DiscourseEvents::Events::OneboxOccurrence.for_cooked(object.cooked)
   end
 
   sync_event_from_post = ->(post) do
@@ -813,6 +846,10 @@ after_initialize do
   on(:reduce_cooked) do |fragment, post|
     if SiteSetting.discourse_post_event_enabled
       fragment
+        .css(".discourse-event-onebox")
+        .each { |node| DiscourseEvents::Events::OneboxOccurrence.new(node).apply! }
+
+      fragment
         .css(".discourse-post-event")
         .each do |event_node|
           event_node.replace(DiscourseEvents::Events::EmailRenderer.render(event_node, post))
@@ -985,6 +1022,25 @@ after_initialize do
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
+  add_to_serializer(:topic_view, :livestream_chat_active) do
+    !!object.topic.first_post&.event&.livestream_chat_active?
+  end
+
+  on(:discourse_post_event_event_ended) do |event, event_date|
+    if event.livestream?
+      Jobs.enqueue(:publish_livestream_chat_transcript, event_date_id: event_date.id)
+    end
+  end
+
+  # Any status set since the event closed the chat is deliberate, so a resumed
+  # event leaves it be.
+  on(:chat_channel_status_change) do |channel:, **|
+    DiscourseEvents::Livestream::TopicChatChannel.where(
+      chat_channel_id: channel.id,
+      closed_on_event_end: true,
+    ).update_all(closed_on_event_end: false)
+  end
 
   add_to_serializer(
     :topic_view,

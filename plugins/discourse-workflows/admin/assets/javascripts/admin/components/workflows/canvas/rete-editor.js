@@ -893,6 +893,7 @@ export class ReteEditorBridge {
           reteNode.label !== newLabel ||
           reteNode.width !== newWidth ||
           reteNode.height !== newHeight ||
+          reteNode.workflowData.typeVersion !== nodeData.typeVersion ||
           JSON.stringify(reteNode.workflowData.configuration) !==
             JSON.stringify(nodeData.configuration);
 

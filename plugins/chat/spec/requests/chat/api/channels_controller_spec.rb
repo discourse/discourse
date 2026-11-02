@@ -133,6 +133,35 @@ RSpec.describe Chat::Api::ChannelsController do
         end
       end
 
+      context "when filtering with an unsupported chatable type" do
+        fab!(:channel_1, :category_channel)
+        fab!(:private_message_topic)
+
+        it "does not reveal private-message topic existence" do
+          get "/chat/api/channels",
+              params: {
+                chatable_id: private_message_topic.id,
+                chatable_type: "Topic",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
+
+          get "/chat/api/channels",
+              params: {
+                chatable_id: Topic.maximum(:id) + 1,
+                chatable_type: "Topic",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
+        end
+      end
+
       context "when filtering by chatable_id and chatable_type (Category)" do
         fab!(:category_1, :category)
         fab!(:category_2, :category)

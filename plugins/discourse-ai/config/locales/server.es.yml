@@ -66,7 +66,6 @@ es:
     ai_toxicity_flag_threshold_threat: "Amenaza"
     ai_toxicity_flag_threshold_sexual_explicit: "Sexual explícito"
     ai_toxicity_groups_bypass: "Los usuarios de esos grupos no verán sus mensajes clasificados por el módulo de toxicidad."
-    ai_sentiment_enabled: "Activar el módulo de sentimientos."
     ai_sentiment_inference_service_api_endpoint: "URL donde se ejecuta la API para el módulo de sentimientos"
     ai_sentiment_inference_service_api_key: "Clave API para la API de sentimientos"
     ai_nsfw_detection_enabled: "Activar el módulo NSFW."
@@ -144,88 +143,60 @@ es:
       yaxis: "Fecha"
     emotion_admiration:
       title: "🤩 Admiración"
-      description: "Publicaciones clasificadas con la emoción Admiración mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_amusement:
       title: "😄 Diversión"
-      description: "Publicaciones clasificadas con la emoción Diversión mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_anger:
       title: "😠 Enfado"
-      description: "Publicaciones clasificadas con la emoción Enfado mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_annoyance:
       title: "😒 Molestia"
-      description: "Publicaciones clasificadas con la emoción Molestia mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_approval:
       title: "👍 Aprobación"
-      description: "Mensajes clasificados con la emoción Aprobación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_caring:
       title: "🤗 Cariño"
-      description: "Publicaciones clasificadas con la emoción Cariño mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_confusion:
       title: "😕 Confusión"
-      description: "Publicaciones clasificadas con la emoción Confusión mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_curiosity:
       title: "🤔 Curiosidad"
-      description: "Publicaciones clasificadas con la emoción Curiosidad mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_desire:
       title: "😍 Deseo"
-      description: "Publicaciones clasificadas con la emoción Deseo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disappointment:
       title: "😞 Decepción"
-      description: "Publicaciones clasificadas con la emoción Decepción mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disapproval:
       title: "👎 Desaprobación"
-      description: "Publicaciones clasificadas con la emoción Desaprobación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disgust:
       title: "🤢 Asco"
-      description: "Publicaciones clasificadas con la emoción Asco mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_embarrassment:
       title: "😳 Vergüenza"
-      description: "Publicaciones clasificadas con la emoción Vergüenza mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_excitement:
       title: "🤪 Excitación"
-      description: "Publicaciones clasificadas con la emoción Excitación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_fear:
       title: "😨 Miedo"
-      description: "Publicaciones clasificadas con la emoción Miedo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_gratitude:
       title: "🙏 Gratitud"
-      description: "Publicaciones clasificadas con la emoción Gratitud mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_grief:
       title: "😢 Duelo"
-      description: "Publicaciones clasificadas con la emoción Duelo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_joy:
       title: "😊 Alegría"
-      description: "Publicaciones clasificadas con la emoción Alegría mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_love:
       title: '❤️ Amor'
-      description: "Publicaciones clasificadas con la emoción Amor mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_nervousness:
       title: "😰 Nerviosismo"
-      description: "Publicaciones clasificadas con la emoción Nerviosismo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_neutral:
       title: "😐 Neutro"
-      description: "Publicaciones clasificadas con la emoción Neutro mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_optimism:
       title: "🌟 Optimismo"
-      description: "Publicaciones clasificadas con la emoción Optimismo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_pride:
       title: "🦁 Orgullo"
-      description: "Publicaciones clasificadas con la emoción Orgullo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_realization:
       title: "💡 Realización"
-      description: "Mensajes clasificados con la emoción Realización mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_relief:
       title: "😌 Alivio"
-      description: "Publicaciones clasificadas con la emoción Alivio mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_remorse:
       title: "😔 Remordimiento"
-      description: "Publicaciones clasificadas con la emoción Remordimiento mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_sadness:
       title: "😭 Tristeza"
-      description: "Publicaciones clasificadas con la emoción Tristeza mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_surprise:
       title: "😲 Sorpresa"
-      description: "Publicaciones clasificadas con la emoción Sorpresa mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
   discourse_ai:
     ai_artifact:
       errors:
@@ -347,6 +318,9 @@ es:
       configuration_missing: "Falta la configuración de detección de spam de IA. Añade la configuración en «Administración > Plugins > Discourse AI > Spam» antes de activarla."
       logging_subject: "Detección de spam"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Detección de spam"
       navigation:
         settings:
           title: "Ajustes del sitio"

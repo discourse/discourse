@@ -568,6 +568,22 @@ RSpec.describe GroupsController do
       )
     end
 
+    it "uses the full name as entered for the HTML title" do
+      group.update!(full_name: "Utah - St. George")
+
+      get "/groups/#{group.name}.html"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag "title", text: "Utah - St. George - #{SiteSetting.title}"
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          property: "og:title",
+          content: "Utah - St. George",
+        },
+      )
+    end
+
     it "renders a single-escaped, tag-free meta description from the bio" do
       group.update!(bio_raw: "Tom & Jerry [blog](https://evil.example) win")
 

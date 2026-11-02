@@ -73,6 +73,8 @@ ca:
         filters:
           all: "Tots"
           reset: "Restableix"
+        sentiment:
+          enabled: "Activat"
         search:
           name: "Cerca"
         image_caption:

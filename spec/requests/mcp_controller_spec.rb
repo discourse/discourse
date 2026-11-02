@@ -78,6 +78,72 @@ describe "MCP transport" do
     McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
   end
 
+  it "filters hidden private-message content before paginating for MCP participants" do
+    participant = Fabricate(:user)
+    author = Fabricate(:user)
+    message = Fabricate(:private_message_post, user: author, recipient: participant)
+    hidden_post =
+      Fabricate(
+        :post,
+        topic: message.topic,
+        user: author,
+        hidden: true,
+        raw: "Restricted PM content",
+      )
+    visible_post = Fabricate(:post, topic: message.topic, user: author)
+    trailing_hidden_post =
+      Fabricate(
+        :post,
+        topic: message.topic,
+        user: author,
+        hidden: true,
+        raw: "Further restricted content",
+      )
+    tool_name = "discourse_read_private_message"
+    McpPrimitive.create!(kind: "tool", identifier: tool_name, enabled: true)
+    group = Fabricate(:group)
+    group.add(participant)
+    group.add(author)
+    McpGroupScope.create!(group: group, scope: "mcp:private-messages:read")
+
+    [participant, author, admin].each do |viewer|
+      grant =
+        DiscourseMcp::OAuth::AuthorizationGrant.create!(
+          user: viewer,
+          client: client,
+          redirect_uri: client.redirect_uris.first,
+          requested_scopes: %w[mcp:profile:read mcp:private-messages:read],
+        )
+      token = McpOauthAccessToken.issue!(authorization: grant)
+      read_payload =
+        payload.deep_merge(
+          params: {
+            name: tool_name,
+            arguments: {
+              topic_id: message.topic_id,
+              start_post_number: hidden_post.post_number,
+              post_limit: 1,
+            },
+          },
+        )
+
+      post "/mcp",
+           params: read_payload.to_json,
+           headers:
+             headers.merge("HTTP_AUTHORIZATION" => "Bearer #{token}", "HTTP_MCP_NAME" => tool_name)
+
+      expect(response.status).to eq(200)
+      result = response.parsed_body.fetch("result").fetch("structuredContent")
+      expected_post = viewer == participant ? visible_post : hidden_post
+      if viewer == participant
+        expect(response.body).not_to include(hidden_post.raw, trailing_hidden_post.raw)
+      end
+      expect(result.fetch("posts").pluck("id")).to eq([expected_post.id])
+      expect(result.fetch("posts").sole.fetch("raw")).to eq(expected_post.raw)
+      expect(result.fetch("meta")).to include("returned" => 1, "has_more" => viewer != participant)
+    end
+  end
+
   it "returns a structured internal error when a tool unexpectedly fails" do
     failure_message = "private implementation failure"
     primitive = DiscourseMcp.registry.find(:tool, "discourse_current_user_get")

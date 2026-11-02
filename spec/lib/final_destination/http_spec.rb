@@ -37,15 +37,18 @@ describe FinalDestination::HTTP do
 
   # A minimal HTTP server on `bind`:<ephemeral> that answers every request with "hi".
   def with_http_server(bind = "127.0.0.1")
+    started = Queue.new
     server =
       WEBrick::HTTPServer.new(
         BindAddress: bind,
         Port: 0,
         Logger: WEBrick::Log.new(File::NULL),
         AccessLog: [],
+        StartCallback: -> { started << true },
       )
     server.mount_proc("/") { |_req, res| res.body = "hi" }
     thread = Thread.new { server.start }
+    started.pop
     yield server.config[:Port]
   ensure
     server&.shutdown

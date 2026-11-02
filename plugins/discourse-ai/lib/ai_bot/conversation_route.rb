@@ -21,6 +21,7 @@ module DiscourseAi
           :model_source,
           :authorization_user,
           :modality,
+          :replaced_topic_model,
         ) do
           def agent_id
             agent_record.id
@@ -90,7 +91,7 @@ module DiscourseAi
         end
 
         validate_recipient!(agent_record)
-        model, model_source = resolve_model(agent_record, agent_class)
+        model, model_source, replaced_topic_model = resolve_model(agent_record, agent_class)
 
         Result.new(
           agent_record:,
@@ -100,6 +101,7 @@ module DiscourseAi
           model_source:,
           authorization_user: @authorization_user,
           modality: @modality,
+          replaced_topic_model: !!replaced_topic_model,
         )
       end
 
@@ -202,11 +204,14 @@ module DiscourseAi
         persisted_topic_id = topic_model_id
         topic_id = persisted_topic_id if requested_id.blank?
         legacy_id = legacy_model_id if requested_id.blank? && topic_id.blank?
+        echoed_topic_model =
+          @selection_source == :request && requested_id.present? &&
+            requested_id == persisted_topic_id
 
         if agent_class.force_default_llm
           forced_id = agent_record.default_llm_id
           raise_error(:ai_llm_model_id, "no_model_available") if forced_id.blank?
-          if requested_id.present? && requested_id != forced_id
+          if requested_id.present? && requested_id != forced_id && !echoed_topic_model
             raise_error(:ai_llm_model_id, "model_conflicts_with_agent")
           end
           return find_model!(forced_id), :forced
@@ -215,17 +220,28 @@ module DiscourseAi
         selected_id = requested_id || topic_id || legacy_id
         if selected_id
           source = model_selection_source(requested_id, topic_id)
+          model = LlmModel.find_by(id: selected_id)
+          inherited_topic_model = topic_id.present? || echoed_topic_model
+          if model.blank? && inherited_topic_model
+            model, source = resolve_default_model(agent_record)
+            return model, source, true
+          end
+
           configured_source = configured_model_source(selected_id, agent_record)
-          inherited_configured_model =
-            source == :topic || (source == :request && persisted_topic_id == selected_id)
+          inherited_configured_model = source == :topic || echoed_topic_model
           source = configured_source if configured_source && inherited_configured_model
           if %i[request topic].include?(source) &&
                !LlmModel.enabled_chat_bot_ids.include?(selected_id)
             raise_error(:ai_llm_model_id, "model_not_selectable")
           end
-          return find_model!(selected_id), source
+          raise_error(:ai_llm_model_id, "model_unavailable") if model.blank?
+          return model, source
         end
 
+        resolve_default_model(agent_record)
+      end
+
+      def resolve_default_model(agent_record)
         default_id =
           agent_record.default_llm_id.presence || SiteSetting.ai_default_llm_model.presence
         raise_error(:ai_llm_model_id, "no_model_available") if default_id.blank?

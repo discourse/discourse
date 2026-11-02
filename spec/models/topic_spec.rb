@@ -251,6 +251,33 @@ RSpec.describe Topic do
     end
   end
 
+  describe "archetype validation" do
+    fab!(:topic)
+
+    it "is invalid with an unregistered archetype" do
+      topic.archetype = "unknown"
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:archetype]).to be_present
+    end
+
+    it "is valid with an archetype registered by a plugin" do
+      Archetype.register("plugin_archetype")
+      topic.archetype = "plugin_archetype"
+
+      expect(topic).to be_valid
+    ensure
+      Archetype.deregister("plugin_archetype")
+    end
+
+    it "does not block saving a topic that already has an unregistered archetype" do
+      topic.update_column(:archetype, "unknown")
+      topic.title = "this is a brand new topic title"
+
+      expect(topic).to be_valid
+    end
+  end
+
   describe "slug" do
     context "with encoded generator" do
       before { SiteSetting.slug_generation_method = "encoded" }
@@ -1610,7 +1637,9 @@ RSpec.describe Topic do
           2.times { topic.update_status("closed", true, user) }
         end
 
-      expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, "closed", true, { acting_user: user }]],
+      )
     end
 
     it "emits pin status events only when pin attributes change" do
@@ -1624,7 +1653,10 @@ RSpec.describe Topic do
         end
 
       expect(events.map { |event| event[:params] }).to eq(
-        [[topic, "pinned", true], [topic, "pinned", false]],
+        [
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned", false, { acting_user: user }],
+        ],
       )
     end
 
@@ -1642,9 +1674,9 @@ RSpec.describe Topic do
 
       expect(events.map { |event| event[:params] }).to eq(
         [
-          [topic, "pinned", true],
-          [topic, "pinned_globally", true],
-          [topic, "pinned_globally", true],
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
         ],
       )
     end

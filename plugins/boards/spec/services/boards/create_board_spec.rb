@@ -52,6 +52,29 @@ RSpec.describe Boards::CreateBoard do
         expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
       end
 
+      it "makes the creator the board owner" do
+        board = result[:board]
+
+        owner_acl = AccessControlList.find_by!(target: board, permission: "owner")
+        expect(owner_acl.allowed_user_ids).to contain_exactly(manager.id)
+        expect(owner_acl.allowed_group_ids).to be_empty
+      end
+
+      context "with co-owners" do
+        let(:raw) do
+          {
+            "name" => "Co-owned board",
+            "slug" => "co-owned-board",
+            "owner_user_ids" => [outsider.id],
+          }
+        end
+
+        it "rejects the initial owner set from a non-admin" do
+          expect { result }.not_to change { Boards::Board.count }
+          expect(result).to fail_a_step(:create_acl)
+        end
+      end
+
       it "creates mandatory ACLs when ACL params are empty" do
         raw["acl"] = []
 

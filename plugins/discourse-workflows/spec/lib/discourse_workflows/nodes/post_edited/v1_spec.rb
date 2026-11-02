@@ -43,11 +43,12 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
   end
 
   describe "#output" do
-    it "exposes the editor separately from the author" do
+    it "exposes the editor separately from the author with the revision details",
+       :aggregate_failures do
       editor = Fabricate(:admin)
       events =
         DiscourseEvent.track_events(:post_edited) do
-          first_post.revise(editor, raw: "Edited by another user")
+          first_post.revise(editor, raw: "Edited by another user", edit_reason: "Typo")
         end
 
       output = described_class.new(*events.sole[:params]).output
@@ -58,9 +59,13 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
         trust_level: editor.trust_level,
       )
       expect(output[:user][:id]).to eq(user.id)
+      expect(output[:revision]).to include(
+        number: 2,
+        edit_reason: "Typo",
+        previous_raw: "First post",
+      )
+      expect(output[:revision][:changes]).to include("raw")
       expect(output).to match_node_output_schema(described_class)
-      editor_schema = described_class.output_schemas.first.dig("properties", "editor")
-      expect(editor_schema).to include("properties" => DiscourseWorkflows::Schema::USER_PROPERTIES)
     end
 
     it "returns post and topic data" do
@@ -69,7 +74,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
 
       expect(output[:post][:id]).to eq(first_post.id)
       expect(output[:post][:raw]).to eq(first_post.raw)
-      expect(output[:post][:cooked]).to eq("<p>Cooked</p>")
+      expect(output[:post][:cooked]).to eq(first_post.cooked)
       expect(output[:user]).to include(
         id: user.id,
         username: user.username,
@@ -80,7 +85,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       expect(output[:topic][:user_id]).to eq(topic.user_id)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output).not_to have_key(:cooked)
-      expect(output).to include(editor: nil)
+      expect(output).to include(editor: nil, revision: nil)
       expect(output).to match_node_output_schema(described_class)
     end
   end

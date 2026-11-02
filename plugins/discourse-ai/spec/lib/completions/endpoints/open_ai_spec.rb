@@ -1652,6 +1652,8 @@ TEXT
     end
 
     it "collapses minimal to low since some models reject it outright" do
+      model.update!(name: "gpt-5")
+
       parsed_body = nil
       stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
         body:
@@ -1771,6 +1773,43 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("none")
     end
 
+    %w[gpt-4.1-mini gpt-35-turbo].each do |model_name|
+      it "omits per-call efforts for #{model_name}, which does not reason" do
+        model.update!(name: model_name)
+
+        bodies = []
+        stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+          body:
+            proc do |req_body|
+              bodies << JSON.parse(req_body, symbolize_names: true)
+              true
+            end,
+        ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+        endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+        endpoint.perform_completion!(dialect, user, { thinking_effort: "medium" })
+
+        expect(bodies.map { |body| body.key?(:reasoning_effort) }).to eq([false, false])
+      end
+    end
+
+    it "sends a per-call none to reasoning models" do
+      model.update!(name: "gpt-5-mini")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("none")
+    end
+
     it "uses native max effort for GPT-6 Astra" do
       model.update!(name: "gpt-6-astra")
 
@@ -1831,13 +1870,15 @@ TEXT
     end
 
     it "reserves OpenAI recommended output room for reasoning when no token cap is configured" do
+      model.update!(name: "gpt-5")
+
       prepared_params = endpoint.prepare_model_params(thinking_effort: "high")
 
       expect(prepared_params[:reserved_output_tokens]).to eq(25_000)
     end
 
     it "uses the model output limit as the reasoning output reservation when configured" do
-      model.update!(max_output_tokens: 12_000)
+      model.update!(name: "gpt-5", max_output_tokens: 12_000)
 
       prepared_params = endpoint.prepare_model_params(thinking_effort: "high")
 

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -27,11 +27,18 @@ export default class AdminConfigAreasColorPalette extends Component {
   @tracked hasChangedDefaultLightOnTheme = false;
   @tracked hasChangedDefaultDarkOnTheme = false;
   @tracked hasChangedColors = false;
-  @tracked lightColorSchemeId = this.defaultTheme.color_scheme_id;
-  @tracked darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
 
   saveNameOnly = false;
   fkApi;
+  data = {
+    name: this.args.colorPalette.name,
+    user_selectable: this.args.colorPalette.user_selectable,
+    default_light_on_theme:
+      this.defaultTheme.color_scheme_id === this.args.colorPalette.id,
+    default_dark_on_theme:
+      this.defaultTheme.dark_color_scheme_id === this.args.colorPalette.id,
+    colors: this.args.colorPalette.colors,
+  };
 
   get defaultTheme() {
     return this.site.user_themes.find((theme) => theme.default);
@@ -49,19 +56,6 @@ export default class AdminConfigAreasColorPalette extends Component {
 
   get installedWithTheme() {
     return !!this.args.colorPalette.theme_id;
-  }
-
-  @cached
-  get data() {
-    return {
-      name: this.args.colorPalette.name,
-      user_selectable: this.args.colorPalette.user_selectable,
-      default_light_on_theme:
-        this.lightColorSchemeId === this.args.colorPalette.id,
-      default_dark_on_theme:
-        this.darkColorSchemeId === this.args.colorPalette.id,
-      colors: this.args.colorPalette.colors,
-    };
   }
 
   @action
@@ -97,7 +91,6 @@ export default class AdminConfigAreasColorPalette extends Component {
         this.defaultTheme.color_scheme_id = data.default_light_on_theme
           ? this.args.colorPalette.id
           : null;
-        this.lightColorSchemeId = this.defaultTheme.color_scheme_id;
       }
       if (this.hasChangedDefaultDarkOnTheme) {
         this.args.colorPalette.default_dark_on_theme =
@@ -105,7 +98,6 @@ export default class AdminConfigAreasColorPalette extends Component {
         this.defaultTheme.dark_color_scheme_id = data.default_dark_on_theme
           ? this.args.colorPalette.id
           : null;
-        this.darkColorSchemeId = this.defaultTheme.dark_color_scheme_id;
       }
     }
 

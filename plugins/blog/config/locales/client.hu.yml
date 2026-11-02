@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Dizájn
+        overridden: Egyéni
+        insert: Beszúrás
+        array_value: Lista
+        preview_home: Főoldal
+        preview_archive: Archiválás
+        desktop: Asztali
+        mobile: Mobil
+        back_to_themes: Vissza a témákhoz
+        new_theme_short: Új téma
+        themes: Témák
+        theme_name: A téma neve
+        edit: Szerkesztés
+        activate: Aktiválás
+        preview: Előnézet
+        import: Importálás
+        export: Exportálás
+        active: Aktív
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Vázlat
+        preview: Előnézet
+        publish: Közzététel
+        options: Beállítások
+        change:
+          title: cím
+          body: törzs
+      review:
+        copy: Hivatkozás másolása
+        active: Aktív
+        message: Visszajelzés
+      editor_table:
+        edit: Szerkesztés
+        status: Állapot
+        replies: Válaszok
+      drafts: Vázlatok
+      private_draft: Vázlat
+      preview: Előnézet
+      unpublish: Közzététel visszavonása
+      appearance_link: Megjelenés

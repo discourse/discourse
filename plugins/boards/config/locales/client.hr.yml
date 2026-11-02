@@ -32,7 +32,10 @@ hr:
           few: "%{count} odgovora"
           other: "%{count} odgovora"
         edit_assignments: "Uredi zadatke..."
-        created_by: "Napravio"
+        owners:
+          one: "Vlasnik"
+          few: "Vlasnici"
+          other: "Vlasnici"
       manage:
         name: "Ime"
         slug: "Puž"

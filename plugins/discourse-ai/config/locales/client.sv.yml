@@ -77,6 +77,8 @@ sv:
         filters:
           all: "Alla"
           reset: "Återställ"
+        sentiment:
+          enabled: "Aktiverad"
         search:
           name: "Sök"
         image_caption:

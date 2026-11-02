@@ -7,6 +7,7 @@ module DiscourseEvents
         description: Event::MAX_DESCRIPTION_LENGTH,
         url: Event::MAX_URL_LENGTH,
         location: Event::MAX_LOCATION_LENGTH,
+        recording: Event::MAX_URL_LENGTH,
       }
 
       def initialize(post)
@@ -119,6 +120,7 @@ module DiscourseEvents
         end
 
         add_error("invalid_url") if !Parser.valid_url?(extracted_event[:url])
+        add_error("invalid_recording_url") if !Parser.valid_web_url?(extracted_event[:recording])
       end
 
       private

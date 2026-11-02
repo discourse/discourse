@@ -22,7 +22,6 @@ ca:
       description_placeholder: "Introduïu una descripció aquí"
       ai:
         generate: "Genera"
-        optional: "opcional"
       help:
         label: "Ajuda"
       schema:
@@ -43,7 +42,7 @@ ca:
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultats."
-      query_name: "Consulta"
+      name: "Nom"
       query_groups: "Grups"
       query_tags: "Etiquetes"
       link: "Enllaç de"

@@ -107,6 +107,7 @@ pt:
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não definido"
         no_groups: "Nenhuma"
+        classification_model: "Modelo:"
         edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
@@ -121,6 +122,11 @@ pt:
         filters:
           all: "Todos"
           reset: "Repor"
+        sentiment:
+          emotion: "Emoção"
+          enabled: "Ativado"
+          setting_groups:
+            emotion: "Emoção"
         summarization:
           name: "Resumos"
           topic_summaries: "Resumos de tópico"

@@ -2007,13 +2007,31 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Vsak dan"
+        every_weekday: "Vsak delavnik"
+        ordinals:
+          last: "zadnji"
+        weekdays:
+          sunday: "Nedelja"
+          monday: "Ponedeljek"
+          tuesday: "Torek"
+          wednesday: "Sreda"
+          thursday: "Četrtek"
+          friday: "Petek"
+          saturday: "Sobota"
     google_meet:
       meeting_code: "Koda:"
     github:
+      header:
+        success: "Uspeh"
       closed: "zaprto"
-      status_date:
-        approved: "potrjen"
-        closed: "zaprta"
+      pr_status:
+        draft: "Osnutek"
+        open: "Odpri"
+        approved: "Potrjeno"
+        closed: "Zaprta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je omenil v "%{topic}" - %{site_title}'

@@ -1349,28 +1349,44 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
       placeholderData.processingPlaceholder,
       placeholderData.uploadPlaceholder
     );
+    placeholderData.processingPlaceholder = undefined;
   }
 
   cancelAll(): void {
-    Object.values(this.#placeholders).forEach((data) => {
-      this.textManipulation.replaceText(data.uploadPlaceholder, "");
-    });
+    Object.values(this.#placeholders).forEach((data) =>
+      this.#removePlaceholder(data)
+    );
+    this.#placeholders = {};
   }
 
   cancel(file: UppyFile): void {
-    if (this.#placeholders[file.id]) {
-      this.textManipulation.replaceText(
-        this.#placeholders[file.id].uploadPlaceholder,
-        ""
-      );
+    const placeholderData = this.#placeholders[file.id];
+    if (placeholderData) {
+      this.#removePlaceholder(placeholderData);
+      delete this.#placeholders[file.id];
     }
   }
 
   success(file: UppyFile, markdown: string): void {
+    const placeholderData = this.#placeholders[file.id];
+    if (!placeholderData) {
+      return;
+    }
+
     this.textManipulation.replaceText(
-      this.#placeholders[file.id].uploadPlaceholder.trim(),
+      placeholderData.uploadPlaceholder.trim(),
       markdown
     );
+  }
+
+  #removePlaceholder(placeholderData: PlaceholderData): void {
+    if (placeholderData.processingPlaceholder !== undefined) {
+      this.textManipulation.replaceText(
+        placeholderData.processingPlaceholder,
+        ""
+      );
+    }
+    this.textManipulation.replaceText(placeholderData.uploadPlaceholder, "");
   }
 
   #uploadPlaceholder(file: UppyFile, currentMarkdown: string): string {

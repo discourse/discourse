@@ -7,6 +7,9 @@ module DiscourseAi
       EMOTION_MODEL = "SamLowe/roberta-base-go_emotions"
       SENTIMENT_AGENT_MODEL = "discourse-ai/sentiment-agent"
       EMOTION_AGENT_MODEL = "discourse-ai/emotion-agent"
+      SENTIMENT_DECISION_MODEL = "discourse-ai/sentiment-decision"
+      EMOTION_DECISION_MODEL = "discourse-ai/emotion-decision"
+      DECISION_MODEL_STRATEGY = "decision_model"
       CLASSIFICATION_MODEL_STRATEGY = "classification_model"
       AGENT_STRATEGY = "agent"
       SENTIMENT_THRESHOLD = 0.6

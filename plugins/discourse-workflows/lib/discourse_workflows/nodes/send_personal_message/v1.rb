@@ -104,9 +104,9 @@ module DiscourseWorkflows
           post = PostCreator.new(sender, post_args).create!
 
           {
-            topic: topic_data(post.topic, scope: sender.guardian),
+            topic: serialize_topic_list_item(post.topic, scope: sender.guardian),
             post:
-              exec_ctx.serialize_post(
+              serialize_post(
                 post,
                 guardian: sender.guardian,
                 include_raw: true,

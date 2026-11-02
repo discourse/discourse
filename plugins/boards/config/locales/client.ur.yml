@@ -35,7 +35,9 @@ ur:
         assign: "تفویض"
         reassign: "دوبارہ تفویض"
         unassign: "غیر اسائین کریں"
-        created_by: "نے بنایا"
+        owners:
+          one: "مالک"
+          other: "مالکان"
       manage:
         name: "نام"
         slug: "سلگ"

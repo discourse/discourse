@@ -66,7 +66,6 @@ tr_TR:
     ai_toxicity_flag_threshold_threat: "Tehdit"
     ai_toxicity_flag_threshold_sexual_explicit: "Cinsel İçerikli"
     ai_toxicity_groups_bypass: "Bu gruplardaki kullanıcıların gönderileri toksiklik modülü tarafından sınıflandırılmaz."
-    ai_sentiment_enabled: "Duyarlılık modülünü etkinleştirin."
     ai_sentiment_inference_service_api_endpoint: "Duyarlılık modülü için API'nin çalıştığı URL"
     ai_sentiment_inference_service_api_key: "Duyarlılık API'si için API anahtarı"
     ai_nsfw_detection_enabled: "NSFW modülünü etkinleştirin."
@@ -144,88 +143,60 @@ tr_TR:
       yaxis: "Tarih"
     emotion_admiration:
       title: "🤩 Hayranlık"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla hayranlık duygusu ile sınıflandırılan gönderiler."
     emotion_amusement:
       title: "😄 Eğlenme"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla eğlenme duygusu ile sınıflandırılan gönderiler."
     emotion_anger:
       title: "😠 Öfke"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla öfke duygusu ile sınıflandırılan gönderiler."
     emotion_annoyance:
       title: "😒 Rahatsız olma"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla rahatsız olma duygusu ile sınıflandırılan gönderiler."
     emotion_approval:
       title: "👍 Onaylama"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla onaylama duygusu ile sınıflandırılan gönderiler."
     emotion_caring:
       title: "🤗 Önemseme"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla önemseme duygusu ile sınıflandırılan gönderiler."
     emotion_confusion:
       title: "😕 Kafa karışıklığı"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla kafa karışıklığı duygusu ile sınıflandırılan gönderiler."
     emotion_curiosity:
       title: "🤔 Merak"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla merak duygusu ile sınıflandırılan gönderiler."
     emotion_desire:
       title: "😍 Arzu"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla arzu duygusu ile sınıflandırılan gönderiler."
     emotion_disappointment:
       title: "😞 Hayal kırıklığı"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla hayal kırıklığı duygusu ile sınıflandırılan gönderiler."
     emotion_disapproval:
       title: "👎 Onaylamama"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla onaylamama duygusu ile sınıflandırılan gönderiler."
     emotion_disgust:
       title: "🤢 İğrenme"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla iğrenme duygusu ile sınıflandırılan gönderiler."
     emotion_embarrassment:
       title: "😳 Utanma"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla utanma duygusu ile sınıflandırılan gönderiler."
     emotion_excitement:
       title: "🤪 Heyecan"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla heyecan duygusu ile sınıflandırılan gönderiler."
     emotion_fear:
       title: "😨 Korku"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla korku duygusu ile sınıflandırılan gönderiler."
     emotion_gratitude:
       title: "🙏 Minnettarlık"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla minnettarlık duygusu ile sınıflandırılan gönderiler."
     emotion_grief:
       title: "😢 Keder"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla keder duygusu ile sınıflandırılan gönderiler."
     emotion_joy:
       title: "😊 Neşe"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla neşe duygusu ile sınıflandırılan gönderiler."
     emotion_love:
       title: '❤️ Sevgi'
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla sevgi duygusu ile sınıflandırılan gönderiler."
     emotion_nervousness:
       title: "😰 Gerginlik"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla gerginlik duygusu ile sınıflandırılan gönderiler."
     emotion_neutral:
       title: "😐 Nötr"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla nötr duygusu ile sınıflandırılan gönderiler."
     emotion_optimism:
       title: "🌟 İyimserlik"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla iyimserlik duygusu ile sınıflandırılan gönderiler."
     emotion_pride:
       title: "🦁 Gurur"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla gurur duygusu ile sınıflandırılan gönderiler."
     emotion_realization:
       title: "💡 Farkına varma"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla farkına varma duygusu ile sınıflandırılan gönderiler."
     emotion_relief:
       title: "😌 Rahatlama"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla rahatlama duygusu ile sınıflandırılan gönderiler."
     emotion_remorse:
       title: "😔 Pişmanlık"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla pişmanlık duygusu ile sınıflandırılan gönderiler."
     emotion_sadness:
       title: "😭 Üzüntü"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla üzüntü duygusu ile sınıflandırılan gönderiler."
     emotion_surprise:
       title: "😲 Şaşırma"
-      description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla şaşırma duygusu ile sınıflandırılan gönderiler."
   discourse_ai:
     ai_artifact:
       errors:
@@ -347,6 +318,9 @@ tr_TR:
       configuration_missing: "YZ spam algılama yapılandırması eksik. Etkinleştirmeden önce \"Yönetici > Eklentiler > Discourse YZ > Spam\" bölümüne yapılandırmayı ekleyin."
       logging_subject: "Spam tespiti"
     ai_bot:
+      sources:
+        historical: "Discourse YZ"
+        spam_detection: "İstenmeyen içerik tespiti"
       navigation:
         settings:
           title: "Site ayarları"

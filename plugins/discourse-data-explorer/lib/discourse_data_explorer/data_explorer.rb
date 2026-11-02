@@ -56,6 +56,8 @@ module DiscourseDataExplorer
     # skipping the declared-parameter casting `run_query` does. Callers with
     # undeclared parameters, such as a workflow's raw SQL node, use this directly.
     def self.run_query_with_values(query, values = {}, opts = {})
+      opts = opts.merge(explain: false) if opts[:explain] && !opts[:current_user]&.admin?
+
       # Safety checks
       # see test 'doesn't allow you to modify the database #2'
       if query.sql =~ /;/

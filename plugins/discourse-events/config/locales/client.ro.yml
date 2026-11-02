@@ -82,7 +82,6 @@ ro:
             going: "Merg"
             interested: "Interesat"
         event:
-          expired: "Expirate"
           closed: "Închis"
           full: "Complet"
           status:
@@ -90,6 +89,8 @@ ro:
               title: "Public"
             private:
               title: "Privat"
+      recording_modal:
+        save: "Salvează"
       composer:
         url_placeholder: "Adaugă URL"
         reminder:

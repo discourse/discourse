@@ -127,7 +127,9 @@ en:
         constraint_fix_tags: "Add a board tag"
         constraint_fix_confirm: "Move and update"
         constraint_tooltip: "Only topics with these categories and tags are allowed on this board."
-        created_by: "Created by"
+        owners:
+          one: "Owner"
+          other: "Owners"
         show_older_cards: "Show %{count} older cards"
         errors:
           category_unavailable: "The destination category is no longer available. Update the board or column settings before creating a topic."

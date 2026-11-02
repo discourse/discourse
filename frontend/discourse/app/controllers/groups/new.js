@@ -42,14 +42,18 @@ export default class GroupsNewController extends Controller {
 
     group
       .create()
-      .then(() => {
+      .then((created) => {
+        // Matches the shape `SiteSerializer#groups` sends.
+        const fullName = created.full_name || created.name;
         this.site.groups.push({
-          id: group.id,
-          name: group.name,
-          flair_url: group.flair_url,
-          flair_bg_color: group.flair_bg_color,
-          flair_color: group.flair_color,
-          automatic: false,
+          id: created.id,
+          name: created.name,
+          full_name: fullName,
+          display_name: fullName,
+          flair_url: created.flair_url,
+          flair_bg_color: created.flair_bg_color,
+          flair_color: created.flair_color,
+          automatic: created.automatic,
         });
         this.router.transitionTo("group.members", group.name);
       })

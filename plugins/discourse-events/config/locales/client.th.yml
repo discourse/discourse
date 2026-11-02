@@ -49,6 +49,8 @@ th:
               title: "สาธารณะ"
             private:
               title: "ส่วนตัว"
+      recording_modal:
+        save: "บันทึก"
       composer:
         url_placeholder: "เพิ่ม URL"
         reminder:

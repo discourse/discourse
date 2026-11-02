@@ -37,7 +37,7 @@ export default <template>
           {{/if}}
           {{#if @controller.filters.acting_user}}
             <DButton
-              class="filter btn-default"
+              class="filter btn-default staff-action-logs-filters__staff-user"
               @action={{fn @controller.clearFilter "acting_user"}}
               @suffixIcon="xmark"
               @translatedLabel={{concat
@@ -45,6 +45,7 @@ export default <template>
                 ": "
                 @controller.filters.acting_user
               }}
+              @translatedTitle={{@controller.filters.acting_user}}
             />
           {{/if}}
           {{#if @controller.filters.target_user}}
@@ -129,8 +130,17 @@ export default <template>
                     {{#if item.acting_user}}
                       <LinkTo @model={{item.acting_user}} @route="adminUser">
                         {{dAvatar item.acting_user imageSize="tiny"}}
-                        {{item.acting_user.username}}
                       </LinkTo>
+                      <DButton
+                        class="staff-user__filter"
+                        @action={{fn
+                          @controller.filterByStaffUser
+                          item.acting_user
+                        }}
+                        @display="link"
+                        @translatedLabel={{item.acting_user.username}}
+                        @translatedTitle={{item.acting_user.username}}
+                      />
                     {{else}}
                       <span
                         class="deleted-user"
@@ -200,7 +210,7 @@ export default <template>
                   </div>
                 </td>
                 <td class="col value context">
-                  {{#if (fn @controller.showHtmlSafeContext item)}}
+                  {{#if (@controller.showHtmlSafeContext item)}}
                     {{trustHTML item.context}}
                   {{else}}
                     {{item.context}}
@@ -210,13 +220,12 @@ export default <template>
             {{/each}}
           </tbody>
         </table>
-      {{else if @controller.model.loadingMore}}
-        <DConditionalLoadingSpinner
-          @condition={{@controller.model.loadingMore}}
-        />
-      {{else}}
+      {{else if (not @controller.model.loadingMore)}}
         {{i18n "search.no_results"}}
       {{/if}}
+      <DConditionalLoadingSpinner
+        @condition={{@controller.model.loadingMore}}
+      />
     </DLoadMore>
   </StaffActions>
 </template>

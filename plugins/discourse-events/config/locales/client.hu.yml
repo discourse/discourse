@@ -428,7 +428,6 @@ hu:
               one: "%{count} meghívott felhasználó"
               other: "%{count} meghívott felhasználó"
         event:
-          expired: "Lejárt"
           closed: "Lezárt"
           full: "Tele"
           status:
@@ -441,6 +440,8 @@ hu:
             private:
               title: "Privát"
               description: "Privát eseményhez csak a meghívott felhasználók csatlakozhatnak."
+      recording_modal:
+        save: "Mentés"
       composer:
         name_placeholder: "Esemény neve"
         location_or_url_placeholder: "Helyszín vagy URL hozzáadása"

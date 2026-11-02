@@ -34,7 +34,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicStatusChanged::V1 do
       output = trigger.output
       expect(output).to match_node_output_schema(node_class)
       if change == "closed"
-        expect(output.keys).to eq([:topic])
+        expect(output.keys).to eq(%i[topic actor])
       else
         expect(output).to include(status: status, enabled: enabled, change: change)
       end
@@ -74,6 +74,19 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicStatusChanged::V1 do
       expect(closed_output).to match_node_output_schema(described_class)
       expect(reopened_output).to match_node_output_schema(described_class)
     end
+  end
+
+  it "exposes the user who changed the status" do
+    admin = Fabricate(:admin)
+    events =
+      DiscourseEvent.track_events(:topic_status_updated) do
+        topic.update_status("archived", true, admin)
+      end
+
+    output = described_class.new(*events.sole[:params]).output
+
+    expect(output[:actor]).to include(id: admin.id, username: admin.username)
+    expect(output).to match_node_output_schema(described_class)
   end
 
   describe "#matches?" do

@@ -25,6 +25,9 @@ vi:
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Phát hiện rác rưởi"
       navigation:
         settings:
           title: "Cài đặt trang web"

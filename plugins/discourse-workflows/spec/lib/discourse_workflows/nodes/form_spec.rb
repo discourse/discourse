@@ -47,4 +47,35 @@ RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
       end
     end
   end
+
+  describe ".output_schemas" do
+    let(:configuration) do
+      {
+        "form_fields" => {
+          "values" => [
+            { "field_label" => "Reason", "field_type" => "text" },
+            { "field_label" => "Approved", "field_type" => "checkbox" },
+            { "field_label" => "Intro", "field_type" => "html", "html" => "<p>Hi</p>" },
+          ],
+        },
+      }
+    end
+
+    it "derives the schema from the configured form fields like the form trigger" do
+      expect(described_class.output_schemas(configuration)).to eq(
+        DiscourseWorkflows::Nodes::FormTrigger::V1.output_schemas(configuration),
+      )
+    end
+
+    it "passes the input schema through for a completion page" do
+      input_schema = DiscourseWorkflows::Schema.document("source" => { "type" => "string" })
+
+      expect(
+        described_class.output_schemas(
+          configuration.merge("page_type" => "completion"),
+          input_schemas: [input_schema],
+        ),
+      ).to eq([input_schema])
+    end
+  end
 end

@@ -9,7 +9,6 @@ describe "Data Explorer | Add query to admin dashboard" do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.dashboard_improvements = true
     SiteSetting.data_explorer_enabled = true
     SiteSetting.data_explorer_ai_queries_enabled = false
     AdminDashboardSectionConfiguration.update(
@@ -60,14 +59,5 @@ describe "Data Explorer | Add query to admin dashboard" do
     query_runner.visit_admin_query(query.id)
 
     expect(query_runner).to have_disabled_dashboard_toggle
-  end
-
-  it "hides the button when the dashboard improvements are disabled" do
-    SiteSetting.dashboard_improvements = false
-
-    query_runner.visit_admin_query(query.id)
-
-    expect(page).to have_css(".query-run-split__primary")
-    expect(query_runner).to have_no_dashboard_toggle
   end
 end

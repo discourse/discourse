@@ -36,6 +36,44 @@ RSpec.describe DiscourseAi::Sentiment::SentimentController do
       end
     end
 
+    it "selects decision results for drilldown while preserving the sentiment threshold" do
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
+      Fabricate(
+        :sentiment_classification,
+        target: post,
+        model_used: "discourse-ai/sentiment-decision",
+        classification: {
+          negative: 0.8,
+          neutral: 0.1,
+          positive: 0.1,
+        },
+      )
+      Fabricate(
+        :sentiment_classification,
+        target: post_2,
+        model_used: "discourse-ai/sentiment-decision",
+        classification: {
+          negative: 0.1,
+          neutral: 0.3,
+          positive: 0.6,
+        },
+      )
+
+      get "/discourse-ai/sentiment/posts",
+          params: {
+            group_by: "category",
+            group_value: category.name,
+          }
+
+      expect(response).to be_successful
+      expect(
+        response.parsed_body["posts"].map { |result| result.slice("post_id", "sentiment") },
+      ).to contain_exactly(
+        { "post_id" => post.id, "sentiment" => "negative" },
+        { "post_id" => post_2.id, "sentiment" => "neutral" },
+      )
+    end
+
     context "when signed in as a moderator" do
       fab!(:moderator)
 

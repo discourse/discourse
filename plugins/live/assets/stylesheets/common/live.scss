@@ -811,6 +811,10 @@
     align-self: flex-start;
   }
 
+  &__delete-btn {
+    margin-top: 1.5rem;
+  }
+
   &__edit-form {
     padding: 1.5rem;
 
@@ -1030,7 +1034,8 @@
   font-size: var(--font-down-1);
 }
 
-.live-room-page__transcript-toggle {
+.live-room-page__transcript-toggle,
+.live-local-recording-toggle {
   &.--recording {
     .d-icon {
       color: var(--danger);

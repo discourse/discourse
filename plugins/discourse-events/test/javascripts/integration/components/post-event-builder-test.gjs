@@ -229,6 +229,26 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     );
   });
 
+  test("advanced screen offers a recording field once a livestream has ended", async function (assert) {
+    const event = eventWith({ livestream: true });
+    await renderAdvanced(event);
+
+    await fillIn(`[data-name="recordingUrl"] input`, "https://youtu.be/abc");
+
+    assert.strictEqual(event.recordingUrl, "https://youtu.be/abc");
+  });
+
+  test("advanced screen hides the recording field before a livestream ends", async function (assert) {
+    const event = eventWith({
+      livestream: true,
+      starts_at: "2099-07-01T10:00:00Z",
+      ends_at: "2099-07-01T11:00:00Z",
+    });
+    await renderAdvanced(event);
+
+    assert.dom(`[data-name="recordingUrl"]`).doesNotExist();
+  });
+
   test("offers livestream when the url field carries the livestream link", async function (assert) {
     this.siteSettings.chat_enabled = true;
 

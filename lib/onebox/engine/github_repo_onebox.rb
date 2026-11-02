@@ -45,6 +45,9 @@ module Onebox
       def data
         result = raw.clone
         result["link"] = link
+        result["layout_class"] = "github-onebox"
+        result["repository"] = URI(link).path.split("/")[1, 2].join("/")
+        result["i18n"] = { header: { repository: I18n.t("onebox.github.header.repository") } }
         description = result["description"]
         title = "GitHub - #{result["full_name"]}"
 

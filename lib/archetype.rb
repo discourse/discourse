@@ -31,6 +31,10 @@ class Archetype
     @archetypes.values
   end
 
+  def self.exists?(name)
+    @archetypes.present? && @archetypes.key?(name)
+  end
+
   def self.register(name, options = {})
     @archetypes ||= {}
     @archetypes[name] = Archetype.new(name, options)

@@ -22,6 +22,7 @@ sq:
     access_control:
       manage:
         access_permission_editor: "Redaktor"
+        access_permission_owner: "Pronar"
         access_permission_remove: "Hiq"
     number:
       format:
@@ -2470,6 +2471,7 @@ sq:
       default: Emoji të personalizuara
     filter_controls:
       reset: "Rivendosni"
+      sort_label: "Rendit sipas"
     shared_drafts:
       title: "Drafte të përbashkëta"
       notice: "Kjo temë është e dukshme vetëm për ata që mund të publikojnë drafte të përbashkëta."
@@ -3503,13 +3505,14 @@ sq:
           notify_moderators: "Ti sinjalizove këtë postim për moderim"
           notify_user: "Ju i dërguat një mesazh këtij përdoruesi"
       revisions:
+        visibility:
+          hidden:
+            title: "Fshehur"
         controls:
           first: "Revizioni i parë"
           previous: "Revizioni i shkuar"
           next: "Revizioni i ardhshëm"
           last: "Revizioni i fundit"
-          hide: "Fshihe revizionin"
-          show: "Trego revizionin"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
@@ -4053,6 +4056,9 @@ sq:
           impact_role_admins: "Administratorët"
           impact_role_moderators: "Moderatorë"
           impact_role_staff: "Stafi"
+        sort:
+          status: "Status"
+          name: "Emri"
       config:
         developer:
           title: "Developer"
@@ -4237,28 +4243,11 @@ sq:
         version: "Versioni"
         up_to_date: "Jeni të azhurnuar!"
         updates_available: "Ka përditësime."
-        no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
-        stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
-        installed_version: "Instaluar"
-        github: "Github"
         dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
-        last_checked: "Verifikimi i fundit"
         refresh_problems: "Rifresko"
-        no_problems: "Nuk u gjet asnjë gabim."
-        moderators: "Moderatorët:"
-        admins: "Administratorët:"
-        suspended: "Përjashtuar:"
-        private_messages_short: "Msgs"
-        private_messages_title: "Mesazhet"
-        mobile_title: "Mobile"
         backups: "Rezervat"
-        traffic_short: "Trafik"
-        traffic: "Kërkesat web të aplikimit"
-        show_traffic_report: "Trego raportin e detajuar të trafikut"
-        general_tab: "Karakteristika të përgjithshme"
-        security_tab: "Siguria"
         report_filter_any: "ndonjë"
         sections:
           engagement:
@@ -4294,8 +4283,6 @@ sq:
           series:
             anonymous: "Anonim"
           crawler_learn_more: "Mësoni më shumë"
-        period:
-          custom: "Grupet e krijuara"
         reports:
           today: "Sot"
           yesterday: "Dje"
@@ -4838,6 +4825,9 @@ sq:
           suspended: "Të pezulluar"
           staged: "Staged"
         approved: "Aprovuar?"
+        bots:
+          name: "Emri"
+          username: "Emri i përdoruesit"
         titles:
           active: "Përdoruesit aktivë"
           pending: "Përdorues në pritje"

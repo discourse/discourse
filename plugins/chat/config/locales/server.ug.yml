@@ -55,6 +55,7 @@ ug:
 
         قايتا سىناش ئۈچۈن %{channel_url} قانالنى زىيارەت قىلىڭ.
   chat:
+    design_wizard_homepage_name: "سۆھبەت"
     deleted_chat_username: ئۆچۈرۈلدى
     crawler:
       directory_title: "سۆھبەت قانىلى"

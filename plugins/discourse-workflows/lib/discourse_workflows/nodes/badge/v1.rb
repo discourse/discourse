@@ -21,6 +21,9 @@ module DiscourseWorkflows
             "badge_name" => {
               "type" => "string",
             },
+            "changed" => {
+              "type" => "boolean",
+            },
           },
         }.freeze
 
@@ -110,15 +113,26 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           raise Discourse::InvalidAccess if !actor.guardian.can_grant_badges?(user)
 
+          user_badges = UserBadge.where(user: user, badge: badge)
+
           case config["operation"]
           when "revoke"
-            user_badge = UserBadge.find_by(user: user, badge: badge)
+            user_badge = user_badges.first
             BadgeGranter.revoke(user_badge, revoked_by: actor) if user_badge
+            changed = user_badge.present?
           else
+            last_user_badge_id = user_badges.maximum(:id)
             BadgeGranter.grant(badge, user, granted_by: actor)
+            changed = user_badges.maximum(:id) != last_user_badge_id
           end
 
-          { user_id: user.id, username: user.username, badge_id: badge.id, badge_name: badge.name }
+          {
+            user_id: user.id,
+            username: user.username,
+            badge_id: badge.id,
+            badge_name: badge.name,
+            changed:,
+          }
         end
       end
     end

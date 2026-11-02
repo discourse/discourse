@@ -21,4 +21,17 @@ RSpec.describe DiscourseSolved::AnswerSchemaSerializer do
       { "@type" => "Person", "name" => post.user.username, "url" => post.user.full_url },
     )
   end
+
+  context "with a post longer than the excerpt limit" do
+    fab!(:long_post) { Fabricate(:post, raw: Array.new(120) { |i| "word#{i}" }.join(" ")) }
+
+    subject(:json) do
+      described_class.new(long_post, root: false).serializable_hash.deep_stringify_keys
+    end
+
+    it "uses the full text of the post" do
+      expect(long_post.raw.length).to be > SiteSetting.post_excerpt_maxlength
+      expect(json["text"]).to eq(long_post.raw)
+    end
+  end
 end

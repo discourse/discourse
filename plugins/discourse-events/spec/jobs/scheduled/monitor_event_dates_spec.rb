@@ -31,6 +31,24 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
   end
   let(:past_date_no_end_time) { past_event_no_end_time.event_dates.first }
 
+  describe "#execute" do
+    it "sends due reminders when the reminder counter is nil" do
+      past_date.update!(reminder_counter: nil)
+      freeze_time(past_date.starts_at - 59.minutes)
+
+      expect_enqueued_with(
+        job: :discourse_post_event_send_reminder,
+        args: {
+          event_id: past_event.id,
+          event_date_id: past_date.id,
+          reminder: "notification.1.hours",
+        },
+      ) { job.execute({}) }
+
+      expect(past_date.reload.reminder_counter).to eq(1)
+    end
+  end
+
   describe "#send_reminder" do
     it "lodge reminder jobs in correct times" do
       expect_not_enqueued_with(job: :discourse_post_event_send_reminder) { job.execute({}) }
@@ -128,6 +146,97 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
   end
 
   describe "#finish" do
+    it "rolls back advancement without emitting side effects and advances on the next run" do
+      past_event.update!(recurrence: "every_week")
+      original_date = past_date
+      freeze_time 8.days.after
+
+      allow_any_instance_of(DiscourseEvents::Events::Event).to receive(
+        :set_next_recurrent_event_date,
+      ).and_wrap_original do |original|
+        original.call
+        raise "Advancement failed"
+      end
+
+      messages = nil
+      events =
+        DiscourseEvent.track_events do
+          messages =
+            MessageBus.track_publish do
+              expect { job.finish(original_date) }.to raise_error("Advancement failed")
+            end
+        end
+
+      expect(events).to be_empty
+      expect(messages).to be_empty
+      expect(original_date.reload.finished_at).to be_nil
+      expect(past_event.event_dates.pluck(:id)).to contain_exactly(original_date.id)
+
+      allow_any_instance_of(DiscourseEvents::Events::Event).to receive(
+        :set_next_recurrent_event_date,
+      ).and_call_original
+      events =
+        DiscourseEvent.track_events(:discourse_post_event_event_ended) do
+          job.finish(original_date)
+          job.finish(original_date)
+        end
+
+      expect(events.size).to eq(1)
+      expect(original_date.reload.finished_at).to be_present
+      expect(past_event.event_dates.pending.pluck(:starts_at)).to contain_exactly(
+        be_within_one_second_of(original_date.starts_at + 7.days),
+      )
+    end
+
+    it "defers side effects until the enclosing transaction commits" do
+      past_event.update!(recurrence: "every_week")
+      original_date = past_date
+      freeze_time 8.days.after
+
+      messages = nil
+      events =
+        DiscourseEvent.track_events do
+          messages =
+            MessageBus.track_publish do
+              DiscourseEvents::Events::Event.transaction(requires_new: true) do
+                job.finish(original_date)
+                raise ActiveRecord::Rollback
+              end
+            end
+        end
+
+      expect(events).to be_empty
+      expect(messages).to be_empty
+      expect(original_date.reload.finished_at).to be_nil
+      expect(past_event.event_dates.pluck(:id)).to contain_exactly(original_date.id)
+    end
+
+    it "keeps advancement committed when a broadcast fails without repeating the ended event" do
+      past_event.update!(recurrence: "every_week")
+      original_date = past_date
+      freeze_time 8.days.after
+
+      allow(MessageBus).to receive(
+        :publish,
+      ).and_wrap_original do |original, channel, *args, **kwargs|
+        raise "Event broadcast failed" if channel == "/topic/#{past_event.post.topic_id}"
+
+        original.call(channel, *args, **kwargs)
+      end
+
+      events =
+        DiscourseEvent.track_events(:discourse_post_event_event_ended) do
+          expect { job.finish(original_date) }.to raise_error("Event broadcast failed")
+          job.finish(original_date)
+        end
+
+      expect(events.size).to eq(1)
+      expect(original_date.reload.finished_at).to be_present
+      expect(past_event.event_dates.pending.pluck(:starts_at)).to contain_exactly(
+        be_within_one_second_of(original_date.starts_at + 7.days),
+      )
+    end
+
     it "finishes past event" do
       job.execute({})
       expect(future_date.finished_at).to eq(nil)
@@ -256,6 +365,59 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
       expect(job.due_reminders(invalid_event.event_dates.first)).to be_blank
       expect(job.due_reminders(valid_event.event_dates.first).length).to eq(1)
+    end
+  end
+
+  describe "livestream chat transcript" do
+    before do
+      Jobs.run_later!
+      SiteSetting.discourse_events_enabled = true
+      past_event.update_columns(livestream: true)
+    end
+
+    it "publishes the transcript once a livestream ends" do
+      freeze_time 8.days.after
+
+      expect_enqueued_with(
+        job: :publish_livestream_chat_transcript,
+        args: {
+          event_date_id: past_date.id,
+        },
+      ) { job.execute({}) }
+    end
+
+    it "does not publish a transcript for events that aren't livestreams" do
+      past_event.update_columns(livestream: false)
+      freeze_time 8.days.after
+
+      expect_not_enqueued_with(job: :publish_livestream_chat_transcript) { job.execute({}) }
+    end
+  end
+
+  describe "#open_livestream_chat" do
+    let(:topic) { past_event.post.topic }
+    let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { job.execute({}) } }
+
+    before { past_event.update_columns(livestream: true, recurrence: "every_week") }
+
+    it "waits until the occurrence's chat window opens" do
+      freeze_time(past_date.starts_at - 31.minutes)
+
+      expect(messages).to be_empty
+    end
+
+    it "tells open pages to reload once the window opens" do
+      freeze_time(past_date.starts_at - 29.minutes)
+
+      expect(messages.map(&:data)).to contain_exactly({ reload_topic: true })
+      expect(MessageBus.track_publish("/topic/#{topic.id}") { job.execute({}) }).to be_empty
+    end
+
+    it "leaves one-off livestreams alone, whose chat docks throughout" do
+      past_event.update_columns(recurrence: nil)
+      freeze_time(past_date.starts_at - 29.minutes)
+
+      expect(messages).to be_empty
     end
   end
 end

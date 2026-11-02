@@ -2305,13 +2305,29 @@ ro:
               private:
                 label: "Privat"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "În fiecare zi"
+        ordinals:
+          last: "ultima"
+        weekdays:
+          sunday: "Duminică"
+          monday: "Luni"
+          tuesday: "Marți"
+          wednesday: "Miercuri"
+          thursday: "Joi"
+          friday: "Vineri"
+          saturday: "Sâmbătă"
     google_meet:
       meeting_code: "Cod:"
     github:
+      header:
+        success: "Succes"
       closed: "închis"
-      status_date:
-        approved: "aprobat"
-        closed: "închis"
+      pr_status:
+        open: "Deschide"
+        approved: "Aprobat"
+        closed: "Închis"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'

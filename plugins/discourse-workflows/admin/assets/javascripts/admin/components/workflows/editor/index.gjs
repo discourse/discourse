@@ -516,6 +516,7 @@ export default class WorkflowsEditor extends Component {
               options
             ),
           onRemove: () => this.removeNodes([clientId]),
+          onUpgrade: () => this.upgradeNode(clientId),
         },
       })
       .finally(() => {
@@ -781,6 +782,30 @@ export default class WorkflowsEditor extends Component {
       )
     );
     return this.handleSubmit(options);
+  }
+
+  @action
+  async upgradeNode(clientId) {
+    const nodes = this.formApi
+      .get("nodes")
+      .map((n) =>
+        n.clientId === clientId
+          ? { ...n, typeVersion: nodeTypeVersion(this.#nodeTypeFor(n)) }
+          : n
+      );
+    this.formApi.set("nodes", nodes);
+
+    try {
+      await this.handleSubmit({ throwOnError: true });
+    } catch {
+      return;
+    }
+
+    if (this.isDestroying) {
+      return;
+    }
+
+    this.editNode(clientId);
   }
 
   @action

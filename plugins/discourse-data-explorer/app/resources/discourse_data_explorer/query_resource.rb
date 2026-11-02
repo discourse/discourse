@@ -25,6 +25,8 @@ module DiscourseDataExplorer
     end
 
     has_one :user
+    has_one :cached_result
+
     has_many :groups
 
     sort :name

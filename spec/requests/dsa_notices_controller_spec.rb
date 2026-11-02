@@ -150,6 +150,85 @@ RSpec.describe DsaNoticesController do
       expect(response.parsed_body["reference"]).to start_with("DSA-")
     end
 
+    it "uses the signed in reporter's account email regardless of the submitted address" do
+      reporter = Fabricate(:user)
+      reporter.activate
+      sign_in(reporter)
+
+      post "/dsa/report-illegal-content.json", params: { notice:, token: "" }
+
+      expect(response.status).to eq(201)
+      saved_notice = Dsa::Notice.last
+      expect(response.parsed_body["reference"]).to eq(saved_notice.reference)
+      expect(saved_notice.email).to eq(reporter.email)
+    end
+
+    it "limits account submissions independently of email verification requests" do
+      reporter = Fabricate(:user)
+      reporter.activate
+      RateLimiter.enable
+
+      stub_const(Dsa::NoticeRateLimiter, :MAX_REQUESTS_PER_REPORTER_PER_DAY, 1) do
+        post "/dsa/report-illegal-content/verify-email.json", params: { email: reporter.email }
+        expect(response.status).to eq(202)
+
+        sign_in(reporter)
+
+        post "/dsa/report-illegal-content.json", params: { notice:, token: "" }
+        expect(response.status).to eq(201)
+
+        expect do
+          post "/dsa/report-illegal-content.json", params: { notice:, token: "" }
+        end.not_to change(Dsa::Notice, :count)
+
+        expect(response.status).to eq(429)
+      end
+    end
+
+    it "lets an anonymous mode reporter submit only with a verified contact email" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      reporter = Fabricate(:user, trust_level: TrustLevel[3])
+      sign_in(AnonymousShadowCreator.get(reporter))
+      SiteSetting.allow_anonymous_mode = false
+
+      expect do
+        post "/dsa/report-illegal-content.json", params: { notice:, token: "" }
+      end.not_to change(Dsa::Notice, :count)
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["error_type"]).to eq("verification_required")
+
+      post "/dsa/report-illegal-content.json", params: params
+
+      expect(response.status).to eq(201)
+      expect(Dsa::Notice.last.email).to eq(email)
+    end
+
+    it "requires verification when the signed in reporter's account email is unconfirmed" do
+      reporter = Fabricate(:user)
+      sign_in(reporter)
+      Fabricate(:email_token, user: reporter)
+
+      expect do post "/dsa/report-illegal-content.json", params: { notice: } end.not_to change(
+        Dsa::Notice,
+        :count,
+      )
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["error_type"]).to eq("verification_required")
+    end
+
+    it "requires email verification for an anonymous report without a token" do
+      expect do post "/dsa/report-illegal-content.json", params: { notice: } end.not_to change(
+        Dsa::Notice,
+        :count,
+      )
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["error_type"]).to eq("verification_required")
+    end
+
     it "returns not found when disabled" do
       SiteSetting.dsa_reporting_enabled = false
       post "/dsa/report-illegal-content.json", params: params

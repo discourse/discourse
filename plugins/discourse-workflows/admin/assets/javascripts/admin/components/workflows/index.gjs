@@ -336,7 +336,7 @@ export default class WorkflowsIndex extends Component {
         >
           <:head>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.workflow_name"
+                "discourse_workflows.name"
               }}</th>
             <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.creator"

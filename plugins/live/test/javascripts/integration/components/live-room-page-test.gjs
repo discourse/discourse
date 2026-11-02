@@ -60,6 +60,10 @@ class LiveWebrtcStub extends Service {
     return false;
   }
 
+  isRecordingLocally() {
+    return false;
+  }
+
   setWatching() {}
   join() {}
   leave() {}
@@ -168,6 +172,33 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
     assert
       .dom(".live-room-page__layout-trigger")
       .exists("exposes the layout switcher in the overflow menu");
+  });
+
+  test("a one-to-one call floats the self view over the other participant", async function (assert) {
+    this.room.active_participants = this.room.active_participants.slice(0, 2);
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert
+      .dom(
+        `.live-room-page__grid > .live-room-page__pip[data-user-id='${this.currentUser.id}']`
+      )
+      .exists("renders the current user as the floating self view");
+    assert
+      .dom(".live-room-page__tiles .live-video-tile")
+      .exists({ count: 1 }, "leaves only the other participant in the grid");
+    assert
+      .dom(".live-room-page__tiles .live-video-tile[data-user-id='2']")
+      .exists("the other participant gets the stage");
+  });
+
+  test("calls with more than two participants keep everyone in the grid", async function (assert) {
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert.dom(".live-room-page__pip").doesNotExist("no floating self view");
+    assert
+      .dom(".live-room-page__tiles .live-video-tile")
+      .exists({ count: 3 }, "every participant is tiled");
   });
 
   test("a stage room defaults to the presentation layout", async function (assert) {

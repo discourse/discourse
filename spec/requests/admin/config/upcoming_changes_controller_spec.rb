@@ -55,6 +55,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
             "impact_type" => "other",
             "status" => "experimental",
             "enabled_for" => "no_one",
+            "status_changed_at" => nil,
           },
         )
       end

@@ -165,7 +165,8 @@ if ARGV.include?("--compress")
     next if File.exist?("#{file}.br")
 
     start = Time.now
-    system("brotli", "-f", "--quality=11", "-o", "#{file}.br", file, exception: true)
+    system("brotli", "-f", "--quality=11", "-o", "#{file}.br.tmp", file, exception: true)
+    File.rename("#{file}.br.tmp", "#{file}.br")
     puts "Compressed #{file} in #{(Time.now - start).round(2)}s"
   end
 end

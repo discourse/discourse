@@ -1,8 +1,15 @@
-import { click, currentRouteName, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  visit,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import groupFixtures from "discourse/tests/fixtures/group-fixtures";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -154,6 +161,34 @@ acceptance("Managing Group Email Settings - SMTP Enabled", function (needs) {
       .field("email_from_alias")
       .fillIn("akasomegroup@example.com");
 
+    let release;
+    const held = new Promise((resolve) => (release = resolve));
+    pretender.post("/groups/47/test_email_settings", async () => {
+      await held;
+      return response({ success: "OK" });
+    });
+
+    const testing = formKit().submit();
+    await waitFor(".group-smtp-form__test-smtp-settings:disabled");
+
+    const aliasField = formKit().field("email_from_alias");
+    const typing = aliasField.fillIn("team@example.com");
+    await waitUntil(() => aliasField.value() === "team@example.com");
+
+    release();
+    await Promise.all([testing, typing]);
+
+    assert
+      .form()
+      .field("email_from_alias")
+      .hasValue(
+        "team@example.com",
+        "keeps text typed while the settings were being tested"
+      );
+    assert
+      .dom(".group-manage-save")
+      .isDisabled("cannot save settings edited while they were being tested");
+
     await formKit().submit();
     await click(".group-manage-save");
 
@@ -217,6 +252,15 @@ acceptance(
           },
         });
       });
+
+      server.get("/groups/support.json", () => {
+        const fixture = cloneJSON(groupFixtures["/groups/support.json"]);
+        Object.assign(fixture.group, {
+          smtp_enabled: true,
+          smtp_server: "smtp.office365.com",
+        });
+        return helper.response(fixture);
+      });
     });
 
     test("prefills smtp saved settings and shows last updated details", async function (assert) {
@@ -247,6 +291,13 @@ acceptance(
           GROUP_SMTP_SSL_MODES.starttls.toString(),
           "SMTP ssl mode is prefilled"
         );
+
+      await visit("/g/support/manage/email");
+
+      assert
+        .form()
+        .field("smtp_server")
+        .hasValue("smtp.office365.com", "shows the settings of the new group");
     });
   }
 );

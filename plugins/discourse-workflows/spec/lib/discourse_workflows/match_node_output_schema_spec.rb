@@ -102,6 +102,41 @@ RSpec.describe RSpec::Matchers, "#match_node_output_schema" do
     )
   end
 
+  describe "strict mode" do
+    let(:loose_node) do
+      Class.new do
+        def self.output_schemas(_configuration = {}, input_schemas: [])
+          [
+            {
+              "type" => "object",
+              "properties" => {
+                "name" => {
+                  "type" => "string",
+                },
+                "extra" => {
+                  "type" => "object",
+                  "x-optional" => true,
+                },
+              },
+            },
+          ]
+        end
+      end
+    end
+
+    it "requires declared properties even when the schema omits required" do
+      output = { extra: {} }
+
+      expect(output).not_to match_node_output_schema(loose_node)
+    end
+
+    it "allows x-optional properties to be absent" do
+      output = { name: "Ada" }
+
+      expect(output).to match_node_output_schema(loose_node)
+    end
+  end
+
   it "rejects non-Hash output" do
     output = [{ profile: { name: "Ada" } }]
 

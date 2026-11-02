@@ -10,9 +10,10 @@ export default class PostMenuFlagButton extends Component {
     const { post } = args;
     const { reviewable_id, canFlag, hidden } = post;
 
-    let show =
+    const show =
       reviewable_id ||
       (canFlag && !hidden) ||
+      helper.siteSettings.dsa_reporting_enabled ||
       (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
         !helper.currentUser);
 

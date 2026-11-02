@@ -801,6 +801,18 @@ RSpec.describe SearchController do
   end
 
   context "with search context" do
+    it "returns a 400 for a string search context on full-page search" do
+      get "/search.json", params: { q: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns a 400 for a string search context on search queries" do
+      get "/search/query.json", params: { term: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
     it "raises an error with an invalid context type" do
       get "/search/query.json",
           params: {

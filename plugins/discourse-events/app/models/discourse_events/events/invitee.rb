@@ -33,7 +33,7 @@ module DiscourseEvents
         @statuses ||= Enum.new(going: 0, interested: 1, not_going: 2)
       end
 
-      def self.create_attendance!(user_id, post_id, status, recurring: false)
+      def self.create_attendance!(user_id, post_id, status, recurring: false, acting_user: nil)
         status = status.to_sym
         event = Event.find(post_id)
 
@@ -42,14 +42,14 @@ module DiscourseEvents
         end
 
         invitee = create!(post_id:, user_id:, status: statuses[status], recurring:)
-        invitee.publish_attendance_change!
+        invitee.publish_attendance_change!(acting_user:)
         invitee
       rescue ActiveRecord::RecordNotUnique
         # multiple attendances may be created concurrently — return the winning row
         find_by(post_id:, user_id:)
       end
 
-      def update_attendance!(status, recurring: false)
+      def update_attendance!(status, recurring: false, acting_user: nil)
         status = status&.to_sym
 
         if status == :going && event.at_capacity? && !going?
@@ -57,7 +57,7 @@ module DiscourseEvents
         end
 
         update!(status: self.class.statuses[status], recurring:)
-        publish_attendance_change!
+        publish_attendance_change!(acting_user:)
         self
       end
 
@@ -65,14 +65,18 @@ module DiscourseEvents
         status == Invitee.statuses[:going]
       end
 
-      def publish_attendance_change!
+      def publish_attendance_change!(acting_user:)
         event.publish_update!
         update_topic_tracking!
-        DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
+        publish_status_changed!(acting_user:)
       end
 
-      def publish_attendance_removed!
-        DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
+      def publish_status_changed!(acting_user:)
+        DiscourseEvent.trigger(
+          :discourse_calendar_post_event_invitee_status_changed,
+          self,
+          acting_user:,
+        )
       end
 
       def self.extract_uniq_usernames(groups)

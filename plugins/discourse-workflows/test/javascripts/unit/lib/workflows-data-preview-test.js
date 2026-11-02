@@ -7,23 +7,10 @@ import {
   schemaFieldsForNodeOutput,
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/data-preview";
 
-function declaredType(name) {
-  return {
-    name,
-    versions: {
-      "1.0": {
-        output_contracts: [
-          {
-            schema: {
-              type: "object",
-              properties: { declared: { type: "string" } },
-            },
-          },
-        ],
-      },
-    },
-  };
-}
+const DECLARED_SCHEMA = {
+  type: "object",
+  properties: { declared: { type: "string" } },
+};
 
 function typedNode(clientId, name, type) {
   return { clientId, name, type, typeVersion: "1.0" };
@@ -31,23 +18,17 @@ function typedNode(clientId, name, type) {
 
 function sampleGraph() {
   const node = typedNode("sample", "Sample", "action:sample");
-  const graph = {
-    nodes: [node],
-    connections: [],
-    nodeTypes: [declaredType("action:sample")],
-  };
-  return { node, graph };
+  return { node, declaredOutputSchemas: { sample: [DECLARED_SCHEMA] } };
 }
 
 function sourceCurrentGraph() {
   const sourceNode = typedNode("source", "Source", "trigger:source");
   const currentNode = typedNode("current", "Current", "action:current");
-  const graph = {
-    nodes: [sourceNode, currentNode],
-    connections: [{ sourceClientId: "source", targetClientId: "current" }],
-    nodeTypes: [declaredType("trigger:source")],
+  return {
+    sourceNode,
+    currentNode,
+    declaredOutputSchemas: { source: [DECLARED_SCHEMA] },
   };
-  return { sourceNode, currentNode, graph };
 }
 
 function successRun(attrs) {
@@ -111,15 +92,17 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
   });
 
   test("output declarations fill in before a run and after full compaction", function (assert) {
-    const { node, graph } = sampleGraph();
+    const { node, declaredOutputSchemas } = sampleGraph();
 
     assert.deepEqual(
-      keys(schemaFieldsForNodeOutput({}, "Sample", { node, graph })),
+      keys(
+        schemaFieldsForNodeOutput({}, "Sample", { node, declaredOutputSchemas })
+      ),
       ["declared"],
       "uses declared fields before the first run"
     );
     assert.deepEqual(
-      outputPreviewForNode({}, "Sample", { node, graph }),
+      outputPreviewForNode({}, "Sample", { node, declaredOutputSchemas }),
       {
         summary: null,
         fields: [{ key: "declared", id: "$json.declared", type: "string" }],
@@ -129,7 +112,10 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
 
     const emptyRun = { Sample: [successRun({ outputs: [port(0, [])] })] };
     assert.deepEqual(
-      schemaFieldsForNodeOutput(emptyRun, "Sample", { node, graph }),
+      schemaFieldsForNodeOutput(emptyRun, "Sample", {
+        node,
+        declaredOutputSchemas,
+      }),
       [],
       "a successful empty output takes precedence over the declaration"
     );
@@ -142,11 +128,19 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
       ],
     };
     assert.deepEqual(
-      keys(schemaFieldsForNodeOutput(compacted, "Sample", { node, graph })),
+      keys(
+        schemaFieldsForNodeOutput(compacted, "Sample", {
+          node,
+          declaredOutputSchemas,
+        })
+      ),
       ["declared"],
       "recovers declarations when persistence removed every output sample"
     );
-    const preview = outputPreviewForNode(compacted, "Sample", { node, graph });
+    const preview = outputPreviewForNode(compacted, "Sample", {
+      node,
+      declaredOutputSchemas,
+    });
     assert.deepEqual(
       preview.summary,
       { itemCount: 24, truncated: true },
@@ -259,7 +253,8 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
   });
 
   test("a successful run with a stale recorded source yields no input preview", function (assert) {
-    const { sourceNode, currentNode, graph } = sourceCurrentGraph();
+    const { sourceNode, currentNode, declaredOutputSchemas } =
+      sourceCurrentGraph();
     const runData = {
       Source: [
         successRun({
@@ -285,7 +280,7 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
       schemaFieldsForNodeInput(runData, "Current", {
         node: currentNode,
         sourceNode,
-        graph,
+        declaredOutputSchemas,
         outputIndex: 0,
       }),
       [],
@@ -303,7 +298,8 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
   });
 
   test("schemaFieldsForNodeInput recovers declarations from a fully compacted port", function (assert) {
-    const { sourceNode, currentNode, graph } = sourceCurrentGraph();
+    const { sourceNode, currentNode, declaredOutputSchemas } =
+      sourceCurrentGraph();
     const runData = {
       Current: [
         successRun({
@@ -323,7 +319,7 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
         schemaFieldsForNodeInput(runData, "Current", {
           node: currentNode,
           sourceNode,
-          graph,
+          declaredOutputSchemas,
         })
       ),
       ["declared"],
@@ -340,7 +336,8 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
   });
 
   test("schemaFieldsForNodeInput prefers recorded and pinned items over declarations", function (assert) {
-    const { sourceNode, currentNode, graph } = sourceCurrentGraph();
+    const { sourceNode, currentNode, declaredOutputSchemas } =
+      sourceCurrentGraph();
     const pinnedItems = [
       { json: { pinned: true } },
       { json: { pinned: false } },
@@ -351,7 +348,7 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
         schemaFieldsForNodeInput({}, "Current", {
           node: currentNode,
           sourceNode,
-          graph,
+          declaredOutputSchemas,
           pinnedItems,
         })
       ),
@@ -384,7 +381,7 @@ module("Unit | lib | discourse-workflows | data-preview", function () {
         schemaFieldsForNodeInput(runData, "Current", {
           node: currentNode,
           sourceNode,
-          graph,
+          declaredOutputSchemas,
           pinnedItems,
         })
       ),

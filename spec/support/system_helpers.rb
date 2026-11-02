@@ -166,15 +166,17 @@ module SystemHelpers
 
   def select_all_content(selector)
     js = <<-JS
+      const done = arguments[arguments.length - 1];
       const el = document.querySelector(arguments[0]);
       const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(el);
+      document.addEventListener("selectionchange", () => done(), { once: true });
       selection.removeAllRanges();
       selection.addRange(range);
     JS
 
-    page.execute_script(js, selector)
+    page.evaluate_async_script(js, selector)
   end
 
   def select_text_range(selector, start = 0, offset = 5)

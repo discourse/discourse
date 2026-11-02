@@ -315,6 +315,48 @@ describe Middleware::CrawlerHooks do
       expect(Nokogiri::HTML5.parse(transformed_response.first).css("a").size).to eq(2)
     end
 
+    context "when the locale parameter is the default locale" do
+      def call_with_default_locale(env_overrides = {})
+        middleware.call(
+          env(
+            :path => "https://discourse.site/page",
+            :params => {
+              Discourse::LOCALE_PARAM => SiteSetting.default_locale,
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+            "X-Discourse-Crawler-View" => true,
+            **env_overrides,
+          ),
+        )
+      end
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_crawler_param = true
+      end
+
+      it "does not append it to links when the plain URL serves the default locale" do
+        status, _headers, response =
+          call_with_default_locale(ContentLocalization::PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV => true)
+
+        expect(status).to eq(200)
+        expect(response).to eq(html_response)
+      end
+
+      it "appends it to links when the plain URL may serve another locale" do
+        _status, _headers, response =
+          call_with_default_locale(
+            ContentLocalization::PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV => false,
+          )
+
+        expect(response.first).to include(%(href="/test?#{Discourse::LOCALE_PARAM}=en"))
+
+        _status, _headers, response = call_with_default_locale
+
+        expect(response.first).to include(%(href="/test?#{Discourse::LOCALE_PARAM}=en"))
+      end
+    end
+
     it "does not modify links in HTML responses when locale parameter is not present" do
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_crawler_param = true
@@ -374,6 +416,52 @@ describe Middleware::CrawlerHooks do
       expect(transformed).to include("href=\"#{base_url}/uploads/default/original/1X/abc.png\"")
       expect(transformed).to include("href=\"/secure-uploads/original/1X/def.pdf\"")
       expect(transformed).to include("href=\"/secure-media-uploads/original/1X/ghi.pdf\"")
+    end
+
+    it "appends the locale param to pagination link tags but not to canonical or alternate ones" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      html = [
+        "<html><head>" \
+          "<link rel=\"prev\" href=\"/t/topic-slug/123\">" \
+          "<link rel=\"next\" href=\"#{Discourse.base_url}/t/topic-slug/123?page=3\">" \
+          "<link rel=\"canonical\" href=\"/t/topic-slug/123?page=2\">" \
+          "<link rel=\"alternate\" href=\"/t/topic-slug/123?page=2\" hreflang=\"x-default\">" \
+          "</head><body></body></html>",
+      ]
+      def html.body
+        join("")
+      end
+
+      test_env =
+        Rack::MockRequest.env_for(
+          "https://discourse.site/t/topic-slug/123?page=2",
+          params: {
+            Discourse::LOCALE_PARAM => "fr",
+          },
+        )
+      request = Rack::Request.new(test_env)
+
+      middleware_instance =
+        Middleware::CrawlerHooks.new(
+          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+        )
+
+      transformed_response =
+        middleware_instance.send(:transform_response, request: request, response: html)
+
+      links =
+        Nokogiri::HTML5
+          .parse(transformed_response.first)
+          .css("link")
+          .map { |link| [link["rel"], link["href"]] }
+      expect(links).to contain_exactly(
+        ["prev", "/t/topic-slug/123?#{Discourse::LOCALE_PARAM}=fr"],
+        ["next", "#{Discourse.base_url}/t/topic-slug/123?page=3&#{Discourse::LOCALE_PARAM}=fr"],
+        %w[canonical /t/topic-slug/123?page=2],
+        %w[alternate /t/topic-slug/123?page=2],
+      )
     end
 
     it "modifies external links that start with the base URL" do

@@ -28,9 +28,13 @@ module DiscourseMcp
 
         topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
         if draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) ||
-             (topic_id && Topic.exists?(id: topic_id.to_i, archetype: Archetype.private_message))
+             (
+               topic_id &&
+                 Topic.with_deleted.exists?(id: topic_id.to_i, archetype: Archetype.private_message)
+             )
           request_context.ensure_scopes!(Scopes::PRIVATE_MESSAGES_READ)
         end
+        ToolHelpers.ensure_private_message_draft_scope!(draft_key, request_context, access: :read)
 
         parsed = JSON.parse(draft)
         parsed = {} if !parsed.is_a?(Hash)
@@ -76,6 +80,7 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")
+        ToolHelpers.ensure_private_message_draft_scope!(draft_key, request_context, access: :write)
 
         if !Draft.exists?(user_id: user.id, draft_key:) &&
              Draft.where(user_id: user.id).count >= SiteSetting.max_drafts_per_user
@@ -120,6 +125,7 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")
+        ToolHelpers.ensure_private_message_draft_scope!(draft_key, request_context, access: :write)
         Draft.clear(user, draft_key, arguments.fetch("sequence"))
         ToolHelpers.text_and_structured(draft_key:, deleted: true)
       rescue Draft::OutOfSequence

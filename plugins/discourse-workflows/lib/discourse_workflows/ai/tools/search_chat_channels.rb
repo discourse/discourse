@@ -42,7 +42,7 @@ module DiscourseWorkflows
           {
             status: "success",
             query: query,
-            matches: channels_matching(query).map { |channel| channel_data(channel) },
+            matches: channels_matching(query).map { |channel| serialize_channel(channel) },
           }
         end
 
@@ -67,7 +67,7 @@ module DiscourseWorkflows
           channels.order("LOWER(#{CHANNEL_NAME_SQL}) ASC").limit(MAX_RESULTS)
         end
 
-        def channel_data(channel)
+        def serialize_channel(channel)
           category = channel.chatable if channel.chatable.is_a?(::Category)
 
           {

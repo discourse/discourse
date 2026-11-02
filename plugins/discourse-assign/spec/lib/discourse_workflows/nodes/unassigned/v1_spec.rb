@@ -4,6 +4,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Unassigned::V1 do
   fab!(:post)
   fab!(:topic) { post.topic }
   fab!(:assigned_by_user, :admin)
+  fab!(:unassigned_by_user, :admin)
   fab!(:assignee, :moderator)
   fab!(:group)
 
@@ -83,15 +84,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Unassigned::V1 do
     end
 
     it "returns valid output for an assignment destroyed by unassign", :aggregate_failures do
-      assigner = Assigner.new(topic, assigned_by_user)
-      assigner.assign(assignee)
-      assignment = topic.reload.assignment
+      Assigner.new(topic, assigned_by_user).assign(assignee)
 
-      DiscourseEvent.track(:unassigned) { assigner.unassign }
+      event = DiscourseEvent.track(:unassigned) { Assigner.new(topic, unassigned_by_user).unassign }
 
-      output = described_class.new(assignment).output
+      output = described_class.from_event(:unassigned, *event[:params]).output
 
       expect(output[:assignment]).to include(target_type: "Topic", target_id: topic.id)
+      expect(output[:actor][:username]).to eq(unassigned_by_user.username)
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output).to match_node_output_schema(described_class)
     end

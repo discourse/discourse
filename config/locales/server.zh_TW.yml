@@ -2583,7 +2583,6 @@ zh_TW:
     create_post_for_category_and_tag_changes: "主題分類或標籤變更時建立私語貼文；需要啟用私語貼文。"
     automatically_clean_unused_tags: "每天自動刪除未被任何主題或私人訊息使用的標籤。"
     default_watched_precedence_over_muted: "如果使用者監看的分類或標籤中有主題同時屬於其已靜音項目，仍通知使用者"
-    company_name: "公司或組織名稱。若留空，將不提供標準的服務條款或隱私權聲明。"
     company_url: "公司或組織的網站 URL。選填。"
     governing_law: "指定管轄網站法律事項（包括服務條款與隱私權政策）的司法管轄區。通常是營運網站之公司註冊或經營業務所在的國家／地區或州。"
     city_for_disputes: "指定用來作為解決使用此論壇相關爭議之司法管轄區的城市。此資訊通常會包含在論壇服務條款等法律文件中。"
@@ -2600,9 +2599,6 @@ zh_TW:
     enable_user_status: "允許使用者設定自訂狀態訊息（表情符號＋說明）。"
     enable_user_tips: "啟用向使用者說明主要功能的新使用者提示"
     short_title: "短標題會用於使用者主畫面、啟動器或其他空間可能受限的位置，應限制為 12 個字元。請注意，變更此標題可能會向 PWA 使用者顯示提示，要求他們更新或解除安裝應用程式。"
-    dashboard_hidden_reports: "允許從控制面板隱藏指定報告。"
-    dashboard_visible_tabs: "選擇要顯示的控制面板分頁。"
-    dashboard_general_tab_activity_metrics: "選擇要在“常規”標簽頁上顯示為活動指標的報告。"
     site_traffic_explorer_event_limit: "控制網站流量探索器處理的最近頁面瀏覽量上限。較高的限制涵蓋更多流量，但在資源較少的資料庫伺服器上可能需要更久載入或發生逾時。"
     gravatar_enabled: "使用 <a href='https://gravatar.com/'>Gravatar</a> 服務提供使用者大頭貼。停用後，使用者將無法改用 Gravatar 大頭貼，但不會影響已經使用的使用者。"
     gravatar_name: "指定 Gravatar 服務提供者的名稱。此名稱通常用於識別向網站提供 Gravatar 大頭貼的來源。"
@@ -5217,6 +5213,28 @@ zh_TW:
     graph_title: "搜尋計數"
   onebox:
     discourse:
+      event_all_day: "全天"
+      recurrence:
+        every_day: "每天"
+        every_weekday: "每個工作日"
+        every_week: "每週 %{weekday}"
+        every_two_weeks: "每隔一週的 %{weekday}"
+        every_four_weeks: "每 4 週的 %{weekday}"
+        every_month: "每月的%{ordinal}%{weekday}"
+        ordinals:
+          first: "第一個"
+          second: "第二個"
+          third: "第三個"
+          fourth: "第四個"
+          last: "最後一個"
+        weekdays:
+          sunday: "週日"
+          monday: "星期一"
+          tuesday: "週二"
+          wednesday: "週三"
+          thursday: "週四"
+          friday: "週五"
+          saturday: "週六"
       user_joined_community: "%{date}加入"
     google_meet:
       title: "Google Meet 會議"
@@ -5227,6 +5245,10 @@ zh_TW:
       truncated_file: "此檔案已被截斷。"
       show_original: "顯示原始內容"
     github:
+      header:
+        file: "檔案"
+        success: "成功"
+        pending: "處理中"
       binary_file: "此文件是二進制文件。"
       truncated_file: "此檔案已被截斷。"
       show_original: "顯示原始內容"
@@ -5240,20 +5262,11 @@ zh_TW:
       review_by: "審查者"
       pr_summary: "%{commits} 提交了更改的 %{changed_files} 文件，其中包含 %{additions} 項增加和 %{deletions} 項刪除"
       no_description: "通過在 GitHub 上創建帳號來為 %{repo} 開發做出貢獻。"
-      pr_title:
-        default: "拉取請求"
-        draft: "草稿拉取請求"
-        open: "打開拉取請求"
-        approved: "已批準的拉取請求"
-        changes_requested: "已請求更改"
-        merged: "已合并的拉取請求"
-        closed: "已關閉的拉取請求"
-      status_date:
-        open: "已開啟"
+      pr_status:
         draft: "草稿"
+        open: "開放"
         approved: "已批準"
-        changes_requested: "已請求更改"
-        merged: "已合并"
+        merged: "已合併"
         closed: "已關閉"
   discourse_push_notifications:
     popup:

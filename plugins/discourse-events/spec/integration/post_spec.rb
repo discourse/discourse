@@ -213,6 +213,14 @@ describe Post do
             expect(post.event.url).to eq(url)
           end
 
+          it "works with recording attribute" do
+            Jobs.run_later!
+            recording = "https://www.youtube.com/watch?v=abc123&t=10"
+
+            post = create_post_with_event(user, "recording=\"#{recording}\"").reload
+            expect(post.event.recording_url).to eq(recording)
+          end
+
           it "works with status attribute" do
             post = create_post_with_event(user, 'status="private"').reload
             expect(post.event.status).to eq(DiscourseEvents::Events::Event.statuses[:private])
@@ -552,6 +560,16 @@ describe Post do
                 "discourse_post_event.errors.models.event.url.length",
                 maximum: DiscourseEvents::Events::Event::MAX_URL_LENGTH,
               ),
+            )
+          end
+        end
+
+        context "when recording is not a web address" do
+          it "raises an error" do
+            expect {
+              create_post_with_event(user, 'recording="javascript:alert(1)"')
+            }.to raise_error(
+              I18n.t("discourse_post_event.errors.models.event.invalid_recording_url"),
             )
           end
         end

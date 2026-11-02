@@ -4,6 +4,7 @@ RSpec.describe "Stage a private theme" do
   fab!(:admin)
 
   let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
+  let(:components_page) { PageObjects::Pages::AdminCustomizeComponentsConfigArea.new }
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:repository_url) { "git@github.com:discourse/private-theme.git" }
@@ -20,10 +21,33 @@ RSpec.describe "Stage a private theme" do
     install_modal.stage_private_theme
 
     expect(install_modal).to be_closed
-    expect(themes_page).to have_theme_named("private-theme")
-
-    themes_page.click_edit_by_name("private-theme")
     expect(theme_page).to have_incomplete_installation
+    expect(theme_page).to have_back_button_to_themes_page
+  end
+
+  it "lets an admin stage a private component before repository access is granted" do
+    components_page.visit
+    install_modal = components_page.click_install_button
+    install_modal.choose_remote_repository("git@github.com:discourse/private-component.git")
+
+    expect(install_modal).to have_private_theme_actions_enabled
+
+    install_modal.stage_private_theme
+
+    expect(install_modal).to be_closed
+    expect(theme_page).to have_incomplete_installation
+    expect(theme_page).to have_back_button_to_components_page
+  end
+
+  it "lets an admin choose the type of the placeholder" do
+    themes_page.visit
+    install_modal = themes_page.click_install_button
+    install_modal.choose_remote_repository("git@github.com:discourse/private-component.git")
+    install_modal.select_placeholder_type("components")
+    install_modal.stage_private_theme
+
+    expect(install_modal).to be_closed
+    expect(theme_page).to have_back_button_to_components_page
   end
 
   it "keeps installation unavailable when deploy key generation fails" do

@@ -135,34 +135,8 @@ acceptance("Run Query", function (needs) {
       helper.response(["default", "existing"])
     );
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
-      return helper.response({
-        queries: [
-          {
-            id: -6,
-            name: "Top 100 Likers",
-            description:
-              "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            username: "system",
-            group_ids: [],
-            tags: ["default"],
-            last_run_at: "2021-02-11T08:29:59.337Z",
-            user_id: -1,
-            is_default: true,
-          },
-          {
-            id: 2,
-            name: "What about 0?",
-            description: "",
-            username: "system",
-            group_ids: [],
-            tags: ["custom", "existing"],
-            last_run_at: "2023-05-04T22:16:23.858Z",
-            user_id: 1,
-            is_default: false,
-          },
-        ],
-      });
+    server.get("/api/data-explorer/queries", () => {
+      return helper.response({ data: [] });
     });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/-6", () => {

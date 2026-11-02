@@ -52,7 +52,8 @@ module DiscourseWorkflows
     end
 
     def description_key
-      description[:description_key] || "#{DEFAULT_I18N_PREFIX}.node_descriptions.#{identifier}"
+      deprecation&.dig(:description_key) || description[:description_key] ||
+        "#{DEFAULT_I18N_PREFIX}.node_descriptions.#{identifier}"
     end
 
     def group

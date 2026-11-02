@@ -14,7 +14,7 @@ RSpec.describe JsonApiKit::Linkage::ToOne do
   end
   let(:record) do
     JsonApiKit::Record.new(
-      JsonApiKit::Pagination::Row.new(record: topic, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic, segment: nil),
       resource.fields(guardian:),
       type: "topics",
     )

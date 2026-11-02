@@ -15,6 +15,7 @@ module DiscourseWorkflows
         OUTPUT_SCHEMA =
           Schema.merge(
             Schema::TOPIC_LIST_ITEM_SCHEMA,
+            Schema::ACTOR_SCHEMA,
             Schema.document(
               "status" => {
                 "type" => "string",
@@ -60,11 +61,12 @@ module DiscourseWorkflows
           )
         end
 
-        def initialize(topic, status, enabled)
+        def initialize(topic, status, enabled, payload = {})
           super(parameters: {})
           @topic = topic
           @status = status.to_s == "autoclosed" ? "closed" : status.to_s
           @enabled = enabled
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -74,7 +76,13 @@ module DiscourseWorkflows
         end
 
         def output
-          { topic: topic_data(@topic), status: @status, enabled: @enabled, change: change }
+          {
+            topic: serialize_topic_list_item(@topic),
+            actor: serialize_user(@actor),
+            status: @status,
+            enabled: @enabled,
+            change: change,
+          }
         end
 
         def matches?(trigger_ctx)

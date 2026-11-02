@@ -361,6 +361,26 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
+  it "expands a lone thread opener into its replies" do
+    thread = Fabricate(:chat_thread, channel:, original_message_user: user1)
+    reply = Fabricate(:chat_message, chat_channel: channel, user: user2, thread:, message: "done")
+    thread.update!(replies_count: 1)
+
+    expect(service(thread.original_message_id).generate_markdown).to include(reply.message)
+  end
+
+  it "renders only the given thread opener when thread expansion is off" do
+    thread = Fabricate(:chat_thread, channel:, original_message_user: user1)
+    reply = Fabricate(:chat_message, chat_channel: channel, user: user2, thread:, message: "done")
+    thread.update!(replies_count: 1)
+
+    rendered =
+      service(thread.original_message_id, opts: { no_thread_expansion: true }).generate_markdown
+
+    expect(rendered).to include("quote=\"#{user1.username};#{thread.original_message_id};")
+    expect(rendered).not_to include(reply.message)
+  end
+
   it "generates a chat transcript for threaded messages" do
     thread =
       Fabricate(

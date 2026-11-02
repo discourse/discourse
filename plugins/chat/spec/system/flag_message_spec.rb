@@ -5,6 +5,8 @@ RSpec.describe "Flag message" do
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:reporting_modal) { PageObjects::Modals::Flag.new }
+  let(:notice_modal) { PageObjects::Modals::DsaNotice.new }
 
   before do
     chat_system_bootstrap
@@ -17,16 +19,28 @@ RSpec.describe "Flag message" do
 
     before { category_channel_1.add(current_user) }
 
-    it "allows to flag a message" do
+    it "lets a user flag a message and then report illegal content" do
+      SiteSetting.dsa_reporting_enabled = true
+      SiteSetting.allow_all_users_to_flag_illegal_content = false
+      current_user.activate
       chat.visit_channel(category_channel_1)
       channel.messages.flag(message_1)
 
-      expect(page).to have_css(".flag-modal")
+      expect(reporting_modal).to be_open
+      reporting_modal.choose_type(:spam)
+      reporting_modal.confirm_flag
+      expect(channel.messages.find(id: message_1.id)).to have_flag
 
-      choose("radio_spam")
-      click_button(I18n.t("js.chat.flagging.action"))
+      channel.messages.flag(message_1)
+      expect(reporting_modal).to be_open
+      reporting_modal.report_illegal_content
+      expect(notice_modal).to be_open
+      expect(notice_modal).to have_no_email_input
 
-      expect(channel.message_by_id(message_1.id)).to have_css(".chat-message-info__flag")
+      notice_modal.go_back
+      expect(reporting_modal).to have_no_selected_illegal_report
+      expect(reporting_modal).to have_no_message_input
+      expect(reporting_modal).to have_no_confirmation
     end
   end
 

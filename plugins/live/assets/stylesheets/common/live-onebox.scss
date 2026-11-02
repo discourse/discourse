@@ -1,0 +1,80 @@
+aside.onebox.live-room-onebox {
+  // Specific enough to beat the generic onebox heading margins, including
+  // the extra top margin chat adds to onebox headings on narrow screens.
+  .onebox-body h3.live-room-onebox__title {
+    margin-block: 0 var(--space-1);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  .live-room-onebox__type {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  .live-room-onebox__description {
+    margin-top: var(--space-2);
+  }
+
+  .live-room-onebox__presence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  .live-room-onebox__presence-dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background-color: var(--success);
+  }
+
+  .live-room-onebox__presence-avatars {
+    display: flex;
+    gap: var(--space-1);
+
+    .avatar {
+      display: block;
+    }
+  }
+}
+
+// Font Awesome microphone-lines and podcast, the icons the room cards and
+// room hashtags use.
+a.inline-onebox.live-inline-onebox-room,
+a.inline-onebox.live-inline-onebox-stage {
+  &::before {
+    content: "";
+    display: inline-block;
+    width: var(--live-inline-onebox-icon-width, 0.875em);
+    height: 1em;
+    margin-right: 0.25em;
+    vertical-align: -0.125em;
+    background-color: currentcolor;
+    mask-image: var(--live-inline-onebox-icon);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+  }
+}
+
+a.inline-onebox.live-inline-onebox-room {
+  --live-inline-onebox-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M96 96c0-53 43-96 96-96 50.3 0 91.6 38.7 95.7 88L232 88c-13.3 0-24 10.7-24 24s10.7 24 24 24l56 0 0 48-56 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l55.7 0c-4.1 49.3-45.3 88-95.7 88-53 0-96-43-96-96L96 96zM24 160c13.3 0 24 10.7 24 24l0 40c0 79.5 64.5 144 144 144s144-64.5 144-144l0-40c0-13.3 10.7-24 24-24s24 10.7 24 24l0 40c0 97.9-73.3 178.7-168 190.5l0 49.5 48 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-144 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0 0-49.5C73.3 402.7 0 321.9 0 224l0-40c0-13.3 10.7-24 24-24z'/%3E%3C/svg%3E");
+}
+
+a.inline-onebox.live-inline-onebox-stage {
+  --live-inline-onebox-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M336 359.8c39.1-32.3 64-81.1 64-135.8 0-97.2-78.8-176-176-176S48 126.8 48 224C48 278.7 72.9 327.5 112 359.8 112.4 377.4 115.2 400.2 118.4 421.6 48 383.9 0 309.5 0 224 0 100.3 100.3 0 224 0S448 100.3 448 224c0 85.6-48 159.9-118.5 197.6 3.3-21.4 6-44.2 6.4-61.8zm-14-53.4c-8.3-12.6-19.2-21.6-30.4-27.8-2.1-1.1-4.2-2.2-6.3-3.2 11.7-13.9 18.8-31.9 18.8-51.5 0-44.2-35.8-80-80-80s-80 35.8-80 80c0 19.6 7.1 37.6 18.8 51.5-2.1 1-4.2 2-6.3 3.2-11.2 6.2-22.1 15.2-30.4 27.8-18.8-22.3-30.1-51-30.1-82.4 0-70.7 57.3-128 128-128s128 57.3 128 128c0 31.4-11.3 60.2-30.1 82.4zM224 312c32.9 0 64 8.6 64 43.8 0 33-12.9 104.1-20.6 132.9-5.1 19-24.5 23.4-43.4 23.4s-38.2-4.4-43.4-23.4c-7.8-28.5-20.6-99.7-20.6-132.8 0-35.1 31.1-43.8 64-43.8zm0-128a40 40 0 1 1 0 80 40 40 0 1 1 0-80z'/%3E%3C/svg%3E");
+  --live-inline-onebox-icon-width: 1em;
+}

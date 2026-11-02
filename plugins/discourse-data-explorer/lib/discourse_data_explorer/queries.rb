@@ -1692,6 +1692,7 @@ module DiscourseDataExplorer
         FROM ask_ai_logs
         WHERE asked_at >= :start_date::date
           AND asked_at < :end_date::date + INTERVAL '1 day'
+          AND ask_outcome IS DISTINCT FROM 4 -- skipped: the reader never requested an answer
         GROUP BY asked_at::date
       )
       SELECT days.date::date AS date, COALESCE(daily_asks.asks, 0) AS asks
@@ -1718,6 +1719,7 @@ module DiscourseDataExplorer
       FROM ask_ai_logs
       WHERE asked_at >= :start_date::date
         AND asked_at < :end_date::date + INTERVAL '1 day'
+        AND ask_outcome IS DISTINCT FROM 4 -- skipped: the reader never requested an answer
       GROUP BY ask_outcome
       ORDER BY ask_outcome NULLS LAST
       SQL
@@ -1769,6 +1771,7 @@ module DiscourseDataExplorer
       FROM ask_ai_logs
       WHERE asked_at >= :start_date::date
         AND asked_at < :end_date::date + INTERVAL '1 day'
+        AND ask_outcome IS DISTINCT FROM 4 -- skipped: the reader never requested an answer
       ORDER BY ask_ai_logs.asked_at DESC, id DESC
       SQL
 

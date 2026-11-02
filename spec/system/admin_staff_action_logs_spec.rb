@@ -115,7 +115,46 @@ describe "Admin staff action logs" do
     )
   end
 
-  it "can filter by type of action" do
+  it "keeps HTML submitted through self-deletion as context text" do
+    attacker = Fabricate(:user, refresh_auto_groups: true)
+    payload = %(<img src="https://attacker.invalid/staff-action-log-context">)
+
+    sign_in(attacker)
+    visit "/u/#{attacker.username}/preferences/account"
+
+    status = page.evaluate_async_script(<<~JS, "/u/#{attacker.username}.json", payload)
+        const [url, context, done] = arguments;
+        fetch("/session/csrf.json")
+          .then((response) => response.json())
+          .then(({ csrf }) =>
+            fetch(url, {
+              body: JSON.stringify({ context }),
+              credentials: "same-origin",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrf,
+              },
+              method: "DELETE",
+            })
+          )
+          .then((response) => done(response.status));
+      JS
+
+    expect(status).to eq(200)
+
+    history = UserHistory.where(action: UserHistory.actions[:delete_user]).last
+
+    sign_in(current_user)
+    visit "/admin/logs/staff_action_logs"
+
+    expect(staff_action_logs_page.log_row(history)).to have_no_css(".context img")
+    expect(staff_action_logs_page.log_row(history)).to have_css(".context", text: payload)
+  end
+
+  it "can filter by type of action and staff user" do
+    history_1.update!(acting_user: current_user)
+    other_history = Fabricate(:site_setting_change_history)
+
     visit "/admin/logs/staff_action_logs"
 
     expect(staff_action_logs_page).to have_log_row(history_1)
@@ -132,6 +171,25 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page).to have_log_row(history_1)
     expect(staff_action_logs_page).to have_no_log_row(history_2)
     expect(staff_action_logs_page).to have_no_log_row(history_3)
+
+    expect(staff_action_logs_page).to have_log_row(other_history)
+
+    staff_action_logs_page.filter_by_staff_user(current_user)
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+
+    page.refresh
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+
+    staff_action_logs_page.clear_staff_user_filter(current_user)
+
+    expect(staff_action_logs_page).to have_log_row(other_history)
+    expect(staff_action_logs_page).to have_no_log_row(history_2)
 
     staff_action_logs_page.clear_filter
 

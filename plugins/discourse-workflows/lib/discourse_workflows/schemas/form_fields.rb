@@ -5,6 +5,7 @@ module DiscourseWorkflows
     module FormFields
       MAX_FIELD_VALUE_LENGTH = 10_000
       EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
+      DISPLAY_ONLY_FIELD_TYPE = "html"
 
       ValidationResult =
         Struct.new(:errors, :data, keyword_init: true) do
@@ -153,7 +154,7 @@ module DiscourseWorkflows
             next field if field["field_value"].present?
 
             field.merge("field_value" => normalized_query_parameters[key])
-          when "password", "html"
+          when "password", DISPLAY_ONLY_FIELD_TYPE
             field
           else
             field.merge("default_value" => normalized_query_parameters[key])
@@ -181,7 +182,7 @@ module DiscourseWorkflows
         data = {}
 
         with_keys(fields).each do |field|
-          next if field["field_type"] == "html"
+          next if field["field_type"] == DISPLAY_ONLY_FIELD_TYPE
 
           key = field["key"]
 
@@ -216,7 +217,7 @@ module DiscourseWorkflows
         return false unless field["required"]
         return false if field["field_type"] == "checkbox"
         return false if field["field_type"] == "hiddenField"
-        return false if field["field_type"] == "html"
+        return false if field["field_type"] == DISPLAY_ONLY_FIELD_TYPE
 
         value.blank?
       end

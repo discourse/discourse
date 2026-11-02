@@ -48,8 +48,6 @@ RSpec.describe SitemapController do
   end
 
   describe "#page" do
-    before { Discourse.cache.delete("sitemap/1/#{SiteSetting.sitemap_page_size}") }
-
     it "returns a 404 if the sitemap doesn't exist" do
       get "/sitemap_999.xml"
 
@@ -68,6 +66,23 @@ RSpec.describe SitemapController do
       expect(response.status).to eq(200)
       expect(loc).to eq("#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}")
       expect(last_mod).to eq(topic.bumped_at.xmlschema)
+    end
+
+    it "refreshes a cached page once its newest topic changes" do
+      topic = Fabricate(:topic)
+      topic.update_columns(updated_at: 1.hour.ago)
+      Sitemap.regenerate_sitemaps
+      get "/sitemap_1.xml"
+
+      new_topic = Fabricate(:topic)
+      Sitemap.regenerate_sitemaps
+      get "/sitemap_1.xml"
+
+      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
+      expect(locs).to contain_exactly(
+        "#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}",
+        "#{Discourse.base_url}/t/#{new_topic.slug}/#{new_topic.id}",
+      )
     end
   end
 

@@ -25,6 +25,12 @@ module DiscourseEvents
       SQL
       end
 
+      # Mirrors the opening of Event#currently_within_event_timeframe?.
+      def opens_at
+        return starts_at.beginning_of_day if event.all_day
+        starts_at - Event::EARLY_ACCESS_MINUTES.minutes
+      end
+
       after_commit :upsert_topic_custom_field, on: %i[create update]
       def upsert_topic_custom_field
         if event.post && event.post.is_first_post?

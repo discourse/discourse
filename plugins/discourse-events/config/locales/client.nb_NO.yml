@@ -52,13 +52,14 @@ nb_NO:
         status: "Status"
       models:
         event:
-          expired: "Utløpt"
           closed: "Lukket"
           status:
             public:
               title: "Offentlig"
             private:
               title: "Privat"
+      recording_modal:
+        save: "Lagre"
       composer:
         url_placeholder: "Legg til URL"
         reminder:

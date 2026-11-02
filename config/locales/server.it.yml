@@ -2354,7 +2354,7 @@ it:
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
     create_post_for_category_and_tag_changes: "Crea un sussurro quando la categoria o i tag di un argomento cambiano. Richiede che i sussurri siano abilitati."
     automatically_clean_unused_tags: "Elimina automaticamente quotidianamente le etichette che non vengono utilizzate su argomenti o messaggi personali."
-    company_name: "Nome della tua azienda o organizzazione. Se lasciato vuoto, non verranno forniti Termini di servizio o Informativa sulla privacy."
+    company_name: "Nome della tua azienda o organizzazione."
     governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
     city_for_disputes: "Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum."
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
@@ -2369,9 +2369,6 @@ it:
     sitemap_page_size: "Numero di URL da includere in ciascuna pagina della mappa del sito. Massimo 50.000"
     enable_user_status: "Consenti agli utenti di impostare un messaggio di stato personalizzato (emoji + descrizione)."
     enable_user_tips: "Abilita i nuovi suggerimenti per utenti che descrivono le funzionalità chiave per gli utenti"
-    dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
-    dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
-    dashboard_general_tab_activity_metrics: "Scegli i report da visualizzare come metriche di attività nella scheda generale."
     gravatar_name: "Specifica il nome del fornitore di servizi Gravatar. Questo nome serve generalmente a identificare la sorgente che fornisce al sito gli avatar Gravatar."
     gravatar_base_url: "Definisci l'URL di accesso all'API del provider di Gravatar. Questa impostazione è necessaria per convertire gli indirizzi email negli URL di Gravatar presso cui verranno archiviate le immagini degli avatar."
     share_quote_buttons: "Determina quali elementi appaiono nel widget di condivisione citazioni e in quale ordine."
@@ -4448,6 +4445,19 @@ it:
     graph_title: "Conteggio Ricerche"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Ogni giorno"
+        every_weekday: "Ogni giorno feriale"
+        ordinals:
+          last: "ultimo"
+        weekdays:
+          sunday: "domenica"
+          monday: "lunedi"
+          tuesday: "martedì"
+          wednesday: "mercoledì"
+          thursday: "giovedi"
+          friday: "venerdì"
+          saturday: "sabato"
       user_joined_community: "Iscrizione: %{date}"
     google_meet:
       meeting_code: "Codice:"
@@ -4455,6 +4465,8 @@ it:
       truncated_file: "Questo file è stato troncato."
       show_original: "mostra originale"
     github:
+      header:
+        success: "Operazione riuscita"
       binary_file: "Questo file è binario."
       truncated_file: "Questo file è stato troncato."
       show_original: "mostra originale"
@@ -4468,10 +4480,11 @@ it:
       review_by: "Revisione di"
       pr_summary: "%{commits} commit, %{changed_files} file modificati con %{additions} aggiunte e %{deletions} eliminazioni"
       no_description: "Contribuisci allo sviluppo di %{repo} creando un account su GitHub."
-      status_date:
-        open: "aperto"
-        approved: "approvato"
-        closed: "chiuso"
+      pr_status:
+        draft: "Bozza"
+        open: "Aperta"
+        approved: "Approvato"
+        closed: "Chiuso"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'

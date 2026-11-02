@@ -50,7 +50,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
         </template>
@@ -84,7 +83,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
         </template>
@@ -99,51 +97,35 @@ module(
         .hasText(/Add sample data/);
     });
 
-    test("renders a configuration-aware declaration before the first run", async function (assert) {
+    test("renders server-resolved output schemas before the first run", async function (assert) {
       const node = {
         clientId: "n1",
         name: "Group",
         type: "action:group",
         typeVersion: "1.0",
-        configuration: { operation: "add" },
+        configuration: { operation: "check_membership" },
       };
-      const nodeTypes = [
-        {
-          name: "action:group",
-          versions: {
-            "1.0": {
-              output_contracts: [
-                {
-                  mode: "merge",
-                  schema: {
-                    type: "object",
-                    properties: {
-                      group_membership: {
-                        type: "object",
-                        description: "Group membership result",
-                        properties: { in_group: { type: "boolean" } },
-                      },
-                    },
-                  },
-                  display_options: {
-                    show: { operation: ["check_membership"] },
-                  },
-                },
-              ],
+      this.session.outputSchemas = {
+        n1: [
+          {
+            type: "object",
+            properties: {
+              group_membership: {
+                type: "object",
+                description: "Group membership result",
+                properties: { in_group: { type: "boolean" } },
+              },
             },
           },
-        },
-      ];
-      const configuration = { operation: "check_membership" };
+        ],
+      };
 
       await render(
         <template>
           <OutputContext
-            @configuration={{configuration}}
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{nodeTypes}}
             @session={{this.session}}
           />
         </template>
@@ -203,7 +185,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{(Array)}}
             @session={{session}}
           />
         </template>
@@ -236,7 +217,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
         </template>
@@ -274,7 +254,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
         </template>
@@ -313,7 +292,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
         </template>
@@ -357,7 +335,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
         </template>
@@ -411,7 +388,6 @@ module(
             @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
         </template>

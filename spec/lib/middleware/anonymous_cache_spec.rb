@@ -144,6 +144,40 @@ RSpec.describe Middleware::AnonymousCache do
 
         expect(new_helper(env).cache_key).to include("l=#{Discourse.anonymous_locale(request)}")
       end
+
+      it "keys locale param URLs on the locale the plain URL serves when crawler URLs are localized" do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_accept_language_header = true
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "ja"
+        path = "http://test.com/path?#{Discourse::LOCALE_PARAM}=en"
+
+        key_for = ->(opts = {}) { new_helper(path:, **opts).cache_key }
+
+        expect(key_for.call).to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "ja"))
+
+        SiteSetting.content_localization_crawler_param = true
+
+        expect(key_for.call).not_to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "ja"))
+        expect(key_for.call).to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "en"))
+        expect(new_helper.cache_key).to eq(new_helper("HTTP_ACCEPT_LANGUAGE" => "en").cache_key)
+      end
+
+      it "keys blank locale param URLs on the locale the plain URL serves when crawler URLs are localized" do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_accept_language_header = true
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_crawler_param = true
+        SiteSetting.content_localization_supported_locales = "ja"
+        path = "http://test.com/path?#{Discourse::LOCALE_PARAM}="
+
+        key_for = ->(opts = {}) { new_helper(path:, **opts).cache_key }
+
+        expect(key_for.call).not_to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "ja"))
+        expect(key_for.call).to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "en"))
+      end
     end
 
     it "handles old browsers" do

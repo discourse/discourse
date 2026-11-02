@@ -35,7 +35,7 @@
     {
       "id": "get-topic",
       "type": "action:topic",
-      "typeVersion": "1.0",
+      "typeVersion": "2.0",
       "name": "Get topic",
       "parameters": {
         "operation": "get",

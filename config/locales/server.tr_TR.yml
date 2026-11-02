@@ -2448,7 +2448,7 @@ tr_TR:
     create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde bir fısıltı gönderisi oluşturun, fısıltı gönderilerinin etkinleştirilmesini gerektirir."
     automatically_clean_unused_tags: "Herhangi bir konuda veya kişisel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak silin."
     default_watched_precedence_over_muted: "Kullanıcılara, izledikleri kategoriler veya etiketlerdeki, sessize aldıkları kategorilere de ait olan konular hakkında bildirimde bulunun."
-    company_name: "Şirketinizin veya kuruluşunuzun adı. Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz."
+    company_name: "Şirketinizin veya kuruluşunuzun adı."
     governing_law: "Hizmet Koşulları ve Gizlilik Politikası da dâhil olmak üzere sitenin hukuki yönlerini düzenleyen yargı bölgesini belirtin. Bu genellikle siteyi işleten şirketin kayıtlı olduğu veya faaliyet gösterdiği ülke veya eyalettir."
     city_for_disputes: "Bu forumun kullanımıyla ilgili herhangi bir anlaşmazlığın çözümünde yargı yetkisi olarak kullanılacak şehri belirtin. Bu bilgi genellikle forumun Hizmet Koşulları gibi yasal belgelerde yer alır."
     shared_drafts_category: "Konu taslakları için bir kategori belirleyerek Paylaşılan Taslaklar özelliğini etkinleştirin. Bu kategorideki konular, personel kullanıcılar için konu listelerinden bastırılır."
@@ -2464,9 +2464,6 @@ tr_TR:
     enable_user_status: "Kullanıcıların özel durum mesajı (emoji + açıklama) ayarlamalarına izin verin."
     enable_user_tips: "Kullanıcılara temel özellikleri açıklayan yeni kullanıcı ipuçlarını etkinleştirin"
     short_title: "Kısa başlık, kullanıcının ana ekranında, başlatıcıda veya alanın sınırlı olabileceği diğer yerlerde kullanılacaktır. 12 karakterle sınırlı olmalıdır. Bu başlığı değiştirmek, PWA kullanıcılarına uygulamayı güncellemeleri veya kaldırmaları için bir uyarı gönderebilir."
-    dashboard_hidden_reports: "Belirtilen raporların panodan gizlenmesine izin verin."
-    dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
-    dashboard_general_tab_activity_metrics: "Genel sekmesinde aktivite metrikleri olarak görüntülenecek raporları seçin."
     gravatar_enabled: "Kullanıcı avatarları için <a href='https://gravatar.com/'>Gravatar</a> hizmetini kullanın. Bu özelliği devre dışı bırakmak, kullanıcıların avatarları için Gravatar'a geçmelerini engeller, ancak halihazırda bu hizmeti kullanan kullanıcıları etkilemez."
     gravatar_name: "Gravatar hizmet sağlayıcısının adını belirtin. Bu ad genellikle siteye Gravatar avatarları sağlayan kaynağı tanımlamak için kullanılır."
     gravatar_base_url: "Gravatar sağlayıcısının API'sine erişmek için URL'yi belirtin. Bu ayar, e-posta adreslerini avatar görüntülerinin depolandığı Gravatar URL'lerine dönüştürmek için kritik öneme sahiptir."
@@ -4924,6 +4921,19 @@ tr_TR:
     graph_title: "Arama Sayısı"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Her gün"
+        every_weekday: "Hafta içi her gün"
+        ordinals:
+          last: "son"
+        weekdays:
+          sunday: "Pazar"
+          monday: "Pazartesi"
+          tuesday: "Salı"
+          wednesday: "Çarşamba"
+          thursday: "Perşembe"
+          friday: "Cuma"
+          saturday: "Cumartesi"
       user_joined_community: "%{date} tarihinde katıldı"
     google_meet:
       meeting_code: "Kod:"
@@ -4931,6 +4941,9 @@ tr_TR:
       truncated_file: "Bu dosya kesildi."
       show_original: "orjinali göster"
     github:
+      header:
+        file: "Dosya"
+        success: "Başarılı"
       binary_file: "Bu dosya ikilidir."
       truncated_file: "Bu dosya kesildi."
       show_original: "orjinali göster"
@@ -4944,21 +4957,12 @@ tr_TR:
       review_by: "İnceleyen:"
       pr_summary: "%{commits} işlem %{changed_files} dosyalarını %{additions} eklemeler ve %{deletions} silmelerle değiştirdi"
       no_description: "GitHub'da bir hesap oluşturarak %{repo} geliştirmesine katkıda bulunun."
-      pr_title:
-        default: "Çekme İsteği"
-        draft: "Taslak Çekme İsteği"
-        open: "Çekme isteği aç"
-        approved: "Onaylanmış Çekme İsteği"
-        changes_requested: "Değişiklik talep edildi"
-        merged: "Birleştirilmiş Çekme İsteği"
-        closed: "Kapalı Çekme İsteği"
-      status_date:
-        open: "açıldı"
-        draft: "taslağı hazırlanmış"
-        approved: "onaylanmış mı"
-        changes_requested: "değişiklikler talep edildi"
-        merged: "birleştirildi"
-        closed: "kapatıldı"
+      pr_status:
+        draft: "Taslak"
+        open: "Aç"
+        approved: "Onaylandı"
+        merged: "Birleştirildi"
+        closed: "Kapalı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'

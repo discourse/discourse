@@ -68,6 +68,13 @@ export default <template>
       />
     </div>
 
+    {{#if @controller.isBot}}
+      <div class="display-row admin-user__bot-indicator">
+        <div class="field">{{i18n "admin.user.account_type"}}</div>
+        <div class="value">{{dIcon "robot"}} {{i18n "admin.user.bot"}}</div>
+      </div>
+    {{/if}}
+
     <div class="display-row name">
       <AdminEditableField
         @action={{@controller.saveName}}

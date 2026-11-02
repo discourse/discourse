@@ -5,11 +5,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { waitForPromise } from "@ember/test-waiters";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
-import { isRailsTesting, isTesting } from "discourse/lib/environment";
+import { openLightbox } from "discourse/lib/lightbox";
 import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input.gjs";
@@ -495,7 +494,23 @@ export default class ImageNodeView extends Component {
       event?.preventDefault();
       event?.stopPropagation();
 
-      await openLightbox(this.args.view.dom, this.image);
+      // image nodes also hold videos and audio; only rendered images belong in the gallery
+      const { view } = this.args;
+      const slides = [];
+      view.state.doc.descendants((node, pos) => {
+        if (node.type.name !== "image") {
+          return;
+        }
+
+        const element = view.nodeDOM(pos)?.querySelector(":scope > img");
+        if (element) {
+          slides.push({ src: node.attrs.src, element });
+        }
+      });
+
+      await openLightbox(slides, {
+        index: slides.findIndex((slide) => slide.element === this.image),
+      });
 
       const pos = this.args.getPos();
       if (pos !== null && pos >= 0) {
@@ -690,75 +705,4 @@ export default class ImageNodeView extends Component {
       </span>
     {{/if}}
   </template>
-}
-
-async function openLightbox(editorElement, currentImage) {
-  const allImages = [
-    ...editorElement.querySelectorAll(".composer-image-node img"),
-  ];
-  const currentIndex = allImages.indexOf(currentImage);
-
-  const dataSource = allImages.map((img) => {
-    return {
-      src: img.src,
-      msrc: img.currentSrc || img.src,
-      width: img.naturalWidth || 800,
-      height: img.naturalHeight || 600,
-      alt: img.alt || "",
-      element: img,
-      thumbCropped: true,
-    };
-  });
-
-  const { default: PhotoSwipeLightbox } = await waitForPromise(
-    import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
-  );
-  const isTestEnv = isTesting() || isRailsTesting();
-
-  const lightbox = new PhotoSwipeLightbox({
-    dataSource,
-    showHideAnimationType: isTestEnv ? "none" : "zoom",
-    closeTitle: i18n("lightbox.close"),
-    zoomTitle: i18n("lightbox.zoom"),
-    arrowPrevTitle: i18n("lightbox.previous"),
-    arrowNextTitle: i18n("lightbox.next"),
-    pswpModule: () =>
-      waitForPromise(import(/* dynamicChunkName: "photoswipe" */ "photoswipe")),
-    tapAction: (pt, e) => {
-      if (e.target.classList.contains("pswp__img")) {
-        lightbox.pswp?.element?.classList.toggle("pswp--ui-visible");
-      } else {
-        lightbox.pswp?.close();
-      }
-    },
-  });
-
-  lightbox.on("uiRegister", function () {
-    lightbox.pswp.ui.registerElement({
-      name: "caption",
-      order: 11,
-      isButton: false,
-      appendTo: "root",
-      html: "",
-      onInit: (caption, pswp) => {
-        const titleEl = document.createElement("div");
-        titleEl.className = "pswp__caption-title";
-        caption.appendChild(titleEl);
-
-        pswp.on("change", () => {
-          const slideData = pswp.getItemData(pswp.currIndex);
-          titleEl.textContent = slideData?.alt || "";
-        });
-      },
-    });
-  });
-
-  return new Promise((resolve) => {
-    lightbox.addFilter("thumbEl", (thumbEl, itemData) => itemData.element);
-    lightbox.on("close", resolve);
-    lightbox.on("closingAnimationEnd", () => lightbox.destroy());
-
-    lightbox.init();
-    lightbox.loadAndOpen(currentIndex);
-  });
 }

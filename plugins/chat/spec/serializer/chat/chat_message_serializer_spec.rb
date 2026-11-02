@@ -191,6 +191,14 @@ describe Chat::MessageSerializer do
     context "when flagging on a regular channel" do
       let(:options) { { scope: guardian, root: nil, chat_channel: message_1.chat_channel } }
 
+      it "omits the illegal flag when DSA reporting is enabled" do
+        SiteSetting.dsa_reporting_enabled = true
+
+        expect(serializer.as_json[:available_flags]).to contain_exactly(
+          *PostActionType.flag_types.keys.reject { |name| name == :illegal },
+        )
+      end
+
       it "returns an empty list if the user already flagged the message" do
         reviewable = Fabricate(:chat_reviewable_message, target: message_1)
 

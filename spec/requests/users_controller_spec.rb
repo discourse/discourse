@@ -2584,6 +2584,61 @@ RSpec.describe UsersController do
         expect(User.find_by_email(login_code.email)).to be_nil
         expect(session[:current_user_id]).to be_nil
       end
+
+      it "allows a verified email code signup that is choosing a username" do
+        SiteSetting.enable_local_logins_via_code = true
+        login_code = EmailLoginCode.generate!(email: "newuser@example.com")
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: login_code.email,
+               code: login_code.code,
+             }
+        expect(response.parsed_body["username_required"]).to eq(true)
+
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username"]).to be_present
+        expect(User.find_by_email(login_code.email)).to be_nil
+        expect(session[:current_user_id]).to be_nil
+      end
+
+      it "allows a verified invite code signup that is choosing a username" do
+        SiteSetting.enable_local_logins_via_code = true
+        invite = Fabricate(:invite, email: "invited@example.com")
+        login_code = EmailLoginCode.generate!(email: invite.email)
+
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               code: login_code.code,
+             }
+        expect(response.parsed_body["username_required"]).to eq(true)
+
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username"]).to be_present
+        expect(invite.reload).not_to be_redeemed
+      end
+
+      it "rejects an email code signup that entered the wrong code" do
+        SiteSetting.enable_local_logins_via_code = true
+        login_code = EmailLoginCode.generate!(email: "newuser@example.com")
+        wrong_code = login_code.code == "000000" ? "000001" : "000000"
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: login_code.email,
+               code: wrong_code,
+             }
+        expect(response.parsed_body["username_required"]).to be_nil
+
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(403)
+      end
     end
 
     it "keeps an uploaded avatar when generating a username" do
@@ -6135,6 +6190,51 @@ RSpec.describe UsersController do
         parsed = response.parsed_body["users"]
 
         expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
+      end
+    end
+
+    context "when plugins register user cards preloaders" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:preloaded) { [] }
+
+      before do
+        user2.upsert_custom_fields("plugin_field" => "plugin value")
+
+        plugin.register_user_cards_preloaded_custom_field(:plugin_field)
+        plugin.register_user_cards_preloader do |users, guardian|
+          users.each do |card_user|
+            preloaded << [card_user.id, card_user.custom_fields["plugin_field"], guardian.user&.id]
+          end
+        end
+      end
+
+      after do
+        DiscoursePluginRegistry.reset_register!(:user_cards_preloaded_custom_fields)
+        DiscoursePluginRegistry.reset_register!(:user_cards_preloaders)
+      end
+
+      it "passes the visible users to the preloaders with plugin custom fields preloaded" do
+        hidden_user = Fabricate(:user)
+        hidden_user.user_option.update_columns(hide_profile: true)
+        sign_in(another_user)
+
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id},#{hidden_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(preloaded).to contain_exactly(
+          [user.id, nil, another_user.id],
+          [user2.id, "plugin value", another_user.id],
+        )
+        expect(response.parsed_body["users"].map { |card| card["custom_fields"] }).to all(be_blank)
+      end
+
+      it "skips preloaders of disabled plugins" do
+        allow(plugin).to receive(:enabled?).and_return(false)
+
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+
+        expect(response.status).to eq(200)
+        expect(preloaded).to be_empty
       end
     end
   end

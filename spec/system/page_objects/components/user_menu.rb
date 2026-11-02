@@ -9,9 +9,28 @@ module PageObjects
         self
       end
 
+      def press_key(key)
+        find(".user-menu-tab:focus").send_keys(key)
+        self
+      end
+
+      def has_focused_tab?(id)
+        page.has_css?("#user-menu-button-#{id}:focus")
+      end
+
+      def has_selected_tab?(id)
+        page.has_css?("#user-menu-button-#{id}[aria-selected='true']")
+      end
+
       def click_replies_notifications_tab
         click_link("user-menu-button-replies")
         has_css?("#quick-access-replies")
+        self
+      end
+
+      def click_mentions_notifications_tab
+        click_link("user-menu-button-mentions")
+        has_css?("#quick-access-mentions")
         self
       end
 
@@ -93,6 +112,29 @@ module PageObjects
 
       def has_right_replies_button_count?(count)
         expect(find("#user-menu-button-replies").text).to eq(count.to_s)
+      end
+
+      def has_notification_tab?(id)
+        page.has_css?("#user-menu-button-#{id}")
+      end
+
+      def has_no_notification_tab?(id)
+        page.has_no_css?("#user-menu-button-#{id}")
+      end
+
+      def has_no_direct_mentions?
+        page.has_no_css?(".user-menu .notification.mentioned")
+      end
+
+      def has_no_mentions_notifications_tab?
+        page.has_no_css?("#user-menu-button-mentions")
+      end
+
+      def has_direct_mention_notification?(post)
+        page.has_css?(
+          "#quick-access-mentions .mentioned .item-description[data-topic-id='#{post.topic_id}']",
+          text: post.topic.title,
+        )
       end
 
       def has_notification_count_of?(count)

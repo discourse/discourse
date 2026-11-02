@@ -85,6 +85,7 @@ describe DiscourseAi::Translation::BaseTranslator do
     end
 
     it "accounts for the system prompt, examples, and content description" do
+      agent.update!(thinking_effort: nil)
       allow(agent.class_instance).to receive(:compression_threshold).and_return(nil)
       llm_model = Fabricate(:fake_model, max_output_tokens: 8192, max_prompt_tokens: 4096)
       source = "hello world " * 3000
@@ -115,6 +116,7 @@ describe DiscourseAi::Translation::BaseTranslator do
     end
 
     it "bounds output by the agent work allowance when the model has no output limit" do
+      agent.update!(thinking_effort: nil)
       llm_model = Fabricate(:fake_model, max_output_tokens: nil, max_prompt_tokens: 8192)
       translator =
         DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:, llm_model:)

@@ -56,7 +56,6 @@ he:
     ai_toxicity_flag_threshold_threat: "איום"
     ai_toxicity_flag_threshold_sexual_explicit: "מיניות מפורשת"
     ai_toxicity_groups_bypass: "הפוסטים של משתמשים בקבוצות האלו לא יסווגו על ידי מודול הרעילות."
-    ai_sentiment_enabled: "הפעלת מודול התחושה."
     ai_sentiment_inference_service_api_endpoint: "הכתובת בה נמצא ה־API הפעיל עבור מודול התחושה"
     ai_sentiment_inference_service_api_key: "מפתח API ל־API של התחושה"
     ai_nsfw_detection_enabled: "הפעלת מודול הפוגענות."
@@ -119,88 +118,60 @@ he:
       yaxis: "תאריך"
     emotion_admiration:
       title: "🤩 הערצה"
-      description: "פוסטים שסווגו עם הרגש הערצה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_amusement:
       title: "😄 שעשוע"
-      description: "פוסטים שסווגו עם הרגש שעשוע באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_anger:
       title: "😠 כעס"
-      description: "פוסטים שסווגו עם הרגש כעס באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_annoyance:
       title: "😒 מורת רוח"
-      description: "פוסטים שסווגו עם הרגש מורת רוח באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_approval:
       title: "👍 הסכמה"
-      description: "פוסטים שסווגו עם הרגש הסכמה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_caring:
       title: "🤗 אכפתיות"
-      description: "פוסטים שסווגו עם הרגש אכפתיות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_confusion:
       title: "😕 בלבול"
-      description: "פוסטים שסווגו עם הרגש בלבול באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_curiosity:
       title: "🤔 סקרנות"
-      description: "פוסטים שסווגו עם הרגש סקרנות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_desire:
       title: "😍 תשוקה"
-      description: "פוסטים שסווגו עם הרגש תשוקה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_disappointment:
       title: "😞 אכזבה"
-      description: "פוסטים שסווגו עם הרגש אכזבה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_disapproval:
       title: "👎 אי־הסכמה"
-      description: "פוסטים שסווגו עם הרגש אי־הסכמה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_disgust:
       title: "🤢 גועל"
-      description: "פוסטים שסווגו עם הרגש גועל באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_embarrassment:
       title: "😳 מבוכה"
-      description: "פוסטים שסווגו עם הרגש מבוכה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_excitement:
       title: "🤪 התרגשות"
-      description: "פוסטים שסווגו עם הרגש התרגשות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_fear:
       title: "😨 פחד"
-      description: "פוסטים שסווגו עם הרגש פחד באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_gratitude:
       title: "🙏 הכרת תודה"
-      description: "פוסטים שסווגו עם הרגש הכרת תודה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_grief:
       title: "😢 צער"
-      description: "פוסטים שסווגו עם הרגש צער באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_joy:
       title: "😊 הנאה"
-      description: "פוסטים שסווגו עם הרגש הנאה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_love:
       title: '❤️ אהבה'
-      description: "פוסטים שסווגו עם הרגש אהבה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_nervousness:
       title: "😰 עצבנות"
-      description: "פוסטים שסווגו עם הרגש עצבנות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_neutral:
       title: "😐 נייטרלי"
-      description: "פוסטים שסווגו עם הרגש נייטרלי באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_optimism:
       title: "🌟 אופטימיות"
-      description: "פוסטים שסווגו עם הרגש אופטימיות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_pride:
       title: "🦁 גאווה"
-      description: "פוסטים שסווגו עם הרגש גאווה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_realization:
       title: "💡 תובנה"
-      description: "פוסטים שסווגו עם הרגש תובנה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_relief:
       title: "😌 הקלה"
-      description: "פוסטים שסווגו עם הרגש הקלה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_remorse:
       title: "😔 חרטה"
-      description: "פוסטים שסווגו עם הרגש חרטה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_sadness:
       title: "😭 עצב"
-      description: "פוסטים שסווגו עם הרגש עצב באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_surprise:
       title: "😲 הפתעה"
-      description: "פוסטים שסווגו עם הרגש הפתעה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
   discourse_ai:
     ai_artifact:
       link: "הצגה בלשונית חדשה"
@@ -268,6 +239,9 @@ he:
       configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
+      sources:
+        historical: "בינה מלאכותית ב־Discourse"
+        spam_detection: "זיהוי זבל"
       navigation:
         settings:
           title: "הגדרות האתר"

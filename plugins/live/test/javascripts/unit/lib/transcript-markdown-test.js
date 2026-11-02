@@ -74,4 +74,26 @@ module("Live | Unit | Lib | transcript-markdown", function (hooks) {
     assert.false(markdown.includes('"undefined;'));
     assert.true(markdown.startsWith("[chat quote="));
   });
+
+  test("renders a reaction group as the reactor's emoji line", function (assert) {
+    const reactionEntry = {
+      reactionId: 1,
+      userId: 43,
+      username: "bob",
+      reactions: [
+        { emoji: "clap", count: 3 },
+        { emoji: "heart", count: 1 },
+      ],
+      startedAt: Date.UTC(2026, 7, 20, 16, 38, 50),
+    };
+
+    assert.strictEqual(
+      transcriptToMarkdown([reactionEntry]),
+      '[chat quote="bob;reaction-1;2026-08-20T16:38:50.000Z" chained="true"]\n:clap: ×3 :heart:\n[/chat]'
+    );
+    assert.strictEqual(
+      transcriptToMarkdown([reactionEntry], { chatMarkup: false }),
+      '[quote="bob"]\n:clap: ×3 :heart:\n[/quote]'
+    );
+  });
 });

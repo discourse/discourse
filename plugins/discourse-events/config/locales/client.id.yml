@@ -99,6 +99,8 @@ id:
               title: "Umum"
             private:
               title: "Pribadi"
+      recording_modal:
+        save: "Simpan"
       composer:
         reminder:
           units:
