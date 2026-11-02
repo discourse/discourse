@@ -116,6 +116,16 @@ RSpec.describe Scheduler::Defer do
     expect(s).to eq("good")
   end
 
+  it "resets global deferred jobs to synchronous mode during test setup" do
+    Scheduler::Defer.async = true
+
+    TestSetup.test_setup
+
+    expect(Scheduler::Defer.async).to eq(false)
+  ensure
+    Scheduler::Defer.async = false
+  end
+
   describe "#later" do
     let!(:ivar) { Concurrent::IVar.new }
     let!(:responses) { Thread::Queue.new }

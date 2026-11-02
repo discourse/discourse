@@ -10,6 +10,7 @@ module TestSetup
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
 
     RateLimiter.disable
+    Scheduler::Defer.async = false
     PostActionNotifier.disable
     SearchIndexer.disable
     UserActionManager.disable
