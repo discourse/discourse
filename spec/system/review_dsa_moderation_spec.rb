@@ -25,11 +25,13 @@ describe "Classifying reviewable moderation" do
     post = Fabricate(:post, topic: topic)
     flagger = Fabricate(:user, trust_level: TrustLevel[3])
     reviewable = PostActionCreator.create(flagger, post, :inappropriate).reviewable
+    Fabricate(:dsa_statement_of_record, reviewable_id: reviewable.id)
     penalty_modal = PageObjects::Modals::PenalizeUser.new("suspend")
 
     review_page.visit_reviewable(reviewable)
 
     expect(review_page).to have_context_question(reviewable, "Is this post inappropriate?")
+    expect(review_page).to have_no_standalone_classification
 
     review_page.select_bundled_action(reviewable, "post-agree_and_suspend", bundle_index: 1)
 
@@ -50,13 +52,18 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_focused_step("DSA classification")
     expect(modal).to have_no_cancel_button
 
+    modal.open_classification_help
+    dialog = PageObjects::Components::Dialog.new
+
+    expect(dialog).to have_content(I18n.t("js.dsa_statements.help"))
+
+    dialog.click_ok
     modal.confirm("Suspend")
 
     expect(modal).to have_required_errors
 
     modal.select_category(category)
     modal.close
-    dialog = PageObjects::Components::Dialog.new
 
     expect(dialog).to be_open
 

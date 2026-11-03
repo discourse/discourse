@@ -10,6 +10,10 @@ module PageObjects
         super(modal_selector: MODAL_SELECTOR)
       end
 
+      def open_classification_help
+        within(full_modal_selector) { click_button("About DSA classification") }
+      end
+
       def select_rule(ground)
         within(full_modal_selector) { select(ground, from: "Community rule") }
       end

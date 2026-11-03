@@ -1016,12 +1016,7 @@ en:
       rule_prompt: "Choose a community rule"
       category: "Category"
       category_prompt: "Choose a category"
-      pending: "DSA classification pending"
-      confirm_title: "Save DSA classification?"
-      confirm_message: "Check the community rule and category. This classification cannot be changed after saving."
       save: "Save classification"
-      saving: "Saving…"
-      saved: "Classification saved"
     review:
       continue_to_editor: "Continue to editor"
       moderation_steps:

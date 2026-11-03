@@ -77,6 +77,9 @@ export default class DsaModerationAction extends Component {
         @flash={{this.flash}}
         @title={{this.title}}
       >
+        <:headerBelowTitle>
+          <flow.Help />
+        </:headerBelowTitle>
         <:belowHeader>
           <flow.Steps @disabled={{this.saving}} />
         </:belowHeader>

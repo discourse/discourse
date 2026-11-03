@@ -4,10 +4,22 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const Help = <template>
+  {{#if (and @flow.enabled (not @flow.showContinue))}}
+    <DButton
+      class="btn-transparent dsa-moderation-help"
+      @action={{@flow.showHelp}}
+      @icon="circle-question"
+      @title="dsa_statements.help_title"
+    />
+  {{/if}}
+</template>;
 
 const Steps = <template>
   {{#if @flow.nextStepLabel}}
@@ -112,6 +124,8 @@ const Footer = <template>
 </template>;
 
 export default class DsaModeration extends Component {
+  @service dialog;
+
   @tracked classificationStep = false;
 
   formId = `dsa-moderation-${guidFor(this)}`;
@@ -165,6 +179,11 @@ export default class DsaModeration extends Component {
   }
 
   @action
+  showHelp() {
+    this.dialog.alert(i18n("dsa_statements.help"));
+  }
+
+  @action
   submit() {
     return this.args.onSubmit();
   }
@@ -172,6 +191,7 @@ export default class DsaModeration extends Component {
   <template>
     {{yield
       (hash
+        Help=(component Help flow=this)
         Body=(component Body flow=this)
         Footer=(component Footer flow=this)
         Steps=(component Steps flow=this)
