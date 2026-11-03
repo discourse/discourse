@@ -22,6 +22,14 @@ function categoryBadge(item: SelectItem) {
     : undefined;
 }
 
+/** The badge of the topic's own category alone, for a one-line field. */
+function ownCategoryBadge(item: SelectItem) {
+  const category = item.category as Category | undefined;
+  return category
+    ? dCategoryBadge(category, { decorativeEmoji: true, hideParent: true })
+    : undefined;
+}
+
 /** A topic row: its status icons, its title and its category. */
 export const TopicOption: TOC<{
   Args: {
@@ -44,10 +52,29 @@ export const TopicOption: TOC<{
   </span>
 </template>;
 
-/** A held topic: its title. */
+/** A held topic: its title, and optionally its category. */
 export const TopicSelection: TOC<{
   Args: {
     /** The held topic. */
     item: SelectItem;
+    /** Draws the category badge beside the title, which tells similar titles apart. */
+    withCategory?: boolean;
   };
-}> = <template>{{~dReplaceEmoji (topicTitle @item)~}}</template>;
+}> = <template>
+  {{#if @withCategory}}
+    <span class="d-topic-selection">
+      <span class="d-topic-selection__title">
+        {{~dReplaceEmoji (topicTitle @item)~}}
+      </span>
+      {{#let (ownCategoryBadge @item) as |badge|}}
+        {{#if badge}}
+          <span class="d-topic-selection__category">
+            {{~badge~}}
+          </span>
+        {{/if}}
+      {{/let}}
+    </span>
+  {{else}}
+    {{~dReplaceEmoji (topicTitle @item)~}}
+  {{/if}}
+</template>;

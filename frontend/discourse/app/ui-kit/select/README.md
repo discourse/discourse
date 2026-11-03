@@ -1096,7 +1096,9 @@ held lookups in `recipes/topics/-internals/`:
 - **`DSelectTopicList`** (kind `select-topic-list`) is the same source over `DSelectList`, for a
   panel that picks without a trigger. It is multiple unless `@multiple={{false}}`.
 
-Both take `@exclude`, topic ids never offered, such as the topic being worked on.
+Both take `@exclude`, topic ids never offered, such as the topic being worked on. A single held
+topic shows the badge of its own category beside its title, which tells similar titles apart
+(rows also show the parent); chips show the title alone.
 
 Both search as the topic chooser did:
 

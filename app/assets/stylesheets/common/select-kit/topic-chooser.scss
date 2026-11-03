@@ -38,3 +38,26 @@
     font-size: var(--font-down-1);
   }
 }
+
+// The title gives way first, so the category stays readable in a narrow field.
+.d-topic-selection {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+
+  &__title {
+    flex: 0 1 auto;
+    min-width: 2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__category {
+    display: flex;
+    flex: 0 0 auto;
+    max-width: 50%;
+    overflow: hidden;
+  }
+}

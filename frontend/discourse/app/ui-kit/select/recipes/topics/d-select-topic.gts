@@ -186,7 +186,7 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
         {{#if (has-block "selection")}}
           {{yield item options to="selection"}}
         {{else}}
-          <TopicSelection @item={{item}} />
+          <TopicSelection @item={{item}} @withCategory={{not @multiple}} />
         {{/if}}
       </:selection>
       <:footer as |state options|>

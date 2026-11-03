@@ -199,6 +199,33 @@ module(
         .doesNotExist("a topic without a known category draws none");
     });
 
+    test("shows a held topic with its category, and chips by title alone", async function (assert) {
+      const category = this.owner.lookup("service:site").categories[0];
+      stubTopicLookup([
+        { ...TOPICS[0], category_id: category.id },
+        { ...TOPICS[1], category_id: category.id },
+      ]);
+
+      await render(
+        <template>
+          <div class="one"><DSelectTopic @value={{3}} /></div>
+          <div class="many">
+            <DSelectTopic @multiple={{true}} @value={{array 3 5}} />
+          </div>
+        </template>
+      );
+
+      assert
+        .dom(".one .d-select__presentation .d-topic-selection__title")
+        .hasText("Dogs are great");
+      assert
+        .dom(".one .d-select__presentation .badge-category__name")
+        .hasText(category.name, "the held topic's category shows beside it");
+      assert
+        .dom(".many .d-select__chip .badge-category__name")
+        .doesNotExist("chips stay short");
+    });
+
     test("sets a subcategory's badge apart from its parent's", async function (assert) {
       const subcategory = this.owner
         .lookup("service:site")
@@ -221,6 +248,23 @@ module(
       assert.true(
         gap >= halfEm - 0.5,
         `the badges are ${gap}px apart, half an em is ${halfEm}px`
+      );
+    });
+
+    test("a held topic in a subcategory shows that subcategory alone", async function (assert) {
+      const subcategory = this.owner
+        .lookup("service:site")
+        .categories.find((category) => category.parent_category_id);
+      stubTopicLookup([{ ...TOPICS[0], category_id: subcategory.id }]);
+
+      await render(<template><DSelectTopic @value={{3}} /></template>);
+
+      assert.deepEqual(
+        findAll(".d-topic-selection__category .badge-category__name").map(
+          (name) => name.textContent.trim()
+        ),
+        [subcategory.name],
+        "no parent badge in the one-line field"
       );
     });
 
