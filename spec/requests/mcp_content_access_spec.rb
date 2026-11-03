@@ -544,6 +544,7 @@ describe McpController do
   end
 
   it "preserves content access and allows private-message access only with its scopes" do
+    SiteSetting.login_required = true
     public_post = Fabricate(:post, user:)
     unrelated_message = Fabricate(:private_message_post)
     authorize

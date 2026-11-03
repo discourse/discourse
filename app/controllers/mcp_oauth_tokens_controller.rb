@@ -3,7 +3,10 @@
 class McpOauthTokensController < ApplicationController
   OAUTH_PARAMETERS = %w[code refresh_token token code_verifier].freeze
 
-  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
+  skip_before_action :check_xhr,
+                     :preload_json,
+                     :verify_authenticity_token,
+                     :redirect_to_login_if_required
   before_action :validate_request_format
 
   def create
