@@ -24,6 +24,9 @@ export default class ChatRoutesChannelInfo extends Component {
           />
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
+        <navbar.Actions as |a|>
+          <a.OpenDrawerButton />
+        </navbar.Actions>
       </Navbar>
 
       <ChatChannelStatus @channel={{@channel}} />
