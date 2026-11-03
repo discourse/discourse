@@ -118,7 +118,6 @@ export async function startTests() {
 
   startEmberExam({
     setupTestContainer: false,
-    setupEmberOnerrorValidation: testingCore,
     setupTestIsolationValidation: true,
     availableModules,
   });

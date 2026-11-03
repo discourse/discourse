@@ -6,14 +6,12 @@ import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { ASYNC_OBSERVERS, SYNC_OBSERVERS } from "@ember/-internals/metal";
-import { getOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
   pauseTest,
   setApplication,
-  setResolver,
 } from "@ember/test-helpers";
 import $ from "jquery";
 import "message-bus-client";
@@ -35,7 +33,6 @@ import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { buildResolver } from "discourse/resolver";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -71,7 +68,6 @@ function createApplication(config, settings) {
   const app = Application.create(config);
 
   setApplication(app);
-  setResolver(buildResolver("discourse").create({ namespace: app }));
 
   // Production's autoboot builds the ApplicationInstance before initializers run, and they
   // rely on its container. ember-qunit only builds one after booting the app, so build it
@@ -320,7 +316,7 @@ export default async function setupTests(config) {
   });
 
   QUnit.testDone(function () {
-    testCleanup(getOwner(app), app);
+    testCleanup(app);
 
     // A pending ceremony never settles in headless Chrome, so it would retain the app
     WebauthnAbortHandler.controller?.abort();
@@ -395,10 +391,6 @@ export default async function setupTests(config) {
     // by this closure until the next test creates a new one.
     app = null;
   });
-
-  if (getUrlParameter("qunit_disable_auto_start") === "1") {
-    QUnit.config.autostart = false;
-  }
 
   if (getUrlParameter("loop")) {
     QUnit.done(({ failed }) => {
