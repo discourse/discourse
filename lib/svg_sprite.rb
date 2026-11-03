@@ -357,6 +357,19 @@ module SvgSprite
         end
   end
 
+  def self.site_symbols(icon_ids)
+    symbols = core_svgs.slice(*icon_ids)
+
+    DiscoursePluginRegistry.svg_symbol_sources.each do |source|
+      missing = icon_ids - symbols.keys
+      break if missing.empty?
+
+      symbols.merge!(source.symbols(missing).slice(*missing))
+    end
+
+    symbols
+  end
+
   # Just used in tests
   def self.clear_plugin_svg_sprite_cache!
     @plugin_svgs = nil
@@ -459,12 +472,6 @@ module SvgSprite
     cache&.clear
   end
 
-  def self.svgs_for(theme_id)
-    svgs = core_svgs
-    svgs = svgs.merge(custom_svgs(theme_id)) if theme_id.present?
-    svgs
-  end
-
   def self.bundle(theme_id = nil)
     icons = all_icons(theme_id)
 
@@ -478,46 +485,71 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 " \
         "".dup
 
-    svg_subset << core_svgs.slice(*icons).values.join
+    symbols = site_symbols(icons)
+    svg_subset << icons.filter_map { |icon| symbols[icon] }.join
     svg_subset << custom_svgs(theme_id).values.join
 
     svg_subset << "</svg>"
   end
 
   def self.search(searched_icon)
-    svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
+    icon = searched_icon.strip
+    theme_id = SiteSetting.default_theme_id
+    custom = theme_id.present? ? custom_svgs(theme_id) : {}
+
+    custom[icon] || site_symbols([icon])[icon] || false
   end
 
   def self.icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
-    ids = picker_icon_ids(theme_id, only_available)
+    keyword = keyword.to_s.downcase
+    limit = (page + 1) * per_page + 1
+    in_sprite = picker_sprite_icon_ids(theme_id)
 
-    if keyword.present?
-      downcased_keyword = keyword.downcase
-      ids = ids.lazy.select { |id| id.downcase.include?(downcased_keyword) }
+    ids = in_sprite.lazy.select { |id| id.downcase.include?(keyword) }.first(limit)
+    if !only_available && ids.size < limit
+      ids.concat(picker_other_icon_ids(theme_id, keyword, limit - ids.size))
     end
 
-    ids = ids.drop(page * per_page).first(per_page + 1)
-
+    ids = ids.drop(page * per_page)
     has_more = ids.size > per_page
     ids = ids.take(per_page)
 
-    missing = only_available ? [] : (ids - picker_icon_ids(theme_id, true)).to_set
+    missing = only_available ? [] : (ids - in_sprite).to_set
     return { icons: ids.map { |id| { id: } }, has_more: } if missing.empty?
 
     custom = theme_id.present? ? custom_svgs(theme_id) : {}
+    site = site_symbols(missing.to_a)
     icons =
-      ids.map { |id| missing.include?(id) ? { id:, symbol: custom[id] || core_svgs[id] } : { id: } }
+      ids.map { |id| missing.include?(id) ? { id:, symbol: custom[id] || site[id] } : { id: } }
     { icons:, has_more: }
   end
 
-  def self.picker_icon_ids(theme_id, only_available)
-    get_set_cache("picker_icon_ids_#{Theme.transform_ids(theme_id).join(",")}_#{only_available}") do
-      symbols = svgs_for(theme_id)
-      in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
-
-      # Legacy names still render where already used, but aren't offered for new picks
-      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite - legacy_icon_ids).sort
+  def self.picker_sprite_icon_ids(theme_id)
+    get_set_cache("picker_sprite_icon_ids_#{Theme.transform_ids(theme_id).join(",")}") do
+      icons = all_icons(theme_id)
+      available = site_symbols(icons).keys.to_set
+      available.merge(custom_svgs(theme_id).keys) if theme_id.present?
+      icons.select { |id| available.include?(id) }
     end
+  end
+
+  def self.picker_other_icon_ids(theme_id, keyword, limit)
+    in_sprite = picker_sprite_icon_ids(theme_id)
+
+    local =
+      get_set_cache("picker_other_icon_ids_#{Theme.transform_ids(theme_id).join(",")}") do
+        ids = core_svgs.keys
+        ids |= custom_svgs(theme_id).keys if theme_id.present?
+        # Legacy names still render where already used, but aren't offered for new picks
+        (ids - in_sprite - legacy_icon_ids).sort
+      end
+    ids = local.lazy.select { |id| id.downcase.include?(keyword) }.first(limit)
+
+    DiscoursePluginRegistry.svg_symbol_sources.each do |source|
+      ids.concat(source.search_icon_ids(keyword, limit: limit + in_sprite.size) - in_sprite)
+    end
+
+    ids.uniq.sort.first(limit)
   end
 
   # For use in no_ember .html.erb layouts
