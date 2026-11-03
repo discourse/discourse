@@ -25,11 +25,13 @@ describe "Classifying reviewable moderation" do
     post = Fabricate(:post, topic: topic)
     flagger = Fabricate(:user, trust_level: TrustLevel[3])
     reviewable = PostActionCreator.create(flagger, post, :inappropriate).reviewable
+    Fabricate(:dsa_statement_of_record, reviewable_id: reviewable.id)
     penalty_modal = PageObjects::Modals::PenalizeUser.new("suspend")
 
     review_page.visit_reviewable(reviewable)
 
     expect(review_page).to have_context_question(reviewable, "Is this post inappropriate?")
+    expect(review_page).to have_no_standalone_classification
 
     review_page.select_bundled_action(reviewable, "post-agree_and_suspend", bundle_index: 1)
 
