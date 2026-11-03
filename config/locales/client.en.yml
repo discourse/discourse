@@ -1285,6 +1285,7 @@ en:
         target_created_by: "Post created by %{username} · %{relativeDate}"
         target_deleted: "Post deleted"
         target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
+        queued_post_deleted_by: "Queued post deleted by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
