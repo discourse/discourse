@@ -2,6 +2,7 @@ import { module, test } from "qunit";
 import {
   collectPeers,
   formatReport,
+  recordIceError,
   routeFor,
   summarizeStats,
 } from "discourse/plugins/live/discourse/lib/live/connection-diagnostics";
@@ -209,9 +210,11 @@ module("Live | Unit | Lib | connection-diagnostics", function () {
           url: "stun:stun.example.com:3478",
           reachable: false,
           timedOut: true,
+          udp: true,
           candidates: {},
-          addresses: [],
-          errors: [{ errorCode: 701, errorText: "STUN timeout" }],
+          relayAddresses: [],
+          publicAddresses: [],
+          errors: [{ errorCode: 701, errorText: "STUN timeout", count: 3 }],
         },
       ],
       peers,
@@ -224,6 +227,37 @@ module("Live | Unit | Lib | connection-diagnostics", function () {
     assert.true(report.includes("198.51.100.7"), "includes remote address");
     assert.true(report.includes("NO PEER CONNECTION (expected one)"));
     assert.true(report.includes("stun:stun.example.com:3478: NO RESPONSE"));
-    assert.true(report.includes("701 STUN timeout"));
+    assert.true(
+      report.includes("\n  error: 701 STUN timeout (×3)"),
+      "keeps probe errors indented and shows repeat counts"
+    );
+    assert.true(report.includes("public address: NONE"));
+  });
+
+  test("recordIceError folds repeated errors into a count", function (assert) {
+    const errors = [];
+    const timeout = {
+      url: "stun:stun.example.com:3478",
+      errorCode: 701,
+      errorText: "STUN binding request timed out.",
+    };
+
+    recordIceError(errors, timeout);
+    recordIceError(errors, timeout);
+    recordIceError(errors, { ...timeout, errorCode: 1, errorText: "" });
+
+    assert.strictEqual(errors.length, 2);
+    assert.strictEqual(errors[0].count, 2);
+    assert.strictEqual(errors[1].count, 1);
+  });
+
+  test("recordIceError keeps only the most recent distinct errors", function (assert) {
+    const errors = [];
+    for (let code = 0; code < 12; code++) {
+      recordIceError(errors, { url: "turn:x", errorCode: code });
+    }
+
+    assert.strictEqual(errors.length, 10);
+    assert.strictEqual(errors[0].errorCode, 2);
   });
 });

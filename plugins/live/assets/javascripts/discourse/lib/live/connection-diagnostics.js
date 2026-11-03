@@ -8,6 +8,52 @@ const PROBE_TIMEOUT_MS = 6000;
 
 const CANDIDATE_TYPES = ["host", "srflx", "prflx", "relay"];
 
+const MAX_ICE_ERRORS = 10;
+
+/**
+ * Records an ICE candidate error, folding repeats into a count: browsers retry
+ * each server per interface and transaction, so the same failure otherwise
+ * floods the list and pushes out the distinct ones.
+ *
+ * @param {Array<object>} errors - Mutated in place.
+ * @param {{url?: string, errorCode?: number, errorText?: string}} error
+ */
+export function recordIceError(errors, { url, errorCode, errorText }) {
+  const existing = errors.find(
+    (entry) =>
+      entry.url === url &&
+      entry.errorCode === errorCode &&
+      entry.errorText === errorText
+  );
+  if (existing) {
+    existing.count++;
+    existing.lastAt = Date.now();
+    return errors;
+  }
+
+  errors.push({ url, errorCode, errorText, count: 1, lastAt: Date.now() });
+  if (errors.length > MAX_ICE_ERRORS) {
+    errors.shift();
+  }
+  return errors;
+}
+
+/**
+ * @param {{url?: string, errorCode?: number, errorText?: string, count?: number}} error
+ * @param {{includeUrl?: boolean}} [options]
+ */
+export function formatIceError(error, { includeUrl = true } = {}) {
+  const text = [
+    includeUrl && error.url,
+    error.errorCode,
+    error.errorText,
+    error.count > 1 && `(×${error.count})`,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  return text || "?";
+}
+
 function statsValues(report) {
   if (!report) {
     return [];
@@ -268,15 +314,21 @@ export async function probeIceServer(url, server, options = {}) {
   const timeoutMs = options.timeoutMs ?? PROBE_TIMEOUT_MS;
   const isTurn = /^turns?:/i.test(url);
   const expectedType = isTurn ? "relay" : "srflx";
+  // Browsers only learn their public address over UDP; a TCP/TLS server
+  // never yields one, so its absence there says nothing.
+  const udp = !/^turns:/i.test(url) && !/[?&]transport=tcp/i.test(url);
   const startedAt = performance.now();
 
   const result = {
     url,
     kind: isTurn ? "turn" : "stun",
     reachable: false,
+    udp,
     candidates: emptyCandidateCounts(),
-    // The public (srflx) or relay addresses the server handed back.
-    addresses: [],
+    relayAddresses: [],
+    // Our NAT's public address as the server saw it. Missing over UDP means
+    // direct (non-relayed) connections can't be set up through this network.
+    publicAddresses: [],
     errors: [],
     timedOut: false,
     durationMs: null,
@@ -310,12 +362,14 @@ export async function probeIceServer(url, server, options = {}) {
         if (type && type in result.candidates) {
           result.candidates[type]++;
           const address = event.candidate.address;
-          if (
-            type === expectedType &&
-            address &&
-            !result.addresses.includes(address)
-          ) {
-            result.addresses.push(address);
+          const addresses =
+            type === "relay"
+              ? result.relayAddresses
+              : type === "srflx"
+                ? result.publicAddresses
+                : null;
+          if (addresses && address && !addresses.includes(address)) {
+            addresses.push(address);
           }
           if (type === expectedType && !result.reachable) {
             result.reachable = true;
@@ -328,7 +382,8 @@ export async function probeIceServer(url, server, options = {}) {
         }
       };
       pc.onicecandidateerror = (event) => {
-        result.errors.push({
+        recordIceError(result.errors, {
+          url: event.url,
           errorCode: event.errorCode,
           errorText: event.errorText,
         });
@@ -508,11 +563,16 @@ export function formatReport({
         : "FAILED";
     push(`${probe.url}: ${status}`);
     push(`  candidates: ${formatCandidateCounts(probe.candidates)}`);
-    if (probe.addresses?.length) {
-      push(`  addresses: ${probe.addresses.join(", ")}`);
+    if (probe.relayAddresses?.length) {
+      push(`  relay address: ${probe.relayAddresses.join(", ")}`);
+    }
+    if (probe.publicAddresses?.length) {
+      push(`  public address: ${probe.publicAddresses.join(", ")}`);
+    } else if (probe.udp) {
+      push("  public address: NONE (STUN binding got no answer)");
     }
     for (const error of probe.errors) {
-      push(`  error: ${error.errorCode ?? ""} ${error.errorText ?? ""}`.trim());
+      push(`  error: ${formatIceError(error)}`);
     }
   }
   push();
@@ -527,9 +587,7 @@ export function formatReport({
       `  restarts: ${recovery.restartAttempts}/${recovery.maxRestartAttempts}${recovery.restartScheduled ? " (restart pending)" : ""}  offer retries: ${recovery.offerRetryAttempts}/${recovery.maxOfferRetries}  queued candidates: ${recovery.pendingCandidates}`
     );
     for (const error of recovery.iceCandidateErrors) {
-      push(
-        `  ICE error: ${error.url ?? "?"} ${error.errorCode ?? ""} ${error.errorText ?? ""}`.trimEnd()
-      );
+      push(`  ICE error: ${formatIceError(error)}`);
     }
 
     const connection = peer.connection;

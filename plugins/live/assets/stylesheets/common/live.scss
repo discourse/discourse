@@ -1443,26 +1443,26 @@
   }
 
   &__server {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0;
+    padding: 0.5rem 0;
     border-bottom: 1px solid var(--primary-very-low);
 
     code {
       overflow-wrap: anywhere;
     }
+  }
 
-    .live-connection-diagnostics__errors {
-      flex-basis: 100%;
+  &__server-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .live-connection-diagnostics__badge {
+      white-space: nowrap;
     }
   }
 
-  &__server-addresses {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    overflow-wrap: anywhere;
+  &__warning {
+    color: var(--danger);
   }
 
   &__privacy {
