@@ -9,6 +9,8 @@ module Email
       @message = message
       built_message = @message.respond_to?(:message) ? @message.message : @message
       @theme_renderer = built_message.instance_variable_get(:@discourse_email_theme_renderer)
+      # HTML built outside the email layout has no theme branding, so the text part gets none either.
+      @html_uses_layout = @message.html_part.nil? || @theme_renderer.present?
       @opts = (opts || {}).dup
       @opts[:locale] = @message.header[LOCALE_HEADER]&.value.presence || @opts[:locale] ||
         I18n.locale
@@ -21,7 +23,7 @@ module Email
     def text
       return @text if defined?(@text)
 
-      @text = theme_renderer.text(original_text)
+      @text = @html_uses_layout ? theme_renderer.text(original_text) : original_text
     end
 
     def html
