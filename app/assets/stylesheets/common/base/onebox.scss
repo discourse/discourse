@@ -995,7 +995,7 @@ aside.onebox.github-onebox {
       grid-template-columns: minmax(0, 1fr) auto;
     }
 
-    .github-onebox__label > span {
+    .github-onebox__label[aria-label] > span {
       display: none;
     }
   }
