@@ -956,7 +956,7 @@ DEPENDENCIES
   rss
   rswag-specs
   rtlcss
-  rubocop-discourse (>= 3.21.1)
+  rubocop-discourse
   ruby-lsp
   ruby-lsp-rails
   ruby-lsp-rspec
