@@ -324,9 +324,6 @@ class DiscourseVipsWorker
 
         quality = quality.empty? ? nil : Integer(quality)
         animated = animated == "true"
-        if animated && !gravity.empty?
-          raise ArgumentError, "gravity is not supported for animated thumbnails"
-        end
 
         loaders = {
           "jpg" => "VipsForeignLoadJpeg",
@@ -393,7 +390,7 @@ class DiscourseVipsWorker
             raise InvalidImage, error.message
           end
 
-        image = image.gravity(gravity.to_sym, width, height) if !gravity.empty?
+        image = apply_gravity(image:, gravity:, width:, height:, animated:) if !gravity.empty?
         image = image.sharpen if sharpen == "true"
         options = { strip: strip_metadata == "true" }
         options[:Q] = quality if quality
@@ -410,6 +407,23 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :thumbnail
+
+    def self.apply_gravity(image:, gravity:, width:, height:, animated:)
+      frame_height_type = image.get_typeof("page-height")
+      return image.gravity(gravity.to_sym, width, height) if !animated || frame_height_type.zero?
+
+      frame_height = image.get("page-height")
+      frames =
+        (image.height / frame_height).times.map do |index|
+          frame = image.crop(0, index * frame_height, image.width, frame_height)
+          frame.gravity(gravity.to_sym, width, height)
+        end
+
+      result = Vips::Image.arrayjoin(frames, across: 1)
+      result.set_type(frame_height_type, "page-height", height)
+      result
+    end
+    private_class_method :apply_gravity
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)

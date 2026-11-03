@@ -921,21 +921,39 @@ RSpec.describe DiscourseVips do
       let(:animated_gif_path) { file_from_fixtures("animated.gif").path }
       let(:timed_gif_path) { file_from_fixtures("animated-timing.gif").path }
 
-      def animation_metadata(path)
+      def animation_metadata(path:, sample_rows: [])
         script = <<~RUBY
           require "json"
           require "vips"
 
           image = Vips::Image.new_from_file(ARGV.fetch(0), n: -1)
-          puts JSON.generate(
+          metadata = {
             frame_count: image.get("n-pages"),
             frame_delays_ms: image.get("delay"),
             loop_count: image.get("loop"),
-          )
+          }
+          sample_rows = JSON.parse(ARGV.fetch(1))
+          if sample_rows.any?
+            frame_height = image.get("page-height")
+            metadata[:frame_row_opacities] = metadata[:frame_count].times.map do |index|
+              sample_rows.map do |row|
+                image.crop(0, index * frame_height + row, image.width, 1)
+                  .extract_band(image.bands - 1).max
+              end
+            end
+          end
+          puts JSON.generate(metadata)
         RUBY
 
         JSON.parse(
-          Discourse::Utils.execute_command(RbConfig.ruby, "-e", script, path, timeout: 10),
+          Discourse::Utils.execute_command(
+            RbConfig.ruby,
+            "-e",
+            script,
+            path,
+            sample_rows.to_json,
+            timeout: 10,
+          ),
           symbolize_names: true,
         )
       end
@@ -955,7 +973,7 @@ RSpec.describe DiscourseVips do
         )
 
         expect(FastImage.size(output_path)).to eq([100, 50])
-        expect(animation_metadata(output_path)).to eq(
+        expect(animation_metadata(path: output_path)).to eq(
           frame_count: 4,
           frame_delays_ms: [100, 250, 150, 500],
           loop_count: 3,
@@ -979,7 +997,7 @@ RSpec.describe DiscourseVips do
 
         expect(FastImage.type(output_path)).to eq(:webp)
         expect(FastImage.size(output_path)).to eq([100, 50])
-        expect(animation_metadata(output_path)).to eq(
+        expect(animation_metadata(path: output_path)).to eq(
           frame_count: 4,
           frame_delays_ms: [100, 250, 150, 500],
           loop_count: 3,
@@ -1000,32 +1018,57 @@ RSpec.describe DiscourseVips do
         )
 
         expect(FastImage.size(output_path)).to eq([100, 50])
-        expect(animation_metadata(output_path)).to eq(
+        expect(animation_metadata(path: output_path)).to eq(
           frame_count: 4,
           frame_delays_ms: [100, 250, 150, 500],
           loop_count: 3,
         )
       end
 
-      it "rejects gravity for animated thumbnails without changing the destination" do
+      it "positions each animated GIF frame at the top of its canvas" do
+        output_path = File.join(directory, "output.gif")
+
+        described_class.thumbnail(
+          input_path: timed_gif_path,
+          output_path:,
+          width: 100,
+          height: 100,
+          animated: true,
+          gravity: :north,
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.size(output_path)).to eq([100, 100])
+        expect(animation_metadata(path: output_path, sample_rows: [25, 75])).to eq(
+          frame_count: 4,
+          frame_delays_ms: [100, 250, 150, 500],
+          loop_count: 3,
+          frame_row_opacities: [[255, 0], [255, 0], [255, 0], [255, 0]],
+        )
+      end
+
+      it "positions each animated WebP frame at the bottom of its canvas" do
         output_path = File.join(directory, "output.webp")
-        FileUtils.cp(file_from_fixtures("static.webp").path, output_path)
-        original_content = File.binread(output_path)
 
-        expect {
-          described_class.thumbnail(
-            input_path: timed_gif_path,
-            output_path:,
-            width: 100,
-            height: 50,
-            animated: true,
-            gravity: :north,
-            timeout: 20,
-            operation: :upload_animated_avatar,
-          )
-        }.to raise_error(DiscourseVips::Error, "gravity is not supported for animated thumbnails")
+        described_class.thumbnail(
+          input_path: file_from_fixtures("animated-timing.webp").path,
+          output_path:,
+          width: 100,
+          height: 100,
+          animated: true,
+          gravity: :south,
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
 
-        expect(File.binread(output_path)).to eq(original_content)
+        expect(FastImage.size(output_path)).to eq([100, 100])
+        expect(animation_metadata(path: output_path, sample_rows: [25, 75])).to eq(
+          frame_count: 4,
+          frame_delays_ms: [100, 250, 150, 500],
+          loop_count: 3,
+          frame_row_opacities: [[0, 255], [0, 255], [0, 255], [0, 255]],
+        )
       end
 
       it "resizes each animated frame to fit the requested pixel limit" do

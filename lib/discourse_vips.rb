@@ -116,13 +116,36 @@ module DiscourseVips
     end
   end
 
-  # Resizes an image and optionally changes its output format.
+  # Resizes an image and optionally changes its output format. Provide exactly one
+  # resize target: width and height together, scale, or max_pixels.
   #
+  # @param input_path [String] source image path.
+  # @param output_path [String] destination path, which may equal input_path.
+  #   An existing destination is preserved if processing fails.
+  # @param timeout [Numeric] maximum processing time in seconds.
+  # @param operation [Symbol] name recorded by image processing instrumentation.
+  # @param input_format [String, nil] optional restriction on the detected input
+  #   format. The decoder otherwise identifies the file from its contents.
+  # @param output_format [String, nil] output format, defaulting to the destination
+  #   extension. This can differ from the input format.
+  # @param width [Integer, nil] target width in pixels, supplied with height.
+  # @param height [Integer, nil] target height in pixels, supplied with width.
+  # @param scale [Numeric, nil] alternative proportional resize factor.
+  # @param max_pixels [Integer, nil] alternative maximum pixel area per frame.
+  # @param size [Symbol] resize policy: :both allows enlargement and reduction,
+  #   :up only enlarges, :down only reduces, and :force uses the exact dimensions.
+  # @param crop [Symbol] cropping strategy for static thumbnails. Use :none, the
+  #   default, for animations.
+  # @param gravity [Symbol, nil] positions the resized image on the target canvas.
+  #   For animations, each frame is positioned on its own canvas.
+  # @param sharpen [Boolean] applies sharpening after resizing and positioning.
+  # @param quality [Integer, nil] encoder quality when supported by the output format.
+  # @param strip_metadata [Boolean] removes metadata when saving the image.
   # @param animated [Boolean] preserves GIF and WebP frames, frame delays and loop
   #   counts when true. Defaults to false, which processes only the first frame.
-  # @param gravity [Symbol, nil] positions a static thumbnail on the target canvas.
-  #   Cannot be combined with animated: true.
-  # @raise [DiscourseVips::Error] if animated: true is combined with gravity.
+  # @return [nil]
+  # @raise [ArgumentError] if resize targets conflict or are incomplete.
+  # @raise [DiscourseVips::Error] if image processing fails or times out.
   def self.thumbnail(
     input_path:,
     output_path:,
