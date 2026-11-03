@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeGroupControl extends Component {
@@ -23,7 +24,7 @@ export default class UpcomingChangeGroupControl extends Component {
   }
 
   get disabled() {
-    return this._saving || this.args.disabled;
+    return this._saving || this.args.disabled || this.args.locked;
   }
 
   get saveDisabled() {
@@ -70,9 +71,10 @@ export default class UpcomingChangeGroupControl extends Component {
 
   <template>
     <div
-      class="upcoming-change__group-selection-wrapper"
-      hidden={{not @expanded}}
-      id={{@id}}
+      class={{dConcatClass
+        "upcoming-change__group-selection-wrapper"
+        (if @locked "--locked")
+      }}
     >
       <div class="upcoming-change__group-controls">
         <EmailGroupUserChooser
@@ -90,13 +92,18 @@ export default class UpcomingChangeGroupControl extends Component {
           }}
           @value={{this.groups}}
         />
-        <DButton
-          class="btn-primary upcoming-change__save-groups"
-          @disabled={{this.saveDisabled}}
-          @icon="check"
-          @title="admin.upcoming_changes.save_groups"
-          {{on "click" this.saveGroups}}
-        />
+        {{#unless @locked}}
+          <DButton
+            class={{dConcatClass
+              "upcoming-change__save-groups"
+              (if this.saveDisabled "btn-default" "btn-success")
+            }}
+            @disabled={{this.saveDisabled}}
+            @icon="check"
+            @title="admin.upcoming_changes.save_groups"
+            {{on "click" this.saveGroups}}
+          />
+        {{/unless}}
       </div>
       {{#if this.description}}
         <p class="upcoming-change__groups-description">{{this.description}}</p>

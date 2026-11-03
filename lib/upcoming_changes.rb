@@ -323,6 +323,24 @@ module UpcomingChanges
     }
   end
 
+  ROLE_GROUP_KEYS = {
+    all_members: %i[logged_in_users anonymous_users],
+    staff: %i[staff],
+    admins: %i[admins],
+    developers: %i[admins],
+    moderators: %i[moderators],
+  }.freeze
+
+  # The automatic groups matching an upcoming change's `impact_role`. The admin
+  # UI shows these as the default audience, and as a locked audience when the
+  # change cannot be scoped to groups.
+  def self.role_group_ids(change_setting_name)
+    role = change_metadata(change_setting_name)[:impact_role]&.to_sym
+    Group::AUTO_GROUPS.values_at(*ROLE_GROUP_KEYS.fetch(role, ROLE_GROUP_KEYS[:all_members]))
+  end
+
+  # Selecting the full default audience is stored as no restriction, so the
+  # change keeps applying to everyone the feature itself targets.
   def self.normalize_group_names(change_setting_name, group_names)
     names = Array.wrap(group_names).reject(&:blank?).uniq
     unless exists?(change_setting_name) && !group_setting_name(change_setting_name) &&
@@ -332,7 +350,10 @@ module UpcomingChanges
 
     everyone_groups =
       Group.where(id: Group::AUTO_GROUPS.values_at(:logged_in_users, :anonymous_users)).pluck(:name)
-    everyone_groups.length == 2 && (everyone_groups - names).empty? ? [] : names
+    return [] if everyone_groups.length == 2 && (everyone_groups - names).empty?
+
+    role_groups = Group.where(id: role_group_ids(change_setting_name)).pluck(:name)
+    role_groups.present? && role_groups.sort == names.sort ? [] : names
   end
 
   def self.group_scope_allowed?(change_setting_name, group_names)

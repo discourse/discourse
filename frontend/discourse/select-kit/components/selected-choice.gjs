@@ -75,8 +75,8 @@ export default class SelectedChoice extends Component {
         title={{this.readOnlyTitle}}
         type="button"
       >
-        <span class="d-button-label">{{this.itemName}}</span>
         {{dIcon "lock"}}
+        <span class="d-button-label">{{this.itemName}}</span>
       </button>
     {{else if this.readOnly}}
       <button

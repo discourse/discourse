@@ -3063,7 +3063,6 @@ en:
 
     learn_more: "Learn more…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Learn more…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
 
     mute: Mute
     unmute: Unmute
@@ -6916,12 +6915,13 @@ en:
         name: "Name"
         plugin: "Plugin"
         metadata: "Metadata"
-        enabled: "Enabled"
-        availability: "Availability..."
+        enabled: "Enabled?"
+        availability: "Availability"
         show_image: "Show image"
-        edit_groups: "Edit opt-in groups"
+        feedback: "Feedback"
         toggle: "Enable %{name}"
         staff_always_included: "Staff is always included"
+        audience_locked: "This change can't be applied to other groups"
         toggle_instead_of_empty_groups: "To disable this upcoming change, use the toggle instead of changing group permissions."
         groups_updated: "Groups updated!"
         save_groups: "Save groups"
@@ -6929,7 +6929,7 @@ en:
         no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
-        show_related_settings: "Show related settings..."
+        settings: "Settings"
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
@@ -6937,7 +6937,7 @@ en:
         change_disabled: "You have opted-out of this change"
         depends_on_notice: "This change requires %{dependencyLinks} to be enabled."
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
-        permanent_soon_notice: "This change will become permanent soon. You will no longer be able to opt-out."
+        permanent_soon_notice: "This change will become permanent soon. You will not be able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"

@@ -193,8 +193,11 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                 class="d-table__header-cell upcoming-change__name-header"
               >{{i18n "admin.upcoming_changes.name"}}</th>
               <th
-                class="d-table__header-cell upcoming-change__enabled-header"
+                class="d-table__header-cell upcoming-change__availability-header"
               >{{i18n "admin.upcoming_changes.availability"}}</th>
+              <th
+                class="d-table__header-cell upcoming-change__enabled-header"
+              >{{i18n "admin.upcoming_changes.enabled"}}</th>
             </tr>
           </thead>
           <tbody class="d-table__body">

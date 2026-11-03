@@ -138,6 +138,39 @@ RSpec.describe UpcomingChanges::Toggle do
       end
     end
 
+    context "when an admin-only change is scoped to its role's group" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            impact: "feature,admins",
+            impact_role: "admins",
+            status: :experimental,
+          },
+        )
+        SiteSetting.enable_form_templates = false
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "3")
+      end
+
+      context "with exactly the role's group" do
+        let(:params) { super().merge(group_names: ["admins"]) }
+
+        it "stores no restriction" do
+          expect(result).to run_successfully
+          expect(SiteSetting.enable_form_templates).to eq(true)
+          expect(SiteSettingGroup.where(name: setting_name)).to be_empty
+        end
+      end
+
+      context "with the role's group plus another group" do
+        let(:params) { super().merge(group_names: %w[admins trust_level_2]) }
+
+        it "stores the selected groups" do
+          expect(result).to run_successfully
+          expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("1|12")
+        end
+      end
+    end
+
     context "when enabling a staff-inclusive change with additional groups" do
       let(:params) { super().merge(group_names: %w[staff trust_level_2]) }
 

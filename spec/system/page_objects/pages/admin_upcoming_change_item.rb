@@ -73,26 +73,27 @@ module PageObjects
         toggle_switch.unchecked?
       end
 
-      def toggle_groups
-        find_item(@setting_name).find(".upcoming-change__edit-groups").click
-      end
-
-      def has_group_button?
-        find_item(@setting_name).has_css?(".upcoming-change__edit-groups")
-      end
-
-      def has_no_group_button?
-        find_item(@setting_name).has_no_css?(".upcoming-change__edit-groups")
-      end
-
       def group_selector
         PageObjects::Components::SelectKit.new(
           "#{change_item_selector(@setting_name)} .email-group-user-chooser",
         )
       end
 
-      def has_no_group_selector?
-        find_item(@setting_name).has_no_css?(".email-group-user-chooser")
+      def has_editable_audience?
+        find_item(@setting_name).has_css?(".email-group-user-chooser:not(.is-disabled)")
+      end
+
+      def has_locked_audience?(*group_names)
+        item = find_item(@setting_name)
+        item.has_css?(".email-group-user-chooser.is-disabled") &&
+          item.has_no_css?(".upcoming-change__save-groups") &&
+          item.has_css?(
+            ".upcoming-change__groups-description",
+            text: I18n.t("admin_js.admin.upcoming_changes.audience_locked"),
+          ) &&
+          group_names.all? do |group_name|
+            item.has_css?(".selected-choice[data-value='#{group_name}'] .d-icon-lock")
+          end
       end
 
       def open_group_selector

@@ -4,7 +4,6 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { guidFor } from "@ember/object/internals";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -18,11 +17,18 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import lightbox from "discourse/lib/lightbox";
 import { sanitize } from "discourse/lib/text";
-import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const ROLE_GROUPS = {
+  all_members: [AUTO_GROUPS.logged_in_users, AUTO_GROUPS.anonymous_users],
+  staff: [AUTO_GROUPS.staff],
+  admins: [AUTO_GROUPS.admins],
+  developers: [AUTO_GROUPS.admins],
+  moderators: [AUTO_GROUPS.moderators],
+};
 
 export default class UpcomingChangeItem extends Component {
   @service site;
@@ -33,10 +39,7 @@ export default class UpcomingChangeItem extends Component {
   bufferedGroups = this.args.change.groups?.split(",").filter(Boolean) || [];
   @tracked bufferedEnabledFor = this.args.change.upcoming_change.enabled_for;
   @tracked savingEnabledFor = false;
-  @tracked showGroups = false;
   @tracked enableAfterSelection = false;
-  @tracked groupsInitialized = false;
-  groupSelectionId = `${guidFor(this)}-groups`;
 
   applyLightbox = modifier((element) => lightbox(element));
 
@@ -46,12 +49,39 @@ export default class UpcomingChangeItem extends Component {
     return this.args.change.upcoming_change.allow_enabled_for;
   }
 
-  get canRefineGroups() {
-    return (
-      this._linkedGroupSetting ||
-      !this.allowEnabledFor ||
-      this.allowEnabledFor.includes("specific_groups")
+  // Changes that only read the boolean setting can't be scoped, so their
+  // audience is shown as the groups the change affects rather than stored.
+  get isLocked() {
+    return Boolean(
+      !this._linkedGroupSetting &&
+      this.allowEnabledFor &&
+      !this.allowEnabledFor.includes("specific_groups")
     );
+  }
+
+  get roleGroups() {
+    const groups =
+      ROLE_GROUPS[this.args.change.upcoming_change.impact_role] ||
+      ROLE_GROUPS.all_members;
+    return groups.map(
+      (group) => this.site.groupsById[group.id]?.name || group.name
+    );
+  }
+
+  get displayGroups() {
+    if (this._linkedGroupSetting) {
+      return this.bufferedGroups;
+    }
+    if (this.isLocked) {
+      return this.requiresStaff ? [this.staffGroupName] : this.roleGroups;
+    }
+    if (this.requiresStaff) {
+      return [...new Set([this.staffGroupName, ...this.bufferedGroups])];
+    }
+    if (!this.allowEnabledFor && !this.bufferedGroups.length) {
+      return this.roleGroups;
+    }
+    return this.bufferedGroups;
   }
 
   get isEnabled() {
@@ -67,6 +97,9 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get lockedGroups() {
+    if (this.isLocked) {
+      return this.displayGroups;
+    }
     if (this._linkedGroupSetting) {
       return (this._linkedGroupSetting.mandatory_values || "")
         .split("|")
@@ -108,10 +141,13 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get groupsDescription() {
+    if (this.isLocked) {
+      return i18n("admin.upcoming_changes.audience_locked");
+    }
     if (this.requiresStaff) {
       return i18n("admin.upcoming_changes.staff_always_included");
     }
-    if (this.enableAfterSelection || !this.bufferedGroups.length) {
+    if (this.enableAfterSelection || !this.displayGroups.length) {
       return i18n("admin.upcoming_changes.add_groups_to_enable");
     }
   }
@@ -121,6 +157,10 @@ export default class UpcomingChangeItem extends Component {
       this.args.change.upcoming_change.status === "stable" &&
       this.args.change.upcoming_change.permanent_warning !== false
     );
+  }
+
+  get showNotices() {
+    return this.showDependsOnNotice || this.showPermanentSoonNotice;
   }
 
   get showDependsOnNotice() {
@@ -162,16 +202,17 @@ export default class UpcomingChangeItem extends Component {
     );
   }
 
-  get defaultOverrideSettingFilter() {
-    return `upcoming_change_default_override:${this.args.change.setting}`;
+  get hasLinks() {
+    return Boolean(
+      this.args.change.upcoming_change.image?.url ||
+      this.args.change.upcoming_change.learn_more_url ||
+      this.showDependentSettingsLink ||
+      this.showDefaultOverrideSettingLink
+    );
   }
 
-  @action
-  toggleGroupSelection() {
-    this.showGroups = !this.showGroups;
-    if (this.showGroups) {
-      this.#initializeGroups();
-    }
+  get defaultOverrideSettingFilter() {
+    return `upcoming_change_default_override:${this.args.change.setting}`;
   }
 
   @action
@@ -188,10 +229,12 @@ export default class UpcomingChangeItem extends Component {
       await this.#save(true);
       return;
     }
-    this.#initializeGroups();
-    const groups = this.bufferedGroups;
+    if (this.isLocked) {
+      await this.#save(true, this.requiresStaff ? [this.staffGroupName] : []);
+      return;
+    }
+    const groups = this.displayGroups;
     if (this.allowEnabledFor?.includes("specific_groups") && !groups.length) {
-      this.showGroups = true;
       this.enableAfterSelection = true;
       return;
     }
@@ -205,11 +248,7 @@ export default class UpcomingChangeItem extends Component {
     }
     const enabled =
       groups.length > 0 && (this.isEnabled || this.enableAfterSelection);
-    if (await this.#save(enabled, groups)) {
-      this.bufferedGroups = groups;
-      return true;
-    }
-    return false;
+    return this.#save(enabled, groups);
   }
 
   async #saveLinkedGroups(groups) {
@@ -258,29 +297,6 @@ export default class UpcomingChangeItem extends Component {
     }
   }
 
-  #initializeGroups() {
-    if (this.groupsInitialized) {
-      return;
-    }
-    if (this._linkedGroupSetting) {
-      this.groupsInitialized = true;
-      return;
-    }
-    if (this.allowEnabledFor?.includes("everyone")) {
-      this.bufferedGroups = [];
-    } else if (this.requiresStaff) {
-      this.bufferedGroups = this.canRefineGroups
-        ? [...new Set([this.staffGroupName, ...this.bufferedGroups])]
-        : [this.staffGroupName];
-    } else if (!this.allowEnabledFor && !this.bufferedGroups.length) {
-      this.bufferedGroups = [
-        AUTO_GROUPS.logged_in_users,
-        AUTO_GROUPS.anonymous_users,
-      ].map((group) => this.site.groupsById[group.id]?.name || group.name);
-    }
-    this.groupsInitialized = true;
-  }
-
   #enabledFor(enabled, groups) {
     if (!enabled) {
       return "no_one";
@@ -305,13 +321,17 @@ export default class UpcomingChangeItem extends Component {
     return "groups";
   }
 
+  // Mirrors UpcomingChanges.normalize_group_names: the default audience is
+  // stored as no restriction.
   #persistedGroups(groups) {
     if (!this.allowEnabledFor) {
-      const defaults = [
-        AUTO_GROUPS.logged_in_users,
-        AUTO_GROUPS.anonymous_users,
-      ].map((group) => this.site.groupsById[group.id]?.name || group.name);
-      if (defaults.every((group) => groups.includes(group))) {
+      const everyone = ROLE_GROUPS.all_members.map(
+        (group) => this.site.groupsById[group.id]?.name || group.name
+      );
+      const isRoleDefault =
+        groups.length === this.roleGroups.length &&
+        this.roleGroups.every((group) => groups.includes(group));
+      if (isRoleDefault || everyone.every((group) => groups.includes(group))) {
         return [];
       }
     }
@@ -339,6 +359,9 @@ export default class UpcomingChangeItem extends Component {
       });
 
       this.enableAfterSelection = false;
+      if (groupNames !== undefined) {
+        this.bufferedGroups = persistedGroups;
+      }
       this.args.change.groups = persistedGroups.join(",");
       this.args.change.value = enabled;
       this.args.enabledForChanged?.(
@@ -396,11 +419,22 @@ export default class UpcomingChangeItem extends Component {
       data-upcoming-change={{@change.setting}}
     >
       <td class="d-table__cell --overview">
-        {{#if @change.plugin}}
-          <span class="upcoming-change__plugin">
-            {{dIcon "plug"}}
-            {{@change.plugin}}
-          </span>
+        {{#if this.showNotices}}
+          <div class="upcoming-change__notices">
+            {{#if this.showDependsOnNotice}}
+              <div class="upcoming-change__depends-on-notice">
+                {{dIcon "triangle-exclamation"}}
+                {{this.dependsOnNoticeText}}
+              </div>
+            {{/if}}
+
+            {{#if this.showPermanentSoonNotice}}
+              <div class="upcoming-change__status-notice">
+                {{dIcon "triangle-exclamation"}}
+                {{i18n "admin.upcoming_changes.permanent_soon_notice"}}
+              </div>
+            {{/if}}
+          </div>
         {{/if}}
 
         <div class="d-table__overview-name">
@@ -413,12 +447,13 @@ export default class UpcomingChangeItem extends Component {
             {{linkifySettingLinks @change.description}}
           >
             {{trustHTML @change.description}}
+          </div>
+        {{/if}}
 
-            <div
-              class="upcoming-change__description-details"
-              {{this.applyLightbox}}
-            >
-              {{#if @change.upcoming_change.image.url}}
+        {{#if this.hasLinks}}
+          <div class="upcoming-change__links" {{this.applyLightbox}}>
+            {{#if @change.upcoming_change.image.url}}
+              <span class="upcoming-change__link">
                 <a
                   class="lightbox upcoming-change__image-preview"
                   data-large-src={{@change.upcoming_change.image.url}}
@@ -428,101 +463,84 @@ export default class UpcomingChangeItem extends Component {
                   rel="nofollow ugc noopener"
                 >{{dIcon "far-image"}}
                   {{i18n "admin.upcoming_changes.preview"}}</a>
-              {{/if}}
+              </span>
+            {{/if}}
 
-              {{#if @change.upcoming_change.learn_more_url}}
-                <span class="upcoming-change__learn-more">
-                  {{trustHTML
-                    (i18n
-                      "feedback_with_link"
-                      url=@change.upcoming_change.learn_more_url
-                    )
-                  }}
-                </span>
-              {{/if}}
-            </div>
+            {{#if @change.upcoming_change.learn_more_url}}
+              <span class="upcoming-change__link upcoming-change__learn-more">
+                <a
+                  href={{@change.upcoming_change.learn_more_url}}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >{{dIcon "up-right-from-square"}}
+                  {{i18n "admin.upcoming_changes.feedback"}}</a>
+              </span>
+            {{/if}}
+
+            {{#if this.showDependentSettingsLink}}
+              <span class="upcoming-change__link upcoming-change__dependents">
+                <LinkTo
+                  @query={{hash filter="all_results" dependsOn=@change.setting}}
+                  @route="adminSiteSettings"
+                >
+                  {{dIcon "gear"}}
+                  {{i18n "admin.upcoming_changes.settings"}}
+                </LinkTo>
+              </span>
+            {{/if}}
+
+            {{#if this.showDefaultOverrideSettingLink}}
+              <span
+                class="upcoming-change__link upcoming-change__default-override-setting"
+              >
+                <LinkTo
+                  @query={{hash filter=this.defaultOverrideSettingFilter}}
+                  @route="adminSiteSettings"
+                >
+                  {{dIcon "gear"}}
+                  {{i18n "admin.upcoming_changes.settings"}}
+                </LinkTo>
+              </span>
+            {{/if}}
           </div>
         {{/if}}
 
-        {{#if this.showDependsOnNotice}}
-          <div class="upcoming-change__depends-on-notice">
-            {{dIcon "triangle-exclamation"}}
-            {{this.dependsOnNoticeText}}
-          </div>
-        {{/if}}
-
-        {{#if this.showPermanentSoonNotice}}
-          <div class="upcoming-change__status-notice">
-            {{dIcon "triangle-exclamation"}}
-            {{i18n "admin.upcoming_changes.permanent_soon_notice"}}
-          </div>
-        {{/if}}
-
-        <UpcomingChangeBadges @upcomingChange={{@change.upcoming_change}} />
+        <UpcomingChangeBadges
+          @plugin={{@change.plugin}}
+          @upcomingChange={{@change.upcoming_change}}
+        />
       </td>
-      <td class="d-table__cell --detail upcoming-change__toggle-cell">
+      <td class="d-table__cell --detail upcoming-change__availability-cell">
         <div class="d-table__mobile-label">
           {{i18n "admin.upcoming_changes.availability"}}
         </div>
 
-        <div class="upcoming-change__controls">
-          <DToggleSwitch
-            aria-label={{this.toggleLabel}}
-            class="upcoming-change__enabled"
-            disabled={{this.savingEnabledFor}}
-            @state={{this.isEnabled}}
-            {{on "click" this.toggleEnabled}}
-          />
-          {{#if this.canRefineGroups}}
-            <DButton
-              aria-controls={{this.groupSelectionId}}
-              aria-expanded={{if this.showGroups "true" "false"}}
-              class="btn-default upcoming-change__edit-groups"
-              @disabled={{this.savingEnabledFor}}
-              @icon="user-group-gear"
-              @title="admin.upcoming_changes.edit_groups"
-              {{on "click" this.toggleGroupSelection}}
-            />
-          {{/if}}
+        <UpcomingChangeGroupControl
+          @description={{this.groupsDescription}}
+          @disabled={{this.savingEnabledFor}}
+          @disallowedGroups={{this.disallowedGroups}}
+          @emptySelectionMessage={{this.emptySelectionMessage}}
+          @groups={{this.displayGroups}}
+          @includeEveryone={{this.includeEveryone}}
+          @locked={{this.isLocked}}
+          @lockedGroups={{this.lockedGroups}}
+          @onSave={{this.saveGroups}}
+          @preventEmpty={{this.preventEmptyGroups}}
+        />
+
+      </td>
+      <td class="d-table__cell --detail upcoming-change__enabled-cell">
+        <div class="d-table__mobile-label">
+          {{i18n "admin.upcoming_changes.enabled"}}
         </div>
 
-        {{#if this.groupsInitialized}}
-          <UpcomingChangeGroupControl
-            @description={{this.groupsDescription}}
-            @disabled={{this.savingEnabledFor}}
-            @disallowedGroups={{this.disallowedGroups}}
-            @emptySelectionMessage={{this.emptySelectionMessage}}
-            @expanded={{this.showGroups}}
-            @groups={{this.bufferedGroups}}
-            @id={{this.groupSelectionId}}
-            @includeEveryone={{this.includeEveryone}}
-            @lockedGroups={{this.lockedGroups}}
-            @onSave={{this.saveGroups}}
-            @preventEmpty={{this.preventEmptyGroups}}
-          />
-        {{/if}}
-
-        {{#if this.showDependentSettingsLink}}
-          <div class="upcoming-change__dependents">
-            <LinkTo
-              @query={{hash filter="all_results" dependsOn=@change.setting}}
-              @route="adminSiteSettings"
-            >
-              {{i18n "admin.upcoming_changes.show_related_settings"}}
-            </LinkTo>
-          </div>
-        {{/if}}
-
-        {{#if this.showDefaultOverrideSettingLink}}
-          <div class="upcoming-change__default-override-setting">
-            <LinkTo
-              @query={{hash filter=this.defaultOverrideSettingFilter}}
-              @route="adminSiteSettings"
-            >
-              {{i18n "admin.upcoming_changes.show_related_settings"}}
-            </LinkTo>
-          </div>
-        {{/if}}
+        <DToggleSwitch
+          aria-label={{this.toggleLabel}}
+          class="upcoming-change__enabled"
+          disabled={{this.savingEnabledFor}}
+          @state={{this.isEnabled}}
+          {{on "click" this.toggleEnabled}}
+        />
       </td>
     </tr>
   </template>

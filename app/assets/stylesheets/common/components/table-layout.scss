@@ -265,13 +265,16 @@
   background: var(--tertiary-very-low);
   letter-spacing: 0.25px;
 
-  &:visited,
-  &:active {
-    color: var(--primary-very-high);
-  }
+  // Only badges that are links react to hover.
+  &:is(a) {
+    &:visited,
+    &:active {
+      color: var(--primary-very-high);
+    }
 
-  &:hover {
-    color: var(--d-link-color);
+    &:hover {
+      color: var(--d-link-color);
+    }
   }
 
   span {

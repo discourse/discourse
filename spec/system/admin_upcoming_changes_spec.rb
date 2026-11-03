@@ -189,20 +189,17 @@ describe "Admin upcoming changes" do
     )
     upcoming_changes_page.visit
     item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-    item.toggle_groups
     expect(item).to have_groups("trust_level_4")
 
     item.toggle
     expect(upcoming_changes_page).to have_disabled_success_toast
     upcoming_changes_page.visit
     expect(item).to be_disabled
-    item.toggle_groups
     expect(item).to have_groups("trust_level_4")
 
     item.toggle
     expect(item).to be_enabled
     upcoming_changes_page.visit
-    item.toggle_groups
     expect(item).to have_groups("trust_level_4")
     expect(item).to be_enabled
   end
@@ -212,22 +209,17 @@ describe "Admin upcoming changes" do
     item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
     item.toggle
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
-    item.toggle_groups
-    expect(item).to have_groups("logged_in_users", "anonymous_users")
-    item.remove_group("anonymous_users")
-    item.save_groups
-    expect(upcoming_changes_page).to have_groups_updated_success_toast
-
-    upcoming_changes_page.visit
-    item.toggle_groups
-    expect(item).to have_groups("logged_in_users")
+    expect(item).to have_groups("admins")
     item.add_group("trust_level_4")
     item.save_groups
     expect(upcoming_changes_page).to have_groups_updated_success_toast
 
     upcoming_changes_page.visit
-    item.toggle_groups
-    expect(item).to have_groups("logged_in_users", "trust_level_4")
+    expect(item).to have_groups("admins", "trust_level_4")
+    item.remove_group("trust_level_4")
+    item.save_groups
+    expect(upcoming_changes_page).to have_groups_updated_success_toast
+    expect(SiteSettingGroup.where(name: "enable_upload_debug_mode")).to be_empty
   end
 
   context "when an upcoming change uses a linked group setting" do
@@ -247,7 +239,6 @@ describe "Admin upcoming changes" do
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
       expect(item).to be_disabled
-      item.toggle_groups
       expect(item).to have_groups("admins", "moderators", "trust_level_4")
       expect(item).to have_locked_group("admins")
       expect(item).to have_locked_group("moderators")
@@ -259,14 +250,12 @@ describe "Admin upcoming changes" do
       expect(item).to be_disabled
 
       upcoming_changes_page.visit
-      item.toggle_groups
       expect(item).to have_groups("admins", "moderators", "trust_level_2")
       item.toggle
       expect(item).to be_enabled
 
       upcoming_changes_page.visit
       expect(item).to be_enabled
-      item.toggle_groups
       expect(item).to have_groups("admins", "moderators", "trust_level_2")
     end
 
@@ -283,7 +272,6 @@ describe "Admin upcoming changes" do
       SiteSetting.about_page_extra_groups = "12"
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      item.toggle_groups
       expect(item).to have_groups("trust_level_2")
       item.remove_group("trust_level_2")
       expect(item).to have_disabled_group_save
@@ -291,7 +279,6 @@ describe "Admin upcoming changes" do
       expect(item).to be_disabled
 
       upcoming_changes_page.visit
-      item.toggle_groups
       expect(item).to have_groups("trust_level_2")
       expect(item).to be_disabled
     end
@@ -312,20 +299,22 @@ describe "Admin upcoming changes" do
       )
     end
 
-    it "offers only a toggle for changes limited to everyone" do
+    it "shows the affected role as a locked audience for unscoped changes" do
       mock_with_allow([:everyone])
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item).to have_no_group_button
+      expect(item).to have_locked_audience("admins")
       item.toggle
       expect(item).to be_enabled
+      expect(item).to have_locked_audience("admins")
+      expect(SiteSettingGroup.where(name: "enable_upload_debug_mode")).to be_empty
     end
 
-    it "offers only a toggle for changes limited to staff" do
+    it "shows staff as a locked audience for changes limited to staff" do
       mock_with_allow([:staff])
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item).to have_no_group_button
+      expect(item).to have_locked_audience("staff")
       item.toggle
       expect(upcoming_changes_page).to have_enabled_for_success_toast(
         "staff",
@@ -342,7 +331,6 @@ describe "Admin upcoming changes" do
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
       item.toggle
       expect(item).to be_enabled
-      item.toggle_groups
       expect(item).to have_groups("staff")
       expect(item).to have_locked_group("staff")
       expect(item).to have_staff_description
@@ -351,7 +339,6 @@ describe "Admin upcoming changes" do
       expect(upcoming_changes_page).to have_groups_updated_success_toast
 
       upcoming_changes_page.visit
-      item.toggle_groups
       expect(item).to have_groups("staff", "trust_level_4")
       expect(item).to have_locked_group("staff")
       expect(item).to have_staff_description
@@ -376,7 +363,6 @@ describe "Admin upcoming changes" do
       expect(item).to be_enabled
 
       upcoming_changes_page.visit
-      item.toggle_groups
       expect(item).to have_groups("trust_level_4")
       item.remove_group("trust_level_4")
       item.save_groups
@@ -384,14 +370,12 @@ describe "Admin upcoming changes" do
       expect(item).to be_disabled
     end
 
-    it "offers group refinement when allow_enabled_for is omitted" do
+    it "offers group refinement starting from the affected role when allow_enabled_for is omitted" do
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item).to have_group_button
-      expect(item).to have_no_group_selector
-      item.toggle_groups
-      expect(item).to have_groups("logged_in_users", "anonymous_users")
       expect(item).to be_disabled
+      expect(item).to have_groups("admins")
+      expect(item).to have_editable_audience
     end
 
     it "shows auto-promoted changes as enabled before an admin configures their scope" do
@@ -400,7 +384,6 @@ describe "Admin upcoming changes" do
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
       expect(item).to be_enabled
-      item.toggle_groups
       expect(item).to have_groups("staff")
     end
   end

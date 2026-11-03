@@ -293,7 +293,6 @@ module SvgSprite
         user-check
         user-gear
         user-group
-        user-group-gear
         user-pen
         user-plus
         user-secret

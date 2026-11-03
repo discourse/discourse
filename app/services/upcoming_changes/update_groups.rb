@@ -18,6 +18,7 @@ class UpcomingChanges::UpdateGroups
   model :group_ids
   policy :groups_are_allowed
   step :update_setting
+  model :group_setting, :fetch_group_setting
   model :groups, :fetch_saved_groups
 
   private

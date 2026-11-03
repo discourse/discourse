@@ -175,10 +175,10 @@ module SiteSettingExtension
   #     learn_more_url: ""
   #     group_setting: (optional) name of an existing group_list setting to use as the audience.
   #       Cannot combine with allow_enabled_for.
-  #     allow_enabled_for: (optional) array restricting which "Enabled for" dropdown
-  #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
-  #       is always present. If `everyone` is included it must be the only value.
-  #       Omit to allow all options (the default permissive behavior).
+  #     allow_enabled_for: (optional) array restricting the audience admins can pick.
+  #       Valid values: everyone, staff, specific_groups. `everyone` must be the only
+  #       value and marks the change as unscopable, shown locked to the impact role's groups.
+  #       Omit to let admins pick any groups.
   #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
   #       useful for scoping style changes related to the change.
   #     permanent_warning: (optional) boolean, defaults to true. When the change reaches

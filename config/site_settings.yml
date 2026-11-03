@@ -44,14 +44,13 @@
 #                            example a change that only alters the default value of another site setting.
 #                          - group_setting: (optional setting name) use an existing group_list setting as
 #                            the audience instead of SiteSettingGroup. Cannot combine with allow_enabled_for.
-#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
-#                            dropdown options the admin can pick for this upcoming change.
+#                          - allow_enabled_for: (optional array) restricts the audience admins can pick.
 #                            Valid values: everyone, staff, specific_groups.
 #
-#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
-#                            the only value (it cannot combine with staff or specific_groups).
-#                            Omit the key to allow all four options (the default permissive
-#                            behavior).
+#                            `everyone` must be the only value and means the change can't be scoped to
+#                            groups; the admin UI then shows the impact role's groups as a locked audience,
+#                            so make the role match who the change affects. Omit the key to let admins
+#                            pick any groups, starting from the impact role's groups.
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
 #                         Use this when the parent setting is not boolean, for example an enum setting.
