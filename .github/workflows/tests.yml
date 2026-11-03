@@ -72,6 +72,7 @@ jobs:
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
+      TEST_IMPACT_RECORD: ${{ (matrix.build_type == 'backend' || matrix.build_type == 'system') && contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
 
     strategy:
       fail-fast: false
@@ -412,6 +413,17 @@ jobs:
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
+
+      - name: Summarize test impact recordings
+        if: always() && env.TEST_IMPACT_RECORD == '1'
+        run: script/test_impact/build_map tmp/test_impact && ls -la tmp/test_impact
+
+      - name: Upload test impact recordings
+        uses: actions/upload-artifact@v7
+        if: always() && env.TEST_IMPACT_RECORD == '1'
+        with:
+          name: test-impact-recordings-${{ matrix.build_type }}-${{ matrix.target }}
+          path: tmp/test_impact/recording-*.jsonl.gz
 
   deprecation-report:
     name: JS deprecation report

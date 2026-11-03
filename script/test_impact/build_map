@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Merges the recorder's recordings into one map for script/test_impact/select.
+#
+#   script/test_impact/build_map [recordings dir] [map path]
+
+require_relative "map"
+
+dir = ARGV[0] || "tmp/test_impact"
+out = ARGV[1] || File.join(dir, "map.json.gz")
+recordings = Dir[File.join(dir, "recording-*.jsonl.gz")].sort
+abort "build_map: no recordings in #{dir}" if recordings.empty?
+
+map = TestImpact::Map.build(recordings)
+map.dump(out)
+puts "build_map: #{map.spec_count} spec files from #{recordings.size} recordings -> #{out}"

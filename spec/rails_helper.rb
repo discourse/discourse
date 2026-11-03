@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+if ENV["TEST_IMPACT_RECORD"] == "1"
+  require_relative "../script/test_impact/recorder"
+  TestImpact::Recorder.start
+end
+
 if ENV["COVERAGE"]
   require "simplecov"
   if ENV["TEST_ENV_NUMBER"]
@@ -144,6 +149,8 @@ RSpec.configure do |config|
 
   config.order = "random"
   config.infer_spec_type_from_file_location!
+
+  TestImpact::Recorder.install(config) if defined?(TestImpact::Recorder)
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
