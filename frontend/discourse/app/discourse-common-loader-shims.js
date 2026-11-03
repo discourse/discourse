@@ -5,9 +5,6 @@ import loaderShim from "discourse/lib/loader-shim";
 loaderShim("discourse-common/helpers/base-path", () =>
   importSync("discourse/ui-kit/helpers/d-base-path")
 );
-loaderShim("discourse-common/helpers/base-url", () =>
-  importSync("discourse/helpers/base-url")
-);
 loaderShim("discourse-common/helpers/bound-i18n", () =>
   importSync("discourse/helpers/bound-i18n")
 );
