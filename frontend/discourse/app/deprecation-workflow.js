@@ -332,7 +332,6 @@ const workflows = [
     "discourse.d-popover",
     "discourse.d-section",
     "discourse.deprecated-resolver-normalization",
-    "discourse.discourse-module",
     "discourse.discovery-topics-controller",
     "discourse.ember-computed-decorators",
     "discourse.form-kit.legacy-field-yield",
