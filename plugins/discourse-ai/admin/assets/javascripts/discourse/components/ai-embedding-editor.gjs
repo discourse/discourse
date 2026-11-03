@@ -305,7 +305,7 @@ export default class AiEmbeddingEditor extends Component {
         return this.args.model
           .destroyRecord()
           .then(() => {
-            removeValueFromArray(this.args.embeddings, this.args.model);
+            removeValueFromArray(this.args.embeddings.content, this.args.model);
             this.router.transitionTo(
               "adminPlugins.show.discourse-ai-models.index"
             );
