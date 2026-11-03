@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe EmailStyle do
+  it "includes explicit theme fragment placeholders in the default HTML template" do
+    expect(described_class.new.default_html).to include(
+      "%{theme_email_header}",
+      "%{email_content}",
+      "%{theme_email_footer}",
+    )
+  end
+
   describe "ERB evaluation" do
     it "does not evaluate ERB outside of the email itself" do
       SiteSetting.email_custom_template = "<hello>%{email_content}</hello><%= (111 * 333) %>"

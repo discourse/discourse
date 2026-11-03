@@ -36,6 +36,7 @@ const ADVANCED_FIELDS = [
 @tagName("")
 export default class AdminThemeEditor extends Component {
   @service router;
+  @service siteSettings;
 
   @tracked showAdvanced;
   currentTargetName;
@@ -67,12 +68,29 @@ export default class AdminThemeEditor extends Component {
     return `${this.fieldName}|${this.currentTargetName}`;
   }
 
+  @computed("showAdvanced")
+  get advancedModeEnabled() {
+    return this.showAdvanced;
+  }
+
+  @computed("currentTargetName", "fieldName")
+  get navigationFieldName() {
+    return this.currentTargetName === "email" ? "scss" : this.fieldName;
+  }
+
   get visibleTargets() {
     return this.theme.targets.filter((target) => {
+      if (target.name === "email") {
+        return (
+          this.siteSettings.enable_email_theme_header_and_footer &&
+          this.theme.id > 0 &&
+          !this.theme.component
+        );
+      }
       if (target.edited) {
         return true;
       }
-      if (!this.showAdvanced && ADVANCED_TARGETS.includes(target.name)) {
+      if (!this.advancedModeEnabled && ADVANCED_TARGETS.includes(target.name)) {
         return false;
       }
       return true;
@@ -82,7 +100,7 @@ export default class AdminThemeEditor extends Component {
   @computed("currentTargetName", "showAdvanced", "theme.fields")
   get visibleFields() {
     let fields = this.theme.fields[this.currentTargetName];
-    if (!this.showAdvanced) {
+    if (!this.advancedModeEnabled) {
       fields = fields.filter(
         (field) => field.edited || !ADVANCED_FIELDS.includes(field.name)
       );
@@ -99,6 +117,12 @@ export default class AdminThemeEditor extends Component {
 
   @computed("currentTargetName", "fieldName")
   get activeSectionMode() {
+    if (
+      this.currentTargetName === "email" &&
+      this.fieldName.endsWith("_text")
+    ) {
+      return "text";
+    }
     if (this.fieldName === "color_definitions") {
       return "scss";
     }
@@ -153,10 +177,14 @@ export default class AdminThemeEditor extends Component {
 
   @action
   toggleShowAdvanced() {
-    this.showAdvanced = !this.showAdvanced;
+    this.showAdvanced = !this.advancedModeEnabled;
+    this.onShowAdvancedChange(this.showAdvanced);
+
     if (
-      !this.visibleTargets.some((t) => t.name === this.currentTargetName) ||
-      !this.visibleFields.some((f) => f.name === this.fieldName)
+      !this.visibleTargets.some(
+        (target) => target.name === this.currentTargetName
+      ) ||
+      !this.visibleFields.some((field) => field.name === this.fieldName)
     ) {
       this.router.replaceWith(
         this.editRouteName,
@@ -194,7 +222,7 @@ export default class AdminThemeEditor extends Component {
         <div class="editor-information__admin-actions">
           <DToggleSwitch
             @label="admin.customize.theme.show_advanced"
-            @state={{this.showAdvanced}}
+            @state={{this.advancedModeEnabled}}
             {{on "click" this.toggleShowAdvanced}}
           />
 
@@ -215,13 +243,23 @@ export default class AdminThemeEditor extends Component {
                 <LinkTo
                   class={{if target.edited "edited" "blank"}}
                   title={{this.field.title}}
-                  @models={{array this.theme.id target.name this.fieldName}}
+                  @models={{array
+                    this.theme.id
+                    target.name
+                    (if
+                      (eq target.name "email") "header" this.navigationFieldName
+                    )
+                  }}
                   @replace={{true}}
                   @route={{this.editRouteName}}
                 >
                   {{#if target.error}}{{dIcon "triangle-exclamation"}}{{/if}}
                   {{#if target.icon}}{{dIcon target.icon}}{{/if}}
-                  {{i18n (concat "admin.customize.theme." target.name)}}
+                  {{#if target.translatedName}}
+                    {{target.translatedName}}
+                  {{else}}
+                    {{i18n (concat "admin.customize.theme." target.name)}}
+                  {{/if}}
                 </LinkTo>
               </li>
             {{/each}}
@@ -229,7 +267,7 @@ export default class AdminThemeEditor extends Component {
         </div>
       {{/if}}
 
-      <div class="admin-controls">
+      <div class="admin-controls theme-editor__fields">
         <DHorizontalOverflowNav @className="fields">
           {{#each this.visibleFields as |field|}}
             <li>
@@ -265,17 +303,20 @@ export default class AdminThemeEditor extends Component {
         {{this.currentField.title}}
       </div>
 
-      <AceEditor
-        @autofocus="true"
-        @content={{this.activeSection}}
-        @editorId={{this.editorId}}
-        @htmlPlaceholder={{true}}
-        @mode={{this.activeSectionMode}}
-        @onChange={{fn (mut this.activeSection)}}
-        @placeholder={{this.placeholder}}
-        @save={{this.save}}
-        @setWarning={{this.setWarning}}
-      />
+      {{#each (array this.editorId) key="@identity" as |editorId|}}
+        <AceEditor
+          class="theme-editor__code"
+          @autofocus="true"
+          @content={{this.activeSection}}
+          @editorId={{editorId}}
+          @htmlPlaceholder={{true}}
+          @mode={{this.activeSectionMode}}
+          @onChange={{fn (mut this.activeSection)}}
+          @placeholder={{this.placeholder}}
+          @save={{this.save}}
+          @setWarning={{this.setWarning}}
+        />
+      {{/each}}
     </div>
   </template>
 }

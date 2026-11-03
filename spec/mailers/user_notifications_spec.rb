@@ -2175,7 +2175,7 @@ RSpec.describe UserNotifications do
 
         expect(html.css("[onerror], img[src='x']")).to be_empty
         expect(html.text).to include(post.topic.title)
-        expect(renderer.text).to include(post.topic.title)
+        expect(renderer.text).to eq(mail.text_part.body.decoded)
         expect(html.css("a").map { |link| link["href"] }).to include(post.topic.url)
       end
     end

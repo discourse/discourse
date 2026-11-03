@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { click, currentURL, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -8,8 +8,36 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/admin/themes", () => {
+      const localTheme = {
+        id: 43,
+        name: "Local custom theme",
+        default: false,
+        component: false,
+        user_selectable: false,
+        enabled: true,
+        supported: true,
+        settings: [],
+        theme_fields: [
+          {
+            name: "header",
+            target: "email",
+            value: "<header>Email header content</header>",
+            type_id: 0,
+          },
+          {
+            name: "footer",
+            target: "email",
+            value: "<footer>Email footer content</footer>",
+            type_id: 0,
+          },
+        ],
+        child_themes: [],
+        parent_themes: [],
+        remote_theme: null,
+      };
       return helper.response({
         themes: [
+          localTheme,
           {
             id: -1,
             name: "Foundation",
@@ -44,6 +72,18 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
                 upload_id: 84,
                 url: "/uploads/default/original/1X/783d7817fd5e44b15d3532ffb13d2f70174a039f.png",
                 filename: "dark.png",
+              },
+              {
+                name: "header",
+                target: "email",
+                value: "<header>Email header content</header>",
+                type_id: 0,
+              },
+              {
+                name: "footer",
+                target: "email",
+                value: "<footer>Email footer content</footer>",
+                type_id: 0,
               },
               {
                 name: "en",
@@ -169,6 +209,81 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
         "theme:-1",
         "the theme id is exposed via outletArgs on the translation selector outlet"
       );
+  });
+
+  test("hides the email tab when branding is disabled and on built-in themes", async function (assert) {
+    await visit("/admin/customize/themes/43/common/scss/edit");
+    await click(".d-toggle-switch__checkbox");
+    assert
+      .dom('.edit-main-nav a[href*="/email/"]')
+      .doesNotExist("disabled branding has no email tab");
+
+    this.siteSettings.enable_email_theme_header_and_footer = true;
+    await visit("/admin/customize/themes/-1/common/scss/edit");
+    assert
+      .dom('.edit-main-nav a[href*="/email/"]')
+      .doesNotExist("built-in themes have no editable email tab");
+  });
+
+  test("preserves email rendering and advanced state across field navigation", async function (assert) {
+    this.siteSettings.enable_email_theme_header_and_footer = true;
+    await visit("/admin/customize/themes/43/email/header/edit");
+
+    let editor = find(".theme-editor__code").aceEditor;
+    assert.strictEqual(
+      editor.getValue(),
+      "<header>Email header content</header>",
+      "loads the header"
+    );
+    await click(
+      '.theme-editor__fields a[href="/admin/customize/themes/43/email/footer/edit"]'
+    );
+    editor = find(".theme-editor__code").aceEditor;
+    assert.strictEqual(
+      editor.getValue(),
+      "<footer>Email footer content</footer>",
+      "loads the footer"
+    );
+    assert.strictEqual(
+      editor.session.getMode().$id,
+      "ace/mode/html",
+      "keeps HTML mode"
+    );
+    assert
+      .dom(".theme-editor__code")
+      .hasClass("ace_editor", "keeps Ace styling");
+    assert
+      .dom(".theme-editor__code .ace_text-layer")
+      .includesText("Email footer content", "renders the footer");
+
+    await click(
+      '.theme-editor__fields a[href="/admin/customize/themes/43/email/footer_text/edit"]'
+    );
+    assert.strictEqual(
+      find(".theme-editor__code").aceEditor.session.getMode().$id,
+      "ace/mode/text",
+      "plain-text overrides use text mode"
+    );
+    await click(
+      '.edit-main-nav a[href="/admin/customize/themes/43/common/scss/edit"]'
+    );
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .hasAttribute("aria-checked", "true", "advanced mode persists");
+    assert
+      .dom(
+        '.edit-main-nav a[href="/admin/customize/themes/43/email/header/edit"]'
+      )
+      .exists("the email tab remains visible");
+  });
+
+  test("redirects disabled email editors back to the theme page", async function (assert) {
+    await visit("/admin/customize/themes/43/email/header/edit");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/customize/themes/43",
+      "disabled email editors are not exposed"
+    );
   });
 
   test("shows the compatibility-pinned ref for the pending update", async function (assert) {

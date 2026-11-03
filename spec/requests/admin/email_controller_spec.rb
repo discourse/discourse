@@ -245,17 +245,100 @@ RSpec.describe Admin::EmailController do
     end
   end
 
-  describe "#preview_digest" do
+  describe "#preview_types" do
+    it "returns the editable email template catalog to admins" do
+      sign_in(admin)
+
+      get "/admin/email/preview-types.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["email_templates"]).to include(
+        {
+          "id" => "system_messages.backup_failed",
+          "title" => I18n.t("system_messages.backup_failed.title"),
+        },
+      )
+    end
+
+    it "lists the message catalog and non-selectable custom themes" do
+      sign_in(admin)
+      theme = Fabricate(:theme, user_selectable: false)
+      component = Fabricate(:theme, component: true)
+
+      get "/admin/email/preview-types.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["message_types"]).to include(
+        "id" => "password_reset",
+        "title" => I18n.t("admin_js.admin.email.preview_types.password_reset"),
+      )
+      expect(response.parsed_body["branding_themes"]).to include(
+        "id" => theme.id,
+        "title" => theme.name,
+      )
+      expect(response.parsed_body["branding_themes"].map { |entry| entry["id"] }).not_to include(
+        component.id,
+      )
+    end
+
+    it "denies access to non-admins" do
+      sign_in(user)
+
+      get "/admin/email/preview-types.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "#preview_redirect" do
+    it "redirects legacy page loads while preserving the query string" do
+      sign_in(admin)
+
+      get "/admin/email/preview-digest",
+          params: {
+            email_type: "password_reset",
+            locale: "fr",
+            theme_id: "25",
+          }
+
+      expect(response.status).to eq(301)
+      location = URI(response.location)
+      expect(location.path).to eq("/admin/email/preview")
+      expect(Rack::Utils.parse_query(location.query)).to eq(
+        "email_type" => "password_reset",
+        "locale" => "fr",
+        "theme_id" => "25",
+      )
+    end
+
+    it "preserves the site subfolder for legacy page loads" do
+      set_subfolder "/forum"
+      sign_in(admin)
+
+      get "/admin/email/preview-digest"
+
+      expect(response).to redirect_to("#{Discourse.base_url}/admin/email/preview")
+    end
+  end
+
+  describe "#preview" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "serves the preview application shell on a direct page load" do
+        get "/admin/email/preview"
+
+        expect(response.status).to eq(200)
+        expect(response.media_type).to eq("text/html")
+      end
+
       it "raises an error without the last_seen_at parameter" do
-        get "/admin/email/preview-digest.json"
+        get "/admin/email/preview.json"
         expect(response.status).to eq(400)
       end
 
       it "returns the right response when username is invalid" do
-        get "/admin/email/preview-digest.json",
+        get "/admin/email/preview.json",
             params: {
               last_seen_at: 1.week.ago,
               username: "somerandomeusername",
@@ -268,7 +351,7 @@ RSpec.describe Admin::EmailController do
         Fabricate(:topic, created_at: 1.day.ago)
 
         expect do
-          get "/admin/email/preview-digest.json",
+          get "/admin/email/preview.json",
               params: {
                 last_seen_at: 1.week.ago,
                 username: admin.username,
@@ -282,14 +365,204 @@ RSpec.describe Admin::EmailController do
       end
 
       it "returns no preview when the digest has no content" do
-        get "/admin/email/preview-digest.json",
+        get "/admin/email/preview.json",
             params: {
               last_seen_at: 1.week.ago,
               username: admin.username,
             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body).to eq("html_content" => "", "text_content" => "")
+        expect(response.parsed_body).to eq(
+          "subject" => nil,
+          "html_content" => "",
+          "text_content" => "",
+        )
+      end
+
+      it "previews the digest in the requested locale" do
+        Fabricate(:topic, created_at: 1.day.ago)
+
+        get "/admin/email/preview.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: admin.username,
+              locale: "fr",
+            }
+
+        expect(response.status).to eq(200)
+        rendered_contents = response.parsed_body.values_at("html_content", "text_content")
+        french_label = I18n.t("user_notifications.digest.new_topics", locale: :fr)
+        english_label = I18n.t("user_notifications.digest.new_topics", locale: :en)
+        expect(rendered_contents).to all(include(french_label))
+        rendered_contents.each do |rendered_content|
+          expect(rendered_content).not_to include(english_label)
+        end
+      end
+
+      it "validates theme overrides" do
+        component = Fabricate(:theme, component: true)
+        [0, component.id, "not-an-id"].each do |theme_id|
+          get "/admin/email/preview.json",
+              params: {
+                username: admin.username,
+                email_type: "test_email",
+                theme_id:,
+              }
+          expect(response.status).to eq(400)
+        end
+      end
+
+      it "rejects an unsupported preview locale" do
+        get "/admin/email/preview.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: admin.username,
+              locale: "unsupported",
+            }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "previews password reset messages without creating credentials" do
+        preview_token = Email::Preview::PASSWORD_RESET_TOKEN
+        preview_code = Email::Preview::LOGIN_CODE
+        reset_link_preview = nil
+        reset_code_preview = nil
+
+        expect do
+          get "/admin/email/preview.json",
+              params: {
+                username: admin.username,
+                email_type: "password_reset",
+                locale: "fr",
+              }
+          expect(response.status).to eq(200)
+          reset_link_preview = response.parsed_body
+
+          get "/admin/email/preview.json",
+              params: {
+                username: admin.username,
+                email_type: "password_reset_code",
+                locale: "fr",
+              }
+          expect(response.status).to eq(200)
+          reset_code_preview = response.parsed_body
+        end.not_to change { EmailToken.count }
+
+        expect(reset_link_preview.values_at("html_content", "text_content")).to all(
+          include("/u/password-reset/#{preview_token}"),
+        )
+        expect(reset_link_preview["text_content"]).to include(
+          I18n.t(
+            "user_notifications.forgot_password.text_body_template",
+            locale: :fr,
+            site_name: SiteSetting.title,
+            base_url: Discourse.base_url,
+            email_token: preview_token,
+          ),
+        )
+        expect(reset_code_preview.values_at("html_content", "text_content")).to all(
+          include(preview_code),
+        )
+      end
+
+      it "previews representative messages without creating credentials" do
+        expected_content = {
+          "email_login_code" => Email::Preview::LOGIN_CODE,
+          "signup" => Email::Preview::EMAIL_TOKEN,
+          "activation_reminder" => Email::Preview::EMAIL_TOKEN,
+          "email_login" => Email::Preview::EMAIL_TOKEN,
+          "admin_login" => Email::Preview::EMAIL_TOKEN,
+          "account_created" => Email::Preview::EMAIL_TOKEN,
+          "confirm_new_email" => Email::Preview::EMAIL_TOKEN,
+          "test_email" => Discourse.base_url,
+        }
+
+        expect do
+          expected_content.each do |email_type, content|
+            get "/admin/email/preview.json",
+                params: {
+                  username: admin.username,
+                  email_type:,
+                  locale: "en",
+                }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["subject"]).to be_present
+            expect(response.parsed_body["text_content"]).to include(content)
+          end
+        end.not_to change { EmailToken.count }
+      end
+
+      it "previews representative messages in the requested locale" do
+        get "/admin/email/preview.json",
+            params: {
+              username: admin.username,
+              email_type: "signup",
+              locale: "fr",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["text_content"]).to include(
+          I18n.t(
+            "user_notifications.signup.text_body_template",
+            locale: :fr,
+            site_name: SiteSetting.title,
+            base_url: Discourse.base_url,
+            email_token: Email::Preview::EMAIL_TOKEN,
+          ),
+        )
+      end
+
+      it "previews editable templates with unresolved substitutions" do
+        get "/admin/email/preview.json",
+            params: {
+              username: admin.username,
+              email_type: "template:system_messages.backup_failed",
+              locale: "en",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["subject"]).to eq(
+          I18n.t("system_messages.backup_failed.subject_template"),
+        )
+        expect(response.parsed_body.values_at("html_content", "text_content")).to all(
+          include("%{logs}"),
+        )
+      end
+
+      it "previews the other form of pluralized templates" do
+        get "/admin/email/preview.json",
+            params: {
+              username: admin.username,
+              email_type: "template:system_messages.reviewables_reminder",
+              locale: "en",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["text_content"]).to include("%{mentions}", "%{count}")
+      end
+
+      it "rejects an unknown template preview" do
+        get "/admin/email/preview.json",
+            params: {
+              username: admin.username,
+              email_type: "template:unsupported",
+              locale: "en",
+            }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects an unsupported preview email type" do
+        get "/admin/email/preview.json",
+            params: {
+              username: admin.username,
+              email_type: "unsupported",
+              locale: "en",
+            }
+
+        expect(response.status).to eq(400)
       end
 
       it "does not turn a post attribute into executable HTML" do
@@ -304,7 +577,7 @@ RSpec.describe Admin::EmailController do
         end
 
         sign_in(admin)
-        get "/admin/email/preview-digest.json",
+        get "/admin/email/preview.json",
             params: {
               last_seen_at: 1.week.ago,
               username: admin.username,
@@ -318,7 +591,7 @@ RSpec.describe Admin::EmailController do
 
     shared_examples "preview digest inaccessible" do
       it "denies access with a 404 response" do
-        get "/admin/email/preview-digest.json",
+        get "/admin/email/preview.json",
             params: {
               last_seen_at: 1.week.ago,
               username: moderator.username,
@@ -342,27 +615,142 @@ RSpec.describe Admin::EmailController do
     end
   end
 
-  describe "#send_digest" do
+  describe "#send_preview" do
     context "when logged in as an admin" do
-      let(:email_send_path) { "/admin/email/send-digest.json" }
+      let(:email_send_path) { "/admin/email/send-preview.json" }
       let(:recipient_parameter) { :email }
       let(:email_send_params) do
         Fabricate(:topic, created_at: 1.day.ago)
-        { last_seen_at: 1.week.ago, username: user.username }
+        { last_seen_at: 1.week.ago, username: user.username, email_type: "digest" }
       end
 
       before { sign_in(admin) }
 
       include_examples "restricted and rate-limited admin email sends"
 
-      it "sends the digest" do
-        post "/admin/email/send-digest.json",
+      it "rejects sending an empty digest" do
+        post "/admin/email/send-preview.json",
              params: {
                last_seen_at: 1.week.ago,
                username: admin.username,
                email: admin.email,
              }
+        expect(response.status).to eq(422)
+      end
+
+      it "sends the digest in the requested locale" do
+        Fabricate(:topic, created_at: 1.day.ago)
+        ActionMailer::Base.deliveries.clear
+
+        post "/admin/email/send-preview.json",
+             params: {
+               last_seen_at: 1.month.ago,
+               username: admin.username,
+               email: admin.email,
+               locale: "fr",
+             }
+
         expect(response.status).to eq(200)
+        message = ActionMailer::Base.deliveries.last
+        rendered_contents = [message.html_part.body.to_s, message.text_part.body.to_s]
+        expect(rendered_contents).to all(
+          include(I18n.t("user_notifications.digest.new_topics", locale: :fr)),
+        )
+      end
+
+      it "respects disabled delivery for every preview type" do
+        SiteSetting.disable_emails = "yes"
+        %w[admin_login test_email template:system_messages.backup_failed].each do |email_type|
+          expect do
+            post "/admin/email/send-preview.json",
+                 params: {
+                   username: admin.username,
+                   email: admin.email,
+                   email_type:,
+                 }
+          end.not_to change { ActionMailer::Base.deliveries.length }
+          expect(response.status).to eq(422)
+        end
+      end
+
+      it "sends draft theme branding without changing the default theme or setting" do
+        theme = Fabricate(:theme)
+        theme.set_field(
+          target: :email,
+          name: "header",
+          value: "<header>Draft preview branding</header>",
+        )
+        theme.save!
+        default_theme_id = SiteSetting.default_theme_id
+
+        post "/admin/email/send-preview.json",
+             params: {
+               username: admin.username,
+               email: admin.email,
+               email_type: "test_email",
+               theme_id: theme.id,
+             }
+
+        expect(response.status).to eq(200)
+        message = ActionMailer::Base.deliveries.last
+        expect([message.html_part.body.decoded, message.text_part.body.decoded]).to all(
+          include("Draft preview branding"),
+        )
+        expect(message.header[Email::Renderer::THEME_HEADER]).to be_nil
+        expect(SiteSetting.default_theme_id).to eq(default_theme_id)
+        expect(SiteSetting.enable_email_theme_header_and_footer).to eq(false)
+      end
+
+      it "sends password reset previews without creating credentials" do
+        ActionMailer::Base.deliveries.clear
+        email_token_count = EmailToken.count
+        messages = {}
+
+        %w[password_reset password_reset_code].each do |email_type|
+          post "/admin/email/send-preview.json",
+               params: {
+                 username: admin.username,
+                 email: admin.email,
+                 email_type:,
+                 locale: "en",
+               }
+
+          expect(response.status).to eq(200)
+          messages[email_type] = ActionMailer::Base.deliveries.last
+        end
+
+        expect(EmailToken.count).to eq(email_token_count)
+        expect(
+          [
+            messages["password_reset"].html_part.body.to_s,
+            messages["password_reset"].text_part.body.to_s,
+          ],
+        ).to all(include("/u/password-reset/#{Email::Preview::PASSWORD_RESET_TOKEN}"))
+        expect(
+          [
+            messages["password_reset_code"].html_part.body.to_s,
+            messages["password_reset_code"].text_part.body.to_s,
+          ],
+        ).to all(include(Email::Preview::LOGIN_CODE))
+      end
+
+      it "sends literal template previews" do
+        ActionMailer::Base.deliveries.clear
+
+        post "/admin/email/send-preview.json",
+             params: {
+               username: admin.username,
+               email: admin.email,
+               email_type: "template:system_messages.backup_failed",
+               locale: "en",
+             }
+
+        expect(response.status).to eq(200)
+        message = ActionMailer::Base.deliveries.last
+        expect(message.subject).to eq(I18n.t("system_messages.backup_failed.subject_template"))
+        expect([message.html_part.body.to_s, message.text_part.body.to_s]).to all(
+          include("%{logs}"),
+        )
       end
 
       it "sends the digest to the requested email without unsubscribe links" do
@@ -370,7 +758,7 @@ RSpec.describe Admin::EmailController do
         ActionMailer::Base.deliveries.clear
 
         expect {
-          post "/admin/email/send-digest.json",
+          post "/admin/email/send-preview.json",
                params: {
                  last_seen_at: 1.month.ago,
                  username: user.username,
@@ -387,6 +775,24 @@ RSpec.describe Admin::EmailController do
         expect(message.text_part.body.to_s).not_to include("/email/unsubscribe/")
         expect(message.header["List-Unsubscribe"].to_s).to be_blank
         expect(message.header["List-Unsubscribe-Post"].to_s).to be_blank
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "denies test sends" do
+        expect do
+          post "/admin/email/send-preview.json",
+               params: {
+                 username: user.username,
+                 email: user.email,
+                 email_type: "template:test_mailer",
+                 locale: "en",
+               }
+        end.not_to change { ActionMailer::Base.deliveries.length }
+
+        expect(response.status).to eq(404)
       end
     end
   end

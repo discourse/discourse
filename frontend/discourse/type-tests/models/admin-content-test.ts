@@ -288,22 +288,38 @@ declare const preview: EmailPreview;
 expectTypeOf(preview).toExtend<EmberObject>();
 expectTypeOf(preview).not.toExtend<RestModel>();
 EmailPreview.create({ html_content: "<p>Hello</p>", text_content: "Hello" });
+expectTypeOf(preview.subject).toEqualTypeOf<string | null>();
 expectTypeOf(preview.html_content).toEqualTypeOf<string>();
 expectTypeOf(preview.text_content).toEqualTypeOf<string>();
 expectTypeOf(oneWeekAgo()).toEqualTypeOf<string>();
 expectTypeOf(
-  EmailPreview.findDigest("anne")
+  EmailPreview.findPreview("anne")
 ).resolves.toEqualTypeOf<EmailPreview>();
-EmailPreview.findDigest("anne", null);
-EmailPreview.findDigest("anne", "2026-10-20");
+EmailPreview.findPreview("anne", null);
+EmailPreview.findPreview("anne", "2026-10-20");
+EmailPreview.findPreview("anne", null, "password_reset", "fr", 42);
+EmailPreview.findPreview("anne", null, "template:test_mailer", null, "42");
+expectTypeOf(EmailPreview.findTypes()).resolves.toMatchObjectType<{
+  message_types: { id: string; title: string }[];
+  email_templates: { id: string; title: string }[];
+  branding_themes: { id: number; title: string }[];
+}>();
 expectTypeOf(
-  EmailPreview.sendDigest("anne", "2026-10-20", "anne@example.com")
+  EmailPreview.sendPreview("anne", "2026-10-20", "anne@example.com")
 ).resolves.toExtend<{ success?: string; errors?: string | string[] | null }>();
 expectTypeOf(
-  EmailPreview.sendDigest("anne", null, "anne@example.com")
+  EmailPreview.sendPreview("anne", null, "anne@example.com")
 ).resolves.not.toBeAny();
-EmailPreview.sendDigest(null, null, null);
-EmailPreview.sendDigest(undefined, null, "anne@example.com");
+EmailPreview.sendPreview(null, null, null);
+EmailPreview.sendPreview(undefined, null, "anne@example.com");
+EmailPreview.sendPreview(
+  "anne",
+  null,
+  "anne@example.com",
+  "password_reset",
+  "fr",
+  42
+);
 
 declare const emailSettings: EmailSettings;
 expectTypeOf(emailSettings).toExtend<EmberObject>();
