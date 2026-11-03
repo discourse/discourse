@@ -1522,7 +1522,6 @@ ca:
     enable_names: "Mostra el nom complet de l'usuari en el seu perfil, la seva targeta d'usuari i els seus correus. Desactiveu-ho per a amagar el nom complet a tot arreu."
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
-    short_progress_text_threshold: "Després que el nombre de publicacions en un tema superi aquesta xifra, la barra de progrés només mostrarà el nombre actual de publicacions. Si voleu canviar l'amplada de la barra de progrés, cal modificar aquest valor."
     embed_any_origin: "Permet el contingut incrustable independentment de l’origen. Això és necessari per a aplicacions mòbils amb HTML estàtic."
     embed_support_markdown: "Admet el format de Markdown per a les publicacions incrustades."
     allowed_embed_selectors: "Llista separada per comes d'elements CSS permesos en les incrustacions."

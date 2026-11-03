@@ -32,21 +32,26 @@ es:
         badge:
           draft: Borrador
         preview: Vista previa
-        publish: Publicar
-        options: Opciones
         change:
           title: título
           body: cuerpo
       review:
-        copy: Copiar enlace
-        active: Activo
+        create: Crear enlace
+        copy: Copiar
+        open: Abierto
+        status:
+          active: Activo
+          expired: Caducado
+          revoked: Revocada
+          inactive: Inactivo
+        closed_on: "Cerrado %{date}"
+        revoke: Revocar
         message: Comentarios
       editor_table:
         edit: Editar
         status: Estado
         replies: Respuestas
       drafts: Borradores
-      private_draft: Borrador
       preview: Vista previa
       unpublish: Despublicar
       appearance_link: Aspecto

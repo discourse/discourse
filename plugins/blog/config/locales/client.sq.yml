@@ -23,18 +23,22 @@ sq:
         badge:
           draft: Draft
         preview: Parashikimi
-        options: Opsione
         change:
           title: titulli
           body: trupi
       review:
-        copy: Kopjoni lidhjen
-        active: Aktiv
+        create: Krijoni lidhje
+        copy: Kopjo
+        open: Fillo
+        status:
+          active: Aktiv
+          expired: Skaduar
+        closed_on: "Mbylli %{date}"
+        revoke: Revoko
         message: Reagime
       editor_table:
         edit: Redaktoni
         status: Status
         replies: Përgjigjet
       drafts: Drafte
-      private_draft: Draft
       preview: Parashikimi

@@ -539,7 +539,6 @@ nb_NO:
         placeholder: "Skriv tittel, URL eller ID her"
     dsa_statements:
       category: "Kategori"
-      saving: "Lagrer…"
     review:
       show_more: "Vis mer"
       show_less: "Vis mindre"

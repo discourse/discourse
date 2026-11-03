@@ -18,16 +18,19 @@ id:
       panel:
         badge:
           draft: Konsep
-        options: Opsi
         change:
           title: judul
           body: konten
       review:
-        active: Aktif
+        copy: Salin
+        open: Buka
+        status:
+          active: Aktif
+        closed_on: "Ditutup %{date}"
+        revoke: Cabut
         message: Umpan balik
       editor_table:
         edit: Ubah
         status: Status
         replies: balasan
       drafts: Konsep
-      private_draft: Konsep

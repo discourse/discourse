@@ -774,7 +774,6 @@ es:
     dsa_statements:
       category: "Categoría"
       category_prompt: "Elige una categoría"
-      saving: "Guardando…"
     review:
       show_more: "Mostrar más"
       show_less: "Mostrar menos"

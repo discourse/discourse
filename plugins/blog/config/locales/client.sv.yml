@@ -27,20 +27,25 @@ sv:
         badge:
           draft: Utkast
         preview: Förhandsgranska
-        publish: Publicera
-        options: Alternativ
         change:
           title: rubrik
           body: huvuddel
       review:
-        active: Aktiv
+        copy: Kopiera
+        open: Öppen
+        status:
+          active: Aktiv
+          expired: Utgången
+          revoked: Återkallad
+          inactive: Inaktiv
+        closed_on: "Stängdes %{date}"
+        revoke: Återkalla
         message: Feedback
       editor_table:
         edit: Redigera
         status: Status
         replies: Svar
       drafts: Utkast
-      private_draft: Utkast
       preview: Förhandsgranska
       unpublish: Avpublicera
       appearance_link: Utseende

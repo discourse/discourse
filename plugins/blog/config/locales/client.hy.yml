@@ -28,21 +28,25 @@ hy:
         badge:
           draft: Սևագրել
         preview: Նախադիտում
-        publish: Հրատարակել
-        options: Տարբերակներ
         change:
           title: վերնագիր
           body: բովանդակություն
       review:
-        copy: Պատճենել հղումը
-        active: Ակտիվ
+        copy: Կրկնօրինակել
+        open: Բացել
+        status:
+          active: Ակտիվ
+          expired: Ժամկետանց
+          revoked: Հետկանչված
+          inactive: Ոչ ակտիվ
+        closed_on: "Փակվել է %{date}"
+        revoke: Հետ կանչել
         message: Կարծիք
       editor_table:
         edit: Խմբագրել
         status: Ստատուս
         replies: Պատասխաններ
       drafts: Սևագրեր
-      private_draft: Սևագրել
       preview: Նախադիտում
       unpublish: Հրապարակումը չեղարկել
       appearance_link: Արտաքին տեսք

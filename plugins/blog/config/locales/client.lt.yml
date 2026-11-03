@@ -28,23 +28,28 @@ lt:
         badge:
           draft: Juodraštis
         preview: Peržiūrėti
-        publish: Paskelbti
-        options: Nustatymai
         submit: Pateikti patvirtinimui
         change:
           title: antraštė
           body: tekstas
       review:
-        copy: Kopijuoti nuorodą
-        active: Aktyvus
-        revoke: Atšaukti nuorodą
+        label: Pavadinimas
+        create: Sukurti nuorodą
+        copy: Kopijuoti
+        open: Atidaryti
+        status:
+          active: Aktyvus
+          expired: Baigėsi galiojimo laikas
+          revoked: Atšauktas
+          inactive: Neaktyvus
+        closed_on: "Uždaryta %{date}"
+        revoke: Pašalinti
         message: Atsiliepimai
       editor_table:
         edit: Redaguoti
         status: Statusas
         replies: Atsakymai
       drafts: Juodraščiai
-      private_draft: Juodraštis
       preview: Peržiūrėti
       unpublish: Atšaukti paskelbimą
       appearance_link: Išvaizda

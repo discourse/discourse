@@ -955,7 +955,6 @@ sw:
     auto_handle_queued_age: "Shughulikia rekodi zinazosubirishwa baada ya siku hizi. Bendera zitapuuzwa . Machapisho kwenye foleni na watumiaji watakataliwa. Weka namba 0 kusitisha hiki kipengele."
     display_name_on_posts: "Onyesha jina lote kwenye machapisho zaidi ya @jinalamtumiaji"
     show_time_gap_days: "Kama machapisho mawili yametengenezwa baada ya siku hizi kupita, onyesha utofauti wa mda kwenye mada."
-    short_progress_text_threshold: "Baada ya namba za machapisho kupita namba hii, indiketa ya maendeleo kijaonyesha namba ya machapisho ya karibuni tu. Ukibadilisha upana wa indiketa ya maendeleo, itabidi ubadilishe hii namba."
     embed_support_markdown: "Ruhusu umbizo wa Markdown kwa ajili ya machapisho yaliyoambatanishwa."
     embed_post_limit: "Kiwango cha juu cha machapisho yakuambatanisha."
     embed_username_required: "Jina la mtumiaji kwa ajili ya kutengeneza mada linahitajika."

@@ -661,7 +661,6 @@ ja:
     dsa_statements:
       category: "カテゴリ"
       category_prompt: "カテゴリを選択する"
-      saving: "保存中…"
     review:
       show_more: "もっと表示"
       show_less: "表示を減らす"

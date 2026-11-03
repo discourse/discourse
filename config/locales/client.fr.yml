@@ -830,7 +830,6 @@ fr:
     dsa_statements:
       category: "Catégorie"
       category_prompt: "Choisir une catégorie"
-      saving: "Enregistrement…"
     review:
       show_more: "Afficher plus"
       show_less: "Afficher moins"

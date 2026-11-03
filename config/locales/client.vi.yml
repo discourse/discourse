@@ -655,7 +655,6 @@ vi:
         placeholder: "nhập tiêu đề tin nhắn, url hoặc id ở đây"
     dsa_statements:
       category: "Danh mục"
-      saving: "Đang lưu…"
     review:
       show_more: "Mở rộng"
       show_less: "Thu gọn"
