@@ -329,7 +329,6 @@ const workflows = [
     "discourse.ember-computed-decorators",
     "discourse.form-kit.legacy-field-yield",
     "discourse.format-age",
-    "discourse.formatter.update-relative-age-node-list",
     "discourse.get-owner-with-fallback",
     "discourse.global.site",
     "discourse.global.site-settings",
