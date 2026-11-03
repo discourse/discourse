@@ -132,6 +132,7 @@ module Onebox
             commit: I18n.t("onebox.github.header.commit"),
           },
           opened: I18n.t("onebox.github.opened"),
+          commit_by: I18n.t("onebox.github.commit_by"),
           comment_by: I18n.t("onebox.github.comment_by"),
           review_by: I18n.t("onebox.github.review_by"),
         }
