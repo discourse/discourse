@@ -37,6 +37,7 @@ export default class ChatUserInfo extends Component {
   <template>
     {{#if @user}}
       <ChatUserAvatar
+        @ariaHidden={{this.interactive}}
         @avatarSize={{this.avatarSize}}
         @interactive={{this.interactive}}
         @user={{@user}}

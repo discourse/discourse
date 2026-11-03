@@ -2,8 +2,15 @@
   max-width: 500px;
   width: 100%;
 
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-4);
+  }
+
   &__filter {
-    margin-bottom: 1rem;
+    flex-grow: 1;
   }
 
   &__list {
@@ -13,74 +20,45 @@
 
     &-item {
       display: flex;
+      gap: var(--space-2);
       list-style: none;
       border-bottom: 1px solid var(--content-border-color);
       align-items: center;
       box-sizing: border-box;
-      padding: 0.5rem;
-      cursor: pointer;
+      padding: var(--space-3);
 
-      .-user-info {
-        width: 100%;
-        border: 0 none;
-        display: flex;
-        flex-grow: 1;
-      }
-
-      .avatar {
-        cursor: pointer;
+      a {
+        color: inherit;
+        overflow: hidden;
       }
 
       &:hover {
-        background: var(--primary-very-low);
+        background: var(--d-hover);
       }
 
-      &.-member {
-        .chat-user-avatar {
-          margin-right: 0.5rem;
+      .chat-user-display-name {
+        display: inline-flex;
+        gap: var(--space-2);
+        width: 100%;
+
+        span:not(.-first) {
+          color: var(--primary-high);
         }
 
-        .chat-user-display-name {
+        &__name {
           @include ellipsis;
-
-          span:not(.-first) {
-            color: var(--primary-high);
-            font-size: var(--font-down-1);
-            margin-left: 0.5rem;
-          }
-        }
-
-        .fk-d-tooltip__trigger-container {
-          gap: 0.5rem;
-        }
-
-        .user-status-message {
-          color: var(--primary-medium);
-          font-size: var(--font-down-2);
-          margin-left: 0.5rem;
-
-          .emoji {
-            height: var(--font-0);
-            width: var(--font-0);
-          }
-        }
-
-        .btn {
-          margin-left: auto;
         }
       }
 
-      &.-add-member {
-        color: var(--tertiary);
-        cursor: pointer;
+      .user-status-message {
+        @include ellipsis;
+        color: var(--primary-medium);
+        font-size: var(--font-down-2-rem);
+        white-space: nowrap;
+      }
 
-        .d-icon {
-          background: var(--primary-low);
-          color: var(--tertiary);
-          padding: 5px;
-          border-radius: 50%;
-          margin-right: 0.5rem;
-        }
+      .remove-member {
+        margin-left: auto;
       }
 
       &:last-child {
