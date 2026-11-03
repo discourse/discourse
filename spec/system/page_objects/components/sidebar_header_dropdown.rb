@@ -38,6 +38,15 @@ module PageObjects
         ).click
       end
 
+      def has_visible_categories_header_dropdown?
+        has_css?(
+          "[data-section-name='categories'] .sidebar-section-header-dropdown",
+          style: {
+            opacity: "1",
+          },
+        )
+      end
+
       def click_outside
         width = page.evaluate_script("document.body.clientWidth")
         page.find("body").click(x: width - 1, y: 1)

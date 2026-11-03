@@ -2,6 +2,8 @@
 
 describe "Viewing sidebar" do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+  let(:header_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
+  let(:edit_categories_modal) { PageObjects::Modals::SidebarEditCategories.new }
 
   context "as logged in user" do
     fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
@@ -9,6 +11,24 @@ describe "Viewing sidebar" do
     fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
 
     before { sign_in(user) }
+
+    it "keeps sidebar action buttons visible at mobile widths without touch" do
+      sign_in(admin)
+
+      resize_window(width: 390) do
+        visit("/latest")
+
+        header_dropdown.click
+
+        expect(header_dropdown).to have_visible_categories_header_dropdown
+
+        header_dropdown.click_edit_categories_dropdown_option
+
+        expect(edit_categories_modal).to have_right_title(
+          I18n.t("js.sidebar.categories_form_modal.title"),
+        )
+      end
+    end
 
     describe "when using the header dropdown navigation menu" do
       before { SiteSetting.navigation_menu = "header dropdown" }

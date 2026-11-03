@@ -56,7 +56,10 @@
         transition:
           opacity 0.25s,
           background 0.25s;
-        opacity: 0;
+
+        @include viewport.from(sm) {
+          opacity: 0;
+        }
 
         &:hover {
           .d-icon {
