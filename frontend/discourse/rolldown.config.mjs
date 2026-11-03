@@ -3,6 +3,7 @@ import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import brotliAssetsPlugin from "./lib/brotli-assets-plugin.mjs";
 import bundleAnalyzerPlugin from "./lib/bundle-analyzer-plugin.mjs";
+import bundleGraphPlugin from "./lib/bundle-graph-plugin.mjs";
 import chunkImportMapPlugin from "./lib/chunk-import-map-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
@@ -211,6 +212,9 @@ export function buildConfig({ devMode } = {}) {
       },
       brotliAssetsPlugin({ enabled: isProduction }),
       bundleAnalyzerPlugin({ compress: isProduction }),
+      ...(isProduction
+        ? [bundleGraphPlugin({ root: import.meta.dirname })]
+        : []),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {

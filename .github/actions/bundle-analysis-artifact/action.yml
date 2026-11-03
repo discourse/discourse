@@ -1,0 +1,27 @@
+name: Upload the bundle analysis artifact
+description: Uploads $RUNNER_TEMP/analysis/report.json and a pr.json for bundle-analysis-comment.yml, which accepts only those two files.
+
+runs:
+  using: composite
+  steps:
+    - name: Record the PR
+      shell: bash
+      env:
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+      run: |
+        mkdir -p "$RUNNER_TEMP/artifact"
+        cp "$RUNNER_TEMP/analysis/report.json" "$RUNNER_TEMP/artifact/report.json"
+        node -e 'require("fs").writeFileSync(process.argv[1], JSON.stringify({
+          number: Number(process.env.PR_NUMBER),
+          head_sha: process.env.HEAD_SHA,
+          head_repo: process.env.HEAD_REPO,
+        }))' "$RUNNER_TEMP/artifact/pr.json"
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: bundle-analysis
+        path: ${{ runner.temp }}/artifact
+        retention-days: 7
+        if-no-files-found: error
