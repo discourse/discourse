@@ -324,6 +324,9 @@ class DiscourseVipsWorker
 
         quality = quality.empty? ? nil : Integer(quality)
         animated = animated == "true"
+        if animated && !gravity.empty?
+          raise ArgumentError, "gravity is not supported for animated thumbnails"
+        end
 
         loaders = {
           "jpg" => "VipsForeignLoadJpeg",

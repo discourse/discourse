@@ -1007,6 +1007,27 @@ RSpec.describe DiscourseVips do
         )
       end
 
+      it "rejects gravity for animated thumbnails without changing the destination" do
+        output_path = File.join(directory, "output.webp")
+        FileUtils.cp(file_from_fixtures("static.webp").path, output_path)
+        original_content = File.binread(output_path)
+
+        expect {
+          described_class.thumbnail(
+            input_path: timed_gif_path,
+            output_path:,
+            width: 100,
+            height: 50,
+            animated: true,
+            gravity: :north,
+            timeout: 20,
+            operation: :upload_animated_avatar,
+          )
+        }.to raise_error(DiscourseVips::Error, "gravity is not supported for animated thumbnails")
+
+        expect(File.binread(output_path)).to eq(original_content)
+      end
+
       it "resizes each animated frame to fit the requested pixel limit" do
         output_path = File.join(directory, "output.webp")
 

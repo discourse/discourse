@@ -116,6 +116,13 @@ module DiscourseVips
     end
   end
 
+  # Resizes an image and optionally changes its output format.
+  #
+  # @param animated [Boolean] preserves GIF and WebP frames, frame delays and loop
+  #   counts when true. Defaults to false, which processes only the first frame.
+  # @param gravity [Symbol, nil] positions a static thumbnail on the target canvas.
+  #   Cannot be combined with animated: true.
+  # @raise [DiscourseVips::Error] if animated: true is combined with gravity.
   def self.thumbnail(
     input_path:,
     output_path:,
