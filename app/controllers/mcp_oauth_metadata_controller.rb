@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class McpOauthMetadataController < ApplicationController
-  skip_before_action :check_xhr, :preload_json
+  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
   before_action :ensure_mcp_enabled
 
   def protected_resource
