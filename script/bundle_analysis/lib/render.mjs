@@ -143,7 +143,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
         const from = bundle.importedBy[0];
         return [
           cell(bundle.name),
-          bundle.kind,
+          kindCell(bundle.kind),
           kib(bundle.head.load),
           from
             ? `${cell(from.fromName)}${from.example ? ` from ${cell(from.example.from)}` : ""}`
@@ -166,7 +166,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
             .map((edge) => cell(edge.fromName))
             .join(", ")}${more > 0 ? ` and ${more} more` : ""}`,
           cell(toName),
-          kind,
+          kindCell(kind),
           example ? cell(example.from) : "–",
         ];
       })
@@ -333,6 +333,10 @@ function kib(bytes) {
   if (bytes === null || bytes === undefined) {
     return "–";
   }
+  // The report is untrusted; anything else could carry markdown.
+  if (!Number.isFinite(bytes)) {
+    throw new Error(`Not a size: ${JSON.stringify(bytes)}`);
+  }
   if (Math.abs(bytes) < 1024) {
     return `${bytes} B`;
   }
@@ -366,6 +370,13 @@ export function code(value) {
   const fence = "`".repeat(longestRun + 1);
   const pad = /^[\s`]|[\s`]$/.test(text) ? " " : "";
   return `${fence}${pad}${text}${pad}${fence}`;
+}
+
+const KINDS = new Set(["entry", "lazy", "static", "dynamic", "url"]);
+
+/** Known bundle and import kinds as plain text, anything else escaped. */
+function kindCell(kind) {
+  return KINDS.has(kind) ? kind : cell(kind);
 }
 
 /** `code()` for table cells, where a pipe would end the cell. */

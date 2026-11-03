@@ -1,13 +1,13 @@
 import { createHash } from "crypto";
-import { readdirSync, readFileSync, statSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import { join } from "path";
+import { REPORT_SCHEMA } from "./analyze.mjs";
 import { HEADING, renderComment } from "./render.mjs";
-import { validateReport } from "./validate.mjs";
 
 const MARKER =
   /<!-- bundle-analysis:v1 state=(active|resolved|superseded) keys=([0-9a-f,]*) -->/g;
 const BOT_LOGIN = "github-actions[bot]";
-const ARTIFACT_FILES = { "report.json": 20 * 1024 * 1024, "pr.json": 1024 };
+const MAX_REPORT_BYTES = 20 * 1024 * 1024;
 
 export function hashKey(key) {
   return createHash("sha256").update(key).digest("hex").slice(0, 12);
@@ -47,80 +47,50 @@ export function decideAction({ keys, existing }) {
     : { type: "supersede", comment: active };
 }
 
-/** Reads the artifact from bundle-analysis.yml, accepting only the expected files. */
-export function readArtifact(dir) {
-  const files = readdirSync(dir);
-  for (const file of files) {
-    if (!(file in ARTIFACT_FILES)) {
-      throw new Error(`Unexpected file in artifact: ${JSON.stringify(file)}`);
-    }
+/**
+ * The report from bundle-analysis.yml. It comes from untrusted PR code;
+ * rendering escapes every string in it and rejects anything else where a
+ * size belongs.
+ */
+export function readReport(dir) {
+  const path = join(dir, "report.json");
+  const stat = statSync(path, { throwIfNoEntry: false });
+  if (!stat?.isFile() || stat.size > MAX_REPORT_BYTES) {
+    throw new Error("report.json is missing or too large");
   }
-  const read = (file) => {
-    const path = join(dir, file);
-    if (
-      !statSync(path).isFile() ||
-      statSync(path).size > ARTIFACT_FILES[file]
-    ) {
-      throw new Error(`${file} is missing or too large`);
-    }
-    return JSON.parse(readFileSync(path, "utf8"));
-  };
-  return {
-    pr: validatePr(read("pr.json")),
-    report: validateReport(read("report.json")),
-  };
-}
-
-function validatePr(pr) {
-  if (
-    !Number.isSafeInteger(pr?.number) ||
-    pr.number <= 0 ||
-    typeof pr.head_sha !== "string" ||
-    !/^[0-9a-f]{40}$/.test(pr.head_sha) ||
-    typeof pr.head_repo !== "string" ||
-    !/^[\w.-]+\/[\w.-]+$/.test(pr.head_repo)
-  ) {
-    throw new Error("pr.json is invalid");
+  const report = JSON.parse(readFileSync(path, "utf8"));
+  if (report?.schema !== REPORT_SCHEMA) {
+    throw new Error(`Unsupported report schema: ${report?.schema}`);
   }
-  return { number: pr.number, headSha: pr.head_sha, headRepo: pr.head_repo };
+  return report;
 }
 
 /**
  * Entry point for the trusted comment workflow (actions/github-script). The
- * artifact comes from a run of untrusted PR code, so every field is checked
- * against the workflow_run event and the PR itself before anything is
- * written.
+ * PR comes from the workflow_run event, which the PR's code cannot change:
+ * the open PR whose head is the commit that was analyzed.
  */
 export async function run({ github, context, core, artifactDir, budgetPath }) {
   const workflowRun = context.payload.workflow_run;
-  const { pr, report } = readArtifact(artifactDir);
+  const headRepo = workflowRun.head_repository;
   const { owner, repo } = context.repo;
+  const atHead = (pr) =>
+    pr.state === "open" &&
+    pr.head.sha === workflowRun.head_sha &&
+    pr.head.repo?.full_name === headRepo.full_name;
 
-  if (
-    pr.headSha !== workflowRun.head_sha ||
-    pr.headRepo !== workflowRun.head_repository?.full_name
-  ) {
-    core.warning("Artifact does not match the workflow run; skipping.");
+  const { data: open } = await github.rest.pulls.list({
+    owner,
+    repo,
+    state: "open",
+    head: `${headRepo.owner.login}:${workflowRun.head_branch}`,
+  });
+  const pr = open.find(atHead);
+  if (!pr) {
+    core.info("No open PR is at the analyzed commit; skipping.");
     return { type: "skipped" };
   }
-
-  const currentHead = async () => {
-    const { data } = await github.rest.pulls.get({
-      owner,
-      repo,
-      pull_number: pr.number,
-    });
-    return (
-      data.state === "open" &&
-      data.head.sha === workflowRun.head_sha &&
-      data.head.repo?.full_name === workflowRun.head_repository.full_name
-    );
-  };
-
-  if (!(await currentHead())) {
-    core.info("PR is closed or has newer commits; skipping.");
-    return { type: "skipped" };
-  }
+  const report = readReport(artifactDir);
 
   const budget = JSON.parse(readFileSync(budgetPath, "utf8"));
   const { keys, body } = renderComment(report, budget, {
@@ -146,7 +116,12 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
   }
 
   // A push while this ran would make the comment stale; its own run follows.
-  if (!(await currentHead())) {
+  const { data: latest } = await github.rest.pulls.get({
+    owner,
+    repo,
+    pull_number: pr.number,
+  });
+  if (!atHead(latest)) {
     core.info("PR changed while rendering; skipping.");
     return { type: "skipped" };
   }

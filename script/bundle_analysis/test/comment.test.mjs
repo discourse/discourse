@@ -3,12 +3,13 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { tmpdir } from "os";
 import { join } from "path";
+import { REPORT_SCHEMA } from "../lib/analyze.mjs";
 import {
   decideAction,
   hashKey,
   marker,
   parseMarker,
-  readArtifact,
+  readReport,
   run,
 } from "../lib/comment.mjs";
 import { emptyReport, NO_JS_REPORT } from "./helpers.mjs";
@@ -55,40 +56,37 @@ const FINDINGS_REPORT = emptyReport({
   totals: { base: 3_000_000, head: 3_050_000, chunks: { base: 50, head: 50 } },
 });
 
-function artifact(report, pr = {}) {
+function artifact(report) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-artifact-"));
-  writeFileSync(join(dir, "report.json"), JSON.stringify(report));
-  writeFileSync(
-    join(dir, "pr.json"),
-    JSON.stringify({
-      number: 7,
-      head_sha: SHA,
-      head_repo: "fork/discourse",
-      ...pr,
-    })
-  );
+  if (report) {
+    writeFileSync(join(dir, "report.json"), JSON.stringify(report));
+  }
   return dir;
 }
 
-function fakeGitHub({ comments = [], pull = {} } = {}) {
+const PR = {
+  number: 7,
+  state: "open",
+  head: { sha: SHA, repo: { full_name: "fork/discourse" } },
+};
+
+function fakeGitHub({ comments = [], listed = [PR], latest = PR } = {}) {
   const calls = [];
   let nextId = 100;
   const github = {
     calls,
     comments,
     paginate: async (_method, params) => {
-      calls.push(["list", params.issue_number]);
+      calls.push(["comments", params.issue_number]);
       return comments;
     },
     rest: {
       pulls: {
-        get: async () => ({
-          data: {
-            state: "open",
-            head: { sha: SHA, repo: { full_name: "fork/discourse" } },
-            ...pull,
-          },
-        }),
+        list: async ({ head }) => {
+          calls.push(["pulls", head]);
+          return { data: listed };
+        },
+        get: async () => ({ data: latest }),
       },
       issues: {
         listComments: () => {},
@@ -100,12 +98,10 @@ function fakeGitHub({ comments = [], pull = {} } = {}) {
             html_url: "https://example.test/c",
           };
           comments.push(comment);
-          calls.push(["create", comment.id]);
           return { data: comment };
         },
         updateComment: async ({ comment_id, body }) => {
           comments.find((c) => c.id === comment_id).body = body;
-          calls.push(["update", comment_id]);
           return { data: {} };
         },
       },
@@ -119,19 +115,23 @@ const context = {
   payload: {
     workflow_run: {
       head_sha: SHA,
-      head_repository: { full_name: "fork/discourse" },
+      head_branch: "feature",
+      head_repository: {
+        full_name: "fork/discourse",
+        owner: { login: "fork" },
+      },
       html_url: "https://github.com/cvx/discourse/actions/runs/1",
     },
   },
 };
 const core = { info() {}, warning() {} };
 
-function go(github, report, pr) {
+function go(github, report) {
   return run({
     github,
     context,
     core,
-    artifactDir: artifact(report, pr),
+    artifactDir: artifact(report),
     budgetPath: BUDGET_PATH,
   });
 }
@@ -148,6 +148,7 @@ test("run creates, updates and resolves its own comment", async () => {
   });
 
   assert.equal((await go(github, FINDINGS_REPORT)).type, "create");
+  assert.deepEqual(github.calls[0], ["pulls", "fork:feature"]);
   assert.match(github.comments[1].body, /Grew over the threshold/);
   assert.equal((await go(github, FINDINGS_REPORT)).type, "update");
   assert.equal((await go(github, NO_JS_REPORT)).type, "resolve");
@@ -156,32 +157,21 @@ test("run creates, updates and resolves its own comment", async () => {
   assert.equal(github.comments.length, 2);
 });
 
-test("run skips an artifact for another commit or a PR that moved on", async () => {
-  const github = fakeGitHub();
-  const moved = fakeGitHub({
-    pull: {
-      head: { sha: "c".repeat(40), repo: { full_name: "fork/discourse" } },
-    },
-  });
+test("run skips unless an open PR is at the analyzed commit until it posts", async () => {
+  const elsewhere = { ...PR, head: { ...PR.head, sha: "b".repeat(40) } };
+  const none = fakeGitHub({ listed: [elsewhere] });
+  const moved = fakeGitHub({ latest: elsewhere });
 
-  const stale = await go(github, FINDINGS_REPORT, { head_sha: "b".repeat(40) });
-  assert.equal(stale.type, "skipped");
-  assert.deepEqual(github.calls, []);
+  assert.equal((await go(none, FINDINGS_REPORT)).type, "skipped");
+  assert.deepEqual(none.calls, [["pulls", "fork:feature"]]);
   assert.equal((await go(moved, FINDINGS_REPORT)).type, "skipped");
+  assert.equal(moved.comments.length, 0);
 });
 
-test("readArtifact rejects unexpected files and invalid PR data", () => {
-  const extra = artifact(FINDINGS_REPORT);
-  writeFileSync(join(extra, "render-comment.mjs"), "evil");
-  assert.throws(() => readArtifact(extra), /Unexpected file/);
-
+test("readReport rejects a missing report or another schema", () => {
+  assert.throws(() => readReport(artifact(null)), /missing/);
   assert.throws(
-    () => readArtifact(artifact(FINDINGS_REPORT, { number: "7" })),
-    /pr.json is invalid/
-  );
-  assert.throws(
-    () =>
-      readArtifact(artifact(FINDINGS_REPORT, { head_repo: "a/b; rm -rf /" })),
-    /pr.json is invalid/
+    () => readReport(artifact({ ...NO_JS_REPORT, schema: REPORT_SCHEMA + 1 })),
+    /schema/
   );
 });

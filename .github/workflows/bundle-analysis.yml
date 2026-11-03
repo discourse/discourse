@@ -45,9 +45,13 @@ jobs:
         if: steps.changes.outputs.js == 'false'
         run: node script/bundle_analysis/analyze.mjs --no-js-changes --out "$RUNNER_TEMP/analysis"
 
-      - name: Record the PR
+      - name: Upload the report
         if: steps.changes.outputs.js == 'false'
-        uses: ./.github/actions/bundle-analysis-artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: bundle-analysis
+          path: ${{ runner.temp }}/analysis/report.json
+          retention-days: 7
 
   analyze:
     needs: changes
@@ -84,5 +88,9 @@ jobs:
           node script/bundle_analysis/analyze.mjs --base "$RUNNER_TEMP/base" --head frontend/discourse/dist --out "$RUNNER_TEMP/analysis"
           cat "$RUNNER_TEMP/analysis/summary.md" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Record the PR
-        uses: ./.github/actions/bundle-analysis-artifact
+      - name: Upload the report
+        uses: actions/upload-artifact@v7
+        with:
+          name: bundle-analysis
+          path: ${{ runner.temp }}/analysis/report.json
+          retention-days: 7

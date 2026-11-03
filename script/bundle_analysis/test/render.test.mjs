@@ -54,6 +54,21 @@ test("hostile names cannot inject markdown into the comment", () => {
   assert.ok(body.includes("`[link](https://example.com)`"));
 });
 
+test("hostile values render escaped or throw, so nothing is posted", () => {
+  const kind = "<img src=x> [link](https://example.com)";
+  const { body } = renderComment(
+    emptyReport({ edges: { added: [edge("a", { kind })], removed: [] } }),
+    BUDGET
+  );
+  const initialLoad = { ...emptyReport().initialLoad, head: "\n\n9000000" };
+
+  assert.ok(body.includes(`| \`${kind}\` |`));
+  assert.throws(
+    () => renderComment(emptyReport({ initialLoad }), BUDGET),
+    /Not a size/
+  );
+});
+
 test("edges that share a target are one row with a key each", () => {
   const { body, keys } = renderComment(
     emptyReport({ edges: { added: [edge("a"), edge("b")], removed: [] } }),
