@@ -324,7 +324,6 @@ const workflows = [
     "discourse.add-toolbar-popup-menu-options-callback",
     "discourse.avatar-utils",
     "discourse.bound-date",
-    "discourse.category-list.categories",
     "discourse.chat.addToolbarButton",
     "discourse.click-track.is-valid-link-jquery",
     "discourse.component-template-resolving",

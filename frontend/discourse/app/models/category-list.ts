@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
 import { number } from "discourse/lib/formatter";
 import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import PreloadStore from "discourse/lib/preload-store";
@@ -215,7 +214,11 @@ export default class CategoryList extends LegacyArrayLikeObject<Category> {
     attrs?: CategoryListCreateAttrs<M>
   ): M;
 
-  static create(attrs: Partial<CategoryList> & Record<string, unknown> = {}) {
+  static create(
+    attrs: Partial<CategoryList> & {
+      categories?: Category[];
+    } & Record<string, unknown> = {}
+  ) {
     const { categories, ...properties } = attrs;
     return super.create({ content: categories, ...properties });
   }
@@ -228,17 +231,6 @@ export default class CategoryList extends LegacyArrayLikeObject<Category> {
   @tracked parentCategory?: Category | null;
   @autoTrackedArray topics?: Topic[];
   store!: StoreService;
-
-  /**
-   * @deprecated use the category list instance instead
-   */
-  get categories() {
-    deprecated(
-      "Using `CategoryList.categories` property is deprecated. Use `CategoryList.content` instead",
-      { id: "discourse.category-list.categories" }
-    );
-    return this.content;
-  }
 
   /**
    * Loads more categories from the server

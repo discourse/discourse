@@ -225,7 +225,6 @@ expectTypeOf(categoryList.parentCategory).toEqualTypeOf<
 >();
 // Only the combined categories-and-topics page supplies topics.
 expectTypeOf(categoryList.topics).toEqualTypeOf<Topic[] | undefined>();
-expectTypeOf(categoryList.categories).toEqualTypeOf<Category[]>();
 expectTypeOf(categoryList.loadMore()).resolves.toEqualTypeOf<void>();
 
 /* Subclasses keep their own factories. */
