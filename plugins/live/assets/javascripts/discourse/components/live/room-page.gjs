@@ -21,6 +21,7 @@ import { i18n } from "discourse-i18n";
 import {
   toggleFullscreen,
   trackFullscreen,
+  trackFullscreenWithin,
 } from "../../lib/live/fullscreen.js";
 import { activeRingingEntries } from "../../lib/live/ringing.js";
 import { speakQueue } from "../../lib/live/speak-queue.js";
@@ -93,6 +94,7 @@ export default class LiveRoomPage extends Component {
   @tracked gridHeight = 0;
   @tracked gridGap = 0;
   @tracked gridFullscreen = false;
+  @tracked fullscreenWithin = false;
   // Stage rooms mirror a workshop: chat panel open, presenter featured.
   @tracked chatOpen = !!this.args.openChat || this.#isStageRoom;
   @tracked chatClosing = false;
@@ -113,6 +115,7 @@ export default class LiveRoomPage extends Component {
   gridElement = null;
   trackGridSize = trackGridSize;
   trackFullscreen = trackFullscreen;
+  trackFullscreenWithin = trackFullscreenWithin;
   #chatCloseFallback = null;
   #ringingTicker = null;
 
@@ -302,12 +305,6 @@ export default class LiveRoomPage extends Component {
       return LAYOUT_PRESENTATION;
     }
 
-    // Swapping layouts would unmount the fullscreen grid and drop the viewer
-    // out of fullscreen. The share still shows as a tile until they exit.
-    if (this.gridFullscreen) {
-      return LAYOUT_TILED;
-    }
-
     return this.remoteScreenSharers.length ? LAYOUT_PRESENTATION : LAYOUT_TILED;
   }
 
@@ -433,9 +430,12 @@ export default class LiveRoomPage extends Component {
    */
   @action
   followLayout(element) {
+    // Re-rendering the stage would unmount whatever is fullscreen and drop the
+    // viewer out of it, so changes wait until fullscreen ends.
     if (
-      this.shownLayout === this.resolvedLayout &&
-      this.shownFeaturedId === this.featuredParticipantId
+      this.fullscreenWithin ||
+      (this.shownLayout === this.resolvedLayout &&
+        this.shownFeaturedId === this.featuredParticipantId)
     ) {
       return;
     }
@@ -511,6 +511,11 @@ export default class LiveRoomPage extends Component {
 
       this.liveWebrtc.setWatching(this.args.room.id, true);
     });
+  }
+
+  @action
+  setFullscreenWithin(isFullscreen) {
+    this.fullscreenWithin = isFullscreen;
   }
 
   @action
@@ -720,7 +725,9 @@ export default class LiveRoomPage extends Component {
         this.followLayout
         this.resolvedLayout
         this.featuredParticipantId
+        this.fullscreenWithin
       }}
+      {{this.trackFullscreenWithin this.setFullscreenWithin}}
     >
 
       <div class="live-room-page__main">

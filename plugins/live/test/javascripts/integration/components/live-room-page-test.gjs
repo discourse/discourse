@@ -448,6 +448,35 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
       .hasClass("--presentation", "choosing auto again follows the share");
   });
 
+  test("auto layout waits for a fullscreen tile to exit before switching", async function (assert) {
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    const tile = document.querySelector(".live-video-tile[data-user-id='3']");
+    Object.defineProperty(document, "fullscreenElement", {
+      configurable: true,
+      get: () => tile,
+    });
+
+    try {
+      document.dispatchEvent(new Event("fullscreenchange"));
+      this.updateParticipant(2, { is_screen_sharing: true });
+      await settled();
+
+      assert
+        .dom(".live-room-page")
+        .hasClass("--tiled", "keeps the fullscreen tile mounted");
+    } finally {
+      delete document.fullscreenElement;
+    }
+
+    document.dispatchEvent(new Event("fullscreenchange"));
+    await settled();
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--presentation", "switches once fullscreen ends");
+  });
+
   test("unpinning in auto layout returns to tiles when nobody is sharing", async function (assert) {
     await render(<template><LiveRoomPage @room={{this.room}} /></template>);
 
