@@ -839,7 +839,7 @@ aside.onebox.github-onebox {
   > .source.github-onebox__header {
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(max-content, 1fr);
-    gap: 0.5em 1em;
+    column-gap: 1em;
     margin: 0;
     padding: 0.5em 1em;
     background: var(--github-onebox-header-background);
@@ -857,7 +857,6 @@ aside.onebox.github-onebox {
     align-items: center;
     gap: 0.5em;
     min-width: 0;
-    overflow-wrap: anywhere;
   }
 
   .github-onebox__label {
@@ -886,7 +885,6 @@ aside.onebox.github-onebox {
       font-size: var(--font-0);
       font-weight: var(--token-font-weight-semibold);
       line-height: var(--line-height-large);
-      overflow-wrap: anywhere;
     }
   }
 
@@ -909,12 +907,9 @@ aside.onebox.github-onebox {
     display: flex;
     align-items: baseline;
     gap: var(--space-1);
-    min-width: 0;
     font-size: var(--font-down-2);
-    line-height: var(--line-height-large);
 
     code {
-      min-width: 0;
       font-size: inherit;
       border-radius: var(--token-radius-small);
       overflow-wrap: anywhere;
@@ -958,7 +953,6 @@ aside.onebox.github-onebox {
 
       a {
         display: flex;
-        flex-wrap: wrap;
         gap: var(--space-1);
       }
     }
@@ -967,7 +961,6 @@ aside.onebox.github-onebox {
   .onebox-avatar-inline {
     width: var(--space-4);
     height: var(--space-4);
-    object-fit: cover;
   }
 
   .github-body-container {
@@ -976,8 +969,6 @@ aside.onebox.github-onebox {
     font-family: inherit;
     font-size: var(--font-down-1);
     line-height: var(--cooked-line-height);
-    color: var(--token-color-text-default);
-    overflow-wrap: anywhere;
   }
 
   .github-repo-description,
@@ -1069,9 +1060,6 @@ aside.onebox.github-onebox {
   }
 
   .github-info-container {
-    width: 100%;
-    overflow-x: hidden;
-
     > span {
       // TODO: remove in a few months
       // replaced by .github-info in new commit oneboxes
@@ -1084,7 +1072,6 @@ aside.onebox.github-onebox {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    width: 100%;
     gap: 0.15em 0.75em;
 
     .lines {
@@ -1115,7 +1102,6 @@ aside.onebox.github-onebox {
     font-family: var(--d-font-family--monospace);
     font-size: 0.875em;
     line-height: calc((13 + 4) / 13);
-    box-sizing: border-box;
 
     @include viewport.until(sm) {
       max-height: 50vh;
