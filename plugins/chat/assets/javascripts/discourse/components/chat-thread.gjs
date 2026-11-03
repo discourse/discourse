@@ -374,6 +374,7 @@ export default class ChatThread extends Component {
         isAtLiveEdge: this.paneState.isAtLiveEdge,
         isOwnMessage,
       }),
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
       isOwnMessage,

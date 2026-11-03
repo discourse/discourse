@@ -193,9 +193,9 @@ module("Integration | Component | ChatChannel", function (hooks) {
     const cursorsBeforePush = futurePageCursors().length;
 
     await this.receiveLiveMessage();
-    assert.true(
+    assert.false(
       renderedMessageIds().includes(LIVE),
-      "the live message renders at the end of the partially loaded list"
+      "the live message waits until the history before it is loaded"
     );
 
     await scrollToEdge("bottom");
@@ -223,12 +223,10 @@ module("Integration | Component | ChatChannel", function (hooks) {
 
     await this.receiveLiveMessage();
 
-    // the precondition the bug needs: the live message is on screen while
-    // history between it and the loaded window is still missing
     const hole = gap.filter((id) => !renderedMessageIds().includes(id));
     assert.true(
       hole.length > 0,
-      `a hole of ${hole.length} messages sits under the live message`
+      `${hole.length} messages are still unloaded when the live one arrives`
     );
 
     for (let i = 0, seen = 0; i < 40; i++) {
