@@ -23,6 +23,37 @@ RSpec.describe UserMerger do
     UserMerger.new(source, target).merge!
   end
 
+  describe "#merge!" do
+    [false, true].each do |reload_target|
+      it "rejects self-merging with #{reload_target ? "a separately loaded" : "the same"} user instance before changing data" do
+        visit = Fabricate(:user_visit, user: source_user, posts_read: 12, time_read: 34)
+        PostTiming.create!(
+          user: source_user,
+          topic: p1.topic,
+          post_number: p1.post_number,
+          msecs: 5678,
+        )
+        original_attributes = source_user.attributes
+        target = reload_target ? User.find(source_user.id) : source_user
+
+        expect { UserMerger.new(source_user, target).merge! }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+
+        expect(source_user.reload.attributes).to eq(original_attributes)
+        expect(visit.reload.posts_read).to eq(12)
+        expect(visit.time_read).to eq(34)
+        expect(
+          PostTiming.find_by!(
+            user_id: source_user.id,
+            topic_id: p1.topic_id,
+            post_number: p1.post_number,
+          ).msecs,
+        ).to eq(5678)
+      end
+    end
+  end
+
   it "changes owner of topics and posts" do
     topic1 = Fabricate(:topic, user: source_user)
     post1 = Fabricate(:post, topic: topic1, user: source_user)

@@ -711,6 +711,16 @@ RSpec.describe UserGuardian do
     end
   end
 
+  describe "#can_merge_users?" do
+    it "allows an admin to merge distinct users" do
+      expect(admin.guardian.can_merge_users?(user, Fabricate(:user))).to eq(true)
+    end
+
+    it "rejects merging a user into a separately loaded instance of itself" do
+      expect(admin.guardian.can_merge_users?(user, User.find(user.id))).to eq(false)
+    end
+  end
+
   describe "#can_see_review_queue?" do
     it "returns true when the user is a staff member" do
       guardian = Guardian.new(moderator)
