@@ -67,6 +67,24 @@ function chunkUrlStandIn() {
   };
 }
 
+// Precompressed copies, as production builds emit beside every chunk.
+function brotliStandIn() {
+  return {
+    name: "brotli-stand-in",
+    generateBundle(_options, bundle) {
+      for (const [fileName, output] of Object.entries(bundle)) {
+        if (output.type === "chunk") {
+          this.emitFile({
+            type: "asset",
+            fileName: `${fileName}.br`,
+            source: "",
+          });
+        }
+      }
+    },
+  };
+}
+
 function writeFixture() {
   const dir = realpathSync(mkdtempSync(join(tmpdir(), "bundle-graph-")));
   for (const [path, content] of Object.entries(FIXTURE)) {
@@ -85,7 +103,11 @@ async function build(dir) {
     cwd: dir,
     input: { main: join(dir, "main.js") },
     onLog() {},
-    plugins: [chunkUrlStandIn(), bundleGraphPlugin({ root: dir })],
+    plugins: [
+      chunkUrlStandIn(),
+      brotliStandIn(),
+      bundleGraphPlugin({ root: dir }),
+    ],
   });
   const { output } = await bundle.generate({
     dir: join(dir, "dist"),
@@ -98,16 +120,7 @@ async function build(dir) {
   const graphFile = output.find(
     (file) => file.fileName === "manifest/bundle-graph.json"
   );
-  const code = Object.fromEntries(
-    output
-      .filter((file) => file.type === "chunk")
-      .map((file) => [file.fileName, file.code])
-  );
-  return {
-    graph: JSON.parse(graphFile.source),
-    source: graphFile.source,
-    code,
-  };
+  return { graph: JSON.parse(graphFile.source), source: graphFile.source };
 }
 
 function importersOf(graph, id) {
@@ -147,7 +160,7 @@ test("records a dynamic import that rolldown merged into its importer", async ()
   const { graph } = await build(writeFixture());
   const main = chunkByLabel(graph, "main");
 
-  expect(Object.keys(main.modules)).toContain("merged.js");
+  expect(main.modules).toContain("merged.js");
   expect(main.dynamicImports).not.toContain(main.file);
   expect(importersOf(graph, "merged.js")).toEqual(["main.js"]);
 });
@@ -170,16 +183,20 @@ test("records URL imports created through virtual:dynamic-chunk-url", async () =
   expect(main.urlImports).toEqual([worker[0]]);
 });
 
-test("attributes every minified byte to a module", async () => {
-  const { graph, code } = await build(writeFixture());
+test("lists modules by normalized id", async () => {
+  const { graph } = await build(writeFixture());
 
-  for (const [file, chunk] of Object.entries(graph.chunks)) {
-    const total = Object.values(chunk.modules).reduce((a, b) => a + b, 0);
-    expect(total, file).toBe(code[file].length);
-  }
-  expect(chunkByLabel(graph, "main").modules).toHaveProperty([
-    "fake-pkg@1.2.3/index.js",
-  ]);
+  expect(chunkByLabel(graph, "main").modules).toContain(
+    "fake-pkg@1.2.3/index.js"
+  );
+});
+
+test("leaves precompressed copies out of the assets", async () => {
+  const { graph } = await build(writeFixture());
+
+  expect(Object.keys(graph.assets).filter((f) => f.endsWith(".br"))).toEqual(
+    []
+  );
 });
 
 test("output is identical across builds", async () => {

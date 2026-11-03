@@ -75,7 +75,7 @@ if (args["no-js-changes"]) {
       });
     }
   }
-  report = await analyze({ baseDir, headDir: resolve(args.head) });
+  report = analyze({ baseDir, headDir: resolve(args.head) });
 }
 
 const summary = renderSummary(report, budget);

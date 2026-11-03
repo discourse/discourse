@@ -1,55 +1,49 @@
 import { mkdirSync, mkdtempSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
+import { packageOf, stripVersion } from "../lib/graph.mjs";
 
-// Deterministic, poorly compressible text, so brotli sizes track raw sizes.
-function text(seed, length) {
-  let state = [...seed].reduce(
-    (h, c) => (h * 31 + c.charCodeAt(0)) % 2 ** 32,
-    7
-  );
-  let out = "";
-  while (out.length < length) {
-    state = (state * 1103515245 + 12345) % 2 ** 32;
-    out += state.toString(36);
-  }
-  return out.slice(0, length);
-}
+export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 
 /**
- * Writes a fake production build. `chunks` maps a file name to
- * `{ kind, facade?, imports?, dynamicImports?, urlImports?, modules, examples? }`;
- * each module's content depends only on its id, so moving a module between
- * chunks keeps the bytes.
+ * Writes a fake production build: the bundle graph, the bundle analyzer
+ * report with its sizes, and asset files. `chunks` maps a file name to
+ * `{ kind, facade?, imports?, dynamicImports?, urlImports?, modules, examples? }`
+ * with `modules` as id → bytes; a chunk's brotli size is the sum of its
+ * module bytes. `assets` maps a file name to its size.
  */
 export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-dist-"));
-  const graph = { version: 2, entries, chunks: {}, assets: {} };
+  const graph = { version: 3, entries, chunks: {}, assets: {} };
+  const report = { chunks: {} };
 
   for (const [file, chunk] of Object.entries(chunks)) {
-    const content = Object.entries(chunk.modules)
-      .map(([id, bytes]) => text(id, bytes))
-      .join("");
-    mkdirSync(dirname(join(dir, file)), { recursive: true });
-    writeFileSync(join(dir, file), content);
     graph.chunks[file] = {
       label: file
         .split("/")
         .pop()
         .replace(/-[a-z0-9]+\.digested\.js$/, ""),
-      name: "x",
       kind: chunk.kind,
       facade: chunk.facade ?? null,
       imports: chunk.imports ?? [],
       dynamicImports: chunk.dynamicImports ?? [],
       urlImports: chunk.urlImports ?? [],
-      modules: chunk.modules,
+      modules: Object.keys(chunk.modules).sort(),
       examples: chunk.examples ?? {},
+    };
+    const rawSize = Object.values(chunk.modules).reduce((a, b) => a + b, 0);
+    report.chunks[file] = {
+      rawSize,
+      brotliSize: rawSize,
+      modules: Object.entries(chunk.modules).map(([id, renderedLength]) => ({
+        id: reportedId(id),
+        renderedLength,
+      })),
     };
   }
   for (const [file, bytes] of Object.entries(assets)) {
     mkdirSync(dirname(join(dir, file)), { recursive: true });
-    writeFileSync(join(dir, file), text(file, bytes));
+    writeFileSync(join(dir, file), "x".repeat(bytes));
     graph.assets[file] = {
       label: file
         .split("/")
@@ -65,7 +59,17 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   );
   mkdirSync(join(dir, "manifest"), { recursive: true });
   writeFileSync(join(dir, "manifest/bundle-graph.json"), JSON.stringify(graph));
+  mkdirSync(dirname(join(dir, REPORT)), { recursive: true });
+  writeFileSync(join(dir, REPORT), JSON.stringify(report));
   return dir;
+}
+
+/** How the bundle analyzer report names a module id from the graph. */
+function reportedId(id) {
+  if (id.startsWith("virtual:")) {
+    return `\0${id}`;
+  }
+  return packageOf(id) ? `node_modules/${stripVersion(id)}` : id;
 }
 
 /** A small app: an entry, a shared chunk, and admin and editor bundles. */

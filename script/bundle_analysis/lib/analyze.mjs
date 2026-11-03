@@ -5,9 +5,7 @@ import {
   moduleBytes,
   packageOf,
   stripVersion,
-  UNMAPPED,
 } from "./graph.mjs";
-import { brotliSizes } from "./sizes.mjs";
 
 export const REPORT_SCHEMA = 2;
 const TOP_MODULES = 5;
@@ -19,16 +17,13 @@ const MIN_MODULE_DELTA = 100;
  * applied when rendering, so the trusted comment workflow decides what is
  * flagged.
  */
-export async function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
+export function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
   const base = describeBuild(loadGraph(baseDir), { mainEntry });
   const head = describeBuild(loadGraph(headDir), { mainEntry });
 
-  const baseSizes = await brotliSizes(baseDir, outputFiles(base.graph));
-  const headSizes = await brotliSizes(headDir, outputFiles(head.graph), {
-    reuse: baseSizes,
-  });
-  const sum = (files, sizes) =>
-    [...files].reduce((total, file) => total + sizes.get(file).brotli, 0);
+  const brotli = (graph, file) => graph.chunks[file].brotliSize;
+  const sum = (files, graph) =>
+    [...files].reduce((total, file) => total + brotli(graph, file), 0);
 
   const moved = movedIntoInitialLoad(base, head);
   const movedKeys = new Set(moved.map((group) => group.bundle));
@@ -37,11 +32,11 @@ export async function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
   for (const key of new Set([...base.bundles.keys(), ...head.bundles.keys()])) {
     const b = base.bundles.get(key);
     const h = head.bundles.get(key);
-    const measure = (bundle, sizes) =>
+    const measure = (bundle, graph) =>
       bundle
         ? {
-            own: sizes.get(bundle.file).brotli,
-            load: sum(bundle.costChunks, sizes),
+            own: brotli(graph, bundle.file),
+            load: sum(bundle.costChunks, graph),
           }
         : null;
     bundles.push({
@@ -52,8 +47,8 @@ export async function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
       isMain: (h ?? b).isMain,
       status: !b ? "new" : !h ? "removed" : "same",
       movedToInitialLoad: !h && movedKeys.has(key),
-      base: measure(b, baseSizes),
-      head: measure(h, headSizes),
+      base: measure(b, base.graph),
+      head: measure(h, head.graph),
       topModules:
         b && h
           ? moduleDeltas(base.graph, b.costChunks, head.graph, h.costChunks)
@@ -87,11 +82,11 @@ export async function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
     schema: REPORT_SCHEMA,
     noJsChanges: false,
     initialLoad: {
-      base: sum(base.initial, baseSizes),
-      head: sum(head.initial, headSizes),
+      base: sum(base.initial, base.graph),
+      head: sum(head.initial, head.graph),
       entryOwn: {
-        base: baseSizes.get(base.bundles.get(base.mainKey).file).brotli,
-        head: headSizes.get(head.bundles.get(head.mainKey).file).brotli,
+        base: brotli(base.graph, base.bundles.get(base.mainKey).file),
+        head: brotli(head.graph, head.bundles.get(head.mainKey).file),
       },
       chunks: { base: base.initial.size, head: head.initial.size },
       topModules: moduleDeltas(
@@ -102,8 +97,8 @@ export async function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
       ),
     },
     totals: {
-      base: sum(chunkFiles(base.graph), baseSizes),
-      head: sum(chunkFiles(head.graph), headSizes),
+      base: sum(chunkFiles(base.graph), base.graph),
+      head: sum(chunkFiles(head.graph), head.graph),
       chunks: {
         base: chunkFiles(base.graph).length,
         head: chunkFiles(head.graph).length,
@@ -118,7 +113,7 @@ export async function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
       added: edgeList(head.edges, new Set(base.edges.keys()), newKeys),
       removed: edgeList(base.edges, new Set(head.edges.keys()), removedKeys),
     },
-    assets: compareAssets(base.graph, baseSizes, head.graph, headSizes),
+    assets: compareAssets(base.graph, head.graph),
     duplicatePackages: duplicatePackages(base.graph, head.graph),
   };
 }
@@ -131,12 +126,8 @@ function chunkFiles(graph) {
   return Object.keys(graph.chunks);
 }
 
-function outputFiles(graph) {
-  return [...chunkFiles(graph), ...Object.keys(graph.assets)];
-}
-
 /**
- * Modules whose minified bytes grew most between two sets of chunks. `added`
+ * Modules whose rendered bytes grew most between two sets of chunks. `added`
  * means new to the build, not just to these chunks: moved code is not new.
  */
 function moduleDeltas(baseGraph, baseFiles, headGraph, headFiles) {
@@ -146,7 +137,7 @@ function moduleDeltas(baseGraph, baseFiles, headGraph, headFiles) {
   const deltas = [];
   for (const [id, size] of after) {
     const delta = size - (before.get(id) ?? 0);
-    if (delta >= MIN_MODULE_DELTA && id !== UNMAPPED) {
+    if (delta >= MIN_MODULE_DELTA) {
       deltas.push({ id, delta, added: !inBase.has(id) });
     }
   }
@@ -271,20 +262,21 @@ function boundaryImports(base, head, movedIds) {
     .map(({ from, to }) => ({ from, to }));
 }
 
-function compareAssets(baseGraph, baseSizes, headGraph, headSizes) {
-  const byLabel = (graph, sizes) => {
+/** Uncompressed: wasm and worker files get no precompressed copy. */
+function compareAssets(baseGraph, headGraph) {
+  const byLabel = (graph) => {
     const assets = new Map();
     for (const file of Object.keys(graph.assets).sort()) {
       let label = graph.assets[file].label;
       for (let n = 2; assets.has(label); n++) {
         label = `${graph.assets[file].label} (${n})`;
       }
-      assets.set(label, sizes.get(file).brotli);
+      assets.set(label, graph.assets[file].rawSize);
     }
     return assets;
   };
-  const before = byLabel(baseGraph, baseSizes);
-  const after = byLabel(headGraph, headSizes);
+  const before = byLabel(baseGraph);
+  const after = byLabel(headGraph);
   return [...new Set([...before.keys(), ...after.keys()])]
     .sort()
     .map((label) => ({

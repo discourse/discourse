@@ -9,8 +9,8 @@ const SHARED = "assets/js/chunk-bbbb2222.digested.js";
 const ADMIN = "assets/js/admin-cccc3333.digested.js";
 const CODEMIRROR = "assets/js/codemirror-dddd4444.digested.js";
 
-async function compare(base, head) {
-  const report = await analyze({
+function compare(base, head) {
+  const report = analyze({
     baseDir: makeDist(base),
     headDir: makeDist(head),
   });
@@ -21,15 +21,15 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
-test("identical builds have no findings", async () => {
-  const { report, keys } = await compare(baseApp(), baseApp());
+test("identical builds have no findings", () => {
+  const { report, keys } = compare(baseApp(), baseApp());
 
   assert.deepEqual(keys, []);
   assert.equal(report.initialLoad.base, report.initialLoad.head);
   assert.ok(report.bundles.every((bundle) => bundle.status === "same"));
 });
 
-test("a new lazy import is a new bundle, reported with its importer", async () => {
+test("a new lazy import is a new bundle, reported with its importer", () => {
   const head = baseApp();
   head.chunks[ADMIN].dynamicImports.push(
     "assets/js/rrule-eeee5555.digested.js"
@@ -42,7 +42,7 @@ test("a new lazy import is a new bundle, reported with its importer", async () =
     modules: { "rrule@2.8.1/dist/esm/index.js": 8000 },
   };
 
-  const { report, keys } = await compare(baseApp(), head);
+  const { report, keys } = compare(baseApp(), head);
   const rrule = report.bundles.find(
     (bundle) => bundle.key === "lazy:rrule/dist/esm/index.js"
   );
@@ -62,14 +62,14 @@ test("a new lazy import is a new bundle, reported with its importer", async () =
   assert.deepEqual(report.edges.added, []);
 });
 
-test("a lazy bundle merged into the initial load is reported with its static importer", async () => {
+test("a lazy bundle merged into the initial load is reported with its static importer", () => {
   const head = baseApp();
   Object.assign(head.chunks[ENTRY].modules, head.chunks[CODEMIRROR].modules);
   delete head.chunks[CODEMIRROR];
   head.chunks[ADMIN].dynamicImports = [];
   head.importers["app/static/codemirror.js"] = ["app/app.js"];
 
-  const { report, keys } = await compare(baseApp(), head);
+  const { report, keys } = compare(baseApp(), head);
   const [moved] = report.movedIntoInitialLoad;
 
   assert.deepEqual(keys, ["moved:lazy:app/static/codemirror.js", "initial"]);
@@ -85,7 +85,7 @@ test("a lazy bundle merged into the initial load is reported with its static imp
   assert.equal(bundle.movedToInitialLoad, true);
 });
 
-test("splitting a shared chunk differently has no findings", async () => {
+test("splitting a shared chunk differently has no findings", () => {
   const base = baseApp();
   base.chunks[SHARED].modules["lodash@4.17.21/lodash.js"] = 15000;
   const head = clone(base);
@@ -105,12 +105,12 @@ test("splitting a shared chunk differently has no findings", async () => {
   head.chunks[ENTRY].imports = shared;
   head.chunks[ADMIN].imports = shared;
 
-  const { keys } = await compare(base, head);
+  const { keys } = compare(base, head);
 
   assert.deepEqual(keys, []);
 });
 
-test("a version bump that only changes paths keeps the bundle", async () => {
+test("a version bump that only changes paths keeps the bundle", () => {
   const withDiff = (version) => {
     const app = baseApp();
     const file = `assets/js/diff-${version.replaceAll(".", "")}zz.digested.js`;
@@ -123,7 +123,7 @@ test("a version bump that only changes paths keeps the bundle", async () => {
     return app;
   };
 
-  const { report, keys } = await compare(withDiff("9.0.0"), withDiff("9.1.0"));
+  const { report, keys } = compare(withDiff("9.0.0"), withDiff("9.1.0"));
   const diff = report.bundles.find(
     (bundle) => bundle.key === "lazy:diff/libesm/index.js"
   );
@@ -132,14 +132,14 @@ test("a version bump that only changes paths keeps the bundle", async () => {
   assert.equal(diff.status, "same");
 });
 
-test("a new import between existing bundles is a new connection", async () => {
+test("a new import between existing bundles is a new connection", () => {
   const head = baseApp();
   head.chunks[ENTRY].dynamicImports.push(CODEMIRROR);
   head.chunks[ENTRY].examples[`dynamic:${CODEMIRROR}`] = [
     { from: "app/lib/editor.js", to: "app/static/codemirror.js" },
   ];
 
-  const { report, keys } = await compare(baseApp(), head);
+  const { report, keys } = compare(baseApp(), head);
 
   assert.deepEqual(keys, [
     "edge:entry:discourse:lazy:app/static/codemirror.js:dynamic",
@@ -149,11 +149,11 @@ test("a new import between existing bundles is a new connection", async () => {
   ]);
 });
 
-test("imports inside the initial load are not attributed to lazy bundles", async () => {
+test("imports inside the initial load are not attributed to lazy bundles", () => {
   const head = baseApp();
   head.chunks[SHARED].dynamicImports = [CODEMIRROR];
 
-  const { report } = await compare(baseApp(), head);
+  const { report } = compare(baseApp(), head);
 
   assert.deepEqual(
     report.edges.added.map((edge) => edge.from),
@@ -161,11 +161,11 @@ test("imports inside the initial load are not attributed to lazy bundles", async
   );
 });
 
-test("growth over the threshold names the largest additions", async () => {
+test("growth over the threshold names the largest additions", () => {
   const head = baseApp();
   head.chunks[ADMIN].modules["admin/components/b.gjs"] = 5000;
 
-  const { report, keys } = await compare(baseApp(), head);
+  const { report, keys } = compare(baseApp(), head);
   const admin = report.bundles.find(
     (bundle) => bundle.key === "lazy:admin/compat-modules.js"
   );
@@ -176,18 +176,18 @@ test("growth over the threshold names the largest additions", async () => {
   ]);
 });
 
-test("duplicate package versions are listed", async () => {
+test("duplicate package versions are listed", () => {
   const head = baseApp();
   head.chunks[ADMIN].modules["moment@2.29.0/moment.js"] = 3000;
 
-  const { report } = await compare(baseApp(), head);
+  const { report } = compare(baseApp(), head);
 
   assert.deepEqual(report.duplicatePackages, [
     { name: "moment", versions: ["2.29.0", "2.30.1"], new: true },
   ]);
 });
 
-test("core importing admin code names the import that pulled it in", async () => {
+test("core importing admin code names the import that pulled it in", () => {
   const base = baseApp();
   base.chunks[ADMIN].modules["admin/components/big.gjs"] = 20000;
   base.importers["admin/components/big.gjs"] = ["admin/components/a.gjs"];
@@ -199,7 +199,7 @@ test("core importing admin code names the import that pulled it in", async () =>
     "app/app.js",
   ];
 
-  const { report, keys } = await compare(base, head);
+  const { report, keys } = compare(base, head);
   const [moved] = report.movedIntoInitialLoad;
 
   assert.deepEqual(keys, ["moved:lazy:admin/compat-modules.js", "initial"]);
@@ -214,7 +214,7 @@ test("core importing admin code names the import that pulled it in", async () =>
   });
 });
 
-test("code moved into the initial load is found across a version bump", async () => {
+test("code moved into the initial load is found across a version bump", () => {
   const head = baseApp();
   delete head.chunks[CODEMIRROR];
   head.chunks[ADMIN].dynamicImports = [];
@@ -222,16 +222,16 @@ test("code moved into the initial load is found across a version bump", async ()
   head.chunks[ENTRY].modules["@codemirror/view@6.2.0/dist/index.js"] = 20000;
   head.importers["app/static/codemirror.js"] = ["app/app.js"];
 
-  const { report } = await compare(baseApp(), head);
+  const { report } = compare(baseApp(), head);
 
   assert.equal(report.movedIntoInitialLoad[0].bytes, 25000);
 });
 
-test("a lazy chunk without a facade is treated as shared", async () => {
+test("a lazy chunk without a facade is treated as shared", () => {
   const head = baseApp();
   head.chunks[CODEMIRROR].facade = null;
 
-  const { report } = await compare(baseApp(), head);
+  const { report } = compare(baseApp(), head);
 
   assert.ok(report.bundles.every((bundle) => bundle.facade !== null));
 });

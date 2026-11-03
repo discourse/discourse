@@ -4,8 +4,8 @@ import { analyze } from "../lib/analyze.mjs";
 import { validateReport } from "../lib/validate.mjs";
 import { baseApp, makeDist } from "./helpers.mjs";
 
-test("accepts what the analyzer writes", async () => {
-  const report = await analyze({
+test("accepts what the analyzer writes", () => {
+  const report = analyze({
     baseDir: makeDist(baseApp()),
     headDir: makeDist(baseApp()),
   });
@@ -17,7 +17,7 @@ test("accepts what the analyzer writes", async () => {
   );
 });
 
-test("accepts reports with new and removed bundles", async () => {
+test("accepts reports with new and removed bundles", () => {
   const head = baseApp();
   delete head.chunks["assets/js/codemirror-dddd4444.digested.js"];
   head.chunks["assets/js/admin-cccc3333.digested.js"].dynamicImports = [
@@ -30,7 +30,7 @@ test("accepts reports with new and removed bundles", async () => {
   };
   const report = JSON.parse(
     JSON.stringify(
-      await analyze({ baseDir: makeDist(baseApp()), headDir: makeDist(head) })
+      analyze({ baseDir: makeDist(baseApp()), headDir: makeDist(head) })
     )
   );
 
@@ -39,10 +39,10 @@ test("accepts reports with new and removed bundles", async () => {
   assert.deepEqual(JSON.parse(JSON.stringify(validateReport(report))), report);
 });
 
-test("rejects wrong types and unknown schemas", async () => {
+test("rejects wrong types and unknown schemas", () => {
   const report = JSON.parse(
     JSON.stringify(
-      await analyze({
+      analyze({
         baseDir: makeDist(baseApp()),
         headDir: makeDist(baseApp()),
       })
@@ -62,10 +62,10 @@ test("rejects wrong types and unknown schemas", async () => {
   assert.throws(() => validateReport(report), /kind must be one of/);
 });
 
-test("drops unknown fields", async () => {
+test("drops unknown fields", () => {
   const report = JSON.parse(
     JSON.stringify(
-      await analyze({
+      analyze({
         baseDir: makeDist(baseApp()),
         headDir: makeDist(baseApp()),
       })

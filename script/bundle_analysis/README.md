@@ -16,7 +16,7 @@ It is informational only and never fails a PR.
 - **Initial load:** the `discourse` entry plus everything it imports statically.
 - **Load cost:** a bundle plus what it loads beyond the initial load.
 
-Bundle sizes are brotli quality 11, as production serves. Module sizes are minified bytes.
+Sizes come from the bundle analyzer report that production builds write (`dist/assets/js/bundle-analysis-*.digested.json`). Bundle sizes are brotli quality 11, as production serves. Module sizes are rendered lengths before minification, so comment-heavy modules look larger than they ship. wasm and worker files are uncompressed.
 
 ## Running it locally
 
@@ -39,7 +39,7 @@ Baselines are exact because the build is reproducible: a weekly job (`reproducib
 ## Files
 
 - `budget.json`: thresholds. Changes take effect for PRs once merged.
-- `lib/graph.mjs`: bundles, closures and connections from `dist/manifest/bundle-graph.json`, which `frontend/discourse/lib/bundle-graph-plugin.mjs` writes in production builds.
+- `lib/graph.mjs`: bundles, closures and connections from `dist/manifest/bundle-graph.json`, which `frontend/discourse/lib/bundle-graph-plugin.mjs` writes in production builds, with sizes from the bundle analyzer report.
 - `lib/analyze.mjs`: compares two builds into a report of raw numbers.
 - `lib/render.mjs`: applies thresholds and renders the comment and summary.
 - `lib/comment.mjs`: the comment workflow's checks and comment lifecycle.

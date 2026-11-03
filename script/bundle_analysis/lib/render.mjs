@@ -81,7 +81,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
       tableSection(
         "#### ⚠️ Moved into the initial load",
         "This code now downloads on every first page view. If that is unintended, load it with `import()` instead of a static import.",
-        ["From bundle", "Size (minified)", "Pulled in by", "Largest modules"],
+        ["From bundle", "Size (unminified)", "Pulled in by", "Largest modules"],
         ["---", "---:", "---", "---"],
         moved.map(({ group }) => [
           cell(group.name),
@@ -119,14 +119,14 @@ export function renderComment(report, budget, { runUrl } = {}) {
     let grewSection = tableSection(
       "#### 📈 Grew over the threshold",
       null,
-      ["Bundle", "Before", "After", "Change", "Largest addition (minified)"],
+      ["Bundle", "Before", "After", "Change", "Largest addition (unminified)"],
       ["---", "---:", "---:", "---:", "---"],
       grewRows
     );
     if (byType("initial").length && initial.topModules.length > 1) {
       grewSection += details(
         "Largest additions to the initial load",
-        ["Module", "Change (minified)"],
+        ["Module", "Change (unminified)"],
         ["---", "---:"],
         initial.topModules.map((m) => [
           `${cell(m.id)}${m.added ? " (new)" : ""}`,
@@ -181,7 +181,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
     flagged.length === 1 ? "1 finding" : `${flagged.length} findings`;
   const footer = [
     "---",
-    `<sub>Sizes are brotli unless marked minified. Flagged when the initial load grows over ${budget.initialLoad.percent}% ${budget.initialLoad.combine} ${budget.initialLoad.kib} KiB, or another bundle over ${budget.bundles.percent}% ${budget.bundles.combine} ${budget.bundles.kib} KiB. Informational only.</sub>`,
+    `<sub>Sizes are brotli unless marked unminified. Flagged when the initial load grows over ${budget.initialLoad.percent}% ${budget.initialLoad.combine} ${budget.initialLoad.kib} KiB, or another bundle over ${budget.bundles.percent}% ${budget.bundles.combine} ${budget.bundles.kib} KiB. Informational only.</sub>`,
     `<sub>Reproduce locally: \`${REPRODUCE}\`${runUrl ? ` · [Full report](${runUrl})` : ""}</sub>`,
   ];
 
@@ -261,7 +261,7 @@ export function renderSummary(report, budget) {
   const lines = [
     "### JS bundle analysis",
     "",
-    "Sizes are brotli (quality 11) unless marked minified.",
+    "Sizes are brotli (quality 11) unless marked otherwise.",
     "",
     "| | Base | Head | Change |",
     "| --- | ---: | ---: | ---: |",
@@ -272,7 +272,7 @@ export function renderSummary(report, budget) {
   ];
 
   if (initial.topModules.length) {
-    lines.push("**Initial load, largest additions (minified)**", "");
+    lines.push("**Initial load, largest additions (unminified)**", "");
     lines.push(...initial.topModules.map(moduleLine), "");
   }
 
@@ -280,7 +280,7 @@ export function renderSummary(report, budget) {
     lines.push("**Moved into the initial load**", "");
     for (const group of report.movedIntoInitialLoad) {
       lines.push(
-        `- ${code(group.name)}: ${kib(group.bytes)} minified${group.importers.length ? `, pulled in by ${group.importers.map(importLine).join(", ")}` : ""}`
+        `- ${code(group.name)}: ${kib(group.bytes)} unminified${group.importers.length ? `, pulled in by ${group.importers.map(importLine).join(", ")}` : ""}`
       );
     }
     lines.push("");
@@ -324,7 +324,7 @@ export function renderSummary(report, budget) {
 
   const changedAssets = report.assets.filter((a) => a.base !== a.head);
   lines.push(
-    `**Other assets** (wasm and worker files, ${report.assets.length} total, ${changedAssets.length} changed)`,
+    `**Other assets** (wasm and worker files, uncompressed, ${report.assets.length} total, ${changedAssets.length} changed)`,
     ""
   );
   if (changedAssets.length) {

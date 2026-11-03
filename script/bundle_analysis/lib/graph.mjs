@@ -1,9 +1,11 @@
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { join } from "path";
 
 export const GRAPH_PATH = "manifest/bundle-graph.json";
 export const MAIN_ENTRY = "discourse";
-export const UNMAPPED = "(unmapped)";
+const REPORT_DIR = "assets/js";
+const REPORT_NAME = /^bundle-analysis-\w+\.digested\.json$/;
+const SCHEME = /^((?:[\w-]+:)+)(.+)$/;
 
 // Labels the bundler derives from a module's basename that say nothing about
 // the bundle; such bundles are named after their facade instead.
@@ -32,6 +34,11 @@ export function packageOf(id) {
   return match ? { name: match[1], version: match[2] } : null;
 }
 
+/**
+ * The bundle graph of a production build, with sizes from the bundle analyzer
+ * report beside it: `brotliSize` on chunks, `rawSize` on assets,
+ * and `modules` as id → rendered (unminified) length.
+ */
 export function loadGraph(distDir) {
   const path = join(distDir, GRAPH_PATH);
   if (!existsSync(path)) {
@@ -40,10 +47,93 @@ export function loadGraph(distDir) {
     );
   }
   const graph = JSON.parse(readFileSync(path, "utf8"));
-  if (graph.version !== 2) {
+  if (graph.version !== 3) {
     throw new Error(`${path} has unsupported version ${graph.version}`);
   }
+
+  const reportPath = findReport(distDir);
+  const report = JSON.parse(readFileSync(reportPath, "utf8"));
+  for (const [file, chunk] of Object.entries(graph.chunks)) {
+    const sized = report.chunks[file];
+    if (!Number.isInteger(sized?.brotliSize)) {
+      throw new Error(
+        `${reportPath} has no brotli size for ${file}. Production builds write it: EMBER_ENV=production pnpm build`
+      );
+    }
+    chunk.brotliSize = sized.brotliSize;
+    chunk.modules = moduleSizes(chunk.modules, sized.modules);
+  }
+  for (const [file, asset] of Object.entries(graph.assets)) {
+    asset.rawSize = statSync(join(distDir, file)).size;
+  }
   return graph;
+}
+
+function findReport(distDir) {
+  const dir = join(distDir, REPORT_DIR);
+  const names = existsSync(dir)
+    ? readdirSync(dir).filter((name) => REPORT_NAME.test(name))
+    : [];
+  if (names.length !== 1) {
+    throw new Error(
+      `Expected one bundle analyzer report in ${dir}, found ${names.length}`
+    );
+  }
+  return join(dir, names[0]);
+}
+
+/**
+ * The report names a dependency by its path under node_modules, without a
+ * version, and keeps virtual ids raw, sometimes with an absolute build path.
+ * Two versions of one package share a report id and are matched in order.
+ * Sizes that match no graph id stay under the report's id.
+ */
+function moduleSizes(ids, reported) {
+  const sizes = Object.fromEntries(ids.map((id) => [id, 0]));
+  const pending = new Map();
+  for (const id of ids) {
+    const key = stripVersion(id);
+    pending.set(key, [...(pending.get(key) ?? []), id]);
+  }
+  const take = (key) => {
+    const list = pending.get(key);
+    const id = list?.shift();
+    if (list?.length === 0) {
+      pending.delete(key);
+    }
+    return id;
+  };
+
+  const unmatched = [];
+  for (const { id, renderedLength } of reported) {
+    const key = reportedKey(id);
+    const ours = take(key);
+    if (ours) {
+      sizes[ours] += renderedLength;
+    } else {
+      unmatched.push([key, renderedLength]);
+    }
+  }
+  for (const [key, length] of unmatched) {
+    const match = [...pending.keys()].find((ours) => endsWithPath(key, ours));
+    const id = (match && take(match)) ?? key;
+    sizes[id] = (sizes[id] ?? 0) + length;
+  }
+  return sizes;
+}
+
+function reportedKey(id) {
+  if (id.startsWith("\0")) {
+    const bare = id.slice(1);
+    return bare.startsWith("virtual:") ? bare : `virtual:${bare}`;
+  }
+  return id.startsWith("node_modules/") ? id.slice("node_modules/".length) : id;
+}
+
+/** `virtual:x:/abs/app/a.js` ends with the path of `virtual:x:app/a.js`. */
+function endsWithPath(key, ours) {
+  const [, scheme, path] = ours.match(SCHEME) ?? [];
+  return Boolean(scheme && key.startsWith(scheme) && key.endsWith(`/${path}`));
 }
 
 /**
@@ -137,10 +227,8 @@ export function describeBuild(graph, { mainEntry = MAIN_ENTRY } = {}) {
   const strippedModuleChunk = new Map();
   for (const [file, chunk] of Object.entries(chunks)) {
     for (const id of Object.keys(chunk.modules)) {
-      if (id !== UNMAPPED) {
-        moduleChunk.set(id, file);
-        strippedModuleChunk.set(stripVersion(id), file);
-      }
+      moduleChunk.set(id, file);
+      strippedModuleChunk.set(stripVersion(id), file);
     }
   }
 
@@ -265,7 +353,7 @@ function examplesTo(closure, chunks, kind, target) {
   return examples;
 }
 
-/** Minified bytes per version-less module id over a set of chunks. */
+/** Rendered bytes per version-less module id over a set of chunks. */
 export function moduleBytes(graph, files) {
   const bytes = new Map();
   for (const file of files) {
