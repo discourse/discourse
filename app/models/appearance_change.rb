@@ -14,6 +14,8 @@ class AppearanceChange < ActiveRecord::Base
   SITE_SETTING_NAMES = %w[base_font heading_font].freeze
   # drafts that never go live are removed after this long
   DRAFT_LIFETIME = 7.days
+  # marks previous_state recorded by an activation that hasn't finished
+  PENDING_KEY = "pending"
 
   enum :kind, { palettes: 0, theme: 1, existing_palettes: 2 }, prefix: true
 
@@ -62,7 +64,7 @@ class AppearanceChange < ActiveRecord::Base
   # fonts, even when its theme or palettes were already in use.
   def applied?
     if site_settings.present?
-      return false if previous_state.blank?
+      return false if previous_state.blank? || activation_pending?
       return false if !site_settings.all? { |name, value| SiteSetting.get(name) == value }
     end
     return theme.default? if kind_theme?
@@ -80,7 +82,12 @@ class AppearanceChange < ActiveRecord::Base
   end
 
   # What making the change live replaces, so switching back can restore it.
+  # When an earlier attempt applied the site settings but didn't finish, the
+  # site already shows them, so the state recorded before that attempt is
+  # used instead.
   def replaced_state
+    return previous_state.except(PENDING_KEY) if retrying_activation?
+
     state = {
       "site_settings" =>
         activation_site_settings.keys.index_with { |setting_name| SiteSetting.get(setting_name) },
@@ -91,6 +98,16 @@ class AppearanceChange < ActiveRecord::Base
       "color_scheme_id" => theme.color_scheme_id,
       "dark_color_scheme_id" => theme.dark_color_scheme_id,
     )
+  end
+
+  # Recorded before the site settings change, so a retry after a later
+  # failure still knows what they were.
+  def record_pending_activation!(state)
+    update!(previous_state: state.merge(PENDING_KEY => true))
+  end
+
+  def activation_pending?
+    previous_state[PENDING_KEY] == true
   end
 
   # Whether the palettes and the default theme that switching back restores
@@ -115,6 +132,11 @@ class AppearanceChange < ActiveRecord::Base
   end
 
   private
+
+  def retrying_activation?
+    activation_pending? &&
+      activation_site_settings.all? { |name, value| SiteSetting.get(name).to_s == value.to_s }
+  end
 
   # Palettes the site already had aren't the change's to remove.
   def created_palettes

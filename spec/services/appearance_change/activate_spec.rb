@@ -61,7 +61,28 @@ RSpec.describe AppearanceChange::Activate do
           color_scheme_id: light_palette.id,
           dark_color_scheme_id: dark_palette.id,
         )
-        expect(appearance_change.reload).to have_attributes(previous_state: {}, activated_at: nil)
+        expect(appearance_change.reload).to have_attributes(activated_at: nil, applied?: false)
+      end
+    end
+
+    %i[palettes existing_palettes].each do |kind|
+      it "restores the original fonts after retrying a #{kind} activation that failed after applying them" do
+        appearance_change.update!(kind:)
+        original_font = SiteSetting.base_font
+        Theme.any_instance.stubs(:update!).raises(ActiveRecord::RecordInvalid)
+
+        expect { result }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(SiteSetting.base_font).to eq("roboto")
+
+        Theme.any_instance.unstub(:update!)
+        expect(described_class.call(params:, **dependencies)).to run_successfully
+        expect(AppearanceChange::Revert.call(params:, **dependencies)).to run_successfully
+
+        expect(SiteSetting.base_font).to eq(original_font)
+        expect(theme.reload).to have_attributes(
+          color_scheme_id: light_palette.id,
+          dark_color_scheme_id: dark_palette.id,
+        )
       end
     end
 

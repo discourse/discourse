@@ -3,8 +3,9 @@
 # Makes a saved appearance change live and records what it replaces so
 # AppearanceChange::Revert can switch back.
 #
-# Apply site settings before assigning palettes and recording activation,
-# so a failed font update leaves the original state intact for a retry.
+# What it replaces is recorded before anything changes. Site settings can't
+# be rolled back with the palettes, so if a later step fails after they were
+# applied, a retry still restores what the site had before.
 class AppearanceChange::Activate
   include Service::Base
 
@@ -19,6 +20,7 @@ class AppearanceChange::Activate
   policy :not_applied
   policy :palettes_exist
   model :replaced_state
+  step :record_pending_activation
   only_if(:changes_site_settings) { step :apply_site_settings }
 
   transaction do
@@ -46,6 +48,10 @@ class AppearanceChange::Activate
 
   def fetch_replaced_state(appearance_change:)
     appearance_change.replaced_state
+  end
+
+  def record_pending_activation(appearance_change:, replaced_state:)
+    appearance_change.record_pending_activation!(replaced_state)
   end
 
   def changes_palettes(appearance_change:)
