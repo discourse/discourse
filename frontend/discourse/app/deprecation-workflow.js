@@ -343,7 +343,6 @@ const workflows = [
     "discourse.d-editor.on-toolbar-create",
     "discourse.d-popover",
     "discourse.d-section",
-    "discourse.decorate-plugin-outlet",
     "discourse.deprecated-resolver-normalization",
     "discourse.discourse-module",
     "discourse.discovery-topics-controller",

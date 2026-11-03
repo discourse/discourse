@@ -30,7 +30,6 @@ import { clearPluginDocumentTitleCounters } from "discourse/components/d-documen
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
-import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetGroupPostSmallActionCodes } from "discourse/components/post/small-action";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
@@ -232,7 +231,6 @@ export function testCleanup(container, app) {
   clearOutletCache();
   clearHTMLCache();
   clearRewrites();
-  resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
   resetInlineOneboxCache();
