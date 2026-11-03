@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - main
+      - bundle-analysis
 
 concurrency:
   group: bundle-analysis-${{ github.event.pull_request.number }}
