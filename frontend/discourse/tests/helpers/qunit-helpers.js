@@ -207,7 +207,7 @@ export function applyPretender(name, server, helper) {
 }
 
 // Add clean up code here to run after every test
-export function testCleanup(container, app) {
+export function testCleanup(app) {
   if (_initialized.has(QUnit.config.current.testId)) {
     if (!app) {
       app = getApplication();
@@ -217,7 +217,7 @@ export function testCleanup(container, app) {
     });
 
     app._runInitializer("initializers", (_, initializer) => {
-      initializer.teardown?.(container);
+      initializer.teardown?.();
     });
   }
 
@@ -249,7 +249,6 @@ export function testCleanup(container, app) {
   clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
-  container?.lookup?.("service:composer-action-state")?.clear();
   _clearRegisteredActions();
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
