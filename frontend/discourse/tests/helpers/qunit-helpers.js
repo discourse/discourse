@@ -382,9 +382,7 @@ export function acceptance(name, callback) {
       this.container = getOwnerWithFallback(this);
 
       // Hooks added via `needs.hooks` run before ember-qunit sets the owner
-      if (!this.owner) {
-        this.owner = this.container;
-      }
+      this.owner ??= this.container;
     });
 
     hooks.afterEach(function () {
