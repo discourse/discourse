@@ -40,11 +40,8 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
     end
 
     it "includes branch names" do
-      branches = Nokogiri::HTML5.fragment(html).css(".branches code")
-
-      expect(branches.map(&:text)).to eq(%w[main jamesaanderson:add-audio-onebox])
-      expect(branches.map { |branch| branch["title"] }).to eq(
-        %w[main jamesaanderson:add-audio-onebox],
+      expect(html).to include(
+        '<code title="main">main</code> ← <code title="jamesaanderson:add-audio-onebox">jamesaanderson:add-audio-onebox</code>',
       )
     end
 
