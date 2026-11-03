@@ -348,7 +348,6 @@ const workflows = [
     "discourse.qunit-helpers.query-all",
     "discourse.register-connector-class-legacy",
     "discourse.resolver-resolutions",
-    "discourse.section-link-class-arg",
     "discourse.select-kit-resolved-components",
     "discourse.site.is-mobile-device",
     "discourse.static-viewport-initialization",
