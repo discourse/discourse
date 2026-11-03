@@ -293,8 +293,6 @@ export default class ChatThread extends Component {
       return;
     }
 
-    // Corrected before paint: scrolling after it shows the end of the new page
-    // for a frame, since the reversed scroller stays pinned to the bottom.
     if (direction === FUTURE) {
       maintainScrollPosition(this.scroller, () =>
         this.messagesManager.addMessages(messages)

@@ -328,7 +328,7 @@ export default class ChatChannel extends Component {
     this.maybeDebouncedUpdateLastReadMessage();
   }
 
-  async fetchMoreMessages({ direction }, opts = {}) {
+  async fetchMoreMessages({ direction }) {
     if (this.messagesLoader.loading) {
       return;
     }
@@ -343,9 +343,7 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    // Corrected before paint: scrolling after it shows the end of the new page
-    // for a frame, since the reversed scroller stays pinned to the bottom.
-    if (direction === FUTURE && !opts.noScroll) {
+    if (direction === FUTURE) {
       maintainScrollPosition(this.scroller, () =>
         this.messagesManager.addMessages(messages)
       );

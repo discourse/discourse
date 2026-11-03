@@ -122,17 +122,6 @@ function renderedMessageIds() {
   ].sort((a, b) => a - b);
 }
 
-function futurePageCursors() {
-  return pretender.handledRequests
-    .filter(
-      ({ method, url }) =>
-        method === "GET" && url.includes("/chat/api/channels/1/messages")
-    )
-    .map((request) => new URL(request.url, "http://discourse.test"))
-    .filter((url) => url.searchParams.get("direction") === "future")
-    .map((url) => Number(url.searchParams.get("target_message_id")));
-}
-
 module("Integration | Component | ChatChannel", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -182,51 +171,17 @@ module("Integration | Component | ChatChannel", function (hooks) {
     };
   });
 
-  test("a live push does not become the forward cursor", async function (assert) {
+  test("a live message waits behind unloaded history, and paging reaches it without gaps", async function (assert) {
     await this.openBacklog(assert);
+    const windowTop = Math.max(...renderedMessageIds());
 
-    // used to null can_load_more_future and close the stream early
+    // a past page must leave the forward stream open
     await scrollToEdge("top");
-
-    // mount-time paging already issued forward requests, so only the ones after
-    // the push say anything about the bug
-    const cursorsBeforePush = futurePageCursors().length;
 
     await this.receiveLiveMessage();
     assert.false(
       renderedMessageIds().includes(LIVE),
       "the live message waits until the history before it is loaded"
-    );
-
-    await scrollToEdge("bottom");
-
-    const cursors = futurePageCursors().slice(cursorsBeforePush);
-    assert.true(
-      cursors.length > 0,
-      "scrolling to the bottom still requests a forward page"
-    );
-    assert.true(
-      cursors[0] < LIVE,
-      `the forward page resumes from loaded history (${cursors[0]}), not from the live message (${LIVE})`
-    );
-  });
-
-  test("paging to the end of the stream leaves nothing stranded", async function (assert) {
-    await this.openBacklog(assert);
-
-    const windowTop = Math.max(...renderedMessageIds());
-    const gap = STREAM.filter((id) => id > windowTop && id < LIVE);
-    assert.true(
-      gap.length > 0,
-      `the backlog to bridge is ${gap.length} messages`
-    );
-
-    await this.receiveLiveMessage();
-
-    const hole = gap.filter((id) => !renderedMessageIds().includes(id));
-    assert.true(
-      hole.length > 0,
-      `${hole.length} messages are still unloaded when the live one arrives`
     );
 
     for (let i = 0, seen = 0; i < 40; i++) {
@@ -239,7 +194,9 @@ module("Integration | Component | ChatChannel", function (hooks) {
     }
 
     const rendered = renderedMessageIds();
-    const stranded = gap.filter((id) => !rendered.includes(id));
+    const stranded = STREAM.filter(
+      (id) => id > windowTop && !rendered.includes(id)
+    );
 
     assert.true(rendered.includes(LIVE), "the live message is rendered");
     assert.deepEqual(

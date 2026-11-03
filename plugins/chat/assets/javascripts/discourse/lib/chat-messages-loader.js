@@ -21,6 +21,7 @@ export default class ChatMessagesLoader {
   // because it also holds messages that never came from a page.
   #oldestFetchedMessageId = null;
   #newestFetchedMessageId = null;
+
   #newestLiveMessageId = null;
 
   constructor(owner, model) {
@@ -48,42 +49,21 @@ export default class ChatMessagesLoader {
     }
   }
 
-  async loadMore(args = {}) {
-    if (this.canLoadMoreFuture === false && args.direction === FUTURE) {
+  async loadMore({ direction } = {}) {
+    if (direction === FUTURE && this.canLoadMoreFuture === false) {
       return;
     }
 
-    if (this.canLoadMorePast === false && args.direction === PAST) {
+    if (direction === PAST && this.canLoadMorePast === false) {
       return;
     }
-
-    args = {
-      direction: args.direction,
-      page_size: DEFAULT_MESSAGE_PAGE_SIZE,
-      target_message_id:
-        args.direction === PAST
-          ? this.#oldestFetchedMessageId
-          : this.#newestFetchedMessageId,
-    };
-
-    args = this.#cleanArgs(args);
 
     let result;
     try {
       this.loading = true;
-      result = await this.#apiFunction(args);
+      result = await this.#fetchPage(direction);
 
-      // A page only tells us about its own direction; the server leaves the
-      // other flag null.
-      if (args.direction === FUTURE) {
-        this.canLoadMoreFuture = result.meta.can_load_more_future;
-      } else if (args.direction === PAST) {
-        this.canLoadMorePast = result.meta.can_load_more_past;
-      }
-
-      this.#extendFetchedWindow(result.messages, args.direction);
-
-      if (args.direction === FUTURE) {
+      if (direction === FUTURE) {
         result = await this.#catchUpWithLiveMessages(result);
       }
     } catch (error) {
@@ -113,8 +93,8 @@ export default class ChatMessagesLoader {
       this.canLoadMoreFuture = result.meta.can_load_more_future;
       this.canLoadMorePast = result.meta.can_load_more_past;
       this.#extendFetchedWindow(result.messages);
-      result = await this.#catchUpWithLiveMessages(result);
       this.fetchedOnce = true;
+      result = await this.#catchUpWithLiveMessages(result);
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -142,6 +122,30 @@ export default class ChatMessagesLoader {
       .reduce((a, k) => ({ ...a, [k]: args[k] }), {});
   }
 
+  async #fetchPage(direction) {
+    const result = await this.#apiFunction(
+      this.#cleanArgs({
+        direction,
+        page_size: DEFAULT_MESSAGE_PAGE_SIZE,
+        target_message_id:
+          direction === PAST
+            ? this.#oldestFetchedMessageId
+            : this.#newestFetchedMessageId,
+      })
+    );
+
+    // A page only tells us about its own direction; the server leaves the
+    // other flag null.
+    if (direction === FUTURE) {
+      this.canLoadMoreFuture = result.meta.can_load_more_future;
+    } else if (direction === PAST) {
+      this.canLoadMorePast = result.meta.can_load_more_past;
+    }
+
+    this.#extendFetchedWindow(result.messages, direction);
+    return result;
+  }
+
   // A message can be posted after the server built the last page but reach us
   // before it, while it is held back as pending. One more page picks it up; only
   // one, since a message deleted meanwhile will never arrive.
@@ -154,15 +158,7 @@ export default class ChatMessagesLoader {
     }
 
     this.#newestLiveMessageId = null;
-    const next = await this.#apiFunction(
-      this.#cleanArgs({
-        direction: FUTURE,
-        page_size: DEFAULT_MESSAGE_PAGE_SIZE,
-        target_message_id: this.#newestFetchedMessageId,
-      })
-    );
-    this.canLoadMoreFuture = next.meta.can_load_more_future;
-    this.#extendFetchedWindow(next.messages, FUTURE);
+    const next = await this.#fetchPage(FUTURE);
 
     return { ...result, messages: [...result.messages, ...next.messages] };
   }

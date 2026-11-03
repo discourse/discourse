@@ -13,6 +13,8 @@ const pendingAdjustments = new WeakMap();
  *
  * Our chat scroller uses flex-direction: column-reverse for bottom-origin scroll.
  * Appending content can shift the viewport unless we compensate for height changes.
+ * The correction runs before paint, unlike scrolling to a message afterwards,
+ * which shows the end of the appended content for a frame.
  *
  * @param {HTMLElement | null} scroller - The scrollable container
  * @param {Function} callback - Function that modifies the list content
