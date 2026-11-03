@@ -52,18 +52,17 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_focused_step("DSA classification")
     expect(modal).to have_no_cancel_button
 
-    modal.open_classification_help
-    dialog = PageObjects::Components::Dialog.new
+    modal.open_dsa_help
 
-    expect(dialog).to have_content(I18n.t("js.dsa_statements.help"))
+    expect(modal).to have_classification_help(I18n.t("js.dsa_statements.help"))
 
-    dialog.click_ok
     modal.confirm("Suspend")
 
     expect(modal).to have_required_errors
 
     modal.select_category(category)
     modal.close
+    dialog = PageObjects::Components::Dialog.new
 
     expect(dialog).to be_open
 
@@ -135,6 +134,10 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_action_title("Edit post")
     expect(modal).to have_steps("DSA classification", "Edit post")
     expect(modal).to have_selected_rule("Choose a community rule")
+
+    modal.open_dsa_help
+
+    expect(modal).to have_classification_help(I18n.t("js.dsa_statements.help"))
 
     modal.select_rule(rule[:ground])
     modal.select_category(category)

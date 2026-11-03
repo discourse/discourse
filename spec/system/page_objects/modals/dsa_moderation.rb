@@ -10,8 +10,12 @@ module PageObjects
         super(modal_selector: MODAL_SELECTOR)
       end
 
-      def open_classification_help
-        within(full_modal_selector) { click_button("About DSA classification") }
+      def open_dsa_help
+        within(full_modal_selector) { find(".dsa-moderation-help").hover }
+      end
+
+      def has_classification_help?(text)
+        has_css?("[role='tooltip']", text: text)
       end
 
       def select_rule(ground)

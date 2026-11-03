@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
-.dsa-moderation-help {
-  margin-inline-end: auto;
+.dsa-moderation-title-help {
+  margin-inline: var(--space-2) auto;
 }
 
 .dsa-moderation-action__user {

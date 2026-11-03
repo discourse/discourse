@@ -78,7 +78,9 @@ export default class DsaModerationAction extends Component {
         @title={{this.title}}
       >
         <:headerBelowTitle>
-          <flow.Help />
+          {{#if flow.showTitleHelp}}
+            <flow.Help class="dsa-moderation-title-help" />
+          {{/if}}
         </:headerBelowTitle>
         <:belowHeader>
           <flow.Steps @disabled={{this.saving}} />
