@@ -708,12 +708,11 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     const link = document.querySelector(".ai-search-discoveries__discovery a");
     assert.strictEqual(link?.tagName, "A", "link exists in discovery text");
 
-    const clickEvent = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      ctrlKey: true,
+    // The browser would otherwise follow the link and unload the test runner
+    document.addEventListener("click", (event) => event.preventDefault(), {
+      once: true,
     });
-    link.dispatchEvent(clickEvent);
+    await click(link, { ctrlKey: true });
 
     assert.false(
       this.closeSearchMenuCalled,
