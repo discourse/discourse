@@ -341,7 +341,6 @@ const workflows = [
     "discourse.legacy-topic-list",
     "discourse.markdown-it.whitelist",
     "discourse.modify-class-model",
-    "discourse.nav-item.built-list-site-settings",
     "discourse.number-field",
     "discourse.offset-calculator.minimumOffset",
     "discourse.plugin-outlet-args",

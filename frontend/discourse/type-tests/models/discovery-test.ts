@@ -39,6 +39,7 @@ declare const categoryList: CategoryList;
 declare const html: TrustedHTML;
 declare const user: User;
 declare const options: NavItemOptions;
+declare const siteSettings: NonNullable<NavItemOptions["siteSettings"]>;
 declare const api: Parameters<Parameters<typeof withPluginApi>[0]>[0];
 
 /* Store registration: every spelling callers use resolves to the class. */
@@ -140,9 +141,11 @@ expectTypeOf(
 ).toEqualTypeOf<NavItem | null>();
 NavItem.fromText("latest");
 expectTypeOf(
-  NavItem.buildList(category, { noSubcategories: true })
+  NavItem.buildList(category, { noSubcategories: true, siteSettings })
 ).toEqualTypeOf<NavItem[]>();
-NavItem.buildList(undefined);
+NavItem.buildList(undefined, { siteSettings });
+// @ts-expect-error buildList needs siteSettings
+NavItem.buildList(category, { noSubcategories: true });
 expectTypeOf(
   NavItem.pathFor("latest", { category, noSubcategories: true })
 ).toEqualTypeOf<string>();
@@ -340,7 +343,7 @@ const descriptor: NavigationBarItem = {
   },
 };
 api.addNavigationBarItem(descriptor);
-NavItem.buildList(category, options);
+NavItem.buildList(category, { ...options, siteSettings });
 
 /* No any leaks. */
 
