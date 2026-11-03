@@ -337,6 +337,19 @@ acceptance("Admin - email-preview", function (needs) {
     );
     assert.strictEqual(previewLocale, "fr", "uses the linked language");
     assert.dom("#last-seen").doesNotExist("uses non-summary controls");
+    assert.strictEqual(
+      selectKit(".email-preview__theme-selector").header().label(),
+      "Draft theme",
+      "shows the linked theme by name"
+    );
+
+    await selectKit(".email-preview__theme-selector").expand();
+    await selectKit(".email-preview__theme-selector").selectRowByName(
+      "Draft theme"
+    );
+    assert
+      .dom(".email-preview__stale")
+      .doesNotExist("reselecting the linked theme keeps the preview current");
   });
 
   test("keeps the newest preview when refresh responses arrive out of order", async function (assert) {

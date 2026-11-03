@@ -72,7 +72,7 @@ export default class AdminEmailPreviewDigestController extends Controller {
       { name: i18n("admin.email.preview_default_theme"), value: "" },
       ...this.brandingThemeOptions.map((theme) => ({
         name: theme.title,
-        value: theme.id,
+        value: String(theme.id),
       })),
     ];
   }
