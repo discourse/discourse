@@ -1213,7 +1213,7 @@ class Search
       end
       localized_tag_ids =
         localizations.where(
-          "to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("LOWER(tag_localizations.name)")}) @@ #{ts_query}",
+          "to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("tag_localizations.name")}) @@ #{ts_query}",
         ).select(:tag_id)
       matching_tags = matching_tags.or(tags.where(id: localized_tag_ids))
     end
