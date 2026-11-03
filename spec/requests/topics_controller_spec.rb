@@ -4691,6 +4691,71 @@ RSpec.describe TopicsController do
       expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
     end
 
+    describe "topic_noindex modifier" do
+      fab!(:first_post) { Fabricate(:post, topic: topic) }
+      fab!(:second_post) { Fabricate(:post, topic: topic) }
+
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier_args) { [] }
+      let(:noindex_topic_ids) { [] }
+      let(:modifier) do
+        Proc.new do |noindex, modifier_topic|
+          modifier_args << [noindex, modifier_topic]
+          noindex || noindex_topic_ids.include?(modifier_topic.id)
+        end
+      end
+
+      before { DiscoursePluginRegistry.register_modifier(plugin, :topic_noindex, &modifier) }
+      after { DiscoursePluginRegistry.unregister_modifier(plugin, :topic_noindex, &modifier) }
+
+      it "receives core's decision and the topic" do
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(modifier_args).to eq([[false, topic]])
+        expect(response.headers["X-Robots-Tag"]).to eq(nil)
+
+        get "/t/#{invisible_topic.slug}/#{invisible_topic.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(modifier_args.last).to eq([true, invisible_topic])
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+      end
+
+      it "lets a plugin send noindex on every version of the topic page" do
+        SiteSetting.enable_markdown_endpoints = true
+        TopicView.stubs(:chunk_size).returns(1)
+        noindex_topic_ids << topic.id
+
+        [
+          "/t/#{topic.slug}/#{topic.id}",
+          "/t/#{topic.slug}/#{topic.id}?page=2",
+          "/t/#{topic.slug}/#{topic.id}/2",
+          "/t/#{topic.slug}/#{topic.id}/print",
+          "/t/#{topic.slug}/#{topic.id}.json",
+          "/t/#{topic.slug}/#{topic.id}.md",
+        ].each do |path|
+          get path, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+          expect(response.status).to eq(200), path
+          expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+        end
+      end
+
+      it "keeps the site-wide nofollow when the site is not indexable" do
+        SiteSetting.allow_index_in_robots_txt = false
+        noindex_topic_ids << topic.id
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+
+        get "/t/#{invisible_topic.slug}/#{invisible_topic.id}.json"
+
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+      end
+    end
+
     it "doesn't store an incoming link when there's no referer" do
       expect { get "/t/#{topic.id}.json" }.not_to change(IncomingLink, :count)
       expect(response.status).to eq(200)

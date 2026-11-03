@@ -1960,6 +1960,80 @@ RSpec.describe ListController do
     end
   end
 
+  describe "category_noindex modifier" do
+    fab!(:category, :category_with_definition)
+    fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    fab!(:topic_in_category) { Fabricate(:topic, category: category) }
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_args) { [] }
+    let(:noindex_category_ids) { [] }
+    let(:modifier) do
+      Proc.new do |noindex, modifier_category|
+        modifier_args << [noindex, modifier_category]
+        noindex || noindex_category_ids.include?(modifier_category.id)
+      end
+    end
+
+    before { DiscoursePluginRegistry.register_modifier(plugin, :category_noindex, &modifier) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, :category_noindex, &modifier) }
+
+    it "receives false and the category, and sends no noindex by default" do
+      get "/c/#{category.slug}/#{category.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, category]])
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+
+    it "receives the subcategory for its own lists" do
+      get "/c/#{category.slug}/#{subcategory.slug}/#{subcategory.id}"
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, subcategory]])
+    end
+
+    it "lets a plugin send noindex on every topic list of the category" do
+      SiteSetting.enable_markdown_endpoints = true
+      noindex_category_ids << category.id
+
+      [
+        "/c/#{category.slug}/#{category.id}",
+        "/c/#{category.slug}/#{category.id}?page=1",
+        "/c/#{category.slug}/#{category.id}/none",
+        "/c/#{category.slug}/#{category.id}/l/top",
+        "/c/#{category.slug}/#{category.id}/l/latest.json",
+        "/c/#{category.slug}/#{category.id}.md",
+        "/latest?category=#{category.id}",
+        "/top?category=#{category.slug}",
+      ].each do |path|
+        get path, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200), path
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+      end
+    end
+
+    it "keeps the site-wide nofollow when the site is not indexable" do
+      SiteSetting.allow_index_in_robots_txt = false
+      noindex_category_ids << category.id
+
+      get "/c/#{category.slug}/#{category.id}.json"
+
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
+    it "is not consulted for topic lists outside a category" do
+      noindex_category_ids << category.id
+
+      get "/latest", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to be_empty
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+  end
+
   describe "shared drafts" do
     fab!(:category1, :category)
     fab!(:category2, :category)
