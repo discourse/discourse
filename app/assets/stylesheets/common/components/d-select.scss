@@ -88,6 +88,9 @@
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
+
+  // Keeps it beside the caret when nothing before it grows (the mobile trigger has no input).
+  margin-inline-start: auto;
   padding: 0;
   border: none;
   background: none;

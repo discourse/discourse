@@ -596,6 +596,30 @@ module(
       }
     });
 
+    test("on mobile, the clear button sits beside the caret however short the value", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <div style="width: 400px">
+            <FrameHost @clearable={{true}} @value={{1}} />
+          </div>
+        </template>
+      );
+
+      const trigger = find(".d-select__trigger");
+      // The fixture is scaled, so rects are converted back to CSS pixels.
+      const scale = trigger.getBoundingClientRect().width / trigger.offsetWidth;
+      const gap =
+        (find(".d-select__caret").getBoundingClientRect().left -
+          find(".d-select__clear").getBoundingClientRect().right) /
+        scale;
+
+      assert.true(
+        gap < 10,
+        `the clear button is not pushed away from the caret (${gap}px apart)`
+      );
+    });
+
     test("@disabled makes the control inert: not focusable, cannot open, no clear", async function (assert) {
       await render(
         <template>
