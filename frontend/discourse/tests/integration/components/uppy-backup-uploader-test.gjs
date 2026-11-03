@@ -1,8 +1,10 @@
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import { render, triggerEvent, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import UppyBackupUploader from "discourse/admin/components/uppy-backup-uploader";
+import BackupsIndex from "discourse/admin/templates/admin/backups/index";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
@@ -75,21 +77,24 @@ module("Integration | Component | UppyBackupUploader", function (hooks) {
     );
 
     const controller = getOwner(this).lookup("controller:admin.backups.index");
+    controller.model = trackedArray();
 
     await render(
-      <template>
-        <UppyBackupUploader @uppyUpload={{controller.uppyUpload}} />
-      </template>
+      <template><BackupsIndex @controller={{controller}} /></template>
     );
     await triggerEvent(".hidden-upload-field", "change", {
       files: [createFile("backup.tar.gz", "application/gzip")],
     });
-    await waitUntil(() => controller.model?.length, { timeout: 5000 });
+    await waitUntil(() => document.querySelector(".backup-item-row"), {
+      timeout: 5000,
+    });
 
-    assert.deepEqual(
-      controller.model.map((backup) => backup.filename),
-      ["backup.tar.gz"],
-      "reloads the backups"
-    );
+    assert
+      .dom(".backup-item-row")
+      .hasAttribute(
+        "data-backup-filename",
+        "backup.tar.gz",
+        "shows the uploaded backup"
+      );
   });
 });
