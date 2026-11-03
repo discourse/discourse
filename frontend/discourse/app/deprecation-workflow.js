@@ -321,7 +321,6 @@ const workflows = [
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
   ...[
-    "discourse.add-saveable-user-option-field",
     "discourse.add-toolbar-popup-menu-options-callback",
     "discourse.add-user-menu-glyph",
     "discourse.application-show-footer",
