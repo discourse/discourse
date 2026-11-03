@@ -352,7 +352,6 @@ const workflows = [
     "discourse.static-viewport-initialization",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
     "discourse.text.cook-async",
-    "discourse.user-menu.panel-component-class",
     "discourse.user.userOptions",
     "discourse.utils-decorators-import",
     /^discourse\.native-array-extensions\..+$/,
