@@ -1,5 +1,13 @@
 @use "lib/viewport";
 
+.dsa-moderation-help {
+  color: var(--primary-medium);
+}
+
+.dsa-moderation-title-help {
+  margin-inline: var(--space-2) auto;
+}
+
 .dsa-classification {
   min-width: 0;
   overflow-wrap: anywhere;

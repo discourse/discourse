@@ -5,9 +5,33 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const Help = <template>
+  <DTooltip
+    aria-label={{i18n "dsa_statements.help_title"}}
+    class="dsa-moderation-help"
+    tabindex="0"
+    ...attributes
+    @icon="circle-question"
+    @interactive={{true}}
+  >
+    <:content>
+      <div>
+        {{i18n "dsa_statements.help"}}
+        <br />
+        <a
+          href="https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms"
+          rel="noopener noreferrer"
+          target="_blank"
+        >{{i18n "learn_more"}}</a>
+      </div>
+    </:content>
+  </DTooltip>
+</template>;
 
 const Steps = <template>
   {{#if @flow.nextStepLabel}}
@@ -15,9 +39,10 @@ const Steps = <template>
       aria-label={{i18n "review.moderation_steps.label"}}
       class="dsa-moderation-steps"
     >
-      <li aria-current="step" class="--current">{{i18n
-          "dsa_statements.title"
-        }}</li>
+      <li aria-current="step" class="--current">
+        {{i18n "dsa_statements.title"}}
+        <Help />
+      </li>
       <li>
         {{dIcon "angle-right"}}
         {{@flow.nextStepLabel}}
@@ -52,6 +77,7 @@ const Steps = <template>
       >
         {{dIcon "angle-right"}}
         {{i18n "dsa_statements.title"}}
+        <Help />
       </li>
     </ol>
   {{/if}}
@@ -136,6 +162,10 @@ export default class DsaModeration extends Component {
     return this.args.options;
   }
 
+  get showTitleHelp() {
+    return this.enabled && !this.hasActionDetails && !this.nextStepLabel;
+  }
+
   get showContinue() {
     return this.enabled && this.hasActionDetails && !this.classificationStep;
   }
@@ -172,6 +202,8 @@ export default class DsaModeration extends Component {
   <template>
     {{yield
       (hash
+        Help=Help
+        showTitleHelp=this.showTitleHelp
         Body=(component Body flow=this)
         Footer=(component Footer flow=this)
         Steps=(component Steps flow=this)

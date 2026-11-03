@@ -50,6 +50,13 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_focused_step("DSA classification")
     expect(modal).to have_no_cancel_button
 
+    modal.open_dsa_help
+
+    expect(modal).to have_classification_help(I18n.t("js.dsa_statements.help"))
+    expect(modal).to have_dsa_learn_more_link(
+      "https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms",
+    )
+
     modal.confirm("Suspend")
 
     expect(modal).to have_required_errors
@@ -128,6 +135,10 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_action_title("Edit post")
     expect(modal).to have_steps("DSA classification", "Edit post")
     expect(modal).to have_selected_rule("Choose a community rule")
+
+    modal.open_dsa_help
+
+    expect(modal).to have_classification_help(I18n.t("js.dsa_statements.help"))
 
     modal.select_rule(rule[:ground])
     modal.select_category(category)

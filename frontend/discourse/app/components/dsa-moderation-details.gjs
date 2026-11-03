@@ -23,6 +23,7 @@ export default class DsaModerationDetails extends Component {
         @format="full"
         @name="community_rule"
         @title={{i18n "dsa_statements.rule"}}
+        @tooltip={{i18n "dsa_statements.rule_help"}}
         @type="select"
         @validation="required"
         as |field|
@@ -40,6 +41,7 @@ export default class DsaModerationDetails extends Component {
         @format="full"
         @name="category"
         @title={{i18n "dsa_statements.category"}}
+        @tooltip={{i18n "dsa_statements.category_help"}}
         @type="select"
         @validation="required"
         as |field|

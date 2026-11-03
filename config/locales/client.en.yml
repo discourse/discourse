@@ -1011,10 +1011,12 @@ en:
     dsa_statements:
       title: "DSA classification"
       help_title: "About DSA classification"
-      help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."
+      help: "The EU Digital Services Act asks platforms to record why content was moderated."
       rule: "Community rule"
+      rule_help: "Select the community rule this moderation decision is based on."
       rule_prompt: "Choose a community rule"
       category: "Category"
+      category_help: "Select the type of violation using the categories required for Digital Services Act reporting."
       category_prompt: "Choose a category"
       pending: "DSA classification pending"
       confirm_title: "Save DSA classification?"
