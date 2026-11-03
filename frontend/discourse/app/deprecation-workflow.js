@@ -360,7 +360,6 @@ const workflows = [
     "discourse.html-safe-helper",
     "discourse.icon-picker",
     "discourse.icon-renderer-translatedtitle",
-    "discourse.inline-date",
     "discourse.is-legacy-ember",
     "discourse.jquery-cookie",
     "discourse.legacy-array-like-object.proxied-array",
