@@ -41,7 +41,7 @@ acceptance("Admin - email-preview", function (needs) {
       previewEmailType = request.queryParams.email_type;
       previewLocale = request.queryParams.locale;
       previewThemeId = request.queryParams.theme_id;
-      if (previewFails) {
+      if (previewFails || (previewThemeId && previewThemeId !== "43")) {
         return helper.response(422, { errors: ["Preview failed"] });
       }
       if (!previewHasContent) {
@@ -415,6 +415,32 @@ acceptance("Admin - email-preview", function (needs) {
     assert
       .dom(".email-preview-digest .controls .btn-default")
       .isEnabled("a successful retry restores sending");
+  });
+
+  test("opens a linked preview whose theme no longer exists", async function (assert) {
+    await visit("/admin/email/preview?theme_id=999");
+    assert
+      .dom(".dialog-body")
+      .includesText("Preview failed", "shows the request error");
+    await click(".dialog-footer .btn-primary");
+    assert
+      .dom(".email-preview__stale")
+      .exists("asks for a refresh instead of showing an error page");
+
+    const themeSelector = selectKit(".email-preview__theme-selector");
+    await themeSelector.expand();
+    await themeSelector.selectRowByName(
+      i18n("admin.email.preview_default_theme")
+    );
+    await click(".digest-refresh-button");
+    assert.strictEqual(
+      previewThemeId,
+      "",
+      "refreshes without the missing theme"
+    );
+    assert
+      .dom(".email-preview__stale")
+      .doesNotExist("a successful refresh renders the preview");
   });
 
   test("previews and sends branding from the selected draft theme", async function (assert) {

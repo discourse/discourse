@@ -1,4 +1,5 @@
 import EmailPreview, { oneWeekAgo } from "discourse/admin/models/email-preview";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminEmailPreviewDigestRoute extends DiscourseRoute {
@@ -9,7 +10,17 @@ export default class AdminEmailPreviewDigestRoute extends DiscourseRoute {
     const locale = params.locale || null;
     const themeId = params.themeId || "";
     const [emailPreview, previewTypes] = await Promise.all([
-      EmailPreview.findPreview(username, lastSeen, emailType, locale, themeId),
+      // A link whose user, theme or locale no longer exists still opens the page.
+      EmailPreview.findPreview(
+        username,
+        lastSeen,
+        emailType,
+        locale,
+        themeId
+      ).catch((error) => {
+        popupAjaxError(error);
+        return null;
+      }),
       EmailPreview.findTypes(),
     ]);
     return {
@@ -30,7 +41,10 @@ export default class AdminEmailPreviewDigestRoute extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    super.setupController(controller, model.emailPreview);
+    super.setupController(
+      controller,
+      model.emailPreview ?? EmailPreview.create()
+    );
     controller.setProperties({
       username: model.username,
       lastSeen: model.lastSeen,
@@ -44,6 +58,9 @@ export default class AdminEmailPreviewDigestRoute extends DiscourseRoute {
       loading: false,
       sentEmail: false,
     });
-    controller.set("renderedParameters", controller.previewParameters);
+    controller.set(
+      "renderedParameters",
+      model.emailPreview ? controller.previewParameters : null
+    );
   }
 }
