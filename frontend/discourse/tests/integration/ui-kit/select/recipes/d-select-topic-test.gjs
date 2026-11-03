@@ -98,6 +98,18 @@ module(
       assert.deepEqual(optionTitles(), ["Dogs are great"]);
     });
 
+    test("leaves out the excluded topics", async function (assert) {
+      stubTopicSearch();
+      const exclude = [3];
+
+      await render(<template><DSelectTopic @exclude={{exclude}} /></template>);
+      const select = new DSelect();
+      await select.open();
+      await select.search("e");
+
+      assert.deepEqual(optionTitles(), ["Cats", "Closed birds"]);
+    });
+
     test("additional filters list topics before a term, as a plain search", async function (assert) {
       const requests = stubTopicSearch();
 

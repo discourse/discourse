@@ -18,7 +18,7 @@ import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import DSelectTopicList from "discourse/ui-kit/select/recipes/topics/d-select-topic-list";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 
 export default class BoardsAddTopicAsCard extends Component {
@@ -215,13 +215,13 @@ export default class BoardsAddTopicAsCard extends Component {
       <:body>
         {{! TODO (select-kit-replacement-cleanup): Remove the legacy search after rollout. }}
         {{#if this.siteSettings.enable_new_select_controls}}
-          {{! The list holds nothing: a pick adds a card and closes the modal. }}
-          <DSelectTopicList
+          {{! The field holds nothing: a pick adds a card and closes the modal. }}
+          <DSelectTopic
             @archetype={{null}}
-            @multiple={{false}}
             @onChange={{this.addPickedTopic}}
             @texts={{hash
               ariaLabel=(i18n "boards.board.topic_search_placeholder")
+              placeholder=(i18n "boards.board.topic_search_placeholder")
               searchPlaceholder=(i18n "boards.board.topic_search_placeholder")
             }}
             @value={{null}}

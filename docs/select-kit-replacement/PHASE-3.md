@@ -221,6 +221,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     in an outlet the dialog provides (2026-10-31); VoiceOver then reads each row with its
     position and the pick. Tooltips stay in the page's portal: `aria-describedby` reaches them
     across the boundary.
+  - ☑ Pickers inside modals (move to topic or message, chat to topic, boards) use `DSelectTopic`
+    instead of a list, so the modal no longer grows and shrinks with the results (2026-11-03).
+    `DSelectTopic` takes `@exclude` for the current topic.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
   `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.

@@ -11,7 +11,7 @@ import { searchForTerm } from "discourse/lib/search";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import DSelectTopicList from "discourse/ui-kit/select/recipes/topics/d-select-topic-list";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 
 // args:
@@ -132,11 +132,10 @@ export default class ChooseTopic extends Component {
         <label for="choose-topic-title">
           <span>{{i18n (or @label "choose_topic.title.search")}}</span>
         </label>
-        <DSelectTopicList
+        <DSelectTopic
           @additionalFilters={{@additionalFilters}}
           @exclude={{this.excludedTopicIds}}
           @id="choose-topic-title"
-          @multiple={{false}}
           @onChange={{this.onChangeTopic}}
           @texts={{hash
             ariaLabel=(i18n (or @label "choose_topic.title.search"))

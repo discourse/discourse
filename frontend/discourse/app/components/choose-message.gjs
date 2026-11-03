@@ -8,7 +8,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { searchForTerm } from "discourse/lib/search";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
-import DSelectTopicList from "discourse/ui-kit/select/recipes/topics/d-select-topic-list";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 
 export default class ChooseMessage extends Component {
@@ -64,11 +64,10 @@ export default class ChooseMessage extends Component {
         <label for="choose-message-title">
           {{i18n "choose_message.title.search"}}
         </label>
-        <DSelectTopicList
+        <DSelectTopic
           @archetype="private_message"
           @exclude={{this.excludedTopicIds}}
           @id="choose-message-title"
-          @multiple={{false}}
           @onChange={{this.onChangeMessage}}
           @texts={{hash ariaLabel=(i18n "choose_message.title.search")}}
           @value={{@selectedTopicId}}

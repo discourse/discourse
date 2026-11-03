@@ -1089,12 +1089,14 @@ Until cleanup, `DSelectUser` defaults `@legacyKind` to both `user-chooser` and
 The topic family has two recipes over one source, the site search, with shared rows, texts and
 held lookups in `recipes/topics/-internals/`:
 
-- **`DSelectTopic`** (kind `select-topic`) is the trigger form, for form fields. `@value` takes
-  topic ids; it holds one unless `@multiple={{true}}`. `@onChange` emits numeric ids and the
-  topics: arrays when multiple, otherwise one id or `null`.
+- **`DSelectTopic`** (kind `select-topic`) is the trigger form, for form fields, modals
+  included: its results float over a modal instead of resizing it. `@value` takes topic ids; it
+  holds one unless `@multiple={{true}}`. `@onChange` emits numeric ids and the topics: arrays
+  when multiple, otherwise one id or `null`.
 - **`DSelectTopicList`** (kind `select-topic-list`) is the same source over `DSelectList`, for a
-  panel or modal that picks without a trigger. It is multiple unless `@multiple={{false}}`, and
-  `@exclude` lists topic ids never offered, such as the topic being worked on.
+  panel that picks without a trigger. It is multiple unless `@multiple={{false}}`.
+
+Both take `@exclude`, topic ids never offered, such as the topic being worked on.
 
 Both search as the topic chooser did:
 

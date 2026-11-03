@@ -266,9 +266,9 @@ customization ports are done.
   `DAccessControlGranteeChooser` (moves with `d-access-control`) and the workflows group field
   (wave 5). `addUserSearchOption` reaches only the legacy pickers; extensions set
   `searchOptions` through a customization instead.
-  The topic pickers joined the same day: `DSelectTopic` for form fields, and `DSelectTopicList`
-  for the lists inside modals (move to topic or message, feature topic, chat to topic, boards'
-  "Add topic as card"). Held topics are looked up through `GET /topics/lookup`.
+  The topic pickers joined the same day through `DSelectTopic`, in form fields and in modals
+  alike (move to topic or message, feature topic, chat to topic, boards' "Add topic as card"), so
+  a modal keeps its height as results come and go. Held topics are looked up through `GET /topics/lookup`.
 - **Wave 3, menu-shaped value selects and action menus.** The group dropdown and value-type
   `DropdownSelectBox` uses become `DSelect`; action menus become `DMenu`. Customer ports for the
   live patches on direct `DropdownSelectBox` invocations (caret icons and hidden titles) land here.
@@ -643,12 +643,12 @@ The migrated-module reporting set now includes `user-chooser` with its row,
 
 ## Topic call sites
 
-Topic pickers branch to `DSelectTopic` and `DSelectTopicList` while `enable_new_select_controls`
-is on. Ids are emitted as numbers, with the topics. The site setting writes the picked id, or
+Topic pickers branch to `DSelectTopic` while `enable_new_select_controls` is on, including the
+pickers inside modals, which were lists of radio buttons. Ids are emitted as numbers, with the topics. The site setting writes the picked id, or
 `null` when cleared; both invite modals pass the invite's topic as `@topics`, so the held topic
 needs no lookup, and keep `additionalFilters="status:public"`. `ChooseTopic` and `ChooseMessage`
 branch inside the two components, so their callers are unchanged: the current topic is passed as
-`@exclude`, `loadOnInit` becomes listing on render (as `@additionalFilters` alone does), and
+`@exclude`, `loadOnInit` becomes listing on open (as `@additionalFilters` alone does), and
 `topicChangedCallback` still receives the topic. Workflows passes `@archetype={{null}}`, since its
 search was never limited to regular topics, and its unavailable-topic text as `unresolved`.
 Boards' "Add topic as card" holds nothing: a pick adds the card and closes the modal.

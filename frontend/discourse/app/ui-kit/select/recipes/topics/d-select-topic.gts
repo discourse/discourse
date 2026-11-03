@@ -64,6 +64,8 @@ interface DSelectTopicSignature {
      * `null` searches every topic the term finds.
      */
     archetype?: TopicPickerArchetype | null;
+    /** Topic ids never offered, such as the topic being moved from. */
+    exclude?: readonly number[];
     /** Held topics already in hand, shown without a lookup. */
     topics?: readonly object[];
     /** The picker's texts, over its defaults: the engine's and `unresolved`. */
@@ -113,6 +115,7 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
     return {
       additionalFilters: this.args.additionalFilters,
       archetype: this.archetype,
+      exclude: this.args.exclude ?? [],
     };
   }
 
@@ -121,11 +124,13 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
   }
 
   @action
-  load(filter: string) {
-    return searchTopics(filter, {
+  async load(filter: string) {
+    const topics = await searchTopics(filter, {
       additionalFilters: this.args.additionalFilters,
       archetype: this.archetype,
     });
+    const exclude = this.args.exclude ?? [];
+    return topics.filter((topic) => !exclude.includes(topic.id as number));
   }
 
   @action
@@ -151,6 +156,7 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
         value=@value
         additionalFilters=@additionalFilters
         archetype=this.archetype
+        exclude=@exclude
       }}
       @kindTexts={{this.kindTexts}}
       @labelField="title"

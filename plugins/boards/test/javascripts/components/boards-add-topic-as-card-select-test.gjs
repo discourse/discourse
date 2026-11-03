@@ -15,7 +15,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import BoardsAddTopicAsCard from "discourse/plugins/boards/discourse/components/modal/boards-add-topic-as-card";
 
 const MODAL = ".discourse-boards-add-topic-as-card-modal";
-const SEARCH = `${MODAL} .d-select.--list input[type='search']`;
+const SEARCH = `${MODAL} .d-select [role='combobox']`;
 
 const TOPICS = [
   {
@@ -120,17 +120,22 @@ module(
       assert.strictEqual(this.onAddTopicAsCard.firstCall.args[0].topicId, 280);
     });
 
-    test("Escape clears the search before it closes the modal", async function (assert) {
+    test("Escape closes the results before it closes the modal", async function (assert) {
       await fillIn(SEARCH, "rocket");
       await triggerKeyEvent(SEARCH, "keydown", "Escape");
 
-      assert.dom(SEARCH).hasValue("", "the search is cleared");
+      assert.dom(`${MODAL} [role='listbox']`).doesNotExist("the results close");
       assert.dom(MODAL).exists("the modal stays open");
 
       await triggerKeyEvent(SEARCH, "keydown", "Escape");
       assert
         .dom(MODAL)
-        .doesNotExist("an empty search leaves Escape to the modal");
+        .doesNotExist("closed results leave Escape to the modal");
+    });
+
+    test("searches from a field, not a list that resizes the modal", async function (assert) {
+      assert.dom(`${MODAL} .d-select.--list`).doesNotExist();
+      assert.dom(SEARCH).exists();
     });
 
     test("offers the topics as a single choice", async function (assert) {

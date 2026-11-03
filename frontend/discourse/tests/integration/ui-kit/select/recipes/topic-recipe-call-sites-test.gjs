@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { click, fillIn, find, findAll, render } from "@ember/test-helpers";
+import { click, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SiteSettingTopic from "discourse/admin/components/site-settings/topic";
 import ChooseMessage from "discourse/components/choose-message";
@@ -202,7 +202,7 @@ module(
     });
 
     module("choose topic", function () {
-      test("lists matches other than the current topic and hands the pick on", async function (assert) {
+      test("offers matches other than the current topic in a field and hands the pick on", async function (assert) {
         stubTopicSearch();
         const selected = tracked(null);
         const picks = [];
@@ -221,13 +221,17 @@ module(
             />
           </template>
         );
-        const input = ".choose-topic .d-select.--list input[type='search']";
+        assert
+          .dom(".choose-topic .d-select.--list")
+          .doesNotExist("a field, not a list that resizes the modal");
         assert.strictEqual(
-          accessibleName(find(input)),
+          accessibleName(find(".choose-topic [role='combobox']")),
           i18n("choose_topic.title.search")
         );
 
-        await fillIn(input, "are");
+        const select = new DSelect(".choose-topic .d-select");
+        await select.open();
+        await select.search("are");
         assert.deepEqual(optionTitles(), ["Cats are fine", "Birds are loud"]);
 
         await click(optionNamed("Cats"));
@@ -236,12 +240,10 @@ module(
           picks.map((topic) => [topic.id, topic.title]),
           [[5, "Cats are fine"]]
         );
-        assert
-          .dom(".choose-topic .d-select.--list")
-          .hasAttribute("data-value", "5");
+        assert.dom(".choose-topic .d-select").hasAttribute("data-value", "5");
       });
 
-      test("lists filtered topics as it opens when asked", async function (assert) {
+      test("lists filtered topics as it opens", async function (assert) {
         const searches = stubTopicSearch();
         const choose = () => {};
 
@@ -255,6 +257,7 @@ module(
             />
           </template>
         );
+        await new DSelect(".choose-topic .d-select").open();
 
         assert.deepEqual(searches, [{ term: " status:public" }]);
         assert.strictEqual(optionTitles().length, 3);
@@ -295,10 +298,12 @@ module(
             />
           </template>
         );
-        await fillIn(
-          ".choose-message .d-select.--list input[type='search']",
-          "birds"
-        );
+        assert
+          .dom(".choose-message .d-select.--list")
+          .doesNotExist("a field, not a list that resizes the modal");
+        const select = new DSelect(".choose-message .d-select");
+        await select.open();
+        await select.search("birds");
         await click(optionNamed("Birds"));
 
         assert.strictEqual(searches[0].type_filter, "private_messages");
