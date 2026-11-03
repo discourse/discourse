@@ -324,7 +324,6 @@ const workflows = [
     "discourse.add-toolbar-popup-menu-options-callback",
     "discourse.avatar-utils",
     "discourse.bound-date",
-    "discourse.capitalize-string",
     "discourse.category-hashtags.categoryHashtagTriggerRule",
     "discourse.category-list.categories",
     "discourse.category-list.listForParent",
