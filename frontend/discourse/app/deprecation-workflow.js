@@ -327,7 +327,6 @@ const workflows = [
     "discourse.component-template-resolving",
     "discourse.createNewMessageViaParams",
     "discourse.createNewTopicViaParams",
-    "discourse.current-theme-key",
     "discourse.d-editor.on-toolbar-create",
     "discourse.d-popover",
     "discourse.d-section",
