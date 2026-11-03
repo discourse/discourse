@@ -62,7 +62,7 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 50
+          fetch-depth: 2
           persist-credentials: false
 
       - name: pnpm install
@@ -76,7 +76,7 @@ jobs:
               CI: "1"
             run: pnpm build
 
-          - name: Find the baseline
+          - name: Build the base
             run: node script/bundle_analysis/baseline.mjs --commit HEAD^1 --out "$RUNNER_TEMP/base"
 
       - name: Analyze

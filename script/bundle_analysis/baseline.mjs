@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import { resolve } from "path";
 import { parseArgs } from "util";
-import { findBaseline, git, sameJsInputs } from "./lib/baseline.mjs";
+import { buildBaseline, git, sameJsInputs } from "./lib/baseline.mjs";
 
 const USAGE = `Usage:
   node script/bundle_analysis/baseline.mjs --commit <sha> --out <dir>
@@ -21,10 +21,9 @@ const revParse = (ref) => git(["rev-parse", ref]);
 if (args["js-changed-since"]) {
   console.log(!sameJsInputs(revParse(args["js-changed-since"]), "HEAD"));
 } else if (args.commit && args.out) {
-  const result = findBaseline(revParse(args.commit), resolve(args.out), {
+  buildBaseline(revParse(args.commit), resolve(args.out), {
     log: (message) => console.error(message),
   });
-  console.log(JSON.stringify(result));
 } else {
   console.error(USAGE);
   process.exit(1);
