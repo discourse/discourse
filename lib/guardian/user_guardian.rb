@@ -130,7 +130,7 @@ module UserGuardian
   end
 
   def can_merge_users?(source_user, target_user)
-    can_merge_user?(source_user) && !target_user.nil?
+    can_merge_user?(source_user) && !target_user.nil? && source_user.id != target_user.id
   end
 
   def can_see_warnings?(user)
