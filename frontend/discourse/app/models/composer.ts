@@ -11,7 +11,6 @@ import type DialogService from "discourse/dialog-holder/services/dialog";
 import type { AjaxError } from "discourse/lib/ajax";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
-import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
@@ -117,8 +116,6 @@ export interface ComposerOpenOptions {
   reply?: string | null;
   title?: string | null;
   recipients?: string;
-  /** Deprecated in favor of recipients. */
-  usernames?: string;
   composerTime?: number;
   typingTime?: number;
   whisper?: boolean;
@@ -1663,19 +1660,13 @@ export default class Composer extends RestModel {
       throw new Error("draft sequence is required");
     }
 
-    if (opts.usernames) {
-      deprecated("`usernames` is deprecated, use `recipients` instead.", {
-        id: "discourse.composer.usernames",
-      });
-    }
-
     this.setProperties({
       draftKey: opts.draftKey,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,
       topic: opts.topic,
-      targetRecipients: opts.usernames || opts.recipients,
+      targetRecipients: opts.recipients,
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,

@@ -9,7 +9,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
-import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import {
@@ -1053,23 +1052,6 @@ export default class Topic extends RestModel {
       slug = "topic";
     }
     return `${getURL("/t/")}${slug}/${this.id}`;
-  }
-
-  @computed("unread_posts", "new_posts")
-  get totalUnread() {
-    deprecated("The totalUnread property of the topic model is deprecated", {
-      id: "discourse.topic.totalUnread",
-    });
-    return this.unread_posts || this.new_posts;
-  }
-
-  @computed("unread_posts", "new_posts")
-  get displayNewPosts() {
-    deprecated(
-      "The displayNewPosts property of the topic model is deprecated",
-      { id: "discourse.topic.totalUnread" }
-    );
-    return this.unread_posts || this.new_posts;
   }
 
   @computed("last_read_post_number", "url", "is_nested_view")

@@ -1,5 +1,4 @@
 import { isTesting as embroiderIsTesting } from "@embroider/macros";
-import deprecated from "discourse/lib/deprecated";
 
 export const INPUT_DELAY = 250;
 
@@ -23,14 +22,6 @@ export function isTesting() {
  */
 export function isRailsTesting() {
   return environment === "test";
-}
-
-// Generally means "before we migrated to Ember CLI"
-export function isLegacyEmber() {
-  deprecated("`isLegacyEmber()` is now deprecated and always returns false", {
-    id: "discourse.is-legacy-ember",
-  });
-  return false;
 }
 
 export function isDevelopment() {

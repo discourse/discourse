@@ -356,8 +356,6 @@ expectTypeOf(topic.searchContext).toEqualTypeOf<{
   type: "topic";
   id: number;
 }>();
-expectTypeOf(topic.totalUnread).toEqualTypeOf<number | undefined>();
-expectTypeOf(topic.displayNewPosts).toEqualTypeOf<number | undefined>();
 expectTypeOf(topic.viewsHeat).toEqualTypeOf<
   "heatmap-high" | "heatmap-med" | "heatmap-low" | null
 >();

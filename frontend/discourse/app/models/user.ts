@@ -2056,18 +2056,6 @@ export default class User extends RestModel.extend(Evented) {
     }
   }
 
-  resolvedTimezone() {
-    deprecated(
-      "user.resolvedTimezone() has been deprecated. Use user.user_option.timezone instead",
-      {
-        id: "discourse.user.resolved-timezone",
-        since: "2.9.0.beta12",
-      }
-    );
-
-    return this.user_option!.timezone;
-  }
-
   calculateMutedIds(
     notificationLevel: number,
     id: number,
