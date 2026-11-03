@@ -84,6 +84,8 @@ If you want to run the plugin qunit tests on the command line, you can run
 bin/qunit --target purple-tentacle
 ```
 
+(add `--standalone` if your development server isn't running)
+
 (where `purple-tentacle` is the folder name of your plugin)
 
 ### Debugging your tests

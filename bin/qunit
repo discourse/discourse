@@ -282,7 +282,6 @@ class QunitRunner
 
     env = {}
     env["LOAD_PLUGINS"] = should_load_plugins? ? "1" : "0"
-    env["REPORT_REQUESTS"] = "1" if @report_requests
     env["UNICORN_PORT"] = @rails_port.to_s
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
