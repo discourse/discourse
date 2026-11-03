@@ -165,6 +165,32 @@ function setupToolbar() {
   });
 }
 
+function reportMemoryUsageAfterTests() {
+  QUnit.done(() => {
+    const usageBytes = performance.memory?.usedJSHeapSize;
+    let result;
+    if (usageBytes) {
+      result = `${(usageBytes / Math.pow(2, 30)).toFixed(3)}GB`;
+    } else {
+      result = "(performance.memory api unavailable)";
+    }
+
+    writeSummaryLine(`Used JS Heap Size: ${result}`);
+  });
+}
+
+function writeSummaryLine(message) {
+  // eslint-disable-next-line no-console
+  console.log(`\n${message}\n`);
+  if (window.Testem) {
+    window.Testem.useCustomAdapter(function (socket) {
+      socket.emit("test-metadata", "summary-line", {
+        message,
+      });
+    });
+  }
+}
+
 export default async function setupTests(config) {
   const target = getUrlParameter("target") || "core";
 
@@ -379,6 +405,9 @@ export default async function setupTests(config) {
     QUnit.config.reporters.html = false;
   } else {
     setupToolbar();
+  }
+  if (getUrlParameter("report_memory") === "1") {
+    reportMemoryUsageAfterTests();
   }
   patchFailedAssertion();
 
