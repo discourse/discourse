@@ -136,7 +136,12 @@ module Boards
         ) do |result|
           on_success { |board:| render json: { board: serialize_board(board) }, status: :created }
           on_failed_policy(:can_create_board) do |policy|
-            render_json_error(policy.reason, status: :forbidden, html_message: true)
+            render_json_error(
+              policy.reason,
+              status: :forbidden,
+              html_message: true,
+              skip_error_prefix: true,
+            )
           end
           on_failed_contract do |contract|
             render json: failed_json.merge(errors: contract.errors.full_messages),

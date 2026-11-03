@@ -754,6 +754,7 @@ RSpec.describe Boards::Api::BoardsController do
 
       expect(response.status).to eq(403)
       expect(response.parsed_body["errors"]).to eq([reason])
+      expect(response.parsed_body["skip_error_prefix"]).to eq(true)
     end
   end
 

@@ -669,6 +669,7 @@ class ApplicationController < ActionController::Base
   #   type    - a machine-readable description of the error
   #   status  - HTTP status code to return
   #   headers - extra headers for the response
+  #   skip_error_prefix - display a single error without the client's generic prefix
   def render_json_error(obj, opts = {})
     opts = { status: opts } if opts.is_a?(Integer)
     opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
