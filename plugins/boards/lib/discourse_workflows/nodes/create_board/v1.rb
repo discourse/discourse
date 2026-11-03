@@ -93,7 +93,7 @@ if defined?(DiscourseWorkflows)
                   "unicode_name" => board.unicode_name,
                 }
               end
-              on_failed_policy(:can_manage) do
+              on_failed_policy(:can_create_board) do
                 raise_node_error!(I18n.t("discourse_workflows.errors.create_board.forbidden"))
               end
               on_failed_contract do |contract|
