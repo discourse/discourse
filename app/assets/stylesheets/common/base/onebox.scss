@@ -946,7 +946,7 @@ aside.onebox.github-onebox {
     }
 
     .user a,
-    .discourse-local-date {
+    .discourse-local-date.cooked-date {
       border-bottom: 0;
       text-decoration: underline dashed var(--primary-low-mid);
       text-decoration-thickness: 1px;
