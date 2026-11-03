@@ -134,6 +134,23 @@ module("Unit | Lib | chat-messages-loader", function (hooks) {
       assert.strictEqual(this.lastRequest().target_message_id, 15);
     });
 
+    test("an edge removed from the list pages from its nearest neighbour", async function (assert) {
+      await this.withMessages(1, 2, 3, 4);
+      const manager = this.channel.messagesManager;
+      manager.removeMessage(manager.findMessage(1));
+      manager.removeMessage(manager.findMessage(4));
+
+      this.respondWith({
+        can_load_more_past: true,
+        can_load_more_future: true,
+      });
+      await this.loader.loadMore({ direction: PAST });
+      assert.strictEqual(this.lastRequest().target_message_id, 2);
+
+      await this.loader.loadMore({ direction: FUTURE });
+      assert.strictEqual(this.lastRequest().target_message_id, 3);
+    });
+
     test("an empty page leaves the window intact", async function (assert) {
       await this.withMessages(1, 2, 3);
 
@@ -205,6 +222,18 @@ module("Unit | Lib | chat-messages-loader", function (hooks) {
       );
       assert.strictEqual(this.lastRequest().target_message_id, 9);
       assert.false(this.loader.canLoadMoreFuture);
+    });
+
+    test("the follow-up to a first load pages from that load, before it is rendered", async function (assert) {
+      this.loader.trackLiveMessage(this.message(10));
+      this.channelMessages.resolves({
+        messages: [7, 8, 9].map((id) => this.message(id)),
+        meta: { can_load_more_past: true, can_load_more_future: false },
+      });
+
+      await this.loader.load();
+
+      assert.strictEqual(this.lastRequest().target_message_id, 9);
     });
 
     test("only one follow-up is made for a message that never arrives", async function (assert) {
