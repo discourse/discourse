@@ -348,7 +348,6 @@ const workflows = [
     "discourse.format-age",
     "discourse.formatter.update-relative-age-node-list",
     "discourse.get-owner-with-fallback",
-    "discourse.get-url-helper",
     "discourse.global.site",
     "discourse.global.site-settings",
     "discourse.global.user",
