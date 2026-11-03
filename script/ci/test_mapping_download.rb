@@ -87,7 +87,7 @@ module TestMappingDownload
             raise "Mapping entry exceeds size limit" if entry.size > 500_000_000
             content = +""
             entry.get_input_stream do |stream|
-              while (chunk = stream.read(65_536))
+              while (chunk = stream.read(1_048_576))
                 if content.bytesize + chunk.bytesize > 500_000_000
                   raise "Mapping entry exceeds size limit"
                 end

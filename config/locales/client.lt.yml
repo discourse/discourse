@@ -3567,6 +3567,7 @@ lt:
     filter_controls:
       reset: "Atstatyti"
       toggle: "Perjungti išskleidžiamojo meniu filtrus"
+      sort_label: "Rūšiuoti pagal"
     d_icon_grid_picker:
       select_icon: "Pasirinkite ikoną"
       search_label: "Ieškoti ikonos"
@@ -7215,6 +7216,9 @@ lt:
           impact_role_staff: "Personalas"
           impact_role_all_members: "Visi nariai"
           impact_role_developers: "Kūrėjai"
+        sort:
+          status: "Statusas"
+          name: "Vardas"
       config:
         about:
           title: "Apie jūsų svetainę"

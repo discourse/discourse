@@ -3,6 +3,17 @@ require "json"
 require "fileutils"
 require "rspec/core"
 require_relative "test_inventory"
+RSpec::Core::Runner.singleton_class.prepend(
+  Module.new do
+    def run(...)
+      if ENV.key?("TEST_SELECTION_ORIGINAL_RUBYOPT")
+        ENV["RUBYOPT"] = ENV.delete("TEST_SELECTION_ORIGINAL_RUBYOPT")
+      end
+      super
+    end
+  end,
+)
+
 if ENV["COLLECT_TEST_MAPPING"] == "1" && File.basename($PROGRAM_NAME) != "turbo_rspec"
   require_relative "rspec_mapping"
 end

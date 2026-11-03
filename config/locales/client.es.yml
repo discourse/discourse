@@ -2958,6 +2958,7 @@ es:
     filter_controls:
       reset: "Restablecer"
       toggle: "Activar/desactivar filtros desplegables"
+      sort_label: "Ordenar por"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
       search_label: "Buscar iconos"
@@ -5776,6 +5777,9 @@ es:
           impact_role_staff: "Personal"
           impact_role_all_members: "Todos los miembros"
           impact_role_developers: "Desarrolladores"
+        sort:
+          status: "Estado"
+          name: "Nombre"
       config:
         about:
           title: "Acerca de tu sitio"
@@ -6887,10 +6891,7 @@ es:
           site_contact_group_help: |
             El grupo al que se invita a todos los mensajes personales enviados automáticamente.
           your_organization: "Tu organización"
-          your_organization_description: "Utilizaremos esta información en los Términos del servicio y en el Aviso de privacidad para mostrar quién opera el sitio y bajo qué jurisdicción."
           company_name: "Nombre"
-          company_name_warning: |
-            Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
           company_url: "Página web"
           governing_law: "Ley que rige"
           governing_law_placeholder: "Provincia, Estado o País"

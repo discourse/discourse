@@ -1099,6 +1099,7 @@ en:
           invalid_query: "Enter a search query between 1 and %{max} characters."
           invalid_request_id: "The discovery request ID is invalid."
           request_conflict: "This discovery request ID is already being used for another query."
+          deferred_answer_unavailable: "This search's answer was already requested."
           processing_failed: "Ask AI could not complete this search."
           temporarily_unavailable: "Ask AI is busy right now. Try again shortly."
           credits_unavailable: "Ask AI is unavailable until AI credits reset."

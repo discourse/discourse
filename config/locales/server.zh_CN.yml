@@ -2793,7 +2793,7 @@ zh_CN:
     create_post_for_category_and_tag_changes: "当一个话题的类别或标签发生更改时，创建密语帖子，需要启用密语帖子。"
     automatically_clean_unused_tags: "每天自动删除未在任何话题或个人消息中使用的标签。"
     default_watched_precedence_over_muted: "如果用户正在关注的类别或标签中有他们已设为免打扰的类别或标签，则通知他们"
-    company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
+    company_name: "您的公司或组织的名称。"
     company_url: "公司或机构的网站网址（可选）。"
     governing_law: "指定管辖网站法律方面（包括《服务条款》和《隐私政策》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。"
     city_for_disputes: "指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。"

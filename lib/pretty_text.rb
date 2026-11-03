@@ -19,6 +19,7 @@ module PrettyText
 
   BLOCKED_HOTLINKED_SRC_ATTR = "data-blocked-hotlinked-src"
   BLOCKED_HOTLINKED_SRCSET_ATTR = "data-blocked-hotlinked-srcset"
+  NO_ONEBOX_LIMIT = "none"
 
   VIMEO_PLAYER_HOST = "player.vimeo.com"
   VIMEO_PLAYER_PATH = %r{\A/video/(?<id>\d+)/?\z}
@@ -208,6 +209,7 @@ module PrettyText
     opt_input[:topicId] = opts[:topic_id].to_i if opts[:topic_id]
     opt_input[:postId] = opts[:post_id].to_i if opts[:post_id]
     opt_input[:forceQuoteLink] = opts[:force_quote_link] if opts[:force_quote_link]
+    opt_input[:oneboxLimit] = opts[:onebox_limit] if opts[:onebox_limit]
     opt_input[:userId] = opts[:user_id].to_i if opts[:user_id]
     # Be careful disabling sanitization. We allow for custom emails
     opt_input[:disableSanitizer] = true if opts[:sanitize] == false

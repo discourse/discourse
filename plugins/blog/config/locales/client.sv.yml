@@ -1,0 +1,46 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  admin_js:
+    blog:
+      admin:
+        overridden: Anpassad
+        insert: Infoga
+        preview_home: Hemsida
+        preview_archive: Arkiv
+        desktop: Skrivbord
+        mobile: Mobil
+        themes: Teman
+        theme_name: Temanamn
+        edit: Redigera
+        preview: Förhandsgranska
+        import: Importera
+        export: Exportera
+        active: Aktiv
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Utkast
+        preview: Förhandsgranska
+        publish: Publicera
+        options: Alternativ
+        change:
+          title: rubrik
+          body: huvuddel
+      review:
+        active: Aktiv
+        message: Feedback
+      editor_table:
+        edit: Redigera
+        status: Status
+        replies: Svar
+      drafts: Utkast
+      private_draft: Utkast
+      preview: Förhandsgranska
+      unpublish: Avpublicera
+      appearance_link: Utseende

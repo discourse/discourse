@@ -159,8 +159,6 @@ export default interface PostStream {
   _loadingPostIds?: number[] | null;
   /** Initialized before excerpt callbacks run; callbacks assume the cache is retained. */
   _excerpts?: ExcerptCache;
-  /** TODO(typescript-pending): Core never supplies this nextWindow bound; remove when its source is established. */
-  highest_post_number?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -287,7 +285,11 @@ export default class PostStream extends RestModel {
 
   @dependentKeyCompat
   get firstPostId(): number | undefined {
-    return this.stream[0];
+    deprecated(
+      "`postStream.firstPostId` is deprecated, use `topic.firstPost()` instead",
+      { id: "discourse.post-stream.first-post-id" }
+    );
+    return this.findPostIdForPostNumber(1);
   }
 
   @dependentKeyCompat
@@ -389,10 +391,6 @@ export default class PostStream extends RestModel {
     // Find the index of the last post loaded, if not found, bail
     const lastIndex = this.indexOf(lastLoadedPost);
     if (lastIndex === -1) {
-      return [];
-    }
-    // Preserve the numeric comparison against the currently unsupplied stream bound.
-    if (lastIndex + 1 >= (this.highest_post_number as number)) {
       return [];
     }
 
@@ -1184,7 +1182,7 @@ export default class PostStream extends RestModel {
   }
 
   /** Returns the progress index of a Post object, despite the method name; mega topics use its post_number. */
-  progressIndexOfPostId(post: Post) {
+  progressIndexOfPostId(post: Pick<Post, "id" | "post_number">) {
     const postId = post.id;
 
     if (this.isMegaTopic) {
@@ -1251,6 +1249,10 @@ export default class PostStream extends RestModel {
 
   /** Find a postId for a postNumber, respecting gaps */
   findPostIdForPostNumber(postNumber: number): number | undefined {
+    if (this.isMegaTopic) {
+      return this.postForPostNumber(postNumber)?.id;
+    }
+
     const beforeLookup = this.gaps?.before;
 
     let sum = 1;

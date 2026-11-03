@@ -53,6 +53,10 @@ module TestExecution
     if job.fetch("runner") == "rspec"
       environment["TEST_SELECTION_INVENTORY"] = "#{directory}/inventory.json"
       File.write(environment.fetch("TEST_SELECTION_INVENTORY"), JSON.generate(inventory_paths.keys))
+      environment["TEST_SELECTION_ORIGINAL_RUBYOPT"] = ENV.fetch("RUBYOPT", "")
+      environment["BUNDLER_ORIG_RUBYOPT"] = ENV.fetch("BUNDLER_ORIG_RUBYOPT") do
+        environment.fetch("TEST_SELECTION_ORIGINAL_RUBYOPT")
+      end
       environment["RUBYOPT"] = [
         ENV["RUBYOPT"],
         "-rbundler/setup",

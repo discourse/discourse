@@ -23,6 +23,7 @@ import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
 import { clearExtraAttributes } from "discourse/data/extra-attributes";
+import { removeCookie } from "discourse/lib/cookie";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
@@ -259,6 +260,8 @@ export default async function setupTests(config) {
 
   let app;
   QUnit.testStart(async function (ctx) {
+    removeCookie("destination_url");
+    removeCookie("destination_url", { path: "/" });
     let settings = resetSettings();
 
     resetThemeSettings();

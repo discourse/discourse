@@ -2916,6 +2916,7 @@ sk:
       clear: "Vymazať filter"
     filter_controls:
       reset: "Resetovať"
+      sort_label: "Zoradiť podľa"
     shared_drafts:
       title: "Zdieľané návrhy"
       notice: "Táto téma je viditeľná len pre tých, ktorí môžu zverejňovať zdieľané návrhy."
@@ -5620,6 +5621,9 @@ sk:
           impact_role_admins: "Administrátori"
           impact_role_moderators: "Moderátori"
           impact_role_staff: "Personál"
+        sort:
+          status: "Stav"
+          name: "Meno"
       config:
         about:
           title: "O vašej stránke"
@@ -6682,10 +6686,7 @@ sk:
           site_contact_group_help: |
             Skupina, ktorá dostane pozvánku na všetky automaticky odoslané osobné správy.
           your_organization: "Vaša organizácia"
-          your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_warning: |
-            Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"

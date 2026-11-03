@@ -3218,6 +3218,7 @@ ru:
       clear: "Очистить фильтр"
     filter_controls:
       reset: "Сбросить"
+      sort_label: "Сортировать по"
     d_icon_grid_picker:
       select_icon: "Выбрать иконки"
       search_label: "Искать иконки"
@@ -6220,6 +6221,9 @@ ru:
           impact_role_staff: "Персонал"
           impact_role_all_members: "Все участники"
           impact_role_developers: "Разработчики"
+        sort:
+          status: "Статус"
+          name: "Название"
       config:
         about:
           title: "О вашем сайте"
@@ -7359,10 +7363,7 @@ ru:
           site_contact_group_help: |
             Группа пользователей, получающих все автоматические уведомления в виде личных сообщений.
           your_organization: "Ваша организация"
-          your_organization_description: "Мы будем использовать эту информацию в Условиях использования и Уведомлении о конфиденциальности, чтобы показать, кто управляет сайтом и под какой юрисдикцией."
           company_name: "Название"
-          company_name_warning: |
-            Если оставить это поле пустым, то шаблонных Условий использования и Уведомлений о конфиденциальности предоставляться не будет.
           company_url: "Веб-сайт"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Регулирующее законодательство"

@@ -2990,6 +2990,7 @@ ug:
     filter_controls:
       reset: "ئەسلىگە قايتۇر"
       toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
+      sort_label: "تەرتىپى"
     d_icon_grid_picker:
       search_label: "ئىزدەش سىنبەلگىسى"
       results_loaded:
@@ -5634,6 +5635,9 @@ ug:
           impact_role_staff: "باشقۇرغۇچى خادىم"
           impact_role_all_members: "بارلىق ئەزا"
           impact_role_developers: "ئىجادكار"
+        sort:
+          status: "ھالەت"
+          name: "ئىسمى"
       config:
         about:
           title: "تور بېكىتىڭىز ھەققىدە"
@@ -6686,10 +6690,7 @@ ug:
           site_contact_group_help: |
             ئۆزلۈكىدىن يوللانغان شەخسىي ئۇچۇرنىڭ ھەممىسىگە تەكلىپ قىلىنغان گۇرۇپپا.
           your_organization: "تەشكىلاتىڭىز"
-          your_organization_description: "بىز بۇ ئۇچۇرنى مۇلازىمەت ماددىلىرى ۋە شەخسىيەت باياناتىدا كۆرسىتىپ مەزكۇر تور بېكەتنى يۈرۈشتۈرگۈچىسى ۋە ئەدلىيە تەۋەلىكىنى كۆرسىتىمىز"
           company_name: "ئىسمى"
-          company_name_warning: |
-            ئەگەر بوش قالدۇرۇلسا، قېلىپسىمان مۇلازىمەت ماددىلىرى ياكى شەخسىيەت باياناتىنى تەمىنلىمەيدۇ
           company_url: "تور بېكەت"
           company_url_placeholder: "https://example-co.com"
           governing_law: "باشقۇرۇش قانۇنى"

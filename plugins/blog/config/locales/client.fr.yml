@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Conception
+        overridden: Personnalisé
+        insert: Insérer
+        array_value: Liste
+        preview_home: Page d'accueil
+        preview_archive: Archive
+        desktop: Ordinateur
+        mobile: Mobile
+        back_to_themes: Retour aux thèmes
+        new_theme_short: Nouveau thème
+        themes: Thèmes
+        theme_name: Nom du thème
+        edit: Modifier
+        activate: Activer
+        preview: Aperçu
+        import: Téléverser
+        export: Exporter
+        active: Actif
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Brouillon
+        preview: Aperçu
+        publish: Publier
+        options: Options
+        change:
+          title: titre
+          body: corps
+      review:
+        copy: Copier le lien
+        active: Actif
+        message: Commentaires
+      editor_table:
+        edit: Modifier
+        status: Statut
+        replies: Réponses
+      drafts: Brouillons
+      private_draft: Brouillon
+      preview: Aperçu
+      unpublish: Annuler la publication
+      appearance_link: Apparence

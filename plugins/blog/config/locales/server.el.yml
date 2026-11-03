@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  blog:
+    home: Αρχική σελίδα
+    posted_by: Αναρτήθηκε από
+    permalink: Μόνιμος σύνδεσμος
+    time_ago: "%{time} πριν"
+    archive: Αρχείο
+    about: Σχετικά
+    community: Κοινότητα
+    preview: Προεπισκόπηση
+    search: Αναζήτηση
+    replies:
+      one: "%{count} απάντηση"
+      other: "%{count} απαντήσεις"

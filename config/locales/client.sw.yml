@@ -1315,6 +1315,7 @@ sw:
       default: Ishara binafsi
     filter_controls:
       reset: "Weka/Anzisha Upya"
+      sort_label: "Panga kwa"
     shared_drafts:
       title: "Maswadajaribio Gawiza"
       destination_category: "Kategoria Pokezi"
@@ -2502,6 +2503,8 @@ sw:
           impact_role_admins: "Viongozi"
           impact_role_moderators: "Wasimamizi"
           impact_role_staff: "Wasaidizi"
+        sort:
+          name: "Jina"
       config:
         developer:
           title: "Mtengenezaji"

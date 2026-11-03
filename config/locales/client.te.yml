@@ -2229,6 +2229,7 @@ te:
       clear: "ఫిల్టర్‌ని క్లియర్ చేయండి"
     filter_controls:
       reset: "రీసెట్ చేయండి"
+      sort_label: "క్రమబద్ధీకరించండి"
     shared_drafts:
       title: "షేర్ చేసిన చిత్తుప్రతులు"
       notice: "షేర్ చేయబడిన చిత్తుప్రతులను ప్రచురించగల వారికి మాత్రమే ఈ విషయం కనిపిస్తుంది."
@@ -4358,6 +4359,9 @@ te:
           impact_type_other: "ఇతర"
           impact_role_moderators: "నిర్వాహకులు"
           impact_role_staff: "సిబ్బంది"
+        sort:
+          status: "స్థితి"
+          name: "పేరు"
       config:
         about:
           title: "మీ సైట్ గురించి"

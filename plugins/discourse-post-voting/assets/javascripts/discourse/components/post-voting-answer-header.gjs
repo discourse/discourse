@@ -19,11 +19,12 @@ export default class PostVotingAnswerHeader extends Component {
     const positionInStream =
       repliesToPostNumber && parseInt(repliesToPostNumber, 10) !== 1 ? 2 : 1;
     const answersCount = post.topic.posts_count - 1;
+    const { isMegaTopic, posts, stream } = post.topic.postStream;
+    const answerId = isMegaTopic
+      ? posts[0]?.post_number === 1 && posts[positionInStream]?.id
+      : stream[positionInStream];
 
-    return (
-      answersCount > 0 &&
-      post.id === post.topic.postStream.stream[positionInStream]
-    );
+    return answersCount > 0 && post.id === answerId;
   }
 
   get post() {

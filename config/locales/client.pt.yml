@@ -2772,6 +2772,7 @@ pt:
       default: Emojis Personalizados
     filter_controls:
       reset: "Repor"
+      sort_label: "Ordenar por"
     shared_drafts:
       title: "Rascunhos Partilhados"
       notice: "Este tópico é visível apenas para quem pode publicar rascunhos partilhados."
@@ -4660,6 +4661,9 @@ pt:
           impact_role_admins: "Administradores"
           impact_role_moderators: "Moderadores"
           impact_role_staff: "Pessoal"
+        sort:
+          status: "Estado"
+          name: "Nome"
       config:
         about:
           title: "Sobre o seu ''site''"

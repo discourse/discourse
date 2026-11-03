@@ -2629,7 +2629,7 @@ fr:
     create_post_for_category_and_tag_changes: "Créez une publication chuchotée lorsque la catégorie ou les étiquettes d'un sujet changent. Cette option nécessite l'activation des publications chuchotées."
     automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message direct au quotidien."
     default_watched_precedence_over_muted: "Informe les utilisateurs des sujets appartenant à des catégories ou portant des étiquettes qu'ils surveillent, même s'ils appartiennent également à une catégorie ou portent une étiquette qu'ils ont mise en sourdine"
-    company_name: "Nom de votre entreprise ou organisation. Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis."
+    company_name: "Nom de votre entreprise ou organisation."
     company_url: "URL du site Web de votre entreprise ou organisation. Facultatif."
     governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
     city_for_disputes: "Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum."

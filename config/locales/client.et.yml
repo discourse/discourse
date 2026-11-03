@@ -1516,6 +1516,7 @@ et:
       default: Kohandatud emodži
     filter_controls:
       reset: "Nulli"
+      sort_label: "Järjesta"
     shared_drafts:
       destination_category: "Sihtkategooria"
     composer:
@@ -2826,6 +2827,9 @@ et:
           impact_role_admins: "Adminnid"
           impact_role_moderators: "Moderaatorid"
           impact_role_staff: "Meeskond"
+        sort:
+          status: "Staatus"
+          name: "Nimi"
       config:
         developer:
           title: "Arendaja"

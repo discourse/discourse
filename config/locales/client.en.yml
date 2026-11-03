@@ -3929,6 +3929,7 @@ en:
         link_copied: "Link copied!"
         load_preview: "Load preview"
         preview_failed: "Could not load preview"
+        preview_limit_reached: "This post has reached the maximum number of previews"
 
       onebox_toolbar:
         copy: "Copy link"
@@ -9225,6 +9226,8 @@ en:
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create placeholder"
+          placeholder_type_tip: "Once the installation is finished, the type from the repository's about.json is used."
+          skipped_components: "%{name} is installed, but these components couldn't be installed. Install them from the Components tab, then add them to this theme:"
           about_theme: "About"
           license: "License"
           version: "Version:"

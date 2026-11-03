@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    blog:
+      admin:
+        overridden: Vlastné
+        insert: Vložiť
+        array_value: Zoznam
+        preview_archive: Archivovať
+        desktop: Desktop
+        mobile: Mobil
+        back_to_themes: Späť na témy
+        new_theme_short: Nová téma
+        themes: Témy
+        theme_name: Názov témy
+        edit: Upraviť
+        activate: Aktivovať
+        preview: Náhľad
+        import: Import
+        export: Exportovať
+        active: Aktívny
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Návrh
+        preview: Náhľad
+        publish: Publikovať
+        options: Možnosti
+        change:
+          title: názov
+          body: telo
+      review:
+        copy: Kopírovať odkaz
+        active: Aktívny
+        message: Spätná väzba
+      editor_table:
+        edit: Upraviť
+        status: Stav
+        replies: Odpovede
+      drafts: Koncepty
+      private_draft: Návrh
+      preview: Náhľad
+      unpublish: Zrušenie zverejnenia
+      appearance_link: Vzhľad

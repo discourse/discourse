@@ -5,6 +5,7 @@ module RSpecSubprocessEnvironment
   def isolated_rspec_environment
     {
       "RUBYOPT" => "-rbundler/setup",
+      "TEST_SELECTION_ORIGINAL_RUBYOPT" => nil,
       "TEST_MAPPING_COLLECT" => nil,
       "COLLECT_TEST_MAPPING" => nil,
       "COLLECT_RSPEC_MAPPING" => nil,

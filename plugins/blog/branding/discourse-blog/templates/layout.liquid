@@ -1,0 +1,21 @@
+<div class="discourse-journal">
+  <header class="discourse-journal__header">
+    <a class="discourse-journal__brand" href="{{ site.url }}"><span class="discourse-journal__mark" aria-hidden="true">{{ site.title | slice: 0 | upcase }}</span>{{ site.title }}</a>
+    <nav class="discourse-journal__nav" aria-label="{{ labels.navigation }}">
+      <a href="{{ site.url }}">{{ labels.home }}</a>
+      <a href="{{ site.about_url }}">{{ labels.about }}</a>
+      <a href="{{ site.archive_url }}">{{ labels.archive }}</a>
+      <a href="{{ site.feed_url }}">{{ labels.rss }}</a>
+    </nav>
+    <a class="discourse-journal__join" href="{{ site.community_url }}">{{ labels.join_community }} ↗</a>
+  </header>
+  <main id="main" class="discourse-journal__main">{{ content_html }}</main>
+  <footer class="discourse-journal__footer">
+    <div><a class="discourse-journal__brand" href="{{ site.url }}">{{ site.title }}</a><p>{{ labels.footer }}</p></div>
+    <nav class="discourse-journal__nav" aria-label="{{ labels.navigation }}">
+      <a href="{{ site.about_url }}">{{ labels.about }}</a>
+      <a href="{{ site.feed_url }}">{{ labels.rss }}</a>
+      <a href="{{ site.editor_url }}">{{ labels.editor }}</a>
+    </nav>
+  </footer>
+</div>

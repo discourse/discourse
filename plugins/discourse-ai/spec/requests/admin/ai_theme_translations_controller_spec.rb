@@ -33,6 +33,29 @@ describe DiscourseAi::Admin::AiThemeTranslationsController do
         expect(response.status).to eq(204)
       end
 
+      it "respects plugin restrictions on theme edits" do
+        plugin = Plugin::Instance.new
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        expect_not_enqueued_with(job: :localize_theme_translations) do
+          post "/admin/plugins/discourse-ai/ai-theme-translations.json",
+               params: {
+                 theme_id: theme.id,
+               }
+        end
+
+        expect(response.status).to eq(403)
+      ensure
+        if plugin
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin,
+            :user_guardian_can_edit_theme,
+            &modifier
+          )
+        end
+      end
+
       it "passes a valid locale through as source_locale" do
         expect_enqueued_with(
           job: :localize_theme_translations,

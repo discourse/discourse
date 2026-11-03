@@ -83,6 +83,41 @@ module DiscourseSolved
         post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
     end
 
+    # The full plain text of a post, for the Question and Answer `text` properties. Google's
+    # Q&A guidelines ask for the complete question and answer, so unlike the excerpts used
+    # elsewhere this has no length limit and nothing is folded away. Quotes are left out
+    # unless the post is nothing but a quote, and onebox bodies are kept, as the excerpt did
+    # before.
+    def self.post_text(post)
+      cooked = post.cooked.to_s
+      return "" if cooked.blank?
+
+      # ExcerptParser keeps only the contents of an [excerpt] block and only the summary of a
+      # [details] block. The full text needs both, so unwrap them before parsing. The summary
+      # becomes a paragraph so it stays separated from the body it introduces.
+      doc = Nokogiri::HTML5.fragment(cooked)
+      doc.css(".excerpt").each { |node| node.remove_class("excerpt") }
+      doc
+        .css("details")
+        .each do |details|
+          details.css("summary").each { |summary| summary.name = "p" }
+          details.replace(details.children)
+        end
+      html = doc.to_html
+
+      options = {
+        strip_links: true,
+        text_entities: true,
+        plain_hashtags: true,
+        keep_onebox_body: true,
+        post:,
+      }
+      # The plain text is never longer than the HTML it comes from, so the HTML's length acts
+      # as "no limit", the same way ExcerptParser treats custom excerpts.
+      Post.excerpt(html, html.length, options).presence ||
+        Post.excerpt(html, html.length, options.merge(keep_quotes: true))
+    end
+
     private_class_method def self.accepted_answer_visible?(topic)
       topic.solved&.answer_posts&.any? { |post| Guardian.new.can_see_post?(post) }
     end

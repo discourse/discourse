@@ -315,5 +315,35 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
         expect(html).to include(suggested_user.username)
       end
     end
+
+    context "when the question and the accepted answer are longer than the excerpt limit" do
+      fab!(:long_topic) { Fabricate(:topic, user:) }
+      fab!(:question_post) do
+        Fabricate(
+          :post,
+          topic: long_topic,
+          user:,
+          raw: Array.new(120) { |i| "question#{i}" }.join(" "),
+        )
+      end
+      fab!(:answer_post) do
+        Fabricate(:post, topic: long_topic, raw: Array.new(120) { |i| "answer#{i}" }.join(" "))
+      end
+
+      let(:params) { { topic_id: long_topic.id } }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic: long_topic, answer_post:)
+      end
+
+      it "includes the full text of the question and the answer" do
+        fragment = Nokogiri::HTML5.fragment(result[:html])
+        schema = JSON.parse(fragment.at_css('script[type="application/ld+json"]').content)
+
+        expect(schema.dig("mainEntity", "text")).to eq(question_post.raw)
+        expect(schema.dig("mainEntity", "acceptedAnswer", 0, "text")).to eq(answer_post.raw)
+      end
+    end
   end
 end

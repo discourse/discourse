@@ -1413,6 +1413,94 @@ end
 
 RSpec.describe TestExecution do
   include RSpecSubprocessEnvironment
+  it "observes an exec wrapper while isolating Ruby children before specs load" do
+    Dir.mktmpdir("execution-", "tmp") do |directory|
+      file = "#{directory}/child_spec.rb"
+      wrapper = "#{directory}/wrapper.rb"
+      startup_check = "#{directory}/plain_start.rb"
+      File.write(startup_check, 'abort "Launcher must start without Bundler" if defined?(Bundler)')
+      File.write(wrapper, 'exec "bundle", "exec", "rspec", *ARGV')
+      File.write(file, <<~RUBY)
+        require "open3"
+        require "rbconfig"
+        probe = <<~CHILD
+          abort "RSpec leaked into a child" if defined?(RSpec)
+          options = ENV.fetch("RUBYOPT", "")
+          abort "Original option missing" unless options.split.include?("-W0")
+          abort "Observer leaked into a child" if options.include?("rspec_execution")
+        CHILD
+        output, error, status = Open3.capture3(RbConfig.ruby, "-e", probe)
+        Bundler.with_unbundled_env do
+          unbundled_output, unbundled_error, unbundled_status =
+            Open3.capture3(RbConfig.ruby, "-e", probe)
+          raise unbundled_error unless unbundled_status.success?
+        end
+        RSpec.describe "Ruby child environment" do
+          it "keeps the original options without the observer" do
+            expect(status.success?).to eq(true), error
+            expect(ENV.key?("TEST_SELECTION_ORIGINAL_RUBYOPT")).to eq(false)
+          end
+        end
+      RUBY
+      revision = "c" * 40
+      plan = {
+        "version" => 2,
+        "mode" => "select",
+        "revision" => revision,
+        "files" => [file],
+        "jobs" => {
+          "backend" => [file],
+        },
+        "environments" => {
+          "backend" => "core",
+        },
+      }
+      catalog = {
+        "revision" => revision,
+        "jobs" => {
+          "backend" => {
+            "inventory" => [file],
+            "environment" => "core",
+            "runner" => "rspec",
+            "command" => [RbConfig.ruby, wrapper, "--options", "/dev/null"],
+          },
+        },
+      }
+      File.write("#{directory}/plan.json", JSON.generate(plan))
+      File.write("#{directory}/catalog.json", JSON.generate(catalog))
+
+      output, error, status =
+        Open3.capture3(
+          isolated_rspec_environment.merge(
+            ENV.keys.grep(/\ABUNDLER_ORIG_/).to_h { |key| [key, nil] },
+            "GITHUB_SHA" => revision,
+            "RUBYOPT" => "-W0",
+            "BUNDLER_SETUP" => nil,
+            "BUNDLE_BIN_PATH" => nil,
+            "BUNDLER_VERSION" => nil,
+            "RUBYLIB" => nil,
+          ),
+          RbConfig.ruby,
+          "-r",
+          File.expand_path(startup_check),
+          "script/ci/test_execution.rb",
+          "#{directory}/plan.json",
+          "#{directory}/catalog.json",
+          "backend",
+          "#{directory}/report.json",
+        )
+      report = JSON.parse(File.read("#{directory}/report.json"))
+
+      expect(status.success?).to eq(true), "#{output}\n#{error}"
+      expect(report.slice("loaded", "examples", "failures", "exact")).to eq(
+        "loaded" => [file],
+        "examples" => 1,
+        "failures" => [],
+        "exact" => true,
+      )
+    end
+  end
+
   it "records actual RSpec outcomes without fabricated examples" do
     Dir.mktmpdir("execution-", "tmp") do |directory|
       file = "#{directory}/added_spec.rb"

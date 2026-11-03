@@ -29,6 +29,7 @@ acceptance("Admin - Edit category topic template", function (needs) {
           slug: "bug",
           can_edit: true,
           category_type_site_settings: {},
+          category_types: {},
           permissions: [],
         },
       });
@@ -43,6 +44,7 @@ acceptance("Admin - Edit category topic template", function (needs) {
           can_edit: true,
           category_type_site_settings: {},
           ...putData,
+          category_types: {},
           permissions: [],
         },
       });
