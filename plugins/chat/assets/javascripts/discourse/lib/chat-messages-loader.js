@@ -49,6 +49,31 @@ export default class ChatMessagesLoader {
     }
   }
 
+  /**
+   * Moves a fetched edge off a message that is about to leave the list. The
+   * server ignores a deleted message as a cursor for most users, so paging from
+   * it would restart at an end of the stream.
+   *
+   * @param {ChatMessage} message - Still in the list when this is called
+   */
+  releaseMessage(message) {
+    const shown = this.model.messagesManager.messages.filter(
+      (item) => !item.staged
+    );
+    const index = shown.indexOf(message);
+    if (index === -1) {
+      return;
+    }
+
+    if (message.id === this.#oldestFetchedMessageId) {
+      this.#oldestFetchedMessageId = shown[index + 1]?.id ?? message.id;
+    }
+
+    if (message.id === this.#newestFetchedMessageId) {
+      this.#newestFetchedMessageId = shown[index - 1]?.id ?? message.id;
+    }
+  }
+
   async loadMore({ direction } = {}) {
     if (direction === FUTURE && this.canLoadMoreFuture === false) {
       return;
@@ -122,12 +147,15 @@ export default class ChatMessagesLoader {
       .reduce((a, k) => ({ ...a, [k]: args[k] }), {});
   }
 
-  async #fetchPage(direction, cursor = this.#cursorFor(direction)) {
+  async #fetchPage(direction) {
     const result = await this.#apiFunction(
       this.#cleanArgs({
         direction,
         page_size: DEFAULT_MESSAGE_PAGE_SIZE,
-        target_message_id: cursor,
+        target_message_id:
+          direction === PAST
+            ? this.#oldestFetchedMessageId
+            : this.#newestFetchedMessageId,
       })
     );
 
@@ -143,26 +171,6 @@ export default class ChatMessagesLoader {
     return result;
   }
 
-  // The server ignores a cursor on a message deleted for this user, and the
-  // list drops such messages, so page from the nearest one that is still shown.
-  // Only valid once earlier pages have been rendered.
-  #cursorFor(direction) {
-    const id =
-      direction === PAST
-        ? this.#oldestFetchedMessageId
-        : this.#newestFetchedMessageId;
-    const manager = this.model.messagesManager;
-
-    if (id == null || manager.findMessage(id)) {
-      return id;
-    }
-
-    const shown = manager.messages.filter((message) => !message.staged);
-    return direction === PAST
-      ? shown.find((message) => message.id > id)?.id
-      : shown.findLast((message) => message.id < id)?.id;
-  }
-
   // A message can be posted after the server built the last page but reach us
   // before it, while it is held back as pending. One more page picks it up; only
   // one, since a message deleted meanwhile will never arrive.
@@ -174,9 +182,16 @@ export default class ChatMessagesLoader {
       return result;
     }
 
+    let next;
+    try {
+      next = await this.#fetchPage(FUTURE);
+    } catch (error) {
+      // keep it reachable once the connection recovers
+      this.canLoadMoreFuture = true;
+      throw error;
+    }
+
     this.#newestLiveMessageId = null;
-    // the page just fetched is not in the list yet, so its edge is used as is
-    const next = await this.#fetchPage(FUTURE, this.#newestFetchedMessageId);
 
     return { ...result, messages: [...result.messages, ...next.messages] };
   }

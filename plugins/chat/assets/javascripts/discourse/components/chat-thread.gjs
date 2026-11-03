@@ -225,7 +225,11 @@ export default class ChatThread extends Component {
     this.subscriptionManager = new ChatChannelThreadSubscriptionManager(
       this,
       this.args.thread,
-      { onNewMessage: this.onNewMessage }
+      {
+        onNewMessage: this.onNewMessage,
+        onRemoveMessage: (message) =>
+          this.messagesLoader.releaseMessage(message),
+      }
     );
   }
 

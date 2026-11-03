@@ -254,7 +254,11 @@ export default class ChatChannel extends Component {
     this.subscriptionManager = new ChatChannelSubscriptionManager(
       this,
       this.args.channel,
-      { onNewMessage: this.onNewMessage }
+      {
+        onNewMessage: this.onNewMessage,
+        onRemoveMessage: (message) =>
+          this.messagesLoader.releaseMessage(message),
+      }
     );
 
     if (targetMessageId) {

@@ -48,13 +48,26 @@ export function maintainScrollPosition(scroller, callback) {
       return;
     }
 
-    const heightDiff = scroller.scrollHeight - captured.scrollHeight;
-    if (!heightDiff || heightDiff < 1) {
-      return;
+    // Outside a run loop the list can render after this queue; the frame
+    // callback still runs before paint.
+    if (!compensateHeightChange(scroller, captured)) {
+      requestAnimationFrame(() => {
+        if (scroller.isConnected) {
+          compensateHeightChange(scroller, captured);
+        }
+      });
     }
-
-    scroller.scrollTop = captured.scrollTop - heightDiff;
   });
+}
+
+function compensateHeightChange(scroller, captured) {
+  const heightDiff = scroller.scrollHeight - captured.scrollHeight;
+  if (!heightDiff || heightDiff < 1) {
+    return false;
+  }
+
+  scroller.scrollTop = captured.scrollTop - heightDiff;
+  return true;
 }
 
 export async function scrollListToBottom(list) {

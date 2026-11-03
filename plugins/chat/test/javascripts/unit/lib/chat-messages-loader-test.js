@@ -134,11 +134,15 @@ module("Unit | Lib | chat-messages-loader", function (hooks) {
       assert.strictEqual(this.lastRequest().target_message_id, 15);
     });
 
-    test("an edge removed from the list pages from its nearest neighbour", async function (assert) {
+    test("a released edge moves to its neighbour", async function (assert) {
       await this.withMessages(1, 2, 3, 4);
       const manager = this.channel.messagesManager;
-      manager.removeMessage(manager.findMessage(1));
-      manager.removeMessage(manager.findMessage(4));
+
+      for (const id of [1, 4]) {
+        const message = manager.findMessage(id);
+        this.loader.releaseMessage(message);
+        manager.removeMessage(message);
+      }
 
       this.respondWith({
         can_load_more_past: true,
@@ -149,6 +153,19 @@ module("Unit | Lib | chat-messages-loader", function (hooks) {
 
       await this.loader.loadMore({ direction: FUTURE });
       assert.strictEqual(this.lastRequest().target_message_id, 3);
+    });
+
+    test("an edge missing from the list without being released is kept", async function (assert) {
+      await this.withMessages(1, 2, 3);
+      this.channel.messagesManager.clear();
+
+      this.respondWith({
+        can_load_more_past: true,
+        can_load_more_future: null,
+      });
+      await this.loader.loadMore({ direction: PAST });
+
+      assert.strictEqual(this.lastRequest().target_message_id, 1);
     });
 
     test("an empty page leaves the window intact", async function (assert) {
@@ -255,7 +272,7 @@ module("Unit | Lib | chat-messages-loader", function (hooks) {
       );
     });
 
-    test("a failed follow-up still leaves the channel loaded", async function (assert) {
+    test("a failed follow-up leaves the channel loaded and retryable", async function (assert) {
       this.loader.trackLiveMessage(this.message(10));
       this.channelMessages.onCall(this.channelMessages.callCount).resolves({
         messages: [1, 2, 3].map((id) => this.message(id)),
@@ -271,6 +288,23 @@ module("Unit | Lib | chat-messages-loader", function (hooks) {
       assert.deepEqual(
         result.messages.map((m) => m.id),
         [1, 2, 3]
+      );
+      assert.true(
+        this.loader.canLoadMoreFuture,
+        "newer messages can still be requested"
+      );
+
+      this.channelMessages.resolves({
+        messages: [this.message(10)],
+        meta: { can_load_more_past: null, can_load_more_future: false },
+      });
+      const retry = await this.loader.loadMore({ direction: FUTURE });
+
+      assert.strictEqual(this.lastRequest().target_message_id, 3);
+      assert.deepEqual(
+        retry.messages.map((m) => m.id),
+        [10],
+        "the held message is fetched on the next attempt"
       );
     });
 
