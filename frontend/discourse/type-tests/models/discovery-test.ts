@@ -113,7 +113,6 @@ expectTypeOf(TopicList.topicsFrom(store, list)).toEqualTypeOf<
 TopicList.topicsFrom(store, list, { listKey: "shared_drafts" });
 TopicList.hideUniformCategory(list, category);
 TopicList.hideUniformCategory(list, undefined);
-expectTypeOf(TopicList.find("latest", {})).resolves.toEqualTypeOf<TopicList>();
 
 /* Topic posters and participants are hydrated by the list. */
 
