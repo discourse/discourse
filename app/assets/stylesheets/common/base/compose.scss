@@ -47,7 +47,7 @@ html.composer-open:not(.has-full-page-chat) {
   display: flex;
   flex-direction: column;
   bottom: 0;
-  right: 0;
+  right: var(--d-page-inset-inline-end, 0);
   left: 0;
   margin-inline: auto;
   max-width: $reply-area-max-width;
