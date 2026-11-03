@@ -19,10 +19,7 @@ module PageObjects
       end
 
       def has_dsa_learn_more_link?(url)
-        has_css?(
-          "[role='tooltip'] a[href='#{url}'][target='_blank']",
-          text: I18n.t("js.learn_more"),
-        )
+        has_css?("[role='tooltip'] a[href='#{url}'][target='_blank']", text: "Learn more…")
       end
 
       def select_rule(ground)
