@@ -85,8 +85,6 @@ class Reporter extends TapReporter {
           existing.count = detail.count;
         }
       }
-    } else if (tag === "summary-line") {
-      this.out.write(`\n${metadata.message}\n`);
     } else {
       super.reportMetadata(...arguments);
     }
