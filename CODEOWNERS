@@ -11,4 +11,11 @@
 /script/bulk_import/ @discourse/migrations-tooling
 /script/import_scripts/ @discourse/migrations-tooling
 
-*vips* @tgxworld
+# libvips
+/config/initializers/003-vips.rb @tgxworld
+/lib/demon/discourse_vips.rb @tgxworld
+/lib/discourse_vips.rb @tgxworld
+/lib/discourse_vips/ @tgxworld
+/script/discourse_vips_worker @tgxworld
+/spec/lib/discourse_vips/ @tgxworld
+/spec/lib/discourse_vips_spec.rb @tgxworld
