@@ -1,10 +1,19 @@
+@use "lib/viewport";
+
 .c-channel-info {
   display: flex;
   padding: 1rem;
   flex-direction: column;
 
+  @include viewport.until(sm) {
+    padding-inline: var(--d-wrap-padding-x);
+    padding-block-start: var(--space-2);
+  }
+
   &__nav {
     margin-block-end: var(--space-6);
+    padding-inline: var(--d-wrap-padding-x);
+    margin-inline: calc(-1 * var(--d-wrap-padding-x));
 
     .nav-pills {
       margin: 0;

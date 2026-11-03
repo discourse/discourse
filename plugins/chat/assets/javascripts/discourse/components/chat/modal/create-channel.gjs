@@ -359,7 +359,7 @@ export default class ChatModalCreateChannel extends Component {
               <field.Control @context="channel-emoji" />
 
               <DButton
-                class="btn-flat edit-channel-clear-emoji"
+                class="btn-transparent --primary edit-channel-clear-emoji"
                 @action={{fn field.set null}}
                 @disabled={{not field.value}}
                 @label="chat.create_channel.emoji.reset"
