@@ -83,18 +83,6 @@ module DiscourseVips
     end
   end
 
-  def self.gif_to_webp(input_path:, output_path:, quality:, timeout:)
-    ImageProcessing::OutputFile.write(output_path) do |temporary_path|
-      Client.call(
-        ["gif-to-webp", input_path, temporary_path, quality],
-        operation: :upload_gif_to_webp,
-        read: [input_path],
-        write: [temporary_path],
-        timeout:,
-      )
-    end
-  end
-
   def self.png_to_jpeg(input_path:, output_path:, quality:, timeout:)
     ImageProcessing::OutputFile.write(output_path) do |temporary_path|
       Client.call(
