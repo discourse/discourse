@@ -1,13 +1,5 @@
 @use "lib/viewport";
 
-.dsa-moderation-help {
-  color: var(--primary-medium);
-}
-
-.dsa-moderation-title-help {
-  margin-inline: var(--space-2) auto;
-}
-
 .dsa-classification {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -114,4 +106,12 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
       color: var(--primary);
     }
   }
+}
+
+.dsa-moderation-help {
+  color: var(--primary-medium);
+}
+
+.dsa-moderation-title-help {
+  margin-inline: var(--space-2) auto;
 }
