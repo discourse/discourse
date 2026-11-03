@@ -356,8 +356,6 @@ const workflows = [
     "discourse.user.resolved-timezone",
     "discourse.user.userOptions",
     "discourse.utils-decorators-import",
-    "discourse.utils-decorators-observes",
-    "discourse.utils-decorators-on",
     /^discourse\.native-array-extensions\..+$/,
   ].map((matchId) => ({ handler: "notify-admin", matchId })),
 

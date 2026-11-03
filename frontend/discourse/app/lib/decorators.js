@@ -32,13 +32,8 @@ import {
 import CoreObject from "@ember/object/core";
 import { on as emberOn } from "@ember/object/evented";
 import { bind as emberBind, schedule } from "@ember/runloop";
-import {
-  observes as emberObservesDecorator,
-  on as emberOnDecorator,
-} from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
 import decoratorAlias from "discourse/lib/decorator-alias";
-import deprecated from "discourse/lib/deprecated";
 import extractValue from "discourse/lib/extract-value";
 import handleDescriptor from "discourse/lib/handle-descriptor";
 import isDescriptor from "discourse/lib/is-descriptor";
@@ -179,34 +174,28 @@ export function debounce(delay, immediate = false) {
 export function on(...onParams) {
   return function (target) {
     if (target instanceof CoreObject) {
-      deprecated(
-        `Using 'on' from 'discourse/lib/decorators' as a class property decorator is deprecated. You should import it from '@ember-decorators/object' instead.`,
-        { id: "discourse.utils-decorators-on", from: "3.1.0.beta2" }
+      throw new Error(
+        "`on` from 'discourse/lib/decorators' only works with `.extend()`. Import it from '@ember-decorators/object' for native classes."
       );
-      return emberOnDecorator(...onParams)(...arguments);
-    } else {
-      return decoratorAlias(
-        emberOn,
-        "Can not `on` without event names"
-      )(...onParams)(...arguments);
     }
+    return decoratorAlias(
+      emberOn,
+      "Can not `on` without event names"
+    )(...onParams)(...arguments);
   };
 }
 
 export function observes(...observeParams) {
   return function (target) {
     if (target instanceof CoreObject) {
-      deprecated(
-        `Using 'observes' from 'discourse/lib/decorators' as a class property decorator is deprecated. You should import it from '@ember-decorators/object' instead.`,
-        { id: "discourse.utils-decorators-observes", from: "3.1.0.beta2" }
+      throw new Error(
+        "`observes` from 'discourse/lib/decorators' only works with `.extend()`. Import it from '@ember-decorators/object' for native classes."
       );
-      return emberObservesDecorator(...observeParams)(...arguments);
-    } else {
-      return decoratorAlias(
-        observer,
-        "Can not `observe` without property names"
-      )(...observeParams)(...arguments);
     }
+    return decoratorAlias(
+      observer,
+      "Can not `observe` without property names"
+    )(...observeParams)(...arguments);
   };
 }
 
