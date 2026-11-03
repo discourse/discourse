@@ -3,7 +3,6 @@ import { run } from "@ember/runloop";
 import {
   find,
   findAll,
-  getApplication,
   settled,
   triggerKeyEvent,
   typeIn,
@@ -208,9 +207,6 @@ export function applyPretender(name, server, helper) {
 // Add clean up code here to run after every test
 export function testCleanup(app) {
   if (_initialized.has(QUnit.config.current.testId)) {
-    if (!app) {
-      app = getApplication();
-    }
     app._runInitializer("instanceInitializers", (_, initializer) => {
       initializer.teardown?.();
     });
@@ -318,7 +314,7 @@ function cleanupCssGeneratorTags() {
   document.querySelector("style#hashtag-css-generator")?.remove();
 }
 
-export function addPretenderCallback(name, fn) {
+function addPretenderCallback(name, fn) {
   if (name && fn) {
     if (_pretenderCallbacks[name]) {
       throw `There is already a pretender callback with module name (${name}).`;
@@ -331,21 +327,37 @@ export function addPretenderCallback(name, fn) {
 export function acceptance(name, callback) {
   name = `Acceptance: ${name}`;
 
-  let options = {};
-
-  addPretenderCallback(name, options.pretend);
-
   let loggedIn = false;
   let mobileView = false;
   let siteChanges;
   let settingChanges;
   let userChanges;
 
-  const setup = {
-    beforeEach() {
+  const needs = {
+    user(changes) {
+      loggedIn = true;
+      userChanges = changes;
+    },
+    pretender(fn) {
+      addPretenderCallback(name, fn);
+    },
+    site(changes) {
+      siteChanges = changes;
+    },
+    settings(changes) {
+      settingChanges = changes;
+    },
+    mobileView() {
+      mobileView = true;
+    },
+  };
+
+  module(name, function (hooks) {
+    needs.hooks = hooks;
+
+    hooks.beforeEach(function () {
       I18n.testing = true;
 
-      resetExtraClasses();
       if (mobileView) {
         forceMobile();
       }
@@ -369,70 +381,21 @@ export function acceptance(name, callback) {
 
       this.container = getOwnerWithFallback(this);
 
-      if (!this.owner) {
-        this.owner = this.container;
-      }
+      // Hooks added via `needs.hooks` run before ember-qunit sets the owner
+      this.owner ??= this.container;
+    });
 
-      if (options.beforeEach) {
-        options.beforeEach.call(this);
-      }
-    },
-
-    afterEach() {
+    hooks.afterEach(function () {
       I18n.testing = false;
-      options?.afterEach?.call(this);
       if (loggedIn) {
         User.current().statusManager.stopTrackingStatus();
       }
-    },
-  };
-
-  const needs = {
-    user(changes) {
-      loggedIn = true;
-      userChanges = changes;
-    },
-    pretender(fn) {
-      addPretenderCallback(name, fn);
-    },
-    site(changes) {
-      siteChanges = changes;
-    },
-    settings(changes) {
-      settingChanges = changes;
-    },
-    mobileView() {
-      mobileView = true;
-    },
-  };
-
-  if (options.loggedIn) {
-    needs.user();
-  }
-  if (options.site) {
-    needs.site(options.site);
-  }
-  if (options.settings) {
-    needs.settings(options.settings);
-  }
-  if (options.mobileView) {
-    needs.mobileView();
-  }
-
-  if (callback) {
-    // New, preferred way
-    module(name, function (hooks) {
-      needs.hooks = hooks;
-      hooks.beforeEach(setup.beforeEach);
-      hooks.afterEach(setup.afterEach);
-      callback(needs);
-
-      setupApplicationTest(hooks);
     });
-  } else {
-    // Old way
-    module(name, setup);
-  }
+
+    callback(needs);
+
+    setupApplicationTest(hooks);
+  });
 }
 
 export function fixture(selector) {
@@ -575,29 +538,17 @@ export async function selectText(selector, endOffset = null) {
     range.setEnd(node, endOffset);
   }
 
-  const performSelection = () => {
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-  };
-
-  performSelection();
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
 
   await settled();
 }
 
-export function conditionalTest(name, condition, testCase) {
-  if (condition) {
+export function chromeTest(name, testCase) {
+  if (navigator.userAgent.includes("Chrome")) {
     test(name, testCase);
   }
-}
-
-export function chromeTest(name, testCase) {
-  conditionalTest(name, navigator.userAgent.includes("Chrome"), testCase);
-}
-
-export function firefoxTest(name, testCase) {
-  conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
 }
 
 export function silenceConsoleErrorsMatching(substring) {
@@ -664,15 +615,6 @@ export async function simulateKeys(element, keys) {
   for (let key of keys) {
     await simulateKey(element, key);
   }
-}
-
-// The order of attributes can vary in different browsers. When comparing
-// HTML strings from the DOM, this function helps to normalize them to make
-// comparison work cross-browser
-export function normalizeHtml(html) {
-  const resultElement = document.createElement("template");
-  resultElement.innerHTML = html;
-  return resultElement.innerHTML;
 }
 
 export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };

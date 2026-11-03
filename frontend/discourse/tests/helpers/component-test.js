@@ -32,7 +32,7 @@ export function setupRenderingTest(hooks, opts = {}) {
 
   hooks.beforeEach(function () {
     this.siteSettings = currentSettings();
-    this.registry ||= this.owner.__registry__;
+    this.registry = this.owner.__registry__;
     this.container = this.owner;
 
     this.site = Site.current();
@@ -70,6 +70,5 @@ export function setupRenderingTest(hooks, opts = {}) {
     }
 
     autoLoadModules(this.owner, this.registry);
-    this.owner.lookup("service:store");
   });
 }
