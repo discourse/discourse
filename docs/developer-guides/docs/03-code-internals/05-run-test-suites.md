@@ -49,6 +49,8 @@ bin/qunit --standalone --no-headless
 From the root directory of Discourse:
 
 ```sh
+bin/qunit plugins/chat/test/javascripts/unit/lib/chat-audio-test.js # Run one file
+bin/qunit plugins/chat/test/javascripts/unit # Run a directory
 bin/rake "plugin:qunit" # Run all plugin qunit tests
 bin/rake "plugin:qunit[discourse-chat-integration]" # Run a single plugin's qunit tests
 ```
