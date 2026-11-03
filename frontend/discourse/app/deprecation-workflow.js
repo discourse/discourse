@@ -337,7 +337,6 @@ const workflows = [
     "discourse.es6-extension",
     "discourse.header-service-topic",
     "discourse.html-safe-helper",
-    "discourse.jquery-cookie",
     "discourse.legacy-array-like-object.proxied-array",
     "discourse.legacy-topic-list",
     "discourse.markdown-it.whitelist",
