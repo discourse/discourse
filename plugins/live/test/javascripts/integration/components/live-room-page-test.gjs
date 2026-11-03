@@ -36,6 +36,10 @@ class LiveWebrtcStub extends Service {
     return "connected";
   }
 
+  canDiagnoseConnection() {
+    return false;
+  }
+
   videoAllowedIn() {
     return true;
   }
