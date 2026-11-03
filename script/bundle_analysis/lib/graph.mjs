@@ -40,8 +40,10 @@ export function packageOf(id) {
  * config.
  */
 export function labelOf(fileName) {
-  const base = fileName.split("/").pop();
-  return base.replace(/-[a-z0-9]+\.digested\.[a-z0-9]+$/, "");
+  return fileName
+    .split("/")
+    .pop()
+    .replace(/-[a-z0-9]+\.digested\.[a-z0-9]+$/, "");
 }
 
 /** The bundle analyzer report in a build, or `null` if it has none. */
@@ -68,15 +70,13 @@ export function loadGraph(distDir) {
     );
   }
   const report = JSON.parse(readFileSync(path, "utf8"));
+  if (report.emberEnv !== "production") {
+    throw new Error(
+      `${path} is from a ${report.emberEnv} build, without brotli sizes: EMBER_ENV=production pnpm build`
+    );
+  }
   if (!report.importers) {
     throw new Error(`${path} predates the module graph`);
-  }
-  for (const [file, chunk] of Object.entries(report.chunks)) {
-    if (!Number.isInteger(chunk.brotliSize)) {
-      throw new Error(
-        `${path} has no brotli size for ${file}. Production builds write it: EMBER_ENV=production pnpm build`
-      );
-    }
   }
   return report;
 }
@@ -98,13 +98,9 @@ export function describeBuild(graph) {
 
   const closure = (file) => {
     const seen = new Set([file]);
-    const queue = [file];
-    while (queue.length) {
-      for (const imported of chunks[queue.shift()]?.imports ?? []) {
-        if (!seen.has(imported)) {
-          seen.add(imported);
-          queue.push(imported);
-        }
+    for (const current of seen) {
+      for (const imported of chunks[current]?.imports ?? []) {
+        seen.add(imported);
       }
     }
     return seen;
@@ -126,44 +122,33 @@ export function describeBuild(graph) {
     bundleOfChunk.set(file, key);
   }
 
-  const lazyFacade = new Map();
-  for (const file of graph.dynamicEntrypoints) {
-    const facade = lazyEntryModule(chunks[file]);
-    if (facade && !bundleOfChunk.has(file)) {
-      lazyFacade.set(file, facade);
-    }
-  }
-  const lazyFiles = [...lazyFacade.keys()].sort();
-  const strippedCount = new Map();
-  for (const file of lazyFiles) {
-    const stripped = stripVersion(lazyFacade.get(file));
-    strippedCount.set(stripped, (strippedCount.get(stripped) ?? 0) + 1);
-  }
-  for (const file of lazyFiles) {
-    const facade = lazyFacade.get(file);
+  const lazy = graph.dynamicEntrypoints
+    .filter((file) => !bundleOfChunk.has(file))
+    .toSorted()
+    .map((file) => ({ file, facade: lazyEntryModule(chunks[file]) }))
+    .filter(({ facade }) => facade);
+  const strippedCount = countBy(lazy, ({ facade }) => stripVersion(facade));
+  for (const { file, facade } of lazy) {
     const stripped = stripVersion(facade);
     const key = `lazy:${strippedCount.get(stripped) > 1 ? facade : stripped}`;
-    bundles.set(key, { key, kind: "lazy", name: null, file, facade });
+    bundles.set(key, { key, kind: "lazy", file, facade });
     bundleOfChunk.set(file, key);
   }
   nameLazyBundles(bundles, chunks);
 
   for (const bundle of bundles.values()) {
-    const own = closure(bundle.file);
-    bundle.closure = own;
+    bundle.closure = closure(bundle.file);
     bundle.costChunks =
       bundle.kind === "lazy"
-        ? new Set([...own].filter((file) => !initial.has(file)))
-        : own;
+        ? new Set([...bundle.closure].filter((file) => !initial.has(file)))
+        : bundle.closure;
   }
 
   const moduleChunk = new Map();
-  const moduleSize = new Map();
   const strippedModuleChunk = new Map();
   for (const [file, chunk] of Object.entries(chunks)) {
-    for (const { id, renderedLength } of chunk.modules) {
+    for (const { id } of chunk.modules) {
       moduleChunk.set(id, file);
-      moduleSize.set(id, renderedLength);
       strippedModuleChunk.set(stripVersion(id), file);
     }
   }
@@ -183,7 +168,6 @@ export function describeBuild(graph) {
     bundles,
     bundleOfChunk,
     moduleChunk,
-    moduleSize,
     edges: computeEdges(chunks, bundles, bundleOfChunk, initial),
   };
 }
@@ -195,22 +179,18 @@ export function describeBuild(graph) {
  * the bundle's key when that changes between builds.
  */
 function lazyEntryModule(chunk) {
-  if (chunk.facadeModuleId) {
-    return chunk.facadeModuleId;
-  }
-  return [...(chunk.dynamicEntryModules ?? [])].sort(
-    (a, b) =>
-      stripVersion(a).localeCompare(stripVersion(b)) || a.localeCompare(b)
-  )[0];
+  return (
+    chunk.facadeModuleId ??
+    chunk.dynamicEntryModules.toSorted(
+      (a, b) =>
+        stripVersion(a).localeCompare(stripVersion(b)) || a.localeCompare(b)
+    )[0]
+  );
 }
 
 function nameLazyBundles(bundles, chunks) {
   const lazy = [...bundles.values()].filter((b) => b.kind === "lazy");
-  const labelCount = new Map();
-  for (const bundle of lazy) {
-    const label = chunks[bundle.file].name;
-    labelCount.set(label, (labelCount.get(label) ?? 0) + 1);
-  }
+  const labelCount = countBy(lazy, (bundle) => chunks[bundle.file].name);
   for (const bundle of lazy) {
     const label = chunks[bundle.file].name;
     const stripped = stripVersion(bundle.facade);
@@ -224,10 +204,7 @@ function nameLazyBundles(bundles, chunks) {
       bundle.name = stripped.replace(/\.[a-z]+$/, "");
     }
   }
-  const nameCount = new Map();
-  for (const bundle of lazy) {
-    nameCount.set(bundle.name, (nameCount.get(bundle.name) ?? 0) + 1);
-  }
+  const nameCount = countBy(lazy, (bundle) => bundle.name);
   for (const bundle of lazy) {
     if (nameCount.get(bundle.name) > 1) {
       bundle.name = `${bundle.name} (${stripVersion(bundle.facade)})`;
@@ -244,8 +221,9 @@ function nameLazyBundles(bundles, chunks) {
  */
 function computeEdges(chunks, bundles, bundleOfChunk, initial) {
   const edges = new Map();
-  const add = (from, to, kind, example) => {
-    if (from.key === to.key || initial.has(to.file)) {
+  const add = (from, file, kind, example) => {
+    const to = bundles.get(bundleOfChunk.get(file));
+    if (!to || to === from || initial.has(file)) {
       return;
     }
     const key = `${from.key}|${to.key}|${kind}`;
@@ -256,34 +234,30 @@ function computeEdges(chunks, bundles, bundleOfChunk, initial) {
   };
 
   for (const from of bundles.values()) {
+    const staticExamples = [...from.costChunks].map(
+      (file) => chunks[file].examples.static
+    );
     for (const file of from.costChunks) {
       const chunk = chunks[file];
-      if (file !== from.file && bundleOfChunk.has(file)) {
-        const to = bundles.get(bundleOfChunk.get(file));
-        add(from, to, "static", staticExampleTo(from.costChunks, chunks, file));
-      }
+      add(from, file, "static", staticExamples.find((e) => e[file])?.[file]);
       for (const target of chunk.dynamicImports) {
-        const to = bundles.get(bundleOfChunk.get(target));
-        if (to && !from.closure.has(target)) {
-          add(from, to, "dynamic", chunk.examples.dynamic[target]);
+        if (!from.closure.has(target)) {
+          add(from, target, "dynamic", chunk.examples.dynamic[target]);
         }
       }
       for (const [target, example] of Object.entries(chunk.examples.url)) {
-        const to = bundles.get(bundleOfChunk.get(target));
-        if (to) {
-          add(from, to, "url", example);
-        }
+        add(from, target, "url", example);
       }
     }
   }
   return edges;
 }
 
-function staticExampleTo(closure, chunks, target) {
-  for (const file of closure) {
-    const example = chunks[file].examples.static[target];
-    if (example) {
-      return example;
-    }
+function countBy(items, keyOf) {
+  const counts = new Map();
+  for (const item of items) {
+    const key = keyOf(item);
+    counts.set(key, (counts.get(key) ?? 0) + 1);
   }
+  return counts;
 }

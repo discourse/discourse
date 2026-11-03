@@ -1,25 +1,14 @@
-import { execFileSync } from "child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "fs";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { tmpdir } from "os";
 import { join } from "path";
-import { jsInputsChanged } from "../lib/baseline.mjs";
+import { git as gitIn, jsInputsChanged } from "../lib/baseline.mjs";
 
 function repo() {
   const dir = mkdtempSync(join(tmpdir(), "bundle-repo-"));
   const git = (...args) =>
-    execFileSync("git", args, {
-      cwd: dir,
-      encoding: "utf8",
-      env: {
-        ...process.env,
-        GIT_AUTHOR_NAME: "t",
-        GIT_AUTHOR_EMAIL: "t@t",
-        GIT_COMMITTER_NAME: "t",
-        GIT_COMMITTER_EMAIL: "t@t",
-      },
-    }).trim();
+    gitIn(["-c", "user.name=t", "-c", "user.email=t@t", ...args], { cwd: dir });
   const commit = (files, message) => {
     for (const [path, content] of Object.entries(files)) {
       mkdirSync(join(dir, path, ".."), { recursive: true });

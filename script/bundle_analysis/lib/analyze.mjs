@@ -20,93 +20,87 @@ const MIN_MODULE_DELTA = 100;
 export function analyze({ baseDir, headDir }) {
   const base = describeBuild(loadGraph(baseDir));
   const head = describeBuild(loadGraph(headDir));
-
-  const brotli = (graph, file) => graph.chunks[file].brotliSize;
-  const sum = (files, graph) =>
-    [...files].reduce((total, file) => total + brotli(graph, file), 0);
-
-  const moved = movedIntoInitialLoad(base, head);
-
-  const bundles = [];
-  for (const key of new Set([...base.bundles.keys(), ...head.bundles.keys()])) {
-    const b = base.bundles.get(key);
-    const h = head.bundles.get(key);
-    const measure = (bundle, graph) =>
-      bundle
-        ? {
-            own: brotli(graph, bundle.file),
-            load: sum(bundle.costChunks, graph),
-          }
-        : null;
-    bundles.push({
+  const pair = (fn) => ({ base: fn(base), head: fn(head) });
+  const size = (build, files) =>
+    [...files].reduce(
+      (total, file) => total + build.graph.chunks[file].brotliSize,
+      0
+    );
+  const measure = (bundle, build) =>
+    bundle
+      ? {
+          own: size(build, [bundle.file]),
+          load: size(build, bundle.costChunks),
+        }
+      : null;
+  const nameOf = new Map(
+    [...base.bundles, ...head.bundles].map(([key, bundle]) => [
       key,
-      name: (h ?? b).name,
-      kind: (h ?? b).kind,
-      facade: (h ?? b).facade,
-      status: !b ? "new" : !h ? "removed" : "same",
-      base: measure(b, base.graph),
-      head: measure(h, head.graph),
-      topModules:
-        b && h ? moduleDeltas(base, b.costChunks, head, h.costChunks) : [],
-      importedBy: !b && h ? importersOf(key, head) : [],
-    });
-  }
-  bundles.sort((x, y) => (y.head?.load ?? 0) - (x.head?.load ?? 0));
-
-  const newKeys = new Set(
-    bundles.filter((b) => b.status === "new").map((b) => b.key)
+      bundle.name,
+    ])
   );
-  const removedKeys = new Set(
-    bundles.filter((b) => b.status === "removed").map((b) => b.key)
-  );
-  const nameOf = new Map(bundles.map((b) => [b.key, b.name]));
-  const edgeList = (edges, others, skip) =>
-    [...edges]
-      .filter(([key]) => !others.has(key))
-      .filter(([, edge]) => !skip.has(edge.from) && !skip.has(edge.to))
+  // Edges `other` lacks, between bundles it has.
+  const newEdges = (build, other) =>
+    [...build.edges]
+      .filter(
+        ([key, { from, to }]) =>
+          !other.edges.has(key) &&
+          other.bundles.has(from) &&
+          other.bundles.has(to)
+      )
       .sort(([x], [y]) => x.localeCompare(y))
-      .map(([, edge]) => ({
-        ...edge,
-        fromName: nameOf.get(edge.from),
-        toName: nameOf.get(edge.to),
-      }));
+      .map(([, edge]) => named(edge));
+  const named = (edge) => ({
+    ...edge,
+    fromName: nameOf.get(edge.from),
+    toName: nameOf.get(edge.to),
+  });
+
+  const bundles = [...nameOf.keys()]
+    .map((key) => {
+      const b = base.bundles.get(key);
+      const h = head.bundles.get(key);
+      const { name, kind, facade } = h ?? b;
+      return {
+        key,
+        name,
+        kind,
+        facade,
+        status: !b ? "new" : !h ? "removed" : "same",
+        base: measure(b, base),
+        head: measure(h, head),
+        topModules:
+          b && h ? moduleDeltas(base, b.costChunks, head, h.costChunks) : [],
+        importedBy: b
+          ? []
+          : [...head.edges.values()].filter((e) => e.to === key).map(named),
+      };
+    })
+    .sort((x, y) => (y.head?.load ?? 0) - (x.head?.load ?? 0));
 
   return {
     schema: REPORT_SCHEMA,
     initialLoad: {
-      base: sum(base.initial, base.graph),
-      head: sum(head.initial, head.graph),
-      entryOwn: {
-        base: brotli(base.graph, base.bundles.get(MAIN_KEY).file),
-        head: brotli(head.graph, head.bundles.get(MAIN_KEY).file),
-      },
-      chunks: { base: base.initial.size, head: head.initial.size },
+      ...pair((build) => size(build, build.initial)),
+      entryOwn: pair((build) =>
+        size(build, [build.bundles.get(MAIN_KEY).file])
+      ),
+      chunks: pair((build) => build.initial.size),
       topModules: moduleDeltas(base, base.initial, head, head.initial),
     },
     totals: {
-      base: sum(chunkFiles(base.graph), base.graph),
-      head: sum(chunkFiles(head.graph), head.graph),
-      chunks: {
-        base: chunkFiles(base.graph).length,
-        head: chunkFiles(head.graph).length,
-      },
+      ...pair((build) => size(build, Object.keys(build.graph.chunks))),
+      chunks: pair((build) => Object.keys(build.graph.chunks).length),
     },
     bundles,
-    movedIntoInitialLoad: moved.map((group) => ({
+    movedIntoInitialLoad: movedIntoInitialLoad(base, head).map((group) => ({
       ...group,
       name: nameOf.get(group.bundle),
     })),
-    edges: {
-      added: edgeList(head.edges, base.edges, newKeys),
-      removed: edgeList(base.edges, head.edges, removedKeys),
-    },
+    edges: { added: newEdges(head, base), removed: newEdges(base, head) },
     assets: compareAssets(base.graph, head.graph),
     duplicatePackages: duplicatePackages(base.graph, head.graph),
   };
-}
-
-function chunkFiles(graph) {
-  return Object.keys(graph.chunks);
 }
 
 /** Rendered bytes per version-less module id over a set of chunks. */
@@ -138,58 +132,36 @@ function moduleDeltas(base, baseFiles, head, headFiles) {
   return deltas.sort((a, b) => b.delta - a.delta).slice(0, TOP_MODULES);
 }
 
-/** Who imports a new bundle, with the importing module. */
-function importersOf(key, build) {
-  return [...build.edges.values()]
-    .filter((edge) => edge.to === key)
-    .map((edge) => ({
-      from: edge.from,
-      fromName: build.bundles.get(edge.from).name,
-      kind: edge.kind,
-      example: edge.example,
-    }));
-}
-
 /**
  * Modules that were only lazily loaded in base but are part of the initial
  * load in head, grouped by the base bundle they came from.
  */
 function movedIntoInitialLoad(base, head) {
   const groups = new Map();
-  const owners = new Map();
-  for (const [id, headFile] of head.moduleChunk) {
-    // Version-less, so code that moves in the PR that bumps its package
-    // is still found.
-    const baseFile =
-      base.moduleChunk.get(id) ??
-      base.strippedModuleChunk.get(stripVersion(id));
-    if (
-      !baseFile ||
-      base.initial.has(baseFile) ||
-      !head.initial.has(headFile)
-    ) {
-      continue;
+  for (const file of head.initial) {
+    for (const { id, renderedLength: bytes } of head.graph.chunks[file]
+      .modules) {
+      // Version-less, so code that moves in the PR that bumps its package
+      // is still found.
+      const baseFile =
+        base.moduleChunk.get(id) ??
+        base.strippedModuleChunk.get(stripVersion(id));
+      const owner =
+        baseFile && !base.initial.has(baseFile) && ownerBundle(base, baseFile);
+      if (owner) {
+        if (!groups.has(owner.key)) {
+          groups.set(owner.key, { bundle: owner.key, bytes: 0, modules: [] });
+        }
+        const group = groups.get(owner.key);
+        group.bytes += bytes;
+        group.modules.push({ id, bytes });
+      }
     }
-    if (!owners.has(baseFile)) {
-      owners.set(baseFile, ownerBundle(base, baseFile));
-    }
-    const owner = owners.get(baseFile);
-    if (!owner) {
-      continue;
-    }
-    if (!groups.has(owner.key)) {
-      groups.set(owner.key, { bundle: owner.key, bytes: 0, modules: [] });
-    }
-    const group = groups.get(owner.key);
-    const bytes = head.moduleSize.get(id);
-    group.bytes += bytes;
-    group.modules.push({ id, bytes });
   }
 
   return [...groups.values()]
     .map((group) => ({
-      bundle: group.bundle,
-      bytes: group.bytes,
+      ...group,
       modules: group.modules
         .sort((a, b) => b.bytes - a.bytes)
         .slice(0, TOP_MODULES),
@@ -204,13 +176,12 @@ function movedIntoInitialLoad(base, head) {
 
 /** The lazy bundle whose own chunk holds `file`, else the first whose closure does. */
 function ownerBundle(build, file) {
-  const direct = build.bundleOfChunk.get(file);
-  if (direct) {
-    return build.bundles.get(direct);
-  }
-  return [...build.bundles.values()]
-    .filter((bundle) => bundle.kind === "lazy" && bundle.closure.has(file))
-    .sort((a, b) => a.key.localeCompare(b.key))[0];
+  return (
+    build.bundles.get(build.bundleOfChunk.get(file)) ??
+    [...build.bundles.values()]
+      .filter((bundle) => bundle.kind === "lazy" && bundle.closure.has(file))
+      .sort((a, b) => a.key.localeCompare(b.key))[0]
+  );
 }
 
 /**
@@ -219,27 +190,23 @@ function ownerBundle(build, file) {
  * initial load come first, as they are the usual cause.
  */
 function boundaryImports(base, head, movedIds) {
-  const imports = [];
-  for (const id of movedIds) {
-    for (const importer of head.importers.get(id) ?? []) {
-      if (
-        !movedIds.has(importer) &&
-        head.initial.has(head.moduleChunk.get(importer))
-      ) {
-        const wasInitial = base.initial.has(base.moduleChunk.get(importer));
-        imports.push({ from: importer, to: id, wasInitial });
-      }
-    }
-  }
-  return imports
+  const wasInitial = ({ from }) => base.initial.has(base.moduleChunk.get(from));
+  return [...movedIds]
+    .flatMap((to) =>
+      (head.importers.get(to) ?? [])
+        .filter(
+          (from) =>
+            !movedIds.has(from) && head.initial.has(head.moduleChunk.get(from))
+        )
+        .map((from) => ({ from, to }))
+    )
     .sort(
       (a, b) =>
-        b.wasInitial - a.wasInitial ||
+        wasInitial(b) - wasInitial(a) ||
         a.from.localeCompare(b.from) ||
         a.to.localeCompare(b.to)
     )
-    .slice(0, 3)
-    .map(({ from, to }) => ({ from, to }));
+    .slice(0, 3);
 }
 
 /** Uncompressed: wasm and worker files get no precompressed copy. */
@@ -269,15 +236,15 @@ function compareAssets(baseGraph, headGraph) {
 function duplicatePackages(baseGraph, headGraph) {
   const versions = (graph) => {
     const result = new Map();
-    for (const chunk of Object.values(graph.chunks)) {
-      for (const { id } of chunk.modules) {
-        const pkg = packageOf(id);
-        if (pkg) {
-          if (!result.has(pkg.name)) {
-            result.set(pkg.name, new Set());
-          }
-          result.get(pkg.name).add(pkg.version);
-        }
+    for (const { id } of Object.values(graph.chunks).flatMap(
+      (c) => c.modules
+    )) {
+      const pkg = packageOf(id);
+      if (pkg) {
+        result.set(
+          pkg.name,
+          (result.get(pkg.name) ?? new Set()).add(pkg.version)
+        );
       }
     }
     return result;

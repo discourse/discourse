@@ -126,6 +126,7 @@ test("bundles keep their keys across version bumps and lost facades", () => {
   const head = withDiff("9.1.0");
   head.chunks[CODEMIRROR].facade = null;
   head.chunks[CODEMIRROR].kind = "shared";
+  head.chunks[CODEMIRROR].dynamicEntryModules = ["app/static/codemirror.js"];
 
   const { report, keys } = compare(withDiff("9.0.0"), head);
 
@@ -171,6 +172,7 @@ test("a lazy chunk without a facade is a bundle named after its import", () => {
     const app = baseApp({
       [MARKDOWN]: {
         kind: "shared",
+        dynamicEntryModules: ["app/static/markdown-it/index.js"],
         modules: {
           "app/static/markdown-it/index.js": 1000,
           "markdown-it@15.0.3/dist/markdown-it.mjs": bytes,
@@ -178,10 +180,6 @@ test("a lazy chunk without a facade is a bundle named after its import", () => {
       },
     });
     app.chunks[ENTRY].dynamicImports.push(MARKDOWN);
-    app.chunks[ENTRY].examples.dynamic[MARKDOWN] = {
-      from: "app/lib/text.js",
-      to: "app/static/markdown-it/index.js",
-    };
     return app;
   };
 

@@ -18,16 +18,10 @@ export function git(args, { cwd } = {}) {
 }
 
 export function jsInputsChanged(a, b, cwd) {
-  const result = spawnSync(
-    "git",
-    ["diff", "--quiet", a, b, "--", ...JS_INPUTS],
-    {
-      cwd,
-    }
-  );
   // 1 means the inputs differ; anything else (e.g. 128 for a commit beyond a
   // shallow clone) means they cannot be compared, so count as changed.
-  return result.status !== 0;
+  const args = ["diff", "--quiet", a, b, "--", ...JS_INPUTS];
+  return spawnSync("git", args, { cwd }).status !== 0;
 }
 
 // CI builds both sides like this; `CI` reaches the code through `@glimmer/env`.
@@ -48,15 +42,16 @@ export function buildCore(root) {
 }
 
 /** Builds `commit` in a temporary worktree and moves its dist to `outDir`. */
-export function buildBaseline(commit, outDir, { cwd, log = () => {} } = {}) {
+export function buildBaseline(commit, outDir) {
   // Next to outDir, so the final rename stays on one filesystem: in CI the
   // system temp dir and the output dir are different mounts.
   mkdirSync(dirname(outDir), { recursive: true });
   const worktree = mkdtempSync(
     join(dirname(outDir), ".bundle-baseline-worktree-")
   );
-  log(`Building ${commit.slice(0, 8)} in ${worktree}`);
-  git(["worktree", "add", "--detach", worktree, commit], { cwd });
+  // eslint-disable-next-line no-console
+  console.error(`Building ${commit.slice(0, 8)} in ${worktree}`);
+  git(["worktree", "add", "--detach", worktree, commit]);
   try {
     run("pnpm", ["install", "--frozen-lockfile", "--ignore-scripts"], {
       cwd: worktree,
@@ -65,6 +60,6 @@ export function buildBaseline(commit, outDir, { cwd, log = () => {} } = {}) {
     rmSync(outDir, { recursive: true, force: true });
     renameSync(dist, outDir);
   } finally {
-    git(["worktree", "remove", "--force", worktree], { cwd });
+    git(["worktree", "remove", "--force", worktree]);
   }
 }

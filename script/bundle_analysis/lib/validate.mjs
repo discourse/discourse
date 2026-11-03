@@ -35,14 +35,7 @@ export function validateReport(input) {
         base: nullable(shape({ own: num, load: num })),
         head: nullable(shape({ own: num, load: num })),
         topModules: list(moduleDelta),
-        importedBy: list(
-          shape({
-            from: str,
-            fromName: str,
-            kind: edgeKind,
-            example: nullable(example),
-          })
-        ),
+        importedBy: list(edge),
       })
     ),
     movedIntoInitialLoad: list(
@@ -64,6 +57,21 @@ export function validateReport(input) {
   })(input, "report");
 }
 
+function fail(path, expected) {
+  throw new Error(`report: ${path} must be ${expected}`);
+}
+
+const is = (test, expected) => (value, path) =>
+  test(value) ? value : fail(path, expected);
+const num = is(Number.isFinite, "a number");
+const bool = is((value) => typeof value === "boolean", "a boolean");
+const str = is(
+  (value) => typeof value === "string" && value.length <= MAX_STRING,
+  `a string of at most ${MAX_STRING} characters`
+);
+const oneOf = (...allowed) =>
+  is((value) => allowed.includes(value), `one of ${allowed.join(", ")}`);
+
 const edgeKind = oneOf("static", "dynamic", "url");
 const example = shape({ from: str, to: str });
 const edge = shape({
@@ -76,31 +84,6 @@ const edge = shape({
 });
 const moduleDelta = shape({ id: str, delta: num, added: bool });
 const pair = shape({ base: num, head: num });
-
-function fail(path, expected) {
-  throw new Error(`report: ${path} must be ${expected}`);
-}
-
-function num(value, path) {
-  return Number.isFinite(value) ? value : fail(path, "a number");
-}
-
-function bool(value, path) {
-  return typeof value === "boolean" ? value : fail(path, "a boolean");
-}
-
-function str(value, path) {
-  return typeof value === "string" && value.length <= MAX_STRING
-    ? value
-    : fail(path, `a string of at most ${MAX_STRING} characters`);
-}
-
-function oneOf(...allowed) {
-  return (value, path) =>
-    allowed.includes(value)
-      ? value
-      : fail(path, `one of ${allowed.join(", ")}`);
-}
 
 function nullable(check) {
   return (value, path) => (value === null ? null : check(value, path));

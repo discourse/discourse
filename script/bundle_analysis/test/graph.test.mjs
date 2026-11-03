@@ -1,7 +1,5 @@
-import { readFileSync, writeFileSync } from "fs";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { join } from "path";
 import {
   describeBuild,
   labelOf,
@@ -9,7 +7,7 @@ import {
   packageOf,
   stripVersion,
 } from "../lib/graph.mjs";
-import { baseApp, makeDist, REPORT } from "./helpers.mjs";
+import { baseApp, makeDist } from "./helpers.mjs";
 
 test("id and file name helpers", () => {
   assert.equal(
@@ -34,12 +32,8 @@ test("a lazy bundle costs only what it adds to the initial load", () => {
   assert.equal(build.initial.size, 2);
 });
 
-test("loadGraph needs brotli sizes, which only production builds have", () => {
-  const dir = makeDist(baseApp());
-  const path = join(dir, REPORT);
-  const report = JSON.parse(readFileSync(path, "utf8"));
-  report.chunks["assets/js/chunk-bbbb2222.digested.js"].brotliSize = null;
-  writeFileSync(path, JSON.stringify(report));
+test("loadGraph needs a production build, which has brotli sizes", () => {
+  const dir = makeDist({ ...baseApp(), emberEnv: "development" });
 
-  assert.throws(() => loadGraph(dir), /no brotli size/);
+  assert.throws(() => loadGraph(dir), /from a development build/);
 });

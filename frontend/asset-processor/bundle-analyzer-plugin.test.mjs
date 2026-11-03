@@ -11,11 +11,11 @@ import {
 import { tmpdir } from "os";
 import { dirname, join } from "path";
 import { rolldown } from "rolldown";
-import { beforeAll, expect, test } from "vitest";
+import { beforeAll, expect, test, vi } from "vitest";
 import brotliAssetsPlugin from "../discourse/lib/brotli-assets-plugin.mjs";
 import bundleAnalyzerPlugin from "../discourse/lib/bundle-analyzer-plugin.mjs";
 import { normalizeModuleId } from "../discourse/lib/bundle-module-ids.mjs";
-import { RESOLVED_PREFIX } from "../discourse/lib/dynamic-chunk-url-plugin.mjs";
+import dynamicChunkUrlPlugin from "../discourse/lib/dynamic-chunk-url-plugin.mjs";
 
 const FIXTURE = {
   "main.js": `
@@ -49,32 +49,6 @@ const FIXTURE = {
   "node_modules/.pnpm/fake-pkg@1.2.3/node_modules/fake-pkg/index.js": `export default ["fake", Math.random()];`,
 };
 
-// Same virtual module ids as dynamic-chunk-url-plugin.mjs, which names chunks
-// relative to process.cwd() and so cannot build a fixture outside it.
-function chunkUrlStandIn() {
-  const unresolved = RESOLVED_PREFIX.slice(1);
-  return {
-    name: "chunk-url-stand-in",
-    async resolveId(source, importer) {
-      if (source.startsWith(unresolved)) {
-        const target = source.slice(unresolved.length);
-        const resolved = await this.resolve(target, importer);
-        return RESOLVED_PREFIX + resolved.id;
-      }
-    },
-    load(id) {
-      if (id.startsWith(RESOLVED_PREFIX)) {
-        const ref = this.emitFile({
-          type: "chunk",
-          id: id.slice(RESOLVED_PREFIX.length),
-          name: "worker",
-        });
-        return `export default import.meta.ROLLUP_FILE_URL_${ref};`;
-      }
-    },
-  };
-}
-
 function writeFixture() {
   const dir = realpathSync(mkdtempSync(join(tmpdir(), "bundle-graph-")));
   for (const [path, content] of Object.entries(FIXTURE)) {
@@ -89,6 +63,8 @@ function writeFixture() {
 }
 
 async function build(dir) {
+  // The chunk URL plugin names chunks relative to the cwd.
+  vi.spyOn(process, "cwd").mockReturnValue(dir);
   const bundle = await rolldown({
     cwd: dir,
     input: { main: join(dir, "main.js") },
@@ -96,7 +72,7 @@ async function build(dir) {
     experimental: { resolveNewUrlToAsset: true },
     moduleTypes: { ".wasm": "asset" },
     plugins: [
-      chunkUrlStandIn(),
+      dynamicChunkUrlPlugin(),
       brotliAssetsPlugin({ enabled: true }),
       bundleAnalyzerPlugin({ root: dir }),
     ],

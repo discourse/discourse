@@ -33,8 +33,6 @@ export function bundleGraph(bundle, getModuleInfo, normalize) {
 
   const chunks = {};
   const importers = new Map();
-  // A chunk without a facade has no other name for what loads it lazily.
-  const dynamicEntryModules = new Map();
   for (const [fileName, chunk] of Object.entries(bundle)) {
     if (chunk.type !== "chunk") {
       continue;
@@ -43,6 +41,8 @@ export function bundleGraph(bundle, getModuleInfo, normalize) {
     // Per module rather than of the facade, so a chunk that several dynamic
     // entries were merged into still names what pulls it in.
     const importSites = new Set();
+    // A chunk without a facade has no other name for what loads it lazily.
+    const dynamicEntryModules = new Set();
     const examples = { static: {}, dynamic: {}, url: {} };
     const addExample = (kind, from, to) => {
       const targetFile = chunkOfModule.get(to);
@@ -75,16 +75,13 @@ export function bundleGraph(bundle, getModuleInfo, normalize) {
       }
       for (const imported of info.dynamicallyImportedIds) {
         addExample("dynamic", moduleId, imported);
-        const targetFile = chunkOfModule.get(imported);
-        if (targetFile && targetFile !== fileName) {
-          if (!dynamicEntryModules.has(targetFile)) {
-            dynamicEntryModules.set(targetFile, new Set());
-          }
-          dynamicEntryModules.get(targetFile).add(normalize(imported));
-        }
       }
       for (const importer of info.dynamicImporters) {
         importSites.add(normalize(importer));
+        const importerFile = chunkOfModule.get(importer);
+        if (importerFile && importerFile !== fileName) {
+          dynamicEntryModules.add(normalize(moduleId));
+        }
       }
 
       importers.set(normalize(moduleId), info.importers.map(normalize));
@@ -92,6 +89,7 @@ export function bundleGraph(bundle, getModuleInfo, normalize) {
 
     chunks[fileName] = {
       importSites: [...importSites].sort(),
+      dynamicEntryModules: [...dynamicEntryModules].sort(),
       dynamicImports: chunk.dynamicImports
         .filter((file) => file !== fileName)
         .sort(),
@@ -101,12 +99,6 @@ export function bundleGraph(bundle, getModuleInfo, normalize) {
         url: sortedByKey(examples.url),
       },
     };
-  }
-
-  for (const [fileName, chunk] of Object.entries(chunks)) {
-    chunk.dynamicEntryModules = [
-      ...(dynamicEntryModules.get(fileName) ?? []),
-    ].sort();
   }
 
   return {

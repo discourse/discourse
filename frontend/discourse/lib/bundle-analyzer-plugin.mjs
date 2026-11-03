@@ -48,9 +48,6 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
       );
 
       for (const [fileName, chunk] of chunkList) {
-        const rawSize = Buffer.byteLength(chunk.code, "utf8");
-        const compressed = compressedSize(`${options.dir}/${fileName}.br`);
-
         const modules = Object.entries(chunk.modules)
           .map(([moduleId, m]) => ({
             id: normalize(moduleId),
@@ -69,8 +66,9 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
             : null,
           isEntry: chunk.isEntry,
           isDynamicEntry: chunk.isDynamicEntry,
-          rawSize,
-          brotliSize: compressed,
+          // From disk: reading `chunk.code` copies every chunk out of rolldown.
+          rawSize: fileSize(`${options.dir}/${fileName}`),
+          brotliSize: fileSize(`${options.dir}/${fileName}.br`),
           imports: [...chunk.imports].sort(),
           modules,
           ...graph.chunks[fileName],
@@ -130,6 +128,6 @@ function compareStrings(a, b) {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-function compressedSize(path) {
-  return fs.existsSync(path) ? fs.statSync(path).size : null;
+function fileSize(path) {
+  return fs.statSync(path, { throwIfNoEntry: false })?.size ?? null;
 }

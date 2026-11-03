@@ -28,10 +28,6 @@ const { values: args } = parseArgs({
     head: { type: "string" },
     "build-head": { type: "boolean", default: false },
     out: { type: "string" },
-    budget: {
-      type: "string",
-      default: join(import.meta.dirname, "budget.json"),
-    },
     "no-js-changes": { type: "boolean", default: false },
     help: { type: "boolean", default: false },
   },
@@ -46,7 +42,9 @@ if (
   process.exit(args.help ? 0 : 1);
 }
 
-const budget = JSON.parse(readFileSync(args.budget, "utf8"));
+const budget = JSON.parse(
+  readFileSync(join(import.meta.dirname, "budget.json"), "utf8")
+);
 let report;
 
 if (args["no-js-changes"]) {
@@ -56,19 +54,14 @@ if (args["no-js-changes"]) {
   const headDir = args["build-head"] ? buildCore(repo) : resolve(args.head);
   let baseDir = args.base && resolve(args.base);
   if (!baseDir) {
-    const commit = git(["merge-base", "HEAD", args["base-ref"]], {
-      cwd: repo,
-    });
+    const commit = git(["merge-base", "HEAD", args["base-ref"]]);
     baseDir = join(repo, "tmp/bundle-analysis", commit);
     if (findReport(baseDir)) {
       console.error(
         `Reusing the baseline for ${commit.slice(0, 8)} in ${baseDir}`
       );
     } else {
-      buildBaseline(commit, baseDir, {
-        cwd: repo,
-        log: (m) => console.error(m),
-      });
+      buildBaseline(commit, baseDir);
     }
   }
   report = analyze({ baseDir, headDir });

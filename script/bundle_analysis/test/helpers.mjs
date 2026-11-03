@@ -4,18 +4,23 @@ import { dirname, join } from "path";
 import { analyze, REPORT_SCHEMA } from "../lib/analyze.mjs";
 import { labelOf } from "../lib/graph.mjs";
 
-export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
+const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 
 /**
  * Writes a fake production build's bundle analyzer report. `entries` maps an
  * entry name to its file; `chunks` maps a file name to
  * `{ kind, facade?, imports?, dynamicImports?, modules, examples? }` with
  * `modules` as id → bytes and `examples` as kind → target file → example; a
- * chunk's brotli size is the sum of its module bytes, and the modules other
- * chunks import from it dynamically are those in their dynamic examples.
+ * chunk's brotli size is the sum of its module bytes.
  * `assets` maps a file name to its size.
  */
-export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
+export function makeDist({
+  entries,
+  chunks,
+  assets = {},
+  importers = {},
+  emberEnv = "production",
+}) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-dist-"));
   const entryName = new Map(
     Object.entries(entries).map(([name, file]) => [file, name])
@@ -26,20 +31,8 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   const dynamicTargets = new Set(
     Object.values(chunks).flatMap((c) => c.dynamicImports ?? [])
   );
-  const dynamicEntryModules = new Map();
-  for (const [file, chunk] of Object.entries(chunks)) {
-    for (const [target, example] of Object.entries(
-      chunk.examples?.dynamic ?? {}
-    )) {
-      if (target !== file) {
-        dynamicEntryModules.set(target, [
-          ...(dynamicEntryModules.get(target) ?? []),
-          example.to,
-        ]);
-      }
-    }
-  }
   const report = {
+    emberEnv,
     entrypoints: Object.values(entries),
     dynamicEntrypoints: Object.keys(chunks).filter(
       (file) =>
@@ -58,8 +51,6 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
     report.chunks[file] = {
       name: entryName.get(file) ?? labelOf(file),
       facadeModuleId: chunk.facade ?? null,
-      isEntry: chunk.kind === "entry",
-      isDynamicEntry: chunk.kind === "lazy",
       brotliSize: Object.values(chunk.modules).reduce((a, b) => a + b, 0),
       imports: chunk.imports ?? [],
       modules: Object.entries(chunk.modules).map(([id, renderedLength]) => ({
@@ -67,7 +58,7 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
         renderedLength,
       })),
       dynamicImports: chunk.dynamicImports ?? [],
-      dynamicEntryModules: [...new Set(dynamicEntryModules.get(file))].sort(),
+      dynamicEntryModules: chunk.dynamicEntryModules ?? [],
       examples: { static: {}, dynamic: {}, url: {}, ...chunk.examples },
     };
   }
@@ -142,27 +133,7 @@ export const NO_JS_REPORT = { schema: REPORT_SCHEMA, noJsChanges: true };
 
 /** A report of two identical builds; `overrides` replace top-level fields. */
 export function emptyReport(overrides = {}) {
-  return {
-    schema: REPORT_SCHEMA,
-    initialLoad: {
-      base: 1_000_000,
-      head: 1_000_000,
-      entryOwn: { base: 600_000, head: 600_000 },
-      chunks: { base: 20, head: 20 },
-      topModules: [],
-    },
-    totals: {
-      base: 3_000_000,
-      head: 3_000_000,
-      chunks: { base: 50, head: 50 },
-    },
-    bundles: [],
-    movedIntoInitialLoad: [],
-    edges: { added: [], removed: [] },
-    assets: [],
-    duplicatePackages: [],
-    ...overrides,
-  };
+  return { ...analyzedReport(), ...overrides };
 }
 
 /** What the analyzer writes for two fake builds, after a JSON round trip. */

@@ -16,14 +16,10 @@ const { values: args } = parseArgs({
   },
 });
 
-const revParse = (ref) => git(["rev-parse", ref]);
-
 if (args["js-changed-since"]) {
   console.log(jsInputsChanged(args["js-changed-since"], "HEAD"));
 } else if (args.commit && args.out) {
-  buildBaseline(revParse(args.commit), resolve(args.out), {
-    log: (message) => console.error(message),
-  });
+  buildBaseline(git(["rev-parse", args.commit]), resolve(args.out));
 } else {
   console.error(USAGE);
   process.exit(1);

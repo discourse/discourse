@@ -110,11 +110,11 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
       repo,
       pull_number: pr.number,
     });
-    return data.state === "open" &&
+    return (
+      data.state === "open" &&
       data.head.sha === workflowRun.head_sha &&
       data.head.repo?.full_name === workflowRun.head_repository.full_name
-      ? data
-      : null;
+    );
   };
 
   if (!(await currentHead())) {
@@ -151,23 +151,24 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
     return { type: "skipped" };
   }
 
-  const shortSha = workflowRun.head_sha.slice(0, 7);
+  const update = (comment, text) =>
+    github.rest.issues.updateComment({
+      owner,
+      repo,
+      comment_id: comment.id,
+      body: text,
+    });
+  const stub = (text, state) => `${HEADING}\n\n${text}\n\n${marker(state, [])}`;
   const fullBody = body && `${body}\n\n${marker("active", keys)}`;
 
   if (action.type === "resolve") {
-    await github.rest.issues.updateComment({
-      owner,
-      repo,
-      comment_id: action.comment.id,
-      body: `${HEADING}\n\n✅ Resolved as of ${shortSha}: nothing over the thresholds.\n\n${marker("resolved", [])}`,
-    });
+    const sha = workflowRun.head_sha.slice(0, 7);
+    await update(
+      action.comment,
+      stub(`✅ Resolved as of ${sha}: nothing over the thresholds.`, "resolved")
+    );
   } else if (action.type === "update") {
-    await github.rest.issues.updateComment({
-      owner,
-      repo,
-      comment_id: action.comment.id,
-      body: fullBody,
-    });
+    await update(action.comment, fullBody);
   } else {
     const { data: created } = await github.rest.issues.createComment({
       owner,
@@ -176,12 +177,13 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
       body: fullBody,
     });
     if (action.type === "supersede") {
-      await github.rest.issues.updateComment({
-        owner,
-        repo,
-        comment_id: action.comment.id,
-        body: `${HEADING}\n\nSuperseded by [a newer report](${created.html_url}).\n\n${marker("superseded", [])}`,
-      });
+      await update(
+        action.comment,
+        stub(
+          `Superseded by [a newer report](${created.html_url}).`,
+          "superseded"
+        )
+      );
     }
   }
   core.info(`Comment action: ${action.type}`);

@@ -29,42 +29,32 @@ export function findings(report, budget) {
     return [];
   }
   const result = [];
+  const add = (type, id, data) =>
+    result.push({ key: id ? `${type}:${id}` : type, type, ...data });
 
   for (const group of report.movedIntoInitialLoad) {
     if (group.bytes >= budget.movedIntoInitialLoad.kib * 1024) {
-      result.push({ key: `moved:${group.bundle}`, type: "moved", group });
+      add("moved", group.bundle, { group });
     }
   }
-
   const initial = report.initialLoad;
   if (exceeds(initial.base, initial.head, budget.initialLoad)) {
-    result.push({ key: "initial", type: "initial" });
+    add("initial");
   }
-
   for (const bundle of report.bundles) {
     if (bundle.status === "new") {
-      result.push({ key: `new:${bundle.key}`, type: "new", bundle });
-    }
-  }
-
-  for (const bundle of report.bundles) {
-    if (
+      add("new", bundle.key, { bundle });
+    } else if (
       bundle.status === "same" &&
       bundle.key !== MAIN_KEY &&
       exceeds(bundle.base.load, bundle.head.load, budget.bundles)
     ) {
-      result.push({ key: `grew:${bundle.key}`, type: "grew", bundle });
+      add("grew", bundle.key, { bundle });
     }
   }
-
   for (const edge of report.edges.added) {
-    result.push({
-      key: `edge:${edge.from}:${edge.to}:${edge.kind}`,
-      type: "edge",
-      edge,
-    });
+    add("edge", `${edge.from}:${edge.to}:${edge.kind}`, { edge });
   }
-
   return result;
 }
 
@@ -76,125 +66,122 @@ export function renderComment(report, budget, { runUrl } = {}) {
   }
   const byType = (type) => flagged.filter((f) => f.type === type);
   const initial = report.initialLoad;
-  const sections = [];
-
-  const moved = byType("moved");
-  if (moved.length) {
-    sections.push(
-      tableSection(
-        "#### ⚠️ Moved into the initial load",
-        "This code now downloads on every first page view. If that is unintended, load it with `import()` instead of a static import.",
-        ["From bundle", "Size (unminified)", "Pulled in by", "Largest modules"],
-        ["---", "---:", "---", "---"],
-        moved.map(({ group }) => [
-          cell(group.name),
-          kib(group.bytes),
-          group.importers.map(importLine).join("<br>") || "–",
-          group.modules
-            .slice(0, 3)
-            .map((m) => `${cell(m.id)} ${kib(m.bytes)}`)
-            .join("<br>"),
-        ])
-      )
-    );
+  const initialGrew = byType("initial").length > 0;
+  const growthRow = (name, base, head, topModules) => [
+    name,
+    kib(base),
+    kib(head),
+    `**${delta(base, head)}**`,
+    topModuleCell(topModules),
+  ];
+  // Edges into one bundle often come from one shared chunk.
+  const edgeGroups = new Map();
+  for (const { edge } of byType("edge")) {
+    const key = `${edge.to}|${edge.kind}`;
+    edgeGroups.set(key, [...(edgeGroups.get(key) ?? []), edge]);
   }
 
-  const grewRows = [];
-  if (byType("initial").length) {
-    grewRows.push([
-      "Initial load",
-      kib(initial.base),
-      kib(initial.head),
-      `**${delta(initial.base, initial.head)}**`,
-      topModuleCell(initial.topModules),
-    ]);
-  }
-  for (const { bundle } of byType("grew")) {
-    grewRows.push([
-      cell(bundle.name),
-      kib(bundle.base.load),
-      kib(bundle.head.load),
-      `**${delta(bundle.base.load, bundle.head.load)}**`,
-      topModuleCell(bundle.topModules),
-    ]);
-  }
-  if (grewRows.length) {
-    let grewSection = tableSection(
+  const sections = [
+    tableSection(
+      "#### ⚠️ Moved into the initial load",
+      "This code now downloads on every first page view. If that is unintended, load it with `import()` instead of a static import.",
+      ["From bundle", "Size (unminified)", "Pulled in by", "Largest modules"],
+      ["---", "---:", "---", "---"],
+      byType("moved").map(({ group }) => [
+        cell(group.name),
+        kib(group.bytes),
+        group.importers.map(importLine).join("<br>") || "–",
+        group.modules
+          .slice(0, 3)
+          .map((m) => `${cell(m.id)} ${kib(m.bytes)}`)
+          .join("<br>"),
+      ])
+    ),
+    tableSection(
       "#### 📈 Grew over the threshold",
       null,
       ["Bundle", "Before", "After", "Change", "Largest addition (unminified)"],
       ["---", "---:", "---:", "---:", "---"],
-      grewRows
-    );
-    if (byType("initial").length && initial.topModules.length > 1) {
-      grewSection += details(
-        "Largest additions to the initial load",
-        ["Module", "Change (unminified)"],
-        ["---", "---:"],
-        initial.topModules.map((m) => [
-          `${cell(m.id)}${m.added ? " (new)" : ""}`,
-          signedKib(m.delta),
-        ])
-      );
-    }
-    sections.push(grewSection);
-  }
-
-  const added = byType("new");
-  if (added.length) {
-    sections.push(
-      tableSection(
-        "#### 🆕 New bundles",
-        "Expected when you add an `import()`.",
-        ["Bundle", "Type", "Size", "Loaded by", "Entry module"],
-        ["---", "---", "---:", "---", "---"],
-        added.map(({ bundle }) => {
-          const from = bundle.importedBy[0];
-          return [
+      [
+        ...(initialGrew
+          ? [
+              growthRow(
+                "Initial load",
+                initial.base,
+                initial.head,
+                initial.topModules
+              ),
+            ]
+          : []),
+        ...byType("grew").map(({ bundle }) =>
+          growthRow(
             cell(bundle.name),
-            bundle.kind,
-            kib(bundle.head.load),
-            from ? `${cell(from.fromName)}${viaText(from.example)}` : "–",
-            cell(bundle.facade),
-          ];
-        })
-      )
-    );
-  }
-
-  const edges = byType("edge");
-  if (edges.length) {
-    sections.push(
-      tableSection(
-        "#### 🔗 New connections",
-        "Loading the first bundle can now load the second.",
-        ["From", "To", "Import", "Imported in"],
-        ["---", "---", "---", "---"],
-        groupEdges(edges.map((f) => f.edge)).map((group) => [
-          `${group.from.map(cell).join(", ")}${group.more ? ` and ${group.more} more` : ""}`,
-          cell(group.toName),
-          group.kind,
-          group.example ? cell(group.example.from) : "–",
-        ])
-      )
-    );
-  }
-
-  const count =
-    flagged.length === 1 ? "1 finding" : `${flagged.length} findings`;
-  const footer = [
-    "---",
-    `<sub>Sizes are brotli unless marked unminified. Flagged when the initial load grows over ${budget.initialLoad.percent}% ${budget.initialLoad.combine} ${budget.initialLoad.kib} KiB, or another bundle over ${budget.bundles.percent}% ${budget.bundles.combine} ${budget.bundles.kib} KiB. Informational only.</sub>`,
-    `<sub>Reproduce locally: \`${REPRODUCE}\`${runUrl ? ` · [Full report](${runUrl})` : ""}</sub>`,
-  ];
+            bundle.base.load,
+            bundle.head.load,
+            bundle.topModules
+          )
+        ),
+      ]
+    ) +
+      (initialGrew && initial.topModules.length > 1
+        ? details(
+            "Largest additions to the initial load",
+            ["Module", "Change (unminified)"],
+            ["---", "---:"],
+            initial.topModules.map((m) => [
+              `${cell(m.id)}${m.added ? " (new)" : ""}`,
+              signedKib(m.delta),
+            ])
+          )
+        : ""),
+    tableSection(
+      "#### 🆕 New bundles",
+      "Expected when you add an `import()`.",
+      ["Bundle", "Type", "Size", "Loaded by", "Entry module"],
+      ["---", "---", "---:", "---", "---"],
+      byType("new").map(({ bundle }) => {
+        const from = bundle.importedBy[0];
+        return [
+          cell(bundle.name),
+          bundle.kind,
+          kib(bundle.head.load),
+          from
+            ? `${cell(from.fromName)}${from.example ? ` from ${cell(from.example.from)}` : ""}`
+            : "–",
+          cell(bundle.facade),
+        ];
+      })
+    ),
+    tableSection(
+      "#### 🔗 New connections",
+      "Loading the first bundle can now load the second.",
+      ["From", "To", "Import", "Imported in"],
+      ["---", "---", "---", "---"],
+      [...edgeGroups.values()].map((edges) => {
+        const [{ toName, kind, example }] = edges;
+        const more = edges.length - MAX_NAMES;
+        return [
+          `${edges
+            .slice(0, MAX_NAMES)
+            .map((edge) => cell(edge.fromName))
+            .join(", ")}${more > 0 ? ` and ${more} more` : ""}`,
+          cell(toName),
+          kind,
+          example ? cell(example.from) : "–",
+        ];
+      })
+    ),
+  ].filter(Boolean);
 
   let body = [
     HEADING,
     "",
-    `**Initial load:** ${kib(initial.base)} → ${kib(initial.head)} (${delta(initial.base, initial.head)}) · ${count}`,
+    `**Initial load:** ${kib(initial.base)} → ${kib(initial.head)} (${delta(initial.base, initial.head)}) · ${flagged.length} finding${flagged.length === 1 ? "" : "s"}`,
     "",
     ...sections,
-    ...footer,
+    "---",
+    `<sub>Sizes are brotli unless marked unminified. Flagged when the initial load grows over ${budget.initialLoad.percent}% ${budget.initialLoad.combine} ${budget.initialLoad.kib} KiB, or another bundle over ${budget.bundles.percent}% ${budget.bundles.combine} ${budget.bundles.kib} KiB. Informational only.</sub>`,
+    `<sub>Reproduce locally: \`${REPRODUCE}\`${runUrl ? ` · [Full report](${runUrl})` : ""}</sub>`,
   ].join("\n");
   if (body.length > COMMENT_LIMIT) {
     body = `${body.slice(0, COMMENT_LIMIT)}\n\n… truncated, see the full report.`;
@@ -203,14 +190,16 @@ export function renderComment(report, budget, { runUrl } = {}) {
 }
 
 function tableSection(heading, intro, header, align, rows) {
-  const shown = rows.slice(0, MAX_LIST);
-  const hidden = rows.length - shown.length;
+  if (!rows.length) {
+    return "";
+  }
+  const hidden = rows.length - MAX_LIST;
   return [
     heading,
     ...(intro ? [intro, ""] : []),
     tableRow(header),
     tableRow(align),
-    ...shown.map(tableRow),
+    ...rows.slice(0, MAX_LIST).map(tableRow),
     ...(hidden > 0
       ? [
           tableRow([
@@ -223,18 +212,8 @@ function tableSection(heading, intro, header, align, rows) {
   ].join("\n");
 }
 
-function details(summary, header, align, rows) {
-  return [
-    "<details>",
-    `<summary>${summary}</summary>`,
-    "",
-    tableRow(header),
-    tableRow(align),
-    ...rows.slice(0, MAX_LIST).map(tableRow),
-    "",
-    "</details>",
-    "",
-  ].join("\n");
+function details(summary, ...table) {
+  return `<details>\n<summary>${summary}</summary>\n${tableSection("", null, ...table)}\n</details>\n`;
 }
 
 function tableRow(cells) {
@@ -250,17 +229,15 @@ function topModuleCell(modules) {
   return top ? `${cell(top.id)} ${signedKib(top.delta)}` : "–";
 }
 
-function viaText(example) {
-  return example ? ` from ${cell(example.from)}` : "";
-}
-
 export function renderSummary(report, budget) {
   if (report.noJsChanges) {
     return "### JS bundle analysis\n\nNo JS inputs changed, nothing to compare.\n";
   }
-  const flaggedKeys = new Set(findings(report, budget).map((f) => f.key));
+  const flagged = new Set(findings(report, budget).map((f) => f.bundle));
   const movedKeys = new Set(report.movedIntoInitialLoad.map((g) => g.bundle));
   const initial = report.initialLoad;
+  const sizeRow = (label, { base, head }) =>
+    `| ${label} | ${kib(base)} | ${kib(head)} | ${delta(base, head)} |`;
   const lines = [
     "### JS bundle analysis",
     "",
@@ -268,26 +245,32 @@ export function renderSummary(report, budget) {
     "",
     "| | Base | Head | Change |",
     "| --- | ---: | ---: | ---: |",
-    `| Initial load (${initial.chunks.head} chunks) | ${kib(initial.base)} | ${kib(initial.head)} | ${delta(initial.base, initial.head)} |`,
-    `| ${cell("discourse")} entry chunk | ${kib(initial.entryOwn.base)} | ${kib(initial.entryOwn.head)} | ${delta(initial.entryOwn.base, initial.entryOwn.head)} |`,
-    `| All JS (${report.totals.chunks.head} chunks) | ${kib(report.totals.base)} | ${kib(report.totals.head)} | ${delta(report.totals.base, report.totals.head)} |`,
+    sizeRow(`Initial load (${initial.chunks.head} chunks)`, initial),
+    sizeRow(`${cell("discourse")} entry chunk`, initial.entryOwn),
+    sizeRow(`All JS (${report.totals.chunks.head} chunks)`, report.totals),
     "",
   ];
-
-  if (initial.topModules.length) {
-    lines.push("**Initial load, largest additions (unminified)**", "");
-    lines.push(...initial.topModules.map(moduleLine), "");
-  }
-
-  if (report.movedIntoInitialLoad.length) {
-    lines.push("**Moved into the initial load**", "");
-    for (const group of report.movedIntoInitialLoad) {
-      lines.push(
-        `- ${code(group.name)}: ${kib(group.bytes)} unminified${group.importers.length ? `, pulled in by ${group.importers.map(importLine).join(", ")}` : ""}`
-      );
+  const list = (title, items) => {
+    if (items.length) {
+      lines.push(`**${title}**`, "", ...items, "");
     }
-    lines.push("");
-  }
+  };
+  const edgeLine = (edge) =>
+    `- ${code(edge.fromName)} → ${code(edge.toName)}: ${edge.kind}${edge.example ? `, from ${code(edge.example.from)}` : ""}`;
+
+  list(
+    "Initial load, largest additions (unminified)",
+    initial.topModules.map(
+      (m) => `- ${code(m.id)} ${signedKib(m.delta)}${m.added ? " (new)" : ""}`
+    )
+  );
+  list(
+    "Moved into the initial load",
+    report.movedIntoInitialLoad.map(
+      (group) =>
+        `- ${code(group.name)}: ${kib(group.bytes)} unminified${group.importers.length ? `, pulled in by ${group.importers.map(importLine).join(", ")}` : ""}`
+    )
+  );
 
   lines.push(
     "**Bundles** (load cost: the bundle plus what it loads beyond the initial load)",
@@ -296,35 +279,18 @@ export function renderSummary(report, budget) {
     "| --- | --- | --- | ---: | ---: | ---: | ---: |"
   );
   for (const bundle of report.bundles) {
-    const flag =
-      flaggedKeys.has(`grew:${bundle.key}`) ||
-      flaggedKeys.has(`new:${bundle.key}`)
-        ? " ⚠️"
-        : "";
     const status =
       bundle.status === "removed" && movedKeys.has(bundle.key)
         ? "moved into initial load"
         : bundle.status;
     lines.push(
-      `| ${cell(bundle.name)}${flag} | ${bundle.kind} | ${status} | ${bundle.head ? kib(bundle.head.own) : "–"} | ${bundle.base ? kib(bundle.base.load) : "–"} | ${bundle.head ? kib(bundle.head.load) : "–"} | ${bundle.base && bundle.head ? delta(bundle.base.load, bundle.head.load) : "–"} |`
+      `| ${cell(bundle.name)}${flagged.has(bundle) ? " ⚠️" : ""} | ${bundle.kind} | ${status} | ${kib(bundle.head?.own)} | ${kib(bundle.base?.load)} | ${kib(bundle.head?.load)} | ${bundle.base && bundle.head ? delta(bundle.base.load, bundle.head.load) : "–"} |`
     );
   }
   lines.push("");
 
-  for (const [title, list] of [
-    ["New connections", report.edges.added],
-    ["Removed connections", report.edges.removed],
-  ]) {
-    if (list.length) {
-      lines.push(`**${title}**`, "");
-      for (const edge of list) {
-        lines.push(
-          `- ${code(edge.fromName)} → ${code(edge.toName)}: ${edge.kind}${exampleText(edge.example)}`
-        );
-      }
-      lines.push("");
-    }
-  }
+  list("New connections", report.edges.added.map(edgeLine));
+  list("Removed connections", report.edges.removed.map(edgeLine));
 
   const changedAssets = report.assets.filter((a) => a.base !== a.head);
   lines.push(
@@ -335,75 +301,39 @@ export function renderSummary(report, budget) {
     lines.push("| Asset | Base | Head |", "| --- | ---: | ---: |");
     for (const asset of changedAssets) {
       lines.push(
-        `| ${cell(asset.label)} | ${asset.base === null ? "–" : kib(asset.base)} | ${asset.head === null ? "–" : kib(asset.head)} |`
+        `| ${cell(asset.label)} | ${kib(asset.base)} | ${kib(asset.head)} |`
       );
     }
     lines.push("");
   }
 
-  if (report.duplicatePackages.length) {
-    lines.push("**Packages bundled in more than one version**", "");
-    for (const pkg of report.duplicatePackages) {
-      lines.push(
+  list(
+    "Packages bundled in more than one version",
+    report.duplicatePackages.map(
+      (pkg) =>
         `- ${code(pkg.name)}: ${pkg.versions.map(code).join(", ")}${pkg.new ? " (new)" : ""}`
-      );
-    }
-    lines.push("");
-  }
+    )
+  );
 
   lines.push(`Reproduce locally: \`${REPRODUCE}\``, "");
   return lines.join("\n");
 }
 
-/** Groups edges that share a target and kind, e.g. from one shared chunk. */
-function groupEdges(edges) {
-  const groups = new Map();
-  for (const edge of edges) {
-    const key = `${edge.to}|${edge.kind}`;
-    if (!groups.has(key)) {
-      groups.set(key, {
-        toName: edge.toName,
-        kind: edge.kind,
-        from: [],
-        example: edge.example,
-      });
-    }
-    groups.get(key).from.push(edge.fromName);
-  }
-  return [...groups.values()].map((group) => ({
-    ...group,
-    from: group.from.slice(0, MAX_NAMES),
-    more: Math.max(0, group.from.length - MAX_NAMES),
-  }));
-}
-
-function exampleText(example) {
-  return example ? `, from ${code(example.from)}` : "";
-}
-
-function moduleLine(module) {
-  return `- ${code(module.id)} ${signedKib(module.delta)}${module.added ? " (new)" : ""}`;
-}
-
 function delta(base, head) {
   const change = head - base;
-  if (change === 0) {
-    return "0";
+  if (change === 0 || base <= 0) {
+    return change === 0 ? "0" : signedKib(change);
   }
-  const percent = base > 0 ? `, ${percentChange(change, base)}` : "";
-  return `${signedKib(change)}${percent}`;
+  const percent = Math.abs((change / base) * 100);
+  return `${signedKib(change)}, ${change > 0 ? "+" : "-"}${percent < 0.1 ? "<0.1" : percent.toFixed(1)}%`;
 }
 
-function percentChange(change, base) {
-  const percent = (change / base) * 100;
-  if (Math.abs(percent) < 0.1) {
-    return `${change > 0 ? "+" : "-"}<0.1%`;
+/** `–` for a size a build does not have. */
+function kib(bytes) {
+  if (bytes === null || bytes === undefined) {
+    return "–";
   }
-  return `${change > 0 ? "+" : ""}${percent.toFixed(1)}%`;
-}
-
-export function kib(bytes) {
-  if (Math.abs(number(bytes)) < 1024) {
+  if (Math.abs(bytes) < 1024) {
     return `${bytes} B`;
   }
   const value = bytes / 1024;
@@ -415,14 +345,7 @@ export function kib(bytes) {
 }
 
 function signedKib(bytes) {
-  return `${number(bytes) > 0 ? "+" : ""}${kib(bytes)}`;
-}
-
-function number(value) {
-  if (!Number.isFinite(value)) {
-    throw new Error(`Expected a number, got ${typeof value}`);
-  }
-  return value;
+  return `${bytes > 0 ? "+" : ""}${kib(bytes)}`;
 }
 
 /**
@@ -441,10 +364,7 @@ export function code(value) {
     ...(text.match(/`+/g) ?? []).map((run) => run.length)
   );
   const fence = "`".repeat(longestRun + 1);
-  const pad =
-    text.startsWith("`") || text.endsWith("`") || text.trim() !== text
-      ? " "
-      : "";
+  const pad = /^[\s`]|[\s`]$/.test(text) ? " " : "";
   return `${fence}${pad}${text}${pad}${fence}`;
 }
 

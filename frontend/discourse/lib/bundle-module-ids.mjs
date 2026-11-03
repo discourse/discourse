@@ -11,19 +11,17 @@ const NODE_MODULES = "/node_modules/";
  * @returns {(id: string) => string}
  */
 export function moduleIdNormalizer(root) {
-  const versions = new Map();
-  const versionOf = (packageDir) => {
-    if (!versions.has(packageDir)) {
-      versions.set(packageDir, readPackageVersion(packageDir));
+  const versionOf = memoize(readPackageVersion);
+  return memoize((id) => normalizeModuleId(id, root, versionOf));
+}
+
+function memoize(fn) {
+  const cache = new Map();
+  return (key) => {
+    if (!cache.has(key)) {
+      cache.set(key, fn(key));
     }
-    return versions.get(packageDir);
-  };
-  const normalized = new Map();
-  return (id) => {
-    if (!normalized.has(id)) {
-      normalized.set(id, normalizeModuleId(id, root, versionOf));
-    }
-    return normalized.get(id);
+    return cache.get(key);
   };
 }
 
