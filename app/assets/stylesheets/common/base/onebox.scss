@@ -899,19 +899,8 @@ aside.onebox.github-onebox {
   }
 
   .github-pull-request__title {
-    display: inline-flex;
-    align-items: flex-end;
-    max-width: 100%;
-    gap: 0.25em;
-  }
-
-  .github-pull-request__title-text {
     @include line-clamp(3);
     overflow-wrap: anywhere;
-  }
-
-  .github-pull-request__number {
-    flex-shrink: 0;
   }
 
   .branches,
