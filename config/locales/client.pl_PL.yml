@@ -5322,10 +5322,10 @@ pl_PL:
       aria_post_number: "%{title} - wpis #%{postNumber}"
       bulk:
         selected:
-          one: "%{count} zaznaczony post"
-          few: "%{count} zaznaczone posty"
-          many: "%{count} zaznaczonych postów"
-          other: "%{count} zaznaczonych postów"
+          one: "%{count} zaznaczony wpis"
+          few: "%{count} zaznaczone wpisy"
+          many: "%{count} zaznaczonych wpisów"
+          other: "%{count} zaznaczonych wpisów"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystkie"
         actions: "Działania zbiorcze"

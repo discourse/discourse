@@ -450,7 +450,7 @@ pl_PL:
         markdown_table: Wygeneruj tabelę Markdown
         custom_prompt: "Niestandardowy monit"
         explain: "Wyjaśnij"
-        illustrate_post: "Zilustruj post"
+        illustrate_post: "Zilustruj wpis"
         replace_dates: "Inteligentne daty"
       image_caption:
         aria_description: "%{description} (Napisy wygenerowane przez AI)"

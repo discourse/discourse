@@ -81,7 +81,7 @@ pl_PL:
       category_not_found: "Nie odnaleziono kategorii"
       category_update_failed: "Nie można zaktualizować kategorii"
       category_update_required: "Należy podać co najmniej jedno pole kategorii"
-      draft_sequence_conflict: "Konflikt sekwencji roboczej"
+      draft_sequence_conflict: "Konflikt sekwencji szkiców"
       draft_too_long: "Szkic jest zbyt długi"
       group_create_failed: "Nie udało się zaktualizować motywu"
       group_delete_confirmation_required: "Usunięcie grupy musi zostać potwierdzone"
@@ -1515,7 +1515,7 @@ pl_PL:
     too_many_drafts:
       title: "Zbyt wiele szkiców"
       description: "Osiągnąłeś maksymalną liczbę dozwolonych szkiców. Usuń niektóre z [twoich szkiców](%{base_url}/my/activity/draft) i spróbuj ponownie."
-    bulk_destroy_limit: "Jednorazowo możesz usunąć maksymalnie %{limit} wersji roboczych."
+    bulk_destroy_limit: "Jednorazowo możesz usunąć maksymalnie %{limit} szkiców."
   draft_backup:
     pm_title: "Szkice bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"
@@ -6223,7 +6223,7 @@ pl_PL:
       pr_summary: "%{commits} commity zmodyfikowały %{changed_files} pliki z %{additions} dodaniami i %{deletions} usunięciami"
       no_description: "Przyczyń się do rozwoju %{repo}, tworząc konto na GitHub."
       pr_status:
-        draft: "Wersja robocza"
+        draft: "Szkic"
         open: "Otwórz"
         approved: "Zaakceptowano"
         changes_requested: "Żądane zmiany"
