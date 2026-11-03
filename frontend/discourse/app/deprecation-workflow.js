@@ -325,8 +325,6 @@ const workflows = [
     "discourse.avatar-utils",
     "discourse.bound-date",
     "discourse.component-template-resolving",
-    "discourse.createNewMessageViaParams",
-    "discourse.createNewTopicViaParams",
     "discourse.d-editor.on-toolbar-create",
     "discourse.d-popover",
     "discourse.d-section",
