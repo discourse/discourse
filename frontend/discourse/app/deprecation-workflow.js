@@ -326,7 +326,6 @@ const workflows = [
     "discourse.bound-date",
     "discourse.component-template-resolving",
     "discourse.deprecated-resolver-normalization",
-    "discourse.discovery-topics-controller",
     "discourse.ember-computed-decorators",
     "discourse.form-kit.legacy-field-yield",
     "discourse.format-age",
@@ -351,7 +350,6 @@ const workflows = [
     "discourse.markdown-it.whitelist",
     "discourse.modify-class-model",
     "discourse.nav-item.built-list-site-settings",
-    "discourse.navigation-category-controller",
     "discourse.number-field",
     "discourse.offset-calculator.minimumOffset",
     "discourse.plugin-outlet-args",
@@ -373,7 +371,6 @@ const workflows = [
     "discourse.show-popover",
     "discourse.site.is-mobile-device",
     "discourse.static-viewport-initialization",
-    "discourse.tag-show-controller",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
     "discourse.text.cook-async",
     "discourse.this-container",
