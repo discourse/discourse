@@ -72,29 +72,13 @@ function createApplication(config, settings) {
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
-  // Modern Ember only sets up a container when the ApplicationInstance
-  // is booted. We have legacy code which relies on having access to a container
-  // before boot (e.g. during pre-initializers)
-  //
-  // This hack sets up a container early, then stubs the container setup method
-  // so that Ember will use the same container instance when it boots the ApplicationInstance
-  //
-  // Note that this hack is not required in production because we use the default `autoboot` flag,
-  // which triggers the internal `_globalsMode` flag, which sets up an ApplicationInstance immediately when
-  // an Application is initialized (via the `_buildDeprecatedInstance` method).
-  //
-  // In the future, we should move away from relying on the `container` before the ApplicationInstance
-  // is booted, and then remove this hack.
-  let container = app.__registry__.container();
-  app.__container__ = container;
-  setDefaultOwner(container);
-  sinon
-    .stub(Object.getPrototypeOf(app.__registry__), "container")
-    .callsFake((opts) => {
-      container.owner = opts.owner;
-      container.registry = opts.owner.__registry__;
-      return container;
-    });
+  // Production's autoboot builds the ApplicationInstance before initializers run, and they
+  // rely on its container. ember-qunit only builds one after booting the app, so build it
+  // up front and have ember-qunit boot this one.
+  const instance = app.buildInstance();
+  app.__container__ = instance.__container__;
+  app.buildInstance = () => instance;
+  setDefaultOwner(app.__container__);
 
   SiteSettingService.create = () => settings;
 
