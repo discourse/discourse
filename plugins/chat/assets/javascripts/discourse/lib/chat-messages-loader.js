@@ -17,6 +17,11 @@ export default class ChatMessagesLoader {
   @tracked canLoadMoreFuture = false;
   @tracked fetchedOnce = false;
 
+  // Edges of what the server has returned, kept apart from the rendered list
+  // because live messages can be appended past a gap in it.
+  #oldestFetchedMessageId = null;
+  #newestFetchedMessageId = null;
+
   constructor(owner, model) {
     setOwner(this, owner);
     this.model = model;
@@ -35,15 +40,13 @@ export default class ChatMessagesLoader {
       return;
     }
 
-    const nextTargetMessage = this.#computeNextTargetMessage(
-      args.direction,
-      this.model
-    );
-
     args = {
       direction: args.direction,
       page_size: DEFAULT_MESSAGE_PAGE_SIZE,
-      target_message_id: nextTargetMessage?.id,
+      target_message_id:
+        args.direction === PAST
+          ? this.#oldestFetchedMessageId
+          : this.#newestFetchedMessageId,
     };
 
     args = this.#cleanArgs(args);
@@ -52,8 +55,16 @@ export default class ChatMessagesLoader {
     try {
       this.loading = true;
       result = await this.#apiFunction(args);
-      this.canLoadMoreFuture = result.meta.can_load_more_future;
-      this.canLoadMorePast = result.meta.can_load_more_past;
+
+      // A page only tells us about its own direction; the server leaves the
+      // other flag null.
+      if (args.direction === FUTURE) {
+        this.canLoadMoreFuture = result.meta.can_load_more_future;
+      } else if (args.direction === PAST) {
+        this.canLoadMorePast = result.meta.can_load_more_past;
+      }
+
+      this.#extendFetchedWindow(result.messages, args.direction);
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -68,6 +79,8 @@ export default class ChatMessagesLoader {
     this.canLoadMoreFuture = true;
     this.fetchedOnce = false;
     this.loading = true;
+    this.#oldestFetchedMessageId = null;
+    this.#newestFetchedMessageId = null;
 
     args.page_size ??= DEFAULT_MESSAGE_PAGE_SIZE;
 
@@ -78,6 +91,7 @@ export default class ChatMessagesLoader {
       result = await this.#apiFunction(args);
       this.canLoadMoreFuture = result.meta.can_load_more_future;
       this.canLoadMorePast = result.meta.can_load_more_past;
+      this.#extendFetchedWindow(result.messages);
       this.fetchedOnce = true;
     } catch (error) {
       popupAjaxError(error);
@@ -106,9 +120,18 @@ export default class ChatMessagesLoader {
       .reduce((a, k) => ({ ...a, [k]: args[k] }), {});
   }
 
-  #computeNextTargetMessage(direction, model) {
-    return direction === PAST
-      ? model.messagesManager.messages.find((message) => !message.staged)
-      : model.messagesManager.messages.findLast((message) => !message.staged);
+  // Pages arrive oldest-first in both directions.
+  #extendFetchedWindow(messages = [], direction) {
+    if (!messages.length) {
+      return;
+    }
+
+    if (direction !== FUTURE) {
+      this.#oldestFetchedMessageId = messages[0].id;
+    }
+
+    if (direction !== PAST) {
+      this.#newestFetchedMessageId = messages.at(-1).id;
+    }
   }
 }
