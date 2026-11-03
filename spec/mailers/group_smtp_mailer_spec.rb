@@ -68,6 +68,36 @@ RSpec.describe GroupSmtpMailer do
     expect(sent_mail.to_s).to include(raw)
   end
 
+  it "uses the site locale for branding in both parts when the recipient has another locale" do
+    SiteSetting.default_locale = "en"
+    SiteSetting.allow_user_locale = true
+    SiteSetting.enable_email_theme_header_and_footer = true
+    recipient = Fabricate(:staged, email: "john@doe.com", locale: "fr")
+    english_branding = { "header" => "English header", "footer" => "English footer" }
+    french_branding = { "header" => "En-tête français", "footer" => "Pied de page français" }
+    theme = Fabricate(:theme)
+    theme.set_field(target: :email, name: "header", value: "<header>%{branding.header}</header>")
+    theme.set_field(target: :email, name: "footer", value: "<footer>%{branding.footer}</footer>")
+    { "en" => english_branding, "fr" => french_branding }.each do |locale, translations|
+      theme.set_field(
+        target: :translations,
+        name: locale,
+        value: { locale => { "branding" => translations } }.to_yaml,
+      )
+    end
+    theme.save!
+    SiteSetting.default_theme_id = theme.id
+
+    PostCreator.create(user, topic_id: receiver.incoming_email.topic.id, raw: raw)
+
+    expect(ActionMailer::Base.deliveries.size).to eq(1)
+    sent_mail = ActionMailer::Base.deliveries.last
+    expect(sent_mail.to).to contain_exactly(recipient.email)
+    rendered_parts = [sent_mail.html_part.body.decoded, sent_mail.text_part.body.decoded]
+    expect(rendered_parts).to all(include(*english_branding.values))
+    expect(rendered_parts).to all(exclude(*french_branding.values))
+  end
+
   it "includes the participants list in the email" do
     Fabricate(:staged, email: "james.bond@gmail.com")
     topic = receiver.incoming_email.topic
