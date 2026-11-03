@@ -1,36 +1,20 @@
-import { readFileSync } from "fs";
-import { isAbsolute, join, relative } from "path";
+import { moduleIdNormalizer } from "./bundle-module-ids.mjs";
 import { RESOLVED_PREFIX as URL_IMPORT_PREFIX } from "./dynamic-chunk-url-plugin.mjs";
 
-const NODE_MODULES = "/node_modules/";
-
 /**
- * Writes `manifest/bundle-graph.json`: every chunk's modules, its static,
- * dynamic and URL imports, an example module-level import behind each
- * cross-chunk edge, and every module's static importers. The
+ * Writes `manifest/bundle-graph.json`: every chunk's static, dynamic and URL
+ * imports, an example module-level import behind each cross-chunk edge, and
+ * every module's static importers. The
  * importers explain code that moved into another chunk, such as lazy code
  * now imported statically, where no cross-chunk import is left to show it.
  * CI compares this file between builds to report new bundles, growth and
- * new connections, taking sizes from the bundle analyzer report.
+ * new connections, taking modules and sizes from the bundle analyzer report,
+ * whose module ids match these.
  *
  * @param {{ root: string }} options `root` makes module ids relative.
  */
 export default function bundleGraphPlugin({ root }) {
-  const versions = new Map();
-  const versionOf = (packageDir) => {
-    if (!versions.has(packageDir)) {
-      versions.set(packageDir, readPackageVersion(packageDir));
-    }
-    return versions.get(packageDir);
-  };
-  // Module ids repeat across importer lists.
-  const normalized = new Map();
-  const normalize = (id) => {
-    if (!normalized.has(id)) {
-      normalized.set(id, normalizeModuleId(id, root, versionOf));
-    }
-    return normalized.get(id);
-  };
+  const normalize = moduleIdNormalizer(root);
 
   return {
     name: "bundle-graph",
@@ -114,7 +98,6 @@ export default function bundleGraphPlugin({ root }) {
           urlImports: Object.keys(examples)
             .filter((key) => key.startsWith("url:"))
             .map((key) => key.slice("url:".length)),
-          modules: chunk.moduleIds.map(normalize),
           examples,
         };
       }
@@ -123,7 +106,7 @@ export default function bundleGraphPlugin({ root }) {
         type: "asset",
         fileName: "manifest/bundle-graph.json",
         source: JSON.stringify({
-          version: 4,
+          version: 5,
           entries,
           chunks,
           assets,
@@ -132,61 +115,6 @@ export default function bundleGraphPlugin({ root }) {
       });
     },
   };
-}
-
-/**
- * Makes a module id stable across machines: relative to `root`, and
- * `<package>@<version>/<path>` for node_modules, whatever the package
- * manager's directory layout.
- */
-export function normalizeModuleId(id, root, versionOf = () => undefined) {
-  let prefix = "";
-  let path = id;
-  if (path.startsWith("\0")) {
-    path = path.slice(1);
-    prefix = path.startsWith("virtual:") ? "" : "virtual:";
-  }
-
-  // Virtual ids like `virtual:some-plugin:/abs/path.js` embed a path.
-  const scheme = path.match(/^((?:[\w-]+:)+)(\/.*)$/);
-  if (scheme) {
-    return `${prefix}${scheme[1]}${normalizeModuleId(scheme[2], root, versionOf)}`;
-  }
-
-  const [file, query] = splitQuery(path);
-  const posixFile = file.replaceAll("\\", "/");
-  const packageStart = posixFile.lastIndexOf(NODE_MODULES);
-
-  if (packageStart !== -1) {
-    const inPackages = posixFile.slice(packageStart + NODE_MODULES.length);
-    const nameParts = inPackages.startsWith("@") ? 2 : 1;
-    const segments = inPackages.split("/");
-    const packageName = segments.slice(0, nameParts).join("/");
-    const rest = segments.slice(nameParts).join("/");
-    const version = versionOf(
-      posixFile.slice(0, packageStart + NODE_MODULES.length) + packageName
-    );
-    return `${prefix}${packageName}${version ? `@${version}` : ""}/${rest}${query}`;
-  }
-
-  if (isAbsolute(file)) {
-    return `${prefix}${relative(root, file).replaceAll("\\", "/")}${query}`;
-  }
-  return `${prefix}${posixFile}${query}`;
-}
-
-function splitQuery(path) {
-  const index = path.indexOf("?");
-  return index === -1 ? [path, ""] : [path.slice(0, index), path.slice(index)];
-}
-
-function readPackageVersion(packageDir) {
-  try {
-    return JSON.parse(readFileSync(join(packageDir, "package.json"), "utf8"))
-      .version;
-  } catch {
-    return undefined;
-  }
 }
 
 /**

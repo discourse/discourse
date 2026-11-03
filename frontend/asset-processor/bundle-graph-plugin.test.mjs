@@ -2,6 +2,8 @@
 import {
   mkdirSync,
   mkdtempSync,
+  readdirSync,
+  readFileSync,
   realpathSync,
   symlinkSync,
   writeFileSync,
@@ -10,9 +12,9 @@ import { tmpdir } from "os";
 import { dirname, join } from "path";
 import { rolldown } from "rolldown";
 import { expect, test } from "vitest";
-import bundleGraphPlugin, {
-  normalizeModuleId,
-} from "../discourse/lib/bundle-graph-plugin.mjs";
+import bundleAnalyzerPlugin from "../discourse/lib/bundle-analyzer-plugin.mjs";
+import bundleGraphPlugin from "../discourse/lib/bundle-graph-plugin.mjs";
+import { normalizeModuleId } from "../discourse/lib/bundle-module-ids.mjs";
 import { RESOLVED_PREFIX } from "../discourse/lib/dynamic-chunk-url-plugin.mjs";
 
 const FIXTURE = {
@@ -107,20 +109,26 @@ async function build(dir) {
       chunkUrlStandIn(),
       brotliStandIn(),
       bundleGraphPlugin({ root: dir }),
+      bundleAnalyzerPlugin({ root: dir }),
     ],
   });
-  const { output } = await bundle.generate({
-    dir: join(dir, "dist"),
+  const dist = join(dir, "dist");
+  await bundle.write({
+    dir: dist,
     minify: true,
     hashCharacters: "base36",
     sourcemap: true,
     entryFileNames: "assets/js/[name]-[hash].digested.js",
     chunkFileNames: "assets/js/[name]-[hash].digested.js",
   });
-  const graphFile = output.find(
-    (file) => file.fileName === "manifest/bundle-graph.json"
+  const readJson = (path) => JSON.parse(readFileSync(join(dist, path), "utf8"));
+  const reportFile = readdirSync(join(dist, "assets/js")).find((file) =>
+    file.startsWith("bundle-analysis-")
   );
-  return JSON.parse(graphFile.source);
+  return {
+    graph: readJson("manifest/bundle-graph.json"),
+    report: readJson(`assets/js/${reportFile}`),
+  };
 }
 
 function importersOf(graph, id) {
@@ -137,7 +145,7 @@ function chunkOf(graph, facade) {
 }
 
 test("records entries, lazy chunks and their connections", async () => {
-  const graph = await build(writeFixture());
+  const { graph } = await build(writeFixture());
 
   const main = chunkOf(graph, "main.js");
   const lazy = chunkOf(graph, "lazy.js");
@@ -158,23 +166,25 @@ test("records entries, lazy chunks and their connections", async () => {
 });
 
 test("records a dynamic import that rolldown merged into its importer", async () => {
-  const graph = await build(writeFixture());
+  const { graph, report } = await build(writeFixture());
   const main = chunkOf(graph, "main.js");
 
-  expect(main.modules).toContain("merged.js");
+  expect(report.chunks[main.file].modules.map((m) => m.id)).toContain(
+    "merged.js"
+  );
   expect(main.dynamicImports).not.toContain(main.file);
   expect(importersOf(graph, "merged.js")).toEqual(["main.js"]);
 });
 
 test("records every module's static importers", async () => {
-  const graph = await build(writeFixture());
+  const { graph } = await build(writeFixture());
 
   expect(importersOf(graph, "shared.js")).toEqual(["lazy.js", "main.js"]);
   expect(importersOf(graph, "lazy-only.js")).toEqual(["lazy.js", "nested.js"]);
 });
 
 test("records URL imports created through virtual:dynamic-chunk-url", async () => {
-  const graph = await build(writeFixture());
+  const { graph } = await build(writeFixture());
   const main = chunkOf(graph, "main.js");
   const worker = chunkOf(graph, "worker.js");
 
@@ -182,16 +192,18 @@ test("records URL imports created through virtual:dynamic-chunk-url", async () =
   expect(main.urlImports).toEqual([worker.file]);
 });
 
-test("lists modules by normalized id", async () => {
-  const graph = await build(writeFixture());
-
-  expect(chunkOf(graph, "main.js").modules).toContain(
-    "fake-pkg@1.2.3/index.js"
+test("names modules as the bundle analyzer report does", async () => {
+  const { graph, report } = await build(writeFixture());
+  const reported = Object.values(report.chunks).flatMap((chunk) =>
+    chunk.modules.map((m) => m.id)
   );
+
+  expect(reported).toEqual(expect.arrayContaining(graph.moduleIds));
+  expect(reported).toContain("fake-pkg@1.2.3/index.js");
 });
 
 test("leaves precompressed copies out of the assets", async () => {
-  const graph = await build(writeFixture());
+  const { graph } = await build(writeFixture());
 
   expect(graph.assets.filter((f) => f.endsWith(".br"))).toEqual([]);
 });

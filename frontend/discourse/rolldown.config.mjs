@@ -211,7 +211,10 @@ export function buildConfig({ devMode } = {}) {
         },
       },
       brotliAssetsPlugin({ enabled: isProduction }),
-      bundleAnalyzerPlugin({ compress: isProduction }),
+      bundleAnalyzerPlugin({
+        compress: isProduction,
+        root: import.meta.dirname,
+      }),
       ...(isProduction
         ? [bundleGraphPlugin({ root: import.meta.dirname })]
         : []),

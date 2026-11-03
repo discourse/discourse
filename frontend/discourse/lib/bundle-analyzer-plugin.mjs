@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
 import * as fs from "fs";
-import { relative } from "path";
 import brotli from "./brotli.mjs";
+import { moduleIdNormalizer } from "./bundle-module-ids.mjs";
 
 const BUNDLE_ANALYSIS_RE = /^bundle-analysis-\w+\.digested\.json(\.br)?$/;
 
@@ -13,32 +13,13 @@ function nameFromFile(fileName) {
   return m ? m[1] : fileName;
 }
 
-const relCache = new Map();
-
-// A dependency reads better as its package-relative path than as a pnpm store
-// path; everything else is relative to the build cwd. Memoised: a module id
-// repeats across chunks.
-function rel(id) {
-  if (!id) {
-    return null;
-  }
-
-  if (!relCache.has(id)) {
-    const nodeModules = id.lastIndexOf("node_modules/");
-    relCache.set(
-      id,
-      nodeModules >= 0 ? id.slice(nodeModules) : relative(process.cwd(), id)
-    );
-  }
-
-  return relCache.get(id);
-}
-
 // Describes the finished bundle: what each chunk weighs, what is inside it, and
 // which files dynamically import it. Written from `writeBundle`, where the
 // chunks a browser will fetch are already on disk to be measured; Rails finds
-// the report by globbing for its name.
-export default function bundleAnalyzerPlugin({ compress } = {}) {
+// the report by globbing for its name. `root` makes module ids relative.
+export default function bundleAnalyzerPlugin({ compress, root }) {
+  const normalize = moduleIdNormalizer(root);
+
   return {
     name: "bundle-analyzer",
 
@@ -63,7 +44,7 @@ export default function bundleAnalyzerPlugin({ compress } = {}) {
 
         const modules = Object.entries(chunk.modules)
           .map(([moduleId, m]) => ({
-            id: rel(moduleId),
+            id: normalize(moduleId),
             renderedLength: m.renderedLength,
           }))
           .sort((a, b) => b.renderedLength - a.renderedLength);
@@ -74,7 +55,7 @@ export default function bundleAnalyzerPlugin({ compress } = {}) {
         for (const moduleId of Object.keys(chunk.modules)) {
           for (const imp of this.getModuleInfo(moduleId)?.dynamicImporters ??
             []) {
-            importers.add(rel(imp));
+            importers.add(normalize(imp));
           }
         }
 
@@ -83,7 +64,9 @@ export default function bundleAnalyzerPlugin({ compress } = {}) {
         chunks[fileName] = {
           file: fileName,
           name: nameFromFile(fileName),
-          facadeModuleId: rel(chunk.facadeModuleId),
+          facadeModuleId: chunk.facadeModuleId
+            ? normalize(chunk.facadeModuleId)
+            : null,
           isEntry: chunk.isEntry,
           isDynamicEntry: chunk.isDynamicEntry,
           rawSize,

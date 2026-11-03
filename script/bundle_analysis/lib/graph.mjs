@@ -6,7 +6,6 @@ export const MAIN_ENTRY = "discourse";
 export const MAIN_KEY = `entry:${MAIN_ENTRY}`;
 const REPORT_DIR = "assets/js";
 const REPORT_NAME = /^bundle-analysis-\w+\.digested\.json$/;
-const SCHEME = /^((?:[\w-]+:)+)(.+)$/;
 
 // Labels the bundler derives from a module's basename that say nothing about
 // the bundle; such bundles are named after their facade instead.
@@ -47,9 +46,10 @@ export function labelOf(fileName) {
 }
 
 /**
- * The bundle graph of a production build with sizes: `brotliSize` on chunks
- * and `modules` as id → rendered (unminified) length, both from the bundle
- * analyzer report beside it, and `assets` as file → size on disk.
+ * The bundle graph of a production build with `brotliSize` and `modules`
+ * (id → rendered, unminified length) on chunks from the bundle analyzer report
+ * beside it, and `assets` as file → size on disk. Both reports name modules
+ * the same way.
  */
 export function loadGraph(distDir) {
   const path = join(distDir, GRAPH_PATH);
@@ -59,7 +59,7 @@ export function loadGraph(distDir) {
     );
   }
   const graph = JSON.parse(readFileSync(path, "utf8"));
-  if (graph.version !== 4) {
+  if (graph.version !== 5) {
     throw new Error(`${path} has unsupported version ${graph.version}`);
   }
 
@@ -73,7 +73,9 @@ export function loadGraph(distDir) {
       );
     }
     chunk.brotliSize = sized.brotliSize;
-    chunk.modules = moduleSizes(chunk.modules, sized.modules);
+    chunk.modules = Object.fromEntries(
+      sized.modules.map((m) => [m.id, m.renderedLength])
+    );
   }
   graph.assets = Object.fromEntries(
     graph.assets.map((file) => [file, statSync(join(distDir, file)).size])
@@ -92,60 +94,6 @@ function findReport(distDir) {
     );
   }
   return join(dir, names[0]);
-}
-
-/**
- * The report names a dependency by its path under node_modules, without a
- * version, and keeps virtual ids raw, sometimes with an absolute build path.
- * Two versions of one package share a report id and are matched in order.
- * Sizes that match no graph id stay under the report's id.
- */
-function moduleSizes(ids, reported) {
-  const sizes = Object.fromEntries(ids.map((id) => [id, 0]));
-  const pending = new Map();
-  for (const id of ids) {
-    const key = stripVersion(id);
-    pending.set(key, [...(pending.get(key) ?? []), id]);
-  }
-  const take = (key) => {
-    const list = pending.get(key);
-    const id = list?.shift();
-    if (list?.length === 0) {
-      pending.delete(key);
-    }
-    return id;
-  };
-
-  const unmatched = [];
-  for (const { id, renderedLength } of reported) {
-    const key = reportedKey(id);
-    const ours = take(key);
-    if (ours) {
-      sizes[ours] += renderedLength;
-    } else {
-      unmatched.push([key, renderedLength]);
-    }
-  }
-  for (const [key, length] of unmatched) {
-    const match = [...pending.keys()].find((ours) => endsWithPath(key, ours));
-    const id = (match && take(match)) ?? key;
-    sizes[id] = (sizes[id] ?? 0) + length;
-  }
-  return sizes;
-}
-
-function reportedKey(id) {
-  if (id.startsWith("\0")) {
-    const bare = id.slice(1);
-    return bare.startsWith("virtual:") ? bare : `virtual:${bare}`;
-  }
-  return id.startsWith("node_modules/") ? id.slice("node_modules/".length) : id;
-}
-
-/** `virtual:x:/abs/app/a.js` ends with the path of `virtual:x:app/a.js`. */
-function endsWithPath(key, ours) {
-  const [, scheme, path] = ours.match(SCHEME) ?? [];
-  return Boolean(scheme && key.startsWith(scheme) && key.endsWith(`/${path}`));
 }
 
 /**

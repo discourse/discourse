@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
-import { GRAPH_PATH, packageOf, stripVersion } from "../lib/graph.mjs";
+import { GRAPH_PATH } from "../lib/graph.mjs";
 
 export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 
@@ -15,7 +15,7 @@ export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-dist-"));
   const graph = {
-    version: 4,
+    version: 5,
     entries,
     chunks: {},
     assets: Object.keys(assets),
@@ -29,13 +29,12 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
       imports: chunk.imports ?? [],
       dynamicImports: chunk.dynamicImports ?? [],
       urlImports: chunk.urlImports ?? [],
-      modules: Object.keys(chunk.modules),
       examples: chunk.examples ?? {},
     };
     report.chunks[file] = {
       brotliSize: Object.values(chunk.modules).reduce((a, b) => a + b, 0),
       modules: Object.entries(chunk.modules).map(([id, renderedLength]) => ({
-        id: reportedId(id),
+        id,
         renderedLength,
       })),
     };
@@ -55,14 +54,6 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   mkdirSync(dirname(join(dir, REPORT)), { recursive: true });
   writeFileSync(join(dir, REPORT), JSON.stringify(report));
   return dir;
-}
-
-/** How the bundle analyzer report names a module id from the graph. */
-function reportedId(id) {
-  if (id.startsWith("virtual:")) {
-    return `\0${id}`;
-  }
-  return packageOf(id) ? `node_modules/${stripVersion(id)}` : id;
 }
 
 /** A small app: an entry, a shared chunk, and admin and editor bundles. */
