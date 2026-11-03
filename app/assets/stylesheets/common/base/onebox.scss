@@ -939,10 +939,15 @@ aside.onebox.github-onebox {
     }
 
     .user a {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: var(--space-1);
       color: var(--primary);
+    }
+
+    .user a,
+    .discourse-local-date {
+      border-bottom: 0;
       text-decoration: underline dashed var(--primary-low-mid);
       text-decoration-thickness: 1px;
       text-underline-offset: 0.2em;
@@ -969,6 +974,7 @@ aside.onebox.github-onebox {
     font-family: inherit;
     font-size: var(--font-down-1);
     line-height: var(--cooked-line-height);
+    color: var(--token-color-text-default);
   }
 
   .github-repo-description,
@@ -982,16 +988,12 @@ aside.onebox.github-onebox {
       grid-template-columns: minmax(0, 1fr) auto;
     }
 
-    .github-onebox__label {
-      gap: 0;
-
-      > span {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-      }
+    .github-onebox__label > span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
     }
   }
 }
