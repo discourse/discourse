@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { trustHTML } from "@ember/template";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import DButton from "discourse/ui-kit/d-button";
@@ -20,15 +21,7 @@ const Help = <template>
     @interactive={{true}}
   >
     <:content>
-      <div>
-        {{i18n "dsa_statements.help"}}
-        <br />
-        <a
-          href="https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms"
-          rel="noopener noreferrer"
-          target="_blank"
-        >{{i18n "learn_more"}}</a>
-      </div>
+      <div>{{trustHTML (i18n "dsa_statements.help")}}</div>
     </:content>
   </DTooltip>
 </template>;

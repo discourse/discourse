@@ -54,7 +54,9 @@ describe "Classifying reviewable moderation" do
 
     modal.open_dsa_help
 
-    expect(modal).to have_classification_help(I18n.t("js.dsa_statements.help"))
+    expect(modal).to have_classification_help(
+      "The EU Digital Services Act asks platforms to record why content was moderated.",
+    )
     expect(modal).to have_dsa_learn_more_link(
       "https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms",
     )
@@ -140,7 +142,9 @@ describe "Classifying reviewable moderation" do
 
     modal.open_dsa_help
 
-    expect(modal).to have_classification_help(I18n.t("js.dsa_statements.help"))
+    expect(modal).to have_classification_help(
+      "The EU Digital Services Act asks platforms to record why content was moderated.",
+    )
 
     modal.select_rule(rule[:ground])
     modal.select_category(category)

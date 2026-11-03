@@ -1,6 +1,20 @@
 import Component from "@glimmer/component";
+import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
+
+const CategoryHelp = <template>
+  <DTooltip
+    class="form-kit__tooltip"
+    @icon="circle-question"
+    @interactive={{true}}
+  >
+    <:content>
+      <div>{{trustHTML (i18n "dsa_statements.category_help")}}</div>
+    </:content>
+  </DTooltip>
+</template>;
 
 export function defaultClassification(options) {
   const rules = options?.community_rules;
@@ -41,7 +55,7 @@ export default class DsaModerationDetails extends Component {
         @format="full"
         @name="category"
         @title={{i18n "dsa_statements.category"}}
-        @tooltip={{i18n "dsa_statements.category_help"}}
+        @tooltip={{component CategoryHelp}}
         @type="select"
         @validation="required"
         as |field|
