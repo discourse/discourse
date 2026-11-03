@@ -325,7 +325,6 @@ const workflows = [
     "discourse.avatar-utils",
     "discourse.bound-date",
     "discourse.component-template-resolving",
-    "discourse.d-section",
     "discourse.deprecated-resolver-normalization",
     "discourse.discovery-topics-controller",
     "discourse.ember-computed-decorators",
