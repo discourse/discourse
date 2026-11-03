@@ -2204,7 +2204,6 @@ ja:
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームはすべての場所で非表示になります。"
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
-    short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
     highlighted_languages: "構文ハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> をご覧ください。"
     show_copy_button_on_codeblocks: "コードブロックに、ブロックのコンテンツをユーザーのクリップボードにコピーするボタンを追加します。"
     embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"

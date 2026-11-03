@@ -23,19 +23,22 @@ bg:
         badge:
           draft: Чернова
         preview: Преглед
-        publish: Публикувайте
-        options: Опции
         change:
           title: заглавие
           body: тяло
       review:
-        active: Активни
+        copy: Копирай
+        open: Отвори
+        status:
+          active: Активни
+          expired: Изтекъл срок
+        closed_on: "Затворена %{date}"
+        revoke: Анулирай
         message: Обратна връзка
       editor_table:
         edit: Редактирай
         status: Статус
         replies: Отговори
       drafts: Чернови
-      private_draft: Чернова
       preview: Преглед
       unpublish: Прекратяване на публикуването

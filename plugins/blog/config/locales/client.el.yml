@@ -31,21 +31,26 @@ el:
         badge:
           draft: Προσχέδιο
         preview: Προεπισκόπηση
-        publish: Δημοσιεύστε
-        options: Επιλογές
         change:
           title: τίτλος
           body: κύριο μέρος
       review:
-        copy: Αντιγραφή συνδέσμου
-        active: Ενεργό
+        create: Δημιουργία συνδέσμου
+        copy: Αντιγραφή
+        open: Άνοιγμα
+        status:
+          active: Ενεργό
+          expired: Έληξε
+          revoked: Ανακλήθηκε
+          inactive: Ανενεργό
+        closed_on: "Έκλεισε %{date}"
+        revoke: Ανακάλεσε
         message: Ανατροφοδότηση
       editor_table:
         edit: Επεξεργασία
         status: Κατάσταση
         replies: Απαντήσεις
       drafts: Προσχέδια
-      private_draft: Προσχέδιο
       preview: Προεπισκόπηση
       unpublish: Κατάργηση δημοσίευσης
       appearance_link: Εμφάνιση

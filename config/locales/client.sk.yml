@@ -698,7 +698,6 @@ sk:
     dsa_statements:
       category: "Kategória"
       category_prompt: "Vyberte kategóriu"
-      saving: "Ukladanie…"
     review:
       show_more: "Zobraziť viac"
       show_less: "Zobraziť menej"

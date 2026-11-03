@@ -26,19 +26,22 @@ et:
         badge:
           draft: Mustand
         preview: Eelvaade
-        publish: Avalda
-        options: Suvandid
         change:
           title: pealkiri
           body: sisu
       review:
-        active: Aktiivne
+        copy: Kopeeri
+        open: Ava
+        status:
+          active: Aktiivne
+          inactive: Mitteaktiivne
+        closed_on: "Suletud %{date}"
+        revoke: Tühista
         message: Tagasiside
       editor_table:
         edit: Muuda
         status: Staatus
         replies: Vastused
       drafts: Mustandid
-      private_draft: Mustand
       preview: Eelvaade
       unpublish: Tühista avaldamine

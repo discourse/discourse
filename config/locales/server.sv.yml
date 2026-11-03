@@ -1954,7 +1954,6 @@ sv:
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
-    short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
     show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
     embed_set_canonical_url: "Ställ in den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."

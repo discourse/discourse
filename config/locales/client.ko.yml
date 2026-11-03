@@ -509,7 +509,6 @@ ko:
     dsa_statements:
       category: "카테고리"
       category_prompt: "카테고리 선택"
-      saving: "저장 중…"
     review:
       show_more: "더 보기"
       show_less: "간략히 보기"

@@ -858,7 +858,6 @@ de:
     dsa_statements:
       category: "Kategorie"
       category_prompt: "Kategorie auswählen"
-      saving: "Wird gespeichert …"
     review:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"

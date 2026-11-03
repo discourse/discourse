@@ -837,7 +837,6 @@ zh_TW:
     dsa_statements:
       category: "分類"
       category_prompt: "選擇一個分類"
-      saving: "正在儲存..."
     review:
       show_more: "顯示更多"
       show_less: "顯示更少"

@@ -495,7 +495,6 @@ sl:
         placeholder: "tu vnesite naslov, URL ali id sporočila"
     dsa_statements:
       category: "Kategorija"
-      saving: "Shranjujem..."
     review:
       show_more: "Več"
       show_less: "Manj"

@@ -32,23 +32,28 @@ zh_CN:
         badge:
           draft: 草稿
         preview: 预览
-        publish: 发布
-        options: 选项
         submit: 提交审批
         change:
           title: 标题
           body: 正文
       review:
-        copy: 复制链接
-        active: 有效
-        revoke: 撤销链接
+        label: 标签
+        create: 创建链接
+        copy: 复制
+        open: 已打开
+        status:
+          active: 有效
+          expired: 已过期
+          revoked: 已撤销
+          inactive: 停用
+        closed_on: "%{date}关闭"
+        revoke: 撤销
         message: 反馈
       editor_table:
         edit: 编辑
         status: 状态
         replies: 回复
       drafts: 草稿
-      private_draft: 草稿
       preview: 预览
       unpublish: 取消发布
       appearance_link: 外观

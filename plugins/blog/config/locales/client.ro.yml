@@ -26,13 +26,20 @@ ro:
     blog:
       panel:
         preview: Previzualizează
-        options: Opțiuni
         change:
           title: titlu
           body: corp
       review:
-        copy: Copiază legătură
-        active: Activă
+        create: Creează legătură
+        copy: Copiază
+        open: Deschide
+        status:
+          active: Activă
+          expired: Expirate
+          revoked: Revocat
+          inactive: Inactive
+        closed_on: "Închis %{date}"
+        revoke: Revocă
       editor_table:
         edit: Editează
         status: Stare

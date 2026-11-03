@@ -452,7 +452,7 @@ pl_PL:
         markdown_table: Wygeneruj tabelę Markdown
         custom_prompt: "Niestandardowy monit"
         explain: "Wyjaśnij"
-        illustrate_post: "Zilustruj post"
+        illustrate_post: "Zilustruj wpis"
         replace_dates: "Inteligentne daty"
       image_caption:
         aria_description: "%{description} (Napisy wygenerowane przez AI)"
@@ -1113,6 +1113,7 @@ pl_PL:
           invalid_query: "Wprowadź zapytanie wyszukiwania składające się z 1 do %{max} znaków."
           invalid_request_id: "Identyfikator żądania ujawnienia jest nieprawidłowy."
           request_conflict: "Ten identyfikator żądania odkrycia jest już używany w innym zapytaniu."
+          deferred_answer_unavailable: "Odpowiedź na to wyszukiwanie została już zażądana."
           processing_failed: "Funkcja Zapytaj AI nie mogła dokończyć tego wyszukiwania."
           temporarily_unavailable: "Funkcja Zapytaj AI jest teraz zajęta. Spróbuj ponownie za chwilę."
           credits_unavailable: "Funkcja Ask AI będzie niedostępna do momentu zresetowania kredytów AI."

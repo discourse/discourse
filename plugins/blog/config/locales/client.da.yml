@@ -30,21 +30,26 @@ da:
         badge:
           draft: Kladde
         preview: Forhåndsvisning
-        publish: Udgiv
-        options: Indstillinger
         change:
           title: titel
           body: brødtekst
       review:
-        copy: Kopiér link
-        active: Aktiv
+        create: Opret link
+        copy: Kopier
+        open: Åbn
+        status:
+          active: Aktiv
+          expired: Udløbet
+          revoked: Tilbagekaldt
+          inactive: Inaktiv
+        closed_on: "Lukket %{date}"
+        revoke: Tilbagekald
         message: Tilbagemelding
       editor_table:
         edit: Rediger
         status: Status
         replies: Svar
       drafts: Kladder
-      private_draft: Kladde
       preview: Forhåndsvisning
       unpublish: Fjern udgivelsen
       appearance_link: Udseende

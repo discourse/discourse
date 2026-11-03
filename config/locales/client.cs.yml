@@ -829,7 +829,6 @@ cs:
     dsa_statements:
       category: "Kategorie"
       category_prompt: "Vyberte kategorii"
-      saving: "Ukládání…"
     review:
       show_more: "Zobrazit více"
       show_less: "Zobrazit méně"

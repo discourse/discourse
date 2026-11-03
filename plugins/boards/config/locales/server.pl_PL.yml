@@ -18,7 +18,7 @@ pl_PL:
         acl_failed: "Nie udało się utworzyć uprawnień dostępu do tablicy. Sprawdź wybrane grupy i uprawnienia."
         failed: "Nie udało się utworzyć tablicy."
   site_settings:
-    boards_enabled: "Organizuj tematy i lekkie, samodzielne karty „pływające” w konfigurowalnych tablicach i kolumnach typu „przeciągnij i upuść” w stylu kanban, a wszystko to z wykorzystaniem specjalnie zaprojektowanego interfejsu użytkownika do zarządzania i kontroli dostępu do poszczególnych tablic"
+    boards_enabled: "Organizuj tematy i lekkie, samodzielne karty „floater” w konfigurowalnych tablicach i kolumnach w stylu kanban metodą „przeciągnij i upuść”, a wszystko to z dedykowanym interfejsem użytkownika i kontrolą dostępu do poszczególnych tablic. Odwiedź <a href='%{base_path}/boards'>/boards</a> , aby rozpocząć."
     boards_manage_board_allowed_groups: "Grupy mogące tworzyć i konfigurować tablice."
   access_control_list:
     errors:
