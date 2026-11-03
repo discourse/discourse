@@ -11,8 +11,8 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import { MODES } from "./constants.js";
 import ChatablesLoader from "./lib/chatables-loader.js";
+import listKeyboardNavigation from "./lib/list-keyboard-navigation.js";
 import List from "./list.gjs";
-import ListHandler from "./list-handler.gjs";
 import SearchInput from "./search-input.gjs";
 
 export default class ChatMessageCreatorSearch extends Component {
@@ -134,37 +134,36 @@ export default class ChatMessageCreatorSearch extends Component {
   }
 
   <template>
-    <ListHandler
-      @highlightedItem={{this.highlightedChatable}}
-      @items={{this.items}}
-      @onHighlight={{this.highlightChatable}}
-      @onSelect={{this.selectChatable}}
-      @onShifSelect={{this.prefillAddMembers}}
+    <div
+      class="chat-message-creator__search"
+      {{listKeyboardNavigation
+        highlightedItem=this.highlightedChatable
+        items=this.items
+        onHighlight=this.highlightChatable
+        onSelect=this.selectChatable
+        onShifSelect=this.prefillAddMembers
+      }}
     >
-      <div class="chat-message-creator__search-container">
-        <div class="chat-message-creator__search">
-          <div
-            class="chat-message-creator__section"
-            {{didInsert (fn this.fetch null)}}
-          >
-            <SearchInput @filter={{this.term}} @onFilter={{this.onFilter}} />
+      <div
+        class="chat-message-creator__section"
+        {{didInsert (fn this.fetch null)}}
+      >
+        <SearchInput @filter={{this.term}} @onFilter={{this.onFilter}} />
 
-            <DButton
-              class="btn-flat chat-message-creator__search-input__cancel-button"
-              @action={{@close}}
-              @icon="xmark"
-            />
-          </div>
-
-          <List
-            @highlightedItem={{this.highlightedChatable}}
-            @items={{this.items}}
-            @onHighlight={{this.highlightChatable}}
-            @onSelect={{this.selectChatable}}
-            @onShiftSelect={{this.prefillAddMembers}}
-          />
-        </div>
+        <DButton
+          class="btn-flat chat-message-creator__search-input__cancel-button"
+          @action={{@close}}
+          @icon="xmark"
+        />
       </div>
-    </ListHandler>
+
+      <List
+        @highlightedItem={{this.highlightedChatable}}
+        @items={{this.items}}
+        @onHighlight={{this.highlightChatable}}
+        @onSelect={{this.selectChatable}}
+        @onShiftSelect={{this.prefillAddMembers}}
+      />
+    </div>
   </template>
 }

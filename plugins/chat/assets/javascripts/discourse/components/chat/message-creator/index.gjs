@@ -39,17 +39,15 @@ export default class ChatMessageCreator extends Component {
   }
 
   <template>
-    <div class="chat-message-creator-container">
-      <div class="chat-message-creator">
-        <this.componentForMode
-          @cancel={{this.cancelAction}}
-          @channel={{@channel}}
-          @close={{@onClose}}
-          @members={{this.members}}
-          @onChangeMembers={{this.changeMembers}}
-          @onChangeMode={{this.changeMode}}
-        />
-      </div>
+    <div class="chat-message-creator">
+      <this.componentForMode
+        @cancel={{this.cancelAction}}
+        @channel={{@channel}}
+        @close={{@onClose}}
+        @members={{this.members}}
+        @onChangeMembers={{this.changeMembers}}
+        @onChangeMode={{this.changeMode}}
+      />
     </div>
   </template>
 }
