@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 import {
   formatBitrate,
   formatCandidateCounts,
+  formatIceError,
   formatReport,
   formatRtt,
 } from "../../lib/live/connection-diagnostics.js";
@@ -157,9 +158,7 @@ export default class LiveConnectionDiagnosticsModal extends Component {
             recovery.restartAttempts >= recovery.maxRestartAttempts &&
             status !== "connected",
           iceErrors: recovery.iceCandidateErrors.map((error) =>
-            [error.url, error.errorCode, error.errorText]
-              .filter(Boolean)
-              .join(" — ")
+            formatIceError(error)
           ),
         };
       })
@@ -196,15 +195,18 @@ export default class LiveConnectionDiagnosticsModal extends Component {
       return {
         url: probe.url,
         kind: probe.kind.toUpperCase(),
-        addresses: probe.addresses.join(", "),
+        relayAddresses: probe.relayAddresses.join(", "),
+        publicAddresses: probe.publicAddresses.join(", "),
+        missingPublicAddress: probe.udp && !probe.publicAddresses.length,
         status,
         statusLabel: probe.reachable
           ? i18n("live.connection_diagnostics.probe.ok", {
               ms: probe.durationMs,
             })
           : i18n(`live.connection_diagnostics.probe.${status}`),
+        // The probe only talks to this one server, so its URL is redundant.
         errors: probe.errors.map((error) =>
-          [error.errorCode, error.errorText].filter(Boolean).join(" — ")
+          formatIceError(error, { includeUrl: false })
         ),
       };
     });
@@ -318,14 +320,18 @@ export default class LiveConnectionDiagnosticsModal extends Component {
     >
       <:body>
         {{#if this.diagnostics}}
-          <p class="live-connection-diagnostics__summary">
-            {{this.summary}}
-            {{#if this.relayOnly}}
-              <span class="live-connection-diagnostics__note">
-                {{i18n "live.connection_diagnostics.relay_only"}}
-              </span>
-            {{/if}}
-          </p>
+          {{#if (or this.peers.length this.relayOnly)}}
+            <p class="live-connection-diagnostics__summary">
+              {{#if this.peers.length}}
+                {{this.summary}}
+              {{/if}}
+              {{#if this.relayOnly}}
+                <span class="live-connection-diagnostics__note">
+                  {{i18n "live.connection_diagnostics.relay_only"}}
+                </span>
+              {{/if}}
+            </p>
+          {{/if}}
 
           <section class="live-connection-diagnostics__section">
             <h3>{{i18n "live.connection_diagnostics.peers"}}</h3>
@@ -444,21 +450,39 @@ export default class LiveConnectionDiagnosticsModal extends Component {
             {{else}}
               {{#each this.probeRows as |probe|}}
                 <div class="live-connection-diagnostics__server">
-                  <span
-                    class="live-connection-diagnostics__server-kind"
-                  >{{probe.kind}}</span>
-                  <code>{{probe.url}}</code>
-                  <span
-                    class={{dConcatClass
-                      "live-connection-diagnostics__badge"
-                      (concat "--" probe.status)
-                    }}
-                  >{{probe.statusLabel}}</span>
-                  {{#if probe.addresses}}
+                  <div class="live-connection-diagnostics__server-header">
                     <span
-                      class="live-connection-diagnostics__server-addresses"
-                    >{{probe.addresses}}</span>
-                  {{/if}}
+                      class="live-connection-diagnostics__server-kind"
+                    >{{probe.kind}}</span>
+                    <code>{{probe.url}}</code>
+                    <span
+                      class={{dConcatClass
+                        "live-connection-diagnostics__badge"
+                        (concat "--" probe.status)
+                      }}
+                    >{{probe.statusLabel}}</span>
+                  </div>
+                  <dl class="live-connection-diagnostics__details">
+                    {{#if probe.relayAddresses}}
+                      <dt>{{i18n
+                          "live.connection_diagnostics.relay_address"
+                        }}</dt>
+                      <dd>{{probe.relayAddresses}}</dd>
+                    {{/if}}
+                    {{#if probe.publicAddresses}}
+                      <dt>{{i18n
+                          "live.connection_diagnostics.public_address"
+                        }}</dt>
+                      <dd>{{probe.publicAddresses}}</dd>
+                    {{else if probe.missingPublicAddress}}
+                      <dt>{{i18n
+                          "live.connection_diagnostics.public_address"
+                        }}</dt>
+                      <dd class="live-connection-diagnostics__warning">
+                        {{i18n "live.connection_diagnostics.no_public_address"}}
+                      </dd>
+                    {{/if}}
+                  </dl>
                   {{#if probe.errors.length}}
                     <ul class="live-connection-diagnostics__errors">
                       {{#each probe.errors as |error|}}

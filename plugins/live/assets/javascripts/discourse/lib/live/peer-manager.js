@@ -1,4 +1,5 @@
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
+import { recordIceError } from "./connection-diagnostics.js";
 
 // The screen-share audio m-line is pre-negotiated like the video one, but
 // both audio transceivers on a connection report kind "audio", so the screen
@@ -10,7 +11,6 @@ const screenAudioTransceivers = new WeakMap();
 // they are the only signal that a STUN/TURN server rejected or never answered
 // this peer's allocation.
 const iceCandidateErrors = new WeakMap();
-const MAX_ICE_CANDIDATE_ERRORS = 10;
 
 const DEFAULT_TIMING = {
   offerRetryBaseDelayMs: 400,
@@ -392,14 +392,14 @@ export default class PeerManager {
 
     pc.onicecandidateerror = (event) => {
       liveLog.warn("[live] ICE candidate error for peer");
-      const errors = iceCandidateErrors.get(pc) || [];
-      errors.push({
+      if (!iceCandidateErrors.has(pc)) {
+        iceCandidateErrors.set(pc, []);
+      }
+      recordIceError(iceCandidateErrors.get(pc), {
         url: event.url,
         errorCode: event.errorCode,
         errorText: event.errorText,
-        at: Date.now(),
       });
-      iceCandidateErrors.set(pc, errors.slice(-MAX_ICE_CANDIDATE_ERRORS));
     };
 
     pc.onconnectionstatechange = () => {
