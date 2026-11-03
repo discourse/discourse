@@ -35,6 +35,8 @@ en:
         preview:
           label: "Workflow preview"
           exact_configuration: "Exact configuration"
+          shortened_configuration: "Shortened configuration"
+          shortened: "Some long settings are shortened here to fit in chat. Approving saves the full workflow unpublished, so you can review every setting before publishing it."
           read_only: "Read-only preview"
           script_validation_warning: "Some Code nodes failed syntax or mode checks. Review the errors in Exact configuration before approving."
           connects_to: "Connects to %{nodes}"
