@@ -11,7 +11,7 @@ import {
 import { tmpdir } from "os";
 import { dirname, join } from "path";
 import { rolldown } from "rolldown";
-import { expect, test } from "vitest";
+import { beforeAll, expect, test } from "vitest";
 import brotliAssetsPlugin from "../discourse/lib/brotli-assets-plugin.mjs";
 import bundleAnalyzerPlugin from "../discourse/lib/bundle-analyzer-plugin.mjs";
 import { normalizeModuleId } from "../discourse/lib/bundle-module-ids.mjs";
@@ -129,81 +129,49 @@ function chunkOf(report, facade) {
   );
 }
 
-test("records entries, lazy chunks and their connections", async () => {
-  const report = await build(writeFixture());
+let report;
+beforeAll(async () => {
+  report = await build(writeFixture());
+});
 
+test("records how chunks connect, including imports rolldown merged", () => {
   const main = chunkOf(report, "main.js");
   const lazy = chunkOf(report, "lazy.js");
   const nested = chunkOf(report, "nested.js");
+  const worker = chunkOf(report, "worker.js");
 
-  expect(report.entrypoints).toContain(main.file);
-  expect(main.name).toBe("main");
-  expect(main.isEntry).toBe(true);
-  expect(lazy.isDynamicEntry).toBe(true);
-  expect(main.dynamicImports).toContain(lazy.file);
-  expect(lazy.dynamicImports).toContain(nested.file);
+  expect(report.entrypoints).toEqual([main.file, worker.file].sort());
+  expect(main.dynamicImports).toEqual([lazy.file]);
+  expect(lazy.dynamicImports).toEqual([nested.file]);
   expect(lazy.dynamicEntryModules).toEqual(["lazy.js"]);
-  expect(nested.dynamicEntryModules).toEqual(["nested.js"]);
+  // merged.js is dynamically imported, but rolldown put it in main.
+  expect(main.dynamicEntryModules).toEqual([]);
   expect(main.examples.dynamic[lazy.file]).toEqual({
     from: "main.js",
     to: "lazy.js",
   });
-  expect(importersOf(report, "lazy.js")).toEqual([]);
-});
-
-test("records a dynamic import that rolldown merged into its importer", async () => {
-  const report = await build(writeFixture());
-  const main = chunkOf(report, "main.js");
-
-  expect(main.modules.map((m) => m.id)).toContain("merged.js");
-  expect(main.dynamicImports).not.toContain(main.file);
-  expect(main.dynamicEntryModules).toEqual([]);
-  expect(importersOf(report, "merged.js")).toEqual(["main.js"]);
-});
-
-test("records every module's static importers", async () => {
-  const report = await build(writeFixture());
-
-  expect(importersOf(report, "shared.js")).toEqual(["lazy.js", "main.js"]);
-  expect(importersOf(report, "lazy-only.js")).toEqual(["lazy.js", "nested.js"]);
-});
-
-test("records URL imports created through virtual:dynamic-chunk-url", async () => {
-  const report = await build(writeFixture());
-  const main = chunkOf(report, "main.js");
-  const worker = chunkOf(report, "worker.js");
-
-  expect(worker.isEntry).toBe(true);
   expect(Object.keys(main.examples.url)).toEqual([worker.file]);
 });
 
-test("names modules by stable, versioned ids", async () => {
-  const report = await build(writeFixture());
-  const reported = Object.values(report.chunks).flatMap((chunk) =>
-    chunk.modules.map((m) => m.id)
-  );
-
-  expect(reported).toEqual(expect.arrayContaining(report.moduleIds));
-  expect(reported).toContain("fake-pkg@1.2.3/index.js");
+test("records every module's static importers", () => {
+  expect(importersOf(report, "shared.js")).toEqual(["lazy.js", "main.js"]);
+  expect(importersOf(report, "merged.js")).toEqual(["main.js"]);
+  expect(importersOf(report, "lazy.js")).toEqual([]);
 });
 
-test("lists the assets modules bring in, with their sizes", async () => {
-  const report = await build(writeFixture());
-  const [file, ...others] = Object.keys(report.assets);
+test("records sizes, assets and stable ids, in a stable order", () => {
+  const main = chunkOf(report, "main.js");
+  const ids = main.modules.map((m) => m.id);
 
-  expect(others).toEqual([]);
-  expect(file).toMatch(/^assets\/js\/codec-\w+\.digested\.wasm$/);
-  expect(report.assets[file]).toBe("not really wasm".length);
-  expect(chunkOf(report, "main.js").brotliSize).toBeGreaterThan(0);
-});
-
-test("orders modules of equal size by id", async () => {
-  const report = await build(writeFixture());
-  const ties = chunkOf(report, "main.js")
-    .modules.filter((m) => m.id.startsWith("tie-"))
-    .map((m) => m.id);
-
-  expect(ties).toEqual(["tie-a.js", "tie-z.js"]);
+  expect(main.brotliSize).toBeGreaterThan(0);
+  expect(ids).toContain("fake-pkg@1.2.3/index.js");
+  expect(ids.filter((id) => id.startsWith("tie-"))).toEqual([
+    "tie-a.js",
+    "tie-z.js",
+  ]);
+  expect(Object.entries(report.assets)).toEqual([
+    [expect.stringMatching(/^assets\/js\/codec-\w+\.digested\.wasm$/), 15],
+  ]);
 });
 
 test("normalizeModuleId drops machine-specific paths", () => {

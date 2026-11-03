@@ -4,16 +4,10 @@ import { REPORT_SCHEMA } from "../lib/analyze.mjs";
 import { validateReport } from "../lib/validate.mjs";
 import { analyzedReport, baseApp, NO_JS_REPORT } from "./helpers.mjs";
 
-test("accepts what the analyzer writes", () => {
-  const roundTripped = analyzedReport();
+const roundTrip = (report) =>
+  JSON.parse(JSON.stringify(validateReport(report)));
 
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(validateReport(roundTripped))),
-    roundTripped
-  );
-});
-
-test("accepts reports with new and removed bundles", () => {
+test("accepts everything the analyzer writes", () => {
   const head = baseApp();
   delete head.chunks["assets/js/codemirror-dddd4444.digested.js"];
   head.chunks["assets/js/admin-cccc3333.digested.js"].dynamicImports = [
@@ -26,9 +20,14 @@ test("accepts reports with new and removed bundles", () => {
   };
   const report = analyzedReport(baseApp(), head);
 
-  const statuses = report.bundles.map((bundle) => bundle.status).sort();
-  assert.deepEqual(statuses, ["new", "removed", "same", "same"]);
-  assert.deepEqual(JSON.parse(JSON.stringify(validateReport(report))), report);
+  assert.deepEqual(report.bundles.map((b) => b.status).sort(), [
+    "new",
+    "removed",
+    "same",
+    "same",
+  ]);
+  assert.deepEqual(roundTrip(report), report);
+  assert.deepEqual(roundTrip(NO_JS_REPORT), NO_JS_REPORT);
 });
 
 test("rejects wrong types and unknown schemas", () => {
@@ -50,7 +49,7 @@ test("rejects wrong types and unknown schemas", () => {
   assert.throws(() => validateReport(report), /kind must be one of/);
 });
 
-test("drops unknown fields", () => {
+test("drops unknown fields, including __proto__", () => {
   const report = analyzedReport();
   report.extra = "x";
   report.bundles[0] = {
@@ -63,8 +62,4 @@ test("drops unknown fields", () => {
   assert.equal(result.extra, undefined);
   assert.equal(Object.getPrototypeOf(result.bundles[0]), null);
   assert.equal({}.polluted, undefined);
-});
-
-test("a no-JS-changes report needs nothing else", () => {
-  assert.deepEqual({ ...validateReport(NO_JS_REPORT) }, NO_JS_REPORT);
 });

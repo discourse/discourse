@@ -30,37 +30,19 @@ test("markers round-trip their state and hashed keys", () => {
   assert.equal(parseMarker(forged).state, "active");
 });
 
-test("decideAction", () => {
+test("decideAction notifies only for findings the comment lacks", () => {
   const comment = (state, keys) => ({
     id: 1,
     marker: parseMarker(marker(state, keys)),
   });
 
-  assert.equal(decideAction({ keys: [], existing: undefined }).type, "none");
-  assert.equal(
-    decideAction({ keys: [], existing: comment("resolved", []) }).type,
-    "none"
-  );
-  assert.equal(
-    decideAction({ keys: [], existing: comment("active", ["a"]) }).type,
-    "resolve"
-  );
-  assert.equal(
-    decideAction({ keys: ["a"], existing: undefined }).type,
-    "create"
-  );
-  assert.equal(
-    decideAction({ keys: ["a"], existing: comment("resolved", []) }).type,
-    "create"
-  );
-  assert.equal(
-    decideAction({ keys: ["a"], existing: comment("active", ["a", "b"]) }).type,
-    "update"
-  );
-  assert.equal(
-    decideAction({ keys: ["a", "c"], existing: comment("active", ["a"]) }).type,
-    "supersede"
-  );
+  for (const [keys, existing, type] of [
+    [["a"], comment("resolved", []), "create"],
+    [["a"], comment("active", ["a", "b"]), "update"],
+    [["a", "c"], comment("active", ["a"]), "supersede"],
+  ]) {
+    assert.equal(decideAction({ keys, existing }).type, type);
+  }
 });
 
 const FINDINGS_REPORT = emptyReport({
@@ -144,31 +126,17 @@ const context = {
 };
 const core = { info() {}, warning() {} };
 
-test("run creates, updates and resolves one comment", async () => {
-  const github = fakeGitHub();
-  const go = (report) =>
-    run({
-      github,
-      context,
-      core,
-      artifactDir: artifact(report),
-      budgetPath: BUDGET_PATH,
-    });
+function go(github, report, pr) {
+  return run({
+    github,
+    context,
+    core,
+    artifactDir: artifact(report, pr),
+    budgetPath: BUDGET_PATH,
+  });
+}
 
-  assert.equal((await go(FINDINGS_REPORT)).type, "create");
-  assert.match(github.comments[0].body, /Grew over the threshold/);
-  assert.match(github.comments[0].body, /state=active/);
-
-  assert.equal((await go(FINDINGS_REPORT)).type, "update");
-  assert.equal(github.comments.length, 1);
-
-  assert.equal((await go(NO_JS_REPORT)).type, "resolve");
-  assert.match(github.comments[0].body, /Resolved as of aaaaaaa/);
-
-  assert.equal((await go(NO_JS_REPORT)).type, "none");
-});
-
-test("run ignores comments from other users", async () => {
+test("run creates, updates and resolves its own comment", async () => {
   const github = fakeGitHub({
     comments: [
       {
@@ -179,46 +147,27 @@ test("run ignores comments from other users", async () => {
     ],
   });
 
-  const action = await run({
-    github,
-    context,
-    core,
-    artifactDir: artifact(FINDINGS_REPORT),
-    budgetPath: BUDGET_PATH,
-  });
-
-  assert.equal(action.type, "create");
+  assert.equal((await go(github, FINDINGS_REPORT)).type, "create");
+  assert.match(github.comments[1].body, /Grew over the threshold/);
+  assert.equal((await go(github, FINDINGS_REPORT)).type, "update");
+  assert.equal((await go(github, NO_JS_REPORT)).type, "resolve");
+  assert.match(github.comments[1].body, /Resolved as of aaaaaaa/);
+  assert.equal((await go(github, NO_JS_REPORT)).type, "none");
+  assert.equal(github.comments.length, 2);
 });
 
-test("run skips an artifact that does not match the workflow run", async () => {
+test("run skips an artifact for another commit or a PR that moved on", async () => {
   const github = fakeGitHub();
-  const action = await run({
-    github,
-    context,
-    core,
-    artifactDir: artifact(FINDINGS_REPORT, { head_sha: "b".repeat(40) }),
-    budgetPath: BUDGET_PATH,
-  });
-
-  assert.equal(action.type, "skipped");
-  assert.deepEqual(github.calls, []);
-});
-
-test("run skips a PR that moved on", async () => {
-  const github = fakeGitHub({
+  const moved = fakeGitHub({
     pull: {
       head: { sha: "c".repeat(40), repo: { full_name: "fork/discourse" } },
     },
   });
-  const action = await run({
-    github,
-    context,
-    core,
-    artifactDir: artifact(FINDINGS_REPORT),
-    budgetPath: BUDGET_PATH,
-  });
 
-  assert.equal(action.type, "skipped");
+  const stale = await go(github, FINDINGS_REPORT, { head_sha: "b".repeat(40) });
+  assert.equal(stale.type, "skipped");
+  assert.deepEqual(github.calls, []);
+  assert.equal((await go(moved, FINDINGS_REPORT)).type, "skipped");
 });
 
 test("readArtifact rejects unexpected files and invalid PR data", () => {

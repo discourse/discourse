@@ -30,14 +30,7 @@ function repo() {
     return git("rev-parse", "HEAD");
   };
   git("init", "-q");
-  const first = commit(
-    {
-      "frontend/discourse/app.js": "one",
-      "package.json": "{}",
-      "pnpm-lock.yaml": "",
-    },
-    "first"
-  );
+  const first = commit({ "frontend/discourse/app.js": "one" }, "first");
   const docs = commit({ "README.md": "docs" }, "docs only");
   const js = commit({ "frontend/discourse/app.js": "two" }, "js change");
   const patch = commit({ "patches/x.patch": "p" }, "patch");
