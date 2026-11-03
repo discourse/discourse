@@ -1,7 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { join } from "path";
 
-export const GRAPH_PATH = "manifest/bundle-graph.json";
 export const MAIN_ENTRY = "discourse";
 export const MAIN_KEY = `entry:${MAIN_ENTRY}`;
 const REPORT_DIR = "assets/js";
@@ -45,55 +44,67 @@ export function labelOf(fileName) {
   return base.replace(/-[a-z0-9]+\.digested\.[a-z0-9]+$/, "");
 }
 
-/**
- * The bundle graph of a production build with `brotliSize` and `modules`
- * (id → rendered, unminified length) on chunks from the bundle analyzer report
- * beside it, and `assets` as file → size on disk. Both reports name modules
- * the same way.
- */
-export function loadGraph(distDir) {
-  const path = join(distDir, GRAPH_PATH);
-  if (!existsSync(path)) {
-    throw new Error(
-      `${path} is missing. Production builds write it: EMBER_ENV=production pnpm build`
-    );
-  }
-  const graph = JSON.parse(readFileSync(path, "utf8"));
-  if (graph.version !== 5) {
-    throw new Error(`${path} has unsupported version ${graph.version}`);
-  }
-
-  const reportPath = findReport(distDir);
-  const report = JSON.parse(readFileSync(reportPath, "utf8"));
-  for (const [file, chunk] of Object.entries(graph.chunks)) {
-    const sized = report.chunks[file];
-    if (!Number.isInteger(sized?.brotliSize)) {
-      throw new Error(
-        `${reportPath} has no brotli size for ${file}. Production builds write it: EMBER_ENV=production pnpm build`
-      );
-    }
-    chunk.brotliSize = sized.brotliSize;
-    chunk.modules = Object.fromEntries(
-      sized.modules.map((m) => [m.id, m.renderedLength])
-    );
-  }
-  graph.assets = Object.fromEntries(
-    graph.assets.map((file) => [file, statSync(join(distDir, file)).size])
-  );
-  return graph;
-}
-
-function findReport(distDir) {
+/** The bundle analyzer report in a build, or `null` if it has none. */
+export function findReport(distDir) {
   const dir = join(distDir, REPORT_DIR);
   const names = existsSync(dir)
     ? readdirSync(dir).filter((name) => REPORT_NAME.test(name))
     : [];
-  if (names.length !== 1) {
+  if (names.length > 1) {
+    throw new Error(`${dir} has ${names.length} bundle analyzer reports`);
+  }
+  return names[0] ? join(dir, names[0]) : null;
+}
+
+/**
+ * A production build as the analysis reads it, from its bundle analyzer
+ * report: entries by name, chunks with `brotliSize` and `modules` (id →
+ * rendered, unminified length), `assets` as file → size on disk, and every
+ * module's static importers.
+ */
+export function loadGraph(distDir) {
+  const path = findReport(distDir);
+  if (!path) {
     throw new Error(
-      `Expected one bundle analyzer report in ${dir}, found ${names.length}`
+      `${distDir} has no bundle analyzer report. Production builds write it: EMBER_ENV=production pnpm build`
     );
   }
-  return join(dir, names[0]);
+  const report = JSON.parse(readFileSync(path, "utf8"));
+  if (!report.importers) {
+    throw new Error(`${path} predates the module graph`);
+  }
+
+  const chunks = {};
+  for (const [file, chunk] of Object.entries(report.chunks)) {
+    if (!Number.isInteger(chunk.brotliSize)) {
+      throw new Error(
+        `${path} has no brotli size for ${file}. Production builds write it: EMBER_ENV=production pnpm build`
+      );
+    }
+    chunks[file] = {
+      kind: chunk.isEntry ? "entry" : chunk.isDynamicEntry ? "lazy" : "shared",
+      facade: chunk.facadeModuleId,
+      imports: chunk.imports,
+      dynamicImports: chunk.dynamicImports,
+      urlImports: chunk.urlImports,
+      examples: chunk.examples,
+      brotliSize: chunk.brotliSize,
+      modules: Object.fromEntries(
+        chunk.modules.map((m) => [m.id, m.renderedLength])
+      ),
+    };
+  }
+  return {
+    entries: Object.fromEntries(
+      report.entrypoints.map((file) => [report.chunks[file].name, file])
+    ),
+    chunks,
+    assets: Object.fromEntries(
+      report.assets.map((file) => [file, statSync(join(distDir, file)).size])
+    ),
+    moduleIds: report.moduleIds,
+    importers: report.importers,
+  };
 }
 
 /**

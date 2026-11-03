@@ -1,56 +1,55 @@
 import { mkdirSync, mkdtempSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
-import { GRAPH_PATH } from "../lib/graph.mjs";
 
 export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 
 /**
- * Writes a fake production build: the bundle graph, the bundle analyzer
- * report with its sizes, and asset files. `chunks` maps a file name to
+ * Writes a fake production build: its bundle analyzer report and asset files.
+ * `entries` maps an entry name to its file; `chunks` maps a file name to
  * `{ kind, facade?, imports?, dynamicImports?, urlImports?, modules, examples? }`
  * with `modules` as id → bytes; a chunk's brotli size is the sum of its
  * module bytes. `assets` maps a file name to its size.
  */
 export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-dist-"));
-  const graph = {
-    version: 5,
-    entries,
+  const entryName = new Map(
+    Object.entries(entries).map(([name, file]) => [file, name])
+  );
+  const moduleIds = [
+    ...new Set(Object.values(chunks).flatMap((c) => Object.keys(c.modules))),
+  ].sort();
+  const report = {
+    entrypoints: Object.values(entries),
     chunks: {},
     assets: Object.keys(assets),
+    moduleIds,
+    importers: moduleIds.map((id) =>
+      (importers[id] ?? []).map((importer) => moduleIds.indexOf(importer))
+    ),
   };
-  const report = { chunks: {} };
 
   for (const [file, chunk] of Object.entries(chunks)) {
-    graph.chunks[file] = {
-      kind: chunk.kind,
-      facade: chunk.facade ?? null,
-      imports: chunk.imports ?? [],
-      dynamicImports: chunk.dynamicImports ?? [],
-      urlImports: chunk.urlImports ?? [],
-      examples: chunk.examples ?? {},
-    };
     report.chunks[file] = {
+      name: entryName.get(file) ?? "x",
+      facadeModuleId: chunk.facade ?? null,
+      isEntry: chunk.kind === "entry",
+      isDynamicEntry: chunk.kind === "lazy",
       brotliSize: Object.values(chunk.modules).reduce((a, b) => a + b, 0),
+      imports: chunk.imports ?? [],
       modules: Object.entries(chunk.modules).map(([id, renderedLength]) => ({
         id,
         renderedLength,
       })),
+      dynamicImports: chunk.dynamicImports ?? [],
+      urlImports: chunk.urlImports ?? [],
+      examples: chunk.examples ?? {},
     };
   }
   for (const [file, bytes] of Object.entries(assets)) {
     mkdirSync(dirname(join(dir, file)), { recursive: true });
     writeFileSync(join(dir, file), "x".repeat(bytes));
   }
-  graph.moduleIds = [
-    ...new Set(Object.values(chunks).flatMap((c) => Object.keys(c.modules))),
-  ].sort();
-  graph.importers = graph.moduleIds.map((id) =>
-    (importers[id] ?? []).map((importer) => graph.moduleIds.indexOf(importer))
-  );
-  mkdirSync(dirname(join(dir, GRAPH_PATH)), { recursive: true });
-  writeFileSync(join(dir, GRAPH_PATH), JSON.stringify(graph));
   mkdirSync(dirname(join(dir, REPORT)), { recursive: true });
   writeFileSync(join(dir, REPORT), JSON.stringify(report));
   return dir;

@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import * as fs from "fs";
 import brotli from "./brotli.mjs";
+import { bundleGraph } from "./bundle-graph.mjs";
 import { moduleIdNormalizer } from "./bundle-module-ids.mjs";
 
 const BUNDLE_ANALYSIS_RE = /^bundle-analysis-\w+\.digested\.json(\.br)?$/;
@@ -13,8 +14,9 @@ function nameFromFile(fileName) {
   return m ? m[1] : fileName;
 }
 
-// Describes the finished bundle: what each chunk weighs, what is inside it, and
-// which files dynamically import it. Written from `writeBundle`, where the
+// Describes the finished bundle: what each chunk weighs, what is inside it,
+// which files dynamically import it and how the chunks connect, which CI
+// compares between builds. Written from `writeBundle`, where the
 // chunks a browser will fetch are already on disk to be measured; Rails finds
 // the report by globbing for its name. `root` makes module ids relative.
 export default function bundleAnalyzerPlugin({ compress, root }) {
@@ -24,6 +26,11 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
     name: "bundle-analyzer",
 
     async writeBundle(options, bundle) {
+      const graph = bundleGraph(
+        bundle,
+        (id) => this.getModuleInfo(id),
+        normalize
+      );
       const chunks = {};
       const entrypoints = [];
       const dynamicEntrypoints = [];
@@ -74,6 +81,7 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
           imports: chunk.imports,
           modules,
           importSites,
+          ...graph.chunks[fileName],
         };
 
         if (chunk.isEntry) {
@@ -88,6 +96,9 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
         entrypoints,
         dynamicEntrypoints,
         chunks,
+        assets: graph.assets,
+        moduleIds: graph.moduleIds,
+        importers: graph.importers,
       };
 
       const json = JSON.stringify(data);

@@ -37,7 +37,7 @@ A PR gets one comment, edited in place. A finding the comment did not have yet g
 ## Files
 
 - `budget.json`: thresholds. Changes take effect for PRs once merged.
-- `lib/graph.mjs`: bundles, closures and connections from `dist/manifest/bundle-graph.json`, which `frontend/discourse/lib/bundle-graph-plugin.mjs` writes in production builds, with sizes from the bundle analyzer report.
+- `lib/graph.mjs`: bundles, closures and connections from the bundle analyzer report, whose module graph `frontend/discourse/lib/bundle-graph.mjs` records.
 - `lib/analyze.mjs`: compares two builds into a report of raw numbers.
 - `lib/render.mjs`: applies thresholds and renders the comment and summary.
 - `lib/comment.mjs`: the comment workflow's checks and comment lifecycle.

@@ -13,7 +13,6 @@ import { dirname, join } from "path";
 import { rolldown } from "rolldown";
 import { expect, test } from "vitest";
 import bundleAnalyzerPlugin from "../discourse/lib/bundle-analyzer-plugin.mjs";
-import bundleGraphPlugin from "../discourse/lib/bundle-graph-plugin.mjs";
 import { normalizeModuleId } from "../discourse/lib/bundle-module-ids.mjs";
 import { RESOLVED_PREFIX } from "../discourse/lib/dynamic-chunk-url-plugin.mjs";
 
@@ -108,7 +107,6 @@ async function build(dir) {
     plugins: [
       chunkUrlStandIn(),
       brotliStandIn(),
-      bundleGraphPlugin({ root: dir }),
       bundleAnalyzerPlugin({ root: dir }),
     ],
   });
@@ -121,91 +119,83 @@ async function build(dir) {
     entryFileNames: "assets/js/[name]-[hash].digested.js",
     chunkFileNames: "assets/js/[name]-[hash].digested.js",
   });
-  const readJson = (path) => JSON.parse(readFileSync(join(dist, path), "utf8"));
   const reportFile = readdirSync(join(dist, "assets/js")).find((file) =>
     file.startsWith("bundle-analysis-")
   );
-  return {
-    graph: readJson("manifest/bundle-graph.json"),
-    report: readJson(`assets/js/${reportFile}`),
-  };
+  return JSON.parse(readFileSync(join(dist, "assets/js", reportFile), "utf8"));
 }
 
-function importersOf(graph, id) {
-  return graph.importers[graph.moduleIds.indexOf(id)].map(
-    (i) => graph.moduleIds[i]
+function importersOf(report, id) {
+  return report.importers[report.moduleIds.indexOf(id)].map(
+    (i) => report.moduleIds[i]
   );
 }
 
-function chunkOf(graph, facade) {
-  const entry = Object.entries(graph.chunks).find(
-    ([, chunk]) => chunk.facade === facade
+function chunkOf(report, facade) {
+  return Object.values(report.chunks).find(
+    (chunk) => chunk.facadeModuleId === facade
   );
-  return entry && { file: entry[0], ...entry[1] };
 }
 
 test("records entries, lazy chunks and their connections", async () => {
-  const { graph } = await build(writeFixture());
+  const report = await build(writeFixture());
 
-  const main = chunkOf(graph, "main.js");
-  const lazy = chunkOf(graph, "lazy.js");
-  const nested = chunkOf(graph, "nested.js");
+  const main = chunkOf(report, "main.js");
+  const lazy = chunkOf(report, "lazy.js");
+  const nested = chunkOf(report, "nested.js");
 
-  expect(graph.entries.main).toBe(main.file);
-  expect(main.kind).toBe("entry");
-  expect(main.facade).toBe("main.js");
-  expect(lazy.kind).toBe("lazy");
-  expect(lazy.facade).toBe("lazy.js");
+  expect(report.entrypoints).toContain(main.file);
+  expect(main.name).toBe("main");
+  expect(main.isEntry).toBe(true);
+  expect(lazy.isDynamicEntry).toBe(true);
   expect(main.dynamicImports).toContain(lazy.file);
   expect(lazy.dynamicImports).toContain(nested.file);
   expect(main.examples[`dynamic:${lazy.file}`]).toEqual({
     from: "main.js",
     to: "lazy.js",
   });
-  expect(importersOf(graph, "lazy.js")).toEqual([]);
+  expect(importersOf(report, "lazy.js")).toEqual([]);
 });
 
 test("records a dynamic import that rolldown merged into its importer", async () => {
-  const { graph, report } = await build(writeFixture());
-  const main = chunkOf(graph, "main.js");
+  const report = await build(writeFixture());
+  const main = chunkOf(report, "main.js");
 
-  expect(report.chunks[main.file].modules.map((m) => m.id)).toContain(
-    "merged.js"
-  );
+  expect(main.modules.map((m) => m.id)).toContain("merged.js");
   expect(main.dynamicImports).not.toContain(main.file);
-  expect(importersOf(graph, "merged.js")).toEqual(["main.js"]);
+  expect(importersOf(report, "merged.js")).toEqual(["main.js"]);
 });
 
 test("records every module's static importers", async () => {
-  const { graph } = await build(writeFixture());
+  const report = await build(writeFixture());
 
-  expect(importersOf(graph, "shared.js")).toEqual(["lazy.js", "main.js"]);
-  expect(importersOf(graph, "lazy-only.js")).toEqual(["lazy.js", "nested.js"]);
+  expect(importersOf(report, "shared.js")).toEqual(["lazy.js", "main.js"]);
+  expect(importersOf(report, "lazy-only.js")).toEqual(["lazy.js", "nested.js"]);
 });
 
 test("records URL imports created through virtual:dynamic-chunk-url", async () => {
-  const { graph } = await build(writeFixture());
-  const main = chunkOf(graph, "main.js");
-  const worker = chunkOf(graph, "worker.js");
+  const report = await build(writeFixture());
+  const main = chunkOf(report, "main.js");
+  const worker = chunkOf(report, "worker.js");
 
-  expect(worker.kind).toBe("entry");
+  expect(worker.isEntry).toBe(true);
   expect(main.urlImports).toEqual([worker.file]);
 });
 
-test("names modules as the bundle analyzer report does", async () => {
-  const { graph, report } = await build(writeFixture());
+test("names chunk modules and importers the same way", async () => {
+  const report = await build(writeFixture());
   const reported = Object.values(report.chunks).flatMap((chunk) =>
     chunk.modules.map((m) => m.id)
   );
 
-  expect(reported).toEqual(expect.arrayContaining(graph.moduleIds));
+  expect(reported).toEqual(expect.arrayContaining(report.moduleIds));
   expect(reported).toContain("fake-pkg@1.2.3/index.js");
 });
 
 test("leaves precompressed copies out of the assets", async () => {
-  const { graph } = await build(writeFixture());
+  const report = await build(writeFixture());
 
-  expect(graph.assets.filter((f) => f.endsWith(".br"))).toEqual([]);
+  expect(report.assets.filter((f) => f.endsWith(".br"))).toEqual([]);
 });
 
 test("normalizeModuleId drops machine-specific paths", () => {

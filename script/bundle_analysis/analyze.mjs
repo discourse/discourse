@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join, resolve } from "path";
 import { parseArgs } from "util";
 import { analyze, REPORT_SCHEMA } from "./lib/analyze.mjs";
 import { buildBaseline, git } from "./lib/baseline.mjs";
-import { GRAPH_PATH } from "./lib/graph.mjs";
+import { findReport } from "./lib/graph.mjs";
 import { renderComment, renderSummary } from "./lib/render.mjs";
 
 const USAGE = `Compares two production JS builds.
@@ -57,7 +57,7 @@ if (args["no-js-changes"]) {
       cwd: repo,
     });
     baseDir = join(repo, "tmp/bundle-analysis", commit);
-    if (existsSync(join(baseDir, GRAPH_PATH))) {
+    if (findReport(baseDir)) {
       console.error(
         `Reusing the baseline for ${commit.slice(0, 8)} in ${baseDir}`
       );
