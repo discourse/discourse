@@ -103,6 +103,7 @@ en:
         exit_fullscreen: "Exit full screen"
         fullscreen_all: "Full-screen all videos"
         layout: "Video layout"
+        layout_auto: "Auto layout"
         layout_presentation: "Presentation layout"
         layout_tiled: "Tiled layout"
       ptt:
