@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { analyze } from "../lib/analyze.mjs";
-import { findings } from "../lib/render.mjs";
+import { findings, renderSummary } from "../lib/render.mjs";
 import { baseApp, BUDGET, makeDist } from "./helpers.mjs";
 
 const ENTRY = "assets/js/discourse-aaaa1111.digested.js";
 const SHARED = "assets/js/chunk-bbbb2222.digested.js";
 const ADMIN = "assets/js/admin-cccc3333.digested.js";
 const CODEMIRROR = "assets/js/codemirror-dddd4444.digested.js";
+const MARKDOWN = "assets/js/chunk-hhhh8888.digested.js";
 
 function compare(base, head) {
   const report = analyze({
@@ -34,7 +35,7 @@ test("a new lazy import is a new bundle, reported with its importer", () => {
   head.chunks[ADMIN].dynamicImports.push(
     "assets/js/rrule-eeee5555.digested.js"
   );
-  head.chunks[ADMIN].examples["dynamic:assets/js/rrule-eeee5555.digested.js"] =
+  head.chunks[ADMIN].examples.dynamic["assets/js/rrule-eeee5555.digested.js"] =
     { from: "admin/components/a.gjs", to: "rrule@2.8.1/dist/esm/index.js" };
   head.chunks["assets/js/rrule-eeee5555.digested.js"] = {
     kind: "lazy",
@@ -83,7 +84,10 @@ test("a lazy bundle merged into the initial load is reported with its static imp
     (b) => b.key === "lazy:app/static/codemirror.js"
   );
   assert.equal(bundle.status, "removed");
-  assert.equal(bundle.movedToInitialLoad, true);
+  assert.match(
+    renderSummary(report, BUDGET),
+    /\| `codemirror` \| lazy \| moved into initial load \|/
+  );
 });
 
 test("splitting a shared chunk differently has no findings", () => {
@@ -136,7 +140,7 @@ test("a version bump that only changes paths keeps the bundle", () => {
 test("a new import between existing bundles is a new connection", () => {
   const head = baseApp();
   head.chunks[ENTRY].dynamicImports.push(CODEMIRROR);
-  head.chunks[ENTRY].examples[`dynamic:${CODEMIRROR}`] = {
+  head.chunks[ENTRY].examples.dynamic[CODEMIRROR] = {
     from: "app/lib/editor.js",
     to: "app/static/codemirror.js",
   };
@@ -230,11 +234,48 @@ test("code moved into the initial load is found across a version bump", () => {
   assert.equal(report.movedIntoInitialLoad[0].bytes, 25000);
 });
 
-test("a lazy chunk without a facade is treated as shared", () => {
+test("a lazy chunk keeps its key when it loses its facade", () => {
   const head = baseApp();
   head.chunks[CODEMIRROR].facade = null;
+  head.chunks[CODEMIRROR].kind = "shared";
 
-  const { report } = compare(baseApp(), head);
+  const { report, keys } = compare(baseApp(), head);
+  const codemirror = report.bundles.find(
+    (bundle) => bundle.key === "lazy:app/static/codemirror.js"
+  );
 
-  assert.ok(report.bundles.every((bundle) => bundle.facade !== null));
+  assert.deepEqual(keys, []);
+  assert.equal(codemirror.status, "same");
+  assert.equal(codemirror.facade, "app/static/codemirror.js");
+});
+
+test("a lazy chunk without a facade is a bundle named after its import", () => {
+  const withMarkdown = (bytes) => {
+    const app = baseApp({
+      [MARKDOWN]: {
+        kind: "shared",
+        modules: {
+          "app/static/markdown-it/index.js": 1000,
+          "markdown-it@15.0.3/dist/markdown-it.mjs": bytes,
+        },
+      },
+    });
+    app.chunks[ENTRY].dynamicImports.push(MARKDOWN);
+    app.chunks[ENTRY].examples.dynamic[MARKDOWN] = {
+      from: "app/lib/text.js",
+      to: "app/static/markdown-it/index.js",
+    };
+    return app;
+  };
+
+  const { report, keys } = compare(withMarkdown(40000), withMarkdown(45000));
+  const markdown = report.bundles.find(
+    (bundle) => bundle.key === "lazy:app/static/markdown-it/index.js"
+  );
+
+  assert.deepEqual(keys, ["grew:lazy:app/static/markdown-it/index.js"]);
+  assert.equal(markdown.name, "app/static/markdown-it/index");
+  assert.deepEqual(markdown.topModules, [
+    { id: "markdown-it/dist/markdown-it.mjs", delta: 5000, added: false },
+  ]);
 });

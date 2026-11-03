@@ -17,7 +17,6 @@ export function validateReport(input) {
   }
   return shape({
     schema: num,
-    noJsChanges: bool,
     initialLoad: shape({
       base: num,
       head: num,
@@ -32,9 +31,7 @@ export function validateReport(input) {
         name: str,
         kind: oneOf("entry", "lazy"),
         facade: nullable(str),
-        isMain: bool,
         status: oneOf("new", "removed", "same"),
-        movedToInitialLoad: bool,
         base: nullable(shape({ own: num, load: num })),
         head: nullable(shape({ own: num, load: num })),
         topModules: list(moduleDelta),

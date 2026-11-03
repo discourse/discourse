@@ -1,15 +1,16 @@
 import { RESOLVED_PREFIX as URL_IMPORT_PREFIX } from "./dynamic-chunk-url-plugin.mjs";
 
-// Build metadata, source maps and precompressed copies are not assets a page
-// loads.
-const NOT_LOADED = /^manifest\/|\.(map|br)$/;
-
 /**
- * How the chunks of a finished bundle connect: each chunk's dynamic and URL
- * imports with an example module-level import behind each cross-chunk edge,
- * the other files it emits, and every module's static importers. The
- * importers explain code that moved into another chunk, such as lazy code
- * now imported statically, where no cross-chunk import is left to show it.
+ * How the chunks of a finished bundle connect. Per chunk: the modules that
+ * dynamically import it and which of its modules they import, its own dynamic
+ * imports, and an example module-level import behind each static, dynamic or
+ * URL import of another chunk. Also the assets modules bring in, with their
+ * sizes, and every module's static importers. The importers explain code
+ * that moved into another chunk, such as lazy code now imported statically,
+ * where no cross-chunk import is left to show it.
+ *
+ * Everything is sorted, since rolldown's iteration order can change between
+ * builds of the same input.
  *
  * @param {object} bundle The output bundle.
  * @param {(id: string) => object | null} getModuleInfo
@@ -17,32 +18,43 @@ const NOT_LOADED = /^manifest\/|\.(map|br)$/;
  */
 export function bundleGraph(bundle, getModuleInfo, normalize) {
   const chunkOfModule = new Map();
-  const assets = [];
+  const assets = {};
   for (const [fileName, output] of Object.entries(bundle)) {
     if (output.type === "chunk") {
       for (const moduleId of output.moduleIds) {
         chunkOfModule.set(moduleId, fileName);
       }
-    } else if (!NOT_LOADED.test(fileName)) {
-      assets.push(fileName);
+    } else if (output.originalFileNames.length) {
+      // Source maps, precompressed copies and build metadata come from no
+      // module.
+      assets[fileName] = Buffer.byteLength(output.source);
     }
   }
 
   const chunks = {};
   const importers = new Map();
+  // A chunk without a facade has no other name for what loads it lazily.
+  const dynamicEntryModules = new Map();
   for (const [fileName, chunk] of Object.entries(bundle)) {
     if (chunk.type !== "chunk") {
       continue;
     }
 
-    const examples = {};
+    // Per module rather than of the facade, so a chunk that several dynamic
+    // entries were merged into still names what pulls it in.
+    const importSites = new Set();
+    const examples = { static: {}, dynamic: {}, url: {} };
     const addExample = (kind, from, to) => {
       const targetFile = chunkOfModule.get(to);
       if (targetFile && targetFile !== fileName) {
-        examples[`${kind}:${targetFile}`] ??= {
-          from: normalize(from),
-          to: normalize(to),
-        };
+        const example = { from: normalize(from), to: normalize(to) };
+        const kept = examples[kind][targetFile];
+        if (
+          !kept ||
+          `${example.from}\0${example.to}` < `${kept.from}\0${kept.to}`
+        ) {
+          examples[kind][targetFile] = example;
+        }
       }
     };
 
@@ -63,21 +75,53 @@ export function bundleGraph(bundle, getModuleInfo, normalize) {
       }
       for (const imported of info.dynamicallyImportedIds) {
         addExample("dynamic", moduleId, imported);
+        const targetFile = chunkOfModule.get(imported);
+        if (targetFile && targetFile !== fileName) {
+          if (!dynamicEntryModules.has(targetFile)) {
+            dynamicEntryModules.set(targetFile, new Set());
+          }
+          dynamicEntryModules.get(targetFile).add(normalize(imported));
+        }
+      }
+      for (const importer of info.dynamicImporters) {
+        importSites.add(normalize(importer));
       }
 
       importers.set(normalize(moduleId), info.importers.map(normalize));
     }
 
     chunks[fileName] = {
-      dynamicImports: chunk.dynamicImports.filter((file) => file !== fileName),
-      urlImports: Object.keys(examples)
-        .filter((key) => key.startsWith("url:"))
-        .map((key) => key.slice("url:".length)),
-      examples,
+      importSites: [...importSites].sort(),
+      dynamicImports: chunk.dynamicImports
+        .filter((file) => file !== fileName)
+        .sort(),
+      examples: {
+        static: sortedByKey(examples.static),
+        dynamic: sortedByKey(examples.dynamic),
+        url: sortedByKey(examples.url),
+      },
     };
   }
 
-  return { chunks, assets, ...indexedImporters(importers) };
+  for (const [fileName, chunk] of Object.entries(chunks)) {
+    chunk.dynamicEntryModules = [
+      ...(dynamicEntryModules.get(fileName) ?? []),
+    ].sort();
+  }
+
+  return {
+    chunks,
+    assets: sortedByKey(assets),
+    ...indexedImporters(importers),
+  };
+}
+
+function sortedByKey(object) {
+  return Object.fromEntries(
+    Object.keys(object)
+      .sort()
+      .map((key) => [key, object[key]])
+  );
 }
 
 /**

@@ -21,11 +21,10 @@ Sizes come from the bundle analyzer report that production builds write (`dist/a
 ## Running it locally
 
 ```sh
-cd frontend/discourse && EMBER_ENV=production pnpm build && cd ../..
-node script/bundle_analysis/analyze.mjs --base-ref origin/main --head frontend/discourse/dist
+node script/bundle_analysis/analyze.mjs --base-ref origin/main --build-head
 ```
 
-This prints the full report and the PR comment it would post. The baseline is the merge base, built in a temporary worktree and cached in `tmp/bundle-analysis/`.
+This builds the checkout and prints the full report and the PR comment it would post. The baseline is the merge base, built in a temporary worktree and cached in `tmp/bundle-analysis/`. Both are built as CI builds them (`EMBER_ENV=production CI=1`), so the comparison matches CI's.
 
 ## How CI runs it
 

@@ -4,8 +4,8 @@ import { isAbsolute, join, relative } from "path";
 const NODE_MODULES = "/node_modules/";
 
 /**
- * A memoized `normalizeModuleId` for one build. The bundle reports share it
- * so their module ids can be joined.
+ * A memoized `normalizeModuleId` for one build, whose ids are the same on
+ * every machine.
  *
  * @param {string} root
  * @returns {(id: string) => string}

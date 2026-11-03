@@ -11,6 +11,7 @@ import {
   readArtifact,
   run,
 } from "../lib/comment.mjs";
+import { emptyReport, NO_JS_REPORT } from "./helpers.mjs";
 
 const BUDGET_PATH = new URL("../budget.json", import.meta.url).pathname;
 const SHA = "a".repeat(40);
@@ -62,23 +63,15 @@ test("decideAction", () => {
   );
 });
 
-const FINDINGS_REPORT = {
-  schema: 2,
-  noJsChanges: false,
+const FINDINGS_REPORT = emptyReport({
   initialLoad: {
-    base: 1_000_000,
+    ...emptyReport().initialLoad,
     head: 1_050_000,
     entryOwn: { base: 600_000, head: 650_000 },
-    chunks: { base: 20, head: 20 },
     topModules: [{ id: "app/lib/big.js", delta: 50_000, added: true }],
   },
   totals: { base: 3_000_000, head: 3_050_000, chunks: { base: 50, head: 50 } },
-  bundles: [],
-  movedIntoInitialLoad: [],
-  edges: { added: [], removed: [] },
-  assets: [],
-  duplicatePackages: [],
-};
+});
 
 function artifact(report, pr = {}) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-artifact-"));
@@ -169,10 +162,10 @@ test("run creates, updates and resolves one comment", async () => {
   assert.equal((await go(FINDINGS_REPORT)).type, "update");
   assert.equal(github.comments.length, 1);
 
-  assert.equal((await go({ schema: 2, noJsChanges: true })).type, "resolve");
+  assert.equal((await go(NO_JS_REPORT)).type, "resolve");
   assert.match(github.comments[0].body, /Resolved as of aaaaaaa/);
 
-  assert.equal((await go({ schema: 2, noJsChanges: true })).type, "none");
+  assert.equal((await go(NO_JS_REPORT)).type, "none");
 });
 
 test("run ignores comments from other users", async () => {

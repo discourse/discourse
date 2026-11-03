@@ -35,9 +35,11 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
       const entrypoints = [];
       const dynamicEntrypoints = [];
 
-      const chunkList = Object.entries(bundle).filter(
-        ([, chunk]) => chunk.type === "chunk"
-      );
+      // Rolldown's iteration order can change between builds of the same
+      // input, and the report is digested, so everything in it is sorted.
+      const chunkList = Object.entries(bundle)
+        .filter(([, chunk]) => chunk.type === "chunk")
+        .sort(([a], [b]) => compareStrings(a, b));
 
       // `isDynamicEntry` is set only while a dynamically-imported module has a
       // chunk to itself, so the import edges are the authority instead.
@@ -54,19 +56,10 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
             id: normalize(moduleId),
             renderedLength: m.renderedLength,
           }))
-          .sort((a, b) => b.renderedLength - a.renderedLength);
-
-        // Per module rather than of the facade, so a chunk that several dynamic
-        // entries were merged into still names what pulls it in.
-        const importers = new Set();
-        for (const moduleId of Object.keys(chunk.modules)) {
-          for (const imp of this.getModuleInfo(moduleId)?.dynamicImporters ??
-            []) {
-            importers.add(normalize(imp));
-          }
-        }
-
-        const importSites = [...importers];
+          .sort(
+            (a, b) =>
+              b.renderedLength - a.renderedLength || compareStrings(a.id, b.id)
+          );
 
         chunks[fileName] = {
           file: fileName,
@@ -78,9 +71,8 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
           isDynamicEntry: chunk.isDynamicEntry,
           rawSize,
           brotliSize: compressed,
-          imports: chunk.imports,
+          imports: [...chunk.imports].sort(),
           modules,
-          importSites,
           ...graph.chunks[fileName],
         };
 
@@ -115,9 +107,11 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
       fs.writeFileSync(`${dir}/${fileName}`, json);
 
       if (compress) {
+        // Only the dev tools fetch the report; the highest quality would take
+        // most of a second on it.
         fs.writeFileSync(
           `${dir}/${fileName}.br`,
-          await brotli(Buffer.from(json, "utf8"))
+          await brotli(Buffer.from(json, "utf8"), 9)
         );
       }
 
@@ -130,6 +124,10 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
       }
     },
   };
+}
+
+function compareStrings(a, b) {
+  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 function compressedSize(path) {

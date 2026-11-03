@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { tmpdir } from "os";
 import { join } from "path";
-import { sameJsInputs } from "../lib/baseline.mjs";
+import { jsInputsChanged } from "../lib/baseline.mjs";
 
 function repo() {
   const dir = mkdtempSync(join(tmpdir(), "bundle-repo-"));
@@ -44,11 +44,11 @@ function repo() {
   return { dir, first, docs, js, patch };
 }
 
-test("sameJsInputs looks at every build input", () => {
+test("jsInputsChanged looks at every build input", () => {
   const { dir, first, docs, js, patch } = repo();
 
-  assert.equal(sameJsInputs(first, docs, dir), true);
-  assert.equal(sameJsInputs(docs, js, dir), false);
-  assert.equal(sameJsInputs(js, patch, dir), false);
-  assert.equal(sameJsInputs(first, "0".repeat(40), dir), false);
+  assert.equal(jsInputsChanged(first, docs, dir), false);
+  assert.equal(jsInputsChanged(docs, js, dir), true);
+  assert.equal(jsInputsChanged(js, patch, dir), true);
+  assert.equal(jsInputsChanged(first, "0".repeat(40), dir), true);
 });

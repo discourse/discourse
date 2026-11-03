@@ -1,15 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { analyze } from "../lib/analyze.mjs";
+import { REPORT_SCHEMA } from "../lib/analyze.mjs";
 import { validateReport } from "../lib/validate.mjs";
-import { baseApp, makeDist } from "./helpers.mjs";
+import { analyzedReport, baseApp, NO_JS_REPORT } from "./helpers.mjs";
 
 test("accepts what the analyzer writes", () => {
-  const report = analyze({
-    baseDir: makeDist(baseApp()),
-    headDir: makeDist(baseApp()),
-  });
-  const roundTripped = JSON.parse(JSON.stringify(report));
+  const roundTripped = analyzedReport();
 
   assert.deepEqual(
     JSON.parse(JSON.stringify(validateReport(roundTripped))),
@@ -28,11 +24,7 @@ test("accepts reports with new and removed bundles", () => {
     facade: "rrule@2.8.1/dist/esm/index.js",
     modules: { "rrule@2.8.1/dist/esm/index.js": 8000 },
   };
-  const report = JSON.parse(
-    JSON.stringify(
-      analyze({ baseDir: makeDist(baseApp()), headDir: makeDist(head) })
-    )
-  );
+  const report = analyzedReport(baseApp(), head);
 
   const statuses = report.bundles.map((bundle) => bundle.status).sort();
   assert.deepEqual(statuses, ["new", "removed", "same", "same"]);
@@ -40,16 +32,12 @@ test("accepts reports with new and removed bundles", () => {
 });
 
 test("rejects wrong types and unknown schemas", () => {
-  const report = JSON.parse(
-    JSON.stringify(
-      analyze({
-        baseDir: makeDist(baseApp()),
-        headDir: makeDist(baseApp()),
-      })
-    )
-  );
+  const report = analyzedReport();
 
-  assert.throws(() => validateReport({ ...report, schema: 3 }), /schema/);
+  assert.throws(
+    () => validateReport({ ...report, schema: REPORT_SCHEMA + 1 }),
+    /schema/
+  );
   assert.throws(
     () =>
       validateReport({
@@ -63,14 +51,7 @@ test("rejects wrong types and unknown schemas", () => {
 });
 
 test("drops unknown fields", () => {
-  const report = JSON.parse(
-    JSON.stringify(
-      analyze({
-        baseDir: makeDist(baseApp()),
-        headDir: makeDist(baseApp()),
-      })
-    )
-  );
+  const report = analyzedReport();
   report.extra = "x";
   report.bundles[0] = {
     ...report.bundles[0],
@@ -85,8 +66,5 @@ test("drops unknown fields", () => {
 });
 
 test("a no-JS-changes report needs nothing else", () => {
-  assert.deepEqual(
-    { ...validateReport({ schema: 2, noJsChanges: true }) },
-    { schema: 2, noJsChanges: true }
-  );
+  assert.deepEqual({ ...validateReport(NO_JS_REPORT) }, NO_JS_REPORT);
 });

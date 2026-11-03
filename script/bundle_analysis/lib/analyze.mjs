@@ -3,7 +3,6 @@ import {
   labelOf,
   loadGraph,
   MAIN_KEY,
-  moduleBytes,
   packageOf,
   stripVersion,
 } from "./graph.mjs";
@@ -27,7 +26,6 @@ export function analyze({ baseDir, headDir }) {
     [...files].reduce((total, file) => total + brotli(graph, file), 0);
 
   const moved = movedIntoInitialLoad(base, head);
-  const movedKeys = new Set(moved.map((group) => group.bundle));
 
   const bundles = [];
   for (const key of new Set([...base.bundles.keys(), ...head.bundles.keys()])) {
@@ -45,9 +43,7 @@ export function analyze({ baseDir, headDir }) {
       name: (h ?? b).name,
       kind: (h ?? b).kind,
       facade: (h ?? b).facade,
-      isMain: (h ?? b).isMain,
       status: !b ? "new" : !h ? "removed" : "same",
-      movedToInitialLoad: !h && movedKeys.has(key),
       base: measure(b, base.graph),
       head: measure(h, head.graph),
       topModules:
@@ -77,7 +73,6 @@ export function analyze({ baseDir, headDir }) {
 
   return {
     schema: REPORT_SCHEMA,
-    noJsChanges: false,
     initialLoad: {
       base: sum(base.initial, base.graph),
       head: sum(head.initial, head.graph),
@@ -112,6 +107,18 @@ export function analyze({ baseDir, headDir }) {
 
 function chunkFiles(graph) {
   return Object.keys(graph.chunks);
+}
+
+/** Rendered bytes per version-less module id over a set of chunks. */
+function moduleBytes(graph, files) {
+  const bytes = new Map();
+  for (const file of files) {
+    for (const { id, renderedLength } of graph.chunks[file].modules) {
+      const key = stripVersion(id);
+      bytes.set(key, (bytes.get(key) ?? 0) + renderedLength);
+    }
+  }
+  return bytes;
 }
 
 /**
@@ -174,7 +181,7 @@ function movedIntoInitialLoad(base, head) {
       groups.set(owner.key, { bundle: owner.key, bytes: 0, modules: [] });
     }
     const group = groups.get(owner.key);
-    const bytes = head.graph.chunks[headFile].modules[id];
+    const bytes = head.moduleSize.get(id);
     group.bytes += bytes;
     group.modules.push({ id, bytes });
   }
@@ -263,7 +270,7 @@ function duplicatePackages(baseGraph, headGraph) {
   const versions = (graph) => {
     const result = new Map();
     for (const chunk of Object.values(graph.chunks)) {
-      for (const id of Object.keys(chunk.modules)) {
+      for (const { id } of chunk.modules) {
         const pkg = packageOf(id);
         if (pkg) {
           if (!result.has(pkg.name)) {

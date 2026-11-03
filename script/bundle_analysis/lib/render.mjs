@@ -1,3 +1,5 @@
+import { MAIN_KEY } from "./graph.mjs";
+
 const MAX_LIST = 10;
 const MAX_NAMES = 5;
 const MAX_STRING = 120;
@@ -5,7 +7,7 @@ const COMMENT_LIMIT = 60_000;
 
 export const HEADING = "### 📦 JS bundle changes";
 const REPRODUCE =
-  "node script/bundle_analysis/analyze.mjs --base-ref origin/main --head frontend/discourse/dist";
+  "node script/bundle_analysis/analyze.mjs --base-ref origin/main --build-head";
 
 /** Whether a size change exceeds a `{ percent, kib, combine }` threshold. */
 export function exceeds(base, head, { percent, kib: limitKib, combine }) {
@@ -48,7 +50,7 @@ export function findings(report, budget) {
   for (const bundle of report.bundles) {
     if (
       bundle.status === "same" &&
-      !bundle.isMain &&
+      bundle.key !== MAIN_KEY &&
       exceeds(bundle.base.load, bundle.head.load, budget.bundles)
     ) {
       result.push({ key: `grew:${bundle.key}`, type: "grew", bundle });
@@ -257,6 +259,7 @@ export function renderSummary(report, budget) {
     return "### JS bundle analysis\n\nNo JS inputs changed, nothing to compare.\n";
   }
   const flaggedKeys = new Set(findings(report, budget).map((f) => f.key));
+  const movedKeys = new Set(report.movedIntoInitialLoad.map((g) => g.bundle));
   const initial = report.initialLoad;
   const lines = [
     "### JS bundle analysis",
@@ -298,9 +301,10 @@ export function renderSummary(report, budget) {
       flaggedKeys.has(`new:${bundle.key}`)
         ? " ⚠️"
         : "";
-    const status = bundle.movedToInitialLoad
-      ? "moved into initial load"
-      : bundle.status;
+    const status =
+      bundle.status === "removed" && movedKeys.has(bundle.key)
+        ? "moved into initial load"
+        : bundle.status;
     lines.push(
       `| ${cell(bundle.name)}${flag} | ${bundle.kind} | ${status} | ${bundle.head ? kib(bundle.head.own) : "–"} | ${bundle.base ? kib(bundle.base.load) : "–"} | ${bundle.head ? kib(bundle.head.load) : "–"} | ${bundle.base && bundle.head ? delta(bundle.base.load, bundle.head.load) : "–"} |`
     );

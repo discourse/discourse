@@ -40,7 +40,7 @@ jobs:
         id: changes
         run: echo "js=$(node script/bundle_analysis/baseline.mjs --js-changed-since HEAD^1)" >> "$GITHUB_OUTPUT"
 
-      # workflow B still runs for PRs without JS changes, to resolve an old comment.
+      # bundle-analysis-comment.yml still runs for PRs without JS changes, to resolve an old comment.
       - name: Report no JS changes
         if: steps.changes.outputs.js == 'false'
         run: node script/bundle_analysis/analyze.mjs --no-js-changes --out "$RUNNER_TEMP/analysis"
@@ -65,16 +65,16 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-
+      # Install scripts generate types and vendored assets the build does not
+      # use.
       - parallel:
           - name: Build the PR
-            working-directory: frontend/discourse
             env:
               EMBER_ENV: production
               CI: "1"
-            run: pnpm build
+            run: |
+              pnpm install --frozen-lockfile --ignore-scripts
+              pnpm --dir frontend/discourse build
 
           - name: Build the base
             run: node script/bundle_analysis/baseline.mjs --commit HEAD^1 --out "$RUNNER_TEMP/base"

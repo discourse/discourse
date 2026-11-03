@@ -1,15 +1,19 @@
 import { mkdirSync, mkdtempSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
+import { analyze, REPORT_SCHEMA } from "../lib/analyze.mjs";
+import { labelOf } from "../lib/graph.mjs";
 
 export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 
 /**
- * Writes a fake production build: its bundle analyzer report and asset files.
- * `entries` maps an entry name to its file; `chunks` maps a file name to
- * `{ kind, facade?, imports?, dynamicImports?, urlImports?, modules, examples? }`
- * with `modules` as id → bytes; a chunk's brotli size is the sum of its
- * module bytes. `assets` maps a file name to its size.
+ * Writes a fake production build's bundle analyzer report. `entries` maps an
+ * entry name to its file; `chunks` maps a file name to
+ * `{ kind, facade?, imports?, dynamicImports?, modules, examples? }` with
+ * `modules` as id → bytes and `examples` as kind → target file → example; a
+ * chunk's brotli size is the sum of its module bytes, and the modules other
+ * chunks import from it dynamically are those in their dynamic examples.
+ * `assets` maps a file name to its size.
  */
 export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-dist-"));
@@ -19,10 +23,31 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   const moduleIds = [
     ...new Set(Object.values(chunks).flatMap((c) => Object.keys(c.modules))),
   ].sort();
+  const dynamicTargets = new Set(
+    Object.values(chunks).flatMap((c) => c.dynamicImports ?? [])
+  );
+  const dynamicEntryModules = new Map();
+  for (const [file, chunk] of Object.entries(chunks)) {
+    for (const [target, example] of Object.entries(
+      chunk.examples?.dynamic ?? {}
+    )) {
+      if (target !== file) {
+        dynamicEntryModules.set(target, [
+          ...(dynamicEntryModules.get(target) ?? []),
+          example.to,
+        ]);
+      }
+    }
+  }
   const report = {
     entrypoints: Object.values(entries),
+    dynamicEntrypoints: Object.keys(chunks).filter(
+      (file) =>
+        !entryName.has(file) &&
+        (chunks[file].kind === "lazy" || dynamicTargets.has(file))
+    ),
     chunks: {},
-    assets: Object.keys(assets),
+    assets,
     moduleIds,
     importers: moduleIds.map((id) =>
       (importers[id] ?? []).map((importer) => moduleIds.indexOf(importer))
@@ -31,7 +56,7 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
 
   for (const [file, chunk] of Object.entries(chunks)) {
     report.chunks[file] = {
-      name: entryName.get(file) ?? "x",
+      name: entryName.get(file) ?? labelOf(file),
       facadeModuleId: chunk.facade ?? null,
       isEntry: chunk.kind === "entry",
       isDynamicEntry: chunk.kind === "lazy",
@@ -42,13 +67,9 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
         renderedLength,
       })),
       dynamicImports: chunk.dynamicImports ?? [],
-      urlImports: chunk.urlImports ?? [],
-      examples: chunk.examples ?? {},
+      dynamicEntryModules: [...new Set(dynamicEntryModules.get(file))].sort(),
+      examples: { static: {}, dynamic: {}, url: {}, ...chunk.examples },
     };
-  }
-  for (const [file, bytes] of Object.entries(assets)) {
-    mkdirSync(dirname(join(dir, file)), { recursive: true });
-    writeFileSync(join(dir, file), "x".repeat(bytes));
   }
   mkdirSync(dirname(join(dir, REPORT)), { recursive: true });
   writeFileSync(join(dir, REPORT), JSON.stringify(report));
@@ -67,9 +88,11 @@ export function baseApp(overrides = {}) {
         dynamicImports: ["assets/js/admin-cccc3333.digested.js"],
         modules: { "discourse.js": 40000, "app/app.js": 30000 },
         examples: {
-          "dynamic:assets/js/admin-cccc3333.digested.js": {
-            from: "app/app.js",
-            to: "admin/compat-modules.js",
+          dynamic: {
+            "assets/js/admin-cccc3333.digested.js": {
+              from: "app/app.js",
+              to: "admin/compat-modules.js",
+            },
           },
         },
       },
@@ -87,9 +110,11 @@ export function baseApp(overrides = {}) {
           "admin/components/a.gjs": 10000,
         },
         examples: {
-          "dynamic:assets/js/codemirror-dddd4444.digested.js": {
-            from: "admin/components/a.gjs",
-            to: "app/static/codemirror.js",
+          dynamic: {
+            "assets/js/codemirror-dddd4444.digested.js": {
+              from: "admin/components/a.gjs",
+              to: "app/static/codemirror.js",
+            },
           },
         },
       },
@@ -112,3 +137,39 @@ export const BUDGET = {
   bundles: { percent: 3, kib: 2, combine: "and" },
   movedIntoInitialLoad: { kib: 1 },
 };
+
+export const NO_JS_REPORT = { schema: REPORT_SCHEMA, noJsChanges: true };
+
+/** A report of two identical builds; `overrides` replace top-level fields. */
+export function emptyReport(overrides = {}) {
+  return {
+    schema: REPORT_SCHEMA,
+    initialLoad: {
+      base: 1_000_000,
+      head: 1_000_000,
+      entryOwn: { base: 600_000, head: 600_000 },
+      chunks: { base: 20, head: 20 },
+      topModules: [],
+    },
+    totals: {
+      base: 3_000_000,
+      head: 3_000_000,
+      chunks: { base: 50, head: 50 },
+    },
+    bundles: [],
+    movedIntoInitialLoad: [],
+    edges: { added: [], removed: [] },
+    assets: [],
+    duplicatePackages: [],
+    ...overrides,
+  };
+}
+
+/** What the analyzer writes for two fake builds, after a JSON round trip. */
+export function analyzedReport(base = baseApp(), head = baseApp()) {
+  return JSON.parse(
+    JSON.stringify(
+      analyze({ baseDir: makeDist(base), headDir: makeDist(head) })
+    )
+  );
+}

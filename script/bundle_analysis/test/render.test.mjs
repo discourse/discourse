@@ -7,7 +7,7 @@ import {
   renderComment,
   renderSummary,
 } from "../lib/render.mjs";
-import { BUDGET } from "./helpers.mjs";
+import { BUDGET, emptyReport, NO_JS_REPORT } from "./helpers.mjs";
 
 test("exceeds combines percent and bytes as configured", () => {
   const and = { percent: 3, kib: 2, combine: "and" };
@@ -38,35 +38,10 @@ test("code keeps untrusted strings inside a code span", () => {
   assert.ok(code("x".repeat(500)).length < 130);
 });
 
-function report(overrides = {}) {
-  return {
-    schema: 2,
-    noJsChanges: false,
-    initialLoad: {
-      base: 1_000_000,
-      head: 1_000_000,
-      entryOwn: { base: 600_000, head: 600_000 },
-      chunks: { base: 20, head: 20 },
-      topModules: [],
-    },
-    totals: {
-      base: 3_000_000,
-      head: 3_000_000,
-      chunks: { base: 50, head: 50 },
-    },
-    bundles: [],
-    movedIntoInitialLoad: [],
-    edges: { added: [], removed: [] },
-    assets: [],
-    duplicatePackages: [],
-    ...overrides,
-  };
-}
-
 test("tiny changes show as under 0.1%", () => {
   const { body } = renderComment(
-    report({
-      initialLoad: { ...report().initialLoad, head: 999_609 },
+    emptyReport({
+      initialLoad: { ...emptyReport().initialLoad, head: 999_609 },
       edges: {
         added: [
           {
@@ -88,17 +63,17 @@ test("tiny changes show as under 0.1%", () => {
 });
 
 test("no findings means no comment", () => {
-  assert.deepEqual(renderComment(report(), BUDGET), { keys: [], body: null });
-  assert.equal(
-    renderComment({ schema: 2, noJsChanges: true }, BUDGET).body,
-    null
-  );
+  assert.deepEqual(renderComment(emptyReport(), BUDGET), {
+    keys: [],
+    body: null,
+  });
+  assert.equal(renderComment(NO_JS_REPORT, BUDGET).body, null);
 });
 
 test("hostile names cannot inject markdown into the comment", () => {
   const name = "evil\n\n### Approved by @team <img src=x> `x`";
   const { body } = renderComment(
-    report({
+    emptyReport({
       edges: {
         added: [
           {
@@ -131,7 +106,7 @@ test("edges that share a target are grouped", () => {
     example: null,
   });
   const { body, keys } = renderComment(
-    report({ edges: { added: [edge("a"), edge("b")], removed: [] } }),
+    emptyReport({ edges: { added: [edge("a"), edge("b")], removed: [] } }),
     BUDGET
   );
 
@@ -140,8 +115,5 @@ test("edges that share a target are grouped", () => {
 });
 
 test("the summary renders a no-changes report", () => {
-  assert.match(
-    renderSummary({ schema: 2, noJsChanges: true }, BUDGET),
-    /No JS inputs changed/
-  );
+  assert.match(renderSummary(NO_JS_REPORT, BUDGET), /No JS inputs changed/);
 });

@@ -17,7 +17,7 @@ export function git(args, { cwd } = {}) {
   return execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 }
 
-export function sameJsInputs(a, b, cwd) {
+export function jsInputsChanged(a, b, cwd) {
   const result = spawnSync(
     "git",
     ["diff", "--quiet", a, b, "--", ...JS_INPUTS],
@@ -26,8 +26,25 @@ export function sameJsInputs(a, b, cwd) {
     }
   );
   // 1 means the inputs differ; anything else (e.g. 128 for a commit beyond a
-  // shallow clone) means they cannot be compared.
-  return result.status === 0;
+  // shallow clone) means they cannot be compared, so count as changed.
+  return result.status !== 0;
+}
+
+// CI builds both sides like this; `CI` reaches the code through `@glimmer/env`.
+const BUILD_ENV = { EMBER_ENV: "production", CI: "1" };
+
+function run(command, args, options) {
+  execFileSync(command, args, {
+    stdio: ["ignore", process.stderr, process.stderr],
+    ...options,
+  });
+}
+
+/** Builds the core JS of the checkout at `root` as CI does; returns its dist. */
+export function buildCore(root) {
+  const app = join(root, "frontend/discourse");
+  run("pnpm", ["build"], { cwd: app, env: { ...process.env, ...BUILD_ENV } });
+  return join(app, "dist");
 }
 
 /** Builds `commit` in a temporary worktree and moves its dist to `outDir`. */
@@ -41,18 +58,12 @@ export function buildBaseline(commit, outDir, { cwd, log = () => {} } = {}) {
   log(`Building ${commit.slice(0, 8)} in ${worktree}`);
   git(["worktree", "add", "--detach", worktree, commit], { cwd });
   try {
-    const run = (command, args, options) =>
-      execFileSync(command, args, {
-        stdio: ["ignore", process.stderr, process.stderr],
-        ...options,
-      });
-    run("pnpm", ["install", "--frozen-lockfile"], { cwd: worktree });
-    run("pnpm", ["build"], {
-      cwd: join(worktree, "frontend/discourse"),
-      env: { ...process.env, EMBER_ENV: "production", CI: "1" },
+    run("pnpm", ["install", "--frozen-lockfile", "--ignore-scripts"], {
+      cwd: worktree,
     });
+    const dist = buildCore(worktree);
     rmSync(outDir, { recursive: true, force: true });
-    renameSync(join(worktree, "frontend/discourse/dist"), outDir);
+    renameSync(dist, outDir);
   } finally {
     git(["worktree", "remove", "--force", worktree], { cwd });
   }

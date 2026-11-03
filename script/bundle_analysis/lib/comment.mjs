@@ -47,7 +47,7 @@ export function decideAction({ keys, existing }) {
     : { type: "supersede", comment: active };
 }
 
-/** Reads the artifact from workflow A, accepting only the expected files. */
+/** Reads the artifact from bundle-analysis.yml, accepting only the expected files. */
 export function readArtifact(dir) {
   const files = readdirSync(dir);
   for (const file of files) {
