@@ -388,4 +388,25 @@ RSpec.describe UserStat do
       update_pending_posts
     end
   end
+
+  describe "trigger_badges" do
+    fab!(:user)
+
+    it "queues a badge grant for the user when present" do
+      stat = user.user_stat
+
+      BadgeGranter.expects(:queue_badge_grant).with(Badge::Trigger::UserChange, user:)
+
+      stat.save!
+    end
+
+    it "does not raise when the user row is gone" do
+      stat = user.user_stat
+      User.where(id: user.id).delete_all
+      stat.reload
+      expect(stat.user).to be_nil
+
+      expect { stat.save! }.not_to raise_error
+    end
+  end
 end
