@@ -100,9 +100,6 @@ loaderShim("discourse-common/utils/handle-descriptor", () =>
 loaderShim("discourse-common/utils/is-descriptor", () =>
   importSync("discourse/lib/is-descriptor")
 );
-loaderShim("discourse-common/utils/macro-alias", () =>
-  importSync("discourse/lib/macro-alias")
-);
 loaderShim("discourse-common/utils/multi-cache", () =>
   importSync("discourse/lib/multi-cache")
 );
