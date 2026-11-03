@@ -776,7 +776,7 @@ aside.onebox.github-onebox {
   --github-onebox-header-background: var(--primary-very-low);
   --onebox-border-color: light-dark(#d1d9e0, #3d444d);
   --onebox-shadow-color: transparent;
-  --onebox-shadow-width: 1px;
+  --onebox-shadow-width: var(--token-border-width);
   container: github-onebox / inline-size;
   padding: 0;
   overflow: hidden;
@@ -952,7 +952,7 @@ aside.onebox.github-onebox {
     .user a,
     .discourse-local-date.cooked-date .relative-time {
       text-decoration: underline dashed var(--primary-low-mid);
-      text-decoration-thickness: 1px;
+      text-decoration-thickness: var(--token-border-width);
       text-underline-offset: 0.2em;
     }
 
@@ -996,11 +996,7 @@ aside.onebox.github-onebox {
     }
 
     .github-onebox__label > span {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
+      display: none;
     }
   }
 }
@@ -1125,7 +1121,7 @@ aside.onebox.github-onebox {
   }
 
   .onebox-avatar-inline {
-    border-radius: 2px;
+    border-radius: var(--token-radius-small);
     vertical-align: text-bottom;
   }
 
@@ -1138,7 +1134,7 @@ aside.onebox.github-onebox {
       // !important required to override inline style attribute
       background-color: var(--primary-medium) !important;
       color: var(--secondary) !important;
-      padding: 2px 4px !important;
+      padding: var(--space-half) var(--space-1) !important;
       white-space: nowrap;
     }
   }
