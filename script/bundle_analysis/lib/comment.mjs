@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
 import { readdirSync, readFileSync, statSync } from "fs";
 import { join } from "path";
-import { renderComment } from "./render.mjs";
+import { HEADING, renderComment } from "./render.mjs";
 import { validateReport } from "./validate.mjs";
 
 const MARKER =
@@ -159,7 +159,7 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
       owner,
       repo,
       comment_id: action.comment.id,
-      body: `### 📦 JS bundle changes\n\n✅ Resolved as of ${shortSha}: nothing over the thresholds.\n\n${marker("resolved", [])}`,
+      body: `${HEADING}\n\n✅ Resolved as of ${shortSha}: nothing over the thresholds.\n\n${marker("resolved", [])}`,
     });
   } else if (action.type === "update") {
     await github.rest.issues.updateComment({
@@ -180,7 +180,7 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
         owner,
         repo,
         comment_id: action.comment.id,
-        body: `### 📦 JS bundle changes\n\nSuperseded by [a newer report](${created.html_url}).\n\n${marker("superseded", [])}`,
+        body: `${HEADING}\n\nSuperseded by [a newer report](${created.html_url}).\n\n${marker("superseded", [])}`,
       });
     }
   }

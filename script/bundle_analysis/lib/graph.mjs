@@ -3,6 +3,7 @@ import { join } from "path";
 
 export const GRAPH_PATH = "manifest/bundle-graph.json";
 export const MAIN_ENTRY = "discourse";
+export const MAIN_KEY = `entry:${MAIN_ENTRY}`;
 const REPORT_DIR = "assets/js";
 const REPORT_NAME = /^bundle-analysis-\w+\.digested\.json$/;
 const SCHEME = /^((?:[\w-]+:)+)(.+)$/;
@@ -35,9 +36,20 @@ export function packageOf(id) {
 }
 
 /**
- * The bundle graph of a production build, with sizes from the bundle analyzer
- * report beside it: `brotliSize` on chunks, `rawSize` on assets,
- * and `modules` as id → rendered (unminified) length.
+ * The filename part before the content hash, e.g. `admin` for
+ * `assets/js/admin-gwfrhsfc.digested.js`. Files without a digested hash
+ * keep their whole name. Follows the output file name patterns in the build
+ * config.
+ */
+export function labelOf(fileName) {
+  const base = fileName.split("/").pop();
+  return base.replace(/-[a-z0-9]+\.digested\.[a-z0-9]+$/, "");
+}
+
+/**
+ * The bundle graph of a production build with sizes: `brotliSize` on chunks
+ * and `modules` as id → rendered (unminified) length, both from the bundle
+ * analyzer report beside it, and `assets` as file → size on disk.
  */
 export function loadGraph(distDir) {
   const path = join(distDir, GRAPH_PATH);
@@ -47,7 +59,7 @@ export function loadGraph(distDir) {
     );
   }
   const graph = JSON.parse(readFileSync(path, "utf8"));
-  if (graph.version !== 3) {
+  if (graph.version !== 4) {
     throw new Error(`${path} has unsupported version ${graph.version}`);
   }
 
@@ -63,9 +75,9 @@ export function loadGraph(distDir) {
     chunk.brotliSize = sized.brotliSize;
     chunk.modules = moduleSizes(chunk.modules, sized.modules);
   }
-  for (const [file, asset] of Object.entries(graph.assets)) {
-    asset.rawSize = statSync(join(distDir, file)).size;
-  }
+  graph.assets = Object.fromEntries(
+    graph.assets.map((file) => [file, statSync(join(distDir, file)).size])
+  );
   return graph;
 }
 
@@ -141,11 +153,11 @@ function endsWithPath(key, ours) {
  * with the chunks it loads. Shared chunks belong to no bundle; they count
  * toward every bundle whose closure includes them.
  */
-export function describeBuild(graph, { mainEntry = MAIN_ENTRY } = {}) {
+export function describeBuild(graph) {
   const chunks = graph.chunks;
-  const mainFile = graph.entries[mainEntry];
+  const mainFile = graph.entries[MAIN_ENTRY];
   if (!mainFile) {
-    throw new Error(`The build has no "${mainEntry}" entry`);
+    throw new Error(`The build has no "${MAIN_ENTRY}" entry`);
   }
 
   const closureCache = new Map();
@@ -180,7 +192,7 @@ export function describeBuild(graph, { mainEntry = MAIN_ENTRY } = {}) {
       name,
       file,
       facade: chunks[file].facade,
-      isMain: name === mainEntry,
+      isMain: name === MAIN_ENTRY,
     });
     bundleOfChunk.set(file, key);
   }
@@ -212,7 +224,7 @@ export function describeBuild(graph, { mainEntry = MAIN_ENTRY } = {}) {
     });
     bundleOfChunk.set(file, key);
   }
-  nameLazyBundles(bundles, chunks);
+  nameLazyBundles(bundles);
 
   for (const bundle of bundles.values()) {
     const own = closure(bundle.file);
@@ -243,7 +255,6 @@ export function describeBuild(graph, { mainEntry = MAIN_ENTRY } = {}) {
     graph,
     importers,
     strippedModuleChunk,
-    mainKey: `entry:${mainEntry}`,
     initial,
     bundles,
     bundleOfChunk,
@@ -252,15 +263,15 @@ export function describeBuild(graph, { mainEntry = MAIN_ENTRY } = {}) {
   };
 }
 
-function nameLazyBundles(bundles, chunks) {
+function nameLazyBundles(bundles) {
   const lazy = [...bundles.values()].filter((b) => b.kind === "lazy");
   const labelCount = new Map();
   for (const bundle of lazy) {
-    const label = chunks[bundle.file].label;
+    const label = labelOf(bundle.file);
     labelCount.set(label, (labelCount.get(label) ?? 0) + 1);
   }
   for (const bundle of lazy) {
-    const label = chunks[bundle.file].label;
+    const label = labelOf(bundle.file);
     const stripped = stripVersion(bundle.facade);
     if (!GENERIC_LABELS.has(label) && labelCount.get(label) === 1) {
       bundle.name = label;
@@ -292,25 +303,15 @@ function nameLazyBundles(bundles, chunks) {
  */
 function computeEdges(chunks, bundles, bundleOfChunk, initial) {
   const edges = new Map();
-  const add = (from, to, kind, examples) => {
+  const add = (from, to, kind, example) => {
     if (from.key === to.key || initial.has(to.file)) {
       return;
     }
     const key = `${from.key}|${to.key}|${kind}`;
     if (!edges.has(key)) {
-      edges.set(key, { from: from.key, to: to.key, kind, examples: [] });
+      edges.set(key, { from: from.key, to: to.key, kind, example: null });
     }
-    const edge = edges.get(key);
-    for (const example of examples ?? []) {
-      if (
-        edge.examples.length < 3 &&
-        !edge.examples.some(
-          (e) => e.from === example.from && e.to === example.to
-        )
-      ) {
-        edge.examples.push(example);
-      }
-    }
+    edges.get(key).example ??= example ?? null;
   };
 
   for (const from of bundles.values()) {
@@ -322,7 +323,7 @@ function computeEdges(chunks, bundles, bundleOfChunk, initial) {
           from,
           to,
           "static",
-          examplesTo(from.costChunks, chunks, "static", file)
+          exampleTo(from.costChunks, chunks, "static", file)
         );
       }
       for (const target of chunk.dynamicImports) {
@@ -342,15 +343,13 @@ function computeEdges(chunks, bundles, bundleOfChunk, initial) {
   return edges;
 }
 
-function examplesTo(closure, chunks, kind, target) {
-  const examples = [];
+function exampleTo(closure, chunks, kind, target) {
   for (const file of closure) {
-    examples.push(...(chunks[file].examples[`${kind}:${target}`] ?? []));
-    if (examples.length >= 3) {
-      break;
+    const example = chunks[file].examples[`${kind}:${target}`];
+    if (example) {
+      return example;
     }
   }
-  return examples;
 }
 
 /** Rendered bytes per version-less module id over a set of chunks. */

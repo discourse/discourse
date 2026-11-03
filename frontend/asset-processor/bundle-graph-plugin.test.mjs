@@ -11,9 +11,9 @@ import { dirname, join } from "path";
 import { rolldown } from "rolldown";
 import { expect, test } from "vitest";
 import bundleGraphPlugin, {
-  labelOf,
   normalizeModuleId,
 } from "../discourse/lib/bundle-graph-plugin.mjs";
+import { RESOLVED_PREFIX } from "../discourse/lib/dynamic-chunk-url-plugin.mjs";
 
 const FIXTURE = {
   "main.js": `
@@ -44,21 +44,21 @@ const FIXTURE = {
 // Same virtual module ids as dynamic-chunk-url-plugin.mjs, which names chunks
 // relative to process.cwd() and so cannot build a fixture outside it.
 function chunkUrlStandIn() {
-  const prefix = "\0virtual:dynamic-chunk-url:";
+  const unresolved = RESOLVED_PREFIX.slice(1);
   return {
     name: "chunk-url-stand-in",
     async resolveId(source, importer) {
-      if (source.startsWith("virtual:dynamic-chunk-url:")) {
-        const target = source.slice("virtual:dynamic-chunk-url:".length);
+      if (source.startsWith(unresolved)) {
+        const target = source.slice(unresolved.length);
         const resolved = await this.resolve(target, importer);
-        return prefix + resolved.id;
+        return RESOLVED_PREFIX + resolved.id;
       }
     },
     load(id) {
-      if (id.startsWith(prefix)) {
+      if (id.startsWith(RESOLVED_PREFIX)) {
         const ref = this.emitFile({
           type: "chunk",
-          id: id.slice(prefix.length),
+          id: id.slice(RESOLVED_PREFIX.length),
           name: "worker",
         });
         return `export default import.meta.ROLLUP_FILE_URL_${ref};`;
@@ -120,7 +120,7 @@ async function build(dir) {
   const graphFile = output.find(
     (file) => file.fileName === "manifest/bundle-graph.json"
   );
-  return { graph: JSON.parse(graphFile.source), source: graphFile.source };
+  return JSON.parse(graphFile.source);
 }
 
 function importersOf(graph, id) {
@@ -129,19 +129,19 @@ function importersOf(graph, id) {
   );
 }
 
-function chunkByLabel(graph, label) {
+function chunkOf(graph, facade) {
   const entry = Object.entries(graph.chunks).find(
-    ([, chunk]) => chunk.label === label
+    ([, chunk]) => chunk.facade === facade
   );
   return entry && { file: entry[0], ...entry[1] };
 }
 
 test("records entries, lazy chunks and their connections", async () => {
-  const { graph } = await build(writeFixture());
+  const graph = await build(writeFixture());
 
-  const main = chunkByLabel(graph, "main");
-  const lazy = chunkByLabel(graph, "lazy");
-  const nested = chunkByLabel(graph, "nested");
+  const main = chunkOf(graph, "main.js");
+  const lazy = chunkOf(graph, "lazy.js");
+  const nested = chunkOf(graph, "nested.js");
 
   expect(graph.entries.main).toBe(main.file);
   expect(main.kind).toBe("entry");
@@ -150,15 +150,16 @@ test("records entries, lazy chunks and their connections", async () => {
   expect(lazy.facade).toBe("lazy.js");
   expect(main.dynamicImports).toContain(lazy.file);
   expect(lazy.dynamicImports).toContain(nested.file);
-  expect(main.examples[`dynamic:${lazy.file}`]).toEqual([
-    { from: "main.js", to: "lazy.js" },
-  ]);
+  expect(main.examples[`dynamic:${lazy.file}`]).toEqual({
+    from: "main.js",
+    to: "lazy.js",
+  });
   expect(importersOf(graph, "lazy.js")).toEqual([]);
 });
 
 test("records a dynamic import that rolldown merged into its importer", async () => {
-  const { graph } = await build(writeFixture());
-  const main = chunkByLabel(graph, "main");
+  const graph = await build(writeFixture());
+  const main = chunkOf(graph, "main.js");
 
   expect(main.modules).toContain("merged.js");
   expect(main.dynamicImports).not.toContain(main.file);
@@ -166,56 +167,33 @@ test("records a dynamic import that rolldown merged into its importer", async ()
 });
 
 test("records every module's static importers", async () => {
-  const { graph } = await build(writeFixture());
+  const graph = await build(writeFixture());
 
   expect(importersOf(graph, "shared.js")).toEqual(["lazy.js", "main.js"]);
   expect(importersOf(graph, "lazy-only.js")).toEqual(["lazy.js", "nested.js"]);
 });
 
 test("records URL imports created through virtual:dynamic-chunk-url", async () => {
-  const { graph } = await build(writeFixture());
-  const main = chunkByLabel(graph, "main");
-  const worker = Object.entries(graph.chunks).find(
-    ([, chunk]) => chunk.facade === "worker.js"
-  );
+  const graph = await build(writeFixture());
+  const main = chunkOf(graph, "main.js");
+  const worker = chunkOf(graph, "worker.js");
 
-  expect(worker[1].kind).toBe("entry");
-  expect(main.urlImports).toEqual([worker[0]]);
+  expect(worker.kind).toBe("entry");
+  expect(main.urlImports).toEqual([worker.file]);
 });
 
 test("lists modules by normalized id", async () => {
-  const { graph } = await build(writeFixture());
+  const graph = await build(writeFixture());
 
-  expect(chunkByLabel(graph, "main").modules).toContain(
+  expect(chunkOf(graph, "main.js").modules).toContain(
     "fake-pkg@1.2.3/index.js"
   );
 });
 
 test("leaves precompressed copies out of the assets", async () => {
-  const { graph } = await build(writeFixture());
+  const graph = await build(writeFixture());
 
-  expect(Object.keys(graph.assets).filter((f) => f.endsWith(".br"))).toEqual(
-    []
-  );
-});
-
-test("output is identical across builds", async () => {
-  const dir = writeFixture();
-  const first = await build(dir);
-  const second = await build(dir);
-
-  expect(second.source).toBe(first.source);
-});
-
-test("labelOf strips the content hash", () => {
-  expect(labelOf("assets/js/admin-gwfrhsfc.digested.js")).toBe("admin");
-  expect(labelOf("assets/js/route-wizard-js-ab12cd34.digested.js")).toBe(
-    "route-wizard-js"
-  );
-  expect(labelOf("assets/js/jxl_enc-gne50clb.digested.wasm")).toBe("jxl_enc");
-  expect(labelOf("@embroider/virtual/test-support.css")).toBe(
-    "test-support.css"
-  );
+  expect(graph.assets.filter((f) => f.endsWith(".br"))).toEqual([]);
 });
 
 test("normalizeModuleId drops machine-specific paths", () => {

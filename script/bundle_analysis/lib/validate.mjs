@@ -43,7 +43,7 @@ export function validateReport(input) {
             from: str,
             fromName: str,
             kind: edgeKind,
-            examples: list(example),
+            example: nullable(example),
           })
         ),
       })
@@ -67,32 +67,18 @@ export function validateReport(input) {
   })(input, "report");
 }
 
-function edgeKind(value, path) {
-  return oneOf("static", "dynamic", "url")(value, path);
-}
-
-function example(value, path) {
-  return shape({ from: str, to: str })(value, path);
-}
-
-function edge(value, path) {
-  return shape({
-    from: str,
-    to: str,
-    kind: edgeKind,
-    fromName: str,
-    toName: str,
-    examples: list(example),
-  })(value, path);
-}
-
-function moduleDelta(value, path) {
-  return shape({ id: str, delta: num, added: bool })(value, path);
-}
-
-function pair(value, path) {
-  return shape({ base: num, head: num })(value, path);
-}
+const edgeKind = oneOf("static", "dynamic", "url");
+const example = shape({ from: str, to: str });
+const edge = shape({
+  from: str,
+  to: str,
+  kind: edgeKind,
+  fromName: str,
+  toName: str,
+  example: nullable(example),
+});
+const moduleDelta = shape({ id: str, delta: num, added: bool });
+const pair = shape({ base: num, head: num });
 
 function fail(path, expected) {
   throw new Error(`report: ${path} must be ${expected}`);

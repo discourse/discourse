@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
-import { packageOf, stripVersion } from "../lib/graph.mjs";
+import { GRAPH_PATH, packageOf, stripVersion } from "../lib/graph.mjs";
 
 export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 
@@ -14,27 +14,26 @@ export const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
  */
 export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-dist-"));
-  const graph = { version: 3, entries, chunks: {}, assets: {} };
+  const graph = {
+    version: 4,
+    entries,
+    chunks: {},
+    assets: Object.keys(assets),
+  };
   const report = { chunks: {} };
 
   for (const [file, chunk] of Object.entries(chunks)) {
     graph.chunks[file] = {
-      label: file
-        .split("/")
-        .pop()
-        .replace(/-[a-z0-9]+\.digested\.js$/, ""),
       kind: chunk.kind,
       facade: chunk.facade ?? null,
       imports: chunk.imports ?? [],
       dynamicImports: chunk.dynamicImports ?? [],
       urlImports: chunk.urlImports ?? [],
-      modules: Object.keys(chunk.modules).sort(),
+      modules: Object.keys(chunk.modules),
       examples: chunk.examples ?? {},
     };
-    const rawSize = Object.values(chunk.modules).reduce((a, b) => a + b, 0);
     report.chunks[file] = {
-      rawSize,
-      brotliSize: rawSize,
+      brotliSize: Object.values(chunk.modules).reduce((a, b) => a + b, 0),
       modules: Object.entries(chunk.modules).map(([id, renderedLength]) => ({
         id: reportedId(id),
         renderedLength,
@@ -44,12 +43,6 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   for (const [file, bytes] of Object.entries(assets)) {
     mkdirSync(dirname(join(dir, file)), { recursive: true });
     writeFileSync(join(dir, file), "x".repeat(bytes));
-    graph.assets[file] = {
-      label: file
-        .split("/")
-        .pop()
-        .replace(/-[a-z0-9]+(\.digested)?\.[a-z0-9]+$/, ""),
-    };
   }
   graph.moduleIds = [
     ...new Set(Object.values(chunks).flatMap((c) => Object.keys(c.modules))),
@@ -57,8 +50,8 @@ export function makeDist({ entries, chunks, assets = {}, importers = {} }) {
   graph.importers = graph.moduleIds.map((id) =>
     (importers[id] ?? []).map((importer) => graph.moduleIds.indexOf(importer))
   );
-  mkdirSync(join(dir, "manifest"), { recursive: true });
-  writeFileSync(join(dir, "manifest/bundle-graph.json"), JSON.stringify(graph));
+  mkdirSync(dirname(join(dir, GRAPH_PATH)), { recursive: true });
+  writeFileSync(join(dir, GRAPH_PATH), JSON.stringify(graph));
   mkdirSync(dirname(join(dir, REPORT)), { recursive: true });
   writeFileSync(join(dir, REPORT), JSON.stringify(report));
   return dir;
@@ -84,9 +77,10 @@ export function baseApp(overrides = {}) {
         dynamicImports: ["assets/js/admin-cccc3333.digested.js"],
         modules: { "discourse.js": 40000, "app/app.js": 30000 },
         examples: {
-          "dynamic:assets/js/admin-cccc3333.digested.js": [
-            { from: "app/app.js", to: "admin/compat-modules.js" },
-          ],
+          "dynamic:assets/js/admin-cccc3333.digested.js": {
+            from: "app/app.js",
+            to: "admin/compat-modules.js",
+          },
         },
       },
       "assets/js/chunk-bbbb2222.digested.js": {
@@ -103,9 +97,10 @@ export function baseApp(overrides = {}) {
           "admin/components/a.gjs": 10000,
         },
         examples: {
-          "dynamic:assets/js/codemirror-dddd4444.digested.js": [
-            { from: "admin/components/a.gjs", to: "app/static/codemirror.js" },
-          ],
+          "dynamic:assets/js/codemirror-dddd4444.digested.js": {
+            from: "admin/components/a.gjs",
+            to: "app/static/codemirror.js",
+          },
         },
       },
       "assets/js/codemirror-dddd4444.digested.js": {

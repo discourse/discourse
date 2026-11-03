@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-import { execFileSync } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join, resolve } from "path";
 import { parseArgs } from "util";
 import { analyze, REPORT_SCHEMA } from "./lib/analyze.mjs";
-import { findBaseline } from "./lib/baseline.mjs";
+import { findBaseline, git } from "./lib/baseline.mjs";
+import { GRAPH_PATH } from "./lib/graph.mjs";
 import { renderComment, renderSummary } from "./lib/render.mjs";
 
 const USAGE = `Compares two production JS builds.
@@ -52,19 +52,12 @@ if (args["no-js-changes"]) {
 } else {
   let baseDir = args.base && resolve(args.base);
   if (!baseDir) {
-    const repo = execFileSync("git", ["rev-parse", "--show-toplevel"], {
-      encoding: "utf8",
-    }).trim();
-    const commit = execFileSync(
-      "git",
-      ["merge-base", "HEAD", args["base-ref"]],
-      {
-        cwd: repo,
-        encoding: "utf8",
-      }
-    ).trim();
+    const repo = git(["rev-parse", "--show-toplevel"]);
+    const commit = git(["merge-base", "HEAD", args["base-ref"]], {
+      cwd: repo,
+    });
     baseDir = join(repo, "tmp/bundle-analysis", commit);
-    if (existsSync(join(baseDir, "manifest/bundle-graph.json"))) {
+    if (existsSync(join(baseDir, GRAPH_PATH))) {
       console.error(
         `Reusing the baseline for ${commit.slice(0, 8)} in ${baseDir}`
       );

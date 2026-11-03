@@ -3,11 +3,10 @@ import { isAbsolute, join, relative } from "path";
 import { RESOLVED_PREFIX as URL_IMPORT_PREFIX } from "./dynamic-chunk-url-plugin.mjs";
 
 const NODE_MODULES = "/node_modules/";
-const EXAMPLES_PER_EDGE = 3;
 
 /**
  * Writes `manifest/bundle-graph.json`: every chunk's modules, its static,
- * dynamic and URL imports, example module-level imports behind each
+ * dynamic and URL imports, an example module-level import behind each
  * cross-chunk edge, and every module's static importers. The
  * importers explain code that moved into another chunk, such as lazy code
  * now imported statically, where no cross-chunk import is left to show it.
@@ -24,7 +23,14 @@ export default function bundleGraphPlugin({ root }) {
     }
     return versions.get(packageDir);
   };
-  const normalize = (id) => normalizeModuleId(id, root, versionOf);
+  // Module ids repeat across importer lists.
+  const normalized = new Map();
+  const normalize = (id) => {
+    if (!normalized.has(id)) {
+      normalized.set(id, normalizeModuleId(id, root, versionOf));
+    }
+    return normalized.get(id);
+  };
 
   return {
     name: "bundle-graph",
@@ -32,14 +38,14 @@ export default function bundleGraphPlugin({ root }) {
     generateBundle(_outputOptions, bundle) {
       const chunkOfModule = new Map();
       const chunks = {};
-      const assets = {};
+      const assets = [];
       const entries = {};
       const importers = new Map();
 
       for (const [fileName, output] of Object.entries(bundle)) {
         if (output.type !== "chunk") {
           if (!/\.(map|br)$/.test(fileName)) {
-            assets[fileName] = { label: labelOf(fileName) };
+            assets.push(fileName);
           }
           continue;
         }
@@ -62,10 +68,10 @@ export default function bundleGraphPlugin({ root }) {
           if (!targetFile || targetFile === fileName) {
             return;
           }
-          const list = (examples[`${kind}:${targetFile}`] ??= []);
-          if (list.length < EXAMPLES_PER_EDGE) {
-            list.push({ from: normalize(from), to: normalize(to) });
-          }
+          examples[`${kind}:${targetFile}`] ??= {
+            from: normalize(from),
+            to: normalize(to),
+          };
         };
 
         for (const moduleId of chunk.moduleIds) {
@@ -95,22 +101,20 @@ export default function bundleGraphPlugin({ root }) {
         }
 
         chunks[fileName] = {
-          label: labelOf(fileName),
           kind: chunk.isEntry
             ? "entry"
             : chunk.isDynamicEntry
               ? "lazy"
               : "shared",
           facade: chunk.facadeModuleId ? normalize(chunk.facadeModuleId) : null,
-          imports: [...chunk.imports].sort(),
-          dynamicImports: chunk.dynamicImports
-            .filter((file) => file !== fileName)
-            .sort(),
+          imports: chunk.imports,
+          dynamicImports: chunk.dynamicImports.filter(
+            (file) => file !== fileName
+          ),
           urlImports: Object.keys(examples)
             .filter((key) => key.startsWith("url:"))
-            .map((key) => key.slice("url:".length))
-            .sort(),
-          modules: chunk.moduleIds.map(normalize).sort(),
+            .map((key) => key.slice("url:".length)),
+          modules: chunk.moduleIds.map(normalize),
           examples,
         };
       }
@@ -118,8 +122,8 @@ export default function bundleGraphPlugin({ root }) {
       this.emitFile({
         type: "asset",
         fileName: "manifest/bundle-graph.json",
-        source: stableStringify({
-          version: 3,
+        source: JSON.stringify({
+          version: 4,
           entries,
           chunks,
           assets,
@@ -128,17 +132,6 @@ export default function bundleGraphPlugin({ root }) {
       });
     },
   };
-}
-
-/**
- * The filename part before the content hash, e.g. `admin` for
- * `assets/js/admin-gwfrhsfc.digested.js`. Files without a digested hash
- * keep their whole name. Follows the output file name patterns in the build
- * config.
- */
-export function labelOf(fileName) {
-  const base = fileName.split("/").pop();
-  return base.replace(/-[a-z0-9]+\.digested\.[a-z0-9]+$/, "");
 }
 
 /**
@@ -212,23 +205,4 @@ function indexedImporters(importers) {
         .sort((a, b) => a - b)
     ),
   };
-}
-
-/** JSON with object keys sorted, so the file is reproducible. */
-export function stableStringify(value) {
-  return JSON.stringify(sortKeys(value), null, 1);
-}
-
-function sortKeys(value) {
-  if (Array.isArray(value)) {
-    return value.map(sortKeys);
-  }
-  if (value && typeof value === "object") {
-    return Object.fromEntries(
-      Object.keys(value)
-        .sort()
-        .map((key) => [key, sortKeys(value[key])])
-    );
-  }
-  return value;
 }

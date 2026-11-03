@@ -75,7 +75,7 @@ test("tiny changes show as under 0.1%", () => {
             kind: "dynamic",
             fromName: "a",
             toName: "b",
-            examples: [],
+            example: null,
           },
         ],
         removed: [],
@@ -107,7 +107,7 @@ test("hostile names cannot inject markdown into the comment", () => {
             kind: "dynamic",
             fromName: name,
             toName: "b",
-            examples: [{ from: "[link](https://example.com)", to: "b" }],
+            example: { from: "[link](https://example.com)", to: "b" },
           },
         ],
         removed: [],
@@ -128,7 +128,7 @@ test("edges that share a target are grouped", () => {
     kind: "dynamic",
     fromName: from,
     toName: "x",
-    examples: [],
+    example: null,
   });
   const { body, keys } = renderComment(
     report({ edges: { added: [edge("a"), edge("b")], removed: [] } }),

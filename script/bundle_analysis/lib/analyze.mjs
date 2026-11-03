@@ -1,7 +1,8 @@
 import {
   describeBuild,
+  labelOf,
   loadGraph,
-  MAIN_ENTRY,
+  MAIN_KEY,
   moduleBytes,
   packageOf,
   stripVersion,
@@ -17,9 +18,9 @@ const MIN_MODULE_DELTA = 100;
  * applied when rendering, so the trusted comment workflow decides what is
  * flagged.
  */
-export function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
-  const base = describeBuild(loadGraph(baseDir), { mainEntry });
-  const head = describeBuild(loadGraph(headDir), { mainEntry });
+export function analyze({ baseDir, headDir }) {
+  const base = describeBuild(loadGraph(baseDir));
+  const head = describeBuild(loadGraph(headDir));
 
   const brotli = (graph, file) => graph.chunks[file].brotliSize;
   const sum = (files, graph) =>
@@ -50,11 +51,7 @@ export function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
       base: measure(b, base.graph),
       head: measure(h, head.graph),
       topModules:
-        b && h
-          ? moduleDeltas(base.graph, b.costChunks, head.graph, h.costChunks)
-          : h
-            ? moduleDeltas(base.graph, [], head.graph, h.costChunks)
-            : [],
+        b && h ? moduleDeltas(base, b.costChunks, head, h.costChunks) : [],
       importedBy: !b && h ? importersOf(key, head) : [],
     });
   }
@@ -68,15 +65,15 @@ export function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
   );
   const nameOf = new Map(bundles.map((b) => [b.key, b.name]));
   const edgeList = (edges, others, skip) =>
-    [...edges.values()]
-      .filter((edge) => !others.has(edgeKey(edge)))
-      .filter((edge) => !skip.has(edge.from) && !skip.has(edge.to))
-      .map((edge) => ({
+    [...edges]
+      .filter(([key]) => !others.has(key))
+      .filter(([, edge]) => !skip.has(edge.from) && !skip.has(edge.to))
+      .sort(([x], [y]) => x.localeCompare(y))
+      .map(([, edge]) => ({
         ...edge,
         fromName: nameOf.get(edge.from),
         toName: nameOf.get(edge.to),
-      }))
-      .sort((x, y) => edgeKey(x).localeCompare(edgeKey(y)));
+      }));
 
   return {
     schema: REPORT_SCHEMA,
@@ -85,16 +82,11 @@ export function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
       base: sum(base.initial, base.graph),
       head: sum(head.initial, head.graph),
       entryOwn: {
-        base: brotli(base.graph, base.bundles.get(base.mainKey).file),
-        head: brotli(head.graph, head.bundles.get(head.mainKey).file),
+        base: brotli(base.graph, base.bundles.get(MAIN_KEY).file),
+        head: brotli(head.graph, head.bundles.get(MAIN_KEY).file),
       },
       chunks: { base: base.initial.size, head: head.initial.size },
-      topModules: moduleDeltas(
-        base.graph,
-        base.initial,
-        head.graph,
-        head.initial
-      ),
+      topModules: moduleDeltas(base, base.initial, head, head.initial),
     },
     totals: {
       base: sum(chunkFiles(base.graph), base.graph),
@@ -110,16 +102,12 @@ export function analyze({ baseDir, headDir, mainEntry = MAIN_ENTRY }) {
       name: nameOf.get(group.bundle),
     })),
     edges: {
-      added: edgeList(head.edges, new Set(base.edges.keys()), newKeys),
-      removed: edgeList(base.edges, new Set(head.edges.keys()), removedKeys),
+      added: edgeList(head.edges, base.edges, newKeys),
+      removed: edgeList(base.edges, head.edges, removedKeys),
     },
     assets: compareAssets(base.graph, head.graph),
     duplicatePackages: duplicatePackages(base.graph, head.graph),
   };
-}
-
-function edgeKey(edge) {
-  return `${edge.from}|${edge.to}|${edge.kind}`;
 }
 
 function chunkFiles(graph) {
@@ -130,29 +118,17 @@ function chunkFiles(graph) {
  * Modules whose rendered bytes grew most between two sets of chunks. `added`
  * means new to the build, not just to these chunks: moved code is not new.
  */
-function moduleDeltas(baseGraph, baseFiles, headGraph, headFiles) {
-  const before = moduleBytes(baseGraph, baseFiles);
-  const after = moduleBytes(headGraph, headFiles);
-  const inBase = allModules(baseGraph);
+function moduleDeltas(base, baseFiles, head, headFiles) {
+  const before = moduleBytes(base.graph, baseFiles);
+  const after = moduleBytes(head.graph, headFiles);
   const deltas = [];
   for (const [id, size] of after) {
     const delta = size - (before.get(id) ?? 0);
     if (delta >= MIN_MODULE_DELTA) {
-      deltas.push({ id, delta, added: !inBase.has(id) });
+      deltas.push({ id, delta, added: !base.strippedModuleChunk.has(id) });
     }
   }
   return deltas.sort((a, b) => b.delta - a.delta).slice(0, TOP_MODULES);
-}
-
-const allModulesCache = new WeakMap();
-function allModules(graph) {
-  if (!allModulesCache.has(graph)) {
-    allModulesCache.set(
-      graph,
-      new Set(moduleBytes(graph, Object.keys(graph.chunks)).keys())
-    );
-  }
-  return allModulesCache.get(graph);
 }
 
 /** Who imports a new bundle, with the importing module. */
@@ -163,7 +139,7 @@ function importersOf(key, build) {
       from: edge.from,
       fromName: build.bundles.get(edge.from).name,
       kind: edge.kind,
-      examples: edge.examples,
+      example: edge.example,
     }));
 }
 
@@ -195,19 +171,12 @@ function movedIntoInitialLoad(base, head) {
       continue;
     }
     if (!groups.has(owner.key)) {
-      groups.set(owner.key, {
-        bundle: owner.key,
-        facade: owner.facade,
-        bytes: 0,
-        modules: [],
-        ids: new Set(),
-      });
+      groups.set(owner.key, { bundle: owner.key, bytes: 0, modules: [] });
     }
     const group = groups.get(owner.key);
     const bytes = head.graph.chunks[headFile].modules[id];
     group.bytes += bytes;
     group.modules.push({ id, bytes });
-    group.ids.add(id);
   }
 
   return [...groups.values()]
@@ -217,7 +186,11 @@ function movedIntoInitialLoad(base, head) {
       modules: group.modules
         .sort((a, b) => b.bytes - a.bytes)
         .slice(0, TOP_MODULES),
-      importers: boundaryImports(base, head, group.ids),
+      importers: boundaryImports(
+        base,
+        head,
+        new Set(group.modules.map((m) => m.id))
+      ),
     }))
     .sort((a, b) => b.bytes - a.bytes);
 }
@@ -266,12 +239,12 @@ function boundaryImports(base, head, movedIds) {
 function compareAssets(baseGraph, headGraph) {
   const byLabel = (graph) => {
     const assets = new Map();
-    for (const file of Object.keys(graph.assets).sort()) {
-      let label = graph.assets[file].label;
+    for (const [file, size] of Object.entries(graph.assets).sort()) {
+      let label = labelOf(file);
       for (let n = 2; assets.has(label); n++) {
-        label = `${graph.assets[file].label} (${n})`;
+        label = `${labelOf(file)} (${n})`;
       }
-      assets.set(label, graph.assets[file].rawSize);
+      assets.set(label, size);
     }
     return assets;
   };

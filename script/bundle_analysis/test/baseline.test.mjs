@@ -7,10 +7,10 @@ import { join } from "path";
 import {
   findBaseline,
   sameJsInputs,
-  treeHash,
   tryDownload,
   versionAt,
 } from "../lib/baseline.mjs";
+import { GRAPH_PATH } from "../lib/graph.mjs";
 
 function repo() {
   const dir = mkdtempSync(join(tmpdir(), "bundle-repo-"));
@@ -51,15 +51,11 @@ function repo() {
   return { dir, git, first, docs, js, patch };
 }
 
-function tarball({ treeHash: hash, graph = true }) {
+function tarball({ graph = true } = {}) {
   const dir = mkdtempSync(join(tmpdir(), "bundle-tarball-"));
   mkdirSync(join(dir, "core/manifest"), { recursive: true });
-  writeFileSync(
-    join(dir, "core/BUILD_INFO.json"),
-    JSON.stringify({ core_tree_hash: hash })
-  );
   if (graph) {
-    writeFileSync(join(dir, "core/manifest/bundle-graph.json"), "{}");
+    writeFileSync(join(dir, "core", GRAPH_PATH), "{}");
   }
   execFileSync("tar", [
     "-czf",
@@ -80,53 +76,29 @@ test("sameJsInputs looks at every build input", () => {
   assert.equal(sameJsInputs(first, "0".repeat(40), dir), false);
 });
 
-test("treeHash matches the hash assemble_ember_build.rb records", () => {
-  const { dir, git, first, docs, js } = repo();
-  const expected = execFileSync("git", ["mktree", "--missing"], {
-    cwd: dir,
-    input: `${git("ls-tree", first, "--", "frontend", "package.json", "pnpm-lock.yaml")}\n`,
-    encoding: "utf8",
-  }).trim();
-
-  assert.equal(treeHash(first, dir), expected);
-  assert.equal(treeHash(docs, dir), expected);
-  assert.notEqual(treeHash(js, dir), expected);
-});
-
 test("versionAt reads lib/version.rb", () => {
   const { dir, first } = repo();
   assert.equal(versionAt(first, dir), "2026.10.0-latest");
 });
 
-test("tryDownload checks the tree hash and the bundle graph", () => {
-  const { dir, first } = repo();
-  const hash = treeHash(first, dir);
+test("tryDownload needs a bundle graph", () => {
   const out = () => join(mkdtempSync(join(tmpdir(), "bundle-out-")), "base");
 
   const good = out();
-  assert.equal(tryDownload(tarball({ treeHash: hash }), good, hash), true);
-  assert.ok(existsSync(join(good, "manifest/bundle-graph.json")));
+  assert.equal(tryDownload(tarball(), good), true);
+  assert.ok(existsSync(join(good, GRAPH_PATH)));
 
-  assert.equal(tryDownload(tarball({ treeHash: "other" }), out(), hash), false);
-  assert.equal(
-    tryDownload(tarball({ treeHash: hash, graph: false }), out(), hash),
-    false
-  );
-  assert.equal(
-    tryDownload("file:///does/not/exist.tar.gz", out(), hash),
-    false
-  );
+  assert.equal(tryDownload(tarball({ graph: false }), out()), false);
+  assert.equal(tryDownload("file:///does/not/exist.tar.gz", out()), false);
 
   const junk = join(mkdtempSync(join(tmpdir(), "bundle-junk-")), "junk.tar.gz");
   writeFileSync(junk, "not a tarball");
-  assert.equal(tryDownload(`file://${junk}`, out(), hash), false);
+  assert.equal(tryDownload(`file://${junk}`, out()), false);
 });
 
 test("findBaseline uses any recent commit with the same JS inputs, else builds", () => {
   const { dir, first, docs, js } = repo();
-  const published = new Map([
-    [first, tarball({ treeHash: treeHash(first, dir) })],
-  ]);
+  const published = new Map([[first, tarball()]]);
   const urlFor = (_version, commit) =>
     published.get(commit) ?? "file:///missing";
   const built = [];

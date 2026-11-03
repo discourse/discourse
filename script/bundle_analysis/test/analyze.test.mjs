@@ -35,7 +35,7 @@ test("a new lazy import is a new bundle, reported with its importer", () => {
     "assets/js/rrule-eeee5555.digested.js"
   );
   head.chunks[ADMIN].examples["dynamic:assets/js/rrule-eeee5555.digested.js"] =
-    [{ from: "admin/components/a.gjs", to: "rrule@2.8.1/dist/esm/index.js" }];
+    { from: "admin/components/a.gjs", to: "rrule@2.8.1/dist/esm/index.js" };
   head.chunks["assets/js/rrule-eeee5555.digested.js"] = {
     kind: "lazy",
     facade: "rrule@2.8.1/dist/esm/index.js",
@@ -54,9 +54,10 @@ test("a new lazy import is a new bundle, reported with its importer", () => {
       from: "lazy:admin/compat-modules.js",
       fromName: "admin",
       kind: "dynamic",
-      examples: [
-        { from: "admin/components/a.gjs", to: "rrule@2.8.1/dist/esm/index.js" },
-      ],
+      example: {
+        from: "admin/components/a.gjs",
+        to: "rrule@2.8.1/dist/esm/index.js",
+      },
     },
   ]);
   assert.deepEqual(report.edges.added, []);
@@ -135,18 +136,20 @@ test("a version bump that only changes paths keeps the bundle", () => {
 test("a new import between existing bundles is a new connection", () => {
   const head = baseApp();
   head.chunks[ENTRY].dynamicImports.push(CODEMIRROR);
-  head.chunks[ENTRY].examples[`dynamic:${CODEMIRROR}`] = [
-    { from: "app/lib/editor.js", to: "app/static/codemirror.js" },
-  ];
+  head.chunks[ENTRY].examples[`dynamic:${CODEMIRROR}`] = {
+    from: "app/lib/editor.js",
+    to: "app/static/codemirror.js",
+  };
 
   const { report, keys } = compare(baseApp(), head);
 
   assert.deepEqual(keys, [
     "edge:entry:discourse:lazy:app/static/codemirror.js:dynamic",
   ]);
-  assert.deepEqual(report.edges.added[0].examples, [
-    { from: "app/lib/editor.js", to: "app/static/codemirror.js" },
-  ]);
+  assert.deepEqual(report.edges.added[0].example, {
+    from: "app/lib/editor.js",
+    to: "app/static/codemirror.js",
+  });
 });
 
 test("imports inside the initial load are not attributed to lazy bundles", () => {

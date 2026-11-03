@@ -3,7 +3,8 @@ const MAX_NAMES = 5;
 const MAX_STRING = 120;
 const COMMENT_LIMIT = 60_000;
 
-export const REPRODUCE =
+export const HEADING = "### 📦 JS bundle changes";
+const REPRODUCE =
   "node script/bundle_analysis/analyze.mjs --base-ref origin/main --head frontend/discourse/dist";
 
 /** Whether a size change exceeds a `{ percent, kib, combine }` threshold. */
@@ -151,7 +152,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
             cell(bundle.name),
             bundle.kind,
             kib(bundle.head.load),
-            from ? `${cell(from.fromName)}${viaText(from.examples)}` : "–",
+            from ? `${cell(from.fromName)}${viaText(from.example)}` : "–",
             cell(bundle.facade),
           ];
         })
@@ -171,7 +172,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
           `${group.from.map(cell).join(", ")}${group.more ? ` and ${group.more} more` : ""}`,
           cell(group.toName),
           group.kind,
-          group.examples[0] ? cell(group.examples[0].from) : "–",
+          group.example ? cell(group.example.from) : "–",
         ])
       )
     );
@@ -186,7 +187,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
   ];
 
   let body = [
-    "### 📦 JS bundle changes",
+    HEADING,
     "",
     `**Initial load:** ${kib(initial.base)} → ${kib(initial.head)} (${delta(initial.base, initial.head)}) · ${count}`,
     "",
@@ -247,8 +248,7 @@ function topModuleCell(modules) {
   return top ? `${cell(top.id)} ${signedKib(top.delta)}` : "–";
 }
 
-function viaText(examples) {
-  const example = examples?.[0];
+function viaText(example) {
   return example ? ` from ${cell(example.from)}` : "";
 }
 
@@ -315,7 +315,7 @@ export function renderSummary(report, budget) {
       lines.push(`**${title}**`, "");
       for (const edge of list) {
         lines.push(
-          `- ${code(edge.fromName)} → ${code(edge.toName)}: ${edge.kind}${exampleText(edge.examples)}`
+          `- ${code(edge.fromName)} → ${code(edge.toName)}: ${edge.kind}${exampleText(edge.example)}`
         );
       }
       lines.push("");
@@ -361,7 +361,7 @@ function groupEdges(edges) {
         toName: edge.toName,
         kind: edge.kind,
         from: [],
-        examples: edge.examples,
+        example: edge.example,
       });
     }
     groups.get(key).from.push(edge.fromName);
@@ -373,8 +373,7 @@ function groupEdges(edges) {
   }));
 }
 
-function exampleText(examples) {
-  const example = examples?.[0];
+function exampleText(example) {
   return example ? `, from ${code(example.from)}` : "";
 }
 

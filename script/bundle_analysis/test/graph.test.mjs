@@ -4,6 +4,8 @@ import { test } from "node:test";
 import { join } from "path";
 import {
   describeBuild,
+  GRAPH_PATH,
+  labelOf,
   loadGraph,
   packageOf,
   stripVersion,
@@ -66,7 +68,7 @@ function withReportedModules(file, modules) {
   );
   const path = join(dir, REPORT);
   const report = JSON.parse(readFileSync(path, "utf8"));
-  const graphPath = join(dir, "manifest/bundle-graph.json");
+  const graphPath = join(dir, GRAPH_PATH);
   const graph = JSON.parse(readFileSync(graphPath, "utf8"));
   graph.chunks[file].modules = modules.graph;
   report.chunks[file].modules = modules.report;
@@ -117,4 +119,17 @@ test("loadGraph needs brotli sizes, which only production builds have", () => {
   writeFileSync(path, JSON.stringify(report));
 
   assert.throws(() => loadGraph(dir), /no brotli size for assets\/js\/chunk/);
+});
+
+test("labelOf strips the content hash", () => {
+  assert.equal(labelOf("assets/js/admin-gwfrhsfc.digested.js"), "admin");
+  assert.equal(
+    labelOf("assets/js/route-wizard-js-ab12cd34.digested.js"),
+    "route-wizard-js"
+  );
+  assert.equal(labelOf("assets/js/jxl_enc-gne50clb.digested.wasm"), "jxl_enc");
+  assert.equal(
+    labelOf("@embroider/virtual/test-support.css"),
+    "test-support.css"
+  );
 });

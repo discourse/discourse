@@ -68,15 +68,16 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
-      - name: Build the PR
-        working-directory: frontend/discourse
-        env:
-          EMBER_ENV: production
-          CI: "1"
-        run: pnpm build
+      - parallel:
+          - name: Build the PR
+            working-directory: frontend/discourse
+            env:
+              EMBER_ENV: production
+              CI: "1"
+            run: pnpm build
 
-      - name: Find the baseline
-        run: node script/bundle_analysis/baseline.mjs --commit HEAD^1 --out "$RUNNER_TEMP/base"
+          - name: Find the baseline
+            run: node script/bundle_analysis/baseline.mjs --commit HEAD^1 --out "$RUNNER_TEMP/base"
 
       - name: Analyze
         run: |
