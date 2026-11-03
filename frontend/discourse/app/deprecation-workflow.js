@@ -336,7 +336,6 @@ const workflows = [
     "discourse.hbs-extension",
     "discourse.es6-extension",
     "discourse.header-service-topic",
-    "discourse.hide-popover",
     "discourse.html-helper",
     "discourse.html-safe-helper",
     "discourse.icon-picker",
@@ -366,7 +365,6 @@ const workflows = [
     "discourse.safari-hacks-disabled",
     "discourse.section-link-class-arg",
     "discourse.select-kit-resolved-components",
-    "discourse.show-popover",
     "discourse.site.is-mobile-device",
     "discourse.static-viewport-initialization",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
