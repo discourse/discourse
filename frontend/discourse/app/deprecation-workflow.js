@@ -344,7 +344,6 @@ const workflows = [
     "discourse.discourse-module",
     "discourse.discovery-topics-controller",
     "discourse.ember-computed-decorators",
-    "discourse.fa-icon",
     "discourse.form-kit.legacy-field-yield",
     "discourse.format-age",
     "discourse.formatter.update-relative-age-node-list",

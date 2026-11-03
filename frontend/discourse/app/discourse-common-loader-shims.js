@@ -17,9 +17,6 @@ loaderShim("discourse-common/helpers/component-for-row", () =>
 loaderShim("discourse-common/helpers/d-icon", () =>
   importSync("discourse/ui-kit/helpers/d-icon")
 );
-loaderShim("discourse-common/helpers/fa-icon", () =>
-  importSync("discourse/helpers/fa-icon")
-);
 loaderShim("discourse-common/helpers/get-url", () =>
   importSync("discourse/lib/get-url")
 );
