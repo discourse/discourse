@@ -340,7 +340,6 @@ const workflows = [
     "discourse.legacy-array-like-object.proxied-array",
     "discourse.legacy-topic-list",
     "discourse.modify-class-model",
-    "discourse.number-field",
     "discourse.offset-calculator.minimumOffset",
     "discourse.plugin-outlet-args",
     "discourse.plugin-outlet-classic-args-clash",
