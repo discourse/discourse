@@ -1011,12 +1011,10 @@ en:
     dsa_statements:
       title: "DSA classification"
       help_title: "About DSA classification"
-      help: "The Digital Services Act requires platforms to record why content was moderated. Select the community rule and category that explain this decision."
+      help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."
       rule: "Community rule"
-      rule_help: "Select the community rule this moderation decision is based on."
       rule_prompt: "Choose a community rule"
       category: "Category"
-      category_help: "Select the type of violation using the categories required for Digital Services Act reporting."
       category_prompt: "Choose a category"
       save: "Save classification"
     review:

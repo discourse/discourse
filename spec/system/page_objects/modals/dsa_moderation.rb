@@ -10,14 +10,6 @@ module PageObjects
         super(modal_selector: MODAL_SELECTOR)
       end
 
-      def open_dsa_help
-        within(full_modal_selector) { find(".dsa-moderation-help").hover }
-      end
-
-      def has_classification_help?(text)
-        has_css?("[role='tooltip']", text: text)
-      end
-
       def select_rule(ground)
         within(full_modal_selector) { select(ground, from: "Community rule") }
       end
