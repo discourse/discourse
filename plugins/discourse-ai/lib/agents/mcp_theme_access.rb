@@ -17,8 +17,6 @@ module DiscourseAi
       THEME_SCOPES = [DiscourseMcp::Scopes::THEMES_READ, DiscourseMcp::Scopes::THEMES_WRITE].freeze
       SERVER_SETTING = :mcp_server_enabled
 
-      # Apps with setup steps, in the order they're offered.
-      APPS = %w[claude chatgpt claude_code codex cursor vscode].freeze
       RECENT_CALLS = 5
 
       Change = Data.define(:key, :before, :after)
@@ -139,22 +137,13 @@ module DiscourseAi
       end
       private_class_method :enable_server
 
-      # The apps connected to the user's account, whether each can use the
-      # theme tools, and whether it has to be approved again first, as
-      # happens when new tools become available to it.
+      # The apps connected to the user's account, and whether each can use
+      # the theme tools.
       def self.connections(user)
-        McpOauthAuthorization
-          .where(user:, status: %w[active consent_required], revoked_at: nil)
-          .includes(:client, :scope_records)
-          .order(consented_at: :desc)
-          .map do |authorization|
-            {
-              app: authorization.client.name,
-              theme_access: (THEME_SCOPES - authorization.scopes).empty?,
-              needs_approval:
-                authorization.status == "consent_required" || !authorization.consent_current?,
-              connected_at: authorization.consented_at.iso8601,
-            }
+        McpAppSetup
+          .connections(user, scopes: THEME_SCOPES)
+          .map do |connection|
+            connection.except(:has_scopes).merge(theme_access: connection[:has_scopes])
           end
       end
 
@@ -174,42 +163,6 @@ module DiscourseAi
               at: log.occurred_at.iso8601,
             }.compact
           end
-      end
-
-      # What stops apps from signing in, beyond what turning access on fixes.
-      def self.sign_in_notes
-        case SiteSetting.mcp_oauth_client_id_metadata_policy
-        when "approved_domains"
-          domains = SiteSetting.mcp_oauth_client_id_metadata_domains.split("|").compact_blank
-          [
-            I18n.t(
-              "discourse_ai.mcp_theme_access.notes.approved_domains",
-              domains: domains.presence&.join(", ") || I18n.t("discourse_ai.mcp_theme_access.none"),
-              settings_url: "#{Discourse.base_url}/admin/config/mcp/settings",
-            ),
-          ]
-        when "disabled"
-          [
-            I18n.t(
-              "discourse_ai.mcp_theme_access.notes.pre_registered_only",
-              clients_url: "#{Discourse.base_url}/admin/config/mcp/clients",
-            ),
-          ]
-        else
-          []
-        end
-      end
-
-      def self.app_steps(app, site_name:)
-        I18n.t(
-          "discourse_ai.mcp_theme_access.apps.#{app}.steps",
-          url: DiscourseMcp.resource_url,
-          name: site_name,
-        )
-      end
-
-      def self.app_name(app)
-        I18n.t("discourse_ai.mcp_theme_access.apps.#{app}.name")
       end
 
       def self.tool_title(primitive_id)

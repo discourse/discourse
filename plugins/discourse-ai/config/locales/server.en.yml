@@ -1441,9 +1441,6 @@ en:
         server: "Turn on the MCP server."
         tools: "Let apps use these theme tools: %{tools}."
         admin_scopes: "Give administrators theme access."
-      notes:
-        approved_domains: "Apps can only sign in from approved domains (%{domains}). If an app's sign-in page says the page is private, add its domain, for example claude.ai or chatgpt.com, under MCP settings: %{settings_url}"
-        pre_registered_only: "Apps can only sign in once an administrator registers them, under MCP clients: %{clients_url}"
       starter_message: |-
         I'm an administrator of the Discourse site %{site_url}. Use its MCP server to build a theme. Its current default theme is "%{theme}".
 
@@ -1459,6 +1456,12 @@ en:
         banner_topic: "A banner topic shown to everyone, from a topic's admin wrench menu"
         global_notice: "A notice across the top of every page: %{base_url}/admin/site_settings/category/all_results?filter=global_notice"
         theme_components: "Ready-made theme components, such as custom header links: %{base_url}/admin/config/customize/components"
+
+    mcp_app_setup:
+      none: "none"
+      notes:
+        approved_domains: "Apps can only sign in from approved domains (%{domains}). If an app's sign-in page says the page is private, add its domain, for example claude.ai or chatgpt.com, under MCP settings: %{settings_url}"
+        pre_registered_only: "Apps can only sign in once an administrator registers them, under MCP clients: %{clients_url}"
       apps:
         claude:
           name: "Claude (web or desktop)"

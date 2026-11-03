@@ -23,7 +23,7 @@ module DiscourseAi
               {
                 name: "app",
                 type: "string",
-                enum: McpThemeAccess::APPS,
+                enum: McpAppSetup::APPS,
                 description: "The AI app the administrator uses, when known",
               },
               {
@@ -54,9 +54,9 @@ module DiscourseAi
             mcp_url: DiscourseMcp.resource_url,
             setup_needed: setup_needed.presence,
             blocked_tools: blocked_tools.presence,
-            sign_in_notes: McpThemeAccess.sign_in_notes.presence,
-            apps: app.nil? ? McpThemeAccess::APPS.map { |key| McpThemeAccess.app_name(key) } : nil,
-            app_steps: app && McpThemeAccess.app_steps(app, site_name: SiteSetting.title),
+            sign_in_notes: McpAppSetup.sign_in_notes.presence,
+            apps: app.nil? ? McpAppSetup::APPS.map { |key| McpAppSetup.app_name(key) } : nil,
+            app_steps: app && McpAppSetup.app_steps(app, site_name: SiteSetting.title),
             connections: McpThemeAccess.connections(context.user),
             recent_theme_changes: McpThemeAccess.recent_theme_calls(context.user),
             starter_message:,
@@ -82,7 +82,7 @@ module DiscourseAi
 
         def app
           value = parameters[:app].to_s
-          value if McpThemeAccess::APPS.include?(value)
+          value if McpAppSetup::APPS.include?(value)
         end
 
         def request_text
