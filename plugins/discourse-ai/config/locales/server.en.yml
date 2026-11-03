@@ -509,6 +509,9 @@ en:
       bot_user_update_failed: "Failed to update the spam scanning bot user"
       configuration_missing: "The AI spam detection configuration is missing. Add configuration in the 'Admin > Plugins > Discourse AI > Spam' before enabling."
       logging_subject: "Spam detection"
+      model_missing: "Select an LLM or a decision model for spam detection."
+      decision_reason: "The decision model rated this post %{probability}% likely to be spam."
+      decision_refused: "The decision model did not answer, so the post was not flagged."
 
     ai_bot:
       sources:
@@ -1428,6 +1431,7 @@ en:
         duplicate_name: "must have unique names (case-insensitive)"
       secret_not_found: "The selected credential does not exist"
       invalid_url: "must be an http:// or https:// URL, or an srv:// URL without a port"
+      delete_failed_spam: "This decision model is used for spam detection. Choose another model in the spam settings first."
       test_refused: "The decision model declined to answer the test question."
       test_image_not_read: "The decision model did not recognise the test image. Untick \"Supports image input\" if it cannot read images."
       credit_limit_exceeded: "%{model_name} has used all of today's AI credits. Credits reset in %{reset_time}."
