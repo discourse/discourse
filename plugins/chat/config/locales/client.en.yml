@@ -424,7 +424,6 @@ en:
       members_view:
         filter_placeholder: Find members
         add_member: Add Member
-        back_to_settings: "Back to settings"
 
       about_view:
         associated_topic: Linked topic
@@ -435,12 +434,15 @@ en:
       channel_info:
         back_to_all_channels: "All channels"
         back_to_channel: "Back"
+        nav_label: "Channel info"
         tabs:
           members: Members
+          preferences: Preferences
           settings: Settings
           search: Search
         remove_member: "Remove"
         members_title: "%{channel} members"
+        preferences_title: "%{channel} preferences"
 
       new_message_modal:
         title: Send message
@@ -623,7 +625,6 @@ en:
         save: "Save"
         saved: "Saved"
         unfollow: "Leave"
-        info_title: "Channel info"
         category_label: "Category"
         history_label: "History"
         members_label: "Members"

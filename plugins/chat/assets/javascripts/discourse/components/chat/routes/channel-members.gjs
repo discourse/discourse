@@ -3,7 +3,6 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
@@ -21,12 +20,11 @@ import MessageCreator from "discourse/plugins/chat/discourse/components/chat/mes
 import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 
-export default class ChatRouteChannelInfoMembers extends Component {
+export default class ChatRouteChannelMembers extends Component {
   @service chatApi;
   @service chatGuardian;
   @service currentUser;
   @service loadingSlider;
-  @service site;
 
   @tracked filter = "";
   @tracked updatedAt = Date.now();
@@ -158,16 +156,6 @@ export default class ChatRouteChannelInfoMembers extends Component {
 
   <template>
     <div class="c-routes --channel-info-members">
-      {{#if this.site.mobileView}}
-        <LinkTo
-          class="c-back-button"
-          @model={{@channel}}
-          @route="chat.channel.info.settings"
-        >
-          {{dIcon "chevron-left"}}
-          {{i18n "chat.members_view.back_to_settings"}}
-        </LinkTo>
-      {{/if}}
       {{#if this.showAddMembers}}
         <MessageCreator
           @channel={{@channel}}

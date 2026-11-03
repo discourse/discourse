@@ -25,7 +25,7 @@ export default function withChatChannel(extendedClass) {
       }
     }
 
-    afterModel(model) {
+    afterModel(model, transition) {
       super.afterModel?.(...arguments);
 
       this.chat.activeChannel = model;
@@ -39,7 +39,7 @@ export default function withChatChannel(extendedClass) {
       if (channelTitle && channelTitle !== model.slugifiedTitle) {
         if (this.routeName === "chat.channel.info") {
           return this.router.replaceWith(
-            "chat.channel.info",
+            transition.to.name,
             ...model.routeModels
           );
         }

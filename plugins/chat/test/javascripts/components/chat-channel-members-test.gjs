@@ -7,12 +7,12 @@ import pretender, {
   response,
   TOO_MANY_REQUESTS,
 } from "discourse/tests/helpers/create-pretender";
-import ChatRouteChannelInfoMembers from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-members";
+import ChatRouteChannelMembers from "discourse/plugins/chat/discourse/components/chat/routes/channel-members";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 const CHANNEL_ID = 1;
 
-module("Component | ChatRouteChannelInfoMembers", function (hooks) {
+module("Component | ChatRouteChannelMembers", function (hooks) {
   setupRenderingTest(hooks);
 
   test("ends the loading slider when loading members fails", async function (assert) {
@@ -28,7 +28,7 @@ module("Component | ChatRouteChannelInfoMembers", function (hooks) {
     });
 
     await render(
-      <template><ChatRouteChannelInfoMembers @channel={{channel}} /></template>
+      <template><ChatRouteChannelMembers @channel={{channel}} /></template>
     );
 
     await fillIn(".c-channel-members__filter input", "bob");

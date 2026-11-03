@@ -23,6 +23,16 @@ export default class ChatNavbarChannelTitle extends Component {
     );
   }
 
+  get infoRoute() {
+    const channel = this.args.channel;
+
+    if (channel.isOpen && channel.currentUserMembership.following) {
+      return "chat.channel.info.preferences";
+    }
+
+    return "chat.channel.info.settings";
+  }
+
   get isStarred() {
     return this.args.channel?.currentUserMembership?.starred;
   }
@@ -75,7 +85,7 @@ export default class ChatNavbarChannelTitle extends Component {
         <LinkTo
           class="c-navbar__channel-title"
           @models={{@channel.routeModels}}
-          @route="chat.channel.info.settings"
+          @route={{this.infoRoute}}
         >
           <ChannelTitle @channel={{@channel}} />
         </LinkTo>

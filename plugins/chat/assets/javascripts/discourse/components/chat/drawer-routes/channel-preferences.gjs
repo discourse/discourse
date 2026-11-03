@@ -3,9 +3,9 @@ import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChannelInfoNav from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-nav";
-import ChannelSettings from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-settings";
+import ChannelPreferences from "discourse/plugins/chat/discourse/components/chat/routes/channel-preferences";
 
-export default class ChatDrawerRoutesSettings extends Component {
+export default class ChatDrawerRoutesPreferences extends Component {
   @service chat;
   @service chatStateManager;
 
@@ -18,7 +18,7 @@ export default class ChatDrawerRoutesSettings extends Component {
   }
 
   <template>
-    <div class="c-drawer-routes --channel-info-settings">
+    <div class="c-drawer-routes --channel-info-preferences">
       {{#if @model.channel}}
         <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
           <navbar.BackButton
@@ -36,8 +36,8 @@ export default class ChatDrawerRoutesSettings extends Component {
 
         {{#if this.chatStateManager.isDrawerExpanded}}
           <div class="chat-drawer-content">
-            <ChannelInfoNav @channel={{@model.channel}} @tab="settings" />
-            <ChannelSettings @channel={{@model.channel}} />
+            <ChannelInfoNav @channel={{@model.channel}} @tab="preferences" />
+            <ChannelPreferences @channel={{@model.channel}} />
           </div>
         {{/if}}
       {{/if}}
