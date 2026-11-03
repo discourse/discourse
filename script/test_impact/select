@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Prints the spec files a diff affects, one per line, from a map built by
+# script/test_impact/build_map. Changed files the map can't answer for (new
+# files, templates outside it, YAML, JS, migrations) are listed on stderr:
+# when there are any, the selection is incomplete.
+#
+#   script/test_impact/select [--map PATH] [--base REF]
+#   bin/rspec $(script/test_impact/select --base origin/main)
+
+require "optparse"
+require_relative "map"
+
+map_path = "tmp/test_impact/map.json.gz"
+base = "origin/main"
+OptionParser
+  .new do |opts|
+    opts.on("--map PATH") { |v| map_path = v }
+    opts.on("--base REF", "compare against the merge base with REF") { |v| base = v }
+  end
+  .parse!
+
+merge_base = IO.popen(["git", "merge-base", base, "HEAD"], &:read).strip
+abort "select: no merge base with #{base}" if !$?.success?
+# Against the working tree, so uncommitted changes count too.
+diff = IO.popen(["git", "diff", "-U0", "--no-color", "-M", merge_base], &:read)
+abort "select: git diff failed" if !$?.success?
+
+selection = TestImpact::Map.load(map_path).select(TestImpact::Diff.parse(diff))
+puts selection.specs
+
+if selection.untested.any?
+  warn "select: changed methods no recorded spec runs:"
+  selection.untested.each { |where| warn "  #{where}" }
+end
+if selection.unmapped.any?
+  warn "select: not in the map, so the selection is incomplete for:"
+  selection.unmapped.each { |path| warn "  #{path}" }
+end
