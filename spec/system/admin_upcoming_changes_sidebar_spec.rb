@@ -27,7 +27,7 @@ describe "Admin upcoming changes sidebar interaction" do
   it "adds the form templates sidebar link when the upcoming change is enabled" do
     upcoming_changes_page.visit
 
-    upcoming_changes_page.change_item(:enable_form_templates).select_enabled_for("everyone")
+    upcoming_changes_page.change_item(:enable_form_templates).toggle
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
 
     upcoming_changes_page.visit
@@ -40,7 +40,7 @@ describe "Admin upcoming changes sidebar interaction" do
     SiteSetting.enable_form_templates = true
     upcoming_changes_page.visit
 
-    upcoming_changes_page.change_item(:enable_form_templates).select_enabled_for("no_one")
+    upcoming_changes_page.change_item(:enable_form_templates).toggle
     expect(upcoming_changes_page).to have_disabled_success_toast
 
     upcoming_changes_page.visit
