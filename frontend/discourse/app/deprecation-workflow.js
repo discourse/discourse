@@ -359,7 +359,6 @@ const workflows = [
     "discourse.qunit-helpers.query-all",
     "discourse.register-connector-class-legacy",
     "discourse.register-raw-helper",
-    "discourse.register-unbound",
     "discourse.resolver-resolutions",
     "discourse.safari-hacks-disabled",
     "discourse.section-link-class-arg",

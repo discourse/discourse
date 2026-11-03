@@ -74,27 +74,6 @@ export function helperContext() {
 }
 
 /**
- * Register a helper for Ember and raw-hbs. This exists for
- * legacy reasons, and should be avoided in new code. Instead, you should
- * do `export default ...` from a `helpers/*.js` file.
- */
-export function registerUnbound(
-  name: string,
-  fn: (...args: unknown[]) => unknown
-) {
-  deprecated(
-    `[registerUnbound ${name}] registerUnbound is deprecated. Instead, you should export a default function from 'discourse/helpers/${name}.js'.`,
-    { id: "discourse.register-unbound" }
-  );
-
-  _helpers[name] = class extends Helper {
-    compute(params: unknown[], args: unknown) {
-      return fn(...params, args);
-    }
-  };
-}
-
-/**
  * Register a helper for raw-hbs only
  */
 export function registerRawHelper(name: string) {
