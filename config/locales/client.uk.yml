@@ -3533,6 +3533,7 @@ uk:
     filter_controls:
       reset: "Скинути"
       toggle: "Перемкнути випадаючі фільтри"
+      sort_label: "Сортувати за"
     d_icon_grid_picker:
       select_icon: "Виберіть іконку"
       search_label: "Пошук значків"
@@ -7130,6 +7131,9 @@ uk:
           impact_role_staff: "Команда обслуговування"
           impact_role_all_members: "Всі учасники"
           impact_role_developers: "Розробники"
+        sort:
+          status: "Статус"
+          name: "Імʼя"
       config:
         about:
           title: "Про ваш сайт"
@@ -8901,11 +8905,8 @@ uk:
           site_contact_group_help: |
             Група, яка отримує запрошення до всіх автоматично відправлених особистих повідомлень.
           your_organization: "Ваша організація"
-          your_organization_description: "Ми будемо використовувати цю інформацію в Умовах надання послуг та Повідомленні про конфіденційність, щоб показати, хто управляє сайтом і під якою юрисдикцією."
           company_name: "Імʼя"
           company_name_placeholder: "ПрикладКо"
-          company_name_warning: |
-            Якщо залишити порожнім, жодні Умови надання послуг чи Повідомлення про конфіденційність не надаватимуться.
           company_url: "Вебсайт"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Регулювальне право"

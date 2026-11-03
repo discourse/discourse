@@ -4745,6 +4745,71 @@ RSpec.describe TopicsController do
       expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
     end
 
+    describe "topic_noindex modifier" do
+      fab!(:first_post) { Fabricate(:post, topic: topic) }
+      fab!(:second_post) { Fabricate(:post, topic: topic) }
+
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier_args) { [] }
+      let(:noindex_topic_ids) { [] }
+      let(:modifier) do
+        Proc.new do |noindex, modifier_topic|
+          modifier_args << [noindex, modifier_topic]
+          noindex || noindex_topic_ids.include?(modifier_topic.id)
+        end
+      end
+
+      before { DiscoursePluginRegistry.register_modifier(plugin, :topic_noindex, &modifier) }
+      after { DiscoursePluginRegistry.unregister_modifier(plugin, :topic_noindex, &modifier) }
+
+      it "receives core's decision and the topic" do
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(modifier_args).to eq([[false, topic]])
+        expect(response.headers["X-Robots-Tag"]).to eq(nil)
+
+        get "/t/#{invisible_topic.slug}/#{invisible_topic.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(modifier_args.last).to eq([true, invisible_topic])
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+      end
+
+      it "lets a plugin send noindex on every version of the topic page" do
+        SiteSetting.enable_markdown_endpoints = true
+        TopicView.stubs(:chunk_size).returns(1)
+        noindex_topic_ids << topic.id
+
+        [
+          "/t/#{topic.slug}/#{topic.id}",
+          "/t/#{topic.slug}/#{topic.id}?page=2",
+          "/t/#{topic.slug}/#{topic.id}/2",
+          "/t/#{topic.slug}/#{topic.id}/print",
+          "/t/#{topic.slug}/#{topic.id}.json",
+          "/t/#{topic.slug}/#{topic.id}.md",
+        ].each do |path|
+          get path, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+          expect(response.status).to eq(200), path
+          expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+        end
+      end
+
+      it "keeps the site-wide nofollow when the site is not indexable" do
+        SiteSetting.allow_index_in_robots_txt = false
+        noindex_topic_ids << topic.id
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+
+        get "/t/#{invisible_topic.slug}/#{invisible_topic.id}.json"
+
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+      end
+    end
+
     it "doesn't store an incoming link when there's no referer" do
       expect { get "/t/#{topic.id}.json" }.not_to change(IncomingLink, :count)
       expect(response.status).to eq(200)
@@ -8028,6 +8093,82 @@ RSpec.describe TopicsController do
           text: subcategory.name,
         )
         expect(response.body).to have_tag("a", with: { href: category.url }, text: category.name)
+      end
+
+      describe "BreadcrumbList structured data" do
+        def breadcrumb_list_items
+          Nokogiri
+            .HTML5(response.body)
+            .css(
+              "[itemtype='http://schema.org/BreadcrumbList'] > [itemtype='http://schema.org/ListItem']",
+            )
+            .map do |item|
+              name = item.at_css("[itemprop='name']")
+              {
+                position: item.at_css("[itemprop='position']")["content"],
+                name: name["content"] || name.text.strip,
+                item: item.at_css("[itemprop='item']")["href"],
+              }
+            end
+        end
+
+        it "ends with the topic so a topic in a top-level category still has two items" do
+          topic.update!(category: category)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(breadcrumb_list_items).to eq(
+            [
+              { position: "1", name: category.name, item: category.url },
+              { position: "2", name: topic.title, item: topic.url },
+            ],
+          )
+        end
+
+        it "appends the topic after the full category chain" do
+          subcategory = Fabricate(:category, parent_category: category)
+          topic.update!(category: subcategory)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(breadcrumb_list_items).to eq(
+            [
+              { position: "1", name: category.name, item: category.url },
+              { position: "2", name: subcategory.name, item: subcategory.url },
+              { position: "3", name: topic.title, item: topic.url },
+            ],
+          )
+        end
+
+        it "converts emoji in the topic title to unicode" do
+          topic.update!(category: category, title: "Breadcrumbs are great :tada:")
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(breadcrumb_list_items.last[:name]).to eq("Breadcrumbs are great 🎉")
+        end
+
+        it "renders no BreadcrumbList for an uncategorized topic" do
+          topic.update!(category_id: SiteSetting.uncategorized_category_id)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(response.body).not_to have_tag("[itemtype='http://schema.org/BreadcrumbList']")
+        end
+
+        it "keeps the topic out of the og:article:section meta tags" do
+          topic.update!(category: category)
+
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+          expect(response.body).to have_tag(
+            "meta[property='og:article:section']",
+            count: 1,
+            with: {
+              content: category.name,
+            },
+          )
+        end
       end
 
       context "with canonical_url" do

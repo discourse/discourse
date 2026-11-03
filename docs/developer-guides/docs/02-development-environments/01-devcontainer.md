@@ -46,7 +46,9 @@ Once the test dependencies are installed, you can run [`bin/lint`](https://meta.
 
 ## Applying config/container updates
 
-Every so often, the devcontainer config and the associated container image will be updated. VSCode should prompt you to "rebuild" to apply the changes. Alternatively, you can run "Dev Containers: Rebuild Container" from the VSCode command palette. The working directory, and your Redis/Postgres data will be preserved across rebuilds.
+Every so often, the devcontainer config will be updated. VSCode should prompt you to "rebuild" to apply the changes. Alternatively, you can run "Dev Containers: Rebuild Container" from the VSCode command palette. The working directory, and your Redis/Postgres data will be preserved across rebuilds.
+
+The container image uses the `release` tag, so VSCode will not prompt you when a new image is published. To update it, run `docker pull discourse/discourse_dev:release` and then rebuild the container. In GitHub Codespaces, run "Codespaces: Full Rebuild Container" instead.
 
 If you'd like to start from scratch with fresh database, you'll need to delete the `discourse-pg` and `discourse-redis` docker volumes. This can be done from the "Remote Explorer" tab of the VSCode sidebar.
 

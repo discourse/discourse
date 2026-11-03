@@ -42,6 +42,50 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(source_refs["max_items"]).to eq(6)
   end
 
+  it "says why a reply cannot be used" do
+    cases = [
+      [{ answerable: false, source_refs: [], title: "", answer: "" }, :abstained],
+      [
+        { answerable: true, source_refs: %w[source_9], title: "", answer: "An answer" },
+        :unresolved_sources,
+      ],
+      [{ answerable: true, source_refs: %w[source_1], title: "", answer: "null" }, :empty_answer],
+    ]
+
+    reasons =
+      cases.map do |response, _reason|
+        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+          synthesis.call(
+            query: "plugins",
+            candidates: [
+              { "source_ref" => "source_1", "title" => "Plugins", "url" => "/t/plugins/1" },
+            ],
+          ).no_answer_reason
+        end
+      end
+
+    expect(reasons).to eq(cases.map(&:last))
+  end
+
+  it "labels its model calls so they can be traced to the ask" do
+    bot = instance_double(DiscourseAi::Agents::Bot, reply: nil)
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+
+    described_class.new(user:, ai_agent:, llm_model:, feature_context: { ask_ai_log_id: 5 }).call(
+      query: "plugins",
+      candidates: [{ "source_ref" => "source_1", "title" => "Plugins", "url" => "/t/plugins/1" }],
+    )
+
+    expect(bot).to have_received(:reply).with(
+      an_instance_of(DiscourseAi::Agents::BotContext),
+      llm_args: {
+        feature_context: {
+          ask_ai_log_id: 5,
+        },
+      },
+    )
+  end
+
   it "leaves out unset flags, whether the post is the first, and a same-day last update" do
     candidate = {
       "source_ref" => "source_1",

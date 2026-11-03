@@ -1011,6 +1011,20 @@ RSpec.describe "Markdown endpoints" do
     expect(response.body).not_to eq(anonymous_body)
   end
 
+  it "caches recent post bodies for a day and older bodies for an hour" do
+    old_post = Fabricate(:post, topic: topic, user: user, raw: "Older body")
+    old_post.update_columns(created_at: 2.months.ago, updated_at: 2.months.ago)
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response.body).to include(post.raw, old_post.raw)
+
+    ttls = Discourse.cache.keys("markdown-endpoint:cooked:*").map { |key| Discourse.redis.ttl(key) }
+    expect(ttls.size).to eq(2)
+    expect(ttls.min).to be <= 1.hour.to_i
+    expect(ttls.max).to be > 1.hour.to_i
+    expect(ttls.max).to be <= 1.day.to_i
+  end
+
   it "uses visible tags and excludes deleted posts from anonymous output" do
     visible_tag = Fabricate(:tag, name: "visible-markdown-tag")
     restricted_tag = Fabricate(:tag, name: "restricted-markdown-tag")

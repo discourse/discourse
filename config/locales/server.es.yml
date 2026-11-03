@@ -2438,7 +2438,7 @@ es:
     create_post_for_category_and_tag_changes: "Crear una publicación de susurro cuando cambie la categoría o las etiquetas de un tema, requiere que las publicaciones de susurro estén activadas."
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se utilicen en ningún tema o mensaje personal a diario."
     default_watched_precedence_over_muted: "Notificar a los usuarios sobre temas en categorías o etiquetas que están observando y que también pertenezcan a una que hayan silenciado"
-    company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."
+    company_name: "Nombre de tu empresa u organización."
     governing_law: "Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y la Política de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades."
     city_for_disputes: "Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro."
     shared_drafts_category: "Activa la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del personal."

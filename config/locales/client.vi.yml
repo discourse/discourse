@@ -2750,6 +2750,7 @@ vi:
     filter_controls:
       reset: "Cài lại"
       toggle: "Bật/tắt bộ lọc thả xuống"
+      sort_label: "Sắp xếp theo"
     shared_drafts:
       title: "Thư nháp được Chia sẻ"
       notice: "Chủ đề này chỉ hiển thị với những người có thể xuất bản các bản nháp được chia sẻ."
@@ -5300,6 +5301,9 @@ vi:
           impact_role_staff: "Nhân viên"
           impact_role_all_members: "Tất cả thành viên"
           impact_role_developers: "Nhà phát triển"
+        sort:
+          status: "Trạng thái"
+          name: "Tên"
       config:
         about:
           title: "Về trang web của bạn"
@@ -6409,10 +6413,7 @@ vi:
           site_contact_group_help: |
             Nhóm người được mời tham gia sẽ tự động nhận được tin nhắn cá nhân.
           your_organization: "Tổ chức của bạn"
-          your_organization_description: "Chúng tôi sẽ sử dụng thông tin này trong Điều khoản dịch vụ và Thông báo bảo mật để nêu rõ ai là người vận hành trang web và thuộc thẩm quyền nào."
           company_name: "Tên"
-          company_name_warning: |
-            Nếu để trống, sẽ không cung cấp các điều khoản dịch vụ hoặc thông báo về quyền riêng tư mẫu.
           company_url: "Trang web"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Luật áp dụng"

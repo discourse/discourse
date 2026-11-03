@@ -3135,6 +3135,7 @@ cs:
     filter_controls:
       reset: "obnovit výchozí"
       toggle: "Přepnout rozbalovací filtry"
+      sort_label: "Řadit podle"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -6078,6 +6079,9 @@ cs:
           impact_role_staff: "Redakce"
           impact_role_all_members: "Všichni členové"
           impact_role_developers: "Vývojáři"
+        sort:
+          status: "Stav"
+          name: "Jméno"
       config:
         about:
           title: "O vašem webu"
@@ -7198,10 +7202,7 @@ cs:
           site_contact_group_help: |
             Skupina, která dostane pozvánku ke všem automaticky zasílaným soukromým zprávám.
           your_organization: "Vaše organizace"
-          your_organization_description: "Tyto informace použijeme ve Smluvních podmínkách a Oznámení o ochraně osobních údajů, abychom ukázali, kdo provozuje web a pod kterou jurisdikcí."
           company_name: "Jméno"
-          company_name_warning: |
-            Pokud ponecháte prázdné, nebudou poskytnuty žádné standardní Smluvní podmínky ani Oznámení o ochraně osobních údajů.
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Rozhodné právo"

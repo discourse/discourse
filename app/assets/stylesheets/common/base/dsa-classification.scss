@@ -1,54 +1,5 @@
 @use "lib/viewport";
 
-.dsa-classification {
-  min-width: 0;
-  overflow-wrap: anywhere;
-
-  &__heading {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-block-end: 0.5em;
-  }
-
-  h2 {
-    font-size: var(--font-up-2);
-    margin: 0;
-  }
-}
-
-.dsa-classification-confirmation {
-  &__label {
-    font-weight: bold;
-  }
-
-  &__value {
-    margin: 0 0 var(--space-4);
-    overflow-wrap: anywhere;
-  }
-}
-
-.review-item__aside.--dsa-classification {
-  padding-block-start: 0;
-}
-
-.review-item__classify {
-  margin-block-end: var(--space-4);
-  margin-inline-start: var(--review-item-padding);
-
-  &.--pending-notice {
-    inline-size: calc(100% - 2 * var(--review-item-padding));
-    justify-content: flex-start;
-    background: var(--highlight-low);
-    color: var(--primary);
-    border: 1px solid var(--highlight-medium);
-  }
-}
-
-.dsa-classification-modal__help {
-  margin-inline-end: auto;
-}
-
 .dsa-moderation-action__user {
   white-space: nowrap;
   vertical-align: baseline;
@@ -106,4 +57,12 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
       color: var(--primary);
     }
   }
+}
+
+.dsa-moderation-help {
+  color: var(--primary-medium);
+}
+
+.dsa-moderation-title-help {
+  margin-inline: var(--space-2) auto;
 }

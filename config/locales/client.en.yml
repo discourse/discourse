@@ -1010,18 +1010,15 @@ en:
 
     dsa_statements:
       title: "DSA classification"
-      help_title: "About DSA classification"
-      help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."
+      help_title: "About EU Digital Services Act classification"
+      help: "The EU Digital Services Act asks platforms to record why content was moderated.<br><a href='https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms' rel='noopener noreferrer' target='_blank'>Learn more…</a>"
       rule: "Community rule"
+      rule_help: "Select the community rule this moderation decision is based on."
       rule_prompt: "Choose a community rule"
       category: "Category"
+      category_help: "Select the EU Digital Services Act category that best describes the violation. <a href='https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification' rel='noopener noreferrer' target='_blank'>View category definitions…</a>"
       category_prompt: "Choose a category"
-      pending: "DSA classification pending"
-      confirm_title: "Save DSA classification?"
-      confirm_message: "Check the community rule and category. This classification cannot be changed after saving."
       save: "Save classification"
-      saving: "Saving…"
-      saved: "Classification saved"
     review:
       continue_to_editor: "Continue to editor"
       moderation_steps:
@@ -3929,6 +3926,7 @@ en:
         link_copied: "Link copied!"
         load_preview: "Load preview"
         preview_failed: "Could not load preview"
+        preview_limit_reached: "This post has reached the maximum number of previews"
 
       onebox_toolbar:
         copy: "Copy link"
@@ -9225,6 +9223,8 @@ en:
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create placeholder"
+          placeholder_type_tip: "Once the installation is finished, the type from the repository's about.json is used."
+          skipped_components: "%{name} is installed, but these components couldn't be installed. Install them from the Components tab, then add them to this theme:"
           about_theme: "About"
           license: "License"
           version: "Version:"

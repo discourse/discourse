@@ -1,7 +1,10 @@
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import Composer from "discourse/models/composer";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Service | composer", function (hooks) {
@@ -26,6 +29,29 @@ module("Unit | Service | composer", function (hooks) {
       })
     );
   }
+
+  test("importQuote quotes the first post of a mega topic", async function (assert) {
+    setComposerModel(this);
+    const topic = this.owner
+      .lookup("service:store")
+      .createRecord("topic", { id: 280 });
+    topic.postStream.isMegaTopic = true;
+    topic.postStream.stream = [9001];
+    this.composer.set("topic", topic);
+    pretender.get("/posts/by_number/280/1", () =>
+      response({ id: 398, post_number: 1, topic_id: 280 })
+    );
+    const toolbarEvent = { addText: sinon.spy() };
+
+    await this.composer.importQuote(toolbarEvent);
+    await settled();
+
+    assert.true(
+      toolbarEvent.addText.calledOnceWith(
+        sinon.match("Any plans to support localization")
+      )
+    );
+  });
 
   test("predicts the markdown preview before a composer model exists", function (assert) {
     assert.true(

@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  blog:
+    home: Home
+    posted_by: Postavio
+    time_ago: "p%{time}"
+    archive: Arhiviraj
+    about: O nama
+    community: Zajednica
+    search: Pretraži
+    replies:
+      one: "%{count} odgovor"
+      few: "%{count} odgovora"
+      other: "%{count} odgovora"

@@ -2961,6 +2961,7 @@ nl:
     filter_controls:
       reset: "Resetten"
       toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
+      sort_label: "Sorteren op"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
       search_label: "Pictogrammen zoeken"
@@ -5837,6 +5838,9 @@ nl:
           impact_role_staff: "Medewerkers"
           impact_role_all_members: "Alle leden"
           impact_role_developers: "Ontwikkelaars"
+        sort:
+          status: "Status"
+          name: "Naam"
       config:
         about:
           title: "Over je site"
@@ -6959,10 +6963,7 @@ nl:
           site_contact_group_help: |
             De groep die wordt uitgenodigd voor alle automatisch gestuurde persoonlijke berichten.
           your_organization: "Je organisatie"
-          your_organization_description: "We gebruiken deze informatie in de Gebruiksvoorwaarden en Privacyverklaring om aan te geven wie de site beheert en in welk rechtsgebied."
           company_name: "Naam"
-          company_name_warning: |
-            Als dit leeg wordt gelaten worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt.
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Toepasselijk recht"

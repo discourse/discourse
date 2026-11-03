@@ -70,6 +70,8 @@ export default class AiSearchSession extends Service {
   // the menu search's tab choices, logged on its ask to judge how well the
   // opening tab was chosen
   #tabLog = null;
+  #answerArrived = false;
+  #deferredAskLogId = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -190,6 +192,7 @@ export default class AiSearchSession extends Service {
   }
 
   reset() {
+    this.#deferredAskLogId = null;
     this.query = "";
     this.answering = false;
     this.scope = null;
@@ -223,6 +226,28 @@ export default class AiSearchSession extends Service {
     this.#tabChosenByReader = true;
     this.selectedTab = tab;
     this.#showSelectedResults();
+    if (tab === "ask" && this.#deferredAskLogId) {
+      this.#requestDeferredAnswer();
+    }
+    this.#noteAnswerSeen();
+  }
+
+  /**
+   * Records the first result opened from a search still on screen.
+   *
+   * @param {string} term the search menu's current term
+   */
+  recordResultClick(term) {
+    const log = this.#tabLog;
+    if (!log || log.clicked || !this.selectedTab || !this.isActiveFor(term)) {
+      return;
+    }
+
+    log.clicked = true;
+    this.#recordTabs(log, {
+      result_clicked_tab: this.selectedTab,
+      result_clicked_after_ms: Date.now() - log.since,
+    });
   }
 
   async startConversation(question) {
@@ -254,6 +279,11 @@ export default class AiSearchSession extends Service {
     }
 
     this.discoveries.onDiscoveryUpdate(update);
+
+    if (isCurrent && update.ai_discover_reply) {
+      this.#answerArrived = true;
+      this.#noteAnswerSeen();
+    }
   }
 
   /**
@@ -275,15 +305,28 @@ export default class AiSearchSession extends Service {
   // Every tab is searched at once, so switching between them is instant; the
   // one to open on is chosen once the keyword results show what there is.
   async #searchMenuTabs(query, { searchedAgain, asked }) {
-    const log = { asked, since: Date.now(), switched: false };
+    const startedAt = Date.now();
+    const log = {
+      asked,
+      startedAt,
+      // the reader's events are timed from the opening tab; its own delay
+      // from the search is logged once, so the two add up
+      since: startedAt,
+      switched: false,
+      answerSeen: false,
+      clicked: false,
+    };
     this.#tabLog = log;
     this.#tabChosenByReader = false;
+    this.#answerArrived = false;
+    this.#deferredAskLogId = null;
     this.selectedTab = null;
     this.topicsResults = null;
     this.contextResults = null;
     this.search.noResults = false;
 
     const scopeKey = this.scope?.key;
+    asked.then((reply) => this.#onReply(query, reply));
     const replied = this.#waitForReply(asked);
     const [topics, context] = await Promise.all([
       this.#menuSearch(query),
@@ -316,15 +359,77 @@ export default class AiSearchSession extends Service {
         searchedAgain,
         intent: reply?.intent,
         prefersResults: reply?.prefers_results,
+        // the reply can land after the wait for it, but before the results
+        answerDeferred:
+          reply?.answer_deferred || this.#deferredAskLogId !== null,
       });
       this.selectedTab = tab;
       log.since = Date.now();
-      this.#recordTabs(log, { tab_opened: tab, tab_opened_reason: reason });
+      this.#recordTabs(log, {
+        tab_opened: tab,
+        tab_opened_reason: reason,
+        tab_opened_after_ms: log.since - log.startedAt,
+      });
       if (this.answerFailed) {
         this.#leaveFailedAnswer();
       }
+      this.#noteAnswerSeen();
     }
     this.#showSelectedResults();
+  }
+
+  // The reply can land after the tab was chosen without it, so a deferred
+  // answer is handled here rather than only when choosing.
+  #onReply(query, reply) {
+    if (this.query !== query || !reply?.answer_deferred) {
+      return;
+    }
+
+    this.#deferredAskLogId = reply.ask_log_id;
+    if (this.selectedTab !== "ask") {
+      return;
+    }
+
+    if (this.#tabChosenByReader) {
+      this.#requestDeferredAnswer();
+    } else {
+      this.selectedTab = this.contextResults?.posts?.length
+        ? "context"
+        : "topics";
+      this.#showSelectedResults();
+    }
+  }
+
+  async #requestDeferredAnswer() {
+    const log = this.#tabLog;
+    const deferredAskLogId = this.#deferredAskLogId;
+    this.#deferredAskLogId = null;
+    this.discoveries.dismissDiscovery();
+    const reply = await this.discoveries.triggerDiscovery(this.query, {
+      scope: this.scope?.key,
+      deferredAskLogId,
+    });
+    // a failed request leaves the answer to be requested again from the tab
+    if (!reply && this.#tabLog === log) {
+      this.#deferredAskLogId = deferredAskLogId;
+    }
+  }
+
+  #noteAnswerSeen() {
+    const log = this.#tabLog;
+    if (
+      !log ||
+      log.answerSeen ||
+      !this.#answerArrived ||
+      this.selectedTab !== "ask"
+    ) {
+      return;
+    }
+
+    log.answerSeen = true;
+    this.#recordTabs(log, {
+      answer_seen_after_ms: Date.now() - log.since,
+    });
   }
 
   // a failed answer is a dead end, so the reader is moved to results that exist
@@ -434,6 +539,7 @@ export default class AiSearchSession extends Service {
       intentHeuristic: readsAsQuestion(query) ? "answer" : "lookup",
       classifyIntent:
         !!this.siteSettings.ai_ask_ai_search_intent_decision_model,
+      deferIfPrecise: true,
     });
   }
 

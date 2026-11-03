@@ -14,7 +14,11 @@ module PageObjects
       # stream having loaded a post: a cloaked post keeps its `#post_N` id, so
       # `has_post_number?` is satisfied by a placeholder the reader never reached.
       def has_position?(current, total)
-        has_css?("#{SCROLLER_SELECTOR} .timeline-replies", exact_text: "#{current} / #{total}")
+        has_css?(
+          "#{SCROLLER_SELECTOR} .timeline-replies",
+          exact_text: "#{current} / #{total}",
+          normalize_ws: true,
+        )
       end
 
       def drag_to_bottom

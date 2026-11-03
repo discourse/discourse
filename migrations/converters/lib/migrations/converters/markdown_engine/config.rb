@@ -40,6 +40,7 @@ module Migrations
           external_emoji_url
           markdown_linkify_tlds
           markdown_typographer_quotation_marks
+          max_oneboxes_per_post
           policy_enabled
           poll_enabled
           poll_maximum_options

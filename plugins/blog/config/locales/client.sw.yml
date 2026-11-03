@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  admin_js:
+    blog:
+      admin:
+        overridden: Binafsi
+        insert: Weka
+        preview_home: Ukurasa mkuu
+        preview_archive: Nyaraka
+        desktop: Eneo kazi la Kompyuta
+        mobile: Kifaa cha kiganjani
+        themes: Mandhari
+        edit: Hariri
+        preview: Kihakiki
+        import: Imeingizwa kutoka sehemu nyingine
+        export: Hamisha
+        active: Amilifu
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Rasimu
+        preview: Kihakiki
+        options: Machaguo
+        change:
+          title: kichwa cha Habari
+          body: mwili
+      review:
+        active: Amilifu
+      editor_table:
+        edit: Hariri
+        replies: Majibu
+      private_draft: Rasimu
+      preview: Kihakiki

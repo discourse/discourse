@@ -3192,6 +3192,7 @@ ur:
       clear: "فلٹر مٹائیں"
     filter_controls:
       reset: "ری سیٹ"
+      sort_label: "ترتیب بہ"
     d_icon_grid_picker:
       select_icon: "آئیکن منتخب کریں"
       search_label: "آئیکنز ڈھونڈھیں"
@@ -6151,6 +6152,9 @@ ur:
           impact_role_moderators: "نگران"
           impact_role_staff: "عملہ"
           impact_role_all_members: "تمام صارفین"
+        sort:
+          status: "حیثیت"
+          name: "نام"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -7419,10 +7423,7 @@ ur:
           site_contact_group_help: |
             وہ گروپ جو خود بخود بھیجے گئے تمام ذاتی پیغامات میں مدعو کیا جاتا ہے۔
           your_organization: "آپ کی تنظیم"
-          your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور راز داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
           company_name: "نام"
-          company_name_warning: |
-            اگر خالی چھوڑ دیا جائے تو، کوئی بوائلر پلیٹ سروس کی شرائط یا راز داری کا نوٹس فراہم نہیں کیا جائے گا۔
           company_url: "ویب سائٹ"
           company_url_placeholder: "https://example-co.com"
           governing_law: "گورنمنٹ قانون"

@@ -1726,6 +1726,7 @@ lv:
       default: Lietotāja emoji
     filter_controls:
       reset: "Atlikt"
+      sort_label: "Kārtot pēc"
     shared_drafts:
       title: "Kopīgotie melnraksti"
       notice: "Šī tēma ir redzama tikai tiem, kuri var publicēt koplietotos melnrakstus."
@@ -2958,6 +2959,9 @@ lv:
           impact_role_admins: "Administratori"
           impact_role_moderators: "Moderātori"
           impact_role_staff: "Personāls"
+        sort:
+          status: "Statuss"
+          name: "Vārds"
       config:
         developer:
           title: "Izstrādātājs"

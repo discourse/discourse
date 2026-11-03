@@ -383,6 +383,7 @@ const workflows = [
     "discourse.plugin-outlet-classic-args-clash",
     "discourse.plugin-outlet-classic-hooks",
     "discourse.plugin-outlet-context-get",
+    "discourse.post-stream.first-post-id",
     "discourse.post-stream.trigger-new-post",
     "discourse.pretty-text.registerOption",
     "discourse.qunit-helpers.jquery-selector",

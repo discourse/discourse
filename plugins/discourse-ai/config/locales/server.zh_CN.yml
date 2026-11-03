@@ -575,7 +575,6 @@ zh_CN:
         agent_not_allowed: "请求的子代理不被允许。"
         unavailable_agent: "请求的子代理不可用或无法访问。"
         missing_model: "请求的子代理没有可用的语言模型。"
-        call_limit: "已达到委托调用次数上限。"
         completion_limit: "委托完成次数已达上限。"
         token_limit: "回合工作或子工作配额已用完。"
         cancelled: "委托的任务已取消。"

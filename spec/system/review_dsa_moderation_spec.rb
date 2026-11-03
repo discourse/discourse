@@ -25,11 +25,13 @@ describe "Classifying reviewable moderation" do
     post = Fabricate(:post, topic: topic)
     flagger = Fabricate(:user, trust_level: TrustLevel[3])
     reviewable = PostActionCreator.create(flagger, post, :inappropriate).reviewable
+    Fabricate(:dsa_statement_of_record, reviewable_id: reviewable.id)
     penalty_modal = PageObjects::Modals::PenalizeUser.new("suspend")
 
     review_page.visit_reviewable(reviewable)
 
     expect(review_page).to have_context_question(reviewable, "Is this post inappropriate?")
+    expect(review_page).to have_no_standalone_classification
 
     review_page.select_bundled_action(reviewable, "post-agree_and_suspend", bundle_index: 1)
 
@@ -49,6 +51,15 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_selected_rule(rule[:ground])
     expect(modal).to have_focused_step("DSA classification")
     expect(modal).to have_no_cancel_button
+
+    modal.open_dsa_help
+
+    expect(modal).to have_classification_help(
+      "The EU Digital Services Act asks platforms to record why content was moderated.",
+    )
+    expect(modal).to have_dsa_learn_more_link(
+      "https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms",
+    )
 
     modal.confirm("Suspend")
 
@@ -128,6 +139,12 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_action_title("Edit post")
     expect(modal).to have_steps("DSA classification", "Edit post")
     expect(modal).to have_selected_rule("Choose a community rule")
+
+    modal.open_dsa_help
+
+    expect(modal).to have_classification_help(
+      "The EU Digital Services Act asks platforms to record why content was moderated.",
+    )
 
     modal.select_rule(rule[:ground])
     modal.select_category(category)

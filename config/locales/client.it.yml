@@ -2760,6 +2760,7 @@ it:
       clear: "Cancella il filtro"
     filter_controls:
       reset: "Reimposta"
+      sort_label: "Ordina per"
     shared_drafts:
       title: "Bozze condivise"
       notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
@@ -5219,6 +5220,9 @@ it:
           impact_role_admins: "Amministratori"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Staff"
+        sort:
+          status: "Stato"
+          name: "Nome"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -6258,10 +6262,7 @@ it:
           site_contact_group_help: |
             Il gruppo che riceve inviti per tutti i messaggi personali inviati automaticamente.
           your_organization: "La tua organizzazione"
-          your_organization_description: "Utilizzeremo queste informazioni nei Termini di servizio e nell'Informativa sulla privacy per indicare chi gestisce il sito e sotto quale giurisdizione."
           company_name: "Nome"
-          company_name_warning: |
-            Se non compilato, non avrai a disposizione Termini di servizio o Informativa sulla privacy standard.
           company_url: "Sito web"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Diritto applicabile"

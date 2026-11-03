@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  admin_js:
+    blog:
+      admin:
+        overridden: سفارشی
+        insert: درج کردن
+        array_value: فهرست
+        preview_home: صفحه اصلی
+        preview_archive: بایگانی
+        desktop: کامپیوتر
+        mobile: موبایل
+        new_theme_short: پوسته جدید
+        themes: قالب‌ها
+        theme_name: نام قالب
+        edit: ویرایش
+        activate: فعال کردن
+        preview: پیش‌نمایش
+        import: ورود داده‌ها
+        export: خروجی گرفتن
+        active: فعال
+  js:
+    blog:
+      panel:
+        badge:
+          draft: درفت
+        preview: پیش‌نمایش
+        publish: انتشار
+        options: تنظیمات
+        change:
+          title: عنوان
+          body: body
+      review:
+        copy: رونوشت پیوند
+        active: فعال
+        message: بازخورد
+      editor_table:
+        edit: ویرایش
+        status: وضعیت
+        replies: پاسخ‌ها
+      drafts: پیش‌نویس‌ها
+      private_draft: درفت
+      preview: پیش‌نمایش
+      unpublish: لغو انتشار
+      appearance_link: ظاهر
