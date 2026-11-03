@@ -1,7 +1,6 @@
 import Helper from "@ember/component/helper";
 import type { RegisterOptions } from "@ember/owner";
 import { dasherize } from "@ember/string";
-import deprecated from "discourse/lib/deprecated";
 import type Session from "discourse/models/session";
 import type Site from "discourse/models/site";
 import type TopicTrackingState from "discourse/models/topic-tracking-state";
@@ -71,14 +70,4 @@ export function createHelperContext(ctx: HelperContext) {
  */
 export function helperContext() {
   return _helperContext;
-}
-
-/**
- * Register a helper for raw-hbs only
- */
-export function registerRawHelper(name: string) {
-  deprecated(
-    `[registerRawHelper ${name}] the raw handlebars system has been removed, so calls to registerRawHelper should be removed.`,
-    { id: "discourse.register-raw-helper" }
-  );
 }
