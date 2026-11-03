@@ -25,6 +25,7 @@ import ChatPaneState from "discourse/plugins/chat/discourse/lib/chat-pane-state"
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
+  maintainScrollPosition,
   scrollListToBottom,
   scrollListToMessage,
   scrollListToTop,
@@ -292,15 +293,18 @@ export default class ChatThread extends Component {
       return;
     }
 
-    this.messagesManager.addMessages(messages);
+    // Corrected before paint: scrolling after it shows the end of the new page
+    // for a frame, since the reversed scroller stays pinned to the bottom.
+    if (direction === FUTURE) {
+      maintainScrollPosition(this.scroller, () =>
+        this.messagesManager.addMessages(messages)
+      );
+    } else {
+      this.messagesManager.addMessages(messages);
+    }
     this.args.thread.details = meta;
 
-    if (direction === FUTURE) {
-      this.scrollToMessageId(messages[0].id, {
-        position: "end",
-        behavior: "auto",
-      });
-    } else if (direction === PAST) {
+    if (direction === PAST) {
       this.scrollToMessageId(messages.at(-1).id);
     }
 

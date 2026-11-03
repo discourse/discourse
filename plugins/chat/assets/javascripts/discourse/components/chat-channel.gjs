@@ -28,6 +28,7 @@ import { checkMessageTopVisibility } from "discourse/plugins/chat/discourse/lib/
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
+  maintainScrollPosition,
   scrollListToBottom,
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
@@ -342,14 +343,14 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const targetMessageId = this.messagesManager.messages.at(-1).id;
-    this.messagesManager.addMessages(messages);
-
+    // Corrected before paint: scrolling after it shows the end of the new page
+    // for a frame, since the reversed scroller stays pinned to the bottom.
     if (direction === FUTURE && !opts.noScroll) {
-      this.scrollToMessageId(targetMessageId, {
-        position: "end",
-        forceAuto: true,
-      });
+      maintainScrollPosition(this.scroller, () =>
+        this.messagesManager.addMessages(messages)
+      );
+    } else {
+      this.messagesManager.addMessages(messages);
     }
 
     this.debounceFillPaneAttempt();
