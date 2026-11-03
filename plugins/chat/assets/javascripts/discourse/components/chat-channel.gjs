@@ -28,6 +28,7 @@ import { checkMessageTopVisibility } from "discourse/plugins/chat/discourse/lib/
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
+  maintainScrollPosition,
   scrollListToBottom,
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
@@ -253,7 +254,11 @@ export default class ChatChannel extends Component {
     this.subscriptionManager = new ChatChannelSubscriptionManager(
       this,
       this.args.channel,
-      { onNewMessage: this.onNewMessage }
+      {
+        onNewMessage: this.onNewMessage,
+        onRemoveMessage: (message) =>
+          this.messagesLoader.releaseMessage(message),
+      }
     );
 
     if (targetMessageId) {
@@ -270,6 +275,7 @@ export default class ChatChannel extends Component {
   @bind
   onNewMessage(message) {
     const isOwnMessage = message.user.id === this.currentUser.id;
+    this.messagesLoader.trackLiveMessage(message);
 
     if (!isOwnMessage) {
       this.chatNewMessageAnnouncer.notify(message, {
@@ -284,6 +290,7 @@ export default class ChatChannel extends Component {
         isAtLiveEdge: this.paneState.isAtLiveEdge,
         isOwnMessage,
       }),
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
       isOwnMessage,
@@ -325,7 +332,7 @@ export default class ChatChannel extends Component {
     this.maybeDebouncedUpdateLastReadMessage();
   }
 
-  async fetchMoreMessages({ direction }, opts = {}) {
+  async fetchMoreMessages({ direction }) {
     if (this.messagesLoader.loading) {
       return;
     }
@@ -340,14 +347,12 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const targetMessageId = this.messagesManager.messages.at(-1).id;
-    this.messagesManager.addMessages(messages);
-
-    if (direction === FUTURE && !opts.noScroll) {
-      this.scrollToMessageId(targetMessageId, {
-        position: "end",
-        forceAuto: true,
-      });
+    if (direction === FUTURE) {
+      maintainScrollPosition(this.scroller, () =>
+        this.messagesManager.addMessages(messages)
+      );
+    } else {
+      this.messagesManager.addMessages(messages);
     }
 
     this.debounceFillPaneAttempt();
