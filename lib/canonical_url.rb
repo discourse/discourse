@@ -19,10 +19,8 @@ module CanonicalURL
       @default_canonical ||=
         begin
           canonical = +"#{Discourse.base_url_no_prefix}#{request.path}"
-          allowed_params = params.select { |key| ALLOWED_CANONICAL_PARAMS.include?(key) }
-          if allowed_params.present?
-            canonical << "?#{allowed_params.keys.zip(allowed_params.values).map { |key, value| "#{key}=#{value}" }.join("&")}"
-          end
+          allowed_params = params.to_unsafe_h.slice(*ALLOWED_CANONICAL_PARAMS)
+          canonical << "?#{allowed_params.to_query}" if allowed_params.present?
           append_content_localization_param(canonical)
         end
     end
