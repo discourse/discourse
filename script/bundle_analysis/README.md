@@ -34,8 +34,6 @@ This prints the full report and the PR comment it would post. The baseline is th
 
 A PR gets one comment, edited in place. A finding the comment did not have yet gets a new comment, because edits notify nobody. When nothing is over the thresholds any more, the comment says so.
 
-Baselines are exact because the build is reproducible: a weekly job (`reproducibility.mjs`) rebuilds a published commit and fails if anything differs.
-
 ## Files
 
 - `budget.json`: thresholds. Changes take effect for PRs once merged.

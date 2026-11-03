@@ -66,15 +66,14 @@ export function releaseUrl(version, commit) {
 
 /**
  * Downloads a published build and extracts its `core/` directory to `outDir`
- * if it was built from `expectedTreeHash` and, unless `requireGraph` is
- * false, has a bundle graph. Builds published before the bundle-graph plugin
- * have none.
+ * if it was built from `expectedTreeHash` and has a bundle graph. Builds
+ * published before the bundle-graph plugin have none.
  */
 export function tryDownload(
   url,
   outDir,
   expectedTreeHash,
-  { log = () => {}, requireGraph = true } = {}
+  { log = () => {} } = {}
 ) {
   // Next to outDir, so the final rename stays on one filesystem: in CI the
   // system temp dir and the output dir are different mounts.
@@ -115,7 +114,7 @@ export function tryDownload(
       log(`Published build at ${url} is from different JS inputs`);
       return false;
     }
-    if (requireGraph && !existsSync(join(work, "core", GRAPH_PATH))) {
+    if (!existsSync(join(work, "core", GRAPH_PATH))) {
       log(`Published build at ${url} predates the bundle graph`);
       return false;
     }

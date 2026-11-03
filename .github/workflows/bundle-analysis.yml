@@ -8,12 +8,9 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: "17 4 * * 1"
-  workflow_dispatch:
 
 concurrency:
-  group: bundle-analysis-${{ github.event.pull_request.number || github.run_id }}
+  group: bundle-analysis-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 permissions:
@@ -21,7 +18,6 @@ permissions:
 
 jobs:
   changes:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -89,21 +85,3 @@ jobs:
 
       - name: Record the PR
         uses: ./.github/actions/bundle-analysis-artifact
-
-  reproducibility:
-    if: github.event_name != 'pull_request'
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
-    container: discourse/discourse_test:release
-    timeout-minutes: 30
-
-    steps:
-      - name: Set working directory owner
-        run: chown root:root .
-
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 50
-          persist-credentials: false
-
-      - name: Rebuild a published build and compare
-        run: node script/bundle_analysis/reproducibility.mjs

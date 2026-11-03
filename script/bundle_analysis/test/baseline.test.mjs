@@ -113,12 +113,6 @@ test("tryDownload checks the tree hash and the bundle graph", () => {
     false
   );
   assert.equal(
-    tryDownload(tarball({ treeHash: hash, graph: false }), out(), hash, {
-      requireGraph: false,
-    }),
-    true
-  );
-  assert.equal(
     tryDownload("file:///does/not/exist.tar.gz", out(), hash),
     false
   );
