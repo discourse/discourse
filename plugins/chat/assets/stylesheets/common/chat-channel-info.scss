@@ -15,6 +15,10 @@
     padding-inline: var(--d-wrap-padding-x);
     margin-inline: calc(-1 * var(--d-wrap-padding-x));
 
+    .chat-drawer & {
+      margin-block-end: var(--space-2);
+    }
+
     .nav-pills {
       margin: 0;
     }
