@@ -1,7 +1,6 @@
 import Helper from "@ember/component/helper";
 import type { RegisterOptions } from "@ember/owner";
 import { dasherize } from "@ember/string";
-import { trustHTML } from "@ember/template";
 import deprecated from "discourse/lib/deprecated";
 import type Session from "discourse/models/session";
 import type Site from "discourse/models/site";
@@ -20,21 +19,6 @@ export function makeArray<T>(obj: T | T[] | null | undefined): T[] {
     return [];
   }
   return Array.isArray(obj) ? obj : [obj];
-}
-
-export function htmlHelper(fn: (...args: unknown[]) => unknown) {
-  deprecated(
-    `htmlHelper is deprecated. Use a plain function and \`htmlSafe()\` from "@ember/template" instead.`,
-    { id: "discourse.html-helper" }
-  );
-
-  return Helper.helper(function (this: unknown, ...args: unknown[]) {
-    args =
-      args.length > 1
-        ? (args[0] as unknown[]).concat({ hash: args[args.length - 1] })
-        : args;
-    return trustHTML((fn.apply(this, args) || "") as string);
-  });
 }
 
 /** The subset of the owner's registry {@link registerHelpers} writes into. */

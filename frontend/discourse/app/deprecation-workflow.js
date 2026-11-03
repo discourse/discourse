@@ -336,7 +336,6 @@ const workflows = [
     "discourse.hbs-extension",
     "discourse.es6-extension",
     "discourse.header-service-topic",
-    "discourse.html-helper",
     "discourse.html-safe-helper",
     "discourse.icon-picker",
     "discourse.icon-renderer-translatedtitle",
