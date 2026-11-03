@@ -708,16 +708,31 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     const link = document.querySelector(".ai-search-discoveries__discovery a");
     assert.strictEqual(link?.tagName, "A", "link exists in discovery text");
 
-    const clickEvent = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      ctrlKey: true,
-    });
-    link.dispatchEvent(clickEvent);
+    // The component leaves modified clicks to the browser, which would follow
+    // the href and navigate the test runner away (e.g. ctrl+click on macOS)
+    const defaultPrevented = [];
+    const blockNavigation = (event) => {
+      defaultPrevented.push(event.defaultPrevented);
+      event.preventDefault();
+    };
+    document.addEventListener("click", blockNavigation);
 
+    try {
+      for (const modifier of ["ctrlKey", "metaKey"]) {
+        await click(link, { [modifier]: true });
+      }
+    } finally {
+      document.removeEventListener("click", blockNavigation);
+    }
+
+    assert.deepEqual(
+      defaultPrevented,
+      [false, false],
+      "the browser handles ctrl/cmd clicks"
+    );
     assert.false(
       this.closeSearchMenuCalled,
-      "closeSearchMenu was not called when ctrl+clicking"
+      "closeSearchMenu was not called when ctrl/cmd+clicking"
     );
     assert.false(
       DiscourseURL.routeTo.called,
