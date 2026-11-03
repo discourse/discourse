@@ -3034,6 +3034,17 @@ RSpec.describe UsersController do
       expect(user1.reload.name).to_not eq("test.test")
     end
 
+    it "saves the featured topic with the profile" do
+      SiteSetting.allow_featured_topic_on_user_profiles = true
+      topic = Fabricate(:topic)
+      sign_in(user1)
+
+      put "/u/#{user1.username}.json", params: { featured_topic_id: topic.id }
+
+      expect(response.status).to eq(200)
+      expect(user1.reload.user_profile.featured_topic_id).to eq(topic.id)
+    end
+
     context "when username contains a period" do
       before { sign_in(user) }
 
