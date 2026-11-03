@@ -36,6 +36,19 @@ RSpec.describe Admin::EmailController do
       end
     end
 
+    it "rejects more than one recipient" do
+      [
+        [admin.email, "outsider@example.com"],
+        "#{admin.email}, outsider@example.com",
+      ].each do |recipient|
+        expect do
+          post email_send_path, params: email_send_params.merge(recipient_parameter => recipient)
+        end.not_to change { ActionMailer::Base.deliveries.size }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
     it "limits each administrator to ten sends per minute" do
       request_params = email_send_params.merge(recipient_parameter => admin.email)
       RateLimiter.enable
