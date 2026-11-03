@@ -22,6 +22,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       js: ${{ steps.changes.outputs.js }}
+      ready: ${{ steps.base.outputs.ready }}
 
     steps:
       - uses: actions/checkout@v7
@@ -43,6 +44,17 @@ jobs:
           js=$(node script/bundle_analysis/baseline.mjs --js-changed-since HEAD^1)
           echo "js=$js" >> "$GITHUB_OUTPUT"
 
+      # A base from before this analysis has nothing to compare with.
+      - name: Check the base can be analyzed
+        id: base
+        if: steps.changes.outputs.js == 'true'
+        run: |
+          if git cat-file -e HEAD^1:script/bundle_analysis/analyze.mjs 2>/dev/null; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::The base has no bundle analysis yet, so there is nothing to compare."
+          fi
+
       # bundle-analysis-comment.yml still runs for PRs without JS changes, to resolve an old comment.
       - name: Report no JS changes
         if: steps.changes.outputs.js == 'false'
@@ -58,7 +70,7 @@ jobs:
 
   analyze:
     needs: changes
-    if: needs.changes.outputs.js == 'true'
+    if: needs.changes.outputs.ready == 'true'
     runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: 20

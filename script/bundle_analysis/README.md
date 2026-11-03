@@ -28,7 +28,7 @@ This builds the checkout and prints the full report and the PR comment it would 
 
 ## How CI runs it
 
-- `.github/workflows/bundle-analysis.yml` runs on every PR to `main` with read-only permissions. A small job checks whether any JS input changed (`baseline.mjs --js-changed-since`). Only then does it build the PR and its base side by side, each in a worktree (`baseline.mjs --commit`), then writes the full report to the run summary and uploads `report.json` as an artifact.
+- `.github/workflows/bundle-analysis.yml` runs on every PR to `main` with read-only permissions. A small job checks whether any JS input changed (`baseline.mjs --js-changed-since`) and whether the base has this analysis yet. Only then does it build the PR and its base side by side, each in a worktree (`baseline.mjs --commit`), then writes the full report to the run summary and uploads `report.json` as an artifact.
 - `.github/workflows/bundle-analysis-comment.yml` runs on `workflow_run` from the default branch, so it can comment on PRs from forks. It treats the report as untrusted: it finds the PR from the workflow run, not the report, and renders the comment with its own copy of this directory and `budget.json`, which escapes every string and rejects anything but numbers where sizes belong.
 
 A PR gets one comment, edited in place. A finding the comment did not have yet gets a new comment, because edits notify nobody. When nothing is over the thresholds any more, the comment says so.
