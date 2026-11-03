@@ -204,6 +204,31 @@ acceptance("Composer Form Template", function (needs) {
       );
   });
 
+  test("keeps the entered values when the composer is shrunk while the form template fails to load", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".form-template-field__input[name='full-name']", "John Smith");
+    await click(".toggle-minimize");
+
+    pretender.get("/form-templates/1.json", () => response(504, {}));
+    await click("#reply-control");
+
+    assert
+      .dom("#form-template-form .alert-error")
+      .exists("the form template fails to load");
+
+    await click(".toggle-minimize");
+
+    pretender.get("/form-templates/1.json", () =>
+      response({ form_template: FORM_TEMPLATES[0] })
+    );
+    await click("#reply-control");
+
+    assert
+      .dom(".form-template-field__input[name='full-name']")
+      .hasValue("John Smith", "keeps the value entered before the failure");
+  });
+
   test("Composer opens with the specified form template selected", async function (assert) {
     await visit("/");
 

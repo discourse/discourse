@@ -2101,7 +2101,8 @@ export default class ComposerService extends Service {
       // until we have a proper draft system for these forms
       if (this.hasFormTemplate) {
         const form = document.querySelector("#form-template-form");
-        if (form) {
+        // The form has no fields while its template is loading or failed to load
+        if (form?.querySelector("[name]")) {
           this.set("formTemplateInitialValues", getFormTemplateObject(form));
         }
       }
