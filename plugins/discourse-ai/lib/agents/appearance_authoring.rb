@@ -184,14 +184,16 @@ module DiscourseAi
       end
 
       # Lets staff see a saved change before it goes live. The link fixes the
-      # theme and both palettes, so an administrator's own theme or palette
-      # choice can't change what the preview shows.
+      # theme, both palettes and the change's fonts, so an administrator's own
+      # theme or palette choice can't change what the preview shows.
       def self.preview_url(appearance_change)
         query = {
           preview_theme_id: appearance_change.theme_id,
           preview_color_scheme_id: appearance_change.light_color_scheme_id,
           preview_dark_color_scheme_id: appearance_change.dark_color_scheme_id,
-        }
+          preview_base_font: appearance_change.site_settings["base_font"],
+          preview_heading_font: appearance_change.site_settings["heading_font"],
+        }.compact
         "#{Discourse.base_url}/?#{query.to_query}"
       end
 

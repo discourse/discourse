@@ -131,6 +131,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
       "preview_theme_id" => Theme.foundation_theme.id.to_s,
       "preview_color_scheme_id" => appearance_change.light_color_scheme_id.to_s,
       "preview_dark_color_scheme_id" => appearance_change.dark_color_scheme_id.to_s,
+      "preview_heading_font" => "lora",
     )
   end
 
@@ -155,6 +156,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
         "preview_theme_id" => theme.id.to_s,
         "preview_color_scheme_id" => theme.color_scheme_id.to_s,
         "preview_dark_color_scheme_id" => theme.dark_color_scheme_id.to_s,
+        "preview_heading_font" => "lora",
       )
     end
   end

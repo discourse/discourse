@@ -1209,6 +1209,41 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "#preview_font_style_tag" do
+    before do
+      SiteSetting.base_font = "inter"
+      controller.params[:preview_base_font] = "lora"
+      controller.params[:preview_heading_font] = "roboto"
+    end
+
+    it "defines the fonts passed in the URL for staff, leaving the site's fonts alone" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+
+      style = helper.preview_font_style_tag
+
+      expect(style).to include(
+        "font-family: 'Lora'",
+        "--font-family: Lora",
+        "--heading-font-family: Roboto",
+      )
+      expect(SiteSetting.base_font).to eq("inter")
+    end
+
+    it "ignores unknown fonts" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+      controller.params[:preview_base_font] = "</style><script>"
+      controller.params[:preview_heading_font] = nil
+
+      expect(helper.preview_font_style_tag).to be_nil
+    end
+
+    it "ignores them for everyone else" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      expect(helper.preview_font_style_tag).to be_nil
+    end
+  end
+
   describe "#forced_light_mode?" do
     fab!(:user)
 

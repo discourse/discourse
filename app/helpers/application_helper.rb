@@ -754,6 +754,25 @@ module ApplicationHelper
     ColorScheme.valid_id(params[param_name])
   end
 
+  # Staff can try out fonts the same way, while the site keeps its own. Only
+  # known font keys are used, so the styles only hold trusted font data.
+  def preview_font_style_tag
+    return if !guardian.is_staff?
+
+    base_font = params[:preview_base_font].presence
+    heading_font = params[:preview_heading_font].presence
+    return if base_font.nil? && heading_font.nil?
+
+    css =
+      Stylesheet::Importer.font_definitions(
+        base_font: base_font.to_s,
+        heading_font: heading_font.to_s,
+      )
+    return if css.blank?
+
+    "<style class=\"preview-fonts\">#{css}</style>".html_safe
+  end
+
   def theme_limits_color_schemes?
     return @theme_limits_color_schemes if defined?(@theme_limits_color_schemes)
     @theme_limits_color_schemes =
