@@ -1416,6 +1416,7 @@ en:
       cannot_edit_builtin: "You can't edit a built-in model."
       secret_required: "A credential must be selected"
       secret_not_found: "The selected credential does not exist"
+      missing_provider_param: "%{param} can't be blank"
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
         choose_model: "Set 'ai embeddings selected model' first."
