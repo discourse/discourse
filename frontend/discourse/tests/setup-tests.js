@@ -210,13 +210,6 @@ export default async function setupTests(config) {
   // Stop the message bus so we don't get ajax calls
   window.MessageBus.stop();
 
-  // disable logster error reporting
-  if (window.Logster) {
-    window.Logster.enabled = false;
-  } else {
-    window.Logster = { enabled: false };
-  }
-
   let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
   if (setupDataElement) {
