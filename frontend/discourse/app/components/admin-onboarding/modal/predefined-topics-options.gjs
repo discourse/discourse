@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import DModal from "discourse/ui-kit/d-modal";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class PredefinedTopicOptions extends Component {
@@ -17,10 +18,10 @@ export default class PredefinedTopicOptions extends Component {
     const general = Category.findById(this.siteSettings.general_category_id);
 
     return [
-      { key: "plan_categories", category: staff },
-      { key: "plan_invites", category: staff },
-      { key: "introduce_yourself", category: general },
-      { key: "write_your_own", category: general },
+      { key: "plan_categories", emoji: "card_index_dividers", category: staff },
+      { key: "plan_invites", emoji: "busts_in_silhouette", category: staff },
+      { key: "introduce_yourself", emoji: "wave", category: general },
+      { key: "write_your_own", emoji: "writing_hand", category: general },
     ].map((topic) => ({
       ...topic,
       disabled: !topic.category?.canCreateTopic,
@@ -79,29 +80,32 @@ export default class PredefinedTopicOptions extends Component {
               type="button"
               {{on "click" (fn this.handleSelectTopic topic)}}
             >
-              <span class="predefined-topic-options-modal__heading">
-                <span class="predefined-topic-options-modal__title">
-                  {{i18n
-                    (concat
-                      "admin_onboarding_banner.start_posting.icebreakers."
-                      topic.key
-                      ".title"
-                    )
-                  }}
-                </span>
-                {{#if topic.category}}
-                  {{dCategoryBadge topic.category}}
-                {{/if}}
+              <span class="predefined-topic-options-modal__icon">
+                {{dEmoji topic.emoji alt="" skipTitle=true}}
               </span>
-              <p class="predefined-topic-options-modal__body">
+              <span class="predefined-topic-options-modal__title">
                 {{i18n
                   (concat
                     "admin_onboarding_banner.start_posting.icebreakers."
                     topic.key
-                    ".body"
+                    ".title"
                   )
                 }}
-              </p>
+              </span>
+              {{#if topic.category}}
+                <span class="predefined-topic-options-modal__category">
+                  {{dCategoryBadge topic.category}}
+                </span>
+              {{/if}}
+              <span class="predefined-topic-options-modal__description">
+                {{i18n
+                  (concat
+                    "admin_onboarding_banner.start_posting.icebreakers."
+                    topic.key
+                    ".description"
+                  )
+                }}
+              </span>
             </button>
           {{/each}}
         </div>

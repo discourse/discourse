@@ -196,44 +196,72 @@
   }
 
   &__card {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    text-align: left;
+    all: unset; // reset browser button styles
+    box-sizing: border-box;
+    display: grid;
+    grid-template-areas: "icon title" "icon category" "icon description";
+    grid-template-columns: auto 1fr;
+    align-content: start;
+    gap: 0 var(--space-6);
     width: 100%;
     padding: var(--space-4);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
-    background: var(--secondary);
+    text-align: left;
+    cursor: pointer;
 
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    @include viewport.from(sm) {
+      gap: 0 var(--space-8);
     }
 
-    &:focus-visible,
-    &:hover:not(:disabled) {
-      outline: 2px solid var(--tertiary);
+    &:hover,
+    &:focus-visible {
+      border-color: var(--tertiary);
+    }
 
-      .predefined-topic-options-modal__title {
-        color: var(--tertiary);
+    &:disabled {
+      cursor: not-allowed;
+
+      > * {
+        opacity: 0.5;
+      }
+
+      &:hover {
+        border-color: var(--primary-low);
       }
     }
   }
 
-  &__heading {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2);
+  &__icon {
+    grid-area: icon;
+    font-size: 2.75em;
+    line-height: 1;
   }
 
+  // Mirrors the topic list so the suggestions preview how the topic will look.
   &__title {
-    display: block;
-    font-weight: bold;
+    grid-area: title;
+    font-size: var(--d-topic-list-title-font-size);
+    font-weight: var(--topic-title-font-weight);
+    color: var(--title-color);
+    overflow-wrap: break-word;
   }
 
-  &__body {
-    max-width: var(--modal-max-width);
+  &__category {
+    grid-area: category;
+    display: flex;
+    align-items: center;
+    margin-top: var(--d-topic-list-metadata-top-space);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+  }
+
+  &__description {
+    grid-area: description;
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--excerpt-color);
+    overflow-wrap: break-word;
   }
 }
