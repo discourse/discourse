@@ -58,3 +58,11 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
     }
   }
 }
+
+.dsa-moderation-help {
+  color: var(--primary-medium);
+}
+
+.dsa-moderation-title-help {
+  margin-inline: var(--space-2) auto;
+}

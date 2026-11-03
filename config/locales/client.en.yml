@@ -1010,11 +1010,13 @@ en:
 
     dsa_statements:
       title: "DSA classification"
-      help_title: "About DSA classification"
-      help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."
+      help_title: "About EU Digital Services Act classification"
+      help: "The EU Digital Services Act asks platforms to record why content was moderated.<br><a href='https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms' rel='noopener noreferrer' target='_blank'>Learn more…</a>"
       rule: "Community rule"
+      rule_help: "Select the community rule this moderation decision is based on."
       rule_prompt: "Choose a community rule"
       category: "Category"
+      category_help: "Select the EU Digital Services Act category that best describes the violation. <a href='https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification' rel='noopener noreferrer' target='_blank'>View category definitions…</a>"
       category_prompt: "Choose a category"
       save: "Save classification"
     review:
