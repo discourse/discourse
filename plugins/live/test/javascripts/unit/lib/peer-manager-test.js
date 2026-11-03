@@ -263,4 +263,36 @@ module("Live | Unit | Lib | peer-manager", function (hooks) {
       "keeps the pre-allocated transceiver as the screen audio slot"
     );
   });
+
+  test("diagnosticsFor reports ICE candidate errors for the current connection", async function (assert) {
+    const manager = (this.manager = new PeerManager({
+      getIceServers: () => [],
+      getLocalStream: () => null,
+      sendSignal: () => Promise.resolve(),
+      flushQueuedSignals: () => Promise.resolve(),
+      onTrack: () => {},
+      clearSignalQueue: () => {},
+      onPeerDestroyed: () => {},
+    }));
+
+    const pc = await manager.create(1, 2);
+    pc.onicecandidateerror({
+      url: "turn:turn.example.com:3478",
+      errorCode: 401,
+      errorText: "Unauthorized",
+    });
+    manager.queuePendingCandidate(1, 2, { candidate: "x" });
+
+    const diagnostics = manager.diagnosticsFor(1, 2);
+
+    assert.strictEqual(diagnostics.restartAttempts, 0);
+    assert.strictEqual(diagnostics.pendingCandidates, 1);
+    assert.strictEqual(diagnostics.iceCandidateErrors.length, 1);
+    assert.strictEqual(diagnostics.iceCandidateErrors[0].errorCode, 401);
+    assert.deepEqual(
+      manager.diagnosticsFor(1, 3).iceCandidateErrors,
+      [],
+      "a peer without a connection has no errors"
+    );
+  });
 });
