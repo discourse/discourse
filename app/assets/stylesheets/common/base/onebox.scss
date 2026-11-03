@@ -898,6 +898,22 @@ aside.onebox.github-onebox {
     display: block;
   }
 
+  .github-pull-request__title {
+    display: inline-flex;
+    align-items: flex-end;
+    max-width: 100%;
+    gap: 0.25em;
+  }
+
+  .github-pull-request__title-text {
+    @include line-clamp(3);
+    overflow-wrap: anywhere;
+  }
+
+  .github-pull-request__number {
+    flex-shrink: 0;
+  }
+
   .branches,
   .labels {
     margin-block-end: var(--space-1);
@@ -910,10 +926,9 @@ aside.onebox.github-onebox {
     font-size: var(--font-down-2);
 
     code {
+      @include ellipsis;
       font-size: inherit;
       border-radius: var(--token-radius-small);
-      overflow-wrap: anywhere;
-      word-break: normal;
     }
 
     code:first-of-type {

@@ -40,7 +40,12 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
     end
 
     it "includes branch names" do
-      expect(html).to include("<code>main</code> ← <code>jamesaanderson:add-audio-onebox</code>")
+      branches = Nokogiri::HTML5.fragment(html).css(".branches code")
+
+      expect(branches.map(&:text)).to eq(%w[main jamesaanderson:add-audio-onebox])
+      expect(branches.map { |branch| branch["title"] }).to eq(
+        %w[main jamesaanderson:add-audio-onebox],
+      )
     end
 
     it "includes commit author gravatar" do
