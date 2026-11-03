@@ -10,7 +10,7 @@ class InlineOneboxController < ApplicationController
 
     if urls.size > MAX_URLS_LIMIT
       render json: failed_json.merge(errors: [I18n.t("inline_oneboxer.too_many_urls")]),
-             status: :payload_too_large
+             status: :content_too_large
       return
     end
 

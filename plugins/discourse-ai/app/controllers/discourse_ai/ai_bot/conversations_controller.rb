@@ -29,20 +29,20 @@ module DiscourseAi
               status: :bad_request,
             )
           end
-          on_failure { render(json: failed_json, status: :unprocessable_entity) }
+          on_failure { render(json: failed_json, status: :unprocessable_content) }
         end
       end
 
       def create
         result = NewPostManager.new(current_user, create_params).perform
         json = serialize_data(result, NewPostResultSerializer, root: false).symbolize_keys
-        status = json[:success] ? :ok : :unprocessable_entity
+        status = json[:success] ? :ok : :unprocessable_content
         json = json[:post] if json[:success] && json[:errors].blank? &&
           json[:action].to_s != "enqueued"
 
         render json: json, status: status
       rescue DiscourseAi::AiBot::ConversationRoute::Error => error
-        render_json_error error.message, status: :unprocessable_entity
+        render_json_error error.message, status: :unprocessable_content
       end
 
       def update_starred
@@ -58,7 +58,7 @@ module DiscourseAi
               status: :bad_request,
             )
           end
-          on_failure { render(json: failed_json, status: :unprocessable_entity) }
+          on_failure { render(json: failed_json, status: :unprocessable_content) }
         end
       end
 

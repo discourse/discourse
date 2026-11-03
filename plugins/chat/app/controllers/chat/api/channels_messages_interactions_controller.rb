@@ -6,7 +6,7 @@ class Chat::Api::ChannelsMessagesInteractionsController < Chat::ApiController
       on_success do |interaction:|
         render_serialized(interaction, Chat::MessageInteractionSerializer, root: "interaction")
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_policy(:can_interact_with_message) { raise Discourse::NotFound }
       on_model_not_found(:action) { raise Discourse::NotFound }

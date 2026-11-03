@@ -146,7 +146,7 @@ RSpec.describe JsonApiKitPostSpec::GroupsController, type: :request do
     shared_examples "a contract refusal" do
       it "reports the submitted location without creating a group", :aggregate_failures do
         expect { create_group }.not_to change(Group, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(parsed_body.fetch("errors")).to contain_exactly(
           a_hash_including("status" => "422", "source" => { "pointer" => pointer }),
         )
@@ -175,7 +175,7 @@ RSpec.describe JsonApiKitPostSpec::GroupsController, type: :request do
 
         it "reports the submitted attributes object", :aggregate_failures do
           expect { create_group }.not_to change(Group, :count)
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(parsed_body.fetch("errors")).to contain_exactly(
             a_hash_including("status" => "422", "source" => { "pointer" => "/data/attributes" }),
           )
@@ -248,7 +248,7 @@ RSpec.describe JsonApiKitPostSpec::GroupsController, type: :request do
 
       it "reports the submitted attribute", :aggregate_failures do
         expect { create_group }.not_to change(Group, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(parsed_body.fetch("errors")).to contain_exactly(
           a_hash_including("status" => "422", "source" => { "pointer" => pointer }),
         )

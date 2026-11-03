@@ -18,7 +18,7 @@ module DiscourseWorkflows
                    meta: { total_rows: total_rows, load_more_url: load_more_url }.compact,
                  }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
@@ -29,7 +29,7 @@ module DiscourseWorkflows
         on_success do |workflow:|
           render_serialized(workflow, DiscourseWorkflows::WorkflowSerializer, root: "workflow")
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -42,7 +42,7 @@ module DiscourseWorkflows
         on_model_errors(:workflow) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
       end

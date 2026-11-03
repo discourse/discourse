@@ -13,7 +13,7 @@ module DiscourseWorkflows
       Workflow::PreviewNode.call(service_params) do |result|
         on_success { |output:| render json: output }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
-        on_failed_policy(:node_type_previewable) { head :unprocessable_entity }
+        on_failed_policy(:node_type_previewable) { head :unprocessable_content }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
         on_model_not_found(:node) { raise Discourse::NotFound }
         on_model_not_found(:node_type_class) { raise Discourse::NotFound }
@@ -23,7 +23,7 @@ module DiscourseWorkflows
             status: :bad_request,
           )
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 

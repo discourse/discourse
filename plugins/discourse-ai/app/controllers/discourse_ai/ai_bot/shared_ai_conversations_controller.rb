@@ -42,7 +42,7 @@ module DiscourseAi
         else
           render json:
                    failed_json.merge(error: I18n.t("discourse_ai.share_ai.errors.failed_to_share")),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
       end
 

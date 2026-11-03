@@ -14,7 +14,7 @@ module DiscourseWorkflows
             status: :created,
           )
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -31,7 +31,7 @@ module DiscourseWorkflows
         on_success do |data_table:|
           render_serialized(data_table, DiscourseWorkflows::DataTableSerializer, root: "data_table")
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -48,7 +48,7 @@ module DiscourseWorkflows
         on_success do |data_table:|
           render_serialized(data_table, DiscourseWorkflows::DataTableSerializer, root: "data_table")
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -63,7 +63,7 @@ module DiscourseWorkflows
     def destroy
       DiscourseWorkflows::DataTableColumn::Destroy.call(service_params) do |result|
         on_success { head :no_content }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),

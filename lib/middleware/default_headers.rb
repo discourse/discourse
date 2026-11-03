@@ -19,13 +19,13 @@ module Middleware
       default_headers.each do |header_name, value|
         next if !is_html_response && HTML_ONLY_HEADERS.include?(header_name)
 
-        headers[header_name] ||= value
+        headers[header_name.downcase] ||= value
       end
 
       headers[
-        "Cross-Origin-Opener-Policy"
+        "cross-origin-opener-policy"
       ] = SiteSetting.cross_origin_opener_policy_header if is_html_response &&
-        headers["Cross-Origin-Opener-Policy"].nil?
+        headers["cross-origin-opener-policy"].nil?
 
       [status, headers, body]
     end
@@ -33,7 +33,7 @@ module Middleware
     private
 
     def html_response?(headers)
-      headers["Content-Type"] && headers["Content-Type"] =~ /html/
+      headers["content-type"] && headers["content-type"] =~ /html/
     end
   end
 end

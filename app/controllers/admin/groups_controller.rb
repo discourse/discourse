@@ -18,17 +18,17 @@ class Admin::GroupsController < Admin::StaffController
       on_failed_policy(:can_create_group) { |policy| raise Discourse::InvalidAccess }
       on_failed_policy(:can_use_flair_upload) do
         render json: failed_json.merge(errors: [I18n.t("groups.errors.flair_upload_not_owned")]),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_failed_policy(:can_request_access) do
         render json:
                  failed_json.merge(
                    errors: [I18n.t("groups.errors.cant_allow_membership_requests")],
                  ),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_model_errors(:group) { |group:| render_json_error(group) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
     end
   end
 

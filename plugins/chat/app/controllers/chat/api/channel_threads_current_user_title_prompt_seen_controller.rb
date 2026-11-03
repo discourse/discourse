@@ -6,7 +6,7 @@ class Chat::Api::ChannelThreadsCurrentUserTitlePromptSeenController < Chat::ApiC
       on_success do |membership:|
         render_serialized(membership, Chat::BaseThreadMembershipSerializer, root: "membership")
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:thread) { raise Discourse::NotFound }

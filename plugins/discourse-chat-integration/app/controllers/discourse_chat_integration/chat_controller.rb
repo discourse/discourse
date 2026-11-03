@@ -74,12 +74,12 @@ class DiscourseChatIntegration::ChatController < ApplicationController
     DiscourseChatIntegration::Provider.setup(provider_klass, current_user, permitted_site_settings)
     render json: success_json
   rescue Discourse::InvalidParameters => err
-    render json: { errors: [err.message] }, status: :unprocessable_entity
+    render json: { errors: [err.message] }, status: :unprocessable_content
   rescue DiscourseChatIntegration::ProviderError => err
     if err.info[:error_key].present?
-      render json: { error_key: err.info[:error_key] }, status: :unprocessable_entity
+      render json: { error_key: err.info[:error_key] }, status: :unprocessable_content
     else
-      render json: { errors: [err.message.presence || "error"] }, status: :unprocessable_entity
+      render json: { errors: [err.message.presence || "error"] }, status: :unprocessable_content
     end
   end
 
@@ -98,13 +98,13 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
     render json: success_json
   rescue Discourse::InvalidParameters, ActiveRecord::RecordNotFound => err
-    render json: { errors: [err.message] }, status: :unprocessable_entity
+    render json: { errors: [err.message] }, status: :unprocessable_content
   rescue DiscourseChatIntegration::ProviderError => err
     Rails.logger.error("Test provider failed #{err.info}")
     if err.info.key?(:error_key) && !err.info[:error_key].nil?
-      render json: { error_key: err.info[:error_key] }, status: :unprocessable_entity
+      render json: { error_key: err.info[:error_key] }, status: :unprocessable_content
     else
-      render json: { errors: [err.message] }, status: :unprocessable_entity
+      render json: { errors: [err.message] }, status: :unprocessable_content
     end
   end
 
@@ -144,7 +144,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
     render_serialized channel, DiscourseChatIntegration::ChannelSerializer, root: "channel"
   rescue Discourse::InvalidParameters => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [e.message] }, status: :unprocessable_content
   end
 
   def update_channel
@@ -162,7 +162,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
     render_serialized channel, DiscourseChatIntegration::ChannelSerializer, root: "channel"
   rescue Discourse::InvalidParameters => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [e.message] }, status: :unprocessable_content
   end
 
   def destroy_channel
@@ -182,7 +182,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
     render_serialized rule, DiscourseChatIntegration::RuleSerializer, root: "rule"
   rescue Discourse::InvalidParameters => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [e.message] }, status: :unprocessable_content
   end
 
   def update_rule
@@ -193,7 +193,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
     render_serialized rule, DiscourseChatIntegration::RuleSerializer, root: "rule"
   rescue Discourse::InvalidParameters => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [e.message] }, status: :unprocessable_content
   end
 
   def destroy_rule

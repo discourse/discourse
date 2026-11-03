@@ -41,7 +41,7 @@ module DiscourseRssPolling
                      ),
                    ],
                  },
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_model_not_found(:rss_feed) { raise Discourse::NotFound }
         on_model_errors(:rss_feed) do |rss_feed|
@@ -49,9 +49,9 @@ module DiscourseRssPolling
                    success: false,
                    errors: rss_feed.errors.full_messages,
                  },
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
-        on_failure { render json: { success: false }, status: :unprocessable_entity }
+        on_failure { render json: { success: false }, status: :unprocessable_content }
       end
     end
 
@@ -62,11 +62,11 @@ module DiscourseRssPolling
         end
         on_failed_contract { render json: { error: :blank_feed_url }, status: :bad_request }
         on_failed_step(:fetch) do |step|
-          render json: { error: step.error }, status: :unprocessable_entity
+          render json: { error: step.error }, status: :unprocessable_content
         end
         on_exceptions do |exception|
           Discourse.warn_exception(exception, message: "RSS Polling: failed to test feed")
-          render json: { error: :unknown }, status: :unprocessable_entity
+          render json: { error: :unknown }, status: :unprocessable_content
         end
       end
     end

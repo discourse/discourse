@@ -11,7 +11,7 @@ module DiscourseWorkflows
         on_success do |query_result:|
           render json: { rows: query_result[:rows], count: query_result[:count] }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -29,7 +29,7 @@ module DiscourseWorkflows
         service_params.deep_merge(params: { data_table_id: params[:data_table_id] }),
       ) do |result|
         on_success { |row:| render json: { row: row }, status: :created }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -48,7 +48,7 @@ module DiscourseWorkflows
         service_params.deep_merge(params: { data_table_id: params[:data_table_id] }),
       ) do |result|
         on_success { |updated_count:| render json: { updated_count: updated_count } }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -73,7 +73,7 @@ module DiscourseWorkflows
         ),
       ) do |result|
         on_success { |row:| render json: { row: row } }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -98,7 +98,7 @@ module DiscourseWorkflows
         ),
       ) do |result|
         on_success { head :no_content }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -116,7 +116,7 @@ module DiscourseWorkflows
         service_params.deep_merge(params: { data_table_id: params[:data_table_id] }),
       ) do |result|
         on_success { |deleted_count:| render json: { deleted_count: deleted_count } }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),

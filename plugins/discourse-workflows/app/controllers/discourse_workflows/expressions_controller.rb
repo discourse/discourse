@@ -19,7 +19,7 @@ module DiscourseWorkflows
             status: :bad_request,
           )
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 

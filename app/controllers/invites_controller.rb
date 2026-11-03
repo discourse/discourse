@@ -191,7 +191,7 @@ class InvitesController < ApplicationController
         show_warnings: true,
       )
     else
-      render json: failed_json, status: :unprocessable_entity
+      render json: failed_json, status: :unprocessable_content
     end
   rescue Invite::UserExists => e
     render_json_error(e.message)
@@ -556,7 +556,7 @@ class InvitesController < ApplicationController
 
         if custom_error.present?
           return(
-            render json: failed_json.merge(errors: [custom_error]), status: :unprocessable_entity
+            render json: failed_json.merge(errors: [custom_error]), status: :unprocessable_content
           )
         end
 
@@ -572,13 +572,13 @@ class InvitesController < ApplicationController
                        ),
                      ],
                    ),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         else
           render json: success_json
         end
       else
         render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
     end
   end

@@ -54,7 +54,7 @@ RSpec.describe DiscourseWorkflows::StepExecutionsController do
              node_id: "set-1",
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"]).to include(
         I18n.t("discourse_workflows.errors.step_execution.missing_input_data"),
       )

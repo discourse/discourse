@@ -110,7 +110,7 @@ RSpec.describe DiscourseWorkflows::WaitingWebhookRunner do
     it "returns structured validation errors from the waiting form webhook" do
       result = dispatch(http_method: "POST", params: { form_data: {} })
 
-      expect(result.status).to eq(:unprocessable_entity)
+      expect(result.status).to eq(:unprocessable_content)
       expect(result.body[:errors]).to contain_exactly(field_label: "Feedback", code: :missing)
     end
 

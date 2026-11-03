@@ -26,7 +26,7 @@ module DiscourseWorkflows
         end
         on_model_not_found(:workflow) { raise Discourse::NotFound }
         on_model_not_found(:step_node) { raise Discourse::NotFound }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 
@@ -37,7 +37,7 @@ module DiscourseWorkflows
                failed_json.merge(
                  errors: [I18n.t("discourse_workflows.errors.step_execution.#{key}")],
                ),
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
   end
 end

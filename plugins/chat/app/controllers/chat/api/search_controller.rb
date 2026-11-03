@@ -18,7 +18,7 @@ class Chat::Api::SearchController < Chat::ApiController
                  meta: metadata.slice(:has_more, :limit, :offset),
                }
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::NotFound }
       on_failed_contract do |contract|

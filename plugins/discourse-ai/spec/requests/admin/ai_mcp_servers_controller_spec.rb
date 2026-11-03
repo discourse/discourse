@@ -148,7 +148,7 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
              }
       }.not_to change(AiMcpServer, :count)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"].join(" ")).to include(
         I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable"),
       )

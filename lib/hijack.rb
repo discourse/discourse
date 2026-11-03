@@ -102,7 +102,7 @@ module Hijack
             headers["X-Runtime"] = "#{"%0.6f" % duration}"
           end
 
-          headers.each { |name, val| io.write "#{name}: #{val}\r\n" }
+          headers.each { |name, val| Array(val).each { |v| io.write "#{name}: #{v}\r\n" } }
 
           io.write "\r\n"
           io.write body

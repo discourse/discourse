@@ -31,7 +31,7 @@ Discourse::Application.configure do
 
   config.assets.debug = false
 
-  config.public_file_server.headers = { "Access-Control-Allow-Origin" => "*" }
+  config.public_file_server.headers = { "access-control-allow-origin" => "*" }
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load

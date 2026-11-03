@@ -22,7 +22,7 @@ class DiscourseSolved::AnswerController < ::ApplicationController
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 
@@ -37,7 +37,7 @@ class DiscourseSolved::AnswerController < ::ApplicationController
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 

@@ -47,7 +47,7 @@ module DiscourseEvents
         on_model_not_found(:invitee) { raise Discourse::NotFound }
         on_model_not_found(:event) { raise Discourse::NotFound }
         on_failed_contract { raise Discourse::InvalidParameters }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 
@@ -74,7 +74,7 @@ module DiscourseEvents
         on_model_not_found(:event) { raise Discourse::NotFound }
         on_model_not_found(:user) { raise Discourse::NotFound }
         on_failed_contract { raise Discourse::InvalidParameters }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 
@@ -93,7 +93,7 @@ module DiscourseEvents
         on_model_not_found(:event) { raise Discourse::NotFound }
         on_model_not_found(:invitee) { raise Discourse::NotFound }
         on_failed_contract { raise Discourse::InvalidParameters }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
   end

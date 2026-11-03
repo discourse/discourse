@@ -24,7 +24,7 @@ module DiscourseAi
         return(
           render_json_error(
             I18n.t("discourse_ai.post_image_captions.errors.description_blank"),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         )
       end
@@ -36,7 +36,7 @@ module DiscourseAi
               "discourse_ai.post_image_captions.errors.description_too_long",
               count: DiscourseAi::PostImageCaptions::MAX_CAPTION_LENGTH,
             ),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         )
       end

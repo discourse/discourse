@@ -152,7 +152,7 @@ RSpec.describe DiscourseWorkflows::CredentialsController do
 
       delete "/admin/plugins/discourse-workflows/credentials/#{credential.id}.json"
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["type"]).to eq("credential_in_use")
       expect(response.parsed_body["referencing_workflows"]).to contain_exactly(
         { "id" => workflow.id, "name" => "My Workflow" },

@@ -252,7 +252,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
                ai_llm: valid_attrs.merge(vision_mode: nil, vision_enabled: true),
              }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(LlmModel.where(display_name: valid_attrs[:display_name])).not_to exist
       end
 

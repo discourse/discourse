@@ -15,7 +15,7 @@ module DiscourseSubscriptions
 
     def create
       begin
-        payload = request.body.read
+        payload = request.raw_post
         sig_header = request.env["HTTP_STRIPE_SIGNATURE"]
         webhook_secret = SiteSetting.discourse_subscriptions_webhook_secret
 

@@ -113,7 +113,7 @@ class GroupsController < ApplicationController
 
     render json: success_json
   rescue GroupUpdater::ExistingUsersConfirmationRequired => error
-    render status: :unprocessable_entity,
+    render status: :unprocessable_content,
            json: {
              user_count: error.user_count,
              errors: [error.message],

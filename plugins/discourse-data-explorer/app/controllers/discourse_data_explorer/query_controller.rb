@@ -210,7 +210,7 @@ module DiscourseDataExplorer
       result = QueryRunner.run(query, params[:params], current_user:, explain:, limit:)
 
       if result[:error]
-        render json: format_query_error(result[:error]), status: :unprocessable_entity
+        render json: format_query_error(result[:error]), status: :unprocessable_content
       else
         render json: result
       end
@@ -293,7 +293,7 @@ module DiscourseDataExplorer
       result = QueryRunner.run(query, params[:params], current_user:, explain:, limit:)
 
       if result[:error]
-        render json: format_query_error(result[:error]), status: :unprocessable_entity
+        render json: format_query_error(result[:error]), status: :unprocessable_content
       else
         render json: result
       end
@@ -335,7 +335,7 @@ module DiscourseDataExplorer
         )
 
       if result[:error]
-        return render json: format_query_error(result[:error]), status: :unprocessable_entity
+        return render json: format_query_error(result[:error]), status: :unprocessable_content
       end
 
       content_disposition =
@@ -364,7 +364,7 @@ module DiscourseDataExplorer
                success: false,
                errors: ["Invalid JSON in params"],
              },
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
 
     def set_group

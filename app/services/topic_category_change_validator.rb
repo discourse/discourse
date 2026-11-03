@@ -60,7 +60,7 @@ class TopicCategoryChangeValidator
   end
   private_class_method :success
 
-  def self.failure(error, status = :unprocessable_entity)
+  def self.failure(error, status = :unprocessable_content)
     Result.new(category: nil, error:, status:)
   end
   private_class_method :failure

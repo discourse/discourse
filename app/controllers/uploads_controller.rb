@@ -54,7 +54,7 @@ class UploadsController < ApplicationController
            SiteSetting.discourse_connect_overrides_avatar || SiteSetting.auth_overrides_avatar ||
              !me.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
          )
-      return render json: failed_json, status: :unprocessable_entity
+      return render json: failed_json, status: :unprocessable_content
     end
 
     url = params[:url]
@@ -88,7 +88,7 @@ class UploadsController < ApplicationController
       )
 
       render json: failed_json.merge(message: I18n.t("upload.failed")),
-             status: :unprocessable_entity
+             status: :unprocessable_content
     else
       render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
     end

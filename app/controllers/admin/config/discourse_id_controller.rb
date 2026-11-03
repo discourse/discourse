@@ -18,17 +18,17 @@ class Admin::Config::DiscourseIdController < Admin::AdminController
       on_success { render json: success_json }
       on_failed_policy(:credentials_configured?) do
         render json: failed_json.merge(error: I18n.t("discourse_id.errors.not_configured")),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_failed_step(:request_challenge) do |step|
-        render json: failed_json.merge(error: step.error), status: :unprocessable_entity
+        render json: failed_json.merge(error: step.error), status: :unprocessable_content
       end
       on_failed_step(:regenerate_with_challenge) do |step|
-        render json: failed_json.merge(error: step.error), status: :unprocessable_entity
+        render json: failed_json.merge(error: step.error), status: :unprocessable_content
       end
       on_failure do
         render json: failed_json.merge(error: I18n.t("discourse_id.errors.regenerate_failed")),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
     end
   end

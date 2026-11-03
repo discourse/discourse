@@ -79,7 +79,7 @@ RSpec.describe Hijack do
         tester = Hijack::Tester.new(env)
         tester.hijack_test { render body: "hello", status: :created }
 
-        expect(tester.io.string).to include("Access-Control-Allow-Origin: www.rainbows.com")
+        expect(tester.io.string).to include("access-control-allow-origin: www.rainbows.com")
       end
 
     env = {}
@@ -94,12 +94,12 @@ RSpec.describe Hijack do
     expect(status).to eq(200)
 
     expected = {
-      "Access-Control-Allow-Origin" => "www.rainbows.com",
-      "Access-Control-Allow-Headers" =>
+      "access-control-allow-origin" => "www.rainbows.com",
+      "access-control-allow-headers" =>
         "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
-      "Access-Control-Allow-Credentials" => "true",
-      "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE",
-      "Access-Control-Max-Age" => "7200",
+      "access-control-allow-credentials" => "true",
+      "access-control-allow-methods" => "POST, PUT, GET, OPTIONS, DELETE",
+      "access-control-max-age" => "7200",
     }
 
     expect(headers).to eq(expected)
@@ -114,7 +114,7 @@ RSpec.describe Hijack do
         tester = Hijack::Tester.new(env)
         tester.hijack_test { render body: "hello", status: :created }
 
-        expect(tester.io.string).to include("Access-Control-Allow-Origin: https://www.rainbows.com")
+        expect(tester.io.string).to include("access-control-allow-origin: https://www.rainbows.com")
       end
 
     env = {}
@@ -129,12 +129,12 @@ RSpec.describe Hijack do
     expect(status).to eq(200)
 
     expected = {
-      "Access-Control-Allow-Origin" => "https://www.rainbows.com",
-      "Access-Control-Allow-Headers" =>
+      "access-control-allow-origin" => "https://www.rainbows.com",
+      "access-control-allow-headers" =>
         "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
-      "Access-Control-Allow-Credentials" => "true",
-      "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE",
-      "Access-Control-Max-Age" => "7200",
+      "access-control-allow-credentials" => "true",
+      "access-control-allow-methods" => "POST, PUT, GET, OPTIONS, DELETE",
+      "access-control-max-age" => "7200",
     }
 
     expect(headers).to eq(expected)
@@ -147,7 +147,7 @@ RSpec.describe Hijack do
       render body: "hello world", status: :payment_required
     end
 
-    expect(tester.io.string).to include("Hello-World: sam")
+    expect(tester.io.string).to include("hello-world: sam")
   end
 
   it "handles expires_in" do
@@ -180,7 +180,7 @@ RSpec.describe Hijack do
     end
 
     result =
-      "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
+      "HTTP/1.1 302 Found\r\nlocation: http://awesome.com\r\ncontent-type: text/html; charset=utf-8\r\ncontent-length: 0\r\nconnection: close\r\nx-runtime: 1.000000\r\n\r\n"
     expect(tester.io.string).to eq(result)
   end
 
@@ -192,7 +192,7 @@ RSpec.describe Hijack do
     end
 
     result =
-      "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
+      "HTTP/1.1 200 OK\r\ncontent-type: text/plain; charset=utf-8\r\ncontent-length: 0\r\nconnection: close\r\nx-runtime: 1.000000\r\n\r\n"
     expect(tester.io.string).to eq(result)
   end
 
@@ -204,7 +204,7 @@ RSpec.describe Hijack do
     end
 
     result =
-      "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 11\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\nhello world"
+      "HTTP/1.1 200 OK\r\ncontent-type: text/plain; charset=utf-8\r\ncontent-length: 11\r\nconnection: close\r\nx-runtime: 1.000000\r\n\r\nhello world"
     expect(tester.io.string).to eq(result)
   end
 
@@ -213,7 +213,7 @@ RSpec.describe Hijack do
     tester.hijack_test
 
     expected =
-      "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 0.000000\r\n\r\n"
+      "HTTP/1.1 500 Internal Server Error\r\ncontent-type: text/html; charset=utf-8\r\ncontent-length: 0\r\nconnection: close\r\nx-runtime: 0.000000\r\n\r\n"
     expect(tester.io.string).to eq(expected)
   end
 

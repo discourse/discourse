@@ -201,7 +201,7 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
              },
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 
@@ -335,7 +335,7 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
             },
           }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(workflow.reload.error_workflow_id).to be_nil
     end
 
@@ -428,7 +428,7 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
 
       delete "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json"
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body).to include(
         "type" => "workflow_called_by_other_workflows",
         "referencing_workflows" => [include("id" => caller.id, "name" => caller.name)],
@@ -471,7 +471,7 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
             },
           }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 

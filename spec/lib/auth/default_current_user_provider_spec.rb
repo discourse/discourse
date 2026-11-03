@@ -272,6 +272,13 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(u.last_seen_at).to eq(nil)
     end
 
+    it "looks up the user for a redirect route behind a staff constraint" do
+      path = "/admin/logs/watched_words"
+
+      expect(provider(path).current_user).to eq(nil)
+      expect(provider(path, "HTTP_COOKIE" => "_t=#{cookie}").current_user).to eq(user)
+    end
+
     describe "when readonly mode is enabled due to postgres" do
       before { Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
@@ -643,7 +650,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     @provider.log_on_user(user, {}, @provider.cookie_jar)
 
     cookie_info = get_cookie_info(@provider.cookie_jar, "_t")
-    expect(cookie_info[:samesite]).to eq("Lax")
+    expect(cookie_info[:samesite]).to eq("lax")
     expect(cookie_info[:httponly]).to eq(true)
     expect(cookie_info.key?(:secure)).to eq(false)
 

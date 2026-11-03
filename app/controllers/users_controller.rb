@@ -670,7 +670,7 @@ class UsersController < ApplicationController
     if username.blank?
       return(
         render json: failed_json.merge(errors: [I18n.t("random_username.unavailable")]),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       )
     end
 
@@ -1402,19 +1402,19 @@ class UsersController < ApplicationController
 
     type = params[:type].presence || "system"
     unless guardian.can_pick_avatar_source?(user, type)
-      return render json: failed_json, status: :unprocessable_entity
+      return render json: failed_json, status: :unprocessable_content
     end
 
     case type
     when "associated_account"
       picked = user.user_avatar&.pick_associated_account(params[:associated_account_id])
-      return render json: failed_json, status: :unprocessable_entity unless picked
+      return render json: failed_json, status: :unprocessable_content unless picked
     when "system"
       user.pick_avatar!(nil)
     else
       upload_id = params[:upload_id]
       if type == "current" && upload_id.to_i != user.uploaded_avatar_id
-        return render json: failed_json, status: :unprocessable_entity
+        return render json: failed_json, status: :unprocessable_content
       end
 
       upload = Upload.find_by(id: upload_id)
@@ -1436,19 +1436,19 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     unless guardian.can_edit_avatar?(user)
-      return render json: failed_json, status: :unprocessable_entity
+      return render json: failed_json, status: :unprocessable_content
     end
 
     url = params[:url]
 
     if url.blank? || SiteSetting.selectable_avatars_mode == "disabled" ||
          SiteSetting.selectable_avatars.blank?
-      return render json: failed_json, status: :unprocessable_entity
+      return render json: failed_json, status: :unprocessable_content
     end
 
     upload = Upload.get_from_url(url)
     unless upload && SiteSetting.selectable_avatars.include?(upload)
-      return render json: failed_json, status: :unprocessable_entity
+      return render json: failed_json, status: :unprocessable_content
     end
 
     SiteSetting.use_site_small_logo_as_system_avatar = false if user.is_system_user?

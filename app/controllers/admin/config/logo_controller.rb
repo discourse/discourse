@@ -13,7 +13,7 @@ class Admin::Config::LogoController < Admin::AdminController
       render json: {
                error: I18n.t("topic_og_image.preview_not_eligible"),
              },
-             status: :unprocessable_entity
+             status: :unprocessable_content
       return
     end
 
@@ -23,7 +23,7 @@ class Admin::Config::LogoController < Admin::AdminController
       render json: {
                error: I18n.t("topic_og_image.preview_generation_failed"),
              },
-             status: :unprocessable_entity
+             status: :unprocessable_content
       return
     end
 

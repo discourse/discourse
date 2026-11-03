@@ -30,15 +30,15 @@ class Admin::EmojiController < Admin::AdminController
         end
         on_failed_contract do |contract|
           render json: failed_json.merge(errors: contract.errors.full_messages),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_model_errors(:upload) do |_, upload:|
           render json: failed_json.merge(errors: upload.errors.full_messages),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_model_errors(:custom_emoji) do |custom_emoji|
           render json: failed_json.merge(errors: custom_emoji.errors.full_messages),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
       end
     end
@@ -54,7 +54,7 @@ class Admin::EmojiController < Admin::AdminController
       end
       on_failed_contract do
         render json: failed_json.merge(errors: [I18n.t("emoji.export.no_selection")]),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_model_not_found(:emojis) { render json: failed_json, status: :not_found }
     end
@@ -75,31 +75,31 @@ class Admin::EmojiController < Admin::AdminController
         end
         on_failed_contract do
           render json: failed_json.merge(errors: [I18n.t("emoji.import.missing_file")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_failed_policy(:manifest_not_empty) do
           render json: failed_json.merge(errors: [I18n.t("emoji.import.empty_manifest")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_exceptions(CSV::MalformedCSVError) do
           render json: failed_json.merge(errors: [I18n.t("emoji.import.invalid_csv")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_exceptions(Compression::SafeZipReader::MissingEntryError) do
           render json: failed_json.merge(errors: [I18n.t("emoji.import.missing_csv")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_exceptions(Compression::SafeZipReader::TooManyEntriesError) do
           render json: failed_json.merge(errors: [I18n.t("emoji.import.too_many_entries")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_exceptions(Compression::SafeZipReader::EntryTooLargeError) do
           render json: failed_json.merge(errors: [I18n.t("emoji.import.file_too_large")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_exceptions(Compression::SafeZipReader::SuspiciousEntryError) do
           render json: failed_json.merge(errors: [I18n.t("emoji.import.suspicious_entry")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
       end
     end
@@ -110,14 +110,14 @@ class Admin::EmojiController < Admin::AdminController
       on_success { |report:| render json: report }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_model_not_found(:rows) do
         render json: failed_json.merge(errors: [I18n.t("emoji.import.session_expired")]),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_exceptions(ActiveRecord::RecordInvalid) do |exception|
-        render json: failed_json.merge(errors: [exception.message]), status: :unprocessable_entity
+        render json: failed_json.merge(errors: [exception.message]), status: :unprocessable_content
       end
     end
   end

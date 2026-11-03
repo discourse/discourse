@@ -19,7 +19,7 @@ module DiscourseTopicVoting
         on_success do |topic:|
           render json: voting_response(topic).merge(alert: current_user.alert_low_votes?)
         end
-        on_failure { render json: failed_json, status: :unprocessable_entity }
+        on_failure { render json: failed_json, status: :unprocessable_content }
         on_model_not_found(:topic) { raise Discourse::NotFound }
         on_failed_policy(:can_see_topic) { raise Discourse::InvalidAccess }
         on_failed_policy(:topic_is_votable) { raise Discourse::InvalidAccess }
@@ -38,7 +38,7 @@ module DiscourseTopicVoting
     def unvote
       DiscourseTopicVoting::Votes::Remove.call(service_params) do
         on_success { |topic:| render json: voting_response(topic) }
-        on_failure { render json: failed_json, status: :unprocessable_entity }
+        on_failure { render json: failed_json, status: :unprocessable_content }
         on_model_not_found(:topic) { raise Discourse::NotFound }
         on_failed_policy(:can_see_topic) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|

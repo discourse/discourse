@@ -33,7 +33,7 @@ class McpController < ApplicationController
     raw_payload = request.body.read(SiteSetting.mcp_max_request_bytes + 1) || ""
     if raw_payload.bytesize > SiteSetting.mcp_max_request_bytes
       return(
-        render json: jsonrpc_error(nil, -32_600, "Request too large"), status: :payload_too_large
+        render json: jsonrpc_error(nil, -32_600, "Request too large"), status: :content_too_large
       )
     end
 

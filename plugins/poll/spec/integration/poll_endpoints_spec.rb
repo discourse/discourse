@@ -565,7 +565,7 @@ RSpec.describe "DiscoursePoll endpoints" do
               user_field_name: groupable_user_field,
             }
 
-        expect(response).to have_http_status :unprocessable_entity
+        expect(response).to have_http_status :unprocessable_content
         expect(response.parsed_body["errors"][0]).to eq(I18n.t("poll.user_cant_post_in_topic"))
       end
     end

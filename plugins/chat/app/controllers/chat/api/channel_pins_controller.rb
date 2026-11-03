@@ -16,7 +16,7 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
     end
   end
 
@@ -31,7 +31,7 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
     end
   end
 
@@ -40,7 +40,7 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
 
     Chat::PinMessage.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_policy(:can_pin) { raise Discourse::InvalidAccess }
       on_failed_policy(:within_pin_limit) do
@@ -53,13 +53,13 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
                   limit: Chat::PinnedMessage::MAX_PINS_PER_CHANNEL,
                 ),
             ),
-          status: :unprocessable_entity,
+          status: :unprocessable_content,
         )
       end
       on_failed_policy(:not_already_pinned) do
         render(
           json: failed_json.merge(error: I18n.t("chat.errors.message_already_pinned")),
-          status: :unprocessable_entity,
+          status: :unprocessable_content,
         )
       end
       on_failed_contract do |contract|
@@ -73,12 +73,12 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
 
     Chat::UnpinMessage.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_model_not_found(:pin) do
         render(
           json: failed_json.merge(error: I18n.t("chat.errors.message_not_pinned")),
-          status: :unprocessable_entity,
+          status: :unprocessable_content,
         )
       end
       on_failed_policy(:can_unpin) { raise Discourse::InvalidAccess }

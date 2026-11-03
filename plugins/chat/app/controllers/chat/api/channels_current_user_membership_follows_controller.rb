@@ -10,7 +10,7 @@ class Chat::Api::ChannelsCurrentUserMembershipFollowsController < Chat::Api::Cha
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
       on_model_not_found(:channel) { raise Discourse::NotFound }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
     end
   end
 end

@@ -4,7 +4,7 @@ class Chat::Api::ChannelsThreadsDraftsController < Chat::ApiController
   def create
     Chat::UpsertDraft.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_step(:check_thread_exists) { raise Discourse::NotFound }
       on_failed_contract do |contract|

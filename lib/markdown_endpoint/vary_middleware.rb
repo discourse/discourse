@@ -11,7 +11,7 @@ module MarkdownEndpoint
       return status, headers, body unless env[RequestConstraint::VARY_ACCEPT_ENV_KEY]
 
       headers = headers.dup
-      vary_key = headers.keys.find { |key| key.casecmp?("Vary") } || "Vary"
+      vary_key = headers.keys.find { |key| key.casecmp?("Vary") } || "vary"
       tokens = headers[vary_key].to_s.split(",").map(&:strip).reject(&:blank?)
       tokens << "Accept" unless tokens.any? { |token| token.casecmp?("Accept") }
       headers[vary_key] = tokens.join(", ")

@@ -8,7 +8,7 @@ module ::DiscourseRewind
     def dismiss
       DiscourseRewind::Dismiss.call(service_params) do
         on_success { head :no_content }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 
@@ -20,7 +20,7 @@ module ::DiscourseRewind
           render json: failed_json.merge(errors: contract.errors.full_messages),
                  status: :bad_request
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_success { |reports:, total_available:| render json: { reports:, total_available: } }
       end
     end
@@ -28,7 +28,7 @@ module ::DiscourseRewind
     def toggle_share
       DiscourseRewind::ToggleShare.call(service_params) do
         on_success { |shared:| render json: { shared: } }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:user_not_hiding_profile) do
           render_json_error(
             I18n.t("discourse_rewind.cannot_share_when_profile_hidden"),

@@ -37,7 +37,7 @@ RSpec.describe "RequestTracker in multisite", type: :multisite do
             [200, {}, ["OK"]]
           end
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq(error_code)
+        expect(headers["discourse-rate-limit-error-code"]).to eq(error_code)
         expect(called[:default]).to eq(1)
       end
 
@@ -50,7 +50,7 @@ RSpec.describe "RequestTracker in multisite", type: :multisite do
             [200, {}, ["OK"]]
           end
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq(error_code)
+        expect(headers["discourse-rate-limit-error-code"]).to eq(error_code)
         expect(called[:second]).to eq(0)
       end
     end
@@ -78,7 +78,7 @@ RSpec.describe "RequestTracker in multisite", type: :multisite do
             [200, {}, ["OK"]]
           end
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq(error_code)
+        expect(headers["discourse-rate-limit-error-code"]).to eq(error_code)
         expect(called[:default]).to eq(1)
       end
 
@@ -100,7 +100,7 @@ RSpec.describe "RequestTracker in multisite", type: :multisite do
             [200, {}, ["OK"]]
           end
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq(error_code)
+        expect(headers["discourse-rate-limit-error-code"]).to eq(error_code)
         expect(called[:second]).to eq(1)
       end
     end

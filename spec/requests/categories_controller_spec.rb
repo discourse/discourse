@@ -1591,7 +1591,7 @@ RSpec.describe CategoriesController do
                   }
             end.not_to raise_error
 
-            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response).to have_http_status(:unprocessable_content)
             expect(response.parsed_body["errors"].join(" ").downcase).to include(
               review_mode.humanize.downcase,
               "is not included in the list",
