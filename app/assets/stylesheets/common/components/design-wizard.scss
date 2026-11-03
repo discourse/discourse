@@ -19,6 +19,23 @@ $dw-primary-high: #646464;
 $dw-primary-very-high: #434343;
 $dw-button-default-border: #d3d3d3;
 
+// px, so the reserved space matches the panel, whose font size is pinned
+$dw-docked-width: 360px;
+$dw-rail-width: 56px;
+
+// fixed-position UI pinned to the inline end reads this to stay uncovered
+html.design-wizard-docked {
+  --d-page-inset-inline-end: #{$dw-docked-width};
+
+  &.design-wizard-collapsed {
+    --d-page-inset-inline-end: #{$dw-rail-width};
+  }
+
+  body {
+    padding-inline-end: var(--d-page-inset-inline-end);
+  }
+}
+
 .design-wizard,
 .design-wizard__restore,
 .design-wizard__font-select-content {
@@ -107,6 +124,9 @@ $dw-button-default-border: #d3d3d3;
 }
 
 .design-wizard {
+  // regions pad themselves so their dividers can run edge to edge
+  --design-wizard-gutter: var(--space-5);
+
   // also read by the panel component, for its closing animation
   --design-wizard-slide-out: translateX(100%);
   --design-wizard-category-1: #25aae2;
@@ -148,6 +168,30 @@ $dw-button-default-border: #d3d3d3;
     }
   }
 
+  &.--docked {
+    inset-block: 0;
+    width: var(--d-page-inset-inline-end);
+    border-block: none;
+    border-inline-end: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  // controls stay laid out at full width so their scroll position survives
+  &.--collapsed {
+    overflow: hidden;
+
+    .design-wizard__panel-actions,
+    .design-wizard__content {
+      visibility: hidden;
+    }
+
+    .design-wizard__content {
+      flex: none;
+      width: $dw-docked-width;
+    }
+  }
+
   &.--no-entrance {
     animation: none;
   }
@@ -178,6 +222,43 @@ $dw-button-default-border: #d3d3d3;
     inset-block-start: var(--space-2);
     inset-inline-end: var(--space-2);
     display: flex;
+  }
+
+  &__expand {
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-radius: 0;
+  }
+
+  &__expand-label {
+    display: flex;
+    gap: var(--space-3);
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+
+  &__expand-progress,
+  &__step-progress {
+    color: var(--primary-medium);
+  }
+
+  &__step-progress {
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  html[dir="rtl"] &.--docked .design-wizard__minimize .d-icon,
+  html[dir="rtl"] & .design-wizard__expand .d-icon {
+    transform: scaleX(-1);
   }
 
   &__restore {
@@ -219,28 +300,23 @@ $dw-button-default-border: #d3d3d3;
   &__content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
     height: 100%;
 
     // so the sections scroll rather than pushing the footer actions out
     min-height: 0;
-    padding: var(--space-5);
   }
 
   &__header {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    padding-inline-end: 4em;
+    padding-block: var(--design-wizard-gutter) var(--space-4);
+    padding-inline: var(--design-wizard-gutter) 4em;
+    border-block-end: 1px solid var(--content-border-color);
 
     h2 {
       margin: 0;
     }
-  }
-
-  &__subtitle {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
   }
 
   &__intro {
@@ -250,6 +326,7 @@ $dw-button-default-border: #d3d3d3;
     gap: var(--space-4);
     align-items: flex-start;
     min-height: 0;
+    padding: var(--design-wizard-gutter);
     overflow-y: auto;
   }
 
@@ -274,10 +351,7 @@ $dw-button-default-border: #d3d3d3;
     flex-direction: column;
     gap: var(--space-6);
     min-height: 0;
-
-    // so a selected control's box-shadow isn't clipped by the scroll container
-    padding: 2px;
-    margin: -2px;
+    padding: var(--design-wizard-gutter);
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-width: thin;
@@ -915,7 +989,8 @@ $dw-button-default-border: #d3d3d3;
     align-items: center;
     justify-content: flex-end;
     gap: var(--space-2);
-    padding-block-start: var(--space-4);
+    padding-block: var(--space-4) var(--design-wizard-gutter);
+    padding-inline: var(--design-wizard-gutter);
     border-block-start: 1px solid var(--content-border-color);
   }
 

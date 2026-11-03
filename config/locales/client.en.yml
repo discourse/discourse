@@ -661,11 +661,12 @@ en:
 
     design_wizard:
       title: "Customize your site"
-      subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
       step_progress: "Step %{current}/%{total}"
       minimize: "Minimize design wizard"
       restore: "Restore design wizard"
+      collapse: "Collapse design wizard"
+      expand: "Expand design wizard"
       save: "Save and finish"
       back: "Back"
       next: "Next"
