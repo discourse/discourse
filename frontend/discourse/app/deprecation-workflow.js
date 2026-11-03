@@ -322,7 +322,6 @@ const workflows = [
   // we should only add values here after fixing core and official plugins
   ...[
     "discourse.add-toolbar-popup-menu-options-callback",
-    "discourse.application-show-footer",
     "discourse.avatar-utils",
     "discourse.base-url",
     "discourse.bound-date",
