@@ -3,7 +3,7 @@ import { test } from "node:test";
 import {
   describeBuild,
   labelOf,
-  loadGraph,
+  loadReport,
   packageOf,
   stripVersion,
 } from "../lib/graph.mjs";
@@ -23,7 +23,7 @@ test("id and file name helpers", () => {
 });
 
 test("a lazy bundle costs only what it adds to the initial load", () => {
-  const build = describeBuild(loadGraph(makeDist(baseApp())));
+  const build = describeBuild(loadReport(makeDist(baseApp())));
 
   assert.deepEqual(
     [...build.bundles.get("lazy:admin/compat-modules.js").costChunks],
@@ -32,8 +32,8 @@ test("a lazy bundle costs only what it adds to the initial load", () => {
   assert.equal(build.initial.size, 2);
 });
 
-test("loadGraph needs a production build, which has brotli sizes", () => {
+test("loadReport needs a production build, which has brotli sizes", () => {
   const dir = makeDist({ ...baseApp(), emberEnv: "development" });
 
-  assert.throws(() => loadGraph(dir), /from a development build/);
+  assert.throws(() => loadReport(dir), /from a development build/);
 });

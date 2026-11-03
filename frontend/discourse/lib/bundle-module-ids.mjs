@@ -4,8 +4,8 @@ import { isAbsolute, join, relative } from "path";
 const NODE_MODULES = "/node_modules/";
 
 /**
- * A memoized `normalizeModuleId` for one build, whose ids are the same on
- * every machine.
+ * A memoized `normalizeModuleId`, whose ids are the same on every machine.
+ * Watch rebuilds reuse it, so package versions refresh on restart.
  *
  * @param {string} root
  * @returns {(id: string) => string}

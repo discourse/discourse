@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { tmpdir } from "os";
 import { join } from "path";
+import { fileURLToPath } from "url";
 import { REPORT_SCHEMA } from "../lib/analyze.mjs";
 import {
   decideAction,
@@ -14,7 +15,7 @@ import {
 } from "../lib/comment.mjs";
 import { emptyReport, NO_JS_REPORT } from "./helpers.mjs";
 
-const BUDGET_PATH = new URL("../budget.json", import.meta.url).pathname;
+const BUDGET_PATH = fileURLToPath(new URL("../budget.json", import.meta.url));
 const SHA = "a".repeat(40);
 
 test("markers round-trip their state and hashed keys", () => {
@@ -32,6 +33,7 @@ test("markers round-trip their state and hashed keys", () => {
 });
 
 test("decideAction notifies only for findings the comment lacks", () => {
+  const many = Array.from({ length: 400 }, (_, i) => `k${i}`);
   const comment = (state, keys) => ({
     id: 1,
     marker: parseMarker(marker(state, keys)),
@@ -41,6 +43,8 @@ test("decideAction notifies only for findings the comment lacks", () => {
     [["a"], comment("resolved", []), "create"],
     [["a"], comment("active", ["a", "b"]), "update"],
     [["a", "c"], comment("active", ["a"]), "supersede"],
+    // Over the marker's cap, the same findings still match.
+    [many, comment("active", many), "update"],
   ]) {
     assert.equal(decideAction({ keys, existing }).type, type);
   }
@@ -70,7 +74,7 @@ const PR = {
   head: { sha: SHA, repo: { full_name: "fork/discourse" } },
 };
 
-function fakeGitHub({ comments = [], listed = [PR], latest = PR } = {}) {
+function fakeGitHub({ comments = [], listed = [PR] } = {}) {
   const calls = [];
   let nextId = 100;
   const github = {
@@ -82,11 +86,10 @@ function fakeGitHub({ comments = [], listed = [PR], latest = PR } = {}) {
     },
     rest: {
       pulls: {
-        list: async ({ head }) => {
-          calls.push(["pulls", head]);
+        list: async ({ head, base }) => {
+          calls.push(["pulls", `${head} → ${base}`]);
           return { data: listed };
         },
-        get: async () => ({ data: latest }),
       },
       issues: {
         listComments: () => {},
@@ -113,6 +116,7 @@ function fakeGitHub({ comments = [], listed = [PR], latest = PR } = {}) {
 const context = {
   repo: { owner: "cvx", repo: "discourse" },
   payload: {
+    repository: { default_branch: "main" },
     workflow_run: {
       head_sha: SHA,
       head_branch: "feature",
@@ -124,7 +128,7 @@ const context = {
     },
   },
 };
-const core = { info() {}, warning() {} };
+const core = { info() {} };
 
 function go(github, report) {
   return run({
@@ -148,7 +152,7 @@ test("run creates, updates and resolves its own comment", async () => {
   });
 
   assert.equal((await go(github, FINDINGS_REPORT)).type, "create");
-  assert.deepEqual(github.calls[0], ["pulls", "fork:feature"]);
+  assert.deepEqual(github.calls[0], ["pulls", "fork:feature → main"]);
   assert.match(github.comments[1].body, /Grew over the threshold/);
   assert.equal((await go(github, FINDINGS_REPORT)).type, "update");
   assert.equal((await go(github, NO_JS_REPORT)).type, "resolve");
@@ -157,15 +161,12 @@ test("run creates, updates and resolves its own comment", async () => {
   assert.equal(github.comments.length, 2);
 });
 
-test("run skips unless an open PR is at the analyzed commit until it posts", async () => {
+test("run skips unless an open PR is at the analyzed commit", async () => {
   const elsewhere = { ...PR, head: { ...PR.head, sha: "b".repeat(40) } };
-  const none = fakeGitHub({ listed: [elsewhere] });
-  const moved = fakeGitHub({ latest: elsewhere });
+  const github = fakeGitHub({ listed: [elsewhere] });
 
-  assert.equal((await go(none, FINDINGS_REPORT)).type, "skipped");
-  assert.deepEqual(none.calls, [["pulls", "fork:feature"]]);
-  assert.equal((await go(moved, FINDINGS_REPORT)).type, "skipped");
-  assert.equal(moved.comments.length, 0);
+  assert.equal((await go(github, FINDINGS_REPORT)).type, "skipped");
+  assert.deepEqual(github.calls, [["pulls", "fork:feature → main"]]);
 });
 
 test("readReport rejects a missing report or another schema", () => {

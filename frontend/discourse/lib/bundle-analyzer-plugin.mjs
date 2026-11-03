@@ -19,7 +19,10 @@ function nameFromFile(fileName) {
 // compares between builds. Written from `writeBundle`, where the
 // chunks a browser will fetch are already on disk to be measured; Rails finds
 // the report by globbing for its name. `root` makes module ids relative.
-export default function bundleAnalyzerPlugin({ compress, root }) {
+export default function bundleAnalyzerPlugin({
+  compress,
+  root = process.cwd(),
+} = {}) {
   const normalize = moduleIdNormalizer(root);
 
   return {
@@ -35,7 +38,7 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
       const entrypoints = [];
       const dynamicEntrypoints = [];
 
-      // Rolldown's iteration order can change between builds of the same
+      // The bundler's iteration order can change between builds of the same
       // input, and the report is digested, so everything in it is sorted.
       const chunkList = Object.entries(bundle)
         .filter(([, chunk]) => chunk.type === "chunk")
@@ -66,7 +69,7 @@ export default function bundleAnalyzerPlugin({ compress, root }) {
             : null,
           isEntry: chunk.isEntry,
           isDynamicEntry: chunk.isDynamicEntry,
-          // From disk: reading `chunk.code` copies every chunk out of rolldown.
+          // From disk: reading `chunk.code` copies every chunk out of the bundler.
           rawSize: fileSize(`${options.dir}/${fileName}`),
           brotliSize: fileSize(`${options.dir}/${fileName}.br`),
           imports: [...chunk.imports].sort(),

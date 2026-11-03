@@ -38,7 +38,10 @@ jobs:
 
       - name: Check for JS changes
         id: changes
-        run: echo "js=$(node script/bundle_analysis/baseline.mjs --js-changed-since HEAD^1)" >> "$GITHUB_OUTPUT"
+        # Assigned first, so a node failure fails the step.
+        run: |
+          js=$(node script/bundle_analysis/baseline.mjs --js-changed-since HEAD^1)
+          echo "js=$js" >> "$GITHUB_OUTPUT"
 
       # bundle-analysis-comment.yml still runs for PRs without JS changes, to resolve an old comment.
       - name: Report no JS changes
@@ -69,23 +72,17 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
 
-      # Install scripts generate types and vendored assets the build does not
-      # use.
+      # Both in worktrees, the same way.
       - parallel:
           - name: Build the PR
-            env:
-              EMBER_ENV: production
-              CI: "1"
-            run: |
-              pnpm install --frozen-lockfile --ignore-scripts
-              pnpm --dir frontend/discourse build
+            run: node script/bundle_analysis/baseline.mjs --commit HEAD --out "$RUNNER_TEMP/head"
 
           - name: Build the base
             run: node script/bundle_analysis/baseline.mjs --commit HEAD^1 --out "$RUNNER_TEMP/base"
 
       - name: Analyze
         run: |
-          node script/bundle_analysis/analyze.mjs --base "$RUNNER_TEMP/base" --head frontend/discourse/dist --out "$RUNNER_TEMP/analysis"
+          node script/bundle_analysis/analyze.mjs --base "$RUNNER_TEMP/base" --head "$RUNNER_TEMP/head" --out "$RUNNER_TEMP/analysis"
           cat "$RUNNER_TEMP/analysis/summary.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the report

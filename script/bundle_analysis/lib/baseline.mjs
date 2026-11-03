@@ -24,7 +24,7 @@ export function jsInputsChanged(a, b, cwd) {
   return spawnSync("git", args, { cwd }).status !== 0;
 }
 
-// CI builds both sides like this; `CI` reaches the code through `@glimmer/env`.
+// CI builds both sides like this; `CI` is a build-time flag in the code too.
 const BUILD_ENV = { EMBER_ENV: "production", CI: "1" };
 
 function run(command, args, options) {
@@ -53,6 +53,7 @@ export function buildBaseline(commit, outDir) {
   console.error(`Building ${commit.slice(0, 8)} in ${worktree}`);
   git(["worktree", "add", "--detach", worktree, commit]);
   try {
+    // Install scripts generate types and vendored assets the build does not use.
     run("pnpm", ["install", "--frozen-lockfile", "--ignore-scripts"], {
       cwd: worktree,
     });

@@ -78,7 +78,10 @@ export function renderComment(report, budget, { runUrl } = {}) {
   const edgeGroups = new Map();
   for (const { edge } of byType("edge")) {
     const key = `${edge.to}|${edge.kind}`;
-    edgeGroups.set(key, [...(edgeGroups.get(key) ?? []), edge]);
+    if (!edgeGroups.has(key)) {
+      edgeGroups.set(key, []);
+    }
+    edgeGroups.get(key).push(edge);
   }
 
   const sections = [
@@ -90,7 +93,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
       byType("moved").map(({ group }) => [
         cell(group.name),
         kib(group.bytes),
-        group.importers.map(importLine).join("<br>") || "–",
+        group.importers.slice(0, 3).map(importLine).join("<br>") || "–",
         group.modules
           .slice(0, 3)
           .map((m) => `${cell(m.id)} ${kib(m.bytes)}`)
@@ -173,7 +176,7 @@ export function renderComment(report, budget, { runUrl } = {}) {
     ),
   ].filter(Boolean);
 
-  let body = [
+  const body = [
     HEADING,
     "",
     `**Initial load:** ${kib(initial.base)} → ${kib(initial.head)} (${delta(initial.base, initial.head)}) · ${flagged.length} finding${flagged.length === 1 ? "" : "s"}`,
@@ -183,10 +186,16 @@ export function renderComment(report, budget, { runUrl } = {}) {
     `<sub>Sizes are brotli unless marked unminified. Flagged when the initial load grows over ${budget.initialLoad.percent}% ${budget.initialLoad.combine} ${budget.initialLoad.kib} KiB, or another bundle over ${budget.bundles.percent}% ${budget.bundles.combine} ${budget.bundles.kib} KiB. Informational only.</sub>`,
     `<sub>Reproduce locally: \`${REPRODUCE}\`${runUrl ? ` · [Full report](${runUrl})` : ""}</sub>`,
   ].join("\n");
-  if (body.length > COMMENT_LIMIT) {
-    body = `${body.slice(0, COMMENT_LIMIT)}\n\n… truncated, see the full report.`;
+  return { keys, body: truncate(body, runUrl) };
+}
+
+/** Cuts at a line end: code spans never hold one, so none is left open. */
+export function truncate(body, runUrl, limit = COMMENT_LIMIT) {
+  if (body.length <= limit) {
+    return body;
   }
-  return { keys, body };
+  const report = runUrl ? `[full report](${runUrl})` : "full report";
+  return `${body.slice(0, body.lastIndexOf("\n", limit))}\n\n… truncated, see the ${report}.`;
 }
 
 function tableSection(heading, intro, header, align, rows) {
@@ -213,6 +222,7 @@ function tableSection(heading, intro, header, align, rows) {
 }
 
 function details(summary, ...table) {
+  // The empty heading line ends the HTML block, so the table renders.
   return `<details>\n<summary>${summary}</summary>\n${tableSection("", null, ...table)}\n</details>\n`;
 }
 
@@ -358,7 +368,12 @@ function signedKib(bytes) {
  * mentions; the fence is longer than any backtick run inside.
  */
 export function code(value) {
-  let text = String(value).replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ");
+  // Control and invisible formatting characters, which could end the span or
+  // reorder the text around it.
+  let text = String(value).replace(
+    /[\u0000-\u001f\u007f\u2028\u2029\p{Cf}]/gu,
+    " "
+  );
   if (text.length > MAX_STRING) {
     const half = Math.floor((MAX_STRING - 1) / 2);
     text = `${text.slice(0, half)}…${text.slice(-half)}`;

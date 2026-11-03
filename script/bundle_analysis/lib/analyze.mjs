@@ -1,7 +1,7 @@
 import {
   describeBuild,
   labelOf,
-  loadGraph,
+  loadReport,
   MAIN_KEY,
   packageOf,
   stripVersion,
@@ -18,12 +18,12 @@ const MIN_MODULE_DELTA = 100;
  * flagged.
  */
 export function analyze({ baseDir, headDir }) {
-  const base = describeBuild(loadGraph(baseDir));
-  const head = describeBuild(loadGraph(headDir));
+  const base = describeBuild(loadReport(baseDir));
+  const head = describeBuild(loadReport(headDir));
   const pair = (fn) => ({ base: fn(base), head: fn(head) });
   const size = (build, files) =>
     [...files].reduce(
-      (total, file) => total + build.graph.chunks[file].brotliSize,
+      (total, file) => total + build.report.chunks[file].brotliSize,
       0
     );
   const measure = (bundle, build) =>
@@ -39,6 +39,11 @@ export function analyze({ baseDir, headDir }) {
       bundle.name,
     ])
   );
+  const named = (edge) => ({
+    ...edge,
+    fromName: nameOf.get(edge.from),
+    toName: nameOf.get(edge.to),
+  });
   // Edges `other` lacks, between bundles it has.
   const newEdges = (build, other) =>
     [...build.edges]
@@ -50,11 +55,6 @@ export function analyze({ baseDir, headDir }) {
       )
       .sort(([x], [y]) => x.localeCompare(y))
       .map(([, edge]) => named(edge));
-  const named = (edge) => ({
-    ...edge,
-    fromName: nameOf.get(edge.from),
-    toName: nameOf.get(edge.to),
-  });
 
   const bundles = [...nameOf.keys()]
     .map((key) => {
@@ -89,8 +89,8 @@ export function analyze({ baseDir, headDir }) {
       topModules: moduleDeltas(base, base.initial, head, head.initial),
     },
     totals: {
-      ...pair((build) => size(build, Object.keys(build.graph.chunks))),
-      chunks: pair((build) => Object.keys(build.graph.chunks).length),
+      ...pair((build) => size(build, Object.keys(build.report.chunks))),
+      chunks: pair((build) => Object.keys(build.report.chunks).length),
     },
     bundles,
     movedIntoInitialLoad: movedIntoInitialLoad(base, head).map((group) => ({
@@ -98,16 +98,16 @@ export function analyze({ baseDir, headDir }) {
       name: nameOf.get(group.bundle),
     })),
     edges: { added: newEdges(head, base), removed: newEdges(base, head) },
-    assets: compareAssets(base.graph, head.graph),
-    duplicatePackages: duplicatePackages(base.graph, head.graph),
+    assets: compareAssets(base.report, head.report),
+    duplicatePackages: duplicatePackages(base, head),
   };
 }
 
 /** Rendered bytes per version-less module id over a set of chunks. */
-function moduleBytes(graph, files) {
+function moduleBytes(report, files) {
   const bytes = new Map();
   for (const file of files) {
-    for (const { id, renderedLength } of graph.chunks[file].modules) {
+    for (const { id, renderedLength } of report.chunks[file].modules) {
       const key = stripVersion(id);
       bytes.set(key, (bytes.get(key) ?? 0) + renderedLength);
     }
@@ -120,13 +120,13 @@ function moduleBytes(graph, files) {
  * means new to the build, not just to these chunks: moved code is not new.
  */
 function moduleDeltas(base, baseFiles, head, headFiles) {
-  const before = moduleBytes(base.graph, baseFiles);
-  const after = moduleBytes(head.graph, headFiles);
+  const before = moduleBytes(base.report, baseFiles);
+  const after = moduleBytes(head.report, headFiles);
   const deltas = [];
   for (const [id, size] of after) {
     const delta = size - (before.get(id) ?? 0);
     if (delta >= MIN_MODULE_DELTA) {
-      deltas.push({ id, delta, added: !base.strippedModuleChunk.has(id) });
+      deltas.push({ id, delta, added: !base.strippedModuleId.has(id) });
     }
   }
   return deltas.sort((a, b) => b.delta - a.delta).slice(0, TOP_MODULES);
@@ -139,13 +139,15 @@ function moduleDeltas(base, baseFiles, head, headFiles) {
 function movedIntoInitialLoad(base, head) {
   const groups = new Map();
   for (const file of head.initial) {
-    for (const { id, renderedLength: bytes } of head.graph.chunks[file]
+    for (const { id, renderedLength: bytes } of head.report.chunks[file]
       .modules) {
-      // Version-less, so code that moves in the PR that bumps its package
-      // is still found.
+      // Version-less, so code that moves in the PR that bumps its package is
+      // still found; a second version leaves the base's in place, unmoved.
+      const baseVersion = base.strippedModuleId.get(stripVersion(id));
       const baseFile =
         base.moduleChunk.get(id) ??
-        base.strippedModuleChunk.get(stripVersion(id));
+        (!head.moduleChunk.has(baseVersion) &&
+          base.moduleChunk.get(baseVersion));
       const owner =
         baseFile && !base.initial.has(baseFile) && ownerBundle(base, baseFile);
       if (owner) {
@@ -174,12 +176,12 @@ function movedIntoInitialLoad(base, head) {
     .sort((a, b) => b.bytes - a.bytes);
 }
 
-/** The lazy bundle whose own chunk holds `file`, else the first whose closure does. */
+/** The bundle whose own chunk holds `file`, else the first lazy one that loads it. */
 function ownerBundle(build, file) {
   return (
     build.bundles.get(build.bundleOfChunk.get(file)) ??
     [...build.bundles.values()]
-      .filter((bundle) => bundle.kind === "lazy" && bundle.closure.has(file))
+      .filter((bundle) => bundle.kind === "lazy" && bundle.costChunks.has(file))
       .sort((a, b) => a.key.localeCompare(b.key))[0]
   );
 }
@@ -210,10 +212,10 @@ function boundaryImports(base, head, movedIds) {
 }
 
 /** Uncompressed: wasm and worker files get no precompressed copy. */
-function compareAssets(baseGraph, headGraph) {
-  const byLabel = (graph) => {
+function compareAssets(baseReport, headReport) {
+  const byLabel = (report) => {
     const assets = new Map();
-    for (const [file, size] of Object.entries(graph.assets).sort()) {
+    for (const [file, size] of Object.entries(report.assets).sort()) {
       let label = labelOf(file);
       for (let n = 2; assets.has(label); n++) {
         label = `${labelOf(file)} (${n})`;
@@ -222,8 +224,8 @@ function compareAssets(baseGraph, headGraph) {
     }
     return assets;
   };
-  const before = byLabel(baseGraph);
-  const after = byLabel(headGraph);
+  const before = byLabel(baseReport);
+  const after = byLabel(headReport);
   return [...new Set([...before.keys(), ...after.keys()])]
     .sort()
     .map((label) => ({
@@ -233,12 +235,10 @@ function compareAssets(baseGraph, headGraph) {
     }));
 }
 
-function duplicatePackages(baseGraph, headGraph) {
-  const versions = (graph) => {
+function duplicatePackages(base, head) {
+  const versions = (build) => {
     const result = new Map();
-    for (const { id } of Object.values(graph.chunks).flatMap(
-      (c) => c.modules
-    )) {
+    for (const id of build.moduleChunk.keys()) {
       const pkg = packageOf(id);
       if (pkg) {
         result.set(
@@ -249,8 +249,8 @@ function duplicatePackages(baseGraph, headGraph) {
     }
     return result;
   };
-  const before = versions(baseGraph);
-  return [...versions(headGraph)]
+  const before = versions(base);
+  return [...versions(head)]
     .filter(([, set]) => set.size > 1)
     .map(([name, set]) => ({
       name,

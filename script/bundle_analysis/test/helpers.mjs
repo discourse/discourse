@@ -9,15 +9,13 @@ const REPORT = "assets/js/bundle-analysis-abcdef123456.digested.json";
 /**
  * Writes a fake production build's bundle analyzer report. `entries` maps an
  * entry name to its file; `chunks` maps a file name to
- * `{ kind, facade?, imports?, dynamicImports?, modules, examples? }` with
- * `modules` as id → bytes and `examples` as kind → target file → example; a
- * chunk's brotli size is the sum of its module bytes.
- * `assets` maps a file name to its size.
+ * `{ facade?, imports?, dynamicImports?, dynamicEntryModules?, modules,
+ * examples? }` with `modules` as id → bytes and `examples` as kind → target
+ * file → example; a chunk's brotli size is the sum of its module bytes.
  */
 export function makeDist({
   entries,
   chunks,
-  assets = {},
   importers = {},
   emberEnv = "production",
 }) {
@@ -35,12 +33,10 @@ export function makeDist({
     emberEnv,
     entrypoints: Object.values(entries),
     dynamicEntrypoints: Object.keys(chunks).filter(
-      (file) =>
-        !entryName.has(file) &&
-        (chunks[file].kind === "lazy" || dynamicTargets.has(file))
+      (file) => !entryName.has(file) && dynamicTargets.has(file)
     ),
     chunks: {},
-    assets,
+    assets: {},
     moduleIds,
     importers: moduleIds.map((id) =>
       (importers[id] ?? []).map((importer) => moduleIds.indexOf(importer))
@@ -73,7 +69,6 @@ export function baseApp(overrides = {}) {
     entries: { discourse: "assets/js/discourse-aaaa1111.digested.js" },
     chunks: {
       "assets/js/discourse-aaaa1111.digested.js": {
-        kind: "entry",
         facade: "discourse.js",
         imports: ["assets/js/chunk-bbbb2222.digested.js"],
         dynamicImports: ["assets/js/admin-cccc3333.digested.js"],
@@ -88,11 +83,9 @@ export function baseApp(overrides = {}) {
         },
       },
       "assets/js/chunk-bbbb2222.digested.js": {
-        kind: "shared",
         modules: { "moment@2.30.1/moment.js": 20000 },
       },
       "assets/js/admin-cccc3333.digested.js": {
-        kind: "lazy",
         facade: "admin/compat-modules.js",
         imports: ["assets/js/chunk-bbbb2222.digested.js"],
         dynamicImports: ["assets/js/codemirror-dddd4444.digested.js"],
@@ -110,7 +103,6 @@ export function baseApp(overrides = {}) {
         },
       },
       "assets/js/codemirror-dddd4444.digested.js": {
-        kind: "lazy",
         facade: "app/static/codemirror.js",
         modules: {
           "app/static/codemirror.js": 5000,
@@ -133,14 +125,9 @@ export const NO_JS_REPORT = { schema: REPORT_SCHEMA, noJsChanges: true };
 
 /** A report of two identical builds; `overrides` replace top-level fields. */
 export function emptyReport(overrides = {}) {
-  return { ...analyzedReport(), ...overrides };
-}
-
-/** What the analyzer writes for two fake builds, after a JSON round trip. */
-export function analyzedReport(base = baseApp(), head = baseApp()) {
-  return JSON.parse(
-    JSON.stringify(
-      analyze({ baseDir: makeDist(base), headDir: makeDist(head) })
-    )
-  );
+  const report = analyze({
+    baseDir: makeDist(baseApp()),
+    headDir: makeDist(baseApp()),
+  });
+  return { ...JSON.parse(JSON.stringify(report)), ...overrides };
 }

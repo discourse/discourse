@@ -8,13 +8,19 @@ const MARKER =
   /<!-- bundle-analysis:v1 state=(active|resolved|superseded) keys=([0-9a-f,]*) -->/g;
 const BOT_LOGIN = "github-actions[bot]";
 const MAX_REPORT_BYTES = 20 * 1024 * 1024;
+const MAX_KEYS = 300;
 
 export function hashKey(key) {
   return createHash("sha256").update(key).digest("hex").slice(0, 12);
 }
 
+/** What a marker stores and compares: capped, to stay inside GitHub's comment limit. */
+function keyHashes(keys) {
+  return [...new Set(keys.map(hashKey))].sort().slice(0, MAX_KEYS);
+}
+
 export function marker(state, keys) {
-  return `<!-- bundle-analysis:v1 state=${state} keys=${[...new Set(keys.map(hashKey))].sort().join(",")} -->`;
+  return `<!-- bundle-analysis:v1 state=${state} keys=${keyHashes(keys).join(",")} -->`;
 }
 
 /**
@@ -41,7 +47,7 @@ export function decideAction({ keys, existing }) {
   if (!active) {
     return { type: "create" };
   }
-  const known = keys.every((key) => active.marker.keys.has(hashKey(key)));
+  const known = keyHashes(keys).every((hash) => active.marker.keys.has(hash));
   return known
     ? { type: "update", comment: active }
     : { type: "supersede", comment: active };
@@ -74,18 +80,19 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
   const workflowRun = context.payload.workflow_run;
   const headRepo = workflowRun.head_repository;
   const { owner, repo } = context.repo;
-  const atHead = (pr) =>
-    pr.state === "open" &&
-    pr.head.sha === workflowRun.head_sha &&
-    pr.head.repo?.full_name === headRepo.full_name;
 
   const { data: open } = await github.rest.pulls.list({
     owner,
     repo,
     state: "open",
     head: `${headRepo.owner.login}:${workflowRun.head_branch}`,
+    base: context.payload.repository.default_branch,
   });
-  const pr = open.find(atHead);
+  const pr = open.find(
+    ({ head }) =>
+      head.sha === workflowRun.head_sha &&
+      head.repo?.full_name === headRepo.full_name
+  );
   if (!pr) {
     core.info("No open PR is at the analyzed commit; skipping.");
     return { type: "skipped" };
@@ -113,17 +120,6 @@ export async function run({ github, context, core, artifactDir, budgetPath }) {
   if (action.type === "none") {
     core.info("No findings and no active comment.");
     return action;
-  }
-
-  // A push while this ran would make the comment stale; its own run follows.
-  const { data: latest } = await github.rest.pulls.get({
-    owner,
-    repo,
-    pull_number: pr.number,
-  });
-  if (!atHead(latest)) {
-    core.info("PR changed while rendering; skipping.");
-    return { type: "skipped" };
   }
 
   const update = (comment, text) =>

@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { code, exceeds, renderComment, renderSummary } from "../lib/render.mjs";
+import {
+  code,
+  exceeds,
+  renderComment,
+  renderSummary,
+  truncate,
+} from "../lib/render.mjs";
 import { BUDGET, emptyReport, NO_JS_REPORT } from "./helpers.mjs";
 
 function edge(fromName, overrides = {}) {
@@ -67,6 +73,16 @@ test("hostile values render escaped or throw, so nothing is posted", () => {
     () => renderComment(emptyReport({ initialLoad }), BUDGET),
     /Not a size/
   );
+});
+
+test("truncation cuts at a line end, so no code span is left open", () => {
+  const body = ["| `a` |", "| `bbbbbbbb` |"].join("\n");
+
+  assert.equal(
+    truncate(body, "https://ci/run", 12),
+    "| `a` |\n\n… truncated, see the [full report](https://ci/run)."
+  );
+  assert.equal(truncate(body, null, 100), body);
 });
 
 test("edges that share a target are one row with a key each", () => {

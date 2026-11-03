@@ -62,7 +62,7 @@ export function findReport(distDir) {
  * The bundle analyzer report of a production build, which carries chunk
  * sizes, modules, imports and the module graph.
  */
-export function loadGraph(distDir) {
+export function loadReport(distDir) {
   const path = findReport(distDir);
   if (!path) {
     throw new Error(
@@ -86,10 +86,10 @@ export function loadGraph(distDir) {
  * targets, each with the chunks it loads. Shared chunks belong to no bundle;
  * they count toward every bundle whose closure includes them.
  */
-export function describeBuild(graph) {
-  const chunks = graph.chunks;
+export function describeBuild(report) {
+  const chunks = report.chunks;
   const entries = new Map(
-    graph.entrypoints.map((file) => [chunks[file].name, file])
+    report.entrypoints.map((file) => [chunks[file].name, file])
   );
   const mainFile = entries.get(MAIN_ENTRY);
   if (!mainFile) {
@@ -122,8 +122,9 @@ export function describeBuild(graph) {
     bundleOfChunk.set(file, key);
   }
 
-  const lazy = graph.dynamicEntrypoints
-    .filter((file) => !bundleOfChunk.has(file))
+  // An import() of code the initial load already has loads nothing.
+  const lazy = report.dynamicEntrypoints
+    .filter((file) => !initial.has(file))
     .toSorted()
     .map((file) => ({ file, facade: lazyEntryModule(chunks[file]) }))
     .filter(({ facade }) => facade);
@@ -137,33 +138,33 @@ export function describeBuild(graph) {
   nameLazyBundles(bundles, chunks);
 
   for (const bundle of bundles.values()) {
-    bundle.closure = closure(bundle.file);
+    const loads = closure(bundle.file);
     bundle.costChunks =
       bundle.kind === "lazy"
-        ? new Set([...bundle.closure].filter((file) => !initial.has(file)))
-        : bundle.closure;
+        ? new Set([...loads].filter((file) => !initial.has(file)))
+        : loads;
   }
 
   const moduleChunk = new Map();
-  const strippedModuleChunk = new Map();
+  const strippedModuleId = new Map();
   for (const [file, chunk] of Object.entries(chunks)) {
     for (const { id } of chunk.modules) {
       moduleChunk.set(id, file);
-      strippedModuleChunk.set(stripVersion(id), file);
+      strippedModuleId.set(stripVersion(id), id);
     }
   }
 
   const importers = new Map(
-    graph.moduleIds.map((id, i) => [
+    report.moduleIds.map((id, i) => [
       id,
-      graph.importers[i].map((index) => graph.moduleIds[index]),
+      report.importers[i].map((index) => report.moduleIds[index]),
     ])
   );
 
   return {
-    graph,
+    report,
     importers,
-    strippedModuleChunk,
+    strippedModuleId,
     initial,
     bundles,
     bundleOfChunk,
@@ -174,9 +175,9 @@ export function describeBuild(graph) {
 
 /**
  * The module a lazy chunk is known by: its facade, else the first module
- * other chunks import from it dynamically. Rolldown gives a dynamically
- * imported chunk no facade when it merges it with other code, so this keeps
- * the bundle's key when that changes between builds.
+ * other chunks import from it dynamically. A dynamically imported chunk has
+ * no facade once merged with other code, so this keeps the bundle's key when
+ * that changes between builds.
  */
 function lazyEntryModule(chunk) {
   return (
@@ -216,7 +217,7 @@ function nameLazyBundles(bundles, chunks) {
  * Bundle A connects to bundle B when loading A loads B (static), can lazily
  * load B (dynamic) or references B's URL (url, for workers). Edges into the
  * initial load are dropped: that code is already loaded. A lazy bundle's
- * edges come only from the chunks it adds to the initial load; imports in
+ * edges come only from the chunks it loads beyond the initial load; imports in
  * initial-load chunks belong to the main entry.
  */
 function computeEdges(chunks, bundles, bundleOfChunk, initial) {
@@ -241,7 +242,7 @@ function computeEdges(chunks, bundles, bundleOfChunk, initial) {
       const chunk = chunks[file];
       add(from, file, "static", staticExamples.find((e) => e[file])?.[file]);
       for (const target of chunk.dynamicImports) {
-        if (!from.closure.has(target)) {
+        if (!from.costChunks.has(target)) {
           add(from, target, "dynamic", chunk.examples.dynamic[target]);
         }
       }

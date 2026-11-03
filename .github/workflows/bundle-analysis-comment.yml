@@ -1,9 +1,7 @@
 name: Bundle analysis comment
 
-# Posts the result of bundle-analysis.yml on the PR. workflow_run always runs
-# this file from the default branch, with a token that can comment even on
-# PRs from forks, so it never runs PR code: the report is only rendered, with
-# the default branch's script/bundle_analysis, which escapes it.
+# Comments bundle-analysis.yml's report on the PR, even from forks. It runs from
+# the default branch and never runs PR code: it only renders the report, escaped.
 
 on:
   workflow_run:

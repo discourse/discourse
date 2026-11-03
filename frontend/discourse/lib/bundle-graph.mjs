@@ -7,10 +7,7 @@ import { RESOLVED_PREFIX as URL_IMPORT_PREFIX } from "./dynamic-chunk-url-plugin
  * URL import of another chunk. Also the assets modules bring in, with their
  * sizes, and every module's static importers. The importers explain code
  * that moved into another chunk, such as lazy code now imported statically,
- * where no cross-chunk import is left to show it.
- *
- * Everything is sorted, since rolldown's iteration order can change between
- * builds of the same input.
+ * where no cross-chunk import is left to show it. Sorted, like the report.
  *
  * @param {object} bundle The output bundle.
  * @param {(id: string) => object | null} getModuleInfo

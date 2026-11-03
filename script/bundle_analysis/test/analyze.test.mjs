@@ -29,7 +29,6 @@ test("a new lazy import is a new bundle, reported with its importer", () => {
   head.chunks[ADMIN].dynamicImports.push(RRULE);
   head.chunks[ADMIN].examples.dynamic[RRULE] = example;
   head.chunks[RRULE] = {
-    kind: "lazy",
     facade: "rrule@2.8.1/dist/esm/index.js",
     modules: { "rrule@2.8.1/dist/esm/index.js": 8000 },
   };
@@ -101,7 +100,6 @@ test("splitting a shared chunk differently has no findings", () => {
   delete head.chunks[SHARED];
   for (const [file, id] of Object.entries(split)) {
     head.chunks[file] = {
-      kind: "shared",
       modules: { [id]: base.chunks[SHARED].modules[id] },
     };
   }
@@ -117,7 +115,6 @@ test("bundles keep their keys across version bumps and lost facades", () => {
     const file = `assets/js/diff-${version.replaceAll(".", "")}zz.digested.js`;
     app.chunks[ENTRY].dynamicImports.push(file);
     app.chunks[file] = {
-      kind: "lazy",
       facade: `diff@${version}/libesm/index.js`,
       modules: { [`diff@${version}/libesm/index.js`]: 7000 },
     };
@@ -125,7 +122,6 @@ test("bundles keep their keys across version bumps and lost facades", () => {
   };
   const head = withDiff("9.1.0");
   head.chunks[CODEMIRROR].facade = null;
-  head.chunks[CODEMIRROR].kind = "shared";
   head.chunks[CODEMIRROR].dynamicEntryModules = ["app/static/codemirror.js"];
 
   const { report, keys } = compare(withDiff("9.0.0"), head);
@@ -171,7 +167,6 @@ test("a lazy chunk without a facade is a bundle named after its import", () => {
   const withMarkdown = (bytes) => {
     const app = baseApp({
       [MARKDOWN]: {
-        kind: "shared",
         dynamicEntryModules: ["app/static/markdown-it/index.js"],
         modules: {
           "app/static/markdown-it/index.js": 1000,
@@ -190,4 +185,30 @@ test("a lazy chunk without a facade is a bundle named after its import", () => {
     bundle(report, "lazy:app/static/markdown-it/index.js").name,
     "app/static/markdown-it/index"
   );
+});
+
+test("making initial-load code lazy again is a new bundle, nothing more", () => {
+  const base = baseApp();
+  base.chunks[ENTRY].imports.push(CODEMIRROR);
+
+  assert.deepEqual(compare(base, baseApp()).keys, [
+    "new:lazy:app/static/codemirror.js",
+  ]);
+});
+
+test("an import() of code the initial load has is no new bundle", () => {
+  const head = baseApp();
+  head.chunks[ADMIN].dynamicImports.push(SHARED);
+  head.chunks[SHARED].dynamicEntryModules = ["moment@2.30.1/moment.js"];
+
+  assert.deepEqual(compare(baseApp(), head).keys, []);
+});
+
+test("a second version of a lazy package in core is not moved code", () => {
+  const base = baseApp();
+  base.chunks[ADMIN].modules["foo@1.0.0/x.js"] = 5000;
+  const head = structuredClone(base);
+  head.chunks[ENTRY].modules["foo@2.0.0/x.js"] = 5000;
+
+  assert.deepEqual(compare(base, head).report.movedIntoInitialLoad, []);
 });
