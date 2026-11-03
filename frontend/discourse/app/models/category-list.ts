@@ -163,21 +163,6 @@ export default class CategoryList extends LegacyArrayLikeObject<Category> {
   }
 
   /**
-   * @deprecated Use list() instead
-   */
-  static listForParent(
-    store: StoreService,
-    parentCategory: Pick<Category, "id"> | null
-  ) {
-    deprecated(
-      "The listForParent method of CategoryList is deprecated. Use list instead",
-      { id: "discourse.category-list.listForParent" }
-    );
-
-    return CategoryList.list(store, parentCategory);
-  }
-
-  /**
    * Fetches and creates a list of categories
    *
    * @param store - The store instance

@@ -325,7 +325,6 @@ const workflows = [
     "discourse.avatar-utils",
     "discourse.bound-date",
     "discourse.category-list.categories",
-    "discourse.category-list.listForParent",
     "discourse.chat.addToolbarButton",
     "discourse.click-track.is-valid-link-jquery",
     "discourse.component-template-resolving",

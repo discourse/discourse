@@ -375,5 +375,4 @@ expectTypeOf<OwnAnyKeys<CategoryList, EmberObject>>().toEqualTypeOf<never>();
 // Existing JS fixtures and factories use ID-only parent contexts.
 CategoryList.categoriesFrom(store, {}, { id: 1 });
 CategoryList.list(store, { id: 1 });
-CategoryList.listForParent(store, { id: 1 });
 CategoryList.create({ parentCategory: { id: 1 } });
