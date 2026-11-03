@@ -96,6 +96,20 @@ RSpec.describe DiscourseAi::Agents::McpThemeAccess do
       expect(SiteSetting.mcp_server_enabled).to eq(false)
     end
 
+    it "changes nothing when the server can't be turned on inside another transaction, as approving does" do
+      McpGroupScope.where(group_id: admins_group_id).delete_all
+      McpGroupScope.create!(group_id: admins_group_id, scope: DiscourseMcp::INITIAL_SCOPE)
+      SiteSetting.stubs(:shadowed_settings).returns(Set[:mcp_server_enabled])
+
+      expect {
+        ActiveRecord::Base.transaction do
+          expect(described_class.enable!(guardian: admin.guardian)).to eq(false)
+        end
+      }.not_to change {
+        [McpPrimitive.exposed.count, McpGroupScope.where(group_id: admins_group_id).pluck(:scope)]
+      }
+    end
+
     it "leaves theme tools blocked in an emergency off" do
       McpPrimitive.create!(
         kind: "tool",

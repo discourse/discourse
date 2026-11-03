@@ -102,7 +102,9 @@ module DiscourseAi
       def self.enable!(guardian:)
         enabled = false
 
-        ActiveRecord::Base.transaction do
+        # approving runs this inside its own transaction, so it needs a
+        # savepoint for the rollback to undo anything
+        ActiveRecord::Base.transaction(requires_new: true) do
           if (missing = missing_theme_tool_ids - blocked_theme_tool_ids).present?
             # the updater replaces the whole list, so keep what's on
             exposed =
