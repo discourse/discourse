@@ -339,7 +339,6 @@ const workflows = [
     "discourse.html-safe-helper",
     "discourse.legacy-array-like-object.proxied-array",
     "discourse.legacy-topic-list",
-    "discourse.markdown-it.whitelist",
     "discourse.modify-class-model",
     "discourse.number-field",
     "discourse.offset-calculator.minimumOffset",
