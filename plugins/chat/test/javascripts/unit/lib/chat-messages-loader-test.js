@@ -295,4 +295,74 @@ module("Unit | Lib | chat-messages-loader", function (hooks) {
       );
     });
   });
+
+  module("live messages held back as pending", function () {
+    test("a last page built before the live message is followed by one more", async function (assert) {
+      await this.withMessages(1, 2, 3);
+      this.loader.trackLiveMessage(this.message(10));
+
+      const pages = [
+        { messages: [4, 5, 6, 7, 8, 9], canFuture: false },
+        { messages: [10], canFuture: false },
+      ];
+      this.channelMessages.callsFake(() => {
+        const page = pages.shift();
+        return Promise.resolve({
+          messages: page.messages.map((id) => this.message(id)),
+          meta: {
+            can_load_more_past: null,
+            can_load_more_future: page.canFuture,
+          },
+        });
+      });
+
+      const result = await this.loader.loadMore({ direction: FUTURE });
+
+      assert.deepEqual(
+        result.messages.map((m) => m.id),
+        [4, 5, 6, 7, 8, 9, 10],
+        "the follow-up page is merged into the result"
+      );
+      assert.strictEqual(this.lastRequest().target_message_id, 9);
+      assert.false(this.loader.canLoadMoreFuture);
+    });
+
+    test("only one follow-up is made for a message that never arrives", async function (assert) {
+      await this.withMessages(1, 2, 3);
+      this.loader.trackLiveMessage(this.message(10));
+      this.respondWith({
+        can_load_more_past: null,
+        can_load_more_future: false,
+      });
+      const before = this.channelMessages.callCount;
+
+      await this.loader.loadMore({ direction: FUTURE });
+      await this.loader.load();
+
+      assert.strictEqual(
+        this.channelMessages.callCount,
+        before + 3,
+        "one page, one follow-up, then a plain reload"
+      );
+    });
+
+    test("messages received at the live edge are not tracked", async function (assert) {
+      await this.withMessages(1, 2, 3);
+      this.respondWith({
+        can_load_more_past: null,
+        can_load_more_future: false,
+      });
+      await this.loader.loadMore({ direction: FUTURE });
+
+      this.loader.trackLiveMessage(this.message(10));
+      this.respondWith({
+        can_load_more_past: true,
+        can_load_more_future: null,
+      });
+      const before = this.channelMessages.callCount;
+      await this.loader.loadMore({ direction: PAST });
+
+      assert.strictEqual(this.channelMessages.callCount, before + 1);
+    });
+  });
 });

@@ -18,9 +18,10 @@ export default class ChatMessagesLoader {
   @tracked fetchedOnce = false;
 
   // Edges of what the server has returned, kept apart from the rendered list
-  // because live messages can be appended past a gap in it.
+  // because it also holds messages that never came from a page.
   #oldestFetchedMessageId = null;
   #newestFetchedMessageId = null;
+  #newestLiveMessageId = null;
 
   constructor(owner, model) {
     setOwner(this, owner);
@@ -29,6 +30,22 @@ export default class ChatMessagesLoader {
 
   get loadedPast() {
     return this.canLoadMorePast === false && this.fetchedOnce;
+  }
+
+  /**
+   * Records a message received live while newer history is still unloaded, so
+   * a page that reaches the end of the stream without it is followed by one more.
+   *
+   * @param {ChatMessage} message
+   */
+  trackLiveMessage(message) {
+    if (!this.canLoadMoreFuture || message.staged) {
+      return;
+    }
+
+    if (message.id > (this.#newestLiveMessageId ?? 0)) {
+      this.#newestLiveMessageId = message.id;
+    }
   }
 
   async loadMore(args = {}) {
@@ -65,6 +82,10 @@ export default class ChatMessagesLoader {
       }
 
       this.#extendFetchedWindow(result.messages, args.direction);
+
+      if (args.direction === FUTURE) {
+        result = await this.#catchUpWithLiveMessages(result);
+      }
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -92,6 +113,7 @@ export default class ChatMessagesLoader {
       this.canLoadMoreFuture = result.meta.can_load_more_future;
       this.canLoadMorePast = result.meta.can_load_more_past;
       this.#extendFetchedWindow(result.messages);
+      result = await this.#catchUpWithLiveMessages(result);
       this.fetchedOnce = true;
     } catch (error) {
       popupAjaxError(error);
@@ -118,6 +140,31 @@ export default class ChatMessagesLoader {
     return Object.keys(args)
       .filter((k) => args[k] != null)
       .reduce((a, k) => ({ ...a, [k]: args[k] }), {});
+  }
+
+  // A message can be posted after the server built the last page but reach us
+  // before it, while it is held back as pending. One more page picks it up; only
+  // one, since a message deleted meanwhile will never arrive.
+  async #catchUpWithLiveMessages(result) {
+    if (
+      this.canLoadMoreFuture ||
+      !(this.#newestLiveMessageId > (this.#newestFetchedMessageId ?? 0))
+    ) {
+      return result;
+    }
+
+    this.#newestLiveMessageId = null;
+    const next = await this.#apiFunction(
+      this.#cleanArgs({
+        direction: FUTURE,
+        page_size: DEFAULT_MESSAGE_PAGE_SIZE,
+        target_message_id: this.#newestFetchedMessageId,
+      })
+    );
+    this.canLoadMoreFuture = next.meta.can_load_more_future;
+    this.#extendFetchedWindow(next.messages, FUTURE);
+
+    return { ...result, messages: [...result.messages, ...next.messages] };
   }
 
   // Pages arrive oldest-first in both directions.

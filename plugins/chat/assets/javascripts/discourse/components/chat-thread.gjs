@@ -360,6 +360,7 @@ export default class ChatThread extends Component {
   @bind
   onNewMessage(message) {
     const isOwnMessage = message.user.id === this.currentUser.id;
+    this.messagesLoader.trackLiveMessage(message);
 
     if (!isOwnMessage) {
       this.chatNewMessageAnnouncer.notify(message, {
