@@ -75,7 +75,7 @@ module DiscourseAi
           )
 
         extract_embedding(JSON.parse(response.body.read))
-      rescue Aws::BedrockRuntime::Errors::ServiceError => e
+      rescue Aws::Errors::ServiceError => e
         raise error_from_service(e)
       rescue Aws::Errors::MissingCredentialsError, Aws::Sigv4::Errors::MissingCredentialsError => e
         raise EmbeddingInferenceError.new(

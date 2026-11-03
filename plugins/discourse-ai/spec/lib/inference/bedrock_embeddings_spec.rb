@@ -140,6 +140,48 @@ RSpec.describe DiscourseAi::Inference::BedrockEmbeddings do
       end
     end
 
+    context "with a role ARN that can't be assumed" do
+      let(:role_arn) { "arn:aws:iam::123456789012:role/bedrock" }
+      let(:api_key) { nil }
+
+      around do |example|
+        previous = ENV.to_h.slice("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
+        ENV["AWS_ACCESS_KEY_ID"] = "AKIAFROMENV"
+        ENV["AWS_SECRET_ACCESS_KEY"] = "env-secret"
+        example.run
+      ensure
+        %w[AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY].each { |name| ENV[name] = previous[name] }
+      end
+
+      it "raises a terminal authorization error" do
+        stub_request(:post, "https://sts.us-east-1.amazonaws.com/").to_return(
+          status: 403,
+          body: <<~XML,
+            <ErrorResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+              <Error>
+                <Type>Sender</Type>
+                <Code>AccessDenied</Code>
+                <Message>User is not authorized to perform: sts:AssumeRole</Message>
+              </Error>
+            </ErrorResponse>
+          XML
+          headers: {
+            "Content-Type" => "text/xml",
+          },
+        )
+        stub_invoke
+
+        expect { client.perform!("hello world") }.to raise_error(
+          DiscourseAi::Inference::EmbeddingInferenceError,
+        ) { |error|
+          expect([error.category, error.http_status, error.terminal?]).to eq(
+            [:authorization_failed, 403, true],
+          )
+        }
+        expect(WebMock).not_to have_requested(:post, invoke_url)
+      end
+    end
+
     context "without configured credentials" do
       let(:api_key) { nil }
 
