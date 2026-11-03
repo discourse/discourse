@@ -235,3 +235,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 - Every family above has joined: call sites branched, state survives a mode change, specs pass in
   both modes, SCSS migrated, customization ports done.
 - Each family passes the a11y acceptance gate and the manual screen-reader matrix.
+
+## Before the branch merges
+
+- ☐ Remove the removed-name guard tagged `TODO (select-kit-rework-merge)` (see "Customizable
+  texts" above).
+- ☐ Decide whether `DSelectTopicList` stays. It has had no callers since the pickers inside modals
+  moved to `DSelectTopic` (2026-11-03), and is kept for now because a use case may come up.
