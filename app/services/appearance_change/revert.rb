@@ -4,9 +4,9 @@
 # previous palettes, or the previous default theme, along with the previous
 # fonts. The change itself is kept, so it can be made live again.
 #
-# Site settings are restored first, the same way the admin config writes them,
-# so if that fails, what the change replaced is still recorded and switching
-# back can be tried again.
+# Site settings are restored first, the same way the admin config writes them.
+# They can't be rolled back with the palettes, so the change is marked as
+# switching back beforehand, and a failure at any point can be retried.
 class AppearanceChange::Revert
   include Service::Base
 
@@ -21,6 +21,7 @@ class AppearanceChange::Revert
   policy :applied
   model :previous_state
   policy :restorable
+  step :record_pending_revert
   only_if(:changes_site_settings) { step :restore_site_settings }
 
   transaction do
@@ -39,7 +40,7 @@ class AppearanceChange::Revert
   end
 
   def applied(appearance_change:)
-    appearance_change.applied?
+    appearance_change.applied? || appearance_change.revert_interrupted?
   end
 
   def fetch_previous_state(appearance_change:)
@@ -48,6 +49,10 @@ class AppearanceChange::Revert
 
   def restorable(appearance_change:)
     appearance_change.restorable?
+  end
+
+  def record_pending_revert(appearance_change:)
+    appearance_change.record_pending_revert!
   end
 
   def changes_site_settings(previous_state:)

@@ -71,12 +71,44 @@ RSpec.describe AppearanceChange::Revert do
       it { is_expected.to fail_a_step(:restore_site_settings) }
 
       it "keeps the change live with what it replaced, so switching back can be tried again" do
-        expect { result }.not_to change { appearance_change.reload.previous_state }
+        expect { result }.not_to change {
+          appearance_change.reload.previous_state.except(AppearanceChange::REVERTING_KEY)
+        }
         expect(theme.reload).to have_attributes(
           color_scheme_id: appearance_change.light_color_scheme_id,
           dark_color_scheme_id: appearance_change.dark_color_scheme_id,
         )
         expect(appearance_change).to be_applied
+      end
+    end
+
+    context "when switching back fails after restoring the fonts" do
+      before { Theme.any_instance.stubs(:update!).raises(ActiveRecord::RecordInvalid) }
+
+      it "can be tried again" do
+        expect { result }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(SiteSetting.base_font).to eq(SiteSetting.defaults[:base_font])
+
+        Theme.any_instance.unstub(:update!)
+        expect(described_class.call(params:, **dependencies)).to run_successfully
+        expect(theme.reload).to have_attributes(
+          color_scheme_id: light_palette.id,
+          dark_color_scheme_id: dark_palette.id,
+        )
+      end
+
+      it "keeps what the change replaced when it goes live again" do
+        expect { result }.to raise_error(ActiveRecord::RecordInvalid)
+
+        Theme.any_instance.unstub(:update!)
+        expect(AppearanceChange::Activate.call(params:, **dependencies)).to run_successfully
+        expect(described_class.call(params:, **dependencies)).to run_successfully
+
+        expect(theme.reload).to have_attributes(
+          color_scheme_id: light_palette.id,
+          dark_color_scheme_id: dark_palette.id,
+        )
+        expect(SiteSetting.base_font).to eq(SiteSetting.defaults[:base_font])
       end
     end
 

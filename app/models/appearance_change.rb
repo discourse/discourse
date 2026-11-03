@@ -16,6 +16,8 @@ class AppearanceChange < ActiveRecord::Base
   DRAFT_LIFETIME = 7.days
   # marks previous_state recorded by an activation that hasn't finished
   PENDING_KEY = "pending"
+  # marks previous_state while switching back hasn't finished
+  REVERTING_KEY = "reverting"
 
   enum :kind, { palettes: 0, theme: 1, existing_palettes: 2 }, prefix: true
 
@@ -86,7 +88,9 @@ class AppearanceChange < ActiveRecord::Base
   # site already shows them, so the state recorded before that attempt is
   # used instead.
   def replaced_state
-    return previous_state.except(PENDING_KEY) if retrying_activation?
+    if retrying_activation? || revert_interrupted?
+      return previous_state.except(PENDING_KEY, REVERTING_KEY)
+    end
 
     state = {
       "site_settings" =>
@@ -108,6 +112,20 @@ class AppearanceChange < ActiveRecord::Base
 
   def activation_pending?
     previous_state[PENDING_KEY] == true
+  end
+
+  # Marked before switching back restores the site settings, so a failure
+  # after that still lets switching back, or going live again, finish.
+  def record_pending_revert!
+    update!(previous_state: previous_state.merge(REVERTING_KEY => true))
+  end
+
+  # Switching back restored the site settings but didn't finish.
+  def revert_interrupted?
+    previous_state[REVERTING_KEY] == true &&
+      previous_state["site_settings"].to_h.all? do |name, value|
+        SiteSetting.get(name).to_s == value.to_s
+      end
   end
 
   # Whether the palettes and the default theme that switching back restores
