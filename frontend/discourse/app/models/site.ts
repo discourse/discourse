@@ -462,21 +462,6 @@ export default class Site extends RestModel {
   }
 
   @dependentKeyCompat
-  get isMobileDevice(): boolean {
-    deprecated(
-      "Site.isMobileDevice is deprecated. Use `site.mobileView` and `site.desktopView` instead for " +
-        "viewport-based values or `capabilities.isMobileDevice` for user-agent based detection.",
-      {
-        id: "discourse.site.is-mobile-device",
-        since: "3.5.0.beta9-dev",
-        url: "https://meta.discourse.org/t/367810",
-      }
-    );
-
-    return this.mobileView;
-  }
-
-  @dependentKeyCompat
   get categoriesById() {
     return new Map(this.categories.map((c) => [c.id, c]));
   }
