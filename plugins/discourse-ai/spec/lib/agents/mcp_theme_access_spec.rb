@@ -49,6 +49,13 @@ RSpec.describe DiscourseAi::Agents::McpThemeAccess do
       expect(described_class).not_to be_ready
     end
 
+    it "doesn't save access rules on a site that has none, where administrators have every scope" do
+      McpGroupScope.where(group_id: admins_group_id).delete_all
+
+      expect { described_class.changes }.not_to change { McpGroupScope.count }
+      expect(described_class.changes.map(&:key)).to eq(%i[server tools])
+    end
+
     it "is empty once the server is on and apps can use the theme tools" do
       SiteSetting.mcp_server_enabled = true
       expose(*described_class::THEME_TOOL_IDS)
@@ -74,6 +81,19 @@ RSpec.describe DiscourseAi::Agents::McpThemeAccess do
       )
       expect(SiteSetting.mcp_server_enabled).to eq(true)
       expect(described_class).to be_ready
+    end
+
+    it "changes nothing when the server can't be turned on" do
+      McpGroupScope.where(group_id: admins_group_id).delete_all
+      McpGroupScope.create!(group_id: admins_group_id, scope: DiscourseMcp::INITIAL_SCOPE)
+      SiteSetting.stubs(:shadowed_settings).returns(Set[:mcp_server_enabled])
+
+      expect {
+        expect(described_class.enable!(guardian: admin.guardian)).to eq(false)
+      }.not_to change {
+        [McpPrimitive.exposed.count, McpGroupScope.where(group_id: admins_group_id).pluck(:scope)]
+      }
+      expect(SiteSetting.mcp_server_enabled).to eq(false)
     end
 
     it "leaves theme tools blocked in an emergency off" do

@@ -70,9 +70,16 @@ module DiscourseAi
         end
       end
 
+      # Until access rules are saved for administrators, they get every scope,
+      # so that's what they have. Reading this never saves any rules; only an
+      # approved enable! does.
+      def self.admin_scopes
+        McpGroupScope.where(group_id: Group::AUTO_GROUPS[:admins]).pluck(:scope).presence ||
+          DiscourseMcp.registry.scopes
+      end
+
       def self.missing_admin_scopes
-        McpGroupScope.ensure_admins!
-        THEME_SCOPES - McpGroupScope.where(group_id: Group::AUTO_GROUPS[:admins]).pluck(:scope)
+        THEME_SCOPES - admin_scopes
       end
 
       # What turning on theme access would change, as Change rows.
@@ -91,30 +98,38 @@ module DiscourseAi
       end
 
       # Turns on the MCP server, lets apps use the theme tools and gives
-      # administrators the theme scopes. Everything else stays as it was.
+      # administrators the theme scopes. Everything else stays as it was. It's
+      # all or nothing: if the server can't be turned on, the tools and scopes
+      # are left as they were too.
       def self.enable!(guardian:)
+        enabled = false
+
         ActiveRecord::Base.transaction do
           if (missing = missing_theme_tool_ids - blocked_theme_tool_ids).present?
             # the updater replaces the whole list, so keep what's on
-            enabled =
+            exposed =
               McpPrimitive.where(enabled: true).pluck(:kind, :identifier).map { |k, i| "#{k}:#{i}" }
-            McpPrimitiveUpdater.update!(actor: guardian.user, primitive_ids: enabled + missing)
+            McpPrimitiveUpdater.update!(actor: guardian.user, primitive_ids: exposed + missing)
           end
 
           if (scopes = missing_admin_scopes).present?
-            current = McpGroupScope.where(group_id: Group::AUTO_GROUPS[:admins]).pluck(:scope)
             McpAccessRuleUpdater.replace!(
               actor: guardian.user,
               group_id: Group::AUTO_GROUPS[:admins],
-              scopes: current + scopes,
+              scopes: admin_scopes + scopes,
             )
           end
+
+          # last, so nothing that can fail follows it before the commit
+          raise ActiveRecord::Rollback if !server_enabled? && !enable_server(guardian)
+
+          enabled = true
         end
 
-        # site settings are written after the transaction, the way the admin
-        # config writes them
-        return true if server_enabled?
+        enabled
+      end
 
+      def self.enable_server(guardian)
         SiteSetting::Update.call(
           guardian:,
           params: {
@@ -122,6 +137,7 @@ module DiscourseAi
           },
         ).success?
       end
+      private_class_method :enable_server
 
       # The apps connected to the user's account, whether each can use the
       # theme tools, and whether it has to be approved again first, as
