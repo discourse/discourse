@@ -125,6 +125,15 @@ class UserUpdater
       end
     end
 
+    if attributes.key?(:featured_topic_id)
+      if attributes[:featured_topic_id].blank?
+        user_profile.featured_topic_id = nil
+      elsif (topic = Topic.find_by(id: attributes[:featured_topic_id])) &&
+            guardian.can_see?(topic) && guardian.can_feature_topic?(user, topic)
+        user_profile.featured_topic_id = topic.id
+      end
+    end
+
     if attributes[:user_notification_schedule]
       user_notification_schedule =
         user.user_notification_schedule || UserNotificationSchedule.new(user: user)

@@ -224,6 +224,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ Pickers inside modals (move to topic or message, chat to topic, boards) use `DSelectTopic`
     instead of a list, so the modal no longer grows and shrinks with the results (2026-11-03).
     `DSelectTopic` takes `@exclude` for the current topic.
+  - ☑ The profile's featured topic is a field saved with "Save changes" instead of a modal that
+    saved on pick (2026-11-03); the profile update stores it under `can_feature_topic?`.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
   `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.

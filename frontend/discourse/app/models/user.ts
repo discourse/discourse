@@ -557,6 +557,12 @@ let userFields = [
   "website",
 ];
 
+/**
+ * Saved only when a caller names them. A form can hold an unsaved value here (the featured
+ * topic waits for the profile's Save changes), which any other save of the user would carry.
+ */
+const namedOnlyUserFields = ["featured_topic_id"];
+
 export function addSaveableUserField(fieldName: string) {
   userFields.push(fieldName);
 }
@@ -1491,9 +1497,10 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   override save(fields?: string[]) {
-    const data = this.getProperties(
-      userFields.filter((uf) => !fields || fields.includes(uf))
-    ) as Record<string, unknown>;
+    const data = this.getProperties([
+      ...userFields.filter((uf) => !fields || fields.includes(uf)),
+      ...namedOnlyUserFields.filter((uf) => fields?.includes(uf)),
+    ]) as Record<string, unknown>;
 
     const filteredUserOptionFields = fields
       ? userOptionFields.filter((uo) => fields.includes(uo))

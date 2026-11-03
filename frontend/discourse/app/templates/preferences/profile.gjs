@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { array, fn } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -13,6 +13,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DEditor from "discourse/ui-kit/d-editor";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -159,42 +160,65 @@ export default <template>
     {{/if}}
 
     {{#if @controller.siteSettings.allow_featured_topic_on_user_profiles}}
-      <div class="control-group" data-setting-name="user-featured-topic">
-        <label class="control-label">{{i18n "user.featured_topic"}}</label>
-        {{#if @controller.model.featured_topic}}
-          <label class="featured-topic-link">
-            <LinkTo
-              @models={{array
-                @controller.model.featured_topic.slug
-                @controller.model.featured_topic.id
-              }}
-              @route="topic"
-            >
-              {{dReplaceEmoji
-                (trustHTML @controller.model.featured_topic.fancy_title)
-              }}
-            </LinkTo>
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy modal and buttons after rollout. }}
+      {{#if @controller.siteSettings.enable_new_select_controls}}
+        <div class="control-group" data-setting-name="user-featured-topic">
+          <label class="control-label" for="user-featured-topic">
+            {{i18n "user.featured_topic"}}
           </label>
-        {{/if}}
-
-        <div>
-          <DButton
-            class="btn-default feature-topic-on-profile-btn"
-            @action={{@controller.showFeaturedTopicModal}}
-            @label="user.feature_topic_on_profile.open_search"
-          />
-          {{#if @controller.model.featured_topic}}
-            <DButton
-              class="btn-danger clear-feature-topic-on-profile-btn"
-              @action={{@controller.clearFeaturedTopicFromProfile}}
-              @label="user.feature_topic_on_profile.clear.title"
+          <div class="controls">
+            <DSelectTopic
+              @additionalFilters="status:public"
+              @clearable={{true}}
+              @describedBy="user-featured-topic-instructions"
+              @id="user-featured-topic"
+              @onChange={{@controller.changeFeaturedTopic}}
+              @texts={{hash ariaLabel=(i18n "user.featured_topic")}}
+              @value={{@controller.featuredTopicId}}
             />
+          </div>
+          <div class="instructions" id="user-featured-topic-instructions">
+            {{i18n "user.change_featured_topic.instructions"}}
+          </div>
+        </div>
+      {{else}}
+        <div class="control-group" data-setting-name="user-featured-topic">
+          <label class="control-label">{{i18n "user.featured_topic"}}</label>
+          {{#if @controller.model.featured_topic}}
+            <label class="featured-topic-link">
+              <LinkTo
+                @models={{array
+                  @controller.model.featured_topic.slug
+                  @controller.model.featured_topic.id
+                }}
+                @route="topic"
+              >
+                {{dReplaceEmoji
+                  (trustHTML @controller.model.featured_topic.fancy_title)
+                }}
+              </LinkTo>
+            </label>
           {{/if}}
+
+          <div>
+            <DButton
+              class="btn-default feature-topic-on-profile-btn"
+              @action={{@controller.showFeaturedTopicModal}}
+              @label="user.feature_topic_on_profile.open_search"
+            />
+            {{#if @controller.model.featured_topic}}
+              <DButton
+                class="btn-danger clear-feature-topic-on-profile-btn"
+                @action={{@controller.clearFeaturedTopicFromProfile}}
+                @label="user.feature_topic_on_profile.clear.title"
+              />
+            {{/if}}
+          </div>
+          <div class="instructions">
+            {{i18n "user.change_featured_topic.instructions"}}
+          </div>
         </div>
-        <div class="instructions">
-          {{i18n "user.change_featured_topic.instructions"}}
-        </div>
-      </div>
+      {{/if}}
     {{/if}}
 
     {{#if @controller.canChangeDefaultCalendar}}

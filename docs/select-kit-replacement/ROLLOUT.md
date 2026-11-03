@@ -267,8 +267,8 @@ customization ports are done.
   (wave 5). `addUserSearchOption` reaches only the legacy pickers; extensions set
   `searchOptions` through a customization instead.
   The topic pickers joined the same day through `DSelectTopic`, in form fields and in modals
-  alike (move to topic or message, feature topic, chat to topic, boards' "Add topic as card"), so
-  a modal keeps its height as results come and go. Held topics are looked up through `GET /topics/lookup`.
+  alike (move to topic or message, chat to topic, boards' "Add topic as card"), so a modal keeps
+  its height as results come and go. The profile's featured topic became a field on the page. Held topics are looked up through `GET /topics/lookup`.
 - **Wave 3, menu-shaped value selects and action menus.** The group dropdown and value-type
   `DropdownSelectBox` uses become `DSelect`; action menus become `DMenu`. Customer ports for the
   live patches on direct `DropdownSelectBox` invocations (caret icons and hidden titles) land here.
@@ -652,6 +652,13 @@ branch inside the two components, so their callers are unchanged: the current to
 `topicChangedCallback` still receives the topic. Workflows passes `@archetype={{null}}`, since its
 search was never limited to regular topics, and its unavailable-topic text as `unresolved`.
 Boards' "Add topic as card" holds nothing: a pick adds the card and closes the modal.
+
+The profile's featured topic is a field on the profile page instead of a button that opens a
+modal, and it is saved with "Save changes" like the page's other fields, not on pick. The profile
+update (`UserUpdater`) stores `featured_topic_id` under the feature endpoint's rules
+(`can_feature_topic?`), and a blank value clears it. The user model sends it only when a save
+names it, so another save of the user never carries a pick still waiting on the form. With the
+flag off, the modal and its endpoints are unchanged.
 
 `@archetype` replaces the legacy hard-coded `restrictToArchetype: "regular"`. It defaults to
 `"regular"`, takes `"private_message"` for messages, and `null` searches every topic.
