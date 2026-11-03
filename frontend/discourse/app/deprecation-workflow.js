@@ -325,7 +325,6 @@ const workflows = [
     "discourse.avatar-utils",
     "discourse.bound-date",
     "discourse.component-template-resolving",
-    "discourse.composer.usernames",
     "discourse.computed-html-safe",
     "discourse.create-store-helper",
     "discourse.createNewMessageViaParams",
