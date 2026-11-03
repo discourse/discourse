@@ -62,7 +62,7 @@ export default class PredefinedTopicOptions extends Component {
       @subtitle={{i18n
         "admin_onboarding_banner.start_posting.predefined_topics_subtitle"
       }}
-      @title={{i18n "admin_onboarding_banner.start_posting.predefined_topics"}}
+      @title={{i18n "admin_onboarding_banner.start_posting.title"}}
     >
       <:body>
         <div class="predefined-topic-options-modal__list">
@@ -83,28 +83,30 @@ export default class PredefinedTopicOptions extends Component {
               <span class="predefined-topic-options-modal__icon">
                 {{dEmoji topic.emoji alt="" skipTitle=true}}
               </span>
-              <span class="predefined-topic-options-modal__title">
-                {{i18n
-                  (concat
-                    "admin_onboarding_banner.start_posting.icebreakers."
-                    topic.key
-                    ".title"
-                  )
-                }}
-              </span>
-              {{#if topic.category}}
-                <span class="predefined-topic-options-modal__category">
-                  {{dCategoryBadge topic.category}}
+              <span class="predefined-topic-options-modal__content">
+                <span class="predefined-topic-options-modal__title">
+                  {{i18n
+                    (concat
+                      "admin_onboarding_banner.start_posting.icebreakers."
+                      topic.key
+                      ".title"
+                    )
+                  }}
                 </span>
-              {{/if}}
-              <span class="predefined-topic-options-modal__description">
-                {{i18n
-                  (concat
-                    "admin_onboarding_banner.start_posting.icebreakers."
-                    topic.key
-                    ".description"
-                  )
-                }}
+                {{#if topic.category}}
+                  <span class="predefined-topic-options-modal__category">
+                    {{dCategoryBadge topic.category}}
+                  </span>
+                {{/if}}
+                <span class="predefined-topic-options-modal__description">
+                  {{i18n
+                    (concat
+                      "admin_onboarding_banner.start_posting.icebreakers."
+                      topic.key
+                      ".description"
+                    )
+                  }}
+                </span>
               </span>
             </button>
           {{/each}}

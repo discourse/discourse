@@ -199,9 +199,8 @@
     all: unset; // reset browser button styles
     box-sizing: border-box;
     display: grid;
-    grid-template-areas: "icon title" "icon category" "icon description";
     grid-template-columns: auto 1fr;
-    align-content: start;
+    align-items: start;
     gap: 0 var(--space-6);
     width: 100%;
     padding: var(--space-4);
@@ -233,22 +232,25 @@
   }
 
   &__icon {
-    grid-area: icon;
     font-size: 2.75em;
     line-height: 1;
   }
 
-  // Mirrors the topic list so the suggestions preview how the topic will look.
-  &__title {
-    grid-area: title;
+  // Mirrors the topic list's title cell, where the category and excerpt
+  // scale down from the title size.
+  &__content {
     font-size: var(--d-topic-list-title-font-size);
+  }
+
+  &__title {
+    display: block;
     font-weight: var(--topic-title-font-weight);
+    line-height: var(--line-height-medium);
     color: var(--title-color);
     overflow-wrap: break-word;
   }
 
   &__category {
-    grid-area: category;
     display: flex;
     align-items: center;
     margin-top: var(--d-topic-list-metadata-top-space);
@@ -257,7 +259,7 @@
   }
 
   &__description {
-    grid-area: description;
+    display: block;
     margin-top: var(--space-1);
     font-size: var(--font-down-1);
     line-height: var(--line-height-large);

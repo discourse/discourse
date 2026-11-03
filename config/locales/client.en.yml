@@ -637,7 +637,7 @@ en:
         completed: "See more ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
-        predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
+        predefined_topics_subtitle: "Give members something to discuss"
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
         back: "Back"
