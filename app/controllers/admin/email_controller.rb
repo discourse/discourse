@@ -134,12 +134,17 @@ class Admin::EmailController < Admin::AdminController
   private
 
   def ensure_test_email_recipient!(recipient)
-    return if !SiteSetting.restrict_admin_email_test_sends_to_self
+    if SiteSetting.restrict_admin_email_test_sends_to_self
+      normalized_recipient = recipient.to_s.strip.downcase
+      if !current_user.user_emails.where("lower(email) = ?", normalized_recipient).exists?
+        raise Discourse::InvalidParameters.new(I18n.t("email_settings.test_email_restricted"))
+      end
+    end
 
-    normalized_recipient = recipient.to_s.strip.downcase
-    return if current_user.user_emails.where("lower(email) = ?", normalized_recipient).exists?
-
-    raise Discourse::InvalidParameters.new(I18n.t("email_settings.test_email_restricted"))
+    # Mail sends to every address in a list or comma-separated string, but the send checks look at one.
+    if !recipient.is_a?(String) || !Email.is_valid?(recipient.strip)
+      raise Discourse::InvalidParameters
+    end
   end
 
   def delivery_settings
