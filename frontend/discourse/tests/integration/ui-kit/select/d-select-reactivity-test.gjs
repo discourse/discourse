@@ -33,7 +33,7 @@ class TestState {
   @tracked valueItemsMulti = undefined;
   @tracked value = 1;
   @tracked multiple = false;
-  @tracked minChars = 0;
+  @tracked minChars;
   @tracked allowCreate = false;
   @tracked labelField = "title";
 }

@@ -116,11 +116,6 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
     };
   }
 
-  /** Filters alone list topics, so they are searched before anything is typed. */
-  get minChars() {
-    return this.args.additionalFilters ? 0 : 1;
-  }
-
   get valueItems() {
     return this.args.topics as SelectItem[] | undefined;
   }
@@ -164,7 +159,6 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
-      @minChars={{this.minChars}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}

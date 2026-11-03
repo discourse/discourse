@@ -163,13 +163,6 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     };
   }
 
-  /** A topic or category lists its users, and a call site its special rows, before anything is typed. */
-  get minChars() {
-    return this.args.topicId || this.args.categoryId || this.args.specialItems
-      ? 0
-      : 1;
-  }
-
   get selectedValue() {
     const values = makeArray(this.args.value as string | string[] | null);
     return this.args.multiple ? values : (values[0] ?? null);
@@ -351,7 +344,6 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
-      @minChars={{this.minChars}}
       @multiple={{@multiple}}
       @normalizeKey={{caseInsensitiveKey}}
       @onChange={{this.onChange}}

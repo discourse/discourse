@@ -241,9 +241,10 @@ export interface DSelectSignature {
      */
     debounce?: boolean | number;
     /**
-     * Minimum query length before the list searches. A query shorter than this — including the
-     * empty query on open — shows a keep-typing hint and issues no source call (no request, no
-     * skeleton). `0` (default) searches on any input.
+     * Minimum query length before the list searches, 2 or more. A query shorter than this —
+     * including the empty query on open — shows a keep-typing hint and issues no source call
+     * (no request, no skeleton). Omitted, any input searches; a minimum of 1 would be the
+     * same, so it asserts.
      */
     minChars?: number;
     /** Optional server row ceiling with a filter-to-narrow hint. Uncapped by default. */

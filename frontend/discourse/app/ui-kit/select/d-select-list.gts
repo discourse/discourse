@@ -88,7 +88,7 @@ interface DSelectListSignature {
     parsePaste?: SelectHostArgs["parsePaste"];
     /** Query debounce in milliseconds; true uses the shared input delay. */
     debounce?: boolean | number;
-    /** Minimum query length before calling the source. */
+    /** Minimum query length before calling the source, 2 or more; omit for none. */
     minChars?: number;
     /** Optional server row ceiling with a filter-to-narrow hint. Uncapped by default. */
     maxLoaded?: number;

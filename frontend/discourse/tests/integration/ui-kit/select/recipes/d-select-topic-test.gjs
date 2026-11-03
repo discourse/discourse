@@ -74,6 +74,9 @@ module(
 
       assert.deepEqual(requests, [], "nothing is searched");
       assert.deepEqual(optionTitles(), []);
+      assert
+        .dom(".d-select__min-chars")
+        .doesNotExist("no keep-typing hint: any term searches");
     });
 
     test("searches regular topics by title, URL or id with a term", async function (assert) {
@@ -411,6 +414,18 @@ module(
 
       assert.deepEqual(changes, [[5, "Cats :smile:"]]);
       assert.dom(".d-select.--list").hasAttribute("data-value", "5");
+    });
+
+    test("shows nothing before a term", async function (assert) {
+      const requests = stubTopicSearch();
+
+      await render(<template><DSelectTopicList /></template>);
+
+      assert.deepEqual(requests, [], "nothing is searched");
+      assert
+        .dom(".d-select__min-chars")
+        .doesNotExist("no keep-typing hint: any term searches");
+      assert.dom(".d-select__empty").doesNotExist("and no empty result");
     });
 
     test("leaves out the excluded topics", async function (assert) {

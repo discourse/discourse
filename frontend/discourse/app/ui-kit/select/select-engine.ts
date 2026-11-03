@@ -520,10 +520,10 @@ export interface SelectEngineOptions {
       ) => boolean);
 
   /**
-   * Minimum filter length before the list searches. `0` (default) searches on any input.
-   * A query shorter than this — including the empty query — is "below threshold": the list
-   * issues no source call and the component shows a keep-typing hint. See
-   * {@link SelectEngine#belowMinChars}.
+   * Minimum filter length before the list searches, 2 or more. Omitted, any input searches;
+   * a minimum of 1 would be the same, so it asserts. A query shorter than this — including
+   * the empty query — is "below threshold": the list issues no source call and the component
+   * shows a keep-typing hint. See {@link SelectEngine#belowMinChars}.
    */
   minChars?: number;
 

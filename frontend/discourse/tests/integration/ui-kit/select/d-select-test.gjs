@@ -13,6 +13,7 @@ import {
   focus,
   render,
   settled,
+  setupOnerror,
   triggerEvent,
   triggerKeyEvent,
   waitFor,
@@ -2028,7 +2029,47 @@ module(
         .exists("and restores the keep-typing hint");
     });
 
-    test("@minChars defaults to 0, searching on any input", async function (assert) {
+    test("@minChars below 2 asserts, since a one-character minimum is no minimum", async function (assert) {
+      const messages = [];
+      setupOnerror((error) => messages.push(error.message));
+      const state = new (class {
+        @tracked minChars = 2;
+      })();
+
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @minChars={{state.minChars}} />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.deepEqual(messages, [], "a minimum of 2 is accepted");
+
+      state.minChars = 1;
+      await settled();
+
+      assert.true(
+        messages.some((message) => message.includes("@minChars")),
+        `a minimum of 1 asserts: ${messages}`
+      );
+    });
+
+    test("@minChars of 0 asserts too: leaving it out means no minimum", async function (assert) {
+      const messages = [];
+      setupOnerror((error) => messages.push(error.message));
+
+      await render(
+        <template><DSelect @items={{ITEMS}} @minChars={{0}} /></template>
+      );
+      await click("[role='combobox']");
+
+      assert.true(
+        messages.some((message) => message.includes("@minChars")),
+        `the assertion names @minChars: ${messages}`
+      );
+    });
+
+    test("@minChars defaults to none, searching on any input", async function (assert) {
       const load = () => ITEMS;
 
       await render(

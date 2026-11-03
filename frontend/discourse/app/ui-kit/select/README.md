@@ -1172,7 +1172,7 @@ by mechanism.
   filtered out under an active query so a non-matching search still reaches the empty state.
 - Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and an
   optional server row ceiling (`@maxLoaded`, uncapped by default); opaque paging cursors;
-  `@filterBy` field or predicate; `@minChars` gate; `@debounce` (filter changes only; reveals
+  `@filterBy` field or predicate; `@minChars` gate (2 or more: any one character already searches); `@debounce` (filter changes only; reveals
   and reloads fetch at once). By default a server source waits the input delay, unless its
   loader last answered without a promise; a synchronous `@load` filters at once, so a recipe
   never needs to toggle `@debounce` itself.

@@ -188,7 +188,13 @@ export default class SelectOptionsView {
   }
 
   get minChars(): number {
-    return this.#readMinChars?.() ?? this.#minChars ?? 0;
+    const minChars = this.#readMinChars?.() ?? this.#minChars;
+    assert(
+      `DSelect: \`@minChars\` (${minChars}) must be 2 or more. Any query of one character ` +
+        `already searches, so leave it out for no minimum.`,
+      minChars == null || minChars >= 2
+    );
+    return minChars ?? 0;
   }
 
   get maxLoaded(): number | undefined {

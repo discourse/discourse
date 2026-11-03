@@ -134,7 +134,9 @@ module(
       await select.open();
 
       assert.deepEqual(requests, [], "an empty query sends nothing");
-      assert.dom(".d-select__min-chars").exists();
+      assert
+        .dom(".d-select__min-chars")
+        .doesNotExist("no keep-typing hint: any term searches");
 
       await select.close();
       state.topicId = 12;
