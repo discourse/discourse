@@ -40,7 +40,7 @@ module Onebox
             "path" => %w[d fill-rule],
             "svg" => %w[aria-hidden width height viewbox],
             "div" => [:data], # any data-* attributes,
-            "span" => [:data], # any data-* attributes,
+            "span" => [:data, "role", "aria-label"], # any data-* attributes,
             "use" => %w[href],
           },
           add_attributes: {
