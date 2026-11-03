@@ -138,8 +138,6 @@ export default {
     );
     for (let linkIndex = 0; linkIndex < links.length; linkIndex++) {
       const link = links[linkIndex];
-      // Messages are decorated in a detached document, where relative
-      // `link.href` values don't resolve.
       const href = link.getAttribute("href");
       if (!href) {
         continue;
@@ -148,7 +146,7 @@ export default {
       if (shouldOpenInNewTab(href)) {
         link.setAttribute("target", "_blank");
       } else if (DiscourseURL.isInternal(href) && !samePrefix(href)) {
-        // Same origin but outside the subfolder: the router can't handle it.
+        // Bypass routing for links outside the forum's subfolder.
         link.classList.add("raw-link");
       }
     }
