@@ -6,6 +6,12 @@ import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
 // order at every lookup.
 const screenAudioTransceivers = new WeakMap();
 
+// Recent ICE candidate errors per connection, kept for connection diagnostics:
+// they are the only signal that a STUN/TURN server rejected or never answered
+// this peer's allocation.
+const iceCandidateErrors = new WeakMap();
+const MAX_ICE_CANDIDATE_ERRORS = 10;
+
 const DEFAULT_TIMING = {
   offerRetryBaseDelayMs: 400,
   maxOfferRetryDelayMs: 5000,
@@ -237,6 +243,23 @@ export default class PeerManager {
     return PeerManager.screenAudioTransceiverFor(pc)?.receiver?.track || null;
   }
 
+  // Recovery bookkeeping for one peer, so diagnostics can tell a peer that is
+  // still retrying from one that exhausted its restarts and gave up.
+  diagnosticsFor(roomId, remoteUserId) {
+    const key = PeerManager.peerKey(roomId, remoteUserId);
+    const pc = this.get(roomId, remoteUserId);
+
+    return {
+      restartAttempts: this.#restartAttempts.get(key) || 0,
+      maxRestartAttempts: PeerManager.#maxRestartAttempts,
+      restartScheduled: this.#peerReconnectTimers.has(key),
+      offerRetryAttempts: this.#offerRetryAttempts.get(key) || 0,
+      maxOfferRetries: PeerManager.#maxOfferRetries,
+      pendingCandidates: this.#pendingCandidates.get(key)?.length || 0,
+      iceCandidateErrors: (pc && iceCandidateErrors.get(pc)) || [],
+    };
+  }
+
   allPeerConnections() {
     return this.#peerConnections;
   }
@@ -367,8 +390,16 @@ export default class PeerManager {
       }
     };
 
-    pc.onicecandidateerror = () => {
+    pc.onicecandidateerror = (event) => {
       liveLog.warn("[live] ICE candidate error for peer");
+      const errors = iceCandidateErrors.get(pc) || [];
+      errors.push({
+        url: event.url,
+        errorCode: event.errorCode,
+        errorText: event.errorText,
+        at: Date.now(),
+      });
+      iceCandidateErrors.set(pc, errors.slice(-MAX_ICE_CANDIDATE_ERRORS));
     };
 
     pc.onconnectionstatechange = () => {

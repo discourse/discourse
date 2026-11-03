@@ -28,6 +28,7 @@ import {
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveCallControls from "./call-controls.gjs";
@@ -298,6 +299,10 @@ export default class LiveRoomPage extends Component {
       : i18n("live.transcript.draft_topic");
   }
 
+  get canDiagnoseConnection() {
+    return this.liveWebrtc.canDiagnoseConnection(this.room?.id);
+  }
+
   @action
   toggleSpotlight(participantId) {
     this.spotlightParticipantId =
@@ -457,6 +462,14 @@ export default class LiveRoomPage extends Component {
       cancel(this.#chatCloseFallback);
       this.chatClosing = false;
     }
+  }
+
+  @action
+  openConnectionDiagnostics(closeMenu) {
+    closeMenu?.();
+    this.modal.show(LiveConnectionDiagnosticsModal, {
+      model: { room: this.room },
+    });
   }
 
   @action
@@ -783,6 +796,19 @@ export default class LiveRoomPage extends Component {
                           />
                         </dropdown.item>
                       {{/if}}
+                    {{/if}}
+                    {{#if this.canDiagnoseConnection}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent live-connection-diagnostics-trigger"
+                          @action={{fn
+                            this.openConnectionDiagnostics
+                            roomMenu.close
+                          }}
+                          @icon="stethoscope"
+                          @label="live.connection_diagnostics.menu"
+                        />
+                      </dropdown.item>
                     {{/if}}
                     <dropdown.item>
                       <DButton
