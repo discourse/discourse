@@ -388,8 +388,6 @@ const workflows = [
     "discourse.pretty-text.registerOption",
     "discourse.qunit-helpers.jquery-selector",
     "discourse.qunit-helpers.query-all",
-    "discourse.qunit.acceptance-function",
-    "discourse.qunit.global-exists",
     "discourse.register-connector-class-legacy",
     "discourse.register-raw-helper",
     "discourse.register-unbound",
