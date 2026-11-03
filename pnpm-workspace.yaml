@@ -99,6 +99,8 @@ overrides:
   "@glint/tsserver-plugin>typescript": "^6.0.3"
   "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
   "broccoli-babel-transpiler@8.0.0": "^8.0.2"
+  "prosemirror-markdown>markdown-it": "^15.0.3"
+  "@messageformat/runtime>make-plural": "^8.1.0"
 allowedDeprecatedVersions:
   "@babel/plugin-proposal-class-properties": "*"
   "@babel/plugin-proposal-private-methods": "*"
