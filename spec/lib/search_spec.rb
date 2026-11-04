@@ -47,6 +47,11 @@ RSpec.describe Search do
   describe ".need_segmenting?" do
     subject(:search) { described_class }
 
+    it "segments malformed mailto links as text" do
+      expect(search.need_segmenting?("mailto:a@@b")).to eq(true)
+      expect(search.prepare_data("mailto:a@@b")).to eq("mailto:a@@b")
+    end
+
     context "when data only contains digits" do
       let(:data) { "510" }
 
