@@ -467,6 +467,39 @@ RSpec.describe InvitesController do
         expect(Jobs::InviteEmail.jobs.first["args"].first["invite_to_topic"]).to be_truthy
       end
 
+      it "sends a forum invitation when topic access is revoked before delivery" do
+        sign_in(user)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               topic_id: topic.id,
+               invite_to_topic: true,
+             }
+
+        expect(response.status).to eq(200)
+        invite = Invite.find(response.parsed_body["id"])
+        expect(invite.topics).to contain_exactly(topic)
+
+        topic.update!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          title: "Restricted updated topic title",
+          excerpt: "Restricted updated topic excerpt",
+        )
+        expect(user.guardian.can_see?(topic.reload)).to eq(false)
+
+        job_args = Jobs::InviteEmail.jobs.last["args"].first.symbolize_keys
+        expect { Jobs::InviteEmail.new.execute(job_args) }.to change {
+          ActionMailer::Base.deliveries.size
+        }.by(1)
+
+        message = ActionMailer::Base.deliveries.last
+        expect(message.to).to eq([invite.email])
+        expect(message.subject).not_to include(topic.title)
+        expect(message.body.decoded).not_to include(topic.title, topic.excerpt)
+        expect(message.body.decoded).to include(invite.invite_key)
+      end
+
       it "fails when topic_id is invalid" do
         sign_in(user)
 
