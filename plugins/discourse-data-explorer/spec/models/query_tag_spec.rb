@@ -35,7 +35,7 @@ RSpec.describe DiscourseDataExplorer::QueryTag do
         described_class.sync!(query:, names: 11.times.map { |index| "tag-#{index}" })
       }.to raise_error(
         ActiveRecord::RecordInvalid,
-        "Validation failed: A query can have at most 10 tags, not counting automatic tags.",
+        "Validation failed: Tags are limited to 10 per query, not counting automatic tags",
       )
 
       expect(query.tags).to be_empty
@@ -56,7 +56,7 @@ RSpec.describe DiscourseDataExplorer::QueryTag do
     it "reserves the default tag for system queries" do
       expect { described_class.sync!(query:, names: ["Default"]) }.to raise_error(
         ActiveRecord::RecordInvalid,
-        "Validation failed: The default tag is reserved for system queries.",
+        "Validation failed: Tags cannot include the default tag, which is reserved for system queries",
       )
 
       expect(query.tags).to be_empty
@@ -78,7 +78,7 @@ RSpec.describe DiscourseDataExplorer::QueryTag do
 
       expect { described_class.sync!(query: bundled_query, names: ["Custom"]) }.to raise_error(
         ActiveRecord::RecordInvalid,
-        "Validation failed: The custom tag is reserved for user-created queries.",
+        "Validation failed: Tags cannot include the custom tag, which is reserved for user-created queries",
       )
     end
 

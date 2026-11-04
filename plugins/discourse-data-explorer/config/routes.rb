@@ -21,6 +21,7 @@ end
 
 Discourse::Application.routes.draw do
   get "/api/data-explorer/queries" => "discourse_data_explorer/queries#index"
+  post "/api/data-explorer/queries" => "discourse_data_explorer/queries#create"
   get "/api/data-explorer/queries/:id" => "discourse_data_explorer/queries#show"
   get "/api/data-explorer/cached_results/:id" => "discourse_data_explorer/cached_results#show"
   get "/api/data-explorer/queries/:id/cached-result" =>

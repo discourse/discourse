@@ -52,11 +52,12 @@ module JsonApiKitPostSpec
     resource GroupResource
 
     def create
-      CreateGroup.call(service_params) do
+      CreateGroup.call(service_params) do |result|
         on_success { |group:| render_document(group, status: :created) }
         on_failed_contract { |contract| render_validation_errors(contract.errors) }
         on_failed_policy(:can_create_group) { raise Discourse::InvalidAccess }
         on_model_errors(:group) { |group| render_validation_errors(group.errors) }
+        on_failure { render_service_failure(result) }
       end
     end
   end
@@ -82,19 +83,15 @@ end
 
 RSpec.describe JsonApiKitPostSpec::GroupsController, type: :request do
   describe "#create" do
-    subject(:create_group) do
-      post path,
-           params: document.to_json,
-           headers: {
-             "HTTP_API_VERSION" => version,
-             "CONTENT_TYPE" => JsonApiKit::MediaType::JSON_API,
-           }
-    end
+    subject(:create_group) { post path, params: document.to_json, headers: }
 
     fab!(:admin)
 
     let(:actor) { admin }
     let(:path) { "/api/groups" }
+    let(:headers) do
+      { "HTTP_API_VERSION" => version, "CONTENT_TYPE" => JsonApiKit::MediaType::JSON_API }
+    end
     let(:version) { "2026-09-01" }
     let(:type) { "groups" }
     let(:document) { { "data" => primary } }
@@ -329,6 +326,72 @@ RSpec.describe JsonApiKitPostSpec::GroupsController, type: :request do
       it "preserves the service policy", :aggregate_failures do
         expect { create_group }.not_to change(Group, :count)
         expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when the service fails for an unknown reason" do
+      let(:fake_logger) { FakeLogger.new }
+
+      before do
+        allow(Group).to receive(:create).and_return(nil)
+        Rails.logger.broadcast_to(fake_logger)
+      end
+
+      after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
+      it "returns a server error", :aggregate_failures do
+        create_group
+
+        expect(response).to have_http_status(:internal_server_error)
+        expect(parsed_body.fetch("errors")).to contain_exactly(a_hash_including("status" => "500"))
+      end
+
+      it "logs the service steps" do
+        create_group
+
+        expect(fake_logger.warnings).to include(a_string_including("[model] group"))
+      end
+    end
+
+    context "when forgery protection is enabled" do
+      before { ActionController::Base.allow_forgery_protection = true }
+
+      after { ActionController::Base.allow_forgery_protection = false }
+
+      context "when a session request has no CSRF token" do
+        it "refuses the request", :aggregate_failures do
+          expect { create_group }.not_to change(Group, :count)
+          expect(response).to have_http_status(:forbidden)
+          expect(JsonApiKit::MediaType.new(response.media_type)).to be_json_api
+          expect(parsed_body.fetch("errors")).to contain_exactly(
+            a_hash_including("status" => "403", "source" => { "header" => "X-CSRF-Token" }),
+          )
+        end
+      end
+
+      context "when a session request has the CSRF token" do
+        let(:headers) { super().merge("HTTP_X_CSRF_TOKEN" => csrf_token) }
+        let(:csrf_token) do
+          get "/session/csrf.json"
+          response.parsed_body["csrf"]
+        end
+
+        it "creates the group" do
+          expect { create_group }.to change(Group, :count).by(1)
+        end
+      end
+
+      context "when the request has an API key" do
+        let(:headers) do
+          super().merge("HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => admin.username)
+        end
+        let(:api_key) { Fabricate(:api_key, user: admin) }
+
+        before { sign_out }
+
+        it "creates the group" do
+          expect { create_group }.to change(Group, :count).by(1)
+        end
       end
     end
   end
