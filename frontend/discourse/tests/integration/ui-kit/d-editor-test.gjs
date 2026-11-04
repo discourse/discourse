@@ -42,19 +42,23 @@ module("Integration | ui-kit | DEditor", function (hooks) {
   });
 
   test("preview updates with markdown", async function (assert) {
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    const value = tracked(undefined);
+
+    await render(<template><DEditor @value={{value.value}} /></template>);
 
     assert.dom(".d-editor-button-bar").exists();
     await fillIn(".d-editor-input", "hello **world**");
 
-    assert.strictEqual(this.value, "hello **world**");
+    assert.strictEqual(value.value, "hello **world**");
     assert
       .dom(".d-editor-preview")
       .hasHtml("<p>hello <strong>world</strong></p>");
   });
 
   test("links in preview are not tabbable", async function (assert) {
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    const value = tracked(undefined);
+
+    await render(<template><DEditor @value={{value.value}} /></template>);
 
     await fillIn(".d-editor-input", "[discourse](https://www.discourse.org)");
 
@@ -267,18 +271,15 @@ module("Integration | ui-kit | DEditor", function (hooks) {
 
   test("advanced code", async function (assert) {
     this.siteSettings.code_formatting_style = "4-spaces-indent";
-    this.set(
-      "value",
-      `
+    const value = tracked(`
 function xyz(x, y, z) {
   if (y === z) {
     return true;
   }
 }
-`
-    );
+`);
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    await render(<template><DEditor @value={{value.value}} /></template>);
 
     const textarea = find("textarea.d-editor-input");
     textarea.selectionStart = 0;
@@ -286,7 +287,7 @@ function xyz(x, y, z) {
 
     await click("button.code");
     assert.strictEqual(
-      this.value,
+      value.value,
       `
     function xyz(x, y, z) {
       if (y === z) {
@@ -394,23 +395,23 @@ third line`
   });
 
   test("code button does not reset undo history", async function (assert) {
-    this.set("value", "existing");
+    const value = tracked("existing");
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    await render(<template><DEditor @value={{value.value}} /></template>);
     const textarea = find("textarea.d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = 8;
 
     await click("button.code");
-    assert.strictEqual(this.value, "`existing`");
+    assert.strictEqual(value.value, "`existing`");
 
     await click("button.code");
-    assert.strictEqual(this.value, "existing");
+    assert.strictEqual(value.value, "existing");
 
     document.execCommand("undo");
-    assert.strictEqual(this.value, "`existing`");
+    assert.strictEqual(value.value, "`existing`");
     document.execCommand("undo");
-    assert.strictEqual(this.value, "existing");
+    assert.strictEqual(value.value, "existing");
   });
 
   test("code fences", async function (assert) {
@@ -535,11 +536,11 @@ third line`
   });
 
   test("quote button - empty lines", async function (assert) {
-    this.set("value", "one\n\ntwo\n\nthree");
+    const value = tracked("one\n\ntwo\n\nthree");
 
     await render(
       <template>
-        <DEditor @composerEvents={{true}} @value={{this.value}} />
+        <DEditor @composerEvents={{true}} @value={{value.value}} />
       </template>
     );
 
@@ -549,20 +550,20 @@ third line`
 
     await click("button.blockquote");
 
-    assert.strictEqual(this.value, "> one\n> \n> two\n> \n> three");
+    assert.strictEqual(value.value, "> one\n> \n> two\n> \n> three");
     assert.strictEqual(textarea.selectionStart, 0);
     assert.strictEqual(textarea.selectionEnd, 25);
 
     await click("button.blockquote");
-    assert.strictEqual(this.value, "one\n\ntwo\n\nthree");
+    assert.strictEqual(value.value, "one\n\ntwo\n\nthree");
   });
 
   test("quote button - selecting empty lines", async function (assert) {
-    this.set("value", "one\n\n\n\ntwo");
+    const value = tracked("one\n\n\n\ntwo");
 
     await render(
       <template>
-        <DEditor @composerEvents={{true}} @value={{this.value}} />
+        <DEditor @composerEvents={{true}} @value={{value.value}} />
       </template>
     );
 
@@ -572,10 +573,10 @@ third line`
     textarea.selectionEnd = 10;
 
     await click("button.blockquote");
-    assert.strictEqual(this.value, "one\n\n\n> \n> two");
+    assert.strictEqual(value.value, "one\n\n\n> \n> two");
 
     document.execCommand("undo");
-    assert.strictEqual(this.value, "one\n\n\n\ntwo");
+    assert.strictEqual(value.value, "one\n\n\n\ntwo");
   });
 
   testCase("quote button", async function (assert, textarea, value) {
@@ -973,7 +974,9 @@ third line`
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    const value = tracked(undefined);
+
+    await render(<template><DEditor @value={{value.value}} /></template>);
 
     await click("button.toggle-direction");
     assert.dom("textarea.d-editor-input").hasAttribute("dir", "rtl");
@@ -997,12 +1000,12 @@ third line`
       });
     });
 
-    this.value = "hello";
+    const value = tracked("hello");
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    await render(<template><DEditor @value={{value.value}} /></template>);
     await click("button.replace-text");
 
-    assert.strictEqual(this.value, "goodbye");
+    assert.strictEqual(value.value, "goodbye");
   });
 
   testCase(
@@ -1021,11 +1024,11 @@ third line`
   );
 
   test("emoji", async function (assert) {
-    this.set("value", "hello world.");
+    const value = tracked("hello world.");
     // we need DMenus here, as we are testing the d-editor which is not renderining
     // the in-element outlet container necessary for DMenu to work
     await render(
-      <template><DMenus /><DEditor @value={{this.value}} /></template>
+      <template><DMenus /><DEditor @value={{value.value}} /></template>
     );
     const picker = emojiPicker();
     jumpEnd("textarea.d-editor-input");
@@ -1033,7 +1036,7 @@ third line`
     await picker.select("raised_hands");
 
     assert.strictEqual(
-      this.value,
+      value.value,
       "hello world. :raised_hands:",
       "it works when there is no partial emoji"
     );
@@ -1046,7 +1049,7 @@ third line`
     await picker.select("woman_genie");
 
     assert.strictEqual(
-      this.value,
+      value.value,
       "starting to type an emoji like :woman_genie:",
       "it works when there is a partial emoji"
     );
@@ -1237,34 +1240,34 @@ third line`
   );
 
   test("paste table", async function (assert) {
-    this.set("value", "");
+    const value = tracked("");
     this.siteSettings.enable_rich_text_paste = true;
 
     await render(
       <template>
-        <DEditor @composerEvents={{true}} @value={{this.value}} />
+        <DEditor @composerEvents={{true}} @value={{value.value}} />
       </template>
     );
 
     await paste(".d-editor", "\ta\tb\n1\t2\t3");
-    assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+    assert.strictEqual(value.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
 
     document.execCommand("undo");
-    assert.strictEqual(this.value, "");
+    assert.strictEqual(value.value, "");
   });
 
   test("paste a different table", async function (assert) {
-    this.set("value", "");
+    const value = tracked("");
     this.siteSettings.enable_rich_text_paste = true;
 
     await render(
       <template>
-        <DEditor @composerEvents={{true}} @value={{this.value}} />
+        <DEditor @composerEvents={{true}} @value={{value.value}} />
       </template>
     );
 
     await paste(".d-editor", '\ta\tb\n1\t"2\n2.5"\t3');
-    assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
+    assert.strictEqual(value.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
   });
 
   testCase(
@@ -1657,9 +1660,9 @@ third line`
       });
     });
 
-    this.value = "hello";
+    const value = tracked("hello");
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    await render(<template><DEditor @value={{value.value}} /></template>);
 
     assert.dom(".d-editor-button-bar").exists();
     assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
@@ -1700,20 +1703,21 @@ third line`
 module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   setupRenderingTest(hooks);
 
-  async function setupRichEditor(context, value) {
-    context.set("value", value);
-    context.onSetup = (textManipulation) => {
-      context.textManipulation = textManipulation;
+  async function setupRichEditor(initialValue) {
+    const value = tracked(initialValue);
+    let textManipulation;
+    const onSetup = (instance) => {
+      textManipulation = instance;
     };
 
     await render(
       <template>
-        <DEditor @onSetup={{context.onSetup}} @value={{context.value}} />
+        <DEditor @onSetup={{onSetup}} @value={{value.value}} />
       </template>
     );
     await click(".composer-toggle-switch");
 
-    return context.textManipulation.view;
+    return { textManipulation, value, view: textManipulation.view };
   }
 
   function selectAll(view) {
@@ -1764,7 +1768,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("small applies to every selected line and toggles off", async function (assert) {
-    const view = await setupRichEditor(this, "First\n\nSecond");
+    const { view } = await setupRichEditor("First\n\nSecond");
 
     selectAll(view);
     await toggleSmall();
@@ -1786,13 +1790,13 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("small does not accumulate trailing spaces when repeatedly toggled", async function (assert) {
-    const view = await setupRichEditor(this, "First");
+    const { value, view } = await setupRichEditor("First");
 
     selectAll(view);
     await toggleSmall();
     selectAll(view);
     await toggleSmall();
-    const valueAfterOneToggleCycle = this.value;
+    const valueAfterOneToggleCycle = value.value;
 
     selectAll(view);
     await toggleSmall();
@@ -1800,14 +1804,14 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
     await toggleSmall();
 
     assert.strictEqual(
-      this.value,
+      value.value,
       valueAfterOneToggleCycle,
       "a second toggle cycle does not add another space"
     );
   });
 
   test("small applies to the whole line for a partial selection", async function (assert) {
-    const view = await setupRichEditor(this, "Hello world");
+    const { view } = await setupRichEditor("Hello world");
 
     view.dispatch(
       view.state.tr.setSelection(TextSelection.create(view.state.doc, 7, 12))
@@ -1820,10 +1824,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("small normalizes inline small text when applied to its line", async function (assert) {
-    const view = await setupRichEditor(
-      this,
-      "Before <small>small</small> after"
-    );
+    const { view } = await setupRichEditor("Before <small>small</small> after");
 
     view.dispatch(
       view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
@@ -1839,7 +1840,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("small replaces a heading at line granularity", async function (assert) {
-    const view = await setupRichEditor(this, "## Hello world");
+    const { view } = await setupRichEditor("## Hello world");
 
     view.dispatch(
       view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
@@ -1853,7 +1854,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("small toggles off from a collapsed caret", async function (assert) {
-    const view = await setupRichEditor(this, "Hello world");
+    const { textManipulation, view } = await setupRichEditor("Hello world");
 
     view.dispatch(
       view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
@@ -1862,7 +1863,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
 
     assert.dom(".ProseMirror p > small").hasText("Hello world");
     assert.true(
-      this.textManipulation.state.inSmall,
+      textManipulation.state.inSmall,
       "the caret stays inside the wrapper, so small reports itself active"
     );
 
@@ -1874,8 +1875,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("imported small text inside a heading exposes both active formats", async function (assert) {
-    const view = await setupRichEditor(
-      this,
+    const { view } = await setupRichEditor(
       "## Before <small>small</small> after"
     );
     const textNode = find(".ProseMirror small").firstChild;
@@ -1906,7 +1906,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("small inserts and selects a placeholder in an empty line", async function (assert) {
-    const view = await setupRichEditor(this, "");
+    const { view } = await setupRichEditor("");
 
     await toggleSmall();
 
