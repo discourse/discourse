@@ -27,7 +27,7 @@
     }
 
     .expanding-text-area {
-      --expanding-text-area-min-height: 6em;
+      --expanding-text-area-min-height: calc(var(--space-12) * 2);
     }
 
     input[type="checkbox"] {

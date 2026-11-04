@@ -52,7 +52,6 @@ export default class SchemaSettingTypeString extends Component {
         maxlength={{this.maxLength}}
         minlength={{this.minLength}}
         required={{this.required}}
-        rows="4"
         @value={{this.value}}
         {{on "input" this.onInput}}
       />
