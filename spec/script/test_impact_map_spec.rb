@@ -196,10 +196,35 @@ RSpec.describe TestImpact::Map do
         select(
           diff("frontend/discourse/tests/helpers/thing.js", "@@ -1 +1 @@") +
             diff("docs/guide.md", "@@ -1 +1 @@") +
+            diff("frontend/discourse/type-tests/thing-test.ts", "@@ -1 +1 @@") +
             diff("frontend/discourse/app/new.js", "@@ -1 +1 @@"),
         )
 
       expect(selection).to have_attributes(specs: [], unmapped: ["frontend/discourse/app/new.js"])
+    end
+
+    it "selects nothing for deleting a file no spec loaded or read" do
+      selection = select(<<~DIFF)
+        diff --git a/frontend/discourse/app/unused.js b/frontend/discourse/app/unused.js
+        deleted file mode 100644
+        --- a/frontend/discourse/app/unused.js
+        +++ /dev/null
+        @@ -1,3 +0,0 @@
+      DIFF
+
+      expect(selection).to have_attributes(specs: [], unmapped: [])
+    end
+
+    it "selects every spec that ran a deleted file" do
+      selection = select(<<~DIFF)
+        diff --git a/app/models/thing.rb b/app/models/thing.rb
+        deleted file mode 100644
+        --- a/app/models/thing.rb
+        +++ /dev/null
+        @@ -1,11 +0,0 @@
+      DIFF
+
+      expect(selection.specs).to eq(%w[spec/block_spec.rb spec/double_spec.rb])
     end
   end
 

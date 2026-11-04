@@ -16,8 +16,9 @@ module TestImpact
     SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
     LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
     QUNIT_TEST = %r{\A(?:frontend/[^/]+/tests|plugins/[^/]+/test)/.*-test\.g?[jt]s\z}
-    # Test support no test ran, and documentation, which runs nowhere.
-    NOT_RUN = %r{\A(?:frontend/[^/]+/tests/|plugins/[^/]+/test/|docs/)|\.md\z}
+    # Test support no test ran, documentation, which runs nowhere, and type
+    # tests, which only the type checker reads.
+    NOT_RUN = %r{\A(?:frontend/[^/]+/(?:tests|type-tests)/|plugins/[^/]+/test/|docs/)|\.md\z}
 
     def self.build(recording_paths)
       specs = []
@@ -95,7 +96,8 @@ module TestImpact
     # in, and one in a server locale file the specs that looked up its key (or
     # a key above or below it), in that locale unless it is English, which
     # every locale falls back to. Other files select the specs that read them.
-    # Test support and documentation no spec ran or read select nothing.
+    # Test support, documentation and type tests no spec ran or read select
+    # nothing, and so does deleting a file no spec loaded or read.
     #
     # `source` returns a changed file's content before the change, for the
     # settings and keys its hunks fall in.
@@ -131,7 +133,7 @@ module TestImpact
           readers = @indexes["reads"][old]
           if readers
             ids.merge(readers)
-          elsif !NOT_RUN.match?(path)
+          elsif change.new_path && !NOT_RUN.match?(path)
             unmapped << path
           end
           next

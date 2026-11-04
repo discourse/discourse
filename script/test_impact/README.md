@@ -68,8 +68,10 @@ bin/qunit $(grep -v '_spec\.rb$' <<< "$specs")
 - a change in a server locale file selects the specs that looked up its key,
   or a key above or below it; outside English, only those that used that
   locale;
-- any other changed file selects the specs that read it, except QUnit tests
-  and documentation, which select nothing when no spec ran or read them.
+- any other changed file selects the specs that read it, except QUnit tests,
+  type tests and documentation, which select nothing when no spec ran or
+  read them;
+- deleting a file no spec loaded or read selects nothing.
 
 On stderr it lists changed methods no spec ran, and changed files the map
 doesn't cover (new files, JavaScript no system spec loads, client locales,
