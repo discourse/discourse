@@ -358,11 +358,9 @@ class SessionController < ApplicationController
 
   def create
     params.require(:login)
-    password = params.require(:password)
+    params.require(:password)
 
-    if !password.is_a?(String) || password.length > User.max_password_length
-      return invalid_credentials
-    end
+    return invalid_credentials if params[:password].length > User.max_password_length
 
     user = User.find_by_username_or_email(normalized_login_param)
 
@@ -371,6 +369,8 @@ class SessionController < ApplicationController
     rate_limit_second_factor!(user)
 
     if user.present?
+      password = params[:password]
+
       # If their password is incorrect
       if !user.confirm_password?(password)
         invalid_credentials

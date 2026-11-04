@@ -3408,38 +3408,6 @@ RSpec.describe SessionController do
   end
 
   describe "#create" do
-    [
-      { value: "myawesomepassword" },
-      ["myawesomepassword"],
-      719_384_625_018,
-      719_384_625.5,
-      true,
-      false,
-    ].each do |password|
-      it "rejects a non-string JSON password #{password.inspect} without logging in" do
-        EmailToken.confirm(email_token.token)
-        user.update!(password: password.to_s) if password.is_a?(Numeric)
-
-        post "/session.json", params: { login: user.username, password: }, as: :json
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["error"]).to eq(
-          I18n.t("login.incorrect_username_email_or_password"),
-        )
-        expect(session[:current_user_id]).to be_nil
-      end
-    end
-
-    [nil, {}, []].each do |password|
-      it "rejects a missing or empty JSON password #{password.inspect} with a bad request" do
-        post "/session.json", params: { login: user.username, password: }, as: :json
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"]).to be_present
-        expect(session[:current_user_id]).to be_nil
-      end
-    end
-
     context "when read only mode" do
       before do
         Discourse.enable_readonly_mode

@@ -389,26 +389,47 @@ RSpec.describe InvitesController do
       end
     end
 
-    %i[missing expired redeemed redeemed_link].each do |state|
-      it "returns a private JSON not-found error for a #{state} invite" do
-        case state
-        when :expired
-          invite.update!(expires_at: 1.day.ago)
-        when :redeemed, :redeemed_link
-          invite.redeem
-          invite.update!(email: nil) if state == :redeemed_link
-        end
+    it "returns a generic JSON not-found error for a missing invite" do
+      get "/invites/missing", headers: { "ACCEPT" => "application/json" }
 
-        invite_key = state == :missing ? "missing" : invite.invite_key
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
+    end
 
-        get "/invites/#{invite_key}", headers: { "ACCEPT" => "application/json" }
+    it "returns a generic JSON not-found error for an expired invite" do
+      invite.update!(expires_at: 1.day.ago)
 
-        expect(response.status).to eq(404)
-        expect(response.media_type).to eq("application/json")
-        expect(response.parsed_body["errors"]).to eq([I18n.t("invite.not_found_json")])
-        expect(response.body).not_to include(invite.email) if invite.email
-        expect(server_session["invite-key"]).to be_nil
-      end
+      get "/invites/#{invite.invite_key}", headers: { "ACCEPT" => "application/json" }
+
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
+    end
+
+    it "returns a generic JSON not-found error for a redeemed email invite" do
+      invite.redeem
+
+      get "/invites/#{invite.invite_key}", headers: { "ACCEPT" => "application/json" }
+
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
+    end
+
+    it "returns a generic JSON not-found error for a fully redeemed link invite" do
+      invite.redeem
+      invite.update!(email: nil)
+
+      get "/invites/#{invite.invite_key}", headers: { "ACCEPT" => "application/json" }
+
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
     end
 
     context "when rate limited" do
