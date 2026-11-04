@@ -62,7 +62,7 @@ links:
 
 The above schema definition states that the `link` object has a `name` property of type `string` which means that only string values will be accepted for the property. Currently the following types are supported:
 
-- `string`: Value of property is stored as a string.
+- `string`: Value of property is stored as a string. Add `textarea: true` to the property to use an expanding text area for multiline content.
 - `integer`: Value of property is stored as an integer.
 - `float`: Value of property is stored as a float.
 - `boolean`: Value of property is `true` or `false`.

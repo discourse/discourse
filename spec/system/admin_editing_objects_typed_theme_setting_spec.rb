@@ -180,6 +180,33 @@ RSpec.describe "Admin editing objects type" do
       )
     end
 
+    it "lets an admin identify and edit community rules with multiline text" do
+      ground = "Offensive, harassing, or abusive content"
+      explanation = "You may not submit harmful content.\nThis includes personal attacks."
+
+      admin_objects_setting_editor_page.visit_setting("dsa_community_rules")
+      admin_objects_setting_editor_page.add_object_in_root
+
+      expect(admin_objects_setting_editor_page).to have_object("Community rule 1")
+      expect(admin_objects_setting_editor_page).to have_multiline_field("ground")
+      expect(admin_objects_setting_editor_page).to have_multiline_field("explanation")
+
+      admin_objects_setting_editor_page.fill_in_field("ground", ground)
+      admin_objects_setting_editor_page.fill_in_field("explanation", explanation)
+
+      expect(admin_objects_setting_editor_page).to have_object(ground)
+
+      admin_objects_setting_editor_page.save
+
+      expect(page).to have_current_path("/admin/site_settings/category/required")
+
+      admin_objects_setting_editor_page.visit_setting("dsa_community_rules")
+
+      expect(admin_objects_setting_editor_page).to have_object(ground)
+      expect(admin_objects_setting_editor_page).to have_setting_field("ground", ground)
+      expect(admin_objects_setting_editor_page).to have_setting_field("explanation", explanation)
+    end
+
     it "allows an admin to edit a site setting of objects type via the settings editor" do
       admin_objects_setting_editor_page.visit_setting("objects_setting")
       admin_objects_setting_editor_page.add_object_in_root.fill_in_field("name", "new section").save
