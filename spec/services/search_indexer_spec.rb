@@ -7,6 +7,25 @@ RSpec.describe SearchIndexer do
 
   after { SearchIndexer.disable }
 
+  it "indexes malformed mailto links without losing multilingual text" do
+    SiteSetting.default_locale = "zh_CN"
+    [
+      ['<a href="mailto:a@@b"></a>', "mailto:a@@b"],
+      ['<a href="mailto:a@@b">你好世界</a>', "mailto:a@@b 你好 世界"],
+    ].each do |cooked, expected_text|
+      described_class.update_posts_index(
+        post_id: post_id,
+        topic_title: "",
+        category_name: "",
+        topic_tags: "",
+        cooked: cooked,
+        private_message: false,
+      )
+
+      expect(PostSearchData.find_by(post_id: post_id).raw_data).to eq(expected_text)
+    end
+  end
+
   it "correctly indexes chinese" do
     SiteSetting.default_locale = "zh_CN"
     data = "你好世界"
