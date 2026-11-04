@@ -2296,8 +2296,8 @@ RSpec.describe Admin::ThemesController do
         expect(theme.reload.child_theme_ids).to eq([locked_component.id])
       end
 
-      %w[none merge sync].each do |components|
-        it "blocks type changes removing restricted children when replacing an archive with #{components}" do
+      shared_examples "rejecting archive type changes" do |components:|
+        it "blocks type changes removing restricted children when replacing an archive" do
           theme.add_relative_theme!(:child, locked_component)
 
           post "/admin/themes/import.json",
@@ -2312,7 +2312,7 @@ RSpec.describe Admin::ThemesController do
           expect(theme.child_theme_ids).to eq([locked_component.id])
         end
 
-        it "blocks type changes removing restricted parents when replacing an archive with #{components}" do
+        it "blocks type changes removing restricted parents when replacing an archive" do
           component = Fabricate(:theme, component: true)
           locked_theme.add_relative_theme!(:child, component)
 
@@ -2327,6 +2327,18 @@ RSpec.describe Admin::ThemesController do
           expect(component.reload).to be_component
           expect(locked_theme.reload.child_theme_ids).to eq([component.id])
         end
+      end
+
+      context "with component updates disabled" do
+        include_examples "rejecting archive type changes", components: "none"
+      end
+
+      context "when merging components" do
+        include_examples "rejecting archive type changes", components: "merge"
+      end
+
+      context "when synchronizing components" do
+        include_examples "rejecting archive type changes", components: "sync"
       end
 
       it "blocks including a restricted component in a theme imported from a repository" do

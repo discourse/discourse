@@ -155,6 +155,19 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       )
     end
 
+    it "keeps HTML response bodies in the plain error only" do
+      body = '<img src="x" onerror="alert(1)"><strong>Not found</strong>'
+      stub_request(:get, "https://api.example.com/fail").to_return(status: 404, body:)
+      config = { "method" => "GET", "url" => "https://api.example.com/fail" }
+
+      expect { execute_node(configuration: config, item:) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+      ) do |error|
+        expect(error.message).to end_with(": #{body}")
+        expect(error.html).to be_nil
+      end
+    end
+
     it "raises an error for server errors" do
       stub_request(:post, "https://api.example.com/error").to_return(
         status: 500,

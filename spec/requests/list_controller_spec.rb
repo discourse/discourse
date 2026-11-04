@@ -321,6 +321,7 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "with #{filter}" do
         it "returns the requested list" do
@@ -329,6 +330,7 @@ RSpec.describe ListController do
         end
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     it "allows users to filter on a set of topic ids" do
       p = create_post
@@ -1070,6 +1072,7 @@ RSpec.describe ListController do
       expect(response.status).to eq(400)
     end
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
         get "/top.rss?period=#{period}"
@@ -1077,6 +1080,7 @@ RSpec.describe ListController do
         expect(response.media_type).to eq("application/rss+xml")
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     describe "RSS feeds ignore current user" do
       fab!(:muted_topic, :topic)
@@ -1836,48 +1840,54 @@ RSpec.describe ListController do
     context "with encoded non-ASCII slugs" do
       before { SiteSetting.slug_generation_method = "encoded" }
 
-      {
-        "zh_CN" => %w[产品 问题],
-        "zh_TW" => %w[產品 問題],
-        "ja" => %w[製品 質問],
-      }.each do |locale, (old_name, new_name)|
-        context "with a #{locale} category" do
-          let(:category) { Fabricate(:category, name: old_name) }
-          let!(:old_slug) { category.slug }
+      shared_examples "an encoded category slug" do |old_name:, new_name:|
+        let(:category) { Fabricate(:category, name: old_name) }
+        let!(:old_slug) { category.slug }
 
-          before { category.update!(slug: new_name) }
+        before { category.update!(slug: new_name) }
 
-          it "redirects an outdated slug to the current encoded slug" do
-            get "/c/#{old_slug}/#{category.id}"
+        it "redirects an outdated slug to the current encoded slug" do
+          get "/c/#{old_slug}/#{category.id}"
 
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{CGI.escape(new_name)}/#{category.id}")
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{CGI.escape(new_name)}/#{category.id}")
 
-            get response.location
-            expect(response.status).to eq(200)
-          end
-
-          it "redirects the slug without an id to the URL with the id" do
-            get "/c/#{category.slug}"
-
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
-          end
-
-          it "keeps the filter and the query string" do
-            get "/c/#{old_slug}/#{category.id}/l/latest?page=2"
-
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}/l/latest?page=2")
-          end
-
-          it "keeps the format" do
-            get "/c/#{old_slug}/#{category.id}.json"
-
-            expect(response.status).to eq(301)
-            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json")
-          end
+          get response.location
+          expect(response.status).to eq(200)
         end
+
+        it "redirects the slug without an id to the URL with the id" do
+          get "/c/#{category.slug}"
+
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
+        end
+
+        it "keeps the filter and the query string" do
+          get "/c/#{old_slug}/#{category.id}/l/latest?page=2"
+
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}/l/latest?page=2")
+        end
+
+        it "keeps the format" do
+          get "/c/#{old_slug}/#{category.id}.json"
+
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json")
+        end
+      end
+
+      context "with Simplified Chinese category names" do
+        include_examples "an encoded category slug", old_name: "产品", new_name: "问题"
+      end
+
+      context "with Traditional Chinese category names" do
+        include_examples "an encoded category slug", old_name: "產品", new_name: "問題"
+      end
+
+      context "with Japanese category names" do
+        include_examples "an encoded category slug", old_name: "製品", new_name: "質問"
       end
 
       it "redirects an outdated parent slug for a subcategory" do

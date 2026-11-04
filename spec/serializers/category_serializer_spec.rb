@@ -72,7 +72,7 @@ RSpec.describe CategorySerializer do
     end
 
     context "with logged-in permissions" do
-      [false, true].each do |enabled|
+      shared_examples "preserving logged in category grants" do |enabled:|
         it "preserves grants through saves and flag toggles with granular permissions initially #{enabled}" do
           SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -105,6 +105,14 @@ RSpec.describe CategorySerializer do
             expect(category.read_restricted).to eq(true)
           end
         end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "preserving logged in category grants", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "preserving logged in category grants", enabled: true
       end
 
       it "keeps an existing unsupported anonymous grant visible instead of synthesizing public access" do
@@ -177,7 +185,7 @@ RSpec.describe CategorySerializer do
   end
 
   describe "permission groups" do
-    [false, true].each do |enabled|
+    shared_examples "offering category permission groups" do |enabled:|
       it "offers category groups independently of granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -191,6 +199,14 @@ RSpec.describe CategorySerializer do
           Group::AUTO_GROUPS[:anonymous_users],
         )
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "offering category permission groups", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "offering category permission groups", enabled: true
     end
 
     it "omits editor group choices for regular users" do

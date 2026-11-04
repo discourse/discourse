@@ -46,8 +46,8 @@ RSpec.describe AppearanceChange do
       expect(appearance_change.reload.applied?).to eq(true)
     end
 
-    %i[palettes existing_palettes theme].each do |kind|
-      it "checks both current fonts for #{kind} changes" do
+    shared_examples "checking the current fonts" do |kind:|
+      it "checks both current fonts" do
         appearance_change =
           Fabricate(
             :appearance_change,
@@ -80,6 +80,18 @@ RSpec.describe AppearanceChange do
         SiteSetting.base_font = "inter"
         expect(appearance_change).not_to be_applied
       end
+    end
+
+    context "with new palettes" do
+      include_examples "checking the current fonts", kind: :palettes
+    end
+
+    context "with existing palettes" do
+      include_examples "checking the current fonts", kind: :existing_palettes
+    end
+
+    context "with theme changes" do
+      include_examples "checking the current fonts", kind: :theme
     end
 
     it "is only true for palettes that also set fonts once the change has gone live" do

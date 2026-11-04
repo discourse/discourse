@@ -66,3 +66,45 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
 .dsa-moderation-title-help {
   margin-inline: var(--space-2) auto;
 }
+
+.dsa-community-rule-trigger {
+  justify-content: space-between;
+  text-align: start;
+
+  .d-button-label {
+    @include ellipsis;
+    min-width: 0;
+  }
+}
+
+.dsa-community-rules.fk-d-menu {
+  z-index: z("modal", "popover");
+
+  .fk-d-menu__inner-content {
+    max-height: 40dvh;
+  }
+}
+
+.dsa-community-rule {
+  white-space: normal;
+  text-align: start;
+
+  &__texts {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__name,
+  &__explanation {
+    display: block;
+  }
+
+  &__name {
+    font-weight: var(--token-font-weight-semibold);
+  }
+
+  &__explanation {
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+  }
+}

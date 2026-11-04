@@ -36,7 +36,7 @@ describe Chat::Api::CategoryChatablesController do
         expect(response.parsed_body["private"]).to eq(true)
       end
 
-      [false, true].each do |enabled|
+      shared_examples "counting category members with a logged in grant" do |enabled:|
         it "counts logged-in category members regardless of granular permissions #{enabled}" do
           SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
           member = Fabricate(:user)
@@ -60,6 +60,14 @@ describe Chat::Api::CategoryChatablesController do
             "@#{group.name}",
           )
         end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "counting category members with a logged in grant", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "counting category members with a logged in grant", enabled: true
       end
 
       it "excludes a read-only logged-in grant from channel participation" do

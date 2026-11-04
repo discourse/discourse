@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
@@ -678,7 +679,11 @@ export default class ExecutionDetail extends Component {
 
             {{#if (stepSummary step)}}
               <div class="workflows-execution-detail__step-summary">
-                {{stepSummary step}}
+                {{#if step.error_html}}
+                  {{trustHTML step.error_html}}
+                {{else}}
+                  {{stepSummary step}}
+                {{/if}}
               </div>
             {{/if}}
 

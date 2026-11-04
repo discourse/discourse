@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Discourse/NoIterationOverRSpecDefinitions
 
 def upcoming_change_setting_files
   [
@@ -181,3 +182,4 @@ RSpec.describe "upcoming change metadata integrity checks" do
     end
   end
 end
+# rubocop:enable Discourse/NoIterationOverRSpecDefinitions

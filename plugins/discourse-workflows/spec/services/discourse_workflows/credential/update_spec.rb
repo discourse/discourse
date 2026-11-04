@@ -133,12 +133,16 @@ RSpec.describe DiscourseWorkflows::Credential::Update do
     end
 
     context "when data is not a hash" do
-      ["not-a-hash", %w[foo bar]].each do |non_hash|
-        context "with #{non_hash.class}" do
-          let(:params) { super().merge(data: non_hash) }
+      context "with #{"not-a-hash".class}" do
+        let(:params) { super().merge(data: "not-a-hash") }
 
-          it { is_expected.to fail_a_contract }
-        end
+        it { is_expected.to fail_a_contract }
+      end
+
+      context "with #{%w[foo bar].class}" do
+        let(:params) { super().merge(data: %w[foo bar]) }
+
+        it { is_expected.to fail_a_contract }
       end
     end
 

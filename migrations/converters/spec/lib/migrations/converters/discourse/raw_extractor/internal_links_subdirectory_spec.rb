@@ -26,9 +26,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # The host's own root is somebody else's app, not the forum, so rewriting its
     # origin would move a link that never pointed at us.
-    %w[https://www.example.com https://www.example.com/ https://www.example.com?ref=x].each do |raw|
-      it "leaves #{raw} alone, since only the prefix belongs to the forum" do
-        expect(extract(raw)).to eq(raw)
+    context "when the URL points to the host root" do
+      it "preserves a URL without a trailing slash" do
+        expect(extract("https://www.example.com")).to eq("https://www.example.com")
+        expect(buffer.links).to be_empty
+      end
+
+      it "preserves a URL with a trailing slash" do
+        expect(extract("https://www.example.com/")).to eq("https://www.example.com/")
+        expect(buffer.links).to be_empty
+      end
+
+      it "preserves a URL with a query string" do
+        expect(extract("https://www.example.com?ref=x")).to eq("https://www.example.com?ref=x")
         expect(buffer.links).to be_empty
       end
     end

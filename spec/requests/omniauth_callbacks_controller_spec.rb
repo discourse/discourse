@@ -123,6 +123,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.body).to include(I18n.t("login.omniauth_error.generic_without_provider"))
       end
 
+      # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
       Users::OmniauthCallbacksController::ALLOWED_FAILURE_ERRORS.each_key do |error|
         it "supports specific '#{error}' messages" do
           get "/auth/failure", params: { message: error }
@@ -130,6 +131,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(flash[:error]).to include(I18n.t("login.omniauth_error.#{error}"))
         end
       end
+      # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
       it "falls back to generic error when the specific error doesn't exist" do
         get "/auth/failure", params: { message: "foo_bar" }

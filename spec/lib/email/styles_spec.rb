@@ -58,8 +58,8 @@ RSpec.describe Email::Styles do
   end
 
   describe "custom formatter" do
-    ["a:visited", "a:hover", "a["].each do |selector|
-      it "skips #{selector} while applying supported custom selectors" do
+    shared_examples "applying CSS beside an unsupported selector" do |selector:|
+      it "skips the unsupported selector and applies supported styles" do
         SiteSetting.email_custom_css_compiled = <<~CSS
           p { color: red; }
           #{selector}, a:first-child { letter-spacing: 3px; }
@@ -75,6 +75,18 @@ RSpec.describe Email::Styles do
         expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
         expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
       end
+    end
+
+    context "with the a:visited selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:visited"
+    end
+
+    context "with the a:hover selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:hover"
+    end
+
+    context "with the a[ selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a["
     end
   end
 

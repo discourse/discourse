@@ -71,6 +71,7 @@ RSpec.describe ReviewablesController do
             {
               "id" => DsaStatementOfRecord.community_rules.first["id"],
               "ground" => "Terms, section 3",
+              "explanation" => "Personal attacks are prohibited.",
             },
           ],
         )
@@ -669,6 +670,7 @@ RSpec.describe ReviewablesController do
               {
                 "id" => DsaStatementOfRecord.community_rules.first["id"],
                 "ground" => "Terms, section 3",
+                "explanation" => "Personal attacks are prohibited.",
               },
             ],
           )

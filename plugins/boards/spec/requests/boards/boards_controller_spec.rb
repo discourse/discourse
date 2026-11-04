@@ -739,6 +739,22 @@ RSpec.describe Boards::Api::BoardsController do
       post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
 
       expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("boards.errors.board_create_forbidden")])
+    end
+
+    it "returns the creation policy's custom failure reason" do
+      sign_in(manager)
+      reason = "The account has reached its board limit."
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:call).returns(false)
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:reason).returns(reason)
+
+      expect do
+        post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
+      end.not_to change { Boards::Board.count }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([reason])
+      expect(response.parsed_body["skip_error_prefix"]).to eq(true)
     end
   end
 

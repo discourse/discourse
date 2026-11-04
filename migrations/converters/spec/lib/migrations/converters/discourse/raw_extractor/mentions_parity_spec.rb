@@ -85,26 +85,50 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       slug && CGI.unescape(slug)
     end
 
-    [
-      ["john.doe", "hi @john.doe there", "john.doe"], # interior dot
-      ["john", "thanks @john.", "john"], # trailing dot dropped
-      ["j-d", "cc @j-d please", "j-d"], # interior dash
-      ["user", "ping @user_ here", "user"], # trailing underscore dropped
-      ["café", "cc @café here", "café"], # multibyte
-    ].each do |username, raw, expected|
-      it "reads #{raw.inspect} the same name core links" do
+    shared_examples "matching mention extraction to cooked links" do |username:, raw:, expected_name:|
+      it "extracts the same username that core links" do
         Fabricate(:user, username:)
-        expect(extracted_name(raw, username)).to eq(expected)
-        expect(cooked_link(raw)).to eq(expected)
+        expect(extracted_name(raw, username)).to eq(expected_name)
+        expect(cooked_link(raw)).to eq(expected_name)
       end
+    end
+
+    context "with an interior dot" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "john.doe",
+                       raw: "hi @john.doe there",
+                       expected_name: "john.doe"
+    end
+
+    context "with a trailing dot" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "john",
+                       raw: "thanks @john.",
+                       expected_name: "john"
+    end
+
+    context "with an interior dash" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "j-d",
+                       raw: "cc @j-d please",
+                       expected_name: "j-d"
+    end
+
+    context "with a trailing underscore" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "user",
+                       raw: "ping @user_ here",
+                       expected_name: "user"
+    end
+
+    context "with a multibyte username" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "café",
+                       raw: "cc @café here",
+                       expected_name: "café"
     end
   end
 
-  # The one deliberate divergence: core's name regex caps a username at 60
-  # characters, so a longer `@name` cooks nothing, while the construct has no cap and
-  # extracts it. A name that long can't be a real source username (Discourse's own
-  # limit is 60), so the gate never defers one — the cap is moot, and we keep the
-  # simpler capless construct.
   it "leaves an over-long name literal, matching core's 60-character cap" do
     # The construct grammar itself has no length cap, but the engine's mention
     # rule does — and no token means nothing matches, so extraction inherits

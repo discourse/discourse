@@ -196,26 +196,103 @@ RSpec.describe Email::AuthenticationResults do
   describe "#verdict and #action" do
     before { SiteSetting.email_in_authserv_id = "valid.com" }
 
-    {
-      "" => %i[gray accept],
-      "valid.com; dmarc=pass" => %i[pass accept],
-      "valid.com; dmarc=fail" => %i[fail enqueue],
-      "valid.com; DMARC=Fail" => %i[fail enqueue],
-      "valid.com; dmarc=error" => %i[gray accept],
-      "valid.com; none" => %i[gray accept],
-      "valid.com 1; NONE (no checks run)" => %i[gray accept],
-      "valid.com; none (a=b; dmarc=fail)" => %i[gray accept],
-      "valid.com; none; dmarc=fail" => %i[fail enqueue],
-      ["valid.com; dmarc=pass", "invalid.com; dmarc=fail"] => %i[pass accept],
-      ["valid.com; dmarc=fail", "valid.com; dmarc=pass"] => %i[fail enqueue],
-      ["valid.com; dmarc=fail", "valid.com; none"] => %i[fail enqueue],
-      ["valid.com; dmarc=foobar", "valid.com; dmarc=pass"] => %i[pass accept],
-    }.each do |headers, (verdict, action)|
-      it "is #{verdict} and #{action}s #{headers.inspect}" do
+    shared_examples "interpreting authentication result headers" do |headers:, expected_verdict:, expected_action:|
+      it "returns the expected verdict and delivery action" do
         results = described_class.new(headers)
-        expect(results.verdict).to eq(verdict)
-        expect(results.action).to eq(action)
+        expect(results.verdict).to eq(expected_verdict)
+        expect(results.action).to eq(expected_action)
       end
+    end
+
+    context "without authentication headers" do
+      include_examples "interpreting authentication result headers",
+                       headers: "",
+                       expected_verdict: :gray,
+                       expected_action: :accept
+    end
+
+    context "with a passing DMARC result" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com; dmarc=pass",
+                       expected_verdict: :pass,
+                       expected_action: :accept
+    end
+
+    context "with a failing DMARC result" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com; dmarc=fail",
+                       expected_verdict: :fail,
+                       expected_action: :enqueue
+    end
+
+    context "with mixed case DMARC fields" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com; DMARC=Fail",
+                       expected_verdict: :fail,
+                       expected_action: :enqueue
+    end
+
+    context "with a DMARC error" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com; dmarc=error",
+                       expected_verdict: :gray,
+                       expected_action: :accept
+    end
+
+    context "with no authentication checks" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com; none",
+                       expected_verdict: :gray,
+                       expected_action: :accept
+    end
+
+    context "with an explicit no checks comment" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com 1; NONE (no checks run)",
+                       expected_verdict: :gray,
+                       expected_action: :accept
+    end
+
+    context "with a failing result inside a comment" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com; none (a=b; dmarc=fail)",
+                       expected_verdict: :gray,
+                       expected_action: :accept
+    end
+
+    context "with none followed by a failing result" do
+      include_examples "interpreting authentication result headers",
+                       headers: "valid.com; none; dmarc=fail",
+                       expected_verdict: :fail,
+                       expected_action: :enqueue
+    end
+
+    context "with a failing result from an untrusted domain" do
+      include_examples "interpreting authentication result headers",
+                       headers: ["valid.com; dmarc=pass", "invalid.com; dmarc=fail"],
+                       expected_verdict: :pass,
+                       expected_action: :accept
+    end
+
+    context "with a trusted failure before a pass" do
+      include_examples "interpreting authentication result headers",
+                       headers: ["valid.com; dmarc=fail", "valid.com; dmarc=pass"],
+                       expected_verdict: :fail,
+                       expected_action: :enqueue
+    end
+
+    context "with a trusted failure before none" do
+      include_examples "interpreting authentication result headers",
+                       headers: ["valid.com; dmarc=fail", "valid.com; none"],
+                       expected_verdict: :fail,
+                       expected_action: :enqueue
+    end
+
+    context "with an unknown verdict before a pass" do
+      include_examples "interpreting authentication result headers",
+                       headers: ["valid.com; dmarc=foobar", "valid.com; dmarc=pass"],
+                       expected_verdict: :pass,
+                       expected_action: :accept
     end
 
     it "is gray without a configured authserv-id" do

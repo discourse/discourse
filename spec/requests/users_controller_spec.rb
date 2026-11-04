@@ -4493,9 +4493,8 @@ RSpec.describe UsersController do
         SiteSetting.selectable_avatars_mode = "no_one"
       end
 
-      %i[auth_overrides_avatar discourse_connect_overrides_avatar].each do |setting|
-        it "rejects preset selection when #{setting} is enabled" do
-          SiteSetting.public_send("#{setting}=", true)
+      shared_examples "protecting an externally controlled avatar from preset selection" do
+        it "rejects preset selection and preserves the existing avatar" do
           user1.update!(uploaded_avatar_id: avatar2.id)
 
           put "/u/#{user1.username}/preferences/avatar/select.json", params: { url: avatar1.url }
@@ -4503,6 +4502,18 @@ RSpec.describe UsersController do
           expect(response).to be_unprocessable
           expect(user1.reload.uploaded_avatar_id).to eq(avatar2.id)
         end
+      end
+
+      context "with auth_overrides_avatar enabled" do
+        before { SiteSetting.auth_overrides_avatar = true }
+
+        include_examples "protecting an externally controlled avatar from preset selection"
+      end
+
+      context "with discourse_connect_overrides_avatar enabled" do
+        before { SiteSetting.discourse_connect_overrides_avatar = true }
+
+        include_examples "protecting an externally controlled avatar from preset selection"
       end
 
       it "raises an error when url is blank" do
