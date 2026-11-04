@@ -321,7 +321,6 @@ const workflows = [
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
   ...[
-    "discourse.add-toolbar-popup-menu-options-callback",
     "discourse.avatar-utils",
     "discourse.bound-date",
     "discourse.component-template-resolving",

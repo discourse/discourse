@@ -1181,18 +1181,6 @@ class _PluginApi {
     addPopupMenuOption(opts);
   }
 
-  addToolbarPopupMenuOptionsCallback(opts) {
-    deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
-      {
-        id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.2",
-      }
-    );
-
-    this.addComposerToolbarPopupMenuOption(opts);
-  }
-
   /**
    * Register a custom item in the composer-actions dropdown (the menu next
    * to the composer title that switches between Reply, Create Topic, etc.).
