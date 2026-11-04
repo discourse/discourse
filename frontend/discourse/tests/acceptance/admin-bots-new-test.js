@@ -287,6 +287,21 @@ acceptance("Admin - New bot", function (needs) {
       );
   });
 
+  test("plugins can add values to the bot payload", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "admin-new-bot-params",
+        ({ value, context }) => ({ ...value, extra: context.data.username })
+      );
+    });
+
+    await visit("/admin/users/bots/new");
+    await formKit(FORM).field("username").fillIn("plugin_bot");
+    await formKit(FORM).submit();
+
+    assert.strictEqual(payloads[0].bot.extra, "plugin_bot");
+  });
+
   test("suggests a username from the name until one is typed", async function (assert) {
     await visit("/admin/users/bots/new");
     const form = formKit(FORM);
