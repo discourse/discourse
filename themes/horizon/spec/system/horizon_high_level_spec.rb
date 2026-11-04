@@ -5,6 +5,8 @@ require_relative "page_objects/components/user_color_palette_selector"
 describe "Horizon theme | High level" do
   let!(:horizon_theme) do
     horizon_theme = upload_theme
+    # the bundled Horizon's palettes share these names, and the menu matches by name
+    ColorScheme.where(theme_id: Theme::CORE_THEMES["horizon"]).update_all(user_selectable: false)
     ColorScheme
       .where(theme_id: horizon_theme.id)
       .where.not("name LIKE '%Dark%'")
