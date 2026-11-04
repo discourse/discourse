@@ -100,11 +100,11 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
   }
 
   &__name {
-    font-weight: 600;
+    font-weight: var(--token-font-weight-semibold);
   }
 
   &__explanation {
-    color: var(--primary-high);
+    color: var(--token-color-text-subtle);
     font-size: var(--font-down-1);
   }
 }
