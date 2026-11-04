@@ -1,0 +1,49 @@
+// Contexts set --avatar-flair-size (and position); the inset of the icon or
+// image within the box is owned here so flair keeps the same proportions
+// wherever it renders.
+.avatar-flair {
+  --avatar-flair-size: 20px;
+  --avatar-flair-icon-scale: 80%;
+
+  // unitless: multiplies --avatar-flair-size, which may be a percentage
+  --avatar-flair-image-scale: 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--avatar-flair-size);
+  height: var(--avatar-flair-size);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  background-size: contain;
+
+  &.avatar-flair-image {
+    padding: calc(
+      var(--avatar-flair-size) * (1 - var(--avatar-flair-image-scale)) / 2
+    );
+  }
+
+  .d-icon {
+    width: var(--avatar-flair-icon-scale);
+    height: var(--avatar-flair-icon-scale);
+  }
+
+  &.rounded {
+    --avatar-flair-icon-scale: 66.67%;
+    --avatar-flair-image-scale: 0.75;
+    border-radius: 50%;
+  }
+
+  &.--bot {
+    --avatar-flair-icon-scale: 70%;
+    background-color: var(--primary);
+    color: var(--secondary);
+    border-radius: var(--d-border-radius);
+
+    .d-icon {
+      fill: var(--secondary);
+    }
+  }
+}

@@ -29,6 +29,8 @@
   }
 
   .avatar-flair.--threads {
+    --avatar-flair-size: auto;
+    --avatar-flair-icon-scale: 1em;
     position: absolute;
     top: -4px;
     right: -3px;
