@@ -358,9 +358,11 @@ class SessionController < ApplicationController
 
   def create
     params.require(:login)
-    params.require(:password)
+    password = params.require(:password)
 
-    return invalid_credentials if params[:password].length > User.max_password_length
+    if !password.is_a?(String) || password.length > User.max_password_length
+      return invalid_credentials
+    end
 
     user = User.find_by_username_or_email(normalized_login_param)
 
@@ -369,8 +371,6 @@ class SessionController < ApplicationController
     rate_limit_second_factor!(user)
 
     if user.present?
-      password = params[:password]
-
       # If their password is incorrect
       if !user.confirm_password?(password)
         invalid_credentials
@@ -1231,7 +1231,9 @@ class SessionController < ApplicationController
   def process_verified_invite_login_code(matched_user)
     if matched_user
       return render json: login_not_approved if login_not_approved_for?(matched_user)
-      return render json: login_error if (login_error = login_error_check(matched_user))
+      if payload = login_error_check(matched_user)
+        return render json: payload
+      end
     end
 
     if matched_user.nil? && (signup_user_fields_missing? || signup_full_name_missing?)
