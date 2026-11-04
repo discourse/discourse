@@ -57,9 +57,21 @@ RSpec.describe TestImpact::Map do
       )
       gz.puts(
         {
+          spec: "spec/integrity_spec.rb",
+          files: {
+          },
+          reads: %w[config/site_settings.yml Gemfile.lock],
+        }.to_json,
+      )
+      gz.puts(
+        {
           methods: {
             "app/models/thing.rb" => [[5, 7], [9, 11]],
             "frontend/discourse/app/thing.js" => [[1, 20], [5, 8], [10, 12]],
+            "lib/plugin/setup.rb" => [[2, 4]],
+          },
+          boot: {
+            "lib/plugin/setup.rb" => [[2, 4]],
           },
         }.to_json,
       )
@@ -154,16 +166,37 @@ RSpec.describe TestImpact::Map do
       )
     end
 
-    it "selects the specs that read a changed setting" do
+    it "selects the specs that read a changed setting or read the settings file" do
       selection = select(diff("config/site_settings.yml", "@@ -4 +4 @@"))
 
-      expect(selection.specs).to eq(["spec/double_spec.rb"])
+      expect(selection.specs).to eq(%w[spec/double_spec.rb spec/integrity_spec.rb])
     end
 
     it "reports a change to a settings category, which names no setting" do
       selection = select(diff("config/site_settings.yml", "@@ -1 +1 @@"))
 
-      expect(selection).to have_attributes(specs: [], unmapped: ["config/site_settings.yml"])
+      expect(selection).to have_attributes(
+        specs: ["spec/integrity_spec.rb"],
+        unmapped: ["config/site_settings.yml"],
+      )
+    end
+
+    it "reports a change to a method boot ran" do
+      selection = select(diff("lib/plugin/setup.rb", "@@ -3 +3 @@"))
+
+      expect(selection).to have_attributes(specs: [], unmapped: ["lib/plugin/setup.rb"])
+    end
+
+    it "reports a change to the dependencies even when a spec read the file" do
+      selection =
+        select(
+          diff("Gemfile.lock", "@@ -3 +3 @@") + diff("plugins/chat/package.json", "@@ -1 +1 @@"),
+        )
+
+      expect(selection).to have_attributes(
+        specs: [],
+        unmapped: %w[Gemfile.lock plugins/chat/package.json],
+      )
     end
 
     it "selects the specs that looked up a changed English key or a key above it" do

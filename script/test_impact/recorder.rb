@@ -14,7 +14,8 @@
 #    "reads": ["spec/fixtures/images/logo.png"],
 #    "js": {"app-a1b2.digested.js": [[1, 52, 1, 90]]}}
 #   {"methods": {"app/models/post.rb": [[12, 30]]},
-#    "js_functions": {"app-a1b2.digested.js": [[1, 52, 1, 90]]}}  (last line)
+#    "js_functions": {"app-a1b2.digested.js": [[1, 52, 1, 90]]},
+#    "boot": {"lib/plugin/instance.rb": [[40, 52]]}}  (last line)
 #
 # JavaScript is recorded as bundle line/column ranges of the functions that
 # ran; script/test_impact/resolve_js maps them to source files through the
@@ -45,6 +46,7 @@ module TestImpact
     def self.install(rspec_config)
       recorder = @instance or return
       recorder.hook_lookups
+      recorder.hook_loading
       rspec_config.before(:context) { recorder.reset }
       rspec_config.after(:context) { recorder.record(self.class.metadata[:file_path]) }
       rspec_config.before(:each, type: :system) { recorder.start_js(page) }
@@ -57,6 +59,32 @@ module TestImpact
       @notes = NOTES.to_h { |kind| [kind, Set.new] }
       @js_ran = Hash.new { |h, script| h[script] = Set.new }
       @js_functions = Hash.new { |h, script| h[script] = Set.new }
+      @loaded = {}
+    end
+
+    # What a spec file does as it loads, such as generating examples from a
+    # data file, is its own, kept until it runs.
+    def hook_loading
+      recorder = self
+      loading =
+        Module.new do
+          private
+
+          define_method(:load_file_handling_errors) do |method, file|
+            recorder.loading(file) { super(method, file) }
+          end
+        end
+      RSpec::Core::Configuration.prepend(loading)
+    end
+
+    def loading(file)
+      @boot ||= boot_methods(Coverage.result(stop: false, clear: true))
+      @notes.each_value(&:clear)
+      yield
+    ensure
+      spec = File.expand_path(file.to_s).delete_prefix("#{ROOT}/")
+      @loaded[spec] = { files: collect_files, notes: @notes.transform_values(&:dup) }
+      @notes.each_value(&:clear)
     end
 
     # Settings and translations are loaded once at boot, so it's the lookups,
@@ -187,25 +215,30 @@ module TestImpact
     end
 
     def reset
-      Coverage.result(stop: false, clear: true)
+      result = Coverage.result(stop: false, clear: true)
+      # Boot (plugin activation, initializers) and the suite hooks run before
+      # every spec but are recorded for none. Boot ends at the first spec
+      # file loaded after this hooks in, the suite hooks at the first reset.
+      if !@running
+        @running = true
+        @boot = (@boot || {}).merge(boot_methods(result)) { |_, a, b| (a | b).sort }
+      end
       @notes.each_value(&:clear)
       @started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
 
     def record(spec)
-      files = {}
-      Coverage
-        .result(stop: false, clear: true)
-        .each do |absolute, coverage|
-          path = relative(absolute) or next
-          ran = ran(path, coverage)
-          files[path] = ran if ran.any?
-        end
+      spec = spec.delete_prefix("./")
+      files = collect_files
+      if (loaded = @loaded.delete(spec))
+        loaded[:files].each { |path, ran| files[path] = (Array(files[path]) | ran).sort }
+        loaded[:notes].each { |kind, values| @notes[kind].merge(values) }
+      end
       notes = @notes.transform_values { |values| values.to_a.sort }
       # What selecting the spec costs, recording included.
       seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started).round(2)
       js = @js_ran.transform_values { |ranges| ranges.to_a.sort }
-      out.puts(JSON.generate(spec: spec.delete_prefix("./"), seconds:, files:, **notes, js:))
+      out.puts(JSON.generate(spec:, seconds:, files:, **notes, js:))
       @notes.each_value(&:clear)
       @js_ran.clear
     end
@@ -214,7 +247,7 @@ module TestImpact
       return if !@out
       methods = @methods.transform_values { |m| m[:ranges].to_a.sort }
       js_functions = @js_functions.transform_values { |ranges| ranges.to_a.sort }
-      @out.puts(JSON.generate(methods:, js_functions:))
+      @out.puts(JSON.generate(methods:, js_functions:, boot: @boot || {}))
       @out.close
     end
 
@@ -236,6 +269,27 @@ module TestImpact
       return if !absolute.start_with?("#{ROOT}/")
       path = absolute.delete_prefix("#{ROOT}/")
       path if !EXCLUDED.match?(path)
+    end
+
+    def collect_files
+      Coverage
+        .result(stop: false, clear: true)
+        .each_with_object({}) do |(absolute, coverage), files|
+          path = relative(absolute) or next
+          ran = ran(path, coverage)
+          files[path] = ran if ran.any?
+        end
+    end
+
+    def boot_methods(result)
+      result.each_with_object({}) do |(absolute, coverage), boot|
+        path = relative(absolute) or next
+        ran =
+          (coverage[:methods] || {}).filter_map do |(_klass, _name, first, _, last, _), count|
+            [first, last] if count > 0
+          end
+        boot[path] = ran.uniq.sort if ran.any?
+      end
     end
 
     # The methods that ran, plus runs of lines that ran outside every method:
