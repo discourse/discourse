@@ -1,5 +1,6 @@
 import { getOwner as emberGetOwner, setOwner } from "@ember/owner";
-import deprecated from "discourse/lib/deprecated";
+
+export { getOwner } from "@ember/owner";
 
 let _default = {};
 
@@ -16,21 +17,6 @@ export function getOwnerWithFallback(obj) {
   }
 
   return obj.container;
-}
-
-/**
- * @deprecated use `getOwnerWithFallback` instead
- */
-export function getOwner(obj) {
-  deprecated(
-    "Importing getOwner from `discourse/lib/get-owner` is deprecated. See the alternatives on meta.",
-    {
-      since: "3.2",
-      id: "discourse.get-owner-with-fallback",
-      url: "https://meta.discourse.org/t/292080",
-    }
-  );
-  return getOwnerWithFallback(obj);
 }
 
 export function setDefaultOwner(container) {
