@@ -27,6 +27,10 @@ class Recording {
   #entries = [];
   #queue = Promise.resolve();
   #failed = false;
+  // Why modules might go unrecorded, summarized at the end.
+  #navigations = 0;
+  #pagesCreated = 0;
+  #detached = null;
 
   constructor(runner) {
     this.#runner = runner;
@@ -44,7 +48,33 @@ class Recording {
     } catch (error) {
       this.#fail(error);
     }
+    await this.#summarize();
     this.#socket?.close();
+  }
+
+  async #summarize() {
+    let page = null;
+    try {
+      const { result } = await this.#send("Runtime.evaluate", {
+        expression: "JSON.stringify(window.__testImpactStats ?? null)",
+        returnByValue: true,
+      });
+      page = JSON.parse(result.value);
+    } catch {
+      // The page went away.
+    }
+    // eslint-disable-next-line no-console
+    console.error(
+      `[test-impact] browser ${this.#runner.launcherId}: ${JSON.stringify({
+        recorded: this.#entries.length,
+        page,
+        attaches: this.#runner.testImpactAttaches,
+        navigations: this.#navigations,
+        pagesCreated: this.#pagesCreated,
+        detached: this.#detached,
+        failed: this.#failed,
+      })}`
+    );
   }
 
   async #connect() {
@@ -84,6 +114,8 @@ class Recording {
       detailed: false,
     });
     await this.#send("Runtime.addBinding", { name: BINDING });
+    await this.#send("Page.enable");
+    await this.#send("Target.setDiscoverTargets", { discover: true });
   }
 
   #send(method, params = {}) {
@@ -112,6 +144,23 @@ class Recording {
       this.#queue = this.#queue.then(() =>
         this.#nextModule(JSON.parse(message.params.payload))
       );
+    } else if (
+      message.method === "Page.frameNavigated" &&
+      !message.params.frame.parentId
+    ) {
+      this.#navigations++;
+    } else if (
+      message.method === "Target.targetCreated" &&
+      message.params.targetInfo.type === "page"
+    ) {
+      this.#pagesCreated++;
+    } else if (
+      message.method === "Target.detachedFromTarget" &&
+      message.params.sessionId === this.#session
+    ) {
+      this.#detached = "detached";
+    } else if (message.method === "Target.targetCrashed") {
+      this.#detached = `crashed: ${message.params.status}`;
     }
   }
 
@@ -272,6 +321,9 @@ function patchTestemTestImpact() {
   const originalTryAttach = BrowserTestRunner.prototype.tryAttach;
   BrowserTestRunner.prototype.tryAttach = function (browser, id, socket) {
     const result = originalTryAttach.call(this, browser, id, socket);
+    if (result !== false) {
+      this.testImpactAttaches = (this.testImpactAttaches || 0) + 1;
+    }
     if (result !== false && !this.testImpact) {
       this.testImpact = new Recording(this);
     }
