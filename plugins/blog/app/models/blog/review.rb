@@ -61,16 +61,20 @@ module ::Blog
 
     # Publishing closes the draft's links; the article is public by then, so its URL is safe to share.
     def self.published_article_url(token)
-      return unless token.is_a?(String) && token.match?(TOKEN_FORMAT)
+      return if !token.is_a?(String) || !token.match?(TOKEN_FORMAT)
+
       review = find_by(token: token, revoked_by_publish: true)
-      return unless review
-      publication =
-        Publication
-          .where(draft_topic_id: review.topic_id)
-          .or(Publication.where(topic_id: review.topic_id))
-          .first
+      return if !review
+
+      publication = publication_for_reviewed_topic(review.topic_id)
       publication.url if publication&.publicly_visible?
     end
+
+    # The reviewed topic is the publication's working copy, or its source before a copy existed.
+    def self.publication_for_reviewed_topic(topic_id)
+      Publication.where(draft_topic_id: topic_id).or(Publication.where(topic_id: topic_id)).first
+    end
+    private_class_method :publication_for_reviewed_topic
 
     # The link only reaches editors, who can already read the draft and issue more links.
     def url
@@ -78,12 +82,33 @@ module ::Blog
     end
 
     def self.eligible_topic?(topic)
-      Configuration.public_enabled? && topic.present? && !topic.deleted_at && topic.visible &&
-        topic.category_id == SiteSetting.blog_drafts_category.to_i &&
-        topic.category&.read_restricted? && !topic.private_message? && !topic.shared_draft? &&
-        topic.first_post.present? && !topic.first_post.deleted_at && !topic.first_post.hidden? &&
-        !Publication.where(discussion_topic_id: topic.id, published: true).exists?
+      return false if !Configuration.public_enabled?
+      return false if !listed_topic?(topic)
+      return false if !private_draft?(topic)
+      return false if !intact_post?(topic.first_post)
+      !published_discussion?(topic)
     end
+
+    def self.listed_topic?(topic)
+      topic.present? && !topic.deleted_at && topic.visible
+    end
+    private_class_method :listed_topic?
+
+    def self.private_draft?(topic)
+      topic.category_id == SiteSetting.blog_drafts_category.to_i &&
+        topic.category&.read_restricted? && !topic.private_message? && !topic.shared_draft?
+    end
+    private_class_method :private_draft?
+
+    def self.intact_post?(post)
+      post.present? && !post.deleted_at && !post.hidden?
+    end
+    private_class_method :intact_post?
+
+    def self.published_discussion?(topic)
+      Publication.where(discussion_topic_id: topic.id, published: true).exists?
+    end
+    private_class_method :published_discussion?
 
     def current?
       !revoked_at && expires_at > Time.current
