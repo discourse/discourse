@@ -361,7 +361,7 @@ module(
         .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
-    test("multiline string fields preserve line breaks", async function (assert) {
+    test("string fields with textarea enabled", async function (assert) {
       const setting = objectsSetting({
         objects_schema: {
           name: "item",
