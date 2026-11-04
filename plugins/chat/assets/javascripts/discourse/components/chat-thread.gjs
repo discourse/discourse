@@ -391,6 +391,14 @@ export default class ChatThread extends Component {
       });
     }
 
+    // the load in flight, or the one that already ran, brings it in
+    if (
+      !this.messagesLoader.fetchedOnce ||
+      this.messagesManager.findMessage(message.id)
+    ) {
+      return;
+    }
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
       shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({

@@ -234,6 +234,45 @@ module("Integration | Component | ChatChannel", function (hooks) {
       .doesNotExist("the arrow hides near the end, as it does for history");
   });
 
+  test("a message replayed while the channel loads is not counted as new", async function (assert) {
+    let releaseLoad;
+    pretender.get("/chat/api/channels/1/messages", async (request) => {
+      if (!request.queryParams.direction) {
+        await new Promise((resolve) => (releaseLoad = resolve));
+      }
+      return messagesHandler(request);
+    });
+
+    this.channel = this.fabricators.channel({ id: 1 });
+    this.channel.currentUserMembership.following = true;
+    this.channel.currentUserMembership.lastReadMessageId = LAST_READ;
+    const rendering = render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+    await waitUntil(() => releaseLoad);
+
+    // subscribing replays posts made while the reader was elsewhere
+    const replayed = publishToMessageBus("/chat/1", {
+      type: "sent",
+      chat_message: messageJson(LAST_READ + 1),
+    });
+
+    assert.strictEqual(
+      this.owner.lookup("service:chat-pane-pending-manager")
+        .totalPendingMessageCount,
+      0,
+      "it is not counted as a new message below"
+    );
+
+    releaseLoad();
+    await Promise.all([rendering, replayed]);
+
+    assert.true(
+      renderedMessageIds().includes(LAST_READ + 1),
+      "the message is shown from the loaded page"
+    );
+  });
+
   test("reaching the end while an older page loads still checks for newer messages", async function (assert) {
     // a window that ends on a full page is reported as having more ahead
     let releasePast;
