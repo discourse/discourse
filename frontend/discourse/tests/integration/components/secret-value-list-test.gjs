@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SecretValueList from "discourse/admin/components/secret-value-list";
@@ -8,20 +9,19 @@ module("Integration | Component | SecretValueList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
-    this.set("setValidationMessage", () => {});
-    this.set("changeValueCallback", (values) => this.set("values", values));
+    const values = tracked("firstKey|FirstValue\nsecondKey|secondValue");
+    const setValidationMessage = () => {};
+    const changeValueCallback = (newValues) => (values.value = newValues);
 
     await render(
       <template>
         <SecretValueList
-          @changeValueCallback={{this.changeValueCallback}}
-          @setValidationMessage={{this.setValidationMessage}}
-          @values={{this.values}}
+          @changeValueCallback={{changeValueCallback}}
+          @setValidationMessage={{setValidationMessage}}
+          @values={{values.value}}
         />
       </template>
     );
-
-    this.set("values", "firstKey|FirstValue\nsecondKey|secondValue");
 
     await fillIn(".new-value-input.key", "thirdKey");
     await click(".add-value-btn");
@@ -53,7 +53,7 @@ module("Integration | Component | SecretValueList", function (hooks) {
       .exists({ count: 3 }, "adds the value to the list of values");
 
     assert.deepEqual(
-      this.values,
+      values.value,
       "firstKey|FirstValue\nsecondKey|secondValue\nthirdKey|thirdValue",
       "it adds the value to the list of values"
     );
@@ -98,20 +98,19 @@ module("Integration | Component | SecretValueList", function (hooks) {
   });
 
   test("changing a value", async function (assert) {
-    this.set("setValidationMessage", () => {});
-    this.set("changeValueCallback", (values) => this.set("values", values));
+    const values = tracked("firstKey|FirstValue\nsecondKey|secondValue");
+    const setValidationMessage = () => {};
+    const changeValueCallback = (newValues) => (values.value = newValues);
 
     await render(
       <template>
         <SecretValueList
-          @changeValueCallback={{this.changeValueCallback}}
-          @setValidationMessage={{this.setValidationMessage}}
-          @values={{this.values}}
+          @changeValueCallback={{changeValueCallback}}
+          @setValidationMessage={{setValidationMessage}}
+          @values={{values.value}}
         />
       </template>
     );
-
-    this.set("values", "firstKey|FirstValue\nsecondKey|secondValue");
 
     await fillIn(
       ".values .value[data-index='1'] .value-input:first-of-type",
@@ -133,27 +132,26 @@ module("Integration | Component | SecretValueList", function (hooks) {
       .dom(".values .value[data-index='1'] .value-input:last-of-type")
       .hasValue("changedValue");
     assert.deepEqual(
-      this.values,
+      values.value,
       "firstKey|FirstValue\nchangedKey|changedValue",
       "updates the value list"
     );
   });
 
   test("removing a value", async function (assert) {
-    this.set("setValidationMessage", () => {});
-    this.set("changeValueCallback", (values) => this.set("values", values));
+    const values = tracked("firstKey|FirstValue\nsecondKey|secondValue");
+    const setValidationMessage = () => {};
+    const changeValueCallback = (newValues) => (values.value = newValues);
 
     await render(
       <template>
         <SecretValueList
-          @changeValueCallback={{this.changeValueCallback}}
-          @setValidationMessage={{this.setValidationMessage}}
-          @values={{this.values}}
+          @changeValueCallback={{changeValueCallback}}
+          @setValidationMessage={{setValidationMessage}}
+          @values={{values.value}}
         />
       </template>
     );
-
-    this.set("values", "firstKey|FirstValue\nsecondKey|secondValue");
 
     await click(".values .value[data-index='0'] .remove-value-btn");
 
@@ -162,7 +160,7 @@ module("Integration | Component | SecretValueList", function (hooks) {
       .exists({ count: 1 }, "removes the value from the list of values");
 
     assert.strictEqual(
-      this.values,
+      values.value,
       "secondKey|secondValue",
       "it removes the expected value"
     );

@@ -1,4 +1,5 @@
 /* eslint-disable qunit/no-conditional-assertions */
+import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
 import {
   click,
@@ -7,6 +8,7 @@ import {
   findAll,
   focus,
   render,
+  rerender,
   settled,
   triggerEvent,
   triggerKeyEvent,
@@ -64,13 +66,13 @@ module("Integration | ui-kit | DEditor", function (hooks) {
   });
 
   test("updating the value refreshes the preview", async function (assert) {
-    this.set("value", "evil trout");
+    const editorValue = tracked("evil trout");
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    await render(<template><DEditor @value={{editorValue.value}} /></template>);
 
     assert.dom(".d-editor-preview").hasHtml("<p>evil trout</p>");
 
-    this.set("value", "zogstrip");
+    editorValue.value = "zogstrip";
     await settled();
 
     assert.dom(".d-editor-preview").hasHtml("<p>zogstrip</p>");
@@ -286,22 +288,24 @@ function xyz(x, y, z) {
 
   test("code button", async function (assert) {
     this.siteSettings.code_formatting_style = "4-spaces-indent";
+    const editorValue = tracked(undefined);
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    await render(<template><DEditor @value={{editorValue.value}} /></template>);
 
     const textarea = jumpEnd("textarea.d-editor-input");
 
     await click("button.code");
-    assert.strictEqual(this.value, `    ${i18n("composer.code_text")}`);
+    assert.strictEqual(editorValue.value, `    ${i18n("composer.code_text")}`);
 
-    this.set("value", "first line\n\nsecond line\n\nthird line");
+    editorValue.value = "first line\n\nsecond line\n\nthird line";
+    await rerender();
 
     textarea.selectionStart = 11;
     textarea.selectionEnd = 11;
 
     await click("button.code");
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `first line
     ${i18n("composer.code_text")}
 second line
@@ -309,43 +313,52 @@ second line
 third line`
     );
 
-    this.set("value", "first line\n\nsecond line\n\nthird line");
+    editorValue.value = "first line\n\nsecond line\n\nthird line";
+    await rerender();
 
     await click("button.code");
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `first line
 
 second line
 
 third line\`${i18n("composer.code_title")}\``
     );
-    this.set("value", "first line\n\nsecond line\n\nthird line");
+    editorValue.value = "first line\n\nsecond line\n\nthird line";
+    await rerender();
 
     textarea.selectionStart = 5;
     textarea.selectionEnd = 5;
 
     await click("button.code");
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `first\`${i18n("composer.code_title")}\` line
 
 second line
 
 third line`
     );
-    this.set("value", "first line\n\nsecond line\n\nthird line");
+    editorValue.value = "first line\n\nsecond line\n\nthird line";
+    await rerender();
 
     textarea.selectionStart = 6;
     textarea.selectionEnd = 10;
 
     await click("button.code");
-    assert.strictEqual(this.value, "first `line`\n\nsecond line\n\nthird line");
+    assert.strictEqual(
+      editorValue.value,
+      "first `line`\n\nsecond line\n\nthird line"
+    );
     assert.strictEqual(textarea.selectionStart, 7);
     assert.strictEqual(textarea.selectionEnd, 11);
 
     await click("button.code");
-    assert.strictEqual(this.value, "first line\n\nsecond line\n\nthird line");
+    assert.strictEqual(
+      editorValue.value,
+      "first line\n\nsecond line\n\nthird line"
+    );
     assert.strictEqual(textarea.selectionStart, 6);
     assert.strictEqual(textarea.selectionEnd, 10);
 
@@ -354,14 +367,17 @@ third line`
 
     await click("button.code");
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       "    first line\n\n    second line\n\nthird line"
     );
     assert.strictEqual(textarea.selectionStart, 0);
     assert.strictEqual(textarea.selectionEnd, 31);
 
     await click("button.code");
-    assert.strictEqual(this.value, "first line\n\nsecond line\n\nthird line");
+    assert.strictEqual(
+      editorValue.value,
+      "first line\n\nsecond line\n\nthird line"
+    );
     assert.strictEqual(textarea.selectionStart, 0);
     assert.strictEqual(textarea.selectionEnd, 23);
   });
@@ -387,15 +403,15 @@ third line`
   });
 
   test("code fences", async function (assert) {
-    this.set("value", "");
+    const editorValue = tracked("");
 
-    await render(<template><DEditor @value={{this.value}} /></template>);
+    await render(<template><DEditor @value={{editorValue.value}} /></template>);
 
     const textarea = jumpEnd("textarea.d-editor-input");
 
     await click("button.code");
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `\`\`\`
 ${i18n("composer.paste_code_text")}
 \`\`\``
@@ -404,7 +420,8 @@ ${i18n("composer.paste_code_text")}
     assert.strictEqual(textarea.selectionStart, 4);
     assert.strictEqual(textarea.selectionEnd, 27);
 
-    this.set("value", "first line\nsecond line\nthird line");
+    editorValue.value = "first line\nsecond line\nthird line";
+    await rerender();
 
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
@@ -412,7 +429,7 @@ ${i18n("composer.paste_code_text")}
     await click("button.code");
 
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `\`\`\`
 first line
 second line
@@ -424,7 +441,8 @@ third line
     assert.strictEqual(textarea.selectionStart, textarea.value.length);
     assert.strictEqual(textarea.selectionEnd, textarea.value.length);
 
-    this.set("value", "first line\nsecond line\nthird line");
+    editorValue.value = "first line\nsecond line\nthird line";
+    await rerender();
 
     textarea.selectionStart = 0;
     textarea.selectionEnd = 0;
@@ -432,7 +450,7 @@ third line
     await click("button.code");
 
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `\`${i18n("composer.code_title")}\`first line
 second line
 third line`
@@ -444,7 +462,8 @@ third line`
       i18n("composer.code_title").length + 1
     );
 
-    this.set("value", "first line\nsecond line\nthird line");
+    editorValue.value = "first line\nsecond line\nthird line";
+    await rerender();
 
     textarea.selectionStart = 0;
     textarea.selectionEnd = 10;
@@ -452,7 +471,7 @@ third line`
     await click("button.code");
 
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `\`first line\`
 second line
 third line`
@@ -461,7 +480,8 @@ third line`
     assert.strictEqual(textarea.selectionStart, 1);
     assert.strictEqual(textarea.selectionEnd, 11);
 
-    this.set("value", "first line\nsecond line\nthird line");
+    editorValue.value = "first line\nsecond line\nthird line";
+    await rerender();
 
     textarea.selectionStart = 0;
     textarea.selectionEnd = 23;
@@ -469,7 +489,7 @@ third line`
     await click("button.code");
 
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `\`\`\`
 first line
 second line
@@ -480,7 +500,8 @@ third line`
     assert.strictEqual(textarea.selectionStart, 30);
     assert.strictEqual(textarea.selectionEnd, 30);
 
-    this.set("value", "first line\nsecond line\nthird line");
+    editorValue.value = "first line\nsecond line\nthird line";
+    await rerender();
 
     textarea.selectionStart = 6;
     textarea.selectionEnd = 17;
@@ -488,7 +509,7 @@ third line`
     await click("button.code");
 
     assert.strictEqual(
-      this.value,
+      editorValue.value,
       `first \n\`\`\`\nline\nsecond\n\`\`\`\n line\nthird line`
     );
 
@@ -496,7 +517,10 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 27);
 
     document.execCommand("undo");
-    assert.strictEqual(this.value, "first line\nsecond line\nthird line");
+    assert.strictEqual(
+      editorValue.value,
+      "first line\nsecond line\nthird line"
+    );
   });
 
   test("quote button - empty lines", async function (assert) {

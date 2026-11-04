@@ -1,9 +1,11 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import {
   click,
   find,
   focus,
   render,
+  rerender,
   settled,
   triggerEvent,
 } from "@ember/test-helpers";
@@ -92,22 +94,22 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   });
 
   test("inline actions retain focus when their state changes", async function (assert) {
-    this.headerActions = [
+    const headerActions = tracked([
       { id: "toggle", icon: "eye", title: "Show all", action() {} },
-    ];
+    ]);
     await render(
       <template>
         <Section
-          @headerActions={{this.headerActions}}
+          @headerActions={{headerActions.value}}
           @headerActionsInline={{true}}
           @sectionName="test"
         />
       </template>
     );
     await focus('[data-sidebar-action-id="toggle"]');
-    this.set("headerActions", [
+    headerActions.value = [
       { id: "toggle", icon: "eye-slash", title: "Apply filters", action() {} },
-    ]);
+    ];
     await settled();
     assert
       .dom('[data-sidebar-action-id="toggle"]')
@@ -152,10 +154,13 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   });
 
   test("displaySection is dynamic based on argument", async function (assert) {
+    const displaySection = tracked(false);
+    const headerActions = [];
+
     const template = <template>
       <Section
-        @displaySection={{this.displaySection}}
-        @headerActions={{this.headerActions}}
+        @displaySection={{displaySection.value}}
+        @headerActions={{headerActions}}
         @headerActionsIcon="plus"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
@@ -163,15 +168,14 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       />
     </template>;
 
-    this.displaySection = false;
-    this.headerActions = [];
     await render(template);
 
     assert
       .dom(".sidebar-section-wrapper")
       .doesNotExist("section is not displayed");
 
-    this.set("displaySection", true);
+    displaySection.value = true;
+    await rerender();
     assert.dom(".sidebar-section-wrapper").exists("section is displayed");
   });
 

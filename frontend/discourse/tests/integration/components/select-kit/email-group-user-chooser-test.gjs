@@ -1,4 +1,4 @@
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -278,11 +278,10 @@ module(
         return response({ users });
       });
 
-      this.set("excludedUsernames", ["osama", "joshua"]);
       await render(
         <template>
           <EmailGroupUserChooser
-            @options={{hash excludedUsernames=this.excludedUsernames}}
+            @options={{hash excludedUsernames=(array "osama" "joshua")}}
           />
         </template>
       );
@@ -293,11 +292,10 @@ module(
       let suggestions = this.subject.displayedContent().map((item) => item.id);
       assert.deepEqual(suggestions, ["sam"]);
 
-      this.set("excludedUsernames", ["osama"]);
       await render(
         <template>
           <EmailGroupUserChooser
-            @options={{hash excludedUsernames=this.excludedUsernames}}
+            @options={{hash excludedUsernames=(array "osama")}}
           />
         </template>
       );

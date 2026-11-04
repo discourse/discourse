@@ -1,7 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
 import Service from "@ember/service";
-import { click, fillIn, render, select, settled } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  rerender,
+  select,
+  settled,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
@@ -178,16 +185,16 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("supports additional filters and includes them in reset state", async function (assert) {
-    this.set("additionalFiltersActive", false);
-    this.set("resetCount", 0);
-    this.set("onReset", () => this.set("resetCount", this.resetCount + 1));
+    const additionalFiltersActive = tracked(false);
+    let resetCount = 0;
+    const onReset = () => resetCount++;
 
     await render(
       <template>
         <DFilterControls
-          @additionalFiltersActive={{this.additionalFiltersActive}}
+          @additionalFiltersActive={{additionalFiltersActive.value}}
           @array={{SAMPLE_DATA}}
-          @onResetFilters={{this.onReset}}
+          @onResetFilters={{onReset}}
           @showTextFilter={{false}}
         >
           <:additionalFilters>
@@ -202,7 +209,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .dom(".d-filter-controls__reset")
       .isDisabled("disables reset while the additional filter is inactive");
 
-    this.set("additionalFiltersActive", true);
+    additionalFiltersActive.value = true;
+    await rerender();
 
     assert
       .dom(".d-filter-controls__reset")
@@ -210,7 +218,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
 
     await click(".d-filter-controls__reset");
 
-    assert.strictEqual(this.resetCount, 1, "calls the reset callback once");
+    assert.strictEqual(resetCount, 1, "calls the reset callback once");
   });
 
   test("filters data by text (client-side)", async function (assert) {
@@ -459,15 +467,15 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("keeps reset visible and enables it only for active filters", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
+    const searchableProps = ["name"];
+    const loading = tracked(undefined);
 
     await render(
       <template>
         <DFilterControls
-          @array={{this.data}}
-          @loading={{this.loading}}
-          @searchableProps={{this.searchableProps}}
+          @array={{SAMPLE_DATA}}
+          @loading={{loading.value}}
+          @searchableProps={{searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -506,14 +514,14 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .dom(".d-filter-controls > .d-filter-controls__reset")
       .isEnabled("enables reset when the search has results");
 
-    this.set("loading", true);
+    loading.value = true;
     await settled();
 
     assert
       .dom(".d-filter-controls > .d-filter-controls__reset")
       .isEnabled("reset stays available during a reload");
 
-    this.set("loading", false);
+    loading.value = false;
     await fillIn(".filter-input", "nonexistent");
 
     assert

@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
@@ -620,6 +621,8 @@ module(
     });
 
     test("each call re-measures instead of answering from an earlier one", async function (assert) {
+      const showLateRadio = tracked(false);
+
       await render(
         <template>
           {{! Names unique to this test: group membership is resolved by querying the whole
@@ -628,7 +631,7 @@ module(
           <div id="root">
             <button id="rescan-control">control</button>
             <input id="rescan-first-radio" name="rescan-group" type="radio" />
-            {{#if this.showLateRadio}}
+            {{#if showLateRadio.value}}
               <input
                 checked
                 id="rescan-late-radio"
@@ -652,7 +655,7 @@ module(
       // state, and a group's representative from the radios present at the time. Reusing either
       // measurement past the call that took it would report the DOM as it used to be.
       find("#rescan-control").tabIndex = -1;
-      this.set("showLateRadio", true);
+      showLateRadio.value = true;
       await settled();
 
       assert.deepEqual(

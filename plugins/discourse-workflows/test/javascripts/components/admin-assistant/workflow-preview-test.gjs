@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -343,14 +344,16 @@ module(
     });
 
     test("falls back honestly for unsupported or oversized exact drafts", async function (assert) {
-      this.message = approvalMessage(44, {
-        name: "Unsupported graph",
-        operations: [{ op: "future_operation" }],
-      });
+      const message = tracked(
+        approvalMessage(44, {
+          name: "Unsupported graph",
+          operations: [{ op: "future_operation" }],
+        })
+      );
 
       await render(
         <template>
-          <AdminAssistantWorkflowPreview @message={{this.message}} />
+          <AdminAssistantWorkflowPreview @message={{message.value}} />
         </template>
       );
 
@@ -359,15 +362,12 @@ module(
         .dom(".assistant-workflow-preview__fallback")
         .includesText("Review the exact configuration before approving");
 
-      this.set(
-        "message",
-        approvalMessage(45, {
-          name: "Large graph",
-          operations: Array.from({ length: 25 }, (_, index) =>
-            addNode(`node-${index}`, `Node ${index}`)
-          ),
-        })
-      );
+      message.value = approvalMessage(45, {
+        name: "Large graph",
+        operations: Array.from({ length: 25 }, (_, index) =>
+          addNode(`node-${index}`, `Node ${index}`)
+        ),
+      });
 
       await settled();
       assert.dom(".assistant-workflow-preview__node").doesNotExist();

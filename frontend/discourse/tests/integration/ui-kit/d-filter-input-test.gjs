@@ -1,5 +1,12 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  rerender,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -65,20 +72,21 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
   });
 
   test("Clear button visibility", async function (assert) {
-    this.set("clearAction", () => {});
-    this.set("value", "test");
+    const clearAction = () => {};
+    const inputValue = tracked("test");
     await render(
       <template>
         <DFilterInput
-          @onClearInput={{this.clearAction}}
-          @value={{this.value}}
+          @onClearInput={{clearAction}}
+          @value={{inputValue.value}}
         />
       </template>
     );
 
     assert.dom(".filter-input-clear-btn").exists();
 
-    this.set("value", "");
+    inputValue.value = "";
+    await rerender();
 
     assert.dom(".filter-input-clear-btn").doesNotExist();
   });

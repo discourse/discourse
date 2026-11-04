@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import {
+  clearRender,
   find,
   render,
   settled,
@@ -193,17 +194,10 @@ module(
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
-      this.set("show", true);
 
       await render(
         <template>
-          {{#if this.show}}
-            <FormComposer
-              @onChange={{noop}}
-              @uppyComposerUpload={{this.uppy}}
-            />
-          {{/if}}
+          <FormComposer @onChange={{noop}} @uppyComposerUpload={{uppy}} />
         </template>
       );
 
@@ -213,8 +207,7 @@ module(
         "[data-field-type='composer'] .d-editor-input"
       );
 
-      this.set("show", false);
-      await settled();
+      await clearRender();
 
       uppy.textManipulation = "sentinel";
 

@@ -1,6 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import { blur, click, focus, render } from "@ember/test-helpers";
+import { blur, click, focus, render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -218,19 +219,20 @@ module("Component | ChatMessageReaction", function (hooks) {
   });
 
   test("count of reactions", async function (assert) {
-    this.set("count", 0);
+    const count = tracked(0);
 
     await render(
       <template>
         <ChatMessageReaction
-          @reaction={{hash emoji="heart" count=this.count}}
+          @reaction={{hash emoji="heart" count=count.value}}
         />
       </template>
     );
 
     assert.dom(".chat-message-reaction .count").doesNotExist();
 
-    this.set("count", 2);
+    count.value = 2;
+    await rerender();
     assert.dom(".chat-message-reaction .count").hasText("2");
   });
 

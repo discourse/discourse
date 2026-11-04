@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { click, findAll, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -244,8 +245,7 @@ module("Component | chat message collapser images", function (hooks) {
   });
 
   test("rebinds lightbox when upload data changes", async function (assert) {
-    this.set("cooked", imageTextCooked);
-    this.set("uploads", [
+    const uploads = tracked([
       {
         original_filename: "tomtom.png",
         url: "/images/d-logo-sketch-small.png",
@@ -258,8 +258,8 @@ module("Component | chat message collapser images", function (hooks) {
     await render(
       <template>
         <ChatMessageCollapser
-          @cooked={{this.cooked}}
-          @uploads={{this.uploads}}
+          @cooked={{imageTextCooked}}
+          @uploads={{uploads.value}}
         />
       </template>
     );
@@ -270,7 +270,7 @@ module("Component | chat message collapser images", function (hooks) {
     await click(".pswp__button--close");
     await waitFor(".pswp--open", { count: 0 });
 
-    this.set("uploads", [
+    uploads.value = [
       {
         original_filename: "tomtom-new.png",
         url: "/images/avatar.png",
@@ -278,7 +278,7 @@ module("Component | chat message collapser images", function (hooks) {
         width: 16,
         height: 16,
       },
-    ]);
+    ];
     await settled();
 
     await click(".chat-img-upload");

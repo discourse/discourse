@@ -1,4 +1,5 @@
-import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { click, fillIn, render, rerender, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -112,28 +113,27 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   });
 
   test("supports swapping timezone without changing visible date/time", async function (assert) {
-    this.setProperties({
-      date: moment.tz("2023-05-05T12:00:00", "Europe/London"),
-      timezone: "Europe/London",
-      onChange: (date) => this.set("date", date),
-    });
+    const date = tracked(moment.tz("2023-05-05T12:00:00", "Europe/London"));
+    const timezone = tracked("Europe/London");
+    const onChange = (newDate) => (date.value = newDate);
 
     await render(
       <template>
         <DDateTimeInput
-          @date={{this.date}}
-          @onChange={{this.onChange}}
-          @timezone={{this.timezone}}
+          @date={{date.value}}
+          @onChange={{onChange}}
+          @timezone={{timezone.value}}
         />
       </template>
     );
     await triggerEvent(".date-picker", "change");
-    assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+01:00");
+    assert.strictEqual(date.value.format(), "2023-05-05T12:00:00+01:00");
 
-    this.setProperties({ timezone: "Australia/Sydney" });
+    timezone.value = "Australia/Sydney";
+    await rerender();
 
     await triggerEvent(".date-picker", "change");
-    assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+10:00");
+    assert.strictEqual(date.value.format(), "2023-05-05T12:00:00+10:00");
   });
 
   test("without @timezone a picked time keeps the browser's offset for that day", async function (assert) {

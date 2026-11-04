@@ -1,11 +1,5 @@
 import { fn } from "@ember/helper";
-import {
-  clearRender,
-  click,
-  render,
-  settled,
-  waitFor,
-} from "@ember/test-helpers";
+import { clearRender, click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { restoreBaseUri, setupURL } from "discourse/lib/get-url";
@@ -162,30 +156,27 @@ module("Component | ChatComposerUpload", function (hooks) {
 
   test("registers its preview and asks to open it when clicked", async function (assert) {
     const unregister = sinon.spy();
-    this.set("registerPreview", sinon.stub().returns(unregister));
-    this.set("onPreview", sinon.spy());
-    this.set("shown", true);
-    this.set("upload", {
+    const registerPreview = sinon.stub().returns(unregister);
+    const onPreview = sinon.spy();
+    const upload = {
       original_filename: "photo.png",
       extension: "png",
       url: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
-        {{#if this.shown}}
-          <ChatComposerUpload
-            @isDone={{true}}
-            @onPreview={{this.onPreview}}
-            @registerPreview={{this.registerPreview}}
-            @upload={{this.upload}}
-          />
-        {{/if}}
+        <ChatComposerUpload
+          @isDone={{true}}
+          @onPreview={{onPreview}}
+          @registerPreview={{registerPreview}}
+          @upload={{upload}}
+        />
       </template>
     );
 
     assert.true(
-      this.registerPreview.calledOnceWith({
+      registerPreview.calledOnceWith({
         type: "image",
         element: document.querySelector("img.preview-img"),
         alt: "photo.png",
@@ -196,10 +187,9 @@ module("Component | ChatComposerUpload", function (hooks) {
       .hasAria("label", i18n("chat.preview_upload", { filename: "photo.png" }));
 
     await click(".chat-composer-upload__preview-btn");
-    assert.true(this.onPreview.calledOnce);
+    assert.true(onPreview.calledOnce);
 
-    this.set("shown", false);
-    await settled();
+    await clearRender();
     assert.true(unregister.calledOnce, "unregisters when removed");
   });
 
