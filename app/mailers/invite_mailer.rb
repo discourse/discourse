@@ -25,7 +25,7 @@ class InviteMailer < ActionMailer::Base
       )
 
     # If they were invited to a topic
-    if invite_to_topic && first_topic.present?
+    if invite_to_topic && first_topic.present? && invite.invited_by.guardian.can_see?(first_topic)
       # get topic excerpt
       topic_excerpt = ""
       topic_excerpt = first_topic.excerpt.tr("\n", " ") if first_topic.excerpt
