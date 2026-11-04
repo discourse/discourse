@@ -620,6 +620,41 @@ module(
       );
     });
 
+    test("a held value too long to fit runs up to the clear button, with no room kept for typing", async function (assert) {
+      const items = [
+        { id: 1, name: "A held value much longer than the field it sits in" },
+      ];
+      await render(
+        <template>
+          <div style="width: 240px">
+            <DSelect
+              @clearable={{true}}
+              @identifier="test-select"
+              @items={{items}}
+              @value={{1}}
+            >
+              <:selection as |item|>
+                {{~item.name~}}
+              </:selection>
+            </DSelect>
+          </div>
+        </template>
+      );
+
+      const trigger = find(".d-select__trigger");
+      // The fixture is scaled, so rects are converted back to CSS pixels.
+      const scale = trigger.getBoundingClientRect().width / trigger.offsetWidth;
+      const gap =
+        (find(".d-select__clear").getBoundingClientRect().left -
+          find(".d-select__presentation").getBoundingClientRect().right) /
+        scale;
+
+      assert.true(
+        gap < 10,
+        `the value is not cut short by the empty query input (${gap}px before the clear button)`
+      );
+    });
+
     test("@disabled makes the control inert: not focusable, cannot open, no clear", async function (assert) {
       await render(
         <template>

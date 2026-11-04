@@ -39,6 +39,13 @@
       opacity: 1;
     }
   }
+
+  // While the held value is drawn the field is not being typed in, so the input keeps no room
+  // of its own; clicking anywhere on the trigger still focuses it.
+  .d-select__presentation + .d-select__input {
+    flex-basis: 0;
+    min-width: 0;
+  }
 }
 
 .d-select__trigger.--multiple {
