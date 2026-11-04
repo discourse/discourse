@@ -3,21 +3,32 @@
 
 // Takes a page's JavaScript function coverage over its own DevTools
 // connection, for the test impact recorder: large responses through the
-// test's Playwright client take minutes. Starts coverage, prints "started",
-// and on a line from stdin writes the coverage to OUTPUT and exits. It stays
-// connected in between, since closing the connection stops the coverage.
+// test's Playwright client take minutes, and the spec process can't make
+// HTTP requests. Finds which of PORTS has the page, starts coverage, prints
+// "started", and on a line from stdin writes the coverage of the page
+// origin's scripts to OUTPUT and exits. It stays connected in between, since
+// closing the connection stops the coverage.
 //
-//   script/test_impact/cdp_coverage PORT TARGET_ID OUTPUT
+// OUTPUT maps each script's file name to its functions, as bundle
+// [startLine, startColumn, endLine, endColumn, ran] (1-based, ran 0 or 1).
+// Line starts of each script are cached in CACHE_DIR.
+//
+//   script/test_impact/cdp_coverage PORTS TARGET_ID OUTPUT CACHE_DIR
 
+const crypto = require("node:crypto");
 const fs = require("node:fs");
+const path = require("node:path");
 const readline = require("node:readline");
 
-const [port, targetId, output] = process.argv.slice(2);
-const socket = new WebSocket(
-  `ws://127.0.0.1:${port}/devtools/page/${targetId}`
-);
+const [ports, targetId, output, cacheDir] = process.argv.slice(2);
+let socket;
 const pending = new Map();
 let nextId = 1;
+
+function fail(message) {
+  process.stderr.write(`cdp_coverage: ${message}\n`);
+  process.exit(1);
+}
 
 function send(method, params = {}) {
   const id = nextId++;
@@ -25,42 +36,124 @@ function send(method, params = {}) {
   return new Promise((resolve, reject) => pending.set(id, { resolve, reject }));
 }
 
-socket.addEventListener("message", (event) => {
-  const message = JSON.parse(event.data);
-  const waiting = pending.get(message.id);
-  if (!waiting) {
-    return;
+async function findPort() {
+  for (const port of ports.split(",")) {
+    try {
+      const targets = await (
+        await fetch(`http://127.0.0.1:${port}/json/list`)
+      ).json();
+      if (targets.some((target) => target.id === targetId)) {
+        return port;
+      }
+    } catch {
+      // Not this browser's port, or not up.
+    }
   }
-  pending.delete(message.id);
-  message.error
-    ? waiting.reject(new Error(message.error.message))
-    : waiting.resolve(message.result);
-});
+}
 
-socket.addEventListener("error", () => {
-  process.stderr.write(`cdp_coverage: no DevTools connection on ${port}\n`);
-  process.exit(1);
-});
+// Offsets of each line's start. JavaScript string indices are UTF-16 code
+// units, as V8 counts coverage offsets.
+async function lineStarts(url) {
+  const cached = path.join(
+    cacheDir,
+    `${crypto.createHash("sha1").update(url).digest("hex")}.json`
+  );
+  if (fs.existsSync(cached)) {
+    return JSON.parse(fs.readFileSync(cached, "utf8"));
+  }
 
-socket.addEventListener("open", async () => {
-  try {
-    await send("Profiler.enable");
-    // Whether each function ran is all the map needs.
-    await send("Profiler.startPreciseCoverage", {
-      callCount: false,
-      detailed: false,
-    });
-    process.stdout.write("started\n");
+  const source = await (await fetch(url)).text();
+  const starts = [0];
+  for (let index = 0; index < source.length; index++) {
+    if (source.charCodeAt(index) === 10) {
+      starts.push(index + 1);
+    }
+  }
+  fs.mkdirSync(cacheDir, { recursive: true });
+  fs.writeFileSync(cached, JSON.stringify(starts));
+  return starts;
+}
 
-    const lines = readline.createInterface({ input: process.stdin });
-    lines.once("line", async () => {
-      const { result } = await send("Profiler.takePreciseCoverage");
-      fs.writeFileSync(output, JSON.stringify(result));
+function position(starts, offset) {
+  let low = 0;
+  let high = starts.length - 1;
+  while (low < high) {
+    const middle = Math.ceil((low + high) / 2);
+    if (starts[middle] <= offset) {
+      low = middle;
+    } else {
+      high = middle - 1;
+    }
+  }
+  return [low + 1, offset - starts[low] + 1];
+}
+
+async function take() {
+  const origin = (
+    await send("Runtime.evaluate", {
+      expression: "location.origin",
+      returnByValue: true,
+    })
+  ).result.value;
+  const { result } = await send("Profiler.takePreciseCoverage");
+
+  const coverage = {};
+  for (const entry of result) {
+    const url = new URL(entry.url, "file:///");
+    if (url.origin !== origin || !url.pathname.endsWith(".js")) {
+      continue;
+    }
+    const starts = await lineStarts(entry.url);
+    const script = path.basename(url.pathname);
+    for (const { ranges } of entry.functions) {
+      const [whole] = ranges;
+      (coverage[script] ||= []).push([
+        ...position(starts, whole.startOffset),
+        ...position(starts, whole.endOffset - 1),
+        whole.count > 0 ? 1 : 0,
+      ]);
+    }
+  }
+  fs.writeFileSync(output, JSON.stringify(coverage));
+}
+
+async function main() {
+  const port = await findPort();
+  if (!port) {
+    fail(`no DevTools port has page ${targetId}`);
+  }
+
+  socket = new WebSocket(`ws://127.0.0.1:${port}/devtools/page/${targetId}`);
+  socket.addEventListener("error", () => fail(`no connection on ${port}`));
+  socket.addEventListener("message", (event) => {
+    const message = JSON.parse(event.data);
+    const waiting = pending.get(message.id);
+    if (waiting) {
+      pending.delete(message.id);
+      message.error
+        ? waiting.reject(new Error(message.error.message))
+        : waiting.resolve(message.result);
+    }
+  });
+  await new Promise((resolve) => socket.addEventListener("open", resolve));
+
+  await send("Profiler.enable");
+  // Whether each function ran is all the map needs.
+  await send("Profiler.startPreciseCoverage", {
+    callCount: false,
+    detailed: false,
+  });
+  process.stdout.write("started\n");
+
+  readline.createInterface({ input: process.stdin }).once("line", async () => {
+    try {
+      await take();
       socket.close();
       process.exit(0);
-    });
-  } catch (error) {
-    process.stderr.write(`cdp_coverage: ${error.message}\n`);
-    process.exit(1);
-  }
-});
+    } catch (error) {
+      fail(error.message);
+    }
+  });
+}
+
+main().catch((error) => fail(error.message));

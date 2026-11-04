@@ -22,10 +22,8 @@
 require "coverage"
 require "fileutils"
 require "json"
-require "net/http"
 require "open3"
 require "tmpdir"
-require "uri"
 require "zlib"
 
 module TestImpact
@@ -58,7 +56,6 @@ module TestImpact
       @notes = NOTES.to_h { |kind| [kind, Set.new] }
       @js_ran = Hash.new { |h, script| h[script] = Set.new }
       @js_functions = Hash.new { |h, script| h[script] = Set.new }
-      @line_starts = {}
     end
 
     # Settings and translations are loaded once at boot, so it's the lookups,
@@ -138,8 +135,10 @@ module TestImpact
     end
 
     # Coverage goes through script/test_impact/cdp_coverage's own connection:
-    # through the test's Playwright client a page's coverage takes minutes.
+    # through the test's Playwright client a page's coverage takes minutes, and
+    # specs can't make HTTP requests (WebMock).
     def start_js(page)
+      return if Recorder.ports.empty?
       target_id =
         page.driver.with_playwright_page do |pw|
           session = pw.context.new_cdp_session(pw)
@@ -147,18 +146,18 @@ module TestImpact
         ensure
           session&.detach
         end
-      port = Recorder.ports.find { |candidate| page_on?(candidate, target_id) } or return
       @js_output = File.join(Dir.tmpdir, "test-impact-js-#{Process.pid}.json")
       @js_process =
         Open3.popen2(
           File.join(ROOT, "script/test_impact/cdp_coverage"),
-          port.to_s,
+          Recorder.ports.join(","),
           target_id,
           @js_output,
+          File.join(ROOT, "tmp", "test_impact", "js-lines"),
+          err: File::NULL,
         )
       stdin, stdout, waiter = @js_process
       return if IO.select([stdout], nil, nil, 30) && stdout.gets&.strip == "started"
-      warn "test impact: no JavaScript coverage for this example"
       stdin.close
       waiter.join(5)
       @js_process = nil
@@ -170,9 +169,15 @@ module TestImpact
       @js_process = nil
       stdin.puts("take")
       stdin.close
-      return warn("test impact: JavaScript coverage timed out") if !waiter.join(120)
-      return if !waiter.value.success? || !File.exist?(@js_output)
-      record_js(JSON.parse(File.read(@js_output)))
+      return if !waiter.join(60)&.value&.success? || !File.exist?(@js_output)
+      JSON
+        .parse(File.read(@js_output))
+        .each do |script, functions|
+          functions.each do |*range, ran|
+            @js_functions[script] << range
+            @js_ran[script] << range if ran == 1
+          end
+        end
     ensure
       File.delete(@js_output) if @js_output && File.exist?(@js_output)
     end
@@ -221,60 +226,6 @@ module TestImpact
           name = "recording-#{ENV["TEST_ENV_NUMBER"] || "0"}-#{Process.pid}.jsonl.gz"
           Zlib::GzipWriter.open(File.join(dir, name))
         end
-    end
-
-    def record_js(coverage)
-      coverage.each do |entry|
-        script = script_name(entry["url"]) or next
-        starts = (@line_starts[entry["url"]] ||= line_starts(fetch(entry["url"])))
-        Array(entry["functions"]).each do |function|
-          whole = function["ranges"]&.first or next
-          range = [
-            *position(starts, whole["startOffset"]),
-            *position(starts, whole["endOffset"] - 1),
-          ]
-          @js_functions[script] << range
-          @js_ran[script] << range if whole["count"].to_i > 0
-        end
-      end
-    end
-
-    def page_on?(port, target_id)
-      targets = JSON.parse(Net::HTTP.get(URI("http://127.0.0.1:#{port}/json/list")))
-      targets.any? { |target| target["id"] == target_id }
-    rescue StandardError
-      false
-    end
-
-    # The app's own scripts, by file name (digested, so unique per build).
-    def script_name(url)
-      path = URI.parse(url.to_s).path.to_s
-      File.basename(path) if path.end_with?(".js")
-    rescue URI::InvalidURIError
-      nil
-    end
-
-    # Once per script per process, only to turn offsets into lines.
-    def fetch(url)
-      Net::HTTP.get(URI(url)).force_encoding(Encoding::UTF_8)
-    rescue StandardError
-      ""
-    end
-
-    # V8 counts offsets in UTF-16 code units, as source maps count columns.
-    def line_starts(source)
-      starts = [0]
-      units = 0
-      source.each_char do |char|
-        units += char.ord > 0xFFFF ? 2 : 1
-        starts << units if char == "\n"
-      end
-      starts
-    end
-
-    def position(starts, offset)
-      line = starts.bsearch_index { |start| start > offset } || starts.size
-      [line, offset - starts[line - 1] + 1]
     end
 
     def relative(absolute)
