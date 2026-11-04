@@ -30,22 +30,37 @@ module("Discourse Chat | Unit | chat-decorators | links", function (hooks) {
     setPrefix("/sub");
   });
 
-  for (const preference of [false, true]) {
-    test(`handles subfolder links with external_links_in_new_tab=${preference}`, function (assert) {
-      User.currentProp("user_option.external_links_in_new_tab", preference);
-      const element = decoratedLinks();
+  test("keeps subfolder links in the same tab with the preference disabled", function (assert) {
+    User.currentProp("user_option.external_links_in_new_tab", false);
+    const element = decoratedLinks();
 
-      assert.dom(".external", element).hasAttribute("target", "_blank");
-      assert.dom(".external", element).doesNotHaveClass("raw-link");
-      assert.dom(".in-prefix", element).doesNotHaveAttribute("target");
-      assert.dom(".in-prefix", element).doesNotHaveClass("raw-link");
+    assert.dom(".external", element).hasAttribute("target", "_blank");
+    assert.dom(".external", element).doesNotHaveClass("raw-link");
+    assert.dom(".in-prefix", element).doesNotHaveAttribute("target");
+    assert.dom(".in-prefix", element).doesNotHaveClass("raw-link");
 
-      for (const selector of [".out-of-prefix", ".root", ".absolute-root"]) {
-        assert.dom(selector, element).doesNotHaveAttribute("target");
-        assert.dom(selector, element).hasClass("raw-link");
-      }
+    for (const selector of [".out-of-prefix", ".root", ".absolute-root"]) {
+      assert.dom(selector, element).doesNotHaveAttribute("target");
+      assert.dom(selector, element).hasClass("raw-link");
+    }
 
-      assert.dom(".explicit-new-tab", element).hasAttribute("target", "_blank");
-    });
-  }
+    assert.dom(".explicit-new-tab", element).hasAttribute("target", "_blank");
+  });
+
+  test("keeps subfolder links in the same tab with the preference enabled", function (assert) {
+    User.currentProp("user_option.external_links_in_new_tab", true);
+    const element = decoratedLinks();
+
+    assert.dom(".external", element).hasAttribute("target", "_blank");
+    assert.dom(".external", element).doesNotHaveClass("raw-link");
+    assert.dom(".in-prefix", element).doesNotHaveAttribute("target");
+    assert.dom(".in-prefix", element).doesNotHaveClass("raw-link");
+
+    for (const selector of [".out-of-prefix", ".root", ".absolute-root"]) {
+      assert.dom(selector, element).doesNotHaveAttribute("target");
+      assert.dom(selector, element).hasClass("raw-link");
+    }
+
+    assert.dom(".explicit-new-tab", element).hasAttribute("target", "_blank");
+  });
 });
