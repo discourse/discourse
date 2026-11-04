@@ -2,6 +2,14 @@ discourse_assign:
   assign_enabled:
     default: false
     client: true
+  assign_allow_multiple_topic_assignees:
+    default: false
+    client: true
+    refresh: true
+  assign_max_assignments_per_topic:
+    default: 20
+    min: 1
+    hidden: true
   assigns_by_staff_mention: false
   unassign_creates_tracking_post: true
   assigns_public:

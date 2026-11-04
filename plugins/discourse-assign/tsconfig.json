@@ -3,7 +3,8 @@
   "include": [
     "admin/assets/javascripts/**/*",
     "assets/javascripts/**/*",
-    "test/javascripts/**/*"
+    "test/javascripts/**/*",
+    "type-tests/**/*.ts"
   ],
   "compilerOptions": {
     "paths": {

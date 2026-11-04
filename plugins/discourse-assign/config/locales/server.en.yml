@@ -1,5 +1,7 @@
 en:
   site_settings:
+    assign_allow_multiple_topic_assignees: "Allow multiple users and one group to be assigned to a topic. Individual posts still have one assignee."
+    assign_max_assignments_per_topic: "Maximum number of active assignments across a topic and its posts."
     assign_enabled: "Enable the assign plugin"
     assigns_public: "Allow general public to see topic assignments"
     assigns_user_url_path: "Path to users assigned topics (use: {username} to substitute username)"
@@ -28,6 +30,13 @@ en:
         duplicate: "There are duplicate status values."
         removed_in_use: "Can't remove a status from the list if there are existing assignments using this status."
   discourse_assign:
+    multiple_assignments_disabled: "Multiple topic assignments are disabled."
+    multiple_assignments_not_ready: "The assignment database upgrade must finish before multiple assignments can be added."
+    duplicate_assignee: "Each user or group can only be assigned to a topic once."
+    multiple_groups: "Only one group can be assigned to a topic."
+    stale_assignments: "The assignments have changed. Reload them before saving your changes."
+    invalid_assignment: "An assignment does not belong to this topic."
+    invalid_assignment_status: "Choose a valid assignment status."
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
     filter:

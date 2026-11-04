@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 DiscourseAssign::Engine.routes.draw do
+  get "/topics/:topic_id/assignments" => "assign#topic_assignments"
+  put "/topics/:topic_id/assignments" => "assign#replace_topic_assignments"
+  post "/topics/:topic_id/assignments" => "assign#add_topic_assignment"
+  patch "/assignments/:id" => "assign#update_assignment"
+  delete "/assignments/:id" => "assign#remove_assignment"
   put "/claim/:topic_id" => "assign#claim"
   put "/assign" => "assign#assign"
   put "/unassign" => "assign#unassign"

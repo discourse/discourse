@@ -21686,10 +21686,24 @@ CREATE INDEX index_assignments_on_assigned_to_id_and_assigned_to_type ON public.
 
 
 --
--- Name: index_assignments_on_target_id_and_target_type; Type: INDEX; Schema: public; Owner: -
+-- Name: index_assignments_on_post_target; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_assignments_on_target_id_and_target_type ON public.assignments USING btree (target_id, target_type);
+CREATE UNIQUE INDEX index_assignments_on_post_target ON public.assignments USING btree (target_id, target_type) WHERE ((target_type)::text = 'Post'::text);
+
+
+--
+-- Name: index_assignments_on_target; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_assignments_on_target ON public.assignments USING btree (target_id, target_type);
+
+
+--
+-- Name: index_assignments_on_topic_group; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_assignments_on_topic_group ON public.assignments USING btree (target_id, target_type) WHERE (((target_type)::text = 'Topic'::text) AND ((assigned_to_type)::text = 'Group'::text));
 
 
 --
@@ -26582,6 +26596,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261104055325'),
+('20261104055247'),
 ('20261102174233'),
 ('20261030215104'),
 ('20261030183551'),

@@ -173,11 +173,12 @@ after_initialize do
           .includes(:assigned_to)
 
       topic_assignments, post_assignments = assignments.partition { it.target_type == "Topic" }
-      topic_assignments_map = topic_assignments.index_by(&:target_id)
+      topic_assignments_map = topic_assignments.group_by(&:target_id)
       post_assignments_map = post_assignments.index_by(&:target_id)
 
       topics.each do |topic|
-        assignment = topic_assignments_map[topic.id]
+        topic.preload_topic_assignments(topic_assignments_map.fetch(topic.id, []))
+        assignment = topic_assignments_map[topic.id]&.min_by(&:id)
         # NOTE: preloading to `nil` is necessary to avoid N+1 queries
         topic.preload_assigned_to(assignment&.assigned_to)
         topic.preload_assignment_status(assignment&.status)
@@ -193,6 +194,9 @@ after_initialize do
   TopicView.on_preload do |topic_view|
     if SiteSetting.assign_enabled
       topic_view.instance_variable_set(:@posts, topic_view.posts.includes(:assignment))
+      topic_view.topic.preload_topic_assignments(
+        Assignment.where(target: topic_view.topic).order(:id).includes(:assigned_to).to_a,
+      )
     end
   end
 
@@ -215,6 +219,9 @@ after_initialize do
     groups_map = Group.where(id: group_ids).index_by(&:id)
 
     topics.each do |topic|
+      topic.preload_topic_assignments(
+        Array(assignments_map[topic.id]).select { |assignment| assignment.target_type == "Topic" },
+      )
       if assignments = assignments_map[topic.id]
         topic_assignments, post_assignments = assignments.partition { it.target_type == "Topic" }
 
@@ -272,6 +279,9 @@ after_initialize do
         .group_by(&:topic_id)
 
     results.posts.each do |post|
+      post.topic.preload_topic_assignments(
+        Array(assignments[post.topic_id]).select { |assignment| assignment.target_type == "Topic" },
+      )
       if topic_assignments = assignments[post.topic_id]
         direct_assignment = topic_assignments.find { it.target_type == "Topic" }
         indirect_assignments = topic_assignments.select { it.target_type == "Post" }
@@ -311,22 +321,19 @@ after_initialize do
       )
     end
 
-    if name == "*"
-      next(
-        results
-          .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
-          .where.not(a: { assigned_to_id: nil })
-      )
-    end
+    next(results.where(id: Assignment.active.select(:topic_id))) if name == "*"
 
     user_id = topic_query.guardian.user.id if name == "me"
     user_id ||= User.where(username_lower: name.downcase).pick(:id)
 
     if user_id
       next(
-        results.joins("JOIN assignments a ON a.topic_id = topics.id AND active").where(
-          "a.assigned_to_id = ? AND a.assigned_to_type = 'User'",
-          user_id,
+        results.where(
+          id:
+            Assignment
+              .active
+              .where(assigned_to_type: "User", assigned_to_id: user_id)
+              .select(:topic_id),
         )
       )
     end
@@ -340,9 +347,12 @@ after_initialize do
 
     if group_id
       next(
-        results.joins("JOIN assignments a ON a.topic_id = topics.id AND active").where(
-          "a.assigned_to_id = ? AND a.assigned_to_type = 'Group'",
-          group_id,
+        results.where(
+          id:
+            Assignment
+              .active
+              .where(assigned_to_type: "Group", assigned_to_id: group_id)
+              .select(:topic_id),
         )
       )
     end
@@ -528,6 +538,31 @@ after_initialize do
       .count
   end
 
+  %i[
+    topic_view
+    topic_list_item
+    suggested_topic
+    search_topic_list_item
+    flagged_topic
+    assigned_topic
+  ].each do |serializer|
+    add_to_serializer(
+      serializer,
+      :topic_assignments,
+      include_condition: -> do
+        topic = object.is_a?(TopicView) ? object.topic : object
+        SiteSetting.assigns_public || scope.can_assign?(topic)
+      end,
+    ) do
+      topic = object.is_a?(TopicView) ? object.topic : object
+      ActiveModel::ArraySerializer.new(
+        topic.active_topic_assignments,
+        each_serializer: DiscourseAssign::AssignmentSerializer,
+        scope:,
+      ).as_json
+    end
+  end
+
   # TopicView serializer
   add_to_serializer(
     :topic_view,
@@ -684,6 +719,13 @@ after_initialize do
   TopicsBulkAction.register_operation("assign") do
     raise Discourse::InvalidAccess if !guardian.can_assign?
 
+    if SiteSetting.enable_assign_status && @operation[:status].present? &&
+         !Assignment.statuses.include?(@operation[:status])
+      assignment = Assignment.new(status: @operation[:status])
+      assignment.errors.add(:status, :invalid)
+      raise ActiveRecord::RecordInvalid, assignment
+    end
+
     assign_to =
       DiscourseAssign::AssigneeResolver.resolve!(
         guardian,
@@ -732,6 +774,21 @@ after_initialize do
 
   add_to_class(:user_bookmark_base_serializer, :assignment_target) do
     bookmarkable_type == "Topic" ? bookmarkable : bookmarkable.topic
+  end
+
+  add_to_serializer(
+    :user_bookmark_base,
+    :topic_assignments,
+    include_condition: -> do
+      bookmarkable_type == "Topic" &&
+        (SiteSetting.assigns_public || scope.can_assign?(bookmarkable))
+    end,
+  ) do
+    ActiveModel::ArraySerializer.new(
+      bookmarkable.active_topic_assignments,
+      each_serializer: DiscourseAssign::AssignmentSerializer,
+      scope:,
+    ).as_json
   end
 
   add_to_serializer(
@@ -844,7 +901,19 @@ after_initialize do
 
   add_api_key_scope(
     :assign,
-    { assign: { actions: %w[discourse_assign/assign#assign discourse_assign/assign#unassign] } },
+    {
+      assign: {
+        actions: %w[
+          discourse_assign/assign#assign
+          discourse_assign/assign#unassign
+          discourse_assign/assign#topic_assignments
+          discourse_assign/assign#replace_topic_assignments
+          discourse_assign/assign#add_topic_assignment
+          discourse_assign/assign#update_assignment
+          discourse_assign/assign#remove_assignment
+        ],
+      },
+    },
   )
 
   # Event listeners
@@ -921,8 +990,8 @@ after_initialize do
   on(:move_to_inbox) do |info|
     topic = info[:topic]
 
-    if topic.assignment
-      TopicTrackingState.publish_assigned_private_message(topic, topic.assignment.assigned_to)
+    topic.active_topic_assignments.each do |assignment|
+      TopicTrackingState.publish_assigned_private_message(topic, assignment.assigned_to)
     end
 
     next if !SiteSetting.unassign_on_group_archive
@@ -933,9 +1002,11 @@ after_initialize do
 
   on(:archive_message) do |info|
     topic = info[:topic]
-    next if !topic.assignment
+    next if topic.active_topic_assignments.empty?
 
-    TopicTrackingState.publish_assigned_private_message(topic, topic.assignment.assigned_to)
+    topic.active_topic_assignments.each do |assignment|
+      TopicTrackingState.publish_assigned_private_message(topic, assignment.assigned_to)
+    end
 
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
@@ -950,28 +1021,61 @@ after_initialize do
   end
 
   on(:user_removed_from_group) do |user, group|
-    user.notifications.for_assignment(group.assignments.select(:id)).destroy_all
+    group.assignments.active.find_each do |assignment|
+      Jobs::UnassignNotification.new.execute(
+        topic_id: assignment.topic_id,
+        assigned_to_id: group.id,
+        assigned_to_type: "Group",
+        assignment_id: assignment.id,
+        user_id: user.id,
+      )
+    end
   end
 
   on(:post_moved) do |post, original_topic_id|
     assignment =
       Assignment.where(topic_id: original_topic_id, target_type: "Post", target_id: post.id).first
     next if !assignment
-    if post.is_first_post?
-      assignment.update!(topic_id: post.topic_id, target_type: "Topic", target_id: post.topic_id)
-    else
-      assignment.update!(topic_id: post.topic_id)
+    post.topic.with_lock do
+      direct = Assignment.where(target: post.topic)
+      convert =
+        post.is_first_post? &&
+          (SiteSetting.assign_allow_multiple_topic_assignees || !direct.exists?) &&
+          !direct.exists?(assigned_to: assignment.assigned_to) &&
+          !(assignment.assigned_to_group? && direct.exists?(assigned_to_type: "Group"))
+      assignment.update!(topic: post.topic, target: convert ? post.topic : post)
+      assigner = Assigner.new(assignment.target, Discourse.system_user, assignment:)
+      eligible =
+        assignment.assigned_to && assigner.can_be_assigned?(assignment.assigned_to) &&
+          assignment.assigned_users.all? { |user| assigner.can_assignee_see_target?(user) }
+      if !eligible ||
+           Assignment.active.where(topic: post.topic).count >
+             SiteSetting.assign_max_assignments_per_topic
+        assignment.update!(active: false)
+      end
+      ActiveRecord.after_all_transactions_commit do
+        Jobs.enqueue(
+          :unassign_notification,
+          topic_id: original_topic_id,
+          assigned_to_id: assignment.assigned_to_id,
+          assigned_to_type: assignment.assigned_to_type,
+          assignment_id: assignment.id,
+        )
+        Jobs.enqueue(:assign_notification, assignment_id: assignment.id) if assignment.active
+      end
     end
   end
 
   on(:group_destroyed) do |group, user_ids|
-    User
-      .where(id: user_ids)
-      .find_each do |user|
-        user.notifications.for_assignment(group.assignments.select(:id)).destroy_all
-      end
-
-    Assignment.active_for_group(group).destroy_all
+    group.assignments.find_each do |assignment|
+      assignment.destroy!
+      Jobs::UnassignNotification.new.execute(
+        topic_id: assignment.topic_id,
+        assigned_to_id: group.id,
+        assigned_to_type: "Group",
+        assignment_id: assignment.id,
+      )
+    end
   end
 
   add_filter_custom_filter("assigned") do |scope, filter_values, guardian|
@@ -1154,10 +1258,11 @@ after_initialize do
       next if SiteSetting.assignment_status_on_solve.blank?
       assignments = Assignment.includes(:target).where(topic: post.topic)
       assignments.each do |assignment|
-        assigned_user = User.find_by(id: assignment.assigned_to_id)
-        Assigner.new(assignment.target, assigned_user).assign(
+        assigned_user = assignment.assigned_to
+        Assigner.new(assignment.target, Discourse.system_user, assignment:).assign(
           assigned_user,
           status: SiteSetting.assignment_status_on_solve,
+          replace: false,
         )
       end
     end
@@ -1168,10 +1273,11 @@ after_initialize do
 
       assignments = Assignment.includes(:target).where(topic: post.topic)
       assignments.each do |assignment|
-        assigned_user = User.find_by(id: assignment.assigned_to_id)
-        Assigner.new(assignment.target, assigned_user).assign(
+        assigned_user = assignment.assigned_to
+        Assigner.new(assignment.target, Discourse.system_user, assignment:).assign(
           assigned_user,
           status: SiteSetting.assignment_status_on_unsolve,
+          replace: false,
         )
       end
     end

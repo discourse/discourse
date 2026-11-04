@@ -20,11 +20,18 @@ export default class AssignedTopicListColumn extends Component {
     });
   }
 
+  @action
+  async removeAssignment(id, topic) {
+    await this.taskActions.removeAssignment(id, topic);
+    this.router.refresh();
+  }
+
   <template>
     {{#if @topic.assigned_to_user}}
       <AssignActionsDropdown
         @assignee={{@topic.assigned_to_user.username}}
         @reassign={{this.reassign}}
+        @removeAssignment={{this.removeAssignment}}
         @topic={{@topic}}
         @unassign={{this.unassign}}
       />
@@ -33,11 +40,17 @@ export default class AssignedTopicListColumn extends Component {
         @assignee={{@topic.assigned_to_group.name}}
         @group={{true}}
         @reassign={{this.reassign}}
+        @removeAssignment={{this.removeAssignment}}
         @topic={{@topic}}
         @unassign={{this.unassign}}
       />
     {{else}}
-      <AssignActionsDropdown @topic={{@topic}} @unassign={{this.unassign}} />
+      <AssignActionsDropdown
+        @reassign={{this.reassign}}
+        @removeAssignment={{this.removeAssignment}}
+        @topic={{@topic}}
+        @unassign={{this.unassign}}
+      />
     {{/if}}
   </template>
 }

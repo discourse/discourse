@@ -45,12 +45,208 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
+  describe "#topic_assignments" do
+    before do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      sign_in(admin)
+    end
+
+    it "returns assignment IDs and the editor version" do
+      assignment =
+        Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user, note: "Review")
+
+      get "/assign/topics/#{post.topic_id}/assignments.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_assignments"]).to contain_exactly(
+        hash_including("id" => assignment.id, "note" => assignment.note),
+      )
+      expect(response.parsed_body["version"]).to eq(Assignment.version_for(post.topic))
+      expect(response.parsed_body["max_assignments"]).to eq(20)
+    end
+
+    it "hides assignments on a topic the actor cannot see" do
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: non_allowed_group))
+      assignment =
+        Fabricate(:topic_assignment, topic: private_topic, assigned_to: admin, note: "Private note")
+      sign_in(allowed_user)
+
+      get "/assign/topics/#{private_topic.id}/assignments.json"
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(assignment.note)
+    end
+  end
+
+  describe "#replace_topic_assignments" do
+    before do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      sign_in(admin)
+    end
+
+    it "replaces the complete direct set and returns its canonical representation" do
+      put "/assign/topics/#{post.topic_id}/assignments.json",
+          params: {
+            expected_version: Assignment.version_for(post.topic),
+            assignments: [{ username: admin.username }, { username: allowed_user.username }],
+          }
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body["topic_assignments"].map { |entry| entry["assigned_to"]["username"] },
+      ).to contain_exactly(admin.username, allowed_user.username)
+    end
+
+    it "rejects a stale save without removing another assignee" do
+      version = Assignment.version_for(post.topic)
+      assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user)
+
+      put "/assign/topics/#{post.topic_id}/assignments.json",
+          params: {
+            expected_version: version,
+            assignments: [{ username: admin.username }],
+          }
+
+      expect(response.status).to eq(409)
+      expect(assignment.reload).to be_active
+    end
+
+    it "rejects multiple assignments when the setting is disabled" do
+      SiteSetting.assign_allow_multiple_topic_assignees = false
+
+      put "/assign/topics/#{post.topic_id}/assignments.json",
+          params: {
+            expected_version: Assignment.version_for(post.topic),
+            assignments: [{ username: admin.username }, { username: allowed_user.username }],
+          }
+
+      expect(response.status).to eq(400)
+      expect(post.topic.assignments).to be_empty
+    end
+
+    it "keeps the original assignments when one new assignee is ineligible" do
+      assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user)
+
+      put "/assign/topics/#{post.topic_id}/assignments.json",
+          params: {
+            expected_version: Assignment.version_for(post.topic),
+            assignments: [
+              { username: admin.username },
+              { username: user_in_non_allowed_group.username },
+            ],
+          }
+
+      expect(response.status).to eq(400)
+      expect(post.topic.assignments.reload).to contain_exactly(assignment)
+    end
+
+    it "accepts an empty JSON list without clearing assigned posts" do
+      Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user)
+      post_assignment = Fabricate(:post_assignment, topic: post.topic, assigned_to: admin)
+
+      put "/assign/topics/#{post.topic_id}/assignments.json",
+          params: {
+            expected_version: Assignment.version_for(post.topic),
+            assignments: [],
+          },
+          as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_assignments"]).to be_empty
+      expect(post_assignment.reload).to be_active
+    end
+  end
+
+  describe "#add_topic_assignment" do
+    before do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      sign_in(admin)
+    end
+
+    it "adds a direct assignment without replacing an existing assignee" do
+      assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user)
+
+      integration_session.post "/assign/topics/#{post.topic_id}/assignments.json",
+                               params: {
+                                 username: admin.username,
+                               }
+
+      expect(response.status).to eq(201)
+      expect(post.topic.assignments.active.map(&:assigned_to)).to contain_exactly(
+        admin,
+        allowed_user,
+      )
+      expect(assignment.reload).to be_active
+    end
+  end
+
+  describe "#update_assignment" do
+    before do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      sign_in(admin)
+    end
+
+    it "edits one note without changing its assignee or neighboring assignments" do
+      assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user)
+      neighboring_assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: admin)
+
+      patch "/assign/assignments/#{assignment.id}.json", params: { note: "Check the references" }
+
+      expect(response.status).to eq(200)
+      expect(assignment.reload.note).to eq("Check the references")
+      expect(assignment.assigned_to).to eq(allowed_user)
+      expect(neighboring_assignment.reload).to be_active
+    end
+  end
+
+  describe "#remove_assignment" do
+    before do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      sign_in(admin)
+    end
+
+    it "removes one assignment while retaining the other assignee" do
+      assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user)
+      neighboring_assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: admin)
+
+      delete "/assign/assignments/#{assignment.id}.json"
+
+      expect(response.status).to eq(204)
+      expect(response.body).to be_empty
+      expect(post.topic.assignments.reload).to contain_exactly(neighboring_assignment)
+    end
+
+    it "hides assignment IDs belonging to inaccessible topics" do
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: non_allowed_group))
+      assignment = Fabricate(:topic_assignment, topic: private_topic, assigned_to: admin)
+      sign_in(allowed_user)
+
+      delete "/assign/assignments/#{assignment.id}.json"
+
+      expect(response.status).to eq(404)
+      expect(assignment.reload).to be_active
+    end
+
+    it "removes an inactive assignment without clearing active direct assignees" do
+      inactive_assignment =
+        Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user, active: false)
+      active_assignment = Fabricate(:topic_assignment, topic: post.topic, assigned_to: admin)
+
+      delete "/assign/assignments/#{inactive_assignment.id}.json"
+
+      expect(response.status).to eq(204)
+      expect(post.topic.assignments.reload).to contain_exactly(active_assignment)
+    end
+  end
+
   describe "#suggestions" do
     before { sign_in(admin) }
 
-    def assign_user_to_post
+    def assign_user_to_topic
       assignee = Fabricate(:user, groups: [allowed_group])
-      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
+      Fabricate(:topic_assignment, assigned_to: assignee, assigned_by_user: admin)
       assignee
     end
 
@@ -68,7 +264,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     it "suggests the current user + the last 5 previously assigned users" do
-      assignees = 6.times.map { |_| assign_user_to_post.username }
+      assignees = 6.times.map { |_| assign_user_to_topic.username }
 
       get "/assign/suggestions.json"
 
@@ -76,7 +272,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     it "doesn't suggest users on holiday, except the current user" do
-      user_on_vacation = assign_user_to_post
+      user_on_vacation = assign_user_to_topic
       [user_on_vacation, admin].each do |user|
         user.upsert_custom_fields(DiscourseAssign::DiscourseCalendar::HOLIDAY_CUSTOM_FIELD => "t")
       end
@@ -88,12 +284,29 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "excludes other users from the suggestions when they already reached the max assigns limit" do
       SiteSetting.max_assigned_topics = 1
-      another_user = Fabricate(:user)
-      Fabricate(:post_assignment, assigned_to: another_user, assigned_by_user: admin)
+      another_user = Fabricate(:user, groups: [allowed_group])
+      Fabricate(:topic_assignment, assigned_to: another_user, assigned_by_user: admin)
 
       get "/assign/suggestions.json"
 
       expect(suggested_usernames).to contain_exactly(admin.username)
+    end
+
+    it "uses active topic assignments rather than post assignments or inactive history" do
+      recent_assignee = assign_user_to_topic
+      post_assignee = Fabricate(:user, groups: [allowed_group])
+      inactive_assignee = Fabricate(:user, groups: [allowed_group])
+      Fabricate(:post_assignment, assigned_to: post_assignee, assigned_by_user: admin)
+      Fabricate(
+        :topic_assignment,
+        assigned_to: inactive_assignee,
+        assigned_by_user: admin,
+        active: false,
+      )
+
+      get "/assign/suggestions.json"
+
+      expect(suggested_usernames).to contain_exactly(admin.username, recent_assignee.username)
     end
 
     it "suggests the visible groups assignable on the target" do
@@ -329,6 +542,25 @@ RSpec.describe DiscourseAssign::AssignController do
     before do
       sign_in(admin)
       SiteSetting.enable_assign_status = true
+    end
+
+    it "replaces all direct assignees through the legacy endpoint" do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      replacement_assignee = Fabricate(:moderator)
+      Fabricate(:topic_assignment, topic: post.topic, assigned_to: admin)
+      Fabricate(:topic_assignment, topic: post.topic, assigned_to: allowed_user)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            username: replacement_assignee.username,
+          }
+
+      expect(response.status).to eq(200)
+      expect(post.topic.assignments.active.map(&:assigned_to)).to contain_exactly(
+        replacement_assignee,
+      )
     end
 
     it "returns 404 when the acting user cannot see the target topic" do

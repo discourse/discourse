@@ -26,6 +26,48 @@ RSpec.describe Assignment do
     end
   end
 
+  describe "target cardinality" do
+    fab!(:topic, :topic_with_op)
+    fab!(:first_assignee, :user)
+    fab!(:second_assignee, :user)
+
+    it "allows distinct users on a topic and prevents duplicate assignees" do
+      Fabricate(:topic_assignment, topic: topic, assigned_to: first_assignee)
+      Fabricate(:topic_assignment, topic: topic, assigned_to: second_assignee)
+
+      expect(topic.assignments.map(&:assigned_to)).to contain_exactly(
+        first_assignee,
+        second_assignee,
+      )
+      expect {
+        Assignment.transaction(requires_new: true) do
+          Fabricate(:topic_assignment, topic: topic, assigned_to: first_assignee)
+        end
+      }.to raise_error(ActiveRecord::RecordNotUnique)
+    end
+
+    it "keeps individual post targets singular" do
+      post = Fabricate(:post, topic: topic)
+      Fabricate(:post_assignment, post: post, assigned_to: first_assignee)
+
+      expect {
+        Assignment.transaction(requires_new: true) do
+          Fabricate(:post_assignment, post: post, assigned_to: second_assignee)
+        end
+      }.to raise_error(ActiveRecord::RecordNotUnique)
+    end
+
+    it "reserves at most one group slot even for an inactive topic assignment" do
+      Fabricate(:topic_assignment, topic: topic, assigned_to: Fabricate(:group), active: false)
+
+      expect {
+        Assignment.transaction(requires_new: true) do
+          Fabricate(:topic_assignment, topic: topic, assigned_to: Fabricate(:group))
+        end
+      }.to raise_error(ActiveRecord::RecordNotUnique)
+    end
+  end
+
   describe ".deactivate!" do
     subject(:deactivate!) { described_class.deactivate!(topic: topic) }
 
@@ -212,6 +254,69 @@ RSpec.describe Assignment do
           users.first.id,
         )
       end
+    end
+  end
+
+  describe "#create_missing_notifications! with overlapping topic assignments" do
+    fab!(:topic, :topic_with_op)
+    fab!(:user)
+    fab!(:group)
+    fab!(:assigning_user, :admin)
+
+    let!(:direct_assignment) do
+      Fabricate(
+        :topic_assignment,
+        topic: topic,
+        assigned_to: user,
+        assigned_by_user: assigning_user,
+      )
+    end
+    let!(:group_assignment) do
+      Fabricate(
+        :topic_assignment,
+        topic: topic,
+        assigned_to: group,
+        assigned_by_user: assigning_user,
+      )
+    end
+
+    before do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      group.add(user)
+    end
+
+    it "keeps one notification when a directly assigned user is also assigned through a group" do
+      direct_assignment.create_missing_notifications!
+      notification = user.notifications.assigned.find_by!(topic: topic)
+      notification.update!(read: true)
+
+      expect { group_assignment.create_missing_notifications! }.not_to change {
+        user.notifications.assigned.where(topic: topic).count
+      }
+      expect(notification.reload).to be_read
+    end
+
+    it "keeps one notification when a group-assigned user is later assigned directly" do
+      group_assignment.create_missing_notifications!
+
+      expect { direct_assignment.create_missing_notifications! }.not_to change {
+        user.notifications.assigned.where(topic: topic).count
+      }
+    end
+
+    it "retains a separate notification for an assigned post" do
+      direct_assignment.create_missing_notifications!
+      post_assignment =
+        Fabricate(
+          :post_assignment,
+          topic: topic,
+          assigned_to: user,
+          assigned_by_user: assigning_user,
+        )
+
+      expect { post_assignment.create_missing_notifications! }.to change {
+        user.notifications.assigned.where(topic: topic).count
+      }.by(1)
     end
   end
 

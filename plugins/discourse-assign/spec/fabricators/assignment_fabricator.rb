@@ -16,3 +16,5 @@ Fabricator(:post_assignment, class_name: :assignment) do
   assigned_by_user { Fabricate(:user) }
   assigned_to { Fabricate(:user) }
 end
+
+Fabricator(:silenced_assignment) { assignment_id { Fabricate(:topic_assignment).id } }

@@ -5,12 +5,15 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
 import AssignUser from "../components/modal/assign-user.gjs";
+import EditTopicAssignments from "../components/modal/edit-topic-assignments.gjs";
 import assignmentPayload from "../lib/assignment-payload.js";
 
 export default class TaskActions extends Service {
   @service modal;
+  @service siteSettings;
 
   @tracked suggestionsRevision = 0;
+  #refreshVersions = new Map();
   #suggestionsByTarget = new Map();
   #suggestionsPromisesByTarget = new Map();
 
@@ -40,6 +43,43 @@ export default class TaskActions extends Service {
     });
   }
 
+  async removeAssignment(id, topic) {
+    await ajax(`/assign/assignments/${id}`, { type: "DELETE" });
+    if (topic) {
+      await this.refreshTopicAssignments(topic);
+    }
+  }
+
+  async refreshTopicAssignments(topic) {
+    const revision = (this.#refreshVersions.get(topic.id) || 0) + 1;
+    this.#refreshVersions.set(topic.id, revision);
+    const result = await ajax(`/assign/topics/${topic.id}/assignments`);
+    if (this.#refreshVersions.get(topic.id) === revision) {
+      this.#applyTopicAssignments(topic, result);
+    }
+    return result;
+  }
+
+  async replaceTopicAssignments(topic, assignments, version) {
+    const revision = (this.#refreshVersions.get(topic.id) || 0) + 1;
+    this.#refreshVersions.set(topic.id, revision);
+    const result = await ajax(`/assign/topics/${topic.id}/assignments`, {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({
+        expected_version: version,
+        assignments: assignments.map((assignment) => ({
+          id: assignment.id,
+          ...assignmentPayload(assignment),
+        })),
+      }),
+    });
+    if (this.#refreshVersions.get(topic.id) === revision) {
+      this.#applyTopicAssignments(topic, result);
+    }
+    return result;
+  }
+
   async unassignPost(post) {
     await this.unassign(post.id, "Post");
     delete post.topic.indirectly_assigned_to[post.id];
@@ -53,6 +93,15 @@ export default class TaskActions extends Service {
     target,
     { isAssigned = false, targetType = "Topic", onSuccess }
   ) {
+    if (
+      targetType === "Topic" &&
+      (this.siteSettings.assign_allow_multiple_topic_assignees ||
+        target.topic_assignments?.length > 1)
+    ) {
+      return this.modal.show(EditTopicAssignments, {
+        model: { topic: target, onSuccess },
+      });
+    }
     return this.modal.show(AssignUser, {
       model: {
         reassign: isAssigned,
@@ -121,6 +170,21 @@ export default class TaskActions extends Service {
         target_type: assignment.targetType,
       },
     });
+  }
+
+  #applyTopicAssignments(topic, result) {
+    topic.topic_assignments = result.topic_assignments;
+    const representative = result.topic_assignments[0];
+    topic.assigned_to_user =
+      representative?.assigned_to_type === "User"
+        ? representative.assigned_to
+        : null;
+    topic.assigned_to_group =
+      representative?.assigned_to_type === "Group"
+        ? representative.assigned_to
+        : null;
+    topic.assignment_note = representative?.note;
+    topic.assignment_status = representative?.status;
   }
 
   #ensureSuggestions(targetId, targetType) {
