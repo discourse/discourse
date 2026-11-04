@@ -276,7 +276,7 @@ describe "Admin Onboarding Banner" do
 
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
 
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(page).to have_current_path("/latest?preview_theme_id=#{Theme.horizon_theme.id}")
       expect(design_wizard_panel).to be_visible
       expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
@@ -353,7 +353,7 @@ describe "Admin Onboarding Banner" do
       # picking another theme reloads the page with a theme preview and the
       # wizard resumes in the sheet
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(page).to have_current_path("/latest?preview_theme_id=#{Theme.horizon_theme.id}")
       expect(design_wizard_panel).to be_visible
 
       design_wizard_panel.next_step
