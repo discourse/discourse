@@ -9,9 +9,18 @@ export async function setupTestImpact(QUnit) {
     return;
   }
 
+  // Read by the recorder when the run ends, to tell why modules went missing.
+  const stats = (window.__testImpactStats = {
+    bindingTimedOut: false,
+    tests: 0,
+    modules: 0,
+    lastModule: null,
+  });
+
   const started = Date.now();
   while (typeof window[BINDING] !== "function") {
     if (Date.now() - started > BINDING_WAIT_MS) {
+      stats.bindingTimedOut = true;
       return;
     }
     await new Promise((resolve) => setTimeout(resolve, 50));
@@ -24,6 +33,7 @@ export async function setupTestImpact(QUnit) {
 
   let current;
   QUnit.testStart(() => {
+    stats.tests++;
     const test = QUnit.config.current;
     let module = test.module;
     while (module.parentModule) {
@@ -34,6 +44,8 @@ export async function setupTestImpact(QUnit) {
     }
 
     current = module;
+    stats.modules++;
+    stats.lastModule = module.name;
     return new Promise((resolve) => {
       window.__testImpactTaken = resolve;
       window[BINDING](
