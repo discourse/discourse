@@ -42,17 +42,21 @@
     height: 1lh;
   }
 
+  &__label {
+    min-width: 0;
+
+    @include ellipsis;
+  }
+
   &__username {
     color: var(--primary);
     white-space: nowrap;
   }
 
   &__name {
-    min-width: 0;
+    margin-inline-start: 0.5em;
     color: var(--primary-high);
     font-size: var(--font-down-1);
-
-    @include ellipsis;
   }
 
   &__status {

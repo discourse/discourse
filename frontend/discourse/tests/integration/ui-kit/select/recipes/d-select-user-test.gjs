@@ -121,6 +121,30 @@ module(
       );
     });
 
+    test("a row's username and name share a baseline", async function (assert) {
+      stubUserSearch();
+
+      await render(<template><DSelectUser /></template>);
+      const select = new DSelect();
+      await select.open();
+      await select.search("bo");
+
+      // An empty inline box sits on its line's baseline, so its bottom marks the text's baseline.
+      const baseline = (selector) => {
+        const probe = document.createElement("span");
+        probe.style.display = "inline-block";
+        optionNamed("bob").querySelector(selector).append(probe);
+        return probe.getBoundingClientRect().bottom;
+      };
+      const username = baseline(".d-user-option__username");
+      const name = baseline(".d-user-option__name");
+
+      assert.true(
+        Math.abs(username - name) < 0.5,
+        `the smaller name sits on the username's baseline (${username} vs ${name})`
+      );
+    });
+
     test("lists nothing until something is typed, unless a topic or category scopes it", async function (assert) {
       const requests = stubUserSearch();
       const state = new (class {

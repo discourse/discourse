@@ -51,7 +51,7 @@ function fullName(item: SelectItem): string | undefined {
     : undefined;
 }
 
-/** A user row's avatar and username, shared by rows and chips. */
+/** A held user's avatar and username. */
 const UserIdentity: TOC<{ Args: { item: SelectItem } }> = <template>
   {{dAvatar @item imageSize="tiny"}}
   <span class="d-user-option__username">
@@ -74,10 +74,16 @@ export const UserOption: TOC<{
     {{itemName @item}}
   {{else if (isType @item "user")}}
     <span class="d-user-option">
-      <UserIdentity @item={{@item}} />
-      {{#if (fullName @item)}}
-        <span class="d-user-option__name">{{fullName @item}}</span>
-      {{/if}}
+      {{dAvatar @item imageSize="tiny"}}
+      {{! One line of text, so the smaller name sits on the username's baseline. }}
+      <span class="d-user-option__label">
+        <span class="d-user-option__username">
+          {{~formatUsername (itemName @item)~}}
+        </span>
+        {{~#if (fullName @item)~}}
+          <span class="d-user-option__name">{{fullName @item}}</span>
+        {{~/if~}}
+      </span>
       {{#if (statusEmoji @item)}}
         <span class="d-user-option__status">
           {{~dEmoji (statusEmoji @item) alt="" skipTitle=true~}}
