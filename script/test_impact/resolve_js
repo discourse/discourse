@@ -16,12 +16,21 @@ const {
   DeprecationStackResolver,
 } = require("../../frontend/discourse/lib/deprecation-report");
 
+const ROOT = path.resolve(__dirname, "..", "..");
 const resolver = new DeprecationStackResolver();
 const resolved = new Map();
+const exists = new Map();
 
-// Dependencies change through lockfiles, which select everything anyway.
+// Dependencies change through lockfiles, which select everything anyway, and
+// some name their sources by paths outside the repository.
 function ownFile(file) {
-  return !path.isAbsolute(file) && !file.includes("node_modules/");
+  if (path.isAbsolute(file) || file.includes("node_modules/")) {
+    return false;
+  }
+  if (!exists.has(file)) {
+    exists.set(file, fs.existsSync(path.join(ROOT, file)));
+  }
+  return exists.get(file);
 }
 
 // [file, first line, last line] in the source, or null.
@@ -87,8 +96,23 @@ for (const name of recordings) {
     .split("\n")
     .filter(Boolean);
 
-  const rewritten = lines.map((line) => {
+  const rewritten = lines.flatMap((line) => {
     const entry = JSON.parse(line);
+    // QUnit records where a module's first test is defined.
+    if (entry.spec_location) {
+      const [script, specLine, column] = entry.spec_location;
+      const frame = resolver.resolveFrame({
+        url: script,
+        line: specLine,
+        column,
+      });
+      if (!frame.resolved || !ownFile(frame.file)) {
+        return [];
+      }
+      entry.spec = frame.file;
+      delete entry.spec_location;
+      delete entry.module;
+    }
     if (entry.js) {
       entry.files = { ...entry.files, ...bySourceFile(entry.js) };
       delete entry.js;
@@ -97,7 +121,7 @@ for (const name of recordings) {
       entry.methods = { ...entry.methods, ...bySourceFile(entry.js_functions) };
       delete entry.js_functions;
     }
-    return JSON.stringify(entry);
+    return [JSON.stringify(entry)];
   });
 
   fs.writeFileSync(file, zlib.gzipSync(rewritten.join("\n") + "\n"));

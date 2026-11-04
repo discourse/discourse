@@ -15,8 +15,9 @@ module TestImpact
 
     SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
     LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
-    # QUnit runs these itself, and documentation runs nowhere.
-    NOT_RSPEC = %r{\A(?:frontend/[^/]+/tests/|plugins/[^/]+/test/|docs/)|\.md\z}
+    QUNIT_TEST = %r{\A(?:frontend/[^/]+/tests|plugins/[^/]+/test)/.*-test\.g?[jt]s\z}
+    # Test support no test ran, and documentation, which runs nowhere.
+    NOT_RUN = %r{\A(?:frontend/[^/]+/tests/|plugins/[^/]+/test/|docs/)|\.md\z}
 
     def self.build(recording_paths)
       specs = []
@@ -84,7 +85,7 @@ module TestImpact
       spec_paths.sum { |spec| (id = ids[spec]) ? times[id].to_f : 0.0 }
     end
 
-    # Changed spec files are selected as they are. A hunk in a recorded file
+    # Changed spec and QUnit test files are selected as they are. A hunk in a recorded file
     # selects the specs that ran the methods it touches; one that touches no
     # method and nothing that ran (constants, associations, validations: code
     # that only runs at load) selects every spec that ran the file. A method
@@ -94,7 +95,7 @@ module TestImpact
     # in, and one in a server locale file the specs that looked up its key (or
     # a key above or below it), in that locale unless it is English, which
     # every locale falls back to. Other files select the specs that read them.
-    # QUnit tests and documentation no spec ran or read select nothing.
+    # Test support and documentation no spec ran or read select nothing.
     #
     # `source` returns a changed file's content before the change, for the
     # settings and keys its hunks fall in.
@@ -106,7 +107,7 @@ module TestImpact
 
       changes.each do |change|
         path = change.new_path || change.old_path
-        if path.end_with?("_spec.rb")
+        if path.end_with?("_spec.rb") || QUNIT_TEST.match?(path)
           specs << change.new_path if change.new_path
           next
         end
@@ -130,7 +131,7 @@ module TestImpact
           readers = @indexes["reads"][old]
           if readers
             ids.merge(readers)
-          elsif !NOT_RSPEC.match?(path)
+          elsif !NOT_RUN.match?(path)
             unmapped << path
           end
           next

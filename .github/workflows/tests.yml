@@ -72,7 +72,7 @@ jobs:
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
-      TEST_IMPACT_RECORD: ${{ (matrix.build_type == 'backend' || matrix.build_type == 'system') && contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
+      TEST_IMPACT_RECORD: ${{ (matrix.build_type == 'backend' || matrix.build_type == 'system' || (matrix.build_type == 'frontend' && matrix.target != 'themes')) && contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
 
     strategy:
       fail-fast: false
@@ -417,8 +417,8 @@ jobs:
       - name: Summarize test impact recordings
         if: always() && env.TEST_IMPACT_RECORD == '1'
         run: |
-          # Source maps of the build that served the system specs.
-          if [ "${{ matrix.build_type }}" = "system" ]; then
+          # Source maps of the build that served the browser.
+          if [ "${{ matrix.build_type }}" != "backend" ]; then
             node script/test_impact/resolve_js tmp/test_impact
           fi
           script/test_impact/build_map tmp/test_impact && ls -la tmp/test_impact
