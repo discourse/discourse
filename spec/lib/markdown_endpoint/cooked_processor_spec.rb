@@ -23,6 +23,12 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
       expect(markdown).to include("> **More**", "_Poll: Choose one_")
     end
 
+    it "preserves every code segment in a shared preformatted block" do
+      html = '<pre><code class="lang-ruby">one</code><code>two```</code></pre>'
+
+      expect(described_class.to_markdown(html)).to eq("````ruby\nonetwo```\n````")
+    end
+
     it "converts standard emoji, aliases, and skin tones to Unicode" do
       html = PrettyText.cook(":smile: :+1: :wave:t4: :thumbsup:t6:")
 
