@@ -15,6 +15,8 @@ module TestImpact
 
     SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
     LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
+    # QUnit runs these itself, and documentation runs nowhere.
+    NOT_RSPEC = %r{\A(?:frontend/[^/]+/tests/|plugins/[^/]+/test/|docs/)|\.md\z}
 
     def self.build(recording_paths)
       specs = []
@@ -92,6 +94,7 @@ module TestImpact
     # in, and one in a server locale file the specs that looked up its key (or
     # a key above or below it), in that locale unless it is English, which
     # every locale falls back to. Other files select the specs that read them.
+    # QUnit tests and documentation no spec ran or read select nothing.
     #
     # `source` returns a changed file's content before the change, for the
     # settings and keys its hunks fall in.
@@ -125,7 +128,11 @@ module TestImpact
         file = old && @files[old]
         if !file
           readers = @indexes["reads"][old]
-          readers ? ids.merge(readers) : unmapped << path
+          if readers
+            ids.merge(readers)
+          elsif !NOT_RSPEC.match?(path)
+            unmapped << path
+          end
           next
         end
         # A rename or mode change: the constant's path is what moved.

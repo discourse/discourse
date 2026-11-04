@@ -184,6 +184,18 @@ RSpec.describe TestImpact::Map do
 
       expect(selection.specs).to eq(["spec/block_spec.rb"])
     end
+
+    it "selects nothing for QUnit tests and documentation no spec ran or read" do
+      selection =
+        select(
+          diff("frontend/discourse/tests/unit/thing-test.js", "@@ -1 +1 @@") +
+            diff("plugins/chat/test/javascripts/thing-test.js", "@@ -1 +1 @@") +
+            diff("docs/guide.md", "@@ -1 +1 @@") +
+            diff("frontend/discourse/app/new.js", "@@ -1 +1 @@"),
+        )
+
+      expect(selection).to have_attributes(specs: [], unmapped: ["frontend/discourse/app/new.js"])
+    end
   end
 
   describe "#seconds" do
