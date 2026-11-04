@@ -103,6 +103,74 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       expect(new_classifications).to eq(1)
     end
 
+    context "with a classification model payload" do
+      before do
+        SiteSetting.ai_sentiment_model_configs = [
+          {
+            model_name: DiscourseAi::Sentiment::Constants::SENTIMENT_MODEL,
+            endpoint: "https://sentiment.example.com",
+            api_key: "123",
+          },
+        ].to_json
+      end
+
+      def stub_payload(payload)
+        stub_request(:post, "https://sentiment.example.com").to_return(
+          status: 200,
+          body: payload.to_json,
+        )
+      end
+
+      def stored_classification
+        ClassificationResult.find_by!(
+          model_used: DiscourseAi::Sentiment::Constants::SENTIMENT_MODEL,
+          target: post_1,
+        ).classification
+      end
+
+      it "normalizes a flat single-input payload" do
+        stub_payload(
+          [
+            { label: "negative", score: 0.6 },
+            { label: "neutral", score: 0.3 },
+            { label: "positive", score: 0.1 },
+          ],
+        )
+
+        post_classification.classify!(post_1)
+
+        expect(stored_classification).to eq("negative" => 0.6, "neutral" => 0.3, "positive" => 0.1)
+      end
+
+      it "normalizes a nested single-input payload" do
+        stub_payload([[{ label: "negative", score: 0.6 }, { label: "positive", score: 0.4 }]])
+
+        post_classification.classify!(post_1)
+
+        expect(stored_classification).to eq("negative" => 0.6, "positive" => 0.4)
+      end
+
+      it "rejects a multi-input batch instead of flattening it" do
+        stub_payload([[{ label: "negative", score: 0.9 }], [{ label: "positive", score: 0.9 }]])
+
+        expect { post_classification.classify!(post_1) }.to raise_error(
+          DiscourseAi::Sentiment::PostClassification::InvalidPredictionPayload,
+        )
+
+        expect(ClassificationResult.where(target: post_1)).to be_empty
+      end
+
+      it "rejects malformed predictions" do
+        stub_payload([{ label: "negative" }, { score: 0.4 }])
+
+        expect { post_classification.classify!(post_1) }.to raise_error(
+          DiscourseAi::Sentiment::PostClassification::InvalidPredictionPayload,
+        )
+
+        expect(ClassificationResult.where(target: post_1)).to be_empty
+      end
+    end
+
     context "with an agent" do
       fab!(:llm_model, :fake_model)
       fab!(:ai_agent) do

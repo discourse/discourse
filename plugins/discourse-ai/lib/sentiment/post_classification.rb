@@ -5,6 +5,11 @@ module DiscourseAi
     class PostClassification
       include Constants
 
+      # Raised when a classification server answers with a payload that cannot be attributed to
+      # the single post being classified.
+      class InvalidPredictionPayload < StandardError
+      end
+
       def self.enabled_for?(classification_type)
         case classification_type.to_s
         when "sentiment"
@@ -406,10 +411,42 @@ module DiscourseAi
         transform_result(result)
       end
 
+      # The inference client returns the provider payload as-is. A single input arrives either as
+      # a flat list of predictions or wrapped in one batch, and both can be attributed to the
+      # post. A batch of several inputs cannot, so it is rejected rather than flattened.
       def transform_result(result)
-        hash_result = {}
-        result.each { |r| hash_result[r[:label]] = r[:score] }
-        hash_result
+        predictions_for_single_input(result).each_with_object({}) do |prediction, hash_result|
+          hash_result[prediction[:label]] = prediction[:score]
+        end
+      end
+
+      def predictions_for_single_input(result)
+        raise InvalidPredictionPayload, "Expected an array of predictions" if !result.is_a?(Array)
+
+        predictions = result
+        if predictions.first.is_a?(Array)
+          if predictions.size != 1
+            raise InvalidPredictionPayload,
+                  "Expected one input batch, got #{predictions.size} input batches"
+          end
+          predictions = predictions.first
+        end
+
+        raise InvalidPredictionPayload, "Expected at least one prediction" if predictions.empty?
+
+        predictions.each do |prediction|
+          next if valid_prediction?(prediction)
+
+          raise InvalidPredictionPayload,
+                "Expected { label:, score: } predictions, got #{prediction.inspect.truncate(100)}"
+        end
+
+        predictions
+      end
+
+      def valid_prediction?(prediction)
+        prediction.is_a?(Hash) && prediction[:label].is_a?(String) && prediction[:label].present? &&
+          prediction[:score].is_a?(Numeric)
       end
 
       def request_with_agent(classifier, target, content)
