@@ -1057,11 +1057,6 @@ aside.quote {
 .user-image,
 .latest-topic-list-item {
   .avatar-flair {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-repeat: no-repeat;
-    background-position: center;
     position: absolute;
     bottom: 0;
     right: -6px;
@@ -1073,15 +1068,10 @@ aside.quote {
 .collapsed-info .user-profile-avatar .avatar-flair,
 .user-image .avatar-flair,
 .latest-topic-list-item .avatar-flair {
-  background-size: 20px 20px;
-  width: 20px;
-  height: 20px;
+  --avatar-flair-size: 20px;
 
   &.rounded {
-    background-size: 18px 18px;
-    border-radius: 12px;
-    width: 24px;
-    height: 24px;
+    --avatar-flair-size: 24px;
     bottom: -2px;
     right: -8px;
   }
@@ -1089,21 +1079,11 @@ aside.quote {
 
 .user-card-avatar .avatar-flair,
 .user-profile-avatar .avatar-flair {
-  background-size: 40px 40px;
-  width: 40px;
-  height: 40px;
+  --avatar-flair-size: 40px;
 
   &.rounded {
-    background-size: 30px 30px;
-    border-radius: 24px;
-    width: 40px;
-    height: 40px;
     bottom: -2px;
     right: -4px;
-  }
-
-  .fa {
-    font-size: var(--font-up-4);
   }
 }
 

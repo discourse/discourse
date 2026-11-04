@@ -5,6 +5,7 @@ const Group = <template>
   <div class="group-result {{if @result.flairUrl '--with-flair'}}">
     {{#if @result.flairUrl}}
       <DAvatarFlair
+        class="--has-background"
         @flairBgColor={{@result.flairBgColor}}
         @flairColor={{@result.flairColor}}
         @flairName={{@result.name}}

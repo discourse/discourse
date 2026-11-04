@@ -293,22 +293,10 @@
     }
 
     .avatar-flair {
-      width: 1.62em;
-      height: 1.6em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: var(--primary-200);
+      --avatar-flair-size: 1.6em;
       color: var(--primary-medium);
-      border-radius: 50%;
-
-      &.avatar-flair-image {
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-      }
 
       .d-icon {
-        font-size: var(--font-down-2);
         color: currentcolor;
       }
     }

@@ -441,22 +441,14 @@ $show-interested: inherit;
         }
 
         .avatar-flair {
+          --avatar-flair-size: 1rem;
           position: absolute;
           right: 0;
           bottom: 0;
-          background: var(--secondary);
-          border-radius: 50%;
-          height: 1rem;
-          width: 1rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+
+          --avatar-flair-background: var(--secondary);
           color: var(--primary-medium);
           box-shadow: 0 0 0 1px var(--primary-100);
-
-          .d-icon {
-            font-size: var(--font-down-2);
-          }
         }
       }
     }

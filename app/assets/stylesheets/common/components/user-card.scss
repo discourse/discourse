@@ -567,21 +567,8 @@
     }
 
     .avatar-flair {
-      display: flex;
-      background-size: contain;
-      background-repeat: no-repeat;
-      width: var(--avatar-width);
-      height: var(--avatar-width);
+      --avatar-flair-size: var(--avatar-width);
       color: var(--primary);
-
-      .d-icon {
-        margin: auto;
-        font-size: calc(var(--avatar-width) / 1.5);
-      }
-
-      &.rounded {
-        border-radius: 50%;
-      }
     }
   }
 
