@@ -144,12 +144,12 @@ export function iceErrorIsHarmless(error, { candidates = [], probes = [] }) {
     if (candidate.type !== (wantsRelay ? "relay" : "srflx")) {
       return false;
     }
-    // Not every browser reports which server produced a candidate; without
-    // it, a candidate of the right kind (and relay transport) is the best
-    // available evidence.
+    // Not every browser reports which server produced a candidate. Without
+    // that, the candidate may come from a different, working server, so it
+    // is no evidence for this one; the probes still are.
     const source = parseIceUrl(candidate.url);
     if (!source) {
-      return wantsRelay ? candidate.relayProtocol === target.transport : true;
+      return false;
     }
     return (
       sameHost(source, target) &&

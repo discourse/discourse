@@ -388,20 +388,45 @@ module("Live | Unit | Lib | connection-diagnostics", function () {
     );
   });
 
-  test("iceErrorIsHarmless falls back to candidate kind without server URLs", function (assert) {
-    const candidates = [{ type: "relay", relayProtocol: "udp" }];
+  test("iceErrorIsHarmless needs endpoint-specific evidence when candidates lack server URLs", function (assert) {
+    const candidates = [
+      { type: "relay", relayProtocol: "udp" },
+      { type: "srflx" },
+    ];
+    const probes = [
+      {
+        url: "turn:a.example.com:3478",
+        kind: "turn",
+        reachable: true,
+        publicAddresses: ["198.51.100.7"],
+      },
+      {
+        url: "turn:b.example.com:3478",
+        kind: "turn",
+        reachable: false,
+        publicAddresses: [],
+      },
+    ];
 
-    assert.true(
-      iceErrorIsHarmless({ url: "turn:turn.example.com:3478" }, { candidates })
+    assert.false(
+      iceErrorIsHarmless(
+        { url: "turn:b.example.com:3478" },
+        { candidates, probes }
+      ),
+      "a candidate that may come from working server A does not cover broken server B"
     );
     assert.false(
       iceErrorIsHarmless(
-        { url: "turn:turn.example.com:3478?transport=tcp" },
-        { candidates }
+        { url: "stun:b.example.com:3478" },
+        { candidates, probes }
       )
     );
-    assert.false(
-      iceErrorIsHarmless({ url: "stun:turn.example.com:3478" }, { candidates })
+    assert.true(
+      iceErrorIsHarmless(
+        { url: "turn:a.example.com:3478" },
+        { candidates, probes }
+      ),
+      "server A's own probe is still evidence"
     );
   });
 
