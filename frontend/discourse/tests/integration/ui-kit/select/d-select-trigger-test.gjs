@@ -620,6 +620,27 @@ module(
       );
     });
 
+    test("on mobile, the sheet's rows keep a gutter from its edges", async function (assert) {
+      forceMobile();
+      await render(<template><FrameHost @variant="typeahead" /></template>);
+      await click(".d-select__trigger");
+
+      const panel = find(".fk-d-menu-modal .d-select__panel");
+      const option = find(".fk-d-menu-modal [role='option']");
+      // The fixture is scaled, so rects are converted back to CSS pixels.
+      const scale = panel.getBoundingClientRect().width / panel.offsetWidth;
+      const panelRect = panel.getBoundingClientRect();
+      const optionRect = option.getBoundingClientRect();
+      const start = (optionRect.left - panelRect.left) / scale;
+      const end = (panelRect.right - optionRect.right) / scale;
+
+      assert.true(
+        start >= 2,
+        `the row starts off the sheet's edge (${start}px)`
+      );
+      assert.true(end >= 2, `the row ends off the sheet's edge (${end}px)`);
+    });
+
     test("a held value too long to fit runs up to the clear button, with no room kept for typing", async function (assert) {
       const items = [
         { id: 1, name: "A held value much longer than the field it sits in" },
