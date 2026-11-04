@@ -26,6 +26,10 @@
       margin-bottom: 0;
     }
 
+    .expanding-text-area {
+      --expanding-text-area-min-height: 6em;
+    }
+
     input[type="checkbox"] {
       width: auto;
     }
