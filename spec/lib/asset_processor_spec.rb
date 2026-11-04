@@ -362,7 +362,7 @@ RSpec.describe AssetProcessor do
           { themeId: 22, entrypoints: { main: { modules: ["discourse/initializers/foo.gjs"] } } },
         )
       expect(entrypoint(result, "main")["code"]).to include(
-        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store", false, ["getObjectForTheme"])',
       )
     end
 
@@ -425,7 +425,7 @@ RSpec.describe AssetProcessor do
           { themeId: 22, entrypoints: { main: { modules: ["discourse/initializers/foo.js"] } } },
         )
       expect(entrypoint(result, "main")["code"]).to include(
-        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store", false, ["getObjectForTheme"])',
       )
     end
   end
