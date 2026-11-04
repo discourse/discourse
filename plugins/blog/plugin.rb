@@ -48,41 +48,12 @@ after_initialize do
   add_to_serializer(:current_user, :can_blog_edit) { Blog::Configuration.contributor?(object) }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
+  reloadable_patch { ::Post.prepend(Blog::PostExtensions) }
   if defined?(::Middleware::EnforceHostname)
     reloadable_patch { ::Middleware::EnforceHostname.prepend(Blog::EnforceHostnameExtension) }
   end
 
   Rails.application.config.filter_parameters += [:review_token]
-
-  add_model_callback(:topic, :before_destroy) do
-    Blog::Review.where(topic_id: id).find_each(&:destroy!)
-    Blog::Publication
-      .where(topic_id: id)
-      .or(Blog::Publication.where(draft_topic_id: id))
-      .or(Blog::Publication.where(discussion_topic_id: id))
-      .find_each(&:destroy!)
-  end
-
-  add_model_callback(:topic, :validate) do
-    if category_id_changed? && persisted? &&
-         category_id_in_database == SiteSetting.blog_drafts_category.to_i
-      errors.add(:category_id, I18n.t("blog.editorial.private_source"))
-    end
-  end
-
-  add_model_callback(:post, :after_update) do
-    if post_number == 1 &&
-         ((saved_change_to_hidden? && hidden?) || (saved_change_to_deleted_at? && deleted_at))
-      Blog::Review.revoke_for_topic!(topic_id)
-    end
-  end
-
-  add_model_callback(:topic, :after_update) do
-    if saved_change_to_category_id? || saved_change_to_deleted_at? || saved_change_to_archetype? ||
-         saved_change_to_visible?
-      Blog::Review.revoke_for_topic!(id)
-    end
-  end
 
   add_to_serializer(
     :post,
@@ -93,8 +64,7 @@ after_initialize do
         object.topic.category_id == SiteSetting.blog_category.to_i
     end,
   ) do
-    if publication =
-         Blog::Publication.publicly_visible.find_by(discussion_topic_id: object.topic_id)
+    if publication = object.topic.blog_live_publication
       {
         url: publication.url,
         excerpt: publication.display_excerpt,
