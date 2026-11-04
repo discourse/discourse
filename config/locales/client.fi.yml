@@ -6476,7 +6476,6 @@ fi:
           uploading: "Ladataan…"
           uploading_progress: "Ladataan… %{progress}"
           success: "''%{filename}' ladattiin palvelimeen. Tiedostoa käsitellään, ja voi kestää enintään minuutti ennen kuin se näkyy luettelossa."
-          error: "Tiedoston '%{filename}' lataamisessa tapahtui virhe: %{message}"
         settings: "Asetukset"
         operations:
           is_running: "Toimintoa suoritetaan parhaillaan…"

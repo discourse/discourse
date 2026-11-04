@@ -223,6 +223,12 @@ lt:
       assign:
         errors:
           not_found: "Tema nerasta."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Antraštė"
+      fonts:
+        heading_font: "Antraštės šriftas"
     reviewables:
       ai_tool_action:
         title: "DI įrankio veiksmas"

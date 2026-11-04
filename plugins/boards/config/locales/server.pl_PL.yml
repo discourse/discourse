@@ -13,7 +13,7 @@ pl_PL:
         invalid_params: "Nie można utworzyć kolumny tablicy: %{errors}"
         failed: "Nie można utworzyć kolumny tablicy."
       create_board:
-        forbidden: "Użytkownik wykonujący przepływ pracy nie ma uprawnień do tworzenia tablic."
+        forbidden: "Nie można utworzyć tablicy: %{policy_reason}"
         invalid_params: "Nie można utworzyć tablicy: %{errors}"
         acl_failed: "Nie udało się utworzyć uprawnień dostępu do tablicy. Sprawdź wybrane grupy i uprawnienia."
         failed: "Nie udało się utworzyć tablicy."
@@ -33,6 +33,7 @@ pl_PL:
       slug_unavailable: "Ten skrót adresu URL jest już używany. Wybierz inny skrót adresu URL."
       board_not_found: "Nie znaleziono tablicy"
       board_read_forbidden: "Nie masz uprawnień do przeglądania tej tablicy"
+      board_create_forbidden: "Nie masz uprawnień do tworzenia tablic"
       board_write_forbidden: "Nie masz uprawnień do modyfikowania tej tablicy"
       board_manage_forbidden: "Nie masz uprawnień do zarządzania tą tablicą"
       column_not_found: "Kolumna nie została znaleziona"

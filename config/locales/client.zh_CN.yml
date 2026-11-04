@@ -559,7 +559,6 @@ zh_CN:
         completed: "查看更多想法"
         choose_option: "您想如何开始？"
         predefined_topics: "破冰模板"
-        predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自行制作。"
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
         back: "返回"
@@ -569,17 +568,15 @@ zh_CN:
             title: "我们应该从哪些类别开始？"
             body: "让我们在正式上线前先理清思路！大家最想讨论什么？我们可以先从几个类别开始，以后再添加更多。"
           plan_invites:
-            title: "在正式上线之前，我们应该邀请哪些成员？"
             body: "加入一个已经有成员的社区总是令人愉快的。我们应该先邀请谁呢？想想那些喜欢聊天、乐于助人，并且会很兴奋能尽早参与进来的人吧。"
           introduce_yourself:
             title: "自我介绍"
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
           write_your_own:
             title: "写你自己的"
-            body: "选择一个适合您社区的话题，开启一场讨论。"
+            description: "选择一个适合您社区的话题，开启一场讨论。"
     design_wizard:
       title: "自定义您的网站"
-      subtitle: "选择颜色、字体以及网站的布局。"
       step_label: "转到步骤 %{index}"
       save: "保存并完成"
       back: "返回"
@@ -8168,7 +8165,6 @@ zh_CN:
           uploading: "正在上传…"
           uploading_progress: "正在上传… %{progress}%"
           success: "'%{filename}' 已成功上传。文件正在处理，将在几分钟后显示在列表中。"
-          error: "上传 '%{filename}' 时出错：%{message}"
         settings: "设置"
         operations:
           is_running: "一个操作当前正在运行…"

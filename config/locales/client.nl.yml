@@ -496,7 +496,6 @@ nl:
         action: "Ideeën bekijken"
         choose_option: "Hoe wil je starten?"
         predefined_topics: "IJsbrekersjablonen"
-        predefined_topics_subtitle: "Geef nieuwe leden iets om over te praten, kies een sjabloon om te bewerken en maak je eigen."
         predefined_topics_description: "Kies uit een verzameling conversatiestarters om discussies op gang te brengen"
         use_predefined: "Sjablonen bekijken"
         back: "Terug"
@@ -7179,7 +7178,6 @@ nl:
           uploading: "Uploaden…"
           uploading_progress: "Uploaden… %{progress}%"
           success: "'%{filename}' is geüpload. Het bestand wordt nu verwerkt, het kan tot een minuut duren voordat het in de lijst wordt weergegeven."
-          error: "Er is een fout opgetreden bij het uploaden van '%{filename}': %{message}"
         settings: "Instellingen"
         operations:
           is_running: "Er wordt momenteel een bewerking uitgevoerd…"

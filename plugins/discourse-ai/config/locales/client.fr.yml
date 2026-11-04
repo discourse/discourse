@@ -569,6 +569,8 @@ fr:
         short_title: "Contenu indésirable"
         title: "Configuration de la gestion du contenu indésirable"
         select_llm: "Sélectionner le LLM"
+        no_llm_selected: "Jamais"
+        no_decision_model_selected: "Jamais"
         select_agent: "Sélectionner un agent"
         custom_instructions: "Instructions personnalisées"
         custom_instructions_help: "Des instructions personnalisées spécifiques à votre site pour aider l'IA à identifier le contenu indésirable, par exemple « Faites preuve d'agressivité dans l'analyse des publications qui ne sont pas en anglais »."
@@ -1315,6 +1317,7 @@ fr:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personnalisé"
         provider_fields:

@@ -383,6 +383,8 @@ he:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
+        no_llm_selected: "ללא"
+        no_decision_model_selected: "ללא"
         custom_instructions: "הנחיות מותאמות אישית"
         custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
@@ -892,6 +894,7 @@ he:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "מותאם"
         provider_fields:

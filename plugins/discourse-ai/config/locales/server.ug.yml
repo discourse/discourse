@@ -173,6 +173,14 @@ ug:
         errors:
           not_allowed: "تەكشۈرۈش ئۆچىرىتىنى زىيارەت قىلىشىڭىزغا يول قويۇلمىغان"
           not_found: "تەكشۈرۈش ئۆچرىتى تۈرى تېپىلمىدى"
+    appearance_authoring:
+      default_theme: "كۆڭۈلدىكى ئۆرنەك"
+      colors:
+        light:
+          header_background: "بەت قاش"
+      fonts:
+        base_font: "مەزمۇن خەت نۇسخىسى"
+        heading_font: "ماۋزۇ خەت نۇسخىسى"
     reviewables:
       ai_tool_action:
         approve:

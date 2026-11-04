@@ -419,6 +419,8 @@ ja:
         short_title: "迷惑"
         title: "迷惑処理の構成"
         select_llm: "LLM を選択してください"
+        no_llm_selected: "なし"
+        no_decision_model_selected: "なし"
         custom_instructions: "カスタム指示"
         custom_instructions_help: "AI による迷惑行為の識別を誘導しやすくする、サイト固有のカスタム指示。例: 「英語以外の投稿をより積極的にスキャンする」。"
         last_seven_days: "過去 7 日間"
@@ -952,6 +954,7 @@ ja:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "カスタム"
         provider_fields:

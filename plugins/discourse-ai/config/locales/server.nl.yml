@@ -827,6 +827,14 @@ nl:
         errors:
           not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
           not_found: "Item in de beoordelingswachtrij niet gevonden"
+    appearance_authoring:
+      default_theme: "Standaardthema"
+      colors:
+        light:
+          header_background: "Koptekst"
+      fonts:
+        base_font: "Lettertype inhoud"
+        heading_font: "Lettertype kop"
     reviewables:
       ai_tool_action:
         title: "AI-toolactie"
@@ -886,6 +894,7 @@ nl:
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
       secret_required: "Er moeten aanmeldingsgegevens worden geselecteerd"
       secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet"
+      missing_provider_param: "%{param} mag niet leeg zijn"
       configuration:
         disable_embeddings: "Je moet 'ai embeddings enabled' eerst uitschakelen."
         choose_model: "Stel eerst 'ai embeddings selected model' in."

@@ -572,6 +572,14 @@ he:
       assign:
         errors:
           not_found: "הנושא לא נמצא."
+    appearance_authoring:
+      default_theme: "ערכת עיצוב כברירת מחדל"
+      colors:
+        light:
+          header_background: "כותרת"
+      fonts:
+        base_font: "גופן גוף"
+        heading_font: "גופן כותרת"
     reviewables:
       ai_tool_action:
         approve:
@@ -625,6 +633,7 @@ he:
     embeddings:
       delete_failed: "זה המודל שנמצא בשימוש. יש לעדכן את `ai embeddings selected model`."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
+      missing_provider_param: "%{param} לא יכול להישאר ריק"
       configuration:
         disable_embeddings: "יש להשבית קודם את ‚הטמעת בינה מלאכותית פעילה’."
         choose_model: "יש לעדכן את ‚ai embeddings selected model’."

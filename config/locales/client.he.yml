@@ -557,7 +557,6 @@ he:
         completed: "הצגת רעיונות נוספים"
         choose_option: "איך בא לך להתחיל?"
         predefined_topics: "תבניות שוברות קרח"
-        predefined_topics_subtitle: "לספק לחברים חדשים נושא לשיחה, נא לבחור תבנית לעריכה וליצור תבנית משלך."
         predefined_topics_description: "אפשר לבחור מתוך אוסף של פותחי שיחה כדי להניע את השיח"
         use_predefined: "עיון בתבניות"
         back: "חזרה"
@@ -7387,7 +7386,6 @@ he:
           uploading: "בהליכי העלאה…"
           uploading_progress: "מתבצעת העלאה… %{progress}%"
           success: "ההעלאה של ‚%{filename}’ הושלמה בהצלחה. הקובץ עובר עיבוד כרגע ותחלוף עד דקה עד שיופיע ברשימה."
-          error: "הייתה שגיאה במהלך העלאת '%{filename}': %{message}"
         settings: "הגדרות"
         operations:
           is_running: "פעולה רצה כעת…"

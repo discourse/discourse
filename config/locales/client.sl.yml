@@ -4333,7 +4333,6 @@ sl:
           uploading: "Nalagam..."
           uploading_progress: "Nalagam %{progress}%..."
           success: "'%{filename}' je bila uspešno naložena. Datoteka se procesira, zato bo potrebnih nekaj minut, preden se bo pojavila na seznamu."
-          error: "Prišlo je do napake med prenašanjem '%{filename}': %{message}"
         settings: "Nastavitve"
         operations:
           cancel:

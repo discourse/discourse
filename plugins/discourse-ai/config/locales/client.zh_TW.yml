@@ -561,6 +561,8 @@ zh_TW:
         short_title: "垃圾資訊"
         title: "配置垃圾資訊處理"
         select_llm: "選擇 LLM"
+        no_llm_selected: "無"
+        no_decision_model_selected: "無"
         select_agent: "選擇智能體"
         custom_instructions: "自訂指令"
         custom_instructions_help: "特定于您的網站的自訂指令，幫助指導 AI 識別垃圾資訊，例如“更積極地掃描非英語貼文”。"
@@ -1394,6 +1396,7 @@ zh_TW:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "自訂"
         provider_fields:

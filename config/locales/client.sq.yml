@@ -4503,7 +4503,6 @@ sq:
         upload:
           label: "Ngarko"
           title: "Upload a backup to this instance"
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Rregullimet"
         operations:
           failed: "The %{operation} failed. Please check the logs."

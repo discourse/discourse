@@ -541,7 +541,6 @@ fr:
         action: "Découvrir des idées"
         choose_option: "Comment souhaitez-vous commencer ?"
         predefined_topics: "Modèles d'activités pour briser la glace"
-        predefined_topics_subtitle: "Donnez aux nouveaux membres un sujet de conversation, choisissez un modèle à modifier et créez le vôtre."
         predefined_topics_description: "Choisissez parmi une sélection de sujets de conversation pour lancer les discussions."
         use_predefined: "Parcourir les modèles"
         back: "Retour"
@@ -7815,7 +7814,6 @@ fr:
           uploading: "Téléversement…"
           uploading_progress: "Téléversement : %{progress} %"
           success: "Le fichier « %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
-          error: "Une erreur est survenue lors de l'envoi du fichier « %{filename} » : %{message}"
         settings: "Paramètres"
         operations:
           is_running: "Une opération est en cours d'exécution…"

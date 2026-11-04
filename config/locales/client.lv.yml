@@ -3429,7 +3429,6 @@ lv:
         upload:
           label: "Augšupielādēt"
           title: "Augšupielādēt rezerves kopiju uz šo instanci"
-          error: "Augšupielādējot '%{filename}', notika kļūda: %{message}"
         settings: "Iestatījumi"
         operations:
           failed: "%{operation} neizdevās. Lūdzu pārbaudīt žurnāla ierakstus."

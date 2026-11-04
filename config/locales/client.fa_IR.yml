@@ -5901,7 +5901,6 @@ fa_IR:
           uploading: "در حال بارگذاری…"
           uploading_progress: "در حال بارگذاری… %{progress}%"
           success: "'%{filename}' با موفقیت آپلود شد. فایل اکنون در حال پردازش است و تا یک دقیقه طول می کشد تا در لیست نمایش داده شود."
-          error: "هنگام آپلود خطایی رخ می دهد '%{filename}': %{message}"
         settings: "تنظیمات"
         operations:
           is_running: "عملیاتی در جریان است..."

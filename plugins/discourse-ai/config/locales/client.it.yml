@@ -328,6 +328,8 @@ it:
         short_title: "Spam"
         title: "Configura la gestione dello spam"
         select_llm: "Seleziona LLM"
+        no_llm_selected: "Nessuna"
+        no_decision_model_selected: "Nessuna"
         custom_instructions: "Istruzioni personalizzate"
         custom_instructions_help: "Istruzioni personalizzate specifiche per il tuo sito per aiutare l'intelligenza artificiale a identificare lo spam, ad esempio \"Sii più aggressivo nell'analizzare i post in una lingua diversa dall'italiano\"."
         last_seven_days: "Ultimi 7 giorni"
@@ -826,6 +828,7 @@ it:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizzato"
         provider_fields:

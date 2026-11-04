@@ -509,7 +509,6 @@ tr_TR:
         action: "Fikirleri gör"
         choose_option: "Nasıl başlamak istersiniz?"
         predefined_topics: "Buz kırıcı şablonlar"
-        predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."
         predefined_topics_description: "Sohbet başlatıcılar koleksiyonundan seçim yapın ve tartışmaları başlatın"
         use_predefined: "Şablonlara göz atın"
         back: "Geri"
@@ -7205,7 +7204,6 @@ tr_TR:
           uploading: "Yükleniyor…"
           uploading_progress: "Yükleniyor… %%{progress}"
           success: "\"%{filename}\" başarıyla yüklendi. Dosya şu anda işleniyor ve listede görünmesi bir dakika kadar sürecek."
-          error: "\"%{filename}\" yüklenirken bir hata oluştu: %{message}"
         settings: "Ayarlar"
         operations:
           is_running: "Şu anda bir işlem yürütülüyor…"

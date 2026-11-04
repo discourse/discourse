@@ -527,7 +527,6 @@ zh_TW:
         completed: "查看更多點子"
         choose_option: "你想如何開始？"
         predefined_topics: "破冰話題範本"
-        predefined_topics_subtitle: "讓新成員有話題可聊；選擇範本後可自行編輯。"
         predefined_topics_description: "從對話開場白集合中挑選，讓討論持續進行。"
         use_predefined: "瀏覽範本"
         back: "上一步"
@@ -537,7 +536,6 @@ zh_TW:
             body: "歡迎來到社群！讓我們互相認識。請介紹一下自己並分享你的興趣。我先說：我熱愛科技，也喜歡教導他人！"
     design_wizard:
       title: "自訂你的網站"
-      subtitle: "選擇顏色、字型以及網站的版面配置。"
       step_label: "前往第 %{index} 個步驟"
       save: "儲存並完成"
       back: "上一步"
@@ -7879,7 +7877,6 @@ zh_TW:
           uploading: "上傳中..."
           uploading_progress: "正在上傳… %{progress}%"
           success: "%{filename}已成功上傳，該檔案正在被處理中，需花費幾分鐘才會顯示於列表。"
-          error: "上載時發生問題： '%{filename}': %{message}"
         settings: "設定"
         operations:
           is_running: "一個操作目前正在執行…"

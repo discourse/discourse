@@ -7420,7 +7420,6 @@ cs:
           uploading: "Nahrávání…"
           uploading_progress: "Nahrávání: %{progress}…"
           success: "'%{filename}' byl úspěšně nahraný. Soubor je nyní zpracováván a do minuty bude ukázán v seznamu. "
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Nastavení"
         operations:
           is_running: "Probíhá úloha..."

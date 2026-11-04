@@ -625,6 +625,14 @@ pt_BR:
       assign:
         errors:
           not_found: "Tópico não encontrado."
+    appearance_authoring:
+      default_theme: "Tema padrão"
+      colors:
+        light:
+          header_background: "Cabeçalho"
+      fonts:
+        base_font: "Fonte do corpo"
+        heading_font: "Fonte do cabeçalho"
     reviewables:
       ai_tool_action:
         title: "Ação de ferramenta de IA"
@@ -679,6 +687,7 @@ pt_BR:
       cannot_edit_builtin: "Não é possível editar um modelo integrado."
       secret_required: "É necessário selecionar uma credencial."
       secret_not_found: "A credencial selecionada não existe"
+      missing_provider_param: "%{param} Não pode ficar em branco"
       configuration:
         disable_embeddings: "Você precisa desativar \"incorporações com IA ativadas\" primeiro."
         choose_model: "Defina o \"modelo selecionado de incorporações com IA\" primeiro."

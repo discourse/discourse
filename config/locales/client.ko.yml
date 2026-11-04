@@ -4567,7 +4567,6 @@ ko:
           label: "업로드"
           title: "이 인스턴스에 백업 업로드"
           success: "'%{filename}' 파일이 업로드되었습니다. 파일이 현재 처리 중이며 목록에 표시되는 데 최대 1분이 걸립니다."
-          error: "'%{filename}' 파일 업로드 중에 오류가 발생했습니다. %{message}"
         settings: "설정"
         operations:
           failed: "%{operation} 작업을 실행하지 못했습니다. 로그를 확인하세요."

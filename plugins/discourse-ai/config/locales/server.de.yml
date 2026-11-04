@@ -953,6 +953,14 @@ de:
           hidden: "Die Website-Einstellung '%{setting_name}' ist ausgeblendet und kann hier nicht gelesen werden."
           secret: "Die Website-Einstellung '%{setting_name}' enthält einen geheimen Wert und kann hier nicht gelesen werden."
           themeable: "Die Website-Einstellung '%{setting_name}' erfordert ein Theme und kann hier nicht gelesen werden."
+    appearance_authoring:
+      default_theme: "Standard-Theme"
+      colors:
+        light:
+          header_background: "Kopfzeile"
+      fonts:
+        base_font: "Textkörper-Schriftart"
+        heading_font: "Überschrift-Schriftart"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -1018,6 +1026,7 @@ de:
       cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
       secret_required: "Es müssen Anmeldedaten gewählt werden"
       secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht"
+      missing_provider_param: "%{param} darf nicht leer sein"
       configuration:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."

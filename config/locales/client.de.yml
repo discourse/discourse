@@ -545,7 +545,6 @@ de:
         action: "Ideen ansehen"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
-        predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
         predefined_topics_description: "Wähle aus einer Sammlung von Gesprächsanregungen, um Diskussionen in Gang zu bringen"
         use_predefined: "Vorlagen ansehen"
         back: "Zurück"
@@ -7850,7 +7849,6 @@ de:
           uploading: "Wird hochgeladen …"
           uploading_progress: "Wird hochgeladen … %{progress} %"
           success: "„%{filename}“ wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu eine Minute dauern, bis sie in der Liste erscheint."
-          error: "Beim Hochladen der Datei „%{filename}“ ist ein Fehler aufgetreten: %{message}"
         settings: "Einstellungen"
         operations:
           is_running: "Ein Vorgang läuft gerade …"

@@ -493,7 +493,6 @@ hu:
         title: "Kezdj el posztolni!"
         choose_option: "Hogyan szeretnél kezdeni?"
         predefined_topics: "Jégtörő sablonok"
-        predefined_topics_subtitle: "Adj témát az új tagoknak a beszélgetéshez: válassz egy sablont, szerkeszd meg, és alakítsd a sajátodra!"
         predefined_topics_description: "Válogass a beszélgetésindító ötletek közül, és indítsd be a társalgást!"
         use_predefined: "Sablonok böngészése"
         back: "Vissza"
@@ -6976,7 +6975,6 @@ hu:
           uploading: "Feltöltés…"
           uploading_progress: "Feltöltés...: %{progress}"
           success: "'%{filename}' sikeresen feltöltésre került. A fájl feldolgozása folyamatban van, és egy percig eltarthat, amíg megjelenik a listán."
-          error: "Egy hiba lépett fel feltöltés közben '%{filename}': %{message}"
         settings: "Beállítások"
         operations:
           is_running: "Egy folyamat jelenleg fut már."

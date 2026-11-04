@@ -3371,7 +3371,6 @@ sr:
           size: "Veličina"
         upload:
           label: "Učitaj"
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Podešavanja"
         operations:
           failed: "%{operation} neuspješna. Molimo proverite logove."

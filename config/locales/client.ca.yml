@@ -3756,7 +3756,6 @@ ca:
           label: "Carrega"
           title: "Carrega una còpia de seguretat a aquesta instància"
           success: "%{filename} s'ha carregat amb èxit. El fitxer ara és processat i trigarà fins a un minut a aparèixer en la llista."
-          error: "S'ha produït un error en carregar '%{filename}': %{message}"
         settings: "Configuració"
         operations:
           failed: "Ha fallat %{operation}. Consulteu els registres (logs)."

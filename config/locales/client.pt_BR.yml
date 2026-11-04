@@ -509,7 +509,6 @@ pt_BR:
         action: "Ver ideias"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
-        predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."
         predefined_topics_description: "Escolha dentre uma seleção de temas para iniciar conversas e dar início a um diálogo."
         use_predefined: "Navegar pelos modelos"
         back: "Voltar"
@@ -7074,7 +7073,6 @@ pt_BR:
           uploading: "Enviando…"
           uploading_progress: "Enviando… %{progress}%"
           success: "'%{filename} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Houve um erro ao carregar \"%{filename}\": %{message}"
         settings: "Configurações"
         operations:
           is_running: "Uma operação está sendo executada…"
