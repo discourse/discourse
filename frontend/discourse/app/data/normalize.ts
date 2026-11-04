@@ -80,7 +80,7 @@ function badgeTypeResource(raw: ObjectValue) {
 
 function badgeGroupingResource(raw: ObjectValue) {
   const resource = resourceFrom("badge-grouping", BadgeGroupingSchema, raw);
-  if (raw.name) {
+  if (typeof raw.name === "string" && raw.name) {
     resource.attributes.displayName = badgeGroupingDisplayName(raw.name);
   }
   return resource;

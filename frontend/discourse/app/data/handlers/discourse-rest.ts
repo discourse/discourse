@@ -1,7 +1,7 @@
 import type { Handler, NextFn } from "@warp-drive/core/request";
 import type { RequestContext } from "@warp-drive/core/types/request";
 import type { Normalizer } from "discourse/data/warp-rest-model";
-import { ajax } from "discourse/lib/ajax";
+import { ajax, type AjaxOptions } from "discourse/lib/ajax";
 
 const discourseRestHandler: Handler = {
   // The handler contract is generic over the content a caller expects; this
@@ -12,12 +12,12 @@ const discourseRestHandler: Handler = {
       return next(request);
     }
 
-    const ajaxOptions: { type: string; data?: unknown } = {
+    const ajaxOptions: AjaxOptions = {
       type: (request.method ?? "GET").toUpperCase(),
     };
     const body = request.options?.body;
     if (body !== undefined && body !== null) {
-      ajaxOptions.data = body;
+      ajaxOptions.data = body as AjaxOptions["data"];
     }
 
     const raw = await ajax(request.url, ajaxOptions);

@@ -15,14 +15,14 @@ import {
   extraSavePropertiesFor,
   modelNameFor,
 } from "discourse/lib/model-extensions";
+import type {
+  RestModelInstance,
+  RestModelSaveResult,
+} from "discourse/models/rest";
 import type StoreService from "discourse/services/store";
 
 // What the legacy adapter pipeline resolves `update` / `createRecord` with.
-type LegacySaveResult = {
-  payload?: Record<string, unknown>;
-  responseJson?: Record<string, unknown>;
-  target?: RestCompatModel;
-};
+type LegacySaveResult = RestModelSaveResult<RestModelInstance>;
 
 type CallbackKind = "Create" | "Update" | "Destroy";
 
@@ -209,7 +209,7 @@ export default class RestCompatModel extends WarpRestModel {
         const res: LegacySaveResult = await this.store!.update(
           this.__type,
           this[this.primaryKey],
-          props
+          props as object
         );
         const payload = this.constructor.munge(
           res.payload || res.responseJson
@@ -276,11 +276,11 @@ export default class RestCompatModel extends WarpRestModel {
       this.beforeCreate(props);
       return this.#withCallbacks("Create", props, async () => {
         const adapter = this.store!.adapterFor(this.__type);
-        const res: LegacySaveResult = await adapter.createRecord(
-          this.store,
+        const res: LegacySaveResult = (await adapter.createRecord(
+          this.store!,
           this.__type,
-          props
-        );
+          props as object
+        ))!;
         if (res.payload) {
           this.setProperties(
             this.constructor.munge(res.payload) as Record<string, unknown>
