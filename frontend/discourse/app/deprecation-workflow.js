@@ -321,8 +321,6 @@ const workflows = [
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
   ...[
-    "discourse.add-toolbar-popup-menu-options-callback",
-    "discourse.avatar-utils",
     "discourse.bound-date",
     "discourse.component-template-resolving",
     "discourse.deprecated-resolver-normalization",
@@ -332,9 +330,7 @@ const workflows = [
     "discourse.get-owner-with-fallback",
     "discourse.hbs-extension",
     "discourse.es6-extension",
-    "discourse.header-service-topic",
     "discourse.html-safe-helper",
-    "discourse.legacy-topic-list",
     "discourse.modify-class-model",
     "discourse.plugin-outlet-args",
     "discourse.plugin-outlet-classic-args-clash",
@@ -347,7 +343,6 @@ const workflows = [
     "discourse.select-kit-resolved-components",
     "discourse.static-viewport-initialization",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
-    "discourse.text.cook-async",
     "discourse.user.userOptions",
     /^discourse\.native-array-extensions\..+$/,
   ].map((matchId) => ({ handler: "notify-admin", matchId })),

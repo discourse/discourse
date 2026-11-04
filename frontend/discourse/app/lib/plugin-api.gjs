@@ -164,8 +164,6 @@ import {
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
 
-const blockedModifications = ["component:topic-list"];
-
 const appliedModificationIds = new WeakMap();
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
@@ -1179,18 +1177,6 @@ class _PluginApi {
    **/
   addComposerToolbarPopupMenuOption(opts) {
     addPopupMenuOption(opts);
-  }
-
-  addToolbarPopupMenuOptionsCallback(opts) {
-    deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
-      {
-        id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.2",
-      }
-    );
-
-    this.addComposerToolbarPopupMenuOption(opts);
   }
 
   /**
@@ -3921,12 +3907,7 @@ class _PluginApi {
       return;
     }
 
-    let klass;
-    if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized) || lazyClassFor(normalized);
-    }
-
-    return klass;
+    return this.container.factoryFor(normalized) || lazyClassFor(normalized);
   }
 
   // Resolves the `model:<name>` class; `stamp` marks it so instances can
