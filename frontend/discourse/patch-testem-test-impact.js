@@ -113,6 +113,9 @@ class Recording {
       callCount: false,
       detailed: false,
     });
+    // Without the Runtime domain enabled, the binding is gone once the page
+    // reloads, as it does when testem reconnects to the browser.
+    await this.#send("Runtime.enable");
     await this.#send("Runtime.addBinding", { name: BINDING });
     await this.#send("Page.enable");
     await this.#send("Target.setDiscoverTargets", { discover: true });
