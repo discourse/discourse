@@ -409,6 +409,22 @@ RSpec.describe Admin::GroupsController do
         expect(response.status).to eq(200)
         expect(User.where(primary_group_id: group.id).size).to eq(0)
       end
+
+      it "keeps primary groups that belong to other groups" do
+        other_group = Fabricate(:group)
+        user.update!(primary_group_id: other_group.id)
+
+        put "/admin/groups/#{group.id}/primary.json",
+            params: {
+              group: {
+                usernames: user.username,
+              },
+              primary: "false",
+            }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.primary_group_id).to eq(other_group.id)
+      end
     end
 
     context "when logged in as a moderator" do
