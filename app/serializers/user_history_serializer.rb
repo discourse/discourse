@@ -1,10 +1,23 @@
 # frozen_string_literal: true
 
 class UserHistorySerializer < ApplicationSerializer
-  USER_NAME_DETAIL_ACTIONS =
-    %i[delete_post delete_topic recover_post recover_topic post_rejected]
-      .map { |action| UserHistory.actions[action] }
-      .freeze
+  # Names are interpolated unescaped, so they can span lines or contain field labels.
+  # A deleted user's name runs to the last `created_at:`, and deletions logged before
+  # late 2014 joined fields with ", ". The author pattern is anchored to the header so
+  # quoted text in a post body is never rewritten.
+  DELETED_USER_NAME = /^name: .*\n(?=created_at: )|, name: .*(?=, created_at: )/m
+  POST_AUTHOR_NAME =
+    /\A(?:id: [^\n]*\n)?created_at: [^\n]*\n(?:rejected_at: [^\n]*\n)?user: \S+\K \(.*?\)(?=\n(?:topic|title|raw): )/m
+
+  NAME_IN_DETAILS =
+    {
+      delete_user: DELETED_USER_NAME,
+      delete_post: POST_AUTHOR_NAME,
+      delete_topic: POST_AUTHOR_NAME,
+      recover_post: POST_AUTHOR_NAME,
+      recover_topic: POST_AUTHOR_NAME,
+      post_rejected: POST_AUTHOR_NAME,
+    }.transform_keys { |action| UserHistory.actions[action] }.freeze
 
   attributes :action_name,
              :details,
@@ -35,7 +48,8 @@ class UserHistorySerializer < ApplicationSerializer
   def details
     return redacted_content if redact_content?
 
-    redact_user_names(object.details)
+    name_pattern = NAME_IN_DETAILS[object.action] if redact_user_names?
+    name_pattern ? object.details&.sub(name_pattern, "") : object.details
   end
 
   def context
@@ -74,18 +88,6 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   private
-
-  def redact_user_names(value)
-    return value if value.blank? || !redact_user_names?
-
-    if object.action == UserHistory.actions[:delete_user]
-      value.gsub(/^name:.*(?:\n|\z)/, "")
-    elsif USER_NAME_DETAIL_ACTIONS.include?(object.action)
-      value.gsub(/^(user: .+?) \(.+\)$/, "\\1")
-    else
-      value
-    end
-  end
 
   def redact_name_change?
     redact_user_names? && object.action == UserHistory.actions[:change_name]
