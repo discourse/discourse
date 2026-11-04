@@ -442,12 +442,11 @@ $show-interested: inherit;
 
         .avatar-flair {
           --avatar-flair-size: 1rem;
-          --avatar-flair-icon-scale: 66.67%;
           position: absolute;
           right: 0;
           bottom: 0;
-          background: var(--secondary);
-          border-radius: 50%;
+
+          --avatar-flair-background: var(--secondary);
           color: var(--primary-medium);
           box-shadow: 0 0 0 1px var(--primary-100);
         }

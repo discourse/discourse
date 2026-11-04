@@ -42,6 +42,7 @@ export default class DiscoursePostEventInvitee extends Component {
         }}
         {{#if this.statusIcon}}
           <DAvatarFlair
+            class="--has-background"
             @flairName={{this.flairName}}
             @flairUrl={{this.statusIcon}}
           />

@@ -292,14 +292,9 @@
       font-size: var(--font-down-1);
     }
 
-    // always shown on a background, so inset like rounded flair
     .avatar-flair {
       --avatar-flair-size: 1.6em;
-      --avatar-flair-icon-scale: 66.67%;
-      --avatar-flair-image-scale: 0.75;
-      background-color: var(--primary-200);
       color: var(--primary-medium);
-      border-radius: 50%;
 
       .d-icon {
         color: currentcolor;
