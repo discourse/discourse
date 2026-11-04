@@ -34,7 +34,6 @@ const designWizardData = () => ({
         {
           key: "default",
           name: "Default",
-          dark_only: false,
           light: {
             id: -1,
             name: "Light",
@@ -325,11 +324,10 @@ acceptance("Design wizard - admin launch", function (needs) {
       .doesNotHaveClass("design-wizard-docked", "gives the space back");
   });
 
-  test("saves a dark-only palette for both system color modes", async function (assert) {
+  test("saves one palette for both system color modes", async function (assert) {
     wizardData.themes[0].palette_pairs.push({
       key: "dracula",
       name: "Dracula",
-      dark_only: true,
       light: null,
       dark: {
         id: -11,
@@ -343,6 +341,9 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(APPEARANCE_LAUNCH_BUTTON);
     await click(".design-wizard__next");
     await click('[data-pair-key="dracula"]');
+    await click(
+      ".design-wizard__palette-row[data-mode='light'] [data-pair-key='none']"
+    );
     await click(".design-wizard__next");
 
     assert.strictEqual(
@@ -375,7 +376,6 @@ acceptance("Design wizard - admin launch", function (needs) {
       {
         key: "wcag",
         name: "WCAG",
-        dark_only: false,
         light: {
           id: -3,
           name: "WCAG",
@@ -390,7 +390,6 @@ acceptance("Design wizard - admin launch", function (needs) {
       {
         key: "dracula",
         name: "Dracula",
-        dark_only: true,
         light: null,
         dark: {
           id: -11,
@@ -424,8 +423,14 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(`${DARK_ROW} [data-pair-key='dracula']`);
 
     assert
+      .dom(`${LIGHT_ROW} [data-pair-key='default']`)
+      .hasAria("pressed", "true", "a dark palette leaves light mode as it was");
+
+    await click(`${LIGHT_ROW} [data-pair-key='none']`);
+
+    assert
       .dom(`${LIGHT_ROW} [data-pair-key='none']`)
-      .hasAria("pressed", "true", "a dark-only palette turns light mode off");
+      .hasAria("pressed", "true", "light mode can be turned off");
     assert
       .dom(`${LIGHT_ROW} .design-wizard__palette-row-status`)
       .hasText("Off");
@@ -489,7 +494,6 @@ acceptance("Design wizard - admin launch", function (needs) {
     wizardData.themes[0].palette_pairs.push({
       key: "dracula",
       name: "Dracula",
-      dark_only: true,
       light: null,
       dark: {
         id: 11,

@@ -48,9 +48,6 @@ const PaletteRow = <template>
               <span
                 class="design-wizard__palette-name-text"
               >{{pair.name}}</span>
-              {{#if pair.dark_only}}
-                {{dIcon "moon" label=(i18n "design_wizard.colors.dark_only")}}
-              {{/if}}
             </span>
           </button>
         {{/let}}

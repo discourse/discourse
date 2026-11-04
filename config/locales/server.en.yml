@@ -6366,7 +6366,13 @@ en:
       default: "Default"
       wcag: "WCAG"
       solarized: "Solarized"
+      neutral: "Neutral"
+      shades_of_blue: "Shades of Blue"
+      summer: "Summer"
       dracula: "Dracula"
+      grey_amber: "Grey Amber"
+      latte: "Latte"
+      dark_rose: "Dark Rose"
   wizard:
     title: "Discourse Setup"
     step:

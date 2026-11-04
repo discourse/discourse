@@ -53,10 +53,9 @@ RSpec.describe Admin::Config::DesignWizardController do
           "screenshot_dark_url" => "/images/design-wizard/foundation-dark.webp",
         )
         expect(foundation["palette_pairs"].map { |pair| pair["key"] }).to eq(
-          %w[default wcag solarized dracula],
+          DesignWizard::PalettePairs::BUILT_IN_PAIRS.map { |pair| pair[:key] },
         )
         dracula = foundation["palette_pairs"].find { |pair| pair["key"] == "dracula" }
-        expect(dracula["dark_only"]).to eq(true)
         expect(dracula["light"]).to be_nil
       end
 

@@ -556,7 +556,7 @@ RSpec.describe DesignWizard::Apply do
       it { is_expected.to run_successfully }
 
       it "materializes all built-in palettes as user selectable" do
-        expect { result }.to change { ColorScheme.where(via_wizard: true).count }.by(7)
+        expect { result }.to change { ColorScheme.where(via_wizard: true).count }.by(13)
         expect(ColorScheme.where(via_wizard: true).pluck(:user_selectable)).to all(eq(true))
       end
 
@@ -564,7 +564,7 @@ RSpec.describe DesignWizard::Apply do
         result
         described_class.call(params: params.merge(palettes_user_selectable: false), **dependencies)
 
-        expect(ColorScheme.where(via_wizard: true).count).to eq(7)
+        expect(ColorScheme.where(via_wizard: true).count).to eq(13)
         expect(ColorScheme.where(via_wizard: true).pluck(:user_selectable)).to all(eq(false))
       end
     end

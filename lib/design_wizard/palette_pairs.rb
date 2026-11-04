@@ -15,7 +15,13 @@ module DesignWizard
       { key: "default", light: "Light", dark: "Dark" },
       { key: "wcag", light: "WCAG", dark: "WCAG Dark" },
       { key: "solarized", light: "Solarized Light", dark: "Solarized Dark" },
+      { key: "neutral", light: "Neutral", dark: nil },
+      { key: "shades_of_blue", light: "Shades of Blue", dark: nil },
+      { key: "summer", light: "Summer", dark: nil },
       { key: "dracula", light: nil, dark: "Dracula" },
+      { key: "grey_amber", light: nil, dark: "Grey Amber" },
+      { key: "latte", light: nil, dark: "Latte" },
+      { key: "dark_rose", light: nil, dark: "Dark Rose" },
     ].freeze
 
     def self.for_theme(theme)
@@ -62,7 +68,6 @@ module DesignWizard
           {
             key: "custom_#{scheme.id}",
             name: scheme.name,
-            dark_only: false,
             light: dark ? nil : serialized,
             dark: dark ? serialized : nil,
           }
@@ -76,13 +81,7 @@ module DesignWizard
     end
 
     def pair(key:, name:, light:, dark:)
-      {
-        key: key,
-        name: name,
-        dark_only: light.nil?,
-        light: serialize_scheme(light),
-        dark: serialize_scheme(dark),
-      }
+      { key: key, name: name, light: serialize_scheme(light), dark: serialize_scheme(dark) }
     end
 
     def serialize_scheme(scheme)

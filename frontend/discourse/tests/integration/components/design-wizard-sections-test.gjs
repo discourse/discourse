@@ -16,7 +16,6 @@ const PAIRS = [
   {
     key: "default",
     name: "Default",
-    dark_only: false,
     light: {
       colors: {
         secondary: "ffffff",
@@ -32,16 +31,14 @@ const PAIRS = [
   {
     key: "alternate",
     name: "Alternate",
-    dark_only: false,
     light: { colors: { secondary: "eeeeee", tertiary: "ff0000" } },
     dark: { colors: { secondary: "222222", tertiary: "ff4444" } },
   },
 ];
 
-const DARK_ONLY_PAIR = {
+const DRACULA_PAIR = {
   key: "dracula",
   name: "Dracula",
-  dark_only: true,
   light: null,
   dark: { colors: { secondary: "2d303e", tertiary: "bd93f9" } },
 };
@@ -202,7 +199,7 @@ module(
     });
 
     test("turning a mode off uses the other mode's palette for both", async function (assert) {
-      const darkPairs = [...PAIRS, DARK_ONLY_PAIR];
+      const darkPairs = [...PAIRS, DRACULA_PAIR];
       const selections = [];
       const select = (mode, key) => selections.push([mode, key]);
 
@@ -238,9 +235,6 @@ module(
       assert
         .dom(`${DARK} [data-pair-key='none']`)
         .isDisabled("both modes can't be off at once");
-      assert
-        .dom(`${DARK} [data-pair-key='dracula'] .sr-only`)
-        .hasText("Dark mode only", "labels the moon icon");
       assert
         .dom(".design-wizard__palette-note-region[aria-live='polite']")
         .includesText(

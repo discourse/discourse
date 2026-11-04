@@ -698,7 +698,6 @@ en:
         site_default: "Site default"
         mode_off: "Off"
         used_for_both_modes: "Used for both modes"
-        dark_only: "Dark mode only"
         none: "None"
         single_palette_note: "%{name} is used in both light and dark mode, unless members pick a different palette in their preferences."
       fonts:

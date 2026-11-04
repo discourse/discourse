@@ -8,16 +8,38 @@ RSpec.describe DesignWizard::PalettePairs do
       it "offers the curated built-in pairs" do
         pairs = described_class.for_theme(theme)
 
-        expect(pairs.map { |pair| pair[:key] }).to eq(%w[default wcag solarized dracula])
+        expect(pairs.map { |pair| pair[:key] }).to eq(
+          %w[
+            default
+            wcag
+            solarized
+            neutral
+            shades_of_blue
+            summer
+            dracula
+            grey_amber
+            latte
+            dark_rose
+          ],
+        )
       end
 
       it "names the pairs from the design wizard translations" do
         pairs = described_class.for_theme(theme)
 
         expect(pairs.map { |pair| pair[:name] }).to eq(
-          %w[default wcag solarized dracula].map do |key|
-            I18n.t("design_wizard.palette_pairs.#{key}")
-          end,
+          %w[
+            default
+            wcag
+            solarized
+            neutral
+            shades_of_blue
+            summer
+            dracula
+            grey_amber
+            latte
+            dark_rose
+          ].map { |key| I18n.t("design_wizard.palette_pairs.#{key}") },
         )
       end
 
@@ -31,10 +53,16 @@ RSpec.describe DesignWizard::PalettePairs do
         expect(default_pair[:light][:colors].keys).to include("primary", "secondary", "tertiary")
       end
 
-      it "marks a pair without a light palette as dark only" do
+      it "offers single-mode built-ins only in the mode their colors suit" do
+        pairs = described_class.for_theme(theme).index_by { |pair| pair[:key] }
+
+        expect(pairs.values_at("neutral", "shades_of_blue", "summer")).to all(include(dark: nil))
+        expect(pairs.values_at("grey_amber", "latte", "dark_rose")).to all(include(light: nil))
+      end
+
+      it "leaves a pair without a light palette out of light mode" do
         dracula = described_class.for_theme(theme).find { |pair| pair[:key] == "dracula" }
 
-        expect(dracula[:dark_only]).to eq(true)
         expect(dracula[:light]).to be_nil
         expect(dracula[:dark]).to be_present
       end
@@ -64,7 +92,7 @@ RSpec.describe DesignWizard::PalettePairs do
         pairs = described_class.for_theme(theme)
 
         expect(pairs.size).to eq(1)
-        expect(pairs.first).to include(key: "royal", name: "Royal", dark_only: false)
+        expect(pairs.first).to include(key: "royal", name: "Royal")
         expect(pairs.first[:light][:id]).to eq(light.id)
         expect(pairs.first[:dark][:id]).to eq(dark.id)
       end
@@ -80,17 +108,17 @@ RSpec.describe DesignWizard::PalettePairs do
 
         pair = described_class.for_theme(theme).first
 
-        expect(pair).to include(key: "clover", dark_only: false)
+        expect(pair).to include(key: "clover")
         expect(pair[:light]).to be_present
         expect(pair[:dark]).to be_nil
       end
 
-      it "treats a dark palette without a light sibling as dark only" do
+      it "leaves a dark palette without a light sibling unpaired" do
         Fabricate(:color_scheme, name: "Midnight Dark", theme_id: theme.id)
 
         pair = described_class.for_theme(theme).first
 
-        expect(pair).to include(key: "midnight", name: "Midnight", dark_only: true)
+        expect(pair).to include(key: "midnight", name: "Midnight")
         expect(pair[:light]).to be_nil
         expect(pair[:dark]).to be_present
       end
@@ -121,15 +149,16 @@ RSpec.describe DesignWizard::PalettePairs do
         pairs = described_class.for_theme(theme)
 
         expect(pairs.map { |pair| pair[:key] }).to eq(
-          %W[default wcag solarized dracula custom_#{light_palette.id} custom_#{dark_palette.id}],
+          described_class::BUILT_IN_PAIRS.map { |pair| pair[:key] } +
+            %W[custom_#{light_palette.id} custom_#{dark_palette.id}],
         )
 
         light = pairs.find { |pair| pair[:key] == "custom_#{light_palette.id}" }
-        expect(light).to include(name: "Brand", dark_only: false, dark: nil)
+        expect(light).to include(name: "Brand", dark: nil)
         expect(light[:light][:id]).to eq(light_palette.id)
 
         dark = pairs.find { |pair| pair[:key] == "custom_#{dark_palette.id}" }
-        expect(dark).to include(name: "Brand Night", dark_only: false, light: nil)
+        expect(dark).to include(name: "Brand Night", light: nil)
         expect(dark[:dark][:id]).to eq(dark_palette.id)
       end
 

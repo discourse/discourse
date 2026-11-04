@@ -409,14 +409,6 @@ export default class DesignWizardService extends Service {
       ...this.paletteSelections.get(this.themeId),
       [mode]: pairKey,
     };
-    // a palette made only for dark mode is meant to be used in both modes
-    if (
-      mode === "dark" &&
-      this.darkPairs.find((pair) => pair.key === pairKey)?.dark_only
-    ) {
-      selection.light = NO_PALETTE_KEY;
-    }
-
     this.paletteSelections = new Map(this.paletteSelections).set(
       this.themeId,
       selection

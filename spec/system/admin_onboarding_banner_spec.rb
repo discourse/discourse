@@ -321,6 +321,10 @@ describe "Admin Onboarding Banner" do
 
       design_wizard_panel.select_palette("dracula", mode: "dark")
 
+      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
+
+      design_wizard_panel.select_palette("none", mode: "light")
+
       expect(design_wizard_panel).to have_selected_palette("none", mode: "light")
       expect(design_wizard_panel).to have_palette_row_status("Off", mode: "light")
       expect(design_wizard_panel).to have_palette_row_status("Used for both modes", mode: "dark")
@@ -349,12 +353,13 @@ describe "Admin Onboarding Banner" do
       expect(theme.dark_color_scheme_id).to be_nil
     end
 
-    it "saves a dark-only palette for both modes" do
+    it "saves the dark palette for both modes when light mode is none" do
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
       design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.select_palette("none", mode: "light")
       design_wizard_panel.next_step
       design_wizard_panel.save
 
