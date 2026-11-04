@@ -538,13 +538,13 @@ RSpec.describe DesignWizard::Apply do
 
       it { is_expected.to run_successfully }
 
-      it "makes the theme palettes user selectable and disables the others" do
-        result
+      it "makes the theme palettes user selectable and preserves selectable wizard palettes" do
+        expect(result).to run_successfully
 
         theme_schemes = ColorScheme.where(theme_id: horizon_theme.id)
         expect(theme_schemes).to be_present
         expect(theme_schemes.pluck(:user_selectable)).to all(eq(true))
-        expect(wizard_scheme.reload.user_selectable).to eq(false)
+        expect(wizard_scheme.reload.user_selectable).to eq(true)
       end
     end
 
@@ -558,6 +558,16 @@ RSpec.describe DesignWizard::Apply do
       it "materializes all built-in palettes as user selectable" do
         expect { result }.to change { ColorScheme.where(via_wizard: true).count }.by(13)
         expect(ColorScheme.where(via_wizard: true).pluck(:user_selectable)).to all(eq(true))
+      end
+
+      it "preserves selectable Horizon palettes" do
+        horizon_schemes = ColorScheme.where(theme_id: horizon_theme.id)
+        expect(horizon_schemes).to be_present
+        horizon_schemes.update_all(user_selectable: true)
+
+        expect(result).to run_successfully
+
+        expect(horizon_schemes.pluck(:user_selectable)).to all(eq(true))
       end
 
       it "disables them all when reapplied without user selectable palettes" do

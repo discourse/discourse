@@ -17,16 +17,16 @@ RSpec.describe DesignWizard::Action::UpdatePaletteSelectability do
       expect(theme_palette.reload.user_selectable).to eq(true)
     end
 
-    it "revokes palettes that are no longer offered" do
+    it "preserves the selectability of wizard palettes" do
       result
 
-      expect(wizard_palette.reload.user_selectable).to eq(false)
+      expect(wizard_palette.reload.user_selectable).to eq(true)
     end
 
     context "without user selectable palettes" do
       let(:selectable) { false }
 
-      it "revokes the theme palettes too" do
+      it "revokes the theme palettes" do
         result
 
         expect(theme_palette.reload.user_selectable).to eq(false)
