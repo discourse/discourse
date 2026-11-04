@@ -26,8 +26,10 @@ class Promotion
     false
   end
 
-  def review_tl0
-    if Promotion.tl1_met?(@user) && change_trust_level!(TrustLevel[1])
+  def review_tl0(require_reads_in_viewed_topics: true)
+    if Promotion.tl1_met?(@user) &&
+         (!require_reads_in_viewed_topics || Promotion.tl1_reads_in_viewed_topics_met?(@user)) &&
+         change_trust_level!(TrustLevel[1])
       if Badge.exists?(id: Badge::BasicUser, enabled: true) &&
            !@user.badges.exists?(id: Badge::BasicUser)
         @user.enqueue_member_welcome_message
@@ -126,6 +128,37 @@ class Promotion
     true
   end
 
+  # Read timings can be posted for topics the client never loaded, and personal
+  # messages count toward topics_entered, so neither counter proves the user
+  # browsed the site. Kept out of tl1_met? so users without view history, e.g.
+  # imports, aren't downgraded.
+  def self.tl1_reads_in_viewed_topics_met?(user)
+    required_topics = SiteSetting.tl1_requires_topics_entered
+    required_reads = SiteSetting.tl1_requires_read_posts
+    return true if required_topics <= 0 && required_reads <= 0
+
+    counts = DB.query_single(<<~SQL, user_id: user.id)
+      SELECT COUNT(*), COALESCE(SUM(reads), 0)
+      FROM (
+        SELECT COUNT(*) AS reads
+        FROM post_timings pt
+        JOIN topics t ON t.id = pt.topic_id
+        WHERE pt.user_id = :user_id
+          AND t.archetype = 'regular'
+          AND t.deleted_at IS NULL
+          AND EXISTS (
+            SELECT 1
+            FROM topic_views tv
+            WHERE tv.user_id = :user_id AND tv.topic_id = pt.topic_id
+          )
+        GROUP BY pt.topic_id
+      ) per_topic
+    SQL
+    viewed_topics, reads = counts
+
+    viewed_topics >= required_topics && reads >= required_reads
+  end
+
   def self.tl3_met?(user)
     TrustLevel3Requirements.new(user).requirements_met?
   end
@@ -155,7 +188,11 @@ class Promotion
       DiscoursePluginRegistry.apply_modifier(:recalculate_trust_level, false, user, promotion)
     return override if override
 
-    promotion.review_tl0 if granted_trust_level < TrustLevel[1]
+    # Recalculation restores levels a user already earned, and imported or older
+    # users may have no view history.
+    if granted_trust_level < TrustLevel[1]
+      promotion.review_tl0(require_reads_in_viewed_topics: false)
+    end
     promotion.review_tl1 if granted_trust_level < TrustLevel[2]
     promotion.review_tl2 if granted_trust_level < TrustLevel[3]
 

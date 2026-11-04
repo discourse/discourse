@@ -15,12 +15,25 @@ RSpec.describe Promotion do
 
   describe "newuser" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 2.days.ago) }
+    fab!(:topics) { Fabricate.times(SiteSetting.tl1_requires_topics_entered, :topic) }
     let(:promotion) { Promotion.new(user) }
     let!(:plugin) { Plugin::Instance.new }
     let!(:review_modifier) { :review_trust_level }
     let!(:recalculate_modifier) { :recalculate_trust_level }
     let!(:deny_block) { Proc.new { false } }
     let!(:allow_block) { Proc.new { true } }
+
+    def read_required_posts(in_topics: topics, viewed: true)
+      reads_per_topic = (SiteSetting.tl1_requires_read_posts.to_f / in_topics.size).ceil
+      in_topics.each do |topic|
+        PostTiming.insert_all(
+          (1..reads_per_topic).map do |post_number|
+            { topic_id: topic.id, user_id: user.id, post_number:, msecs: 1000 }
+          end,
+        )
+        TopicViewItem.add(topic.id, "127.0.0.1", user.id, nil, true) if viewed
+      end
+    end
 
     it "doesn't raise an error with a nil user" do
       expect { Promotion.new(nil).review }.not_to raise_error
@@ -40,6 +53,7 @@ RSpec.describe Promotion do
 
     context "when user has done the requisite things" do
       before do
+        read_required_posts
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
@@ -83,6 +97,38 @@ RSpec.describe Promotion do
       end
     end
 
+    context "when the user's reads don't come from viewed topics" do
+      before do
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.tl1_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl1_requires_read_posts
+        stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
+      end
+
+      it "does not promote when the topics were never viewed" do
+        read_required_posts(viewed: false)
+
+        expect(promotion.review).to eq(false)
+        expect(user.trust_level).to eq(TrustLevel[0])
+      end
+
+      it "does not promote when all reads are in fewer viewed topics than required" do
+        read_required_posts(in_topics: topics.first(1))
+
+        expect(promotion.review).to eq(false)
+        expect(user.trust_level).to eq(TrustLevel[0])
+      end
+
+      it "does not promote when the viewed topics are personal messages" do
+        read_required_posts(
+          in_topics: Fabricate.times(topics.size, :private_message_topic, user: user),
+        )
+
+        expect(promotion.review).to eq(false)
+        expect(user.trust_level).to eq(TrustLevel[0])
+      end
+    end
+
     context "when user has not done the requisite things" do
       it "does not promote the user" do
         user.created_at = 1.minute.ago
@@ -115,6 +161,7 @@ RSpec.describe Promotion do
 
     context "when may send tl1 promotion messages" do
       before do
+        read_required_posts
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
