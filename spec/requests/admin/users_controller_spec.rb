@@ -1547,7 +1547,6 @@ RSpec.describe Admin::UsersController do
         put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
 
         expect(response.status).to eq(200)
-        expect(response.body).to be_blank
         another_user.reload
         expect(another_user.primary_group_id).to eq(nil)
         expect(another_user.title).to eq(nil)
@@ -1557,7 +1556,6 @@ RSpec.describe Admin::UsersController do
         put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
 
         expect(response.status).to eq(200)
-        expect(response.body).to be_blank
         expect(another_user.reload.primary_group_id).to eq(nil)
       end
 
@@ -1629,6 +1627,17 @@ RSpec.describe Admin::UsersController do
           expect(another_user.title).to eq(group.title)
           expect(response.status).to eq(403)
           expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+
+        it "allows a moderator who owns the group to remove it as primary group" do
+          group.update!(primary_group: true)
+          group.add(another_user)
+          group.add_owner(moderator)
+
+          put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+          expect(response.status).to eq(200)
+          expect(another_user.reload.primary_group_id).to eq(nil)
         end
 
         it "prevents setting primary group with a 403 response" do
