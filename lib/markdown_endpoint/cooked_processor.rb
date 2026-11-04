@@ -102,15 +102,16 @@ module MarkdownEndpoint
 
     def replace_code_blocks
       @fragment
-        .css("pre > code")
-        .each do |code|
+        .css("pre:has(> code)")
+        .each do |pre|
+          code = pre.at_css("code")
           language = code["class"].to_s.split.find { |name| name.match?(/\A(?:lang|language)-/) }
           language = language&.sub(/\A(?:lang|language)-/, "")
-          content = code.text
+          content = pre.text
           longest_run = content.scan(/`+/).map(&:length).max.to_i
           fence = "`" * [3, longest_run + 1].max
           opening = language.present? ? "#{fence}#{language}" : fence
-          code.parent.replace(preserved_block("#{opening}\n#{content}\n#{fence}"))
+          pre.replace(preserved_block("#{opening}\n#{content}\n#{fence}"))
         end
     end
 
