@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
-# Records the application code each spec file runs (TEST_IMPACT_RECORD=1),
-# for script/test_impact/build_map and select. Started before the app loads,
-# so Coverage sees every file; what boot ran is dropped before each spec
-# file, since eager loading runs every class body.
+# Records what each spec file depends on (TEST_IMPACT_RECORD=1), for
+# script/test_impact/build_map and select: the application code it ran, the
+# site settings it read, the translation keys and locales it looked up, and
+# the data files it read. Started before the app loads, so Coverage sees
+# every file; what boot did is dropped before each spec file, since eager
+# loading runs every class body and loads every setting.
 #
 # Writes tmp/test_impact/recording-<TEST_ENV_NUMBER>-<pid>.jsonl.gz:
-#   {"spec": "spec/models/post_spec.rb", "files": {"app/models/post.rb": [[12, 30]]}}
+#   {"spec": "spec/models/post_spec.rb", "files": {"app/models/post.rb": [[12, 30]]},
+#    "settings": ["max_post_length"], "keys": ["post.edit"], "locales": ["en"],
+#    "reads": ["spec/fixtures/images/logo.png"]}
 #   {"methods": {"app/models/post.rb": [[12, 30]]}}  (last line)
 require "coverage"
 require "fileutils"
@@ -19,6 +23,8 @@ module TestImpact
 
     EXCLUDED = %r{\A(?:vendor|node_modules|tmp|public|frontend)/|_spec\.rb\z}
 
+    NOTES = %i[settings keys locales reads].freeze
+
     def self.start
       raise "TEST_IMPACT_RECORD and COVERAGE both need Coverage; set one" if ENV["COVERAGE"]
       # eval: ActionView compiles templates with the template's path as the file.
@@ -28,6 +34,7 @@ module TestImpact
 
     def self.install(rspec_config)
       recorder = @instance or return
+      recorder.hook_lookups
       rspec_config.before(:context) { recorder.reset }
       rspec_config.after(:context) { recorder.record(self.class.metadata[:file_path]) }
       rspec_config.after(:suite) { recorder.finish }
@@ -35,10 +42,75 @@ module TestImpact
 
     def initialize
       @methods = {}
+      @notes = NOTES.to_h { |kind| [kind, Set.new] }
+    end
+
+    # Settings and translations are loaded once at boot, so it's the lookups,
+    # not the files, that tell specs apart.
+    def hook_lookups
+      recorder = self
+
+      settings =
+        Module.new do
+          SiteSetting.defaults.all.keys.each do |name|
+            [name, :"#{name}?"].each do |method|
+              next if !SiteSetting.respond_to?(method)
+              define_method(method) do |*args, &block|
+                recorder.note(:settings, name.to_s)
+                super(*args, &block)
+              end
+            end
+          end
+        end
+      SiteSetting.singleton_class.prepend(settings)
+
+      translations =
+        Module.new do
+          %i[translate t exists?].each do |method|
+            define_method(method) do |*args, &block|
+              recorder.note_translation(args)
+              super(*args, &block)
+            end
+          end
+        end
+      I18n.singleton_class.prepend(translations)
+
+      reads =
+        Module.new do
+          %i[open read readlines foreach binread].each do |method|
+            define_method(method) do |*args, **kwargs, &block|
+              recorder.note_read(args.first)
+              super(*args, **kwargs, &block)
+            end
+          end
+        end
+      File.singleton_class.prepend(reads)
+    end
+
+    def note(kind, value)
+      @notes[kind] << value
+    end
+
+    def note_translation(args)
+      options = args.last.is_a?(Hash) ? args.last : {}
+      locale = options[:locale] || (args[1] if args[1].is_a?(Symbol) || args[1].is_a?(String))
+      note(:locales, (locale || I18n.locale).to_s)
+      scope = Array(options[:scope]).join(".")
+      Array(args.first).each do |key|
+        next if key.nil? || key.is_a?(Hash)
+        note(:keys, scope.empty? ? key.to_s : "#{scope}.#{key}")
+      end
+    end
+
+    def note_read(path)
+      return if !(path.is_a?(String) || path.is_a?(Pathname))
+      path = relative(File.expand_path(path.to_s)) or return
+      note(:reads, path) if !path.end_with?(".rb")
     end
 
     def reset
       Coverage.result(stop: false, clear: true)
+      @notes.each_value(&:clear)
     end
 
     def record(spec)
@@ -50,7 +122,9 @@ module TestImpact
           ran = ran(path, coverage)
           files[path] = ran if ran.any?
         end
-      out.puts(JSON.generate(spec: spec.delete_prefix("./"), files: files))
+      notes = @notes.transform_values { |values| values.to_a.sort }
+      out.puts(JSON.generate(spec: spec.delete_prefix("./"), files: files, **notes))
+      @notes.each_value(&:clear)
     end
 
     def finish

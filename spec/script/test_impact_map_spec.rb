@@ -5,20 +5,67 @@ require "tmpdir"
 require_relative "../../script/test_impact/map"
 
 RSpec.describe TestImpact::Map do
+  let(:site_settings) { <<~YAML }
+    posting:
+      max_post_length:
+        client: true
+        default: 32000
+      min_post_length:
+        default: 20
+  YAML
+
+  let(:server_locale) { <<~YAML }
+    en:
+      post:
+        edit: "Edit"
+        delete: "Delete"
+      topic:
+        title: "Title"
+  YAML
+
   # app/models/thing.rb: methods at 5-7 (`double`) and 9-11 (`unused`), a
   # class-level block at line 3, a constant at line 2.
   def build_map(dir)
     path = File.join(dir, "recording-0-1.jsonl.gz")
     Zlib::GzipWriter.open(path) do |gz|
-      gz.puts({ spec: "spec/double_spec.rb", files: { "app/models/thing.rb" => [[5, 7]] } }.to_json)
-      gz.puts({ spec: "spec/block_spec.rb", files: { "app/models/thing.rb" => [[3, 3]] } }.to_json)
+      gz.puts(
+        {
+          spec: "spec/double_spec.rb",
+          files: {
+            "app/models/thing.rb" => [[5, 7]],
+          },
+          settings: ["max_post_length"],
+          keys: ["post"],
+          locales: ["en"],
+        }.to_json,
+      )
+      gz.puts(
+        {
+          spec: "spec/block_spec.rb",
+          files: {
+            "app/models/thing.rb" => [[3, 3]],
+          },
+          settings: ["min_post_length"],
+          keys: %w[post.edit topic.title],
+          locales: %w[en fr],
+          reads: ["spec/fixtures/logo.png"],
+        }.to_json,
+      )
       gz.puts({ methods: { "app/models/thing.rb" => [[5, 7], [9, 11]] } }.to_json)
     end
     described_class.build([path])
   end
 
   def select(diff)
-    Dir.mktmpdir("test-impact") { |dir| build_map(dir).select(TestImpact::Diff.parse(diff)) }
+    sources = {
+      "config/site_settings.yml" => site_settings,
+      "config/locales/server.en.yml" => server_locale,
+      "config/locales/server.fr.yml" => server_locale.sub("en:", "fr:"),
+      "config/locales/server.de.yml" => server_locale.sub("en:", "de:"),
+    }
+    Dir.mktmpdir("test-impact") do |dir|
+      build_map(dir).select(TestImpact::Diff.parse(diff), source: sources.method(:[]))
+    end
   end
 
   def diff(path, hunk_header)
@@ -79,6 +126,37 @@ RSpec.describe TestImpact::Map do
       DIFF
 
       expect(selection.specs).to eq(%w[spec/block_spec.rb spec/double_spec.rb])
+    end
+
+    it "selects the specs that read a changed setting" do
+      selection = select(diff("config/site_settings.yml", "@@ -4 +4 @@"))
+
+      expect(selection.specs).to eq(["spec/double_spec.rb"])
+    end
+
+    it "reports a change to a settings category, which names no setting" do
+      selection = select(diff("config/site_settings.yml", "@@ -1 +1 @@"))
+
+      expect(selection).to have_attributes(specs: [], unmapped: ["config/site_settings.yml"])
+    end
+
+    it "selects the specs that looked up a changed English key or a key above it" do
+      selection = select(diff("config/locales/server.en.yml", "@@ -3 +3 @@"))
+
+      expect(selection.specs).to eq(%w[spec/block_spec.rb spec/double_spec.rb])
+    end
+
+    it "selects only the specs that used another locale for a change to its file" do
+      french = select(diff("config/locales/server.fr.yml", "@@ -3 +3 @@"))
+      german = select(diff("config/locales/server.de.yml", "@@ -3 +3 @@"))
+
+      expect([french.specs, german.specs]).to eq([["spec/block_spec.rb"], []])
+    end
+
+    it "selects the specs that read a changed data file" do
+      selection = select(diff("spec/fixtures/logo.png", "@@ -1 +1 @@"))
+
+      expect(selection.specs).to eq(["spec/block_spec.rb"])
     end
   end
 end
