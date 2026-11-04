@@ -135,12 +135,11 @@ module(
         });
       });
 
-      class FlipState {
-        @tracked maximum;
-        @tracked multiple = false;
-        @tracked value = null;
-      }
-      const state = new FlipState();
+      const maximum = tracked(undefined);
+
+      const multiple = tracked(false);
+
+      const held = tracked(null);
 
       await render(
         <template>
@@ -148,9 +147,9 @@ module(
             @identifier="test-select"
             @items={{ITEMS}}
             @kind="test-select"
-            @maximum={{state.maximum}}
-            @multiple={{state.multiple}}
-            @value={{state.value}}
+            @maximum={{maximum.value}}
+            @multiple={{multiple.value}}
+            @value={{held.value}}
             @variant="button"
           />
         </template>
@@ -161,9 +160,9 @@ module(
         .dom("[role='listbox']")
         .includesText("Legacy row", "the bridge is active before the flip");
 
-      state.multiple = true;
-      state.value = [1];
-      state.maximum = 5;
+      multiple.value = true;
+      held.value = [1];
+      maximum.value = 5;
       await settled();
 
       assert
@@ -1731,13 +1730,11 @@ module(
 
     test("a client list that changes while open still announces its new count", async function (assert) {
       const announce = spyAnnounce(this);
-      const state = new (class {
-        @tracked items = numbered(3);
-      })();
+      const items = tracked(numbered(3));
 
       await render(
         <template>
-          <DSelect @items={{state.items}} @variant="button" />
+          <DSelect @items={{items.value}} @variant="button" />
         </template>
       );
       await click(".d-select__trigger");
@@ -1747,7 +1744,7 @@ module(
         "opening announces the count"
       );
 
-      state.items = numbered(5);
+      items.value = numbered(5);
       await settled();
 
       assert.deepEqual(
@@ -2194,9 +2191,7 @@ module(
     });
 
     test("a load customization may update tracked state, and an empty reload reports again", async function (assert) {
-      const state = new (class {
-        @tracked calls = 0;
-      })();
+      const calls = tracked(0);
       const announce = sinon.spy(
         getOwner(this).lookup("service:a11y"),
         "announce"
@@ -2207,7 +2202,7 @@ module(
           ({ value: selects }) =>
             selects.forAll((spec) =>
               spec.load((load) => {
-                state.calls++;
+                calls.value++;
                 return load;
               })
             )
@@ -2216,7 +2211,7 @@ module(
       const load = () => [];
       await render(
         <template>
-          <span class="loader-calls">{{state.calls}}</span><EngineProbe
+          <span class="loader-calls">{{calls.value}}</span><EngineProbe
             @debounce={{false}}
             @load={{load}}
             @variant="button"

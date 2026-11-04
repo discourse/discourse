@@ -55,39 +55,37 @@ module(
     });
 
     test("leaves automatic, everyone, excluded and unlisted groups out when asked", async function (assert) {
-      const state = new (class {
-        @tracked automatic;
-        @tracked everyone;
-        @tracked exclude;
-        @tracked only;
-      })();
+      const automatic = tracked(undefined);
+      const everyone = tracked(undefined);
+      const exclude = tracked(undefined);
+      const only = tracked(undefined);
 
       await render(
         <template>
           <DSelectGroup
-            @automatic={{state.automatic}}
-            @everyone={{state.everyone}}
-            @exclude={{state.exclude}}
-            @only={{state.only}}
+            @automatic={{automatic.value}}
+            @everyone={{everyone.value}}
+            @exclude={{exclude.value}}
+            @only={{only.value}}
           />
         </template>
       );
       const select = new DSelect();
       await select.open();
 
-      state.everyone = false;
+      everyone.value = false;
       await settled();
       assert.deepEqual(optionValues(), ["1", "10", "11", "12"]);
 
-      state.automatic = false;
+      automatic.value = false;
       await settled();
       assert.deepEqual(optionValues(), ["10", "11", "12"]);
 
-      state.exclude = [11];
+      exclude.value = [11];
       await settled();
       assert.deepEqual(optionValues(), ["10", "12"]);
 
-      state.only = [10, 11];
+      only.value = [10, 11];
       await settled();
       assert.deepEqual(optionValues(), ["10"]);
     });
@@ -103,22 +101,20 @@ module(
 
     test("ids in, ids out, in single and multiple mode", async function (assert) {
       const onChange = sinon.spy();
-      const state = new (class {
-        @tracked value = "10";
-        @tracked multiple = false;
-      })();
+      const held = tracked("10");
+      const multiple = tracked(false);
       const change = (value) => {
         onChange(value);
-        state.value = value;
+        held.value = value;
       };
 
       await render(
         <template>
           <DSelectGroup
             @clearable={{true}}
-            @multiple={{state.multiple}}
+            @multiple={{multiple.value}}
             @onChange={{change}}
-            @value={{state.value}}
+            @value={{held.value}}
           />
         </template>
       );
@@ -134,8 +130,8 @@ module(
       await select.clear();
       assert.strictEqual(onChange.lastCall.args[0], null);
 
-      state.multiple = true;
-      state.value = [10];
+      multiple.value = true;
+      held.value = [10];
       await settled();
       await select.open();
       await click(optionNamed("sales"));
@@ -220,26 +216,24 @@ module(
 
     test("is named Group while it holds one, otherwise Groups", async function (assert) {
       const accessibleName = await loadAccessibleName();
-      const state = new (class {
-        @tracked multiple = false;
-        @tracked maximum;
-      })();
+      const multiple = tracked(false);
+      const maximum = tracked(undefined);
 
       await render(
         <template>
           <DSelectGroup
-            @maximum={{state.maximum}}
-            @multiple={{state.multiple}}
+            @maximum={{maximum.value}}
+            @multiple={{multiple.value}}
           />
         </template>
       );
       const name = () => accessibleName(find("[role='combobox']"));
 
       assert.strictEqual(name(), i18n("select_group.group"));
-      state.multiple = true;
+      multiple.value = true;
       await settled();
       assert.strictEqual(name(), i18n("select_group.groups"));
-      state.maximum = 1;
+      maximum.value = 1;
       await settled();
       assert.strictEqual(name(), i18n("select_group.group"));
     });

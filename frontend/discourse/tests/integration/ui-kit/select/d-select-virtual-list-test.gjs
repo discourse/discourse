@@ -380,9 +380,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
   // A resize is applied in the next frame. Only that resize may wait: a later jump still has to
   // publish its window in the same render, or the cursor lands before the target mounts.
   test("End still lands on the last logical option after every row resizes", async function (assert) {
-    const state = new (class {
-      @tracked tall = false;
-    })();
+    const tall = tracked(false);
 
     await render(
       <template>
@@ -396,14 +394,14 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
             min-height: 60px;
           }
         </style>
-        <div class={{if state.tall "tall-rows"}}>
+        <div class={{if tall.value "tall-rows"}}>
           <DSelect @items={{LOADED_ITEMS}} @variant="static" />
         </div>
       </template>
     );
     await openSelect();
 
-    state.tall = true;
+    tall.value = true;
     await settledAfterFrame();
 
     await triggerKeyEvent("[role='combobox']", "keydown", "End");

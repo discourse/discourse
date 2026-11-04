@@ -147,12 +147,10 @@ module(
 
     test("lists nothing until something is typed, unless a topic or category scopes it", async function (assert) {
       const requests = stubUserSearch();
-      const state = new (class {
-        @tracked topicId;
-      })();
+      const topicId = tracked(undefined);
 
       await render(
-        <template><DSelectUser @topicId={{state.topicId}} /></template>
+        <template><DSelectUser @topicId={{topicId.value}} /></template>
       );
       const select = new DSelect();
       await select.open();
@@ -163,7 +161,7 @@ module(
         .doesNotExist("no keep-typing hint: any term searches");
 
       await select.close();
-      state.topicId = 12;
+      topicId.value = 12;
       await select.open();
 
       assert.deepEqual(requests, [{ term: "", topic_id: "12", limit: "6" }]);
@@ -172,37 +170,35 @@ module(
 
     test("names the control by what it offers", async function (assert) {
       const accessibleName = await loadAccessibleName();
-      const state = new (class {
-        @tracked groups;
-        @tracked emails = false;
-        @tracked multiple = false;
-      })();
+      const groups = tracked(undefined);
+      const emails = tracked(false);
+      const multiple = tracked(false);
 
       await render(
         <template>
           <DSelectUser
-            @emails={{state.emails}}
-            @includeGroups={{state.groups}}
-            @multiple={{state.multiple}}
+            @emails={{emails.value}}
+            @includeGroups={{groups.value}}
+            @multiple={{multiple.value}}
           />
         </template>
       );
       const name = () => accessibleName(find("[role='combobox']"));
 
       assert.strictEqual(name(), i18n("select_user.user"));
-      state.multiple = true;
+      multiple.value = true;
       await settled();
       assert.strictEqual(name(), i18n("select_user.users"));
-      state.groups = "messageable";
+      groups.value = "messageable";
       await settled();
       assert.strictEqual(name(), i18n("select_user.users_or_groups"));
-      state.emails = true;
+      emails.value = true;
       await settled();
       assert.strictEqual(name(), i18n("select_user.users_groups_or_emails"));
-      state.groups = undefined;
+      groups.value = undefined;
       await settled();
       assert.strictEqual(name(), i18n("select_user.users_or_emails"));
-      state.multiple = false;
+      multiple.value = false;
       await settled();
       assert.strictEqual(name(), i18n("select_user.user_or_email"));
     });
@@ -329,14 +325,12 @@ module(
 
     test("leaves excluded names and, when asked, the current user out", async function (assert) {
       stubUserSearch();
-      const state = new (class {
-        @tracked exclude = ["ALICE"];
-      })();
+      const exclude = tracked(["ALICE"]);
 
       await render(
         <template>
           <DSelectUser
-            @exclude={{state.exclude}}
+            @exclude={{exclude.value}}
             @excludeCurrentUser={{true}}
           />
         </template>
@@ -351,7 +345,7 @@ module(
         "Alice and the current user, Robin Ward, are left out"
       );
 
-      state.exclude = ["sam"];
+      exclude.value = ["sam"];
       await settled();
 
       assert.deepEqual(
@@ -364,13 +358,11 @@ module(
     test("emits the value and typed items, in single and multiple mode", async function (assert) {
       stubUserSearch();
       const onChange = sinon.spy();
-      const state = new (class {
-        @tracked value = null;
-        @tracked multiple = false;
-      })();
+      const held = tracked(null);
+      const multiple = tracked(false);
       const change = (value, items) => {
         onChange(value, items);
-        state.value = value;
+        held.value = value;
       };
 
       await render(
@@ -378,9 +370,9 @@ module(
           <DSelectUser
             @clearable={{true}}
             @includeGroups="visible"
-            @multiple={{state.multiple}}
+            @multiple={{multiple.value}}
             @onChange={{change}}
-            @value={{state.value}}
+            @value={{held.value}}
           />
         </template>
       );
@@ -396,8 +388,8 @@ module(
       assert.strictEqual(onChange.lastCall.args[0], null);
       assert.strictEqual(onChange.lastCall.args[1], null);
 
-      state.multiple = true;
-      state.value = [];
+      multiple.value = true;
+      held.value = [];
       await settled();
       await select.open();
       await select.search("sam");
@@ -413,12 +405,10 @@ module(
     test("offers a typed email as a row only when emails are on", async function (assert) {
       stubUserSearch();
       const onChange = sinon.spy();
-      const state = new (class {
-        @tracked value = [];
-      })();
+      const held = tracked([]);
       const change = (value, items) => {
         onChange(value, items);
-        state.value = value;
+        held.value = value;
       };
 
       await render(
@@ -427,7 +417,7 @@ module(
             @emails={{true}}
             @multiple={{true}}
             @onChange={{change}}
-            @value={{state.value}}
+            @value={{held.value}}
           />
         </template>
       );
@@ -478,17 +468,15 @@ module(
 
     test("pastes a list of names, resolved in one request", async function (assert) {
       const requests = stubUserSearch();
-      const state = new (class {
-        @tracked value = [];
-      })();
-      const change = (value) => (state.value = value);
+      const held = tracked([]);
+      const change = (value) => (held.value = value);
 
       await render(
         <template>
           <DSelectUser
             @multiple={{true}}
             @onChange={{change}}
-            @value={{state.value}}
+            @value={{held.value}}
           />
         </template>
       );
@@ -499,7 +487,7 @@ module(
       const event = await paste("@sam, bob\nghost");
 
       assert.true(event.defaultPrevented);
-      assert.deepEqual(state.value, ["sam", "bob", "ghost"]);
+      assert.deepEqual(held.value, ["sam", "bob", "ghost"]);
       assert.deepEqual(
         requests,
         [{ usernames: "sam,bob,ghost" }],
@@ -510,12 +498,10 @@ module(
 
     test("leaves a single name, or any paste into a single select, to the browser", async function (assert) {
       stubUserSearch();
-      const state = new (class {
-        @tracked multiple = true;
-      })();
+      const multiple = tracked(true);
 
       await render(
-        <template><DSelectUser @multiple={{state.multiple}} /></template>
+        <template><DSelectUser @multiple={{multiple.value}} /></template>
       );
       const select = new DSelect();
       await select.open();
@@ -523,7 +509,7 @@ module(
       assert.false((await paste("sam")).defaultPrevented);
 
       await select.close();
-      state.multiple = false;
+      multiple.value = false;
       await settled();
       await select.open();
 
@@ -541,12 +527,10 @@ module(
           },
         ],
       });
-      const state = new (class {
-        @tracked showStatus = false;
-      })();
+      const showStatus = tracked(false);
 
       await render(
-        <template><DSelectUser @showStatus={{state.showStatus}} /></template>
+        <template><DSelectUser @showStatus={{showStatus.value}} /></template>
       );
       const select = new DSelect();
       await select.open();
@@ -555,7 +539,7 @@ module(
       assert.dom(".d-select__option-description").doesNotExist();
 
       await select.close();
-      state.showStatus = true;
+      showStatus.value = true;
       await settled();
       await select.open();
       await select.search("bob");

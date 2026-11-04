@@ -153,9 +153,7 @@ module(
     });
 
     test("names are fixed for the select's life", async function (assert) {
-      const state = new (class {
-        @tracked kind = "first-kind";
-      })();
+      const kind = tracked("first-kind");
       let setups = 0;
       customize((selects) => {
         selects.forKind("first-kind", (spec) => {
@@ -169,9 +167,9 @@ module(
       });
 
       await render(
-        <template><DSelect @items={{ITEMS}} @kind={{state.kind}} /></template>
+        <template><DSelect @items={{ITEMS}} @kind={{kind.value}} /></template>
       );
-      state.kind = "second-kind";
+      kind.value = "second-kind";
       await settled();
       await click("[role='combobox']");
       await fillIn("[role='combobox']", "a");
@@ -664,13 +662,11 @@ module(
     });
 
     test("options callbacks run per change, not per row", async function (assert) {
-      const state = new (class {
-        @tracked label = "First";
-      })();
+      const label = tracked("First");
       let calls = 0;
       overrideOptions(() => {
         calls++;
-        return { texts: { ariaLabel: state.label } };
+        return { texts: { ariaLabel: label.value } };
       });
 
       await render(<template><DSelect @items={{MANY}} /></template>);
@@ -682,7 +678,7 @@ module(
       );
 
       const before = calls;
-      state.label = "Second";
+      label.value = "Second";
       await settled();
       assert
         .dom("[role='combobox']")
@@ -1160,16 +1156,14 @@ module(
 
     test("recipe values stay live", async function (assert) {
       customizeRecipe();
-      const state = new (class {
-        @tracked prefix = "first";
-      })();
+      const prefix = tracked("first");
 
       await render(
         <template>
           <DSelect
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash prefix=state.prefix}}
+            @kindOptions={{hash prefix=prefix.value}}
           >
             <:item as |item options|>
               {{~concat options.prefix " " item.name~}}
@@ -1180,7 +1174,7 @@ module(
       await click("[role='combobox']");
       assert.dom(optionWithText("first+kind Apple")).exists();
 
-      state.prefix = "second";
+      prefix.value = "second";
       await settled();
       assert.dom(optionWithText("second+kind Apple")).exists();
     });

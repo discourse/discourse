@@ -2032,20 +2032,18 @@ module(
     test("@minChars below 2 asserts, since a one-character minimum is no minimum", async function (assert) {
       const messages = [];
       setupOnerror((error) => messages.push(error.message));
-      const state = new (class {
-        @tracked minChars = 2;
-      })();
+      const minChars = tracked(2);
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @minChars={{state.minChars}} />
+          <DSelect @items={{ITEMS}} @minChars={{minChars.value}} />
         </template>
       );
       await click("[role='combobox']");
 
       assert.deepEqual(messages, [], "a minimum of 2 is accepted");
 
-      state.minChars = 1;
+      minChars.value = 1;
       await settled();
 
       assert.true(

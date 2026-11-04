@@ -1135,11 +1135,8 @@ module(
     });
 
     test("an equal array re-derived after a pick neither reloads nor moves the list", async function (assert) {
-      class State {
-        @tracked value = [];
-        @tracked exclude = [1000];
-      }
-      const state = new State();
+      const held = tracked([]);
+      const exclude = tracked([1000]);
       let loads = 0;
       const load = () => {
         loads++;
@@ -1151,8 +1148,8 @@ module(
       // Call sites derive the excluded ids afresh on every render, so each pick hands the
       // select a new array with the same contents.
       const onChange = (value) => {
-        state.value = value;
-        state.exclude = [1000];
+        held.value = value;
+        exclude.value = [1000];
       };
 
       await render(
@@ -1166,10 +1163,10 @@ module(
           </style>
           <DSelect
             @load={{load}}
-            @loadContext={{hash exclude=state.exclude}}
+            @loadContext={{hash exclude=exclude.value}}
             @multiple={{true}}
             @onChange={{onChange}}
-            @value={{state.value}}
+            @value={{held.value}}
           />
         </template>
       );
@@ -1188,7 +1185,7 @@ module(
       });
       await click(visible);
 
-      assert.strictEqual(state.value.length, 1, "the pick was kept");
+      assert.strictEqual(held.value.length, 1, "the pick was kept");
       assert.strictEqual(loads, initial, "the equal array did not reload");
       assert.strictEqual(
         find(".d-virtual-list").scrollTop,

@@ -102,9 +102,7 @@ module(
     module("composer recipients", function () {
       test("writes picked users and groups as recipients, and remembers the groups", async function (assert) {
         const requests = stubUserSearch();
-        const state = new (class {
-          @tracked recipients = "";
-        })();
+        const recipients = tracked("");
         let selector;
         class Probe extends ComposerUserSelector {
           didInsertElement() {
@@ -115,7 +113,7 @@ module(
 
         await render(
           <template>
-            <Probe @recipients={{state.recipients}} @topicId={{12}} />
+            <Probe @recipients={{recipients.value}} @topicId={{12}} />
           </template>
         );
         assert.dom(".d-select").exists();
@@ -126,7 +124,7 @@ module(
         await select.search("te");
         await click(optionNamed("team"));
 
-        assert.strictEqual(state.recipients, "bob,team");
+        assert.strictEqual(recipients.value, "bob,team");
         assert.deepEqual(selector._groups, ["team"], "the group is kept");
         assert.strictEqual(requests.at(-1).include_messageable_groups, "true");
         assert.strictEqual(requests.at(-1).topic_id, "12");
@@ -337,20 +335,26 @@ module(
         const requests = stubUserSearch();
         const accessibleName = await loadAccessibleName();
         const siteSettings = this.siteSettings;
-        const controller = new (class {
-          @tracked filterClaimedBy;
-          @tracked filterUsername;
-          siteSettings = siteSettings;
-          filtersExpanded = true;
-          updateFilterClaimedBy = sinon.spy(
-            (selected) => (this.filterClaimedBy = selected[0])
-          );
-          updateFilterFlaggedBy = sinon.spy();
-          updateFilterReviewedBy = sinon.spy();
-          updateFilterUsername = sinon.spy(
-            (selected) => (this.filterUsername = selected[0])
-          );
-        })();
+        const claimant = tracked(undefined);
+        const filteredUser = tracked(undefined);
+        const controller = {
+          get filterClaimedBy() {
+            return claimant.value;
+          },
+          get filterUsername() {
+            return filteredUser.value;
+          },
+          siteSettings,
+          filtersExpanded: true,
+          updateFilterClaimedBy: sinon.spy(
+            (selected) => (claimant.value = selected[0])
+          ),
+          updateFilterFlaggedBy: sinon.spy(),
+          updateFilterReviewedBy: sinon.spy(),
+          updateFilterUsername: sinon.spy(
+            (selected) => (filteredUser.value = selected[0])
+          ),
+        };
 
         await render(
           <template><ReviewFilters @controller={{controller}} /></template>
@@ -393,17 +397,15 @@ module(
       test("a picked author writes the @ filter, and clearing removes it", async function (assert) {
         stubUserSearch();
         const accessibleName = await loadAccessibleName();
-        const state = new (class {
-          @tracked term = "";
-        })();
-        const change = (term) => (state.term = term);
+        const searchTerm = tracked("");
+        const change = (term) => (searchTerm.value = term);
 
         await render(
           <template>
             <SearchAdvancedOptions
               @expandFilters={{true}}
               @onChangeSearchTerm={{change}}
-              @searchTerm={{state.term}}
+              @searchTerm={{searchTerm.value}}
             />
           </template>
         );
@@ -415,10 +417,10 @@ module(
 
         const select = new DSelect(picker);
         await pick(select, "bo", "bob");
-        assert.strictEqual(state.term.trim(), "@bob");
+        assert.strictEqual(searchTerm.value.trim(), "@bob");
 
         await select.clear();
-        assert.strictEqual(state.term.trim(), "");
+        assert.strictEqual(searchTerm.value.trim(), "");
       });
     });
 
