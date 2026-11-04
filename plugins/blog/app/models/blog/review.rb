@@ -103,6 +103,8 @@ module ::Blog
 
     def submit_feedback!(attributes)
       topic.with_lock do
+        # Post/topic callbacks revoke reviews without taking the topic lock, so
+        # this row must be locked and reloaded too before trusting revoked_at.
         with_lock do
           raise Discourse::NotFound unless accessible?
           if feedback.count >= 200

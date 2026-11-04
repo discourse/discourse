@@ -14,6 +14,8 @@ module ::Blog
     before_action :find_review, except: :csrf, unless: :review_page?
     layout "blog_review"
 
+    # NOTE: These rescues override ApplicationController's normal handling;
+    # review pages are standalone, so errors are rendered without the Ember app.
     rescue_from Discourse::NotFound, ActiveRecord::RecordNotFound do
       published_url = request.format.json? && Review.published_article_url(params[:review_token])
       if published_url

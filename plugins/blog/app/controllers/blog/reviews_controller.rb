@@ -4,6 +4,9 @@ module ::Blog
   class ReviewsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
     requires_login
+    REVIEWS_PER_PAGE = 30
+    FEEDBACK_PER_PAGE = 30
+
     before_action :find_topic
 
     rescue_from ActiveRecord::RecordInvalid do |error|
@@ -16,15 +19,15 @@ module ::Blog
           .where(topic_id: @topic.id)
           .includes(:creator)
           .order(id: :desc)
-          .offset(page * 30)
-          .limit(31)
+          .offset(page * REVIEWS_PER_PAGE)
+          .limit(REVIEWS_PER_PAGE + 1)
           .to_a
       counts = ReviewFeedback.where(review_id: records.map(&:id)).group(:review_id).count
       eligible = Review.eligible_topic?(@topic)
       creators = {}
       reviews =
         records
-          .first(30)
+          .first(REVIEWS_PER_PAGE)
           .map do |review|
             allowed =
               creators.fetch(review.creator_id) do
@@ -34,7 +37,7 @@ module ::Blog
               feedback_count: counts[review.id] || 0,
             )
           end
-      render json: { reviews: reviews, more: records.length > 30 }
+      render json: { reviews: reviews, more: records.length > REVIEWS_PER_PAGE }
     end
 
     def create
@@ -49,17 +52,23 @@ module ::Blog
 
     def topic_feedback
       scope = ReviewFeedback.joins(:review).where(blog_reviews: { topic_id: @topic.id })
-      records = scope.includes(:review).order(id: :desc).offset(page * 30).limit(31).to_a
+      records =
+        scope
+          .includes(:review)
+          .order(id: :desc)
+          .offset(page * FEEDBACK_PER_PAGE)
+          .limit(FEEDBACK_PER_PAGE + 1)
+          .to_a
       render json: {
                feedback:
                  records
-                   .first(30)
+                   .first(FEEDBACK_PER_PAGE)
                    .map do |record|
                      record.as_json(only: %i[id name email message created_at]).merge(
                        review: record.review.as_json(only: %i[id label post_version revoked_at]),
                      )
                    end,
-               more: records.length > 30,
+               more: records.length > FEEDBACK_PER_PAGE,
                # Feedback is paginated, so one page can't tell the client which version is newest.
                latest_version: scope.maximum("blog_reviews.post_version"),
              }
@@ -67,10 +76,19 @@ module ::Blog
 
     def feedback
       review = Review.where(topic_id: @topic.id).find(params[:id])
-      records = review.feedback.order(:id).offset(page * 30).limit(31).to_a
+      records =
+        review
+          .feedback
+          .order(:id)
+          .offset(page * FEEDBACK_PER_PAGE)
+          .limit(FEEDBACK_PER_PAGE + 1)
+          .to_a
       render json: {
-               feedback: records.first(30).as_json(only: %i[id name email message created_at]),
-               more: records.length > 30,
+               feedback:
+                 records.first(FEEDBACK_PER_PAGE).as_json(
+                   only: %i[id name email message created_at],
+                 ),
+               more: records.length > FEEDBACK_PER_PAGE,
                total: review.feedback.count,
              }
     end
