@@ -24,26 +24,19 @@ module Chat
         text = text.gsub("<!here>", "@here")
         text = text.gsub("<!all>", "@all")
 
-        text.scan(MRKDWN_LINK_REGEX) do |match|
-          match = match.first
-
-          if match.include?("|")
-            link, title = match.split("|")[0..1]
-          else
-            link = match
-          end
-
-          title = title&.gsub(/<|>/, "")
-          link = link&.gsub(/<|>/, "")
+        text.gsub(MRKDWN_LINK_REGEX) do |match|
+          link, title = match[1...-1].split("|")[0..1]
 
           if title
-            text = text.gsub(match, "[#{title}](#{link})")
+            "[#{title}](#{link})"
           else
-            text = text.gsub(match, "#{link}")
+            link
           end
         end
+      end
 
-        text
+      def legacy_attachment_text(attachments)
+        CGI.unescape(attachments[0][:fallback])
       end
 
       # TODO: This is quite hacky and is only here to support a single
@@ -54,8 +47,7 @@ module Chat
       # See https://api.slack.com/reference/messaging/attachments for
       # more details on what fields are here.
       def process_legacy_attachments(attachments)
-        text = CGI.unescape(attachments[0][:fallback])
-        process_text(text)
+        process_text(legacy_attachment_text(attachments))
       end
     end
   end
