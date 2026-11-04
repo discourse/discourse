@@ -47,8 +47,10 @@ export default class ChatBotDiscoverability extends Component {
             {{on "click" this.toggleDiscoverability}}
           />
         </div>
+        <div class="controls">{{i18n
+            "chat.admin.bot_discoverability.description"
+          }}</div>
       </div>
-      <p>{{i18n "chat.admin.bot_discoverability.description"}}</p>
     </section>
   </template>
 }

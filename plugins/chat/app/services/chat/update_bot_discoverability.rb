@@ -16,7 +16,6 @@ class Chat::UpdateBotDiscoverability
   model :bot
 
   transaction do
-    step :lock_bot
     only_if(:discoverability_changes) do
       only_if(:becomes_discoverable) { step :list_bot }
       only_if(:stops_being_discoverable) { step :unlist_bot }
@@ -32,10 +31,6 @@ class Chat::UpdateBotDiscoverability
 
   def fetch_bot(params:)
     User.bot_users.where.not(id: Discourse::SYSTEM_USER_ID).find_by(id: params.user_id)
-  end
-
-  def lock_bot(bot:)
-    bot.lock!
   end
 
   def discoverability_changes(bot:, params:)

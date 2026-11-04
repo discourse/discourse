@@ -8,10 +8,9 @@ export default class ChatDiscoverableField extends Component {
 
   <template>
     <@outletArgs.form.Field
-      @description={{i18n "chat.admin.bot_discoverability.description"}}
       @format="large"
       @name="chat_discoverable"
-      @title={{i18n "chat.admin.bot_discoverability.label"}}
+      @title={{i18n "chat.admin.bot_discoverability.description"}}
       @type="checkbox"
       as |field|
     >
