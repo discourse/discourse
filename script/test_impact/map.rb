@@ -135,15 +135,23 @@ module TestImpact
         end
         change.hunks.each do |first, last|
           touched = file["methods"].select { |s, e| s <= last && e >= first }
-          windows = touched.empty? ? [[first, last]] : touched
-          reached = file["ranges"].select { |s, e, _| windows.any? { |ws, we| s <= we && e >= ws } }
-          if reached.any?
+          # JavaScript functions nest (closures, classes, module wrappers):
+          # what a hunk changes is the innermost ones it falls in.
+          innermost =
+            touched.reject do |s, e|
+              touched.any? { |ts, te| [ts, te] != [s, e] && ts >= s && te <= e }
+            end
+          if innermost.any?
+            reached = file["ranges"].select { |s, e, _| innermost.include?([s, e]) }
             reached.each { |_, _, spec_ids| ids.merge(spec_ids) }
-          elsif touched.any?
-            untested << "#{old}:#{first}-#{last}"
-          else
-            file["ranges"].each { |_, _, spec_ids| ids.merge(spec_ids) }
+            untested << "#{old}:#{first}-#{last}" if reached.empty?
           end
+
+          outside = (first..last).reject { |line| touched.any? { |s, e| line.between?(s, e) } }
+          next if outside.empty?
+          reached = file["ranges"].select { |s, e, _| outside.any? { |line| line.between?(s, e) } }
+          reached = file["ranges"] if reached.empty?
+          reached.each { |_, _, spec_ids| ids.merge(spec_ids) }
         end
       end
 

@@ -150,8 +150,6 @@ RSpec.configure do |config|
   config.order = "random"
   config.infer_spec_type_from_file_location!
 
-  TestImpact::Recorder.install(config) if defined?(TestImpact::Recorder)
-
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -329,4 +327,8 @@ RSpec.configure do |config|
       raise capybara_timeout_error
     end
   end
+
+  # Last, so its system spec hooks run once the browser is set up and before
+  # it is torn down.
+  TestImpact::Recorder.install(config) if defined?(TestImpact::Recorder)
 end

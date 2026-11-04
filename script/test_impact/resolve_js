@@ -1,0 +1,108 @@
+#!/usr/bin/env node
+"use strict";
+
+// Maps the browser JavaScript in test impact recordings (bundle line/column
+// ranges of the functions each system spec ran) to source files through the
+// build's source maps, rewriting the recordings in place. Afterwards a
+// JavaScript file appears in "files" and "methods" just like a Ruby file.
+// Run it where the build that served the specs is, before build_map.
+//
+//   script/test_impact/resolve_js [recordings dir]
+
+const fs = require("node:fs");
+const path = require("node:path");
+const zlib = require("node:zlib");
+const {
+  DeprecationStackResolver,
+} = require("../../frontend/discourse/lib/deprecation-report");
+
+const resolver = new DeprecationStackResolver();
+const resolved = new Map();
+
+// Dependencies change through lockfiles, which select everything anyway.
+function ownFile(file) {
+  return !path.isAbsolute(file) && !file.includes("node_modules/");
+}
+
+// [file, first line, last line] in the source, or null.
+function resolve(script, [startLine, startColumn, endLine, endColumn]) {
+  const key = `${script}:${startLine}:${startColumn}:${endLine}:${endColumn}`;
+  if (resolved.has(key)) {
+    return resolved.get(key);
+  }
+
+  let result = null;
+  const start = resolver.resolveFrame({
+    url: script,
+    line: startLine,
+    column: startColumn,
+  });
+  if (start.resolved && !start.approximate && ownFile(start.file)) {
+    const end = resolver.resolveFrame({
+      url: script,
+      line: endLine,
+      column: endColumn,
+    });
+    const last =
+      end.resolved && end.file === start.file && end.line >= start.line
+        ? end.line
+        : start.line;
+    result = [start.file, start.line, last];
+  }
+
+  resolved.set(key, result);
+  return result;
+}
+
+// { script: [ranges] } into { file: [[first, last]] }, without duplicates.
+function bySourceFile(byScript) {
+  const byFile = {};
+  for (const [script, ranges] of Object.entries(byScript)) {
+    for (const range of ranges) {
+      const found = resolve(script, range);
+      if (found) {
+        const [file, first, last] = found;
+        (byFile[file] ||= new Set()).add(`${first},${last}`);
+      }
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(byFile).map(([file, set]) => [
+      file,
+      [...set].map((pair) => pair.split(",").map(Number)),
+    ])
+  );
+}
+
+const dir = process.argv[2] || "tmp/test_impact";
+const recordings = fs
+  .readdirSync(dir)
+  .filter((name) => /^recording-.*\.jsonl\.gz$/.test(name));
+
+for (const name of recordings) {
+  const file = path.join(dir, name);
+  const lines = zlib
+    .gunzipSync(fs.readFileSync(file))
+    .toString("utf8")
+    .split("\n")
+    .filter(Boolean);
+
+  const rewritten = lines.map((line) => {
+    const entry = JSON.parse(line);
+    if (entry.js) {
+      entry.files = { ...entry.files, ...bySourceFile(entry.js) };
+      delete entry.js;
+    }
+    if (entry.js_functions) {
+      entry.methods = { ...entry.methods, ...bySourceFile(entry.js_functions) };
+      delete entry.js_functions;
+    }
+    return JSON.stringify(entry);
+  });
+
+  fs.writeFileSync(file, zlib.gzipSync(rewritten.join("\n") + "\n"));
+}
+
+process.stdout.write(
+  `resolve_js: ${recordings.length} recordings, ${resolved.size} functions resolved\n`
+);
