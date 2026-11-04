@@ -120,6 +120,30 @@ RSpec.describe Chat::ListChannelThreadMessages do
       it { is_expected.to fail_to_find_a_model(:thread) }
     end
 
+    context "when the original message is missing" do
+      before { thread.original_message.delete }
+
+      it { is_expected.to fail_to_find_a_model(:thread) }
+
+      context "when user is a moderator" do
+        fab!(:user, :moderator)
+
+        it { is_expected.to fail_to_find_a_model(:thread) }
+      end
+    end
+
+    context "when the original message is deleted" do
+      before { thread.original_message.trash! }
+
+      it { is_expected.to fail_a_policy(:original_message_not_deleted) }
+
+      context "when user is a moderator" do
+        fab!(:user, :moderator)
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when threading is not enabled for the channel" do
       before { thread.channel.update!(threading_enabled: false) }
 

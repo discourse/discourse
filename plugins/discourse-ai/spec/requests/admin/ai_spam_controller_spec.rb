@@ -318,6 +318,53 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
       )
     end
 
+    it "returns a verdict error when the LLM gives no usable spam verdict" do
+      [
+        { reason: "missing verdict" },
+        { spam: nil, reason: "null verdict" },
+        { spam: "false", reason: "invalid verdict" },
+      ].each do |llm_response|
+        DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
+          post "/admin/plugins/discourse-ai/ai-spam/test.json",
+               params: {
+                 post_url: spam_post.id.to_s,
+               }
+        end
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("discourse_ai.spam_detection.no_verdict")],
+        )
+        expect(response.parsed_body).not_to have_key("is_spam")
+      end
+
+      expect(AiSpamLog.where(post: spam_post)).to be_empty
+      expect(spam_post.reload.hidden?).to eq(false)
+      expect(spam_post.user.reload).not_to be_silenced
+    end
+
+    it "returns a verdict error when a decision-only model refuses" do
+      decision_model = Fabricate(:decision_model)
+
+      DiscourseAi::Decisions.with_canned_answers(spam: :refusal) do
+        post "/admin/plugins/discourse-ai/ai-spam/test.json",
+             params: {
+               post_url: spam_post.id.to_s,
+               llm_id: "",
+               decision_model_id: decision_model.id,
+             }
+      end
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"]).to eq(
+        [I18n.t("discourse_ai.spam_detection.no_verdict")],
+      )
+      expect(response.parsed_body).not_to have_key("is_spam")
+      expect(AiSpamLog.where(post: spam_post)).to be_empty
+      expect(spam_post.reload.hidden?).to eq(false)
+      expect(spam_post.user.reload).not_to be_silenced
+    end
+
     it "rejects llm_id that is not a valid LlmModel" do
       post "/admin/plugins/discourse-ai/ai-spam/test.json",
            params: {

@@ -127,6 +127,8 @@ module DiscourseAi
           )
 
         render json: result
+      rescue DiscourseAi::AiModeration::SpamScanner::UnknownVerdict
+        render_json_error(I18n.t("discourse_ai.spam_detection.no_verdict"), status: 422)
       rescue DiscourseAi::Decisions::Error => e
         render_json_error(e.message, status: 422)
       end

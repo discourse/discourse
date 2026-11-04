@@ -68,10 +68,12 @@ module Chat
     private
 
     def fetch_thread(params:)
-      ::Chat::Thread
-        .strict_loading
-        .includes(:original_message, channel: :chatable)
-        .find_by(id: params.thread_id, channel_id: params.channel_id)
+      thread =
+        ::Chat::Thread
+          .strict_loading
+          .includes(:original_message, channel: :chatable)
+          .find_by(id: params.thread_id, channel_id: params.channel_id)
+      thread if thread&.original_message
     end
 
     def can_view_thread(guardian:, thread:)

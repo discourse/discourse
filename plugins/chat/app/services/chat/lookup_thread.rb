@@ -36,15 +36,17 @@ module Chat
     def fetch_thread(params:)
       user_includes = SiteSetting.enable_user_status ? %i[user_status user_option] : %i[user_option]
 
-      Chat::Thread.includes(
-        :channel,
-        original_message_user: :user_status,
-        original_message: [
-          :chat_webhook_event,
-          { user: user_includes },
-          { user_mentions: { user: user_includes } },
-        ],
-      ).find_by(id: params.thread_id, channel_id: params.channel_id)
+      thread =
+        Chat::Thread.includes(
+          :channel,
+          original_message_user: :user_status,
+          original_message: [
+            :chat_webhook_event,
+            { user: user_includes },
+            { user_mentions: { user: user_includes } },
+          ],
+        ).find_by(id: params.thread_id, channel_id: params.channel_id)
+      thread if thread&.original_message
     end
 
     def invalid_access(guardian:, thread:)
