@@ -310,6 +310,13 @@ en:
         candidate_pairs_value: "%{total} total, %{succeeded} succeeded, %{failed} failed"
         local_candidates: "Your candidates"
         remote_candidates: "Their candidates"
+        pairs_by_type: "By candidate type"
+        pairs_by_type_value: "%{types}: %{succeeded} succeeded, %{failed} failed"
+        harmless_errors:
+          one: "%{count} harmless error: the server was reached from another address"
+          other: "%{count} harmless errors: the server was reached from another address"
+        multiple_public_ipv4: "This device reaches the internet through more than one public IPv4 address (%{addresses}). This usually means more than one internet connection, which can make direct connections unreliable."
+        unexpected_local_address: "Your traffic to this peer left from a public address no server reported, so direct connections likely failed and the call was relayed. This usually means more than one internet connection or a strict NAT."
         restarts: "Reconnect attempts"
         restarts_value: "%{count} of %{max}"
         gave_up: "Stopped retrying"
