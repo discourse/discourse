@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DsaStatementOfRecord < ActiveRecord::Base
+  COMMUNITY_RULE_EXPLANATION_KEY = "explanation"
+
   TERRITORIAL_SCOPE = %w[
     AT
     BE
@@ -62,7 +64,10 @@ class DsaStatementOfRecord < ActiveRecord::Base
         .parse(SiteSetting.dsa_community_rules)
         .map do |rule|
           rule.merge(
-            "id" => Digest::SHA256.hexdigest([rule["ground"], rule["explanation"]].to_json),
+            "id" =>
+              Digest::SHA256.hexdigest(
+                [rule["ground"], rule[COMMUNITY_RULE_EXPLANATION_KEY]].to_json,
+              ),
           )
         end
     end
@@ -117,7 +122,8 @@ class DsaStatementOfRecord < ActiveRecord::Base
       payload:
         payload.merge(
           "incompatible_content_ground" => community_rule.fetch("ground"),
-          "incompatible_content_explanation" => community_rule.fetch("explanation"),
+          "incompatible_content_explanation" =>
+            community_rule.fetch(COMMUNITY_RULE_EXPLANATION_KEY),
           "category" => category,
         ),
       status: :ready,
