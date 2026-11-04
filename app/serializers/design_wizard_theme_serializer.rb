@@ -5,6 +5,7 @@ class DesignWizardThemeSerializer < ApplicationSerializer
              :name,
              :description,
              :default,
+             :default_homepage,
              :color_scheme_id,
              :dark_color_scheme_id,
              :screenshot_light_url,
@@ -27,6 +28,10 @@ class DesignWizardThemeSerializer < ApplicationSerializer
 
   def default
     object.default?
+  end
+
+  def default_homepage
+    definition.fetch(:default_homepage) { "latest" if Theme::CORE_THEMES.value?(object.id) }
   end
 
   def screenshot_light_url

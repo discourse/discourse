@@ -5,6 +5,7 @@ module DesignWizard
     CONCORD = {
       name: "Concord",
       remote_url: "https://github.com/discourse/discourse-concord-theme",
+      default_homepage: "chat",
       supports_welcome_banner: false,
       supports_search: false,
       screenshot_light_url: "/images/design-wizard/concord-light.webp",

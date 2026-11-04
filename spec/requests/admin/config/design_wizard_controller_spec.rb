@@ -34,7 +34,11 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
         expect(horizon["description"]).to eq("A simple, beautiful theme")
-        expect(horizon).to include("supports_welcome_banner" => true, "supports_search" => true)
+        expect(horizon).to include(
+          "default_homepage" => "latest",
+          "supports_welcome_banner" => true,
+          "supports_search" => true,
+        )
         expect(horizon["palette_pairs"].map { |pair| pair["key"] }).to include(
           "horizon",
           "royal",
@@ -87,6 +91,7 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["themes"].find { |theme| theme["id"] == "concord" }).to include(
+          "default_homepage" => "chat",
           "name" => "Concord",
           "remote_url" => "https://github.com/discourse/discourse-concord-theme",
           "description" => I18n.t("design_wizard.themes.concord.description"),
@@ -183,6 +188,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
         expect(themes.find { |theme| theme["id"] == concord.id }).to include(
           "default" => true,
+          "default_homepage" => "chat",
           "color_scheme_id" => palette.id,
           "supports_welcome_banner" => false,
           "supports_search" => false,

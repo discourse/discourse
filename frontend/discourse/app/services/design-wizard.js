@@ -87,6 +87,7 @@ export default class DesignWizardService extends Service {
   #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
+  #pendingThemeHomepage = false;
 
   get selectedTheme() {
     return this.data?.themes.find((theme) => theme.id === this.themeId);
@@ -265,6 +266,14 @@ export default class DesignWizardService extends Service {
 
     this.#previewSiteSettings();
     await this.#previewSelections();
+
+    // a theme selection happens across a preview reload, so persist it once
+    // the installed theme's palettes are available here
+    if (this.#pendingThemeHomepage) {
+      this.#pendingThemeHomepage = false;
+      this.#persistState();
+      await this.saveProgress();
+    }
   }
 
   // entry point for an admin re-running the wizard: the page behind the sheet
@@ -350,11 +359,30 @@ export default class DesignWizardService extends Service {
     // the theme being previewed rather than carrying the old theme's values
     this.welcomeBanner = undefined;
     this.searchExperience = undefined;
+
+    const themeHomepage = theme?.default_homepage;
+    let previewPath = "/";
+    this.#pendingThemeHomepage = false;
+
+    if (themeHomepage) {
+      const homepage = this.#supportedHomepage(themeHomepage);
+      const homepageOption = this.additionalHomepages.find(
+        ({ id }) => id === homepage
+      );
+
+      this.homepage = homepage;
+      this.homepageSettings = {
+        ...this.#originalHomepageSettings,
+        ...homepageOption?.settings,
+      };
+      this.#pendingThemeHomepage = this.data.homepage !== homepage;
+      previewPath = homepageOption?.path ?? `/${homepage}`;
+    }
     this.#persistState();
 
     // a different theme is a different asset build, so previewing it means
     // reloading the page; state is restored from the store afterwards
-    this.#navigateToThemePreview(themeId);
+    this.#navigateToThemePreview(themeId, previewPath);
   }
 
   async selectPair(pairKey) {
@@ -547,6 +575,8 @@ export default class DesignWizardService extends Service {
       });
 
       this.progressSaved = true;
+      this.data.homepage = this.homepage;
+      this.data.homepage_settings = this.homepageSettings;
       this.#persistState();
 
       // saving recompiles stylesheets and the live reloader swaps them in,
@@ -593,6 +623,7 @@ export default class DesignWizardService extends Service {
     this.returnUrl = undefined;
     this.progressSaved = false;
     this.showIntro = false;
+    this.#pendingThemeHomepage = false;
     this.#snapshot = undefined;
     this.#originalSiteSettings = undefined;
     this.#originalHomepageSettings = undefined;
@@ -659,6 +690,7 @@ export default class DesignWizardService extends Service {
     this.welcomeBannerLocation = this.siteSettings.welcome_banner_location;
     this.searchExperience = this.siteSettings.search_experience;
     this.stepIndex = 0;
+    this.#pendingThemeHomepage = false;
   }
 
   #restore(stored) {
@@ -666,6 +698,7 @@ export default class DesignWizardService extends Service {
     this.source = stored.source ?? SOURCE_ONBOARDING;
     this.returnUrl = stored.returnUrl;
     this.progressSaved = stored.progressSaved ?? false;
+    this.#pendingThemeHomepage = stored.pendingThemeHomepage ?? false;
     this.#snapshot = stored.snapshot;
     if (this.#snapshot) {
       this.#snapshot.homepage_settings = this.#availableHomepageSettings(
@@ -737,6 +770,7 @@ export default class DesignWizardService extends Service {
         source: this.source,
         returnUrl: this.returnUrl,
         progressSaved: this.progressSaved,
+        pendingThemeHomepage: this.#pendingThemeHomepage,
         snapshot: this.#snapshot,
       }),
     });
@@ -763,9 +797,9 @@ export default class DesignWizardService extends Service {
     }
   }
 
-  #navigateToThemePreview(themeId) {
+  #navigateToThemePreview(themeId, path = "/") {
     DiscourseURL.redirectTo(
-      `/?preview_theme_id=${encodeURIComponent(themeId)}`
+      `${path}?preview_theme_id=${encodeURIComponent(themeId)}`
     );
   }
 
