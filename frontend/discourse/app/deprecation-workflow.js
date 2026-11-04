@@ -347,7 +347,6 @@ const workflows = [
     "discourse.select-kit-resolved-components",
     "discourse.static-viewport-initialization",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
-    "discourse.text.cook-async",
     "discourse.user.userOptions",
     /^discourse\.native-array-extensions\..+$/,
   ].map((matchId) => ({ handler: "notify-admin", matchId })),
