@@ -4886,15 +4886,18 @@ experimental:
     default: []
     area: "experimental"
     schema:
-      name: community_rule
+      name: Community rule
+      identifier: ground
       properties:
         ground:
           type: string
+          textarea: true
           required: true
           validations:
             max_length: 500
         explanation:
           type: string
+          textarea: true
           required: true
           validations:
             max_length: 500

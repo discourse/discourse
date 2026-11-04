@@ -361,6 +361,44 @@ module(
         .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
+    test("string fields with textarea enabled", async function (assert) {
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "item",
+          properties: {
+            description: {
+              type: "string",
+              textarea: true,
+              validations: { max_length: 500 },
+            },
+          },
+        },
+        value: [{ description: "First line\nSecond line" }],
+      });
+      const textarea = '.schema-field[data-name="description"] textarea';
+
+      await renderEditor(setting);
+
+      assert
+        .dom(textarea)
+        .hasValue("First line\nSecond line", "renders the multiline string");
+      assert
+        .dom(textarea)
+        .hasAttribute(
+          "maxlength",
+          "500",
+          "retains the configured length limit"
+        );
+
+      await fillIn(textarea, "Updated first line\nUpdated second line");
+
+      assert.deepEqual(
+        await captureSavedValue(this.owner),
+        [{ description: "Updated first line\nUpdated second line" }],
+        "saves the edited string with its line breaks"
+      );
+    });
+
     test("input fields of type integer", async function (assert) {
       const setting = objectsSetting({
         objects_schema: {
