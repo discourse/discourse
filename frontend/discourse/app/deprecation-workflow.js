@@ -336,6 +336,8 @@ const workflows = [
     "discourse.html-safe-helper",
     "discourse.legacy-topic-list",
     "discourse.modify-class-model",
+    "discourse.native-array-extensions.firstObject",
+    "discourse.native-array-extensions.lastObject",
     "discourse.plugin-outlet-args",
     "discourse.plugin-outlet-classic-args-clash",
     "discourse.plugin-outlet-classic-hooks",
@@ -349,7 +351,6 @@ const workflows = [
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
     "discourse.text.cook-async",
     "discourse.user.userOptions",
-    /^discourse\.native-array-extensions\..+$/,
   ].map((matchId) => ({ handler: "notify-admin", matchId })),
 
   // used in system specs
