@@ -331,7 +331,6 @@ const workflows = [
     "discourse.hbs-extension",
     "discourse.es6-extension",
     "discourse.html-safe-helper",
-    "discourse.legacy-topic-list",
     "discourse.modify-class-model",
     "discourse.plugin-outlet-args",
     "discourse.plugin-outlet-classic-args-clash",
