@@ -323,50 +323,100 @@ RSpec.describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#create" do
+      subject(:create_query) do
+        post "/admin/plugins/discourse-data-explorer/queries.json", params: request_parameters
+      end
+
       fab!(:group)
 
-      it "grants the given groups access to the new query" do
-        post "/admin/plugins/discourse-data-explorer/queries.json",
-             params: {
-               query: {
-                 name: "My query",
-                 description: "A description",
-                 sql: "SELECT 1",
-                 group_ids: [group.id],
-                 tags: %w[Staff Monthly],
-               },
-             }
+      let(:query_parameters) do
+        {
+          name: "My query",
+          description: "A description",
+          sql: "SELECT 1",
+          group_ids: [group.id, group.id],
+          tags: [" Staff ", "0012", "Staff", "custom"],
+        }
+      end
+      let(:request_parameters) { { query: query_parameters } }
+      let(:query) { DiscourseDataExplorer::Query.find(response_json.dig("query", "id")) }
 
-        expect(response.status).to eq(200)
-        expect(response_json["query"]["group_ids"]).to eq([group.id])
-        expect(response_json["query"]["tags"]).to eq(%w[custom monthly staff])
+      before { freeze_time(Time.current.change(usec: 0)) }
+
+      it "creates the query with its tags and group access", :aggregate_failures do
+        expect { create_query }.to change(DiscourseDataExplorer::Query, :count).by(1)
+
+        expect(response).to have_http_status(:ok)
+        expect(response_json.dig("query", "group_ids")).to contain_exactly(group.id)
+        expect(response_json.dig("query", "tags")).to contain_exactly("custom", "0012", "staff")
+        expect(query).to have_attributes(user_id: admin.id, last_run_at: Time.current)
       end
 
-      it "creates a query without groups when none are given" do
-        post "/admin/plugins/discourse-data-explorer/queries.json",
-             params: {
-               query: {
-                 name: "My query",
-                 sql: "SELECT 1",
-               },
-             }
+      context "when only a name is supplied" do
+        let(:query_parameters) { super().slice(:name) }
 
-        expect(response.status).to eq(200)
-        expect(response_json["query"]["group_ids"]).to eq([])
+        it "uses the creation defaults", :aggregate_failures do
+          create_query
+
+          expect(response).to have_http_status(:ok)
+          expect(query).to have_attributes(sql: "SELECT 1", description: nil, user_id: admin.id)
+          expect(response_json.dig("query", "group_ids")).to be_empty
+        end
       end
 
-      it "rejects the default tag on user-created queries" do
-        expect {
-          post "/admin/plugins/discourse-data-explorer/queries.json",
-               params: {
-                 query: {
-                   name: "My query",
-                   tags: ["Default"],
-                 },
-               }
-        }.not_to change { DiscourseDataExplorer::Query.user_queries.count }
+      context "when fields appear outside the query object" do
+        let(:query_parameters) { super().slice(:name) }
+        let(:request_parameters) do
+          super().merge(sql: "SELECT 99", description: "Ignore this", group_ids: [group.id])
+        end
 
-        expect(response.status).to eq(422)
+        it "ignores the outer fields", :aggregate_failures do
+          create_query
+
+          expect(response).to have_http_status(:ok)
+          expect(query).to have_attributes(sql: "SELECT 1", description: nil)
+          expect(query.groups).to be_empty
+        end
+      end
+
+      context "when the name is omitted" do
+        let(:query_parameters) { super().except(:name) }
+
+        it "returns a bad request response", :aggregate_failures do
+          expect { create_query }.not_to change(DiscourseDataExplorer::Query, :count)
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      context "when a group does not exist" do
+        let(:query_parameters) { super().merge(group_ids: [Group.maximum(:id).next]) }
+
+        it "returns a not found response" do
+          create_query
+
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context "when a tag is reserved" do
+        let(:query_parameters) { super().merge(tags: ["Default"]) }
+
+        it "rejects the tag" do
+          create_query
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+
+      context "when the service fails for an unknown reason" do
+        before { allow(DiscourseDataExplorer::Query).to receive(:create).and_return(nil) }
+
+        it "returns a failure response", :aggregate_failures do
+          create_query
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_json).to eq("failed" => "FAILED")
+        end
       end
     end
 

@@ -52,6 +52,37 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
       end
   end
 
+  context "when query creation fails" do
+    subject(:result) { tool.invoke }
+
+    let(:reviewable) { build_reviewable }
+
+    before do
+      context.reviewable_id = reviewable.id
+      allow(DiscourseDataExplorer::CreateQuery).to receive(:call!).and_raise(
+        Service::Base::Failure.new,
+      )
+    end
+
+    after do
+      DiscourseDataExplorer::AdminAssistant::QueryDraft.release(token, reviewable_id: reviewable.id)
+    end
+
+    it "releases the draft for another attempt", :aggregate_failures do
+      expect { result }.not_to change { DiscourseDataExplorer::Query.count }
+      expect(result).to include(
+        status: "error",
+        error: I18n.t("discourse_data_explorer.admin_assistant.creation_failed"),
+      )
+      expect(
+        DiscourseDataExplorer::AdminAssistant::QueryDraft.claim(
+          token,
+          reviewable_id: reviewable.id,
+        ),
+      ).to eq(true)
+    end
+  end
+
   it "requires approval and shows the exact query without its token" do
     expect(described_class.mandatory_approval?).to eq(true)
     expect(tool.details).to include(query[:name], query[:description], query[:sql])

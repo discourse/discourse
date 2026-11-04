@@ -17,7 +17,6 @@ module JsonApiKit
     end
 
     delegate :schema,
-             :identifier_type,
              :order,
              :sort_key,
              :paged_from?,
