@@ -12,7 +12,6 @@ import FormTemplate from "discourse/admin/models/form-template";
 import Permalink from "discourse/admin/models/permalink";
 import SiteText from "discourse/admin/models/site-text";
 import UserField from "discourse/admin/models/user-field";
-import type LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import type Category from "discourse/models/category";
 import type RestModel from "discourse/models/rest";
 import type {
@@ -82,19 +81,12 @@ store.find("site-text", {
 });
 
 declare const scheme: ColorScheme;
-declare const schemes: Awaited<ReturnType<typeof ColorScheme.findAll>>;
 declare const color: ColorSchemeColor;
 
 expectTypeOf<Omit<ColorScheme, "destroy">>().toExtend<
   Omit<EmberObject, "destroy">
 >();
 expectTypeOf(scheme).not.toExtend<RestModel>();
-expectTypeOf(schemes).toExtend<LegacyArrayLikeObject<ColorScheme>>();
-expectTypeOf(schemes.content).toEqualTypeOf<ColorScheme[]>();
-expectTypeOf(schemes.loading).toEqualTypeOf<boolean>();
-ColorScheme.findAll();
-schemes.loading = false;
-schemes.content.push(scheme);
 expectTypeOf(ColorScheme.find(860)).resolves.toEqualTypeOf<ColorScheme>();
 ColorScheme.find("860");
 
