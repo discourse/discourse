@@ -168,6 +168,42 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       SiteSetting.ai_spam_detection_enabled = false
       expect { described_class.perform_scan!(post) }.not_to change { AiSpamLog.count }
     end
+
+    it "fails the scan instead of recording an unusable verdict as not spam" do
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ reason: "the model omitted the verdict" }],
+        ) { described_class.perform_scan!(post) }
+      end.to raise_error(described_class::UnknownVerdict)
+
+      expect(AiSpamLog.where(post: post)).to be_empty
+    end
+
+    it "rejects verdicts that are null or not genuine booleans" do
+      [
+        { spam: nil, reason: "no verdict" },
+        { spam: "true", reason: "string verdict" },
+      ].each do |response|
+        expect do
+          DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+            described_class.perform_scan!(post)
+          end
+        end.to raise_error(described_class::UnknownVerdict)
+      end
+
+      expect(AiSpamLog.where(post: post)).to be_empty
+    end
+
+    it "fails the job so it retries when the verdict is unusable" do
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ reason: "the model omitted the verdict" }],
+        ) { Jobs::AiSpamScan.new.execute(post_id: post.id) }
+      end.to raise_error(described_class::UnknownVerdict)
+
+      expect(post.reload.hidden?).to eq(false)
+      expect(post.user.reload).not_to be_silenced
+    end
   end
 
   describe ".perform_scan! with a decision model" do
@@ -221,6 +257,28 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       end
 
       expect(AiSpamLog.find_by!(post:).llm_model_id).to eq(llm_model.id)
+    end
+
+    it "lets the LLM decide when the decision model refuses" do
+      scan_with(:refusal, llm_responses: [{ spam: true, reason: "llm reason" }])
+
+      log = AiSpamLog.find_by!(post:)
+      expect(log.is_spam).to eq(true)
+      expect(log.llm_model_id).to eq(llm_model.id)
+    end
+
+    it "fails the job for retry when the decision model refuses without an LLM" do
+      spam_setting.update!(llm_model: nil)
+
+      expect do
+        DiscourseAi::Decisions.with_canned_answers(spam: :refusal) do
+          Jobs::AiSpamScan.new.execute(post_id: post.id)
+        end
+      end.to raise_error(described_class::UnknownVerdict)
+
+      expect(AiSpamLog.where(post:)).to be_empty
+      expect(post.reload.hidden?).to eq(false)
+      expect(post.user.reload).not_to be_silenced
     end
 
     it "decides every post at one cutoff without an LLM" do
