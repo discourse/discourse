@@ -2,38 +2,6 @@
 
 RSpec.describe "JSON:API queries", type: :request do
   fab!(:admin)
-  fab!(:author) { Fabricate(:user, username: "query_author") }
-  fab!(:oldest) do
-    Fabricate(
-      :query,
-      name: "Posts of the week",
-      description: "Every post written in the last seven days",
-      sql: "SELECT id FROM posts LIMIT 1",
-      user: author,
-      last_run_at: Time.utc(2026, 8, 1),
-    )
-  end
-  fab!(:middle) do
-    Fabricate(
-      :query,
-      name: "Users who never posted",
-      description: "Accounts with no post at all",
-      sql: "SELECT id FROM users LIMIT 2",
-      user: author,
-      last_run_at: Time.utc(2026, 8, 2),
-    )
-  end
-  fab!(:newest) do
-    Fabricate(
-      :query,
-      name: "Topics of a category",
-      description: "Every topic filed under one category",
-      sql: "SELECT id FROM topics LIMIT 3",
-      user: author,
-      last_run_at: Time.utc(2026, 8, 3),
-    )
-  end
-
   fab!(:analysts) { Fabricate(:group, name: "analysts") }
 
   let(:base) { "http://test.localhost/api/data-explorer" }
@@ -47,7 +15,42 @@ RSpec.describe "JSON:API queries", type: :request do
     SiteSetting.data_explorer_enabled = true
     host! Discourse.current_hostname
     sign_in(user)
-    [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) }
+  end
+
+  shared_context "with existing queries" do
+    fab!(:author) { Fabricate(:user, username: "query_author") }
+    fab!(:oldest) do
+      Fabricate(
+        :query,
+        name: "Posts of the week",
+        description: "Every post written in the last seven days",
+        sql: "SELECT id FROM posts LIMIT 1",
+        user: author,
+        last_run_at: Time.utc(2026, 8, 1),
+      )
+    end
+    fab!(:middle) do
+      Fabricate(
+        :query,
+        name: "Users who never posted",
+        description: "Accounts with no post at all",
+        sql: "SELECT id FROM users LIMIT 2",
+        user: author,
+        last_run_at: Time.utc(2026, 8, 2),
+      )
+    end
+    fab!(:newest) do
+      Fabricate(
+        :query,
+        name: "Topics of a category",
+        description: "Every topic filed under one category",
+        sql: "SELECT id FROM topics LIMIT 3",
+        user: author,
+        last_run_at: Time.utc(2026, 8, 3),
+      )
+    end
+
+    before { [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) } }
   end
 
   shared_context "with synchronized default queries" do
@@ -82,7 +85,181 @@ RSpec.describe "JSON:API queries", type: :request do
     end
   end
 
+  describe "#create" do
+    subject(:create_query) { post "/api/data-explorer/queries", params: document.to_json, headers: }
+
+    let(:headers) { super().merge("CONTENT_TYPE" => JsonApiKit::MediaType::JSON_API) }
+    let(:document) { { "data" => primary } }
+    let(:primary) do
+      { "type" => "queries", "attributes" => attributes, "relationships" => relationships }
+    end
+    let(:attributes) do
+      {
+        "name" => "A new report",
+        "description" => "A report for the team",
+        "sql" => "SELECT 1 AS value",
+        "tags" => [" Staff ", "0012", "Staff", "custom"],
+      }
+    end
+    let(:identifier) { { "type" => "groups", "id" => analysts.id.to_s } }
+    let(:relationships) { { "groups" => { "data" => [identifier, identifier] } } }
+    let(:query) { DiscourseDataExplorer::Query.find(parsed_body.dig("data", "id")) }
+    let(:stored_tag_names) { query.tags.map(&:name) }
+
+    before { freeze_time(Time.current.change(usec: 0)) }
+
+    it "creates the query with its tags and group access", :aggregate_failures do
+      expect { create_query }.to change(DiscourseDataExplorer::Query, :count).by(1)
+
+      expect(response).to have_http_status(:created)
+      expect(JsonApiKit::MediaType.new(response.media_type)).to be_json_api
+      expect(query).to have_attributes(
+        name: attributes["name"],
+        description: attributes["description"],
+        sql: attributes["sql"],
+        user_id: admin.id,
+        hidden: false,
+        last_run_at: Time.current,
+      )
+      expect(query.group_ids).to contain_exactly(analysts.id)
+      expect(stored_tag_names).to contain_exactly("0012", "staff")
+      expect(parsed_body.dig("data", "type")).to eq("queries")
+      expect(parsed_body.dig("data", "attributes", "tags")).to contain_exactly(
+        "custom",
+        "0012",
+        "staff",
+      )
+      expect(response.headers["Location"]).to eq("#{base}/queries/#{query.id}")
+    end
+
+    context "when only a name is supplied" do
+      let(:primary) { super().except("relationships") }
+      let(:attributes) { super().slice("name") }
+
+      it "uses the creation defaults", :aggregate_failures do
+        create_query
+
+        expect(response).to have_http_status(:created)
+        expect(query).to have_attributes(sql: "SELECT 1", description: nil, user_id: admin.id)
+        expect(query.groups).to be_empty
+        expect(query.tags).to be_empty
+      end
+    end
+
+    context "when SQL and description are blank" do
+      let(:attributes) { super().merge("sql" => " ", "description" => "") }
+
+      it "uses the creation defaults", :aggregate_failures do
+        create_query
+
+        expect(response).to have_http_status(:created)
+        expect(query).to have_attributes(sql: "SELECT 1", description: nil)
+      end
+    end
+
+    context "when the name is blank" do
+      let(:attributes) { super().merge("name" => " ") }
+
+      it "reports the name without creating a query", :aggregate_failures do
+        expect { create_query }.not_to change(DiscourseDataExplorer::Query, :count)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_body["errors"]).to contain_exactly(
+          a_hash_including("source" => { "pointer" => "/data/attributes/name" }),
+        )
+      end
+    end
+
+    context "when the user is not an admin" do
+      fab!(:visitor, :user)
+
+      let(:user) { visitor }
+
+      it "refuses creation", :aggregate_failures do
+        expect { create_query }.not_to change(DiscourseDataExplorer::Query, :count)
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when the plugin is disabled" do
+      before { SiteSetting.data_explorer_enabled = false }
+
+      it "refuses creation", :aggregate_failures do
+        expect { create_query }.not_to change(DiscourseDataExplorer::Query, :count)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context "when the client supplies a creator" do
+      let(:relationships) do
+        super().merge(
+          "user" => {
+            "data" => {
+              "type" => "users",
+              "id" => Discourse::SYSTEM_USER_ID.to_s,
+            },
+          },
+        )
+      end
+
+      it "rejects the read-only relationship", :aggregate_failures do
+        expect { create_query }.not_to change(DiscourseDataExplorer::Query, :count)
+
+        expect(response).to have_http_status(:forbidden)
+        expect(parsed_body["errors"]).to contain_exactly(
+          a_hash_including("source" => { "pointer" => "/data/relationships/user" }),
+        )
+      end
+    end
+
+    context "when a group does not exist" do
+      let(:identifier) { super().merge("id" => Group.maximum(:id).next.to_s) }
+
+      it "refuses creation without storing group links", :aggregate_failures do
+        expect { create_query }.not_to change {
+          [DiscourseDataExplorer::Query.count, DiscourseDataExplorer::QueryGroup.count]
+        }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context "when group lookup fails unexpectedly" do
+      before do
+        allow(Group).to receive(:find).and_call_original
+        allow(Group).to receive(:find).with([analysts.id]).and_raise(RuntimeError, "lookup failed")
+      end
+
+      it "returns a server error without creating a query", :aggregate_failures do
+        expect { create_query }.not_to change(DiscourseDataExplorer::Query, :count)
+
+        expect(response).to have_http_status(:internal_server_error)
+        expect(parsed_body["errors"]).to contain_exactly(a_hash_including("status" => "500"))
+      end
+    end
+
+    context "when a tag is reserved" do
+      let(:attributes) { super().merge("tags" => ["Default"]) }
+
+      it "rolls back creation", :aggregate_failures do
+        expect { create_query }.not_to change {
+          [
+            DiscourseDataExplorer::Query.count,
+            DiscourseDataExplorer::QueryGroup.count,
+            DiscourseDataExplorer::QueryTag.count,
+            DiscourseDataExplorer::QueryTagMapping.count,
+          ]
+        }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_body["errors"]).to contain_exactly(
+          a_hash_including("source" => { "pointer" => "/data" }),
+        )
+      end
+    end
+  end
+
   describe "GET /index" do
+    include_context "with existing queries"
+
     let(:path) { "/api/data-explorer/queries" }
     let(:data) do
       [newest, middle, oldest].map do |query|
@@ -349,6 +526,8 @@ RSpec.describe "JSON:API queries", type: :request do
   end
 
   describe "GET /show" do
+    include_context "with existing queries"
+
     let(:path) { "/api/data-explorer/queries/#{middle.id}" }
 
     context "when the request includes a cached result" do
