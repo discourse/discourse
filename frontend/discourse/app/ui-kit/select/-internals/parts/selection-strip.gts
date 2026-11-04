@@ -88,14 +88,9 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
   }>((element, [chips = []]) => {
     const previous = this.#keys;
     this.#keys = new Set(chips.map((chip) => chip.key));
-    let index = -1;
-    if (previous) {
-      chips.forEach((chip, at) => {
-        if (!previous.has(chip.key)) {
-          index = at;
-        }
-      });
-    }
+    const index = previous
+      ? chips.findLastIndex((chip) => !previous.has(chip.key))
+      : -1;
     if (index < 0) {
       return;
     }

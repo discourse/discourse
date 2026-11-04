@@ -2816,10 +2816,8 @@ module(
         name: `A fairly long held item name ${index + 1}`,
       }));
       const held = items.slice(0, 12).map((item) => item.id);
-      const host = new (class {
-        @tracked value = held;
-      })();
-      const onChange = (value) => (host.value = value);
+      const picked = tracked(held);
+      const onChange = (value) => (picked.value = value);
       await render(
         <template>
           <div style="width: 240px">
@@ -2828,7 +2826,7 @@ module(
               @maxVisibleChips={{1}}
               @multiple={{true}}
               @onChange={{onChange}}
-              @value={{host.value}}
+              @value={{picked.value}}
             />
           </div>
         </template>
