@@ -3,7 +3,7 @@
     "plugins": [{
       "name": "@glint/tsserver-plugin"
     }],
-    "target": "es2022",
+    "target": "es2023",
     "module": "es2022",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
