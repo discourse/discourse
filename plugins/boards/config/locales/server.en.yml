@@ -7,7 +7,7 @@ en:
         invalid_params: "Could not create board column: %{errors}"
         failed: "Could not create the board column."
       create_board:
-        forbidden: "The workflow execution user does not have permission to create boards. %{policy_reason}"
+        forbidden: "Could not create board: %{policy_reason}"
         invalid_params: "Could not create board: %{errors}"
         acl_failed: "Could not create the board's access permissions. Check the selected groups and permissions."
         failed: "Could not create the board."
