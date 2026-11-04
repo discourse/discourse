@@ -32,8 +32,6 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   def remove_disallowed_groups(objects)
-    return objects if objects.blank?
-
     remove_disallowed_groups_from_objects(objects.deep_dup, schema[:properties])
   end
 
@@ -57,6 +55,10 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   private
 
   def remove_disallowed_groups_from_objects(objects, properties)
+    unless ThemeSettingsValidator.is_valid_value_type?(objects, type)
+      raise Discourse::InvalidParameters, I18n.t("themes.settings_errors.objects.invalid_objects")
+    end
+
     objects.each do |object|
       properties.each do |property_name, property_attributes|
         key = object_key(object, property_name)
@@ -70,7 +72,7 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
           object[key] = Array(object[key]).reject { |id| disallowed_ids.include?(id) }
         when "objects"
           nested_objects = object[key]
-          if nested_objects.is_a?(Array)
+          if !nested_objects.nil?
             remove_disallowed_groups_from_objects(
               nested_objects,
               property_attributes[:schema][:properties],

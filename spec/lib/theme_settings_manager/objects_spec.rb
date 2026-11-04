@@ -30,6 +30,22 @@ RSpec.describe ThemeSettingsManager::Objects do
     expect(theme.reload.settings[:objects_setting].value).to eq(new_value)
   end
 
+  it "rejects invalid root and nested object shapes before saving" do
+    setting = theme_setting[:objects_setting]
+    previous_value = setting.value
+    [
+      true,
+      1,
+      "{}",
+      "[1]",
+      [{ "name" => "Section", "links" => [1] }],
+      [{ "links" => {} }],
+    ].each do |value|
+      expect { setting.value = value }.to raise_error(Discourse::InvalidParameters)
+      expect(theme.reload.settings[:objects_setting].value).to eq(previous_value)
+    end
+  end
+
   it "removes disallowed group ids before saving groups properties" do
     theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
       objects_setting:
