@@ -550,6 +550,11 @@ Open items need a decision after manual testing; the rest are intended but still
 - [ ] **The modal lists no longer pick for the user.** Move to topic or message, feature topic
   and chat to topic used to pick a lone result on their own, and cleared the held topic while
   typing. A topic is now held only when picked, and stays held while searching again.
+- [ ] **The workflows topic field follows the topic type.** Select-kit always searched topics,
+  so a trigger watching personal messages could hold only regular topics (and never fire) and
+  found a message only by its id or URL. It now searches regular topics, or every user's messages,
+  as the trigger's topic type says; "all" keeps the old search. Watching messages lists recent
+  ones before anything is typed.
 - [ ] **"Add topic as card" (boards):** a search starts at one character (was four), a pick
   fills the field and the "Add topic as card" button adds it (a picked result used to add the
   card at once, and the button only took a pasted URL), a pasted URL or path resolves through the
@@ -654,8 +659,9 @@ pickers inside modals, which were lists of radio buttons. Ids are emitted as num
 needs no lookup, and keep `additionalFilters="status:public"`. `ChooseTopic` and `ChooseMessage`
 branch inside the two components, so their callers are unchanged: the current topic is passed as
 `@exclude`, `loadOnInit` becomes listing on open (as `@additionalFilters` alone does), and
-`topicChangedCallback` still receives the topic. Workflows passes `@archetype={{null}}`, since its
-search was never limited to regular topics, and its unavailable-topic text as `unresolved`.
+`topicChangedCallback` still receives the topic. Workflows' topic field follows the trigger's topic
+type (regular topics, every user's messages through `in:all-pms`, or every topic for "all"), and
+passes its unavailable-topic text as `unresolved`.
 Boards' "Add topic as card" holds the picked topic until its button adds the card and closes the
 modal.
 

@@ -78,6 +78,22 @@ export default class TopicControl extends Component {
     return integerIdsFromValue(this.args.field.value);
   }
 
+  /**
+   * What the search offers, following the trigger's topic type: regular topics, or messages
+   * (every user's, since only admins configure workflows). Without a type, or with "all", it
+   * searches every topic and finds a message by its id or URL.
+   */
+  get search() {
+    switch (this.args.configuration?.topic_type) {
+      case "topics":
+        return { archetype: "regular" };
+      case "personal_messages":
+        return { archetype: "private_message", filters: "in:all-pms" };
+      default:
+        return { archetype: null };
+    }
+  }
+
   @action
   hydrateSelectedTopics() {
     const shownIds = this.selectedTopics.map((topic) => topic.id);
@@ -147,7 +163,8 @@ export default class TopicControl extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectTopic
           class="topic-selector"
-          @archetype={{null}}
+          @additionalFilters={{this.search.filters}}
+          @archetype={{this.search.archetype}}
           @multiple={{true}}
           @onChange={{this.setTopicIds}}
           @texts={{hash placeholder=@placeholder unresolved=unavailableTopic}}

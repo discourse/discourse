@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { click, findAll, render, waitFor } from "@ember/test-helpers";
+import { hash } from "@ember/helper";
+import { click, findAll, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -141,6 +142,62 @@ module(
         type_filter: "topic",
         search_for_id: "true",
       });
+    });
+
+    test("searches what the trigger's topic type watches", async function (assert) {
+      const topicType = tracked("topics");
+      this.field = tracked([]);
+      const field = this.field;
+      await render(
+        <template>
+          <TopicControl
+            @configuration={{hash topic_type=topicType.value}}
+            @field={{field}}
+            @supportsExpression={{false}}
+          />
+        </template>
+      );
+      const select = new DSelect(".topic-selector");
+
+      await select.open();
+      await select.search("cube");
+      assert.deepEqual(
+        this.searches.at(-1),
+        {
+          term: "cube ",
+          type_filter: "topic",
+          restrict_to_archetype: "regular",
+          search_for_id: "true",
+        },
+        "topics: regular topics only"
+      );
+      await select.close();
+
+      topicType.value = "personal_messages";
+      await settled();
+      await select.open();
+      await select.search("cube");
+      assert.deepEqual(
+        this.searches.at(-1),
+        {
+          term: "cube in:all-pms",
+          type_filter: "private_messages",
+          restrict_to_archetype: "private_message",
+          search_for_id: "true",
+        },
+        "personal messages: every user's messages"
+      );
+      await select.close();
+
+      topicType.value = "all";
+      await settled();
+      await select.open();
+      await select.search("cube");
+      assert.deepEqual(
+        this.searches.at(-1),
+        { term: "cube ", type_filter: "topic", search_for_id: "true" },
+        "all: every topic, with messages by id or URL"
+      );
     });
 
     test("names stored topics through one lookup", async function (assert) {
