@@ -160,7 +160,7 @@ RSpec.describe AdminUserIndexQuery do
     end
 
     it "sorts bot activity and creation dates in both directions" do
-      other_bot = Fabricate(:user, id: -102, created_at: 2.days.ago)
+      other_bot = Fabricate(:user, id: -102, username: "other_bot", created_at: 2.days.ago)
       bot.update!(created_at: 1.day.ago)
       bot.user_stat.update!(topics_entered: 2, posts_read_count: 4, post_count: 6)
       other_bot.user_stat.update!(topics_entered: 1, posts_read_count: 3, post_count: 5)
