@@ -23,6 +23,7 @@ require "coverage"
 require "fileutils"
 require "json"
 require "open3"
+require "socket"
 require "tmpdir"
 require "zlib"
 
@@ -121,17 +122,20 @@ module TestImpact
       note(:reads, path) if !path.end_with?(".rb")
     end
 
-    # One DevTools port per browser the system specs launch (desktop, mobile,
-    # per allowed host), for cdp_coverage.
-    def self.chrome_args(driver_name)
+    # A DevTools port for each browser the system specs launch, for
+    # cdp_coverage. Each Capybara session launches its own browser, so specs
+    # with several users have several per driver.
+    def self.chrome_args
       return [] if !@instance
-      @ports ||= {}
-      @ports[driver_name] ||= 9300 + (ENV["TEST_ENV_NUMBER"].to_i * 20) + @ports.size
-      ["--remote-debugging-port=#{@ports[driver_name]}"]
+      server = TCPServer.new("127.0.0.1", 0)
+      port = server.addr[1]
+      server.close
+      (@ports ||= []) << port
+      ["--remote-debugging-port=#{port}"]
     end
 
     def self.ports
-      (@ports || {}).values
+      @ports || []
     end
 
     # Coverage goes through script/test_impact/cdp_coverage's own connection:
