@@ -48,6 +48,8 @@ sw:
               title: "Umma"
             private:
               title: "Binafsi"
+      recording_modal:
+        save: "Hifadhi"
       composer:
         url_placeholder: "Ongeza anwani ya mtandao"
         reminder:

@@ -373,6 +373,9 @@ pl_PL:
         topic_id_description: "Wyzwalacz dotyczy tylko wydarzeń tego tematu. Pozostaw puste, aby uwzględnić wszystkie wydarzenia."
     discourse_post_event:
       new_event: "Nowe wydarzenie"
+      onebox:
+        all_day: "Cały dzień"
+        all_day_range: "Cały dzień · %{start} → %{end}"
       notifications:
         before_event_reminder: "Wydarzenie wkrótce się rozpocznie"
         after_event_reminder: "Wydarzenie zakończyło się"
@@ -499,7 +502,7 @@ pl_PL:
               many: "%{count} użytkowników zaproszonych"
               other: "%{count} użytkowników zaproszonych"
         event:
-          expired: "Wygasły"
+          expired: "Zakończone"
           closed: "Zamknięte"
           full: "Pełne"
           status:
@@ -512,12 +515,24 @@ pl_PL:
             private:
               title: "Prywatne"
               description: "Do wydarzenia prywatnego mogą dołączyć wyłącznie zaproszeni użytkownicy."
+      recording:
+        watch: "Obejrzyj nagranie"
+        add: "Dodaj link do nagrania"
+      recording_modal:
+        add_title: "Dodaj nagranie"
+        edit_title: "Edytuj nagranie"
+        label: "Link do nagrania"
+        save: "Zapisz"
+        remove: "Usuń nagranie"
+        edit_reason: "Zaktualizowano link do nagrania"
+        no_event: "Wydarzenie nie zostało znalezione w jego wpisie."
       composer:
         name_placeholder: "Nazwa wydarzenia"
         end_date_placeholder: "Data zakończenia"
         location_or_url_placeholder: "Dodaj lokalizację lub adres URL"
         location_placeholder: "Dodaj lokalizację"
         url_placeholder: "Dodaj URL"
+        recording_placeholder: "Dodaj link do nagrania"
         max_attendees_placeholder: "Nieograniczona liczba uczestników"
         max_attendees_display:
           one: "Maksymalnie %{count} uczestnik"
@@ -638,6 +653,9 @@ pl_PL:
         livestream:
           label: "Transmisja na żywo"
           checkbox_label: "Osadź adres URL jako wideo i otwórz czat na żywo dla uczestników"
+        recording:
+          label: "Nagranie"
+          placeholder: "Dodaj link do nagrania"
         location:
           label: "Lokalizacja"
           label_or_url: "Lokalizacja lub adres URL"

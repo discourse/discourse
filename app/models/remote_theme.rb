@@ -73,7 +73,8 @@ class RemoteTheme < ActiveRecord::Base
     user: Discourse.system_user,
     theme_id: nil,
     update_components: nil,
-    run_migrations: true
+    run_migrations: true,
+    guardian: nil
   )
     update_theme(
       ThemeStore::ZipImporter.new(filename, original_filename),
@@ -81,8 +82,61 @@ class RemoteTheme < ActiveRecord::Base
       theme_id:,
       update_components:,
       run_migrations:,
+      guardian:,
     )
   end
+
+  # Importing a theme can include its listed components, or drop the ones it
+  # no longer lists, which changes where their code runs. When an import
+  # runs for someone, every existing component it would include or drop has
+  # to be editable by them.
+  # The archive may have just changed whether the theme is a component, so
+  # removals go by the links the theme has now: syncing drops them either way.
+  def self.ensure_can_change_components!(guardian, theme, component_urls, update_components:)
+    return if guardian.nil?
+
+    urls = component_urls.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+    # components are only included in themes
+    adds_components = !theme.component?
+    if theme.new_record?
+      return if update_components == "none" || !adds_components
+      added_ids = component_ids_for(urls)
+      removed_ids = []
+    else
+      return if update_components.blank? || update_components == "none"
+      added_ids = adds_components ? component_ids_for(urls) - theme.child_theme_ids : []
+      removed_ids =
+        if update_components == "sync"
+          theme
+            .child_themes
+            .joins(:remote_theme)
+            .where.not(remote_themes: { remote_url: urls })
+            .pluck(:id)
+        else
+          []
+        end
+    end
+
+    changed = Theme.where(id: added_ids + removed_ids)
+    raise Discourse::InvalidAccess if !changed.all? { |related| guardian.can_edit_theme?(related) }
+  end
+
+  def self.ensure_can_change_type!(guardian, theme)
+    return if guardian.nil? || !theme.will_save_change_to_component?
+
+    if !guardian.can_edit_theme_relations?(
+         theme,
+         child_theme_ids: theme.component? ? [] : nil,
+         parent_theme_ids: theme.component? ? nil : [],
+       )
+      raise Discourse::InvalidAccess
+    end
+  end
+
+  def self.component_ids_for(urls)
+    Theme.joins(:remote_theme).where(remote_themes: { remote_url: urls }).pluck(:id)
+  end
+  private_class_method :component_ids_for
 
   def self.import_theme_from_directory(
     directory,
@@ -106,7 +160,8 @@ class RemoteTheme < ActiveRecord::Base
     update_components: nil,
     run_migrations: true,
     allow_out_of_sequence_migration: false,
-    before_save: nil
+    before_save: nil,
+    guardian: nil
   )
     importer.import!
 
@@ -126,14 +181,15 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     theme.component = theme_info["component"].to_s == "true"
-    theme.child_components = child_components = theme_info["components"].presence || []
+    ensure_can_change_type!(guardian, theme)
+    theme.child_components = theme_info["components"].presence || []
     theme.skip_child_components_update = true if update_components == "none"
+    update_children = existing && update_components.present? && update_components != "none"
+    ensure_can_change_components!(guardian, theme, theme.child_components, update_components:)
 
     remote_theme = new
     remote_theme.theme = theme
     remote_theme.remote_url = ""
-
-    do_update_child_components = false
 
     theme.transaction do
       remote_theme.update_from_remote(
@@ -145,28 +201,17 @@ class RemoteTheme < ActiveRecord::Base
         before_save: before_save,
       )
 
-      if existing && update_components.present? && update_components != "none"
-        child_components = child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
-
-        if update_components == "sync"
-          ChildTheme
-            .joins(child_theme: :remote_theme)
-            .where.not(remote_themes: { remote_url: child_components })
-            .delete_all
-        end
-
-        child_components -=
-          theme
-            .child_themes
-            .joins(:remote_theme)
-            .where("remote_themes.remote_url IN (?)", child_components)
-            .pluck("remote_themes.remote_url")
-        theme.child_components = child_components
-        do_update_child_components = true
+      if existing && update_components == "sync"
+        child_urls = theme.child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+        ChildTheme
+          .where(parent_theme_id: theme.id)
+          .joins(child_theme: :remote_theme)
+          .where.not(remote_themes: { remote_url: child_urls })
+          .delete_all
       end
     end
 
-    theme.update_child_components if do_update_child_components
+    theme.update_child_components if update_children
     theme
   ensure
     begin
@@ -177,7 +222,13 @@ class RemoteTheme < ActiveRecord::Base
   end
   private_class_method :update_theme
 
-  def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
+  def self.import_theme(
+    url,
+    user = Discourse.system_user,
+    private_key: nil,
+    branch: nil,
+    guardian: nil
+  )
     importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
     importer.import!
 
@@ -185,7 +236,6 @@ class RemoteTheme < ActiveRecord::Base
 
     component = [true, "true"].include?(theme_info["component"])
     theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
-    theme.child_components = theme_info["components"].presence || []
 
     remote_theme = new
     theme.remote_theme = remote_theme
@@ -194,7 +244,7 @@ class RemoteTheme < ActiveRecord::Base
     remote_theme.branch = branch
     remote_theme.remote_url = importer.url
 
-    remote_theme.update_from_remote(importer)
+    remote_theme.update_from_remote(importer, guardian:)
 
     theme
   ensure
@@ -218,6 +268,14 @@ class RemoteTheme < ActiveRecord::Base
 
   def out_of_date?
     commits_behind > 0 || remote_version != local_version
+  end
+
+  def placeholder?
+    remote_url.present? && local_version.blank?
+  end
+
+  def skipped_child_components
+    @skipped_child_components || []
   end
 
   def update_remote_version
@@ -250,7 +308,9 @@ class RemoteTheme < ActiveRecord::Base
     run_migrations: true,
     allow_out_of_sequence_migration: false,
     before_save: nil,
-    raise_on_import_error: false
+    raise_on_import_error: false,
+    refresh_name_and_type: false,
+    guardian: nil
   )
     cleanup = false
 
@@ -304,11 +364,25 @@ class RemoteTheme < ActiveRecord::Base
       raise ImportError, err.message
     end
 
-    # Update all theme attributes if this is just a placeholder
-    if remote_url.present? && !local_version && !commits_behind
+    # Captured before saving, which sets local_version and reloads the theme
+    was_placeholder = placeholder?
+    new_theme = theme.new_record?
+
+    if was_placeholder || refresh_name_and_type
       theme.name = theme_info["name"]
       theme.component = [true, "true"].include?(theme_info["component"])
+      self.class.ensure_can_change_type!(guardian, theme)
+    end
+    if was_placeholder
       theme.child_components = theme_info["components"].presence || []
+      # a new theme links its components when it's created, and finishing a
+      # placeholder links them afterwards
+      self.class.ensure_can_change_components!(
+        guardian,
+        theme,
+        theme.child_components,
+        update_components: new_theme ? nil : "merge",
+      )
     end
 
     METADATA_PROPERTIES.each { |property| public_send(:"#{property}=", theme_info[property.to_s]) }
@@ -420,6 +494,14 @@ class RemoteTheme < ActiveRecord::Base
       transaction_block.call
     else
       transaction(&transaction_block)
+    end
+
+    # A new theme installed them when it was created. A child may need repository access of its own,
+    # so failing to install one must not block finishing, nor hold the caller's transaction open.
+    if was_placeholder && !new_theme && theme.errors.empty?
+      DB.after_commit do
+        @skipped_child_components = theme.update_child_components(skip_failures: true)
+      end
     end
 
     theme.theme_modifier_set.save! if theme.theme_modifier_set.refresh_theme_setting_modifiers

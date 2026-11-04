@@ -5,7 +5,7 @@ RSpec.describe ReviewableFlaggedPost do
     before do
       enable_current_plugin
       freeze_time
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
     end
 
     it "records automatic detection when a moderator deletes spam detected by the spam bot" do

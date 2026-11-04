@@ -32,7 +32,9 @@ sv:
         assign: "Tilldela"
         reassign: "Tilldela om"
         unassign: "Otilldela"
-        created_by: "Skapat av"
+        owners:
+          one: "Ägare"
+          other: "Ägare"
       manage:
         name: "Namn"
         slug: "Slug"

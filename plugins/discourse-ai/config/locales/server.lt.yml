@@ -47,6 +47,9 @@ lt:
         explain: "Paaiškinkite"
         replace_dates: "Išmaniosios datos"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Šlamšto aptikimas"
       navigation:
         users:
           title: "Vartotojai"

@@ -175,6 +175,13 @@ en:
       modal:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
+      composer_paused:
+        too_many_phrases: "A composer trigger can have at most %{max} phrases."
+        phrase_too_long: "The phrase '%{phrase}' is longer than %{max} characters."
+        invalid_phrase: "The phrase '%{phrase}' is invalid, matches any text, or could take too long to match."
+      composer_message:
+        no_user: "No user is available to show the composer message to."
+        no_composer: "Composer messages need a workflow started by the composer trigger."
       topic_tags:
         unknown_mode: "Unknown tag mode: %{mode}."
         no_tag_names: "No tag names provided."

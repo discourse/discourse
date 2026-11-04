@@ -47,6 +47,12 @@ pl_PL:
           other: "%{formatted_number} wiadomości czatu"
     chat:
       homepage_option: "Kanał czatu"
+      admin_onboarding:
+        start_posting:
+          title: "Zacznij rozmowę"
+          description: "Wyślij swoją pierwszą wiadomość na kanale nr %{channel}."
+          action: "Napisz wiadomość"
+          completed: "Kontynuuj rozmowę"
       edit_category:
         tab_title: "Czat"
         channel: "Kanał"
@@ -337,6 +343,7 @@ pl_PL:
         read_only: "Kanał jest tylko do odczytu, nie możesz teraz wysyłać nowych wiadomości."
       placeholder_silenced: "W tej chwili nie możesz wysyłać wiadomości."
       remove_upload: "Usuń plik"
+      preview_upload: "Podgląd %{filename}"
       react: "Zareaguj z emoji"
       reply: "Odpowiedz"
       message_actions: "Czynności wiadomości"
@@ -984,6 +991,8 @@ pl_PL:
           user: "Użytkownicy (każdy z osobna wiadomość)"
           group: "Grupa (jedna wiadomość bezpośrednia do wszystkich)"
         channel_id: "Kanał"
+        thread_id: "Identyfikator wątku"
+        thread_id_description: "Odpowiedz w tym wątku, a nie na głównym kanale. Zostaw puste, aby opublikować na kanale."
         target_usernames: "Odbiorcy"
         target_usernames_description: "Użytkownicy do wysłania wiadomości. Użyj wyrażenia takiego jak $trigger.user.username, aby wybrać użytkowników z każdego elementu."
         message: "Wiadomość"

@@ -66,7 +66,6 @@ nl:
     ai_toxicity_flag_threshold_threat: "Bedreiging"
     ai_toxicity_flag_threshold_sexual_explicit: "Seksueel expliciet"
     ai_toxicity_groups_bypass: "De berichten van gebruikers in die groepen worden niet geclassificeerd door de toxiciteitsmodule."
-    ai_sentiment_enabled: "Schakel de sentimentmodule in."
     ai_sentiment_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de sentimentmodule"
     ai_sentiment_inference_service_api_key: "API-sleutel voor de sentiment-API"
     ai_nsfw_detection_enabled: "Schakel de NVWW-module in."
@@ -144,88 +143,60 @@ nl:
       yaxis: "Datum"
     emotion_admiration:
       title: "🤩 Bewondering"
-      description: "Berichten geclassificeerd met de emotie bewondering via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
       title: "😄 Geamuseerd"
-      description: "Berichten geclassificeerd met de emotie geamuseerd via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
       title: "😠 Boosheid"
-      description: "Berichten geclassificeerd met de emotie woede via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
       title: "😒 Ergernis"
-      description: "Berichten geclassificeerd met de emotie ergernis via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
       title: "👍 Goedkeuring"
-      description: "Berichten geclassificeerd met de emotie goedkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
       title: "🤗 Zorgzaam"
-      description: "Berichten geclassificeerd met de emotie zorgzaam via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
       title: "😕 Verwarring"
-      description: "Berichten geclassificeerd met de emotie verwarring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
       title: "🤔 Nieuwsgierigheid"
-      description: "Berichten geclassificeerd met de emotie nieuwsgierigheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
       title: "😍 Verlangen"
-      description: "Berichten geclassificeerd met de emotie verlangen via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
       title: "😞 Teleurstelling"
-      description: "Berichten geclassificeerd met de emotie teleurstelling via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
       title: "👎 Afkeuring"
-      description: "Berichten geclassificeerd met de emotie afkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
       title: "🤢 Afschuw"
-      description: "Berichten geclassificeerd met de emotie afschuw via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
       title: "😳 Schaamte"
-      description: "Berichten geclassificeerd met de emotie schaamte via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
       title: "🤪 Opwinding"
-      description: "Berichten geclassificeerd met de emotie opwinding via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
       title: "😨 Angst"
-      description: "Berichten geclassificeerd met de emotie angst via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
       title: "🙏 Dankbaarheid"
-      description: "Berichten geclassificeerd met de emotie dankbaarheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
       title: "😢 Verdriet"
-      description: "Berichten geclassificeerd met de emotie verdriet via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
       title: "😊 Vreugde"
-      description: "Berichten geclassificeerd met de emotie vreugde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Liefde'
-      description: "Berichten geclassificeerd met de emotie liefde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
       title: "😰 Nervositeit"
-      description: "Berichten geclassificeerd met de emotie nervositeit via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
       title: "😐 Neutraal"
-      description: "Berichten geclassificeerd met de emotie neutraal via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
       title: "🌟 Optimisme"
-      description: "Berichten geclassificeerd met de emotie optimisme via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
       title: "🦁 Trots"
-      description: "Berichten geclassificeerd met de emotie trots via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
       title: "💡 Besef"
-      description: "Berichten geclassificeerd met de emotie besef via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
       title: "😌 Opluchting"
-      description: "Berichten geclassificeerd met de emotie oplichting via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
       title: "😔 Spijt"
-      description: "Berichten geclassificeerd met de emotie spijt via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
       title: "😭 Droefheid"
-      description: "Berichten geclassificeerd met de emotie droefheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
       title: "😲 Verrassing"
-      description: "Berichten geclassificeerd met de emotie verrassing via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
       errors:
@@ -347,6 +318,9 @@ nl:
       configuration_missing: "De configuratie voor de AI-spamdetectie ontbreekt. Voeg de configuratie toe via 'Beheer > Plug-ins > Discourse AI > Spam' voordat u deze inschakelt."
       logging_subject: "Spamdetectie"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Spamdetectie"
       navigation:
         settings:
           title: "Site-instellingen"

@@ -28,6 +28,9 @@ ur:
     spam_detection:
       bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "سپیم کا پتہ لگانا"
       navigation:
         settings:
           title: "سائٹ کی ترتیبات"

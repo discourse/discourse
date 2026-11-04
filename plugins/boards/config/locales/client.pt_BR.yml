@@ -39,7 +39,9 @@ pt_BR:
         unassign_from_topic: "Remover atribuição de @%{username} do tópico"
         unassign_from_post: "Remover atribuição de @%{username} a #%{post_number}"
         edit_assignments: "Editar atribuições..."
-        created_by: "Criado(a) por"
+        owners:
+          one: "Proprietário(a)"
+          other: "Prorietários(as)"
       manage:
         name: "Nome"
         slug: "Slug"

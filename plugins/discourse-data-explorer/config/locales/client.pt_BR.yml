@@ -30,7 +30,6 @@ pt_BR:
       description_placeholder: "Insira uma descrição aqui"
       ai:
         generate: "Gerar"
-        optional: "opcional"
       import:
         unparseable_json: "Arquivo JSON não analisável"
         wrong_json: "Arquivo JSON incorreto. Um arquivo JSON deve conter um objeto \"consulta\", que deve ter pelo menos a propriedade \"sql\""
@@ -67,7 +66,7 @@ pt_BR:
       max_result_count:
         one: "Mostrando melhor %{count} resultado."
         other: "Mostrando melhores %{count} resultados."
-      query_name: "Consulta"
+      name: "Nome"
       query_groups: "Grupos"
       query_tags: "Tags"
       link: "Link para"

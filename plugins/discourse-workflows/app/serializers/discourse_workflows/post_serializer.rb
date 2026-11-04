@@ -26,6 +26,7 @@ module DiscourseWorkflows
                :category_slug,
                :tags,
                :upload_ids,
+               :locale,
                :raw,
                :cooked
 

@@ -277,8 +277,8 @@ RSpec.describe "a listing entered at an anchor" do
       expect(document).to eq(
         errors: [
           refusal(
-            title: "No row for the anchor",
-            detail: "No record has id -1.",
+            title: "No record matches the anchor",
+            detail: "No record matches anchor id=-1.",
             parameter: "page[anchor][id]",
           ),
         ],

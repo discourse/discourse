@@ -116,6 +116,7 @@ id:
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
+        classification_model: "Model:"
         edit: "Pengaturan"
         expand_list:
           other: "(%{count} lainnya)"
@@ -125,6 +126,8 @@ id:
         filters:
           all: "Semua"
           reset: "Reset"
+        sentiment:
+          enabled: "Diaktifkan"
         search:
           name: "Cari"
           ask_ai: "Tanya AI"

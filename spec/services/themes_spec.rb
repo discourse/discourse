@@ -174,6 +174,72 @@ RSpec.describe ThemesInstallTask do
     end
   end
 
+  describe ".install" do
+    context "when the theme has been staged as a placeholder" do
+      let(:url) { "https://github.com/discourse/private-theme.git" }
+      let(:child_url) { "https://github.com/discourse/child.git" }
+      let(:repo) do
+        setup_git_repo("about.json" => { name: "Private theme", components: [child_url] }.to_json)
+      end
+      let!(:placeholder) do
+        Fabricate(
+          :theme,
+          remote_theme: RemoteTheme.create!(remote_url: url, private_key: "private key"),
+        )
+      end
+
+      around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+      before { MockGitImporter.register(url, repo) }
+
+      after { FileUtils.rm_rf(repo) }
+
+      it "finishes the installation with its child components" do
+        child_repo = setup_git_repo("about.json" => { name: "Child", component: true }.to_json)
+        MockGitImporter.register(child_url, child_repo)
+
+        _log, counts = ThemesInstallTask.install({ private_theme: url })
+
+        expect(counts).to include(updated: 1, errors: 0)
+        expect(placeholder.reload.child_themes.map(&:name)).to contain_exactly("Child")
+      ensure
+        FileUtils.rm_rf(child_repo)
+      end
+
+      it "logs the child components it couldn't install" do
+        private_child_url = "https://github.com/discourse/private-child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [private_child_url] }.to_json,
+        )
+
+        log, counts = ThemesInstallTask.install({ private_theme: url })
+
+        expect(counts).to include(updated: 1, errors: 0)
+        expect(log).to include(
+          "private_theme: couldn't install component #{private_child_url}: #{I18n.t("themes.import_error.git")}",
+        )
+      end
+
+      it "counts a theme that can't be saved as an error and carries on" do
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private component", component: true }.to_json,
+        )
+        placeholder.set_default!
+        other_repo = setup_git_repo("about.json" => { name: "Other theme" }.to_json)
+        other_url = MockGitImporter.register("https://github.com/discourse/other.git", other_repo)
+
+        _log, counts = ThemesInstallTask.install({ private_theme: url, other_theme: other_url })
+
+        expect(counts).to include(installed: 1, updated: 0, errors: 1)
+        expect(placeholder.remote_theme.reload).to be_placeholder
+      ensure
+        FileUtils.rm_rf(other_repo)
+      end
+    end
+  end
+
   describe "#theme_exists?" do
     it "can use https or ssh and find the same repo" do
       remote_theme =

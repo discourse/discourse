@@ -262,13 +262,14 @@ vi:
         try_again: "Thử lại"
       models:
         event:
-          expired: "Hết hạn"
           closed: "Đã đóng"
           status:
             public:
               title: "Công khai"
             private:
               title: "Riêng tư"
+      recording_modal:
+        save: "Lưu lại"
       composer:
         location_or_url_placeholder: "Thêm vị trí hoặc liên kết (URL)"
         location_placeholder: "Thêm vị trí"

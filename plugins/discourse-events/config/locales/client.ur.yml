@@ -108,6 +108,8 @@ ur:
       post_event:
         topic_id: "ٹاپک ID"
     discourse_post_event:
+      onebox:
+        all_day: "سارا دن"
       notifications:
         invite_user_notification: "%{username} %{description}"
       event_description:
@@ -132,13 +134,14 @@ ur:
         more_than_one_event: "آپ ایک سے زیادہ ایونٹ نہیں رکھ سکتے۔"
       models:
         event:
-          expired: "میعاد ختم ہوگئی"
           closed: "بند"
           status:
             public:
               title: "عوامی"
             private:
               title: "ذاتی"
+      recording_modal:
+        save: "محفوظ"
       composer:
         url_placeholder: "URL شامل کریں"
         reminder:

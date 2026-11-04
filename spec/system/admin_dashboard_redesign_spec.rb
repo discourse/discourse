@@ -7,10 +7,7 @@ describe "Admin Dashboard Redesign" do
   let(:dashboard_reports) { PageObjects::Pages::AdminDashboardReports.new }
   let(:admin_report) { PageObjects::Pages::AdminReport.new }
 
-  before do
-    SiteSetting.dashboard_improvements = true
-    sign_in(current_user)
-  end
+  before { sign_in(current_user) }
 
   it "allows a user to use a preset range or select a custom range",
      time: Time.utc(2026, 5, 26, 12, 0, 0) do

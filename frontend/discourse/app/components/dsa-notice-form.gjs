@@ -5,17 +5,18 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
-import FKContainer from "discourse/form-kit/components/fk/container";
 import FKErrors from "discourse/form-kit/components/fk/errors";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import DOtp from "discourse/ui-kit/d-otp";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class DsaNoticeForm extends Component {
+  @service currentUser;
   @service siteSettings;
 
   @tracked result;
@@ -26,6 +27,10 @@ export default class DsaNoticeForm extends Component {
   @tracked verificationToken;
 
   #form;
+
+  get canSubmit() {
+    return !this.requiresEmailVerification || this.emailVerified;
+  }
 
   get emailCodeDisabled() {
     const email = this.#form?.get("email")?.trim();
@@ -45,6 +50,10 @@ export default class DsaNoticeForm extends Component {
     return this.verificationToken
       ? "dsa_notice.resend_email_code"
       : "dsa_notice.get_email_code";
+  }
+
+  get requiresEmailVerification() {
+    return !this.currentUser?.can_use_dsa_account_email;
   }
 
   @cached
@@ -116,7 +125,9 @@ export default class DsaNoticeForm extends Component {
         type: "POST",
         data: { notice, token: this.verificationToken },
       });
-      window.scrollTo(0, 0);
+      if (!this.args.inModal) {
+        window.scrollTo(0, 0);
+      }
     } catch (error) {
       if (error.jqXHR?.responseJSON?.error_type === "verification_required") {
         this.emailVerified = false;
@@ -166,30 +177,44 @@ export default class DsaNoticeForm extends Component {
   <template>
     <div class="dsa-notice" ...attributes>
       {{#if this.result}}
-        <h1 tabindex="-1" {{dAutoFocus}}>{{i18n "dsa_notice.received"}}</h1>
-        <p>{{i18n
-            "dsa_notice.received_description"
-            site=this.siteSettings.title
-          }}</p>
-        <p class="dsa-notice__reference">
-          {{trustHTML
-            (i18n
-              "dsa_notice.reference"
-              reference=(escapeExpression this.result.reference)
-            )
-          }}
-        </p>
-        <p>{{i18n "dsa_notice.contact_confirmation"}}</p>
+        <div class="dsa-notice__confirmation">
+          {{#if @inModal}}
+            <h2 tabindex="-1" {{dAutoFocus}}>{{i18n "dsa_notice.received"}}</h2>
+          {{else}}
+            <h1 tabindex="-1" {{dAutoFocus}}>{{i18n "dsa_notice.received"}}</h1>
+          {{/if}}
+          <p>{{i18n
+              "dsa_notice.received_description"
+              site=this.siteSettings.title
+            }}</p>
+          <p class="dsa-notice__reference">
+            {{trustHTML
+              (i18n
+                "dsa_notice.reference"
+                reference=(escapeExpression this.result.reference)
+              )
+            }}
+          </p>
+          <p>{{i18n "dsa_notice.contact_confirmation"}}</p>
+        </div>
+        {{#if @inModal}}
+          <div class="dsa-notice__actions">
+            <DButton class="btn-primary" @action={{@onClose}} @label="close" />
+          </div>
+        {{/if}}
       {{else}}
-        <h1>{{i18n "dsa_notice.title"}}</h1>
-        <FKContainer @direction="column" @format="max">
-          <Form
-            @data={{this.initialData}}
-            @onRegisterApi={{this.registerForm}}
-            @onSubmit={{this.submit}}
-            as |form|
-          >
-            <form.Section>
+        {{#unless @inModal}}
+          <h1>{{i18n "dsa_notice.title"}}</h1>
+        {{/unless}}
+        <Form
+          class="dsa-notice__form"
+          @data={{this.initialData}}
+          @onRegisterApi={{this.registerForm}}
+          @onSubmit={{this.submit}}
+          as |form|
+        >
+          <form.Section class="dsa-notice__fields">
+            {{#if this.requiresEmailVerification}}
               <form.Fieldset
                 aria-busy={{or this.requestingCode this.verifyingCode}}
                 aria-label={{i18n "dsa_notice.email"}}
@@ -261,60 +286,67 @@ export default class DsaNoticeForm extends Component {
                   </form.Field>
                 {{/if}}
               </form.Fieldset>
-              <form.Field
-                @disabled={{not this.emailVerified}}
-                @format="full"
-                @name="name"
-                @title={{i18n "dsa_notice.name"}}
-                @type="input"
-                @validation="required:trim|length:1,200"
-                as |field|
-              >
-                <field.Control autocomplete="name" />
-              </form.Field>
-              <form.Field
-                @disabled={{not this.emailVerified}}
-                @format="full"
-                @name="content_url"
-                @title={{i18n "dsa_notice.content_url"}}
-                @type="input-url"
-                @validation="required|url"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
-              <form.Field
-                @description={{i18n "dsa_notice.explanation_help"}}
-                @disabled={{not this.emailVerified}}
-                @format="full"
-                @name="explanation"
-                @title={{i18n "dsa_notice.explanation"}}
-                @type="textarea"
-                @validation="required:trim|length:50,20000"
-                as |field|
-              >
-                <field.Control rows="6" />
-              </form.Field>
-              <form.Field
-                @disabled={{not this.emailVerified}}
-                @format="full"
-                @name="declaration"
-                @title={{i18n "dsa_notice.declaration_section"}}
-                @type="checkbox"
-                @validation="accepted"
-                as |field|
-              >
-                <field.Control @title={{i18n "dsa_notice.declaration"}} />
-              </form.Field>
-              <form.Actions>
-                <form.Submit
-                  @disabled={{not this.emailVerified}}
-                  @label="dsa_notice.submit"
-                />
-              </form.Actions>
-            </form.Section>
-          </Form>
-        </FKContainer>
+            {{/if}}
+            <form.Field
+              @disabled={{not this.canSubmit}}
+              @format="full"
+              @name="name"
+              @title={{i18n "dsa_notice.name"}}
+              @type="input"
+              @validation="required:trim|length:1,200"
+              as |field|
+            >
+              <field.Control autocomplete="name" />
+            </form.Field>
+            <form.Field
+              @disabled={{not this.canSubmit}}
+              @format="full"
+              @name="content_url"
+              @title={{i18n "dsa_notice.content_url"}}
+              @type="input-url"
+              @validation="required|url"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
+            <form.Field
+              @description={{i18n "dsa_notice.explanation_help"}}
+              @disabled={{not this.canSubmit}}
+              @format="full"
+              @name="explanation"
+              @title={{i18n "dsa_notice.explanation"}}
+              @type="textarea"
+              @validation="required:trim|length:50,20000"
+              as |field|
+            >
+              <field.Control rows="6" />
+            </form.Field>
+            <form.Field
+              @disabled={{not this.canSubmit}}
+              @format="full"
+              @name="declaration"
+              @title={{i18n "dsa_notice.declaration_section"}}
+              @type="checkbox"
+              @validation="accepted"
+              as |field|
+            >
+              <field.Control @title={{i18n "dsa_notice.declaration"}} />
+            </form.Field>
+          </form.Section>
+          <form.Actions class="dsa-notice__actions">
+            <form.Submit
+              @disabled={{not this.canSubmit}}
+              @label="dsa_notice.submit"
+            />
+            {{#if @inModal}}
+              <DButton
+                class="btn-flat"
+                @action={{or @onBack @onClose}}
+                @label={{if @onBack "dsa_notice.go_back" "cancel"}}
+              />
+            {{/if}}
+          </form.Actions>
+        </Form>
       {{/if}}
     </div>
   </template>

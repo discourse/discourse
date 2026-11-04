@@ -26,7 +26,6 @@ da:
       description_placeholder: "Indtast en beskrivelse her"
       ai:
         generate: "Generér"
-        optional: "valgfri"
       help:
         label: "Hjælp"
         modal_title: "Hjælp til Data Udforsker"
@@ -48,7 +47,7 @@ da:
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
-      query_name: "Forespørgsel"
+      name: "Navn"
       query_groups: "Grupper"
       query_tags: "Mærker"
       report_name: "Rapport"

@@ -40,7 +40,6 @@ es:
         generating: "Generando consulta con IA..."
         generation_timeout: "Se ha agotado el tiempo de generación de la consulta de IA. Puedes escribir el SQL manualmente."
         generation_error: "Se ha producido un error al generar la consulta."
-        optional: "opcional"
       import:
         unparseable_json: "Archivo JSON no analizable."
         wrong_json: "Archivo JSON incorrecto. Debería contener un objeto «query», con al menos una propiedad «sql»."
@@ -78,7 +77,7 @@ es:
       max_result_count:
         one: "Mostrando el mejor resultado (%{count})."
         other: "Mostrando los mejores %{count} resultados."
-      query_name: "Consulta"
+      name: "Nombre"
       query_groups: "Grupos"
       query_tags: "Etiquetas"
       link: "Enlace para"

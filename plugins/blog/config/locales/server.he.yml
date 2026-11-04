@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  blog:
+    home: בית
+    posted_by: פורסם על ידי
+    permalink: קישור קבוע
+    time_ago: "לפני %{time}"
+    archive: ארכב
+    about: אודות
+    community: קהילה
+    preview: תצוגה מקדימה
+    search: חיפוש
+    replies:
+      one: "תגובה"
+      two: "שתי תגובות"
+      other: "שתי תגובות"

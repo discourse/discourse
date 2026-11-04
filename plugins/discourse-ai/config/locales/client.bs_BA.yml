@@ -74,6 +74,8 @@ bs_BA:
         filters:
           all: "Sve"
           reset: "Resetovati"
+        sentiment:
+          enabled: "Omogućen"
         search:
           name: "Pretraži"
         image_caption:

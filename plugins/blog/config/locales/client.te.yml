@@ -1,0 +1,47 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  admin_js:
+    blog:
+      admin:
+        overridden: అనురూప
+        preview_archive: ఆర్కైవ్ చెయ్యండి
+        desktop: డెస్క్‌టాప్
+        mobile: మొబైల్
+        themes: థీమ్స్
+        theme_name: థీమ్ పేరు
+        edit: సవరించండి
+        preview: ప్రివ్యూ
+        export: ఎగుమతి
+        active: క్రియాశీల
+  js:
+    blog:
+      panel:
+        badge:
+          draft: చిత్తుప్రతి
+        preview: ప్రివ్యూ
+        change:
+          title: శీర్షిక
+          body: బాడీ
+      review:
+        copy: నకలు
+        status:
+          active: క్రియాశీల
+          expired: గడువు ముగిసింది
+          revoked: రద్దు చేయబడింది
+          inactive: నిష్క్రియ
+        closed_on: "%{date} మూసివేయబడింది"
+        revoke: ఉపసంహరించుకోండి
+        message: అభిప్రాయం
+      editor_table:
+        edit: సవరించండి
+        status: స్థితి
+        replies: ప్రత్యుత్తరాలు
+      drafts: చిత్తుప్రతులు
+      preview: ప్రివ్యూ
+      unpublish: ప్రచురణ తీసివేయండి
+      appearance_link: స్వరూపం

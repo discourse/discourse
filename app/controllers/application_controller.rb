@@ -84,6 +84,16 @@ class ApplicationController < ActionController::Base
   end
   helper_method :use_crawler_layout?
 
+  # Kept in the env so that Middleware::CrawlerHooks rewrites links to match the page's tags.
+  def plain_url_serves_default_locale?
+    key = ContentLocalization::PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV
+    return request.env[key] if request.env.key?(key)
+
+    request.env[key] = current_user.nil? &&
+      ContentLocalization.plain_url_serves_default_locale?(request)
+  end
+  helper_method :plain_url_serves_default_locale?
+
   def include_splash_screen?
     !Rails.env.test?
   end
@@ -256,6 +266,7 @@ class ApplicationController < ActionController::Base
       custom_message: e.custom_message,
       custom_message_params: e.custom_message_params,
       group: e.group,
+      authentication_failed: e.opts[:authentication_failed],
     )
   end
 
@@ -348,20 +359,23 @@ class ApplicationController < ActionController::Base
     }
 
     if show_json_errors
+      authentication_failed = opts[:authentication_failed]
       opts = { type: type, status: status_code }
 
-      with_resolved_locale do
-        # Include error in HTML format for topics#show.
-        if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
-             (
-               request.params[:controller] == "categories" &&
-                 request.params[:action] == "find_by_slug"
-             )
-          opts[:extras] = {
-            title: I18n.t("page_not_found.page_title"),
-            html: build_not_found_page(error_page_opts),
-            group: error_page_opts[:group],
-          }
+      if !authentication_failed
+        with_resolved_locale do
+          # Include error in HTML format for topics#show.
+          if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
+               (
+                 request.params[:controller] == "categories" &&
+                   request.params[:action] == "find_by_slug"
+               )
+            opts[:extras] = {
+              title: I18n.t("page_not_found.page_title"),
+              html: build_not_found_page(error_page_opts),
+              group: error_page_opts[:group],
+            }
+          end
         end
       end
 
@@ -988,12 +1002,15 @@ class ApplicationController < ActionController::Base
 
   def add_noindex_header
     if request.get? && !response.headers["X-Robots-Tag"]
-      if SiteSetting.allow_index_in_robots_txt
-        response.headers["X-Robots-Tag"] = "noindex"
-      else
-        response.headers["X-Robots-Tag"] = "noindex, nofollow"
-      end
+      response.headers["X-Robots-Tag"] = noindex_header_value
     end
+  end
+
+  # "noindex", or "noindex, nofollow" when the whole site is kept out of
+  # search engines, so a page-level noindex never drops the site-wide
+  # directive.
+  def noindex_header_value
+    SiteSetting.allow_index_in_robots_txt ? "noindex" : "noindex, nofollow"
   end
 
   def add_noindex_header_to_non_canonical
@@ -1002,6 +1019,23 @@ class ApplicationController < ActionController::Base
          !SiteSetting.allow_indexing_non_canonical_urls
       response.headers["X-Robots-Tag"] ||= "noindex"
     end
+  end
+
+  # Whether search engines are told not to index a topic. Core only keeps
+  # unlisted topics out; the `topic_noindex` modifier receives that decision
+  # and the topic, so a plugin can send noindex for other topics too. It runs
+  # on every request that reaches the controller, so a topic that is flagged
+  # or moved follows once the anonymous cache (one minute) has expired.
+  def topic_noindex?(topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_noindex, !topic.visible, topic)
+  end
+
+  # Whether search engines are told not to index a topic list that loads a
+  # category: its own pages, `?category=` lists and tag pages within it.
+  # Core indexes them all; the `category_noindex` modifier receives `false`
+  # and the category, so a plugin can send noindex for a category.
+  def category_noindex?(category)
+    DiscoursePluginRegistry.apply_modifier(:category_noindex, false, category)
   end
 
   def set_cross_origin_opener_policy_header

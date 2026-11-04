@@ -369,6 +369,9 @@ en:
         topic_id_description: "Only trigger for events in this topic. Leave empty to match all events."
     discourse_post_event:
       new_event: "New Event"
+      onebox:
+        all_day: "All day"
+        all_day_range: "All day · %{start} → %{end}"
       notifications:
         before_event_reminder: "An event is about to start"
         after_event_reminder: "An event has ended"

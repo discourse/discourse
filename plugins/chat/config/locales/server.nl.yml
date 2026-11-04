@@ -59,6 +59,7 @@ nl:
 
         Ga naar het kanaal op %{channel_url} om het opnieuw te proberen.
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: verwijderd
     crawler:
       directory_title: "Chatkanalen"

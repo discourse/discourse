@@ -582,6 +582,8 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
+      dsa_community_rules_required: "Add at least one community rule before enabling DSA reporting."
+      dsa_community_rules_in_use: "Disable DSA reporting before removing all community rules."
       site_settings_are_deprecated: "The following settings are deprecated: %{old_names}. Use %{new_names} instead"
       site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
       site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
@@ -852,6 +854,7 @@ en:
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
   reverted_to_version: "reverted to version #%{version}"
+  cannot_unlist_hidden_revision: "A hidden revision can't be unlisted. Show it first, then unlist it."
   cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts in this topic is not currently allowed during slow mode."
 
   excerpt_image: "image"
@@ -1158,6 +1161,7 @@ en:
         one: "Description is too long (maximum is %{count} character)."
         other: "Description is too long (maximum is %{count} characters)."
       special_category_permissions: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
+      anonymous_permissions_not_supported: "Use the everyone group to allow anonymous users to access a category."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -2127,7 +2131,7 @@ en:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
-      missing_aws_sns_topic_arn: "The server is configured to send emails via Amazon SES but you haven't allowlisted any SNS topic ARNs. Bounce notifications will be rejected until you add the legitimate ARN to <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a>."
+      missing_aws_sns_topic_arn: "This server is configured to send email via Amazon SES. If you use Amazon SNS to deliver bounce notifications to Discourse, you must add your SNS topic ARN to <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a>. SNS webhook notifications from unlisted topics are rejected."
       qq_mail_smtp: "Your SMTP server (%{smtp_address}) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>."
       bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
       poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
@@ -2147,9 +2151,10 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
-    dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
-    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. Leave blank to omit appeal instructions. Requires {{setting:dsa_reporting_enabled}} to be turned on."
-    dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
+    dsa_reporting_enabled: "Enable EU Digital Services Act (DSA) reporting and moderation tools. Requires {{setting:dsa_community_rules}}."
+    dsa_notice_group: "Group receiving illegal content reports and reporter contact details. Defaults to admins."
+    dsa_moderation_appeal_email: "Email address shown in moderation emails and system messages when DSA reporting is enabled. Leave blank to omit appeal instructions from those messages."
+    dsa_community_rules: "Define rules from your Terms of Service or community guidelines. Each rule’s reference and explanation are included in DSA statements of reasons when selected by a moderator."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
@@ -2795,7 +2800,7 @@ en:
     ignore_by_title_regex: "Ignore incoming emails based on their title using a regular expression."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
-    aws_sns_topic_arn_allowlist: "SNS topic ARNs allowed to send Amazon SES bounce webhook notifications."
+    aws_sns_topic_arn_allowlist: "SNS topics allowed to send Amazon SES bounce notifications to this site's AWS webhook endpoint. In Amazon SNS → Topics, copy the full Topic ARN configured for bounce notifications in Amazon SES, for example: arn:aws:sns:eu-west-1:123456789012:DiscourseBounces. Add each ARN as a separate entry. Leave empty if you do not use SNS for bounce notifications. <a href='https://docs.aws.amazon.com/ses/latest/dg/configure-sns-notifications.html'>Setup instructions</a>."
     mailjet_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
@@ -2973,7 +2978,6 @@ en:
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
-    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to markdown code blocks (auto, text, ruby, python etc.). This value must also be present in the {{setting:highlighted_languages}} site setting."
     autohighlight_all_code: "Apply syntax highlighting to HTML-authored &lt;code&gt; blocks, even if they didn't specify a language. To configure markdown-authored code blocks, use the {{setting:default_code_lang}} setting."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> for a demo"
@@ -3149,7 +3153,7 @@ en:
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or personal messages on a daily basis."
     default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
-    company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
+    company_name: "Name of your company or organization."
     company_url: "Website URL for your company or organization. Optional."
     governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
     city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
@@ -3174,9 +3178,6 @@ en:
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
 
-    dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
-    dashboard_visible_tabs: "Choose which dashboard tabs are visible."
-    dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
     site_traffic_explorer_event_limit: "Controls the maximum number of recent pageviews the Site Traffic Explorer processes. Higher limits cover more traffic but may take longer to load or time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
@@ -3193,6 +3194,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
+    concord_in_wizard: "Offer Concord and the General chat homepage in the design wizard."
     enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
     site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
@@ -5583,6 +5585,9 @@ en:
     group_smtp_topic_deleted: "topic has been deleted"
     group_smtp_disabled_for_group: "smtp has been disabled for the group"
 
+  appearance_changes:
+    dark_palette_name: "%{name} Dark"
+
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
@@ -6351,6 +6356,9 @@ en:
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
   design_wizard:
+    themes:
+      concord:
+        description: "Replaces the sidebar with a single channel list made of categories, chat channels and live audio/video rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."
@@ -6401,6 +6409,29 @@ en:
 
   onebox:
     discourse:
+      event_all_day: "All day"
+      recurrence:
+        every_day: "Every day"
+        every_weekday: "Every weekday"
+        every_week: "Every %{weekday}"
+        every_two_weeks: "Every other %{weekday}"
+        every_four_weeks: "Every 4 weeks on %{weekday}"
+        every_month: "The %{ordinal} %{weekday} of every month"
+        until: "%{recurrence} until %{date}"
+        ordinals:
+          first: "first"
+          second: "second"
+          third: "third"
+          fourth: "fourth"
+          last: "last"
+        weekdays:
+          sunday: "Sunday"
+          monday: "Monday"
+          tuesday: "Tuesday"
+          wednesday: "Wednesday"
+          thursday: "Thursday"
+          friday: "Friday"
+          saturday: "Saturday"
       user_joined_community: "Joined %{date}"
     google_meet:
       title: "Google Meet meeting"

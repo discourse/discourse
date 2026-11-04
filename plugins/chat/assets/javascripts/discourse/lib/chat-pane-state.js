@@ -219,10 +219,13 @@ export default class ChatPaneState {
    *
    * If shouldAutoScroll is true, adds the message and scrolls to show it.
    * Otherwise, preserves the current scroll position and tracks the message as pending.
+   * While newer history is still unloaded, the message is only tracked as pending:
+   * appending it would leave a gap in the list, filled in later underneath it.
    *
    * @param {object} options
    * @param {HTMLElement | null} options.scroller - The scrollable container
    * @param {boolean} options.shouldAutoScroll - Whether to auto-scroll to the new message
+   * @param {boolean} [options.canLoadMoreFuture=false] - Whether newer history is still unloaded
    * @param {Function} options.addMessage - Function that adds the message to the list
    * @param {Function} [options.onAutoAdd] - Callback after auto-adding (e.g. to scroll)
    * @param {number} [options.messageCount=1] - Number of messages being added
@@ -231,19 +234,22 @@ export default class ChatPaneState {
     const {
       scroller,
       shouldAutoScroll,
+      canLoadMoreFuture = false,
       addMessage,
       onAutoAdd,
       messageCount = 1,
     } = options;
 
-    if (shouldAutoScroll) {
+    if (shouldAutoScroll && !canLoadMoreFuture) {
       addMessage?.();
       this.clearPendingMessages();
       onAutoAdd?.();
       return;
     }
 
-    maintainScrollPosition(scroller, addMessage);
+    if (!canLoadMoreFuture) {
+      maintainScrollPosition(scroller, addMessage);
+    }
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {

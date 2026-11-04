@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class Researcher < Agent
+      def thinking_effort
+        "medium"
+      end
+
       def tools
         [Tools::Google, Tools::WebBrowser]
       end

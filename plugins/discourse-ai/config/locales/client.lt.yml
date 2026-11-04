@@ -169,6 +169,7 @@ lt:
         disabled: "(uždrausta)"
         groups: "Grupės:"
         no_groups: "Nieko"
+        classification_model: "Modelis:"
         edit: "Nustatymai"
         expand_list:
           one: "(%{count} daugiau)"
@@ -187,6 +188,11 @@ lt:
         filters:
           all: "Visi"
           reset: "Atstatyti"
+        sentiment:
+          emotion: "Emocija"
+          enabled: "Įgalinti"
+          setting_groups:
+            emotion: "Emocija"
         summarization:
           setting_groups:
             settings: "Pagrindiniai nustatymai"

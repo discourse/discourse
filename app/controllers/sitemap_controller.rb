@@ -19,7 +19,7 @@ class SitemapController < ApplicationController
     @output =
       Rails
         .cache
-        .fetch("sitemap/#{sitemap.name}/#{sitemap.max_page_size}", expires_in: 24.hours) do
+        .fetch(sitemap.page_cache_key, expires_in: 24.hours) do
           @topics = sitemap.topics
           render :page, content_type: "text/xml; charset=UTF-8"
         end

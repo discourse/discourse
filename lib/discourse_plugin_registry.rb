@@ -96,6 +96,8 @@ class DiscoursePluginRegistry
   define_filtered_register :topic_thumbnail_sizes
   define_filtered_register :topic_preloader_associations
   define_filtered_register :category_list_topics_preloader_associations
+  define_filtered_register :user_cards_preloaded_custom_fields
+  define_filtered_register :user_cards_preloaders
 
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings
@@ -154,6 +156,8 @@ class DiscoursePluginRegistry
   define_filtered_register :acl_target_classes
 
   define_filtered_register :svg_icon_sources
+
+  define_filtered_register :svg_symbol_sources
 
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do

@@ -373,6 +373,8 @@ zh_CN:
         topic_id_description: "仅触发此话题中的活动。留空则匹配所有活动。"
     discourse_post_event:
       new_event: "新活动"
+      onebox:
+        all_day: "全天"
       notifications:
         before_event_reminder: "活动即将开始"
         after_event_reminder: "活动已结束"
@@ -478,7 +480,7 @@ zh_CN:
             invited_count:
               other: "%{count} 位受邀用户"
         event:
-          expired: "已过期"
+          expired: "结束"
           closed: "已关闭"
           full: "已满"
           status:
@@ -491,12 +493,24 @@ zh_CN:
             private:
               title: "不公开"
               description: "只有受邀用户可以加入不公开活动。"
+      recording:
+        watch: "观看录像"
+        add: "添加录制链接"
+      recording_modal:
+        add_title: "添加录制"
+        edit_title: "编辑录制"
+        label: "录制链接"
+        save: "保存"
+        remove: "移除录制"
+        edit_reason: "录制链接已更新"
+        no_event: "在帖子中找不到该活动。"
       composer:
         name_placeholder: "活动名称"
         end_date_placeholder: "结束日期"
         location_or_url_placeholder: "添加位置或网址"
         location_placeholder: "添加位置"
         url_placeholder: "添加 URL"
+        recording_placeholder: "添加录制链接"
         max_attendees_placeholder: "参与人数不限"
         max_attendees_display:
           other: "最多 %{count} 位与会者"
@@ -602,6 +616,9 @@ zh_CN:
         livestream:
           label: "直播"
           checkbox_label: "将 URL 嵌入为视频，并开启直播聊天功能供与会者使用"
+        recording:
+          label: "录制中"
+          placeholder: "添加录制链接"
         location:
           label: "位置"
           label_or_url: "位置或 URL"

@@ -37,7 +37,8 @@ zh_TW:
         unassign_from_topic: "取消 @%{username} 的主題指派"
         unassign_from_post: "取消 @%{username} 對 #%{post_number} 的指派"
         edit_assignments: "編輯指派…"
-        created_by: "創建者"
+        owners:
+          other: "所有者"
       manage:
         name: "名稱"
         slug: "縮寫"

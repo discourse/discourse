@@ -5,6 +5,10 @@ module PageObjects
     class Review < PageObjects::Pages::Base
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
 
+      def has_no_standalone_classification?
+        has_no_css?(".review-item__classify, .dsa-classification")
+      end
+
       def visit_reviewable(reviewable)
         page.visit("/review/#{reviewable.id}")
         self
@@ -60,6 +64,10 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) do
           page.has_no_css?(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}")
         end
+      end
+
+      def has_help_resources?
+        has_css?(".review-item__resources", text: I18n.t("js.review.need_help"))
       end
 
       def has_reviewable_items?(count:)
@@ -170,6 +178,10 @@ module PageObjects
 
       def has_note?(content)
         page.has_css?(".timeline-event__description", text: content, normalize_ws: true)
+      end
+
+      def has_no_note?(content)
+        page.has_no_css?(".timeline-event__description", text: content, normalize_ws: true)
       end
 
       def has_claimed_history_item?(user)

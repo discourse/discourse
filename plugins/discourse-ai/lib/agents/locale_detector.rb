@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       STATIC_LANGUAGE_CODES = %w[en es fr de it pt-BR ru zh-CN ja ko].freeze
 
       def system_prompt

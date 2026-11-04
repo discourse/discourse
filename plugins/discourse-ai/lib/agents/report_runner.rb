@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT
           You are ForumBot, a backend AI information processor and writer, powered by an AI model capable of generating responses over 4000 words.

@@ -27,6 +27,10 @@ bs_BA:
           one: "%{count} odgovor"
           few: "%{count} odgovora"
           other: "%{count} odgovora"
+        owners:
+          one: "Vlasnik"
+          few: "Vlasnici"
+          other: "Vlasnici"
       manage:
         name: "Ime"
         constraint_categories: "Kategorije"

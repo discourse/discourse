@@ -1,0 +1,58 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: 設計
+        overridden: 客製
+        insert: 插入
+        preview_home: 首頁
+        preview_archive: 封存
+        desktop: 桌面設備
+        mobile: 移動設備
+        back_to_themes: 返回佈景主題
+        new_theme_short: 新佈景主題
+        themes: 佈景主題
+        theme_name: 佈景主題名稱
+        edit: 編輯
+        activate: 啟動
+        preview: 預覽
+        import: 導入
+        export: 導出
+        active: 啟用
+  js:
+    blog:
+      panel:
+        badge:
+          draft: 草稿
+        preview: 預覽
+        submit: 提交審核
+        change:
+          title: 標題
+          body: 內文
+      review:
+        label: 標籤
+        create: 建立連結
+        copy: 復制
+        open: 開放
+        status:
+          active: 啟用
+          expired: 已過期
+          revoked: 已撤消
+          inactive: 不活躍
+        closed_on: "於 %{date} 關閉"
+        revoke: 撤回
+        message: 意見回饋
+      editor_table:
+        edit: 編輯
+        status: 狀態
+        replies: 回覆
+      drafts: 草稿
+      preview: 預覽
+      unpublish: 取消發佈
+      appearance_link: 外觀

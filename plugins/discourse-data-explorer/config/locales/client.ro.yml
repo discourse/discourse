@@ -16,7 +16,6 @@ ro:
       or: "sau"
       ai:
         generate: "Generare"
-        optional: "opțional"
       help:
         label: "Ajutor"
       schema:
@@ -28,6 +27,7 @@ ro:
       save: "Salvează modificări"
       undo: "Renunță la modificări"
       delete: "Șterge"
+      name: "Nume"
       query_groups: "Grupuri"
       query_tags: "Etichete"
       report_name: "Raport"

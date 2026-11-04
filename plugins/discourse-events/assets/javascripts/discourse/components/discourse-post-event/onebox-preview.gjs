@@ -26,12 +26,13 @@ export default class DiscoursePostEventOneboxPreview extends Component {
 
   <template>
     {{#if this.event}}
-      <DiscoursePostEvent
-        class="discourse-post-event--preview"
-        @event={{this.event}}
-        @linkToPost={{true}}
-        @readOnly={{true}}
-      />
+      <div class="discourse-post-event-onebox">
+        <DiscoursePostEvent
+          @event={{this.event}}
+          @linkToPost={{true}}
+          @readOnly={{@readOnly}}
+        />
+      </div>
     {{else}}
       {{this.fallback}}
     {{/if}}

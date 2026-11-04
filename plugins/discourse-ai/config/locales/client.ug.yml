@@ -91,6 +91,8 @@ ug:
         filters:
           all: "ھەممىسى"
           reset: "ئەسلىگە قايتۇر"
+        sentiment:
+          enabled: "قوزغىتىلدى"
         search:
           name: "ئىزدە"
         ai_helper:

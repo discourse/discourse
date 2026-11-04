@@ -24,6 +24,8 @@ fa_IR:
       formatted_excerpt: "گفتگوی هوش‌مصنوعی با %{llm_name}:\n %{excerpt}"
       title: "%{title} - گفتگوی هوش‌مصنوعی - %{site_name}"
     ai_bot:
+      sources:
+        historical: "هوش مصنوعی دیسکورس"
       navigation:
         settings:
           title: "تنظیمات سایت"

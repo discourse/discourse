@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT.strip
           You are a markdown table formatter, I will provide you text inside <input></input> XML tags and you will format it into a markdown table

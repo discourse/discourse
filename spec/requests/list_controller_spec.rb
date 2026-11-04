@@ -931,6 +931,25 @@ RSpec.describe ListController do
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
     end
 
+    it "localizes latest RSS from Accept-Language for clients classified as crawlers" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_param = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+      SiteSetting.content_localization_supported_locales = "ja"
+
+      get "/latest.rss",
+          headers: {
+            "HTTP_USER_AGENT" => "curl/8.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_LANGUAGE" => "ja",
+          }
+
+      title = Nokogiri.XML(response.body).at_xpath("/rss/channel/title").text
+      expect(title).to eq("#{SiteSetting.title} - #{I18n.t("rss_description.latest", locale: :ja)}")
+    end
+
     it "does not allow a topic author to forge RSS items" do
       attacker = Fabricate(:user, refresh_auto_groups: true)
       forged_title = "Forged RSS item"
@@ -1388,6 +1407,19 @@ RSpec.describe ListController do
           expect(response.status).to eq(200)
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
+
+        it "keeps the page number on later pages of a category" do
+          category_url = "#{Discourse.base_url}/c/#{category.slug}/#{category.id}"
+
+          get "/c/#{category.slug}/#{category.id}?page=2&order=views"
+          expect(css_select("link[rel=canonical]").first["href"]).to eq("#{category_url}?page=2")
+
+          get "/c/#{category.slug}/#{category.id}/l/latest?page=2"
+          expect(css_select("link[rel=canonical]").first["href"]).to eq("#{category_url}?page=2")
+
+          get "/c/#{category.slug}/#{category.id}?page=0"
+          expect(css_select("link[rel=canonical]").first["href"]).to eq(category_url)
+        end
       end
 
       context "for category default view" do
@@ -1801,6 +1833,80 @@ RSpec.describe ListController do
       end
     end
 
+    context "with encoded non-ASCII slugs" do
+      before { SiteSetting.slug_generation_method = "encoded" }
+
+      {
+        "zh_CN" => %w[产品 问题],
+        "zh_TW" => %w[產品 問題],
+        "ja" => %w[製品 質問],
+      }.each do |locale, (old_name, new_name)|
+        context "with a #{locale} category" do
+          let(:category) { Fabricate(:category, name: old_name) }
+          let!(:old_slug) { category.slug }
+
+          before { category.update!(slug: new_name) }
+
+          it "redirects an outdated slug to the current encoded slug" do
+            get "/c/#{old_slug}/#{category.id}"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{CGI.escape(new_name)}/#{category.id}")
+
+            get response.location
+            expect(response.status).to eq(200)
+          end
+
+          it "redirects the slug without an id to the URL with the id" do
+            get "/c/#{category.slug}"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
+          end
+
+          it "keeps the filter and the query string" do
+            get "/c/#{old_slug}/#{category.id}/l/latest?page=2"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}/l/latest?page=2")
+          end
+
+          it "keeps the format" do
+            get "/c/#{old_slug}/#{category.id}.json"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json")
+          end
+        end
+      end
+
+      it "redirects an outdated parent slug for a subcategory" do
+        parent = Fabricate(:category, name: "製品")
+        old_parent_slug = parent.slug
+        subcategory = Fabricate(:category, name: "質問", parent_category: parent)
+        parent.update!(slug: "新製品")
+
+        get "/c/#{old_parent_slug}/#{subcategory.slug}/#{subcategory.id}/none"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to(
+          "/c/#{parent.slug}/#{subcategory.slug}/#{subcategory.id}/none",
+        )
+      end
+
+      it "keeps the subfolder" do
+        set_subfolder "/forum"
+        category = Fabricate(:category, name: "製品")
+        old_slug = category.slug
+        category.update!(slug: "質問")
+
+        get "/c/#{old_slug}/#{category.id}/l/latest"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}/l/latest")
+      end
+    end
+
     context "with subfolder" do
       it "main category redirects to URL containing the updated slug" do
         set_subfolder "/forum"
@@ -1851,6 +1957,80 @@ RSpec.describe ListController do
         expect(response).to have_http_status :moved_permanently
         expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
       end
+    end
+  end
+
+  describe "category_noindex modifier" do
+    fab!(:category, :category_with_definition)
+    fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    fab!(:topic_in_category) { Fabricate(:topic, category: category) }
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_args) { [] }
+    let(:noindex_category_ids) { [] }
+    let(:modifier) do
+      Proc.new do |noindex, modifier_category|
+        modifier_args << [noindex, modifier_category]
+        noindex || noindex_category_ids.include?(modifier_category.id)
+      end
+    end
+
+    before { DiscoursePluginRegistry.register_modifier(plugin, :category_noindex, &modifier) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, :category_noindex, &modifier) }
+
+    it "receives false and the category, and sends no noindex by default" do
+      get "/c/#{category.slug}/#{category.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, category]])
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+
+    it "receives the subcategory for its own lists" do
+      get "/c/#{category.slug}/#{subcategory.slug}/#{subcategory.id}"
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, subcategory]])
+    end
+
+    it "lets a plugin send noindex on every topic list of the category" do
+      SiteSetting.enable_markdown_endpoints = true
+      noindex_category_ids << category.id
+
+      [
+        "/c/#{category.slug}/#{category.id}",
+        "/c/#{category.slug}/#{category.id}?page=1",
+        "/c/#{category.slug}/#{category.id}/none",
+        "/c/#{category.slug}/#{category.id}/l/top",
+        "/c/#{category.slug}/#{category.id}/l/latest.json",
+        "/c/#{category.slug}/#{category.id}.md",
+        "/latest?category=#{category.id}",
+        "/top?category=#{category.slug}",
+      ].each do |path|
+        get path, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200), path
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+      end
+    end
+
+    it "keeps the site-wide nofollow when the site is not indexable" do
+      SiteSetting.allow_index_in_robots_txt = false
+      noindex_category_ids << category.id
+
+      get "/c/#{category.slug}/#{category.id}.json"
+
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
+    it "is not consulted for topic lists outside a category" do
+      noindex_category_ids << category.id
+
+      get "/latest", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to be_empty
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
     end
   end
 

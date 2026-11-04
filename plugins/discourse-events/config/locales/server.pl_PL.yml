@@ -152,6 +152,14 @@ pl_PL:
     livestream:
       chat:
         topic_reference_message: "Ten kanał jest przeznaczony na wydarzenie [%{title}](%{url}) — odwiedź temat, aby uzyskać więcej szczegółów i potwierdzić obecność."
+        transcript_heading: "Transkrypcja czatu"
+        transcript_heading_dated: "Transkrypcja czatu w dniu %{date}"
+        transcript_edit_reason: "Dodano transkrypt czatu na żywo"
+        transcript_earlier_messages:
+          one: "%{count} wcześniejsza wiadomość znajduje się na [kanale czatu](%{url})."
+          few: "%{count} wcześniejsze wiadomości znajduje się na [kanale czatu](%{url})."
+          many: "%{count} wcześniejszych wiadomości znajduje się na [kanale czatu](%{url})."
+          other: "%{count} wcześniejszych wiadomości znajduje się na [kanale czatu](%{url})."
       zoom:
         frame_title: "Webinarium Zoom"
         frame_join: "Dołącz do webinarium"
@@ -171,6 +179,21 @@ pl_PL:
       date_with_timezone: "%{date} (%{timezone})"
       date_format: "%-d %B %Y"
       datetime_format: "%-d %B %Y, %k:%M"
+    filter:
+      description:
+        event: "Pokaż tematy z wydarzeniem"
+        event_any_of: "Pokaż tematy zawierające zdarzenie w dowolnym ze wskazanych stanów (rozdzielone przecinkami)"
+        exclude_event: "Wyklucz tematy ze zdarzeniem w określonym stanie"
+        event_any: "Pokaż tematy z wydarzeniem"
+        event_upcoming: "Pokaż tematy z wydarzeniem, które jeszcze się nie rozpoczęło"
+        event_ongoing: "Pokaż tematy z wydarzeniem, które ma miejsce teraz"
+        event_past: "Pokaż tematy z wydarzeniem, które się zakończyło"
+        event_after: "Pokaż tematy, których wydarzenie rozpoczyna się w dniu lub po dacie (RRRR-MM-DD)"
+        event_before: "Pokaż tematy, których wydarzenie rozpoczęło się przed datą (RRRR-MM-DD)"
+        event_attending: "Pokaż tematy z wydarzeniem, do którego wybiera się użytkownik"
+        event_attending_me: "Wydarzenia, na które się wybierasz"
+        order_event_start: "Sortuj według daty rozpoczęcia wydarzenia (od najnowszych)"
+        order_event_start_asc: "Sortuj według daty rozpoczęcia wydarzenia (od najwcześniejszych)"
     notifications:
       before_event_reminder: "%{title} wkrótce się rozpocznie."
       after_event_reminder: "%{title} dobiegło końca."
@@ -196,6 +219,7 @@ pl_PL:
           invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: %{recurrences}."
           invalid_timezone: "Strefa czasowa nie została rozpoznana."
           invalid_url: "Adres URL musi być prawidłowym adresem internetowym."
+          invalid_recording_url: "Nagranie musi być prawidłowym adresem internetowym."
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
           acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
           invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."
@@ -215,6 +239,8 @@ pl_PL:
             length: "Długość adresu URL wydarzenia jest ograniczona do %{maximum} znaków."
           location:
             length: "Lokalizacja zdarzenia jest ograniczona do %{maximum} znaków."
+          recording:
+            length: "Łącze do rejestrowania zdarzeń jest ograniczone do %{maximum} znaków."
   discourse_push_notifications:
     popup:
       event_reminder: "Przypomnienie o wydarzeniu"

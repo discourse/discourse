@@ -22,7 +22,6 @@ sw:
       description_placeholder: "Andika maelezo hapa"
       ai:
         generate: "Tengeneza"
-        optional: "sio Muhimu"
       help:
         label: "Msaada"
       schema:
@@ -35,7 +34,7 @@ sw:
           no: "Hapana"
           null_: "Hamna Kitu"
       delete: "Futa"
-      query_name: "Swali"
+      name: "Jina"
       query_groups: "Makundi"
       query_tags: "Lebo"
       query_description: "Maelezo"

@@ -48,7 +48,6 @@ nl:
         save_query: "Query opslaan"
         write_manually: "SQL handmatig schrijven"
         sql_label: "SQL"
-        optional: "optioneel"
       import:
         unparseable_json: "Onparseerbaar JSON-bestand."
         wrong_json: "Onjuist JSON-bestand. Een JSON-bestand moet een 'query'-object bevatten, dat minimaal een 'sql'-eigenschap moet hebben."
@@ -87,7 +86,7 @@ nl:
       max_result_count:
         one: "Eerste %{count} resultaat wordt weergegeven."
         other: "Eerste %{count} resultaten worden weergegeven."
-      query_name: "Query"
+      name: "Naam"
       query_groups: "Groepen"
       query_tags: "Tags"
       link: "Link voor"

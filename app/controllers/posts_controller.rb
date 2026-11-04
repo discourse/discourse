@@ -471,7 +471,12 @@ class PostsController < ApplicationController
     raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
 
     render_json_dump(
-      PostRevisionSerializer.new(find_post_revision_from_params, scope: guardian, root: false),
+      PostRevisionSerializer.new(
+        find_post_revision_from_params,
+        scope: guardian,
+        root: false,
+        include_unlisted: include_unlisted_revisions?,
+      ),
     )
   end
 
@@ -484,6 +489,7 @@ class PostsController < ApplicationController
         find_latest_post_revision_from_params,
         scope: guardian,
         root: false,
+        include_unlisted: include_unlisted_revisions?,
       ),
     )
   rescue ONPDiff::DiffLimitExceeded
@@ -557,6 +563,35 @@ class PostsController < ApplicationController
     post.publish_change_to_clients!(:revised)
 
     render body: nil
+  end
+
+  def unlist_revision
+    PostRevision::Unlist.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 400)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::NotFound }
+      on_model_not_found(:post_revision) { raise Discourse::NotFound }
+      on_failed_policy(:can_unlist_post_revision) { raise Discourse::InvalidAccess }
+      on_failed_policy(:post_revision_not_hidden) do
+        render_json_error(I18n.t("cannot_unlist_hidden_revision"), status: 422)
+      end
+    end
+  end
+
+  def relist_revision
+    PostRevision::Relist.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 400)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::NotFound }
+      on_model_not_found(:post_revision) { raise Discourse::NotFound }
+      on_failed_policy(:can_relist_post_revision) { raise Discourse::InvalidAccess }
+    end
   end
 
   def revert
@@ -823,9 +858,8 @@ class PostsController < ApplicationController
   def find_latest_post_revision_from_params
     post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post.id).order(:number)
-    finder = finder.where(hidden: false) unless guardian.is_staff?
-    post_revision = finder.last
+    post_revision =
+      PostRevision.latest_for(post, guardian, include_unlisted: include_unlisted_revisions?)
 
     raise Discourse::NotFound unless post_revision
 
@@ -854,6 +888,10 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def include_unlisted_revisions?
+    params[:include_unlisted] == "true"
+  end
 
   def markdown_for_revision
     find_post_revision_from_topic_id.modifications[:raw].last

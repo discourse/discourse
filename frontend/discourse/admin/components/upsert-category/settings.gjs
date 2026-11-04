@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -31,6 +32,12 @@ export default class UpsertCategorySettings extends Component {
     });
 
     return options;
+  }
+
+  /** Converts the native select's string value back to the numeric priority. */
+  @action
+  async onSearchPrioritySet(value, { name, set }) {
+    await set(name, value === null ? null : parseInt(value, 10));
   }
 
   <template>
@@ -75,6 +82,7 @@ export default class UpsertCategorySettings extends Component {
     <@form.Field
       @format="max"
       @name="search_priority"
+      @onSet={{this.onSearchPrioritySet}}
       @title={{i18n "category.search_priority.label"}}
       @type="select"
       @validation="required"

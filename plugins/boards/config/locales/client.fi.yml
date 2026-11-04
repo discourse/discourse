@@ -38,7 +38,9 @@ fi:
         unassign_from_topic: "Peru käyttäjän @%{username} osoitus ketjusta"
         unassign_from_post: "Peru käyttäjän @%{username} osoitus viestistä %{post_number}"
         edit_assignments: "Muokkaa osoituksia..."
-        created_by: "Luonut"
+        owners:
+          one: "Isäntä"
+          other: "Isännät"
       manage:
         name: "Nimi"
         slug: "Polkutunnus"

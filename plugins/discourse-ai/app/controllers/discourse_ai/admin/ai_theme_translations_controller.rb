@@ -8,6 +8,7 @@ module DiscourseAi
       def create
         theme = Theme.find_by(id: params[:theme_id])
         raise Discourse::NotFound if theme.blank?
+        guardian.ensure_can_edit_theme!(theme)
 
         locale = params[:locale].to_s
         source_locale = (locale.present? && LocaleSiteSetting.valid_value?(locale)) ? locale : "en"

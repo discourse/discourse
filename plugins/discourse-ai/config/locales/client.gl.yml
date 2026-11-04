@@ -75,6 +75,8 @@ gl:
         filters:
           all: "Todas"
           reset: "Restabelecer"
+        sentiment:
+          enabled: "Activado"
         search:
           name: "Buscar"
         image_caption:

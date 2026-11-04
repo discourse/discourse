@@ -80,6 +80,8 @@ hr:
         filters:
           all: "Sve"
           reset: "Resetirati"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraživanje"
         image_caption:

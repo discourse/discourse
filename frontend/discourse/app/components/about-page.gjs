@@ -310,7 +310,7 @@ export default class AboutPage extends Component {
         {{#if this.contactInfo}}
           <p class="about__contact-info">{{trustHTML this.contactInfo}}</p>
         {{/if}}
-        <p>{{i18n "about.report_inappropriate_content"}}</p>
+        <p>{{trustHTML (i18n "about.report_inappropriate_content")}}</p>
         <h2>{{i18n "about.site_activity"}}</h2>
         <div class="about__activities">
           {{#each this.siteActivities as |activity|}}

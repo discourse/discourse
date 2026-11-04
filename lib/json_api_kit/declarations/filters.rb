@@ -13,9 +13,11 @@ module JsonApiKit
 
       def with(additional_filters) = self.class.new(declarations.chain(additional_filters))
 
-      def apply(scope, filtering = {})
+      def apply(scope, filtering = {}, adapter:)
         return scope if filtering.blank?
-        filtering.reduce(scope) { |narrowed, (name, value)| fetch(name).apply(narrowed, value) }
+        filtering.reduce(scope) do |narrowed, (name, value)|
+          fetch(name).apply(narrowed, value, adapter:)
+        end
       end
 
       private

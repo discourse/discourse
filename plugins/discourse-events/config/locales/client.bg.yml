@@ -49,13 +49,14 @@ bg:
         status: "Статус"
       models:
         event:
-          expired: "Изтекъл срок"
           closed: "Затворена"
           status:
             public:
               title: "Публични"
             private:
               title: "Затворени"
+      recording_modal:
+        save: "Запази"
       composer:
         url_placeholder: "Добавяне на URL"
         reminder:

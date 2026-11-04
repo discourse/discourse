@@ -11,7 +11,55 @@ RSpec.describe DesignWizard::Apply do
 
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
-    it { is_expected.to validate_inclusion_of(:theme_id).in_array(Theme::CORE_THEMES.values) }
+    it { is_expected.to allow_values(*Theme::CORE_THEMES.values).for(:theme_id) }
+
+    it "accepts installed official themes with either repository URL format" do
+      SiteSetting.concord_in_wizard = true
+      ["", ".git"].each do |suffix|
+        theme =
+          Fabricate(
+            :theme,
+            remote_theme:
+              Fabricate(
+                :remote_theme,
+                remote_url: "https://github.com/discourse/discourse-concord-theme#{suffix}",
+              ),
+          )
+
+        expect(described_class.new(theme_id: theme.id)).to be_valid
+      end
+    end
+
+    it "rejects custom themes, similarly named repositories, and components" do
+      SiteSetting.concord_in_wizard = true
+      custom_theme = Fabricate(:theme, name: "Concord")
+      unofficial_theme =
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/other/discourse-concord-theme",
+            ),
+        )
+      component =
+        Fabricate(
+          :theme,
+          component: true,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+
+      [custom_theme, unofficial_theme, component].each do |theme|
+        contract = described_class.new(theme_id: theme.id)
+
+        expect(contract).to be_invalid
+        expect(contract.errors.of_kind?(:theme_id, :inclusion)).to eq(true)
+      end
+    end
 
     it do
       is_expected.to validate_inclusion_of(:base_font).in_array(
@@ -47,6 +95,23 @@ RSpec.describe DesignWizard::Apply do
       is_expected.to validate_inclusion_of(:search_experience).in_array(
         SearchExperienceSiteSetting.values.map { |experience| experience[:value] },
       ).allow_nil
+    end
+
+    it "defaults homepage settings to an empty hash" do
+      contract = described_class.new(theme_id: Theme::CORE_THEMES["foundation"])
+
+      expect(contract).to be_valid
+      expect(contract.homepage_settings).to eq({})
+    end
+
+    it "rejects non-hash and unregistered homepage settings" do
+      [nil, "invalid", [], { title: "Unexpected title" }].each do |homepage_settings|
+        contract =
+          described_class.new(theme_id: Theme::CORE_THEMES["foundation"], homepage_settings:)
+
+        expect(contract).to be_invalid
+        expect(contract.errors.of_kind?(:homepage_settings, :invalid)).to eq(true)
+      end
     end
 
     it "normalizes the base light palette id to nil" do
@@ -90,6 +155,45 @@ RSpec.describe DesignWizard::Apply do
     let(:dependencies) { { guardian: } }
     let(:theme_id) { Theme::CORE_THEMES["foundation"] }
     let(:params) { { theme_id: } }
+
+    context "when applying an installed official theme" do
+      fab!(:concord_theme) do
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+      end
+      fab!(:palette) { Fabricate(:color_scheme, theme_id: concord_theme.id) }
+
+      let(:theme_id) { concord_theme.id }
+      let(:params) { { theme_id:, light_palette_id: palette.id, palettes_user_selectable: true } }
+
+      before { SiteSetting.concord_in_wizard = true }
+
+      it "rejects the installed theme when Concord is disabled" do
+        SiteSetting.concord_in_wizard = false
+
+        expect(result).to fail_a_contract
+      end
+
+      it "selects the theme and its palette" do
+        expect(result).to run_successfully
+        expect(SiteSetting.default_theme_id).to eq(concord_theme.id)
+        expect(concord_theme.reload.color_scheme_id).to eq(palette.id)
+        expect(palette.reload.user_selectable).to eq(true)
+      end
+    end
+
+    context "when applying an unsupported theme" do
+      fab!(:custom_theme, :theme)
+      let(:theme_id) { custom_theme.id }
+
+      it { is_expected.to fail_a_contract }
+    end
 
     context "when the contract isn't valid" do
       let(:params) { { theme_id:, base_font: "not_a_font" } }
@@ -138,6 +242,77 @@ RSpec.describe DesignWizard::Apply do
       before { Theme.where(id: theme_id).delete_all }
 
       it { is_expected.to fail_to_find_a_model(:theme) }
+    end
+
+    context "when a plugin restricts editing the theme" do
+      let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { proc { false } }
+
+      before { plugin.register_modifier(:user_guardian_can_edit_theme, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:can_edit_theme) }
+
+      it "changes nothing" do
+        expect { result }.not_to change {
+          [foundation_theme.reload.color_scheme_id, ColorScheme.count]
+        }
+      end
+    end
+
+    context "when a plugin restricts palette creation" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { proc { false } }
+
+      before { plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_create_color_scheme,
+          &modifier
+        )
+      end
+
+      context "when a built-in palette has to be saved first" do
+        let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+
+        # new sites start with the built-in palettes saved, but they can be deleted
+        before do
+          ColorScheme.where(
+            base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+            via_wizard: true,
+          ).destroy_all
+        end
+
+        it { is_expected.to fail_a_policy(:can_create_needed_palettes) }
+      end
+
+      context "when offering the built-in palettes would save them" do
+        let(:params) { { theme_id:, palettes_user_selectable: true } }
+
+        it { is_expected.to fail_a_policy(:can_create_needed_palettes) }
+      end
+
+      context "when the built-in palette was saved before" do
+        let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+
+        before do
+          DesignWizard::Action::ResolvePalette.call(
+            palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+          )
+        end
+
+        it { is_expected.to run_successfully }
+      end
     end
 
     context "when a provided palette belongs to another theme" do

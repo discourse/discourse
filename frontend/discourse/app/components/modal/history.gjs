@@ -7,6 +7,7 @@ import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
 import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
@@ -27,6 +28,22 @@ function customTagArray(val) {
   return val;
 }
 
+const VISIBILITY_TRANSITIONS = {
+  listed: {
+    unlisted: [Post.unlistRevision],
+    hidden: [Post.hideRevision],
+  },
+  unlisted: {
+    listed: [Post.relistRevision],
+    hidden: [Post.hideRevision],
+  },
+  // The server refuses to unlist a hidden revision, so it is shown first.
+  hidden: {
+    listed: [Post.showRevision],
+    unlisted: [Post.showRevision, Post.unlistRevision],
+  },
+};
+
 export default class History extends Component {
   @service dialog;
   @service modal;
@@ -40,6 +57,7 @@ export default class History extends Component {
   @tracked bodyDiff;
   @tracked initialLoad = true;
   @tracked error;
+  @tracked includeUnlisted = false;
 
   constructor() {
     super(...arguments);
@@ -79,6 +97,12 @@ export default class History extends Component {
 
   get displayRevisions() {
     return this.postRevision?.version_count > 2;
+  }
+
+  get showUnlistedToggle() {
+    return (
+      !this.currentUser?.staff && this.postRevision?.unlisted_revision_count > 0
+    );
   }
 
   get modalTitleKey() {
@@ -225,6 +249,13 @@ export default class History extends Component {
     }
   }
 
+  get visibility() {
+    if (this.postRevision?.previous_hidden) {
+      return "hidden";
+    }
+    return this.postRevision?.unlisted ? "unlisted" : "listed";
+  }
+
   @action
   async calculateBodyDiff(_, [bodyDiff]) {
     let html = bodyDiff;
@@ -245,7 +276,9 @@ export default class History extends Component {
     this.loading = true;
     this.error = null;
     try {
-      const result = await Post.loadRevision(postId, postVersion);
+      const result = await Post.loadRevision(postId, postVersion, {
+        includeUnlisted: this.includeUnlisted,
+      });
       this.postRevision = result;
       if (result.diff_error) {
         this.error = i18n("post.revisions.diff_too_complex");
@@ -262,18 +295,6 @@ export default class History extends Component {
       this.loading = false;
       this.initialLoad = false;
     }
-  }
-
-  hide(postId, postVersion) {
-    Post.hideRevision(postId, postVersion).then(() =>
-      this.refresh(postId, postVersion)
-    );
-  }
-
-  show(postId, postVersion) {
-    Post.showRevision(postId, postVersion).then(() =>
-      this.refresh(postId, postVersion)
-    );
   }
 
   async revert(post, postVersion) {
@@ -359,11 +380,6 @@ export default class History extends Component {
   }
 
   @action
-  hideVersion() {
-    this.hide(this.postRevision?.post_id, this.postRevision?.current_revision);
-  }
-
-  @action
   permanentlyDeleteVersions() {
     const postId = this.postRevision?.post_id;
     this.args.closeModal();
@@ -380,8 +396,29 @@ export default class History extends Component {
   }
 
   @action
-  showVersion() {
-    this.show(this.postRevision?.post_id, this.postRevision?.current_revision);
+  async changeVisibility(target) {
+    const postId = this.postRevision?.post_id;
+    const postVersion = this.postRevision?.current_revision;
+
+    try {
+      for (const request of VISIBILITY_TRANSITIONS[this.visibility][target]) {
+        await request(postId, postVersion);
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      // A multi-step change can fail after its first step has landed.
+      await this.refresh(postId, postVersion);
+    }
+  }
+
+  @action
+  toggleIncludeUnlisted() {
+    this.includeUnlisted = !this.includeUnlisted;
+    this.refresh(
+      this.postRevision?.post_id,
+      this.postRevision?.current_revision
+    );
   }
 
   @action
@@ -441,11 +478,12 @@ export default class History extends Component {
           {{#if this.postRevision}}
             <TopicFooter
               @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
+              @changeVisibility={{this.changeVisibility}}
               @displayEdit={{this.displayEdit}}
               @displayRevisions={{this.displayRevisions}}
               @editButtonLabel={{this.editButtonLabel}}
               @editPost={{this.editPost}}
-              @hideVersion={{this.hideVersion}}
+              @includeUnlisted={{this.includeUnlisted}}
               @isStaff={{this.currentUser.staff}}
               @loadFirstDisabled={{this.loadFirstDisabled}}
               @loadFirstVersion={{this.loadFirstVersion}}
@@ -461,7 +499,9 @@ export default class History extends Component {
               @revertToRevisionText={{this.revertToRevisionText}}
               @revertToVersion={{this.revertToVersion}}
               @revisionsText={{this.revisionsText}}
-              @showVersion={{this.showVersion}}
+              @showUnlistedToggle={{this.showUnlistedToggle}}
+              @toggleIncludeUnlisted={{this.toggleIncludeUnlisted}}
+              @visibility={{this.visibility}}
             />
           {{/if}}
         {{/if}}

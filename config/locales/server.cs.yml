@@ -2323,7 +2323,6 @@ cs:
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
     full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
     enable_names: "Zobrazení celého jména uživatele v jeho profilu, kartě uživatele a e-mailech. Zakázáním skryjete celé jméno všude."
-    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata budou skryta, dokud uživatel neodpoví."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
     slug_generation_method: "Vyberte metodu generování URL. 'encoded' vygeneruje řetězec se znaky procent. 'none' zakáže zkratky URL úplně."
@@ -2335,14 +2334,12 @@ cs:
     default_text_size: "Určuje výchozí velikost písma pro všechny textové prvky na webu. Tuto velikost si může každý uživatel následně upravit podle svých preferencí."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
+    company_name: "Název vaší společnosti nebo organizace."
     shared_drafts_allowed_groups: "Povolte uživatelům v těchto skupinách zobrazovat a upravovat sdílené návrhy."
     base_font: "Základní písmo použité pro většinu textu na webu. Motivy mohou toto přepsat pomocí vlastní vlastnosti CSS `--font-family`."
     heading_font: "Písmo, které se má použít pro nadpisy na webu. Motivy toto mohou přepsat pomocí vlastní vlastnosti CSS `--heading-font-family`."
     enable_user_status: "Umožnit uživatelům nastavit si vlastní stavovou zprávu (emoji + popis)."
     enable_user_tips: "Povolit tipy pro nové uživatele, které jim popisují klíčové funkce"
-    dashboard_hidden_reports: "Povolit skrytí zadaných sestav z nástěnky"
-    dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
-    dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     gravatar_name: "Zadejte název poskytovatele služby Gravatar. Tento název se obvykle používá k identifikaci zdroje, který webu poskytuje avatary Gravatar."
     gravatar_base_url: "Zadejte adresu URL pro přístup k rozhraní API poskytovatele Gravatar. Toto nastavení je rozhodující pro převod e-mailových adres na adresy URL služby Gravatar, kde jsou uloženy obrázky avatarů."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
@@ -4342,6 +4339,19 @@ cs:
                 label: "Ano, noví členové musí být schváleni moderátory"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Každý den"
+        every_weekday: "Každý den v týdnu"
+        ordinals:
+          last: "poslední"
+        weekdays:
+          sunday: "Neděle"
+          monday: "Pondělí"
+          tuesday: "Úterý"
+          wednesday: "Středa"
+          thursday: "Čtvrtek"
+          friday: "Pátek"
+          saturday: "Sobota"
       user_joined_community: "Připojil/a se %{date}"
     google_meet:
       meeting_code: "Kód:"
@@ -4349,13 +4359,18 @@ cs:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
     github:
+      header:
+        file: "Soubor"
+        success: "Úspěch"
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
       closed: "uzavřeno"
-      status_date:
-        approved: "schválen"
-        merged: "sloučeno"
-        closed: "zavřeno"
+      pr_status:
+        draft: "Koncept"
+        open: "Otevřeno"
+        approved: "Schválen"
+        merged: "Sloučeno"
+        closed: "Zavřeno"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'

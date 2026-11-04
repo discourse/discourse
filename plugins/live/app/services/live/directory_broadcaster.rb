@@ -37,7 +37,7 @@ module Live
             Live::RoomSerializer
               .new(room, scope: Guardian.new(nil), root: false)
               .as_json
-              .except(:can_manage, :can_invite, :membership),
+              .except(:can_manage, :can_delete, :can_invite, :membership),
         },
         **targets,
       )

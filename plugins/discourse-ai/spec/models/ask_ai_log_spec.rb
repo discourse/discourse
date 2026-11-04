@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe AskAiLog do
+  describe ".asked" do
+    fab!(:user)
+
+    it "leaves out searches whose answer was never requested" do
+      pending_ask = AskAiLog.create!(user:, query: "pending", asked_at: Time.current)
+      answered =
+        AskAiLog.create!(user:, query: "done", asked_at: Time.current, ask_outcome: :answered)
+      AskAiLog.create!(user:, query: "in:messages x", asked_at: Time.current, ask_outcome: :skipped)
+
+      expect(AskAiLog.asked).to contain_exactly(pending_ask, answered)
+    end
+  end
+
   describe "#record_judgement!" do
     fab!(:user)
 

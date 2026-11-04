@@ -73,6 +73,8 @@ sq:
         filters:
           all: "Të gjitha"
           reset: "Rivendosni"
+        sentiment:
+          enabled: "Aktivizuar"
         search:
           name: "Kërko"
         image_caption:

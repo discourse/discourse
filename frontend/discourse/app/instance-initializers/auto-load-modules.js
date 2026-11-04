@@ -1,21 +1,8 @@
 import { setOwner } from "@ember/owner";
 import { createHelperContext, registerHelpers } from "discourse/lib/helpers";
 
-function isThemeOrPluginHelper(path) {
-  return (
-    path.includes("/helpers/") &&
-    (path.startsWith("discourse/theme-") ||
-      path.startsWith("discourse/plugins/")) &&
-    !path.endsWith("-test")
-  );
-}
-
 export function autoLoadModules(owner, registry) {
   Object.keys(requirejs.entries).forEach((entry) => {
-    if (isThemeOrPluginHelper(entry)) {
-      // Once the discourse.register-unbound deprecation is resolved, we can remove this eager loading
-      requirejs(entry, null, null, true);
-    }
     if (entry.includes("/widgets/") && !entry.endsWith("-test")) {
       requirejs(entry, null, null, true);
     }

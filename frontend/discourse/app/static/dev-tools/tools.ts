@@ -1,5 +1,6 @@
 import type { ComponentLike } from "@glint/template";
 import BlockDebugButton from "./block-debug/button.gts";
+import BundleAnalyzerButton from "./bundle-analyzer/button.gjs";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button.gjs";
 import SafeModeButton from "./safe-mode/button.gjs";
 import StyleguideButton from "./styleguide/button.gts";
@@ -25,4 +26,5 @@ export const CORE_TOOLS: readonly DevTool[] = [
   { id: "safe-mode", component: SafeModeButton },
   { id: "verbose-localization", component: VerboseLocalizationButton },
   { id: "styleguide", component: StyleguideButton },
+  { id: "bundle-analyzer", component: BundleAnalyzerButton },
 ];

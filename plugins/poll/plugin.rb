@@ -125,21 +125,18 @@ after_initialize do
     doc.css("div.poll").each { |poll| poll.replace(replacement) }
   end
 
-  on(:post_created) do |post, _opts, user|
-    guardian = Guardian.new(user)
+  # Drop content-bearing messages retained before invalidation-only broadcasts.
+  MessageBus.register_client_message_filter("/polls/") do |message|
+    message.data.keys.map(&:to_s) == ["post_id"]
+  end
+
+  on(:post_created) do |post, _opts, _user|
     DiscoursePoll::Poll.schedule_jobs(post)
 
     next if post.is_first_post?
     next if post.custom_fields[DiscoursePoll::HAS_POLLS].blank?
 
-    polls =
-      ActiveModel::ArraySerializer.new(
-        post.polls,
-        each_serializer: PollSerializer,
-        root: false,
-        scope: guardian,
-      ).as_json
-    post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
+    post.publish_poll_message!
   end
 
   on(:post_moved) do |new_post, _original_topic_id, old_post|
@@ -216,15 +213,21 @@ after_initialize do
       end
   end
 
-  add_to_serializer(:post, :polls, include_condition: -> { preloaded_polls.present? }) do
-    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) }
+  add_to_class(PostSerializer, :can_see_post_polls?) do
+    !object.hidden? || scope.can_see_hidden_post?(object)
   end
+
+  add_to_serializer(
+    :post,
+    :polls,
+    include_condition: -> { preloaded_polls.present? && can_see_post_polls? },
+  ) { preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) } }
 
   add_to_serializer(
     :post,
     :polls_votes,
     include_condition: -> do
-      scope.user&.id.present? && preloaded_polls.present? &&
+      scope.user&.id.present? && preloaded_polls.present? && can_see_post_polls? &&
         preloaded_polls.any? { |p| p.has_voted?(scope.user) }
     end,
   ) do

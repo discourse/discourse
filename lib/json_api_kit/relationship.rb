@@ -2,15 +2,25 @@
 
 module JsonApiKit
   class Relationship
+    delegate :related_document, :linkage_document, to: :declaration
+
     def initialize(owner_id, name, resource:)
       @owner_id = owner_id
       @name = name
       @owner_resource = resource
     end
 
-    delegate :resource, to: :declaration
+    def resource
+      @resource ||= owner_resource.resource_for(declaration.resource)
+    end
 
-    def scope = owner_resource.related_scope(declaration.name, owner_id:)
+    def scope
+      resource.related_records(
+        declaration,
+        owners: [owner_resource.record_for(owner_id)],
+        owner_resource:,
+      ).scope
+    end
 
     private
 

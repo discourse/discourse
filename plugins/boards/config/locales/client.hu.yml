@@ -35,7 +35,9 @@ hu:
         assign: "Kiosztás"
         reassign: "Átadás"
         unassign: "Elvétel"
-        created_by: "Létrehozta:"
+        owners:
+          one: "Tulajdonos"
+          other: "tulajdonosok"
       manage:
         name: "Név"
         slug: "URL slug"

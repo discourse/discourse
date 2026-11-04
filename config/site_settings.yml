@@ -1673,11 +1673,6 @@ posting:
     max: 36500
     client: true
     area: "posts_and_topics"
-  short_progress_text_threshold:
-    client: true
-    default: 10000
-    max: 99000
-    area: "posts_and_topics"
   default_code_lang:
     client: true
     default: "auto"
@@ -4299,6 +4294,9 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
+  concord_in_wizard:
+    default: false
+    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4735,40 +4733,6 @@ tags:
     area: "categories_and_tags|categories"
 
 dashboard:
-  dashboard_hidden_reports:
-    client: true
-    type: list
-    list_type: compact
-    default: ""
-    allow_any: true
-    area: "reports"
-  dashboard_visible_tabs:
-    client: true
-    type: list
-    list_type: compact
-    default: "moderation|security|reports|features"
-    allow_any: false
-    choices:
-      - moderation
-      - security
-      - reports
-      - features
-    area: "reports"
-  dashboard_general_tab_activity_metrics:
-    client: true
-    type: list
-    list_type: compact
-    default: "page_view_total_reqs|visits|time_to_first_response|likes|flags|user_to_user_private_messages_with_replies"
-    allow_any: false
-    choices:
-      - page_view_total_reqs
-      - visits
-      - time_to_first_response
-      - likes
-      - flags
-      - user_to_user_private_messages_with_replies
-      - signups
-    area: "reports"
   site_traffic_explorer_event_limit:
     default: 200000
     type: integer
@@ -4909,20 +4873,14 @@ experimental:
   enable_form_templates:
     client: true
     default: true
-  dsa_notice_group:
-    default: "1"
-    type: group
-    hidden: true
-    area: "experimental"
   dsa_reporting_enabled:
     client: true
     default: false
-    hidden: true
     area: "experimental"
-  dsa_moderation_appeal_email:
-    default: ""
-    type: email
-    hidden: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    area: "experimental"
   dsa_community_rules:
     type: objects
     default: []
@@ -4939,7 +4897,11 @@ experimental:
           type: string
           required: true
           validations:
-            max_length: 2000
+            max_length: 500
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    area: "experimental"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -5036,7 +4998,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   improved_crawler_detection:

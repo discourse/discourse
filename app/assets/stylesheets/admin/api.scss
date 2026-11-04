@@ -28,14 +28,6 @@
     display: none;
   }
 
-  .scopes-table__object {
-    display: contents;
-  }
-
-  .form-kit__collection {
-    display: contents;
-  }
-
   .api-key-show {
     .form-element,
     .form-element-desc {
@@ -61,73 +53,6 @@
           margin-right: 1em;
         }
       }
-    }
-  }
-
-  .generated-api-key-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .generated-api-key-container .alert {
-    margin-bottom: 0;
-  }
-
-  .generated-api-key {
-    flex: 1;
-    padding: var(--space-2) var(--space-3);
-    font-family: var(--d-font-family--monospace);
-    font-size: var(--font-down-1);
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
-    user-select: all;
-    word-break: break-all;
-
-    &__details {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-      padding: var(--space-3) var(--space-4);
-      background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
-    }
-
-    &__detail-row {
-      display: flex;
-      gap: var(--space-2);
-    }
-
-    &__label {
-      font-weight: bold;
-      min-width: 8em;
-    }
-
-    &__scope-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-1);
-    }
-
-    &__scope-badge {
-      display: inline-block;
-      padding: 0.15em 0.5em;
-      font-family: var(--d-font-family--monospace);
-      font-size: var(--font-down-1);
-      background: var(--primary-very-low);
-      border: 1px solid var(--primary-low);
-      border-radius: var(--d-border-radius);
-    }
-
-    &__scope-param {
-      color: var(--primary-medium);
-    }
-
-    &__key-row {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
     }
   }
 
@@ -159,45 +84,114 @@
       text-align: left;
       width: 50%;
     }
+  }
+}
 
-    .scopes-title {
-      margin-top: 20px;
+// Shared by every API key form
+.generated-api-key-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.generated-api-key-container .alert {
+  margin-bottom: 0;
+}
+
+.generated-api-key {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--d-font-family--monospace);
+  font-size: var(--font-down-1);
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  user-select: all;
+  word-break: break-all;
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__detail-row {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__label {
+    font-weight: bold;
+    min-width: 8em;
+  }
+
+  &__scope-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  &__scope-badge {
+    display: inline-block;
+    padding: 0.15em 0.5em;
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__scope-param {
+    color: var(--primary-medium);
+  }
+
+  &__key-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+}
+
+.scopes-table.grid {
+  margin: 0;
+
+  .scopes-table__object,
+  .form-kit__collection {
+    display: contents;
+  }
+
+  tr {
+    grid-template-columns: repeat(4, 1fr);
+
+    input {
+      margin-bottom: 2px;
+    }
+
+    @include viewport.until(sm) {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 0.5em;
+
+      &.scope-resource-name {
+        row-gap: 0;
+      }
     }
   }
 
-  .scopes-table.grid {
-    margin: 20px 0;
+  .scope-resource-name {
+    font-size: var(--font-up-1);
+  }
 
-    tr {
-      grid-template-columns: repeat(4, 1fr);
+  .scope-tooltip {
+    font-size: var(--font-down-1);
+  }
 
-      input {
-        margin-bottom: 2px;
-      }
-
-      @include viewport.until(sm) {
-        grid-template-columns: repeat(2, 1fr);
-        row-gap: 0.5em;
-
-        &.scope-resource-name {
-          row-gap: 0;
-        }
-      }
-    }
-
-    .scope-resource-name {
-      font-size: var(--font-up-1);
-    }
-
-    .scope-tooltip {
-      font-size: var(--font-down-1);
-    }
-
-    .scope-name {
-      font-weight: bold;
-      font-size: var(--font-0);
-      display: inline;
-    }
+  .scope-name {
+    font-weight: bold;
+    font-size: var(--font-0);
+    display: inline;
   }
 }
 

@@ -202,10 +202,10 @@ export default class EditCategoryTabsController extends Controller {
       ...(this.model.category_type_settings ?? {}),
     };
     data.site_texts = {};
-    data.category_types = Object.keys(this.model.categoryTypes ?? {});
+    data.category_type_ids = Object.keys(this.model.categoryTypes ?? {});
 
-    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
-      data.category_types.unshift(DISCUSSION_TYPE_ID);
+    if (!data.category_type_ids.includes(DISCUSSION_TYPE_ID)) {
+      data.category_type_ids.unshift(DISCUSSION_TYPE_ID);
     }
 
     Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
@@ -368,7 +368,7 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { visibility, ...categoryData } = data;
+    const { visibility, category_type_ids, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
     // Category serialization converts an empty permission list to staff-only access.
@@ -400,7 +400,7 @@ export default class EditCategoryTabsController extends Controller {
       const previousTypes = new Set(
         Object.keys(this.model.categoryTypes ?? {})
       );
-      const result = await this.model.save();
+      const result = await this.model.save(category_type_ids);
       const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();

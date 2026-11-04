@@ -19,7 +19,7 @@ module DiscourseAi
       end
 
       def build
-        logs = AskAiLog.where(asked_at: @start_date..@end_date)
+        logs = AskAiLog.asked.where(asked_at: @start_date..@end_date)
         questions, askers, average_ms =
           logs.pick(
             Arel.sql("COUNT(*)"),

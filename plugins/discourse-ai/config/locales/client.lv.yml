@@ -74,6 +74,8 @@ lv:
         filters:
           all: "Visi"
           reset: "Atlikt"
+        sentiment:
+          enabled: "Ieslēgts"
         search:
           name: "Meklēt"
         image_caption:

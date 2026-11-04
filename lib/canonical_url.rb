@@ -39,6 +39,7 @@ module CanonicalURL
 
       locale = params[Discourse::LOCALE_PARAM]
       return url if locale.blank?
+      return url if locale == SiteSetting.default_locale && plain_url_serves_default_locale?
 
       supported = SiteSetting.content_localization_supported_locales.to_s.split("|")
       return url if supported.exclude?(locale)

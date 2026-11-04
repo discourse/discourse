@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  blog:
+    home: Ana Sayfa
+    posted_by: 'Gönderi yayınlayan:'
+    permalink: Kalıcı Bağlantı
+    time_ago: "%{time} önce"
+    archive: Arşiv
+    about: Hakkında
+    community: Topluluk
+    preview: Ön izle
+    search: Ara
+    replies:
+      one: "%{count} yanıt"
+      other: "%{count} yanıt"

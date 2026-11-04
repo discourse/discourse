@@ -95,6 +95,8 @@ ro:
         filters:
           all: "Toate"
           reset: "Resetare"
+        sentiment:
+          enabled: "Activate"
         search:
           name: "Caută"
         image_caption:

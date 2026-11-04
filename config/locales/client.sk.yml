@@ -7,6 +7,7 @@
 sk:
   js:
     dsa_notice:
+      choice_title: "Je to nezákonné"
       title: "Nahlásiť nezákonný obsah"
       email: "E-mailová adresa"
     user_api_key:
@@ -28,6 +29,7 @@ sk:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Vlastník"
         access_permission_remove: "Odstrániť"
     number:
       format:
@@ -696,7 +698,6 @@ sk:
     dsa_statements:
       category: "Kategória"
       category_prompt: "Vyberte kategóriu"
-      saving: "Ukladanie…"
     review:
       show_more: "Zobraziť viac"
       show_less: "Zobraziť menej"
@@ -2914,6 +2915,7 @@ sk:
       clear: "Vymazať filter"
     filter_controls:
       reset: "Resetovať"
+      sort_label: "Zoradiť podľa"
     shared_drafts:
       title: "Zdieľané návrhy"
       notice: "Táto téma je viditeľná len pre tých, ktorí môžu zverejňovať zdieľané návrhy."
@@ -4370,6 +4372,9 @@ sk:
           many: "Ste si istý, že chcete zlúčiť týchto %{count} príspevkov?"
           other: "Ste si istý, že chcete zlúčiť tieto %{count} príspevky"
       revisions:
+        visibility:
+          hidden:
+            title: "Skryté"
         locale:
           no_locale_set: "Nie je nastavený žiadny jazyk"
           locale_removed: "Jazyk odstránený"
@@ -4378,9 +4383,6 @@ sk:
           previous: "Predchádzajúca revízia"
           next: "Ďalšia revízia"
           last: "Posledná revízia"
-          hide: "Skriť revíziu"
-          show: "Ukáza revíziu"
-          destroy: "Odstránenie revízií"
           destroy_confirm: "Ste si istí, že chcete odstrániť všetky revízie tohto príspevku? Táto akcia je trvalá."
           revert: "Vrátiť na revíziu %{revision}"
           edit_wiki: "Upraviť Wiki"
@@ -4447,7 +4449,6 @@ sk:
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
-      choose: "Kategória&hellip;"
       edit: "Upraviť"
       edit_title: "Upraviť túto kategóriu"
       edit_dialog_title: "Úprava: %{categoryName}"
@@ -5619,6 +5620,9 @@ sk:
           impact_role_admins: "Administrátori"
           impact_role_moderators: "Moderátori"
           impact_role_staff: "Personál"
+        sort:
+          status: "Stav"
+          name: "Meno"
       config:
         about:
           title: "O vašej stránke"
@@ -6084,33 +6088,16 @@ sk:
           anonymous_human: "Anonymný"
       dashboard:
         title: "Ovládací panel"
-        last_updated: "Informačný panel bol aktualizovaný:"
-        discourse_last_updated: "Discourse bol aktualizovaný:"
         version: "Verzia"
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
         updates_available: "Aktualizácie sú k dispozícii."
-        please_update: "Aktualizujte prosím!"
-        no_check_performed: "Neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
-        stale_data: "V poslednej dobe neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
         version_check_pending: "Vyzerá to, že ste nedávno aktualizovali. Fantastické!"
-        installed_version: "Nainštalované"
-        github: "GitHub"
-        problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
         dismiss_notice: "Ignorovať"
         new_features:
           title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           learn_more: "Zistiť viac..."
-        last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
-        no_problems: "Nenašli sa žiadne problémy."
-        moderators: "Moderátori:"
-        admins: "Administrátori:"
-        silenced: "Umlčané:"
-        suspended: "Odobraté:"
-        private_messages_short: "Správy"
-        private_messages_title: "Správy"
-        mobile_title: "Mobil"
         space_used: "%{usedSize} použité"
         space_used_and_free: "%{usedSize} (%{freeSize} voľné)"
         uploads: "Nahrávania"
@@ -6121,20 +6108,7 @@ sk:
           many: "%{count} zálohovaní na %{location}"
           other: "%{count} zálohovania na %{location}"
         lastest_backup: "Najnovšie: %{date}"
-        traffic_short: "Vyťaženie"
-        traffic: "Požiadavky webových aplikácií"
-        page_views: "Zobrazenia stránky"
-        page_views_short: "Zobrazenia stránky"
-        show_traffic_report: "Zobraziť detaily vyťaženia"
-        community_health: Zdravie komunity
-        moderators_activity: Aktivita moderátorov
         whats_new_in_discourse: Čo je nové v Discourse?
-        activity_metrics: Metriky aktivity
-        all_reports: "Všetky hlásenia"
-        general_tab: "Všeobecné"
-        moderation_tab: "Moderovanie"
-        security_tab: "Bezpečnosť"
-        reports_tab: "Hlásenia"
         report_filter_any: "hocijaký"
         disabled: Vypnuté
         timeout_error: Ľutujeme, dopyt trvá príliš dlho, vyberte kratší interval
@@ -6173,7 +6147,6 @@ sk:
             title: "Systém"
             status: "Stav"
             discourse_updated: "Discourse bol aktualizovaný"
-            dashboard_updated: "Informačný panel bol aktualizovaný"
         reports_section:
           header_action: "Spravovať"
           no_data: "Žiadne údaje na zobrazenie"
@@ -6188,11 +6161,6 @@ sk:
             anonymous: "Anonymný"
             crawlers: "Crawlery"
           crawler_learn_more: "Zistite viac"
-        period:
-          last_7_days: "Posledných 7 dní"
-          last_30_days: "Posledných 30 dní"
-          last_3_months: "Posledných 3 mesiacov"
-          custom: "Vlastné"
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
           percent_change_tooltip: "%{percent} zmena."
@@ -6245,9 +6213,6 @@ sk:
               many: "%{count} príspevkov"
               other: "%{count} príspevkov"
             deselect: "Zrušiť výber %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">V denníkoch vyhľadávania</a>'
-            disabled: 'Prehľad trendov vo vyhľadávaní je zakázaný. Povoľte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">denníkové vyhľadávacie dopyty</a> na zhromažďovanie údajov.'
           sort_button: "Zoradiť podľa %{column}"
           sort_ascending: "vzostupne"
           sort_descending: "zostupne"
@@ -6433,7 +6398,6 @@ sk:
               list: Zoznam najnovších príspevkov a súkromných príspevkov. Podporované je aj RSS.
             revisions:
               read: "Získajte najnovšiu alebo konkrétnu revíziu."
-              modify: "Skryť, zobraziť alebo vrátiť revízie."
               permanently_delete: "Trvalé odstránenie revízie."
             tags:
               list: Zoznam značiek.
@@ -6721,10 +6685,7 @@ sk:
           site_contact_group_help: |
             Skupina, ktorá dostane pozvánku na všetky automaticky odoslané osobné správy.
           your_organization: "Vaša organizácia"
-          your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_warning: |
-            Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"
@@ -7849,6 +7810,11 @@ sk:
           all: "Všetci používatelia"
           activated: "Aktivované"
         approved: "Schválený?"
+        source: "Zdroj"
+        bots:
+          name: "Meno"
+          username: "Používateľské meno"
+          trust_level: "Úroveň dôvery"
         titles:
           active: "Aktívni používatelia"
           new: "Noví používatelia"
@@ -7875,6 +7841,7 @@ sk:
           title: "Odstráňte všetky priradené účty pre tohto používateľa"
           text: "Odstrániť priradené účty"
       user:
+        bot: "Bot"
         suspend_failed: "Niečo sa pokazilo pri odoberaní práv tomuto používateľovi %{error}"
         unsuspend_failed: "Niečo sa pokazilo pri obnovovaní práv tomuto používateľovi %{error}"
         suspend_duration: "Používateľa pozastaviť až do:"
@@ -7890,16 +7857,14 @@ sk:
           no_constructive_purpose: "Ich konanie nemá iný konštruktívny cieľ ako vyvolanie nesúhlasu v komunite"
           custom: "Vlastné…"
         suspend_message: "E-mailová správa"
-        suspend_message_placeholder: "Prípadne uveďte ďalšie informácie o pozastavení a používateľovi budú zaslané e-mailom."
         suspended_by: "Práva odobraté"
         silence_reason: "Dôvod"
         silenced_by: "Umlčané"
         silence_modal_title: "Tichý užívateľ"
         silence_duration: "Na ako dlho bude používateľ umlčaný?"
-        silence_reason_label: "Prečo umlčujete tohto používateľa?"
+        silence_reason_title: "Dôvod ticha"
         silence_reason_placeholder: "Dôvod ticha"
         silence_message: "E-mailová správa"
-        silence_message_placeholder: "(pre odoslanie predvolenej správy nechajte prázdne)"
         suspended_until: "(do %{until})"
         suspend_forever: "Pozastaviť navždy"
         cant_suspend: "Tohto používateľa nemožno pozastaviť."

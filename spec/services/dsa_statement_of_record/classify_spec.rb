@@ -24,10 +24,7 @@ RSpec.describe DsaStatementOfRecord::Classify do
       }
     end
 
-    before do
-      SiteSetting.dsa_reporting_enabled = true
-      SiteSetting.dsa_community_rules = [rule].to_json
-    end
+    before { enable_dsa_reporting(community_rules: [rule]) }
 
     it "classifies a flagged post removal and records the staff member's decision in a note" do
       original_payload = statement.payload
@@ -149,10 +146,10 @@ RSpec.describe DsaStatementOfRecord::Classify do
       it { is_expected.to fail_a_policy(:classification_enabled) }
     end
 
-    context "when community rules are empty" do
+    context "when an existing site has no community rules" do
       before do
         params
-        SiteSetting.dsa_community_rules = "[]"
+        SiteSetting.stubs(:dsa_community_rules).returns("[]")
       end
 
       it { is_expected.to fail_a_policy(:classification_enabled) }

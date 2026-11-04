@@ -68,6 +68,8 @@ sw:
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
+        sentiment:
+          enabled: "Imeruhusiwa"
         search:
           name: "Tafuta"
         image_caption:

@@ -14,7 +14,6 @@ vi:
       or: "hoặc"
       ai:
         generate: "Khởi tạo"
-        optional: "tùy chọn"
       help:
         label: "Giúp "
       schema:
@@ -31,6 +30,7 @@ vi:
           bar: "Cột"
       result_count:
         other: "%{count} kết quả."
+      name: "Tên"
       query_groups: "Nhóm"
       query_tags: "Thẻ"
       query_description: "Mô tả"

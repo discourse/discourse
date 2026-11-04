@@ -161,15 +161,18 @@ RSpec.describe "Chat channel" do
   context "when a new message is created" do
     before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
 
-    it "doesn’t scroll and keeps the scroll-to-bottom arrow when not at bottom" do
+    it "holds it behind the scroll-to-bottom arrow while newer history is unloaded" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
 
-      expect(channel_page.messages).to have_message(id: new_message.id)
       expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
+
+      find(".chat-channel:not(.loading) .chat-scroll-to-bottom__button.visible").click
+
+      expect(channel_page.messages).to have_message(id: new_message.id)
     end
   end
 

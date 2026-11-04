@@ -251,6 +251,33 @@ RSpec.describe Topic do
     end
   end
 
+  describe "archetype validation" do
+    fab!(:topic)
+
+    it "is invalid with an unregistered archetype" do
+      topic.archetype = "unknown"
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:archetype]).to be_present
+    end
+
+    it "is valid with an archetype registered by a plugin" do
+      Archetype.register("plugin_archetype")
+      topic.archetype = "plugin_archetype"
+
+      expect(topic).to be_valid
+    ensure
+      Archetype.deregister("plugin_archetype")
+    end
+
+    it "does not block saving a topic that already has an unregistered archetype" do
+      topic.update_column(:archetype, "unknown")
+      topic.title = "this is a brand new topic title"
+
+      expect(topic).to be_valid
+    end
+  end
+
   describe "slug" do
     context "with encoded generator" do
       before { SiteSetting.slug_generation_method = "encoded" }

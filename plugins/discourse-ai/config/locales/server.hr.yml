@@ -16,6 +16,8 @@ hr:
     spam_detection:
       logging_subject: "Otkrivanje neželjene pošte"
     ai_bot:
+      sources:
+        spam_detection: "Otkrivanje neželjene pošte"
       navigation:
         settings:
           title: "Postavke web-mjesta"

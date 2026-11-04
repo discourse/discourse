@@ -39,6 +39,17 @@ class StaffActionLogger
     )
   end
 
+  def log_bot_creation(user)
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:create_bot],
+        target_user_id: user.id,
+        subject: user.username,
+        details: "trust_level: #{user.trust_level}",
+      ),
+    )
+  end
+
   def log_custom(custom_type, details = nil)
     raise Discourse::InvalidParameters.new(:custom_type) unless custom_type
 

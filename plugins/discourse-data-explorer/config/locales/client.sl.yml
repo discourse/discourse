@@ -23,7 +23,6 @@ sl:
       description_placeholder: "Vnesite opis tukaj"
       ai:
         generate: "Ustvari"
-        optional: "neobvezno"
       help:
         label: "Pomoč"
       schema:
@@ -47,7 +46,7 @@ sl:
         two: "%{count} zadetka."
         few: "%{count} zadetki."
         other: "%{count} zadetkov."
-      query_name: "Poizvedba"
+      name: "Ime"
       query_groups: "Skupine"
       query_tags: "Oznake"
       link: "Povezava za"

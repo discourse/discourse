@@ -196,6 +196,10 @@
   inset-block-start: 0;
 }
 
+.fk-d-menu.sidebar-section-header-dropdown-menu-content {
+  z-index: z("header") + 1;
+}
+
 .sidebar-section-header-global-indicator__content {
   .d-icon-shield-halved {
     padding-right: var(--space-1);

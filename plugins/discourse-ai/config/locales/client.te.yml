@@ -73,6 +73,8 @@ te:
         filters:
           all: "అన్నీ"
           reset: "రీసెట్ చేయండి"
+        sentiment:
+          enabled: "ప్రారంభించబడింది"
         search:
           name: "శోధించండి"
         image_caption:

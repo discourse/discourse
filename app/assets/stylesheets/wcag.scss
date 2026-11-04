@@ -267,13 +267,6 @@ html {
     background: var(--primary-very-low);
   }
 
-  // Dashboard
-  .user-metrics .table-cell.user-basic .label,
-  .user-metrics .table-cell.user-member .label,
-  .user-metrics .table-cell.user-leader .label {
-    color: dark-light-choose($primary, $secondary);
-  }
-
   .admin-contents.admin-plugins td.version .commit-hash {
     color: var(--primary-medium);
   }

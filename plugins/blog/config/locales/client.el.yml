@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Σχεδιασμός
+        overridden: Προσαρμοσμένο
+        insert: Εισαγωγή
+        preview_home: Αρχική Σελίδα
+        preview_archive: Αρχείο
+        desktop: Για υπολογιστές
+        mobile: Mobile
+        back_to_themes: Πίσω στα θέματα
+        new_theme_short: Νέο θέμα
+        themes: Θέματα
+        theme_name: Όνομα θέματος
+        edit: Επεξεργασία
+        activate: Ενεργοποίηση
+        preview: Προεπισκόπηση
+        import: Εισαγωγή
+        export: Εξαγωγή
+        active: Ενεργό
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Προσχέδιο
+        preview: Προεπισκόπηση
+        change:
+          title: τίτλος
+          body: κύριο μέρος
+      review:
+        create: Δημιουργία συνδέσμου
+        copy: Αντιγραφή
+        open: Άνοιγμα
+        status:
+          active: Ενεργό
+          expired: Έληξε
+          revoked: Ανακλήθηκε
+          inactive: Ανενεργό
+        closed_on: "Έκλεισε %{date}"
+        revoke: Ανακάλεσε
+        message: Ανατροφοδότηση
+      editor_table:
+        edit: Επεξεργασία
+        status: Κατάσταση
+        replies: Απαντήσεις
+      drafts: Προσχέδια
+      preview: Προεπισκόπηση
+      unpublish: Κατάργηση δημοσίευσης
+      appearance_link: Εμφάνιση

@@ -3,7 +3,6 @@ import { run } from "@ember/runloop";
 import {
   find,
   findAll,
-  getApplication,
   settled,
   triggerKeyEvent,
   typeIn,
@@ -30,7 +29,6 @@ import { clearPluginDocumentTitleCounters } from "discourse/components/d-documen
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
-import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetGroupPostSmallActionCodes } from "discourse/components/post/small-action";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
@@ -207,17 +205,14 @@ export function applyPretender(name, server, helper) {
 }
 
 // Add clean up code here to run after every test
-export function testCleanup(container, app) {
+export function testCleanup(app) {
   if (_initialized.has(QUnit.config.current.testId)) {
-    if (!app) {
-      app = getApplication();
-    }
     app._runInitializer("instanceInitializers", (_, initializer) => {
       initializer.teardown?.();
     });
 
     app._runInitializer("initializers", (_, initializer) => {
-      initializer.teardown?.(container);
+      initializer.teardown?.();
     });
   }
 
@@ -232,7 +227,6 @@ export function testCleanup(container, app) {
   clearOutletCache();
   clearHTMLCache();
   clearRewrites();
-  resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
   resetInlineOneboxCache();
@@ -249,7 +243,6 @@ export function testCleanup(container, app) {
   clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
-  container?.lookup?.("service:composer-action-state")?.clear();
   _clearRegisteredActions();
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
@@ -321,53 +314,7 @@ function cleanupCssGeneratorTags() {
   document.querySelector("style#hashtag-css-generator")?.remove();
 }
 
-export function discourseModule(name, options) {
-  deprecated(
-    `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
-    { id: "discourse.discourse-module", since: "3.4.0.beta3-dev" }
-  );
-
-  if (typeof options === "function") {
-    module(name, function (hooks) {
-      hooks.beforeEach(function () {
-        this.container = getOwnerWithFallback(this);
-        this.registry = this.container.registry;
-        this.owner = this.container;
-        this.siteSettings = currentSettings();
-      });
-
-      this.getController = function (controllerName, properties) {
-        let controller = this.container.lookup(`controller:${controllerName}`);
-        controller.application = {};
-        controller.siteSettings = this.siteSettings;
-        if (properties) {
-          controller.setProperties(properties);
-        }
-        return controller;
-      };
-
-      this.moduleName = name;
-
-      hooks.usingDiscourseModule = true;
-      options.call(this, hooks);
-    });
-
-    return;
-  }
-
-  module(name, {
-    beforeEach() {
-      this.container = getOwnerWithFallback(this);
-      this.siteSettings = currentSettings();
-      options?.beforeEach?.call(this);
-    },
-    afterEach() {
-      options?.afterEach?.call(this);
-    },
-  });
-}
-
-export function addPretenderCallback(name, fn) {
+function addPretenderCallback(name, fn) {
   if (name && fn) {
     if (_pretenderCallbacks[name]) {
       throw `There is already a pretender callback with module name (${name}).`;
@@ -380,21 +327,37 @@ export function addPretenderCallback(name, fn) {
 export function acceptance(name, callback) {
   name = `Acceptance: ${name}`;
 
-  let options = {};
-
-  addPretenderCallback(name, options.pretend);
-
   let loggedIn = false;
   let mobileView = false;
   let siteChanges;
   let settingChanges;
   let userChanges;
 
-  const setup = {
-    beforeEach() {
+  const needs = {
+    user(changes) {
+      loggedIn = true;
+      userChanges = changes;
+    },
+    pretender(fn) {
+      addPretenderCallback(name, fn);
+    },
+    site(changes) {
+      siteChanges = changes;
+    },
+    settings(changes) {
+      settingChanges = changes;
+    },
+    mobileView() {
+      mobileView = true;
+    },
+  };
+
+  module(name, function (hooks) {
+    needs.hooks = hooks;
+
+    hooks.beforeEach(function () {
       I18n.testing = true;
 
-      resetExtraClasses();
       if (mobileView) {
         forceMobile();
       }
@@ -418,70 +381,21 @@ export function acceptance(name, callback) {
 
       this.container = getOwnerWithFallback(this);
 
-      if (!this.owner) {
-        this.owner = this.container;
-      }
+      // Hooks added via `needs.hooks` run before ember-qunit sets the owner
+      this.owner ??= this.container;
+    });
 
-      if (options.beforeEach) {
-        options.beforeEach.call(this);
-      }
-    },
-
-    afterEach() {
+    hooks.afterEach(function () {
       I18n.testing = false;
-      options?.afterEach?.call(this);
       if (loggedIn) {
         User.current().statusManager.stopTrackingStatus();
       }
-    },
-  };
-
-  const needs = {
-    user(changes) {
-      loggedIn = true;
-      userChanges = changes;
-    },
-    pretender(fn) {
-      addPretenderCallback(name, fn);
-    },
-    site(changes) {
-      siteChanges = changes;
-    },
-    settings(changes) {
-      settingChanges = changes;
-    },
-    mobileView() {
-      mobileView = true;
-    },
-  };
-
-  if (options.loggedIn) {
-    needs.user();
-  }
-  if (options.site) {
-    needs.site(options.site);
-  }
-  if (options.settings) {
-    needs.settings(options.settings);
-  }
-  if (options.mobileView) {
-    needs.mobileView();
-  }
-
-  if (callback) {
-    // New, preferred way
-    module(name, function (hooks) {
-      needs.hooks = hooks;
-      hooks.beforeEach(setup.beforeEach);
-      hooks.afterEach(setup.afterEach);
-      callback(needs);
-
-      setupApplicationTest(hooks);
     });
-  } else {
-    // Old way
-    module(name, setup);
-  }
+
+    callback(needs);
+
+    setupApplicationTest(hooks);
+  });
 }
 
 export function fixture(selector) {
@@ -624,29 +538,17 @@ export async function selectText(selector, endOffset = null) {
     range.setEnd(node, endOffset);
   }
 
-  const performSelection = () => {
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-  };
-
-  performSelection();
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
 
   await settled();
 }
 
-export function conditionalTest(name, condition, testCase) {
-  if (condition) {
+export function chromeTest(name, testCase) {
+  if (navigator.userAgent.includes("Chrome")) {
     test(name, testCase);
   }
-}
-
-export function chromeTest(name, testCase) {
-  conditionalTest(name, navigator.userAgent.includes("Chrome"), testCase);
-}
-
-export function firefoxTest(name, testCase) {
-  conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
 }
 
 export function silenceConsoleErrorsMatching(substring) {
@@ -713,15 +615,6 @@ export async function simulateKeys(element, keys) {
   for (let key of keys) {
     await simulateKey(element, key);
   }
-}
-
-// The order of attributes can vary in different browsers. When comparing
-// HTML strings from the DOM, this function helps to normalize them to make
-// comparison work cross-browser
-export function normalizeHtml(html) {
-  const resultElement = document.createElement("template");
-  resultElement.innerHTML = html;
-  return resultElement.innerHTML;
 }
 
 export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };

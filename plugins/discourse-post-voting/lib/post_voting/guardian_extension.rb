@@ -49,6 +49,10 @@ module PostVoting
     end
 
     def can_flag_post_voting_comment_as?(comment, flag_type_id, opts)
+      if flag_type_id == ReviewableScore.types[:illegal] && SiteSetting.dsa_reporting_enabled
+        return false
+      end
+
       return false if !is_staff? && (opts[:take_action] || opts[:queue_for_review])
 
       if flag_type_id == ReviewableScore.types[:notify_user]

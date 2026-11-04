@@ -3,6 +3,7 @@
 Migrations::Tooling::Schema.ignored do
   # Plugins — all their tables and columns on core tables are auto-ignored via manifest
   plugin :automation, "Not migrated yet"
+  plugin :blog, "Not migrated yet"
   plugin :boards, "Not migrated yet"
   plugin :chat, "Not migrated yet"
   plugin :discourse_adplugin, "Not migrated yet"
@@ -132,7 +133,8 @@ Migrations::Tooling::Schema.ignored do
 
   tables :incoming_domains, :incoming_emails, :incoming_links, :incoming_referers
 
-  tables :dsa_statement_of_records,
+  tables :dsa_notices,
+         :dsa_statement_of_records,
          :reviewable_claimed_topics,
          :reviewable_histories,
          :reviewable_notes,
