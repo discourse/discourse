@@ -3,6 +3,8 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
@@ -85,12 +87,17 @@ export default class BoardsPage extends Component {
       >
         <:actions as |actions|>
           {{#if @canManageBoards}}
-            <actions.Primary
-              class="btn-primary discourse-boards-manage__new-board"
-              @action={{this.openNewBoardModal}}
-              @icon="plus"
-              @label="boards.manage.new"
-            />
+            <PluginOutlet
+              @name="board-new-button"
+              @outletArgs={{lazyHash actions=actions}}
+            >
+              <actions.Primary
+                class="btn-primary discourse-boards-manage__new-board"
+                @action={{this.openNewBoardModal}}
+                @icon="plus"
+                @label="boards.manage.new"
+              />
+            </PluginOutlet>
           {{/if}}
         </:actions>
       </DPageHeader>
