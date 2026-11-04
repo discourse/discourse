@@ -31,6 +31,7 @@ RSpec.describe TestImpact::Map do
       gz.puts(
         {
           spec: "spec/double_spec.rb",
+          seconds: 2.5,
           files: {
             "app/models/thing.rb" => [[5, 7]],
           },
@@ -42,6 +43,7 @@ RSpec.describe TestImpact::Map do
       gz.puts(
         {
           spec: "spec/block_spec.rb",
+          seconds: 1.5,
           files: {
             "app/models/thing.rb" => [[3, 3]],
           },
@@ -157,6 +159,16 @@ RSpec.describe TestImpact::Map do
       selection = select(diff("spec/fixtures/logo.png", "@@ -1 +1 @@"))
 
       expect(selection.specs).to eq(["spec/block_spec.rb"])
+    end
+  end
+
+  describe "#seconds" do
+    it "sums the recorded run time of the given spec files" do
+      Dir.mktmpdir("test-impact") do |dir|
+        map = build_map(dir)
+
+        expect([map.seconds(["spec/double_spec.rb"]), map.seconds]).to eq([2.5, 4.0])
+      end
     end
   end
 end

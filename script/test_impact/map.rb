@@ -21,6 +21,7 @@ module TestImpact
       spec_ids = {}
       ranges = Hash.new { |h, path| h[path] = Hash.new { |r, range| r[range] = Set.new } }
       methods = Hash.new { |h, path| h[path] = Set.new }
+      seconds = Hash.new(0.0)
       indexes = INDEXES.to_h { |kind| [kind, Hash.new { |h, name| h[name] = Set.new }] }
 
       recording_paths.each do |path|
@@ -32,6 +33,7 @@ module TestImpact
               next
             end
             id = spec_ids[entry["spec"]] ||= (specs << entry["spec"]).size - 1
+            seconds[id] += entry["seconds"].to_f
             entry["files"].each { |file, list| list.each { |range| ranges[file][range] << id } }
             INDEXES.each { |kind| Array(entry[kind]).each { |name| indexes[kind][name] << id } }
           end
@@ -47,6 +49,7 @@ module TestImpact
       end
       new(
         "specs" => specs,
+        "seconds" => specs.each_index.map { |id| seconds[id].round(2) },
         "files" => files,
         **indexes.transform_values { |index| index.transform_values { |ids| ids.to_a.sort } },
       )
@@ -69,6 +72,14 @@ module TestImpact
 
     def spec_count
       @specs.size
+    end
+
+    # Recorded run time of the given spec files (all of them by default), in
+    # seconds.
+    def seconds(spec_paths = @specs)
+      times = @data["seconds"] || []
+      ids = @spec_ids ||= @specs.each_with_index.to_h
+      spec_paths.sum { |spec| (id = ids[spec]) ? times[id].to_f : 0.0 }
     end
 
     # Changed spec files are selected as they are. A hunk in a recorded file

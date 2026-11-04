@@ -111,6 +111,7 @@ module TestImpact
     def reset
       Coverage.result(stop: false, clear: true)
       @notes.each_value(&:clear)
+      @started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
 
     def record(spec)
@@ -123,7 +124,9 @@ module TestImpact
           files[path] = ran if ran.any?
         end
       notes = @notes.transform_values { |values| values.to_a.sort }
-      out.puts(JSON.generate(spec: spec.delete_prefix("./"), files: files, **notes))
+      # What selecting the spec costs, recording included.
+      seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started).round(2)
+      out.puts(JSON.generate(spec: spec.delete_prefix("./"), seconds:, files:, **notes))
       @notes.each_value(&:clear)
     end
 
