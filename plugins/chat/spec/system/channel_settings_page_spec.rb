@@ -116,10 +116,44 @@ RSpec.describe "Channel - Info - Settings page" do
       membership = channel_1.membership_for(current_user)
 
       expect {
-        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__mute-switch").toggle
+        select_kit = PageObjects::Components::SelectKit.new(".c-channel-settings__mute-selector")
+        select_kit.expand
+        select_kit.select_row_by_value("until_unmuted")
 
         expect(toasts).to have_success(I18n.t("js.saved"))
       }.to change { membership.reload.muted }.from(false).to(true)
+
+      expect(membership.muted_until).to be_nil
+    end
+
+    it "can mute channel for a duration" do
+      chat_page.visit_channel_settings(channel_1)
+      membership = channel_1.membership_for(current_user)
+
+      select_kit = PageObjects::Components::SelectKit.new(".c-channel-settings__mute-selector")
+      select_kit.expand
+      select_kit.select_row_by_value("8_hours")
+
+      expect(toasts).to have_success(I18n.t("js.saved"))
+      expect(select_kit).to have_selected_value("current")
+
+      membership.reload
+      expect(membership.muted).to eq(true)
+      expect(membership.muted_until).to be_within(1.minute).of(8.hours.from_now)
+    end
+
+    it "can unmute a channel muted for a duration" do
+      membership = channel_1.membership_for(current_user)
+      membership.update!(muted: true, muted_until: 1.hour.from_now)
+
+      chat_page.visit_channel_settings(channel_1)
+
+      select_kit = PageObjects::Components::SelectKit.new(".c-channel-settings__mute-selector")
+      select_kit.expand
+      select_kit.select_row_by_value("off")
+
+      expect(toasts).to have_success(I18n.t("js.saved"))
+      expect(membership.reload).to have_attributes(muted: false, muted_until: nil)
     end
 
     it "can change notification level" do

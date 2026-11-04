@@ -159,6 +159,27 @@ RSpec.describe "Chat channel sidebar context menu" do
       expect(channel_1.membership_for(current_user).reload.muted).to eq(true)
     end
 
+    it "mutes a channel for a duration" do
+      chat_page.visit_channel(channel_1)
+
+      chat_sidebar_page.open_notification_settings(channel_1)
+      chat_sidebar_page.mute_channel_for("1_hour")
+
+      membership = channel_1.membership_for(current_user).reload
+      expect(membership.muted).to eq(true)
+      expect(membership.muted_until).to be_within(1.minute).of(1.hour.from_now)
+    end
+
+    it "shows when a channel muted for a duration unmutes" do
+      channel_1.membership_for(current_user).update!(muted: true, muted_until: 1.hour.from_now)
+
+      chat_page.visit_channel(channel_1)
+
+      menu = chat_sidebar_page.open_notification_settings(channel_1)
+
+      expect(menu).to have_option(".chat-channel-sidebar-link-menu__muted-until")
+    end
+
     it "unmutes a muted channel" do
       channel_1.membership_for(current_user).update!(muted: true)
 

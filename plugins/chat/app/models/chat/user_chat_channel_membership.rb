@@ -14,6 +14,12 @@ module Chat
     enum :notification_level, NOTIFICATION_LEVELS, prefix: :notifications
     enum :join_mode, { manual: 0, automatic: 1 }
 
+    scope :with_expired_mute, -> { where("muted_until <= ?", Time.zone.now) }
+
+    validate :muted_until_in_future, if: -> { muted_until_changed? && muted_until.present? }
+
+    before_save { self.muted_until = nil if !muted }
+
     def mark_read!(new_last_read_id = nil)
       update!(last_read_message_id: new_last_read_id || chat_channel.last_message_id)
     end
@@ -35,6 +41,12 @@ module Chat
         end
       end
     end
+
+    private
+
+    def muted_until_in_future
+      errors.add(:muted_until, :invalid) if muted_until <= Time.zone.now
+    end
   end
 end
 
@@ -48,6 +60,7 @@ end
 #  last_viewed_at                      :datetime         not null
 #  last_viewed_pins_at                 :datetime
 #  muted                               :boolean          default(FALSE), not null
+#  muted_until                         :datetime
 #  notification_level                  :integer          default("mention"), not null
 #  starred                             :boolean          default(FALSE), not null
 #  created_at                          :datetime         not null
@@ -59,6 +72,7 @@ end
 #
 # Indexes
 #
+#  index_user_chat_channel_memberships_on_muted_until          (muted_until) WHERE (muted_until IS NOT NULL)
 #  index_user_chat_channel_memberships_on_user_id_and_starred  (user_id,starred)
 #  user_chat_channel_memberships_index                         (user_id,chat_channel_id,notification_level,following)
 #  user_chat_channel_unique_memberships                        (user_id,chat_channel_id) UNIQUE

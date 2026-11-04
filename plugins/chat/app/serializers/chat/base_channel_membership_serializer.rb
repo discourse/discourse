@@ -4,6 +4,7 @@ module Chat
   class BaseChannelMembershipSerializer < ApplicationSerializer
     attributes :following,
                :muted,
+               :muted_until,
                :notification_level,
                :chat_channel_id,
                :last_read_message_id,

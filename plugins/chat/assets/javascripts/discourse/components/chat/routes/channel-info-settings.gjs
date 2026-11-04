@@ -21,6 +21,11 @@ import ChatModalEditChannelName from "discourse/plugins/chat/discourse/component
 import ChatModalToggleChannelStatus from "discourse/plugins/chat/discourse/components/chat/modal/toggle-channel-status";
 import ChatRetentionReminderText from "discourse/plugins/chat/discourse/components/chat-retention-reminder-text";
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
+import {
+  formatMuteEnd,
+  MUTE_DURATIONS,
+  mutedUntilFromNow,
+} from "discourse/plugins/chat/discourse/lib/chat-mute-durations";
 
 const NOTIFICATION_LEVELS = [
   { name: i18n("chat.notification_levels.never"), value: "never" },
@@ -30,6 +35,7 @@ const NOTIFICATION_LEVELS = [
 
 export default class ChatRouteChannelInfoSettings extends Component {
   @service chatApi;
+  @service currentUser;
   @service chatGuardian;
   @service chatChannelsManager;
   @service siteSettings;
@@ -122,6 +128,46 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
   get isChannelMuted() {
     return this.args.channel.currentUserMembership.muted;
+  }
+
+  get muteOptions() {
+    const membership = this.args.channel.currentUserMembership;
+    const options = [
+      { id: "off", name: i18n("chat.settings.mute_options.off") },
+    ];
+
+    if (membership.muted && membership.mutedUntil) {
+      options.push({
+        id: "current",
+        name: i18n("chat.settings.mute_options.current", {
+          until: formatMuteEnd(membership.mutedUntil, this.currentUser),
+        }),
+      });
+    }
+
+    MUTE_DURATIONS.forEach((duration) => {
+      options.push({
+        id: duration.id,
+        name: i18n(`chat.settings.mute_options.${duration.id}`),
+      });
+    });
+
+    options.push({
+      id: "until_unmuted",
+      name: i18n("chat.settings.mute_options.until_unmuted"),
+    });
+
+    return options;
+  }
+
+  get muteValue() {
+    const membership = this.args.channel.currentUserMembership;
+
+    if (!membership.muted) {
+      return "off";
+    }
+
+    return membership.mutedUntil ? "current" : "until_unmuted";
   }
 
   get shouldRenderMuteSection() {
@@ -244,9 +290,41 @@ export default class ChatRouteChannelInfoSettings extends Component {
   }
 
   @action
-  onToggleMuted() {
-    const newValue = !this.args.channel.currentUserMembership.muted;
-    this.saveNotificationSettings("muted", "muted", newValue);
+  async onChangeMute(value) {
+    if (value === this.muteValue) {
+      return;
+    }
+
+    const duration = MUTE_DURATIONS.find((d) => d.id === value);
+    let settings;
+
+    if (value === "off") {
+      settings = { muted: false };
+    } else if (duration) {
+      settings = {
+        muted: true,
+        muted_until: mutedUntilFromNow(duration.minutes),
+      };
+    } else {
+      settings = { muted: true };
+    }
+
+    try {
+      const result =
+        await this.chatApi.updateCurrentUserChannelNotificationsSettings(
+          this.args.channel.id,
+          settings
+        );
+
+      const membership = this.args.channel.currentUserMembership;
+      membership.muted = result.membership.muted;
+      membership.mutedUntil = result.membership.muted_until
+        ? new Date(result.membership.muted_until)
+        : null;
+      this.toasts.success({ data: { message: i18n("saved") } });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
@@ -423,10 +501,11 @@ export default class ChatRouteChannelInfoSettings extends Component {
               {{#if this.shouldRenderMuteSection}}
                 <section.row @label={{this.muteSectionLabel}}>
                   <:action>
-                    <DToggleSwitch
-                      class="c-channel-settings__mute-switch"
-                      @state={{@channel.currentUserMembership.muted}}
-                      {{on "click" this.onToggleMuted}}
+                    <ComboBox
+                      class="c-channel-settings__selector c-channel-settings__mute-selector"
+                      @content={{this.muteOptions}}
+                      @onChange={{this.onChangeMute}}
+                      @value={{this.muteValue}}
                     />
                   </:action>
                 </section.row>

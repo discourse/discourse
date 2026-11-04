@@ -207,6 +207,13 @@ module PageObjects
       end
 
       # Requires open_notification_settings to be called first
+      def mute_channel_for(duration)
+        find(".chat-channel-sidebar-link-menu__mute-for[data-mute-duration='#{duration}']").click
+        has_no_css?(".chat-channel-sidebar-link-menu__mute-for")
+        self
+      end
+
+      # Requires open_notification_settings to be called first
       def toggle_mute_channel
         find(".chat-channel-sidebar-link-menu__mute-channel").click
         has_no_css?(".chat-channel-sidebar-link-menu__mute-channel")

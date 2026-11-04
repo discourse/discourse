@@ -61,6 +61,7 @@ export default class ChatSubscriptionsManager extends Service {
     this._startChannelArchiveStatusSubscription(messageBusIds.archive_status);
     this._startUserTrackingStateSubscription(messageBusIds.user_tracking_state);
     this._startUserHasThreadsSubscription(messageBusIds.user_has_threads);
+    this._startUserChannelMuteSubscription(messageBusIds.user_channel_mute);
     this._startChannelsEditsSubscription(messageBusIds.channel_edits);
     this._startChannelsStatusChangesSubscription(messageBusIds.channel_status);
     this._startChannelsMetadataChangesSubscription(
@@ -73,6 +74,7 @@ export default class ChatSubscriptionsManager extends Service {
     this._stopChannelArchiveStatusSubscription();
     this._stopUserTrackingStateSubscription();
     this._stopUserHasThreadsSubscription();
+    this._stopUserChannelMuteSubscription();
     this._stopChannelsEditsSubscription();
     this._stopChannelsStatusChangesSubscription();
     this._stopChannelsMetadataChangesSubscription();
@@ -364,6 +366,50 @@ export default class ChatSubscriptionsManager extends Service {
       `/chat/user-has-threads/${this.currentUser.id}`,
       this._onUserHasThreads
     );
+  }
+
+  _startUserChannelMuteSubscription(lastId) {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.messageBus.subscribe(
+      `/chat/user-channel-mute/${this.currentUser.id}`,
+      this._onUserChannelMute,
+      lastId
+    );
+  }
+
+  _stopUserChannelMuteSubscription() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.messageBus.unsubscribe(
+      `/chat/user-channel-mute/${this.currentUser.id}`,
+      this._onUserChannelMute
+    );
+  }
+
+  @bind
+  async _onUserChannelMute(busData) {
+    const channel = await this.chatChannelsManager.find(busData.channel_id, {
+      fetchIfNotFound: false,
+    });
+    const membership = channel?.currentUserMembership;
+
+    if (!membership) {
+      return;
+    }
+
+    membership.muted = busData.muted;
+    membership.mutedUntil = busData.muted_until
+      ? new Date(busData.muted_until)
+      : null;
+
+    if (!membership.muted) {
+      this.startChannelSubscription(channel);
+    }
   }
 
   @bind
