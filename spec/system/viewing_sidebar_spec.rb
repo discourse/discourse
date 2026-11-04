@@ -10,6 +10,21 @@ describe "Viewing sidebar" do
 
     before { sign_in(user) }
 
+    it "keeps focus on section headers when toggling with the keyboard" do
+      visit("/latest")
+      expect(sidebar).to have_section_expanded("categories")
+
+      sidebar.toggle_section_with_keyboard("categories", key: :space)
+
+      expect(sidebar).to have_section_collapsed("categories")
+      expect(sidebar).to have_focused_section_header("categories")
+
+      sidebar.toggle_section_with_keyboard("categories", key: :enter)
+
+      expect(sidebar).to have_section_expanded("categories")
+      expect(sidebar).to have_focused_section_header("categories")
+    end
+
     describe "when using the header dropdown navigation menu" do
       before { SiteSetting.navigation_menu = "header dropdown" }
 

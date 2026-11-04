@@ -35,6 +35,7 @@ export default class SidebarSection extends Component {
   @service router;
   @service sidebarState;
 
+  @tracked animateCaret = false;
   @tracked linkDropActive = false;
   @tracked linkDropIndex;
   @tracked linkDropLinkCount = 0;
@@ -112,10 +113,6 @@ export default class SidebarSection extends Component {
     return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
   }
 
-  get headerCaretIcon() {
-    return this.displaySectionContent ? "angle-down" : "angle-right";
-  }
-
   get showInlineHeaderActions() {
     return (
       this.args.headerActionsInline || this.args.headerActions?.length === 1
@@ -164,6 +161,7 @@ export default class SidebarSection extends Component {
 
   @action
   toggleSectionDisplay(_, event) {
+    this.animateCaret = event.detail > 0;
     this.activeExpanded = false;
 
     if (this.displaySectionContent) {
@@ -175,8 +173,8 @@ export default class SidebarSection extends Component {
       this.sidebarState.expandSection(this.args.sectionName);
     }
 
-    // remove focus from the toggle, but only on click
-    if (!event.key) {
+    // remove focus from the toggle, but only on pointer click
+    if (event.detail > 0) {
       document.activeElement.blur();
     }
   }
@@ -390,8 +388,13 @@ export default class SidebarSection extends Component {
               @toggleSectionDisplay={{this.toggleSectionDisplay}}
             >
               {{#if @collapsable}}
-                <span class="sidebar-section-header-caret">
-                  {{dIcon this.headerCaretIcon}}
+                <span
+                  class={{dConcatClass
+                    "sidebar-section-header-caret"
+                    (if this.animateCaret "--animate")
+                  }}
+                >
+                  {{dIcon "angle-right"}}
                 </span>
               {{/if}}
 

@@ -159,6 +159,31 @@
     border-radius: var(--token-radius-normal);
   }
 
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    --d-sidebar-link-hover-duration: 80ms;
+
+    &.--hovering {
+      --d-sidebar-link-hover-duration: 120ms;
+    }
+
+    .sidebar-section-link:not(
+      :focus-visible,
+      .sidebar-section-link--active,
+      .active,
+      .exact-url-match
+    ) {
+      transition: background-color var(--d-sidebar-link-hover-duration) ease;
+
+      &:hover {
+        transition-duration: 120ms;
+      }
+
+      :root:has(:focus-visible) & {
+        transition: none;
+      }
+    }
+  }
+
   .--link-button {
     border: none;
     background: inherit;

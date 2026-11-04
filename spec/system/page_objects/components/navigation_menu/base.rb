@@ -26,6 +26,14 @@ module PageObjects
           find("#{sidebar_section_selector(name)} .sidebar-section-header").click
         end
 
+        def toggle_section_with_keyboard(name, key:)
+          find("#{sidebar_section_selector(name)} .sidebar-section-header").send_keys(key)
+        end
+
+        def has_focused_section_header?(name)
+          has_css?("#{sidebar_section_selector(name)} .sidebar-section-header:focus")
+        end
+
         def click_section_link(name)
           find(".#{SIDEBAR_SECTION_LINK_SELECTOR}", text: name).click
         end

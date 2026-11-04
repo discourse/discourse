@@ -158,6 +158,16 @@
     }
   }
 
+  .sidebar-section-header[aria-expanded="true"] .sidebar-section-header-caret {
+    transform: rotate(90deg);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sidebar-section-header-caret.--animate {
+      transition: transform 150ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+  }
+
   .select-kit-collection {
     .texts {
       font-size: var(--font-0);
