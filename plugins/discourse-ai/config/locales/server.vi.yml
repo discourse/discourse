@@ -117,6 +117,14 @@ vi:
       assign:
         errors:
           not_found: "Không tìm thấy chủ đề."
+    appearance_authoring:
+      default_theme: "Theme mặc định"
+      colors:
+        light:
+          header_background: "Header"
+      fonts:
+        base_font: "Phông chữ"
+        heading_font: "Phông chữ tiêu đề"
     reviewables:
       ai_tool_action:
         approve:

@@ -4968,7 +4968,6 @@ nb_NO:
           title: "Last opp en sikkerhetskopi til denne instansen"
           uploading: "Laster opp…"
           success: "Opplastingen av '%{filename}' var vellykket. Filen blir nå bearbeidet og det vil ta opp til et minutt før den dukker opp i listen."
-          error: "Det oppstod en feil ved opplastingen av '%{filename}': %{message}"
         settings: "Instillinger"
         operations:
           failed: " %{operation} mislyktes. Undersøk loggene."

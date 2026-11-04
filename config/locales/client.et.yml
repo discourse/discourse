@@ -3341,7 +3341,6 @@ et:
           label: "Laadi üles"
           title: "Laadi varukoopia üles sellesse instantsi"
           uploading: "Laadin üles..."
-          error: "Faili '%{filename}' üleslaadimisel tekkis viga: %{message}"
         settings: "Sätted"
         operations:
           failed: "Toiming %{operation} ebaõnnestus. Kontrolli logisid."

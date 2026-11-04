@@ -81,6 +81,10 @@ bg:
       assign:
         errors:
           not_found: "Темата не е намерена."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Хедър"
     reviewables:
       ai_tool_action:
         approve:

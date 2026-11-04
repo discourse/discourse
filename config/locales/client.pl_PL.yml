@@ -660,7 +660,7 @@ pl_PL:
         completed: "Zobacz więcej pomysłów"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
-        predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
+        predefined_topics_subtitle: "Daj członkom temat do dyskusji"
         predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
         use_predefined: "Przeglądaj szablony"
         back: "Wstecz"
@@ -668,23 +668,27 @@ pl_PL:
         icebreakers:
           plan_categories:
             title: "Od jakich kategorii powinniśmy zacząć?"
+            description: "Zapytaj swój zespół, od jakich kategorii zacząć."
             body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
           plan_invites:
-            title: "Których członków powinniśmy zaprosić przed startem?"
+            title: "Kogo powinniśmy zaprosić przed startem?"
+            description: "Uzgodnij ze swoim zespołem, kogo zaprosić jako pierwszego."
             body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
           introduce_yourself:
             title: "Przedstaw się"
+            description: "Poproś członków, aby podzielili się kilkoma informacjami o sobie."
             body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
           write_your_own:
             title: "Napisz swój własny"
-            body: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
+            description: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
-      subtitle: "Wybierz kolory, czcionki i układ swojej witryny."
       step_label: "Przejdź do kroku %{index}"
       step_progress: "Krok %{current}/%{total}"
       minimize: "Kreator minimalizacji projektu"
       restore: "Kreator przywracania projektu"
+      collapse: "Zwiń kreator projektowania"
+      expand: "Rozszerz kreator projektowania"
       save: "Zapisz i zakończ"
       back: "Wstecz"
       next: "Dalej"
@@ -1333,6 +1337,7 @@ pl_PL:
         target_created_by: "Wpis utworzony przez %{username} · %{relativeDate}"
         target_deleted: "Wpis usunięty"
         target_deleted_by: "Wpis usunięty przez %{username} · %{relativeDate}"
+        queued_post_deleted_by: "Wpis z kolejki usunięty przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Przejęto"
@@ -9267,7 +9272,6 @@ pl_PL:
           uploading: "Przesyłanie…"
           uploading_progress: "Przesyłanie… %{progress}%"
           success: "Plik „%{filename}” został pomyślnie przesłany. Plik jest teraz przetwarzany i pojawienie się na liście może potrwać do minuty."
-          error: "Podczas przesyłania pliku wystąpił błąd '%{filename}': %{message}"
         settings: "Ustawienia"
         operations:
           is_running: "Aktualnie trwa operacja…"

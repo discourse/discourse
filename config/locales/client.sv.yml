@@ -5263,7 +5263,6 @@ sv:
           uploading: "Laddar upp…"
           uploading_progress: "Laddar upp… %{progress}%"
           success: "'%{filename}' har laddats upp. Filen bearbetas nu och det kan dröja upp till en minut innan den syns i listan."
-          error: "Ett fel har uppstått vid uppladdning av '%{filename}': %{message}"
         settings: "Inställningar"
         operations:
           is_running: "En åtgärd är just nu igång…"

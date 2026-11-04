@@ -6900,7 +6900,6 @@ sk:
           uploading: "Nahráva sa…"
           uploading_progress: "Nahráva sa… %{progress}%"
           success: "'%{filename}' bol úspešne nahraný. Súbor sa teraz spracováva a jeho zobrazenie v zozname potrvá až minútu."
-          error: "Počas nahrávania '%{filename}' nastala chyba: %{message}"
         settings: "Nastavenia"
         operations:
           is_running: "Momentálne prebieha operácia…"

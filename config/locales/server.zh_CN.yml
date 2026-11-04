@@ -1948,9 +1948,6 @@ zh_CN:
   random_username:
     unavailable: "无法生成随机用户名。请检查网站设置中的随机用户名词库。"
   site_settings:
-    dsa_notice_group: "启用 {{setting:dsa_reporting_enabled}} 后，群组将收到非法内容通知。成员可以阅读通知和举报人联系方式。默认通知发送给管理员，如果所选群组不存在或为空，管理员也会收到通知。"
-    dsa_moderation_appeal_email: "用户可以通过发送电子邮件至此地址对审核决定提出申诉。留空则不包含申诉说明。需要启用 {{setting:dsa_reporting_enabled}} 功能。"
-    dsa_community_rules: "启用 {{setting:dsa_reporting_enabled}} 后，即可使用社区规则进行 DSA 分类。每条规则都需要一个准确的合同参考（最多 500 个字符）和一个解释（最多 2000 个字符）。留空则禁用分类。"
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示当地时间。"

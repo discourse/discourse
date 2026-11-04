@@ -448,11 +448,10 @@ pt:
             title: "Por que categorias devemos começar?"
             body: "Vamos descobrir como organizar as coisas antes do lançamento! Sobre o que as pessoas mais vão querer falar? Podemos começar com algumas categorias e acrescentar outras depois."
           plan_invites:
-            title: "Que membros devemos convidar antes do lançamento?"
             body: "É melhor juntar-se a uma comunidade que já tenha alguns membros. Quem devemos convidar em primeiro lugar? Pense em pessoas que gostem de conversar, de ajudar os outros e ficariam entusiasmadas por participar desde o início."
           write_your_own:
             title: "Escreva o seu próprio"
-            body: "Inicie uma conversa com um tema adequado à sua comunidade."
+            description: "Inicie uma conversa com um tema adequado à sua comunidade."
     design_wizard:
       back: "Anterior"
       next: "Próximo"
@@ -5337,7 +5336,6 @@ pt:
           title: "Carregar uma cópia de segurança para esta instância"
           uploading: "A enviar…"
           success: "'%{filename}' foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Verificou-se um erro no carregamento de '%{filename}': %{message}"
         settings: "Configurações"
         operations:
           failed: "A %{operation} falhou. Por favor verifique o registo dos logs."

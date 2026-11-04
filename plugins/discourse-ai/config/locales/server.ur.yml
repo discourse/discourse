@@ -119,6 +119,13 @@ ur:
       assign:
         errors:
           not_found: "موضوع نہیں ملا."
+    appearance_authoring:
+      default_theme: "ڈیفالٹ تھیم"
+      colors:
+        light:
+          header_background: "ہَیڈر"
+      fonts:
+        heading_font: "سرخی والا فونٹ"
     reviewables:
       ai_tool_action:
         approve:

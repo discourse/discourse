@@ -103,6 +103,14 @@ hu:
       assign:
         errors:
           not_found: "A téma nem található."
+    appearance_authoring:
+      default_theme: "Alapértelmezett téma"
+      colors:
+        light:
+          header_background: "Fejléc"
+      fonts:
+        base_font: "Törzs betűtípus"
+        heading_font: "Fejléc betűkészlet"
     reviewables:
       ai_tool_action:
         approve:

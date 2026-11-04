@@ -827,6 +827,14 @@ es:
         errors:
           not_allowed: "No tienes permiso para acceder a la cola de revisión"
           not_found: "No se ha encontrado el elemento en la cola de revisión"
+    appearance_authoring:
+      default_theme: "Tema predeterminado"
+      colors:
+        light:
+          header_background: "Encabezado"
+      fonts:
+        base_font: "Tipo de letra para textos"
+        heading_font: "Tipo de letra para encabezados"
     reviewables:
       ai_tool_action:
         title: "Acción de herramienta de IA"
@@ -886,6 +894,7 @@ es:
       cannot_edit_builtin: "No puedes editar un modelo integrado."
       secret_required: "Se debe seleccionar una credencial"
       secret_not_found: "La credencial seleccionada no existe"
+      missing_provider_param: "%{param} no puede estar en blanco"
       configuration:
         disable_embeddings: "Tienes que desactivar primero «ai embeddings enabled»."
         choose_model: "Establece primero «ai embeddings selected model»."

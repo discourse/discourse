@@ -4860,7 +4860,6 @@ ro:
         upload:
           label: "Încarcă"
           title: "Încarcă un backup în această instanță."
-          error: "A apărut o eroare la încărcarea fișierului '%{filename}': %{message}"
         settings: "Setări"
         operations:
           failed: "operația %{operation} nu s-a finalizat. Te rugăm verifică rapoartele."

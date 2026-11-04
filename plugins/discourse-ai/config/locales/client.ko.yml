@@ -139,6 +139,8 @@ ko:
             other: "글 %{count}개"
       spam:
         short_title: "스팸"
+        no_llm_selected: "없음"
+        no_decision_model_selected: "없음"
         last_seven_days: "지난 7일"
         enable: "활성화"
         test_modal:

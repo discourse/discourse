@@ -118,6 +118,8 @@ bs_BA:
             other: "%{count} objava"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         enable: "Omogući"
         test_modal:
           spam: "Spam"

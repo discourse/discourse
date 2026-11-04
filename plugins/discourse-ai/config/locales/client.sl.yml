@@ -129,6 +129,8 @@ sl:
             other: "%{count} prispevkov"
       spam:
         short_title: "Neželeno"
+        no_llm_selected: "Brez"
+        no_decision_model_selected: "Brez"
         last_seven_days: "Zadnjih 7 dni"
         enable: "Omogoči"
         test_modal:

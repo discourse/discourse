@@ -1275,6 +1275,14 @@ zh_CN:
         errors:
           page_not_found: "Discourse 网站页面 '%{page_name}' 不可用。"
           fetch_failed: "无法加载 Discourse 官方网站上的 '%{page_name}' 页面。"
+    appearance_authoring:
+      default_theme: "默认主题"
+      colors:
+        light:
+          header_background: "标头"
+      fonts:
+        base_font: "正文字体"
+        heading_font: "标题字体"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"
@@ -1341,6 +1349,7 @@ zh_CN:
       cannot_edit_builtin: "您无法编辑内置模型。"
       secret_required: "必须选择一个凭据"
       secret_not_found: "所选凭据不存在"
+      missing_provider_param: "%{param}不能为空"
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"

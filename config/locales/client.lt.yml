@@ -9,8 +9,21 @@ lt:
     dsa_notice:
       choice_title: "Tai neteisėta"
       title: "Pranešti apie neteisėtą turinį"
+      content_url: "Tikslus turinio URL adresas"
+      explanation: "Kodėl manote, kad šis turinys yra neteisėtas?"
+      explanation_help: "Aprašykite faktus ir paaiškinkite, kodėl turinys gali būti neteisėtas. Nereikia nurodyti konkretaus įstatymo."
+      name: "Pilnas vardas arba organizacijos pavadinimas"
       email: "El. pašto adresas"
+      declaration_section: "Deklaracija"
+      submit: "Pateikti pranešimą"
+      get_email_code: "Gaukite el. pašto kodą"
       resend_email_code: "Išsiųsti kodą dar kartą"
+      email_verified: "Patvirtinta"
+      verification_code: "Patvirtinimo kodas"
+      received: "Gautas pranešimas"
+      received_description: "%{site} gavo jūsų pranešimą peržiūrai."
+      reference: "Jūsų pranešimo nuoroda yra <strong>%{reference}</strong>."
+      contact_confirmation: "El. paštu atsiųsime jums pranešimo santrauką ir kopiją. Apie rezultatus bus pranešta el. paštu.."
     mcp_oauth_client_id_metadata_policy:
       disabled: "Registracija tik administratoriams"
       approved_domains: "CIMD iš patvirtintų domenų"
@@ -67,6 +80,7 @@ lt:
         access_permission_editor: "Redaguotojas"
         access_permission_editor_description: "Gali kurti ir redaguoti šio objekto turinį"
         access_permission_owner: "Savininkas"
+        access_permission_owner_description: "Savininkas turi visišką %{target} kontrolę ir gali pridėti arba pašalinti kitus savininkus."
         access_permission_viewer: "Žiūrovas"
         access_permission_viewer_description: "Gali peržiūrėti šio objekto turinį"
         access_permission_remove: "Pašalinti"
@@ -76,6 +90,7 @@ lt:
         mandatory: "Privalomas"
         disallowed: "Neleidžiama"
         required_permission_not_added: "Bent vienas gavėjas turi turėti %{permission} leidimą šiam %{typeName}"
+        owner_required: "Bent vienas naudotojas turi likti %{typeName} savininku"
     carousel:
       go_to_slide: "Eiti į skaidrę %{index}"
       previous: "Ankstesnė skaidrė"
@@ -642,7 +657,6 @@ lt:
         completed: "Žr. daugiau idėjų"
         choose_option: "Kaip norėtumėte pradėti?"
         predefined_topics: "Pradiniai šablonai"
-        predefined_topics_subtitle: "Suteikite naujiems nariams temą pokalbiams – pasirinkite šabloną, kurį galite redaguoti, ir pritaikykite jį pagal savo poreikius."
         predefined_topics_description: "Pasirinkite iš pokalbių pradžios frazių rinkinio, kad pradėtumėte diskusijas"
         use_predefined: "Peržiūrėti šablonus"
         back: "Atgal"
@@ -652,17 +666,15 @@ lt:
             title: "Nuo kokių kategorijų turėtume pradėti?"
             body: "Prieš pradėdami išsiaiškinkime, kaip viską suorganizuoti! Apie ką žmonės labiausiai norės kalbėti? Galime pradėti nuo kelių kategorijų ir vėliau pridėti daugiau."
           plan_invites:
-            title: "Kokius narius turėtume pakviesti prieš pradėdami veiklą?"
             body: "Visada maloniau prisijungti prie bendruomenės, kurioje jau yra keletas narių. Ką turėtume pakviesti pirmiausia? Pagalvokite apie žmones, kurie mėgsta bendrauti, padėti kitiems ir kurie džiaugtųsi galėdami prisijungti prie bendruomenės nuo pat pradžių."
           introduce_yourself:
             title: "Prisistatykite"
             body: "Sveiki atvykę į bendruomenę! Susipažinkime. Prašau prisistatykite ir papasakokite šiek tiek apie savo pomėgius. Aš pradėsiu pirmas: man labai patinka technologijos ir mėgstu mokyti kitus!"
           write_your_own:
             title: "Parašykite savo"
-            body: "Pradėkite pokalbį, pasirinkdami temą, pritaikytą jūsų bendruomenei."
+            description: "Pradėkite pokalbį, pasirinkdami temą, pritaikytą jūsų bendruomenei."
     design_wizard:
       title: "Pritaikykite savo svetainę"
-      subtitle: "Pasirinkite spalvas, šriftus ir svetainės išdėstymą."
       step_label: "Eikite į veiksmą %{index}"
       save: "Išsaugoti ir baigti"
       back: "Atgal"
@@ -1994,6 +2006,8 @@ lt:
       no_notifications_title: "Jūs dar neturite jokių pranešimų"
       no_notifications_body: >
         Šiame skydelyje būsite informuoti apie tiesiogiai su jumis susijusią veiklą, įskaitant atsakymus į jūsų temas ir įrašus, kai kas nors <b>jus @paminėja</b> arba cituoja, ir atsakymus į temas, kurias žiūrite. Pranešimai taip pat bus siunčiami į jūsų el. pašto adresą, kai kurį laiką nebūsite prisijungę. <br><br> Ieškokite %{icon} , kad nuspręstumėte, apie kurias konkrečias temas, kategorijas ir žymas norite gauti pranešimus. Daugiau informacijos rasite savo <a href='%{preferencesUrl}'>pranešimų nuostatose</a>.
+      no_mentions_title: "Jūs dar nebuvote paminėtas"
+      no_mentions_body: "Kai kas nors įraše paminės jūsų @vusername, pranešimas bus rodomas čia."
       no_other_notifications_title: "Kol kas neturite jokių kitų pranešimų"
       no_other_notifications_body: >
         Šiame skydelyje būsite informuoti apie kitokią veiklą, kuri gali būti jums aktuali, pavyzdžiui, kai kas nors įdeda nuorodą į vieną iš jūsų įrašų arba jį redaguoja.
@@ -3802,6 +3816,10 @@ lt:
       show_preview: "rodyti peržiūrą"
       hide_preview: "slėpti peržiūrą"
       resize: "Keisti redaktoriaus dydį"
+      switch_to_markdown: "Perjungti į „Markdown“ redaktorių (%{keyboardShortcut})"
+      switch_to_rich_text: "Perjungti į raiškiojo teksto redaktorių (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Perjungti į „Markdown“ redaktorių"
+      switch_to_rich_text_no_shortcut: "Perjungti į raiškiojo teksto redaktorių"
       quote_post_title: "Cituoti visą įrašą"
       bold_label: "B"
       bold_title: "Paryškinimas"
@@ -3961,6 +3979,7 @@ lt:
         show_source: "Rodyti šaltinį"
         show_preview: "Rodyti peržiūrą"
       table:
+        default_heading: "Stulpelis %{number}"
         add_row: "Pridėti eilutę"
         add_column: "Pridėti stulpelį"
         insert_row_above: "Įterpti aukščiau"
@@ -5099,6 +5118,7 @@ lt:
         unpin: "Pašalink šią temą iš %{categoryLink} kategorijos sąrašo viršaus."
         unpin_until: "Pašalinti temą iš %{categoryLink} kategorijos viršaus arba palaukti iki <strong>%{until}</strong>."
         pin_note: "Vartotojai gali Atsegti temą nuo viršaus individualiai sau."
+        pin_until: "Prisegti iki"
         pin_validation: "Terminas reikalauja Prisegti šią temą."
         not_pinned: "%{categoryLink} nėra prisegtų temų"
         already_pinned:
@@ -6693,6 +6713,7 @@ lt:
       no_drafts_title: "Nepradėjote jokių juodraščių"
       no_drafts_body: "Ne visai pasiruošęs paskelbti? Mes automatiškai išsaugosime naują juodraštį ir pateiksime jį čia, kai tik pradėsite rašyti temą, atsakymą ar asmeninę žinutę. Pasirinkite atšaukimo mygtuką, kad atmestumėte juodraštį arba išsaugotumėte, kad galėtumėte tęsti vėliau."
       no_likes_title: "Jums dar nepatiko jokios temos"
+      no_likes_title_others: "%{username} dar nepamėgo jokių temų"
       no_likes_body: "Puikus būdas prisidėti yra pradėti skaityti jau įvykusius pokalbius ir pasirinkti %{heartIcon} įrašus, kurie jums patinka!"
       no_topics_title: "Dar nepradėjote jokių temų"
       no_topics_body: "Visada geriausia <a href='%{searchUrl}'>ieškoti</a> esamų pokalbių temų prieš pradedant naują, bet jei esate tikri, kad norimos temos dar nėra, pradėkite naują savo temą. Ieškokite mygtuko <kbd>+ Nauja tema</kbd> temų sąrašo, kategorijos ar žymės viršuje dešinėje, kad pradėtumėte kurti naują temą toje srityje."
@@ -7341,71 +7362,234 @@ lt:
               mcp_inspector: "MCP inspektoriaus „OAuth“ nustatymuose naudokite toliau nurodytą kliento ID. Įtraukti ir žiniatinklio, ir komandinės eilutės grįžtamieji iškvietimai."
               visual_studio_code: "Kai „Visual Studio Code“ paprašys įvesti kliento registracijos duomenis, įveskite žemiau nurodytą kliento ID."
               custom: "Įveskite programos pateiktus OAuth duomenis."
+            name: "Kliento vardas"
+            name_description: "Rodoma vartotojams, kai jie patvirtina šią aplikaciją."
+            client_id_description: "Šios programos identifikatorius. Konfigūruodami klientą, įveskite tą pačią reikšmę."
+            redirect_uris: "Peradresavimo URI"
+            redirect_uris_description: "Kur naršyklė grąžina, kai vartotojas patvirtina prieigą. Įveskite po vieną tikslų URI kiekvienoje eilutėje."
             management: "Registracijos atnaujinimai"
             manual: "Valdoma administratorių"
             automatic: "Automatinis"
             manual_description: "Administratoriai tvarko šio kliento pavadinimą ir nukreipimo URI. Metaduomenų atnaujinimas jų nepakeis, todėl užtikrinkite, kad jie būtų nuolat atnaujinami."
             automatic_description: "Pavadinimas ir nukreipimo URI atnaujinami pagal paskelbtus kliento metaduomenis. Pakeitus bet kurį iš jų, abu perjungiami į administratoriaus valdymo režimą."
+            create: "Pridėti klientą"
+            created: "Pridėtas OAuth klientas."
             edit: "Redaguoti OAuth klientą"
             updated: "Atnaujintas OAuth klientas."
+            empty: "Nėra užregistruotų OAuth klientų."
+            no_results: "Nė vienas OAuth klientas neatitinka šio paieškos užklausos."
+            detail_title: "Kliento duomenys"
+            detail_description: "Peržiūrėkite kliento metaduomenis, nukreipimo URI ir registracijos istoriją."
+            client_id: "Kliento ID"
+            domain: "Kliento domenas"
+            registration_type: "Registracijos tipas"
+            first_seen: "Pirmą kartą matytas"
           authorizations:
+            title: "Autorizacijos"
+            description: "Peržiūrėkite naudotojų autorizacijas ir prireikus atšaukite prieigą. Žetonų vertės niekada nerodomos."
+            search_placeholder: "Ieškoti autorizacijos"
+            client: "Klientas"
             user: "Narys"
+            scopes: "Suteikti leidimai"
+            last_used: "Paskutinį kartą naudotas"
             status: "Statusas"
             actions: "Veiksmai"
+            empty: "Nė vienas MCP leidimas neatitinka šio filtro."
           activity:
+            title: "Veikla ir diagnostika"
             description: "Peržiūrėkite MCP veiklą."
+            tool_calls: "Įrankių iškvietimai"
             failed_tool_calls: "Nepavykę įrankio iškvietimai"
             rate_limits: "Prašymai, kurių apdorojimo greitis ribojamas"
+            p95_latency: "95-asis delsos procentilis"
             no_latency: "—"
+            search_placeholder: "Ieškoti pagal naudotoją, klientą, įrankį arba tikslų užklausos ID"
+            outcome: "Rezultatas"
             time: "Laikas"
+            method: "Metodas"
             user: "Narys"
             duration: "Trukmė"
+            duration_value: "%{milliseconds} ms"
+            request_id: "Užklausos ID"
+            empty: "Nėra šio filtro atitinkančių veiklų."
           values:
             server_status:
+              available: "Prieinama"
               disabled: "Uždrausta"
             client_trust:
               approved: "Patvirtinta"
+              pending: "Laukiama patvirtinimo"
+              blocked: "Užblokuotas"
+            registration_type:
+              pre_registered: "Iš anksto užsiregistruota"
+              cimd: "Kliento ID metaduomenys"
             authorization_status:
               active: "Aktyvus"
+              server_disabled: "Serveris išjungtas"
+              client_blocked: "Klientas užblokuotas"
+              client_not_approved: "Klientas nepatvirtintas"
+              access_removed: "Prieiga pašalinta"
+              user_unavailable: "Vartotojas nepasiekiamas"
+              consent_required: "Reikalingas pakartotinis autorizavimas"
               revoked: "Atšauktas"
             activity_outcome:
+              all: "Visi rezultatai"
               success: "Sėkmingai"
               error: "Klaida"
+              rate_limited: "Apribotas užklausų dažnis"
             primitive_state:
+              all: "Visos būsenos"
               enabled: "Galimas"
               disabled: "Uždrausta"
+              unavailable: "Nepasiekiama"
+              blocked: "Užblokuota"
             primitive_kind:
               all: "Visų rūšių"
               tool: "Įrankis"
               resource: "Ištekliai"
+              resource_template: "Išteklių šablonas"
+              prompt: "Šablonas"
             primitive_risk:
+              all: "Visi poveikio lygiai"
               read: "Tik skaityti"
+              write: "Rašyti"
+              destructive: "Destruktyvus"
               moderation: "Moderavimas"
+              administration: "Administravimas"
+              external_side_effect: "Išorinis šalutinis poveikis"
             filter:
               all: "Visi"
           never: "Niekada"
           actions:
+            block_client: "Blokuoti klientą"
+            unblock_client: "Atblokuoti klientą"
+            refresh_metadata: "Atnaujinti metaduomenis"
+            block_primitive: "Blokuoti nedelsiant"
+            unblock_primitive: "Panaikinti blokavimą"
             revoke: "Pašalinti"
+          save_configuration: "Išsaugoti konfigūraciją"
+          save_primitives: "Išsaugoti primityvus"
+          confirm_enable: "Įjungus MCP serverį, atitinkami vartotojai galės suteikti leidimus išoriniams klientams. Tęsti?"
+          confirm_block_client: "Blokuoti %{name}? Naujos šio kliento užklausos bus atmestos."
+          confirm_emergency_block: "Blokuoti %{name} nedelsiant? Šis primityvas bus atmestas nepriklausomai nuo serverio konfigūracijos."
+          primitive_blocked: "%{name} buvo nedelsiant užblokuotas."
+          primitive_unblocked: "%{name} blokavimas buvo panaikintas."
+          confirm_revoke_authorization: "Atšaukti %{name} autorizaciją? Esami prieigos ir atnaujinimo žetonai nustos veikti."
+          saved: "MCP serverio konfigūracija išsaugota."
+          primitives_saved: "MCP primityvai išsaugoti."
+          copy_endpoint: "Kopijuoti serverio galinį tašką"
+          endpoint_copied: "MCP serverio galinis taškas nukopijuotas į iškarpinę."
+        experimental:
+          title: "Eksperimentinis"
+          header_description: "Įjunkite arba išjunkite eksperimentines funkcijas savo svetainėje; daugumą jų galima valdyti grupėmis"
         emojis:
           title: "Emoji"
+          header_description: "Pridėkite naują jaustuką, kuris bus prieinamas visiems. Pasirinkite kelis failus, kad sukurtumėte jaustukus naudodami jų failų pavadinimus. Pasirinkta grupė bus naudojama visiems vienu metu pridedamiems failams."
         flags:
           title: "Moderavimas"
+          header_description: "„Discourse“ žymėjimo sistema padeda jums ir jūsų moderatorių komandai valdyti turinį ir vartotojų elgesį, užtikrinant pagarbą jūsų bendruomenėje. Numatytieji nustatymai tinka daugumai bendruomenių ir jums nereikia jų keisti. Tačiau, jei jūsų svetainė turi specialių reikalavimų, galite išjungti nereikalingas žymas ir pridėti savo pasirinktines žymas."
+          keywords: "flag|review|spam|illegal"
         files:
           title: "Failai"
+          header_description: "Nustatymai, kurie kontroliuoja failų dydžio ir tipo apribojimus, avatarų dydžius ir šaltinius, failų saugyklą, vaizdo kokybę ir glaudinimą ir kt."
         legal:
           title: "Naudojimosi taisyklės"
+          header_description: "Konfigūruokite teisinius nustatymus, pvz., paslaugų teikimo sąlygas, privatumo politiką, kontaktinę informaciją ir su ES susijusius aspektus."
+        theme_site_settings:
+          title: "Temos svetainės nustatymai"
+          header_description: "Rodo visus temos svetainės nustatymus ir temas, kurios šiuo metu juos pakeičia"
+        localization:
+          title: "Lokalizacija"
+          header_description: "Konfigūruokite savo bendruomenės sąsajos kalbą ir kitas lokalizacijos parinktis savo nariams"
+          keywords: "locale|language|timezone|unicode|ltr"
+        upcoming_changes:
+          title: "Būsimi pakeitimai"
+          header_description: "Būsimų „Discourse“ pakeitimų, kurie gali turėti įtakos jūsų svetainei, ir eksperimentinių funkcijų, kurias galite pasirinkti, sąrašas. Galite filtruoti pagal poveikį, tipą ir būseną.\n\nPasirinkimo grupės gali būti naudojamos tam, kad tam tikra vartotojų grupė galėtų išbandyti pakeitimą prieš jį išleidžiant visiems, tačiau šios grupės taps nereikšmingos, kai pakeitimas taps nuolatiniu."
         login:
+          title: "Prisijungimas ir autentifikavimas"
+          header_description: "Konfigūruokite, kaip vartotojai prisijungia ir autentifikuojasi, slaptus kodus ir raktus, „OAuth2“ teikėjus ir kt."
           sub_pages:
             common_settings:
               title: "Nustatymai"
+            authenticators:
+              title: "Prisijungimas per socialinius tinklus"
+            discourseconnect:
+              title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
         discourse_id:
+          title: "Discourse ID"
+          stats:
+            total_users: "Iš viso naudotojų"
+            signups_30_days: "Registracijos (30 dienų)"
+            logins_30_days: "Prisijungimai (30 dienų)"
+          regenerate_credentials: "Iš naujo generuoti prisijungimo duomenis"
+          regenerate_confirm: "Ar tikrai norite iš naujo generuoti „Discourse ID“ prisijungimo duomenis? Tai sugeneruos naują kliento slaptąjį raktą. Prisijungimo duomenų generavimas iš naujo paprastai nėra būtinas, tačiau tai gali būti naudinga siekiant didesnio saugumo."
+          description: "„Discourse ID“ yra vienkartinio prisijungimo paslauga, leidžianti vartotojams prisijungti prie kelių Discourse svetainių naudojant vieną paskyrą. Palaikomi įprasti socialinių tinklų prisijungimo teikėjai, tokie kaip Google, Facebook, Apple ir Github, be papildomos konfigūracijos."
           learn_more: "Sužinoti daugiau"
+          regenerate_success: "Prisijungimo duomenys sėkmingai sukurti iš naujo."
         logo:
+          title: "Logotipas"
+          header_description: "Konfigūruokite logotipus ir ikonas, naudojamas visoje jūsų svetainėje"
           form:
+            saved: "Logotipo nustatymai išsaugoti."
+            logo:
+              title: "Pagrindinis logotipas"
+              description: "Rodomas svetainės viršutinėje navigacijos juostoje, taip pat svetainės el. pašto pranešimų viršuje."
+              help_text: "Rekomenduojamas dydis yra 600 x 80 pikselių."
+            logo_dark:
+              required: "Ar tamsiajam režimui naudoti kitą logotipą?"
+              title: "Pagrindinis logotipas (tamsus)"
+              help_text: "Rekomenduojamas dydis yra 600 x 80 pikselių."
+            large_icon:
+              title: "Kvadratinė ikona"
+              description: "Kvadratinė logotipo versija rodoma svetainės viršuje ir taip pat naudojama kaip mobiliojo programėlės logotipas."
+              help_text: "Rekomenduojamas dydis yra 512 x 512 pikselių."
+            square_icon_dark:
+              required: "Tamsiajame režime naudoti kitą kvadratinę ikoną?"
+              title: "Kvadratinė ikona (tamsus)"
+              help_text: "Rekomenduojamas dydis yra 512 x 512 pikselių."
+            favicon:
+              title: "Favicon"
+              description: "Logotipas bus rodomas kaip piktograma naršyklės skirtuke ir naršyklės mėgstamiausiuose puslapiuose / žymėse."
+            logo_small:
+              title: "Mažas logotipas"
+              description: "Mažas logotipas, esantis svetainės kairiajame viršutiniame kampe, matomas slenkant žemyn. Jei šis laukelis paliekamas tuščias, bus rodomas pagrindinio puslapio simbolis."
+              help_text: "Rekomenduojamas dydis yra 120 x 120 pikselių."
+            logo_small_dark:
+              required: "Tamsiajame režime naudoti kitą mažą logotipą?"
+              title: "Mažas logotipas (tamsus)"
+              help_text: "Rekomenduojamas dydis yra 120 x 120 pikselių."
             mobile: "Mobilus"
             email: "El. paštas"
+            social_media: "Socialiniai tinklai"
+            mobile_logo:
+              title: "Logotipas mobiliajam įrenginiui"
+              description: "Logotipas, naudojamas jūsų svetainės mobiliojoje versijoje. Jei paliksite tuščią, bus naudojamas paveikslėlis iš logotipo nustatymo."
+              help_text: "Naudokite platų stačiakampį paveikslėlį, kurio aukštis yra 120, o kraštinių santykis didesnis nei 3:1."
+            mobile_logo_dark:
+              required: "Ar tamsiajame režime naudoti kitą logotipą mobiliajam įrenginiui?"
+              title: "Logotipas mobiliajam įrenginiui (tamsus)"
+              help_text: "Naudokite platų stačiakampį vaizdą, kurio aukštis – 120 pikselių, o kraštinių santykis – didesnis nei 3:1."
+            manifest_icon:
+              title: "„Manifest“ ikona"
+              description: "Vaizdas naudojamas kaip logotipas / ekrano užsklanda sistemoje „Android“. Jei paliksite tuščią, bus naudojama „large_icon“."
+              help_text: "Rekomenduojamas dydis yra 512 x 512 pikselių."
             manifest_screenshots:
               title: "Manifesto ekrano kopijos"
+              description: "Ekrano kopijos, kuriose pristatomos jūsų svetainės funkcijos ir galimybės ir kurios rodomos siūlant ją įdiegti kaip programėlę. Visi vaizdai turi būti įkelti į šią svetainę ir būti vienodų matmenų."
+            apple_touch_icon:
+              title: "“Apple touch” ikona"
+              description: "Piktograma, naudojama „Apple“ jutikliniuose įrenginiuose. Jei laukelis paliktas tuščias, bus naudojama „large_icon“."
+              help_text: "Rekomenduojamas dydis yra 180 x 180 pikselių. Nenaudokite SVG formato vaizdo. Nerekomenduojamas skaidrus fonas."
+            digest_logo:
+              title: "Santraukos logotipas"
+              description: "Alternatyvus logotipo paveikslėlis, naudojamas jūsų svetainės el. laiško santraukos viršuje. Jei paliksite tuščią, bus naudojamas paveikslėlis iš logotipo nustatymo."
+              help_text: "Naudokite platų stačiakampį vaizdą. Nenaudokite SVG vaizdo."
+            og_image_source:
+              title: "„OpenGraph“ vaizdo šaltinis"
+              description: "Pasirinkite, kaip pateikiami „OpenGraph“ peržiūros vaizdai temoms, kurios neturi savo vaizdo."
+              uploaded: "Naudokite įkeltą paveikslėlį"
             og_image_preview:
               generate: "Generuoti"
               topic_id_label: "Temos ID"
@@ -7429,46 +7613,108 @@ lt:
               placeholder: "Sveikas sugrįžęs, %{preferred_display_name}!"
             header_anonymous:
               placeholder: "Sveiki atvykę į %{site_name}!"
+            subheader_logged_in:
+              description: "Antrinis tekstas, rodomas po antrašte prisijungusiems vartotojams."
+              placeholder: "Peržiūrėkite, kas naujo bendruomenėje"
+            subheader_anonymous:
+              label: "Antraštė, skirta anoniminiams lankytojams"
+              description: "Antrinis tekstas, rodomas po antrašte anoniminiams lankytojams."
+              placeholder: "Prisijunkite prie mūsų bendruomenės ir dalyvaukite diskusijose"
+            search_placeholder:
+              label: "Paieškos vietos laikiklis"
+              description: "Paieškos lauko vietos laikiklis sveikinimo juostoje."
+              placeholder: "Ieškoti temų..."
         navigation:
           title: "Navigacija"
+          header_description: "Nustatykite savo svetainės navigacijos nuorodas ir meniu elementus. Tai apima pagrindinio navigacijos meniu vietą ir veikimą, greitas nuorodas pagrindinio puslapio viršuje, taip pat administratoriaus šoninę juostą"
         notifications:
           title: "Pranešimai"
+          header_description: "Konfigūruokite, kaip pranešimai tvarkomi ir pristatomi vartotojams, įskaitant el. pašto nuostatas, tiesioginius pranešimus, paminėjimų apribojimus ir pranešimų konsolidavimą"
+        gifs:
+          title: "GIF"
+          header_description: "Nustatykite GIF pasirinkimo įrankį, kuris leidžia vartotojams ieškoti ir įterpti GIF failus į įrašus bei pokalbių pranešimus. Modalinio lango svetainės tekstus galima keisti customize/site_texts."
         onebox:
           title: "Laukelio nustatymai"
+          header_description: "Konfigūruokite, kaip jūsų svetainėje generuojamos ir rodomos „OneBox“ peržiūros"
+        rate_limits:
+          title: "Ribos"
+          header_description: "Nustatykite, kaip dažnai vartotojai gali atlikti tam tikrus veiksmus, pavyzdžiui, kurti temas, siųsti pranešimus ir rašyti atsakymus"
+        search:
+          title: "Paieškos nustatymai"
+          header_description: "Konfigūruokite paieškos nustatymus, įskaitant registravimą ir žetonų kūrimą kinų ir japonų kalbomis"
         search_everything:
           title: "Paieška"
+          header_description: "Čia rasite viską, kas yra administratoriaus sąsajoje. Galite filtruoti rezultatus žemiau, ir jūsų nuostatos bus įsimenamos."
+          header_shortcut: "Norėdami atidaryti šią paiešką bet kurioje administratoriaus sąsajos vietoje, paspauskite %{shortcutHTML}."
         security:
           title: "Apsauga"
+          header_description: "Konfigūruokite saugos nustatymus, įskaitant dviejų veiksnių autentifikavimą, moderatoriaus teises ir turinio saugos politiką"
         spam:
           title: "Šlamštas"
+          header_description: "Konfigūruokite, kaip sistema analizuoja vartotojų registraciją ir skelbimų elgseną, kad greitai atpažintų ir blokuotų šlamštą."
+        trust_levels:
+          title: "Pasitikėjimo lygiai"
+          header_description: "Pasitikėjimo lygio nustatymai leidžia tiksliai suderinti jūsų bendruomenės pažangos sistemos reikalavimus ir pranešimus; ši sistema automatiškai paaukština vartotojų pasitikėjimo lygį, kai jie nuosekliai ir aktyviai dalyvauja jūsų forume"
         user_api:
           title: "Nario API"
+          header_description: "Konfigūruokite, kurios vartotojų grupės gali pasiekti API, taip pat kurios taikymo sritys yra leidžiamos"
+        group_permissions:
+          title: "Grupės leidimai"
+          header_description: "Čia valdomi visi su grupiniai leidimai, kurie reguliuoja prieigą prie įvairių „Discourse“ funkcijų"
         dashboard:
           title: "Suvestinė"
           header_description: "Suvestinėje pateikiama jūsų bendruomenės būklės apžvalga, įskaitant srautą, vartotojų aktyvumą ir kitus svarbius rodiklius."
         users:
           title: "Vartotojai"
+          header_description: "Peržiūrėkite ir tvarkykite naudotojus, siųskite kvietimus ir eksportuokite naudotojų duomenis"
         groups:
           title: "Grupės"
+          header_description: "Kurti grupes ir jas valdyti, nustatyti grupių teises bei peržiūrėti grupių veiklą ir pašto dėžutes"
+        site_settings:
+          title: "Visi svetainės nustatymai"
+          header_description: "Konfigūruokite visus „Discourse“ svetainės nustatymus, kad pritaikytumėte jos išvaizdą, funkcionalumą ir naudotojo patirtį."
+        whats_new:
+          title: "Kas naujo?"
+          header_description: "Būkite informuoti apie naujausias „Discourse“ funkcijas ir patobulinimus"
+          keywords: "changelog|feature|release"
         backups:
           title: "Atsarginės kopijos"
+          header_description: "„Discourse“ atsarginės kopijos apima visą svetainės duomenų bazę, kurioje yra viskas: temos, įrašai, vartotojai, grupės, nustatymai, temos ir kt. Priklausomai nuo to, kaip sukuriamas atsarginės kopijos failas, joje gali būti įkėlimų arba ne."
           sub_pages:
             logs:
               title: "Įrašai"
+              header_description: "Peržiūrėkite ir tvarkykite atsarginių kopijų, atkūrimo ir įkėlimo žurnalus"
         problem_checks:
           title: "Problemų patikrinimai"
+          header_description: "Peržiūrėti visus užregistruotus problemų patikrinimus ir jų dabartinę būseną."
+          identifier: "Patikrinti"
+          target: "Tikslas"
           priority: "Prioritetas"
           status: "Statusas"
+          passing: "Praeina"
+          failing: "Nepraeina"
+          last_run_at: "Paskutinis leidimas"
           ignore: "Ignoruoti"
+          watch: "Žiūrėti"
           more_options:
             title: "Daugiau parinkčių"
         reports:
           title: "Pranešimai"
+          header_description: "Ataskaitos yra galingas įrankis, padedantis suprasti, kas vyksta jūsų svetainėje. Jos gali padėti nustatyti tendencijas, pastebėti problemas ir priimti sprendimus remiantis duomenimis."
           sub_pages:
             settings:
               title: "Nustatymai"
         badges:
           title: "Trofėjai"
+          header_description: "Ženkleliai apdovanoja vartotojus už jų veiklą, indėlį ir pasiekimus, siekiant pripažinti, patvirtinti ir skatinti teigiamą elgesį bei įsitraukimą bendruomenėje."
+        analytics:
+          title: "Analitika ir SEO"
+          header_description: "Pagerinkite savo svetainės matomumą paieškos sistemose ir sukonfigūruokite, kaip stebite svetainės lankytojus"
+          keywords: "search|google|sitemap"
+        interface:
+          title: "Sąsaja ir išdėstymas"
+          header_description: "Tinkinkite savo svetainės bendro išdėstymo ir vartotojo sąsajos detales"
+          keywords: "splash"
         content:
           title: "Turinys"
         category_management:
@@ -7499,38 +7745,111 @@ lt:
             templates:
               title: "Juodraščiai"
         email_logs:
+          header_description: "Peržiūrėkite iš jūsų svetainės išsiųstų el. laiškų žurnalus"
+          keywords: "sent|skipped|bounced|received|rejected|email logs"
           sub_pages:
             sent:
               title: "Išsiųsti"
+              header_description: "Peržiūrėti išsiųstų el. laiškų žurnalą"
             skipped:
               title: "Praleisti"
+              header_description: "Peržiūrėkite praleistų el. laiškų žurnalą"
+            bounced:
+              title: "Sugrąžinti"
+              header_description: "Peržiūrėti sugrąžintų el. laiškų žurnalą"
             received:
               title: "Gauta"
+              header_description: "Peržiūrėti gautų el. laiškų žurnalą"
             rejected:
               title: "Atmesta"
+              header_description: "Peržiūrėti atmestų el. laiškų žurnalą"
         email_appearance:
           title: "išvaizda"
+          header_description: "Tinkinkite šabloną, kuriame pateikiami visi HTML el. laiškai, ir stilizuokite naudodami CSS"
         staff_action_logs:
+          title: "Žurnalai ir patikra"
+          header_description: "Žurnalai ir patikra leidžia stebėti ir valdyti savo bendruomenę, užtikrinant, kad ji išliktų saugi ir pagarbi. Galite peržiūrėti visų darbuotojų atliktų veiksmų, paieškos sąrašą ir naudotojų patikros konfigūraciją."
+          keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
           sub_pages:
             screened_emails:
+              title: "Peržiūrimi el. laiškai"
               header_description: "Kai kažkas kuria naują paskyrą, naudojamas el. pašto adresas bus patikrintas, o registracija bus užblokuota"
             screened_ips:
               title: "Tikrinti IP adresai"
+              header_description: "Stebimi IP adresai. Atskiri IP adresai gali būti įtraukti į leidžiamųjų sąrašą."
             screened_urls:
               title: "Tikrintos nuorodos"
               header_description: "Sąraše esantys URL buvo naudojami vartotojų, kurie yra pažymėti, kaip kenkėjai"
+            search_logs:
+              title: "Paieškos žurnalai"
+              header_description: "Peržiūrėti atliktų paieškų žurnalą"
+        plugins:
+          title: "Įdiegti įskiepiai"
+          header_description: "Įskiepiai praturtina jūsų bendruomenę papildomomis funkcijomis. Žemiau pateikiami tiek iš anksto įdiegti, tiek pasirinktiniai įskiepiai."
+        api_keys:
+          title: "API raktai"
+          header_description: "API raktų funkcija leidžia saugiai integruoti „Discourse“ su išorinėmis sistemomis ir automatizuoti veiksmus. Administratoriai gali kurti raktus su konkrečiomis taikymo sritimis, kad galėtų kontroliuoti prieigą prie išteklių ir konfidencialių duomenų. Taikymo sritys riboja funkcionalumą, užtikrinant didesnį saugumą."
+          keywords: "token|scope"
+        webhooks:
+          title: "Webhooks"
+          header_description: "„Webhooks“ leidžia „Discourse“ pranešti išorinėms paslaugoms, kai jūsų svetainėje įvyksta tam tikri įvykiai. Kai suveikia „webhook“, į nurodytus URL adresus išsiunčiamas POST užklausimas."
+          keywords: "event|payload|url"
         embedding:
           title: "Įterpimai"
+          header_description: "„Discourse“ gali įterpti temos komentarus iš nuotolinės svetainės, naudodama „JavaScript“ API, kuri sukuria „IFRAME“"
+        form_templates:
+          title: "Formų šablonai"
+          header_description: "Formų šablonai leidžia užtikrinti, kad kuriant temą būtų naudojama struktūrizuota forma su duomenų tikrinimu"
       theme_site_settings:
+        setting: "Nustatymas"
+        overridden_by: "Perrašyta"
         default_value: "Numatytasis"
+        overridden_value: "Pakeista reikšmė: %{value}"
+        select_setting: "Pasirinkite svetainės nustatymą, kad pamatytumėte dabartines temos reikšmes"
+        add: "Eiti į temos svetainės nustatymus"
+        help: "Šiuo metu naudojama tema yra <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Eikite į <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>temos konfigūracijos puslapį</a> , kad pakeistumėte temos svetainės nustatymus, arba spustelėkite susietą temą toliau pateiktoje lentelėje, kad redaguotumėte jos nustatymus."
+        filter: "Filtruoti temos svetainės nustatymus pagal nustatymo pavadinimą, aprašymą arba temos pavadinimą..."
+        filter_no_results: "Nėra temos svetainės nustatymų, atitinkančių jūsų filtrą"
+        site_setting_warning: 'Šį nustatymą valdo jūsų svetainės numatytoji tema (%{defaultThemeName}). Jį galite pakeisti <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">temos redagavimo puslapyje</a>.'
       search:
+        modal_title: "Ieškoti visko administratoriaus skiltyje"
         title: "Paieška"
+        instructions: "Ieškoti visko administratoriaus skiltyje..."
+        full_page_link: "Perjungti į viso puslapio paiešką"
+        no_results: 'Nepavyko rasti nieko, kas atitiktų „%{filter}“.'
+        result_count:
+          one: '%{count} rezultatas pagal užklausą „%{filter}“'
+          few: '%{count} rezultatai pagal užklausą „%{filter}“'
+          many: '%{count} rezultatų pagal užklausą „%{filter}“'
+          other: '%{count} rezultatų pagal užklausą „%{filter}“'
       new_features:
         title: "Kas naujo?"
+        check_for_updates: "Patikrinkite, ar yra atnaujinimų"
       site_traffic_explorer:
         title: "Svetainės srauto naršyklė"
+        loading: "Kraunamas srautas…"
+        errors:
+          timeout: "Ši srauto užklausa užtruko per ilgai. Pasirinkite trumpesnį dienų intervalą ir bandykite dar kartą."
+          unexpected: "Nepavyko įkelti svetainės srauto. Bandykite dar kartą."
+        empty: "Nėra atitinkančių puslapio peržiūrų"
         metric_information: "Apie %{metric}"
+        active_filters: "Aktyvūs srauto filtrai"
         filtering_to:
+          traffic_type:
+            one: "Filtravimas pagal %{count} srauto tipą"
+            few: "Filtravimas pagal %{count} srauto tipus"
+            many: "Filtravimas pagal %{count} srauto tipų"
+            other: "Filtravimas pagal %{count} srauto tipų"
+          top_url:
+            one: "Filtravimas pagal %{count} populiariausią URL adresą"
+            few: "Filtravimas pagal %{count} populiariausius URL adresus"
+            many: "Filtravimas pagal %{count} populiariausių URL adresų"
+            other: "Filtravimas pagal %{count} populiariausių URL adresų"
+          entry_url:
+            one: "Filtravimas pagal %{count} įrašo URL"
+            few: "Filtravimas pagal %{count} įrašo URL"
+            many: "Filtravimas pagal %{count} įrašo URL"
+            other: "Filtravimas pagal %{count} įrašo URL"
           language:
             one: "Filtruojama %{count} kalba"
             few: "Filtruojamos %{count} kalbos"
@@ -7978,7 +8297,6 @@ lt:
           label: "Įkelti"
           title: "Įkelti atsarginę kopiją šiam atskiram atvejui"
           success: "“%{filename}” sėkmingai įkelta. Failas dabar yra apdorojamas ir užtruks iki minutės, kol pasirodys sąraše."
-          error: "Įvyko klaida įkeliant '%{filename}': %{message}"
         settings: "Nustatymai"
         operations:
           failed: "Įvyko klaida su %{operation}. Prašome patikrinti logaritmus."

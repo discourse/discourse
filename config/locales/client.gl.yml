@@ -4128,7 +4128,6 @@ gl:
           label: "Cargar"
           title: "Cargar unha copia de seguranza a esta instancia"
           success: "Cargouse correctamente «%{filename}». O ficheiro está agora sendo procesado e tardará ata un minuto en aparecer na lista."
-          error: "Produciuse un erro durante a carga de «%{filename}»: %{message}"
         settings: "Configuración"
         operations:
           failed: "Produciuse un fallo %{operation} . Revisa os rexistros."

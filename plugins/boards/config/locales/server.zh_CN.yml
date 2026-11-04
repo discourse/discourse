@@ -13,7 +13,7 @@ zh_CN:
         invalid_params: "无法创建看板列： %{errors}"
         failed: "无法创建看板列。"
       create_board:
-        forbidden: "工作流执行用户没有创建看板的权限。"
+        forbidden: "创建看板失败： %{policy_reason}"
         invalid_params: "创建看板失败： %{errors}"
         acl_failed: "无法创建看板的访问权限。请检查所选的组和权限。"
         failed: "无法创建看板。"

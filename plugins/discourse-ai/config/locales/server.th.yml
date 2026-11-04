@@ -48,6 +48,10 @@ th:
         time: "เวลา"
       tool_help:
         create_category: "สร้างหมวดหมู่ใหม่"
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Header"
     reviewables:
       ai_tool_action:
         approve:

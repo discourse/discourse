@@ -115,6 +115,8 @@ te:
             other: "%{count} పోస్ట్‌లు"
       spam:
         short_title: "స్పామ్"
+        no_llm_selected: "ఏదీ లేదు"
+        no_decision_model_selected: "ఏదీ లేదు"
         enable: "ప్రారంభించండి"
         test_modal:
           spam: "స్పామ్"

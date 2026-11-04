@@ -88,6 +88,13 @@ ko:
       assign:
         errors:
           not_found: "글을 찾을 수 없음."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "헤더"
+      fonts:
+        base_font: "본문 글꼴"
+        heading_font: "제목 글꼴"
     reviewables:
       ai_tool_action:
         approve:

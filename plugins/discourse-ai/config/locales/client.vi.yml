@@ -244,6 +244,8 @@ vi:
             other: "%{count} tút"
       spam:
         short_title: "Rác"
+        no_llm_selected: "Không"
+        no_decision_model_selected: "Không"
         last_seven_days: "7 ngày qua"
         enable: "Bật"
         test_modal:

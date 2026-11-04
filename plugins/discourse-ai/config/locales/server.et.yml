@@ -84,6 +84,10 @@ et:
       assign:
         errors:
           not_found: "Teemat ei leitud."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Päis"
     reviewables:
       ai_tool_action:
         approve:

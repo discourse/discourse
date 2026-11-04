@@ -140,6 +140,8 @@ ug:
             other: "%{count} يازما"
       spam:
         short_title: "ئەخلەت خەت"
+        no_llm_selected: "يوق"
+        no_decision_model_selected: "يوق"
         enable: "قوزغات"
         save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:

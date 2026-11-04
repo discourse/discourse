@@ -6632,7 +6632,6 @@ vi:
           uploading: "Đang tải lên…"
           uploading_progress: "Đang tải lên… %{progress}%"
           success: "'%{filename}' đã được tải lên thành công. Tệp hiện đang được xử lý và sẽ mất đến một phút để hiển thị trong danh sách."
-          error: "Có lõi trong quá trình tải lên '%{filename}': %{message}"
         settings: "Cài đặt"
         operations:
           is_running: "Một tác vụ đang chạy…"

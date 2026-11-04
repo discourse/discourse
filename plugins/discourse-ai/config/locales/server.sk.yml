@@ -544,6 +544,14 @@ sk:
       assign:
         errors:
           not_found: "Téma sa nenašla."
+    appearance_authoring:
+      default_theme: "Predvolená téma"
+      colors:
+        light:
+          header_background: "Hlavička"
+      fonts:
+        base_font: "Písmo tela"
+        heading_font: "Písmo nadpisu"
     reviewables:
       ai_tool_action:
         approve:
@@ -598,6 +606,7 @@ sk:
     embeddings:
       delete_failed: "Tento model sa momentálne používa. Najprv aktualizujte „vybraný model vloženia AI“."
       cannot_edit_builtin: "Vstavaný model nie je možné upravovať."
+      missing_provider_param: "%{param} nemôže byť prázdne"
       configuration:
         disable_embeddings: "Najprv musíte vypnúť možnosť „povolené vkladanie AI“."
         choose_model: "Najprv nastavte „vybraný model pre vloženie AI“."

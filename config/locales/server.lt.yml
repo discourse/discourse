@@ -1333,7 +1333,6 @@ lt:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
   site_settings:
-    dsa_community_rules: "Bendruomenės taisyklės, kurias galima naudoti DSA klasifikavimui, kai įjungta funkcija „ {{setting:dsa_reporting_enabled}} “. Kiekvienai taisyklei reikia nurodyti tikslią nuorodą į sutartį (iki 500 simbolių) ir paaiškinimą (iki 2000 simbolių). Norėdami išjungti klasifikavimą, palikite lauką tuščią."
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
     censored_words: "Žodžiai, kurie bus automatiškai pakeisti &#9632;&#9632;&#9632;&#9632;"

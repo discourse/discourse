@@ -6559,7 +6559,6 @@ ja:
           uploading: "アップロード中…"
           uploading_progress: "アップロード中… %{progress}%"
           success: "'%{filename}' のアップロードに成功しました。このファイルは現在処理中で、リストに表示されるまでに数分程度かかることがあります。"
-          error: "ファイル '%{filename}' のアップロード中にエラーが発生しました: %{message}"
         settings: "設定"
         operations:
           is_running: "バックアップ作業を実行中…"

@@ -669,7 +669,6 @@ ar:
         action: "اطّلع على الأفكار"
         choose_option: "كيف تود أن تبدأ؟"
         predefined_topics: "قوالب لكسر حالة السكوت"
-        predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
         predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
         use_predefined: "تصفح القوالب"
         back: "رجوع"
@@ -9111,7 +9110,6 @@ ar:
           uploading: "جارٍ التحميل…"
           uploading_progress: "جارٍ التحميل: %{progress}%"
           success: "تم تحميل الملف \"%{filename}\" بنجاح. تجري الآن معالجة الملف وسيستغرق دقيقة قبل ظهوره في القائمة."
-          error: "حدثت مشكلة في أثناء تحميل '%{filename}': %{message}"
         settings: "الإعدادات"
         operations:
           is_running: "توجد عملية جارية حاليًا…"

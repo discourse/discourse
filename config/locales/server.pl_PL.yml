@@ -615,6 +615,8 @@ pl_PL:
     site_settings:
       invalid_site_setting: "Brak ustawienia o nazwie '%{name}'."
       invalid_category_id: "Podana kategoria nie istnieje"
+      dsa_community_rules_required: "Przed włączeniem raportowania DSA należy dodać co najmniej jedną regułę społeczności."
+      dsa_community_rules_in_use: "Przed usunięciem wszystkich reguł społeczności wyłącz raportowanie DSA."
       site_settings_are_deprecated: "Następujące ustawienia są przestarzałe: %{old_names}. Zamiast tego użyj %{new_names}"
       site_settings_are_hidden: "Nie masz uprawnień do zmiany ukrytych ustawień: %{setting_names}"
       site_settings_are_shadowed_globally: "Nie możesz zmienić tych ustawień, ponieważ są one skonfigurowane globalnie: %{setting_names}"
@@ -2212,9 +2214,10 @@ pl_PL:
   random_username:
     unavailable: "Nie udało się wygenerować losowej nazwy użytkownika. Sprawdź listy słów w losowej nazwie użytkownika w ustawieniach swojej witryny."
   site_settings:
-    dsa_notice_group: "Grupa, która dostaje powiadomienia o nielegalnych treściach, gdy włączona jest opcja {{setting:dsa_reporting_enabled}}. Członkowie mogą przeglądać powiadomienia i dane kontaktowe osoby, która zgłosiła naruszenie. Domyślnie są to administratorzy, którzy też dostają powiadomienia, jeśli wybrana grupa nie istnieje lub jest pusta."
-    dsa_moderation_appeal_email: "Użytkownicy mogą odwołać się od decyzji moderatorów, wysyłając wiadomość e-mail na ten adres. Pozostaw puste pole, aby pominąć instrukcje dotyczące odwołania. Wymagane jest włączenie opcji {{setting:dsa_reporting_enabled}}."
-    dsa_community_rules: "Reguły społeczności są dostępne dla klasyfikacji DSA, gdy włączona jest opcja {{setting:dsa_reporting_enabled}} . Każda reguła wymaga dokładnego odniesienia umownego (do 500 znaków) oraz wyjaśnienia (do 2000 znaków). Pozostaw puste, aby wyłączyć klasyfikację."
+    dsa_reporting_enabled: "Włącz narzędzia do raportowania i moderowania zgodnie z unijną ustawą o usługach cyfrowych (DSA). Wymaga {{setting:dsa_community_rules}}."
+    dsa_notice_group: "Grupa otrzymująca zgłoszenia o nielegalnych treściach i dane kontaktowe osób zgłaszających. Domyślnie administratorzy."
+    dsa_moderation_appeal_email: "Adres e-mail wyświetlany w wiadomościach moderacyjnych i komunikatach systemowych, gdy włączone jest raportowanie DSA. Pozostaw puste pole, aby pominąć instrukcje dotyczące odwołania w tych wiadomościach."
+    dsa_community_rules: "Zdefiniuj zasady na podstawie Warunków korzystania z usługi lub wytycznych społeczności. Odniesienie do każdej zasady i jej wyjaśnienie są uwzględniane w uzasadnieniach DSA, jeśli moderator je wybierze."
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
@@ -5352,6 +5355,8 @@ pl_PL:
     group_smtp_post_deleted: "wpis został usunięty"
     group_smtp_topic_deleted: "temat został usunięty"
     group_smtp_disabled_for_group: "smtp został wyłączony dla grupy"
+  appearance_changes:
+    dark_palette_name: "Ciemny %{name}"
   color_schemes:
     base_theme_name: "Podstawa"
     light: "Jasny"

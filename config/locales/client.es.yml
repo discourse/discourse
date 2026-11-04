@@ -496,7 +496,6 @@ es:
         action: "Ver ideas"
         choose_option: "¿Cómo te gustaría empezar?"
         predefined_topics: "Plantillas para romper el hielo"
-        predefined_topics_subtitle: "Da a los nuevos miembros algo de lo que hablar, elige una plantilla para editar y personalízala."
         predefined_topics_description: "Elige entre una colección de temas para iniciar conversaciones y dar pie a debates"
         use_predefined: "Explorar plantillas"
         back: "Atrás"
@@ -7106,7 +7105,6 @@ es:
           uploading: "Subiendo…"
           uploading_progress: "Subiendo… %{progress}%"
           success: "«%{filename}» se subió exitosamente. El archivo se procesará ahora y tardará hasta un minuto en mostrarse en la lista."
-          error: "Se produjo un error al subir el archivo «%{filename}»: %{message}"
         settings: "Ajustes"
         operations:
           is_running: "Hay una operación en proceso actualmente…"
