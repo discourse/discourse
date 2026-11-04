@@ -15,8 +15,7 @@ describe "Classifying reviewable moderation" do
   end
 
   before do
-    SiteSetting.dsa_reporting_enabled = true
-    SiteSetting.dsa_community_rules = [rule].to_json
+    enable_dsa_reporting(community_rules: [rule])
     sign_in(admin)
   end
 

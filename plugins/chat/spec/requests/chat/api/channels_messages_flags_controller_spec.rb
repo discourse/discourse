@@ -15,7 +15,7 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
 
   describe "#create" do
     it "requires the DSA form for illegal reports only when DSA reporting is enabled" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
 
       expect do
         post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",

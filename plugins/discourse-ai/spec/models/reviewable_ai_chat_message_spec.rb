@@ -42,7 +42,7 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
       before do
         reviewable.update!(target_created_by: chat_message.user)
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when agree_and_keep_message handles the AI chat message reviewable" do

@@ -44,10 +44,11 @@ RSpec.describe ReviewablesController do
 
     describe "#index" do
       it "includes DSA classification for flagged posts without loading each statement separately" do
-        SiteSetting.dsa_reporting_enabled = true
-        SiteSetting.dsa_community_rules = [
-          { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
-        ].to_json
+        enable_dsa_reporting(
+          community_rules: [
+            { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+          ],
+        )
         first_reviewable = Fabricate(:reviewable_flagged_post)
         second_reviewable = Fabricate(:reviewable_flagged_post)
         first_statement = Fabricate(:dsa_statement_of_record, reviewable_id: first_reviewable.id)
@@ -648,10 +649,11 @@ RSpec.describe ReviewablesController do
 
         before do
           sign_in(Fabricate(:moderator))
-          SiteSetting.dsa_reporting_enabled = true
-          SiteSetting.dsa_community_rules = [
-            { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
-          ].to_json
+          enable_dsa_reporting(
+            community_rules: [
+              { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+            ],
+          )
         end
 
         it "includes pending statement IDs and shared classification options for a flagged post" do
@@ -676,8 +678,8 @@ RSpec.describe ReviewablesController do
           )
         end
 
-        it "omits classification when community rules are empty" do
-          SiteSetting.dsa_community_rules = "[]"
+        it "omits classification for an existing site without community rules" do
+          SiteSetting.stubs(:dsa_community_rules).returns("[]")
 
           get "/review/#{reviewable.id}.json"
 
@@ -1887,8 +1889,7 @@ RSpec.describe ReviewablesController do
       end
 
       before do
-        SiteSetting.dsa_reporting_enabled = true
-        SiteSetting.dsa_community_rules = [rule].to_json
+        enable_dsa_reporting(community_rules: [rule])
         sign_in(admin)
       end
 

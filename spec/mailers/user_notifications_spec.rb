@@ -133,7 +133,7 @@ RSpec.describe UserNotifications do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
@@ -160,7 +160,7 @@ RSpec.describe UserNotifications do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
@@ -1565,7 +1565,7 @@ RSpec.describe UserNotifications do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
@@ -2537,7 +2537,7 @@ RSpec.describe UserNotifications do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
@@ -2651,7 +2651,7 @@ RSpec.describe UserNotifications do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
@@ -2733,7 +2733,7 @@ RSpec.describe UserNotifications do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
@@ -2840,7 +2840,7 @@ RSpec.describe UserNotifications do
   describe ".signup_after_reject" do
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 

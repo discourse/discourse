@@ -77,7 +77,7 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
       before do
         reviewable.update!(target_created_by: chat_message.user)
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when unsilence_user handles the chat message reviewable" do

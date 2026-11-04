@@ -4873,20 +4873,14 @@ experimental:
   enable_form_templates:
     client: true
     default: true
-  dsa_notice_group:
-    default: "1"
-    type: group
-    hidden: true
-    area: "experimental"
   dsa_reporting_enabled:
     client: true
     default: false
-    hidden: true
     area: "experimental"
-  dsa_moderation_appeal_email:
-    default: ""
-    type: email
-    hidden: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    area: "experimental"
   dsa_community_rules:
     type: objects
     default: []
@@ -4903,7 +4897,11 @@ experimental:
           type: string
           required: true
           validations:
-            max_length: 2000
+            max_length: 500
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    area: "experimental"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
