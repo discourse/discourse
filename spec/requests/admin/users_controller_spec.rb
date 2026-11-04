@@ -1539,14 +1539,24 @@ RSpec.describe Admin::UsersController do
         expect(another_user.primary_group_id).to eq(nil)
       end
 
-      it "remove user's primary group" do
+      it "removes the user's primary group and matching title" do
+        group.update!(primary_group: true, title: "Group title")
         group.add(another_user)
+        expect(another_user.reload.primary_group_id).to eq(group.id)
 
         put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
 
         expect(response.status).to eq(200)
         another_user.reload
         expect(another_user.primary_group_id).to eq(nil)
+        expect(another_user.title).to eq(nil)
+      end
+
+      it "allows clearing an already empty primary group" do
+        put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+        expect(response.status).to eq(200)
+        expect(another_user.reload.primary_group_id).to eq(nil)
       end
 
       it "updates user's title when it matches the previous primary group title" do
@@ -1604,6 +1614,31 @@ RSpec.describe Admin::UsersController do
 
       context "when moderators_manage_groups site setting is disabled" do
         before { SiteSetting.moderators_manage_groups = false }
+
+        it "preserves the primary group and title when the moderator cannot manage the group" do
+          group.update!(primary_group: true, title: "Group title")
+          group.add(another_user)
+          expect(another_user.reload.primary_group_id).to eq(group.id)
+          expect(another_user.title).to eq(group.title)
+
+          put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+          expect(another_user.reload.primary_group_id).to eq(group.id)
+          expect(another_user.title).to eq(group.title)
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+
+        it "allows a moderator who owns the group to remove it as primary group" do
+          group.update!(primary_group: true)
+          group.add(another_user)
+          group.add_owner(moderator)
+
+          put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+          expect(response.status).to eq(200)
+          expect(another_user.reload.primary_group_id).to eq(nil)
+        end
 
         it "prevents setting primary group with a 403 response" do
           group.add(another_user)
