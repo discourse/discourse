@@ -114,6 +114,28 @@ RSpec.describe Admin::StaffActionLogsController do
         )
       end
 
+      it "retains stored full names for administrators when names are disabled" do
+        SiteSetting.enable_names = false
+        user.update!(name: "Current Private Name")
+        StaffActionLogger.new(admin).log_user_deletion(user)
+        StaffActionLogger.new(admin).log_name_change(
+          user.id,
+          "Previous Private Name",
+          "New Private Name",
+        )
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        logs_by_action =
+          response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        expect(logs_by_action["delete_user"]["details"]).to include(user.name)
+        expect(logs_by_action["change_name"]).to include(
+          "previous_value" => "Previous Private Name",
+          "new_value" => "New Private Name",
+        )
+      end
+
       it "generates logs with pages" do
         4.times do |idx|
           StaffActionLogger.new(Discourse.system_user).log_site_setting_change(
@@ -202,6 +224,32 @@ RSpec.describe Admin::StaffActionLogsController do
       before { sign_in(moderator) }
 
       include_examples "staff action logs accessible"
+
+      it "hides stored full names when names are disabled" do
+        SiteSetting.enable_names = false
+        user.update!(name: "Current Private Name")
+        StaffActionLogger.new(admin).log_user_deletion(user)
+        StaffActionLogger.new(admin).log_post_deletion(Fabricate(:post, user: user))
+        StaffActionLogger.new(admin).log_name_change(
+          user.id,
+          "Previous Private Name",
+          "New Private Name",
+        )
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(user.name, "Previous Private Name", "New Private Name")
+
+        logs_by_action =
+          response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        expect(logs_by_action["delete_user"]["details"]).to include("username: #{user.username}")
+        expect(logs_by_action["delete_post"]["details"]).to include("user: #{user.username}\n")
+        expect(logs_by_action["change_name"]).to include(
+          "previous_value" => nil,
+          "new_value" => nil,
+        )
+      end
 
       it "does not see admin-only actions" do
         StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")
