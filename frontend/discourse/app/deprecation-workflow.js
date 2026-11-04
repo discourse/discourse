@@ -330,7 +330,6 @@ const workflows = [
     "discourse.get-owner-with-fallback",
     "discourse.hbs-extension",
     "discourse.es6-extension",
-    "discourse.header-service-topic",
     "discourse.html-safe-helper",
     "discourse.legacy-topic-list",
     "discourse.modify-class-model",
