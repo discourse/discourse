@@ -679,7 +679,11 @@ export default class ExecutionDetail extends Component {
 
             {{#if (stepSummary step)}}
               <div class="workflows-execution-detail__step-summary">
-                {{trustHTML (stepSummary step)}}
+                {{#if step.error_html}}
+                  {{trustHTML step.error_html}}
+                {{else}}
+                  {{stepSummary step}}
+                {{/if}}
               </div>
             {{/if}}
 
