@@ -521,6 +521,10 @@ Open items need a decision after manual testing; the rest are intended but still
   results while the user search was rate limited; the new picker shows its load error.
 - [ ] **Dropped options:** `filterIcon`, `useHeaderFilter`, `tabindex` and custom caret icons.
   The change owner modal no longer focuses the picker when it opens.
+- [ ] **Pasted names are checked.** Select-kit appended any paste unchecked. A paste with a
+  comma, a newline or `@` is now looked up in one request: an address becomes an email chip only
+  where the field offers addresses, and a name nobody has is kept but shown as not found (a
+  warning icon, read as "Not found"). A held name that no longer resolves is shown the same way.
 - [ ] **Names match in any case.** The server matches usernames and group names in any case.
   Legacy compared them exactly, so a held `sam` left the `Sam` row offered, and picking it
   added a second value. The new pickers mark that row selected, and picking it removes the

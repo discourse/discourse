@@ -3560,6 +3560,7 @@ en:
       users_groups_or_emails: "Users, groups or emails"
       group_type: "Group"
       email_type: "Email"
+      unknown_type: "Not found"
 
     select_group:
       group: "Group"

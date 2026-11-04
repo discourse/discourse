@@ -178,7 +178,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
 
   @action
   createUnresolvedItem(value: SelectItemId): UserPickItem {
-    return { id: String(value), name: String(value) };
+    return { id: String(value), name: String(value), type: "unknown" };
   }
 
   @action
@@ -258,7 +258,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
         const item = special.get(name);
         return item ? [item] : [];
       }),
-      ...resolved.filter((item) => item.type),
+      ...resolved.filter((item) => item.type !== "unknown"),
     ];
   }
 
@@ -302,7 +302,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     return names.map(
       (name) =>
         found.get(name) ??
-        (emailValid(name)
+        (this.args.emails && emailValid(name)
           ? this.#item({ type: "email", value: name })
           : this.createUnresolvedItem(name))
     );
@@ -370,6 +370,9 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
           <UserSelection @item={{item}} @options={{options}} />
         {{/if}}
       </:selection>
+      <:unresolved as |item|>
+        <UserSelection @item={{item}} />
+      </:unresolved>
       <:footer as |state options|>
         {{yield state options to="footer"}}
       </:footer>

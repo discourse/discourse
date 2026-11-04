@@ -23,7 +23,8 @@
 
 .d-user-option,
 .d-group-option,
-.d-email-option {
+.d-email-option,
+.d-unknown-option {
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -75,8 +76,14 @@
 }
 
 .d-group-option__name,
-.d-email-option__address {
+.d-email-option__address,
+.d-unknown-option__name {
   min-width: 0;
 
   @include ellipsis;
+}
+
+// A name nobody has is kept as typed, so the warning is what tells it from a real user.
+.d-unknown-option .d-icon {
+  color: var(--danger);
 }

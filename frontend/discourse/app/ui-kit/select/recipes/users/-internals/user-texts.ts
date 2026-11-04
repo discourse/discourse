@@ -5,12 +5,17 @@ import type {
 import { i18n } from "discourse-i18n";
 
 /** The texts a user picker accepts: the engine's and the type words its chips speak. */
-export type SelectUserTextKey = SelectCoreTextKey | "groupType" | "emailType";
+export type SelectUserTextKey =
+  | SelectCoreTextKey
+  | "groupType"
+  | "emailType"
+  | "unknownType";
 
-/** The type words read after a group's or an address's name in a chip. */
+/** The type words read after a group's, an address's or an unknown name's chip. */
 export const USER_TEXTS: SelectTexts = Object.freeze({
   groupType: { translationKey: "select_user.group_type" },
   emailType: { translationKey: "select_user.email_type" },
+  unknownType: { translationKey: "select_user.unknown_type" },
 });
 
 /**

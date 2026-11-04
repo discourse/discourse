@@ -15,13 +15,14 @@ import {
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
-/** The kinds of value a user picker holds. */
-export type UserPickType = "user" | "group" | "email";
+/** The kinds of value a user picker holds; `unknown` is a name nothing resolved. */
+export type UserPickType = "user" | "group" | "email" | "unknown";
 
 /** The translations a chip's type words default to when it's drawn without the select's options. */
 const TYPE_TEXT_KEYS: Readonly<Record<string, string>> = {
   groupType: "select_user.group_type",
   emailType: "select_user.email_type",
+  unknownType: "select_user.unknown_type",
 };
 
 /** A chip's type word, from the select's options when the chip has them. */
@@ -106,8 +107,8 @@ export const UserOption: TOC<{
 </template>;
 
 /**
- * Default held-value content. A group or an address also gets a hidden type word, since its
- * icon is hidden from screen readers.
+ * Default held-value content. A group, an address or a name nobody has also gets a hidden type
+ * word, since its icon is hidden from screen readers.
  */
 export const UserSelection: TOC<{
   Args: {
@@ -132,6 +133,12 @@ export const UserSelection: TOC<{
       {{dIcon "envelope"}}
       <span class="d-email-option__address">{{itemName @item}}</span>
       <span class="sr-only">{{typeText @options "emailType"}}</span>
+    </span>
+  {{else if (isType @item "unknown")}}
+    <span class="d-unknown-option --selection">
+      {{dIcon "triangle-exclamation"}}
+      <span class="d-unknown-option__name">{{itemName @item}}</span>
+      <span class="sr-only">{{typeText @options "unknownType"}}</span>
     </span>
   {{else}}
     {{itemName @item}}

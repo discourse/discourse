@@ -496,6 +496,74 @@ module(
       assert.dom(".d-select__chip img.avatar").exists({ count: 2 });
     });
 
+    test("a pasted name nobody has is marked as not found", async function (assert) {
+      stubUserSearch();
+      const held = tracked([]);
+      const change = (value) => (held.value = value);
+
+      await render(
+        <template>
+          <DSelectUser
+            @multiple={{true}}
+            @onChange={{change}}
+            @value={{held.value}}
+          />
+        </template>
+      );
+      const select = new DSelect();
+      await select.open();
+      await paste("bob, ghost");
+      await select.close();
+
+      const chip = find(".d-select__chip[data-name='ghost']");
+      assert
+        .dom(".d-icon-triangle-exclamation", chip)
+        .exists("the chip carries a warning icon");
+      assert
+        .dom(chip)
+        .includesText(
+          i18n("select_user.unknown_type"),
+          "and says it was not found"
+        );
+      assert
+        .dom(".d-select__chip[data-name='bob']")
+        .doesNotIncludeText(i18n("select_user.unknown_type"));
+    });
+
+    for (const emails of [true, false]) {
+      test(`a pasted address is an email chip only where addresses are offered (${emails})`, async function (assert) {
+        stubUserSearch();
+        const held = tracked([]);
+        const change = (value) => (held.value = value);
+
+        await render(
+          <template>
+            <DSelectUser
+              @emails={{emails}}
+              @multiple={{true}}
+              @onChange={{change}}
+              @value={{held.value}}
+            />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+        await paste("ann@example.com");
+        await select.close();
+
+        assert.dom(".d-select__chip .d-email-option").exists({
+          count: emails ? 1 : 0,
+        });
+        assert
+          .dom(".d-select__chip")
+          .includesText(
+            emails
+              ? i18n("select_user.email_type")
+              : i18n("select_user.unknown_type")
+          );
+      });
+    }
+
     test("leaves a single name, or any paste into a single select, to the browser", async function (assert) {
       stubUserSearch();
       const multiple = tracked(true);
