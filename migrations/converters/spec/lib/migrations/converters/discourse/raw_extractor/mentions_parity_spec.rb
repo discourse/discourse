@@ -93,7 +93,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       end
     end
 
-    # interior dot
     context "with an interior dot" do
       include_examples "matching mention extraction to cooked links",
                        username: "john.doe",
@@ -101,7 +100,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
                        expected_name: "john.doe"
     end
 
-    # trailing dot dropped
     context "with a trailing dot" do
       include_examples "matching mention extraction to cooked links",
                        username: "john",
@@ -109,7 +107,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
                        expected_name: "john"
     end
 
-    # interior dash
     context "with an interior dash" do
       include_examples "matching mention extraction to cooked links",
                        username: "j-d",
@@ -117,7 +114,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
                        expected_name: "j-d"
     end
 
-    # trailing underscore dropped
     context "with a trailing underscore" do
       include_examples "matching mention extraction to cooked links",
                        username: "user",
@@ -125,7 +121,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
                        expected_name: "user"
     end
 
-    # multibyte
     context "with a multibyte username" do
       include_examples "matching mention extraction to cooked links",
                        username: "café",
@@ -134,11 +129,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     end
   end
 
-  # The one deliberate divergence: core's name regex caps a username at 60
-  # characters, so a longer `@name` cooks nothing, while the construct has no cap and
-  # extracts it. A name that long can't be a real source username (Discourse's own
-  # limit is 60), so the gate never defers one — the cap is moot, and we keep the
-  # simpler capless construct.
   it "leaves an over-long name literal, matching core's 60-character cap" do
     # The construct grammar itself has no length cap, but the engine's mention
     # rule does — and no token means nothing matches, so extraction inherits
