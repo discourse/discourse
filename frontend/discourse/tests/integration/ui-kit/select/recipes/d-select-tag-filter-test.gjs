@@ -869,6 +869,23 @@ module(
         assert.false(this.routeTo.called, "no navigation");
       });
 
+      test("@maxVisibleChips shows that many chips and counts the rest", async function (assert) {
+        const held = [{ name: "alpha" }, { name: "bug" }, { name: "zeta" }];
+
+        await render(
+          <template>
+            <DSelectTagFilter
+              @maxVisibleChips={{1}}
+              @multiple={{true}}
+              @value={{held}}
+            />
+          </template>
+        );
+
+        assert.dom(".d-select__trigger .d-select__chip").exists({ count: 1 });
+        assert.dom(".d-select__chips-more").hasText("+2");
+      });
+
       test("browses the top tags and searches every tag, as the single filter does", async function (assert) {
         const requests = stubSearch();
         const held = [];

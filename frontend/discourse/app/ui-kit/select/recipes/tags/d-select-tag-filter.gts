@@ -73,6 +73,8 @@ interface DSelectTagFilterSignature {
       | null;
     /** Holds several tags, for an intersection; defaults to one. */
     multiple?: boolean;
+    /** Visible chip limit; zero shows only the selection count. */
+    maxVisibleChips?: number;
     /** Category limiting the available tags. */
     categoryId?: number;
     /** Temporary compatibility aliases for legacy customizations and CSS. */
@@ -344,6 +346,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @load={{this.load}}
       @loadContext={{this.loadContext}}
       @maxLoaded={{this.siteSettings.max_tags_in_filter_list}}
+      @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @searchIcon="magnifying-glass"
