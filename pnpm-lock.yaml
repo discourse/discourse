@@ -810,8 +810,8 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       make-plural:
-        specifier: ^8.1.0
-        version: 8.1.0
+        specifier: ^8.2.0
+        version: 8.2.0
 
   frontend/discourse-markdown-it:
     dependencies:
@@ -6072,8 +6072,8 @@ packages:
     resolution: {integrity: sha512-Je0fLJ0F5atA7F+eIlLzk+Wkcl57JDf4kf+EW8xiP5E31xOQxkIxTbgf1Oi1Lw9tRI9UEMRdI5Vz2xTzoNU1Jw==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  make-plural@8.1.0:
-    resolution: {integrity: sha512-p8EfQ2LFxnU4KGc82hOYdUplQw0eoWJLzJVKyv2GR9sd4zkjA8bLSXLEmp/qE08c/cFTZOK8j6Ex80+Wey+4PA==}
+  make-plural@8.2.0:
+    resolution: {integrity: sha512-JCpE6Pu4LqF20v2tTrSE8KvinBvnUuRmo4yeU0if1y1+hvoVTVba5A8c7f8qfq2yWMjwtYQbAe6UJ/6lO8pUQw==}
 
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
@@ -10150,7 +10150,7 @@ snapshots:
 
   '@messageformat/runtime@3.0.2':
     dependencies:
-      make-plural: 8.1.0
+      make-plural: 8.2.0
 
   '@microsoft/tsdoc-config@0.18.1':
     dependencies:
@@ -14391,7 +14391,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  make-plural@8.1.0: {}
+  make-plural@8.2.0: {}
 
   makeerror@1.0.12:
     dependencies:
