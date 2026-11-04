@@ -10,6 +10,7 @@ const {
 
 require("./patch-testem-output")();
 require("./patch-testem-browser-watchdog")();
+require("./patch-testem-test-impact")();
 
 const SANDBOX_DISABLE_VALUES = ["1", "true"];
 const sandboxDisabled =
@@ -343,3 +344,10 @@ if (pluginTestPages) {
 }
 
 module.exports.proxies["/*/*"] = { target, xfwd: true };
+
+if (process.env.TEST_IMPACT_RECORD === "1" && !themeTestPages) {
+  const pages = module.exports.test_page;
+  module.exports.test_page = Array.isArray(pages)
+    ? pages.map((page) => `${page}&test_impact`)
+    : `${pages}&test_impact`;
+}

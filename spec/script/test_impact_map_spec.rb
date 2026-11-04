@@ -185,11 +185,16 @@ RSpec.describe TestImpact::Map do
       expect(selection.specs).to eq(["spec/block_spec.rb"])
     end
 
-    it "selects nothing for QUnit tests and documentation no spec ran or read" do
+    it "selects a changed QUnit test file" do
+      selection = select(diff("plugins/chat/test/javascripts/thing-test.gjs", "@@ -1 +1 @@"))
+
+      expect(selection.specs).to eq(["plugins/chat/test/javascripts/thing-test.gjs"])
+    end
+
+    it "selects nothing for test support and documentation no spec ran or read" do
       selection =
         select(
-          diff("frontend/discourse/tests/unit/thing-test.js", "@@ -1 +1 @@") +
-            diff("plugins/chat/test/javascripts/thing-test.js", "@@ -1 +1 @@") +
+          diff("frontend/discourse/tests/helpers/thing.js", "@@ -1 +1 @@") +
             diff("docs/guide.md", "@@ -1 +1 @@") +
             diff("frontend/discourse/app/new.js", "@@ -1 +1 @@"),
         )
