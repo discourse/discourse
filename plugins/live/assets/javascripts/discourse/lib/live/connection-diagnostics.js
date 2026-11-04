@@ -9,37 +9,59 @@ const PROBE_TIMEOUT_MS = 6000;
 const CANDIDATE_TYPES = ["host", "srflx", "prflx", "relay"];
 
 const MAX_ICE_ERRORS = 10;
+const MAX_ERROR_ADDRESSES = 4;
 
 /**
  * Records an ICE candidate error, folding repeats into a count: browsers retry
  * each server per interface and transaction, so the same failure otherwise
- * floods the list and pushes out the distinct ones.
+ * floods the list and pushes out the distinct ones. The local addresses the
+ * failing requests were sent from are kept, since they tell which interface
+ * or address family can't reach the server.
  *
  * @param {Array<object>} errors - Mutated in place.
- * @param {{url?: string, errorCode?: number, errorText?: string}} error
+ * @param {{url?: string, errorCode?: number, errorText?: string, address?: string, port?: number}} error
  */
-export function recordIceError(errors, { url, errorCode, errorText }) {
-  const existing = errors.find(
-    (entry) =>
-      entry.url === url &&
-      entry.errorCode === errorCode &&
-      entry.errorText === errorText
+export function recordIceError(
+  errors,
+  { url, errorCode, errorText, address, port }
+) {
+  let entry = errors.find(
+    (existing) =>
+      existing.url === url &&
+      existing.errorCode === errorCode &&
+      existing.errorText === errorText
   );
-  if (existing) {
-    existing.count++;
-    existing.lastAt = Date.now();
-    return errors;
+  if (entry) {
+    entry.count++;
+    entry.lastAt = Date.now();
+  } else {
+    entry = {
+      url,
+      errorCode,
+      errorText,
+      addresses: [],
+      count: 1,
+      lastAt: Date.now(),
+    };
+    errors.push(entry);
+    if (errors.length > MAX_ICE_ERRORS) {
+      errors.shift();
+    }
   }
 
-  errors.push({ url, errorCode, errorText, count: 1, lastAt: Date.now() });
-  if (errors.length > MAX_ICE_ERRORS) {
-    errors.shift();
+  const source = address && (port ? `${address}:${port}` : address);
+  if (
+    source &&
+    !entry.addresses.includes(source) &&
+    entry.addresses.length < MAX_ERROR_ADDRESSES
+  ) {
+    entry.addresses.push(source);
   }
   return errors;
 }
 
 /**
- * @param {{url?: string, errorCode?: number, errorText?: string, count?: number}} error
+ * @param {{url?: string, errorCode?: number, errorText?: string, count?: number, addresses?: string[]}} error
  * @param {{includeUrl?: boolean}} [options]
  */
 export function formatIceError(error, { includeUrl = true } = {}) {
@@ -48,10 +70,126 @@ export function formatIceError(error, { includeUrl = true } = {}) {
     error.errorCode,
     error.errorText,
     error.count > 1 && `(×${error.count})`,
+    error.addresses?.length && `from ${error.addresses.join(", ")}`,
   ]
     .filter(Boolean)
     .join(" ");
   return text || "?";
+}
+
+/**
+ * Splits an ICE server URL into the parts that identify an endpoint.
+ *
+ * @param {string} url
+ * @returns {{scheme: string, host: string, port: string, transport: string}|null}
+ */
+export function parseIceUrl(url) {
+  const match = /^(stuns?|turns?):([^?]+?)(?::(\d+))?(?:\?(.*))?$/i.exec(
+    url || ""
+  );
+  if (!match) {
+    return null;
+  }
+
+  const scheme = match[1].toLowerCase();
+  const secure = scheme.endsWith("s");
+  return {
+    scheme,
+    host: match[2].toLowerCase(),
+    port: match[3] ?? (secure ? "5349" : "3478"),
+    transport:
+      new URLSearchParams(match[4] || "").get("transport")?.toLowerCase() ??
+      (secure ? "tcp" : "udp"),
+  };
+}
+
+function sameHost(a, b) {
+  return a && b && a.host === b.host && a.port === b.port;
+}
+
+// TURN over TLS and plain TURN over TCP can share a host and port, yet one
+// working says nothing about the other (e.g. a certificate problem).
+function sameRelayEndpoint(a, b) {
+  return sameHost(a, b) && a.scheme === b.scheme && a.transport === b.transport;
+}
+
+/**
+ * Whether the server an ICE error is about was reached anyway. Browsers try
+ * every server from every local address and interface, so one address failing
+ * (an IPv6 address without a route, a VPN or container interface) is expected
+ * noise as long as another address got the answer the error was waiting for.
+ *
+ * @param {{url?: string}} error
+ * @param {object} evidence
+ * @param {Array<{type: string, url?: string, relayProtocol?: string}>} [evidence.candidates] - Local candidates gathered on the same connection.
+ * @param {Array<object>} [evidence.probes] - STUN/TURN server probe results.
+ */
+export function iceErrorIsHarmless(error, { candidates = [], probes = [] }) {
+  const target = parseIceUrl(error.url);
+  if (!target) {
+    return false;
+  }
+  const wantsRelay = target.scheme.startsWith("turn");
+
+  const probed = probes.some((probe) => {
+    const endpoint = parseIceUrl(probe.url);
+    return wantsRelay
+      ? probe.reachable && sameRelayEndpoint(endpoint, target)
+      : sameHost(endpoint, target) && probe.publicAddresses?.length > 0;
+  });
+  if (probed) {
+    return true;
+  }
+
+  return candidates.some((candidate) => {
+    if (candidate.type !== (wantsRelay ? "relay" : "srflx")) {
+      return false;
+    }
+    // Not every browser reports which server produced a candidate. Without
+    // that, the candidate may come from a different, working server, so it
+    // is no evidence for this one; the probes still are.
+    const source = parseIceUrl(candidate.url);
+    if (!source) {
+      return false;
+    }
+    return wantsRelay
+      ? sameRelayEndpoint(source, target)
+      : sameHost(source, target);
+  });
+}
+
+/**
+ * @param {Array<object>} errors
+ * @param {Parameters<typeof iceErrorIsHarmless>[1]} evidence
+ * @returns {{problems: Array<object>, harmless: Array<object>}}
+ */
+export function partitionIceErrors(errors, evidence) {
+  const problems = [];
+  const harmless = [];
+  for (const error of errors || []) {
+    (iceErrorIsHarmless(error, evidence) ? harmless : problems).push(error);
+  }
+  return { problems, harmless };
+}
+
+/**
+ * Distinct public IPv4 addresses the STUN/TURN servers saw this device as.
+ * More than one usually means traffic leaves through several internet
+ * connections, which makes the public address a peer is told about
+ * unreliable. IPv6 is excluded: one IPv6 address per interface is normal.
+ *
+ * @param {Array<object>|null} probes
+ */
+export function publicIpv4Addresses(probes) {
+  const addresses = new Set();
+  for (const probe of probes || []) {
+    for (const address of probe.publicAddresses || []) {
+      if (!address.includes(":")) {
+        addresses.add(address);
+      }
+    }
+  }
+  return Array.from(addresses);
 }
 
 function statsValues(report) {
@@ -145,6 +283,8 @@ export function summarizeStats(report) {
   const localCandidates = emptyCandidateCounts();
   const remoteCandidates = emptyCandidateCounts();
   const candidatePairs = { total: 0, succeeded: 0, failed: 0, inProgress: 0 };
+  const pairsByType = {};
+  const localCandidateSources = [];
   const inbound = [];
   const outbound = [];
   let transport = null;
@@ -157,22 +297,37 @@ export function summarizeStats(report) {
         if (stat.candidateType in localCandidates) {
           localCandidates[stat.candidateType]++;
         }
+        localCandidateSources.push({
+          type: stat.candidateType,
+          url: stat.url,
+          relayProtocol: stat.relayProtocol,
+        });
         break;
       case "remote-candidate":
         if (stat.candidateType in remoteCandidates) {
           remoteCandidates[stat.candidateType]++;
         }
         break;
-      case "candidate-pair":
-        candidatePairs.total++;
-        if (stat.state === "succeeded") {
-          candidatePairs.succeeded++;
-        } else if (stat.state === "failed") {
-          candidatePairs.failed++;
-        } else if (stat.state === "in-progress") {
-          candidatePairs.inProgress++;
+      case "candidate-pair": {
+        const key = `${byId.get(stat.localCandidateId)?.candidateType ?? "?"}→${byId.get(stat.remoteCandidateId)?.candidateType ?? "?"}`;
+        pairsByType[key] ??= {
+          total: 0,
+          succeeded: 0,
+          failed: 0,
+          inProgress: 0,
+        };
+        for (const counts of [candidatePairs, pairsByType[key]]) {
+          counts.total++;
+          if (stat.state === "succeeded") {
+            counts.succeeded++;
+          } else if (stat.state === "failed") {
+            counts.failed++;
+          } else if (stat.state === "in-progress") {
+            counts.inProgress++;
+          }
         }
         break;
+      }
       case "transport":
         transport ??= {
           dtlsState: stat.dtlsState,
@@ -227,6 +382,8 @@ export function summarizeStats(report) {
     localCandidates,
     remoteCandidates,
     candidatePairs,
+    pairsByType,
+    localCandidateSources,
     transport,
     // Pre-negotiated idle m-lines report zero-packet RTP entries; they are
     // noise when nothing is being sent on them.
@@ -386,6 +543,8 @@ export async function probeIceServer(url, server, options = {}) {
           url: event.url,
           errorCode: event.errorCode,
           errorText: event.errorText,
+          address: event.address,
+          port: event.port,
         });
       };
 
@@ -501,6 +660,28 @@ function formatCandidate(candidate) {
     .join(" / ");
 }
 
+/**
+ * @param {Record<string, {total: number, succeeded: number, failed: number, inProgress: number}>} pairsByType
+ */
+export function formatPairsByType(pairsByType) {
+  return Object.entries(pairsByType || {})
+    .map(
+      ([types, counts]) =>
+        `${types} ${counts.succeeded}ok/${counts.failed}failed/${counts.total}`
+    )
+    .join(", ");
+}
+
+/**
+ * A local peer-reflexive candidate means the peer saw our packets come from a
+ * public address none of the STUN servers reported, i.e. traffic to this peer
+ * took a different NAT mapping or internet connection. When the call then
+ * ends up relayed, that mismatch is the likely reason direct paths failed.
+ */
+export function unexpectedLocalAddress(stats) {
+  return stats?.localCandidates?.prflx > 0 && stats.route.startsWith("relay");
+}
+
 export function formatCandidateCounts(counts) {
   return CANDIDATE_TYPES.map((type) => `${type}=${counts?.[type] ?? 0}`).join(
     " "
@@ -550,6 +731,12 @@ export function formatReport({
   push();
 
   push("== STUN/TURN servers ==");
+  const publicIpv4 = publicIpv4Addresses(probes);
+  if (publicIpv4.length > 1) {
+    push(
+      `WARNING: multiple public IPv4 addresses (${publicIpv4.join(", ")}); traffic may leave through more than one internet connection`
+    );
+  }
   if (!probes) {
     push("(probe not run)");
   } else if (!probes.length) {
@@ -571,8 +758,14 @@ export function formatReport({
     } else if (probe.udp) {
       push("  public address: NONE (STUN binding got no answer)");
     }
-    for (const error of probe.errors) {
+    const probeErrors = partitionIceErrors(probe.errors, {
+      probes: probes || [],
+    });
+    for (const error of probeErrors.problems) {
       push(`  error: ${formatIceError(error)}`);
+    }
+    for (const error of probeErrors.harmless) {
+      push(`  error (harmless): ${formatIceError(error)}`);
     }
   }
   push();
@@ -586,8 +779,15 @@ export function formatReport({
     push(
       `  restarts: ${recovery.restartAttempts}/${recovery.maxRestartAttempts}${recovery.restartScheduled ? " (restart pending)" : ""}  offer retries: ${recovery.offerRetryAttempts}/${recovery.maxOfferRetries}  queued candidates: ${recovery.pendingCandidates}`
     );
-    for (const error of recovery.iceCandidateErrors) {
+    const peerErrors = partitionIceErrors(recovery.iceCandidateErrors, {
+      candidates: peer.connection?.stats?.localCandidateSources,
+      probes: probes || [],
+    });
+    for (const error of peerErrors.problems) {
       push(`  ICE error: ${formatIceError(error)}`);
+    }
+    for (const error of peerErrors.harmless) {
+      push(`  ICE error (harmless, server reached): ${formatIceError(error)}`);
     }
 
     const connection = peer.connection;
@@ -622,6 +822,15 @@ export function formatReport({
     push(
       `  candidate pairs: total=${stats.candidatePairs.total} succeeded=${stats.candidatePairs.succeeded} failed=${stats.candidatePairs.failed} in-progress=${stats.candidatePairs.inProgress}`
     );
+    const pairTypes = formatPairsByType(stats.pairsByType);
+    if (pairTypes) {
+      push(`  pairs by type: ${pairTypes}`);
+    }
+    if (unexpectedLocalAddress(stats)) {
+      push(
+        "  note: traffic to this peer left from a public address no STUN server reported (local prflx); direct paths likely failed because of it"
+      );
+    }
     push(`  local candidates: ${formatCandidateCounts(stats.localCandidates)}`);
     push(
       `  remote candidates: ${formatCandidateCounts(stats.remoteCandidates)}`

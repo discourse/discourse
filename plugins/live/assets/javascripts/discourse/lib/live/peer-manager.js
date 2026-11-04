@@ -391,7 +391,9 @@ export default class PeerManager {
     };
 
     pc.onicecandidateerror = (event) => {
-      liveLog.warn("[live] ICE candidate error for peer");
+      // Usually one of several local addresses failing while another succeeds;
+      // connection diagnostics tell the two apart, so this is not a warning.
+      liveLog.info("[live] ICE candidate error for peer");
       if (!iceCandidateErrors.has(pc)) {
         iceCandidateErrors.set(pc, []);
       }
@@ -399,6 +401,8 @@ export default class PeerManager {
         url: event.url,
         errorCode: event.errorCode,
         errorText: event.errorText,
+        address: event.address,
+        port: event.port,
       });
     };
 
