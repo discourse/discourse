@@ -34,6 +34,7 @@ RSpec.describe TestImpact::Map do
           seconds: 2.5,
           files: {
             "app/models/thing.rb" => [[5, 7]],
+            "frontend/discourse/app/thing.js" => [[1, 20], [5, 8]],
           },
           settings: ["max_post_length"],
           keys: ["post"],
@@ -46,6 +47,7 @@ RSpec.describe TestImpact::Map do
           seconds: 1.5,
           files: {
             "app/models/thing.rb" => [[3, 3]],
+            "frontend/discourse/app/thing.js" => [[1, 20], [10, 12]],
           },
           settings: ["min_post_length"],
           keys: %w[post.edit topic.title],
@@ -53,7 +55,14 @@ RSpec.describe TestImpact::Map do
           reads: ["spec/fixtures/logo.png"],
         }.to_json,
       )
-      gz.puts({ methods: { "app/models/thing.rb" => [[5, 7], [9, 11]] } }.to_json)
+      gz.puts(
+        {
+          methods: {
+            "app/models/thing.rb" => [[5, 7], [9, 11]],
+            "frontend/discourse/app/thing.js" => [[1, 20], [5, 8], [10, 12]],
+          },
+        }.to_json,
+      )
     end
     described_class.build([path])
   end
@@ -128,6 +137,21 @@ RSpec.describe TestImpact::Map do
       DIFF
 
       expect(selection.specs).to eq(%w[spec/block_spec.rb spec/double_spec.rb])
+    end
+
+    it "selects for a hunk spanning a method and code outside it the specs of both" do
+      selection = select(diff("app/models/thing.rb", "@@ -2,5 +2,5 @@"))
+
+      expect(selection.specs).to eq(%w[spec/block_spec.rb spec/double_spec.rb])
+    end
+
+    it "selects the specs that ran the innermost function a hunk falls in" do
+      inner = select(diff("frontend/discourse/app/thing.js", "@@ -6 +6 @@"))
+      outer = select(diff("frontend/discourse/app/thing.js", "@@ -15 +15 @@"))
+
+      expect([inner.specs, outer.specs]).to eq(
+        [["spec/double_spec.rb"], %w[spec/block_spec.rb spec/double_spec.rb]],
+      )
     end
 
     it "selects the specs that read a changed setting" do

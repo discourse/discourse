@@ -11,19 +11,30 @@ depends on. Experimental.
   blocks: scopes, callbacks, event handlers);
 - the site settings it read;
 - the translation keys and locales it looked up;
-- the non-Ruby files in the repository it read (fixtures, templates, data).
+- the non-Ruby files in the repository it read (fixtures, templates, data);
+- for system specs, the browser JavaScript functions it ran.
 
 Settings and translations are loaded once at boot, so the lookups are what
 tell specs apart. Recordings go to `tmp/test_impact/recording-*.jsonl.gz`.
 Then merge them:
 
 ```sh
-TEST_IMPACT_RECORD=1 bin/turbo_rspec spec/models spec/requests
+TEST_IMPACT_RECORD=1 bin/turbo_rspec spec/models spec/requests spec/system
+script/test_impact/resolve_js           # system specs: bundle ranges -> source files
 script/test_impact/build_map            # -> tmp/test_impact/map.json.gz
 ```
 
-Recording costs about a third more time. It can't run together with
-`COVERAGE=1`, since both use Ruby's `Coverage`.
+JavaScript coverage comes from Chrome's profiler, taken by
+`script/test_impact/cdp_coverage` over a DevTools port of its own (each
+browser gets one while recording): a page's coverage through the test's
+Playwright client takes minutes. It is recorded as bundle line/column ranges;
+`resolve_js` maps them to source files through the build's source maps, so it
+must run where that build is. After that, a `.js`, `.gjs` or `.ts` file is in
+the map like a Ruby file.
+
+Recording costs about a third more time for backend specs and a quarter for
+system specs. It can't run together with `COVERAGE=1`, since both use Ruby's
+`Coverage`.
 
 In CI, a pull request labeled `test-impact-record` records in the backend and
 system jobs and uploads `test-impact-recordings-*` artifacts. The label takes
@@ -39,7 +50,8 @@ bin/rspec $(script/test_impact/select --base origin/main)
 `select` diffs the working tree against the merge base with `--base`:
 
 - a changed spec file is selected;
-- a changed method selects the specs that ran it;
+- a changed method or function selects the specs that ran it (for nested
+  JavaScript functions, the innermost one the change is in);
 - a change outside any method selects the specs that ran that code, or, when
   nothing ran it (constants, associations, validations, which only run at
   load), every spec that ran the file;
@@ -52,6 +64,6 @@ bin/rspec $(script/test_impact/select --base origin/main)
 - any other changed file selects the specs that read it.
 
 On stderr it lists changed methods no spec ran, and changed files the map
-doesn't cover (new files, JS, client locales, migrations, and settings or
-locale changes that name no setting or key). When the second list isn't
-empty, the selection is incomplete.
+doesn't cover (new files, JavaScript no system spec loads, client locales,
+migrations, and settings or locale changes that name no setting or key).
+When the second list isn't empty, the selection is incomplete.

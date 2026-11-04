@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+"use strict";
+
+// Takes a page's JavaScript function coverage over its own DevTools
+// connection, for the test impact recorder: large responses through the
+// test's Playwright client take minutes. Starts coverage, prints "started",
+// and on a line from stdin writes the coverage to OUTPUT and exits. It stays
+// connected in between, since closing the connection stops the coverage.
+//
+//   script/test_impact/cdp_coverage PORT TARGET_ID OUTPUT
+
+const fs = require("node:fs");
+const readline = require("node:readline");
+
+const [port, targetId, output] = process.argv.slice(2);
+const socket = new WebSocket(
+  `ws://127.0.0.1:${port}/devtools/page/${targetId}`
+);
+const pending = new Map();
+let nextId = 1;
+
+function send(method, params = {}) {
+  const id = nextId++;
+  socket.send(JSON.stringify({ id, method, params }));
+  return new Promise((resolve, reject) => pending.set(id, { resolve, reject }));
+}
+
+socket.addEventListener("message", (event) => {
+  const message = JSON.parse(event.data);
+  const waiting = pending.get(message.id);
+  if (!waiting) {
+    return;
+  }
+  pending.delete(message.id);
+  message.error
+    ? waiting.reject(new Error(message.error.message))
+    : waiting.resolve(message.result);
+});
+
+socket.addEventListener("error", () => {
+  process.stderr.write(`cdp_coverage: no DevTools connection on ${port}\n`);
+  process.exit(1);
+});
+
+socket.addEventListener("open", async () => {
+  try {
+    await send("Profiler.enable");
+    // Whether each function ran is all the map needs.
+    await send("Profiler.startPreciseCoverage", {
+      callCount: false,
+      detailed: false,
+    });
+    process.stdout.write("started\n");
+
+    const lines = readline.createInterface({ input: process.stdin });
+    lines.once("line", async () => {
+      const { result } = await send("Profiler.takePreciseCoverage");
+      fs.writeFileSync(output, JSON.stringify(result));
+      socket.close();
+      process.exit(0);
+    });
+  } catch (error) {
+    process.stderr.write(`cdp_coverage: ${error.message}\n`);
+    process.exit(1);
+  }
+});

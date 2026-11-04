@@ -416,7 +416,12 @@ jobs:
 
       - name: Summarize test impact recordings
         if: always() && env.TEST_IMPACT_RECORD == '1'
-        run: script/test_impact/build_map tmp/test_impact && ls -la tmp/test_impact
+        run: |
+          # Source maps of the build that served the system specs.
+          if [ "${{ matrix.build_type }}" = "system" ]; then
+            node script/test_impact/resolve_js tmp/test_impact
+          fi
+          script/test_impact/build_map tmp/test_impact && ls -la tmp/test_impact
 
       - name: Upload test impact recordings
         uses: actions/upload-artifact@v7

@@ -104,6 +104,10 @@ module SystemDrivers
         { viewport: viewport, **hidpi_options(viewport) }
       end
 
+    if defined?(TestImpact::Recorder)
+      options[:args] = [*options[:args], *TestImpact::Recorder.chrome_args(name)]
+    end
+
     Capybara.register_driver(name) do |app|
       Capybara::Playwright::Driver.new(app, **options, **mobile_options)
     end
