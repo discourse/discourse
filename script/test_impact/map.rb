@@ -4,16 +4,24 @@ require "json"
 require "zlib"
 
 module TestImpact
-  # Which spec files ran which line ranges of each file, built from the
-  # recorder's recordings, and the specs a diff's hunks reach.
+  # What each spec file depended on, built from the recorder's recordings:
+  # the line ranges it ran of each file, the settings it read, the translation
+  # keys and locales it looked up, the data files it read. And the specs a
+  # diff's hunks reach.
   class Map
     Selection = Struct.new(:specs, :unmapped, :untested, keyword_init: true)
+
+    INDEXES = %w[settings keys locales reads].freeze
+
+    SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
+    LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
 
     def self.build(recording_paths)
       specs = []
       spec_ids = {}
       ranges = Hash.new { |h, path| h[path] = Hash.new { |r, range| r[range] = Set.new } }
       methods = Hash.new { |h, path| h[path] = Set.new }
+      indexes = INDEXES.to_h { |kind| [kind, Hash.new { |h, name| h[name] = Set.new }] }
 
       recording_paths.each do |path|
         Zlib::GzipReader.open(path) do |gz|
@@ -25,6 +33,7 @@ module TestImpact
             end
             id = spec_ids[entry["spec"]] ||= (specs << entry["spec"]).size - 1
             entry["files"].each { |file, list| list.each { |range| ranges[file][range] << id } }
+            INDEXES.each { |kind| Array(entry[kind]).each { |name| indexes[kind][name] << id } }
           end
         end
       end
@@ -36,7 +45,11 @@ module TestImpact
           "ranges" => ranges[file].map { |range, ids| [*range, ids.to_a.sort] }.sort,
         }
       end
-      new("specs" => specs, "files" => files)
+      new(
+        "specs" => specs,
+        "files" => files,
+        **indexes.transform_values { |index| index.transform_values { |ids| ids.to_a.sort } },
+      )
     end
 
     def self.load(path)
@@ -44,14 +57,14 @@ module TestImpact
     end
 
     def initialize(data)
+      @data = data
       @specs = data["specs"]
       @files = data["files"]
+      @indexes = INDEXES.to_h { |kind| [kind, data[kind] || {}] }
     end
 
     def dump(path)
-      Zlib::GzipWriter.open(path) do |gz|
-        gz.write(JSON.generate("specs" => @specs, "files" => @files))
-      end
+      Zlib::GzipWriter.open(path) { |gz| gz.write(JSON.generate(@data)) }
     end
 
     def spec_count
@@ -63,7 +76,15 @@ module TestImpact
     # method and nothing that ran (constants, associations, validations: code
     # that only runs at load) selects every spec that ran the file. A method
     # no spec ran selects nothing and is reported as untested.
-    def select(changes)
+    #
+    # A hunk in a settings file selects the specs that read the setting it is
+    # in, and one in a server locale file the specs that looked up its key (or
+    # a key above or below it), in that locale unless it is English, which
+    # every locale falls back to. Other files select the specs that read them.
+    #
+    # `source` returns a changed file's content before the change, for the
+    # settings and keys its hunks fall in.
+    def select(changes, source: ->(_path) {})
       ids = Set.new
       specs = Set.new
       unmapped = []
@@ -75,9 +96,25 @@ module TestImpact
           specs << change.new_path if change.new_path
           next
         end
-        file = change.old_path && @files[change.old_path]
+
+        old = change.old_path
+        lines = old && (SETTINGS_FILE.match?(old) || LOCALE_FILE.match?(old)) && source.call(old)
+        if lines
+          lines = lines.lines
+          reached =
+            if SETTINGS_FILE.match?(old)
+              settings_reached(lines, change.hunks)
+            else
+              keys_reached(lines, change.hunks, old[LOCALE_FILE, 1])
+            end
+          reached ? ids.merge(reached) : unmapped << path
+          next
+        end
+
+        file = old && @files[old]
         if !file
-          unmapped << path
+          readers = @indexes["reads"][old]
+          readers ? ids.merge(readers) : unmapped << path
           next
         end
         # A rename or mode change: the constant's path is what moved.
@@ -92,7 +129,7 @@ module TestImpact
           if reached.any?
             reached.each { |_, _, spec_ids| ids.merge(spec_ids) }
           elsif touched.any?
-            untested << "#{change.old_path}:#{first}-#{last}"
+            untested << "#{old}:#{first}-#{last}"
           else
             file["ranges"].each { |_, _, spec_ids| ids.merge(spec_ids) }
           end
@@ -101,6 +138,73 @@ module TestImpact
 
       specs.merge(ids.map { |id| @specs[id] })
       Selection.new(specs: specs.to_a.sort, unmapped: unmapped.uniq.sort, untested: untested)
+    end
+
+    private
+
+    # nil when a hunk touches a category rather than a setting.
+    def settings_reached(lines, hunks)
+      paths = Yaml.key_paths(lines)
+      names = hunk_paths(paths, hunks).map { |path| path&.split(".")&.[](1) }
+      return if names.include?(nil)
+      names.uniq.flat_map { |name| @indexes["settings"][name] || [] }
+    end
+
+    # nil when a hunk touches the locale's root.
+    def keys_reached(lines, hunks, locale)
+      paths = Yaml.key_paths(lines)
+      keys = hunk_paths(paths, hunks).map { |path| path&.split(".", 2)&.[](1) }
+      return if keys.include?(nil)
+      reached =
+        keys.uniq.flat_map do |key|
+          @indexes["keys"].flat_map do |looked_up, spec_ids|
+            related =
+              looked_up == key || key.start_with?("#{looked_up}.") ||
+                looked_up.start_with?("#{key}.")
+            related ? spec_ids : []
+          end
+        end
+      return reached if locale == "en"
+      reached & (@indexes["locales"][locale] || [])
+    end
+
+    # The key path of each changed line that has one (blank and comment lines
+    # have none).
+    def hunk_paths(paths, hunks)
+      hunks
+        .flat_map { |first, last| (first..last).map { |line| paths[line - 1] } }
+        .compact
+        .then { |found| found.empty? ? [nil] : found }
+    end
+  end
+
+  # Key paths of a YAML file's lines, by indentation: enough for the plain
+  # nested mappings of settings and locale files.
+  module Yaml
+    KEY = /\A( *)(?:"([^"]+)"|'([^']+)'|([^\s#'"\-][^:#]*?)):(?:\s|\z)/
+    BLOCK_SCALAR = /\A[|>][-+0-9]*\s*(?:#.*)?\z/
+
+    def self.key_paths(lines)
+      stack = []
+      block_indent = nil
+      lines.map do |line|
+        indent = line[/\A */].size
+        stripped = line.strip
+        if block_indent
+          next stack.map(&:last).join(".") if stripped.empty? || indent > block_indent
+          block_indent = nil
+        end
+        next if stripped.empty? || stripped.start_with?("#")
+
+        match = KEY.match(line)
+        if match
+          stack.pop while stack.any? && stack.last[0] >= indent
+          stack << [indent, (match[2] || match[3] || match[4]).strip]
+          rest = line[match.end(0)..].to_s.strip
+          block_indent = indent if BLOCK_SCALAR.match?(rest)
+        end
+        stack.map(&:last).join(".")
+      end
     end
   end
 
