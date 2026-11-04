@@ -37,8 +37,7 @@ export function setDefaultOwner(container) {
   setOwner(_default, container);
 }
 
-// `this.container` is deprecated, but we can still build a container-like
-// object for components to use
+// Builds a container-like object for components to use
 export function getRegister(obj) {
   const owner = getOwnerWithFallback(obj);
   const register = {
@@ -49,18 +48,6 @@ export function getRegister(obj) {
       } else if (owner._lookupFactory) {
         return owner._lookupFactory(...args);
       }
-    },
-
-    deprecateContainer(target) {
-      Object.defineProperty(target, "container", {
-        get() {
-          deprecated(
-            "Use `this.register` or `getOwner` instead of `this.container`",
-            { id: "discourse.this-container" }
-          );
-          return register;
-        },
-      });
     },
   };
 

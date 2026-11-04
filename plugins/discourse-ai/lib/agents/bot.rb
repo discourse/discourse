@@ -624,7 +624,7 @@ module DiscourseAi
               reviewable_id: reviewable.id,
               summary: tool.approval_title,
               changes: tool.approval_changes,
-              details: tool.approval_details,
+              details: chat_approval_details(tool),
               description_label: tool.approval_description_label,
               show_description: tool.approval_show_description?,
               question: tool.approval_question,
@@ -649,6 +649,16 @@ module DiscourseAi
         end
 
         { status: "pending_approval", message: I18n.t("discourse_ai.ai_bot.tool_pending_approval") }
+      end
+
+      # The approval card is posted as a chat message, so its details must fit
+      # within the chat message length limit or the card cannot be created.
+      def chat_approval_details(tool)
+        details = tool.approval_details.to_s
+        max_length = SiteSetting.chat_maximum_message_length
+        return details if details.length <= max_length
+
+        tool.compact_approval_details(max_length:).to_s.truncate(max_length)
       end
 
       def process_tool(

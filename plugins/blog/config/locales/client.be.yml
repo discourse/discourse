@@ -19,12 +19,14 @@ be:
     blog:
       panel:
         preview: Перадпрагляд
-        options: Параметры
         change:
           title: загаловак
           body: тэкст
       review:
-        active: Актыўныя
+        copy: Капіраваць
+        status:
+          active: Актыўныя
+        revoke: Адклікаць
       editor_table:
         edit: Рэдагаваць
         status: Статус

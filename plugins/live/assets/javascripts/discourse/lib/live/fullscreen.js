@@ -36,6 +36,20 @@ export function toggleTileFullscreen(tile) {
   toggleFullscreen(tile, { fallbackVideo: true });
 }
 
+// Reports whether the fullscreen element is `element` or inside it, updating
+// on every fullscreen change.
+export const trackFullscreenWithin = modifier((element, [onChange]) => {
+  const update = () => onChange(element.contains(fullscreenElement()));
+
+  document.addEventListener("fullscreenchange", update);
+  document.addEventListener("webkitfullscreenchange", update);
+
+  return () => {
+    document.removeEventListener("fullscreenchange", update);
+    document.removeEventListener("webkitfullscreenchange", update);
+  };
+});
+
 // Reports whether `element` is the current fullscreen element, updating on
 // every fullscreen change so a tile can flip its enter/exit affordance.
 export const trackFullscreen = modifier((element, [onChange]) => {

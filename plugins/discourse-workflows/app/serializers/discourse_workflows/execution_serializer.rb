@@ -40,6 +40,7 @@ module DiscourseWorkflows
       input
       output
       error
+      error_html
       metadata
       started_at
       finished_at

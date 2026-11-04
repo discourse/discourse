@@ -80,6 +80,31 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
         expect(created_def.provider_params["model_name"]).to eq("embeddings-v1")
       end
 
+      it "creates a Bedrock definition without a URL or API key" do
+        post "/admin/plugins/discourse-ai/ai-embeddings.json",
+             params: {
+               ai_embedding:
+                 valid_attrs.except(:url, :api_key).merge(
+                   provider: "aws_bedrock",
+                   provider_params: {
+                     model_id: "cohere.embed-v4:0",
+                     region: "us-west-2",
+                     role_arn: "arn:aws:iam::123456789012:role/bedrock",
+                   },
+                 ),
+             }
+
+        created_def = EmbeddingDefinition.last
+
+        expect(response.status).to eq(201)
+        expect(created_def.url).to eq("https://bedrock-runtime.us-west-2.amazonaws.com")
+        expect(created_def.provider_params).to eq(
+          "model_id" => "cohere.embed-v4:0",
+          "region" => "us-west-2",
+          "role_arn" => "arn:aws:iam::123456789012:role/bedrock",
+        )
+      end
+
       it "ignores parameters not associated with that provider" do
         post "/admin/plugins/discourse-ai/ai-embeddings.json",
              params: {

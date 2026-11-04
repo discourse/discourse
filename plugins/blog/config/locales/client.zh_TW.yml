@@ -31,22 +31,28 @@ zh_TW:
         badge:
           draft: 草稿
         preview: 預覽
-        publish: 發佈
-        options: 選項
         submit: 提交審核
         change:
           title: 標題
           body: 內文
       review:
-        copy: 復制連結
-        active: 啟用
+        label: 標籤
+        create: 建立連結
+        copy: 復制
+        open: 開放
+        status:
+          active: 啟用
+          expired: 已過期
+          revoked: 已撤消
+          inactive: 不活躍
+        closed_on: "於 %{date} 關閉"
+        revoke: 撤回
         message: 意見回饋
       editor_table:
         edit: 編輯
         status: 狀態
         replies: 回覆
       drafts: 草稿
-      private_draft: 草稿
       preview: 預覽
       unpublish: 取消發佈
       appearance_link: 外觀

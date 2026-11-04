@@ -47,6 +47,7 @@ const STEP_COMPLETED_KEY = `onboarding_step_${SELECT_THEME_STEP}`;
  * preview reloads required by a different asset build.
  */
 export default class DesignWizardService extends Service {
+  @service capabilities;
   @service keyValueStore;
   @service router;
   @service siteSettings;
@@ -87,6 +88,11 @@ export default class DesignWizardService extends Service {
   #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
+
+  // with room for both, the page reflows beside the panel instead of under it
+  get docked() {
+    return this.active && this.capabilities.viewport.xl;
+  }
 
   get selectedTheme() {
     return this.data?.themes.find((theme) => theme.id === this.themeId);

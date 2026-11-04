@@ -75,13 +75,17 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def create_bot
-    bot = params.expect(bot: %i[name username trust_level])
+    plugin_param_names = DiscoursePluginRegistry.bot_creation_params.keys
+    bot = params.expect(bot: %i[name username trust_level] + plugin_param_names)
+    plugin_params = bot.extract!(*plugin_param_names).to_h
 
     # Request uses `key`, as `api_key` would be read as an authentication credential.
     key = params[:key]
     raise Discourse::InvalidParameters.new(:key) if key && !key.is_a?(ActionController::Parameters)
 
-    User::CreateBot.call(service_params.merge(params: bot.to_h.merge(api_key: key&.to_unsafe_h))) do
+    User::CreateBot.call(
+      service_params.merge(params: bot.to_h.merge(api_key: key&.to_unsafe_h, plugin_params:)),
+    ) do
       on_success do |user:, api_key: nil|
         render json: {
                  user: AdminUserSerializer.new(user, scope: guardian, root: false).as_json,

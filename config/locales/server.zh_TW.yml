@@ -1741,7 +1741,6 @@ zh_TW:
       email_polling_errored_recently:
         other: "電子郵件輪詢在過去 24 小時內產生了 %{count} 個錯誤。詳情請查看<a href='%{base_path}/logs' target='_blank'>記錄</a>。"
       missing_mailgun_api_key: "服務器被配置為通過 Mailgun 發送電子郵件，但是您尚未提供用于驗證網絡鉤子消息的 API 密鑰。"
-      missing_aws_sns_topic_arn: "伺服器已設定透過 Amazon SES 傳送電子郵件，但您尚未將任何 SNS 主題 ARN 加入允許清單。在您將合法 ARN 新增至 <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a> 前，退信通知將被拒絕。"
       qq_mail_smtp: "您的 SMTP 伺服器（%{smtp_address}）已知會導致 Discourse 重複傳送電子郵件。QQ Mail 不會傳回正確的確認，因此 Discourse 會重試已成功的傳送。<a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>查看建議的替代方案</a>。"
       bad_favicon_url: "網站圖示載入失敗。請在<a href='%{base_path}/admin/site_settings'>網站設定</a>中檢查網站圖示設定。"
       poll_pop3_timeout: "連接到 POP3 服務器超時。無法檢索收到的電子郵件。請檢查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>和服務提供者。"
@@ -2315,7 +2314,6 @@ zh_TW:
     ignore_by_title_regex: "使用規則運算式依標題忽略內送電子郵件。"
     mailgun_api_key: "用于驗證網絡鉤子消息的 Mailgun Secret API 密鑰。"
     sendgrid_verification_key: "用來驗證 Webhook 訊息的 SendGrid 驗證金鑰。"
-    aws_sns_topic_arn_allowlist: "允許傳送 Amazon SES 退信 Webhook 通知的 SNS 主題 ARN。"
     mailjet_webhook_token: "用來驗證 Webhook 承載資料的權杖。必須以 Webhook 的「t」查詢參數傳遞，例如：https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "用來驗證 Webhook 承載資料的權杖。必須以 Webhook 的「t」查詢參數傳遞，例如：https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "用來驗證 Webhook 訊息的 Mandrill 驗證金鑰。"
@@ -2443,7 +2441,6 @@ zh_TW:
     enable_names: "在使用者的個人資料、使用者卡片和電子郵件中顯示使用者的全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在貼文中顯示使用者的全名以及他們的使用者名。"
     show_time_gap_days: "如果兩個貼文間隔此天數，在主題中顯示時間間隔。"
-    short_progress_text_threshold: "當一個主題的貼文數量超過此數值后，進度條將只顯示當前貼文數量。如果更改進度條的寬度，則可能需要更改此值。"
     default_code_lang: "套用至 Markdown 程式碼區塊的預設程式語言語法醒目提示（auto、text、ruby、python 等）。此值也必須存在於 {{setting:highlighted_languages}} 網站設定中。"
     autohighlight_all_code: "對以 HTML 撰寫的 &lt;code&gt; 區塊套用語法醒目提示，即使未指定語言。若要設定以 Markdown 撰寫的程式碼區塊，請使用 {{setting:default_code_lang}} 設定。"
     highlighted_languages: "包含的語法醒目提示規則。（警告：包含太多語言可能影響效能）示範請參閱：<a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"

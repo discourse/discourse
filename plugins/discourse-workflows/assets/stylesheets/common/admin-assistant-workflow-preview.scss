@@ -159,6 +159,13 @@
     padding: var(--space-3) var(--space-4);
   }
 
+  &__notice {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+  }
+
   &__fallback {
     color: var(--primary-high);
     margin: 0;

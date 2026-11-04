@@ -39,6 +39,7 @@ declare const categoryList: CategoryList;
 declare const html: TrustedHTML;
 declare const user: User;
 declare const options: NavItemOptions;
+declare const siteSettings: NonNullable<NavItemOptions["siteSettings"]>;
 declare const api: Parameters<Parameters<typeof withPluginApi>[0]>[0];
 
 /* Store registration: every spelling callers use resolves to the class. */
@@ -112,7 +113,6 @@ expectTypeOf(TopicList.topicsFrom(store, list)).toEqualTypeOf<
 TopicList.topicsFrom(store, list, { listKey: "shared_drafts" });
 TopicList.hideUniformCategory(list, category);
 TopicList.hideUniformCategory(list, undefined);
-expectTypeOf(TopicList.find("latest", {})).resolves.toEqualTypeOf<TopicList>();
 
 /* Topic posters and participants are hydrated by the list. */
 
@@ -140,9 +140,11 @@ expectTypeOf(
 ).toEqualTypeOf<NavItem | null>();
 NavItem.fromText("latest");
 expectTypeOf(
-  NavItem.buildList(category, { noSubcategories: true })
+  NavItem.buildList(category, { noSubcategories: true, siteSettings })
 ).toEqualTypeOf<NavItem[]>();
-NavItem.buildList(undefined);
+NavItem.buildList(undefined, { siteSettings });
+// @ts-expect-error buildList needs siteSettings
+NavItem.buildList(category, { noSubcategories: true });
 expectTypeOf(
   NavItem.pathFor("latest", { category, noSubcategories: true })
 ).toEqualTypeOf<string>();
@@ -225,7 +227,6 @@ expectTypeOf(categoryList.parentCategory).toEqualTypeOf<
 >();
 // Only the combined categories-and-topics page supplies topics.
 expectTypeOf(categoryList.topics).toEqualTypeOf<Topic[] | undefined>();
-expectTypeOf(categoryList.categories).toEqualTypeOf<Category[]>();
 expectTypeOf(categoryList.loadMore()).resolves.toEqualTypeOf<void>();
 
 /* Subclasses keep their own factories. */
@@ -341,7 +342,7 @@ const descriptor: NavigationBarItem = {
   },
 };
 api.addNavigationBarItem(descriptor);
-NavItem.buildList(category, options);
+NavItem.buildList(category, { ...options, siteSettings });
 
 /* No any leaks. */
 
@@ -375,5 +376,4 @@ expectTypeOf<OwnAnyKeys<CategoryList, EmberObject>>().toEqualTypeOf<never>();
 // Existing JS fixtures and factories use ID-only parent contexts.
 CategoryList.categoriesFrom(store, {}, { id: 1 });
 CategoryList.list(store, { id: 1 });
-CategoryList.listForParent(store, { id: 1 });
 CategoryList.create({ parentCategory: { id: 1 } });

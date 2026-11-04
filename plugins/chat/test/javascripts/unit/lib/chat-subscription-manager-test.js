@@ -271,6 +271,44 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.strictEqual(message.deletedAt, "2026-03-11T10:00:00.000Z");
     assert.false(message.expanded);
   });
+
+  for (const [label, build] of [
+    ["channel", (channel) => [channel, ChatChannelSubscriptionManager]],
+    [
+      "thread",
+      (channel, fabricators) => [
+        fabricators.thread({ channel }),
+        ChatChannelThreadSubscriptionManager,
+      ],
+    ],
+  ]) {
+    test(`${label} manager notifies before removing a message deleted for this user`, function (assert) {
+      const channel = this.fabricators.channel();
+      const [model, Manager] = build(channel, this.fabricators);
+      const message = this.fabricators.message({
+        channel,
+        user: { id: 2, username: "other_user" },
+      });
+      model.messagesManager.addMessages([message]);
+
+      const onRemoveMessage = sinon.spy((removed) =>
+        assert.true(
+          model.messagesManager.messages.includes(removed),
+          "still in the list when notified"
+        )
+      );
+      const manager = new Manager(this, model, { onRemoveMessage });
+      manager.currentUser = { id: 1, staff: false };
+
+      manager.handleDeleteMessage({
+        deleted_id: message.id,
+        deleted_at: "2026-03-11T10:00:00.000Z",
+      });
+
+      assert.true(onRemoveMessage.calledOnceWith(message));
+      assert.strictEqual(model.messagesManager.messages.length, 0);
+    });
+  }
 });
 
 function buildChatMessagePayload({ id, uploads }) {

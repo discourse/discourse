@@ -799,7 +799,6 @@ el:
     dsa_statements:
       category: "Κατηγορία"
       category_prompt: "Επιλέξτε κατηγορία"
-      saving: "Αποθηκεύεται"
     review:
       show_more: "Δείτε περισσότερα"
       show_less: "Δείξε λιγότερα"

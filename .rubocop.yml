@@ -5,9 +5,6 @@ inherit_mode:
   merge:
     - Exclude
 
-AllCops:
-  TargetRubyVersion: "4.0"
-
 Layout/EmptyLineBetweenDefs:
   Enabled: true
 

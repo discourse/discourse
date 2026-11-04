@@ -2320,7 +2320,6 @@ es:
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y correos electrónicos. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
-    short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
     highlighted_languages: "Incluye reglas de resaltado sintáctico. (Advertencia: incluir demasiados idiomas puede afectar al rendimiento) ver: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> para ver una demostración"
     show_copy_button_on_codeblocks: "Añadir un botón para copiar el contenido de los bloques de código al portapapeles."
     embed_any_origin: "Permitir la inserción de contenido sin importar su origen. Esto se requiere para aplicaciones móviles con HTML estático."

@@ -180,7 +180,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
         context "when the dsa_reporting_enabled site setting is enabled" do
           before do
-            SiteSetting.dsa_reporting_enabled = true
+            enable_dsa_reporting
             SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
           end
 
@@ -653,7 +653,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
   describe "#perform" do
     it "retains the classified decision when account deletion removes the queued review" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       recipient = Fabricate(:user)
       queued =
         Fabricate(
@@ -695,7 +695,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve_post handles the queued post reviewable" do

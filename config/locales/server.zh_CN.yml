@@ -1931,7 +1931,6 @@ zh_CN:
       email_polling_errored_recently:
         other: "电子邮件轮询在过去 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>了解更多详细信息。"
       missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
-      missing_aws_sns_topic_arn: "服务器已配置为通过 Amazon SES 发送电子邮件，但您尚未将任何 SNS 话题 ARN 添加到允许列表中。在您将合法的 ARN 添加到 <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a> 之前，退信通知将被拒绝。"
       qq_mail_smtp: "您的 SMTP 服务器 (%{smtp_address}) 已知会导致 Discourse 发送重复电子邮件。QQ 邮件无法返回正确的确认信息，导致 Discourse 重试已成功发送的邮件。 <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>请参阅推荐的替代方案</a>。"
       bad_favicon_url: "网站图标无法加载。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的网站图标设置。"
       poll_pop3_timeout: "连接到 POP3 服务器超时。无法检索收到的电子邮件。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务提供商。"
@@ -2513,7 +2512,6 @@ zh_CN:
     ignore_by_title_regex: "使用正则表达式根据邮件标题忽略收到的邮件。"
     mailgun_api_key: "用于验证网络钩子消息的 Mailgun Secret API 密钥。"
     sendgrid_verification_key: "用于验证网络钩子消息的 Sendgrid 验证密钥。"
-    aws_sns_topic_arn_allowlist: "SNS 话题 ARN 允许发送Amazon SES 退回网络钩子通知。"
     mailjet_webhook_token: "用于验证网络钩子负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "用于验证网络钩子有效负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "用于验证网络钩子消息的 Mandrill 身份验证密钥。"
@@ -2641,7 +2639,6 @@ zh_CN:
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
-    short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
     default_code_lang: "应用于 Markdown 代码块（auto、text、ruby、python 等）的默认编程语言语法高亮显示。此值还必须存在于 {{setting:highlighted_languages}}` 站点设置中。"
     autohighlight_all_code: "向使用 HTML 编写的 &lt;code&gt; 块应用语法高亮显示，即使这些代码块未指定语言。要配置使用 Markdown 编写的代码块，请使用 {{setting:default_code_lang}} 设置。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含过多语言可能会影响性能）请参阅 <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> 获取演示"

@@ -1017,7 +1017,6 @@ uk:
     dsa_statements:
       category: "Категорія"
       category_prompt: "Оберіть категорію"
-      saving: "Збереження"
     review:
       show_more: "Показати більше"
       show_less: "Показати менше"

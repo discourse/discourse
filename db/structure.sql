@@ -917,10 +917,11 @@ CREATE TABLE public.ai_moderation_settings (
     id bigint NOT NULL,
     setting_type public.ai_moderation_setting_type NOT NULL,
     data jsonb DEFAULT '{}'::jsonb,
-    llm_model_id bigint NOT NULL,
+    llm_model_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    ai_agent_id bigint DEFAULT '-31'::integer NOT NULL
+    ai_agent_id bigint DEFAULT '-31'::integer NOT NULL,
+    decision_model_id bigint
 );
 
 
@@ -1038,7 +1039,7 @@ ALTER SEQUENCE public.ai_secrets_id_seq OWNED BY public.ai_secrets.id;
 CREATE TABLE public.ai_spam_logs (
     id bigint NOT NULL,
     post_id bigint NOT NULL,
-    llm_model_id bigint NOT NULL,
+    llm_model_id bigint,
     ai_api_audit_log_id bigint,
     reviewable_id bigint,
     is_spam boolean NOT NULL,
@@ -1046,7 +1047,9 @@ CREATE TABLE public.ai_spam_logs (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     error character varying(3000),
-    reason text
+    reason text,
+    decision_model_id bigint,
+    spam_probability double precision
 );
 
 
@@ -1377,6 +1380,45 @@ CREATE SEQUENCE public.api_keys_id_seq
 --
 
 ALTER SEQUENCE public.api_keys_id_seq OWNED BY public.api_keys.id;
+
+
+--
+-- Name: appearance_changes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.appearance_changes (
+    id bigint NOT NULL,
+    kind integer NOT NULL,
+    name character varying NOT NULL,
+    theme_id integer NOT NULL,
+    light_color_scheme_id integer NOT NULL,
+    dark_color_scheme_id integer NOT NULL,
+    site_settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    previous_state jsonb DEFAULT '{}'::jsonb NOT NULL,
+    user_id integer NOT NULL,
+    activated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: appearance_changes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.appearance_changes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: appearance_changes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.appearance_changes_id_seq OWNED BY public.appearance_changes.id;
 
 
 --
@@ -3421,6 +3463,37 @@ CREATE SEQUENCE public.chat_channels_id_seq
 --
 
 ALTER SEQUENCE public.chat_channels_id_seq OWNED BY public.chat_channels.id;
+
+
+--
+-- Name: chat_discoverable_bots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chat_discoverable_bots (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chat_discoverable_bots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chat_discoverable_bots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chat_discoverable_bots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chat_discoverable_bots_id_seq OWNED BY public.chat_discoverable_bots.id;
 
 
 --
@@ -14502,6 +14575,13 @@ ALTER TABLE ONLY public.api_keys ALTER COLUMN id SET DEFAULT nextval('public.api
 
 
 --
+-- Name: appearance_changes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.appearance_changes ALTER COLUMN id SET DEFAULT nextval('public.appearance_changes_id_seq'::regclass);
+
+
+--
 -- Name: application_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14821,6 +14901,13 @@ ALTER TABLE ONLY public.chat_channel_custom_fields ALTER COLUMN id SET DEFAULT n
 --
 
 ALTER TABLE ONLY public.chat_channels ALTER COLUMN id SET DEFAULT nextval('public.chat_channels_id_seq'::regclass);
+
+
+--
+-- Name: chat_discoverable_bots id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_discoverable_bots ALTER COLUMN id SET DEFAULT nextval('public.chat_discoverable_bots_id_seq'::regclass);
 
 
 --
@@ -17093,6 +17180,14 @@ ALTER TABLE ONLY public.api_keys
 
 
 --
+-- Name: appearance_changes appearance_changes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.appearance_changes
+    ADD CONSTRAINT appearance_changes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: application_requests application_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17490,6 +17585,14 @@ ALTER TABLE ONLY public.chat_channel_custom_fields
 
 ALTER TABLE ONLY public.chat_channels
     ADD CONSTRAINT chat_channels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chat_discoverable_bots chat_discoverable_bots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_discoverable_bots
+    ADD CONSTRAINT chat_discoverable_bots_pkey PRIMARY KEY (id);
 
 
 --
@@ -21552,6 +21655,13 @@ CREATE INDEX index_api_keys_on_user_id ON public.api_keys USING btree (user_id);
 
 
 --
+-- Name: index_appearance_changes_on_theme_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_appearance_changes_on_theme_id ON public.appearance_changes USING btree (theme_id);
+
+
+--
 -- Name: index_application_requests_on_date_and_req_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22018,6 +22128,13 @@ CREATE UNIQUE INDEX index_chat_channels_on_slug ON public.chat_channels USING bt
 --
 
 CREATE INDEX index_chat_channels_on_status ON public.chat_channels USING btree (status);
+
+
+--
+-- Name: index_chat_discoverable_bots_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_chat_discoverable_bots_on_user_id ON public.chat_discoverable_bots USING btree (user_id);
 
 
 --
@@ -26518,12 +26635,15 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261104011110'),
 ('20261102174233'),
 ('20261030215104'),
+('20261030183551'),
 ('20261030180958'),
 ('20261029021723'),
 ('20261028093149'),
 ('20261028093146'),
+('20261026214816'),
 ('20261021180718'),
 ('20261021180714'),
 ('20261021063131'),

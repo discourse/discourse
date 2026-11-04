@@ -26,18 +26,23 @@ sl:
         badge:
           draft: Osnutek
         preview: Predogled
-        publish: Objavi
-        options: Možnosti
         change:
           title: naziv
       review:
-        active: Aktivni
+        copy: Kopiraj
+        open: Odpri
+        status:
+          active: Aktivni
+          expired: Poteklo
+          revoked: Preklican
+          inactive: Nedejaven
+        closed_on: "Zaprto %{date}"
+        revoke: Odstrani
         message: Povratna informacija
       editor_table:
         edit: Uredi
         status: Status
         replies: Odgovori
       drafts: Osnutki
-      private_draft: Osnutek
       preview: Predogled
       appearance_link: Videz

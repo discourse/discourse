@@ -893,7 +893,6 @@ ru:
     dsa_statements:
       category: "Категория"
       category_prompt: "Выберите раздел"
-      saving: "Сохранение…"
     review:
       show_more: "Развернуть"
       show_less: "Свернуть"

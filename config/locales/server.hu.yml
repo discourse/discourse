@@ -2302,7 +2302,6 @@ hu:
     enable_names: "Mutassa meg a felhasználó teljes nevét a profilján, felhasználói kártyáján és e-mailjeiben. Kapcsolja ki a teljes név elrejtését mindenhol."
     display_name_on_posts: "A felhasználó teljes nevének megjelenítése a bejegyzéseiben a @felhasználónév mellett."
     show_time_gap_days: "Ha két bejegyzés ennyi nap eltéréssel készül, jelenítse meg az időbeli eltérést a témában."
-    short_progress_text_threshold: "Miután egy témában a bejegyzések száma meghaladja ezt a számot, a folyamatjelző sáv csak az aktuális bejegyzés számát mutatja. Ha módosítja a folyamatjelző sáv szélességét, előfordulhat, hogy módosítania kell ezt az értéket."
     highlighted_languages: "Tartalmazza a szintaxis kiemelési szabályokat. (Figyelem: túl sok nyelv használata befolyásolhatja a teljesítményt) lásd: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> a bemutatóért"
     show_copy_button_on_codeblocks: "Adjon hozzá egy gombot a kódblokkokhoz, hogy a blokk tartalmát a felhasználó vágólapjára másolja."
     embed_any_origin: "Beágyazható tartalom engedélyezése származástól függetlenül. Ez szükséges a statikus HTML-kóddal rendelkező mobilalkalmazásokhoz."

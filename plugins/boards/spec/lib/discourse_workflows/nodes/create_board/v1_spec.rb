@@ -211,7 +211,10 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
         execute_node(configuration.merge("actor_username" => user.username))
       }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.create_board.forbidden"),
+        I18n.t(
+          "discourse_workflows.errors.create_board.forbidden",
+          policy_reason: I18n.t("boards.errors.board_create_forbidden"),
+        ),
       )
     end.not_to change { Boards::Board.count }
   end

@@ -32,21 +32,26 @@ fr:
         badge:
           draft: Brouillon
         preview: Aperçu
-        publish: Publier
-        options: Options
         change:
           title: titre
           body: corps
       review:
-        copy: Copier le lien
-        active: Actif
+        create: Créer un lien
+        copy: Copie
+        open: Ouvert
+        status:
+          active: Actif
+          expired: Expiré
+          revoked: Révoquée
+          inactive: Inactif
+        closed_on: "A fermé ce sujet (%{date})"
+        revoke: Révoquer
         message: Commentaires
       editor_table:
         edit: Modifier
         status: Statut
         replies: Réponses
       drafts: Brouillons
-      private_draft: Brouillon
       preview: Aperçu
       unpublish: Annuler la publication
       appearance_link: Apparence

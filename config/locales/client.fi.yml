@@ -690,7 +690,6 @@ fi:
     dsa_statements:
       category: "Luokka"
       category_prompt: "Valitse alue"
-      saving: "Tallennetaan…"
     review:
       show_more: "Näytä lisää"
       show_less: "Näytä vähemmän"

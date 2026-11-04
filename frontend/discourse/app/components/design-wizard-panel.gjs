@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import DesignWizardControls, {
   STEPS,
 } from "discourse/components/design-wizard/controls";
+import htmlClass from "discourse/helpers/html-class";
 import { isTesting } from "discourse/lib/environment";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
@@ -19,6 +20,15 @@ export default class DesignWizardPanel extends Component {
   @service dialog;
 
   element;
+
+  get collapsed() {
+    return this.designWizard.docked && this.designWizard.minimized;
+  }
+
+  // docked, the minimized panel stays on screen as a rail instead
+  get hidden() {
+    return this.designWizard.minimized && !this.designWizard.docked;
+  }
 
   get stepProgress() {
     return i18n("design_wizard.step_progress", {
@@ -110,27 +120,59 @@ export default class DesignWizardPanel extends Component {
 
   <template>
     {{#if this.designWizard.active}}
+      {{#if this.designWizard.docked}}
+        {{htmlClass
+          "design-wizard-docked"
+          (if this.collapsed "design-wizard-collapsed")
+        }}
+      {{/if}}
       <aside
-        aria-hidden={{if this.designWizard.minimized "true"}}
+        aria-hidden={{if this.hidden "true"}}
         aria-labelledby="design-wizard-title"
         class={{dConcatClass
           "design-wizard"
           (unless this.designWizard.animateEntrance "--no-entrance")
           (if this.designWizard.applyingTheme "--busy")
-          (if this.designWizard.minimized "--minimized")
+          (if this.designWizard.docked "--docked")
+          (if this.collapsed "--collapsed")
+          (if this.hidden "--minimized")
         }}
         id="design-wizard-panel"
-        inert={{this.designWizard.minimized}}
+        inert={{this.hidden}}
         ...attributes
         {{didInsert this.registerElement}}
       >
+        {{#if this.collapsed}}
+          <DButton
+            aria-controls="design-wizard-panel"
+            class="btn-transparent design-wizard__expand"
+            @action={{this.restore}}
+            @ariaExpanded={{false}}
+            @title="design_wizard.expand"
+            {{dAutoFocus}}
+          >
+            {{dIcon "angles-left"}}
+            <span class="design-wizard__expand-label">
+              <span>{{i18n "design_wizard.title"}}</span>
+              {{#unless this.designWizard.showIntro}}
+                <span class="design-wizard__expand-progress">
+                  {{this.stepProgress}}
+                </span>
+              {{/unless}}
+            </span>
+          </DButton>
+        {{/if}}
         <div class="design-wizard__panel-actions">
           <DButton
             class="btn-transparent design-wizard__minimize"
             @action={{this.minimize}}
             @disabled={{this.designWizard.applyingTheme}}
-            @icon="minus"
-            @title="design_wizard.minimize"
+            @icon={{if this.designWizard.docked "angles-right" "minus"}}
+            @title={{if
+              this.designWizard.docked
+              "design_wizard.collapse"
+              "design_wizard.minimize"
+            }}
           />
           <DButton
             class="btn-transparent design-wizard__close"
@@ -141,7 +183,7 @@ export default class DesignWizardPanel extends Component {
         </div>
         <DesignWizardControls />
       </aside>
-      {{#if this.designWizard.minimized}}
+      {{#if this.hidden}}
         <DButton
           aria-controls="design-wizard-panel"
           class="btn-default design-wizard__restore"

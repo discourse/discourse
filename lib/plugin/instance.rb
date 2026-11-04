@@ -448,6 +448,14 @@ class Plugin::Instance
     end
   end
 
+  # Accept a scalar bot[<param_name>] when admins create a bot. The callback receives the bot
+  # and the value inside the creation transaction; raising rolls the creation back.
+  def register_bot_creation_param(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.bot_creation_params[param_name] = { plugin:, callback: }
+    end
+  end
+
   def register_upload_unused(&block)
     Upload.add_unused_callback(&block)
   end
@@ -830,6 +838,26 @@ class Plugin::Instance
   # Call `SvgSprite.expire_cache` when the underlying data changes.
   def register_svg_icon_source(&block)
     DiscoursePluginRegistry.register_svg_icon_source(block, self)
+  end
+
+  # Registers a source of extra SVG symbols, such as icons stored in the
+  # database. Unlike the sprites in a plugin's `svg-icons` directory, a symbol
+  # is only added to the SVG sprite when one of the sprite's icons uses it.
+  #
+  # The source must respond to:
+  #
+  # - `symbols(icon_ids)`, returning a hash of the requested names it has to
+  #   their `<symbol>` markup.
+  # - `search_icon_ids(keyword, limit:)`, returning up to `limit` of its icon
+  #   names that contain `keyword`, ignoring case, sorted in byte order. The
+  #   keyword is blank when the icon picker lists every icon.
+  #
+  # Both are called while the sprite is built or searched, so they must not run
+  # at boot, and their results are scoped to the current site.
+  #
+  # Call `SvgSprite.expire_cache` when the underlying data changes.
+  def register_svg_symbol_source(source)
+    DiscoursePluginRegistry.register_svg_symbol_source(source, self)
   end
 
   def extend_content_security_policy(extension)

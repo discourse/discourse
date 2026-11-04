@@ -11,6 +11,11 @@ import { confirmMeshPrivacy } from "../../components/modal/live-mesh-privacy-war
 import { reportMicAcquisitionFailure } from "../../components/modal/live-mic-permission.gjs";
 import AudioMonitor from "../../lib/live/audio-monitor.js";
 import { RING_SECONDS } from "../../lib/live/call-constants.js";
+import {
+  collectLocalInfo,
+  collectPeers,
+  probeIceServers,
+} from "../../lib/live/connection-diagnostics.js";
 import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
 import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
 import { consumePendingInviteRef } from "../../lib/live/invite-ref.js";
@@ -737,6 +742,37 @@ export default class LiveWebrtcService extends Service {
 
   isLivekitRoom(roomId) {
     return this.#roomTransports.get(roomId) === "livekit";
+  }
+
+  // Peer-level diagnostics only exist for mesh rooms; in SFU rooms the single
+  // server connection is owned by the SFU client library.
+  canDiagnoseConnection(roomId) {
+    return (
+      this.connectionStateFor(roomId) === "connected" &&
+      this.#isMeshRoom(roomId)
+    );
+  }
+
+  async connectionDiagnostics(roomId) {
+    const room = this.liveRooms.roomById(roomId);
+    return {
+      room,
+      transport: this.#roomTransports.get(roomId) ?? "mesh",
+      iceTransportPolicy: this.iceTransportPolicy,
+      local: collectLocalInfo(this.localStream),
+      peers: await collectPeers({
+        room,
+        currentUserId: this.currentUser?.id,
+        peerManager: this.#peerManager,
+        shouldMaintainPeer: (userId) =>
+          this.#meshSignals.shouldMaintainPeerConnection(roomId, userId),
+      }),
+      collectedAt: Date.now(),
+    };
+  }
+
+  probeIceServers() {
+    return probeIceServers(this.iceServers);
   }
 
   async join(room) {

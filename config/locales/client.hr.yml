@@ -751,7 +751,6 @@ hr:
         placeholder: "ovdje upišite naslov poruke, URL ili id"
     dsa_statements:
       category: "Kategorija"
-      saving: "Spremanje…"
     review:
       show_more: "Prikaži više"
       show_less: "Prikaži manje"

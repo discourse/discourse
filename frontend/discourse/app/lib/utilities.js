@@ -329,18 +329,6 @@ export function determinePostReplaceSelection({
   }
 }
 
-export function safariHacksDisabled() {
-  deprecated(
-    "`safariHacksDisabled()` is deprecated, it now always returns `false`",
-    {
-      since: "2.8.0.beta8",
-      id: "discourse.safari-hacks-disabled",
-    }
-  );
-
-  return false;
-}
-
 const toArray = (items) => {
   items = items || [];
 

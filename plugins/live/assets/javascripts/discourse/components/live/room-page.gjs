@@ -6,10 +6,11 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { cancel, next } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { isTesting } from "discourse/lib/environment";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
@@ -20,6 +21,7 @@ import { i18n } from "discourse-i18n";
 import {
   toggleFullscreen,
   trackFullscreen,
+  trackFullscreenWithin,
 } from "../../lib/live/fullscreen.js";
 import { activeRingingEntries } from "../../lib/live/ringing.js";
 import { speakQueue } from "../../lib/live/speak-queue.js";
@@ -28,6 +30,7 @@ import {
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveCallControls from "./call-controls.gjs";
@@ -48,8 +51,35 @@ const SUBMENU = "live-call-submenu";
 const ROOM_PATH_PREFIX = "/live/r/";
 
 const MOBILE_VIDEO_TILE_BUDGET = 4;
+const LAYOUT_AUTO = "auto";
 const LAYOUT_PRESENTATION = "presentation";
 const LAYOUT_TILED = "tiled";
+const LAYOUT_VIDEO_WAIT_MS = 300;
+
+/**
+ * Resolves once every video under `element` has a frame, or after `timeout`
+ * ms, so a layout animation never flies empty tiles around.
+ */
+function videoFramesReady(element, timeout) {
+  const pending = [...element.querySelectorAll("video")].filter(
+    (video) => video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA
+  );
+  if (!pending.length) {
+    return Promise.resolve();
+  }
+
+  return Promise.race([
+    Promise.all(
+      pending.map(
+        (video) =>
+          new Promise((resolve) =>
+            video.addEventListener("loadeddata", resolve, { once: true })
+          )
+      )
+    ),
+    new Promise((resolve) => setTimeout(resolve, timeout)),
+  ]);
+}
 
 export default class LiveRoomPage extends Component {
   @service capabilities;
@@ -65,11 +95,19 @@ export default class LiveRoomPage extends Component {
   @tracked gridHeight = 0;
   @tracked gridGap = 0;
   @tracked gridFullscreen = false;
+  @tracked fullscreenWithin = false;
   // Stage rooms mirror a workshop: chat panel open, presenter featured.
   @tracked chatOpen = !!this.args.openChat || this.#isStageRoom;
   @tracked chatClosing = false;
-  @tracked layoutMode = this.#isStageRoom ? LAYOUT_PRESENTATION : LAYOUT_TILED;
+  @tracked layoutMode = LAYOUT_AUTO;
   @tracked spotlightParticipantId = null;
+
+  /**
+   * What the stage renders. It trails the resolved values so followLayout can
+   * animate from the old arrangement; the template must read these.
+   */
+  @tracked shownLayout = this.resolvedLayout;
+  @tracked shownFeaturedId = this.featuredParticipantId;
 
   // Ring windows expire by wall clock, which nothing tracked observes — a
   // coarse ticker re-evaluates them so "Calling…" tiles disappear on time.
@@ -78,6 +116,7 @@ export default class LiveRoomPage extends Component {
   gridElement = null;
   trackGridSize = trackGridSize;
   trackFullscreen = trackFullscreen;
+  trackFullscreenWithin = trackFullscreenWithin;
   #chatCloseFallback = null;
   #ringingTicker = null;
 
@@ -144,14 +183,21 @@ export default class LiveRoomPage extends Component {
       : MOBILE_VIDEO_TILE_BUDGET;
     const videoParticipantIds = new Set();
 
+    // Whoever can take the stage gets live video first, so a featured feed is
+    // never demoted to an avatar by cameras earlier in the roster.
     const spotlightParticipant = this.participants.find(
       (participant) => participant.id === this.spotlightParticipantId
     );
-    if (spotlightParticipant && this.#isPublishing(spotlightParticipant)) {
-      videoParticipantIds.add(spotlightParticipant.id);
-    }
+    const prioritized = [
+      spotlightParticipant,
+      ...this.remoteScreenSharers,
+      ...this.participants,
+    ];
 
-    for (const participant of this.participants) {
+    for (const participant of prioritized) {
+      if (!participant) {
+        continue;
+      }
       if (videoParticipantIds.size >= budget) {
         break;
       }
@@ -175,9 +221,23 @@ export default class LiveRoomPage extends Component {
     return activeRingingEntries(this.room, this.ringingClock);
   }
 
-  get presentationTile() {
+  /**
+   * Excludes your own share: featuring it to yourself mirrors the screen back
+   * into itself.
+   */
+  get remoteScreenSharers() {
+    return this.participants.filter(
+      (participant) =>
+        participant.is_screen_sharing && participant.id !== this.currentUser?.id
+    );
+  }
+
+  get featuredTile() {
     return (
       this.tiles.find((tile) => tile.spotlighted) ??
+      this.tiles.find(
+        (tile) => tile.participant.is_screen_sharing && !tile.isSelf
+      ) ??
       this.tiles.find((tile) => tile.participant.is_screen_sharing) ??
       this.tiles.find((tile) => tile.showVideo && !tile.isSelf) ??
       this.tiles.find((tile) => tile.showVideo) ??
@@ -185,6 +245,24 @@ export default class LiveRoomPage extends Component {
         ["moderator", "speaker"].includes(tile.participant.role)
       ) ??
       this.tiles[0]
+    );
+  }
+
+  get featuredParticipantId() {
+    if (this.resolvedLayout !== LAYOUT_PRESENTATION) {
+      return null;
+    }
+    return this.featuredTile?.participant.id ?? null;
+  }
+
+  /**
+   * Stays on the outgoing participant while a change waits to animate, so the
+   * stage is not swapped underneath the old view.
+   */
+  get presentationTile() {
+    return (
+      this.tiles.find((tile) => tile.participant.id === this.shownFeaturedId) ??
+      this.featuredTile
     );
   }
 
@@ -211,15 +289,46 @@ export default class LiveRoomPage extends Component {
     return this.tiles.filter((tile) => tile.participant.id !== pipId);
   }
 
+  get autoLayout() {
+    return this.layoutMode === LAYOUT_AUTO;
+  }
+
+  /**
+   * The layout the room should show. Auto features a stage room's presenter, a
+   * pinned participant, or another participant's screen share.
+   */
+  get resolvedLayout() {
+    if (!this.autoLayout) {
+      return this.layoutMode;
+    }
+
+    if (this.#isStageRoom || this.spotlightParticipantId) {
+      return LAYOUT_PRESENTATION;
+    }
+
+    return this.remoteScreenSharers.length ? LAYOUT_PRESENTATION : LAYOUT_TILED;
+  }
+
   get tiledLayout() {
-    return this.layoutMode === LAYOUT_TILED;
+    return this.shownLayout === LAYOUT_TILED;
   }
 
   get presentationLayout() {
-    return this.layoutMode === LAYOUT_PRESENTATION;
+    return this.shownLayout === LAYOUT_PRESENTATION;
+  }
+
+  get #animatesLayout() {
+    return (
+      typeof document.startViewTransition === "function" &&
+      !isTesting() &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
   }
 
   get layoutIcon() {
+    if (this.autoLayout) {
+      return "wand-magic-sparkles";
+    }
     return this.presentationLayout ? "person-chalkboard" : "table-cells";
   }
 
@@ -298,17 +407,59 @@ export default class LiveRoomPage extends Component {
       : i18n("live.transcript.draft_topic");
   }
 
+  get canDiagnoseConnection() {
+    return this.liveWebrtc.canDiagnoseConnection(this.room?.id);
+  }
+
   @action
   toggleSpotlight(participantId) {
     this.spotlightParticipantId =
       this.spotlightParticipantId === participantId ? null : participantId;
-    this.layoutMode = LAYOUT_PRESENTATION;
+
+    // Auto already features a pinned participant and falls back once they are
+    // unpinned; only a fixed tiled layout needs switching.
+    if (this.layoutMode === LAYOUT_TILED) {
+      this.layoutMode = LAYOUT_PRESENTATION;
+    }
   }
 
   @action
   setLayoutMode(layoutMode) {
     this.spotlightParticipantId = null;
     this.layoutMode = layoutMode;
+  }
+
+  /**
+   * Moves the stage to the resolved layout, gliding each tile to its new spot
+   * where view transitions are supported.
+   */
+  @action
+  followLayout(element) {
+    // Re-rendering the stage would unmount whatever is fullscreen and drop the
+    // viewer out of it, so changes wait until fullscreen ends.
+    if (
+      this.fullscreenWithin ||
+      (this.shownLayout === this.resolvedLayout &&
+        this.shownFeaturedId === this.featuredParticipantId)
+    ) {
+      return;
+    }
+
+    if (!this.#animatesLayout) {
+      this.#showResolvedLayout();
+      return;
+    }
+
+    document.startViewTransition(async () => {
+      if (this.isDestroying) {
+        return;
+      }
+      // Read again: the layout may have moved on before the old view was
+      // captured.
+      this.#showResolvedLayout();
+      await new Promise((resolve) => schedule("afterRender", resolve));
+      await videoFramesReady(element, LAYOUT_VIDEO_WAIT_MS);
+    });
   }
 
   @action
@@ -365,6 +516,11 @@ export default class LiveRoomPage extends Component {
 
       this.liveWebrtc.setWatching(this.args.room.id, true);
     });
+  }
+
+  @action
+  setFullscreenWithin(isFullscreen) {
+    this.fullscreenWithin = isFullscreen;
   }
 
   @action
@@ -460,6 +616,14 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
+  openConnectionDiagnostics(closeMenu) {
+    closeMenu?.();
+    this.modal.show(LiveConnectionDiagnosticsModal, {
+      model: { room: this.room },
+    });
+  }
+
+  @action
   openRoomInfo(closeMenu) {
     closeMenu?.();
     this.modal.show(LiveRoomInfoModal, { model: { room: this.room } });
@@ -502,20 +666,31 @@ export default class LiveRoomPage extends Component {
       ROOM_MENU,
       [
         {
+          id: LAYOUT_AUTO,
+          label: i18n("live.video.layout_auto"),
+          icon: "wand-magic-sparkles",
+          selected: this.autoLayout,
+        },
+        {
           id: LAYOUT_PRESENTATION,
           label: i18n("live.video.layout_presentation"),
           icon: "person-chalkboard",
-          selected: this.presentationLayout,
+          selected: this.layoutMode === LAYOUT_PRESENTATION,
         },
         {
           id: LAYOUT_TILED,
           label: i18n("live.video.layout_tiled"),
           icon: "table-cells",
-          selected: this.tiledLayout,
+          selected: this.layoutMode === LAYOUT_TILED,
         },
       ],
       this.setLayoutMode
     );
+  }
+
+  #showResolvedLayout() {
+    this.shownLayout = this.resolvedLayout;
+    this.shownFeaturedId = this.featuredParticipantId;
   }
 
   #isPublishing(participant) {
@@ -559,6 +734,13 @@ export default class LiveRoomPage extends Component {
       {{didInsert this.watchRoom}}
       {{didInsert this.autoJoinIfRequested}}
       {{didUpdate this.reconcileSpotlight this.participants}}
+      {{didUpdate
+        this.followLayout
+        this.resolvedLayout
+        this.featuredParticipantId
+        this.fullscreenWithin
+      }}
+      {{this.trackFullscreenWithin this.setFullscreenWithin}}
     >
 
       <div class="live-room-page__main">
@@ -574,6 +756,7 @@ export default class LiveRoomPage extends Component {
               <div class="live-room-page__presentation">
                 <div class="live-room-page__presentation-main">
                   <LiveVideoTile
+                    @animatesLayout={{true}}
                     @isSelf={{this.presentationTile.isSelf}}
                     @onSpotlight={{this.toggleSpotlight}}
                     @participant={{this.presentationTile.participant}}
@@ -594,6 +777,7 @@ export default class LiveRoomPage extends Component {
                       as |tile|
                     }}
                       <LiveVideoTile
+                        @animatesLayout={{true}}
                         @isSelf={{tile.isSelf}}
                         @onSpotlight={{this.toggleSpotlight}}
                         @participant={{tile.participant}}
@@ -628,6 +812,7 @@ export default class LiveRoomPage extends Component {
                 <div class="live-room-page__tiles">
                   {{#each this.gridTiles key="participant.id" as |tile|}}
                     <LiveVideoTile
+                      @animatesLayout={{true}}
                       @isSelf={{tile.isSelf}}
                       @onSpotlight={{this.toggleSpotlight}}
                       @participant={{tile.participant}}
@@ -643,6 +828,7 @@ export default class LiveRoomPage extends Component {
                 {{#if this.pipTile}}
                   <LiveVideoTile
                     class="live-room-page__pip"
+                    @animatesLayout={{true}}
                     @isSelf={{this.pipTile.isSelf}}
                     @onSpotlight={{this.toggleSpotlight}}
                     @participant={{this.pipTile.participant}}
@@ -783,6 +969,19 @@ export default class LiveRoomPage extends Component {
                           />
                         </dropdown.item>
                       {{/if}}
+                    {{/if}}
+                    {{#if this.canDiagnoseConnection}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent live-connection-diagnostics-trigger"
+                          @action={{fn
+                            this.openConnectionDiagnostics
+                            roomMenu.close
+                          }}
+                          @icon="stethoscope"
+                          @label="live.connection_diagnostics.menu"
+                        />
+                      </dropdown.item>
                     {{/if}}
                     <dropdown.item>
                       <DButton

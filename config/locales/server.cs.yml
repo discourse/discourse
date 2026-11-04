@@ -2323,7 +2323,6 @@ cs:
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
     full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
     enable_names: "Zobrazení celého jména uživatele v jeho profilu, kartě uživatele a e-mailech. Zakázáním skryjete celé jméno všude."
-    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata budou skryta, dokud uživatel neodpoví."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
     slug_generation_method: "Vyberte metodu generování URL. 'encoded' vygeneruje řetězec se znaky procent. 'none' zakáže zkratky URL úplně."

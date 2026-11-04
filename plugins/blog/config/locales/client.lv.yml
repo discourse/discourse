@@ -22,12 +22,17 @@ lv:
     blog:
       panel:
         preview: Priekšskatījums
-        options: Opcijas
         change:
           title: virsraksts
           body: saturs
       review:
-        active: Aktīvs
+        copy: Kopēt
+        open: Atvērt
+        status:
+          active: Aktīvs
+          inactive: Neaktīvs
+        closed_on: "Slēdza %{date}"
+        revoke: Atsaukt
       editor_table:
         edit: Labot
         status: Statuss

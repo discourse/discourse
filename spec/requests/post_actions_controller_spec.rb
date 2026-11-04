@@ -104,7 +104,7 @@ RSpec.describe PostActionsController do
     end
 
     it "forbids illegal flags when DSA reporting is enabled" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       sign_in(user)
       target_post = Fabricate(:post, user: coding_horror)
       reviewable =

@@ -36,6 +36,10 @@ class LiveWebrtcStub extends Service {
     return "connected";
   }
 
+  canDiagnoseConnection() {
+    return false;
+  }
+
   videoAllowedIn() {
     return true;
   }
@@ -105,6 +109,16 @@ async function selectParticipantFromOpenMenu(owner) {
   await menuService.close(menu);
 }
 
+async function selectLayout(owner, layout) {
+  await click(".live-room-menu-trigger");
+  await click(".live-room-page__layout-trigger");
+  owner
+    .lookup("service:menu")
+    .getByIdentifier("live-call-submenu")
+    .options.data.onSelect(layout);
+  await settled();
+}
+
 module("Integration | Component | Live | RoomPage", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -155,6 +169,18 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
     };
 
     this.liveRooms.rooms = [this.room];
+
+    // Publishes a roster change the way the room service does, with a new
+    // room object, so tracked getters see it.
+    this.updateParticipant = (id, changes) => {
+      this.room = {
+        ...this.room,
+        active_participants: this.room.active_participants.map((participant) =>
+          participant.id === id ? { ...participant, ...changes } : participant
+        ),
+      };
+      this.liveRooms.rooms = [this.room];
+    };
   });
 
   test("defaults to the tiled layout with the layout switcher available", async function (assert) {
@@ -286,14 +312,7 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
     await click(".live-video-tile[data-user-id='3'] .live-video-tile__menu");
     await selectParticipantFromOpenMenu(this.owner);
     await settled();
-    await click(".live-room-menu-trigger");
-    await click(".live-room-page__layout-trigger");
-
-    this.owner
-      .lookup("service:menu")
-      .getByIdentifier("live-call-submenu")
-      .options.data.onSelect("presentation");
-    await settled();
+    await selectLayout(this.owner, "presentation");
 
     assert
       .dom(
@@ -363,6 +382,149 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
         ".live-room-page__presentation-main .live-video-tile[data-user-id='2']"
       )
       .exists("does not restore a stale spotlight if the participant rejoins");
+  });
+
+  test("auto layout features another participant's screen share while it lasts", async function (assert) {
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert.dom(".live-room-page").hasClass("--tiled", "starts tiled");
+
+    this.updateParticipant(2, { is_screen_sharing: true });
+    await settled();
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--presentation", "switches to presentation for the share");
+    assert
+      .dom(
+        ".live-room-page__presentation-main .live-video-tile[data-user-id='2']"
+      )
+      .exists("features the participant who is sharing");
+
+    this.updateParticipant(2, { is_screen_sharing: false });
+    await settled();
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--tiled", "returns to tiles when the share stops");
+  });
+
+  test("auto layout ignores the viewer's own screen share", async function (assert) {
+    this.liveWebrtc.localVideoKind = "screen";
+    this.updateParticipant(this.currentUser.id, { is_screen_sharing: true });
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--tiled", "keeps the presenter looking at the room");
+  });
+
+  test("auto layout features another share over the viewer's own", async function (assert) {
+    this.liveWebrtc.localVideoKind = "screen";
+    this.updateParticipant(this.currentUser.id, { is_screen_sharing: true });
+    this.updateParticipant(3, { is_screen_sharing: true });
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert
+      .dom(
+        ".live-room-page__presentation-main .live-video-tile[data-user-id='3']"
+      )
+      .exists("features the other participant's share");
+  });
+
+  test("a fixed layout choice is not overridden by a screen share", async function (assert) {
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+    await selectLayout(this.owner, "tiled");
+
+    this.updateParticipant(2, { is_screen_sharing: true });
+    await settled();
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--tiled", "keeps the layout the viewer picked");
+
+    await selectLayout(this.owner, "auto");
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--presentation", "choosing auto again follows the share");
+  });
+
+  test("auto layout waits for a fullscreen tile to exit before switching", async function (assert) {
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    const tile = document.querySelector(".live-video-tile[data-user-id='3']");
+    Object.defineProperty(document, "fullscreenElement", {
+      configurable: true,
+      get: () => tile,
+    });
+
+    try {
+      document.dispatchEvent(new Event("fullscreenchange"));
+      this.updateParticipant(2, { is_screen_sharing: true });
+      await settled();
+
+      assert
+        .dom(".live-room-page")
+        .hasClass("--tiled", "keeps the fullscreen tile mounted");
+    } finally {
+      delete document.fullscreenElement;
+    }
+
+    document.dispatchEvent(new Event("fullscreenchange"));
+    await settled();
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--presentation", "switches once fullscreen ends");
+  });
+
+  test("unpinning in auto layout returns to tiles when nobody is sharing", async function (assert) {
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    await click(".live-video-tile[data-user-id='3'] .live-video-tile__menu");
+    await selectParticipantFromOpenMenu(this.owner);
+    await settled();
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--presentation", "pinning features the participant");
+
+    await click(".live-room-page__presentation-main .live-video-tile__menu");
+    await selectParticipantFromOpenMenu(this.owner);
+    await settled();
+
+    assert
+      .dom(".live-room-page")
+      .hasClass("--tiled", "unpinning returns to tiles");
+  });
+
+  test("a featured screen share receives the mobile video budget", async function (assert) {
+    this.owner.lookup("service:capabilities").viewport.md = false;
+    this.room.active_participants.push(
+      ...[4, 5, 6].map((id) => ({
+        id,
+        username: `user${id}`,
+        avatar_template: `/letter_avatar_proxy/v4/letter/u/{size}.png`,
+        is_video_on: true,
+      })),
+      {
+        id: 7,
+        username: "presenter",
+        avatar_template: `/letter_avatar_proxy/v4/letter/p/{size}.png`,
+        is_screen_sharing: true,
+      }
+    );
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert
+      .dom(
+        ".live-room-page__presentation-main .live-video-tile[data-user-id='7']"
+      )
+      .hasClass("--video", "the share is live video, not an avatar");
   });
 
   test("a joined stage room with chat available opens the chat panel by default", async function (assert) {

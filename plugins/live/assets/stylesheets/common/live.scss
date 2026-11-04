@@ -1330,3 +1330,151 @@
     }
   }
 }
+
+.live-connection-diagnostics {
+  &__summary {
+    margin-top: 0;
+    font-weight: 600;
+  }
+
+  &__note {
+    font-weight: normal;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__section {
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: var(--font-0);
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__peer {
+    border: 1px solid var(--primary-low);
+    border-left-width: 4px;
+    border-radius: var(--d-border-radius);
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+
+    &.--connected {
+      border-left-color: var(--success);
+    }
+
+    &.--connecting {
+      border-left-color: var(--highlight);
+    }
+
+    &.--failed,
+    &.--missing {
+      border-left-color: var(--danger);
+    }
+  }
+
+  &__peer-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__peer-name {
+    font-weight: 600;
+  }
+
+  &__badge {
+    margin-left: auto;
+    padding: 0.1rem 0.5rem;
+    border-radius: 1em;
+    font-size: var(--font-down-1);
+    background: var(--primary-very-low);
+    color: var(--primary-high);
+
+    &.--connected,
+    &.--ok {
+      background: var(--success-low);
+      color: var(--success);
+    }
+
+    &.--failed,
+    &.--missing,
+    &.--timeout {
+      background: var(--danger-low);
+      color: var(--danger);
+    }
+  }
+
+  &__route {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+
+    &.--relayed {
+      color: var(--tertiary);
+    }
+  }
+
+  &__details {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.2rem 1rem;
+    margin: 0.5rem 0 0;
+    font-size: var(--font-down-1);
+
+    dt {
+      color: var(--primary-medium);
+    }
+
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__errors {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+    font-size: var(--font-down-1);
+    color: var(--danger);
+    overflow-wrap: anywhere;
+  }
+
+  &__server {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--primary-very-low);
+
+    code {
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__server-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .live-connection-diagnostics__badge {
+      white-space: nowrap;
+    }
+  }
+
+  &__warning {
+    color: var(--danger);
+  }
+
+  &__privacy {
+    flex-basis: 100%;
+    margin: 0 0 0.5rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__server-kind {
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    color: var(--primary-medium);
+  }
+}

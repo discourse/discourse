@@ -396,7 +396,6 @@ et:
         placeholder: "kirjuta siia teema pealkiri, URL või ID"
     dsa_statements:
       category: "Kategooriad"
-      saving: "Salvestan..."
     review:
       explain:
         total: "Kokku"

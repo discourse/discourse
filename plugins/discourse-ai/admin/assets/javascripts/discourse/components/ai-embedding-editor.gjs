@@ -135,6 +135,10 @@ export default class AiEmbeddingEditor extends Component {
     return this.args.model.id < 0;
   }
 
+  get isBedrock() {
+    return this.currentProvider === "aws_bedrock";
+  }
+
   get providerParams() {
     const normalizeParam = (value) => {
       if (!value) {
@@ -149,6 +153,7 @@ export default class AiEmbeddingEditor extends Component {
         type: value.type || "text",
         values: (value.values || []).map((v) => ({ id: v, name: v })),
         default: value.default,
+        optional: value.optional ?? false,
       };
     };
 
@@ -167,6 +172,8 @@ export default class AiEmbeddingEditor extends Component {
         return "select";
       case "checkbox":
         return "checkbox";
+      case "secret":
+        return "custom";
       default:
         return `input-${type}`;
     }
@@ -402,21 +409,27 @@ export default class AiEmbeddingEditor extends Component {
           </field.Control>
         </form.Field>
 
-        <form.Field
-          class="ai-embedding-editor__url"
-          @format="large"
-          @name="url"
-          @title={{i18n "discourse_ai.embeddings.url"}}
-          @type="input"
-          @validation="required"
-          as |field|
-        >
-          <field.Control />
-        </form.Field>
+        {{#unless this.isBedrock}}
+          <form.Field
+            class="ai-embedding-editor__url"
+            @format="large"
+            @name="url"
+            @title={{i18n "discourse_ai.embeddings.url"}}
+            @type="input"
+            @validation="required"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        {{/unless}}
 
         <form.Field
           class="ai-embedding-editor__api-key"
           @format="large"
+          @helpText={{if
+            this.isBedrock
+            (i18n "discourse_ai.embeddings.hints.bedrock_api_key")
+          }}
           @name="ai_secret_id"
           @title={{i18n "discourse_ai.embeddings.api_key"}}
           @type="custom"
@@ -552,7 +565,7 @@ export default class AiEmbeddingEditor extends Component {
                       (concat "discourse_ai.embeddings.provider_fields." name)
                     }}
                     @type={{this.fieldTypeForProviderParam params.type}}
-                    @validation="required"
+                    @validation={{unless params.optional "required"}}
                     as |field|
                   >
                     {{#if (eq params.type "enum")}}
@@ -565,6 +578,14 @@ export default class AiEmbeddingEditor extends Component {
                       </field.Control>
                     {{else if (eq params.type "checkbox")}}
                       <field.Control />
+                    {{else if (eq params.type "secret")}}
+                      <field.Control>
+                        <AiSecretSelector
+                          @onChange={{field.set}}
+                          @secrets={{this.availableSecrets}}
+                          @value={{field.value}}
+                        />
+                      </field.Control>
                     {{else}}
                       <field.Control />
                     {{/if}}

@@ -30,21 +30,26 @@ sk:
         badge:
           draft: Návrh
         preview: Náhľad
-        publish: Publikovať
-        options: Možnosti
         change:
           title: názov
           body: telo
       review:
-        copy: Kopírovať odkaz
-        active: Aktívny
+        create: Vytvorte odkaz
+        copy: Kopírovať
+        open: Zahájiť
+        status:
+          active: Aktívny
+          expired: Vypršala platnosť
+          revoked: Odvolané
+          inactive: Neaktívne
+        closed_on: "Uzavreté %{date}"
+        revoke: Zrušiť
         message: Spätná väzba
       editor_table:
         edit: Upraviť
         status: Stav
         replies: Odpovede
       drafts: Koncepty
-      private_draft: Návrh
       preview: Náhľad
       unpublish: Zrušenie zverejnenia
       appearance_link: Vzhľad

@@ -886,7 +886,6 @@ he:
         placeholder: "נא להקליד כאן את כותרת ההודעה, הכתובת או את המזהה"
     dsa_statements:
       category: "קטגוריה"
-      saving: "מתבצעת שמירה…"
     review:
       show_more: "להציג יותר"
       show_less: "להציג פחות"

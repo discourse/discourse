@@ -32,21 +32,26 @@ ja:
         badge:
           draft: 下書き
         preview: プレビュー
-        publish: 公開
-        options: オプション
         change:
           title: タイトル
           body: 本文
       review:
-        copy: リンクをコピー
-        active: アクティブ
+        create: リンクを作成
+        copy: コピー
+        open: オープン
+        status:
+          active: アクティブ
+          expired: 期限切れ
+          revoked: 取り消し済み
+          inactive: 非アクティブ
+        closed_on: "クローズされました: %{date}"
+        revoke: 同意を取り消す
         message: フィードバック
       editor_table:
         edit: 編集
         status: ステータス
         replies: 返信
       drafts: 下書き
-      private_draft: 下書き
       preview: プレビュー
       unpublish: 公開を取り消す
       appearance_link: 外観

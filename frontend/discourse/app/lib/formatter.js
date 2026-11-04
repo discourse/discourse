@@ -1,5 +1,3 @@
-import jQuery from "jquery";
-import deprecated from "discourse/lib/deprecated";
 import { helperContext, makeArray } from "discourse/lib/helpers";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -51,14 +49,6 @@ export function longDateNoYear(dt) {
 }
 
 export function updateRelativeAge(elems) {
-  if (elems instanceof jQuery) {
-    elems = elems.toArray();
-    deprecated("updateRelativeAge now expects a DOM NodeList", {
-      since: "2.8.0.beta7",
-      id: "discourse.formatter.update-relative-age-node-list",
-    });
-  }
-
   if (!NodeList.prototype.isPrototypeOf(elems)) {
     elems = makeArray(elems);
   }

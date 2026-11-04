@@ -32,21 +32,26 @@ cs:
         badge:
           draft: Koncept
         preview: Náhled
-        publish: Publikovat
-        options: Možnosti
         change:
           title: název
           body: tělo
       review:
-        copy: Kopírovat odkaz
-        active: Aktivní
+        create: Vytvořit odkaz
+        copy: Kopírovat
+        open: Otevřeno
+        status:
+          active: Aktivní
+          expired: Platnost vypršela
+          revoked: Zrušeno
+          inactive: Neaktivní
+        closed_on: "Uzavřeno %{date}"
+        revoke: Odvolat
         message: Zpětná vazba
       editor_table:
         edit: Upravit
         status: Stav
         replies: Odpovědi
       drafts: Koncepty
-      private_draft: Koncept
       preview: Náhled
       unpublish: Zrušit publikování
       appearance_link: Vzhled

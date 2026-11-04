@@ -77,6 +77,43 @@ RSpec.describe User::CreateBot do
     let(:params) { { name: "Release helper", username: "release_helper", trust_level: 2 } }
     let(:dependencies) { { guardian: actor.guardian } }
 
+    context "with plugin parameters" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:received) { [] }
+      let(:callback) { proc { |bot, value| received << [bot, value] } }
+
+      before do
+        @original_bot_creation_params = DiscoursePluginRegistry.bot_creation_params.dup
+        plugin.register_bot_creation_param(:test_bot_option, &callback)
+        params[:plugin_params] = { test_bot_option: true }
+      end
+
+      after { DiscoursePluginRegistry.bot_creation_params.replace(@original_bot_creation_params) }
+
+      it "passes the new bot and the value to the plugin callback" do
+        expect(result).to run_successfully
+        expect(received).to eq([[result.user, true]])
+      end
+
+      it "ignores disabled plugins and unregistered parameters" do
+        plugin.stubs(:enabled?).returns(false)
+        params[:plugin_params][:unknown] = true
+        expect(result).to run_successfully
+        expect(received).to be_empty
+      end
+
+      context "when the callback raises" do
+        let(:callback) { proc { raise Discourse::InvalidParameters.new(:test_bot_option) } }
+
+        it "rolls back the bot and its audit log" do
+          params[:api_key] = { scope_mode: "global" }
+          expect do
+            expect { result }.to raise_error(Discourse::InvalidParameters)
+          end.not_to change { [User.count, UserHistory.count, ApiKey.count] }
+        end
+      end
+    end
+
     context "when the contract is invalid" do
       let(:params) { { username: "" } }
 

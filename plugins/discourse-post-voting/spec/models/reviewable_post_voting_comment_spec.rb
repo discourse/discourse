@@ -56,7 +56,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
       before do
         reviewable.update!(target_created_by: comment.user)
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when agree_and_keep_comment handles the post voting comment reviewable" do

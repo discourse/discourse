@@ -14,6 +14,7 @@ en:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Chat bot discoverability changed"
             chat_channel_status_change: "Chat channel status changed"
             chat_channel_delete: "Chat channel deleted"
             chat_auto_remove_membership: "Memberships automatically removed from channels"
@@ -625,6 +626,9 @@ en:
         members_label: "Members"
 
       admin:
+        bot_discoverability:
+          label: "Show in chat"
+          description: "Let people find this bot when starting a chat direct message"
         title: "Chat"
         export_messages:
           title: "Export chat messages"

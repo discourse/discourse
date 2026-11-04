@@ -14,6 +14,7 @@ import {
 } from "discourse/admin/lib/color-scheme-manager";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import DiscourseURL from "discourse/lib/url";
+import DesignWizardService from "discourse/services/design-wizard";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const APPEARANCE_LAUNCH_BUTTON =
@@ -60,6 +61,7 @@ acceptance("Design wizard - admin launch", function (needs) {
   let wizardData;
   let importRequests;
   let importFails;
+  let docked;
 
   needs.user({
     admin: true,
@@ -73,6 +75,12 @@ acceptance("Design wizard - admin launch", function (needs) {
     importRequests = [];
     importFails = false;
     this.originalSchemeLinks = captureColorSchemeLinks();
+
+    // docking follows the viewport, which the test runner doesn't control
+    docked = false;
+    sinon.stub(DesignWizardService.prototype, "docked").get(function () {
+      return this.active && docked;
+    });
   });
 
   // A wizard preview swaps the test page's real color-scheme links, and an
@@ -239,6 +247,80 @@ acceptance("Design wizard - admin launch", function (needs) {
       .dom(".design-wizard__restore")
       .doesNotExist("a fresh run has no minimized bar");
     await click(".design-wizard__close");
+  });
+
+  test("docks beside the page and collapses to a rail on wide screens", async function (assert) {
+    docked = true;
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(document.documentElement)
+      .hasClass("design-wizard-docked", "reserves space beside the page");
+    assert.dom(".design-wizard").hasClass("--docked");
+    assert
+      .dom(".design-wizard__step-progress")
+      .doesNotExist("does not show step progress before the wizard starts");
+
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__step-progress")
+      .hasText("Step 2/3", "shows the current step as text");
+
+    const sections = find(".design-wizard__sections");
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(document.documentElement)
+      .hasClass("design-wizard-collapsed", "narrows the reserved space");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "keeps the rail reachable by keyboard");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("aria-hidden", "keeps the rail announced");
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("uses the rail instead of the restore bar");
+    assert
+      .dom(".design-wizard__expand")
+      .isFocused("moves focus to the expand button");
+    assert
+      .dom(".design-wizard__expand")
+      .includesText("Step 2/3", "names the current step");
+    assert
+      .dom(".design-wizard__expand")
+      .hasAria("expanded", "false", "exposes the collapsed state");
+
+    await visit("/categories");
+
+    assert
+      .dom(".design-wizard__expand")
+      .exists("stays collapsed while browsing");
+
+    await click(".design-wizard__expand");
+
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass("design-wizard-collapsed", "widens the reserved space");
+    assert
+      .dom(".design-wizard__minimize")
+      .isFocused("returns focus to the panel");
+    assert.strictEqual(
+      find(".design-wizard__sections"),
+      sections,
+      "keeps the controls mounted to retain their scroll position"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass("design-wizard-docked", "gives the space back");
   });
 
   test("saves a dark-only palette for both system color modes", async function (assert) {
