@@ -107,6 +107,12 @@ module PageObjects
         )
       end
 
+      def has_accessible_rule_description?(ground)
+        has_css?("#{full_modal_selector} .dsa-community-rule-trigger") do |trigger|
+          trigger["aria-description"] == ground
+        end
+      end
+
       def has_selected_category?(category)
         within(full_modal_selector) { has_select?("Category", selected: category) }
       end

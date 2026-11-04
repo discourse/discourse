@@ -33,9 +33,9 @@ function ruleName(rules, ruleId) {
   );
 }
 
-async function selectRule(field, close, ruleId) {
-  await close({ focusTrigger: true });
+function selectRule(field, close, ruleId) {
   field.set(ruleId);
+  return close({ focusTrigger: true });
 }
 
 export default class DsaModerationDetails extends Component {
@@ -62,6 +62,10 @@ export default class DsaModerationDetails extends Component {
         <field.Control>
           <DMenu
             aria-describedby={{field.describedBy}}
+            aria-description={{ruleName
+              @options.community_rules
+              data.community_rule
+            }}
             aria-invalid={{if field.error "true"}}
             id={{field.id}}
             @contentClass="form-kit__control-menu-content dsa-community-rules"
