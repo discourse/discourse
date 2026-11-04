@@ -4,7 +4,7 @@ class DsaClassificationSerializer < ApplicationSerializer
   attributes :community_rules, :categories
 
   def community_rules
-    DsaStatementOfRecord.community_rules.map { |rule| rule.slice("id", "ground") }
+    DsaStatementOfRecord.community_rules.map { |rule| rule.slice("id", "ground", "explanation") }
   end
 
   def categories

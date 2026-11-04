@@ -145,7 +145,24 @@ describe "Classifying reviewable moderation" do
       "The EU Digital Services Act asks platforms to record why content was moderated.",
     )
 
+    modal.open_rule_menu
+
+    expect(modal).to have_rule_option(rule[:ground], explanation: rule[:explanation])
+    expect(modal).to have_rule_option(
+      "No advertising",
+      explanation: "Unsolicited advertising is not allowed.",
+    )
+
+    modal.close_rule_menu
+
+    expect(modal).to have_no_rule_menu
+
     modal.select_rule(rule[:ground])
+
+    expect(modal).to have_selected_rule(rule[:ground])
+    expect(modal).to have_accessible_rule_description(rule[:ground])
+    expect(page).to have_no_text(rule[:explanation])
+
     modal.select_category(category)
     modal.confirm("Continue to editor")
 

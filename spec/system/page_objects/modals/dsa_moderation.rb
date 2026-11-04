@@ -22,8 +22,27 @@ module PageObjects
         has_css?("[role='tooltip'] a[href='#{url}'][target='_blank']", text: "Learn more…")
       end
 
+      def open_rule_menu
+        within(full_modal_selector) do
+          find("[data-name='community_rule'] .form-kit__control-menu-trigger").click
+        end
+      end
+
+      def close_rule_menu
+        page.send_keys(:escape)
+      end
+
       def select_rule(ground)
-        within(full_modal_selector) { select(ground, from: "Community rule") }
+        open_rule_menu
+        find(".form-kit__control-menu-content .btn", text: ground).click
+      end
+
+      def has_no_rule_menu?
+        has_no_css?(".dsa-community-rules")
+      end
+
+      def has_rule_option?(ground, explanation:)
+        has_button?("#{ground} #{explanation}", exact: true, normalize_ws: true)
       end
 
       def select_category(category)
@@ -81,7 +100,17 @@ module PageObjects
       end
 
       def has_selected_rule?(ground)
-        within(full_modal_selector) { has_select?("Community rule", selected: ground) }
+        has_css?(
+          "#{full_modal_selector} [data-name='community_rule'] .d-button-label",
+          text: ground,
+          exact_text: true,
+        )
+      end
+
+      def has_accessible_rule_description?(ground)
+        has_css?("#{full_modal_selector} .dsa-community-rule-trigger") do |trigger|
+          trigger["aria-description"] == ground
+        end
       end
 
       def has_selected_category?(category)
