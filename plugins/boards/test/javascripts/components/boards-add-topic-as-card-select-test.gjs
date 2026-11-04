@@ -12,10 +12,12 @@ import ModalContainer from "discourse/components/modal-container";
 import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { i18n } from "discourse-i18n";
 import BoardsAddTopicAsCard from "discourse/plugins/boards/discourse/components/modal/boards-add-topic-as-card";
 
 const MODAL = ".discourse-boards-add-topic-as-card-modal";
 const SEARCH = `${MODAL} .d-select [role='combobox']`;
+const ADD = `${MODAL} .d-modal__footer .btn-primary`;
 
 const TOPICS = [
   {
@@ -82,10 +84,21 @@ module(
       assert.deepEqual(optionTitles(), ["Rocket launch checklist"]);
     });
 
-    test("pressing a topic adds it as a card and closes", async function (assert) {
+    test("pressing a topic holds it, and the button adds it as a card", async function (assert) {
       await fillIn(SEARCH, "notes");
       await click(`${MODAL} [role='option']`);
 
+      assert.false(this.onAddTopicAsCard.called, "picking alone adds nothing");
+      assert.dom(MODAL).exists("the modal stays open");
+      assert
+        .dom(`${MODAL} .d-select`)
+        .hasAttribute(
+          "data-name",
+          "Payload integration notes",
+          "the field holds the topic"
+        );
+
+      await click(ADD);
       assert.deepEqual(this.onAddTopicAsCard.firstCall.args[0], {
         topicId: 202,
         title: "Payload integration notes",
@@ -93,10 +106,11 @@ module(
       assert.dom(MODAL).doesNotExist("the modal closes behind it");
     });
 
-    test("Enter adds the active topic", async function (assert) {
+    test("Enter picks the active topic", async function (assert) {
       await fillIn(SEARCH, "o");
       await triggerKeyEvent(SEARCH, "keydown", "ArrowDown");
       await triggerKeyEvent(SEARCH, "keydown", "Enter");
+      await click(ADD);
 
       assert.true(
         this.onAddTopicAsCard.calledOnce,
@@ -109,6 +123,25 @@ module(
       );
     });
 
+    test("the add button waits for a held topic", async function (assert) {
+      assert.dom(ADD).isDisabled("nothing is held yet");
+
+      await fillIn(SEARCH, "rocket");
+      await click(`${MODAL} [role='option']`);
+      assert.dom(ADD).isEnabled("a topic is held");
+
+      await click(`${MODAL} .d-select__clear`);
+      assert.dom(ADD).isDisabled("the topic was cleared");
+    });
+
+    test("labels the field, without marking it optional", async function (assert) {
+      const combobox = document.querySelector(SEARCH);
+      assert
+        .dom(`${MODAL} label[for='${combobox.id}']`)
+        .hasText(i18n("boards.board.topic_search_placeholder"));
+      assert.dom(`${MODAL} .form-kit__container-optional`).doesNotExist();
+    });
+
     test("a pasted topic URL or path lists its topic", async function (assert) {
       await fillIn(SEARCH, `${DiscourseURL.origin}/t/some-topic/280`);
       assert.deepEqual(optionTitles(), ["Some topic"], "a full URL");
@@ -117,6 +150,7 @@ module(
       assert.deepEqual(optionTitles(), ["Some topic"], "a path on this site");
 
       await triggerKeyEvent(SEARCH, "keydown", "Enter");
+      await click(ADD);
       assert.strictEqual(this.onAddTopicAsCard.firstCall.args[0].topicId, 280);
     });
 
@@ -147,11 +181,6 @@ module(
       assert
         .dom(`${MODAL} [role='option'] input[type='checkbox']`)
         .doesNotExist();
-    });
-
-    test("needs no submit button, since a pick adds the card", async function (assert) {
-      assert.dom(`${MODAL} .d-modal__footer .btn-primary`).doesNotExist();
-      assert.dom(`${MODAL} .d-modal__footer .btn-transparent`).exists();
     });
   }
 );

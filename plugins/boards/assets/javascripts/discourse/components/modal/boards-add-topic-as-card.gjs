@@ -27,6 +27,7 @@ export default class BoardsAddTopicAsCard extends Component {
   @tracked selectedRow = -1;
   @tracked searchResults = [];
   @tracked searchLoading = false;
+  @tracked pickedTopic = null;
   data = { topicSearch: "" };
   #debounced;
   #activeSearch;
@@ -34,6 +35,11 @@ export default class BoardsAddTopicAsCard extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#debounced);
+  }
+
+  /** The held topic, as the field's known topics, so it shows without a lookup. */
+  get pickedTopics() {
+    return this.pickedTopic ? [this.pickedTopic] : [];
   }
 
   highlightRow(e, direction) {
@@ -147,10 +153,15 @@ export default class BoardsAddTopicAsCard extends Component {
   }
 
   @action
-  addPickedTopic(_topicId, topic) {
+  pickTopic(_topicId, topic) {
+    this.pickedTopic = topic ?? null;
+  }
+
+  @action
+  addPickedTopic() {
     this.args.model.onAddTopicAsCard({
-      topicId: topic.id,
-      title: topic.fancy_title,
+      topicId: this.pickedTopic.id,
+      title: this.pickedTopic.fancy_title,
     });
     this.args.closeModal();
   }
@@ -215,16 +226,23 @@ export default class BoardsAddTopicAsCard extends Component {
       <:body>
         {{! TODO (select-kit-replacement-cleanup): Remove the legacy search after rollout. }}
         {{#if this.siteSettings.enable_new_select_controls}}
-          {{! The field holds nothing: a pick adds a card and closes the modal. }}
+          <label
+            class="boards-add-topic-as-card__label"
+            for="boards-add-topic-as-card-topic"
+          >
+            {{i18n "boards.board.topic_search_placeholder"}}
+          </label>
           <DSelectTopic
             @archetype={{null}}
-            @onChange={{this.addPickedTopic}}
+            @clearable={{true}}
+            @id="boards-add-topic-as-card-topic"
+            @onChange={{this.pickTopic}}
             @texts={{hash
-              ariaLabel=(i18n "boards.board.topic_search_placeholder")
               placeholder=(i18n "boards.board.topic_search_placeholder")
               searchPlaceholder=(i18n "boards.board.topic_search_placeholder")
             }}
-            @value={{null}}
+            @topics={{this.pickedTopics}}
+            @value={{this.pickedTopic.id}}
           />
         {{else}}
           <div class="inputs">
@@ -282,14 +300,21 @@ export default class BoardsAddTopicAsCard extends Component {
       </:body>
 
       <:footer>
-        {{#unless this.siteSettings.enable_new_select_controls}}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DButton
+            class="btn-primary"
+            @action={{this.addPickedTopic}}
+            @disabled={{not this.pickedTopic}}
+            @label="boards.board.add_topic_as_card"
+          />
+        {{else}}
           <DButton
             class="btn-primary"
             type="submit"
             @action={{this.formApi.submit}}
             @label="boards.board.add_topic_as_card"
           />
-        {{/unless}}
+        {{/if}}
         <DButton
           class="btn-transparent"
           @action={{@closeModal}}

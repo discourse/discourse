@@ -546,9 +546,10 @@ Open items need a decision after manual testing; the rest are intended but still
 - [ ] **The modal lists no longer pick for the user.** Move to topic or message, feature topic
   and chat to topic used to pick a lone result on their own, and cleared the held topic while
   typing. A topic is now held only when picked, and stays held while searching again.
-- [ ] **"Add topic as card" (boards):** a search starts at one character (was four), the submit
-  button is gone because a pick adds the card, a pasted URL or path resolves through the id
-  search (a relative path used to search its text), and Escape clears the search before it
+- [ ] **"Add topic as card" (boards):** a search starts at one character (was four), a pick
+  fills the field and the "Add topic as card" button adds it (a picked result used to add the
+  card at once, and the button only took a pasted URL), a pasted URL or path resolves through the
+  id search (a relative path used to search its text), and Escape clears the search before it
   closes the modal.
 - [ ] **Escape in a modal's search field** clears the text first; the next Escape closes the
   modal. This holds for every focused `input[type="search"]` inside a DModal, not only the
@@ -651,7 +652,8 @@ branch inside the two components, so their callers are unchanged: the current to
 `@exclude`, `loadOnInit` becomes listing on open (as `@additionalFilters` alone does), and
 `topicChangedCallback` still receives the topic. Workflows passes `@archetype={{null}}`, since its
 search was never limited to regular topics, and its unavailable-topic text as `unresolved`.
-Boards' "Add topic as card" holds nothing: a pick adds the card and closes the modal.
+Boards' "Add topic as card" holds the picked topic until its button adds the card and closes the
+modal.
 
 The profile's featured topic is a field on the profile page instead of a button that opens a
 modal, and it is saved with "Save changes" like the page's other fields, not on pick. The profile
