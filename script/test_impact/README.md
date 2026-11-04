@@ -61,7 +61,8 @@ bin/rspec $(script/test_impact/select --base origin/main)
 - a change in a server locale file selects the specs that looked up its key,
   or a key above or below it; outside English, only those that used that
   locale;
-- any other changed file selects the specs that read it.
+- any other changed file selects the specs that read it, except QUnit tests
+  and documentation, which select nothing when no spec ran or read them.
 
 On stderr it lists changed methods no spec ran, and changed files the map
 doesn't cover (new files, JavaScript no system spec loads, client locales,
