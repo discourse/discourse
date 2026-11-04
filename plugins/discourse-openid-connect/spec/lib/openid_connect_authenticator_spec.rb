@@ -45,20 +45,54 @@ describe OpenIDConnectAuthenticator do
   context "when the fallback is true and email_verified is supplied" do
     before { SiteSetting.openid_connect_email_verified_claim_fallback = true }
 
-    {
-      true => true,
-      "true" => true,
-      "True" => true,
-      false => false,
-      "false" => false,
-    }.each do |claim, verified|
-      it "uses the supplied #{claim.inspect} value instead of the fallback" do
+    shared_examples "authenticating with an explicit email verification claim" do |claim:, expected_verified:|
+      it "uses the claim for verification and account linking" do
         hash[:extra][:raw_info][:email_verified] = claim
         result = authenticator.after_authenticate(hash)
 
-        expect(result.email_valid).to eq(verified)
-        expect(result.user).to eq(verified ? user : nil)
+        expect(result.email_valid).to eq(expected_verified)
+        expect(result.user).to eq(expected_user)
       end
+    end
+
+    context "with a boolean true claim" do
+      let(:expected_user) { user }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: true,
+                       expected_verified: true
+    end
+
+    context "with a lowercase true claim" do
+      let(:expected_user) { user }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: "true",
+                       expected_verified: true
+    end
+
+    context "with a capitalized true claim" do
+      let(:expected_user) { user }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: "True",
+                       expected_verified: true
+    end
+
+    context "with a boolean false claim" do
+      let(:expected_user) { nil }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: false,
+                       expected_verified: false
+    end
+
+    context "with a string false claim" do
+      let(:expected_user) { nil }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: "false",
+                       expected_verified: false
     end
   end
 

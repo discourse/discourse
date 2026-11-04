@@ -19,9 +19,9 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     }
 
     this.backLink =
-      transition.from?.name === "admin.dashboard.general"
+      transition.from?.name === "admin.dashboard"
         ? {
-            route: "admin.dashboard.general",
+            route: "admin.dashboard",
             query: transition.from.queryParams,
             label: "admin.reports.back_to_dashboard",
           }

@@ -462,21 +462,6 @@ export default class Site extends RestModel {
   }
 
   @dependentKeyCompat
-  get isMobileDevice(): boolean {
-    deprecated(
-      "Site.isMobileDevice is deprecated. Use `site.mobileView` and `site.desktopView` instead for " +
-        "viewport-based values or `capabilities.isMobileDevice` for user-agent based detection.",
-      {
-        id: "discourse.site.is-mobile-device",
-        since: "3.5.0.beta9-dev",
-        url: "https://meta.discourse.org/t/367810",
-      }
-    );
-
-    return this.mobileView;
-  }
-
-  @dependentKeyCompat
   get categoriesById() {
     return new Map(this.categories.map((c) => [c.id, c]));
   }
@@ -507,12 +492,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    // TODO(typescript-pending): PostActionType doesn't type its server fields; remove when it does.
-    return trackedArray(
-      postActionTypes.filter(
-        (type) => (type as PostActionType & { is_flag?: boolean }).is_flag
-      )
-    );
+    return trackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
   // Sort subcategories under parents
@@ -654,24 +634,4 @@ export default class Site extends RestModel {
         ) as unknown as Tag
     );
   }
-}
-
-/** The deprecated global namespace, present only on pages that still define it. */
-declare const Discourse: object | undefined;
-
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-
-  Object.defineProperty(Discourse, "Site", {
-    get() {
-      if (!warned) {
-        deprecated("Import the Site class instead of using Discourse.Site", {
-          since: "2.4.0",
-          id: "discourse.global.site",
-        });
-        warned = true;
-      }
-      return Site;
-    },
-  });
 }

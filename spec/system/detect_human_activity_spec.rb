@@ -4,8 +4,6 @@ describe "Detect human activity" do
   fab!(:topics) { Fabricate.times(5, :post).map(&:topic) }
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
-  before { SiteSetting.dashboard_improvements = true }
-
   def flush_engagement
     page.driver.with_playwright_page do |pw_page|
       pw_page.evaluate("window.dispatchEvent(new Event('pagehide'))")

@@ -86,6 +86,10 @@ ca:
       assign:
         errors:
           not_found: "Tema no trobat."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Capçalera"
     reviewables:
       ai_tool_action:
         approve:

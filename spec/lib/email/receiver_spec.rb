@@ -879,17 +879,31 @@ RSpec.describe Email::Receiver do
         expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
       end
 
-      {
-        "X-Spam-Flag" => :spam_x_spam_flag,
-        "X-Spam-Status" => :spam_x_spam_status,
-        "X-SES-Spam-Verdict" => :spam_x_ses_spam_verdict,
-      }.each do |header, fixture|
-        it "enqueues the post and silences the user for #{header}" do
+      shared_examples "moderating email identified as spam" do |header:, fixture:|
+        it "queues the post and silences the sender" do
           SiteSetting.email_in_spam_header = header
 
           expect { process(fixture) }.to change { ReviewableQueuedPost.count }.by(1)
           expect(user.reload.silenced?).to be(true)
         end
+      end
+
+      context "with the X-Spam-Flag header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Flag",
+                         fixture: :spam_x_spam_flag
+      end
+
+      context "with the X-Spam-Status header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Status",
+                         fixture: :spam_x_spam_status
+      end
+
+      context "with the X-SES-Spam-Verdict header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-SES-Spam-Verdict",
+                         fixture: :spam_x_ses_spam_verdict
       end
 
       it "enqueues the post for a failed Authentication-Results header" do

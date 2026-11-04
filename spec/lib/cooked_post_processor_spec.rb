@@ -95,7 +95,7 @@ RSpec.describe CookedPostProcessor do
             class: "inline-onebox",
           },
           text: title,
-          count: 2,
+          count: 1,
         )
 
         expect(cpp.html).to have_tag("aside.onebox a", text: title, count: 1)
@@ -119,6 +119,92 @@ RSpec.describe CookedPostProcessor do
           text: not_oneboxed_url,
           count: 1,
         )
+      end
+    end
+
+    describe "when post has more oneboxes than max_oneboxes_per_post" do
+      let(:inline_url) { "https://example.com/inline" }
+      let(:first_url) { "https://example.com/first" }
+      let(:second_url) { "https://example.com/second" }
+
+      before do
+        SiteSetting.max_oneboxes_per_post = 1
+        SiteSetting.enable_inline_onebox_on_all_domains = true
+        Oneboxer.stubs(:cached_onebox).returns(nil)
+        Oneboxer.stubs(:onebox).returns(nil)
+        InlineOneboxer.stubs(:lookup).returns(nil)
+        InlineOneboxer.stubs(:lookup).with(inline_url, anything).returns(title: "Inline title")
+      end
+
+      def onebox_html(url)
+        "<aside class='onebox' data-onebox-src='#{url}'><article>#{url}</article></aside>"
+      end
+
+      def processed_html(post)
+        cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
+        cpp.post_process
+        cpp.html
+      end
+
+      it "gives the slot to the first onebox even when a later one is cached" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns(onebox_html(first_url))
+        post = Fabricate(:post, raw: "See #{inline_url} here\n\n#{first_url}")
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("a.inline-onebox", text: "Inline title")
+        expect(html).not_to have_tag("aside.onebox")
+        expect(html).not_to have_tag("a.onebox")
+      end
+
+      it "counts a cached embed that is not an aside" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns("<div class='video-onebox'></div>")
+        Oneboxer.stubs(:onebox).with(second_url, anything).returns(onebox_html(second_url))
+        post = Fabricate(:post, raw: "#{first_url}\n\n#{second_url}")
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("div.video-onebox")
+        expect(html).not_to have_tag("aside.onebox")
+      end
+
+      it "gives a repeated onebox its own slot" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns(onebox_html(first_url))
+        post = Fabricate(:post, raw: "#{first_url}\n\n#{first_url}\n\n#{second_url}")
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("aside.onebox", count: 1)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: first_url)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: second_url)
+      end
+
+      it "counts oneboxes already rendered in raw HTML posts" do
+        Oneboxer.stubs(:onebox).with(second_url, anything).returns(onebox_html(second_url))
+        post = Fabricate(:post, cook_method: Post.cook_methods[:raw_html], raw: <<~RAW)
+          #{onebox_html(first_url)}
+          <p><a class="onebox" href="#{second_url}">#{second_url}</a></p>
+        RAW
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("aside.onebox", count: 1)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: second_url)
+      end
+
+      it "limits oneboxes written as raw HTML" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns(onebox_html(first_url))
+        Oneboxer.stubs(:cached_onebox).with(second_url).returns(onebox_html(second_url))
+        post = Fabricate(:post, raw: <<~RAW)
+          <a class="onebox" href="#{first_url}">#{first_url}</a>
+
+          <a class="onebox" href="#{second_url}">#{second_url}</a>
+        RAW
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("aside.onebox", count: 1)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: second_url)
       end
     end
 

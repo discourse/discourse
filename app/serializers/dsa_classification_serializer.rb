@@ -4,7 +4,13 @@ class DsaClassificationSerializer < ApplicationSerializer
   attributes :community_rules, :categories
 
   def community_rules
-    DsaStatementOfRecord.community_rules.map { |rule| rule.slice("id", "ground") }
+    DsaStatementOfRecord.community_rules.map do |rule|
+      rule.slice(
+        DsaStatementOfRecord::COMMUNITY_RULE_ID_KEY,
+        DsaStatementOfRecord::COMMUNITY_RULE_GROUND_KEY,
+        DsaStatementOfRecord::COMMUNITY_RULE_EXPLANATION_KEY,
+      )
+    end
   end
 
   def categories
@@ -14,7 +20,7 @@ class DsaClassificationSerializer < ApplicationSerializer
   end
 
   def include_community_rules?
-    scope.is_staff? && DsaStatementOfRecord.classification_enabled?
+    scope.can_see_review_queue? && DsaStatementOfRecord.classification_enabled?
   end
 
   alias_method :include_categories?, :include_community_rules?

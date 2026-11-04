@@ -198,6 +198,26 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_unread" do
+    shared_examples "notifying logged in category watchers" do |granular_permissions_enabled:|
+      it "publishes the unread topic to its category watcher" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
+        topic.update!(category: Fabricate(:category, permissions: { logged_in_users: :readonly }))
+
+        message = MessageBus.track_publish("/unread") { described_class.publish_unread(post) }.first
+
+        expect(message.user_ids).to contain_exactly(other_user.id)
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "notifying logged in category watchers", granular_permissions_enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "notifying logged in category watchers", granular_permissions_enabled: true
+    end
+
     let(:other_user) { Fabricate(:user) }
     let!(:other_user_watching_topic) do
       Fabricate(:topic_user_watching, topic: topic, user: other_user)
@@ -832,6 +852,30 @@ RSpec.describe TopicTrackingState do
   end
 
   describe ".report" do
+    shared_examples "reporting logged in category topics" do |granular_permissions_enabled:|
+      it "includes permitted topics and excludes private category topics" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
+        author = Fabricate(:admin)
+        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+        public_post = create_post(category: category, user: author)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        create_post(category: private_category, user: author)
+
+        report = TopicTrackingState.report(user)
+
+        expect(report.map(&:topic_id)).to eq([public_post.topic_id])
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "reporting logged in category topics", granular_permissions_enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "reporting logged in category topics", granular_permissions_enabled: true
+    end
+
     it "correctly reports topics with staff posts" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       create_post(raw: "this is a test post", topic: topic, user: post.user)

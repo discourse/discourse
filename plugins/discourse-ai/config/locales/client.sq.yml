@@ -116,6 +116,8 @@ sq:
             other: "%{count} postime"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Asnjë"
+        no_decision_model_selected: "Asnjë"
         enable: "Aktivizo"
         test_modal:
           spam: "Spam"

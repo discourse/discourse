@@ -2584,6 +2584,61 @@ RSpec.describe UsersController do
         expect(User.find_by_email(login_code.email)).to be_nil
         expect(session[:current_user_id]).to be_nil
       end
+
+      it "allows a verified email code signup that is choosing a username" do
+        SiteSetting.enable_local_logins_via_code = true
+        login_code = EmailLoginCode.generate!(email: "newuser@example.com")
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: login_code.email,
+               code: login_code.code,
+             }
+        expect(response.parsed_body["username_required"]).to eq(true)
+
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username"]).to be_present
+        expect(User.find_by_email(login_code.email)).to be_nil
+        expect(session[:current_user_id]).to be_nil
+      end
+
+      it "allows a verified invite code signup that is choosing a username" do
+        SiteSetting.enable_local_logins_via_code = true
+        invite = Fabricate(:invite, email: "invited@example.com")
+        login_code = EmailLoginCode.generate!(email: invite.email)
+
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               code: login_code.code,
+             }
+        expect(response.parsed_body["username_required"]).to eq(true)
+
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username"]).to be_present
+        expect(invite.reload).not_to be_redeemed
+      end
+
+      it "rejects an email code signup that entered the wrong code" do
+        SiteSetting.enable_local_logins_via_code = true
+        login_code = EmailLoginCode.generate!(email: "newuser@example.com")
+        wrong_code = login_code.code == "000000" ? "000001" : "000000"
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: login_code.email,
+               code: wrong_code,
+             }
+        expect(response.parsed_body["username_required"]).to be_nil
+
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(403)
+      end
     end
 
     it "keeps an uploaded avatar when generating a username" do
@@ -4438,9 +4493,8 @@ RSpec.describe UsersController do
         SiteSetting.selectable_avatars_mode = "no_one"
       end
 
-      %i[auth_overrides_avatar discourse_connect_overrides_avatar].each do |setting|
-        it "rejects preset selection when #{setting} is enabled" do
-          SiteSetting.public_send("#{setting}=", true)
+      shared_examples "protecting an externally controlled avatar from preset selection" do
+        it "rejects preset selection and preserves the existing avatar" do
           user1.update!(uploaded_avatar_id: avatar2.id)
 
           put "/u/#{user1.username}/preferences/avatar/select.json", params: { url: avatar1.url }
@@ -4448,6 +4502,18 @@ RSpec.describe UsersController do
           expect(response).to be_unprocessable
           expect(user1.reload.uploaded_avatar_id).to eq(avatar2.id)
         end
+      end
+
+      context "with auth_overrides_avatar enabled" do
+        before { SiteSetting.auth_overrides_avatar = true }
+
+        include_examples "protecting an externally controlled avatar from preset selection"
+      end
+
+      context "with discourse_connect_overrides_avatar enabled" do
+        before { SiteSetting.discourse_connect_overrides_avatar = true }
+
+        include_examples "protecting an externally controlled avatar from preset selection"
       end
 
       it "raises an error when url is blank" do

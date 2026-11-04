@@ -14,6 +14,10 @@ import Category, {
 } from "discourse/models/category";
 import type RestModel from "discourse/models/rest";
 import type {
+  default as Topic,
+  TopicCreateAttrs,
+} from "discourse/models/topic";
+import type {
   default as StoreService,
   ModelFor,
 } from "discourse/services/store";
@@ -117,7 +121,7 @@ interface ExpectedCategoryFields {
   has_children?: boolean | null;
   subcategory_count?: number | null;
   subcategory_ids?: number[] | null;
-  subcategory_list?: object[];
+  subcategory_list?: ExpectedCategoryListCategory[];
   subcategory_list_style?: string | null;
   sort_order?: string | null;
   sort_ascending?: boolean | null;
@@ -139,6 +143,7 @@ interface ExpectedCategoryFields {
   category_types?: Record<string, CategoryTypeMetadata>;
   locale?: string | null;
   available_groups?: string[];
+  permission_groups?: { id: number; name: string }[];
   allowed_tags?: (ExpectedAllowedTag | string)[];
   allowed_tag_groups?: string[];
   auto_close_hours?: number | null;
@@ -162,7 +167,7 @@ interface ExpectedCategoryFields {
   category_type_settings?: Record<string, unknown>;
   category_type_site_settings?: Record<string, unknown>;
   site_texts?: Record<string, string>;
-  topics?: object[];
+  topics?: (TopicCreateAttrs<Topic> | Topic)[];
   topics_day?: number;
   topics_week?: number;
   topics_month?: number;
@@ -172,6 +177,15 @@ interface ExpectedCategoryFields {
   stat?: string;
   statTitle?: string;
   statTotal?: string;
+}
+
+/** Category pages recursively include listable topic payloads before hydration. */
+interface ExpectedCategoryListCategory extends Omit<
+  ExpectedCategoryFields,
+  "subcategory_list"
+> {
+  type_test_plugin_flag?: boolean;
+  subcategory_list?: ExpectedCategoryListCategory[];
 }
 
 declare module "discourse/models/category" {

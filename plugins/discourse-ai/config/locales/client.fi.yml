@@ -328,6 +328,8 @@ fi:
         short_title: "Roskaposti"
         title: "Määritä roskapostin käsittely"
         select_llm: "Valitse LLM"
+        no_llm_selected: "Ei valittu"
+        no_decision_model_selected: "Ei valittu"
         custom_instructions: "Mukautetut ohjeet"
         custom_instructions_help: "Sivustoasi koskevat mukautetut ohjeet, jotka auttavat tekoälyä tunnistamaan roskapostia, esim. \"ole aggressiivisempi skannattaessa viestejä, jotka eivät ole englanninkielisiä\"."
         last_seven_days: "Viimeiset 7 päivää"
@@ -826,6 +828,7 @@ fi:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Mukautettu"
         provider_fields:
@@ -928,10 +931,7 @@ fi:
           uploads_in_progress: "Lähettäminen ei onnistu, kun latauksia on käynnissä"
           scroll_to_bottom: "Vieritä alas"
       sentiments:
-        dashboard:
-          title: "Sävy"
         sidebar:
-          overview: "Sävyn yleiskatsaus"
           analysis: "Sävyanalyysi"
         sentiment_analysis:
           share_chart: "Kopioi linkki kaavioon"

@@ -1,6 +1,7 @@
 import {
   click,
   currentURL,
+  find,
   visit,
   waitFor,
   waitUntil,
@@ -13,6 +14,7 @@ import {
 } from "discourse/admin/lib/color-scheme-manager";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import DiscourseURL from "discourse/lib/url";
+import DesignWizardService from "discourse/services/design-wizard";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const APPEARANCE_LAUNCH_BUTTON =
@@ -59,6 +61,7 @@ acceptance("Design wizard - admin launch", function (needs) {
   let wizardData;
   let importRequests;
   let importFails;
+  let docked;
 
   needs.user({
     admin: true,
@@ -72,6 +75,12 @@ acceptance("Design wizard - admin launch", function (needs) {
     importRequests = [];
     importFails = false;
     this.originalSchemeLinks = captureColorSchemeLinks();
+
+    // docking follows the viewport, which the test runner doesn't control
+    docked = false;
+    sinon.stub(DesignWizardService.prototype, "docked").get(function () {
+      return this.active && docked;
+    });
   });
 
   // A wizard preview swaps the test page's real color-scheme links, and an
@@ -114,6 +123,249 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     server.get("/admin/config/site_settings.json", () =>
       helper.response(200, { site_settings: [] })
+    );
+  });
+
+  test("minimizing preserves the preview and selections while browsing", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click(".design-wizard__color-mode:last-child");
+    await click(
+      ".design-wizard__font-group:first-child .design-wizard__font-select"
+    );
+    await click("[data-identifier='design-wizard-base-font'] .body-font-arial");
+
+    const previewLinks = captureColorSchemeLinks();
+    const sections = find(".design-wizard__sections");
+    const savedCount = savedPayloads.length;
+
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(".design-wizard")
+      .hasAttribute("inert", "", "hides controls from keyboard navigation");
+    assert
+      .dom(".design-wizard")
+      .hasAria("hidden", "true", "hides controls from assistive technology");
+    assert
+      .dom(".design-wizard__restore")
+      .isFocused("moves focus to the restore button");
+    assert
+      .dom(".design-wizard__restore")
+      .hasAria("expanded", "false", "exposes the collapsed state");
+    assert
+      .dom(".design-wizard__restore")
+      .includesText("Step 2/3", "shows the current step");
+    assert
+      .dom(".dialog-footer")
+      .doesNotExist("minimizing does not ask about saved changes");
+    assert.strictEqual(
+      savedPayloads.length,
+      savedCount,
+      "minimizing does not save changes"
+    );
+    assert.deepEqual(
+      captureColorSchemeLinks(),
+      previewLinks,
+      "keeps the palette preview applied"
+    );
+
+    await visit("/categories");
+
+    assert
+      .dom(".design-wizard__restore")
+      .exists("keeps the restore button available on another page");
+    await click(".design-wizard__restore");
+
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("removes the restore bar when expanded");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "restores keyboard access");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute(
+        "aria-hidden",
+        "restores access for assistive technology"
+      );
+    assert
+      .dom(".design-wizard__minimize")
+      .isFocused("returns focus to the panel");
+    assert
+      .dom(".design-wizard__color-mode:last-child")
+      .hasAria("pressed", "true", "preserves the color mode selection");
+    assert
+      .dom(".design-wizard__font-group:first-child .design-wizard__font-select")
+      .hasText("Arial", "preserves the unsaved font selection");
+    assert.strictEqual(
+      find(".design-wizard__sections"),
+      sections,
+      "keeps the controls mounted to retain their scroll position"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      savedCount,
+      "restoring does not save changes"
+    );
+    assert.deepEqual(
+      captureColorSchemeLinks(),
+      previewLinks,
+      "restoring keeps the palette preview applied"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("the intro can be minimized and a new run opens expanded", async function (assert) {
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(".design-wizard__restore")
+      .includesText("Customize your site", "labels the way back to the wizard");
+    assert
+      .dom(".design-wizard__restore-progress")
+      .doesNotExist("does not show step progress before the wizard starts");
+
+    await click(".design-wizard__restore");
+    assert.dom(".design-wizard__intro").exists("restores the introduction");
+    await click(".design-wizard__close");
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "a fresh run is expanded");
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("a fresh run has no minimized bar");
+    await click(".design-wizard__close");
+  });
+
+  test("docks beside the page and collapses to a rail on wide screens", async function (assert) {
+    docked = true;
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(document.documentElement)
+      .hasClass("design-wizard-docked", "reserves space beside the page");
+    assert.dom(".design-wizard").hasClass("--docked");
+    assert
+      .dom(".design-wizard__step-progress")
+      .doesNotExist("does not show step progress before the wizard starts");
+
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__step-progress")
+      .hasText("Step 2/3", "shows the current step as text");
+
+    const sections = find(".design-wizard__sections");
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(document.documentElement)
+      .hasClass("design-wizard-collapsed", "narrows the reserved space");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "keeps the rail reachable by keyboard");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("aria-hidden", "keeps the rail announced");
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("uses the rail instead of the restore bar");
+    assert
+      .dom(".design-wizard__expand")
+      .isFocused("moves focus to the expand button");
+    assert
+      .dom(".design-wizard__expand")
+      .includesText("Step 2/3", "names the current step");
+    assert
+      .dom(".design-wizard__expand")
+      .hasAria("expanded", "false", "exposes the collapsed state");
+
+    await visit("/categories");
+
+    assert
+      .dom(".design-wizard__expand")
+      .exists("stays collapsed while browsing");
+
+    await click(".design-wizard__expand");
+
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass("design-wizard-collapsed", "widens the reserved space");
+    assert
+      .dom(".design-wizard__minimize")
+      .isFocused("returns focus to the panel");
+    assert.strictEqual(
+      find(".design-wizard__sections"),
+      sections,
+      "keeps the controls mounted to retain their scroll position"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass("design-wizard-docked", "gives the space back");
+  });
+
+  test("saves a dark-only palette for both system color modes", async function (assert) {
+    wizardData.themes[0].palette_pairs.push({
+      key: "dracula",
+      name: "Dracula",
+      dark_only: true,
+      light: null,
+      dark: {
+        id: -11,
+        name: "Dracula",
+        colors: { primary: "f8f8f2", secondary: "282a36" },
+      },
+    });
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click('[data-pair-key="dracula"]');
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "progress saves Dracula as the default palette for light systems"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "progress saves Dracula for dark systems"
+    );
+
+    await click(".design-wizard__save");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "the final save keeps Dracula as the default palette"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "the final save keeps Dracula for dark systems"
     );
   });
 
@@ -324,6 +576,52 @@ acceptance("Design wizard - admin launch", function (needs) {
         "reverts the original channel after resuming"
       );
     });
+  });
+
+  test("resuming drops homepage options that are no longer available", async function (assert) {
+    wizardData.homepage = "chat";
+    wizardData.homepage_settings = { chat_homepage_channel: "23" };
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        path: "/categories",
+        settings: { chat_homepage_channel: "12" },
+      },
+    ];
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+
+    wizardData.additional_homepages = [];
+    wizardData.homepage_settings = {};
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.start({ resuming: true });
+    await wizard.saveProgress();
+
+    assert.strictEqual(savedPayloads.at(-1).homepage, "latest");
+    assert.strictEqual(savedPayloads.at(-1).homepage_settings, undefined);
+
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    await click('[data-homepage="categories"]');
+    await wizard.saveProgress();
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings,
+      undefined,
+      "selecting a homepage does not reintroduce unavailable original settings"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-danger");
+    assert.strictEqual(savedPayloads.at(-1).homepage, "");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings,
+      undefined,
+      "reverting does not send unavailable snapshot settings"
+    );
   });
 
   ["topics", "categories"].forEach((choice) => {

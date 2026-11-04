@@ -71,7 +71,15 @@ class LiveWebrtcStub extends Service {
     return "connected";
   }
 
+  canDiagnoseConnection() {
+    return false;
+  }
+
   isTranscribingRoom() {
+    return false;
+  }
+
+  isRecordingLocally() {
     return false;
   }
 

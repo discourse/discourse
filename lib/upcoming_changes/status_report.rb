@@ -3,7 +3,6 @@
 require "json"
 require "open3"
 require "optparse"
-require "pathname"
 require "psych"
 require "tempfile"
 

@@ -196,30 +196,39 @@ RSpec.describe StaticController do
       end
     end
 
-    [
-      ["tos", :tos_url, I18n.t("js.tos")],
-      ["privacy", :privacy_policy_url, I18n.t("js.privacy")],
-    ].each do |id, setting_name, text|
-      context "with #{id}" do
-        context "when #{setting_name} site setting is NOT set" do
-          it "renders the #{id} page" do
-            get "/#{id}"
+    shared_examples "a configured static information page" do |id:, setting_name:, text:|
+      context "when #{setting_name} site setting is NOT set" do
+        it "renders the #{id} page" do
+          get "/#{id}"
 
-            expect(response.status).to eq(200)
-            expect(response.body).to include(text)
-          end
-        end
-
-        context "when #{setting_name} site setting is set" do
-          before { SiteSetting.set(setting_name, "http://example.com/page") }
-
-          it "redirects to the #{setting_name}" do
-            get "/#{id}"
-
-            expect(response).to redirect_to("http://example.com/page")
-          end
+          expect(response.status).to eq(200)
+          expect(response.body).to include(text)
         end
       end
+
+      context "when #{setting_name} site setting is set" do
+        before { SiteSetting.set(setting_name, "http://example.com/page") }
+
+        it "redirects to the #{setting_name}" do
+          get "/#{id}"
+
+          expect(response).to redirect_to("http://example.com/page")
+        end
+      end
+    end
+
+    context "for the terms of service page" do
+      include_examples "a configured static information page",
+                       id: "tos",
+                       setting_name: :tos_url,
+                       text: I18n.t("js.tos")
+    end
+
+    context "for the privacy policy page" do
+      include_examples "a configured static information page",
+                       id: "privacy",
+                       setting_name: :privacy_policy_url,
+                       text: I18n.t("js.privacy")
     end
 
     it "renders the localized guidelines post" do
@@ -310,11 +319,24 @@ RSpec.describe StaticController do
     context "when login_required is enabled" do
       before { SiteSetting.login_required = true }
 
-      %w[faq guidelines rules conduct].each do |page_name|
-        it "#{page_name} page redirects to login page for anon" do
-          get "/#{page_name}"
-          expect(response).to redirect_to "/login"
-        end
+      it "faq page redirects to login page for anon" do
+        get "/faq"
+        expect(response).to redirect_to "/login"
+      end
+
+      it "guidelines page redirects to login page for anon" do
+        get "/guidelines"
+        expect(response).to redirect_to "/login"
+      end
+
+      it "rules page redirects to login page for anon" do
+        get "/rules"
+        expect(response).to redirect_to "/login"
+      end
+
+      it "conduct page redirects to login page for anon" do
+        get "/conduct"
+        expect(response).to redirect_to "/login"
       end
 
       it "guidelines page loads for logged in user" do
@@ -326,14 +348,28 @@ RSpec.describe StaticController do
         expect(response.body).to include(I18n.t("js.guidelines"))
       end
 
-      %w[faq rules conduct].each do |page_name|
-        it "#{page_name} page redirects to guidelines for logged in user" do
-          sign_in(Fabricate(:user))
+      it "faq page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
 
-          get "/#{page_name}"
+        get "/faq"
 
-          expect(response).to redirect_to("/guidelines")
-        end
+        expect(response).to redirect_to("/guidelines")
+      end
+
+      it "rules page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/rules"
+
+        expect(response).to redirect_to("/guidelines")
+      end
+
+      it "conduct page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/conduct"
+
+        expect(response).to redirect_to("/guidelines")
       end
     end
 

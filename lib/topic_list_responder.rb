@@ -4,6 +4,10 @@ module TopicListResponder
   def respond_with_list(list)
     discourse_expires_in 1.minute
 
+    if list.category && category_noindex?(list.category)
+      response.headers["X-Robots-Tag"] = noindex_header_value
+    end
+
     respond_to do |format|
       format.html do
         @list = list
@@ -42,6 +46,13 @@ module TopicListResponder
   end
 
   private
+
+  def canonical_list_url(path)
+    url = "#{Discourse.base_url_no_prefix}#{path}"
+    page = params[:page]
+    url = "#{url}?page=#{page.to_i}" if TopicQuery.validate?(:page, page) && page.to_i > 0
+    canonical_url(url)
+  end
 
   def localize_topic_list_content(list)
     return if list.topics.blank? || !SiteSetting.content_localization_enabled

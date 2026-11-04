@@ -159,6 +159,8 @@ ro:
             other: "%{count} de postări"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Nimic"
+        no_decision_model_selected: "Nimic"
         last_seven_days: "Ultimele 7 zile"
         enable: "Activează"
         save_button: "Salvează modificări"

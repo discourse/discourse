@@ -418,7 +418,6 @@ module DiscourseAi
 
                   tool_invocation_budget_exhausted ||=
                     tool_batch_count >= MAX_TOOL_CALLS_PER_COMPLETION ||
-                      spawn_agent_budget_exhausted?(tool, context) ||
                       tool_invocation_budget_exhausted?(context)
 
                   chain_next_response =
@@ -516,21 +515,13 @@ module DiscourseAi
 
       private
 
-      def spawn_agent_budget_exhausted?(tool, context)
-        tool.is_a?(Tools::SpawnAgent) && !context.subagent_execution_state.spawn_available?
-      end
-
       def tool_invocation_budget_exhausted?(context)
         runtime_tools = context.runtime_tools.presence || agent.available_tools
         return false if runtime_tools.empty?
 
         runtime_tools.all? do |tool_class|
-          if tool_class <= Tools::SpawnAgent
-            !context.subagent_execution_state.spawn_available?
-          else
-            limit = agent.options[tool_class].to_h.with_indifferent_access[:max_invocations].to_i
-            context.tool_invocation_limit_reached?(tool_class.name, limit: limit)
-          end
+          limit = agent.options[tool_class].to_h.with_indifferent_access[:max_invocations].to_i
+          context.tool_invocation_limit_reached?(tool_class.name, limit: limit)
         end
       end
 
@@ -633,7 +624,7 @@ module DiscourseAi
               reviewable_id: reviewable.id,
               summary: tool.approval_title,
               changes: tool.approval_changes,
-              details: tool.approval_details,
+              details: chat_approval_details(tool),
               description_label: tool.approval_description_label,
               show_description: tool.approval_show_description?,
               question: tool.approval_question,
@@ -658,6 +649,16 @@ module DiscourseAi
         end
 
         { status: "pending_approval", message: I18n.t("discourse_ai.ai_bot.tool_pending_approval") }
+      end
+
+      # The approval card is posted as a chat message, so its details must fit
+      # within the chat message length limit or the card cannot be created.
+      def chat_approval_details(tool)
+        details = tool.approval_details.to_s
+        max_length = SiteSetting.chat_maximum_message_length
+        return details if details.length <= max_length
+
+        tool.compact_approval_details(max_length:).to_s.truncate(max_length)
       end
 
       def process_tool(

@@ -160,18 +160,28 @@ RSpec.describe TopicsBulkAction do
     fab!(:group) { Fabricate(:group).tap { |group| group.add(user) } }
     fab!(:private_message) { Fabricate(:private_message_topic, user: user, recipient: other_user) }
 
-    %w[archive_messages move_messages_to_inbox].each do |operation|
-      it "rejects #{operation} when the selected group is not a message recipient" do
-        topic_ids =
-          TopicsBulkAction.new(
-            user,
-            [private_message.id],
-            { type: operation },
-            group: group.name,
-          ).perform!
+    it "rejects archive_messages when the selected group is not a message recipient" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [private_message.id],
+          { type: "archive_messages" },
+          group: group.name,
+        ).perform!
 
-        expect(topic_ids).to be_empty
-      end
+      expect(topic_ids).to be_empty
+    end
+
+    it "rejects move_messages_to_inbox when the selected group is not a message recipient" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [private_message.id],
+          { type: "move_messages_to_inbox" },
+          group: group.name,
+        ).perform!
+
+      expect(topic_ids).to be_empty
     end
   end
 
@@ -565,55 +575,83 @@ RSpec.describe TopicsBulkAction do
       expect(TopicUser.get(topic, topic.user)).to be_blank
     end
 
-    ["", nil, :missing].each do |invalid_value|
-      it "raises error when notification_level_id is #{invalid_value.inspect}" do
-        options = { type: "change_notification_level" }
-        options[:notification_level_id] = invalid_value unless invalid_value == :missing
+    it "raises error when notification_level_id is \"\"" do
+      options = { type: "change_notification_level" }
+      options[:notification_level_id] = ""
 
-        expect do
-          TopicsBulkAction.new(topic.user, [topic.id], **options).perform!
-        end.to raise_error(Discourse::InvalidParameters, /notification_level_id/)
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
+
+    it "raises error when notification_level_id is nil" do
+      options = { type: "change_notification_level" }
+      options[:notification_level_id] = nil
+
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
+
+    it "raises error when notification_level_id is :missing" do
+      options = { type: "change_notification_level" }
+
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
+  end
+
+  shared_examples "moderating topics in bulk" do |action:|
+    it "#{action}s topic when user can moderate" do
+      Guardian.any_instance.expects(:can_moderate?).returns(true)
+      Guardian.any_instance.expects(:can_create?).returns(true)
+
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      case action
+      when "close"
+        expect(topic).to be_closed
+      when "archive"
+        expect(topic).to be_archived
+      when "unlist"
+        expect(topic).not_to be_visible
+      end
+    end
+
+    it "doesn't #{action} topic when user can't moderate" do
+      Guardian.any_instance.expects(:can_moderate?).returns(false)
+
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+
+      expect(topic_ids).to be_blank
+      topic.reload
+      case action
+      when "close"
+        expect(topic).not_to be_closed
+      when "archive"
+        expect(topic).not_to be_archived
+      when "unlist"
+        expect(topic).to be_visible
       end
     end
   end
 
-  %w[close archive unlist].each do |action|
-    describe action do
-      it "#{action}s topic when user can moderate" do
-        Guardian.any_instance.expects(:can_moderate?).returns(true)
-        Guardian.any_instance.expects(:can_create?).returns(true)
+  context "when closing topics" do
+    include_examples "moderating topics in bulk", action: "close"
+  end
 
-        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+  context "when archiving topics" do
+    include_examples "moderating topics in bulk", action: "archive"
+  end
 
-        expect(topic_ids).to eq([topic.id])
-        topic.reload
-        case action
-        when "close"
-          expect(topic).to be_closed
-        when "archive"
-          expect(topic).to be_archived
-        when "unlist"
-          expect(topic).not_to be_visible
-        end
-      end
-
-      it "doesn't #{action} topic when user can't moderate" do
-        Guardian.any_instance.expects(:can_moderate?).returns(false)
-
-        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
-
-        expect(topic_ids).to be_blank
-        topic.reload
-        case action
-        when "close"
-          expect(topic).not_to be_closed
-        when "archive"
-          expect(topic).not_to be_archived
-        when "unlist"
-          expect(topic).to be_visible
-        end
-      end
-    end
+  context "when unlisting topics" do
+    include_examples "moderating topics in bulk", action: "unlist"
   end
 
   describe "reset_bump_dates" do

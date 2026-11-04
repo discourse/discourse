@@ -1,0 +1,47 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  admin_js:
+    blog:
+      admin:
+        overridden: Individuaalne
+        preview_home: Avaleht
+        preview_archive: Arhiiv
+        desktop: Töölaud
+        mobile: Mobiil
+        themes: Kujundused
+        theme_name: Teema nimi
+        edit: Muuda
+        preview: Eelvaade
+        import: Impordi
+        export: Ekspordi
+        active: Aktiivne
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Mustand
+        preview: Eelvaade
+        change:
+          title: pealkiri
+          body: sisu
+      review:
+        copy: Kopeeri
+        open: Ava
+        status:
+          active: Aktiivne
+          inactive: Mitteaktiivne
+        closed_on: "Suletud %{date}"
+        revoke: Tühista
+        message: Tagasiside
+      editor_table:
+        edit: Muuda
+        status: Staatus
+        replies: Vastused
+      drafts: Mustandid
+      preview: Eelvaade
+      unpublish: Tühista avaldamine

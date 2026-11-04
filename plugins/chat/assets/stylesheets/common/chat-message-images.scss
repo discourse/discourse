@@ -46,8 +46,8 @@ $max_video_height: 250px;
     }
   }
 
-  // Event images are sized by the onebox width, so match the width used in posts
-  aside.onebox:has(.discourse-event-onebox) {
+  // Match the maximum width used in posts
+  aside.onebox {
     max-width: var(--topic-body-width);
   }
 

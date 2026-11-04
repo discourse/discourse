@@ -86,6 +86,10 @@ hy:
       assign:
         errors:
           not_found: "Թեման չի գտնվել."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Վերնամաս"
     reviewables:
       ai_tool_action:
         approve:

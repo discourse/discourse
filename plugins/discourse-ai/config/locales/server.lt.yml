@@ -47,6 +47,9 @@ lt:
         explain: "Paaiškinkite"
         replace_dates: "Išmaniosios datos"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Šlamšto aptikimas"
       navigation:
         users:
           title: "Vartotojai"
@@ -220,6 +223,12 @@ lt:
       assign:
         errors:
           not_found: "Tema nerasta."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Antraštė"
+      fonts:
+        heading_font: "Antraštės šriftas"
     reviewables:
       ai_tool_action:
         title: "DI įrankio veiksmas"

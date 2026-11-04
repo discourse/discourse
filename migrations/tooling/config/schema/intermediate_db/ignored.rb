@@ -3,6 +3,7 @@
 Migrations::Tooling::Schema.ignored do
   # Plugins — all their tables and columns on core tables are auto-ignored via manifest
   plugin :automation, "Not migrated yet"
+  plugin :blog, "Not migrated yet"
   plugin :boards, "Not migrated yet"
   plugin :chat, "Not migrated yet"
   plugin :discourse_adplugin, "Not migrated yet"
@@ -117,7 +118,8 @@ Migrations::Tooling::Schema.ignored do
          :group_requests,
          :group_tag_notification_defaults
 
-  tables :child_themes,
+  tables :appearance_changes,
+         :child_themes,
          :color_scheme_colors,
          :color_schemes,
          :remote_themes,

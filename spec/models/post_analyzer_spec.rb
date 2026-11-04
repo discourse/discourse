@@ -66,7 +66,7 @@ RSpec.describe PostAnalyzer do
 
     it "respects SiteSetting.max_oneboxes_per_post" do
       SiteSetting.max_oneboxes_per_post = 2
-      Oneboxer.expects(:cached_onebox).with(url).returns("something").twice
+      Oneboxer.stubs(:cached_onebox).with(url).returns("something")
 
       cooked = post_analyzer.cook(<<~RAW)
         #{url}
@@ -79,8 +79,20 @@ RSpec.describe PostAnalyzer do
       expect(cooked).to match_html(<<~HTML)
         <p>something</p>
         <p>something</p>
-        <p><a href="#{url}" class="onebox" target="_blank" rel="noopener nofollow ugc">#{url}</a></p>
+        <p><a href="#{url}" rel="noopener nofollow ugc">#{url}</a></p>
       HTML
+    end
+
+    it "only renders max_oneboxes_per_post oneboxes for repeats of a cached URL" do
+      SiteSetting.max_oneboxes_per_post = 2
+      Oneboxer.stubs(:cached_onebox).with(url).returns("<div>something</div>")
+
+      raw = Array.new(3, "<a class=\"onebox\" href=\"#{url}\">#{url}</a>").join("\n\n")
+
+      cooked = post_analyzer.cook(raw)
+
+      expect(cooked).to have_tag("div", text: "something", count: 2)
+      expect(cooked).to have_tag("a", with: { href: url }, count: 1)
     end
   end
 

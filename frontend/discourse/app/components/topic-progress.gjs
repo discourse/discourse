@@ -41,24 +41,26 @@ export default class TopicProgress extends Component {
     );
   }
 
-  @computed("postStream.filteredPostsCount")
-  get hugeNumberOfPosts() {
-    return (
-      this.postStream?.filteredPostsCount >=
-      this.siteSettings.short_progress_text_threshold
-    );
-  }
-
-  @computed("progressPosition", "topic.last_read_post_id")
+  @computed(
+    "progressPosition",
+    "topic.last_read_post_id",
+    "topic.last_read_post_number",
+    "postStream.filteredPostsCount"
+  )
   get showBackButton() {
     if (!this.topic?.last_read_post_id) {
       return;
     }
 
-    const stream = this.get("postStream.stream");
-    const readPos = stream.indexOf(this.topic?.last_read_post_id) || 0;
+    const readPos = this.postStream.progressIndexOfPostId({
+      id: this.topic.last_read_post_id,
+      post_number: this.topic.last_read_post_number,
+    });
 
-    return readPos < stream.length - 1 && readPos > this.progressPosition;
+    return (
+      readPos < this.postStream.filteredPostsCount &&
+      readPos > this.progressPosition + 1
+    );
   }
 
   @computed("_streamPercentage")
@@ -135,10 +137,8 @@ export default class TopicProgress extends Component {
     >
       <div class="nums">
         <span>{{this.progressPosition}}</span>
-        <span class={{if this.hugeNumberOfPosts "hidden"}}>/</span>
-        <span
-          class={{if this.hugeNumberOfPosts "hidden"}}
-        >{{this.postStream.filteredPostsCount}}</span>
+        <span>/</span>
+        <span>{{this.postStream.filteredPostsCount}}</span>
       </div>
       <div class="bg"></div>
     </nav>

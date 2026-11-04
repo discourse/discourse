@@ -206,7 +206,15 @@ export default class DiscobotDiscoveries extends Service {
   @action
   async triggerDiscovery(
     query,
-    { scope, trigger, triggerReason, intentHeuristic, classifyIntent } = {}
+    {
+      scope,
+      trigger,
+      triggerReason,
+      intentHeuristic,
+      classifyIntent,
+      deferIfPrecise,
+      deferredAskLogId,
+    } = {}
   ) {
     const normalizedQuery = query?.trim();
 
@@ -229,16 +237,15 @@ export default class DiscobotDiscoveries extends Service {
     const requestId = buildRequestId();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
-    this.a11y.announce(
-      i18n("discourse_ai.discobot_discoveries.asking"),
-      "polite"
-    );
+    // a search that may defer its answer is not an ask until the server says so
+    if (!deferIfPrecise) {
+      this.#noteAsking(normalizedQuery);
+    }
 
     this.scheduleDiscoveryTimeout();
 
     try {
       this.lastQuery = normalizedQuery;
-      this.rememberAsk(normalizedQuery);
 
       const response = await ajax("/discourse-ai/discoveries/reply", {
         type: "POST",
@@ -250,11 +257,21 @@ export default class DiscobotDiscoveries extends Service {
           ...(triggerReason && { trigger_reason: triggerReason }),
           ...(intentHeuristic && { intent_heuristic: intentHeuristic }),
           ...(classifyIntent && { classify_intent: true }),
+          ...(deferIfPrecise && { defer_if_precise: true }),
+          ...(deferredAskLogId && { deferred_ask_log_id: deferredAskLogId }),
         },
       });
 
       if (response.request_id !== requestId) {
         throw new Error("Discovery request ID mismatch");
+      }
+      if (deferIfPrecise && this.activeRequestId === requestId) {
+        if (response.answer_deferred) {
+          this.cancelDiscoveryTimeout();
+          this.loadingDiscoveries = false;
+        } else {
+          this.#noteAsking(normalizedQuery);
+        }
       }
       return response;
     } catch {
@@ -317,5 +334,13 @@ export default class DiscobotDiscoveries extends Service {
       cancel(this.discoveryTimeout);
       this.discoveryTimeout = null;
     }
+  }
+
+  #noteAsking(query) {
+    this.a11y.announce(
+      i18n("discourse_ai.discobot_discoveries.asking"),
+      "polite"
+    );
+    this.rememberAsk(query);
   }
 }

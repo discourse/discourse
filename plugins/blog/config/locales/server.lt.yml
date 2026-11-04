@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  blog:
+    home: Pradinis
+    posted_by: Paskelbė
+    permalink: Nuoroda
+    time_ago: "prieš %{time}"
+    archive: Archyvuoti
+    about: Apie
+    community: Bendruomenė
+    preview: Peržiūrėti
+    search: Paieška
+    replies:
+      one: "%{count} atsakymas"
+      few: "%{count} atsakymai"
+      many: "%{count} atsakymai"
+      other: "%{count} atsakymai"

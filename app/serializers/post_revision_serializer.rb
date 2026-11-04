@@ -6,6 +6,9 @@ class PostRevisionSerializer < ApplicationSerializer
              # which revision is hidden
              :previous_hidden,
              :current_hidden,
+             # which revisions are skipped when navigating
+             :unlisted,
+             :unlisted_revision_count,
              # dynamic & based on the current scope
              :first_revision,
              :previous_revision,
@@ -62,13 +65,17 @@ class PostRevisionSerializer < ApplicationSerializer
     !!(adjacent_current && adjacent_current["hidden"])
   end
 
+  def unlisted_revision_count
+    revisions.count { |r| r["unlisted"] }
+  end
+
   def first_revision
-    revisions.first["revision"]
+    navigable_revisions.first["revision"]
   end
 
   def previous_revision
     @previous_revision ||=
-      revisions
+      navigable_revisions
         .select { |r| r["revision"] >= first_revision }
         .select { |r| r["revision"] < current_revision }
         .last
@@ -81,7 +88,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def next_revision
     @next_revision ||=
-      revisions
+      navigable_revisions
         .select { |r| r["revision"] <= last_revision }
         .select { |r| r["revision"] > current_revision }
         .first
@@ -89,7 +96,9 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def last_revision
-    @last_revision ||= revisions.select { |r| r["revision"] <= post.version }.last["revision"]
+    @last_revision ||=
+      navigable_revisions.select { |r| r["revision"] <= post.version }.last&.dig("revision") ||
+        current_revision
   end
 
   def current_version
@@ -267,11 +276,27 @@ class PostRevisionSerializer < ApplicationSerializer
       all_revisions.select { |r| scope.can_view_hidden_post_revisions? || !r["hidden"] }
   end
 
+  # Diffs keep using `revisions`, so skipping an unlisted revision never merges it into a
+  # neighbor's diff. The current revision stays so direct links to an unlisted one work.
+  def navigable_revisions
+    @navigable_revisions ||=
+      if scope.can_navigate_unlisted_post_revisions? || @options[:include_unlisted]
+        revisions
+      else
+        revisions.reject { |r| r["unlisted"] && r["revision"] != current_revision }
+      end
+  end
+
   def all_revisions
     return @all_revisions if @all_revisions
 
     post_revisions =
-      PostRevision.where(post_id: object.post_id).order(number: :desc).limit(99).to_a.reverse
+      PostRevision
+        .where(post_id: object.post_id)
+        .order(number: :desc)
+        .limit(PostRevision::HISTORY_WINDOW)
+        .to_a
+        .reverse
 
     latest_modifications = {
       "raw" => [post.raw],
@@ -314,6 +339,7 @@ class PostRevisionSerializer < ApplicationSerializer
       revision = ActiveSupport::HashWithIndifferentAccess.new
       revision[:revision] = pr.number
       revision[:hidden] = pr.hidden
+      revision[:unlisted] = pr.unlisted
 
       pr.modifications.each { |field, (value, _)| revision[field] = value }
 

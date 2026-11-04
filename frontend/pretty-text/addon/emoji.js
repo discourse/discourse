@@ -144,23 +144,8 @@ export function buildEmojiUrl(code, opts) {
     url = opts.customEmoji[code].url || opts.customEmoji[code];
   }
 
-  const noToneMatch = code.match(/([^:]+):?/);
-
-  let emojiBasePath = "/images/emoji";
-  if (opts.emojiCDNUrl) {
-    emojiBasePath = opts.emojiCDNUrl;
-  }
-
-  if (
-    opts.getURL &&
-    opts.emojiSet &&
-    noToneMatch &&
-    !url &&
-    (emojis.has(noToneMatch[1]) || aliasMap.has(noToneMatch[1]))
-  ) {
-    url = opts.getURL(
-      `${emojiBasePath}/${opts.emojiSet}/${code.replace(/:t/, "/")}.png`
-    );
+  if (!url && opts.emojiSet) {
+    url = standardEmojiUrl(code, opts.emojiSet, "png", opts);
   }
 
   if (url) {
@@ -168,6 +153,35 @@ export function buildEmojiUrl(code, opts) {
   }
 
   return url;
+}
+
+// Only some standard emojis are animated, so this URL may not exist.
+export function buildAnimatedEmojiUrl(code, opts) {
+  code = String(code).toLowerCase();
+
+  if (isCustomEmoji(code, opts)) {
+    return;
+  }
+
+  const url = standardEmojiUrl(code, "noto_animated", "avif", opts);
+  if (url) {
+    return `${url}?v=${IMAGE_VERSION}`;
+  }
+}
+
+function standardEmojiUrl(code, set, extension, opts) {
+  const noToneMatch = code.match(/([^:]+):?/);
+
+  if (
+    opts.getURL &&
+    noToneMatch &&
+    (emojis.has(noToneMatch[1]) || aliasMap.has(noToneMatch[1]))
+  ) {
+    const emojiBasePath = opts.emojiCDNUrl || "/images/emoji";
+    return opts.getURL(
+      `${emojiBasePath}/${set}/${code.replace(/:t/, "/")}.${extension}`
+    );
+  }
 }
 
 export function emojiExists(code) {

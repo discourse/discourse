@@ -66,7 +66,7 @@ describe BackupRestore::Creator do
       extracted
     end
 
-    [1, 4].each do |concurrency|
+    shared_examples "creating a backup with concurrent downloads" do |concurrency:|
       it "downloads files with GET requests and no HEAD requests with #{concurrency} workers" do
         GlobalSetting.stubs(:backup_s3_download_concurrency).returns(concurrency)
         2.times do |index|
@@ -339,6 +339,14 @@ describe BackupRestore::Creator do
         end
       end
     end
+
+    context "with one concurrent download" do
+      include_examples "creating a backup with concurrent downloads", concurrency: 1
+    end
+
+    context "with four concurrent downloads" do
+      include_examples "creating a backup with concurrent downloads", concurrency: 4
+    end
   end
 
   describe "#create_archive" do
@@ -360,7 +368,7 @@ describe BackupRestore::Creator do
       end
     end
 
-    [true, false].each do |include_thumbnails|
+    shared_examples "creating a compatible backup archive" do |include_thumbnails:|
       it "creates a compatible gzip archive with thumbnails #{include_thumbnails}" do
         Rails.stubs(:public_path).returns(Pathname.new(@directory))
         SiteSetting.include_thumbnails_in_backups = include_thumbnails
@@ -397,6 +405,14 @@ describe BackupRestore::Creator do
         expect(File.exist?(File.join(uploads, "optimized", "thumb.txt"))).to eq(include_thumbnails)
         expect(File.read(File.join(@local_uploads, "file.txt"))).to eq("local upload")
       end
+    end
+
+    context "when thumbnails are included" do
+      include_examples "creating a compatible backup archive", include_thumbnails: true
+    end
+
+    context "when thumbnails are omitted" do
+      include_examples "creating a compatible backup archive", include_thumbnails: false
     end
 
     it "skips dangling symlinks and still produces a readable backup" do
@@ -482,14 +498,22 @@ describe BackupRestore::Creator do
       expect(File.exist?(@staging)).to eq(false)
     end
 
-    [RuntimeError, SystemExit].each do |error|
-      it "removes the partial archive and waits for gzip when interrupted by #{error}" do
-        creator.stubs(:add_local_uploads_to_archive).raises(error)
-        expect { creator.send(:create_archive) }.to raise_error(error)
+    shared_examples "cleaning up an interrupted backup archive" do |error_class:|
+      it "removes the partial archive and waits for gzip" do
+        creator.stubs(:add_local_uploads_to_archive).raises(error_class)
+        expect { creator.send(:create_archive) }.to raise_error(error_class)
         expect(Dir.glob(File.join(@directory, "backup*"))).to be_empty
         expect(creator.instance_variable_get(:@archive)).to be_nil
         expect($?.success?).to eq(true)
       end
+    end
+
+    context "when interrupted by RuntimeError" do
+      include_examples "cleaning up an interrupted backup archive", error_class: RuntimeError
+    end
+
+    context "when interrupted by SystemExit" do
+      include_examples "cleaning up an interrupted backup archive", error_class: SystemExit
     end
 
     it "does not publish an archive when gzip fails" do

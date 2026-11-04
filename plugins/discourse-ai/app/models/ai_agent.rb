@@ -85,6 +85,9 @@ class AiAgent < ActiveRecord::Base
   after_update :sync_spam_detection_model, if: :saved_change_to_default_llm_id?
   before_destroy :ensure_not_system
   after_destroy :remove_destroyed_agent_from_subagents
+  after_destroy :sync_bot_user_activation
+  after_save :sync_bot_user_activation,
+             if: -> { saved_change_to_enabled? || saved_change_to_user_id? }
 
   def self.agent_cache
     @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
@@ -533,6 +536,23 @@ class AiAgent < ActiveRecord::Base
 
   private
 
+  def sync_bot_user_activation
+    user_ids = [user_id]
+    user_ids.concat(saved_change_to_user_id) if !destroyed? && saved_change_to_user_id?
+
+    User
+      .bot_users
+      .where(id: user_ids.compact.uniq)
+      .order(:id)
+      .lock
+      .each do |bot_user|
+        next if bot_user.is_system_user? || bot_user.staff?
+
+        active = self.class.where(user_id: bot_user.id, enabled: true).exists?
+        bot_user.update!(active:) if bot_user.active? != active
+      end
+  end
+
   # Spam scans use an explicit model setting, so agent edits must update it too.
   # Clearing the agent default preserves the model selected for spam detection.
   def sync_spam_detection_model
@@ -550,10 +570,10 @@ class AiAgent < ActiveRecord::Base
         email: "#{SecureRandom.hex}@does-not-exist.invalid",
         name: name.titleize,
         username: UserNameSuggester.suggest(name + "_bot"),
-        active: true,
+        active: enabled?,
         approved: true,
         trust_level: TrustLevel[4],
-        id: DiscourseAi::BotUser.next_id,
+        id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id,
       )
     user.save!(validate: false)
 

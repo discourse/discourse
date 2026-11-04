@@ -1,30 +1,5 @@
-import deprecated from "discourse/lib/deprecated";
-
 export function scrollTopFor(y) {
   return y - offsetCalculator();
-}
-
-export function minimumOffset() {
-  deprecated(
-    "The minimumOffset() helper is deprecated, please use headerOffset() instead.",
-    {
-      since: "2.8.0.beta10",
-      id: "discourse.offset-calculator.minimumOffset",
-    }
-  );
-
-  const header = document.querySelector("header.d-header"),
-    iPadNav = document.querySelector(".footer-nav-ipad .footer-nav"),
-    iPadNavHeight = iPadNav ? iPadNav.offsetHeight : 0;
-
-  // if the header has a positive offset from the top of the window, we need to include the offset
-  // this covers cases where a site has a custom header above d-header (covers fixed and unfixed)
-  const headerWrap = document.querySelector(".d-header-wrap"),
-    headerWrapOffset = headerWrap.getBoundingClientRect();
-
-  return header
-    ? header.offsetHeight + headerWrapOffset.top + iPadNavHeight
-    : 0;
 }
 
 export function headerOffset() {

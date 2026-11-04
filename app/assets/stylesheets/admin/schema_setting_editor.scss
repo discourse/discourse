@@ -4,7 +4,7 @@
   .schema-setting-editor__wrapper {
     --schema-space: 0.5em;
     display: grid;
-    grid-template-columns: minmax(14em, 0.3fr) 1fr;
+    grid-template-columns: minmax(14em, 0.3fr) minmax(0, 1fr);
     grid-template-rows: auto 1fr;
     gap: 0 2rem;
 

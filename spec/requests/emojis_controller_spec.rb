@@ -36,6 +36,14 @@ RSpec.describe EmojisController do
         ],
       )
     end
+
+    it "flags the emojis that have an animation" do
+      get "/emojis.json"
+
+      emojis = response.parsed_body.values.flatten.index_by { _1["name"] }
+      expect(emojis.dig("wink", "animated")).to eq(true)
+      expect(emojis.dig("abacus", "animated")).to eq(false)
+    end
   end
 
   describe "#search_aliases" do

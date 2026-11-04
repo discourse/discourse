@@ -69,6 +69,28 @@ RSpec.describe Chat::SearchChatable do
           expect(result.users).to include(current_user, sam, charlie, alain)
         end
 
+        it "includes listed bots but not unlisted bots" do
+          bot = Fabricate(:bot)
+          unlisted_bot = Fabricate(:bot)
+          Chat::DiscoverableBot.create!(user: bot)
+          params[:term] = bot.username
+          expect(result.users).to contain_exactly(bot)
+          params[:term] = unlisted_bot.username
+          expect(described_class.call(params: params, **dependencies).users).to be_empty
+        end
+
+        it "preserves listed bots when a modifier replaces the allowlist" do
+          bot = Fabricate(:bot)
+          Chat::DiscoverableBot.create!(user: bot)
+          params[:term] = bot.username
+          modifier = proc { [] }
+          plugin = Plugin::Instance.new
+          plugin.register_modifier(:chat_allowed_bot_user_ids, &modifier)
+          expect(result.users).to contain_exactly(bot)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, :chat_allowed_bot_user_ids, &modifier)
+        end
+
         it "can filter usernames" do
           params[:term] = "sam"
 

@@ -1179,6 +1179,71 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "previewing palettes" do
+    fab!(:light_palette, :color_scheme)
+    fab!(:dark_palette, :color_scheme)
+
+    before do
+      controller.params[:preview_color_scheme_id] = light_palette.id.to_s
+      controller.params[:preview_dark_color_scheme_id] = dark_palette.id.to_s
+    end
+
+    it "uses the palettes passed in the URL for staff" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+
+      expect(helper.scheme_id).to eq(light_palette.id)
+      expect(helper.dark_scheme_id).to eq(dark_palette.id)
+      expect(helper.discourse_color_scheme_stylesheets).to include(
+        %[class="light-scheme" data-scheme-id="#{light_palette.id}"],
+        %[class="dark-scheme" data-scheme-id="#{dark_palette.id}"],
+      )
+    end
+
+    it "ignores them for everyone else" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      expect([helper.scheme_id, helper.dark_scheme_id]).not_to include(
+        light_palette.id,
+        dark_palette.id,
+      )
+    end
+  end
+
+  describe "#preview_font_style_tag" do
+    before do
+      SiteSetting.base_font = "inter"
+      controller.params[:preview_base_font] = "lora"
+      controller.params[:preview_heading_font] = "roboto"
+    end
+
+    it "defines the fonts passed in the URL for staff, leaving the site's fonts alone" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+
+      style = helper.preview_font_style_tag
+
+      expect(style).to include(
+        "font-family: 'Lora'",
+        "--font-family: Lora",
+        "--heading-font-family: Roboto",
+      )
+      expect(SiteSetting.base_font).to eq("inter")
+    end
+
+    it "ignores unknown fonts" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+      controller.params[:preview_base_font] = "</style><script>"
+      controller.params[:preview_heading_font] = nil
+
+      expect(helper.preview_font_style_tag).to be_nil
+    end
+
+    it "ignores them for everyone else" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      expect(helper.preview_font_style_tag).to be_nil
+    end
+  end
+
   describe "#forced_light_mode?" do
     fab!(:user)
 

@@ -83,7 +83,10 @@ RSpec.describe JsonApiKit::VersionChange do
       end
 
       it "rejects the declaration" do
-        expect { declare_default }.to raise_error(ArgumentError, /unknown direction: sideways/)
+        expect { declare_default }.to raise_error(
+          ArgumentError,
+          /Unknown sort direction: :sideways/,
+        )
       end
     end
   end

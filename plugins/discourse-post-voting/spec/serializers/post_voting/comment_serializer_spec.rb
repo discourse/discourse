@@ -12,7 +12,7 @@ describe PostVotingCommentSerializer do
   end
 
   it "omits the illegal flag when DSA reporting is enabled" do
-    SiteSetting.dsa_reporting_enabled = true
+    enable_dsa_reporting
     SiteSetting.flag_posts_voting_comments_allowed_groups = Group::AUTO_GROUPS[:everyone]
 
     serialized = described_class.new(comment, scope: user.guardian).as_json[:post_voting_comment]

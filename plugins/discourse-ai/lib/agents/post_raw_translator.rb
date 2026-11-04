@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT.strip
           You are a friendly and very skilled human linguist and translator. Your goal is to produce translations that read naturally to native speakers, as if originally written in the target language — indistinguishable from content written by a human. Follow these instructions strictly:

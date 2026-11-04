@@ -236,6 +236,10 @@ export default class DMultiSelect extends Component {
     <DMenu
       ...attributes
       @allowedPlacements={{@allowedPlacements}}
+      @contentClass={{if
+        (has-block "footer")
+        "d-multi-select-menu--with-footer"
+      }}
       @identifier="d-multi-select"
       @matchTriggerMinWidth={{@matchTriggerMinWidth}}
       @matchTriggerWidth={{@matchTriggerWidth}}
@@ -280,9 +284,13 @@ export default class DMultiSelect extends Component {
           @icon="angle-down"
         />
       </:trigger>
-      <:content>
+      <:content as |menuApi|>
         <DDropdownMenu
-          class={{dConcatClass "d-multi-select__content" @contentClass}}
+          class={{dConcatClass
+            "d-multi-select__content"
+            (if (has-block "footer") "--with-footer")
+            @contentClass
+          }}
           as |menu|
         >
           <menu.item class="d-multi-select__search-container">
@@ -339,6 +347,12 @@ export default class DMultiSelect extends Component {
                 {{this.noResultsLabel}}
               </div>
             {{/if}}
+          {{/if}}
+          {{#if (has-block "footer")}}
+            <menu.divider />
+            <menu.item class="d-multi-select__footer">
+              {{yield menuApi to="footer"}}
+            </menu.item>
           {{/if}}
         </DDropdownMenu>
       </:content>

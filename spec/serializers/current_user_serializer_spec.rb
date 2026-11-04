@@ -7,7 +7,7 @@ RSpec.describe CurrentUserSerializer do
   let(:guardian) { user.guardian }
 
   describe "#can_use_dsa_account_email" do
-    before { SiteSetting.dsa_reporting_enabled = true }
+    before { enable_dsa_reporting }
 
     it "allows a reporter to use their confirmed account email" do
       user.activate
@@ -607,6 +607,20 @@ RSpec.describe CurrentUserSerializer do
     it "is not included when the default theme is not a core theme" do
       custom_theme = Fabricate(:theme)
       custom_theme.set_default!
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is true while the only other theme is an appearance change's palette theme" do
+      Fabricate(:theme_appearance_change).theme.set_default!
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "is not included once files are added to an appearance change's theme" do
+      theme = Fabricate(:theme_appearance_change).theme
+      theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+      theme.save!
+
       expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
     end
   end

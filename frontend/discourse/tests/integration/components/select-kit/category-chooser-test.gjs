@@ -155,7 +155,12 @@ module(
       assert.strictEqual(this.subject.header().value(), null);
       assert.strictEqual(
         this.subject.header().label(),
-        i18n("category.choose").replace("&hellip;", "…")
+        i18n("category.choose")
+      );
+      assert.strictEqual(
+        this.subject.header().title(),
+        this.subject.header().label(),
+        "the tooltip reads like the label"
       );
     });
 
@@ -192,7 +197,7 @@ module(
       assert.strictEqual(this.subject.header().value(), null);
       assert.strictEqual(
         this.subject.header().label(),
-        i18n("category.choose").replace("&hellip;", "…")
+        i18n("category.choose")
       );
     });
 

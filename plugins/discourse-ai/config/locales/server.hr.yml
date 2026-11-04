@@ -16,6 +16,8 @@ hr:
     spam_detection:
       logging_subject: "Otkrivanje neželjene pošte"
     ai_bot:
+      sources:
+        spam_detection: "Otkrivanje neželjene pošte"
       navigation:
         settings:
           title: "Postavke web-mjesta"
@@ -93,6 +95,12 @@ hr:
       assign:
         errors:
           not_found: "Tema nije pronađena."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Uzglavlje"
+      fonts:
+        heading_font: "Font zaglavlja"
     reviewables:
       ai_tool_action:
         approve:

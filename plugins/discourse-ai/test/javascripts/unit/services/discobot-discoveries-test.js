@@ -263,6 +263,52 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     );
   });
 
+  test("announces asking only once the server keeps the answer", async function (assert) {
+    const announcements = [];
+    this.owner.register(
+      "service:a11y",
+      class extends Service {
+        announce(message, priority) {
+          announcements.push({ message, priority });
+        }
+      }
+    );
+    pretender.post("/discourse-ai/discoveries/reply", (request) => {
+      const body = new URLSearchParams(request.requestBody);
+      return response(200, {
+        request_id: body.get("request_id"),
+        answer_deferred: body.get("query").includes("in:messages"),
+      });
+    });
+    const service = getOwner(this).lookup("service:discobot-discoveries");
+
+    await service.triggerDiscovery("refund in:messages", {
+      deferIfPrecise: true,
+    });
+
+    assert.deepEqual(announcements, [], "a deferred answer is not announced");
+    assert.deepEqual(
+      service.recentAsks,
+      [],
+      "a deferred answer is not a recent ask"
+    );
+
+    await service.triggerDiscovery("What is Discourse?", {
+      deferIfPrecise: true,
+    });
+
+    assert.deepEqual(
+      announcements,
+      [{ message: "Asking AI…", priority: "polite" }],
+      "an answer the server keeps is announced"
+    );
+    assert.deepEqual(
+      service.recentAsks.map((ask) => ask.term),
+      ["What is Discourse?"],
+      "an answer the server keeps is a recent ask"
+    );
+  });
+
   test("announces a completed answer", async function (assert) {
     const announcements = [];
     this.owner.register(

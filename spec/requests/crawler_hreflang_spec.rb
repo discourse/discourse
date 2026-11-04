@@ -324,6 +324,45 @@ describe "Crawler hreflang tags" do
         )
       end
 
+      it "keeps the locale param on the pagination link tags" do
+        topic_path = post.topic.relative_url
+        pagination_links = -> do
+          Nokogiri
+            .HTML5(response.body)
+            .css("link[rel='prev'], link[rel='next']")
+            .map { |link| [link["rel"], link["href"]] }
+        end
+
+        get "#{topic_url}?#{Discourse::LOCALE_PARAM}=ja",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        expect(pagination_links.call).to eq(
+          [["next", "#{topic_path}?page=2&#{Discourse::LOCALE_PARAM}=ja"]],
+        )
+
+        get "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=ja",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        expect(pagination_links.call).to eq(
+          [["prev", "#{topic_path}?#{Discourse::LOCALE_PARAM}=ja"]],
+        )
+
+        get "/latest?#{Discourse::LOCALE_PARAM}=ja",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        next_link = Nokogiri.HTML5(response.body).at_css("link[rel='next']")
+        expect(Addressable::URI.parse(next_link["href"]).query_values).to include(
+          "page" => "1",
+          Discourse::LOCALE_PARAM => "ja",
+        )
+      end
+
       it "points the alternates of a reply link to the page that holds the reply" do
         get "#{topic_url}/#{replies.last.post_number}",
             headers: {

@@ -47,6 +47,16 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
+  register_bot_creation_param(:chat_discoverable) do |bot, value|
+    Chat::DiscoverableBot.create!(user: bot) if ActiveModel::Type::Boolean.new.cast(value)
+  end
+
+  add_to_serializer(
+    :admin_detailed_user,
+    :chat_discoverable,
+    include_condition: -> { scope.is_admin? && object.bot? && !object.is_system_user? },
+  ) { object.chat_discoverable_bot.present? }
+
   original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
   MessageBus.group_ids_lookup do |env|
     host = RailsMultisite::ConnectionManagement.host(env)
@@ -679,6 +689,7 @@ after_initialize do
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,
     limited_pretty_text_markdown_rules: Chat::Message::MARKDOWN_IT_RULES,
+    onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
     hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
   }
 

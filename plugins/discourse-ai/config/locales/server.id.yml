@@ -47,6 +47,8 @@ id:
       prompts:
         custom_prompt: "Perintah Khusus"
     ai_bot:
+      sources:
+        historical: "Discourse"
       navigation:
         users:
           title: "Pengguna"
@@ -125,6 +127,10 @@ id:
       assign:
         errors:
           not_found: "Tidak ada topik."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Header"
     reviewables:
       ai_tool_action:
         approve:

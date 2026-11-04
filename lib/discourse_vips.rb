@@ -132,7 +132,8 @@ module DiscourseVips
     gravity: nil,
     sharpen: false,
     quality: nil,
-    strip_metadata: false
+    strip_metadata: false,
+    animated: false
   )
     if [scale, width || height, max_pixels].compact.length != 1 || width.nil? != height.nil?
       raise ArgumentError,
@@ -157,6 +158,7 @@ module DiscourseVips
           gravity,
           input_format,
           output_format,
+          animated,
         ],
         operation:,
         read: [input_path],

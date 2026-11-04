@@ -213,11 +213,33 @@ export default {
       labelFor(opts)
     );
 
-    // QUnit only finds a test by running the module that registers it, so tests stay eager.
     if (entrypointName === "test" || !frontendConfig?.staticModules) {
-      const { lines, identifiers } = renderImports(records);
+      const isTest = entrypointName === "test";
+
+      // Evaluating a test file registers its tests, so it loads only when the runner selects it.
+      // Helpers stay eager.
+      const lazy = isTest
+        ? records.filter((record) => record.compatModuleName.endsWith("-test"))
+        : [];
+
+      const { lines, identifiers } = renderImports(
+        records.filter((record) => !lazy.includes(record))
+      );
+
+      for (const record of lazy) {
+        identifiers.set(record, `() => import("./${record.importPath}")`);
+      }
+
+      // The test page loads the other entrypoints anyway. Importing them tells rollup their modules
+      // are present for every test file, so it doesn't split them by which test files use them.
+      const siblings = isTest
+        ? Object.keys(opts.entrypoints ?? {})
+            .filter((name) => name !== "test")
+            .map((name) => `import "virtual:entrypoint:${name}";`)
+        : [];
 
       return [
+        ...siblings,
         ...lines,
         ...warnings,
         ...renderMap("compatModules", records, identifiers),

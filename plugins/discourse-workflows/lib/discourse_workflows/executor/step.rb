@@ -19,6 +19,7 @@ module DiscourseWorkflows
                   :started_at,
                   :output,
                   :error,
+                  :error_html,
                   :finished_at
       attr_accessor :metadata
 
@@ -31,6 +32,7 @@ module DiscourseWorkflows
         status: RUNNING,
         output: nil,
         error: nil,
+        error_html: nil,
         started_at: nil,
         finished_at: nil,
         metadata: nil
@@ -43,6 +45,7 @@ module DiscourseWorkflows
         @status = status
         @output = output
         @error = error
+        @error_html = error_html
         @started_at = started_at || Time.current.iso8601(3)
         @finished_at = finished_at || (status != RUNNING ? @started_at : nil)
         @metadata = metadata
@@ -67,9 +70,10 @@ module DiscourseWorkflows
         @finished_at = Time.current.iso8601(3)
       end
 
-      def fail!(message)
+      def fail!(message, error_html: nil)
         @status = ERROR
         @error = message
+        @error_html = error_html
         @finished_at = Time.current.iso8601(3)
       end
 
@@ -89,6 +93,8 @@ module DiscourseWorkflows
         @output = updates["output"] if updates.key?("output")
         @finished_at = updates["finished_at"] if updates.key?("finished_at")
         @error = updates["error"] if updates.key?("error")
+        @error_html = nil if updates.key?("error")
+        @error_html = updates["error_html"] if updates.key?("error_html")
       end
 
       def add_metadata(key, value)
@@ -109,6 +115,7 @@ module DiscourseWorkflows
         h["output"] = output if output
         h["finished_at"] = finished_at if finished_at
         h["error"] = error if error
+        h["error_html"] = error_html if error_html
         h["metadata"] = metadata if metadata
         h
       end
@@ -123,6 +130,7 @@ module DiscourseWorkflows
           status: hash["status"] || RUNNING,
           output: hash["output"],
           error: hash["error"],
+          error_html: hash["error_html"],
           started_at: hash["started_at"],
           finished_at: hash["finished_at"],
           metadata: hash["metadata"],

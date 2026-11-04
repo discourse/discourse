@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  admin_js:
+    blog:
+      admin:
+        overridden: Grupet e krijuara
+        preview_archive: Arkivoni
+        mobile: Mobile
+        edit: Redaktoni
+        activate: Aktivizoni
+        preview: Parashikimi
+        import: Importo
+        export: Eksporto
+        active: Aktiv
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Draft
+        preview: Parashikimi
+        change:
+          title: titulli
+          body: trupi
+      review:
+        create: Krijoni lidhje
+        copy: Kopjo
+        open: Fillo
+        status:
+          active: Aktiv
+          expired: Skaduar
+        closed_on: "Mbylli %{date}"
+        revoke: Revoko
+        message: Reagime
+      editor_table:
+        edit: Redaktoni
+        status: Status
+        replies: Përgjigjet
+      drafts: Drafte
+      preview: Parashikimi

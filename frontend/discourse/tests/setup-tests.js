@@ -6,14 +6,12 @@ import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { ASYNC_OBSERVERS, SYNC_OBSERVERS } from "@ember/-internals/metal";
-import { getOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
   pauseTest,
   setApplication,
-  setResolver,
 } from "@ember/test-helpers";
 import $ from "jquery";
 import "message-bus-client";
@@ -23,6 +21,7 @@ import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
 import { clearExtraAttributes } from "discourse/data/extra-attributes";
+import { removeCookie } from "discourse/lib/cookie";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
@@ -34,7 +33,6 @@ import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { buildResolver } from "discourse/resolver";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -52,7 +50,10 @@ import {
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
-import { resetSettings } from "discourse/tests/helpers/site-settings";
+import {
+  currentSettings,
+  resetSettings,
+} from "discourse/tests/helpers/site-settings";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
@@ -62,41 +63,21 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 
-const REPORT_MEMORY = false;
 let cancelled = false;
 let started = false;
 
-function createApplication(config, settings) {
+function createApplication(config) {
   const app = Application.create(config);
 
   setApplication(app);
-  setResolver(buildResolver("discourse").create({ namespace: app }));
 
-  // Modern Ember only sets up a container when the ApplicationInstance
-  // is booted. We have legacy code which relies on having access to a container
-  // before boot (e.g. during pre-initializers)
-  //
-  // This hack sets up a container early, then stubs the container setup method
-  // so that Ember will use the same container instance when it boots the ApplicationInstance
-  //
-  // Note that this hack is not required in production because we use the default `autoboot` flag,
-  // which triggers the internal `_globalsMode` flag, which sets up an ApplicationInstance immediately when
-  // an Application is initialized (via the `_buildDeprecatedInstance` method).
-  //
-  // In the future, we should move away from relying on the `container` before the ApplicationInstance
-  // is booted, and then remove this hack.
-  let container = app.__registry__.container();
-  app.__container__ = container;
-  setDefaultOwner(container);
-  sinon
-    .stub(Object.getPrototypeOf(app.__registry__), "container")
-    .callsFake((opts) => {
-      container.owner = opts.owner;
-      container.registry = opts.owner.__registry__;
-      return container;
-    });
-
-  SiteSettingService.create = () => settings;
+  // Production's autoboot builds the ApplicationInstance before initializers run, and they
+  // rely on its container. ember-qunit only builds one after booting the app, so build it
+  // up front and have ember-qunit boot this one.
+  const instance = app.buildInstance();
+  app.__container__ = instance.__container__;
+  app.buildInstance = () => instance;
+  setDefaultOwner(app.__container__);
 
   if (!started) {
     app.instanceInitializer({
@@ -185,9 +166,6 @@ function setupToolbar() {
 }
 
 function reportMemoryUsageAfterTests() {
-  if (!REPORT_MEMORY) {
-    return;
-  }
   QUnit.done(() => {
     const usageBytes = performance.memory?.usedJSHeapSize;
     let result;
@@ -229,19 +207,9 @@ export default async function setupTests(config) {
   // Stop the message bus so we don't get ajax calls
   window.MessageBus.stop();
 
-  // disable logster error reporting
-  if (window.Logster) {
-    window.Logster.enabled = false;
-  } else {
-    window.Logster = { enabled: false };
-  }
-
-  let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
-  if (setupDataElement) {
-    setupData = setupDataElement.dataset;
-    setupDataElement.remove();
-  }
+  const setupData = setupDataElement.dataset;
+  setupDataElement.remove();
 
   await loadSprites(setupData.svgSpritePath, "fontawesome");
 
@@ -257,56 +225,59 @@ export default async function setupTests(config) {
     ...SYNC_OBSERVERS.keys(),
   ]);
 
+  // Tests change settings through currentSettings(), so the service must be that object
+  SiteSettingService.create = currentSettings;
+
+  const reportRequests = getUrlParameter("report_requests") === "1";
+
+  pretender.prepareBody = function (body) {
+    if (typeof body === "object") {
+      return JSON.stringify(body);
+    }
+    return body;
+  };
+
+  if (reportRequests) {
+    pretender.handledRequest = function (verb, path) {
+      // eslint-disable-next-line no-console
+      console.log("REQ: " + verb + " " + path);
+    };
+  }
+
+  pretender.unhandledRequest = function (verb, path) {
+    if (reportRequests) {
+      // eslint-disable-next-line no-console
+      console.log("REQ: " + verb + " " + path + " missing");
+    }
+
+    const error =
+      "Unhandled request in test environment: " + path + " (" + verb + ")";
+
+    // eslint-disable-next-line no-console
+    console.error(error);
+    throw new Error(error);
+  };
+
+  pretender.checkPassthrough = (request) =>
+    request.requestHeaders["Discourse-Script"];
+
   let app;
   QUnit.testStart(async function (ctx) {
-    let settings = resetSettings();
-
+    resetSettings();
     resetThemeSettings();
 
-    app = createApplication(config, settings);
+    app = createApplication(config);
 
-    const cdn = setupData ? setupData.cdn : null;
-    const baseUri = setupData ? setupData.baseUri : "";
-    setupURL(cdn, "http://localhost:3000", baseUri, { snapshot: true });
-    if (setupData && setupData.s3BaseUrl) {
+    setupURL(setupData.cdn, "http://localhost:3000", setupData.baseUri, {
+      snapshot: true,
+    });
+    if (setupData.s3BaseUrl) {
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn, { snapshot: true });
     } else {
       setupS3CDN(null, null, { snapshot: true });
     }
 
     applyDefaultHandlers();
-
-    pretender.prepareBody = function (body) {
-      if (typeof body === "object") {
-        return JSON.stringify(body);
-      }
-      return body;
-    };
-
-    if (QUnit.config.logAllRequests) {
-      pretender.handledRequest = function (verb, path) {
-        // eslint-disable-next-line no-console
-        console.log("REQ: " + verb + " " + path);
-      };
-    }
-
-    pretender.unhandledRequest = function (verb, path) {
-      if (QUnit.config.logAllRequests) {
-        // eslint-disable-next-line no-console
-        console.log("REQ: " + verb + " " + path + " missing");
-      }
-
-      const error =
-        "Unhandled request in test environment: " + path + " (" + verb + ")";
-
-      // eslint-disable-next-line no-console
-      console.error(error);
-      throw new Error(error);
-    };
-
-    pretender.checkPassthrough = (request) =>
-      request.requestHeaders["Discourse-Script"];
-
     applyPretender(ctx.module, pretender, pretenderHelpers());
 
     Session.resetCurrent();
@@ -335,7 +306,7 @@ export default async function setupTests(config) {
   });
 
   QUnit.testDone(function () {
-    testCleanup(getOwner(app), app);
+    testCleanup(app);
 
     // A pending ceremony never settles in headless Chrome, so it would retain the app
     WebauthnAbortHandler.controller?.abort();
@@ -399,6 +370,10 @@ export default async function setupTests(config) {
       // eslint-disable-next-line no-console
       console.clear();
     }
+    // Color preferences persist in cookies, which would force a later test's color mode
+    removeCookie("forced_color_mode", { path: "/" });
+    removeCookie("color_scheme_id", { path: "/" });
+    removeCookie("dark_scheme_id", { path: "/" });
     enableLoadMoreObserver();
     enableVirtualization();
 
@@ -407,10 +382,6 @@ export default async function setupTests(config) {
     app = null;
   });
 
-  if (getUrlParameter("qunit_disable_auto_start") === "1") {
-    QUnit.config.autostart = false;
-  }
-
   if (getUrlParameter("loop")) {
     QUnit.done(({ failed }) => {
       if (failed === 0 && !cancelled) {
@@ -418,8 +389,6 @@ export default async function setupTests(config) {
       }
     });
   }
-
-  handleLegacyParameters();
 
   const hasPluginJs = !!document.querySelector(
     "link[rel=modulepreload][data-plugin-name], script[data-plugin-name]"
@@ -437,7 +406,9 @@ export default async function setupTests(config) {
   } else {
     setupToolbar();
   }
-  reportMemoryUsageAfterTests();
+  if (getUrlParameter("report_memory") === "1") {
+    reportMemoryUsageAfterTests();
+  }
   patchFailedAssertion();
 
   setLoadedFaker(FakerModule);
@@ -481,20 +452,4 @@ function patchFailedAssertion() {
 
     oldPushResult.call(this, resultInfo);
   };
-}
-
-function handleLegacyParameters() {
-  for (const param of [
-    "qunit_single_plugin",
-    "qunit_skip_core",
-    "qunit_skip_plugins",
-  ]) {
-    if (getUrlParameter(param)) {
-      QUnit.begin(() => {
-        throw new Error(
-          `${param} is no longer supported. Use the 'target' parameter instead`
-        );
-      });
-    }
-  }
 }

@@ -81,6 +81,10 @@ bs_BA:
       assign:
         errors:
           not_found: "Tema nije pronađena."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Header"
     reviewables:
       ai_tool_action:
         approve:

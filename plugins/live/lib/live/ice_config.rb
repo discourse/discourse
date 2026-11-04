@@ -54,8 +54,11 @@ module Live
 
     # A TURN-only setup with static credentials keeps the historical
     # relay-only behavior. Secret-authenticated TURN keeps the policy at
-    # "all" even without STUN: server-reflexive candidates come from the
-    # (authenticated) TURN allocation, so direct connections still work.
+    # "all" even without STUN URLs, since browsers can learn their
+    # server-reflexive address from the TURN server. Some only learn it from a
+    # separate, always unauthenticated, Binding request, so the TURN server
+    # must not require authentication for STUN (coturn's secure-stun) or
+    # those browsers end up relayed.
     def self.transport_policy
       ephemeral_active = ephemeral_turn_urls.any? && SiteSetting.live_turn_secret.present?
 

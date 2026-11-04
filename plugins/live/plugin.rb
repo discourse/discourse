@@ -71,6 +71,7 @@ register_svg_icon "xmark"
 register_svg_icon "up-right-from-square"
 register_svg_icon "person-chalkboard"
 register_svg_icon "table-cells"
+register_svg_icon "wand-magic-sparkles"
 register_svg_icon "circle-check"
 register_svg_icon "circle-xmark"
 register_svg_icon "triangle-exclamation"
@@ -88,6 +89,10 @@ register_svg_icon "copy"
 register_svg_icon "closed-captioning"
 register_svg_icon "stop"
 register_svg_icon "far-file-lines"
+register_svg_icon "stethoscope"
+register_svg_icon "network-wired"
+register_svg_icon "arrow-right-arrow-left"
+register_svg_icon "server"
 register_asset "stylesheets/common/live.scss"
 register_asset "stylesheets/common/live-room-page.scss"
 register_asset "stylesheets/common/live-chat.scss"
@@ -149,6 +154,8 @@ after_initialize do
     :live_can_call,
     include_condition: -> { scope.can_start_live_call? },
   ) { scope.can_call_live_user?(object) }
+
+  add_to_serializer(:current_user, :live_can_record_locally) { scope.can_record_live_locally? }
 
   # Lets the client decide whether to render the rooms sidebar for anonymous
   # visitors without exposing the configured group ids.

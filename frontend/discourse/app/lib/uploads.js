@@ -3,7 +3,6 @@ import {
   MAX_RATE_LIMIT_RETRY_SECONDS,
   rateLimitWaitSeconds,
 } from "discourse/lib/ajax-error";
-import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { humanizeList } from "discourse/lib/text";
 import { capabilities } from "discourse/services/capabilities";
@@ -350,14 +349,6 @@ export function displayErrorForBulkUpload(errors) {
 }
 
 export function displayErrorForUpload(data, siteSettings, fileName) {
-  if (!fileName) {
-    deprecated(
-      "Calling displayErrorForUpload without a fileName is deprecated and will be removed in a future version.",
-      { id: "discourse.uploads.display-error-for-upload" }
-    );
-    fileName = data.files[0].name;
-  }
-
   if (isRateLimitError(data)) {
     displayRateLimitError(data);
     return;

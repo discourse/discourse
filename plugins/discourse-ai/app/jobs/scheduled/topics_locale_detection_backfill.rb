@@ -9,10 +9,9 @@ module Jobs
     def execute(args)
       return if !DiscourseAi::Translation.backfill_enabled?(target: Topic)
 
-      llm_model = find_llm_model
-      return if llm_model.blank?
+      return if !DiscourseAi::Translation.locale_detector_configured?
 
-      unless LlmCreditAllocation.credits_available?(llm_model)
+      unless DiscourseAi::Translation.credits_available_for_locale_detection?
         Rails.logger.info(
           "Topics locale detection backfill skipped: insufficient credits. Will resume when credits reset.",
         )
@@ -43,15 +42,6 @@ module Jobs
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{topics.size} topic locales")
-    end
-
-    private
-
-    def find_llm_model
-      agent_klass = AiAgent.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_agent)
-      return nil if agent_klass.blank?
-
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
     end
   end
 end

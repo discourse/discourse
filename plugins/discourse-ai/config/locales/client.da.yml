@@ -132,6 +132,8 @@ da:
             other: "%{count} indlæg"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Seneste 7 dage"
         enable: "Aktiver"
         save_button: "Gem ændringer"

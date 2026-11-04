@@ -9,7 +9,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
-import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import {
@@ -29,7 +28,9 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import ActionSummary from "discourse/models/action-summary";
+import ActionSummary, {
+  type ActionSummaryFields,
+} from "discourse/models/action-summary";
 import type Archetype from "discourse/models/archetype";
 import Bookmark from "discourse/models/bookmark";
 import type Post from "discourse/models/post";
@@ -182,7 +183,7 @@ export interface TopicFields {
   op_liked?: boolean;
   participant_count?: number | null;
   participant_groups?: string[];
-  participants?: object[];
+  participants?: TopicParticipant[];
   pending_posts?: TopicPendingPost[];
   pinned?: boolean;
   pinned_at?: string | null;
@@ -191,7 +192,10 @@ export interface TopicFields {
   pm_with_non_human_user?: boolean;
   post_stream?: object;
   posted?: boolean;
-  posters?: object[];
+  posters?: TopicPoster[] & {
+    /** Present on legacy array wrappers; plain arrays do not supply this property. */
+    firstObject?: TopicPoster;
+  };
   posts_count?: number;
   published_page?: TopicPublishedPage;
   queued_posts_count?: number;
@@ -243,14 +247,39 @@ export interface TopicFields {
   topic_status_update?: TopicTimerValue;
 }
 
-/** Poster fields read before their payload model is typed. */
-type TopicPoster = {
-  user?: TopicBasicUser;
-  primary_group?: object | null;
-  extras?: string;
-  user_id?: number;
-  moreCount?: string;
-};
+/** A poster reference, with optional list-hydrated user and primary group. */
+export interface TopicPoster {
+  user_id: number;
+  extras: string | null;
+  description: string | null;
+  primary_group_id: number | null;
+  flair_group_id: number | null;
+  user?: User;
+  primary_group?: EmberObject & { id: number; name: string };
+  extraClasses?: string | null;
+}
+
+/** Participants receive users, but do not receive poster group or CSS hydration. */
+export type TopicParticipant = Pick<
+  TopicPoster,
+  | "user_id"
+  | "extras"
+  | "description"
+  | "primary_group_id"
+  | "flair_group_id"
+  | "user"
+>;
+
+/** featuredUsers mutates the posters array, inserting participants and a count marker. */
+export type TopicFeaturedUser =
+  | (TopicParticipant &
+      Partial<Pick<TopicPoster, "primary_group" | "extraClasses">>)
+  | {
+      moreCount: string;
+      user?: undefined;
+      user_id?: undefined;
+      extras?: undefined;
+    };
 
 type TopicTagInput =
   | string
@@ -351,24 +380,17 @@ export default class Topic extends RestModel {
   static createActionSummary(result: Topic): void {
     if (result.actions_summary) {
       const lookup = EmberObject.create();
-      // TODO(typescript-pending): ActionSummary omits create-assigned fields; remove when ActionSummary is typed.
-      result.actions_summary = (
-        result.actions_summary as (TopicActionSummaryData & {
-          post: Topic;
-          actionType: NonNullable<ReturnType<Site["postActionTypeById"]>> & {
-            name_key: string;
-          };
-        })[]
-      ).map((a) => {
-        a.post = result;
-        // TODO(typescript-pending): PostActionType omits name_key; remove when PostActionType is typed.
-        a.actionType = Site.current().postActionTypeById(
-          a.id
-        ) as typeof a.actionType;
-        const actionSummary = ActionSummary.create(a as typeof a & RestPayload);
-        lookup.set(a.actionType.get("name_key"), actionSummary);
-        return actionSummary;
-      });
+      result.actions_summary = result.actions_summary.map(
+        (a: ActionSummaryFields) => {
+          a.post = result;
+          a.actionType = Site.current().postActionTypeById(a.id)!;
+          const actionSummary = ActionSummary.create(
+            a as typeof a & RestPayload
+          );
+          lookup.set(a.actionType.get("name_key"), actionSummary);
+          return actionSummary;
+        }
+      );
       result.set("actionByName", lookup);
     }
   }
@@ -834,38 +856,23 @@ export default class Topic extends RestModel {
 
   @computed("posters.firstObject")
   get creator(): TopicBasicUser | undefined {
-    // TODO(typescript-pending): poster payloads and firstObject are untyped; remove when posters are typed.
-    return (
-      (
-        this.posters as
-          | (TopicPoster[] & { firstObject?: TopicPoster })
-          | undefined
-      )?.firstObject &&
-      (
-        this.posters as
-          | (TopicPoster[] & { firstObject?: TopicPoster })
-          | undefined
-      )?.firstObject?.user
-    );
+    return this.posters?.firstObject && this.posters?.firstObject?.user;
   }
 
   @computed("posters.[]")
   get lastPoster(): TopicPoster | undefined {
-    // TODO(typescript-pending): poster payloads and firstObject are untyped; remove when posters are typed.
     if (this.posters && this.posters?.length > 0) {
-      const latest = this.posters?.filter((p: TopicPoster) =>
+      const latest = this.posters?.filter((p) =>
         p.extras?.includes("latest")
       )[0];
-      return (latest ||
-        (this.posters as TopicPoster[] & { firstObject?: TopicPoster })
-          ?.firstObject) as TopicPoster | undefined;
+      return latest || this.posters?.firstObject;
     }
   }
 
   @computed("posters.[]", "participants.[]", "allowed_user_count")
-  get featuredUsers(): object[] {
-    // TODO(typescript-pending): posters and participants have no payload types; remove when posters are typed.
-    const users = this.posters as TopicPoster[];
+  get featuredUsers(): TopicFeaturedUser[] {
+    // This aliases posters: participant insertion and the count marker mutate that same array.
+    const users = this.posters as TopicFeaturedUser[];
     const maxUserCount = 5;
     const posterCount = users.length;
 
@@ -882,11 +889,11 @@ export default class Topic extends RestModel {
         }
       }
 
-      const poster_ids = (this.posters as TopicPoster[])
+      const poster_ids = this.posters
         ?.map((p) => p.user && p.user.id)
         ?.filter((id) => id);
-      (this.participants as TopicPoster[])?.some((p) => {
-        if (!poster_ids.includes(p.user_id)) {
+      this.participants?.some((p) => {
+        if (!poster_ids!.includes(p.user_id)) {
           users.splice(users.length - pushOffset, 0, p);
           if (users.length === maxUserCount) {
             return true;
@@ -946,11 +953,10 @@ export default class Topic extends RestModel {
 
   @computed
   get postStream(): PostStream {
-    // TODO(typescript-pending): store has no postStream registry entry; remove when PostStream is typed.
     return this.store.createRecord("postStream", {
       id: this.id,
       topic: this,
-    }) as PostStream;
+    });
   }
 
   @computed("tags")
@@ -1046,23 +1052,6 @@ export default class Topic extends RestModel {
       slug = "topic";
     }
     return `${getURL("/t/")}${slug}/${this.id}`;
-  }
-
-  @computed("unread_posts", "new_posts")
-  get totalUnread() {
-    deprecated("The totalUnread property of the topic model is deprecated", {
-      id: "discourse.topic.totalUnread",
-    });
-    return this.unread_posts || this.new_posts;
-  }
-
-  @computed("unread_posts", "new_posts")
-  get displayNewPosts() {
-    deprecated(
-      "The displayNewPosts property of the topic model is deprecated",
-      { id: "discourse.topic.totalUnread" }
-    );
-    return this.unread_posts || this.new_posts;
   }
 
   @computed("last_read_post_number", "url", "is_nested_view")
@@ -1226,36 +1215,27 @@ export default class Topic extends RestModel {
 
   firstPost(): globalThis.Promise<Post> {
     const postStream = this.postStream;
-    // TODO(typescript-pending): PostStream does not type its post collection; remove when PostStream is typed.
-    const firstPost = postStream.posts[0] as
-      | (Post & { post_number: number })
-      | undefined;
+    const firstPost = postStream.posts[0];
 
     if (firstPost && firstPost.post_number === 1) {
       return Promise.resolve(firstPost);
     }
 
-    // TODO(typescript-pending): PostStream's id lookup is untyped; remove when PostStream is typed.
-    const postId = postStream.findPostIdForPostNumber(1) as number | undefined;
+    const postId = postStream.findPostIdForPostNumber(1);
     if (postId) {
       return this.postById(postId);
     } else {
-      // TODO(typescript-pending): PostStream's load result is untyped; remove when PostStream is typed.
-      return this.postStream.loadPostByPostNumber(
-        1
-      ) as globalThis.Promise<Post>;
+      return this.postStream.loadPostByPostNumber(1);
     }
   }
 
   postById(id: number): globalThis.Promise<Post> {
-    // TODO(typescript-pending): PostStream's loaded-post lookup is untyped; remove when PostStream is typed.
-    const loaded = this.postStream.findLoadedPost(id) as Post | undefined;
+    const loaded = this.postStream.findLoadedPost(id);
     if (loaded) {
       return Promise.resolve(loaded);
     }
 
-    // TODO(typescript-pending): PostStream's load result is untyped; remove when PostStream is typed.
-    return this.postStream.loadPost(id) as globalThis.Promise<Post>;
+    return this.postStream.loadPost(id);
   }
 
   deleteBookmarks(): globalThis.Promise<unknown> {
@@ -1299,10 +1279,7 @@ export default class Topic extends RestModel {
       )
       .map((bookmark) => (bookmark as TopicBookmarkData).bookmarkable_id);
     postIds.forEach((postId) => {
-      // TODO(typescript-pending): PostStream's loaded-post lookup is untyped; remove when PostStream is typed.
-      const loadedPost = this.postStream.findLoadedPost(postId) as
-        | Post
-        | undefined;
+      const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {
         loadedPost.clearBookmark();
       }
@@ -1354,7 +1331,6 @@ export default class Topic extends RestModel {
     deleted_by: User,
     opts: { force_destroy?: boolean; [key: string]: unknown } = {}
   ): globalThis.Promise<void> {
-    // TODO(typescript-pending): User omits server-assigned admin, visibleGroups and can_delete_all_posts_and_topics; remove when User is typed.
     return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname, ...opts },
       type: "DELETE",
@@ -1366,19 +1342,15 @@ export default class Topic extends RestModel {
           "details.can_delete": false,
           "details.can_recover": true,
           "details.can_permanently_delete":
-            this.siteSettings.can_permanently_delete &&
-            (deleted_by as User & { admin: boolean }).admin,
+            this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
         if (
           opts.force_destroy ||
           (!deleted_by.staff &&
-            !(
-              deleted_by as User & { visibleGroups: { id: number }[] }
-            ).visibleGroups.some((group) =>
+            !deleted_by.visibleGroups!.some((group) =>
               this.category?.moderating_group_ids?.includes(group.id)
             ) &&
-            !(deleted_by as User & { can_delete_all_posts_and_topics: boolean })
-              .can_delete_all_posts_and_topics)
+            !deleted_by.can_delete_all_posts_and_topics)
         ) {
           DiscourseURL.redirectTo("/");
         }
@@ -1413,13 +1385,12 @@ export default class Topic extends RestModel {
           removeValuesFromArray(keys, ["details", "post_stream"]);
 
           if (json.published_page) {
-            // TODO(typescript-pending): store has no published-page registry entry; remove when PublishedPage is typed.
             this.set(
               "publishedPage",
               this.store.createRecord(
                 "published-page",
                 json.published_page as TopicPublishedPage & RestPayload
-              ) as PublishedPage
+              )
             );
           }
         }

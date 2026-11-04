@@ -1,5 +1,4 @@
 import cookie, { removeCookie } from "discourse/lib/cookie";
-import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
 // Matches CORE_THEMES in app/models/theme.rb
@@ -9,17 +8,6 @@ export const HORIZON_THEME_ID = -2;
 const keySelector = "meta[name=discourse_theme_id]";
 const COOKIE_NAME = "theme_ids";
 const COOKIE_EXPIRY_DAYS = 365;
-
-export function currentThemeKey() {
-  // eslint-disable-next-line no-console
-  if (console && console.warn && console.trace) {
-    // TODO: Remove this code Jan 2019
-    deprecated(
-      "'currentThemeKey' is deprecated use 'currentThemeId' instead. A theme component may require updating.",
-      { id: "discourse.current-theme-key" }
-    );
-  }
-}
 
 export function currentThemeIds() {
   const themeIds = [];

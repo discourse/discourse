@@ -491,6 +491,9 @@ zh_CN:
       configuration_missing: "缺少 AI 垃圾信息检测配置。请先在“管理 > 插件 > Discourse AI > 垃圾信息”中添加配置，然后再启用。"
       logging_subject: "垃圾信息检测"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "垃圾内容检测"
       search_discourse_navigation:
         not_allowed: "您无权搜索管理目标。"
         invalid_query: "输入 1 到 %{max} 个字符之间的搜索查询。"
@@ -572,7 +575,6 @@ zh_CN:
         agent_not_allowed: "请求的子代理不被允许。"
         unavailable_agent: "请求的子代理不可用或无法访问。"
         missing_model: "请求的子代理没有可用的语言模型。"
-        call_limit: "已达到委托调用次数上限。"
         completion_limit: "委托完成次数已达上限。"
         token_limit: "回合工作或子工作配额已用完。"
         cancelled: "委托的任务已取消。"
@@ -1273,6 +1275,14 @@ zh_CN:
         errors:
           page_not_found: "Discourse 网站页面 '%{page_name}' 不可用。"
           fetch_failed: "无法加载 Discourse 官方网站上的 '%{page_name}' 页面。"
+    appearance_authoring:
+      default_theme: "默认主题"
+      colors:
+        light:
+          header_background: "标头"
+      fonts:
+        base_font: "正文字体"
+        heading_font: "标题字体"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"
@@ -1339,6 +1349,7 @@ zh_CN:
       cannot_edit_builtin: "您无法编辑内置模型。"
       secret_required: "必须选择一个凭据"
       secret_not_found: "所选凭据不存在"
+      missing_provider_param: "%{param}不能为空"
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"

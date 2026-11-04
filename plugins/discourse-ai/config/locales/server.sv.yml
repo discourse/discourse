@@ -92,6 +92,13 @@ sv:
       assign:
         errors:
           not_found: "Ämnet hittades inte."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Sidhuvud"
+      fonts:
+        base_font: "Typsnitt för brödtext"
+        heading_font: "Typsnitt för rubrik"
     reviewables:
       ai_tool_action:
         approve:

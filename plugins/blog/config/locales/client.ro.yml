@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    blog:
+      admin:
+        overridden: Personalizat
+        insert: Introdu
+        preview_home: Pagina principală
+        preview_archive: Arhivă
+        desktop: Desktop
+        mobile: Mobil
+        new_theme_short: Temă nouă
+        themes: Teme
+        edit: Editează
+        activate: Activează
+        preview: Previzualizează
+        import: Importă
+        export: Exportă
+        active: Activă
+  js:
+    blog:
+      panel:
+        preview: Previzualizează
+        change:
+          title: titlu
+          body: corp
+      review:
+        create: Creează legătură
+        copy: Copiază
+        open: Deschide
+        status:
+          active: Activă
+          expired: Expirate
+          revoked: Revocat
+          inactive: Inactive
+        closed_on: "Închis %{date}"
+        revoke: Revocă
+      editor_table:
+        edit: Editează
+        status: Stare
+        replies: Răspunsuri
+      drafts: Ciorne
+      preview: Previzualizează
+      appearance_link: Aspect

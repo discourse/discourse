@@ -6,7 +6,7 @@ module JsonApiKit
       class All < Fields
         def initialize(**declarations) = super(nil, **declarations)
 
-        def columns = Columns.all
+        def all? = true
 
         private
 

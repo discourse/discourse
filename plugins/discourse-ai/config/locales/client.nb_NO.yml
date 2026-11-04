@@ -119,6 +119,8 @@ nb_NO:
             other: "%{count} innlegg"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Siste 7 dager"
         enable: "Aktiver"
         test_modal:

@@ -71,11 +71,11 @@ describe Jobs::PostSentimentAnalysis do
       )
     end
 
-    [[true, false], [false, true]].each do |sentiment, emotion|
-      it "processes only enabled decisions with sentiment=#{sentiment} and emotion=#{emotion}" do
+    shared_examples "analyzing the enabled sentiment capability" do |sentiment_enabled:, emotion_enabled:, expected_feature:, expected_model:|
+      it "runs only the enabled decision and persists its result" do
         model = Fabricate(:decision_model)
-        SiteSetting.ai_sentiment_enabled = sentiment
-        SiteSetting.ai_sentiment_emotion_enabled = emotion
+        SiteSetting.ai_sentiment_enabled = sentiment_enabled
+        SiteSetting.ai_sentiment_emotion_enabled = emotion_enabled
         SiteSetting.ai_sentiment_model_configs = ""
         SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
         SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
@@ -88,14 +88,26 @@ describe Jobs::PostSentimentAnalysis do
         ) do |canned|
           job.execute(post_id: post.id)
 
-          expect(canned.calls.map { |call| call[:feature_name] }).to eq(
-            [sentiment ? "sentiment" : "emotion"],
-          )
+          expect(canned.calls.map { |call| call[:feature_name] }).to eq([expected_feature])
         end
-        expect(ClassificationResult.where(target: post).pluck(:model_used)).to eq(
-          [sentiment ? "discourse-ai/sentiment-decision" : "discourse-ai/emotion-decision"],
-        )
+        expect(ClassificationResult.where(target: post).pluck(:model_used)).to eq([expected_model])
       end
+    end
+
+    context "with only sentiment enabled" do
+      include_examples "analyzing the enabled sentiment capability",
+                       sentiment_enabled: true,
+                       emotion_enabled: false,
+                       expected_feature: "sentiment",
+                       expected_model: "discourse-ai/sentiment-decision"
+    end
+
+    context "with only emotion enabled" do
+      include_examples "analyzing the enabled sentiment capability",
+                       sentiment_enabled: false,
+                       emotion_enabled: true,
+                       expected_feature: "emotion",
+                       expected_model: "discourse-ai/emotion-decision"
     end
 
     it "successfully classifies the post" do

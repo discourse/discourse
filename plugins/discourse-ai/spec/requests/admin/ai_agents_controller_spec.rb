@@ -492,6 +492,24 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "PUT #update" do
+    it "synchronizes the bot account activation when saving the enabled toggle" do
+      bot = ai_agent.create_user!
+
+      [false, true].each do |enabled|
+        put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+            params: {
+              ai_agent: {
+                enabled:,
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(ai_agent.reload.enabled).to eq(enabled)
+        expect(bot.reload.active).to eq(enabled)
+        expect(ai_agent.user_id).to eq(bot.id)
+      end
+    end
+
     context "with scoped api key" do
       it "allows updates with a properly scoped API key" do
         api_key = Fabricate(:api_key, user: admin, created_by: admin)
@@ -1194,21 +1212,33 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       }
     end
 
-    [false, true].each do |bot_enabled|
-      it "imports a conversational agent with automatic provisioning #{bot_enabled ? "enabled" : "disabled"}" do
-        SiteSetting.ai_bot_enabled = bot_enabled
+    shared_examples "importing a conversational agent" do |provisioning_enabled:, expected_new_users:|
+      it "imports the agent with the expected user provisioning" do
+        SiteSetting.ai_bot_enabled = provisioning_enabled
 
         expect do
           post "/admin/plugins/discourse-ai/ai-agents/import.json",
                params: valid_import_data,
                as: :json
-        end.to change(User, :count).by(bot_enabled ? 1 : 0)
+        end.to change(User, :count).by(expected_new_users)
 
         expect(response).to have_http_status(:created)
         agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
         expect(agent.allow_personal_messages).to eq(true)
-        expect(agent.user.present?).to eq(bot_enabled)
+        expect(agent.user.present?).to eq(provisioning_enabled)
       end
+    end
+
+    context "with automatic provisioning disabled" do
+      include_examples "importing a conversational agent",
+                       provisioning_enabled: false,
+                       expected_new_users: 0
+    end
+
+    context "with automatic provisioning enabled" do
+      include_examples "importing a conversational agent",
+                       provisioning_enabled: true,
+                       expected_new_users: 1
     end
 
     it "imports a new agent successfully" do

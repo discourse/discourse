@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  admin_js:
+    blog:
+      admin:
+        overridden: Egendefinert
+        insert: Sett inn
+        preview_home: Hjemmeside
+        preview_archive: Arkiver
+        desktop: Skrivebord
+        mobile: Mobil
+        themes: Drakter
+        theme_name: Navn på tema
+        edit: Rediger
+        preview: Forhåndsvis
+        import: Importer
+        export: Eksporter
+        active: Aktiv
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Utkast
+        preview: Forhåndsvis
+        change:
+          title: tittel
+          body: body
+      review:
+        copy: Kopier
+        open: Åpne
+        status:
+          active: Aktiv
+          expired: Utløpt
+          inactive: Inaktiv
+        closed_on: "Lukket %{date}"
+        revoke: Trekk tilbake
+        message: Tilbakemelding
+      editor_table:
+        edit: Rediger
+        status: Status
+        replies: Svar
+      drafts: Utkast
+      preview: Forhåndsvis
+      unpublish: Avpubliser
+      appearance_link: Utseende

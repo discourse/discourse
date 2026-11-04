@@ -80,9 +80,10 @@ export default <template>
           @routeParam="staged"
         />
         <DNavItem
-          class="admin-users-tabs__groups"
-          @label="groups.index.title"
-          @route="adminGroups.index"
+          class="admin-users-tabs__bots"
+          @label="admin.users.nav.bots"
+          @route="adminUsersList.show"
+          @routeParam="bots"
         />
       </:tabs>
     </DPageHeader>

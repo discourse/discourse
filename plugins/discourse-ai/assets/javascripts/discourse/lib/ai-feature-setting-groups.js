@@ -238,6 +238,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
       titleKey: "discourse_ai.features.translation.setting_groups.agents",
       settings: [
         "ai_translation_locale_detector_agent",
+        "ai_translation_locale_detector_decision_model",
         "ai_translation_post_raw_translator_agent",
         "ai_translation_topic_title_translator_agent",
         "ai_translation_short_text_translator_agent",

@@ -16,7 +16,7 @@ RSpec.describe DsaNoticesController do
   end
 
   before do
-    SiteSetting.dsa_reporting_enabled = true
+    enable_dsa_reporting
     SiteSetting.dsa_notice_group = group.id.to_s
   end
 

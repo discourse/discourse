@@ -21,7 +21,6 @@ import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting } from "discourse/lib/environment";
 import renderFormTemplate, {
   getFormTemplateObject,
@@ -589,8 +588,7 @@ export default class ComposerService extends Service {
         ...options,
         ...customPopupMenuOptions
           .filter((option) => !option.menu)
-          .map((option) => this._setupPopupMenuOption({ ...option }))
-          .filter(Boolean),
+          .map((option) => this._setupPopupMenuOption({ ...option })),
         ...secondaryOptions,
       ];
     }
@@ -1100,9 +1098,10 @@ export default class ComposerService extends Service {
     const postStream = this.get("topic.postStream");
     let postId = this.get("model.post.id");
 
-    // If there is no current post, use the first post id from the stream
     if (!postId && postStream) {
-      postId = postStream.firstPostId;
+      postId =
+        postStream.findPostIdForPostNumber(1) ??
+        (await this.get("topic").firstPost()).id;
     }
 
     // If we're editing a post, fetch the reply when importing a quote
@@ -1946,16 +1945,6 @@ export default class ComposerService extends Service {
   }
 
   _setupPopupMenuOption(option) {
-    // Backwards compatibility support for when we used to accept a function.
-    // This can be dropped when `addToolbarPopupMenuOptionsCallback` is removed from `plugin-api.js`.
-    if (typeof option === "function") {
-      option = option(this);
-    }
-
-    if (typeof option === "undefined") {
-      return null;
-    }
-
     const conditionType = typeof option.condition;
 
     if (conditionType === "undefined") {
@@ -2037,15 +2026,8 @@ export default class ComposerService extends Service {
       locale: this._initialLocale(opts),
     });
 
-    if (!this.model.targetRecipients) {
-      if (opts.usernames) {
-        deprecated("`usernames` is deprecated, use `recipients` instead.", {
-          id: "discourse.composer.usernames",
-        });
-        this.model.set("targetRecipients", opts.usernames);
-      } else if (opts.recipients) {
-        this.model.set("targetRecipients", opts.recipients);
-      }
+    if (!this.model.targetRecipients && opts.recipients) {
+      this.model.set("targetRecipients", opts.recipients);
     }
 
     if (

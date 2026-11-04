@@ -135,6 +135,8 @@ hu:
             other: "%{count} bejegyzés"
       spam:
         short_title: "Kéretlen tartalom"
+        no_llm_selected: "Egyik sem"
+        no_decision_model_selected: "Egyik sem"
         last_seven_days: "Elmúlt 7 nap"
         enable: "Engedélyezés"
         save_button: "Módosítások mentése"

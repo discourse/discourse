@@ -2132,6 +2132,7 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if !SiteSetting.enable_random_usernames
     return redirect_to_login_if_required if current_user
     return if !SiteSetting.login_required?
+    return if server_session[SessionController::LOGIN_CODE_USERNAME_STEP_KEY] == true
 
     signup_token = request.headers["X-Discourse-Signup-Token"].to_s
     signup_proof =
