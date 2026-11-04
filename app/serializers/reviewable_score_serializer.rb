@@ -35,6 +35,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     invite_only: "invite_only",
     email_spam: "email_in_spam_header",
     suspect_user: "approve_suspect_users",
+    reads_without_topic_views: "approve_suspect_users",
     contains_media: "skip_review_media_groups",
   }
 

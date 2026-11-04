@@ -29,6 +29,22 @@ export default class ReviewableUser extends Component {
     return !!this.reviewable?.payload?.scrubbed_by;
   }
 
+  @computed(
+    "reviewable.target_user.posts_read_count",
+    "reviewable.target_user.topics_entered"
+  )
+  get readingActivity() {
+    const targetUser = this.reviewable?.target_user;
+    if (targetUser?.posts_read_count == null) {
+      return;
+    }
+
+    return i18n("review.user.reading_activity_value", {
+      posts_read: targetUser.posts_read_count,
+      topics_entered: targetUser.topics_entered ?? 0,
+    });
+  }
+
   @computed("reviewable.target_user.silenced_till")
   get silencedTill() {
     return this.penaltyDate(this.reviewable?.target_user?.silenced_till);
@@ -172,6 +188,12 @@ export default class ReviewableUser extends Component {
               @classes="reviewable-user-details email"
               @name={{i18n "review.user.email"}}
               @value={{this.reviewable.payload.email}}
+            />
+
+            <ReviewableField
+              @classes="reviewable-user-details reading-activity"
+              @name={{i18n "review.user.reading_activity"}}
+              @value={{this.readingActivity}}
             />
 
             <ReviewableField

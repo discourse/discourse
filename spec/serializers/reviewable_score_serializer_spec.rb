@@ -72,6 +72,10 @@ RSpec.describe ReviewableScoreSerializer do
     include_examples "a configured reviewable score reason", reason: "suspect_user"
   end
 
+  context "with the reads_without_topic_views reason" do
+    include_examples "a configured reviewable score reason", reason: "reads_without_topic_views"
+  end
+
   context "with the contains_media reason" do
     include_examples "a configured reviewable score reason", reason: "contains_media"
   end

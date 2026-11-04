@@ -3,6 +3,8 @@
 class ReviewableUser < Reviewable
   include ReviewableActionBuilder
 
+  SUSPECT_USER_REASONS = %w[suspect_user reads_without_topic_views].freeze
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
@@ -229,7 +231,7 @@ class ReviewableUser < Reviewable
   end
 
   def is_a_suspect_user?
-    reviewable_scores.any? { |rs| rs.reason == "suspect_user" }
+    reviewable_scores.any? { |rs| SUSPECT_USER_REASONS.include?(rs.reason) }
   end
 
   private

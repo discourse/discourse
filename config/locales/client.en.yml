@@ -1119,6 +1119,8 @@ en:
         email: "Email"
         name: "Name"
         fields: "Fields"
+        reading_activity: "Reading activity"
+        reading_activity_value: "Posts read: %{posts_read} · Topics entered: %{topics_entered}"
         silenced_until: "Silenced until"
         silence_reason: "Silence reason"
         suspended_until: "Suspended until"

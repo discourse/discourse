@@ -30,6 +30,14 @@ RSpec.describe ReviewableUserSerializer do
     expect(json[:topic_url]).to be_blank
   end
 
+  it "includes the target user's reading activity" do
+    user.user_stat.update!(posts_read_count: 86, topics_entered: 0)
+
+    json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+
+    expect(json[:target_user]).to include(posts_read_count: 86, topics_entered: 0)
+  end
+
   it "excludes the email user field for moderators" do
     json =
       ReviewableUserSerializer.new(reviewable, scope: Guardian.new(moderator), root: nil).as_json

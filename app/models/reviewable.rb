@@ -1165,7 +1165,9 @@ class Reviewable < ActiveRecord::Base
     automated =
       reviewable_scores.where(
         user_id: Discourse::SYSTEM_USER_ID,
-        reason: %w[watched_word fast_typer auto_silence_regex email_spam suspect_user],
+        reason:
+          %w[watched_word fast_typer auto_silence_regex email_spam] +
+            ReviewableUser::SUSPECT_USER_REASONS,
       ).exists?
 
     if DiscoursePluginRegistry.apply_modifier(:reviewable_automated_detection, automated, self)

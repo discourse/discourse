@@ -2321,7 +2321,7 @@ en:
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: 'All new users must wait for moderator or admin approval before being allowed to log in. (Note: enabling this setting also removes the "arrive at topic" invite option)'
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
-    approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
+    approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity, or have read posts in topics they never opened."
     review_every_post: "Send every new post to the review queue for moderation. Posts are still published immediately and are visible to all users. WARNING! Not recommended for high-traffic sites due to the potential volume of posts needing review."
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
@@ -3365,7 +3365,7 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
-      uncategorized_category_missing: "'allow uncategorized topics' cannot be enabled because the \"Uncategorized\" category no longer exists."
+      uncategorized_category_missing: '''allow uncategorized topics'' cannot be enabled because the "Uncategorized" category no longer exists.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -6569,6 +6569,7 @@ en:
       email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
       email_spam: "This email was flagged as spam by the header defined in %{link}."
       suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See %{link}."
+      reads_without_topic_views: "Almost all of this new user's read posts are in topics they never opened. Browsers record a topic view before counting reads, so this may mean they're using a script to fake reading activity. Controlled by the %{link} setting."
       contains_media: "This post includes embedded media. See %{link}."
       queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
       links:

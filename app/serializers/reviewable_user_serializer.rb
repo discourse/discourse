@@ -38,7 +38,12 @@ class ReviewableUserSerializer < ReviewableSerializer
   end
 
   def target_user
-    FlaggedUserSerializer.new(object.target, scope: scope, root: false).as_json
+    stat = object.target.user_stat
+
+    FlaggedUserSerializer
+      .new(object.target, scope: scope, root: false)
+      .as_json
+      .merge(posts_read_count: stat&.posts_read_count, topics_entered: stat&.topics_entered)
   end
 
   def include_target_user?

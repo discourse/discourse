@@ -230,7 +230,11 @@ export interface ReviewableFields {
   user_fields?: Record<string, string | string[]>;
   reject_reason?: string | null;
   /** Embedded JSON, unlike the side-loaded target_created_by model. */
-  target_user?: TopicBasicUser & ReviewableUserFields;
+  target_user?: TopicBasicUser &
+    ReviewableUserFields & {
+      posts_read_count?: number | null;
+      topics_entered?: number | null;
+    };
   rejectReason?: string;
   sendEmail?: boolean;
 }
@@ -381,7 +385,9 @@ export default class Reviewable extends RestModel {
         return null;
       }
       const isSuspectUser = this.reviewable_scores?.some(
-        (score) => score.reason_type === "suspect_user"
+        (score) =>
+          score.reason_type === "suspect_user" ||
+          score.reason_type === "reads_without_topic_views"
       );
       if (isSuspectUser) {
         return i18n("review.context_question.suspect_user");
