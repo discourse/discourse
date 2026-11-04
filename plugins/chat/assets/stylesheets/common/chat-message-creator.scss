@@ -255,16 +255,8 @@
       width: 24px;
     }
 
-    .unread-indicator {
-      width: 8px;
-      height: 8px;
-      background: var(--tertiary);
-      border-radius: 100%;
-      flex-shrink: 0;
-
-      &.-urgent {
-        background: var(--success);
-      }
+    .unread-indicator.-urgent {
+      --d-new-indicator-color: var(--success);
     }
   }
 

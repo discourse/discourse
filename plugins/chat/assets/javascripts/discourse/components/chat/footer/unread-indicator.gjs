@@ -121,7 +121,7 @@ export default class FooterUnreadIndicator extends Component {
         </div>
       </div>
     {{else if this.showUnread}}
-      <div class="c-unread-indicator"></div>
+      <div class="c-unread-indicator d-new-indicator"></div>
     {{/if}}
   </template>
 }

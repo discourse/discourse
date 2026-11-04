@@ -297,7 +297,9 @@ export default class ChatPinnedMessageBar extends Component {
           >
             {{dIcon "list"}}
             {{#if @channel.hasUnseenPins}}
-              <span class="chat-pinned-bar__unread-indicator"></span>
+              <span
+                class="chat-pinned-bar__unread-indicator d-new-indicator"
+              ></span>
             {{/if}}
           </LinkTo>
         {{/if}}

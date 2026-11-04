@@ -94,13 +94,17 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
   <template>
     {{#if this.showUrgentIndicator}}
-      <div class="chat-channel-unread-indicator -urgent">
-        <div class="chat-channel-unread-indicator__number">
+      <div class="c-unread-indicator chat-channel-unread-indicator -urgent">
+        <div
+          class="c-unread-indicator__number chat-channel-unread-indicator__number"
+        >
           {{this.urgentCountLabel}}
         </div>
       </div>
     {{else if this.showUnreadIndicator}}
-      <div class="chat-channel-unread-indicator"></div>
+      <div
+        class="c-unread-indicator chat-channel-unread-indicator d-new-indicator"
+      ></div>
     {{/if}}
   </template>
 }
