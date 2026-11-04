@@ -5,8 +5,9 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { next } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier as createModifier } from "ember-modifier";
 import { makeArray } from "discourse/lib/helpers";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
@@ -63,9 +64,52 @@ interface SelectionStripSignature {
   };
 }
 
+/** Scrolls `container` by the least amount that brings `item` fully into view. */
+function scrollWithin(container: HTMLElement, item: Element): void {
+  const box = container.getBoundingClientRect();
+  const rect = item.getBoundingClientRect();
+  // Rects follow any transform on an ancestor; scrollTop is in the container's own pixels.
+  const scale = box.height / container.offsetHeight || 1;
+  if (rect.bottom > box.bottom) {
+    container.scrollTop += (rect.bottom - box.bottom) / scale;
+  } else if (rect.top < box.top) {
+    container.scrollTop -= (box.top - rect.top) / scale;
+  }
+}
+
 /** Removable held items in an overlay, with its own scroll and roving focus. */
 export default class SelectionStrip extends Component<SelectionStripSignature> {
   @service declare capabilities: CapabilitiesService;
+
+  /** Scrolls a chip added since the last render into the strip's view, so a pick is seen. */
+  revealAdded = createModifier<{
+    Element: HTMLElement;
+    Args: { Positional: [chips: readonly SelectDescriptor[] | undefined] };
+  }>((element, [chips = []]) => {
+    const previous = this.#keys;
+    this.#keys = new Set(chips.map((chip) => chip.key));
+    let index = -1;
+    if (previous) {
+      chips.forEach((chip, at) => {
+        if (!previous.has(chip.key)) {
+          index = at;
+        }
+      });
+    }
+    if (index < 0) {
+      return;
+    }
+    const reveal = schedule("afterRender", () => {
+      const item = element.children[index];
+      if (item) {
+        scrollWithin(element, item);
+      }
+    });
+    return () => cancel(reveal);
+  });
+
+  /** The held keys last rendered, to tell a new chip from one already shown. */
+  #keys: Set<unknown> | null = null;
 
   /** Stable prefix for label and removal-hint associations. */
   get idPrefix(): string {
@@ -75,6 +119,14 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
   /** One inert placeholder per held value while labels resolve. */
   get skeletons(): number[] {
     return makeArray(this.args.value).map((_, index) => index);
+  }
+
+  /** Pressing the strip's own background or scrollbar leaves typing in the query input. */
+  @action
+  keepQueryFocus(event: FocusEvent): void {
+    if (event.target === event.currentTarget) {
+      this.args.returnToInput?.();
+    }
   }
 
   /** Preserves query focus on pointer presses, including synthesized mouse events. */
@@ -151,6 +203,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
           {{dOnResize @onResize}}
           {{didInsert @onResize}}
           {{willDestroy @onResize}}
+          {{on "focusin" this.keepQueryFocus}}
         >
           {{#each this.skeletons as |index|}}
             <li class="d-select__strip-item" data-key={{index}}>
@@ -174,6 +227,8 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
             restoreLostFocus=false
             onRegisterApi=@onRegisterRoving
           }}
+          {{this.revealAdded chips}}
+          {{on "focusin" this.keepQueryFocus}}
         >
           {{#each chips key="key" as |chip index|}}
             <li

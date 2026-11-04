@@ -2810,6 +2810,64 @@ module(
       assert.dom(".d-select__chips-more").hasText("1");
     });
 
+    test("a pick scrolls the strip to its new chip", async function (assert) {
+      const items = Array.from({ length: 14 }, (_, index) => ({
+        id: index + 1,
+        name: `A fairly long held item name ${index + 1}`,
+      }));
+      const held = items.slice(0, 12).map((item) => item.id);
+      const host = new (class {
+        @tracked value = held;
+      })();
+      const onChange = (value) => (host.value = value);
+      await render(
+        <template>
+          <div style="width: 240px">
+            <DSelect
+              @items={{items}}
+              @maxVisibleChips={{1}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{host.value}}
+            />
+          </div>
+        </template>
+      );
+      await click("[role='combobox']");
+      const strip = find(".d-select__strip");
+      assert.true(
+        strip.scrollHeight > strip.clientHeight,
+        "the strip is taller than its scroll box"
+      );
+
+      await click("[role='option'][data-value='13']");
+
+      const added = find(".d-select__strip-item[data-value='13']");
+      const box = strip.getBoundingClientRect();
+      const chip = added.getBoundingClientRect();
+      assert.true(chip.top >= box.top - 0.5, "the new chip's top is in view");
+      assert.true(
+        chip.bottom <= box.bottom + 0.5,
+        "the new chip's bottom is in view"
+      );
+    });
+
+    test("pressing the strip itself keeps typing in the search field", async function (assert) {
+      await render(
+        <template>
+          <CompactHost @maxVisibleChips={{0}} @value={{array 1 2}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      await click(".d-select__strip");
+
+      assert.strictEqual(
+        document.activeElement,
+        find("[role='combobox']"),
+        "focus stays in the search field"
+      );
+    });
+
     test("a mobile trigger compacts too", async function (assert) {
       forceMobile();
       await render(
