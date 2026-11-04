@@ -292,6 +292,17 @@ export default class ChatThread extends Component {
       return;
     }
 
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const [messages, meta] = this.processMessages(this.args.thread, result);
     if (!messages?.length) {
       return;

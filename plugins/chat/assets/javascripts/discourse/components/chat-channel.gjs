@@ -342,6 +342,17 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const messages = this.processMessages(this.args.channel, result);
     if (!messages.length) {
       return;

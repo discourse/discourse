@@ -5,6 +5,7 @@ import {
   render,
   settled,
   triggerEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -204,5 +205,63 @@ module("Integration | Component | ChatChannel", function (hooks) {
       [],
       `no message between the loaded window (${windowTop}) and the live one (${LIVE}) was skipped`
     );
+  });
+
+  test("reaching the end while an older page loads still checks for newer messages", async function (assert) {
+    // a window that ends on a full page is reported as having more ahead
+    let releasePast;
+    pretender.get("/chat/api/channels/1/messages", async ({ queryParams }) => {
+      if (queryParams.direction === "past") {
+        await new Promise((resolve) => (releasePast = resolve));
+        return response({
+          messages: [15, 16, 17].map(messageJson),
+          meta: meta({ past: false }),
+        });
+      }
+
+      if (queryParams.direction === "future") {
+        return response({ messages: [], meta: meta({ future: false }) });
+      }
+
+      return response({
+        messages: [18, 19, LAST_READ].map(messageJson),
+        meta: meta({ past: true, future: true }),
+      });
+    });
+
+    this.channel = this.fabricators.channel({ id: 1 });
+    this.channel.currentUserMembership.following = true;
+    this.channel.currentUserMembership.lastReadMessageId = LAST_READ;
+    const rendering = render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+
+    await waitUntil(() => renderedMessageIds().length === 3);
+
+    const scroller = find(".chat-messages-scroller");
+    setScrollerHeight(scroller, { clientHeight: 300, scrollHeight: 3000 });
+    scroller.scrollTop = -2700;
+    triggerEvent(scroller, "scroll");
+    triggerEvent(scroller, "scroll");
+    await waitUntil(() => releasePast);
+
+    scroller.scrollTop = 0;
+    triggerEvent(scroller, "scroll");
+    triggerEvent(scroller, "scroll");
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    releasePast();
+    await rendering;
+    await settled();
+
+    assert.true(
+      pretender.handledRequests.some(
+        (request) => request.queryParams.direction === "future"
+      ),
+      "newer messages are requested once the older page is in"
+    );
+    assert
+      .dom(".chat-scroll-to-bottom__button.visible")
+      .doesNotExist("the arrow is hidden at the real end");
   });
 });
