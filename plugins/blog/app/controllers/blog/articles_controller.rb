@@ -10,6 +10,9 @@ module ::Blog
     before_action :ensure_public_blog
     before_action :load_blog_theme, except: :highlight_js
     layout "blog"
+
+    # NOTE: Overrides ApplicationController's global not-found handling, which
+    # renders the Ember app; the blog serves its own not-found page instead.
     rescue_from ActiveRecord::RecordNotFound, Discourse::NotFound do
       @page_title = I18n.t("blog.not_found_title")
       @description = I18n.t("blog.not_found_body")
@@ -109,16 +112,16 @@ module ::Blog
     end
 
     def theme_css
-      colors = <<~CSS
+      css = <<~CSS
         :root {
           --blog-accent-color: ##{@blog_theme["accent_color"]};
           --blog-paper-color: ##{@blog_theme["paper_color"]};
           --blog-ink-color: ##{@blog_theme["ink_color"]};
         }
+        #{@blog_theme["css"] unless params[:blog_safe_mode] == "1"}
       CSS
-      colors += @blog_theme["css"] unless params[:blog_safe_mode] == "1"
       response.headers["X-Robots-Tag"] = "noindex"
-      render plain: colors, content_type: "text/css"
+      render plain: css, content_type: "text/css"
     end
 
     def highlight_js

@@ -3,7 +3,7 @@
 module Blog
   module DemoUsers
     def self.admin
-      User.real.where(admin: true).order(:id).first || abort("Create an admin user first")
+      User.active_admins.order(:id).first || abort("Create an admin user first")
     end
 
     def self.members(limit)
