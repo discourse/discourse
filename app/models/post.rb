@@ -1129,7 +1129,7 @@ class Post < ActiveRecord::Base
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
     post_revision.modifications.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
-      self[attribute] = change[0]
+      self[attribute] = change[0] if has_attribute?(attribute)
     end
   end
 

@@ -149,6 +149,36 @@ RSpec.describe PostsController do
       let(:post_with_revisions) { Fabricate(:post, user: user, version: 2) }
       let(:post_revision) { Fabricate(:post_revision, post: post_with_revisions) }
 
+      it "renders a historical body without replaying topic metadata or persisting changes" do
+        SiteSetting.editing_grace_period = 0
+        SiteSetting.tagging_enabled = true
+        original_category = Fabricate(:category)
+        current_category = Fabricate(:category)
+        original_tag = Fabricate(:tag)
+        current_tag = Fabricate(:tag)
+        revised_post =
+          create_post(user: admin, category: original_category.id, tags: [original_tag.name])
+        original_cooked = revised_post.cooked
+        revised_post.revise(
+          admin,
+          raw: "An updated body for the post",
+          title: "An updated topic title",
+          category_id: current_category.id,
+          tags: [current_tag.name],
+        )
+        post_attributes = revised_post.reload.attributes
+        topic_attributes = revised_post.topic.reload.attributes
+
+        sign_in(user)
+        get "/posts/#{revised_post.id}.json", params: { version: 1 }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["cooked"]).to eq(original_cooked)
+        expect(revised_post.reload.attributes).to eq(post_attributes)
+        expect(revised_post.topic.reload.attributes).to eq(topic_attributes)
+        expect(revised_post.topic.tags).to contain_exactly(current_tag)
+      end
+
       it "returns the reverted content for a visible revision" do
         post_revision
         sign_in(user)
