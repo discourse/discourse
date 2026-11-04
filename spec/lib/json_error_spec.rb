@@ -37,6 +37,13 @@ RSpec.describe JsonError do
     it "returns the string in the error format" do
       expect(creator.create_errors_json("test error")).to eq(errors: ["test error"])
     end
+
+    it "preserves the errors array when skipping the client error prefix" do
+      expect(creator.create_errors_json("test error", skip_error_prefix: true)).to eq(
+        errors: ["test error"],
+        skip_error_prefix: true,
+      )
+    end
   end
 
   describe "an activerecord object with errors" do
