@@ -36,6 +36,20 @@
   }
 }
 
+// A held category and its ancestors read as one name, so their badges stay on one line.
+.d-category-selection {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+
+  > .badge-category__wrapper {
+    min-width: 0;
+  }
+}
+
 // A described row wraps its badges in a label, which the row's own gap no longer reaches.
 .d-select__content:is(.--kind-select-category, .--kind-select-category-filter)
   .d-select__option-content

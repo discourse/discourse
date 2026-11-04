@@ -3,6 +3,7 @@ import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import ActivityByCategory from "discourse/admin/components/dashboard/engagement/activity-by-category";
+import WhosPosting from "discourse/admin/components/dashboard/engagement/whos-posting";
 import ReportFilterCategory from "discourse/admin/components/report-filters/category";
 import ReportFilterCategoryList from "discourse/admin/components/report-filters/category-list";
 import SchemaSettingField from "discourse/admin/components/schema-setting/field";
@@ -599,7 +600,7 @@ module(
         });
       }
 
-      test("the dashboard's activity by category filter is named for what it filters", async function (assert) {
+      test("the dashboard's activity by category filter is named for what it filters and how many it holds", async function (assert) {
         const activity = { total: 0, rows: [] };
         const start = new Date("2026-04-01");
         const end = new Date("2026-04-30");
@@ -615,8 +616,44 @@ module(
 
         assert.strictEqual(
           this.nameOf(find(".db-activity [role='combobox']")),
-          i18n("categories.categories")
+          i18n("d_select.label_with_count", {
+            label: i18n("categories.categories"),
+            count: 0,
+          })
         );
+      });
+
+      test("the dashboard's category filters show two chips and count the rest", async function (assert) {
+        const ids = this.categories.slice(0, 4).map((category) => category.id);
+        const activity = { total: 0, rows: [], category_ids: ids };
+        const posters = { total: 0, groups: [], rows: [], category_ids: ids };
+        const start = new Date("2026-04-01");
+        const end = new Date("2026-04-30");
+        await render(
+          <template>
+            <ActivityByCategory
+              @activity={{activity}}
+              @endDate={{end}}
+              @startDate={{start}}
+            />
+            <WhosPosting
+              @endDate={{end}}
+              @posters={{posters}}
+              @startDate={{start}}
+            />
+          </template>
+        );
+
+        for (const field of findAll(".multiple-categories-selector")) {
+          assert.strictEqual(
+            field.querySelectorAll(".d-select__chip").length,
+            2,
+            "two chips are drawn"
+          );
+          assert
+            .dom(".d-select__chips-more", field)
+            .hasText("+2", "the others are counted");
+        }
       });
 
       test("the bulk category change is named by its description", async function (assert) {

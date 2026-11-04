@@ -38,6 +38,7 @@ interface DSelectCategorySignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "maximum"
+    | "maxVisibleChips"
     | "clearable"
     | "disabled"
     | "ariaLabelledBy"
@@ -412,6 +413,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @load={{this.load}}
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
+      @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}
       @noneRow={{@noneRow}}
       @onChange={{this.onChange}}
@@ -437,7 +439,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         {{#if (has-block "selection")}}
           {{yield item options to="selection"}}
         {{else}}
-          <CategoryBadge @ancestors={{@showAncestors}} @item={{item}} />
+          <span class="d-category-selection">
+            <CategoryBadge @ancestors={{@showAncestors}} @item={{item}} />
+          </span>
         {{/if}}
       </:selection>
       <:footer as |state options|>

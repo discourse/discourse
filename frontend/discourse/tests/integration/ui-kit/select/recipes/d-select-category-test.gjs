@@ -1229,6 +1229,38 @@ module(
           ["Parent Category", "Sub Category"]
         );
       });
+
+      test("a chip with ancestors keeps its badges apart and on one line", async function (assert) {
+        const held = [1002];
+
+        await render(
+          <template>
+            <div style="width: 160px">
+              <Host
+                @multiple={{true}}
+                @showAncestors={{true}}
+                @value={{held}}
+              />
+            </div>
+          </template>
+        );
+
+        const [parent, child] = findAll(
+          ".d-select__chip .badge-category__wrapper"
+        ).map((badge) => badge.getBoundingClientRect());
+        // The fixture is scaled, so rects are converted back to CSS pixels.
+        const chip = find(".d-select__chip");
+        const scale = chip.getBoundingClientRect().width / chip.offsetWidth;
+
+        assert.true(
+          (child.left - parent.right) / scale >= 2,
+          `the child badge stands apart from its parent (${(child.left - parent.right) / scale}px)`
+        );
+        assert.true(
+          Math.abs(child.top - parent.top) < 1,
+          "the child badge stays on the parent's line"
+        );
+      });
     });
 
     module("descendants", function () {
