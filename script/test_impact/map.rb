@@ -16,6 +16,9 @@ module TestImpact
     SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
     LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
     QUNIT_TEST = %r{\A(?:frontend/[^/]+/tests|plugins/[^/]+/test)/.*-test\.g?[jt]s\z}
+    # Dependency changes can change any code path.
+    DEPENDENCIES =
+      %r{\A(?:Gemfile(?:\.lock)?|pnpm-lock\.yaml|pnpm-workspace\.yaml|(?:.+/)?package\.json)\z}
     # Test support no test ran, documentation, which runs nowhere, and type
     # tests, which only the type checker reads.
     NOT_RUN = %r{\A(?:frontend/[^/]+/(?:tests|type-tests)/|plugins/[^/]+/test/|docs/)|\.md\z}
@@ -25,6 +28,7 @@ module TestImpact
       spec_ids = {}
       ranges = Hash.new { |h, path| h[path] = Hash.new { |r, range| r[range] = Set.new } }
       methods = Hash.new { |h, path| h[path] = Set.new }
+      boot = Hash.new { |h, path| h[path] = Set.new }
       seconds = Hash.new(0.0)
       indexes = INDEXES.to_h { |kind| [kind, Hash.new { |h, name| h[name] = Set.new }] }
 
@@ -34,6 +38,7 @@ module TestImpact
             entry = JSON.parse(line)
             if entry["methods"]
               entry["methods"].each { |file, list| methods[file].merge(list) }
+              Hash(entry["boot"]).each { |file, list| boot[file].merge(list) }
               next
             end
             id = spec_ids[entry["spec"]] ||= (specs << entry["spec"]).size - 1
@@ -45,9 +50,10 @@ module TestImpact
       end
 
       files = {}
-      (ranges.keys | methods.keys).each do |file|
+      (ranges.keys | methods.keys | boot.keys).each do |file|
         files[file] = {
           "methods" => methods[file].to_a.sort,
+          "boot" => boot[file].to_a.sort,
           "ranges" => ranges[file].map { |range, ids| [*range, ids.to_a.sort] }.sort,
         }
       end
@@ -95,9 +101,11 @@ module TestImpact
     # A hunk in a settings file selects the specs that read the setting it is
     # in, and one in a server locale file the specs that looked up its key (or
     # a key above or below it), in that locale unless it is English, which
-    # every locale falls back to. Other files select the specs that read them.
-    # Test support, documentation and type tests no spec ran or read select
-    # nothing, and so does deleting a file no spec loaded or read.
+    # every locale falls back to; either also selects the specs that read the
+    # file. Other files select the specs that read them. Test support,
+    # documentation and type tests no spec ran or read select nothing, and so
+    # does deleting a file no spec loaded or read. Dependency changes, and
+    # changes to methods that ran at boot, are reported as outside the map.
     #
     # `source` returns a changed file's content before the change, for the
     # settings and keys its hunks fall in.
@@ -114,6 +122,11 @@ module TestImpact
           next
         end
 
+        if DEPENDENCIES.match?(path)
+          unmapped << path
+          next
+        end
+
         old = change.old_path
         lines = old && (SETTINGS_FILE.match?(old) || LOCALE_FILE.match?(old)) && source.call(old)
         if lines
@@ -125,6 +138,8 @@ module TestImpact
               keys_reached(lines, change.hunks, old[LOCALE_FILE, 1])
             end
           reached ? ids.merge(reached) : unmapped << path
+          # Specs that read the file whole, not only the settings or keys in it.
+          ids.merge(@indexes["reads"][old] || [])
           next
         end
 
@@ -151,6 +166,8 @@ module TestImpact
             touched.reject do |s, e|
               touched.any? { |ts, te| [ts, te] != [s, e] && ts >= s && te <= e }
             end
+          # Boot ran it before any spec, so no spec is charged with it.
+          unmapped << path if innermost.any? { |range| file["boot"]&.include?(range) }
           if innermost.any?
             reached = file["ranges"].select { |s, e, _| innermost.include?([s, e]) }
             reached.each { |_, _, spec_ids| ids.merge(spec_ids) }

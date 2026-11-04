@@ -12,6 +12,7 @@ depends on. Experimental.
 - the site settings it read;
 - the translation keys and locales it looked up;
 - the non-Ruby files in the repository it read (fixtures, templates, data);
+- what it did as it loaded, such as generating examples from a data file;
 - for system specs, the browser JavaScript functions it ran.
 
 QUnit records the same JavaScript per test file, through testem
@@ -64,10 +65,10 @@ bin/qunit $(grep -v '_spec\.rb$' <<< "$specs")
   load), every spec that ran the file;
 - a rename selects every spec that ran the file;
 - a change in `config/site_settings.yml` or a plugin's `settings.yml` selects
-  the specs that read the setting it is in;
+  the specs that read the setting it is in, and those that read the file;
 - a change in a server locale file selects the specs that looked up its key,
   or a key above or below it; outside English, only those that used that
-  locale;
+  locale, plus those that read the file;
 - any other changed file selects the specs that read it, except QUnit tests,
   type tests and documentation, which select nothing when no spec ran or
   read them;
@@ -75,5 +76,8 @@ bin/qunit $(grep -v '_spec\.rb$' <<< "$specs")
 
 On stderr it lists changed methods no spec ran, and changed files the map
 doesn't cover (new files, JavaScript no system spec loads, client locales,
-migrations, and settings or locale changes that name no setting or key).
+migrations, settings or locale changes that name no setting or key, changes
+to methods that ran at boot or in the suite hooks, which no spec is charged
+with, and dependency changes: `Gemfile`, `Gemfile.lock`, `package.json`,
+pnpm's lockfile and workspace).
 When the second list isn't empty, the selection is incomplete.
