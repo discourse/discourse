@@ -18,7 +18,9 @@ module DiscourseAi
         attribute :intent_heuristic, :string
         attribute :classify_intent, :boolean, default: false
         attribute :defer_if_precise, :boolean, default: false
-        attribute :deferred_ask_log_id, :integer
+        # Kept as given rather than cast, so a malformed id is refused instead
+        # of reading as no id: the controller waives the rate limit for it.
+        attribute :deferred_ask_log_id, :string
 
         # What started a search is only logged, so anything unexpected is
         # dropped rather than refused.
@@ -30,6 +32,7 @@ module DiscourseAi
           self.trigger_reason = trigger_reason.to_s
           self.trigger_reason = "" if !trigger_reason.match?(Discoveries::TRIGGER_REASON_PATTERN)
           self.intent_heuristic = "" if Discoveries::Intent::CHOICES.exclude?(intent_heuristic)
+          self.deferred_ask_log_id = deferred_ask_log_id.presence
 
           # Requesting a held-back answer skips the rate limit, so the request
           # may only claim that answer: never defer again or judge first.
@@ -49,6 +52,11 @@ module DiscourseAi
                   }
         validates :request_id, format: { with: Discoveries::REQUEST_ID_PATTERN }
         validates :scope, format: { with: Discoveries::SCOPE_PATTERN }, allow_nil: true
+        validates :deferred_ask_log_id,
+                  format: {
+                    with: Discoveries::ASK_LOG_ID_PATTERN,
+                  },
+                  allow_nil: true
 
         # what the answer job and its log are given
         def answer_attributes
