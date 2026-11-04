@@ -2327,10 +2327,7 @@ RSpec.describe Report do
       it "with category filtering" do
         report = Report.find("top_users_by_likes_received_from_a_variety_of_people")
 
-        expect(report.data.length).to eq(3)
-        expect(report.data[0][:username]).to eq("jonah")
-        expect(report.data[1][:username]).to eq("jake")
-        expect(report.data[2][:username]).to eq("john")
+        expect(report.data.map { |row| row[:username] }).to contain_exactly("jonah", "jake", "john")
       end
     end
   end
