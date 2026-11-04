@@ -142,6 +142,7 @@ class PrivateMessageTopicTrackingState
       .select(%i[user_id last_read_post_number notification_level])
       .each do |tu|
         next if tu.user_id == post.user_id # skip post creator
+        next if tu.user.nil?
 
         if tu.last_read_post_number.nil? &&
              topic.created_at < tu.user.user_option.treat_as_new_topic_start_date
