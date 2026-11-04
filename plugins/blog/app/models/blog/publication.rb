@@ -3,31 +3,9 @@
 module ::Blog
   class Publication < ActiveRecord::Base
     self.table_name = "blog_publications"
-    RESERVED_PATHS =
-      (
-        %w[
-          about
-          tag
-          feed
-          feed.xml
-          sitemap
-          sitemap.xml
-          robots
-          robots.txt
-          blog
-          session
-          admin
-          t
-          u
-          review
-          posts
-          posts.rss
-          posts.atom
-          blog-theme.css
-          blog-custom.js
-          blog-highlight
-        ] + Configuration::ASSET_PREFIXES
-      ).freeze
+    MIDDLEWARE_SEGMENTS = %w[auth message-bus mini-profiler-resources].freeze
+    RESERVED_SEGMENTS =
+      (Routes::RESERVED_SEGMENTS + Configuration::ASSET_PREFIXES + MIDDLEWARE_SEGMENTS).freeze
     METADATA = %w[path excerpt featured published_at].freeze
 
     belongs_to :topic
@@ -75,7 +53,20 @@ module ::Blog
       where(topic_id: topic.id)
         .or(where(draft_topic_id: topic.id))
         .or(where(discussion_topic_id: topic.id))
-        .first || new(topic: topic, path: "/#{topic.slug.presence || topic.id}")
+        .first || new(topic: topic, path: default_path(topic))
+    end
+
+    def self.default_path(topic)
+      path = "/#{topic.slug.presence || topic.id}"
+      reserved_path?(path) ? "#{path}-#{topic.id}" : path
+    end
+
+    def self.reserved_path?(path)
+      segments = path.to_s.downcase.split("/").drop(1)
+      # Some blog routes accept an optional format, so "/about.json" resolves like "/about".
+      names = [segments.first.to_s, segments.first.to_s.sub(/\.[^.]*\z/, "")]
+      names.intersect?(RESERVED_SEGMENTS) ||
+        (segments.size == 1 && names.intersect?(Routes::RESERVED_EXACT_SEGMENTS))
     end
 
     def publicly_visible?
@@ -491,14 +482,18 @@ module ::Blog
     end
 
     def available_path
-      segments = path.to_s.split("/")
-      # Dated archive imports may use the otherwise reserved editorial prefix.
-      legacy_archive = path.to_s.match?(%r{\A/blog/archive/\d{4}/\d{2}/\d{2}/[^/]+\z})
-      reserved = RESERVED_PATHS.include?(segments[1].to_s.downcase) && !legacy_archive
-      if path.to_s.downcase == "/archive" || reserved || segments.intersect?(%w[. ..]) ||
+      if reserved_path? || path.to_s.split("/").intersect?(%w[. ..]) ||
            Path.where(path: path).where.not(publication_id: id).exists?
         errors.add(:path, I18n.t("blog.errors.path_taken"))
       end
+    end
+
+    def reserved_path?
+      # A segment reserved later must not invalidate an existing article.
+      return false if persisted? && !will_save_change_to_path?
+      # Dated archive imports may use the otherwise reserved editorial prefix.
+      return false if path.to_s.match?(%r{\A/blog/archive/\d{4}/\d{2}/\d{2}/[^/]+\z})
+      self.class.reserved_path?(path)
     end
 
     def valid_publication_date
