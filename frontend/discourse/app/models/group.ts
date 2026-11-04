@@ -1,10 +1,8 @@
-/* eslint-disable ember/no-observers */
 /* eslint-disable prefer-const -- Preserve bindings in this types-only port. */
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedArray } from "@ember/reactive/collections";
 import { isEmpty } from "@ember/utils";
-import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import {
   applyModelCallbacks,
@@ -773,12 +771,5 @@ export default class Group extends RestModel {
 
   _filterMembers(usernames: string[]): Promise<void> {
     return this.reloadMembers({ filter: usernames.join(",") });
-  }
-
-  @observes("isPrivate", "canEveryoneMention")
-  _updateAllowMembershipRequests() {
-    if (this.isPrivate || !this.canEveryoneMention) {
-      this.set("allow_membership_requests", false);
-    }
   }
 }
