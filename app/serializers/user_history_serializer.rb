@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class UserHistorySerializer < ApplicationSerializer
+  USER_NAME_DETAIL_ACTIONS =
+    %i[delete_post delete_topic recover_post recover_topic post_rejected]
+      .map { |action| UserHistory.actions[action] }
+      .freeze
+
   attributes :action_name,
              :details,
              :context,
@@ -28,7 +33,9 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   def details
-    redact_content? ? redacted_content : object.details
+    return redacted_content if redact_content?
+
+    redact_user_names(object.details)
   end
 
   def context
@@ -40,7 +47,7 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   def new_value
-    return nil if redact_content?
+    return nil if redact_content? || redact_name_change?
     if object.new_value
       object.new_value_is_json? ? ::JSON.parse(object.new_value) : object.new_value
     else
@@ -49,7 +56,7 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   def previous_value
-    return nil if redact_content?
+    return nil if redact_content? || redact_name_change?
     if object.previous_value
       object.previous_value_is_json? ? ::JSON.parse(object.previous_value) : object.previous_value
     else
@@ -67,6 +74,26 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   private
+
+  def redact_user_names(value)
+    return value if value.blank? || !redact_user_names?
+
+    if object.action == UserHistory.actions[:delete_user]
+      value.gsub(/^name:.*(?:\n|\z)/, "")
+    elsif USER_NAME_DETAIL_ACTIONS.include?(object.action)
+      value.gsub(/^(user: .+?) \(.+\)$/, "\\1")
+    else
+      value
+    end
+  end
+
+  def redact_name_change?
+    redact_user_names? && object.action == UserHistory.actions[:change_name]
+  end
+
+  def redact_user_names?
+    !SiteSetting.enable_names? && !scope.is_admin?
+  end
 
   def redact_content?
     return @redact_content if defined?(@redact_content)

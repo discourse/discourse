@@ -209,6 +209,20 @@ RSpec.describe Jobs::ExportCsvFile do
         action_log.destroy!
       end
 
+      it "hides full names from moderator exports when names are disabled" do
+        SiteSetting.enable_names = false
+        target_user = Fabricate(:user, name: "Private Export Name")
+        moderator = Fabricate(:moderator)
+        StaffActionLogger.new(admin).log_user_deletion(target_user)
+
+        Jobs::ExportCsvFile.new.execute(user_id: moderator.id, entity: "staff_action")
+
+        row =
+          parse_staff_action_rows(Upload.last).find { |record| record["action"] == "delete_user" }
+        expect(row["details"]).to include("username: #{target_user.username}")
+        expect(row["details"]).not_to include(target_user.name)
+      end
+
       it "does not redact details and context for admins" do
         post = Fabricate(:post)
         StaffActionLogger.new(admin).log_post_edit(
