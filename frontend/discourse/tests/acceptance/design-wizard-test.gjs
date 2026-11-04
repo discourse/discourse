@@ -378,6 +378,19 @@ acceptance("Design wizard - admin launch", function (needs) {
     await wizard.start({ resuming: true });
 
     assert.strictEqual(
+      wizard.homepage,
+      "chat",
+      "restores the homepage preview"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
       savedPayloads.at(-1).homepage,
       "chat",
       "saves chat as the underlying homepage"
@@ -429,6 +442,19 @@ acceptance("Design wizard - admin launch", function (needs) {
     await wizard.start({ resuming: true });
 
     assert.strictEqual(
+      wizard.homepage,
+      "latest",
+      "restores the homepage preview"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
       savedPayloads.at(-1).homepage,
       "latest",
       "saves the theme default as the underlying homepage"
@@ -437,6 +463,52 @@ acceptance("Design wizard - admin launch", function (needs) {
       savedPayloads.at(-1).theme_id,
       "-1",
       "saves the selected theme"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("keeps the current homepage when the theme's default is unavailable", async function (assert) {
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default_homepage: "chat",
+      palette_pairs: [],
+    });
+    wizardData.homepage = "categories";
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="42"] input');
+
+    const wizard = this.owner.lookup("service:design-wizard");
+    assert.strictEqual(
+      wizard.homepage,
+      "categories",
+      "keeps the current choice"
+    );
+    wizard.applyingTheme = false;
+    await wizard.start({ resuming: true });
+
+    assert.strictEqual(
+      wizard.homepage,
+      "categories",
+      "restores the current choice"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "categories",
+      "advancing preserves the current homepage"
     );
     await click(".design-wizard__close");
     await click(".dialog-footer .btn-primary");
