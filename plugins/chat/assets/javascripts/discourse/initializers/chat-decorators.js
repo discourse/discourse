@@ -1,5 +1,4 @@
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
-import { shouldOpenInNewTab } from "discourse/lib/click-track";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import { samePrefix } from "discourse/lib/get-url";
 import { decorateHashtags } from "discourse/lib/hashtag-decorator";
@@ -143,9 +142,9 @@ export default {
         continue;
       }
 
-      if (shouldOpenInNewTab(href)) {
+      if (!DiscourseURL.isInternal(href)) {
         link.setAttribute("target", "_blank");
-      } else if (DiscourseURL.isInternal(href) && !samePrefix(href)) {
+      } else if (!samePrefix(href)) {
         // Bypass routing for links outside the forum's subfolder.
         link.classList.add("raw-link");
       }
