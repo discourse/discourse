@@ -12,8 +12,10 @@ navigating the markup. A component is correct only when it holds up across all o
 Two CSS rules are the most load-bearing — get them right by reflex:
 
 1. **Name classes with BEM** so themes can target and override cleanly.
-2. **Never hardcode color** — pull from the CSS custom-property palette so themes and dark
-   mode work for free.
+2. **Reuse Discourse's design tokens.** Before writing CSS, inspect existing tokens and
+   component styling APIs for color, typography, spacing and sizing. Use custom values only
+   when none fits. Wrapping a hardcoded value in a local custom property does not make it a
+   design token.
 
 These rules operationalize Discourse's documented frontend philosophy — **mobile-first,
 progressive enhancement (works without hover or JS), a themeable base layer, and a shared design
