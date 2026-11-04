@@ -18,10 +18,10 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
   @cached
   get data() {
     return {
-      aboutPageExtraGroups:
-        this.args.extraGroups.aboutPageExtraGroups.value
-          .split("|")
-          .map(Number) || [],
+      aboutPageExtraGroups: this.args.extraGroups.aboutPageExtraGroups.value
+        .split("|")
+        .filter(Boolean)
+        .map(Number),
       aboutPageExtraGroupsInitialMembers:
         this.args.extraGroups.aboutPageExtraGroupsInitialMembers.value,
       aboutPageExtraGroupsOrder:

@@ -263,4 +263,29 @@ acceptance("Modal - move-to-topic", function (needs) {
 
     assert.strictEqual(data.participants, "bob", "sends the participant");
   });
+
+  test("the message picker keeps the legacy results' space below it", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/t/pm-for-testing/12");
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-multi-select .btn");
+    await click("#post_1 .select-post");
+    await click(".selected-posts .move-to-topic");
+    await click(".choose-topic-modal .radios #move-to-existing-message");
+
+    const picker = document.querySelector(
+      ".choose-topic-modal .choose-message"
+    );
+    const label = picker.nextElementSibling;
+    const scale = picker.getBoundingClientRect().width / picker.offsetWidth;
+    const gap =
+      (label.getBoundingClientRect().top -
+        picker.getBoundingClientRect().bottom) /
+      scale;
+
+    assert.strictEqual(
+      Math.round(gap),
+      Math.round(parseFloat(getComputedStyle(picker).fontSize))
+    );
+  });
 });

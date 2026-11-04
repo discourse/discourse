@@ -82,4 +82,14 @@ acceptance("Admin - email-preview", function (needs) {
 
     assert.strictEqual(digestRequests.at(-1).username, "bob");
   });
+
+  test("the new user field is as wide as the legacy chooser", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/admin/email/preview-digest");
+
+    assert.strictEqual(
+      document.querySelector(".email-preview .d-select").offsetWidth,
+      300
+    );
+  });
 });

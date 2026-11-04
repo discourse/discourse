@@ -618,6 +618,45 @@ module(
 
         assert.strictEqual(data.extra_groups.groups, "10|11");
       });
+
+      test("an empty extra groups setting holds no groups", async function (assert) {
+        this.owner.lookup("service:site").groups = [
+          { id: 10, name: "support" },
+          { id: 11, name: "design" },
+        ];
+        let data;
+        pretender.put("/admin/config/about.json", (request) => {
+          data = parsePostData(request.requestBody);
+          return response({});
+        });
+        const setting = (value) => ({ value });
+        const extraGroups = {
+          aboutPageExtraGroups: setting(""),
+          aboutPageExtraGroupsInitialMembers: setting(4),
+          aboutPageExtraGroupsOrder: {
+            value: "order_of_creation",
+            choices: [],
+          },
+          aboutPageExtraGroupsShowDescription: setting("false"),
+        };
+        const noop = () => {};
+
+        await render(
+          <template>
+            <AboutExtraGroups
+              @extraGroups={{extraGroups}}
+              @setGlobalSavingStatus={{noop}}
+            />
+          </template>
+        );
+        const select = new DSelect(".form-kit__field-custom .d-select");
+        assert.dom(".d-select__chip", select.element()).doesNotExist();
+        await select.open();
+        await click(optionNamed("design"));
+        await formKit().submit();
+
+        assert.strictEqual(data.extra_groups.groups, "11");
+      });
     });
   }
 );
