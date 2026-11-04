@@ -547,14 +547,8 @@ RSpec.describe UploadsController do
         expect(response.headers["X-Content-Type-Options"]).to eq("nosniff")
       end
 
-      {
-        "document.pdf" => "inline",
-        "clip.mp4" => "inline",
-        "page.html" => "attachment",
-        "data.xml" => "attachment",
-        "image.svg" => "attachment",
-      }.each do |filename, disposition|
-        it "serves #{filename} with #{disposition} disposition and the sandbox CSP" do
+      shared_examples "serving an upload with sandbox protection" do |filename:, expected_disposition:|
+        it "uses the expected disposition and sandbox CSP" do
           extension = File.extname(filename).delete_prefix(".")
           SiteSetting.authorized_extensions = "#{extension}|png"
           upload = upload_file("smallest.png")
@@ -563,9 +557,39 @@ RSpec.describe UploadsController do
           get upload.short_path
 
           expect(response.status).to eq(200)
-          expect(response.headers["Content-Disposition"]).to include(disposition)
+          expect(response.headers["Content-Disposition"]).to include(expected_disposition)
           expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
         end
+      end
+
+      context "with the document.pdf upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "document.pdf",
+                         expected_disposition: "inline"
+      end
+
+      context "with the clip.mp4 upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "clip.mp4",
+                         expected_disposition: "inline"
+      end
+
+      context "with the page.html upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "page.html",
+                         expected_disposition: "attachment"
+      end
+
+      context "with the data.xml upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "data.xml",
+                         expected_disposition: "attachment"
+      end
+
+      context "with the image.svg upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "image.svg",
+                         expected_disposition: "attachment"
       end
 
       it "forces an attachment download with a sandbox CSP when the dl param is given" do

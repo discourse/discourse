@@ -149,11 +149,19 @@ RSpec.describe TopicTimer, type: :model do
     end
 
     describe "#public_type" do
-      %i[close open delete].each do |public_type|
-        it "is true for #{public_type}" do
-          timer = Fabricate(:topic_timer, status_type: described_class.types[public_type])
-          expect(timer.public_type).to eq(true)
-        end
+      it "is true for close" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:close])
+        expect(timer.public_type).to eq(true)
+      end
+
+      it "is true for open" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:open])
+        expect(timer.public_type).to eq(true)
+      end
+
+      it "is true for delete" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:delete])
+        expect(timer.public_type).to eq(true)
       end
 
       it "is true for publish_to_category" do
@@ -166,12 +174,14 @@ RSpec.describe TopicTimer, type: :model do
         expect(timer.public_type).to eq(true)
       end
 
+      # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
       described_class.private_types.keys.each do |private_type|
         it "is false for #{private_type}" do
           timer = Fabricate(:topic_timer, status_type: described_class.types[private_type])
           expect(timer.public_type).to be_falsey
         end
       end
+      # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
     end
   end
 

@@ -481,7 +481,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(thinking["message"]).to eq("Web search: OpenAI news")
     end
 
-    [nil, "setCustomRaw", "streamCustomRaw"].each do |custom_output|
+    shared_examples "reporting tool script errors to the model" do |custom_output:|
       it "returns script errors to the model #{custom_output ? "after #{custom_output}" : "without custom output"}" do
         custom_tool.update!(script: <<~JS)
           function invoke() {
@@ -509,6 +509,18 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           ['{"error":"Error: Category not found"}', tool_call.id, "tool", tool_call.name],
         )
       end
+    end
+
+    context "when a script error has no custom output" do
+      include_examples "reporting tool script errors to the model", custom_output: nil
+    end
+
+    context "when a script error follows setCustomRaw" do
+      include_examples "reporting tool script errors to the model", custom_output: "setCustomRaw"
+    end
+
+    context "when a script error follows streamCustomRaw" do
+      include_examples "reporting tool script errors to the model", custom_output: "streamCustomRaw"
     end
 
     it "uses custom tool in conversation" do

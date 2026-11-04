@@ -71,10 +71,10 @@ RSpec.describe InvitesController do
       end
     end
 
-    %i[enable_local_logins enable_local_logins_via_email].each do |setting|
-      it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
+    shared_examples "redeeming a legacy email invitation token" do |disabled_setting:|
+      it "returns the invitation with its email verified by the link" do
         SiteSetting.enable_local_logins_via_code = true
-        SiteSetting.public_send("#{setting}=", false)
+        SiteSetting.public_send("#{disabled_setting}=", false)
         enable_auth_provider(:google_oauth2)
 
         get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
@@ -86,6 +86,16 @@ RSpec.describe InvitesController do
           expect(invite_info["email_verified_by_link"]).to eq(true)
         end
       end
+    end
+
+    context "with enable_local_logins disabled" do
+      include_examples "redeeming a legacy email invitation token",
+                       disabled_setting: :enable_local_logins
+    end
+
+    context "with enable_local_logins_via_email disabled" do
+      include_examples "redeeming a legacy email invitation token",
+                       disabled_setting: :enable_local_logins_via_email
     end
 
     context "when email data is present in authentication data" do

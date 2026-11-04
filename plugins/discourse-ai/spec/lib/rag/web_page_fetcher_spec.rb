@@ -134,8 +134,8 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
     ).to have_been_made.once
   end
 
-  %w[text/plain text/markdown].each do |content_type|
-    it "decodes binary #{content_type} responses as UTF-8 and replaces invalid bytes" do
+  shared_examples "decoding a binary text response" do |content_type:|
+    it "decodes UTF-8 and replaces incomplete bytes" do
       url = "https://example.com/docs"
       stub_request(:get, url).to_return(
         status: 200,
@@ -150,6 +150,14 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
       expect(result[:text].encoding).to eq(Encoding::UTF_8)
       expect(result[:text]).to eq("Knowledge — café\nTruncated: �")
     end
+  end
+
+  context "with the text/plain content type" do
+    include_examples "decoding a binary text response", content_type: "text/plain"
+  end
+
+  context "with the text/markdown content type" do
+    include_examples "decoding a binary text response", content_type: "text/markdown"
   end
 
   it "preserves UTF-8 characters split across binary response chunks" do

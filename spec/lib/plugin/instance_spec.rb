@@ -672,13 +672,9 @@ TEXT
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
     end
 
-    %w[
-      config/locales/client.foo_BAR.yml
-      config/locales/server.foo_BAR.yml
-      lib/javascripts/locale/moment_js/foo_BAR.js
-    ].each do |path|
-      it "does not register a new locale when #{path} is missing" do
-        path = "#{plugin_path}/#{path}"
+    shared_examples "rejecting an incomplete plugin locale" do |missing_path:|
+      it "does not register the locale when a required file is missing" do
+        path = "#{plugin_path}/#{missing_path}"
         File.stubs("exist?").returns(false)
         File.stubs("exist?").with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
         File.stubs("exist?").with(path).returns(false)
@@ -686,6 +682,21 @@ TEXT
         register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
         expect(DiscoursePluginRegistry.locales.count).to eq(0)
       end
+    end
+
+    context "without the client translations" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "config/locales/client.foo_BAR.yml"
+    end
+
+    context "without the server translations" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "config/locales/server.foo_BAR.yml"
+    end
+
+    context "without the Moment locale" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "lib/javascripts/locale/moment_js/foo_BAR.js"
     end
   end
 

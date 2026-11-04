@@ -1773,7 +1773,7 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("none")
     end
 
-    %w[gpt-4.1-mini gpt-35-turbo].each do |model_name|
+    shared_examples "a model without reasoning support" do |model_name:|
       it "omits per-call efforts for #{model_name}, which does not reason" do
         model.update!(name: model_name)
 
@@ -1791,6 +1791,14 @@ TEXT
 
         expect(bodies.map { |body| body.key?(:reasoning_effort) }).to eq([false, false])
       end
+    end
+
+    context "with the gpt-4.1-mini model" do
+      include_examples "a model without reasoning support", model_name: "gpt-4.1-mini"
+    end
+
+    context "with the gpt-35-turbo model" do
+      include_examples "a model without reasoning support", model_name: "gpt-35-turbo"
     end
 
     it "sends a per-call none to reasoning models" do

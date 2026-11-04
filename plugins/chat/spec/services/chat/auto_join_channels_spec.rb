@@ -17,7 +17,7 @@ RSpec.describe Chat::AutoJoinChannels do
 
       before { SiteSetting.chat_enabled = true }
 
-      [false, true].each do |enabled|
+      shared_examples "joining channels with logged in posting access" do |enabled:|
         it "joins channels with posting access regardless of granular permissions #{enabled}" do
           SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
           channels =
@@ -33,6 +33,14 @@ RSpec.describe Chat::AutoJoinChannels do
             channels[2].id,
           )
         end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "joining channels with logged in posting access", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "joining channels with logged in posting access", enabled: true
       end
     end
 

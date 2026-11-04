@@ -760,8 +760,8 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      ["**bold**", "__italic__", "[b]bold[/b]", "[i]italic[/i]"].each do |raw|
-        it "acknowledges the formatting and starts the quoting tutorial" do
+      shared_examples "advancing the formatting tutorial" do |raw:|
+        it "acknowledges formatting and starts the quoting tutorial" do
           post.update!(raw: raw)
 
           narrative.expects(:enqueue_timeout_job).with(user)
@@ -777,6 +777,22 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
           expect(new_post.raw).to eq(expected_raw.chomp)
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
         end
+      end
+
+      context "with Markdown bold" do
+        include_examples "advancing the formatting tutorial", raw: "**bold**"
+      end
+
+      context "with double underscore formatting" do
+        include_examples "advancing the formatting tutorial", raw: "__italic__"
+      end
+
+      context "with BBCode bold" do
+        include_examples "advancing the formatting tutorial", raw: "[b]bold[/b]"
+      end
+
+      context "with BBCode italic" do
+        include_examples "advancing the formatting tutorial", raw: "[i]italic[/i]"
       end
     end
 
