@@ -107,6 +107,12 @@ function sameHost(a, b) {
   return a && b && a.host === b.host && a.port === b.port;
 }
 
+// TURN over TLS and plain TURN over TCP can share a host and port, yet one
+// working says nothing about the other (e.g. a certificate problem).
+function sameRelayEndpoint(a, b) {
+  return sameHost(a, b) && a.scheme === b.scheme && a.transport === b.transport;
+}
+
 /**
  * Whether the server an ICE error is about was reached anyway. Browsers try
  * every server from every local address and interface, so one address failing
@@ -127,14 +133,9 @@ export function iceErrorIsHarmless(error, { candidates = [], probes = [] }) {
 
   const probed = probes.some((probe) => {
     const endpoint = parseIceUrl(probe.url);
-    if (!sameHost(endpoint, target)) {
-      return false;
-    }
     return wantsRelay
-      ? probe.kind === "turn" &&
-          probe.reachable &&
-          endpoint.transport === target.transport
-      : probe.publicAddresses?.length > 0;
+      ? probe.reachable && sameRelayEndpoint(endpoint, target)
+      : sameHost(endpoint, target) && probe.publicAddresses?.length > 0;
   });
   if (probed) {
     return true;
@@ -151,10 +152,9 @@ export function iceErrorIsHarmless(error, { candidates = [], probes = [] }) {
     if (!source) {
       return false;
     }
-    return (
-      sameHost(source, target) &&
-      (!wantsRelay || source.transport === target.transport)
-    );
+    return wantsRelay
+      ? sameRelayEndpoint(source, target)
+      : sameHost(source, target);
   });
 }
 

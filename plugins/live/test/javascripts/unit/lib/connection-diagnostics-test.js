@@ -430,6 +430,44 @@ module("Live | Unit | Lib | connection-diagnostics", function () {
     );
   });
 
+  test("iceErrorIsHarmless keeps TURN over TLS apart from plain TURN over TCP", function (assert) {
+    const probes = [
+      {
+        url: "turn:turn.example.com:443?transport=tcp",
+        kind: "turn",
+        reachable: true,
+        publicAddresses: [],
+      },
+      {
+        url: "turns:turn.example.com:443",
+        kind: "turn",
+        reachable: false,
+        publicAddresses: [],
+      },
+    ];
+    const candidates = [
+      {
+        type: "relay",
+        url: "turn:turn.example.com:443?transport=tcp",
+        relayProtocol: "tcp",
+      },
+    ];
+
+    assert.false(
+      iceErrorIsHarmless(
+        { url: "turns:turn.example.com:443?transport=tcp" },
+        { probes, candidates }
+      ),
+      "a working plain-TCP endpoint does not cover a failing TLS one"
+    );
+    assert.true(
+      iceErrorIsHarmless(
+        { url: "turn:turn.example.com:443?transport=tcp" },
+        { probes, candidates }
+      )
+    );
+  });
+
   test("partitionIceErrors separates harmless errors from problems", function (assert) {
     const { problems, harmless } = partitionIceErrors(
       [
