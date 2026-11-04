@@ -2531,8 +2531,8 @@ RSpec.describe CookedPostProcessor do
   describe "#html" do
     it "escapes html entities in attributes per html5" do
       post = Fabricate(:post, user: user_with_auto_groups, raw: '<img alt="&<something>">')
-      expect(post.cook(post.raw)).to eq('<p><img alt="&amp;<something>"></p>')
-      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&amp;<something>"></p>')
+      expect(post.cook(post.raw)).to eq('<p><img alt="&amp;&lt;something&gt;"></p>')
+      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&amp;&lt;something&gt;"></p>')
     end
   end
 
