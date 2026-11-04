@@ -84,6 +84,18 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(WebMock).not_to have_requested(:post, zendesk_api_ticket_url)
     end
 
+    %i[admin moderator].each do |staff_role|
+      it "denies creation to an excluded #{staff_role}" do
+        SiteSetting.zendesk_create_ticket_allowed_groups = support_group.id.to_s
+        sign_in(Fabricate(staff_role))
+
+        post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(403)
+        expect(WebMock).not_to have_requested(:post, zendesk_api_ticket_url)
+      end
+    end
+
     it "requires login even when everyone has creation permission" do
       SiteSetting.zendesk_create_ticket_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
 
@@ -108,8 +120,6 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
 
     it "creates a zendesk ticket for a topic" do
       moderator = Fabricate(:moderator)
-      topic = Fabricate(:topic)
-      Fabricate(:post, topic: topic)
       sign_in(moderator)
       SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
       SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"

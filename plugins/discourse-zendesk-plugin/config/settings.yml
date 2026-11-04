@@ -9,12 +9,10 @@ discourse_zendesk:
     type: group_list
     list_type: compact
     default: "1|2"
-    mandatory_values: "1|2"
   zendesk_view_ticket_allowed_groups:
     type: group_list
     list_type: compact
     default: "1|2"
-    mandatory_values: "1|2"
   zendesk_jobs_api_token:
     default: ""
     secret: true

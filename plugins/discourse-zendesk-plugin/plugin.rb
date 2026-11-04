@@ -45,13 +45,11 @@ after_initialize do
   end
 
   add_to_class(:guardian, :can_create_zendesk_ticket?) do
-    authenticated? &&
-      (is_staff? || in_any_groups?(SiteSetting.zendesk_create_ticket_allowed_groups_map))
+    authenticated? && in_any_groups?(SiteSetting.zendesk_create_ticket_allowed_groups_map)
   end
 
   add_to_class(:guardian, :can_view_zendesk_ticket?) do
-    authenticated? &&
-      (is_staff? || in_any_groups?(SiteSetting.zendesk_view_ticket_allowed_groups_map))
+    authenticated? && in_any_groups?(SiteSetting.zendesk_view_ticket_allowed_groups_map)
   end
 
   add_to_serializer(:current_user, :can_create_zendesk_ticket) { scope.can_create_zendesk_ticket? }
@@ -67,15 +65,13 @@ after_initialize do
   add_to_serializer(
     :topic_view,
     DiscourseZendeskPlugin::ZENDESK_ID_FIELD.to_sym,
-    respect_plugin_enabled: false,
-    include_condition: -> { scope.is_staff? || scope.can_view_zendesk_ticket? },
+    include_condition: -> { scope.can_view_zendesk_ticket? },
   ) { object.topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD] }
 
   add_to_serializer(
     :topic_view,
     DiscourseZendeskPlugin::ZENDESK_URL_FIELD.to_sym,
-    respect_plugin_enabled: false,
-    include_condition: -> { scope.is_staff? || scope.can_view_zendesk_ticket? },
+    include_condition: -> { scope.can_view_zendesk_ticket? },
   ) do
     id = object.topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]
     uri = URI.parse(SiteSetting.zendesk_url)

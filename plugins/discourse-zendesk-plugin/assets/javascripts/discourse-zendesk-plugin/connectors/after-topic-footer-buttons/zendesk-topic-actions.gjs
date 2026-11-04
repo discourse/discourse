@@ -14,18 +14,6 @@ export default class ZendeskTopicActions extends Component {
 
   @service("a11y") _a11y;
 
-  @tracked _updatedTopic;
-
-  get #topicState() {
-    return this._updatedTopic?.id === this.args.topic.id
-      ? this._updatedTopic
-      : this.args.topic;
-  }
-
-  get hasTicket() {
-    return this.#topicState.discourse_zendesk_plugin_has_ticket;
-  }
-
   get showActions() {
     if (
       !this.currentUser?.discourse_zendesk_plugin_status &&
@@ -36,12 +24,9 @@ export default class ZendeskTopicActions extends Component {
 
     return (
       this.currentUser?.can_create_zendesk_ticket ||
-      (this.hasTicket && this.currentUser?.can_view_zendesk_ticket)
+      (this.args.topic.discourse_zendesk_plugin_has_ticket &&
+        this.currentUser?.can_view_zendesk_ticket)
     );
-  }
-
-  get ticketUrl() {
-    return this.#topicState.discourse_zendesk_plugin_zendesk_url;
   }
 
   @action
@@ -50,15 +35,20 @@ export default class ZendeskTopicActions extends Component {
       return;
     }
 
+    const topic = this.args.topic;
     this.creating = true;
     try {
-      this._updatedTopic = await ajax("/zendesk-plugin/issues", {
+      const updatedTopic = await ajax("/zendesk-plugin/issues", {
         type: "POST",
-        data: { topic_id: this.args.topic.id },
+        data: { topic_id: topic.id },
       });
-      if (this.hasTicket) {
-        this._a11y.announce(i18n("zendesk.ticket_created"));
-      }
+      topic.setProperties({
+        discourse_zendesk_plugin_has_ticket:
+          updatedTopic.discourse_zendesk_plugin_has_ticket,
+        discourse_zendesk_plugin_zendesk_url:
+          updatedTopic.discourse_zendesk_plugin_zendesk_url,
+      });
+      this._a11y.announce(i18n("zendesk.ticket_created"));
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -73,11 +63,11 @@ export default class ZendeskTopicActions extends Component {
         ...attributes
       >
         {{#if this.currentUser.discourse_zendesk_plugin_status}}
-          {{#if this.hasTicket}}
+          {{#if @topic.discourse_zendesk_plugin_has_ticket}}
             {{#if this.currentUser.can_view_zendesk_ticket}}
               <a
                 class="btn-primary btn"
-                href={{this.ticketUrl}}
+                href={{@topic.discourse_zendesk_plugin_zendesk_url}}
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -88,7 +78,7 @@ export default class ZendeskTopicActions extends Component {
                   "zendesk.ticket_created"
                 }}</span>
             {{/if}}
-          {{else if this.currentUser.can_create_zendesk_ticket}}
+          {{else}}
             <DButton
               class="btn-primary"
               @action={{this.createZendeskIssue}}
