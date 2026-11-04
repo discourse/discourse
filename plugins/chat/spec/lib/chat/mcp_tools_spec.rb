@@ -40,7 +40,7 @@ describe Chat::McpTools::ListMessages do
     )
     expect(result[:meta]).to include(
       returned: 1,
-      can_load_more_past: true,
+      can_load_more_past: false,
       can_load_more_future: nil,
       target_message_id: second_message.id,
     )

@@ -113,6 +113,18 @@ async function scrollToEdge(edge) {
   }
 }
 
+// Touches the bottom only in passing, the way a quick scroll does, so the
+// scroll ends just above it. Dispatched directly because triggerEvent fires
+// after a tick, by which time the scroller has already moved on.
+async function skimPastBottom() {
+  const scroller = find(".chat-messages-scroller");
+  setScrollerHeight(scroller, { clientHeight: 300, scrollHeight: 3000 });
+  scroller.scrollTop = 0;
+  scroller.dispatchEvent(new Event("scroll"));
+  scroller.scrollTop = -100;
+  await settled();
+}
+
 function renderedMessageIds() {
   return [
     ...new Set(
@@ -205,6 +217,21 @@ module("Integration | Component | ChatChannel", function (hooks) {
       [],
       `no message between the loaded window (${windowTop}) and the live one (${LIVE}) was skipped`
     );
+  });
+
+  test("held live messages stop keeping the arrow up once their page loads", async function (assert) {
+    await this.openBacklog(assert);
+    await scrollToEdge("top");
+    await this.receiveLiveMessage();
+
+    for (let i = 0; i < 40 && !renderedMessageIds().includes(LIVE); i++) {
+      await skimPastBottom();
+    }
+
+    assert.true(renderedMessageIds().includes(LIVE), "the live message loaded");
+    assert
+      .dom(".chat-scroll-to-bottom__button.visible")
+      .doesNotExist("the arrow hides near the end, as it does for history");
   });
 
   test("reaching the end while an older page loads still checks for newer messages", async function (assert) {

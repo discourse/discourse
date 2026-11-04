@@ -342,6 +342,11 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // messages held while newer history was unloaded are part of this page
+    if (direction === FUTURE && !this.messagesLoader.canLoadMoreFuture) {
+      this.paneState.clearPendingMessages();
+    }
+
     this.paneState.updatePendingContentFromScrollerPosition({
       scroller: this.scroller,
       fetchedOnce: this.messagesLoader.fetchedOnce,
