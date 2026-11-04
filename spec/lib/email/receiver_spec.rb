@@ -879,25 +879,31 @@ RSpec.describe Email::Receiver do
         expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
       end
 
-      it "enqueues the post and silences the user for X-Spam-Flag" do
-        SiteSetting.email_in_spam_header = "X-Spam-Flag"
+      shared_examples "moderating email identified as spam" do |header:, fixture:|
+        it "queues the post and silences the sender" do
+          SiteSetting.email_in_spam_header = header
 
-        expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
-        expect(user.reload.silenced?).to be(true)
+          expect { process(fixture) }.to change { ReviewableQueuedPost.count }.by(1)
+          expect(user.reload.silenced?).to be(true)
+        end
       end
 
-      it "enqueues the post and silences the user for X-Spam-Status" do
-        SiteSetting.email_in_spam_header = "X-Spam-Status"
-
-        expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
-        expect(user.reload.silenced?).to be(true)
+      context "with the X-Spam-Flag header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Flag",
+                         fixture: :spam_x_spam_flag
       end
 
-      it "enqueues the post and silences the user for X-SES-Spam-Verdict" do
-        SiteSetting.email_in_spam_header = "X-SES-Spam-Verdict"
+      context "with the X-Spam-Status header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Status",
+                         fixture: :spam_x_spam_status
+      end
 
-        expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
-        expect(user.reload.silenced?).to be(true)
+      context "with the X-SES-Spam-Verdict header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-SES-Spam-Verdict",
+                         fixture: :spam_x_ses_spam_verdict
       end
 
       it "enqueues the post for a failed Authentication-Results header" do

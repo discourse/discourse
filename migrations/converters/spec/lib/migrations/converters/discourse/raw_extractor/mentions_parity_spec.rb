@@ -85,39 +85,52 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       slug && CGI.unescape(slug)
     end
 
+    shared_examples "matching mention extraction to cooked links" do |username:, raw:, expected_name:|
+      it "extracts the same username that core links" do
+        Fabricate(:user, username:)
+        expect(extracted_name(raw, username)).to eq(expected_name)
+        expect(cooked_link(raw)).to eq(expected_name)
+      end
+    end
+
     # interior dot
-    it "reads \"hi @john.doe there\" the same name core links" do
-      Fabricate(:user, username: "john.doe")
-      expect(extracted_name("hi @john.doe there", "john.doe")).to eq("john.doe")
-      expect(cooked_link("hi @john.doe there")).to eq("john.doe")
+    context "with an interior dot" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "john.doe",
+                       raw: "hi @john.doe there",
+                       expected_name: "john.doe"
     end
 
     # trailing dot dropped
-    it "reads \"thanks @john.\" the same name core links" do
-      Fabricate(:user, username: "john")
-      expect(extracted_name("thanks @john.", "john")).to eq("john")
-      expect(cooked_link("thanks @john.")).to eq("john")
+    context "with a trailing dot" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "john",
+                       raw: "thanks @john.",
+                       expected_name: "john"
     end
 
     # interior dash
-    it "reads \"cc @j-d please\" the same name core links" do
-      Fabricate(:user, username: "j-d")
-      expect(extracted_name("cc @j-d please", "j-d")).to eq("j-d")
-      expect(cooked_link("cc @j-d please")).to eq("j-d")
+    context "with an interior dash" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "j-d",
+                       raw: "cc @j-d please",
+                       expected_name: "j-d"
     end
 
     # trailing underscore dropped
-    it "reads \"ping @user_ here\" the same name core links" do
-      Fabricate(:user, username: "user")
-      expect(extracted_name("ping @user_ here", "user")).to eq("user")
-      expect(cooked_link("ping @user_ here")).to eq("user")
+    context "with a trailing underscore" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "user",
+                       raw: "ping @user_ here",
+                       expected_name: "user"
     end
 
     # multibyte
-    it "reads \"cc @café here\" the same name core links" do
-      Fabricate(:user, username: "café")
-      expect(extracted_name("cc @café here", "café")).to eq("café")
-      expect(cooked_link("cc @café here")).to eq("café")
+    context "with a multibyte username" do
+      include_examples "matching mention extraction to cooked links",
+                       username: "café",
+                       raw: "cc @café here",
+                       expected_name: "café"
     end
   end
 

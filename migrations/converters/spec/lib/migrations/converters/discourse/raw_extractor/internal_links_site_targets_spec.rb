@@ -14,49 +14,42 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # origin-only rewrite would point the new host at stale coordinates. Worse
     # than verbatim: the construct stays untouched and the body is reported.
     context "when a path resembles a legacy coordinate" do
-      it "refuses an empty topic slug instead of recording a SITE link" do
-        raw = "This topic you've named [>>>>>](https://forum.example.com/t//209) doesn't load"
+      shared_examples "refusing malformed internal coordinates" do |url:|
+        it "preserves the source instead of recording a site link" do
+          raw = "This topic you've named [>>>>>](#{url}) doesn't load"
 
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+          expect(extract(raw)).to eq(raw)
+          expect(buffer.links).to be_empty
+          expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+        end
       end
 
-      it "refuses a junk topic id instead of recording a SITE link" do
-        raw = "This topic you've named [>>>>>](https://forum.example.com/t/slug/5a) doesn't load"
-
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+      context "with an empty topic slug" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/t//209"
       end
 
-      it "refuses an invalid user segment instead of recording a SITE link" do
-        raw = "This topic you've named [>>>>>](https://forum.example.com/u/bob!!!) doesn't load"
+      context "with a junk topic ID" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/t/slug/5a"
+      end
 
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+      context "with an invalid user segment" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/u/bob!!!"
       end
 
       # Core's canonical route order would read the trailing number as a tag id,
       # the legacy order as more slug path — the parser refuses the ambiguity
       # instead of guessing a reading.
-      it "refuses a multi-tag form with a trailing numeric segment instead of recording a SITE link" do
-        raw =
-          "This topic you've named [>>>>>](https://forum.example.com/tags/c/support/feature/12) doesn't load"
-
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+      context "with a tag route ending in a numeric segment" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/tags/c/support/feature/12"
       end
 
-      it "refuses a slug followed by a non-id segment instead of recording a SITE link" do
-        raw =
-          "This topic you've named [>>>>>](https://forum.example.com/t/a-topic-slug/extra!) doesn't load"
-
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+      context "with a slug followed by an invalid ID" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/t/a-topic-slug/extra!"
       end
     end
 

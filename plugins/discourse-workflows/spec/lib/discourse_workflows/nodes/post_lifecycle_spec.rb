@@ -60,10 +60,8 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
     end
 
     context "with V2" do
-      context "with PostDestroyed" do
-        let(:klass) { "DiscourseWorkflows::Nodes::PostDestroyed::V2".constantize }
-
-        it "returns the author as user and the acting user as actor", :aggregate_failures do
+      shared_examples "returning post lifecycle identities" do
+        it "returns the post author, acting user, and valid output schema", :aggregate_failures do
           output = trigger.output
 
           expect(output[:user]).to include(id: post.user.id, username: post.user.username)
@@ -72,16 +70,16 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
         end
       end
 
+      context "with PostDestroyed" do
+        let(:klass) { "DiscourseWorkflows::Nodes::PostDestroyed::V2".constantize }
+
+        include_examples "returning post lifecycle identities"
+      end
+
       context "with PostRecovered" do
         let(:klass) { "DiscourseWorkflows::Nodes::PostRecovered::V2".constantize }
 
-        it "returns the author as user and the acting user as actor", :aggregate_failures do
-          output = trigger.output
-
-          expect(output[:user]).to include(id: post.user.id, username: post.user.username)
-          expect(output[:actor]).to include(id: actor.id, username: actor.username)
-          expect(output).to match_node_output_schema(klass)
-        end
+        include_examples "returning post lifecycle identities"
       end
     end
 

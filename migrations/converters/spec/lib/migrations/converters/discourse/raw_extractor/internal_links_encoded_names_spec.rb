@@ -130,28 +130,26 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # invent path structure the author never wrote — both refuse rather than
     # rewrite a coordinate-shaped path onto the destination.
     context "when an encoded name would change path structure" do
-      it "refuses a name holding invalid UTF-8 bytes" do
-        raw = "see https://forum.example.com/u/%FF%FE there"
+      shared_examples "refusing unsafe encoded link names" do |path:|
+        it "preserves the source and records an invalid route refusal" do
+          raw = "see https://forum.example.com#{path} there"
 
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+          expect(extract(raw)).to eq(raw)
+          expect(buffer.links).to be_empty
+          expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+        end
       end
 
-      it "refuses a name holding an encoded slash" do
-        raw = "see https://forum.example.com/u/a%2Fb there"
-
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+      context "with invalid UTF-8 bytes" do
+        include_examples "refusing unsafe encoded link names", path: "/u/%FF%FE"
       end
 
-      it "refuses a name holding an encoded newline" do
-        raw = "see https://forum.example.com/g/te%0Aam there"
+      context "with an encoded slash" do
+        include_examples "refusing unsafe encoded link names", path: "/u/a%2Fb"
+      end
 
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+      context "with an encoded newline" do
+        include_examples "refusing unsafe encoded link names", path: "/g/te%0Aam"
       end
     end
 

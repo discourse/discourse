@@ -498,20 +498,22 @@ describe BackupRestore::Creator do
       expect(File.exist?(@staging)).to eq(false)
     end
 
-    it "removes the partial archive and waits for gzip when interrupted by #{RuntimeError}" do
-      creator.stubs(:add_local_uploads_to_archive).raises(RuntimeError)
-      expect { creator.send(:create_archive) }.to raise_error(RuntimeError)
-      expect(Dir.glob(File.join(@directory, "backup*"))).to be_empty
-      expect(creator.instance_variable_get(:@archive)).to be_nil
-      expect($?.success?).to eq(true)
+    shared_examples "cleaning up an interrupted backup archive" do |error_class:|
+      it "removes the partial archive and waits for gzip" do
+        creator.stubs(:add_local_uploads_to_archive).raises(error_class)
+        expect { creator.send(:create_archive) }.to raise_error(error_class)
+        expect(Dir.glob(File.join(@directory, "backup*"))).to be_empty
+        expect(creator.instance_variable_get(:@archive)).to be_nil
+        expect($?.success?).to eq(true)
+      end
     end
 
-    it "removes the partial archive and waits for gzip when interrupted by #{SystemExit}" do
-      creator.stubs(:add_local_uploads_to_archive).raises(SystemExit)
-      expect { creator.send(:create_archive) }.to raise_error(SystemExit)
-      expect(Dir.glob(File.join(@directory, "backup*"))).to be_empty
-      expect(creator.instance_variable_get(:@archive)).to be_nil
-      expect($?.success?).to eq(true)
+    context "when interrupted by RuntimeError" do
+      include_examples "cleaning up an interrupted backup archive", error_class: RuntimeError
+    end
+
+    context "when interrupted by SystemExit" do
+      include_examples "cleaning up an interrupted backup archive", error_class: SystemExit
     end
 
     it "does not publish an archive when gzip fails" do

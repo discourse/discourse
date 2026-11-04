@@ -547,69 +547,49 @@ RSpec.describe UploadsController do
         expect(response.headers["X-Content-Type-Options"]).to eq("nosniff")
       end
 
-      it "serves document.pdf with inline disposition and the sandbox CSP" do
-        extension = File.extname("document.pdf").delete_prefix(".")
-        SiteSetting.authorized_extensions = "#{extension}|png"
-        upload = upload_file("smallest.png")
-        upload.update!(original_filename: "document.pdf", extension: extension)
+      shared_examples "serving an upload with sandbox protection" do |filename:, expected_disposition:|
+        it "uses the expected disposition and sandbox CSP" do
+          extension = File.extname(filename).delete_prefix(".")
+          SiteSetting.authorized_extensions = "#{extension}|png"
+          upload = upload_file("smallest.png")
+          upload.update!(original_filename: filename, extension: extension)
 
-        get upload.short_path
+          get upload.short_path
 
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("inline")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+          expect(response.status).to eq(200)
+          expect(response.headers["Content-Disposition"]).to include(expected_disposition)
+          expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+        end
       end
 
-      it "serves clip.mp4 with inline disposition and the sandbox CSP" do
-        extension = File.extname("clip.mp4").delete_prefix(".")
-        SiteSetting.authorized_extensions = "#{extension}|png"
-        upload = upload_file("smallest.png")
-        upload.update!(original_filename: "clip.mp4", extension: extension)
-
-        get upload.short_path
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("inline")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      context "with the document.pdf upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "document.pdf",
+                         expected_disposition: "inline"
       end
 
-      it "serves page.html with attachment disposition and the sandbox CSP" do
-        extension = File.extname("page.html").delete_prefix(".")
-        SiteSetting.authorized_extensions = "#{extension}|png"
-        upload = upload_file("smallest.png")
-        upload.update!(original_filename: "page.html", extension: extension)
-
-        get upload.short_path
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("attachment")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      context "with the clip.mp4 upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "clip.mp4",
+                         expected_disposition: "inline"
       end
 
-      it "serves data.xml with attachment disposition and the sandbox CSP" do
-        extension = File.extname("data.xml").delete_prefix(".")
-        SiteSetting.authorized_extensions = "#{extension}|png"
-        upload = upload_file("smallest.png")
-        upload.update!(original_filename: "data.xml", extension: extension)
-
-        get upload.short_path
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("attachment")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      context "with the page.html upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "page.html",
+                         expected_disposition: "attachment"
       end
 
-      it "serves image.svg with attachment disposition and the sandbox CSP" do
-        extension = File.extname("image.svg").delete_prefix(".")
-        SiteSetting.authorized_extensions = "#{extension}|png"
-        upload = upload_file("smallest.png")
-        upload.update!(original_filename: "image.svg", extension: extension)
+      context "with the data.xml upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "data.xml",
+                         expected_disposition: "attachment"
+      end
 
-        get upload.short_path
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("attachment")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      context "with the image.svg upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "image.svg",
+                         expected_disposition: "attachment"
       end
 
       it "forces an attachment download with a sandbox CSP when the dl param is given" do

@@ -143,70 +143,53 @@ RSpec.describe Onebox::Mixins::GithubApi do
       )
     end
 
-    it "records a backoff when the pull request engine is rate-limited" do
-      begin
-        Onebox::Engine::GithubPullRequestOnebox.new("https://github.com/d/d/pull/1").to_html
-      rescue StandardError
-        nil
+    shared_examples "recording GitHub API rate limit backoff" do |engine_class:, url:|
+      it "records an unauthenticated API backoff" do
+        begin
+          engine_class.new(url).to_html
+        rescue StandardError
+          nil
+        end
+        expect(
+          Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
+        ).to be_present
       end
-      expect(
-        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
-      ).to be_present
     end
 
-    it "records a backoff when the commit engine is rate-limited" do
-      begin
-        Onebox::Engine::GithubCommitOnebox.new("https://github.com/d/d/commit/#{"a" * 40}").to_html
-      rescue StandardError
-        nil
-      end
-      expect(
-        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
-      ).to be_present
+    context "with the pull request engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubPullRequestOnebox,
+                       url: "https://github.com/d/d/pull/1"
     end
 
-    it "records a backoff when the issue engine is rate-limited" do
-      begin
-        Onebox::Engine::GithubIssueOnebox.new("https://github.com/d/d/issues/1").to_html
-      rescue StandardError
-        nil
-      end
-      expect(
-        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
-      ).to be_present
+    context "with the commit engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubCommitOnebox,
+                       url: "https://github.com/d/d/commit/#{"a" * 40}"
     end
 
-    it "records a backoff when the repo engine is rate-limited" do
-      begin
-        Onebox::Engine::GithubRepoOnebox.new("https://github.com/d/d").to_html
-      rescue StandardError
-        nil
-      end
-      expect(
-        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
-      ).to be_present
+    context "with the issue engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubIssueOnebox,
+                       url: "https://github.com/d/d/issues/1"
     end
 
-    it "records a backoff when the actions engine is rate-limited" do
-      begin
-        Onebox::Engine::GithubActionsOnebox.new("https://github.com/d/d/actions/runs/1").to_html
-      rescue StandardError
-        nil
-      end
-      expect(
-        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
-      ).to be_present
+    context "with the repo engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubRepoOnebox,
+                       url: "https://github.com/d/d"
     end
 
-    it "records a backoff when the gist engine is rate-limited" do
-      begin
-        Onebox::Engine::GithubGistOnebox.new("https://gist.github.com/d/abc123def456").to_html
-      rescue StandardError
-        nil
-      end
-      expect(
-        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
-      ).to be_present
+    context "with the actions engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubActionsOnebox,
+                       url: "https://github.com/d/d/actions/runs/1"
+    end
+
+    context "with the gist engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubGistOnebox,
+                       url: "https://gist.github.com/d/abc123def456"
     end
   end
 

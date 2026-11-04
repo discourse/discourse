@@ -226,54 +226,39 @@ RSpec.describe PostActionsController do
         expect(response.status).to eq(403)
       end
 
-      it "allows notifying a user when the is_warning query param is false" do
-        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+      shared_examples "notifying a user without an official warning" do |is_warning:|
+        it "creates the notification message without marking it as a warning" do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
 
-        message = "action message goes here"
+          message = "action message goes here"
 
-        expect do
-          post "/post_actions.json",
-               params: {
-                 id: target_post.id,
-                 post_action_type_id: PostActionType.types[:notify_user],
-                 message: message,
-                 is_warning: false,
-               },
-               as: :json
-        end.to change { PostAction.count }.by(1)
+          expect do
+            post "/post_actions.json",
+                 params: {
+                   id: target_post.id,
+                   post_action_type_id: PostActionType.types[:notify_user],
+                   message: message,
+                   is_warning: is_warning,
+                 },
+                 as: :json
+          end.to change { PostAction.count }.by(1)
 
-        expect(response.status).to eq(200)
+          expect(response.status).to eq(200)
 
-        post_action = PostAction.last
+          post_action = PostAction.last
 
-        expect(post_action.post_id).to eq(target_post.id)
-        expect(post_action.related_post.raw).to include(message)
-        expect(post_action.related_post.topic.is_official_warning?).to eq(false)
+          expect(post_action.post_id).to eq(target_post.id)
+          expect(post_action.related_post.raw).to include(message)
+          expect(post_action.related_post.topic.is_official_warning?).to eq(false)
+        end
       end
 
-      it "allows notifying a user when the is_warning query param is \"false\"" do
-        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+      context "with a boolean false warning parameter" do
+        include_examples "notifying a user without an official warning", is_warning: false
+      end
 
-        message = "action message goes here"
-
-        expect do
-          post "/post_actions.json",
-               params: {
-                 id: target_post.id,
-                 post_action_type_id: PostActionType.types[:notify_user],
-                 message: message,
-                 is_warning: "false",
-               },
-               as: :json
-        end.to change { PostAction.count }.by(1)
-
-        expect(response.status).to eq(200)
-
-        post_action = PostAction.last
-
-        expect(post_action.post_id).to eq(target_post.id)
-        expect(post_action.related_post.raw).to include(message)
-        expect(post_action.related_post.topic.is_official_warning?).to eq(false)
+      context "with a string false warning parameter" do
+        include_examples "notifying a user without an official warning", is_warning: "false"
       end
     end
 

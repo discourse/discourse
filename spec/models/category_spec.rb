@@ -287,9 +287,10 @@ RSpec.describe Category do
   end
 
   describe "resolve_permissions" do
-    context "when granular permissions are disabled" do
-      it "keeps logged-in-only access restricted with granular permissions false" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    shared_examples "resolving logged in category restrictions" do |granular_permissions_enabled:|
+      it "keeps logged in access restricted and resolves its grant" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
 
         read_restricted, resolved = Category.resolve_permissions(logged_in_users: :full)
 
@@ -300,17 +301,14 @@ RSpec.describe Category do
       end
     end
 
+    context "when granular permissions are disabled" do
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: false
+    end
+
     context "when granular permissions are enabled" do
-      it "keeps logged-in-only access restricted with granular permissions true" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-
-        read_restricted, resolved = Category.resolve_permissions(logged_in_users: :full)
-
-        expect(read_restricted).to eq(true)
-        expect(resolved).to eq(
-          [[Group::AUTO_GROUPS[:logged_in_users], CategoryGroup.permission_types[:full]]],
-        )
-      end
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: true
     end
 
     it "can determine read_restricted" do

@@ -143,47 +143,40 @@ RSpec.describe "Glimmer Header" do
     expect(header.active_element_id).to eq("user-menu-button-profile")
   end
 
-  it "navigates the reduced menu with 0 available notification types" do
-    sign_in(current_user)
-    visit "/"
-    user_menu.open
+  shared_examples "navigating a reduced notification menu" do |expected_tabs:|
+    it "cycles through available tabs and selects bookmarks" do
+      sign_in(current_user)
+      visit "/"
+      user_menu.open
 
-    expect(user_menu).to have_focused_tab("all-notifications")
-    visible_tabs = %w[bookmarks profile]
-    visible_tabs.each do |tab|
+      expect(user_menu).to have_focused_tab("all-notifications")
+
+      expected_tabs.each do |tab|
+        user_menu.press_key(:down)
+        expect(user_menu).to have_focused_tab(tab)
+      end
       user_menu.press_key(:down)
-      expect(user_menu).to have_focused_tab(tab)
+      expect(user_menu).to have_focused_tab("all-notifications")
+      user_menu.press_key(:up)
+      expect(user_menu).to have_focused_tab("profile")
+      user_menu.press_key(:up)
+      expect(user_menu).to have_focused_tab("bookmarks")
+      user_menu.press_key(:enter)
+      expect(user_menu).to have_selected_tab("bookmarks")
     end
-    user_menu.press_key(:down)
-    expect(user_menu).to have_focused_tab("all-notifications")
-    user_menu.press_key(:up)
-    expect(user_menu).to have_focused_tab("profile")
-    user_menu.press_key(:up)
-    expect(user_menu).to have_focused_tab("bookmarks")
-    user_menu.press_key(:enter)
-    expect(user_menu).to have_selected_tab("bookmarks")
   end
 
-  it "navigates the reduced menu with 1 available notification type" do
-    Fabricate(:notification, user: current_user, notification_type: Notification.types[:liked])
-    sign_in(current_user)
-    visit "/"
-    user_menu.open
+  context "without available notification types" do
+    include_examples "navigating a reduced notification menu", expected_tabs: %w[bookmarks profile]
+  end
 
-    expect(user_menu).to have_focused_tab("all-notifications")
-    visible_tabs = %w[likes bookmarks profile]
-    visible_tabs.each do |tab|
-      user_menu.press_key(:down)
-      expect(user_menu).to have_focused_tab(tab)
+  context "with an available like notification" do
+    before do
+      Fabricate(:notification, user: current_user, notification_type: Notification.types[:liked])
     end
-    user_menu.press_key(:down)
-    expect(user_menu).to have_focused_tab("all-notifications")
-    user_menu.press_key(:up)
-    expect(user_menu).to have_focused_tab("profile")
-    user_menu.press_key(:up)
-    expect(user_menu).to have_focused_tab("bookmarks")
-    user_menu.press_key(:enter)
-    expect(user_menu).to have_selected_tab("bookmarks")
+
+    include_examples "navigating a reduced notification menu",
+                     expected_tabs: %w[likes bookmarks profile]
   end
 
   it "prioritizes new personal messages bubble over unseen reviewables and regular notifications bubbles" do

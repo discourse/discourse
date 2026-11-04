@@ -170,108 +170,51 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["is_null"]).to eq(false)
     end
 
-    it "uses an untyped NULL for a missing text parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null text :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
+    shared_examples "querying a missing nullable parameter" do |parameter_type:|
+      it "uses an untyped NULL without a query error" do
+        query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
+              -- [params]
+              -- null #{parameter_type} :value
+              SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
+            SQL
 
-      result = described_class.run_query(query)
+        result = described_class.run_query(query)
 
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+        expect(result[:error]).to eq(nil)
+        expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+      end
     end
 
-    it "uses an untyped NULL for a missing date parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null date :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
-
-      result = described_class.run_query(query)
-
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+    context "with a missing text parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "text"
     end
 
-    it "uses an untyped NULL for a missing datetime parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null datetime :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
-
-      result = described_class.run_query(query)
-
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+    context "with a missing date parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "date"
     end
 
-    it "uses an untyped NULL for a missing time parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null time :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
-
-      result = described_class.run_query(query)
-
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+    context "with a missing datetime parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "datetime"
     end
 
-    it "uses an untyped NULL for a missing boolean parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null boolean :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
-
-      result = described_class.run_query(query)
-
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+    context "with a missing time parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "time"
     end
 
-    it "uses an untyped NULL for a missing user_id parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null user_id :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
-
-      result = described_class.run_query(query)
-
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+    context "with a missing boolean parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "boolean"
     end
 
-    it "uses an untyped NULL for a missing int_list parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null int_list :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
-
-      result = described_class.run_query(query)
-
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+    context "with a missing user_id parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "user_id"
     end
 
-    it "uses an untyped NULL for a missing string_list parameter" do
-      query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
-            -- [params]
-            -- null string_list :value
-            SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
-          SQL
+    context "with a missing int_list parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "int_list"
+    end
 
-      result = described_class.run_query(query)
-
-      expect(result[:error]).to eq(nil)
-      expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+    context "with a missing string_list parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "string_list"
     end
 
     it "lets each occurrence of a null parameter infer its own type" do

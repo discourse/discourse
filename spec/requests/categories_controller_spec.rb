@@ -554,46 +554,38 @@ RSpec.describe CategoriesController do
     context "when a moderator evaluates public permissions" do
       fab!(:moderator)
 
-      it "retains access with granular pseudogroup behavior false" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
-        sign_in(moderator)
-        category.set_permissions(everyone: :readonly)
-        category.save!
+      shared_examples "evaluating moderator access to category grants" do |granular_permissions_enabled:|
+        it "retains moderator access when evaluating an everyone grant" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+            granular_permissions_enabled
+          sign_in(moderator)
+          category.set_permissions(everyone: :readonly)
+          category.save!
 
-        expect(moderator.guardian.can_see_category?(category)).to eq(true)
+          expect(moderator.guardian.can_see_category?(category)).to eq(true)
 
-        post "/categories/evaluate_permissions.json",
-             params: {
-               group_ids: [Group::AUTO_GROUPS[:everyone]],
-             },
-             as: :json
+          post "/categories/evaluate_permissions.json",
+               params: {
+                 group_ids: [Group::AUTO_GROUPS[:everyone]],
+               },
+               as: :json
 
-        expect(response.status).to eq(200)
-        expect(response.parsed_body).to include(
-          "success" => "OK",
-          "current_user_will_lose_access" => false,
-        )
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "success" => "OK",
+            "current_user_will_lose_access" => false,
+          )
+        end
       end
 
-      it "retains access with granular pseudogroup behavior true" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        sign_in(moderator)
-        category.set_permissions(everyone: :readonly)
-        category.save!
+      context "when granular permissions are disabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: false
+      end
 
-        expect(moderator.guardian.can_see_category?(category)).to eq(true)
-
-        post "/categories/evaluate_permissions.json",
-             params: {
-               group_ids: [Group::AUTO_GROUPS[:everyone]],
-             },
-             as: :json
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body).to include(
-          "success" => "OK",
-          "current_user_will_lose_access" => false,
-        )
+      context "when granular permissions are enabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: true
       end
     end
 

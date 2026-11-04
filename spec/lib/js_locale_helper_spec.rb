@@ -35,24 +35,24 @@ RSpec.describe JsLocaleHelper do
       )
     end
 
-    it "formats dates with ASCII digits for ar" do
-      v8_ctx.eval(File.read(VendoredAssets.path("moment/moment.js")))
-      v8_ctx.eval("moment.tz = {};")
-      v8_ctx.eval(JsLocaleHelper.output_locale("ar"))
-      v8_ctx.eval("window._discourse_locale_data.configureMoment();")
+    shared_examples "formatting dates with ASCII digits" do |locale:, moment_locale:|
+      it "configures the expected Moment locale and ASCII date digits" do
+        v8_ctx.eval(File.read(VendoredAssets.path("moment/moment.js")))
+        v8_ctx.eval("moment.tz = {};")
+        v8_ctx.eval(JsLocaleHelper.output_locale(locale))
+        v8_ctx.eval("window._discourse_locale_data.configureMoment();")
 
-      expect(v8_ctx.eval("moment.locale()")).to eq("ar")
-      expect(v8_ctx.eval('moment("2026-05-01").format("YYYY-MM-DD")')).to eq("2026-05-01")
+        expect(v8_ctx.eval("moment.locale()")).to eq(moment_locale)
+        expect(v8_ctx.eval('moment("2026-05-01").format("YYYY-MM-DD")')).to eq("2026-05-01")
+      end
     end
 
-    it "formats dates with ASCII digits for fa_IR" do
-      v8_ctx.eval(File.read(VendoredAssets.path("moment/moment.js")))
-      v8_ctx.eval("moment.tz = {};")
-      v8_ctx.eval(JsLocaleHelper.output_locale("fa_IR"))
-      v8_ctx.eval("window._discourse_locale_data.configureMoment();")
+    context "with the ar locale" do
+      include_examples "formatting dates with ASCII digits", locale: "ar", moment_locale: "ar"
+    end
 
-      expect(v8_ctx.eval("moment.locale()")).to eq("fa")
-      expect(v8_ctx.eval('moment("2026-05-01").format("YYYY-MM-DD")')).to eq("2026-05-01")
+    context "with the fa_IR locale" do
+      include_examples "formatting dates with ASCII digits", locale: "fa_IR", moment_locale: "fa"
     end
   end
 

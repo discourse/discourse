@@ -231,68 +231,70 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
   describe "linkage column coverage" do
     idb = Migrations::Database::IntermediateDB
 
-    it "records every #{idb::EmbedQuote.name.split("::").last} column" do
-      buffer.public_send(:quote)
-      descriptor = buffer.public_send(:quotes).last
-      columns = idb::EmbedQuote.method(:create).parameters.map { |_type, name| name }
+    shared_examples "recording the complete embed model contract" do |recorder:, collection:, model:|
+      it "records every model creation column" do
+        buffer.public_send(recorder)
+        descriptor = buffer.public_send(collection).last
+        columns = model.method(:create).parameters.map { |_type, name| name }
 
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+        expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+      end
     end
 
-    it "records every #{idb::EmbedLink.name.split("::").last} column" do
-      buffer.public_send(:link)
-      descriptor = buffer.public_send(:links).last
-      columns = idb::EmbedLink.method(:create).parameters.map { |_type, name| name }
-
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    context "when recording a quote" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :quote,
+                       collection: :quotes,
+                       model: idb::EmbedQuote
     end
 
-    it "records every #{idb::EmbedMention.name.split("::").last} column" do
-      buffer.public_send(:mention)
-      descriptor = buffer.public_send(:mentions).last
-      columns = idb::EmbedMention.method(:create).parameters.map { |_type, name| name }
-
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    context "when recording a link" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :link,
+                       collection: :links,
+                       model: idb::EmbedLink
     end
 
-    it "records every #{idb::EmbedHashtag.name.split("::").last} column" do
-      buffer.public_send(:hashtag)
-      descriptor = buffer.public_send(:hashtags).last
-      columns = idb::EmbedHashtag.method(:create).parameters.map { |_type, name| name }
-
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    context "when recording a mention" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :mention,
+                       collection: :mentions,
+                       model: idb::EmbedMention
     end
 
-    it "records every #{idb::EmbedEmoji.name.split("::").last} column" do
-      buffer.public_send(:emoji)
-      descriptor = buffer.public_send(:emojis).last
-      columns = idb::EmbedEmoji.method(:create).parameters.map { |_type, name| name }
-
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    context "when recording a hashtag" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :hashtag,
+                       collection: :hashtags,
+                       model: idb::EmbedHashtag
     end
 
-    it "records every #{idb::EmbedPoll.name.split("::").last} column" do
-      buffer.public_send(:poll)
-      descriptor = buffer.public_send(:polls).last
-      columns = idb::EmbedPoll.method(:create).parameters.map { |_type, name| name }
-
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    context "when recording an emoji" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :emoji,
+                       collection: :emojis,
+                       model: idb::EmbedEmoji
     end
 
-    it "records every #{idb::EmbedEvent.name.split("::").last} column" do
-      buffer.public_send(:event)
-      descriptor = buffer.public_send(:events).last
-      columns = idb::EmbedEvent.method(:create).parameters.map { |_type, name| name }
-
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    context "when recording a poll" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :poll,
+                       collection: :polls,
+                       model: idb::EmbedPoll
     end
 
-    it "records every #{idb::EmbedUpload.name.split("::").last} column" do
-      buffer.public_send(:upload)
-      descriptor = buffer.public_send(:uploads).last
-      columns = idb::EmbedUpload.method(:create).parameters.map { |_type, name| name }
+    context "when recording an event" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :event,
+                       collection: :events,
+                       model: idb::EmbedEvent
+    end
 
-      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    context "when recording an upload" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :upload,
+                       collection: :uploads,
+                       model: idb::EmbedUpload
     end
   end
 

@@ -4,102 +4,73 @@ RSpec.describe DiscourseAi::Completions::DocumentEncoder do
   before { enable_current_plugin }
 
   describe ".attachment_type_for" do
-    it "maps .pdf to pdf" do
-      mime = MiniMime.lookup_by_filename("sample.pdf")&.content_type.to_s
+    shared_examples "recognizing a document extension" do |extension:, expected_type:|
+      it "recognizes normal and uppercase extensions" do
+        mime = MiniMime.lookup_by_filename("sample.#{extension}")&.content_type.to_s
 
-      expect(described_class.attachment_type_for("pdf", mime)).to eq("pdf")
-      expect(described_class.attachment_type_for(".PDF", mime)).to eq("pdf")
+        expect(described_class.attachment_type_for(extension, mime)).to eq(expected_type)
+        expect(described_class.attachment_type_for(".#{extension.upcase}", mime)).to eq(
+          expected_type,
+        )
+      end
     end
 
-    it "maps .docx to docx" do
-      mime = MiniMime.lookup_by_filename("sample.docx")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("docx", mime)).to eq("docx")
-      expect(described_class.attachment_type_for(".DOCX", mime)).to eq("docx")
+    context "with the pdf extension" do
+      include_examples "recognizing a document extension", extension: "pdf", expected_type: "pdf"
     end
 
-    it "maps .doc to doc" do
-      mime = MiniMime.lookup_by_filename("sample.doc")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("doc", mime)).to eq("doc")
-      expect(described_class.attachment_type_for(".DOC", mime)).to eq("doc")
+    context "with the docx extension" do
+      include_examples "recognizing a document extension", extension: "docx", expected_type: "docx"
     end
 
-    it "maps .xlsx to xlsx" do
-      mime = MiniMime.lookup_by_filename("sample.xlsx")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("xlsx", mime)).to eq("xlsx")
-      expect(described_class.attachment_type_for(".XLSX", mime)).to eq("xlsx")
+    context "with the doc extension" do
+      include_examples "recognizing a document extension", extension: "doc", expected_type: "doc"
     end
 
-    it "maps .xls to xls" do
-      mime = MiniMime.lookup_by_filename("sample.xls")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("xls", mime)).to eq("xls")
-      expect(described_class.attachment_type_for(".XLS", mime)).to eq("xls")
+    context "with the xlsx extension" do
+      include_examples "recognizing a document extension", extension: "xlsx", expected_type: "xlsx"
     end
 
-    it "maps .odt to odt" do
-      mime = MiniMime.lookup_by_filename("sample.odt")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("odt", mime)).to eq("odt")
-      expect(described_class.attachment_type_for(".ODT", mime)).to eq("odt")
+    context "with the xls extension" do
+      include_examples "recognizing a document extension", extension: "xls", expected_type: "xls"
     end
 
-    it "maps .ods to ods" do
-      mime = MiniMime.lookup_by_filename("sample.ods")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("ods", mime)).to eq("ods")
-      expect(described_class.attachment_type_for(".ODS", mime)).to eq("ods")
+    context "with the odt extension" do
+      include_examples "recognizing a document extension", extension: "odt", expected_type: "odt"
     end
 
-    it "maps .csv to csv" do
-      mime = MiniMime.lookup_by_filename("sample.csv")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("csv", mime)).to eq("csv")
-      expect(described_class.attachment_type_for(".CSV", mime)).to eq("csv")
+    context "with the ods extension" do
+      include_examples "recognizing a document extension", extension: "ods", expected_type: "ods"
     end
 
-    it "maps .txt to txt" do
-      mime = MiniMime.lookup_by_filename("sample.txt")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("txt", mime)).to eq("txt")
-      expect(described_class.attachment_type_for(".TXT", mime)).to eq("txt")
+    context "with the csv extension" do
+      include_examples "recognizing a document extension", extension: "csv", expected_type: "csv"
     end
 
-    it "maps .rtf to rtf" do
-      mime = MiniMime.lookup_by_filename("sample.rtf")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("rtf", mime)).to eq("rtf")
-      expect(described_class.attachment_type_for(".RTF", mime)).to eq("rtf")
+    context "with the txt extension" do
+      include_examples "recognizing a document extension", extension: "txt", expected_type: "txt"
     end
 
-    it "maps .html to html" do
-      mime = MiniMime.lookup_by_filename("sample.html")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("html", mime)).to eq("html")
-      expect(described_class.attachment_type_for(".HTML", mime)).to eq("html")
+    context "with the rtf extension" do
+      include_examples "recognizing a document extension", extension: "rtf", expected_type: "rtf"
     end
 
-    it "maps .htm to html" do
-      mime = MiniMime.lookup_by_filename("sample.htm")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("htm", mime)).to eq("html")
-      expect(described_class.attachment_type_for(".HTM", mime)).to eq("html")
+    context "with the html extension" do
+      include_examples "recognizing a document extension", extension: "html", expected_type: "html"
     end
 
-    it "maps .md to md" do
-      mime = MiniMime.lookup_by_filename("sample.md")&.content_type.to_s
-
-      expect(described_class.attachment_type_for("md", mime)).to eq("md")
-      expect(described_class.attachment_type_for(".MD", mime)).to eq("md")
+    context "with the htm extension" do
+      include_examples "recognizing a document extension", extension: "htm", expected_type: "html"
     end
 
-    it "maps .markdown to md" do
-      mime = MiniMime.lookup_by_filename("sample.markdown")&.content_type.to_s
+    context "with the md extension" do
+      include_examples "recognizing a document extension", extension: "md", expected_type: "md"
+    end
 
-      expect(described_class.attachment_type_for("markdown", mime)).to eq("md")
-      expect(described_class.attachment_type_for(".MARKDOWN", mime)).to eq("md")
+    context "with the markdown extension" do
+      include_examples "recognizing a document extension",
+                       extension: "markdown",
+                       expected_type: "md"
     end
 
     it "falls back to the mime type when the extension is unknown" do

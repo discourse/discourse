@@ -6,43 +6,33 @@
 # and optimizer paths are not exercised on every run — so check the method
 # signatures directly.
 RSpec.describe Migrations::Importer::Uploads::Pipeline do
-  it "#{Migrations::Importer::Uploads::Tasks::Uploader.name.demodulize} accepts the pipeline's produce keywords" do
-    parameters = Migrations::Importer::Uploads::Tasks::Uploader.instance_method(:produce).parameters
-    accepted = parameters.filter_map { |type, name| name if %i[keyreq key].include?(type) }
-    has_keyrest = parameters.any? { |type, _| type == :keyrest }
+  shared_examples "accepting pipeline producer keywords" do |task_class:|
+    it "accepts every pipeline keyword and requires no additional keywords" do
+      parameters = task_class.instance_method(:produce).parameters
+      accepted = parameters.filter_map { |type, name| name if %i[keyreq key].include?(type) }
+      has_keyrest = parameters.any? { |type, _| type == :keyrest }
 
-    required = parameters.filter_map { |type, name| name if type == :keyreq }
+      required = parameters.filter_map { |type, name| name if type == :keyreq }
 
-    # Everything the task requires must be provided by the pipeline's call…
-    expect(required - %i[emit_work emit_result]).to be_empty
-    # …and everything the pipeline passes must be accepted.
-    expect(has_keyrest || (%i[emit_work emit_result] - accepted).empty?).to be(true)
+      # Everything the task requires must be provided by the pipeline's call…
+      expect(required - %i[emit_work emit_result]).to be_empty
+      # …and everything the pipeline passes must be accepted.
+      expect(has_keyrest || (%i[emit_work emit_result] - accepted).empty?).to be(true)
+    end
   end
 
-  it "#{Migrations::Importer::Uploads::Tasks::Optimizer.name.demodulize} accepts the pipeline's produce keywords" do
-    parameters =
-      Migrations::Importer::Uploads::Tasks::Optimizer.instance_method(:produce).parameters
-    accepted = parameters.filter_map { |type, name| name if %i[keyreq key].include?(type) }
-    has_keyrest = parameters.any? { |type, _| type == :keyrest }
-
-    required = parameters.filter_map { |type, name| name if type == :keyreq }
-
-    # Everything the task requires must be provided by the pipeline's call…
-    expect(required - %i[emit_work emit_result]).to be_empty
-    # …and everything the pipeline passes must be accepted.
-    expect(has_keyrest || (%i[emit_work emit_result] - accepted).empty?).to be(true)
+  context "with the uploader task" do
+    include_examples "accepting pipeline producer keywords",
+                     task_class: Migrations::Importer::Uploads::Tasks::Uploader
   end
 
-  it "#{Migrations::Importer::Uploads::Tasks::Fixer.name.demodulize} accepts the pipeline's produce keywords" do
-    parameters = Migrations::Importer::Uploads::Tasks::Fixer.instance_method(:produce).parameters
-    accepted = parameters.filter_map { |type, name| name if %i[keyreq key].include?(type) }
-    has_keyrest = parameters.any? { |type, _| type == :keyrest }
+  context "with the optimizer task" do
+    include_examples "accepting pipeline producer keywords",
+                     task_class: Migrations::Importer::Uploads::Tasks::Optimizer
+  end
 
-    required = parameters.filter_map { |type, name| name if type == :keyreq }
-
-    # Everything the task requires must be provided by the pipeline's call…
-    expect(required - %i[emit_work emit_result]).to be_empty
-    # …and everything the pipeline passes must be accepted.
-    expect(has_keyrest || (%i[emit_work emit_result] - accepted).empty?).to be(true)
+  context "with the fixer task" do
+    include_examples "accepting pipeline producer keywords",
+                     task_class: Migrations::Importer::Uploads::Tasks::Fixer
   end
 end

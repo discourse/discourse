@@ -332,59 +332,37 @@ RSpec.describe User::CreateBot do
       expect(ordinary_user.errors[:primary_email]).to include(I18n.t("user.email.not_allowed"))
     end
 
-    it "rejects invalid characters without creating a user or audit entry" do
-      SiteSetting.reserved_usernames = "reserved_helper"
-      SiteSetting.min_username_length = 4
-      SiteSetting.max_username_length = 20
-      params[:username] = "invalid!username"
+    shared_examples "rejecting an invalid bot username" do |username:|
+      it "rejects creation without creating a user or audit entry" do
+        SiteSetting.reserved_usernames = "reserved_helper"
+        SiteSetting.min_username_length = 4
+        SiteSetting.max_username_length = 20
+        params[:username] = username
 
-      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
-      expect(result).to fail_with_an_invalid_model(:user)
-      expect(result.user.errors[:username]).to be_present
+        expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
+        expect(result).to fail_with_an_invalid_model(:user)
+        expect(result.user.errors[:username]).to be_present
+      end
     end
 
-    it "rejects a reserved username without creating a user or audit entry" do
-      SiteSetting.reserved_usernames = "reserved_helper"
-      SiteSetting.min_username_length = 4
-      SiteSetting.max_username_length = 20
-      params[:username] = "reserved_helper"
-
-      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
-      expect(result).to fail_with_an_invalid_model(:user)
-      expect(result.user.errors[:username]).to be_present
+    context "with invalid characters in the username" do
+      include_examples "rejecting an invalid bot username", username: "invalid!username"
     end
 
-    it "rejects an existing route without creating a user or audit entry" do
-      SiteSetting.reserved_usernames = "reserved_helper"
-      SiteSetting.min_username_length = 4
-      SiteSetting.max_username_length = 20
-      params[:username] = "admin"
-
-      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
-      expect(result).to fail_with_an_invalid_model(:user)
-      expect(result.user.errors[:username]).to be_present
+    context "with a reserved username" do
+      include_examples "rejecting an invalid bot username", username: "reserved_helper"
     end
 
-    it "rejects a username shorter than the site minimum without creating a user or audit entry" do
-      SiteSetting.reserved_usernames = "reserved_helper"
-      SiteSetting.min_username_length = 4
-      SiteSetting.max_username_length = 20
-      params[:username] = "bot"
-
-      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
-      expect(result).to fail_with_an_invalid_model(:user)
-      expect(result.user.errors[:username]).to be_present
+    context "with an existing route as the username" do
+      include_examples "rejecting an invalid bot username", username: "admin"
     end
 
-    it "rejects a username longer than the site maximum without creating a user or audit entry" do
-      SiteSetting.reserved_usernames = "reserved_helper"
-      SiteSetting.min_username_length = 4
-      SiteSetting.max_username_length = 20
-      params[:username] = ("x" * 21)
+    context "with a username shorter than the site minimum" do
+      include_examples "rejecting an invalid bot username", username: "bot"
+    end
 
-      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
-      expect(result).to fail_with_an_invalid_model(:user)
-      expect(result.user.errors[:username]).to be_present
+    context "with a username longer than the site maximum" do
+      include_examples "rejecting an invalid bot username", username: ("x" * 21)
     end
 
     it "rejects a case-insensitive duplicate username without creating a user or audit entry" do

@@ -129,34 +129,34 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     # code that is inline to begin with (`[tt]`, or a Code node with no `block`
     # flag) can stay in a label; the unit test further down covers that.
     context "when a code block appears inside a link label" do
-      it "hoists single-line, with a language code out of a link label instead of deferring it into text" do
-        raw = link_renderer.to_markdown("[url=https://example.com][code=ruby]x = 1[/code][/url]")
+      shared_examples "hoisting block code out of a link label" do |bbcode:, expected_fence:|
+        it "records an empty link label and preserves the code fence" do
+          raw = link_renderer.to_markdown(bbcode)
 
-        expect(buffer.links).to contain_exactly(
-          hash_including(url: "https://example.com", text: nil),
-        )
-        expect(raw).to include(buffer.links.first[:placeholder])
-        expect(raw).to include("```ruby\nx = 1\n```")
+          expect(buffer.links).to contain_exactly(
+            hash_including(url: "https://example.com", text: nil),
+          )
+          expect(raw).to include(buffer.links.first[:placeholder])
+          expect(raw).to include(expected_fence)
+        end
       end
 
-      it "hoists single-line, no language code out of a link label instead of deferring it into text" do
-        raw = link_renderer.to_markdown("[url=https://example.com][code]x = 1[/code][/url]")
-
-        expect(buffer.links).to contain_exactly(
-          hash_including(url: "https://example.com", text: nil),
-        )
-        expect(raw).to include(buffer.links.first[:placeholder])
-        expect(raw).to include("```\nx = 1\n```")
+      context "with a single line and a language" do
+        include_examples "hoisting block code out of a link label",
+                         bbcode: "[url=https://example.com][code=ruby]x = 1[/code][/url]",
+                         expected_fence: "```ruby\nx = 1\n```"
       end
 
-      it "hoists multi-line code out of a link label instead of deferring it into text" do
-        raw = link_renderer.to_markdown("[url=https://example.com][code=ruby]a\nb[/code][/url]")
+      context "with a single line and no language" do
+        include_examples "hoisting block code out of a link label",
+                         bbcode: "[url=https://example.com][code]x = 1[/code][/url]",
+                         expected_fence: "```\nx = 1\n```"
+      end
 
-        expect(buffer.links).to contain_exactly(
-          hash_including(url: "https://example.com", text: nil),
-        )
-        expect(raw).to include(buffer.links.first[:placeholder])
-        expect(raw).to include("```ruby\na\nb\n```")
+      context "with multiple lines" do
+        include_examples "hoisting block code out of a link label",
+                         bbcode: "[url=https://example.com][code=ruby]a\nb[/code][/url]",
+                         expected_fence: "```ruby\na\nb\n```"
       end
     end
 

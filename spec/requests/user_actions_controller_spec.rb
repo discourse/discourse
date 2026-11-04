@@ -213,18 +213,41 @@ RSpec.describe UserActionsController do
         let(:offset) { "0" }
         let(:limit) { "10" }
 
-        # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
-        %i[filter username offset limit].each do |parameter|
-          context "when providing bad data for '#{parameter}'" do
-            let(parameter) { { bad: "data" } }
+        context "when providing bad data for 'filter'" do
+          let(:filter) { { bad: "data" } }
 
-            it "doesn't raise an error" do
-              user_actions
-              expect(response).not_to have_http_status :error
-            end
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
           end
         end
-        # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
+
+        context "when providing bad data for 'username'" do
+          let(:username) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
+
+        context "when providing bad data for 'offset'" do
+          let(:offset) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
+
+        context "when providing bad data for 'limit'" do
+          let(:limit) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
       end
     end
   end

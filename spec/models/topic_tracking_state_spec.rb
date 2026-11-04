@@ -198,9 +198,10 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_unread" do
-    context "when granular permissions are disabled" do
-      it "notifies logged-in category watchers with granular permissions false" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    shared_examples "notifying logged in category watchers" do |granular_permissions_enabled:|
+      it "publishes the unread topic to its category watcher" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
         topic.update!(category: Fabricate(:category, permissions: { logged_in_users: :readonly }))
 
         message = MessageBus.track_publish("/unread") { described_class.publish_unread(post) }.first
@@ -209,15 +210,12 @@ RSpec.describe TopicTrackingState do
       end
     end
 
+    context "when granular permissions are disabled" do
+      include_examples "notifying logged in category watchers", granular_permissions_enabled: false
+    end
+
     context "when granular permissions are enabled" do
-      it "notifies logged-in category watchers with granular permissions true" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        topic.update!(category: Fabricate(:category, permissions: { logged_in_users: :readonly }))
-
-        message = MessageBus.track_publish("/unread") { described_class.publish_unread(post) }.first
-
-        expect(message.user_ids).to contain_exactly(other_user.id)
-      end
+      include_examples "notifying logged in category watchers", granular_permissions_enabled: true
     end
 
     let(:other_user) { Fabricate(:user) }
@@ -854,9 +852,10 @@ RSpec.describe TopicTrackingState do
   end
 
   describe ".report" do
-    context "when granular permissions are disabled" do
-      it "reports logged-in pseudogroup topics with granular permissions false" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    shared_examples "reporting logged in category topics" do |granular_permissions_enabled:|
+      it "includes permitted topics and excludes private category topics" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
         author = Fabricate(:admin)
         category = Fabricate(:category, permissions: { logged_in_users: :readonly })
         public_post = create_post(category: category, user: author)
@@ -869,19 +868,12 @@ RSpec.describe TopicTrackingState do
       end
     end
 
+    context "when granular permissions are disabled" do
+      include_examples "reporting logged in category topics", granular_permissions_enabled: false
+    end
+
     context "when granular permissions are enabled" do
-      it "reports logged-in pseudogroup topics with granular permissions true" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        author = Fabricate(:admin)
-        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
-        public_post = create_post(category: category, user: author)
-        private_category = Fabricate(:private_category, group: Fabricate(:group))
-        create_post(category: private_category, user: author)
-
-        report = TopicTrackingState.report(user)
-
-        expect(report.map(&:topic_id)).to eq([public_post.topic_id])
-      end
+      include_examples "reporting logged in category topics", granular_permissions_enabled: true
     end
 
     it "correctly reports topics with staff posts" do

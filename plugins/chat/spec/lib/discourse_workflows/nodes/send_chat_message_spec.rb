@@ -491,26 +491,29 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
       )
     end
 
-    it "fails without creating a direct message when the sender is not allowed to send direct messages" do
-      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-
-      expect_no_dm_side_effects do
-        expect { send_dm(actor_username: sender.username) }.to raise_error(
-          DiscourseWorkflows::NodeError,
-          node_error(:sender_cannot_create_dm, sender: sender.username),
-        )
+    shared_examples "rejecting a direct message without side effects" do |error_key:|
+      it "rejects the request without creating a direct message" do
+        expect_no_dm_side_effects do
+          expect { send_dm(actor_username: sender.username) }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            node_error(error_key, sender: sender.username),
+          )
+        end
       end
     end
 
-    it "fails without creating a direct message when the sender disabled personal messages" do
-      sender.user_option.update!(allow_private_messages: false)
+    context "when the sender cannot create direct messages" do
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
 
-      expect_no_dm_side_effects do
-        expect { send_dm(actor_username: sender.username) }.to raise_error(
-          DiscourseWorkflows::NodeError,
-          node_error(:sender_dms_disabled, sender: sender.username),
-        )
-      end
+      include_examples "rejecting a direct message without side effects",
+                       error_key: :sender_cannot_create_dm
+    end
+
+    context "when the sender disabled personal messages" do
+      before { sender.user_option.update!(allow_private_messages: false) }
+
+      include_examples "rejecting a direct message without side effects",
+                       error_key: :sender_dms_disabled
     end
 
     it "doesn't hint at a bypass when the direct message is not delivered" do

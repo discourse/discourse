@@ -59,36 +59,30 @@ RSpec.describe AiAgent do
       expect(system_user.reload).to be_active
     end
 
-    it "preserves activation of a bot with the admin role" do
-      bot = agent.create_user!
-      bot.update!(admin: true)
+    shared_examples "preserving privileged bot activation" do |role:|
+      it "preserves activation when disabling or removing the agent" do
+        bot = agent.create_user!
+        bot.update!(role => true)
 
-      agent.update!(enabled: false)
-      expect(bot.reload).to be_active
+        agent.update!(enabled: false)
+        expect(bot.reload).to be_active
 
-      bot.update!(active: false)
-      agent.update!(enabled: true)
-      expect(bot.reload).not_to be_active
+        bot.update!(active: false)
+        agent.update!(enabled: true)
+        expect(bot.reload).not_to be_active
 
-      bot.update!(active: true)
-      agent.destroy!
-      expect(bot.reload).to be_active
+        bot.update!(active: true)
+        agent.destroy!
+        expect(bot.reload).to be_active
+      end
     end
 
-    it "preserves activation of a bot with the moderator role" do
-      bot = agent.create_user!
-      bot.update!(moderator: true)
+    context "with an admin bot" do
+      include_examples "preserving privileged bot activation", role: :admin
+    end
 
-      agent.update!(enabled: false)
-      expect(bot.reload).to be_active
-
-      bot.update!(active: false)
-      agent.update!(enabled: true)
-      expect(bot.reload).not_to be_active
-
-      bot.update!(active: true)
-      agent.destroy!
-      expect(bot.reload).to be_active
+    context "with a moderator bot" do
+      include_examples "preserving privileged bot activation", role: :moderator
     end
 
     it "synchronizes both accounts when reassigned by user ID" do
@@ -599,56 +593,46 @@ RSpec.describe AiAgent do
   end
 
   describe ".ensure_users!" do
-    it "only provisions automatically with both settings enabled (AI: false, bot: false)" do
-      SiteSetting.discourse_ai_enabled = false
-      SiteSetting.ai_bot_enabled = false
-      agent = Fabricate(:ai_agent)
-      provisioning_enabled = false
+    shared_examples "gating automatic agent provisioning" do |ai_enabled:, bot_enabled:, provisioning_enabled:|
+      it "checks eligibility and provisions users idempotently" do
+        SiteSetting.discourse_ai_enabled = ai_enabled
+        SiteSetting.ai_bot_enabled = bot_enabled
+        agent = Fabricate(:ai_agent)
 
-      expect(agent.needs_user?).to eq(provisioning_enabled)
-      expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
-        provisioning_enabled ? 1 : 0,
-      )
-      expect(agent.reload.user.present?).to eq(provisioning_enabled)
+        expect(agent.needs_user?).to eq(provisioning_enabled)
+        expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
+          provisioning_enabled ? 1 : 0,
+        )
+        expect(agent.reload.user.present?).to eq(provisioning_enabled)
+      end
     end
 
-    it "only provisions automatically with both settings enabled (AI: false, bot: true)" do
-      SiteSetting.discourse_ai_enabled = false
-      SiteSetting.ai_bot_enabled = true
-      agent = Fabricate(:ai_agent)
-      provisioning_enabled = false
-
-      expect(agent.needs_user?).to eq(provisioning_enabled)
-      expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
-        provisioning_enabled ? 1 : 0,
-      )
-      expect(agent.reload.user.present?).to eq(provisioning_enabled)
+    context "with both AI and bot provisioning disabled" do
+      include_examples "gating automatic agent provisioning",
+                       ai_enabled: false,
+                       bot_enabled: false,
+                       provisioning_enabled: false
     end
 
-    it "only provisions automatically with both settings enabled (AI: true, bot: false)" do
-      SiteSetting.discourse_ai_enabled = true
-      SiteSetting.ai_bot_enabled = false
-      agent = Fabricate(:ai_agent)
-      provisioning_enabled = false
-
-      expect(agent.needs_user?).to eq(provisioning_enabled)
-      expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
-        provisioning_enabled ? 1 : 0,
-      )
-      expect(agent.reload.user.present?).to eq(provisioning_enabled)
+    context "with AI disabled and bot provisioning enabled" do
+      include_examples "gating automatic agent provisioning",
+                       ai_enabled: false,
+                       bot_enabled: true,
+                       provisioning_enabled: false
     end
 
-    it "only provisions automatically with both settings enabled (AI: true, bot: true)" do
-      SiteSetting.discourse_ai_enabled = true
-      SiteSetting.ai_bot_enabled = true
-      agent = Fabricate(:ai_agent)
-      provisioning_enabled = true
+    context "with AI enabled and bot provisioning disabled" do
+      include_examples "gating automatic agent provisioning",
+                       ai_enabled: true,
+                       bot_enabled: false,
+                       provisioning_enabled: false
+    end
 
-      expect(agent.needs_user?).to eq(provisioning_enabled)
-      expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
-        provisioning_enabled ? 1 : 0,
-      )
-      expect(agent.reload.user.present?).to eq(provisioning_enabled)
+    context "with both AI and bot provisioning enabled" do
+      include_examples "gating automatic agent provisioning",
+                       ai_enabled: true,
+                       bot_enabled: true,
+                       provisioning_enabled: true
     end
 
     it "preserves existing users when automatic provisioning is disabled" do

@@ -2124,46 +2124,41 @@ RSpec.describe UserNotifications do
     fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2], name: "Message Inviter") }
     fab!(:invitee, :user)
 
-    it "identifies the inviter when another user started the private_message" do
-      SiteSetting.enable_names = true
-      SiteSetting.display_name_on_email_from = true
-      post = Fabricate(:private_message_post, recipient: inviter)
+    shared_examples "identifying the inviter of an existing conversation" do |notification_type:|
+      it "identifies the inviter in the message and sender name" do
+        SiteSetting.enable_names = true
+        SiteSetting.display_name_on_email_from = true
+        post = invited_post
 
-      post.topic.invite(inviter, invitee.username)
-      notification = invitee.notifications.find_by!(topic_id: post.topic_id)
-      notification_type = "invited_to_private_message"
-      mail =
-        UserNotifications.public_send(
-          "user_#{notification_type}",
-          invitee,
-          notification_type: notification_type,
-          notification_data_hash: notification.data_hash,
-          post: notification.post,
-        )
+        post.topic.invite(inviter, invitee.username)
+        notification = invitee.notifications.find_by!(topic_id: post.topic_id)
 
-      expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
-      expect(mail[:from].display_names).to eq([inviter.name])
+        mail =
+          UserNotifications.public_send(
+            "user_#{notification_type}",
+            invitee,
+            notification_type: notification_type,
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+
+        expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
+        expect(mail[:from].display_names).to eq([inviter.name])
+      end
     end
 
-    it "identifies the inviter when another user started the topic" do
-      SiteSetting.enable_names = true
-      SiteSetting.display_name_on_email_from = true
-      post = Fabricate(:post)
+    context "when another user started the private message" do
+      let(:invited_post) { Fabricate(:private_message_post, recipient: inviter) }
 
-      post.topic.invite(inviter, invitee.username)
-      notification = invitee.notifications.find_by!(topic_id: post.topic_id)
-      notification_type = "invited_to_topic"
-      mail =
-        UserNotifications.public_send(
-          "user_#{notification_type}",
-          invitee,
-          notification_type: notification_type,
-          notification_data_hash: notification.data_hash,
-          post: notification.post,
-        )
+      include_examples "identifying the inviter of an existing conversation",
+                       notification_type: "invited_to_private_message"
+    end
 
-      expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
-      expect(mail[:from].display_names).to eq([inviter.name])
+    context "when another user started the topic" do
+      let(:invited_post) { Fabricate(:post) }
+
+      include_examples "identifying the inviter of an existing conversation",
+                       notification_type: "invited_to_topic"
     end
   end
 
@@ -2393,95 +2388,66 @@ RSpec.describe UserNotifications do
   end
 
   describe "notifications from template" do
+    shared_examples "applying the site locale policy to notification mail" do |mail_type_name:, expected_locale:|
+      include_context "with notification derived from template"
+
+      let(:locale) { "fr" }
+      let(:mail_type) { mail_type_name }
+
+      it "uses the locale allowed by site policy" do
+        expects_build_with(has_entry(:locale, expected_locale))
+      end
+    end
+
     context "when user locale is allowed" do
       before { SiteSetting.allow_user_locale = true }
 
       context "with signup mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "signup" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "signup",
+                         expected_locale: "fr"
       end
 
       context "with signup_after_approval mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "signup_after_approval" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "signup_after_approval",
+                         expected_locale: "fr"
       end
 
       context "with confirm_old_email mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "confirm_old_email" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "confirm_old_email",
+                         expected_locale: "fr"
       end
 
       context "with notify_old_email mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "notify_old_email" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "notify_old_email",
+                         expected_locale: "fr"
       end
 
       context "with confirm_new_email mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "confirm_new_email" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "confirm_new_email",
+                         expected_locale: "fr"
       end
 
       context "with forgot_password mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "forgot_password" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "forgot_password",
+                         expected_locale: "fr"
       end
 
       context "with admin_login mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "admin_login" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "admin_login",
+                         expected_locale: "fr"
       end
 
       context "with account_created mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "account_created" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "fr"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "account_created",
+                         expected_locale: "fr"
       end
     end
 
@@ -2489,91 +2455,51 @@ RSpec.describe UserNotifications do
       before { SiteSetting.allow_user_locale = false }
 
       context "with signup mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "signup" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "signup",
+                         expected_locale: "en"
       end
 
       context "with signup_after_approval mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "signup_after_approval" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "signup_after_approval",
+                         expected_locale: "en"
       end
 
       context "with notify_old_email mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "notify_old_email" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "notify_old_email",
+                         expected_locale: "en"
       end
 
       context "with confirm_old_email mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "confirm_old_email" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "confirm_old_email",
+                         expected_locale: "en"
       end
 
       context "with confirm_new_email mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "confirm_new_email" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "confirm_new_email",
+                         expected_locale: "en"
       end
 
       context "with forgot_password mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "forgot_password" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "forgot_password",
+                         expected_locale: "en"
       end
 
       context "with admin_login mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "admin_login" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "admin_login",
+                         expected_locale: "en"
       end
 
       context "with account_created mail" do
-        include_context "with notification derived from template"
-
-        let(:locale) { "fr" }
-        let(:mail_type) { "account_created" }
-
-        it "sets the locale" do
-          expects_build_with(has_entry(:locale, "en"))
-        end
+        include_examples "applying the site locale policy to notification mail",
+                         mail_type_name: "account_created",
+                         expected_locale: "en"
       end
     end
   end

@@ -817,40 +817,30 @@ RSpec.describe PostAction do
       flag_without_message.destroy!
     end
 
-    it "creates a message for notify_moderators" do
-      result =
-        PostActionCreator.new(
-          Discourse.system_user,
-          post,
-          PostActionType.types[:notify_moderators],
-          message: "WAT",
-        ).perform
-      expect(result).to be_success
-      expect(result.post_action.related_post_id).to be_present
+    shared_examples "creating a related flag message" do |action_type:|
+      it "creates the action and its related message" do
+        result =
+          PostActionCreator.new(
+            Discourse.system_user,
+            post,
+            PostActionType.types[action_type],
+            message: "WAT",
+          ).perform
+        expect(result).to be_success
+        expect(result.post_action.related_post_id).to be_present
+      end
     end
 
-    it "creates a message for notify_user" do
-      result =
-        PostActionCreator.new(
-          Discourse.system_user,
-          post,
-          PostActionType.types[:notify_user],
-          message: "WAT",
-        ).perform
-      expect(result).to be_success
-      expect(result.post_action.related_post_id).to be_present
+    context "with the notify_moderators action" do
+      include_examples "creating a related flag message", action_type: :notify_moderators
     end
 
-    it "creates a message for spam" do
-      result =
-        PostActionCreator.new(
-          Discourse.system_user,
-          post,
-          PostActionType.types[:spam],
-          message: "WAT",
-        ).perform
-      expect(result).to be_success
-      expect(result.post_action.related_post_id).to be_present
+    context "with the notify_user action" do
+      include_examples "creating a related flag message", action_type: :notify_user
+    end
+
+    context "with the spam action" do
+      include_examples "creating a related flag message", action_type: :spam
     end
 
     it "creates a message for custom flags when message is required" do
@@ -930,49 +920,34 @@ RSpec.describe PostAction do
       expect(user_notifications.last.topic).to eq(topic)
     end
 
-    it "bumps the topic when performing agree_and_keep" do
-      SiteSetting.auto_respond_to_flag_actions = true
-      user = Fabricate(:user, refresh_auto_groups: true)
-      result = PostActionCreator.create(user, post, :spam, message: "WAT")
-      topic = result.post_action.related_post.topic
+    shared_examples "bumping a flag message topic after review" do |disposition:|
+      it "bumps the topic after the disposition is performed" do
+        SiteSetting.auto_respond_to_flag_actions = true
+        user = Fabricate(:user, refresh_auto_groups: true)
+        result = PostActionCreator.create(user, post, :spam, message: "WAT")
+        topic = result.post_action.related_post.topic
 
-      original_bumped_at = topic.reload.bumped_at
+        original_bumped_at = topic.reload.bumped_at
 
-      freeze_time 1.hour.from_now
+        freeze_time 1.hour.from_now
 
-      result.reviewable.perform(admin, :agree_and_keep)
+        result.reviewable.perform(admin, disposition)
 
-      expect(topic.reload.bumped_at).to be > original_bumped_at
+        expect(topic.reload.bumped_at).to be > original_bumped_at
+      end
     end
 
-    it "bumps the topic when performing disagree" do
-      SiteSetting.auto_respond_to_flag_actions = true
-      user = Fabricate(:user, refresh_auto_groups: true)
-      result = PostActionCreator.create(user, post, :spam, message: "WAT")
-      topic = result.post_action.related_post.topic
-
-      original_bumped_at = topic.reload.bumped_at
-
-      freeze_time 1.hour.from_now
-
-      result.reviewable.perform(admin, :disagree)
-
-      expect(topic.reload.bumped_at).to be > original_bumped_at
+    context "when performing agree_and_keep" do
+      include_examples "bumping a flag message topic after review", disposition: :agree_and_keep
     end
 
-    it "bumps the topic when performing ignore_and_do_nothing" do
-      SiteSetting.auto_respond_to_flag_actions = true
-      user = Fabricate(:user, refresh_auto_groups: true)
-      result = PostActionCreator.create(user, post, :spam, message: "WAT")
-      topic = result.post_action.related_post.topic
+    context "when performing disagree" do
+      include_examples "bumping a flag message topic after review", disposition: :disagree
+    end
 
-      original_bumped_at = topic.reload.bumped_at
-
-      freeze_time 1.hour.from_now
-
-      result.reviewable.perform(admin, :ignore_and_do_nothing)
-
-      expect(topic.reload.bumped_at).to be > original_bumped_at
+    context "when performing ignore_and_do_nothing" do
+      include_examples "bumping a flag message topic after review",
+                       disposition: :ignore_and_do_nothing
     end
 
     it "does not add a moderator post to the notify_user PM topic when an unrelated flag is agreed" do

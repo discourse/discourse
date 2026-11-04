@@ -4246,9 +4246,10 @@ RSpec.describe User do
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
-    context "when granular permissions are disabled" do
-      it "includes logged-in pseudogroup categories with granular permissions false" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    shared_examples "including logged in categories in secured scopes" do |granular_permissions_enabled:|
+      it "includes logged in categories for users and excludes anonymous access" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
         category = Fabricate(:category, permissions: { logged_in_users: :readonly })
 
         expect(user.secure_category_ids).to eq([category.id])
@@ -4258,16 +4259,14 @@ RSpec.describe User do
       end
     end
 
-    context "when granular permissions are enabled" do
-      it "includes logged-in pseudogroup categories with granular permissions true" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+    context "when granular permissions are disabled" do
+      include_examples "including logged in categories in secured scopes",
+                       granular_permissions_enabled: false
+    end
 
-        expect(user.secure_category_ids).to eq([category.id])
-        expect(user.guardian.can_see_category?(category)).to eq(true)
-        expect(Category.secured(user.guardian).exists?(id: category.id)).to eq(true)
-        expect(Category.secured(Guardian.new).exists?(id: category.id)).to eq(false)
-      end
+    context "when granular permissions are enabled" do
+      include_examples "including logged in categories in secured scopes",
+                       granular_permissions_enabled: true
     end
 
     it "allows admin to see all secure categories" do

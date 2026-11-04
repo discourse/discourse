@@ -4,22 +4,23 @@ RSpec.describe "site setting integrity checks" do
   let(:site_setting_file) { Rails.root.join("config/site_settings.yml").to_s }
   let(:yaml) { YAML.load_file(site_setting_file) }
 
-  it "set hidden value as true or not set" do
-    yaml.each_value do |category|
-      category.each_value do |setting|
-        next unless setting.is_a?(Hash)
-        expect(setting["hidden"] == nil || setting["hidden"] == true).to be_truthy
+  shared_examples "validating optional setting flags" do |property:|
+    it "allows only true or an omitted flag" do
+      yaml.each_value do |category|
+        category.each_value do |setting|
+          next unless setting.is_a?(Hash)
+          expect(setting[property] == nil || setting[property] == true).to be_truthy
+        end
       end
     end
   end
 
-  it "set client value as true or not set" do
-    yaml.each_value do |category|
-      category.each_value do |setting|
-        next unless setting.is_a?(Hash)
-        expect(setting["client"] == nil || setting["client"] == true).to be_truthy
-      end
-    end
+  context "for the hidden property" do
+    include_examples "validating optional setting flags", property: "hidden"
+  end
+
+  context "for the client property" do
+    include_examples "validating optional setting flags", property: "client"
   end
 
   it "has no duplicate keys" do

@@ -8387,37 +8387,35 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "resets bumped_at as admin" do
-      sign_in(public_send(:admin))
-      topic.update!(bumped_at: 1.hour.ago)
-      timestamp = 1.day.ago
-      Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
+    shared_examples "resetting a topic bump date as an authorized user" do
+      it "resets the bump date to the post timestamp" do
+        sign_in(acting_user)
+        topic.update!(bumped_at: 1.hour.ago)
+        timestamp = 1.day.ago
+        Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
 
-      put "/t/#{topic.id}/reset-bump-date.json"
-      expect(response.status).to eq(200)
-      expect(topic.reload.bumped_at).to eq_time(timestamp)
+        put "/t/#{topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to eq_time(timestamp)
+      end
     end
 
-    it "resets bumped_at as moderator" do
-      sign_in(public_send(:moderator))
-      topic.update!(bumped_at: 1.hour.ago)
-      timestamp = 1.day.ago
-      Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
+    context "when an administrator resets the bump date" do
+      let(:acting_user) { admin }
 
-      put "/t/#{topic.id}/reset-bump-date.json"
-      expect(response.status).to eq(200)
-      expect(topic.reload.bumped_at).to eq_time(timestamp)
+      include_examples "resetting a topic bump date as an authorized user"
     end
 
-    it "resets bumped_at as trust_level_4" do
-      sign_in(public_send(:trust_level_4))
-      topic.update!(bumped_at: 1.hour.ago)
-      timestamp = 1.day.ago
-      Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
+    context "when a moderator resets the bump date" do
+      let(:acting_user) { moderator }
 
-      put "/t/#{topic.id}/reset-bump-date.json"
-      expect(response.status).to eq(200)
-      expect(topic.reload.bumped_at).to eq_time(timestamp)
+      include_examples "resetting a topic bump date as an authorized user"
+    end
+
+    context "when a trust level 4 user resets the bump date" do
+      let(:acting_user) { trust_level_4 }
+
+      include_examples "resetting a topic bump date as an authorized user"
     end
 
     context "with a post_id parameter" do

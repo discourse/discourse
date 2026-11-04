@@ -760,72 +760,39 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      it "acknowledges Markdown bold formatting and starts the quoting tutorial" do
-        post.update!(raw: "**bold**")
+      shared_examples "advancing the formatting tutorial" do |raw:|
+        it "acknowledges formatting and starts the quoting tutorial" do
+          post.update!(raw: raw)
 
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+          new_post = Post.last
 
-        expected_raw = <<~RAW
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
+          expected_raw = <<~RAW
+            #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
 
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
-        RAW
+            #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
+          RAW
 
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+          expect(new_post.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+        end
       end
 
-      it "acknowledges double underscore formatting and starts the quoting tutorial" do
-        post.update!(raw: "__italic__")
-
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
-
-        expected_raw = <<~RAW
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
-
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
-        RAW
-
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+      context "with Markdown bold" do
+        include_examples "advancing the formatting tutorial", raw: "**bold**"
       end
 
-      it "acknowledges BBCode bold formatting and starts the quoting tutorial" do
-        post.update!(raw: "[b]bold[/b]")
-
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
-
-        expected_raw = <<~RAW
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
-
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
-        RAW
-
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+      context "with double underscore formatting" do
+        include_examples "advancing the formatting tutorial", raw: "__italic__"
       end
 
-      it "acknowledges BBCode italic formatting and starts the quoting tutorial" do
-        post.update!(raw: "[i]italic[/i]")
+      context "with BBCode bold" do
+        include_examples "advancing the formatting tutorial", raw: "[b]bold[/b]"
+      end
 
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
-
-        expected_raw = <<~RAW
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
-
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
-        RAW
-
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+      context "with BBCode italic" do
+        include_examples "advancing the formatting tutorial", raw: "[i]italic[/i]"
       end
     end
 

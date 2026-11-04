@@ -471,76 +471,41 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    it "logs docx conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw docx bytes", filename: "sample.docx")
+    shared_examples "skipping failed document conversions" do |extension:|
+      it "logs the conversion failure and skips the upload" do
+        upload =
+          create_doc_upload(contents: "raw #{extension} bytes", filename: "sample.#{extension}")
 
-      allow(Rails.logger).to receive(:warn)
+        allow(Rails.logger).to receive(:warn)
 
-      encoded = encode_document(upload, ["docx"])
+        encoded = encode_document(upload, [extension])
 
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .docx upload to text",
-          "upload_id=#{upload.id}",
-          "sample.docx",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
+        expect(Rails.logger).to have_received(:warn).with(
+          a_string_including(
+            "Failed to convert .#{extension} upload to text",
+            "upload_id=#{upload.id}",
+            "sample.#{extension}",
+            "Zip",
+          ),
+        )
+        expect(encoded).to be_empty
+      end
     end
 
-    it "logs xlsx conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw xlsx bytes", filename: "sample.xlsx")
-
-      allow(Rails.logger).to receive(:warn)
-
-      encoded = encode_document(upload, ["xlsx"])
-
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .xlsx upload to text",
-          "upload_id=#{upload.id}",
-          "sample.xlsx",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
+    context "with a DOCX document" do
+      include_examples "skipping failed document conversions", extension: "docx"
     end
 
-    it "logs odt conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw odt bytes", filename: "sample.odt")
-
-      allow(Rails.logger).to receive(:warn)
-
-      encoded = encode_document(upload, ["odt"])
-
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .odt upload to text",
-          "upload_id=#{upload.id}",
-          "sample.odt",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
+    context "with an XLSX document" do
+      include_examples "skipping failed document conversions", extension: "xlsx"
     end
 
-    it "logs ods conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw ods bytes", filename: "sample.ods")
+    context "with an ODT document" do
+      include_examples "skipping failed document conversions", extension: "odt"
+    end
 
-      allow(Rails.logger).to receive(:warn)
-
-      encoded = encode_document(upload, ["ods"])
-
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .ods upload to text",
-          "upload_id=#{upload.id}",
-          "sample.ods",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
+    context "with an ODS document" do
+      include_examples "skipping failed document conversions", extension: "ods"
     end
 
     it "routes .html uploads through the html converter" do
