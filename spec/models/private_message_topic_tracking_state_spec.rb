@@ -137,6 +137,25 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_unread" do
+    it "continues publishing when the first tracked recipient no longer exists" do
+      stale_user = Fabricate(:user)
+      valid_user = Fabricate(:user)
+      message =
+        create_post(
+          user: user,
+          target_usernames: [stale_user.username, valid_user.username],
+          archetype: Archetype.private_message,
+        )
+      stale_user.delete
+
+      messages = MessageBus.track_publish { described_class.publish_unread(message) }
+
+      expect(messages.map(&:channel)).to contain_exactly(
+        described_class.user_channel(valid_user.id),
+      )
+      expect(messages.first.user_ids).to eq([valid_user.id])
+    end
+
     it "publishes the expected MessageBus message" do
       messages =
         MessageBus.track_publish { described_class.publish_unread(private_message.first_post) }
