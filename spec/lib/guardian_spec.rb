@@ -3433,6 +3433,24 @@ RSpec.describe Guardian do
   end
 
   describe "#can_remove_allowed_users?" do
+    it "requires current visibility for a TL2 PM creator, including access through a group" do
+      creator = Fabricate(:user, trust_level: 2)
+      private_topic = Fabricate(:private_message_topic, user: creator)
+      group = Fabricate(:group)
+      group.add(creator)
+
+      expect(creator.guardian.can_remove_allowed_users?(private_topic)).to eq(true)
+
+      private_topic.allowed_users.delete(creator)
+
+      expect(creator.guardian.can_remove_allowed_users?(private_topic)).to eq(false)
+      expect(moderator.guardian.can_remove_allowed_users?(private_topic)).to eq(true)
+
+      private_topic.allowed_groups << group
+
+      expect(creator.guardian.can_remove_allowed_users?(private_topic)).to eq(true)
+    end
+
     context "with staff users" do
       it "allows moderators to remove allowed users" do
         expect(Guardian.new(moderator).can_remove_allowed_users?(topic)).to eq(true)
