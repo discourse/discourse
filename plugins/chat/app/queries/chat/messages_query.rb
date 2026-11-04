@@ -135,30 +135,25 @@ module Chat
           id: target_message_id,
         )
 
-      past_messages =
-        messages
-          .where(
+      past_messages, can_load_more_past =
+        fetch_page(
+          messages.where(
             "(chat_messages.created_at, chat_messages.id) < (?, ?)",
             target_message.created_at,
             target_message.id,
-          )
-          .order(created_at: :desc, id: :desc)
-          .limit(PAST_MESSAGE_LIMIT)
-          .to_a
+          ).order(created_at: :desc, id: :desc),
+          PAST_MESSAGE_LIMIT,
+        )
 
-      future_messages =
-        messages
-          .where(
+      future_messages, can_load_more_future =
+        fetch_page(
+          messages.where(
             "(chat_messages.created_at, chat_messages.id) > (?, ?)",
             target_message.created_at,
             target_message.id,
-          )
-          .order(created_at: :asc, id: :asc)
-          .limit(FUTURE_MESSAGE_LIMIT)
-          .to_a
-
-      can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
-      can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
+          ).order(created_at: :asc, id: :asc),
+          FUTURE_MESSAGE_LIMIT,
+        )
 
       {
         past_messages: past_messages,
@@ -196,20 +191,20 @@ module Chat
 
       order = direction == FUTURE ? "ASC" : "DESC"
 
-      messages =
-        messages
-          .order("chat_messages.created_at #{order}, chat_messages.id #{order}")
-          .limit(page_size)
-          .to_a
+      messages, has_more =
+        fetch_page(
+          messages.order("chat_messages.created_at #{order}, chat_messages.id #{order}"),
+          page_size,
+        )
 
       if direction == FUTURE
-        can_load_more_future = messages.size == page_size
+        can_load_more_future = has_more
       elsif direction == PAST
-        can_load_more_past = messages.size == page_size
+        can_load_more_past = has_more
       else
         # When direction is blank, we'll return the latest messages.
         can_load_more_future = false
-        can_load_more_past = messages.size == page_size
+        can_load_more_past = has_more
       end
 
       {
@@ -220,22 +215,23 @@ module Chat
     end
 
     def self.query_by_date(target_date, channel, messages)
-      past_messages =
-        messages
-          .where("chat_messages.created_at <= ?", target_date.to_time.utc)
-          .order(created_at: :desc, id: :desc)
-          .limit(PAST_MESSAGE_LIMIT)
-          .to_a
+      past_messages, can_load_more_past =
+        fetch_page(
+          messages.where("chat_messages.created_at <= ?", target_date.to_time.utc).order(
+            created_at: :desc,
+            id: :desc,
+          ),
+          PAST_MESSAGE_LIMIT,
+        )
 
-      future_messages =
-        messages
-          .where("chat_messages.created_at > ?", target_date.to_time.utc)
-          .order(created_at: :asc, id: :asc)
-          .limit(FUTURE_MESSAGE_LIMIT)
-          .to_a
-
-      can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
-      can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
+      future_messages, can_load_more_future =
+        fetch_page(
+          messages.where("chat_messages.created_at > ?", target_date.to_time.utc).order(
+            created_at: :asc,
+            id: :asc,
+          ),
+          FUTURE_MESSAGE_LIMIT,
+        )
 
       {
         target_message_id: future_messages.first&.id,
@@ -246,5 +242,12 @@ module Chat
         can_load_more_future: can_load_more_future,
       }
     end
+
+    # A page that is exactly full doesn't mean more follow, so look one row past it.
+    def self.fetch_page(scope, limit)
+      rows = scope.limit(limit + 1).to_a
+      [rows.first(limit), rows.size > limit]
+    end
+    private_class_method :fetch_page
   end
 end
