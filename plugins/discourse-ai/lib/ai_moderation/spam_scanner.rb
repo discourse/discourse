@@ -3,6 +3,11 @@
 module DiscourseAi
   module AiModeration
     class SpamScanner
+      # Raised when the model does not return a usable spam verdict. The scan must fail so the
+      # job retries; it must never be recorded as "not spam".
+      class UnknownVerdict < StandardError
+      end
+
       MINIMUM_EDIT_DIFFERENCE = 10
       EDIT_DELAY_MINUTES = 10
       MAX_AGE_TO_SCAN = 1.day
@@ -268,6 +273,7 @@ module DiscourseAi
           if verdict[:is_spam].nil?
             verdict.merge!(llm_verdict(settings, target_msg, custom_instructions, post:))
           end
+          verdict[:is_spam] = validate_verdict!(verdict[:is_spam])
 
           AiSpamLog.transaction do
             log =
@@ -381,12 +387,7 @@ module DiscourseAi
         answer = result[SPAM_QUESTION_NAME]
         if answer.refusal?
           return if !decides_alone
-          return(
-            verdict.merge(
-              is_spam: false,
-              reason: I18n.t("discourse_ai.spam_detection.decision_refused"),
-            )
-          )
+          raise UnknownVerdict, "The decision model refused to provide a spam verdict"
         end
 
         probability = answer.probability
@@ -452,8 +453,16 @@ module DiscourseAi
       end
 
       def self.is_spam?(structured_output)
-        structured_output.present? && structured_output.read_buffered_property(:spam)
+        value = structured_output.presence&.read_buffered_property(:spam)
+        validate_verdict!(value)
       end
+
+      def self.validate_verdict!(value)
+        return value if value == true || value == false
+
+        raise UnknownVerdict, "Expected a boolean spam verdict, got #{value.inspect}"
+      end
+      private_class_method :validate_verdict!
 
       def self.extract_reason(structured_output)
         return nil if structured_output.blank?
