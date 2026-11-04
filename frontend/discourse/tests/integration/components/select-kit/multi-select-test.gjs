@@ -45,12 +45,12 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
     assert.strictEqual(content.length, 3, "shows rows");
     assert.strictEqual(
       content[0].name,
-      this.content.firstObject.name,
+      this.content[0].name,
       "has the correct name"
     );
     assert.strictEqual(
       content[0].id,
-      this.content.firstObject.id.toString(),
+      this.content[0].id.toString(),
       "has the correct value"
     );
     assert.strictEqual(

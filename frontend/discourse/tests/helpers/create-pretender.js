@@ -524,14 +524,14 @@ export function applyDefaultHandlers() {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "consectetur visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.last_read_post_number = 1;
+      obj.topics[0].last_read_post_number = 1;
       return response(obj);
     } else if (
       request.queryParams.q === "consectetur in:personal" ||
       request.queryParams.q === "consectetur in:messages"
     ) {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.archetype = "private_message";
+      obj.topics[0].archetype = "private_message";
       return response(obj);
     } else {
       return response({});

@@ -867,8 +867,8 @@ export default class SelectKit extends Component {
       }
 
       if (this.singleSelect) {
-        const firstValue = value.firstObject;
-        const firstItem = items.firstObject;
+        const firstValue = value[0];
+        const firstItem = items[0];
 
         value =
           isPresent(firstValue) || (firstValue === "" && firstItem)
