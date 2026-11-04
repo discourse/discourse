@@ -5305,6 +5305,54 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "removing private message participants" do
+    fab!(:creator) { Fabricate(:user, trust_level: 2) }
+    fab!(:recipient, :user)
+    fab!(:recipient_group, :group)
+    fab!(:private_topic) do
+      Fabricate(
+        :private_message_topic,
+        user: creator,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: creator),
+          Fabricate.build(:topic_allowed_user, user: recipient),
+        ],
+        topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: recipient_group)],
+      )
+    end
+
+    before do
+      recipient_group.add(user_2)
+      sign_in(admin)
+      put "/t/#{private_topic.id}/remove-allowed-user.json", params: { username: creator.username }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(creator.guardian.can_see?(private_topic)).to eq(false)
+      sign_in(creator)
+    end
+
+    it "prevents a removed creator from removing an allowed user" do
+      put "/t/#{private_topic.id}/remove-allowed-user.json",
+          params: {
+            username: recipient.username,
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(private_topic.allowed_users.reload).to contain_exactly(recipient)
+      expect(recipient.guardian.can_see?(private_topic)).to eq(true)
+    end
+
+    it "prevents a removed creator from removing an allowed group" do
+      put "/t/#{private_topic.id}/remove-allowed-group.json", params: { name: recipient_group.name }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(private_topic.allowed_groups.reload).to contain_exactly(recipient_group)
+      expect(user_2.guardian.can_see?(private_topic)).to eq(true)
+    end
+  end
+
   describe "#remove_allowed_user" do
     it "admin can be removed from a pm" do
       sign_in(admin)
