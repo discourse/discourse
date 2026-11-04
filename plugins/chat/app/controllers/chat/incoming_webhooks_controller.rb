@@ -15,7 +15,10 @@ module Chat
     def create_message
       debug_payload
 
-      process_webhook_payload(text: params[:text], key: params[:key])
+      process_webhook_payload(
+        text: params[:text],
+        webhook: find_and_rate_limit_webhook(params[:key]),
+      )
     end
 
     # See https://api.slack.com/reference/messaging/payload for the
@@ -24,6 +27,8 @@ module Chat
     # in the formatting.
     def create_message_slack_compatible
       debug_payload
+
+      webhook = find_and_rate_limit_webhook(params[:key])
 
       # See note in validate_payload on why this is needed
       attachments =
@@ -38,21 +43,17 @@ module Chat
           params[:attachments]
         end
 
-      if params[:text].present?
-        text = Chat::SlackCompatibility.process_text(params[:text])
-      else
-        text = Chat::SlackCompatibility.process_legacy_attachments(attachments)
-      end
+      text = params[:text].presence || Chat::SlackCompatibility.legacy_attachment_text(attachments)
+      validate_text_length!(text)
 
-      process_webhook_payload(text: text, key: params[:key])
+      process_webhook_payload(text: Chat::SlackCompatibility.process_text(text), webhook: webhook)
     rescue JSON::ParserError
       raise Discourse::InvalidParameters
     end
 
     private
 
-    def process_webhook_payload(text:, key:)
-      webhook = find_and_rate_limit_webhook(key)
+    def process_webhook_payload(text:, webhook:)
       webhook.chat_channel.add(Discourse.system_user)
 
       Chat::CreateMessage.call(
@@ -85,6 +86,16 @@ module Chat
           render_json_error(model.errors.map(&:full_message).join(", "))
         end
       end
+    end
+
+    def validate_text_length!(text)
+      return if text.length <= SiteSetting.chat_maximum_message_length
+
+      raise Discourse::InvalidParameters.new(
+              [
+                "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+              ],
+            )
     end
 
     def find_and_rate_limit_webhook(key)
