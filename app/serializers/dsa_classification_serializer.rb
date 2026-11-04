@@ -5,7 +5,11 @@ class DsaClassificationSerializer < ApplicationSerializer
 
   def community_rules
     DsaStatementOfRecord.community_rules.map do |rule|
-      rule.slice("id", "ground", DsaStatementOfRecord::COMMUNITY_RULE_EXPLANATION_KEY)
+      rule.slice(
+        DsaStatementOfRecord::COMMUNITY_RULE_ID_KEY,
+        DsaStatementOfRecord::COMMUNITY_RULE_GROUND_KEY,
+        DsaStatementOfRecord::COMMUNITY_RULE_EXPLANATION_KEY,
+      )
     end
   end
 
