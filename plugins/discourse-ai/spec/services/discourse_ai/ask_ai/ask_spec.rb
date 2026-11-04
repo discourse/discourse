@@ -15,6 +15,11 @@ RSpec.describe DiscourseAi::AskAi::Ask do
     it { is_expected.not_to allow_values(nil, "abc", "123").for(:request_id) }
     it { is_expected.to allow_values(nil, "topic:12", "category:3 tag:howto").for(:scope) }
     it { is_expected.not_to allow_values("topic:abc", "in:messages").for(:scope) }
+    it { is_expected.to allow_values(nil, "", "7", 7).for(:deferred_ask_log_id) }
+
+    it do
+      is_expected.not_to allow_values(["7"], { id: "7" }, "7abc", "0").for(:deferred_ask_log_id)
+    end
 
     describe "normalisation" do
       it "strips the query and drops what is not recognised" do

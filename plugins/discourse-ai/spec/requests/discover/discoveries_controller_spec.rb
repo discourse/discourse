@@ -223,6 +223,32 @@ describe DiscourseAi::Discover::DiscoveriesController do
         end
       end
 
+      it "charges and refuses a deferred answer requested with a malformed id" do
+        RateLimiter.enable
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 2) do
+          query = "password status:open"
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id:,
+                 defer_if_precise: true,
+               }
+          deferred_ask_log_id = response.parsed_body["ask_log_id"]
+          params = { query:, deferred_ask_log_id: [deferred_ask_log_id] }
+
+          expect {
+            post "/discourse-ai/discoveries/reply",
+                 params: params.merge(request_id: SecureRandom.uuid)
+          }.to not_change { AskAiLog.count }.and not_change { Jobs::StreamDiscoverReply.jobs.size }
+          expect(response.status).to eq(400)
+
+          post "/discourse-ai/discoveries/reply",
+               params: params.merge(request_id: SecureRandom.uuid)
+          expect(response.status).to eq(429)
+          expect(AskAiLog.find(deferred_ask_log_id)).to be_ask_outcome_skipped
+        end
+      end
+
       it "lets the reader request a deferred answer after using every search" do
         RateLimiter.enable
         stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do
