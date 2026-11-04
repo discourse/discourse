@@ -101,5 +101,59 @@ RSpec.describe DesignWizard::PalettePairs do
         expect(described_class.for_theme(theme).map { |pair| pair[:key] }).not_to include("wcag")
       end
     end
+
+    context "when admins have created palettes of their own" do
+      fab!(:theme)
+      fab!(:light_palette) do
+        ColorScheme.create_from_base(
+          name: "Brand",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"],
+        )
+      end
+      fab!(:dark_palette) do
+        ColorScheme.create_from_base(
+          name: "Brand Night",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+        )
+      end
+
+      it "offers them after the built-in pairs, in the mode their colors suit" do
+        pairs = described_class.for_theme(theme)
+
+        expect(pairs.map { |pair| pair[:key] }).to eq(
+          %W[default wcag solarized dracula custom_#{light_palette.id} custom_#{dark_palette.id}],
+        )
+
+        light = pairs.find { |pair| pair[:key] == "custom_#{light_palette.id}" }
+        expect(light).to include(name: "Brand", dark_only: false, dark: nil)
+        expect(light[:light][:id]).to eq(light_palette.id)
+
+        dark = pairs.find { |pair| pair[:key] == "custom_#{dark_palette.id}" }
+        expect(dark).to include(name: "Brand Night", dark_only: false, light: nil)
+        expect(dark[:dark][:id]).to eq(dark_palette.id)
+      end
+
+      it "offers them alongside a theme's own palettes" do
+        Fabricate(:color_scheme, name: "Royal", theme_id: theme.id)
+
+        expect(described_class.for_theme(theme).map { |pair| pair[:key] }).to eq(
+          %W[royal custom_#{light_palette.id} custom_#{dark_palette.id}],
+        )
+      end
+
+      it "leaves out palettes owned by a theme or saved by the wizard" do
+        other_theme = Fabricate(:theme)
+        Fabricate(:color_scheme, name: "Other", theme_id: other_theme.id)
+        ColorScheme.create_from_base(
+          name: "Solarized Light",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"],
+          via_wizard: true,
+        )
+
+        expect(
+          described_class.for_theme(theme).map { |pair| pair[:key] }.grep(/\Acustom_/),
+        ).to contain_exactly("custom_#{light_palette.id}", "custom_#{dark_palette.id}")
+      end
+    end
   end
 end

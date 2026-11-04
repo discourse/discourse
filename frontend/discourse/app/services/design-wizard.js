@@ -14,6 +14,7 @@ import {
   applyPreviewFonts,
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
+import SidebarColorResolver from "discourse/lib/design-wizard-sidebar-colors";
 import { isTesting } from "discourse/lib/environment";
 import { homepagePreviewDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
@@ -37,6 +38,8 @@ export const SOURCE_ONBOARDING = "onboarding";
 export const SOURCE_ADMIN = "admin";
 // launches the wizard on load, so it can be reached by URL from anywhere
 export const DESIGN_WIZARD_PARAM = "design_wizard";
+// a palette selection for a mode that takes the other mode's palette
+export const NO_PALETTE_KEY = "none";
 // mirrors the onboarding step's own completion key so a wizard finished
 // after its caller was torn down still marks the step complete
 const STEP_COMPLETED_KEY = `onboarding_step_${SELECT_THEME_STEP}`;
@@ -69,7 +72,12 @@ export default class DesignWizardService extends Service {
   @tracked saving = false;
   // a theme preview replaces the whole page, so the panel stays busy until it does
   @tracked applyingTheme = false;
-  @tracked selectedPairKeys = new Map();
+  // theme id => { light, dark } pair keys, or NO_PALETTE_KEY for a mode that
+  // is off and takes the other mode's palette
+  @tracked paletteSelections = new Map();
+  // "<theme id>:<palette id>:<mode>" => the theme's sidebar colors under that
+  // palette, filled in as they resolve
+  @tracked sidebarColors = new Map();
   @tracked stepIndex = 0;
   // resuming an in-progress wizard (e.g. after a theme-preview reload)
   // should not replay the sheet's entrance animation
@@ -78,8 +86,16 @@ export default class DesignWizardService extends Service {
   @tracked returnUrl;
   // whether a step has been saved, i.e. whether the live site has changed yet
   @tracked progressSaved = false;
-  @tracked showIntro = false;
 
+  /**
+   * The selected theme's sidebar colors under a palette, once resolved.
+   *
+   * @param {{ id: number } | null | undefined} palette
+   * @param {"light" | "dark"} mode
+   * @returns {import("discourse/lib/design-wizard-sidebar-colors").SidebarColors | undefined}
+   */
+  sidebarColorsFor = (palette, mode) =>
+    palette && this.sidebarColors.get(this.#sidebarColorsKey(palette.id, mode));
   #onComplete;
   #snapshot;
   #starting = false;
@@ -88,6 +104,8 @@ export default class DesignWizardService extends Service {
   #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
+
+  #sidebarColorResolver;
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -121,23 +139,58 @@ export default class DesignWizardService extends Service {
     return this.selectedTheme?.palette_pairs ?? [];
   }
 
-  get selectedPair() {
-    const key = this.selectedPairKeys.get(this.themeId);
-    return this.pairs.find((pair) => pair.key === key) ?? this.pairs[0];
+  get lightPairs() {
+    return this.pairs.filter((pair) => pair.light);
+  }
+
+  get darkPairs() {
+    return this.pairs.filter((pair) => pair.dark);
+  }
+
+  get selectedLightPair() {
+    return this.#selectedPair(this.lightPairs, "light");
+  }
+
+  get selectedDarkPair() {
+    return this.#selectedPair(this.darkPairs, "dark");
+  }
+
+  // a mode without its own palette uses the other mode's
+  get lightOff() {
+    return !this.selectedLightPair && !!this.selectedDarkPair;
+  }
+
+  get darkOff() {
+    return !this.selectedDarkPair && !!this.selectedLightPair;
+  }
+
+  // the palette used for both modes while either mode is off
+  get singlePaletteName() {
+    if (this.lightOff) {
+      return this.selectedDarkPair.name;
+    }
+    return this.darkOff ? this.selectedLightPair.name : null;
   }
 
   get effectiveColorMode() {
-    return this.selectedPair?.dark_only ? "dark" : this.colorMode;
+    if (this.lightOff) {
+      return "dark";
+    }
+    return this.darkOff ? "light" : this.colorMode;
+  }
+
+  get #lightPalette() {
+    return this.selectedLightPair?.light ?? this.selectedDarkPair?.dark;
+  }
+
+  get #darkPalette() {
+    return this.selectedDarkPair?.dark ?? this.selectedLightPair?.light;
   }
 
   get previewPalette() {
-    const pair = this.selectedPair;
-    if (!pair) {
-      return;
-    }
     return this.effectiveColorMode === "dark"
-      ? (pair.dark ?? pair.light)
-      : (pair.light ?? pair.dark);
+      ? this.#darkPalette
+      : this.#lightPalette;
   }
 
   // Only themes offered by the wizard can be restored through its endpoint.
@@ -156,9 +209,8 @@ export default class DesignWizardService extends Service {
   get #selectionsPayload() {
     return {
       theme_id: this.themeId,
-      light_palette_id:
-        this.selectedPair?.light?.id ?? this.selectedPair?.dark?.id,
-      dark_palette_id: this.selectedPair?.dark?.id,
+      light_palette_id: this.#lightPalette?.id,
+      dark_palette_id: this.selectedDarkPair?.dark?.id,
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
       heading_font: this.headingFont,
@@ -254,9 +306,6 @@ export default class DesignWizardService extends Service {
       this.source = source;
       this.returnUrl = returnUrl;
       this.progressSaved = false;
-      // onboarding introduces the wizard itself; a re-run has to say what it is
-      // about to change before it changes anything
-      this.showIntro = source !== SOURCE_ONBOARDING;
       this.#initFromData();
       this.#snapshot = this.#buildSnapshot();
       // the source, the page to return to and the snapshot all have to outlive
@@ -271,6 +320,7 @@ export default class DesignWizardService extends Service {
 
     this.#previewSiteSettings();
     await this.#previewSelections();
+    this.#loadSidebarColors();
   }
 
   // entry point for an admin re-running the wizard: the page behind the sheet
@@ -317,10 +367,6 @@ export default class DesignWizardService extends Service {
     this.start({ onComplete, resuming: true });
   }
 
-  dismissIntro() {
-    this.showIntro = false;
-  }
-
   async selectTheme(themeId) {
     if (themeId === this.themeId || this.applyingTheme) {
       return;
@@ -363,24 +409,37 @@ export default class DesignWizardService extends Service {
     this.#navigateToThemePreview(themeId);
   }
 
-  async selectPair(pairKey) {
-    this.selectedPairKeys = new Map(this.selectedPairKeys).set(
-      this.themeId,
-      pairKey
-    );
-    this.#persistState();
-    await this.#previewSelections();
-  }
+  /**
+   * Selects the palette pair used for one color mode, and previews that mode.
+   *
+   * @param {"light" | "dark"} mode
+   * @param {string} pairKey
+   */
+  async selectPalette(mode, pairKey) {
+    const otherOff = mode === "light" ? this.darkOff : this.lightOff;
+    if (pairKey === NO_PALETTE_KEY && otherOff) {
+      return;
+    }
 
-  async selectColorMode(mode) {
+    const selection = {
+      ...this.paletteSelections.get(this.themeId),
+      [mode]: pairKey,
+    };
+    // a palette made only for dark mode is meant to be used in both modes
+    if (
+      mode === "dark" &&
+      this.darkPairs.find((pair) => pair.key === pairKey)?.dark_only
+    ) {
+      selection.light = NO_PALETTE_KEY;
+    }
+
+    this.paletteSelections = new Map(this.paletteSelections).set(
+      this.themeId,
+      selection
+    );
     this.colorMode = mode;
     this.#persistState();
     await this.#previewSelections();
-  }
-
-  toggleUserSelectable() {
-    this.palettesUserSelectable = !this.palettesUserSelectable;
-    this.#persistState();
   }
 
   setMinimized(minimized) {
@@ -576,6 +635,42 @@ export default class DesignWizardService extends Service {
     }
   }
 
+  #sidebarColorsKey(paletteId, mode) {
+    return `${this.themeId}:${paletteId}:${mode}`;
+  }
+
+  // the resolver reads the theme's stylesheets off the current page, which
+  // only belong to the selected theme once its preview has loaded
+  #loadSidebarColors() {
+    if (isTesting() || !this.themeId || this.applyingTheme) {
+      return;
+    }
+
+    this.#sidebarColorResolver ??= new SidebarColorResolver(this.themeId);
+
+    const wanted = [
+      ...this.lightPairs.map((pair) => [pair.light, "light"]),
+      ...this.darkPairs.map((pair) => [pair.dark, "dark"]),
+    ];
+
+    for (const [palette, mode] of wanted) {
+      const key = this.#sidebarColorsKey(palette.id, mode);
+      if (this.sidebarColors.has(key)) {
+        continue;
+      }
+
+      this.#sidebarColorResolver
+        .resolve(palette.id, mode)
+        .then((colors) => {
+          if (colors && this.active) {
+            this.sidebarColors = new Map(this.sidebarColors).set(key, colors);
+          }
+        })
+        // a card without the sidebar colors still previews the palette
+        .catch(() => {});
+    }
+  }
+
   // the durable half of the step's own markAsCompleted, for when the caller is
   // gone; awaited so the reload can't cancel the audit write in flight
   async #completeStepWithoutCaller() {
@@ -595,10 +690,12 @@ export default class DesignWizardService extends Service {
 
   #reset() {
     this.minimized = false;
+    this.#sidebarColorResolver?.destroy();
+    this.#sidebarColorResolver = undefined;
+    this.sidebarColors = new Map();
     this.source = SOURCE_ONBOARDING;
     this.returnUrl = undefined;
     this.progressSaved = false;
-    this.showIntro = false;
     this.#snapshot = undefined;
     this.#originalSiteSettings = undefined;
     this.#originalHomepageSettings = undefined;
@@ -650,8 +747,11 @@ export default class DesignWizardService extends Service {
         ? null
         : this.data.themes.find((theme) => theme.id === HORIZON_THEME_ID));
     this.themeId = preselectedTheme?.id ?? null;
-    this.selectedPairKeys = new Map(
-      this.data.themes.map((theme) => [theme.id, this.#currentPairKey(theme)])
+    this.paletteSelections = new Map(
+      this.data.themes.map((theme) => [
+        theme.id,
+        this.#currentPaletteSelection(theme),
+      ])
     );
     this.palettesUserSelectable = this.data.palettes_user_selectable;
     this.bodyFont = this.data.base_font;
@@ -686,10 +786,8 @@ export default class DesignWizardService extends Service {
         stored.snapshot?.homepage_settings ??
         this.data.homepage_settings
     );
-    // the intro is only ever shown once, before the first selection
-    this.showIntro = false;
     this.themeId = stored.themeId;
-    this.selectedPairKeys = new Map(stored.selectedPairKeys);
+    this.paletteSelections = new Map(stored.paletteSelections);
     this.colorMode = stored.colorMode ?? renderedColorMode();
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
@@ -728,7 +826,7 @@ export default class DesignWizardService extends Service {
       value: JSON.stringify({
         minimized: this.minimized,
         themeId: this.themeId,
-        selectedPairKeys: [...this.selectedPairKeys.entries()],
+        paletteSelections: [...this.paletteSelections.entries()],
         colorMode: this.colorMode,
         palettesUserSelectable: this.palettesUserSelectable,
         bodyFont: this.bodyFont,
@@ -779,15 +877,31 @@ export default class DesignWizardService extends Service {
     return this.#supportedHomepages.includes(homepage) ? homepage : "latest";
   }
 
-  #currentPairKey(theme) {
-    const pair = theme.palette_pairs.find(
-      (candidate) =>
-        (theme.color_scheme_id &&
-          candidate.light?.id === theme.color_scheme_id) ||
-        (theme.dark_color_scheme_id &&
-          candidate.dark?.id === theme.dark_color_scheme_id)
-    );
-    return (pair ?? theme.palette_pairs[0])?.key;
+  #selectedPair(pairs, mode) {
+    const key = this.paletteSelections.get(this.themeId)?.[mode];
+    if (key === NO_PALETTE_KEY) {
+      return null;
+    }
+    return pairs.find((pair) => pair.key === key) ?? pairs[0];
+  }
+
+  // A light key left undefined falls back to the row's first palette, which
+  // is also what a theme without an assigned light palette renders. A theme
+  // without a dark palette renders light-only, and one using the same palette
+  // for both modes has no palette of its own for light mode.
+  #currentPaletteSelection(theme) {
+    const pairs = theme.palette_pairs ?? [];
+    const darkId = theme.dark_color_scheme_id;
+    const dark = darkId && pairs.find((pair) => pair.dark?.id === darkId)?.key;
+    const light =
+      dark && theme.color_scheme_id === darkId
+        ? NO_PALETTE_KEY
+        : pairs.find(
+            (pair) =>
+              theme.color_scheme_id && pair.light?.id === theme.color_scheme_id
+          )?.key;
+
+    return { light, dark: darkId ? dark : NO_PALETTE_KEY };
   }
 
   async #previewSelections() {

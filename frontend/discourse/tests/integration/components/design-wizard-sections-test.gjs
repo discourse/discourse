@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
@@ -11,21 +11,41 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 const SCREENSHOT = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 const noop = () => {};
+const noSidebarColors = () => undefined;
 
 const PAIRS = [
   {
     key: "default",
     name: "Default",
     dark_only: false,
-    light: { colors: { secondary: "ffffff", tertiary: "0088cc" } },
+    light: {
+      colors: {
+        secondary: "ffffff",
+        primary: "222222",
+        tertiary: "0088cc",
+        quaternary: "e45735",
+        love: "fa6c8d",
+        highlight: "ffff4d",
+      },
+    },
+    dark: { colors: { secondary: "111111", tertiary: "00aaff" } },
   },
   {
     key: "alternate",
     name: "Alternate",
     dark_only: false,
     light: { colors: { secondary: "eeeeee", tertiary: "ff0000" } },
+    dark: { colors: { secondary: "222222", tertiary: "ff4444" } },
   },
 ];
+
+const DARK_ONLY_PAIR = {
+  key: "dracula",
+  name: "Dracula",
+  dark_only: true,
+  light: null,
+  dark: { colors: { secondary: "2d303e", tertiary: "bd93f9" } },
+};
 
 module(
   "Integration | Component | DesignWizard | ThemeSection",
@@ -125,82 +145,209 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("color controls expose their selected state and switch labels", async function (assert) {
+    test("palette cards expose their selected state and preview colors", async function (assert) {
+      const selections = [];
+      const select = (mode, key) => selections.push([mode, key]);
+
       await render(
         <template>
           <ColorsSection
-            @colorMode="light"
-            @darkOnly={{false}}
-            @onSelectMode={{noop}}
-            @onSelectPair={{noop}}
-            @onToggleUserSelectable={{noop}}
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
-            @userSelectable={{false}}
+            @darkOff={{false}}
+            @darkPairs={{PAIRS}}
+            @lightOff={{false}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{select}}
+            @selectedDarkKey="alternate"
+            @selectedLightKey="default"
+            @sidebarColorsFor={{noSidebarColors}}
           />
         </template>
       );
 
+      const LIGHT = ".design-wizard__palette-row[data-mode='light']";
+      const DARK = ".design-wizard__palette-row[data-mode='dark']";
+
       assert
-        .dom(".design-wizard__color-mode.--active")
-        .hasAria("pressed", "true", "exposes the selected color mode");
+        .dom(`${LIGHT} [data-pair-key='default']`)
+        .hasAria("pressed", "true", "exposes the selected light palette");
       assert
-        .dom(".design-wizard__swatch[data-pair-key='default']")
-        .hasAria("pressed", "true", "exposes the selected palette");
+        .dom(`${LIGHT} [data-pair-key='alternate']`)
+        .hasAria("pressed", "false", "exposes an unselected light palette");
       assert
-        .dom(".design-wizard__swatch[data-pair-key='alternate']")
-        .hasAria("pressed", "false", "exposes the unselected palette");
+        .dom(`${DARK} [data-pair-key='alternate']`)
+        .hasAria("pressed", "true", "selects each row independently");
       assert
-        .dom(".design-wizard__switch-row [role='switch']")
-        .hasAria("checked", "false", "exposes the switch state")
-        .hasAria(
-          "labelledby",
-          "design-wizard-user-selectable-title",
-          "associates the switch title"
-        )
-        .hasAria(
-          "describedby",
-          "design-wizard-user-selectable-description",
-          "associates the switch description"
-        );
+        .dom(`${LIGHT} .design-wizard__palette-row-status`)
+        .hasText("Site default");
+
+      const preview = find(
+        `${LIGHT} [data-pair-key='default'] .design-wizard__palette-preview`
+      );
+      assert.strictEqual(
+        preview.style.getPropertyValue("--palette-quaternary"),
+        "#e45735",
+        "previews the palette's own colors"
+      );
+      assert.strictEqual(
+        find(
+          `${DARK} [data-pair-key='default'] .design-wizard__palette-preview`
+        ).style.getPropertyValue("--palette-secondary"),
+        "#111111",
+        "the dark row previews the dark palette"
+      );
+
+      await click(`${DARK} [data-pair-key='default']`);
+      assert.deepEqual(
+        selections,
+        [["dark", "default"]],
+        "reports the row and palette picked"
+      );
     });
 
-    test("the user selectable switch reflects and toggles its state", async function (assert) {
-      const userSelectable = tracked(false);
-      const toggle = () => (userSelectable.value = !userSelectable.value);
+    test("the sidebar strip uses the theme's colors once they resolve", async function (assert) {
+      const sidebarColorsFor = (palette, mode) =>
+        mode === "light" && palette === PAIRS[0].light
+          ? {
+              background: "rgb(1, 2, 3)",
+              active: "rgb(4, 5, 6)",
+              link: "rgb(7, 8, 9)",
+              border: null,
+            }
+          : undefined;
 
       await render(
         <template>
           <ColorsSection
-            @colorMode="light"
-            @darkOnly={{false}}
-            @onSelectMode={{noop}}
-            @onSelectPair={{noop}}
-            @onToggleUserSelectable={{toggle}}
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
-            @userSelectable={{userSelectable.value}}
+            @darkOff={{false}}
+            @darkPairs={{PAIRS}}
+            @lightOff={{false}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{noop}}
+            @selectedDarkKey="default"
+            @selectedLightKey="default"
+            @sidebarColorsFor={{sidebarColorsFor}}
           />
         </template>
       );
 
-      const SWITCH = ".design-wizard__switch-row [role='switch']";
-      assert.dom(SWITCH).hasAria("checked", "false", "starts off");
+      const style = (selector) =>
+        find(`${selector} .design-wizard__palette-preview`).style;
 
-      await click(SWITCH);
-      assert.true(
-        userSelectable.value,
-        "clicking the switch notifies the caller"
+      const resolved = style(
+        ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
       );
-      assert.dom(SWITCH).hasAria("checked", "true", "renders the new state");
+      assert.strictEqual(
+        resolved.getPropertyValue("--palette-sidebar-background"),
+        "rgb(1, 2, 3)",
+        "uses the theme's sidebar background"
+      );
+      assert.strictEqual(
+        resolved.getPropertyValue("--palette-sidebar-active"),
+        "rgb(4, 5, 6)"
+      );
+      assert.strictEqual(
+        resolved.getPropertyValue("--palette-sidebar-link"),
+        "rgb(7, 8, 9)"
+      );
+      assert.strictEqual(
+        resolved.getPropertyValue("--palette-sidebar-border"),
+        "transparent",
+        "draws no divider when the theme has none"
+      );
 
-      await click(SWITCH);
-      assert.false(userSelectable.value, "clicking again toggles back off");
+      const pending = style(
+        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+      );
+      assert.strictEqual(
+        pending.getPropertyValue("--palette-sidebar-background"),
+        "#111111",
+        "blends the strip into the content until the colors resolve"
+      );
+    });
+
+    test("turning a mode off uses the other mode's palette for both", async function (assert) {
+      const darkPairs = [...PAIRS, DARK_ONLY_PAIR];
+      const selections = [];
+      const select = (mode, key) => selections.push([mode, key]);
+
+      await render(
+        <template>
+          <ColorsSection
+            @darkOff={{false}}
+            @darkPairs={{darkPairs}}
+            @lightOff={{true}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{select}}
+            @selectedDarkKey="dracula"
+            @sidebarColorsFor={{noSidebarColors}}
+            @singlePaletteName="Dracula"
+          />
+        </template>
+      );
+
+      const LIGHT = ".design-wizard__palette-row[data-mode='light']";
+      const DARK = ".design-wizard__palette-row[data-mode='dark']";
+
       assert
-        .dom(SWITCH)
-        .hasAria("checked", "false", "renders the reverted state");
+        .dom(`${LIGHT} [data-pair-key='none']`)
+        .hasAria("pressed", "true", "selects none for light mode")
+        .includesText("None");
+      assert
+        .dom(`${LIGHT} [data-pair-key='default']`)
+        .isEnabled("light palettes can still be picked")
+        .hasAria("pressed", "false");
+      assert.dom(`${LIGHT} .design-wizard__palette-row-status`).hasText("Off");
+      assert
+        .dom(`${DARK} .design-wizard__palette-row-status`)
+        .hasText("Used for both modes");
+      assert
+        .dom(`${DARK} [data-pair-key='none']`)
+        .isDisabled("both modes can't be off at once");
+      assert
+        .dom(`${DARK} [data-pair-key='dracula'] .sr-only`)
+        .hasText("Dark mode only", "labels the moon icon");
+      assert
+        .dom(".design-wizard__palette-note-region[aria-live='polite']")
+        .includesText(
+          "Dracula is used in both light and dark mode",
+          "announces the note"
+        );
+
+      await click(`${LIGHT} [data-pair-key='default']`);
+      assert.deepEqual(
+        selections,
+        [["light", "default"]],
+        "switches light mode back on"
+      );
+    });
+
+    test("each row offers none while the other mode has a palette", async function (assert) {
+      await render(
+        <template>
+          <ColorsSection
+            @darkOff={{false}}
+            @darkPairs={{PAIRS}}
+            @lightOff={{false}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{noop}}
+            @selectedDarkKey="default"
+            @selectedLightKey="default"
+            @sidebarColorsFor={{noSidebarColors}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(
+          ".design-wizard__palette-card[data-pair-key='none']:not(:disabled)"
+        )
+        .exists({ count: 2 });
+      assert
+        .dom(".design-wizard__palette-card[data-pair-key='none']")
+        .hasAria("pressed", "false");
+      assert
+        .dom(".design-wizard__palette-note")
+        .doesNotExist("shows no note while both modes have a palette");
     });
   }
 );

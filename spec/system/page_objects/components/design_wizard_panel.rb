@@ -35,20 +35,62 @@ module PageObjects
         has_css?("#{WIZARD_SELECTOR}__next[disabled]")
       end
 
-      def select_palette(pair_key)
-        find("#{WIZARD_SELECTOR}__swatch[data-pair-key='#{pair_key}']").click
+      def select_palette(pair_key, mode: "light")
+        palette_card(pair_key, mode:).click
       end
 
-      def toggle_user_selectable_palettes
-        user_selectable_switch.toggle
+      def has_selected_palette?(pair_key, mode:)
+        has_css?(
+          "#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}[aria-pressed='true']",
+        )
       end
 
-      def has_user_selectable_palettes?
-        user_selectable_switch.checked?
+      def has_disabled_palette?(pair_key, mode:)
+        has_css?("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}[disabled]")
       end
 
-      def has_no_user_selectable_palettes?
-        user_selectable_switch.unchecked?
+      def has_palette_row_status?(text, mode:)
+        has_css?("#{palette_row_selector(mode)} #{WIZARD_SELECTOR}__palette-row-status", text:)
+      end
+
+      def has_single_palette_note?(name)
+        has_css?(
+          "#{WIZARD_SELECTOR}__palette-note-region[aria-live='polite'] #{WIZARD_SELECTOR}__palette-note",
+          text: "#{name} is used in both light and dark mode",
+        )
+      end
+
+      def has_no_single_palette_note?
+        has_no_css?("#{WIZARD_SELECTOR}__palette-note")
+      end
+
+      # waits for the theme's sidebar colors, which resolve after the card
+      # renders; until then the strip falls back to the palette's hex colors
+      def palette_preview_colors(pair_key, mode:)
+        preview =
+          find(
+            "#{palette_row_selector(mode)} #{palette_card_selector(pair_key)} " \
+              "#{WIZARD_SELECTOR}__palette-preview:not([style*='--palette-sidebar-background: #'])",
+          )
+
+        preview[:style]
+          .split(";")
+          .to_h do |declaration|
+            name, value = declaration.split(":", 2).map(&:strip)
+            [name.delete_prefix("--palette-"), value]
+          end
+      end
+
+      def back
+        find("#{WIZARD_SELECTOR}__back").click
+      end
+
+      def has_palette?(pair_key, mode:)
+        has_css?("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}")
+      end
+
+      def has_no_palette?(pair_key, mode:)
+        has_no_css?("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}")
       end
 
       def select_homepage(key)
@@ -123,10 +165,16 @@ module PageObjects
 
       private
 
-      def user_selectable_switch
-        PageObjects::Components::DToggleSwitch.new(
-          "#{WIZARD_SELECTOR}__switch-row [aria-labelledby='design-wizard-user-selectable-title']",
-        )
+      def palette_row_selector(mode)
+        "#{WIZARD_SELECTOR}__palette-row[data-mode='#{mode}']"
+      end
+
+      def palette_card_selector(pair_key)
+        "#{WIZARD_SELECTOR}__palette-card[data-pair-key='#{pair_key}']"
+      end
+
+      def palette_card(pair_key, mode:)
+        find("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}")
       end
 
       def welcome_banner_switch

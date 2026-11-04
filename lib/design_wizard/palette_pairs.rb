@@ -6,6 +6,8 @@ module DesignWizard
   # "<name>"/"<name> Dark" convention; other themes get a curated set of
   # built-in palettes, which only exist in memory (negative ids) until an
   # admin picks one and it is materialized as a via_wizard color scheme.
+  # Palettes admins created themselves are offered alongside either set, each
+  # in the one mode its colors suit.
   class PalettePairs
     DARK_NAME_SUFFIX = " Dark"
 
@@ -18,7 +20,8 @@ module DesignWizard
 
     def self.for_theme(theme)
       owned = ColorScheme.includes(:color_scheme_colors).where(theme_id: theme.id).order(:id).to_a
-      owned.present? ? new(theme).theme_pairs(owned) : new(theme).built_in_pairs
+      pairs = new(theme)
+      (owned.present? ? pairs.theme_pairs(owned) : pairs.built_in_pairs) + pairs.custom_pairs
     end
 
     def initialize(theme)
@@ -47,7 +50,30 @@ module DesignWizard
       end
     end
 
+    def custom_pairs
+      ColorScheme
+        .includes(:color_scheme_colors, :base_scheme)
+        .where(theme_id: nil, via_wizard: false)
+        .order(:id)
+        .map do |scheme|
+          serialized = serialize_scheme(scheme)
+          dark = dark_colors?(serialized[:colors])
+
+          {
+            key: "custom_#{scheme.id}",
+            name: scheme.name,
+            dark_only: false,
+            light: dark ? nil : serialized,
+            dark: dark ? serialized : nil,
+          }
+        end
+    end
+
     private
+
+    def dark_colors?(colors)
+      ColorMath.brightness(colors["primary"]) > ColorMath.brightness(colors["secondary"])
+    end
 
     def pair(key:, name:, light:, dark:)
       {
