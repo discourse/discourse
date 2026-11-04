@@ -460,7 +460,7 @@ RSpec.describe PostVoting::CommentsController do
     before { sign_in(flagger) }
 
     it "requires the DSA form for illegal reports only when DSA reporting is enabled" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
 
       expect do
         put "/post_voting/comments/flag.json",

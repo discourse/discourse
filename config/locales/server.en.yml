@@ -582,6 +582,8 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
+      dsa_community_rules_required: "Add at least one community rule before enabling DSA reporting."
+      dsa_community_rules_in_use: "Disable DSA reporting before removing all community rules."
       site_settings_are_deprecated: "The following settings are deprecated: %{old_names}. Use %{new_names} instead"
       site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
       site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
@@ -2149,9 +2151,10 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
-    dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
-    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. Leave blank to omit appeal instructions. Requires {{setting:dsa_reporting_enabled}} to be turned on."
-    dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
+    dsa_reporting_enabled: "Enable EU Digital Services Act (DSA) reporting and moderation tools. Requires {{setting:dsa_community_rules}}."
+    dsa_notice_group: "Group receiving illegal content reports and reporter contact details. Defaults to admins."
+    dsa_moderation_appeal_email: "Email address shown in moderation emails and system messages when DSA reporting is enabled. Leave blank to omit appeal instructions from those messages."
+    dsa_community_rules: "Define rules from your Terms of Service or community guidelines. Each rule’s reference and explanation are included in DSA statements of reasons when selected by a moderator."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."

@@ -7,7 +7,7 @@ RSpec.describe CurrentUserSerializer do
   let(:guardian) { user.guardian }
 
   describe "#can_use_dsa_account_email" do
-    before { SiteSetting.dsa_reporting_enabled = true }
+    before { enable_dsa_reporting }
 
     it "allows a reporter to use their confirmed account email" do
       user.activate

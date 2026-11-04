@@ -15,13 +15,14 @@ RSpec.describe DsaStatementsController do
     end
 
     before do
-      SiteSetting.dsa_reporting_enabled = true
-      SiteSetting.dsa_community_rules = [
-        {
-          ground: "Terms, section 3",
-          explanation: "The content targets another person with insults.",
-        },
-      ].to_json
+      enable_dsa_reporting(
+        community_rules: [
+          {
+            ground: "Terms, section 3",
+            explanation: "The content targets another person with insults.",
+          },
+        ],
+      )
     end
 
     it "returns forbidden when a nonstaff user classifies a flagged post" do
