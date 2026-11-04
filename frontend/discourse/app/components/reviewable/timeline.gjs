@@ -13,7 +13,12 @@ import {
   penaltyPastTense,
 } from "discourse/lib/reviewable-penalty";
 import { sanitize } from "discourse/lib/text";
-import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
+import { DELETED } from "discourse/models/reviewable";
+import {
+  CLAIMED,
+  TRANSITIONED,
+  UNCLAIMED,
+} from "discourse/models/reviewable-history";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
@@ -188,7 +193,19 @@ export default class ReviewableTimeline extends Component {
     });
 
     this.args.historyEvents?.forEach((history) => {
-      if (history.reviewable_history_type === CLAIMED) {
+      if (
+        this.args.reviewable.type === "ReviewableQueuedPost" &&
+        history.reviewable_history_type === TRANSITIONED &&
+        history.status === DELETED
+      ) {
+        events.push({
+          type: "queued_post_deleted",
+          date: history.created_at,
+          user: history.created_by,
+          icon: "trash-can",
+          titleKey: "review.timeline.queued_post_deleted_by",
+        });
+      } else if (history.reviewable_history_type === CLAIMED) {
         events.push({
           type: "claimed",
           date: history.created_at,
