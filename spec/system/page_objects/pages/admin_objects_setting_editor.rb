@@ -25,14 +25,6 @@ module PageObjects
         expect(input_field_label(field_name)).to have_text(label)
       end
 
-      def has_object?(name)
-        page.has_css?(".schema-setting-editor__tree-node.--parent", text: name)
-      end
-
-      def has_multiline_field?(field_name)
-        page.has_css?(".schema-field[data-name=\"#{field_name}\"] textarea")
-      end
-
       def click_link(name, child: false)
         find(
           ".schema-setting-editor__navigation .schema-setting-editor__tree-node#{child ? ".--child" : ".--parent"}",
@@ -74,9 +66,7 @@ module PageObjects
       private
 
       def input_field(field_name)
-        page.find(
-          ".schema-field[data-name=\"#{field_name}\"] .schema-field__input :is(input, textarea)",
-        )
+        page.find(".schema-field[data-name=\"#{field_name}\"] .schema-field__input input")
       end
 
       def input_field_label(field_name)
