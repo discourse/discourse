@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { paletteCardStyle } from "discourse/lib/design-wizard-preview";
+import { swatchStyle } from "discourse/lib/design-wizard-preview";
 import { NO_PALETTE_KEY } from "discourse/services/design-wizard";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -42,47 +42,14 @@ const PaletteRow = <template>
             <span
               aria-hidden="true"
               class="design-wizard__palette-preview"
-              style={{paletteCardStyle
-                palette
-                (@sidebarColorsFor palette @mode)
-              }}
-            >
-              <span class="design-wizard__palette-preview-sidebar">
-                <span
-                  class="design-wizard__palette-preview-sidebar-item --active"
-                ></span>
-                <span
-                  class="design-wizard__palette-preview-sidebar-item"
-                ></span>
-                <span
-                  class="design-wizard__palette-preview-sidebar-item"
-                ></span>
-              </span>
-              <span class="design-wizard__palette-preview-content">
-                <span class="design-wizard__palette-preview-text"></span>
-                <span class="design-wizard__palette-preview-footer">
-                  <span
-                    class="design-wizard__palette-preview-dot --quaternary"
-                  ></span>
-                  <span
-                    class="design-wizard__palette-preview-dot --love"
-                  ></span>
-                  <span
-                    class="design-wizard__palette-preview-dot --highlight"
-                  ></span>
-                  <span class="design-wizard__palette-preview-button"></span>
-                </span>
-              </span>
-            </span>
+              style={{swatchStyle palette}}
+            ></span>
             <span class="design-wizard__palette-name">
               <span
                 class="design-wizard__palette-name-text"
               >{{pair.name}}</span>
               {{#if pair.dark_only}}
                 {{dIcon "moon" label=(i18n "design_wizard.colors.dark_only")}}
-              {{/if}}
-              {{#if selected}}
-                {{dIcon "check" class="design-wizard__palette-check"}}
               {{/if}}
             </span>
           </button>
@@ -104,9 +71,6 @@ const PaletteRow = <template>
           <span class="design-wizard__palette-name-text">
             {{i18n "design_wizard.colors.none"}}
           </span>
-          {{#if @off}}
-            {{dIcon "check" class="design-wizard__palette-check"}}
-          {{/if}}
         </span>
       </button>
     </div>
@@ -128,7 +92,6 @@ const DesignWizardColorsSection = <template>
         @otherOff={{@darkOff}}
         @pairs={{@lightPairs}}
         @selectedKey={{@selectedLightKey}}
-        @sidebarColorsFor={{@sidebarColorsFor}}
         @status={{paletteRowStatus @lightOff @darkOff}}
         @title={{i18n "design_wizard.colors.light_mode"}}
       />
@@ -143,7 +106,6 @@ const DesignWizardColorsSection = <template>
         @otherOff={{@lightOff}}
         @pairs={{@darkPairs}}
         @selectedKey={{@selectedDarkKey}}
-        @sidebarColorsFor={{@sidebarColorsFor}}
         @status={{paletteRowStatus @darkOff @lightOff}}
         @title={{i18n "design_wizard.colors.dark_mode"}}
       />

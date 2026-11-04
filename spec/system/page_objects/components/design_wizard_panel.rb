@@ -64,27 +64,6 @@ module PageObjects
         has_no_css?("#{WIZARD_SELECTOR}__palette-note")
       end
 
-      # waits for the theme's sidebar colors, which resolve after the card
-      # renders; until then the strip falls back to the palette's hex colors
-      def palette_preview_colors(pair_key, mode:)
-        preview =
-          find(
-            "#{palette_row_selector(mode)} #{palette_card_selector(pair_key)} " \
-              "#{WIZARD_SELECTOR}__palette-preview:not([style*='--palette-sidebar-background: #'])",
-          )
-
-        preview[:style]
-          .split(";")
-          .to_h do |declaration|
-            name, value = declaration.split(":", 2).map(&:strip)
-            [name.delete_prefix("--palette-"), value]
-          end
-      end
-
-      def back
-        find("#{WIZARD_SELECTOR}__back").click
-      end
-
       def has_palette?(pair_key, mode:)
         has_css?("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}")
       end

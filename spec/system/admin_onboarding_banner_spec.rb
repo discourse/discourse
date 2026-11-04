@@ -385,27 +385,6 @@ describe "Admin Onboarding Banner" do
       )
     end
 
-    it "draws each palette card's sidebar the way the selected theme does" do
-      SystemThemesManager.sync_theme!("horizon")
-
-      visit("/")
-      banner.click_step_action("select_theme")
-      design_wizard_panel.next_step
-
-      foundation = design_wizard_panel.palette_preview_colors("default", mode: "light")
-      expect(foundation["sidebar-background"]).to eq("rgb(255, 255, 255)")
-      expect(foundation["sidebar-border"]).not_to eq("transparent")
-
-      design_wizard_panel.back
-      design_wizard_panel.select_theme(Theme.horizon_theme.id)
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
-      design_wizard_panel.next_step
-
-      horizon = design_wizard_panel.palette_preview_colors("horizon", mode: "light")
-      expect(horizon["sidebar-background"]).not_to eq("rgb(255, 255, 255)")
-      expect(horizon["sidebar-border"]).to eq("transparent")
-    end
-
     it "offers palettes admins created in the mode their colors suit" do
       night =
         ColorScheme.create_from_base(

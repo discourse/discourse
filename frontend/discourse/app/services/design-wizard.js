@@ -14,7 +14,6 @@ import {
   applyPreviewFonts,
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
-import SidebarColorResolver from "discourse/lib/design-wizard-sidebar-colors";
 import { isTesting } from "discourse/lib/environment";
 import { homepagePreviewDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
@@ -75,9 +74,6 @@ export default class DesignWizardService extends Service {
   // theme id => { light, dark } pair keys, or NO_PALETTE_KEY for a mode that
   // is off and takes the other mode's palette
   @tracked paletteSelections = new Map();
-  // "<theme id>:<palette id>:<mode>" => the theme's sidebar colors under that
-  // palette, filled in as they resolve
-  @tracked sidebarColors = new Map();
   @tracked stepIndex = 0;
   // resuming an in-progress wizard (e.g. after a theme-preview reload)
   // should not replay the sheet's entrance animation
@@ -87,15 +83,6 @@ export default class DesignWizardService extends Service {
   // whether a step has been saved, i.e. whether the live site has changed yet
   @tracked progressSaved = false;
 
-  /**
-   * The selected theme's sidebar colors under a palette, once resolved.
-   *
-   * @param {{ id: number } | null | undefined} palette
-   * @param {"light" | "dark"} mode
-   * @returns {import("discourse/lib/design-wizard-sidebar-colors").SidebarColors | undefined}
-   */
-  sidebarColorsFor = (palette, mode) =>
-    palette && this.sidebarColors.get(this.#sidebarColorsKey(palette.id, mode));
   #onComplete;
   #snapshot;
   #starting = false;
@@ -104,8 +91,6 @@ export default class DesignWizardService extends Service {
   #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
-
-  #sidebarColorResolver;
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -320,7 +305,6 @@ export default class DesignWizardService extends Service {
 
     this.#previewSiteSettings();
     await this.#previewSelections();
-    this.#loadSidebarColors();
   }
 
   // entry point for an admin re-running the wizard: the page behind the sheet
@@ -635,42 +619,6 @@ export default class DesignWizardService extends Service {
     }
   }
 
-  #sidebarColorsKey(paletteId, mode) {
-    return `${this.themeId}:${paletteId}:${mode}`;
-  }
-
-  // the resolver reads the theme's stylesheets off the current page, which
-  // only belong to the selected theme once its preview has loaded
-  #loadSidebarColors() {
-    if (isTesting() || !this.themeId || this.applyingTheme) {
-      return;
-    }
-
-    this.#sidebarColorResolver ??= new SidebarColorResolver(this.themeId);
-
-    const wanted = [
-      ...this.lightPairs.map((pair) => [pair.light, "light"]),
-      ...this.darkPairs.map((pair) => [pair.dark, "dark"]),
-    ];
-
-    for (const [palette, mode] of wanted) {
-      const key = this.#sidebarColorsKey(palette.id, mode);
-      if (this.sidebarColors.has(key)) {
-        continue;
-      }
-
-      this.#sidebarColorResolver
-        .resolve(palette.id, mode)
-        .then((colors) => {
-          if (colors && this.active) {
-            this.sidebarColors = new Map(this.sidebarColors).set(key, colors);
-          }
-        })
-        // a card without the sidebar colors still previews the palette
-        .catch(() => {});
-    }
-  }
-
   // the durable half of the step's own markAsCompleted, for when the caller is
   // gone; awaited so the reload can't cancel the audit write in flight
   async #completeStepWithoutCaller() {
@@ -690,9 +638,6 @@ export default class DesignWizardService extends Service {
 
   #reset() {
     this.minimized = false;
-    this.#sidebarColorResolver?.destroy();
-    this.#sidebarColorResolver = undefined;
-    this.sidebarColors = new Map();
     this.source = SOURCE_ONBOARDING;
     this.returnUrl = undefined;
     this.progressSaved = false;

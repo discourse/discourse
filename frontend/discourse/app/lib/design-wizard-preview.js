@@ -5,45 +5,18 @@ function hex(colors, name, fallback) {
   return `#${`${value}`.replace(/[^0-9a-f]/gi, "")}`;
 }
 
-// base light values, for a palette serialized without one of the colors
-const PALETTE_CARD_COLORS = {
-  secondary: "ffffff",
-  primary: "222222",
-  tertiary: "0088cc",
-  quaternary: "e45735",
-  love: "fa6c8d",
-  highlight: "ffff4d",
-};
-
 /**
- * Builds the custom properties a design wizard palette card draws its
- * preview from.
+ * Builds the inline style for a palette swatch in the design wizard.
  *
- * @param {{ colors?: Record<string, string> } | null | undefined} palette - serialized palette with a resolved `colors` map
- * @param {import("discourse/lib/design-wizard-sidebar-colors").SidebarColors} [sidebar] - the theme's sidebar colors under this palette, already validated as colors
+ * @param {{ colors?: Record<string, string> } | null | undefined} palette - serialized palette with a `colors` map
  * @returns {import("@ember/template").TrustedHTML} inline style string
  */
-export function paletteCardStyle(palette, sidebar) {
-  const colors = Object.fromEntries(
-    Object.entries(PALETTE_CARD_COLORS).map(([name, fallback]) => [
-      name,
-      hex(palette?.colors, name, fallback),
-    ])
-  );
-
-  // until the theme's colors resolve, the strip blends into the content
-  const properties = {
-    ...colors,
-    "sidebar-background": sidebar?.background ?? colors.secondary,
-    "sidebar-active": sidebar?.active ?? colors.tertiary,
-    "sidebar-link": sidebar?.link ?? colors.primary,
-    "sidebar-border": sidebar?.border ?? "transparent",
-  };
+export function swatchStyle(palette) {
+  const bg = hex(palette?.colors, "secondary", "ffffff");
+  const accent = hex(palette?.colors, "tertiary", "0088cc");
 
   return trustHTML(
-    Object.entries(properties)
-      .map(([name, value]) => `--palette-${name}: ${value}`)
-      .join("; ")
+    `background: linear-gradient(135deg, ${accent} 50%, color-mix(in srgb, ${accent} 18%, ${bg}) 50%)`
   );
 }
 

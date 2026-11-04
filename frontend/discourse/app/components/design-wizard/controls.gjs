@@ -179,7 +179,6 @@ export default class DesignWizardControls extends Component {
               @onSelectPalette={{this.selectPalette}}
               @selectedDarkKey={{this.designWizard.selectedDarkPair.key}}
               @selectedLightKey={{this.designWizard.selectedLightPair.key}}
-              @sidebarColorsFor={{this.designWizard.sidebarColorsFor}}
               @singlePaletteName={{this.designWizard.singlePaletteName}}
             />
           </Section>

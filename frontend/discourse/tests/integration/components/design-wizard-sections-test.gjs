@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { click, find, render, settled } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
@@ -11,7 +11,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 const SCREENSHOT = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 const noop = () => {};
-const noSidebarColors = () => undefined;
 
 const PAIRS = [
   {
@@ -159,7 +158,6 @@ module(
             @onSelectPalette={{select}}
             @selectedDarkKey="alternate"
             @selectedLightKey="default"
-            @sidebarColorsFor={{noSidebarColors}}
           />
         </template>
       );
@@ -180,88 +178,26 @@ module(
         .dom(`${LIGHT} .design-wizard__palette-row-status`)
         .hasText("Site default");
 
-      const preview = find(
-        `${LIGHT} [data-pair-key='default'] .design-wizard__palette-preview`
-      );
-      assert.strictEqual(
-        preview.style.getPropertyValue("--palette-quaternary"),
-        "#e45735",
-        "previews the palette's own colors"
-      );
-      assert.strictEqual(
-        find(
+      assert
+        .dom(
+          `${LIGHT} [data-pair-key='default'] .design-wizard__palette-preview`
+        )
+        .hasAttribute("style", /#0088cc/, "previews the palette's own colors");
+      assert
+        .dom(
           `${DARK} [data-pair-key='default'] .design-wizard__palette-preview`
-        ).style.getPropertyValue("--palette-secondary"),
-        "#111111",
-        "the dark row previews the dark palette"
-      );
+        )
+        .hasAttribute(
+          "style",
+          /#00aaff/,
+          "the dark row previews the dark palette"
+        );
 
       await click(`${DARK} [data-pair-key='default']`);
       assert.deepEqual(
         selections,
         [["dark", "default"]],
         "reports the row and palette picked"
-      );
-    });
-
-    test("the sidebar strip uses the theme's colors once they resolve", async function (assert) {
-      const sidebarColorsFor = (palette, mode) =>
-        mode === "light" && palette === PAIRS[0].light
-          ? {
-              background: "rgb(1, 2, 3)",
-              active: "rgb(4, 5, 6)",
-              link: "rgb(7, 8, 9)",
-              border: null,
-            }
-          : undefined;
-
-      await render(
-        <template>
-          <ColorsSection
-            @darkOff={{false}}
-            @darkPairs={{PAIRS}}
-            @lightOff={{false}}
-            @lightPairs={{PAIRS}}
-            @onSelectPalette={{noop}}
-            @selectedDarkKey="default"
-            @selectedLightKey="default"
-            @sidebarColorsFor={{sidebarColorsFor}}
-          />
-        </template>
-      );
-
-      const style = (selector) =>
-        find(`${selector} .design-wizard__palette-preview`).style;
-
-      const resolved = style(
-        ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
-      );
-      assert.strictEqual(
-        resolved.getPropertyValue("--palette-sidebar-background"),
-        "rgb(1, 2, 3)",
-        "uses the theme's sidebar background"
-      );
-      assert.strictEqual(
-        resolved.getPropertyValue("--palette-sidebar-active"),
-        "rgb(4, 5, 6)"
-      );
-      assert.strictEqual(
-        resolved.getPropertyValue("--palette-sidebar-link"),
-        "rgb(7, 8, 9)"
-      );
-      assert.strictEqual(
-        resolved.getPropertyValue("--palette-sidebar-border"),
-        "transparent",
-        "draws no divider when the theme has none"
-      );
-
-      const pending = style(
-        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
-      );
-      assert.strictEqual(
-        pending.getPropertyValue("--palette-sidebar-background"),
-        "#111111",
-        "blends the strip into the content until the colors resolve"
       );
     });
 
@@ -279,7 +215,6 @@ module(
             @lightPairs={{PAIRS}}
             @onSelectPalette={{select}}
             @selectedDarkKey="dracula"
-            @sidebarColorsFor={{noSidebarColors}}
             @singlePaletteName="Dracula"
           />
         </template>
@@ -332,7 +267,6 @@ module(
             @onSelectPalette={{noop}}
             @selectedDarkKey="default"
             @selectedLightKey="default"
-            @sidebarColorsFor={{noSidebarColors}}
           />
         </template>
       );
