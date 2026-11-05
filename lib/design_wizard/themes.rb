@@ -7,8 +7,6 @@ module DesignWizard
       remote_url: "https://github.com/discourse/discourse-concord-theme",
       default_homepage: "chat",
       description_key: "design_wizard.themes.concord.description",
-      supports_welcome_banner: false,
-      supports_search: false,
       screenshot_light_url: "/images/design-wizard/concord-light.webp",
       screenshot_dark_url: "/images/design-wizard/concord-dark.webp",
     }.freeze

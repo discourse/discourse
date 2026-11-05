@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 # Applies the design choices made in the admin design wizard: default theme,
-# the theme's light/dark palettes, fonts, homepage, welcome banner and search
-# presentation, and whether members can switch between the offered palettes.
+# the theme's light/dark palettes, fonts, logo, homepage, and whether members
+# can switch between the offered palettes.
 # The palette work is transactional; the site settings are applied after it,
 # the same way the rest of the admin config writes them.
 class DesignWizard::Apply
   include Service::Base
 
   BASE_LIGHT_PALETTE_ID = ColorScheme::NAMES_TO_ID_MAP[ColorScheme::LIGHT_PALETTE_NAME]
-
-  # these are resolved per theme rather than site wide, so they cannot go
-  # through SiteSetting::Update
-  THEMEABLE_SETTINGS = %i[enable_welcome_banner search_experience].freeze
 
   params do
     attribute :theme_id, :integer
@@ -21,19 +17,15 @@ class DesignWizard::Apply
     attribute :palettes_user_selectable, :boolean, default: false
     attribute :base_font, :string
     attribute :heading_font, :string
+    attribute :logo, :string
     attribute :homepage, :string
     attribute :homepage_settings, default: -> { {} }
     attribute :category_page_style, :string
-    attribute :enable_welcome_banner, :boolean
-    attribute :welcome_banner_location, :string
-    attribute :search_experience, :string
 
     before_validation do
       # the built-in light palette is represented by a theme without an
       # assigned light palette
       self.light_palette_id = nil if light_palette_id == BASE_LIGHT_PALETTE_ID
-      self.welcome_banner_location = welcome_banner_location.presence
-      self.search_experience = search_experience.presence
     end
 
     validates :theme_id, presence: true, inclusion: { in: ->(_) { DesignWizard::Themes.ids } }
@@ -43,20 +35,14 @@ class DesignWizard::Apply
                 in: BaseFontSetting.values.map { |font| font[:value] },
               },
               allow_blank: true
-    validates :homepage, inclusion: { in: ->(_) { DesignWizard::Homepages.ids } }, allow_blank: true
+    validates :homepage,
+              inclusion: {
+                in: ->(_) { DesignWizard::Homepages.restorable_ids },
+              },
+              allow_blank: true
     validates :category_page_style,
               inclusion: {
                 in: CategoryPageStyle.values.map { |style| style[:value] },
-              },
-              allow_blank: true
-    validates :welcome_banner_location,
-              inclusion: {
-                in: WelcomeBannerLocation.values.map { |location| location[:value] },
-              },
-              allow_blank: true
-    validates :search_experience,
-              inclusion: {
-                in: SearchExperienceSiteSetting.values.map { |experience| experience[:value] },
               },
               allow_blank: true
     validate :built_in_palettes_exist
@@ -70,23 +56,15 @@ class DesignWizard::Apply
             default_theme_id: theme_id,
             base_font: base_font.presence,
             heading_font: heading_font.presence,
+            # blank removes the logo, so only nil leaves it untouched; a hidden
+            # logo would fail the whole update, including a revert
+            logo: (logo if SiteSetting.hidden_settings.exclude?(:logo)),
             default_homepage: homepage.presence,
             desktop_category_page_style: category_page_style.presence,
-            welcome_banner_location: welcome_banner_location.presence,
           },
         )
         .compact
         .map { |setting_name, value| { setting_name:, value: } }
-    end
-
-    # the wizard re-sends every selection on each step, so skip the settings
-    # that would be written back unchanged and audit-logged again
-    def themeable_site_settings(theme_id:)
-      THEMEABLE_SETTINGS
-        .index_with { |setting_name| public_send(setting_name) }
-        .reject do |setting_name, value|
-          value.nil? || SiteSetting.public_send(setting_name, theme_id:) == value
-        end
     end
 
     private
@@ -131,7 +109,6 @@ class DesignWizard::Apply
   end
 
   step :update_site_settings
-  step :update_themeable_site_settings
   step :expire_user_color_schemes_cache
 
   private
@@ -216,21 +193,6 @@ class DesignWizard::Apply
       },
       guardian:,
     ) { on_failure { fail!("failed to update site settings") } }
-  end
-
-  def update_themeable_site_settings(params:, theme:, guardian:)
-    params
-      .themeable_site_settings(theme_id: theme.id)
-      .each do |setting_name, value|
-        Themes::ThemeSiteSettingManager.call(
-          params: {
-            theme_id: theme.id,
-            name: setting_name,
-            value:,
-          },
-          guardian:,
-        ) { on_failure { fail!("failed to update themeable site settings") } }
-      end
   end
 
   def expire_user_color_schemes_cache
