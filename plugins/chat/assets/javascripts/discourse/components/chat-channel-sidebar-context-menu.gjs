@@ -120,8 +120,9 @@ export default class ChatChannelSidebarContextMenu extends Component {
       this.currentUserMembership.mutedUntil = null;
     } catch (err) {
       popupAjaxError(err);
+    } finally {
+      this.args.close();
     }
-    this.args.close();
   }
 
   @action

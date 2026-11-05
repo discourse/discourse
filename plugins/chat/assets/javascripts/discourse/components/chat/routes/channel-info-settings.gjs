@@ -296,17 +296,10 @@ export default class ChatRouteChannelInfoSettings extends Component {
     }
 
     const duration = MUTE_DURATIONS.find((d) => d.id === value);
-    let settings;
 
-    if (value === "off") {
-      settings = { muted: false };
-    } else if (duration) {
-      settings = {
-        muted: true,
-        muted_until: mutedUntilFromNow(duration.minutes),
-      };
-    } else {
-      settings = { muted: true };
+    let settings = { muted: value !== "off" };
+    if (duration) {
+      settings["muted_until"] = mutedUntilFromNow(duration.minutes);
     }
 
     try {

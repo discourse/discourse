@@ -46,8 +46,9 @@ export default class ChatChannelSidebarContextMuteSubmenu extends Component {
         : null;
     } catch (err) {
       popupAjaxError(err);
+    } finally {
+      this.args.close();
     }
-    this.args.close();
   }
 
   <template>
