@@ -66,8 +66,9 @@ module TestImpact
       @loaded = {}
     end
 
-    # What a spec file does as it loads, such as generating examples from a
-    # data file, is its own, kept until it runs.
+    # What a spec file reads and looks up as it loads, such as the data file
+    # it generates examples from, is its own, kept until it runs. Not the
+    # code it runs: a coverage snapshot per loaded file costs too much.
     def hook_loading
       recorder = self
       loading =
@@ -87,7 +88,7 @@ module TestImpact
       yield
     ensure
       spec = File.expand_path(file.to_s).delete_prefix("#{ROOT}/")
-      @loaded[spec] = { files: collect_files, notes: @notes.transform_values(&:dup) }
+      @loaded[spec] = @notes.transform_values(&:dup)
       @notes.each_value(&:clear)
     end
 
@@ -132,14 +133,54 @@ module TestImpact
         end
       File.singleton_class.prepend(reads)
 
-      # Migrations change tables, not code a spec ran.
+      # Migrations change tables, not code a spec ran. ActiveRecord and the
+      # mini_sql DB helper both query through the pg driver; a prepared
+      # statement's text comes with its prepare. Most texts repeat, so each
+      # one's tables are kept.
       tables = ActiveRecord::Base.connection.tables.to_set
-      ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
-        next if payload[:name] == "SCHEMA"
-        payload[:sql].scan(SQL_TABLE) do |(name)|
-          recorder.note(:tables, name) if tables.include?(name)
+      named = {}
+      prepared = {}
+      tables_of =
+        lambda do |sql|
+          named.clear if named.size > 50_000
+          named[sql] ||= sql.scan(SQL_TABLE).flatten.select { |name| tables.include?(name) }.uniq
         end
-      end
+      queries =
+        Module.new do
+          %i[
+            exec
+            async_exec
+            sync_exec
+            exec_params
+            async_exec_params
+            sync_exec_params
+          ].each do |method|
+            next if !PG::Connection.method_defined?(method)
+            define_method(method) do |sql, *args, &block|
+              recorder.note_tables(tables_of.call(sql)) if sql.is_a?(String)
+              super(sql, *args, &block)
+            end
+          end
+          %i[prepare async_prepare sync_prepare].each do |method|
+            next if !PG::Connection.method_defined?(method)
+            define_method(method) do |name, sql, *args, &block|
+              prepared[[object_id, name]] = tables_of.call(sql)
+              super(name, sql, *args, &block)
+            end
+          end
+          %i[exec_prepared async_exec_prepared sync_exec_prepared].each do |method|
+            next if !PG::Connection.method_defined?(method)
+            define_method(method) do |name, *args, &block|
+              recorder.note_tables(prepared[[object_id, name]] || [])
+              super(name, *args, &block)
+            end
+          end
+        end
+      PG::Connection.prepend(queries)
+    end
+
+    def note_tables(names)
+      @notes[:tables].merge(names)
     end
 
     def note(kind, value)
@@ -243,10 +284,7 @@ module TestImpact
     def record(spec)
       spec = spec.delete_prefix("./")
       files = collect_files
-      if (loaded = @loaded.delete(spec))
-        loaded[:files].each { |path, ran| files[path] = (Array(files[path]) | ran).sort }
-        loaded[:notes].each { |kind, values| @notes[kind].merge(values) }
-      end
+      @loaded.delete(spec)&.each { |kind, values| @notes[kind].merge(values) }
       notes = @notes.transform_values { |values| values.to_a.sort }
       # What selecting the spec costs, recording included.
       seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started).round(2)
