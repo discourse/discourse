@@ -625,7 +625,10 @@ class UsersController < ApplicationController
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = target_user&.email
-    email = params[:email] if !email && !SiteSetting.hide_email_address_taken?
+    if !email && !SiteSetting.hide_email_address_taken?
+      email = params.permit(:email)[:email]
+      raise ActionController::ParameterMissing, :email if params.key?(:email) && email.nil?
+    end
     render json: checker.check_username(username, email)
   end
 
