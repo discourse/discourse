@@ -3408,15 +3408,8 @@ RSpec.describe SessionController do
   end
 
   describe "#create" do
-    [
-      { value: "myawesomepassword" },
-      ["myawesomepassword"],
-      719_384_625_018,
-      719_384_625.5,
-      true,
-      false,
-    ].each do |password|
-      it "rejects a non-string JSON password #{password.inspect} without logging in" do
+    shared_examples "a non-string JSON password" do |password|
+      it "rejects #{password.inspect} without logging in" do
         EmailToken.confirm(email_token.token)
         user.update!(password: password.to_s) if password.is_a?(Numeric)
 
@@ -3430,8 +3423,15 @@ RSpec.describe SessionController do
       end
     end
 
-    [nil, {}, []].each do |password|
-      it "rejects a missing or empty JSON password #{password.inspect} with a bad request" do
+    it_behaves_like "a non-string JSON password", { value: "myawesomepassword" }
+    it_behaves_like "a non-string JSON password", ["myawesomepassword"]
+    it_behaves_like "a non-string JSON password", 719_384_625_018
+    it_behaves_like "a non-string JSON password", 719_384_625.5
+    it_behaves_like "a non-string JSON password", true
+    it_behaves_like "a non-string JSON password", false
+
+    shared_examples "a missing or empty JSON password" do |password|
+      it "returns a bad request for #{password.inspect}" do
         post "/session.json", params: { login: user.username, password: }, as: :json
 
         expect(response.status).to eq(400)
@@ -3439,6 +3439,10 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to be_nil
       end
     end
+
+    it_behaves_like "a missing or empty JSON password", nil
+    it_behaves_like "a missing or empty JSON password", {}
+    it_behaves_like "a missing or empty JSON password", []
 
     context "when read only mode" do
       before do
