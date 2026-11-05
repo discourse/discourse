@@ -104,7 +104,7 @@ RSpec.describe "Blog publication panel", type: :request do
 
   it "keeps editorial state and diffs away from readers and unpublished topics" do
     publication = Blog::Publication.for_topic(topic)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
     discussion = publication.discussion_topic
 
     get "/t/#{discussion.id}.json"
@@ -141,13 +141,13 @@ RSpec.describe "Blog publication panel", type: :request do
   it "reports withdrawn articles and ignores unchanged re-submissions" do
     sign_in(admin)
     publication = Blog::Publication.for_topic(topic)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
 
-    publication.submit!(admin)
+    submit_blog_draft(publication, admin)
     get "/t/#{topic.id}.json"
     expect(response.parsed_body["blog_publication"]).to include("status" => "live", "changes" => [])
 
-    publication.unpublish!(admin)
+    unpublish_blog_article(publication, admin)
     get "/t/#{topic.id}.json"
     expect(response.parsed_body["blog_publication"]).to include(
       "status" => "unpublished",
@@ -157,7 +157,7 @@ RSpec.describe "Blog publication panel", type: :request do
 
   it "reports diffs that are too large instead of failing" do
     sign_in(admin)
-    Blog::Publication.for_topic(topic).publish!(admin)
+    publish_blog_draft(Blog::Publication.for_topic(topic), admin)
     first_post.revise(admin, raw: "A corrected article body ready for another release.")
     DiscourseDiff
       .any_instance

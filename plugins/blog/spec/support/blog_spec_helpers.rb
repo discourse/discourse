@@ -29,6 +29,78 @@ module BlogSpecHelpers
     ]
   end
 
+  # These save an unsaved publication's in-memory changes before running the
+  # service, then reload the given record.
+  def update_blog_metadata(publication, user, **metadata)
+    publication.save! if publication.new_record?
+    Blog::Publication::UpdateMetadata.call!(
+      params: {
+        topic_id: publication.topic_id,
+        metadata:,
+      },
+      guardian: user.guardian,
+    )
+    publication.reload
+  end
+
+  def prepare_blog_draft(publication, user)
+    publication.save! if publication.new_record?
+    Blog::Publication::PrepareDraft.call!(
+      params: {
+        topic_id: publication.topic_id,
+      },
+      guardian: user.guardian,
+    )
+    publication.reload.editorial_topic
+  end
+
+  def submit_blog_draft(publication, user)
+    publication.save! if publication.new_record?
+    revision =
+      Blog::Publication::Submit.call!(
+        params: {
+          topic_id: publication.topic_id,
+        },
+        guardian: user.guardian,
+      )[
+        :revision
+      ]
+    publication.reload
+    revision
+  end
+
+  def approve_blog_revision(publication, revision, user)
+    Blog::Publication::Approve.call!(
+      params: {
+        topic_id: publication.topic_id,
+        revision_id: revision.id,
+      },
+      guardian: user.guardian,
+    )
+    publication.reload
+  end
+
+  def publish_blog_draft(publication, user)
+    publication.save! if publication.new_record?
+    Blog::Publication::Publish.call!(
+      params: {
+        topic_id: publication.topic_id,
+      },
+      guardian: user.guardian,
+    )
+    publication.reload
+  end
+
+  def unpublish_blog_article(publication, user)
+    Blog::Publication::Unpublish.call!(
+      params: {
+        topic_id: publication.topic_id,
+      },
+      guardian: user.guardian,
+    )
+    publication.reload
+  end
+
   def activate_blog_theme(theme, user:)
     Blog::BlogTheme::Activate.call!(
       params: {

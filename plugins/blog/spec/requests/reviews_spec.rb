@@ -94,7 +94,7 @@ RSpec.describe "External draft review", type: :request do
     delete "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{manual["id"]}.json"
 
     publication = Blog::Publication.for_topic(topic)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
 
     get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
     entries = response.parsed_body["reviews"].index_by { |entry| entry["id"] }
@@ -193,7 +193,7 @@ RSpec.describe "External draft review", type: :request do
     expect(response.parsed_body["feedback"].first["message"]).to eq(message)
     get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
     expect(response.parsed_body["reviews"].first["feedback_count"]).to eq(1)
-    Blog::Publication.for_topic(topic).publish!(admin)
+    publish_blog_draft(Blog::Publication.for_topic(topic), admin)
     expect(Blog::Review.find(review["id"]).revoked_at).to be_present
     get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
