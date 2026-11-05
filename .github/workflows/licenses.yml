@@ -18,7 +18,8 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim
+    # Keep this release branch on the last working Ruby 3.4.10 image.
+    container: discourse/discourse_test:slim@sha256:122f143947a6c8d0de5cbb81c5fed6b71b68e1fd6c6c10b84878be1859f7870c
     timeout-minutes: 10
 
     steps:

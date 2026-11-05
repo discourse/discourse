@@ -34,7 +34,8 @@ jobs:
         )
         || 'ubuntu-latest'
       }}
-    container: discourse/discourse_test:release
+    # Keep this release branch on the last working Ruby 3.4.10 image.
+    container: discourse/discourse_test:release@sha256:b8878f0ce322b01cd9bbc8a789cf2c11e8a953c39013248c41230ccc384ad5e3
     services:
       minio:
         image: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'bitnami/minio@sha256:50cec18ac4184af4671a78aedd5554942c8ae105d51a465fa82037949046da01' || '' }}
