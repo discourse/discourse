@@ -35,6 +35,8 @@ module JsonApiKit
 
         def writable_attributes = declared_attributes.select(&:writable?)
 
+        def writable_relationships = declared_relationships.select(&:writable?)
+
         def relationships = Declarations::Relationships.new(declared_relationships)
 
         def related_resource(name)
@@ -72,6 +74,7 @@ module JsonApiKit
 
       delegate :attribute_names,
                :writable_attributes,
+               :writable_relationships,
                :relationships,
                :fields,
                :resolves?,

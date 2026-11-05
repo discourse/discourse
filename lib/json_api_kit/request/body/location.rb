@@ -15,14 +15,16 @@ module JsonApiKit
 
         def value
           return document if root?
-          parent.value[path.last] if parent.object?
+          parent.value.then { |container| container[path.last] if member_of?(container) }
         end
 
-        def supplied? = root? || (parent.object? && parent.value.key?(path.last))
+        def supplied? = root? || member_of?(parent.value)
 
         def object? = value.is_a?(Hash)
 
         def string? = value.is_a?(String)
+
+        def child(*members) = self.class.new(document, path + members)
 
         def name = root? ? "The document" : path.last
 
@@ -31,7 +33,7 @@ module JsonApiKit
           parent.nearest_existing
         end
 
-        def pointer = path.map { "/#{it.gsub("~", "~0").gsub("/", "~1")}" }.join
+        def pointer = path.map { "/#{it.to_s.gsub("~", "~0").gsub("/", "~1")}" }.join
 
         private
 
@@ -40,6 +42,17 @@ module JsonApiKit
         def root? = path.empty?
 
         def parent = @parent ||= self.class.new(document, path[...-1])
+
+        def member_of?(container)
+          case container
+          when Hash
+            container.key?(path.last)
+          when Array
+            path.last.is_a?(Integer) && path.last.between?(0, container.size - 1)
+          else
+            false
+          end
+        end
       end
     end
   end

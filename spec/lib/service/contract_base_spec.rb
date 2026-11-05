@@ -3,6 +3,98 @@
 RSpec.describe Service::ContractBase, type: :model do
   subject(:contract) { contract_class.new(params) }
 
+  describe "#provided?" do
+    subject(:contract) { contract_class.new(**params) }
+
+    let(:contract_class) do
+      Class.new(described_class) do
+        attribute :user_id, :integer
+        attribute :group_ids, :array
+        attribute :enabled, :boolean, default: true
+        attribute :settings
+      end
+    end
+    let(:params) { { user_id: "3" } }
+
+    it "recognizes a supplied attribute", :aggregate_failures do
+      expect(contract).to be_provided(:user_id)
+      expect(contract).to be_provided("user_id")
+    end
+
+    context "when the attribute is omitted" do
+      let(:params) { {} }
+
+      it "reports the attribute as omitted" do
+        expect(contract).not_to be_provided(:user_id)
+      end
+
+      it "does not treat a declaration default as supplied" do
+        expect(contract).not_to be_provided(:enabled)
+      end
+    end
+
+    context "when the supplied value is nil" do
+      let(:params) { { user_id: nil } }
+
+      it { is_expected.to be_provided(:user_id) }
+    end
+
+    context "when the supplied value is false" do
+      let(:params) { { enabled: false } }
+
+      it { is_expected.to be_provided(:enabled) }
+    end
+
+    context "when the supplied value is an empty array" do
+      let(:params) { { group_ids: [] } }
+
+      it { is_expected.to be_provided(:group_ids) }
+    end
+
+    context "when the supplied value is an empty hash" do
+      let(:params) { { settings: {} } }
+
+      it { is_expected.to be_provided(:settings) }
+    end
+
+    context "when coercion produces nil" do
+      let(:params) { { user_id: "" } }
+
+      it "retains the supplied attribute's presence", :aggregate_failures do
+        expect(contract.user_id).to be_nil
+        expect(contract).to be_provided(:user_id)
+      end
+    end
+
+    context "when the input has string keys" do
+      let(:params) { super().stringify_keys }
+
+      it { is_expected.to be_provided(:user_id) }
+    end
+
+    context "when a positional hash supplies the input" do
+      subject(:contract) { contract_class.new(params) }
+
+      it { is_expected.to be_provided(:user_id) }
+    end
+
+    context "when the supplied attribute is undeclared" do
+      let(:params) { super().merge(unknown: "ignored") }
+
+      it "excludes the undeclared attribute" do
+        expect(contract).not_to be_provided(:unknown)
+      end
+    end
+
+    context "when the contract later assigns an omitted attribute" do
+      before { contract.enabled = false }
+
+      it "preserves the original omission" do
+        expect(contract).not_to be_provided(:enabled)
+      end
+    end
+  end
+
   describe "Nested attributes" do
     let(:contract_class) do
       Class.new(described_class) do
@@ -48,6 +140,14 @@ RSpec.describe Service::ContractBase, type: :model do
       }
     end
     let(:created_at) { Time.zone.parse("2025-12-25 00:00") }
+
+    context "when nested input contains an undeclared metadata name" do
+      let(:params) { super().deep_merge(user: { provided_attributes: "unexpected" }) }
+
+      it "accepts the declared attributes" do
+        expect(contract).to be_valid
+      end
+    end
 
     context "when nested containers are frozen" do
       subject(:contract) { contract_class.new(**params) }

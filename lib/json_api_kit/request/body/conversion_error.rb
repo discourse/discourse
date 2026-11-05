@@ -10,7 +10,7 @@ module JsonApiKit
           super(error.message)
         end
 
-        delegate :title, :detail, to: :error
+        delegate :title, :detail, :status, to: :error
 
         def source = { pointer: location.nearest_existing.pointer }
 
