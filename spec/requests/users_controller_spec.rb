@@ -2371,6 +2371,28 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
     end
 
+    it "rejects an array email when checking username availability" do
+      SiteSetting.hide_email_address_taken = false
+      Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"])
+
+      get "/u/check_username.json",
+          params: {
+            username: "someuser98767",
+            email: ["dev@example.com"],
+          }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "allows an empty email when checking username availability" do
+      SiteSetting.hide_email_address_taken = false
+
+      get "/u/check_username.json", params: { username: "someuser98767", email: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("available" => true, "is_developer" => false)
+    end
+
     context "when username is available" do
       before { get "/u/check_username.json", params: { username: "BruceWayne" } }
       include_examples "when username is available"
