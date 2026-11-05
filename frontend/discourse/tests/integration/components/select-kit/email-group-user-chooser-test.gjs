@@ -219,7 +219,15 @@ module(
     });
 
     test("pasting", async function (assert) {
-      await render(<template><EmailGroupUserChooser /></template>);
+      this.set("onChange", (value) => this.set("value", value));
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @onChange={{this.onChange}}
+            @value={{this.value}}
+          />
+        </template>
+      );
 
       await this.subject.expand();
       await paste(".filter-input", "foo,bar");

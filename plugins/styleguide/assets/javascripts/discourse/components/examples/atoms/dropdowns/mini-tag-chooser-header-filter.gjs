@@ -1,15 +1,26 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 
-const TAGS = ["apple", "orange", "potato"];
+export default class MiniTagChooserHeaderFilterExample extends Component {
+  @tracked tags = ["apple", "orange", "potato"];
 
-export default <template>
-  <MiniTagChooser
-    @options={{hash
-      filterable=true
-      filterPlaceholder="tagging.choose_for_topic"
-      useHeaderFilter=true
-    }}
-    @value={{TAGS}}
-  />
-</template>
+  @action
+  onChange(tags) {
+    this.tags = tags;
+  }
+
+  <template>
+    <MiniTagChooser
+      @onChange={{this.onChange}}
+      @options={{hash
+        filterable=true
+        filterPlaceholder="tagging.choose_for_topic"
+        useHeaderFilter=true
+      }}
+      @value={{this.tags}}
+    />
+  </template>
+}
