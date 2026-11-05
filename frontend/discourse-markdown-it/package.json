@@ -18,7 +18,7 @@
     "src"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.10.3",
+    "@embroider/addon-shim": "^1.11.0",
     "discourse-i18n": "workspace:1.0.0",
     "markdown-it": "^15.0.3",
     "pretty-text": "workspace:1.0.0",
