@@ -235,8 +235,8 @@ export default class LivestreamZoomPage extends Component {
 
         {{#if this.currentUser}}
           <LivestreamPauseNotificationsPrompt
-            @event={{this.event}}
             @hidden={{this.errorMessage}}
+            @topicId={{@topic.id}}
           />
         {{/if}}
       {{else}}

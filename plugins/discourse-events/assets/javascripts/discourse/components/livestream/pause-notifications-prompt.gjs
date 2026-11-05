@@ -2,15 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-// An event without an end time has nothing to pause until, and leaving the page
-// is what normally ends the pause, so this only bounds a tab left open.
-const OPEN_ENDED_PAUSE_MINUTES = 180;
+const PAUSE_URL = "/discourse-calendar/livestream/notification-pause";
 
 export default class LivestreamPauseNotificationsPrompt extends Component {
   @service currentUser;
@@ -20,36 +19,29 @@ export default class LivestreamPauseNotificationsPrompt extends Component {
   @tracked answered = false;
   @tracked pausing = false;
 
-  // Only a pause started here is lifted on the way out: one the user already
-  // had is theirs to end.
-  #pausedHere = false;
-  #pauseRequest = null;
+  // Identifies the pause started here, so leaving ends that one alone and the
+  // server can order the two even when leaving overtakes starting.
+  #pauseKey = null;
 
   constructor() {
     super(...arguments);
 
     // Leaving the meeting, or closing the tab, is a full page load, which never
     // tears the component down.
-    window.addEventListener("pagehide", this.liftOnUnload);
+    window.addEventListener("pagehide", this.resumeOnUnload);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
-    window.removeEventListener("pagehide", this.liftOnUnload);
+    window.removeEventListener("pagehide", this.resumeOnUnload);
 
-    if (!this.#pausedHere) {
-      return;
+    const pauseKey = this.#takePauseKey();
+
+    if (pauseKey) {
+      // A failure is left alone: the pause still ends with the event.
+      ajax(this.#resumeUrl(pauseKey), { type: "DELETE" }).catch(() => {});
     }
-
-    this.#pausedHere = false;
-
-    // Waits out a pause still being saved, which would otherwise land after
-    // the lift and stay on. A failure is left alone: the pause still expires
-    // with the event.
-    Promise.resolve(this.#pauseRequest)
-      .then(() => this.currentUser.leaveDoNotDisturb())
-      .catch(() => {});
   }
 
   // Someone already in do not disturb has answered the question for themselves.
@@ -61,39 +53,23 @@ export default class LivestreamPauseNotificationsPrompt extends Component {
     );
   }
 
-  // Bounds the pause by the event as scheduled when it starts, so it does not
-  // outlive the meeting even when the page is never left.
-  get pauseMinutes() {
-    const { allDay, startsAt, endsAt } = this.args.event ?? {};
-    let pauseEndsAt;
-
-    if (allDay) {
-      pauseEndsAt = moment(endsAt || startsAt).endOf("day");
-    } else if (endsAt) {
-      pauseEndsAt = moment(endsAt);
-    } else {
-      return OPEN_ENDED_PAUSE_MINUTES;
-    }
-
-    return Math.max(1, Math.ceil(pauseEndsAt.diff(moment(), "minutes", true)));
-  }
-
   @action
   async pause() {
     this.pausing = true;
-    this.#pausedHere = true;
-    this.#pauseRequest = this.currentUser.enterDoNotDisturbFor(
-      this.pauseMinutes
-    );
+    this.#pauseKey = crypto.randomUUID();
 
     try {
-      await this.#pauseRequest;
+      const response = await ajax(`${PAUSE_URL}.json`, {
+        type: "POST",
+        data: { topic_id: this.args.topicId, pause_key: this.#pauseKey },
+      });
+
+      this.currentUser.updateDoNotDisturbStatus(response.ends_at);
       this.answered = true;
     } catch (e) {
-      this.#pausedHere = false;
+      this.#pauseKey = null;
       popupAjaxError(e);
     } finally {
-      this.#pauseRequest = null;
       this.pausing = false;
     }
   }
@@ -104,18 +80,28 @@ export default class LivestreamPauseNotificationsPrompt extends Component {
   }
 
   @bind
-  liftOnUnload() {
-    if (!this.#pausedHere) {
+  resumeOnUnload() {
+    const pauseKey = this.#takePauseKey();
+
+    if (!pauseKey) {
       return;
     }
 
-    this.#pausedHere = false;
-
-    fetch(getURL("/do-not-disturb.json"), {
+    fetch(getURL(this.#resumeUrl(pauseKey)), {
       method: "DELETE",
       keepalive: true,
       headers: { "X-CSRF-Token": this.session.csrfToken },
     });
+  }
+
+  #takePauseKey() {
+    const pauseKey = this.#pauseKey;
+    this.#pauseKey = null;
+    return pauseKey;
+  }
+
+  #resumeUrl(pauseKey) {
+    return `${PAUSE_URL}/${pauseKey}.json`;
   }
 
   <template>
