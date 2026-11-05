@@ -10,6 +10,28 @@ module DiscoursePostEvent
     end
 
     describe "#index" do
+      it "rejects JSON listings more than ten years ahead" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(:event, original_starts_at: 1.day.from_now, recurrence: "every_two_weeks")
+
+        get "/discourse-post-event/events.json", params: { after: "2200-01-01", limit: 200 }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects ICS listings more than ten years ahead" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(:event, original_starts_at: 1.day.from_now, recurrence: "every_two_weeks")
+
+        get "/discourse-post-event/events.ics",
+            params: {
+              after: "2200-01-01",
+              before: "2201-01-01",
+            }
+
+        expect(response.status).to eq(400)
+      end
+
       it "should not result in N+1 queries problem when multiple events are returned" do
         # Warmup
         get "/discourse-post-event/events.json"
