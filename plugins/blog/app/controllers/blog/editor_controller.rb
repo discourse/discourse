@@ -9,7 +9,6 @@ module ::Blog
     requires_login except: [:index]
     before_action :ensure_blog_editor, except: :index
     before_action :ensure_discussion_host
-    before_action :find_topic, only: %i[show changes schedule cancel_schedule preview]
     skip_before_action :check_xhr, only: %i[index preview]
 
     def index
@@ -63,7 +62,7 @@ module ::Blog
     end
 
     def show
-      render json: serialize_publication(@publication)
+      render json: serialize_publication(find_editable_publication)
     end
 
     def update
@@ -88,7 +87,7 @@ module ::Blog
 
     def publish
       Publication::Publish.call(service_params) do
-        on_success { |revision:| render json: serialize_publication(revision.publication) }
+        on_success { |publication:| render json: serialize_publication(publication) }
         on_failed_contract do |contract|
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
@@ -105,13 +104,25 @@ module ::Blog
           raise Discourse::InvalidParameters.new(step.error)
         end
         on_model_not_found(:revision) { raise Discourse::NotFound }
+        on_failed_policy(:revision_awaits_release) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.stale"))
+        end
+        on_model_not_found(:working_copy) { raise Discourse::InvalidAccess }
+        on_failed_policy(:releasable) { raise Discourse::InvalidAccess }
+        on_failed_policy(:not_published_as_page) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.errors.published_page"))
+        end
+        on_exceptions(ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved) do |exception|
+          raise exception
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
 
     def changes
-      source = @publication.editorial_topic
-      live = @publication.published_revision
+      publication = find_editable_publication
+      source = publication.editorial_topic
+      live = publication.published_revision
       raise Discourse::NotFound unless live && source&.first_post
 
       title_diff =
@@ -189,17 +200,36 @@ module ::Blog
     end
 
     def schedule
-      @publication.schedule!(
-        current_user,
-        revision_id: params.require(:revision_id).to_i,
-        at: params.require(:scheduled_at),
-      )
-      render json: serialize_publication(@publication)
+      Publication::Schedule.call(service_params) do
+        on_success { |publication:| render json: serialize_publication(publication) }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_not_found(:publication) { raise Discourse::NotFound }
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_model_not_found(:revision) { raise Discourse::NotFound }
+        on_failed_policy(:revision_is_approved) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.approval_required"))
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def cancel_schedule
-      @publication.cancel_schedule!(current_user)
-      head :no_content
+      Publication::CancelSchedule.call(service_params) do
+        on_success { head :no_content }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_not_found(:publication) { raise Discourse::NotFound }
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def destroy
@@ -209,9 +239,7 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
-        on_model_errors(:publication) do |publication|
-          raise ActiveRecord::RecordInvalid.new(publication)
-        end
+        on_model_not_found(:publication) { raise Discourse::NotFound }
         on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
@@ -224,9 +252,7 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
-        on_model_errors(:publication) do |publication|
-          raise ActiveRecord::RecordInvalid.new(publication)
-        end
+        on_model_not_found(:publication) { raise Discourse::NotFound }
         on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
         on_failed_policy(:blog_ready) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
@@ -237,6 +263,8 @@ module ::Blog
     end
 
     def preview
+      @publication = find_editable_publication
+      @topic = @publication.topic
       @preview = true
       @canonical_url = @publication.url
       source = @publication.editable_topic
@@ -263,11 +291,10 @@ module ::Blog
       raise Discourse::NotFound if Configuration.blog_host?(request)
     end
 
-    def find_topic
-      requested = Topic.find(params[:topic_id])
-      @publication = Publication.for_topic(requested)
-      @topic = @publication.topic
-      guardian.ensure_can_edit_blog_topic!(@publication.editable_topic)
+    def find_editable_publication
+      publication = Publication.for_topic(Topic.find(params[:topic_id]))
+      guardian.ensure_can_edit_blog_topic!(publication.editable_topic)
+      publication
     end
 
     def serialize_publication(publication, **options)

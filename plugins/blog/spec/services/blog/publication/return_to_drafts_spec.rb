@@ -40,6 +40,19 @@ RSpec.describe Blog::Publication::ReturnToDrafts do
       it { is_expected.to fail_to_find_a_model(:topic) }
     end
 
+    context "when the topic was never published" do
+      fab!(:untracked) { Fabricate(:topic, category:, user: writer) }
+      fab!(:untracked_post) { Fabricate(:post, topic: untracked, user: writer) }
+
+      let(:params) { { topic_id: untracked.id } }
+
+      it "leaves no publication or working copy behind" do
+        expect { result }.not_to change { Topic.count }
+        expect(result).to fail_to_find_a_model(:publication)
+        expect(Blog::Publication.where(topic: untracked)).not_to exist
+      end
+    end
+
     context "when the user is not a publisher" do
       fab!(:acting_user) { writer }
 

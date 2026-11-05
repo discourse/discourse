@@ -38,10 +38,6 @@ RSpec.describe Blog::GuardianExtensions do
     SiteSetting.blog_editor_groups = editors.id.to_s
   end
 
-  def while_publishing(topic, &)
-    Blog::Current.set(publishing_topic_id: topic.id, &)
-  end
-
   def share_drafts_with(group)
     drafts.set_permissions(
       :staff => :full,
@@ -54,39 +50,10 @@ RSpec.describe Blog::GuardianExtensions do
 
   describe "#can_edit_post?" do
     context "with the first post of a published article" do
-      it "denies even admins outside of publishing" do
+      it "denies everyone, including admins" do
         expect(admin.guardian.can_edit_post?(article_post)).to eq(false)
-      end
-
-      it "allows a publisher while that topic is being published" do
-        while_publishing(article) do
-          expect(admin.guardian.can_edit_post?(article_post)).to eq(true)
-        end
-      end
-
-      it "denies a publisher while a different topic is being published" do
-        while_publishing(admin_draft) do
-          expect(admin.guardian.can_edit_post?(article_post)).to eq(false)
-        end
-      end
-
-      it "denies editors and anonymous users while the topic is being published" do
-        while_publishing(article) do
-          expect(editor.guardian.can_edit_post?(article_post)).to eq(false)
-          expect(Guardian.new.can_edit?(article_post)).to eq(false)
-        end
-      end
-
-      it "denies a publisher who cannot see the topic" do
-        publishers = Fabricate(:group)
-        publisher = Fabricate(:user, groups: [publishers])
-        SiteSetting.blog_publisher_groups = publishers.id.to_s
-        category.set_permissions(staff: :full)
-        category.save!
-
-        while_publishing(article) do
-          expect(publisher.guardian.can_edit_post?(article_post)).to eq(false)
-        end
+        expect(editor.guardian.can_edit_post?(article_post)).to eq(false)
+        expect(Guardian.new.can_edit?(article_post)).to eq(false)
       end
 
       it "falls back to core rules when the blog is disabled" do
@@ -249,25 +216,10 @@ RSpec.describe Blog::GuardianExtensions do
 
   describe "#can_edit_topic?" do
     context "with a published article's topic" do
-      it "denies even admins outside of publishing" do
+      it "denies everyone, including admins" do
         expect(admin.guardian.can_edit_topic?(article)).to eq(false)
-      end
-
-      it "allows a publisher while that topic is being published" do
-        while_publishing(article) { expect(admin.guardian.can_edit_topic?(article)).to eq(true) }
-      end
-
-      it "denies a publisher while a different topic is being published" do
-        while_publishing(admin_draft) do
-          expect(admin.guardian.can_edit_topic?(article)).to eq(false)
-        end
-      end
-
-      it "denies editors and anonymous users while the topic is being published" do
-        while_publishing(article) do
-          expect(editor.guardian.can_edit_topic?(article)).to eq(false)
-          expect(Guardian.new.can_edit?(article)).to eq(false)
-        end
+        expect(editor.guardian.can_edit_topic?(article)).to eq(false)
+        expect(Guardian.new.can_edit?(article)).to eq(false)
       end
 
       it "falls back to core rules when the blog is disabled" do

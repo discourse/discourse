@@ -5,13 +5,13 @@ module ::Blog
     def can_edit_post?(post)
       return super if !post.is_first_post?
       topic = post.topic
-      return can_edit_published_blog_discussion?(topic) if topic&.blog_published_discussion?
+      return false if topic&.blog_published_discussion?
       return true if can_edit_blog_draft_post?(post)
       super
     end
 
     def can_edit_topic?(topic)
-      return can_edit_published_blog_discussion?(topic) if topic&.blog_published_discussion?
+      return false if topic&.blog_published_discussion?
       return true if can_edit_blog_draft_topic?(topic)
       super
     end
@@ -44,12 +44,6 @@ module ::Blog
     end
 
     private
-
-    def can_edit_published_blog_discussion?(topic)
-      return false if !Blog::Current.publishing_topic?(topic.id)
-      return false if !is_blog_publisher?
-      can_see?(topic)
-    end
 
     def can_edit_blog_draft_post?(post)
       return false if !can_edit_blog_draft?(post.topic)
