@@ -48,6 +48,26 @@ RSpec.describe InviteSerializer do
 
       expect(json[:topics]).to eq([])
     end
+
+    it "filters groups by guardian visibility" do
+      hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+      invite = Fabricate(:invite, invited_by: user)
+      InvitedGroup.create!(invite: invite, group: hidden_group)
+
+      json = InviteSerializer.new(invite, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:groups]).to eq([])
+    end
+
+    it "includes groups the viewer can see" do
+      visible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:public])
+      invite = Fabricate(:invite, invited_by: user)
+      InvitedGroup.create!(invite: invite, group: visible_group)
+
+      json = InviteSerializer.new(invite, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:groups].map { |g| g[:id] }).to eq([visible_group.id])
+    end
   end
 
   describe "#can_delete_invite" do

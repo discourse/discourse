@@ -7693,6 +7693,37 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(403)
         end
       end
+
+      context "when inviting via email with group_ids the inviter cannot see" do
+        fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
+        fab!(:hidden_group) do
+          Fabricate(
+            :group,
+            name: "secret-cabal",
+            full_name: "Secret Cabal",
+            visibility_level: Group.visibility_levels[:owners],
+          )
+        end
+        fab!(:tl2_pm) { Fabricate(:private_message_topic, user: tl2_user) }
+
+        it "does not leak hidden group metadata back to the inviter" do
+          sign_in(tl2_user)
+
+          post "/t/#{tl2_pm.id}/invite.json",
+               params: {
+                 email: "invitee@example.com",
+                 group_ids: [hidden_group.id],
+               }
+
+          expect(response.status).to eq(200)
+
+          get "/u/#{tl2_user.username}/invited.json", params: { filter: "pending" }
+
+          expect(response.status).to eq(200)
+          expect(response.body).not_to include("secret-cabal")
+          expect(response.body).not_to include("Secret Cabal")
+        end
+      end
     end
   end
 
