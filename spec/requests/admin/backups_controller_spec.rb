@@ -217,6 +217,169 @@ RSpec.describe Admin::BackupsController do
         expect(response.headers["Content-Disposition"]).to match(/attachment; filename/)
       end
 
+      it "does not allow resuming a local backup download when resume is disabled" do
+        expect(SiteSetting.backup_download_resume_window).to eq(
+          BackupDownloadResumeWindowSiteSetting::DISABLED,
+        )
+
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        expect(response.status).to eq(200)
+
+        get "/admin/backups/#{backup_filename}.json",
+            params: {
+              token: token,
+            },
+            headers: {
+              "Range" => "bytes=5-",
+            }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "does not allow reusing a token for another full backup download" do
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
+
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        expect(response.status).to eq(200)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "does not allow resuming a different backup with the same token" do
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
+
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename, backup_filename2)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        expect(response.status).to eq(200)
+
+        get "/admin/backups/#{backup_filename2}.json",
+            params: {
+              token: token,
+            },
+            headers: {
+              "Range" => "bytes=5-",
+            }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "allows resuming a local backup download with a range request" do
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
+
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        expect(response.status).to eq(200)
+
+        get "/admin/backups/#{backup_filename}.json",
+            params: {
+              token: token,
+            },
+            headers: {
+              "Range" => "bytes=5-",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Content-Disposition"]).to match(/attachment; filename/)
+      end
+
+      it "logs a resumed backup download only once" do
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
+
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
+
+        expect do
+          get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        end.to change { UserHistory.where(action: UserHistory.actions[:backup_download]).count }.by(
+          1,
+        )
+
+        expect do
+          get "/admin/backups/#{backup_filename}.json",
+              params: {
+                token: token,
+              },
+              headers: {
+                "Range" => "bytes=5-",
+              }
+        end.not_to change { UserHistory.where(action: UserHistory.actions[:backup_download]).count }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "stops allowing resume when the setting is disabled" do
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
+
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        expect(response.status).to eq(200)
+
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::DISABLED
+
+        get "/admin/backups/#{backup_filename}.json",
+            params: {
+              token: token,
+            },
+            headers: {
+              "Range" => "bytes=5-",
+            }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "does not create a resume grant for a remote backup" do
+        setup_s3
+        SiteSetting.s3_backup_bucket = "test-backup-bucket"
+        SiteSetting.backup_location = BackupLocationSiteSetting::S3
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
+
+        token = EmailBackupToken.set(admin.id)
+        source = "https://example.com/backups/#{backup_filename}?presigned=true"
+        backup =
+          BackupFile.new(
+            filename: backup_filename,
+            size: 11,
+            last_modified: Time.zone.now,
+            source: source,
+          )
+
+        store = instance_double(BackupRestore::BackupStore, remote?: true)
+        allow(store).to receive(:file).with(
+          backup_filename,
+          include_download_source: true,
+        ).and_return(backup)
+        allow(BackupRestore::BackupStore).to receive(:create).and_return(store)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+
+        expect(response).to redirect_to(source)
+        expect(BackupDownloadResumeToken.compare(admin.id, backup_filename, token)).to eq(false)
+
+        get "/admin/backups/#{backup_filename}.json",
+            params: {
+              token: token,
+            },
+            headers: {
+              "Range" => "bytes=5-",
+            }
+
+        expect(response.status).to eq(422)
+      end
+
       it "returns 422 when token is bad" do
         get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }
 
