@@ -76,6 +76,9 @@ module(
       );
 
       assert
+        .dom(".design-wizard__theme-cards legend")
+        .hasText("Choose a theme", "labels the group of themes");
+      assert
         .dom(
           ".design-wizard__theme-card input[type='radio'][name='design-wizard-theme']"
         )
