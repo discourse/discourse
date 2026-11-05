@@ -5,6 +5,49 @@ RSpec.describe Jobs::ProcessPost do
     expect { Jobs::ProcessPost.new.execute(post_id: 1) }.not_to raise_error
   end
 
+  describe "deferred thumbnails" do
+    fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
+    fab!(:post) { Fabricate(:post, raw: "<img src=\"#{upload.url}\">") }
+
+    before do
+      SiteSetting.max_image_height = 2000
+      SiteSetting.create_thumbnails = true
+    end
+
+    around do |example|
+      stub_const(CookedProcessorMixin, :INLINE_THUMBNAIL_IMAGE_LIMIT, 0) { example.run }
+    end
+
+    it "publishes the lightboxed post with the original image and enqueues thumbnail generation" do
+      expect_enqueued_with(
+        job: :create_post_image_thumbnails,
+        args: {
+          post_id: post.id,
+          thumbnails: [
+            { upload_id: upload.id, width: 690, height: 788, crop: false },
+            { upload_id: upload.id, width: 1035, height: 1182, crop: false },
+            { upload_id: upload.id, width: 1380, height: 1576, crop: false },
+          ],
+        },
+      ) { Jobs::ProcessPost.new.execute(post_id: post.id, new_post: true) }
+
+      image =
+        Nokogiri::HTML5.fragment(post.reload.cooked).at_css(".lightbox-wrapper a.lightbox img")
+      expect(image["src"]).to eq("//test.localhost#{upload.url}")
+      expect(upload.thumbnail(690, 788)).to be_nil
+    end
+
+    it "generates thumbnails inline when deferral is disabled" do
+      expect_not_enqueued_with(job: :create_post_image_thumbnails) do
+        Jobs::ProcessPost.new.execute(post_id: post.id, defer_thumbnails: false)
+      end
+
+      image =
+        Nokogiri::HTML5.fragment(post.reload.cooked).at_css(".lightbox-wrapper a.lightbox img")
+      expect(image["src"]).to eq("//test.localhost#{upload.thumbnail(690, 788).url}")
+    end
+  end
+
   context "with a post" do
     fab!(:post)
 
