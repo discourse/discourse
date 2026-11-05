@@ -43,9 +43,11 @@ jobs:
           MINIO_ROOT_PASSWORD: minioadmin
           MINIO_DEFAULT_BUCKETS: discoursetest
           MINIO_DOMAIN: minio.local
+    # Recording for test impact (script/test_impact) can take half again as long.
     timeout-minutes: >-
       ${{
-        matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
+        contains(github.event.pull_request.labels.*.name, 'test-impact-record') && 40
+        || matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
         && 30
         || 20
       }}
