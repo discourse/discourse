@@ -128,7 +128,7 @@ export default class DesignWizardPanel extends Component {
       {{/if}}
       <aside
         aria-hidden={{if this.hidden "true"}}
-        aria-labelledby="design-wizard-title"
+        aria-label={{i18n "design_wizard.title"}}
         class={{dConcatClass
           "design-wizard"
           (unless this.designWizard.animateEntrance "--no-entrance")

@@ -310,38 +310,22 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
 
-    it "uses one palette for both modes when the other mode is set to none" do
+    it "saves a light only site" do
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
+      expect(design_wizard_panel).to have_palette_mode("both")
       expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
       expect(design_wizard_panel).to have_selected_palette("default", mode: "dark")
-      expect(design_wizard_panel).to have_palette_row_status("Site default", mode: "light")
+      expect(design_wizard_panel).to have_selected_palette_name("Default", mode: "light")
 
       design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.select_palette_mode("light")
 
-      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
-
-      design_wizard_panel.select_palette("none", mode: "light")
-
-      expect(design_wizard_panel).to have_selected_palette("none", mode: "light")
-      expect(design_wizard_panel).to have_palette_row_status("Off", mode: "light")
-      expect(design_wizard_panel).to have_palette_row_status("Used for both modes", mode: "dark")
-      expect(design_wizard_panel).to have_disabled_palette("none", mode: "dark")
-      expect(design_wizard_panel).to have_single_palette_note("Dracula")
+      expect(design_wizard_panel).to have_no_palette_row(mode: "dark")
 
       design_wizard_panel.select_palette("solarized", mode: "light")
-
-      expect(design_wizard_panel).to have_selected_palette("solarized", mode: "light")
-      expect(design_wizard_panel).to have_selected_palette("dracula", mode: "dark")
-      expect(design_wizard_panel).to have_no_single_palette_note
-
-      design_wizard_panel.select_palette("none", mode: "dark")
-
-      expect(design_wizard_panel).to have_palette_row_status("Off", mode: "dark")
-      expect(design_wizard_panel).to have_single_palette_note("Solarized")
-
       design_wizard_panel.next_step
       design_wizard_panel.save
 
@@ -353,13 +337,16 @@ describe "Admin Onboarding Banner" do
       expect(theme.dark_color_scheme_id).to be_nil
     end
 
-    it "saves the dark palette for both modes when light mode is none" do
+    it "saves the dark palette for both modes on a dark only site" do
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
+      design_wizard_panel.select_palette_mode("dark")
+
+      expect(design_wizard_panel).to have_no_palette_row(mode: "light")
+
       design_wizard_panel.select_palette("dracula", mode: "dark")
-      design_wizard_panel.select_palette("none", mode: "light")
       design_wizard_panel.next_step
       design_wizard_panel.save
 

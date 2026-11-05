@@ -678,9 +678,18 @@ en:
         keep: "Keep changes"
         revert: "Revert changes"
         continue_editing: "Continue editing"
+      steps:
+        theme:
+          title: "Choose a theme"
+          description: "Pick the overall look for your site. You can fine-tune it in the next steps."
+        colors:
+          title: "Make it yours"
+          description: "Choose your site's colors and fonts."
+        homepage:
+          title: "Site layout"
+          description: "Choose what members see first and how they find their way around."
       sections:
-        theme: "Theme"
-        colors: "Default colors"
+        colors: "Site color modes"
         fonts: "Fonts"
         homepage: "Homepage"
         welcome_banner: "Welcome banner"
@@ -690,19 +699,17 @@ en:
         applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
-        description: "Members see light or dark mode based on their device setting or their preferences."
-        light_mode: "Light mode"
-        dark_mode: "Dark mode"
-        light_mode_group: "Light mode palette"
-        dark_mode_group: "Dark mode palette"
-        site_default: "Site default"
-        mode_off: "Off"
-        used_for_both_modes: "Used for both modes"
-        none: "None"
-        single_palette_note: "%{name} is used in both light and dark mode, unless members pick a different palette in their preferences."
+        description: "Set a default palette for each mode. Members' appearance preferences determine which one they see."
+        light_palette: "Light palette"
+        dark_palette: "Dark palette"
+        modes:
+          label: "Color modes"
+          both: "Light & dark"
+          light: "Light only"
+          dark: "Dark only"
       fonts:
-        base_font: "Base font"
-        heading_font: "Heading font"
+        base_font: "Body"
+        heading_font: "Headings"
       homepage:
         topics: "Topics"
         categories: "Categories"

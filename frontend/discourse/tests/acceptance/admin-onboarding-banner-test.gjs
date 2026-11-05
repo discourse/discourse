@@ -588,7 +588,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .doesNotExist("theme cards are left behind on the colors step");
     assert
       .dom(
-        ".design-wizard__palette-row[data-mode='light'] .design-wizard__palette-card[data-pair-key]:not([data-pair-key='none'])"
+        ".design-wizard__palette-row[data-mode='light'] .design-wizard__palette-card"
       )
       .exists({ count: 1 }, "the colors step shows the theme's light palettes");
 

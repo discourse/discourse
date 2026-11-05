@@ -11,6 +11,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 const SCREENSHOT = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 const noop = () => {};
+const NO_PAIRS = [];
 
 const PAIRS = [
   {
@@ -148,13 +149,14 @@ module(
       await render(
         <template>
           <ColorsSection
-            @darkOff={{false}}
             @darkPairs={{PAIRS}}
-            @lightOff={{false}}
             @lightPairs={{PAIRS}}
             @onSelectPalette={{select}}
+            @paletteMode="both"
             @selectedDarkKey="alternate"
             @selectedLightKey="default"
+            @showsDarkPalettes={{true}}
+            @showsLightPalettes={{true}}
           />
         </template>
       );
@@ -172,8 +174,11 @@ module(
         .dom(`${DARK} [data-pair-key='alternate']`)
         .hasAria("pressed", "true", "selects each row independently");
       assert
-        .dom(`${LIGHT} .design-wizard__palette-row-status`)
-        .hasText("Site default");
+        .dom(`${LIGHT} .design-wizard__palette-row-selected`)
+        .hasText("Default", "names the selected light palette");
+      assert
+        .dom(`${DARK} .design-wizard__palette-row-selected`)
+        .hasText("Alternate", "names the selected dark palette");
 
       assert
         .dom(
@@ -198,84 +203,70 @@ module(
       );
     });
 
-    test("turning a mode off uses the other mode's palette for both", async function (assert) {
+    test("the color mode control picks which rows are shown", async function (assert) {
       const darkPairs = [...PAIRS, DRACULA_PAIR];
-      const selections = [];
-      const select = (mode, key) => selections.push([mode, key]);
+      const modes = [];
+      const selectMode = (mode) => modes.push(mode);
 
       await render(
         <template>
           <ColorsSection
-            @darkOff={{false}}
             @darkPairs={{darkPairs}}
-            @lightOff={{true}}
-            @lightPairs={{PAIRS}}
-            @onSelectPalette={{select}}
-            @selectedDarkKey="dracula"
-            @singlePaletteName="Dracula"
-          />
-        </template>
-      );
-
-      const LIGHT = ".design-wizard__palette-row[data-mode='light']";
-      const DARK = ".design-wizard__palette-row[data-mode='dark']";
-
-      assert
-        .dom(`${LIGHT} [data-pair-key='none']`)
-        .hasAria("pressed", "true", "selects none for light mode")
-        .includesText("None");
-      assert
-        .dom(`${LIGHT} [data-pair-key='default']`)
-        .isEnabled("light palettes can still be picked")
-        .hasAria("pressed", "false");
-      assert.dom(`${LIGHT} .design-wizard__palette-row-status`).hasText("Off");
-      assert
-        .dom(`${DARK} .design-wizard__palette-row-status`)
-        .hasText("Used for both modes");
-      assert
-        .dom(`${DARK} [data-pair-key='none']`)
-        .isDisabled("both modes can't be off at once");
-      assert
-        .dom(".design-wizard__palette-note-region[aria-live='polite']")
-        .includesText(
-          "Dracula is used in both light and dark mode",
-          "announces the note"
-        );
-
-      await click(`${LIGHT} [data-pair-key='default']`);
-      assert.deepEqual(
-        selections,
-        [["light", "default"]],
-        "switches light mode back on"
-      );
-    });
-
-    test("each row offers none while the other mode has a palette", async function (assert) {
-      await render(
-        <template>
-          <ColorsSection
-            @darkOff={{false}}
-            @darkPairs={{PAIRS}}
-            @lightOff={{false}}
             @lightPairs={{PAIRS}}
             @onSelectPalette={{noop}}
-            @selectedDarkKey="default"
-            @selectedLightKey="default"
+            @onSelectPaletteMode={{selectMode}}
+            @paletteMode="dark"
+            @selectedDarkKey="dracula"
+            @showsDarkPalettes={{true}}
+            @showsLightPalettes={{false}}
           />
         </template>
       );
 
       assert
+        .dom(".design-wizard__palette-modes legend")
+        .hasText("Color modes", "labels the control");
+      assert
+        .dom(".design-wizard__palette-modes input[value='dark']")
+        .isChecked("reflects the selected mode");
+      assert
+        .dom(".design-wizard__palette-row[data-mode='light']")
+        .doesNotExist("hides the light row on a dark-only site");
+      assert
         .dom(
-          ".design-wizard__palette-card[data-pair-key='none']:not(:disabled)"
+          ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='dracula']"
         )
-        .exists({ count: 2 });
+        .hasAria("pressed", "true");
+
+      await click(".design-wizard__palette-modes input[value='both']");
+      assert.deepEqual(modes, ["both"], "reports the mode picked");
+    });
+
+    test("modes without palettes can't be picked", async function (assert) {
+      await render(
+        <template>
+          <ColorsSection
+            @darkPairs={{NO_PAIRS}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{noop}}
+            @onSelectPaletteMode={{noop}}
+            @paletteMode="light"
+            @selectedLightKey="default"
+            @showsDarkPalettes={{false}}
+            @showsLightPalettes={{true}}
+          />
+        </template>
+      );
+
       assert
-        .dom(".design-wizard__palette-card[data-pair-key='none']")
-        .hasAria("pressed", "false");
+        .dom(".design-wizard__palette-modes input[value='light']")
+        .isEnabled();
       assert
-        .dom(".design-wizard__palette-note")
-        .doesNotExist("shows no note while both modes have a palette");
+        .dom(".design-wizard__palette-modes input[value='both']")
+        .isDisabled();
+      assert
+        .dom(".design-wizard__palette-modes input[value='dark']")
+        .isDisabled();
     });
   }
 );

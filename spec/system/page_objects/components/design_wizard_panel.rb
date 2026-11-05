@@ -4,6 +4,7 @@ module PageObjects
   module Components
     class DesignWizardPanel < PageObjects::Components::Base
       WIZARD_SELECTOR = ".design-wizard"
+      PALETTE_MODES_SELECTOR = "#{WIZARD_SELECTOR}__palette-modes"
 
       def visible?
         has_css?(WIZARD_SELECTOR)
@@ -45,23 +46,23 @@ module PageObjects
         )
       end
 
-      def has_disabled_palette?(pair_key, mode:)
-        has_css?("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}[disabled]")
+      def select_palette_mode(mode)
+        palette_mode_input(mode).ancestor("label").click
       end
 
-      def has_palette_row_status?(text, mode:)
-        has_css?("#{palette_row_selector(mode)} #{WIZARD_SELECTOR}__palette-row-status", text:)
+      def has_palette_mode?(mode)
+        has_css?("#{PALETTE_MODES_SELECTOR} input[value='#{mode}']:checked", visible: :all)
       end
 
-      def has_single_palette_note?(name)
+      def has_no_palette_row?(mode:)
+        has_no_css?(palette_row_selector(mode))
+      end
+
+      def has_selected_palette_name?(name, mode:)
         has_css?(
-          "#{WIZARD_SELECTOR}__palette-note-region[aria-live='polite'] #{WIZARD_SELECTOR}__palette-note",
-          text: "#{name} is used in both light and dark mode",
+          "#{palette_row_selector(mode)} #{WIZARD_SELECTOR}__palette-row-selected",
+          exact_text: name,
         )
-      end
-
-      def has_no_single_palette_note?
-        has_no_css?("#{WIZARD_SELECTOR}__palette-note")
       end
 
       def has_palette?(pair_key, mode:)
@@ -150,6 +151,10 @@ module PageObjects
 
       def palette_card_selector(pair_key)
         "#{WIZARD_SELECTOR}__palette-card[data-pair-key='#{pair_key}']"
+      end
+
+      def palette_mode_input(mode)
+        find("#{PALETTE_MODES_SELECTOR} input[value='#{mode}']", visible: :all)
       end
 
       def palette_card(pair_key, mode:)

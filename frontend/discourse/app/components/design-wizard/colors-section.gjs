@@ -1,34 +1,55 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import { swatchStyle } from "discourse/lib/design-wizard-preview";
-import { NO_PALETTE_KEY } from "discourse/services/design-wizard";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { PALETTE_MODES } from "discourse/services/design-wizard";
 import { i18n } from "discourse-i18n";
 
-function paletteRowStatus(off, otherOff) {
-  if (off) {
-    return i18n("design_wizard.colors.mode_off");
-  }
-  return otherOff
-    ? i18n("design_wizard.colors.used_for_both_modes")
-    : i18n("design_wizard.colors.site_default");
+// a mode is only on offer when there are palettes for it
+function paletteModeItems(lightPairs, darkPairs) {
+  const noLight = !lightPairs?.length;
+  const noDark = !darkPairs?.length;
+
+  return [
+    {
+      value: PALETTE_MODES.both,
+      label: i18n("design_wizard.colors.modes.both"),
+      disabled: noLight || noDark,
+    },
+    {
+      value: PALETTE_MODES.light,
+      label: i18n("design_wizard.colors.modes.light"),
+      disabled: noLight,
+    },
+    {
+      value: PALETTE_MODES.dark,
+      label: i18n("design_wizard.colors.modes.dark"),
+      disabled: noDark,
+    },
+  ];
+}
+
+function selectedName(pairs, key) {
+  return pairs?.find((pair) => pair.key === key)?.name;
 }
 
 const PaletteRow = <template>
   <div
-    aria-label={{@groupLabel}}
+    aria-label={{@title}}
     class="design-wizard__palette-row"
     data-mode={{@mode}}
     role="group"
   >
     <div class="design-wizard__palette-row-header">
       <h4 class="design-wizard__palette-row-title">{{@title}}</h4>
-      <span class="design-wizard__palette-row-status">{{@status}}</span>
+      <span class="design-wizard__palette-row-selected">
+        {{selectedName @pairs @selectedKey}}
+      </span>
     </div>
     <div class="design-wizard__palette-cards">
       {{#each @pairs as |pair|}}
         {{#let
-          (if @off false (eq pair.key @selectedKey))
+          (eq pair.key @selectedKey)
           (if (eq @mode "light") pair.light pair.dark)
           as |selected palette|
         }}
@@ -52,76 +73,46 @@ const PaletteRow = <template>
           </button>
         {{/let}}
       {{/each}}
-      {{! one mode needs a palette of its own for the other to fall back on }}
-      <button
-        aria-pressed={{if @off "true" "false"}}
-        class="design-wizard__palette-card --none {{if @off '--selected'}}"
-        data-pair-key={{NO_PALETTE_KEY}}
-        disabled={{@otherOff}}
-        type="button"
-        {{on "click" (fn @onSelect @mode NO_PALETTE_KEY)}}
-      >
-        <span aria-hidden="true" class="design-wizard__palette-preview --none">
-          {{dIcon "ban"}}
-        </span>
-        <span class="design-wizard__palette-name">
-          <span class="design-wizard__palette-name-text">
-            {{i18n "design_wizard.colors.none"}}
-          </span>
-        </span>
-      </button>
     </div>
   </div>
 </template>;
 
 const DesignWizardColorsSection = <template>
   <div class="design-wizard__color">
+    {{#if (or @lightPairs.length @darkPairs.length)}}
+      <DSegmentedControl
+        class="design-wizard__palette-modes --full-width"
+        @items={{paletteModeItems @lightPairs @darkPairs}}
+        @label="design_wizard.colors.modes.label"
+        @name="design-wizard-palette-mode"
+        @onSelect={{@onSelectPaletteMode}}
+        @value={{@paletteMode}}
+      />
+    {{/if}}
+
     <p class="design-wizard__color-description">
       {{i18n "design_wizard.colors.description"}}
     </p>
 
-    {{#if @lightPairs.length}}
+    {{#if (and @showsLightPalettes @lightPairs.length)}}
       <PaletteRow
-        @groupLabel={{i18n "design_wizard.colors.light_mode_group"}}
         @mode="light"
-        @off={{@lightOff}}
         @onSelect={{@onSelectPalette}}
-        @otherOff={{@darkOff}}
         @pairs={{@lightPairs}}
         @selectedKey={{@selectedLightKey}}
-        @status={{paletteRowStatus @lightOff @darkOff}}
-        @title={{i18n "design_wizard.colors.light_mode"}}
+        @title={{i18n "design_wizard.colors.light_palette"}}
       />
     {{/if}}
 
-    {{#if @darkPairs.length}}
+    {{#if (and @showsDarkPalettes @darkPairs.length)}}
       <PaletteRow
-        @groupLabel={{i18n "design_wizard.colors.dark_mode_group"}}
         @mode="dark"
-        @off={{@darkOff}}
         @onSelect={{@onSelectPalette}}
-        @otherOff={{@lightOff}}
         @pairs={{@darkPairs}}
         @selectedKey={{@selectedDarkKey}}
-        @status={{paletteRowStatus @darkOff @lightOff}}
-        @title={{i18n "design_wizard.colors.dark_mode"}}
+        @title={{i18n "design_wizard.colors.dark_palette"}}
       />
     {{/if}}
-
-    {{! the region stays mounted so the note is announced when it appears }}
-    <div aria-live="polite" class="design-wizard__palette-note-region">
-      {{#if @singlePaletteName}}
-        <p class="design-wizard__palette-note">
-          {{dIcon "circle-info"}}
-          <span>
-            {{i18n
-              "design_wizard.colors.single_palette_note"
-              name=@singlePaletteName
-            }}
-          </span>
-        </p>
-      {{/if}}
-    </div>
   </div>
 </template>;
 

@@ -37,8 +37,12 @@ export const SOURCE_ONBOARDING = "onboarding";
 export const SOURCE_ADMIN = "admin";
 // launches the wizard on load, so it can be reached by URL from anywhere
 export const DESIGN_WIZARD_PARAM = "design_wizard";
-// a palette selection for a mode that takes the other mode's palette
-export const NO_PALETTE_KEY = "none";
+// which color modes the site offers; a single mode's palette is used for both
+export const PALETTE_MODES = Object.freeze({
+  both: "both",
+  light: "light",
+  dark: "dark",
+});
 // mirrors the onboarding step's own completion key so a wizard finished
 // after its caller was torn down still marks the step complete
 const STEP_COMPLETED_KEY = `onboarding_step_${SELECT_THEME_STEP}`;
@@ -71,8 +75,8 @@ export default class DesignWizardService extends Service {
   @tracked saving = false;
   // a theme preview replaces the whole page, so the panel stays busy until it does
   @tracked applyingTheme = false;
-  // theme id => { light, dark } pair keys, or NO_PALETTE_KEY for a mode that
-  // is off and takes the other mode's palette
+  // theme id => { mode, light, dark }: the PALETTE_MODES value and each row's
+  // pair key, kept while a row is hidden so switching back restores it
   @tracked paletteSelections = new Map();
   @tracked stepIndex = 0;
   // resuming an in-progress wizard (e.g. after a theme-preview reload)
@@ -140,36 +144,34 @@ export default class DesignWizardService extends Service {
     return this.#selectedPair(this.darkPairs, "dark");
   }
 
-  // a mode without its own palette uses the other mode's
-  get lightOff() {
-    return !this.selectedLightPair && !!this.selectedDarkPair;
+  get paletteMode() {
+    return this.paletteSelections.get(this.themeId)?.mode ?? PALETTE_MODES.both;
   }
 
-  get darkOff() {
-    return !this.selectedDarkPair && !!this.selectedLightPair;
+  get showsLightPalettes() {
+    return this.paletteMode !== PALETTE_MODES.dark;
   }
 
-  // the palette used for both modes while either mode is off
-  get singlePaletteName() {
-    if (this.lightOff) {
-      return this.selectedDarkPair.name;
-    }
-    return this.darkOff ? this.selectedLightPair.name : null;
+  get showsDarkPalettes() {
+    return this.paletteMode !== PALETTE_MODES.light;
   }
 
   get effectiveColorMode() {
-    if (this.lightOff) {
-      return "dark";
-    }
-    return this.darkOff ? "light" : this.colorMode;
+    return this.paletteMode === PALETTE_MODES.both
+      ? this.colorMode
+      : this.paletteMode;
   }
 
   get #lightPalette() {
-    return this.selectedLightPair?.light ?? this.selectedDarkPair?.dark;
+    return this.showsLightPalettes
+      ? this.selectedLightPair?.light
+      : this.selectedDarkPair?.dark;
   }
 
   get #darkPalette() {
-    return this.selectedDarkPair?.dark ?? this.selectedLightPair?.light;
+    return this.showsDarkPalettes
+      ? this.selectedDarkPair?.dark
+      : this.selectedLightPair?.light;
   }
 
   get previewPalette() {
@@ -195,7 +197,10 @@ export default class DesignWizardService extends Service {
     return {
       theme_id: this.themeId,
       light_palette_id: this.#lightPalette?.id,
-      dark_palette_id: this.selectedDarkPair?.dark?.id,
+      // a light-only site has no dark palette
+      dark_palette_id: this.showsDarkPalettes
+        ? this.selectedDarkPair?.dark?.id
+        : undefined,
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
       heading_font: this.headingFont,
@@ -400,20 +405,19 @@ export default class DesignWizardService extends Service {
    * @param {string} pairKey
    */
   async selectPalette(mode, pairKey) {
-    const otherOff = mode === "light" ? this.darkOff : this.lightOff;
-    if (pairKey === NO_PALETTE_KEY && otherOff) {
-      return;
-    }
-
-    const selection = {
-      ...this.paletteSelections.get(this.themeId),
-      [mode]: pairKey,
-    };
-    this.paletteSelections = new Map(this.paletteSelections).set(
-      this.themeId,
-      selection
-    );
+    this.#updatePaletteSelection({ [mode]: pairKey });
     this.colorMode = mode;
+    this.#persistState();
+    await this.#previewSelections();
+  }
+
+  /**
+   * Selects which color modes the site offers.
+   *
+   * @param {string} paletteMode - a PALETTE_MODES value
+   */
+  async selectPaletteMode(paletteMode) {
+    this.#updatePaletteSelection({ mode: paletteMode });
     this.#persistState();
     await this.#previewSelections();
   }
@@ -814,31 +818,39 @@ export default class DesignWizardService extends Service {
     return this.#supportedHomepages.includes(homepage) ? homepage : "latest";
   }
 
+  #updatePaletteSelection(changes) {
+    this.paletteSelections = new Map(this.paletteSelections).set(this.themeId, {
+      ...this.paletteSelections.get(this.themeId),
+      ...changes,
+    });
+  }
+
   #selectedPair(pairs, mode) {
     const key = this.paletteSelections.get(this.themeId)?.[mode];
-    if (key === NO_PALETTE_KEY) {
-      return null;
-    }
     return pairs.find((pair) => pair.key === key) ?? pairs[0];
   }
 
-  // A light key left undefined falls back to the row's first palette, which
-  // is also what a theme without an assigned light palette renders. A theme
-  // without a dark palette renders light-only, and one using the same palette
-  // for both modes has no palette of its own for light mode.
+  // A key left undefined falls back to the row's first palette, which is also
+  // what a theme without an assigned light palette renders. A theme without a
+  // dark palette renders light-only, and one using its dark palette for both
+  // modes renders dark-only.
   #currentPaletteSelection(theme) {
     const pairs = theme.palette_pairs ?? [];
     const darkId = theme.dark_color_scheme_id;
     const dark = darkId && pairs.find((pair) => pair.dark?.id === darkId)?.key;
-    const light =
-      dark && theme.color_scheme_id === darkId
-        ? NO_PALETTE_KEY
-        : pairs.find(
-            (pair) =>
-              theme.color_scheme_id && pair.light?.id === theme.color_scheme_id
-          )?.key;
+    const light = pairs.find(
+      (pair) =>
+        theme.color_scheme_id && pair.light?.id === theme.color_scheme_id
+    )?.key;
 
-    return { light, dark: darkId ? dark : NO_PALETTE_KEY };
+    let mode = PALETTE_MODES.both;
+    if (!darkId) {
+      mode = PALETTE_MODES.light;
+    } else if (dark && theme.color_scheme_id === darkId) {
+      mode = PALETTE_MODES.dark;
+    }
+
+    return { mode, light, dark };
   }
 
   async #previewSelections() {

@@ -49,6 +49,14 @@ export default class DesignWizardControls extends Component {
     });
   }
 
+  get stepTitle() {
+    return i18n(`design_wizard.steps.${this.currentStep}.title`);
+  }
+
+  get stepDescription() {
+    return i18n(`design_wizard.steps.${this.currentStep}.description`);
+  }
+
   goToStepLabel(index) {
     return i18n("design_wizard.step_label", { index: index + 1 });
   }
@@ -106,6 +114,11 @@ export default class DesignWizardControls extends Component {
   }
 
   @action
+  selectPaletteMode(paletteMode) {
+    this.designWizard.selectPaletteMode(paletteMode);
+  }
+
+  @action
   selectBodyFont(fontKey) {
     this.designWizard.selectBodyFont(fontKey);
   }
@@ -153,14 +166,13 @@ export default class DesignWizardControls extends Component {
             {{this.stepProgress}}
           </span>
         {{/if}}
-        <h2 id="design-wizard-title">
-          {{i18n "design_wizard.title"}}
-        </h2>
+        <h2 class="design-wizard__title">{{this.stepTitle}}</h2>
+        <p class="design-wizard__description">{{this.stepDescription}}</p>
       </header>
 
       <div class="design-wizard__sections">
         {{#if (eq this.currentStep "theme")}}
-          <Section @title={{i18n "design_wizard.sections.theme"}}>
+          <Section @type="theme">
             <ThemeSection
               @applying={{this.busy}}
               @currentTheme={{this.designWizard.data.current_theme}}
@@ -170,20 +182,24 @@ export default class DesignWizardControls extends Component {
             />
           </Section>
         {{else if (eq this.currentStep "colors")}}
-          <Section @title={{i18n "design_wizard.sections.colors"}}>
+          <Section
+            @title={{i18n "design_wizard.sections.colors"}}
+            @type="colors"
+          >
             <ColorsSection
-              @darkOff={{this.designWizard.darkOff}}
               @darkPairs={{this.designWizard.darkPairs}}
-              @lightOff={{this.designWizard.lightOff}}
               @lightPairs={{this.designWizard.lightPairs}}
               @onSelectPalette={{this.selectPalette}}
+              @onSelectPaletteMode={{this.selectPaletteMode}}
+              @paletteMode={{this.designWizard.paletteMode}}
               @selectedDarkKey={{this.designWizard.selectedDarkPair.key}}
               @selectedLightKey={{this.designWizard.selectedLightPair.key}}
-              @singlePaletteName={{this.designWizard.singlePaletteName}}
+              @showsDarkPalettes={{this.designWizard.showsDarkPalettes}}
+              @showsLightPalettes={{this.designWizard.showsLightPalettes}}
             />
           </Section>
 
-          <Section @title={{i18n "design_wizard.sections.fonts"}}>
+          <Section @title={{i18n "design_wizard.sections.fonts"}} @type="fonts">
             <FontsSection
               @bodyFont={{this.designWizard.bodyFont}}
               @headingFont={{this.designWizard.headingFont}}
@@ -192,7 +208,10 @@ export default class DesignWizardControls extends Component {
             />
           </Section>
         {{else}}
-          <Section @title={{i18n "design_wizard.sections.homepage"}}>
+          <Section
+            @title={{i18n "design_wizard.sections.homepage"}}
+            @type="homepage"
+          >
             <HomepageSection
               @additionalHomepages={{this.designWizard.additionalHomepages}}
               @categoryPageStyle={{this.designWizard.categoryPageStyle}}
@@ -204,7 +223,10 @@ export default class DesignWizardControls extends Component {
           </Section>
 
           {{#if this.designWizard.supportsWelcomeBanner}}
-            <Section @title={{i18n "design_wizard.sections.welcome_banner"}}>
+            <Section
+              @title={{i18n "design_wizard.sections.welcome_banner"}}
+              @type="welcome-banner"
+            >
               <WelcomeBannerSection
                 @enabled={{this.designWizard.welcomeBanner}}
                 @location={{this.designWizard.welcomeBannerLocation}}
@@ -215,7 +237,10 @@ export default class DesignWizardControls extends Component {
 
           {{/if}}
           {{#if this.designWizard.supportsSearch}}
-            <Section @title={{i18n "design_wizard.sections.search"}}>
+            <Section
+              @title={{i18n "design_wizard.sections.search"}}
+              @type="search"
+            >
               <SearchSection
                 @onSelect={{this.selectSearchExperience}}
                 @searchExperience={{this.designWizard.searchExperience}}
