@@ -9,6 +9,7 @@ class Middleware::ProcessingRequest
   end
 
   def call(env)
+    Discourse.resume_after_fork
     Thread.current[PROCESSING_REQUEST_THREAD_KEY] = true
     populate_request_queue_seconds!(env)
     @app.call(env)
