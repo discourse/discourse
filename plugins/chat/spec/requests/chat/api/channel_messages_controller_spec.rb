@@ -25,6 +25,38 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         )
       end
 
+      it "loads flag definitions once per request and refreshes them for later requests" do
+        SiteSetting.chat_message_flag_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        Fabricate.times(2, :chat_message, chat_channel: channel, user: message_1.user)
+        flag_reads = []
+        allow(Discourse.redis).to receive(:get).and_wrap_original do |original, key|
+          flag_reads << key if key == "_CACHE:post_action_type_all_flags"
+          original.call(key)
+        end
+
+        get "/chat/api/channels/#{channel.id}/messages.json", params: { direction: "past" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["messages"].size).to eq(3)
+        expect(
+          response.parsed_body["messages"].map { |message| message["available_flags"] },
+        ).to all(
+          contain_exactly("off_topic", "inappropriate", "spam", "illegal", "notify_moderators"),
+        )
+        expect(flag_reads.size).to eq(1)
+
+        flag = Fabricate(:flag, applies_to: ["Chat::Message"])
+        flag_reads.clear
+
+        get "/chat/api/channels/#{channel.id}/messages.json", params: { direction: "past" }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["messages"].map { |message| message["available_flags"] },
+        ).to all(include(flag.name_key))
+        expect(flag_reads.size).to eq(1)
+      end
+
       context "as anonymous user" do
         before do
           delete "/session/#{current_user.username}.json"
