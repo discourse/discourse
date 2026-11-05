@@ -32,10 +32,19 @@ module Categories
       end
 
       def list(only_visible: false, guardian: nil)
-        types
-          .values
-          .select { |type| only_visible ? type.visible? : true }
-          .map { |type| type.metadata(guardian:) }
+        type_list = types.values.select { |type| only_visible ? type.visible? : true }
+
+        overridden_site_settings =
+          if type_list.any? { |type| type.configuration_schema[:site_settings].present? }
+            SiteSetting
+              .provider
+              .all
+              .each_with_object({}) { |setting, result| result[setting.name.to_sym] = true }
+          else
+            {}
+          end
+
+        type_list.map { |type| type.metadata(guardian:, overridden_site_settings:) }
       end
 
       def valid?(id)
