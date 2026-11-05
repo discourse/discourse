@@ -72,12 +72,12 @@ RSpec.describe "Blog publication panel", type: :request do
       "active_review_links" => 0,
     )
 
-    older = Blog::Review.issue!(topic: topic, user: admin, label: "Round one")
-    newer = Blog::Review.issue!(topic: topic, user: admin)
+    older = issue_blog_review(topic, user: admin, label: "Round one")
+    newer = issue_blog_review(topic, user: admin)
     newer.update_columns(post_version: 2)
-    older.submit_feedback!(name: "Ada", message: "Tighten the introduction.")
-    newer.submit_feedback!(message: "Loving it but the colours hurt.")
-    older.revoke!(admin)
+    submit_blog_review_feedback(older, name: "Ada", message: "Tighten the introduction.")
+    submit_blog_review_feedback(newer, message: "Loving it but the colours hurt.")
+    revoke_blog_review(older, user: admin)
 
     get "/t/#{topic.id}.json"
     expect(response.parsed_body["blog_publication"]).to include(
