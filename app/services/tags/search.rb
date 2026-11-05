@@ -150,7 +150,7 @@ class Tags::Search
 
     candidate_tags =
       visible_tags(guardian)
-        .where("tags.name ~* ?", "\\m#{Regexp.escape(params.term)}")
+        .where("tags.name ~* ?", "(?:^|\\m)#{Regexp.escape(params.term)}")
         .where.not(id: skip_ids)
         .limit(SiteSetting.max_tag_search_results)
         .to_a

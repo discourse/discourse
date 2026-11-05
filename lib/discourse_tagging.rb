@@ -903,8 +903,19 @@ module DiscourseTagging
     tag.downcase! if SiteSetting.force_lowercase_tags
     tag.strip!
     tag.gsub!(/[[:space:]]+/, "-")
-    tag.gsub!(/[^[:word:][:punct:]]+/, "")
-    tag.gsub!(TAGS_FILTER_REGEXP, "")
+    if tag.ascii_only?
+      tag.gsub!(/[^[:word:][:punct:]]+/, "")
+      tag.gsub!(TAGS_FILTER_REGEXP, "")
+    else
+      emoji = Emoji.unicode_replacements
+      tag.gsub!(/\X/) do |grapheme|
+        if emoji.key?(grapheme) || emoji.key?(grapheme.delete("\uFE0F"))
+          grapheme
+        else
+          grapheme.gsub(/[^[:word:][:punct:]]+/, "").gsub(TAGS_FILTER_REGEXP, "")
+        end
+      end
+    end
     tag.squeeze!("-")
     tag = truncate ? tag[0...SiteSetting.max_tag_length] : tag
     tag.gsub(/\A\.+|\.+\z/, "")

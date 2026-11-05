@@ -123,6 +123,40 @@ describe "Composer" do
       expect(topic_page.topic_tags).to include(tag.name)
     end
 
+    it "recognizes an existing emoji tag and saves it alongside a new emoji tag" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.max_tag_search_results = 1
+      expect(Tag.where_name("😊")).not_to exist
+      existing_tag = Fabricate(:tag, name: "🔞", public_topic_count: 17)
+      Fabricate(:tag, name: "popular", public_topic_count: 100)
+
+      page.visit "/new-topic"
+      expect(composer).to be_opened
+      composer.fill_title("Test topic with emoji tags")
+      composer.fill_content("This topic uses an existing emoji tag and a newly created emoji tag.")
+      composer.switch_category(category.name)
+
+      mini_tag_chooser.expand
+      mini_tag_chooser.search(existing_tag.name)
+      expect(mini_tag_chooser.component).to have_css(
+        ".select-kit-row[data-value='#{existing_tag.id}'] .discourse-tag-count",
+        text: "x17",
+      )
+      expect(mini_tag_chooser.component).to have_no_css(".select-kit-row[data-value='🔞']")
+      mini_tag_chooser.select_row_by_name(existing_tag.name)
+      mini_tag_chooser.search("😊")
+      mini_tag_chooser.select_row_by_name("😊")
+      mini_tag_chooser.collapse
+      composer.create
+
+      expect(topic_page).to have_topic_title("Test topic with emoji tags")
+      expect(topic_page.topic_tags).to contain_exactly("🔞", "😊")
+      page.refresh
+      expect(topic_page).to have_topic_title("Test topic with emoji tags")
+      expect(topic_page.topic_tags).to contain_exactly("🔞", "😊")
+      expect(Tag.where_name("🔞").pluck(:id)).to eq([existing_tag.id])
+    end
+
     it "creates a new numeric-name tag rather than reusing an existing tag with that id" do
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
