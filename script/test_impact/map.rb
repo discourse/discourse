@@ -11,7 +11,7 @@ module TestImpact
   class Map
     Selection = Struct.new(:specs, :unmapped, :untested, keyword_init: true)
 
-    INDEXES = %w[settings keys locales reads tables].freeze
+    INDEXES = %w[settings keys locales reads tables gems].freeze
 
     SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
     LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
@@ -46,6 +46,7 @@ module TestImpact
       ranges = Hash.new { |h, path| h[path] = Hash.new { |r, range| r[range] = Set.new } }
       methods = Hash.new { |h, path| h[path] = Set.new }
       boot = Hash.new { |h, path| h[path] = Set.new }
+      gems = Hash.new { |h, kind| h[kind] = Set.new }
       seconds = Hash.new(0.0)
       indexes = INDEXES.to_h { |kind| [kind, Hash.new { |h, name| h[name] = Set.new }] }
 
@@ -56,6 +57,7 @@ module TestImpact
             if entry["methods"]
               entry["methods"].each { |file, list| methods[file].merge(list) }
               Hash(entry["boot"]).each { |file, list| boot[file].merge(list) }
+              Hash(entry["gems"]).each { |kind, names| gems[kind].merge(names) }
               next
             end
             id = spec_ids[entry["spec"]] ||= (specs << entry["spec"]).size - 1
@@ -78,6 +80,7 @@ module TestImpact
         "specs" => specs,
         "seconds" => specs.each_index.map { |id| seconds[id].round(2) },
         "files" => files,
+        "gem_sets" => gems.transform_values { |names| names.to_a.sort },
         **indexes.transform_values { |index| index.transform_values { |ids| ids.to_a.sort } },
       )
     end
@@ -91,6 +94,7 @@ module TestImpact
       @specs = data["specs"]
       @files = data["files"]
       @indexes = INDEXES.to_h { |kind| [kind, data[kind] || {}] }
+      @gem_sets = (data["gem_sets"] || {}).transform_values(&:to_set)
     end
 
     def dump(path)
@@ -140,6 +144,14 @@ module TestImpact
         path = change.new_path || change.old_path
         if path.end_with?("_spec.rb") || QUNIT_TEST.match?(path)
           specs << change.new_path if change.new_path
+          next
+        end
+
+        if path == "Gemfile.lock" && @gem_sets.any? && change.old_path &&
+             (lines = source.call(change.old_path))
+          reached = gems_reached(gems_changed(lines.lines, change.hunks, change.added))
+          reached ? ids.merge(reached) : unmapped << path
+          ids.merge(@indexes["reads"][path] || [])
           next
         end
 
@@ -278,6 +290,47 @@ module TestImpact
           [snake.sub(/y\z/, "ies"), snake.sub(/(s|x|ch|sh)\z/, '\1es'), "#{snake}s"]
         end
       names.uniq.flat_map { |name| @indexes["tables"][name] || [] }
+    end
+
+    # The gems whose entries a Gemfile.lock diff changes, or nil when it
+    # changes anything else (Ruby version, platforms, Bundler, a git or path
+    # source). A dependency line belongs to the gem above it.
+    def gems_changed(lines, hunks, added)
+      section = nil
+      current = nil
+      owners =
+        lines.map do |line|
+          section = line.strip if line.match?(/\A[A-Z]/)
+          if line.strip.empty?
+            :blank
+          elsif !%w[GEM CHECKSUMS DEPENDENCIES].include?(section)
+            nil
+          elsif line.match?(/\A {6}\S/)
+            current
+          elsif line =~ /\A {2}(?: {2})?([\w.-]+)(?: \(.*|!)?\n?\z/
+            current = $1
+          end
+        end
+      touched = hunks.flat_map { |first, last| owners[(first - 1)...[last, lines.size].min] }
+      touched.delete(:blank)
+      return if touched.include?(nil)
+      added = added.each_line.filter_map { |line| line[/\A {2}(?: {2})?([\w.-]+) \(/, 1] }
+      (touched + added).to_set
+    end
+
+    # Specs that ran a changed gem. nil when one ran at boot or has a native
+    # extension (whose C code Coverage doesn't see), or when it loaded but no
+    # spec ran its methods. A gem the suite never loaded selects nothing.
+    def gems_reached(gems)
+      return if !gems
+      loaded = gems.select { |gem| @gem_sets["loaded"]&.include?(gem) }
+      unseen =
+        loaded.any? do |gem|
+          @gem_sets["boot"]&.include?(gem) || @gem_sets["native"]&.include?(gem) ||
+            !@indexes["gems"][gem]
+        end
+      return if unseen
+      loaded.flat_map { |gem| @indexes["gems"][gem] }.to_set
     end
 
     # nil when a hunk touches a category rather than a setting.

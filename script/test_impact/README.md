@@ -13,6 +13,8 @@ depends on. Experimental.
 - the translation keys and locales it looked up;
 - the non-Ruby files in the repository it read (fixtures, templates, data);
 - the tables its queries named;
+- the gems whose methods it ran (and, for the suite, the gems that loaded,
+  ran at boot, or have native extensions);
 - what it read and looked up as it loaded, such as a data file it generates
   examples from;
 - for system specs, the browser JavaScript functions it ran.
@@ -85,13 +87,18 @@ bin/qunit $(grep -v '_spec\.rb$' <<< "$specs")
   calls, its SQL, or as a model class (`Chat::Message` for `chat_messages`);
 - `db/structure.sql` selects nothing: the test database is migrated, and CI
   checks the dump in a step of its own;
-- deleting a file no spec loaded or read selects nothing.
+- deleting a file no spec loaded or read selects nothing;
+- a `Gemfile.lock` change selects the specs that ran the gems whose entries
+  it changes (a dependency line belongs to the gem above it), plus the specs
+  that read the lockfile; a gem the suite never loaded selects nothing.
 
 On stderr it lists changed methods no spec ran, and changed files the map
 doesn't cover: new files that run by convention, JavaScript no spec loads,
-client locales,
-migrations that name no table a spec queried, settings or locale changes that
-name no setting or key, changes to methods that ran at boot or in the suite
-hooks (which no spec is charged with), and dependency changes (`Gemfile`,
-`Gemfile.lock`, `package.json`, pnpm's lockfile and workspace).
+client locales, migrations that name no table a spec queried, settings or
+locale changes that name no setting or key, changes to methods that ran at
+boot or in the suite hooks (which no spec is charged with), and dependency
+changes: `Gemfile`, `package.json`, pnpm's lockfile and workspace, and
+lockfile changes to a gem that ran at boot, has a native extension (whose C
+code Coverage doesn't see), or that no spec ran, or to anything but gem
+entries.
 When the second list isn't empty, the selection is incomplete.

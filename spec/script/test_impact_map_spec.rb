@@ -23,6 +23,30 @@ RSpec.describe TestImpact::Map do
         title: "Title"
   YAML
 
+  let(:gemfile_lock) { <<~LOCK }
+    GEM
+      remote: https://rubygems.org/
+      specs:
+        crass (1.0.7)
+        rack (3.0.0)
+        rubocop (1.80.0)
+        sanitize (7.0.0)
+          crass (~> 1.0.2)
+        oj (3.16.0)
+
+    PLATFORMS
+      ruby
+
+    DEPENDENCIES
+      sanitize
+
+    RUBY VERSION
+       ruby 4.0.0p0
+
+    BUNDLED WITH
+       2.7.0
+  LOCK
+
   # app/models/thing.rb: methods at 5-7 (`double`) and 9-11 (`unused`), a
   # class-level block at line 3, a constant at line 2.
   def build_map(dir)
@@ -40,6 +64,7 @@ RSpec.describe TestImpact::Map do
           keys: ["post"],
           locales: ["en"],
           tables: ["posts"],
+          gems: %w[crass sanitize],
         }.to_json,
       )
       gz.puts(
@@ -75,6 +100,11 @@ RSpec.describe TestImpact::Map do
           boot: {
             "lib/plugin/setup.rb" => [[2, 4]],
           },
+          gems: {
+            loaded: %w[crass oj rack sanitize],
+            boot: ["rack"],
+            native: ["oj"],
+          },
         }.to_json,
       )
     end
@@ -87,6 +117,7 @@ RSpec.describe TestImpact::Map do
       "config/locales/server.en.yml" => server_locale,
       "config/locales/server.fr.yml" => server_locale.sub("en:", "fr:"),
       "config/locales/server.de.yml" => server_locale.sub("en:", "de:"),
+      "Gemfile.lock" => gemfile_lock,
     }
     Dir.mktmpdir("test-impact") do |dir|
       build_map(dir).select(TestImpact::Diff.parse(diff), source: sources.method(:[]))
@@ -269,9 +300,31 @@ RSpec.describe TestImpact::Map do
         )
 
       expect(selection).to have_attributes(
-        specs: [],
+        specs: ["spec/integrity_spec.rb"],
         unmapped: %w[Gemfile.lock plugins/chat/package.json],
       )
+    end
+
+    it "selects for a gem update the specs that ran the gem, and the lockfile's readers" do
+      # The dependency line under sanitize.
+      selection = select(diff("Gemfile.lock", "@@ -8 +8 @@"))
+
+      expect(selection).to have_attributes(
+        specs: %w[spec/double_spec.rb spec/integrity_spec.rb],
+        unmapped: [],
+      )
+    end
+
+    it "selects only the lockfile's readers for a gem the suite never loaded" do
+      selection = select(diff("Gemfile.lock", "@@ -6 +6 @@"))
+
+      expect(selection).to have_attributes(specs: ["spec/integrity_spec.rb"], unmapped: [])
+    end
+
+    it "reports a gem that ran at boot or has a native extension, and other lockfile changes" do
+      ["@@ -5 +5 @@", "@@ -9 +9 @@", "@@ -18 +18 @@", "@@ -21 +21 @@"].each do |hunk|
+        expect(select(diff("Gemfile.lock", hunk)).unmapped).to eq(["Gemfile.lock"]), hunk
+      end
     end
 
     it "selects the specs that looked up a changed English key or a key above it" do
