@@ -4,6 +4,7 @@ import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
 
+let activeContextKey = null;
 let checked = {};
 let foundUsers = {};
 let userReasons = {};
@@ -12,12 +13,35 @@ let groupReasons = {};
 let maxGroupMention;
 
 export function resetMentions() {
+  activeContextKey = null;
   checked = {};
   foundUsers = {};
   userReasons = {};
   foundGroups = {};
   groupReasons = {};
   maxGroupMention = null;
+}
+
+// Mention validation results depend on the composer's topic and PM
+// recipients, so cached answers must never be reused in a different
+// context (e.g. a `private` reason computed while composing a PM leaking
+// into a reply composer on a public topic).
+function contextKey({ topicId, allowedNames }) {
+  const allowed = allowedNames
+    ? [...allowedNames]
+        .map((name) => name.toLowerCase())
+        .sort()
+        .join(",")
+    : "";
+  return `${topicId ?? ""}|${allowed}`;
+}
+
+function switchContext(context) {
+  const key = contextKey(context);
+  if (key !== activeContextKey) {
+    resetMentions();
+    activeContextKey = key;
+  }
 }
 
 function replaceSpan(element, name, opts) {
@@ -70,7 +94,9 @@ function updateFound(mentions, names) {
   });
 }
 
-export function linkSeenMentions(element, siteSettings) {
+export function linkSeenMentions(element, siteSettings, context = {}) {
+  switchContext(context);
+
   const mentions = [
     ...element.querySelectorAll("span.mention:not(.mention-tested)"),
   ];
@@ -90,9 +116,18 @@ export function linkSeenMentions(element, siteSettings) {
 }
 
 export async function fetchUnseenMentions({ names, topicId, allowedNames }) {
+  switchContext({ topicId, allowedNames });
+  const contextKeyAtRequest = activeContextKey;
+
   const response = await ajax("/composer/mentions", {
     data: { names, topic_id: topicId, allowed_names: allowedNames },
   });
+
+  // The composer may have moved to another context while this request was
+  // in flight; caching the answers then would leak them into that context.
+  if (activeContextKey !== contextKeyAtRequest) {
+    return response;
+  }
 
   names.forEach((name) => (checked[name.toLowerCase()] = true));
   response.users.forEach(
