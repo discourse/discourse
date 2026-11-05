@@ -22,18 +22,33 @@ OptionParser
   .parse!
 abort "ci_select: --map, --base, --job and --out are required" if options.size < 4
 
+# The base's hunks in the line numbers of the commit the map was recorded at,
+# fetched when the checkout doesn't have it. Without it they're taken as they
+# are, which is right for files that didn't change in between.
+def translator(map, base)
+  identity = ->(_path, hunks) { hunks }
+  return identity if !map.commit || map.commit == base
+  if !system("git", "cat-file", "-e", "#{map.commit}^{commit}", err: File::NULL) &&
+       !system("git", "fetch", "--quiet", "--depth=1", "origin", map.commit)
+    warn "ci_select: can't fetch the map's commit #{map.commit}; using line numbers as they are"
+    return identity
+  end
+  TestImpact::Diff.translator(base, map.commit)
+end
+
 job = TestImpact::Job.new(options[:job])
 mode, reason, files =
   if !File.exist?(options[:map])
     ["full", "no map at #{options[:map]}"]
   else
     begin
-      changes, source = TestImpact::Diff.against(options[:base])
+      changes, source, base = TestImpact::Diff.against(options[:base])
       map = TestImpact::Map.load(options[:map])
+      translate = translator(map, base)
       # Official plugins are cloned beside the ones in the repository.
       bundled = IO.popen(%w[git ls-tree --name-only -d HEAD plugins/], &:read).split
       job.run(
-        map.select(changes, source:),
+        map.select(changes, source:, translate:),
         recorded: map.specs,
         bundled: bundled.map { File.basename(_1) },
         exists: File.method(:exist?),

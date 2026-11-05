@@ -111,7 +111,7 @@ RSpec.describe TestImpact::Map do
     described_class.build([path])
   end
 
-  def select(diff)
+  def select(diff, translate: ->(_path, hunks) { hunks })
     sources = {
       "config/site_settings.yml" => site_settings,
       "config/locales/server.en.yml" => server_locale,
@@ -120,7 +120,7 @@ RSpec.describe TestImpact::Map do
       "Gemfile.lock" => gemfile_lock,
     }
     Dir.mktmpdir("test-impact") do |dir|
-      build_map(dir).select(TestImpact::Diff.parse(diff), source: sources.method(:[]))
+      build_map(dir).select(TestImpact::Diff.parse(diff), source: sources.method(:[]), translate:)
     end
   end
 
@@ -144,6 +144,14 @@ RSpec.describe TestImpact::Map do
       selection = select(diff("app/models/thing.rb", "@@ -3 +3 @@"))
 
       expect(selection.specs).to eq(["spec/block_spec.rb"])
+    end
+
+    it "reads hunks in the map's line numbers through the translator" do
+      # Two lines added above since the map: the base's line 4 is the map's 6.
+      shifted = ->(_path, hunks) { hunks.map { |first, last| [first + 2, last + 2] } }
+      selection = select(diff("app/models/thing.rb", "@@ -4 +4 @@"), translate: shifted)
+
+      expect(selection.specs).to eq(["spec/double_spec.rb"])
     end
 
     it "selects every spec that ran the file for a hunk in load-time code" do
@@ -451,6 +459,49 @@ RSpec.describe TestImpact::Map do
         map = build_map(dir)
 
         expect([map.seconds(["spec/double_spec.rb"]), map.seconds]).to eq([2.5, 4.0])
+      end
+    end
+  end
+end
+
+RSpec.describe TestImpact::Diff do
+  describe ".line_in" do
+    # Two lines added after line 3, lines 10-11 replaced by 5, line 20 deleted.
+    let(:diff) { [[3, 0, 4, 2], [10, 2, 12, 5], [20, 1, 24, 0]] }
+
+    it "shifts a line by what changed above it" do
+      lines = [2, 3, 4, 15, 25].map { |line| described_class.line_in(line, diff, :first) }
+
+      expect(lines).to eq([2, 3, 6, 20, 29])
+    end
+
+    it "widens a line the diff changed to what replaced it" do
+      expect(described_class.line_in(10, diff, :first)).to eq(12)
+      expect(described_class.line_in(11, diff, :last)).to eq(16)
+      expect(described_class.line_in(20, diff, :first)).to eq(24)
+    end
+  end
+
+  describe ".translator" do
+    it "moves hunks through the file's changes between two commits" do
+      Dir.mktmpdir("test-impact-git") do |dir|
+        git = ->(*args) { system("git", "-C", dir, *args, out: File::NULL, err: File::NULL) }
+        git.("init", "--quiet")
+        git.("config", "user.email", "test@example.com")
+        git.("config", "user.name", "Test")
+        write = ->(lines) { File.write(File.join(dir, "thing.rb"), lines.join("\n") + "\n") }
+        write.((1..10).map { "line #{_1}" })
+        git.("add", ".")
+        git.("commit", "--quiet", "--no-gpg-sign", "-m", "base")
+        base = `git -C #{dir} rev-parse HEAD`.strip
+        write.(["new 1", "new 2", *(1..10).map { "line #{_1}" }])
+        git.("commit", "--quiet", "--no-gpg-sign", "-am", "map")
+        recorded = `git -C #{dir} rev-parse HEAD`.strip
+
+        hunks =
+          Dir.chdir(dir) { described_class.translator(base, recorded).call("thing.rb", [[5, 6]]) }
+
+        expect(hunks).to eq([[7, 8]])
       end
     end
   end
