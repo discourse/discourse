@@ -13,9 +13,13 @@ on:
       - beta
       - stable
       - release/*
+  # Records the test impact map that pull requests select tests with.
+  schedule:
+    - cron: "17 3 * * *"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Apart from pushes to main, which would otherwise cancel a queued recording.
+  group: ${{ github.workflow }}-${{ github.event_name == 'schedule' && 'schedule' || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
@@ -50,7 +54,7 @@ jobs:
     # Recording for test impact (script/test_impact) can take half again as long.
     timeout-minutes: >-
       ${{
-        contains(github.event.pull_request.labels.*.name, 'test-impact-record') && 40
+        (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'schedule') && 40
         || matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
         && 30
         || 20
@@ -78,8 +82,9 @@ jobs:
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
-      TEST_IMPACT_RECORD: ${{ (matrix.build_type == 'backend' || matrix.build_type == 'system' || (matrix.build_type == 'frontend' && matrix.target != 'themes')) && contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
-      TEST_IMPACT_SELECT: ${{ contains(github.event.pull_request.labels.*.name, 'test-impact-select') && !contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
+      TEST_IMPACT_RECORD: ${{ (matrix.build_type == 'backend' || matrix.build_type == 'system' || (matrix.build_type == 'frontend' && matrix.target != 'themes')) && (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'schedule') && '1' || '' }}
+      # test-impact-full runs a pull request's whole suite.
+      TEST_IMPACT_SELECT: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'test-impact-full') && !contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
 
     strategy:
       fail-fast: false
@@ -135,19 +140,24 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      # Only from runs of this repository's branches: forks can upload one too.
+      # The newest map recorded on main, or failing that on the pull request's
+      # own branch, from runs of this repository: forks can upload one too.
       - name: Find the newest test impact map
         if: env.TEST_IMPACT_SELECT == '1'
         env:
           GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           run_id=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
-            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts?name=test-impact-map&per_page=20" |
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts?name=test-impact-map&per_page=100" |
             ruby -rjson -e '
-              map = JSON.parse($stdin.read)["artifacts"].find do |artifact|
+              maps = JSON.parse($stdin.read)["artifacts"].select do |artifact|
                 run = artifact["workflow_run"]
                 !artifact["expired"] && run["head_repository_id"] == run["repository_id"]
               end
+              map = %W[main #{ENV["HEAD_REF"]}].lazy.filter_map do |branch|
+                maps.find { |artifact| artifact.dig("workflow_run", "head_branch") == branch }
+              end.first
               puts map&.dig("workflow_run", "id")
             ')
           echo "TEST_IMPACT_MAP_RUN=$run_id" >> $GITHUB_ENV
@@ -535,7 +545,7 @@ jobs:
   # test-impact-select restore.
   test-impact-map:
     name: Test impact map
-    if: ${{ !cancelled() && contains(github.event.pull_request.labels.*.name, 'test-impact-record') }}
+    if: ${{ !cancelled() && (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'schedule') }}
     runs-on: ubuntu-latest
     needs: build
     permissions:
