@@ -109,7 +109,7 @@ RSpec.describe "Channel - Info - Settings page" do
     end
 
     it "can mute channel" do
-      chat_page.visit_channel_settings(channel_1)
+      chat_page.visit_channel_preferences(channel_1)
       membership = channel_1.membership_for(current_user)
 
       expect {
@@ -120,7 +120,7 @@ RSpec.describe "Channel - Info - Settings page" do
     end
 
     it "can change notification level" do
-      chat_page.visit_channel_settings(channel_1)
+      chat_page.visit_channel_preferences(channel_1)
       membership = channel_1.membership_for(current_user)
 
       expect {
