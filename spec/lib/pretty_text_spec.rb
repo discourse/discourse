@@ -2817,6 +2817,22 @@ HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
+
+    it "inserts the upload src literally and does not treat it as a replacement pattern" do
+      filler = "Z" * 100
+      payload = "$'" * 100
+      raw = <<~HTML
+      <div>
+      <img src="upload://#{payload}.png">
+      #{filler}
+      </div>
+      HTML
+
+      cooked = PrettyText.cook(raw)
+
+      expect(cooked.scan("Z").length).to eq(filler.length)
+      expect(cooked).to include(%{data-orig-src="upload://#{payload}.png"})
+    end
   end
 
   it "can properly allowlist iframes" do
