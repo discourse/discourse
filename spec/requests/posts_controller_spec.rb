@@ -1668,6 +1668,29 @@ RSpec.describe PostsController do
       expect(Topic.find(response.parsed_body["topic_id"]).archetype).to eq(Archetype.default)
     end
 
+    it "does not amplify content when the upload src contains String#replace patterns" do
+      sign_in(user_trust_level_1)
+
+      filler = "Z" * 500
+      raw = <<~HTML
+      <div>
+      <img src="upload://#{"$'" * 200}.png">
+      #{filler}
+      </div>
+      HTML
+
+      post "/posts.json",
+           params: {
+             raw: raw,
+             title: "this is a crafted upload src topic title",
+             category: category.id,
+           }
+
+      expect(response.status).to eq(200)
+      cooked = Post.find(response.parsed_body["id"]).cooked
+      expect(cooked.scan("Z").length).to eq(filler.length)
+    end
+
     context "with api" do
       it "memoizes duplicate requests" do
         raw = "this is a test post 123 #{SecureRandom.hash}"
