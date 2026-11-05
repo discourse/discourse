@@ -118,6 +118,7 @@ module DiscoursePostEvent
 
       before_date = params[:before] == "now" ? Time.current : params[:before]&.to_datetime
       after_date = params[:after] == "now" ? Time.current : params[:after]&.to_datetime
+      raise Discourse::InvalidParameters.new(:after) if after_date && after_date > 10.years.from_now
       include_ongoing = params[:include_ongoing].present?
 
       recurring_scope = build_recurring_date_scope(after_date, before_date)
