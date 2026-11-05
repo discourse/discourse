@@ -56,6 +56,24 @@ module ::Blog
         .first || new(topic: topic, path: default_path(topic))
     end
 
+    # Editorial changes to an article serialize on its original topic's row.
+    def self.lock_for_topic(topic)
+      publication = for_topic(topic)
+      publication.topic.lock!
+      publication.persisted? ? publication.reload : publication
+    end
+
+    def self.editable_for(topic, guardian)
+      return if !UpcomingChanges.enabled?(:blog_enabled)
+      return if topic.private_message?
+      categories = [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i]
+      return if categories.exclude?(topic.category_id)
+      return if !guardian.is_blog_contributor?
+
+      publication = for_topic(topic)
+      publication if guardian.can_edit_blog_topic?(publication.editable_topic)
+    end
+
     def self.default_path(topic)
       path = "/#{topic.slug.presence || topic.id}"
       reserved_path?(path) ? "#{path}-#{topic.id}" : path
@@ -75,6 +93,10 @@ module ::Blog
 
     def editorial_topic
       draft_topic || (topic if topic.category_id == SiteSetting.blog_drafts_category.to_i)
+    end
+
+    def editable_topic
+      editorial_topic || topic
     end
 
     def editorial_metadata
@@ -113,7 +135,7 @@ module ::Blog
     end
 
     def article
-      published_revision || Revision.new(data: Revision.capture(self, editorial_topic || topic))
+      published_revision || Revision.new(data: Revision.capture(self, editable_topic))
     end
 
     def url
@@ -133,117 +155,62 @@ module ::Blog
       last_published_at || published_at || updated_at
     end
 
-    def save_metadata!(user, attributes)
-      Readiness.ensure!
-      topic.with_lock do
-        reload if persisted?
-        user.guardian.ensure_can_edit_blog_topic!(editorial_topic || topic)
-        values = editorial_metadata.merge(attributes.to_h.stringify_keys.slice(*METADATA))
-        values["published_at"] = published_at if published_revision_id &&
-          values["published_at"].blank?
-        previous = self.attributes.slice(*METADATA)
-        assign_attributes(values)
-        raise ActiveRecord::RecordInvalid.new(self) unless valid?
-        self.draft_metadata = self.attributes.slice(*METADATA).as_json
-        assign_attributes(previous) if published_revision_id
-        save!
-        StaffActionLogger.new(user).log_custom(
-          "blog_metadata",
-          topic_id: topic_id,
-          path: values["path"],
-        )
-      end
+    def stage_metadata(changes)
+      values = editorial_metadata.merge(changes.to_h.stringify_keys.slice(*METADATA))
+      values["published_at"] = published_at if published_revision_id &&
+        values["published_at"].blank?
+      live = attributes.slice(*METADATA)
+      assign_attributes(values)
+      return self if invalid?
+      self.draft_metadata = attributes.slice(*METADATA).as_json
+      assign_attributes(live) if published_revision_id
       self
     end
 
-    def prepare_draft!(user)
-      Readiness.ensure!
-      topic.with_lock do
-        reload if persisted?
-        user.guardian.ensure_can_edit_blog_topic!(editorial_topic || topic)
-        save! unless persisted?
-        unless editorial_topic
-          source = discussion_topic || topic
-          unless source.first_post && !source.first_post.hidden? && !source.archived?
-            raise Discourse::InvalidAccess
-          end
-          creator =
-            PostCreator.new(
-              source.user || user,
-              title: source.title,
-              raw: source.first_post.raw,
-              tags: source.tags.visible(Guardian.new).pluck(:name),
-              category: SiteSetting.blog_drafts_category.to_i,
-              guardian: user.guardian,
-              acting_user: user,
-              skip_jobs: true,
-            )
-          post = copy_post!(creator, source, SiteSetting.blog_drafts_category.to_i)
-          post.topic.update!(image_upload_id: source.image_upload_id)
-          update!(draft_topic: post.topic)
-          DB.after_commit { creator.enqueue_jobs }
-        end
-        update!(draft_topic: editorial_topic) unless draft_topic_id
-      end
-      editorial_topic
+    def draftable?
+      return true if editorial_topic
+      source = discussion_topic || topic
+      return false if source.archived?
+      return false if !source.first_post
+      !source.first_post.hidden?
     end
 
-    def submit!(user)
-      source = prepare_draft!(user)
-      topic.with_lock do
-        reload
-        source.with_lock do
-          user.guardian.ensure_can_edit_blog_topic!(source)
-          ensure_source!(source)
-          source.first_post.with_lock do
-            revision =
-              revisions.create!(
-                source_topic: source,
-                creator: user,
-                data: Revision.capture(self, source),
-              )
-            update!(submitted_revision: revision, approved_revision: nil)
-          end
-        end
-        StaffActionLogger.new(user).log_custom(
-          "blog_submit",
-          topic_id: topic_id,
-          revision_id: submitted_revision_id,
-        )
-      end
-      submitted_revision
+    def publishable_source?(source)
+      return false if source.deleted_at
+      return false if source.archived?
+      return false if source.shared_draft?
+      return false if !source.visible
+      return false if source.category_id != SiteSetting.blog_drafts_category.to_i
+      return false if !source.first_post
+      return false if source.first_post.deleted_at
+      !source.first_post.hidden?
     end
 
-    def approve!(user, revision_id)
-      topic.with_lock do
-        reload
-        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
-        revision = revisions.find(revision_id)
-        unless revision.id == submitted_revision_id
-          raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.stale"))
-        end
-        revision.update!(approver: user, approved_at: Time.current) unless revision.approved_at
-        update!(approved_revision: revision)
-        StaffActionLogger.new(user).log_custom(
-          "blog_approve",
-          topic_id: topic_id,
-          revision_id: revision.id,
-        )
-      end
-      self
+    def copy_post!(creator, source, category_id)
+      previous = Thread.current[:blog_copy]
+      Thread.current[:blog_copy] = { source_id: source.id, category_id: category_id }
+      creator.create!
+    ensure
+      Thread.current[:blog_copy] = previous
     end
 
-    def publish!(user, revision_id: nil)
-      # Trusted callers can explicitly approve and publish their current draft in one operation.
-      unless revision_id
-        revision = submit!(user)
-        approve!(user, revision.id)
-        revision_id = revision.id
-      end
+    def clear_schedule!(error: "")
+      # Cleanup must succeed even when publication metadata is no longer valid.
+      update_columns(
+        scheduled_at: nil,
+        scheduled_revision_id: nil,
+        scheduler_id: nil,
+        schedule_token: nil,
+        schedule_error: error,
+        updated_at: Time.current,
+      )
+    end
+
+    def publish!(user, revision_id:)
       topic.with_lock do
         reload
         revision = revisions.find(revision_id)
-        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
+        user.guardian.ensure_can_publish_blog_topic!(editable_topic)
         unless approved_revision_id == revision.id
           raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.stale"))
         end
@@ -266,7 +233,7 @@ module ::Blog
       topic.with_lock do
         reload
         Readiness.ensure!
-        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
+        user.guardian.ensure_can_publish_blog_topic!(editable_topic)
         revision = revisions.find(revision_id)
         unless approved_revision_id == revision.id && revision.approved_at
           raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.approval_required"))
@@ -295,7 +262,7 @@ module ::Blog
     def cancel_schedule!(user)
       topic.with_lock do
         reload
-        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
+        user.guardian.ensure_can_publish_blog_topic!(editable_topic)
         clear_schedule!
       end
     end
@@ -326,21 +293,6 @@ module ::Blog
           )
         end
       end
-    end
-
-    def unpublish!(user)
-      topic.with_lock do
-        reload
-        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
-        update!(published: false)
-        clear_schedule!
-        StaffActionLogger.new(user).log_custom("blog_unpublish", topic_id: topic_id)
-      end
-    end
-
-    def return_to_drafts!(user)
-      unpublish!(user)
-      prepare_draft!(user)
     end
 
     private
@@ -385,11 +337,7 @@ module ::Blog
     end
 
     def ensure_source!(source)
-      if source.deleted_at || source.archived? || source.shared_draft? || !source.visible ||
-           source.category_id != SiteSetting.blog_drafts_category.to_i || !source.first_post ||
-           source.first_post.deleted_at || source.first_post.hidden?
-        raise Discourse::InvalidAccess
-      end
+      raise Discourse::InvalidAccess if !publishable_source?(source)
     end
 
     def publish_revision!(user, revision)
@@ -459,26 +407,6 @@ module ::Blog
         "blog_publish",
         topic_id: discussion_topic_id,
         revision_id: revision.id,
-      )
-    end
-
-    def copy_post!(creator, source, category_id)
-      previous = Thread.current[:blog_copy]
-      Thread.current[:blog_copy] = { source_id: source.id, category_id: category_id }
-      creator.create!
-    ensure
-      Thread.current[:blog_copy] = previous
-    end
-
-    def clear_schedule!(error: "")
-      # Cleanup must succeed even when publication metadata is no longer valid.
-      update_columns(
-        scheduled_at: nil,
-        scheduled_revision_id: nil,
-        scheduler_id: nil,
-        schedule_token: nil,
-        schedule_error: error,
-        updated_at: Time.current,
       )
     end
 

@@ -79,7 +79,16 @@ after_initialize do
     include_condition: -> { !blog_publication.nil? },
   ) do
     unless instance_variable_defined?(:@blog_publication)
-      @blog_publication = Blog::PublicationEntry.for_viewer(object.topic, scope)
+      publication = Blog::Publication.editable_for(object.topic, scope)
+      @blog_publication =
+        if publication
+          Blog::PublicationSerializer.new(
+            publication,
+            scope:,
+            root: false,
+            viewed_topic: object.topic,
+          ).as_json
+        end
     end
     @blog_publication
   end
