@@ -114,6 +114,13 @@ module Chat
 
       last_ids[:user_has_threads] = user_has_threads_last_id if user_has_threads_last_id
 
+      user_channel_mute_last_id =
+        chat_message_bus_last_ids[
+          Chat::Publisher.user_channel_mute_message_bus_channel(scope.user.id)
+        ]
+
+      last_ids[:user_channel_mute] = user_channel_mute_last_id if user_channel_mute_last_id
+
       { message_bus_last_ids: last_ids }
     end
 
@@ -134,6 +141,7 @@ module Chat
                 Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
                 Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id),
                 Chat::Publisher.user_has_threads_message_bus_channel(scope.user.id),
+                Chat::Publisher.user_channel_mute_message_bus_channel(scope.user.id),
               ]
             end
 
