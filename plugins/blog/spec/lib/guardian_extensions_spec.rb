@@ -38,13 +38,8 @@ RSpec.describe Blog::GuardianExtensions do
     SiteSetting.blog_editor_groups = editors.id.to_s
   end
 
-  after { Thread.current[:blog_publishing_topic] = nil }
-
-  def while_publishing(topic)
-    Thread.current[:blog_publishing_topic] = topic.id
-    yield
-  ensure
-    Thread.current[:blog_publishing_topic] = nil
+  def while_publishing(topic, &)
+    Blog::Current.set(publishing_topic_id: topic.id, &)
   end
 
   def share_drafts_with(group)
@@ -377,6 +372,22 @@ RSpec.describe Blog::GuardianExtensions do
         SiteSetting.tl2_post_edit_time_limit = 1
 
         expect(writer.guardian.can_edit_topic?(writer_draft)).to eq(false)
+      end
+
+      it "checks a new drafts category's sharing when the same guardian is reused" do
+        members = Fabricate(:group)
+        shared_drafts = Fabricate(:private_category, group: Group[:staff])
+        shared_drafts.set_permissions(:staff => :full, editors.name => :full, members.name => :full)
+        shared_drafts.save!
+        member_topic =
+          Fabricate(:topic, category: shared_drafts, user: Fabricate(:user, groups: [members]))
+        guardian = editor.guardian
+
+        expect(guardian.can_edit_topic?(admin_draft)).to eq(true)
+
+        SiteSetting.blog_drafts_category = shared_drafts.id
+
+        expect(guardian.can_edit_topic?(member_topic)).to eq(false)
       end
     end
   end

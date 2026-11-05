@@ -23,9 +23,8 @@ module ::Blog
             id: [publication.draft_topic_id, publication.discussion_topic_id].compact,
           )
       end
-      copy = Thread.current[:blog_copy]
-      if new_record? && copy && category_id == copy[:category_id]
-        candidates = candidates.where.not(id: copy[:source_id])
+      if new_record? && Blog::Current.copying_into?(category_id)
+        candidates = candidates.where.not(id: Blog::Current.copy_source_id)
       end
       candidates
     end
@@ -57,18 +56,15 @@ module ::Blog
 
     def blog_keep_in_drafts_category
       return unless SiteSetting.blog_enabled
-      if category_id_changed? && persisted? &&
-           category_id_in_database == SiteSetting.blog_drafts_category.to_i
-        errors.add(:category_id, I18n.t("blog.editorial.private_source"))
-      end
+      return if !persisted? || !category_id_changed?
+      return if category_id_in_database != SiteSetting.blog_drafts_category.to_i
+      errors.add(:category_id, I18n.t("blog.editorial.private_source"))
     end
 
     def blog_revoke_reviews
       return unless SiteSetting.blog_enabled
-      if saved_change_to_category_id? || saved_change_to_deleted_at? ||
-           saved_change_to_archetype? || saved_change_to_visible?
-        Blog::Review.revoke_for_topic!(id)
-      end
+      return if !saved_changes.keys.intersect?(%w[category_id deleted_at archetype visible])
+      Blog::Review.revoke_for_topic!(id)
     end
 
     def blog_destroy_editorial_records
