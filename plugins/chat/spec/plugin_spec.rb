@@ -343,6 +343,28 @@ describe Chat do
     end
   end
 
+  describe "category_serializer#has_chat_channels" do
+    fab!(:category)
+    fab!(:admin)
+    let(:serializer) { CategorySerializer.new(category, scope: Guardian.new(admin), root: false) }
+
+    context "when only another category has a channel" do
+      before { Fabricate(:category_channel) }
+
+      it "returns false" do
+        expect(serializer.as_json[:has_chat_channels]).to eq(false)
+      end
+    end
+
+    context "when the category has a channel" do
+      before { Fabricate(:category_channel, chatable: category) }
+
+      it "returns true" do
+        expect(serializer.as_json[:has_chat_channels]).to eq(true)
+      end
+    end
+  end
+
   describe "Deleting posts while deleting a user" do
     fab!(:user)
 
