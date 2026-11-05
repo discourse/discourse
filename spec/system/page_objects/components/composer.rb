@@ -18,6 +18,10 @@ module PageObjects
         find(RICH_EDITOR)
       end
 
+      def has_rich_hashtag?(hashtag)
+        has_css?("#{RICH_EDITOR} a.hashtag-cooked", text: hashtag.name)
+      end
+
       def has_rich_editor?
         page.has_css?(RICH_EDITOR)
       end
@@ -251,6 +255,10 @@ module PageObjects
 
       def preview
         find("#{@composer_id} .d-editor-preview-wrapper")
+      end
+
+      def has_preview_hashtag?(hashtag)
+        has_css?("#{@composer_id} .d-editor-preview-wrapper a.hashtag-cooked", text: hashtag.name)
       end
 
       def has_discard_draft_modal?

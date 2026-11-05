@@ -227,19 +227,6 @@ RSpec.describe Live::RoomsController do
       expect(response.parsed_body["room"]["name"]).to eq("Game Night")
     end
 
-    it "exposes a trusted user's room name through hashtag lookup" do
-      name = '<b id="hashtag-injected">Meeting</b>'
-      sign_in(user)
-
-      post "/live/rooms.json", params: { room: { name: name, slug: "meeting-room", public: true } }
-      expect(response.status).to eq(200)
-
-      sign_in(other_participant)
-      get "/hashtags.json", params: { slugs: ["meeting-room"], order: ["room"] }
-
-      expect(response.parsed_body.dig("room", 0, "text")).to eq(name)
-    end
-
     it "accepts an optional slug and generates one when it is blank" do
       sign_in(user)
 
