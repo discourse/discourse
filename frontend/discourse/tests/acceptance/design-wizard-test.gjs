@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   find,
+  settled,
   visit,
   waitFor,
   waitUntil,
@@ -134,10 +135,6 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(
       ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
     );
-    await click(
-      ".design-wizard__font-group:first-child .design-wizard__font-select"
-    );
-    await click("[data-identifier='design-wizard-base-font'] .body-font-arial");
 
     const previewLinks = captureColorSchemeLinks();
     const sections = find(".design-wizard__sections");
@@ -201,9 +198,6 @@ acceptance("Design wizard - admin launch", function (needs) {
         ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
       )
       .hasAria("pressed", "true", "preserves the palette selection");
-    assert
-      .dom(".design-wizard__font-group:first-child .design-wizard__font-select")
-      .hasText("Arial", "preserves the unsaved font selection");
     assert.strictEqual(
       find(".design-wizard__sections"),
       sections,
@@ -391,11 +385,14 @@ acceptance("Design wizard - admin launch", function (needs) {
     assert.dom(".design-wizard__title").hasText("Make it yours");
     assert
       .dom(".design-wizard__description")
-      .hasText("Choose your site's colors and fonts.");
+      .hasText("Add your logo and choose your site's colors.");
 
     await click(".design-wizard__next");
 
-    assert.dom(".design-wizard__title").hasText("Site layout");
+    assert.dom(".design-wizard__title").hasText("Look & feel");
+    assert
+      .dom(".design-wizard__description")
+      .hasText("Choose your fonts and what members see first.");
   });
 
   test("a single color mode uses its palette for both", async function (assert) {
@@ -650,7 +647,6 @@ acceptance("Design wizard - admin launch", function (needs) {
     assert
       .dom(".design-wizard__detail-group")
       .includesText("General", "explains the fixed destination");
-    assert.dom("[data-topic-page]").doesNotExist("hides topic list choices");
     assert
       .dom(".design-wizard__detail-group select")
       .doesNotExist("does not offer a channel picker");
@@ -668,9 +664,39 @@ acceptance("Design wizard - admin launch", function (needs) {
     assert.true(redirect.called, "finishes the wizard");
   });
 
-  test("omits unsupported welcome and search choices", async function (assert) {
-    wizardData.themes[0].supports_welcome_banner = false;
-    wizardData.themes[0].supports_search = false;
+  test("previews and saves a new logo", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__section")
+      .hasClass("--section-logo", "the colors step starts with the logo");
+    assert.false(
+      "logo" in savedPayloads.at(-1),
+      "an untouched logo is not saved"
+    );
+
+    const wizard = this.owner.lookup("service:design-wizard");
+    wizard.selectLogo({ url: "/uploads/wizard-logo.png" });
+    await settled();
+
+    assert
+      .dom("#site-logo")
+      .hasAttribute("src", "/uploads/wizard-logo.png", "previews the logo");
+
+    await click(".design-wizard__next");
+    assert.strictEqual(
+      savedPayloads.at(-1).logo,
+      "/uploads/wizard-logo.png",
+      "saves the new logo with the step"
+    );
+  });
+
+  test("closing without saving restores the logo", async function (assert) {
+    this.siteSettings.site_logo_url = "/uploads/original-logo.png";
     sinon.stub(DiscourseURL, "redirectTo");
 
     await visit("/admin");
@@ -678,16 +704,20 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(".design-wizard__next");
     await click(".design-wizard__next");
 
-    assert.dom(".design-wizard__sections").doesNotIncludeText("Welcome banner");
-    assert.dom(".design-wizard__sections").doesNotIncludeText("Search");
-    await click(".design-wizard__save");
-    for (const key of [
-      "enable_welcome_banner",
-      "welcome_banner_location",
-      "search_experience",
-    ]) {
-      assert.false(key in savedPayloads.at(-1), `${key} is not saved`);
-    }
+    const wizard = this.owner.lookup("service:design-wizard");
+    wizard.selectLogo(null);
+    await settled();
+    assert.dom("#site-logo").doesNotExist("previews the removed logo");
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+    assert
+      .dom("#site-logo")
+      .hasAttribute(
+        "src",
+        "/uploads/original-logo.png",
+        "restores the original logo"
+      );
   });
 
   ["chat", "latest"].forEach((homepage) => {
@@ -833,49 +863,6 @@ acceptance("Design wizard - admin launch", function (needs) {
         );
       });
     });
-  });
-
-  test("reverts the welcome banner location after switching from Concord", async function (assert) {
-    wizardData.themes[0].default = false;
-    wizardData.themes.push({
-      id: 42,
-      name: "Concord",
-      default: true,
-      supports_welcome_banner: false,
-      supports_search: false,
-      palette_pairs: [],
-    });
-    this.siteSettings.welcome_banner_location = "top_menu";
-    sinon.stub(DiscourseURL, "redirectTo");
-
-    await visit("/admin");
-    await click(APPEARANCE_LAUNCH_BUTTON);
-    await click('[data-theme-id="-1"] input');
-    const wizard = this.owner.lookup("service:design-wizard");
-    await wizard.start({ resuming: true });
-    wizard.applyingTheme = false;
-    await click(".design-wizard__next");
-    await click(".design-wizard__next");
-    wizard.selectWelcomeBannerLocation("all");
-    await click(".design-wizard__back");
-    await click(".design-wizard__next");
-    assert.strictEqual(
-      savedPayloads.at(-1).welcome_banner_location,
-      "all",
-      "saves the changed site-wide location"
-    );
-    await click(".design-wizard__close");
-    await click(".dialog-footer .btn-danger");
-    assert.strictEqual(
-      savedPayloads.at(-1).theme_id,
-      "42",
-      "reverts to Concord"
-    );
-    assert.strictEqual(
-      savedPayloads.at(-1).welcome_banner_location,
-      "top_menu",
-      "restores the original site-wide location"
-    );
   });
 
   test("the appearance section launches the wizard on the forum", async function (assert) {

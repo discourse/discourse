@@ -417,30 +417,6 @@ describe "Admin Onboarding Banner" do
       expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(true))
     end
 
-    it "reverts a previewed welcome banner when closed without saving" do
-      visit("/")
-      banner.click_step_action("select_theme")
-
-      expect(design_wizard_panel).to be_visible
-
-      design_wizard_panel.next_step
-      design_wizard_panel.next_step
-
-      expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
-
-      design_wizard_panel.toggle_welcome_banner
-
-      expect(design_wizard_panel).to have_no_welcome_banner_enabled
-      expect(page).to have_no_css(".welcome-banner")
-
-      design_wizard_panel.close
-
-      expect(design_wizard_panel).to be_hidden
-      expect(page).to have_css(".welcome-banner")
-      expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
-    end
-
     it "previews and applies the design choices and marks step complete" do
       visit("/")
       banner.click_step_action("select_theme")
@@ -456,18 +432,10 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.next_step
       design_wizard_panel.select_palette("royal", mode: "light")
       expect(design_wizard_panel).to have_palette_preview
-      design_wizard_panel.select_body_font("lato")
 
       design_wizard_panel.next_step
+      design_wizard_panel.select_body_font("lato")
       design_wizard_panel.select_homepage("categories")
-      design_wizard_panel.select_search_experience("search_icon")
-
-      expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
-      design_wizard_panel.select_welcome_banner_location("below_site_header")
-      design_wizard_panel.toggle_welcome_banner
-      expect(page).to have_no_css(".welcome-banner")
-
       design_wizard_panel.save
 
       # Page reloads after saving; wait for it to complete
@@ -481,9 +449,6 @@ describe "Admin Onboarding Banner" do
       expect(SiteSetting.base_font).to eq("lato")
       expect(SiteSetting.default_homepage).to eq("categories")
       expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
-      expect(SiteSetting.enable_welcome_banner(theme_id: horizon.id)).to eq(false)
-      expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
-      expect(SiteSetting.search_experience(theme_id: horizon.id)).to eq("search_icon")
 
       # the reload must not cancel the in-flight audit write
       expect(

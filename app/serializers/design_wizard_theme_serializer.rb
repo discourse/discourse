@@ -9,17 +9,7 @@ class DesignWizardThemeSerializer < ApplicationSerializer
              :dark_color_scheme_id,
              :screenshot_light_url,
              :screenshot_dark_url,
-             :palette_pairs,
-             :supports_welcome_banner,
-             :supports_search
-
-  def supports_welcome_banner
-    definition.fetch(:supports_welcome_banner, true)
-  end
-
-  def supports_search
-    definition.fetch(:supports_search, true)
-  end
+             :palette_pairs
 
   def description
     object.description(preloaded_locale_fields: object.locale_fields)

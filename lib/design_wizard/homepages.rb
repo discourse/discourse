@@ -9,7 +9,7 @@ module DesignWizard
     end
 
     def self.ids
-      %w[latest new hot categories] + additional_options.map { |option| option[:id] }
+      %w[latest categories] + additional_options.map { |option| option[:id] }
     end
 
     def self.current_settings

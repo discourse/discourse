@@ -34,7 +34,6 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
         expect(horizon["description"]).to eq("A simple, beautiful theme")
-        expect(horizon).to include("supports_welcome_banner" => true, "supports_search" => true)
         expect(horizon["palette_pairs"].map { |pair| pair["key"] }).to include(
           "horizon",
           "royal",
@@ -90,8 +89,6 @@ RSpec.describe Admin::Config::DesignWizardController do
           "remote_url" => "https://github.com/discourse/discourse-concord-theme",
           "description" => I18n.t("design_wizard.themes.concord.description"),
           "palette_pairs" => [],
-          "supports_welcome_banner" => false,
-          "supports_search" => false,
           "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
           "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
@@ -183,8 +180,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(themes.find { |theme| theme["id"] == concord.id }).to include(
           "default" => true,
           "color_scheme_id" => palette.id,
-          "supports_welcome_banner" => false,
-          "supports_search" => false,
           "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
           "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
@@ -325,7 +320,6 @@ RSpec.describe Admin::Config::DesignWizardController do
               heading_font: "merriweather",
               homepage: "categories",
               category_page_style: "categories_boxes",
-              welcome_banner_location: "below_site_header",
             }
 
         expect(response.status).to eq(200)
@@ -336,7 +330,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.heading_font).to eq("merriweather")
         expect(SiteSetting.default_homepage).to eq("categories")
         expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
-        expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
         expect(light.reload.user_selectable).to eq(true)
       end
 
@@ -382,32 +375,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect do
           put "/admin/config/design-wizard.json", params: { theme_id: custom_theme.id }
         end.not_to change { SiteSetting.default_theme_id }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"]).to be_present
-      end
-
-      it "applies the welcome banner and search choices to the chosen theme" do
-        horizon = Theme.horizon_theme
-
-        put "/admin/config/design-wizard.json",
-            params: {
-              theme_id: horizon.id,
-              enable_welcome_banner: false,
-              search_experience: "search_field",
-            }
-
-        expect(response.status).to eq(200)
-        expect(SiteSetting.enable_welcome_banner(theme_id: horizon.id)).to eq(false)
-        expect(SiteSetting.search_experience(theme_id: horizon.id)).to eq("search_field")
-      end
-
-      it "returns a 400 for an unsupported search experience" do
-        put "/admin/config/design-wizard.json",
-            params: {
-              theme_id: Theme::CORE_THEMES["horizon"],
-              search_experience: "not_an_experience",
-            }
 
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to be_present
