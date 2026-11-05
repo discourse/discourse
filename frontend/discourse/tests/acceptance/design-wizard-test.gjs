@@ -753,8 +753,8 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     assert.strictEqual(
       savedPayloads.at(-1).homepage,
-      "categories",
-      "advancing preserves the current homepage"
+      undefined,
+      "advancing leaves the current homepage alone"
     );
     await click(".design-wizard__close");
     await click(".dialog-footer .btn-primary");
@@ -852,6 +852,7 @@ acceptance("Design wizard - admin launch", function (needs) {
   });
 
   test("previews and saves a new logo", async function (assert) {
+    this.siteSettings.logo = "";
     sinon.stub(DiscourseURL, "redirectTo");
 
     await visit("/admin");
@@ -880,6 +881,14 @@ acceptance("Design wizard - admin launch", function (needs) {
       "/uploads/wizard-logo.png",
       "saves the new logo with the step"
     );
+
+    wizard.selectLogo(null);
+    await wizard.saveProgress();
+    assert.strictEqual(
+      savedPayloads.at(-1).logo,
+      "",
+      "removing a logo saved earlier in the run is saved"
+    );
   });
 
   test("closing without saving restores the logo", async function (assert) {
@@ -907,6 +916,37 @@ acceptance("Design wizard - admin launch", function (needs) {
       );
   });
 
+  test("leaves a homepage the wizard does not offer alone until one is chosen", async function (assert) {
+    wizardData.homepage = "new";
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    assert.false(
+      "homepage" in savedPayloads.at(-1),
+      "saving a step does not replace it with the fallback"
+    );
+
+    await click('[data-homepage="categories"]');
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.saveProgress();
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "categories",
+      "saves a chosen homepage"
+    );
+
+    await click('[data-homepage="topics"]');
+    await wizard.saveProgress();
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "latest",
+      "saves a change back from a homepage saved earlier in the run"
+    );
+  });
+
   ["chat", "latest"].forEach((homepage) => {
     test(`preserves and restores the chat destination from ${homepage}`, async function (assert) {
       wizardData.homepage = homepage;
@@ -925,9 +965,9 @@ acceptance("Design wizard - admin launch", function (needs) {
       await click(APPEARANCE_LAUNCH_BUTTON);
       await click(".design-wizard__next");
       assert.strictEqual(
-        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
-        "23",
-        "Next preserves the existing channel"
+        savedPayloads.at(-1).homepage_settings,
+        undefined,
+        "Next leaves the existing channel alone"
       );
       await click(".design-wizard__next");
       await click('[data-homepage="chat"]');
@@ -983,7 +1023,11 @@ acceptance("Design wizard - admin launch", function (needs) {
     await wizard.start({ resuming: true });
     await wizard.saveProgress();
 
-    assert.strictEqual(savedPayloads.at(-1).homepage, "latest");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      undefined,
+      "the fallback shown for an unavailable homepage is not saved"
+    );
     assert.strictEqual(savedPayloads.at(-1).homepage_settings, undefined);
 
     await click(".design-wizard__next");
@@ -1038,14 +1082,19 @@ acceptance("Design wizard - admin launch", function (needs) {
 
         await click(`[data-homepage="${choice}"]`);
         await click(".design-wizard__save");
+
+        // without a saved detour, going back to topics is the homepage the
+        // site already has, so there is nothing to save
+        const unchanged = !resume && choice === "topics";
+        const homepage = choice === "topics" ? "latest" : "categories";
         assert.strictEqual(
           savedPayloads.at(-1).homepage,
-          choice === "topics" ? "latest" : "categories",
-          "saves the selected forum homepage"
+          unchanged ? undefined : homepage,
+          "saves the selected forum homepage only when it changed"
         );
         assert.strictEqual(
-          savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
-          "23",
+          savedPayloads.at(-1).homepage_settings?.chat_homepage_channel,
+          unchanged ? undefined : "23",
           "restores the channel configured before the wizard started"
         );
       });

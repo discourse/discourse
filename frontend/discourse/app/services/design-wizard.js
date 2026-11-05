@@ -18,6 +18,7 @@ import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { homepagePreviewDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
+import { deepEqual } from "discourse/lib/object";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 import DiscourseURL from "discourse/lib/url";
 
@@ -92,6 +93,8 @@ export default class DesignWizardService extends Service {
   #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
+  // what the server holds, so a step save only writes choices that differ from it
+  #savedSelections;
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -193,11 +196,13 @@ export default class DesignWizardService extends Service {
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
       heading_font: this.headingFont,
-      homepage: this.homepage,
-      homepage_settings: this.homepageSettings,
       category_page_style:
         this.homepage === "categories" ? this.categoryPageStyle : null,
-      // an untouched logo is left alone rather than written back every step
+      // untouched choices are left alone rather than written back every step,
+      // so a homepage the wizard can't offer isn't replaced by its fallback
+      ...(this.#homepageChanged
+        ? { homepage: this.homepage, homepage_settings: this.homepageSettings }
+        : {}),
       ...(this.#logoChanged ? { logo: this.logo } : {}),
     };
   }
@@ -219,10 +224,18 @@ export default class DesignWizardService extends Service {
     return new URLSearchParams(window.location.search).get("preview_theme_id");
   }
 
-  // the client copy of `logo` is never previewed, so it still holds the
-  // value the page loaded with
+  get #homepageChanged() {
+    return (
+      this.homepage !== this.#savedSelections.homepage ||
+      !deepEqual(
+        this.homepageSettings ?? {},
+        this.#savedSelections.homepageSettings
+      )
+    );
+  }
+
   get #logoChanged() {
-    return (this.logo ?? "") !== (this.siteSettings.logo ?? "");
+    return (this.logo ?? "") !== this.#savedSelections.logo;
   }
 
   // warms the browser cache for the theme screenshots, which dominate the
@@ -579,12 +592,15 @@ export default class DesignWizardService extends Service {
   async saveProgress() {
     this.saving = true;
 
+    const payload = this.#selectionsPayload;
+
     try {
       await ajax("/admin/config/design-wizard.json", {
         type: "PUT",
-        data: this.#selectionsPayload,
+        data: payload,
       });
 
+      this.#recordSavedSelections(payload);
       this.progressSaved = true;
       this.#persistState();
 
@@ -634,6 +650,7 @@ export default class DesignWizardService extends Service {
     this.#snapshot = undefined;
     this.#originalSiteSettings = undefined;
     this.#originalHomepageSettings = undefined;
+    this.#savedSelections = undefined;
   }
 
   // captured before anything is previewed or saved, from the values the server
@@ -689,6 +706,7 @@ export default class DesignWizardService extends Service {
     this.homepageSettings = this.#originalHomepageSettings;
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
     this.logo = this.siteSettings.logo;
+    this.#initSavedSelections();
     this.stepIndex = 0;
   }
 
@@ -726,9 +744,32 @@ export default class DesignWizardService extends Service {
     this.categoryPageStyle =
       stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
     this.logo = stored.logo ?? this.siteSettings.logo;
+    this.#initSavedSelections();
     // selections are restored but the flow always restarts from the first
     // step, so a resumed wizard walks the same path as a fresh one
     this.stepIndex = 0;
+  }
+
+  // `data` is fetched fresh on every start and the client copy of `logo` is
+  // never previewed, so both reflect what the server holds
+  #initSavedSelections() {
+    this.#savedSelections = {
+      homepage: this.#supportedHomepage(this.data.homepage),
+      homepageSettings: this.#availableHomepageSettings(
+        this.data.homepage_settings
+      ),
+      logo: this.siteSettings.logo ?? "",
+    };
+  }
+
+  #recordSavedSelections(payload) {
+    if ("homepage" in payload) {
+      this.#savedSelections.homepage = payload.homepage;
+      this.#savedSelections.homepageSettings = payload.homepage_settings ?? {};
+    }
+    if ("logo" in payload) {
+      this.#savedSelections.logo = payload.logo;
+    }
   }
 
   #availableHomepageSettings(settings) {
