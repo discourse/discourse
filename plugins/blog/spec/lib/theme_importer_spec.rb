@@ -41,7 +41,7 @@ RSpec.describe Blog::ThemeImporter do
         "commit" => "a" * 40,
       )
       expect(File.exist?(@importer.temp_folder)).to eq(false)
-      Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
+      activate_blog_theme(theme, user: admin)
       File.write(File.join(@directory, "blog.css"), ".blog { color: blue; }")
       updated =
         described_class.import(

@@ -63,14 +63,14 @@ RSpec.describe "Blog themes", type: :request do
     private_topic = Fabricate(:topic, category: drafts, user: admin)
     private_post = Fabricate(:post, topic: private_topic, user: admin)
     theme =
-      Blog::BlogTheme.save(
+      create_blog_theme(
         attributes.stringify_keys.merge(
           "template_article" => "CUSTOM ARTICLE",
           "template_layout" => "CUSTOM LAYOUT",
         ),
         user: admin,
       )
-    Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
+    activate_blog_theme(theme, user: admin)
     get "https://test.localhost/session/#{admin.encoded_username}/become"
     get "https://test.localhost/blog-editor/preview/#{private_topic.id}"
     expect(response.status).to eq(200)
@@ -100,14 +100,14 @@ RSpec.describe "Blog themes", type: :request do
       )
     Fabricate(:post, topic: private_topic, user: admin)
     theme =
-      Blog::BlogTheme.save(
+      create_blog_theme(
         attributes.stringify_keys.merge(
           "template_index" =>
             "{% for article in articles %}<h2>{{ article.title }}</h2>{{ article.raw }}{{ article.source_topic_id }}{% endfor %}",
         ),
         user: admin,
       )
-    Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
+    activate_blog_theme(theme, user: admin)
     get "https://blog.example.com/"
     expect(response.status).to eq(200)
     expect(response.body).to include(publication.published_revision.title)
@@ -125,7 +125,7 @@ RSpec.describe "Blog themes", type: :request do
       Blog::TemplateRenderer::PAGES.each do |page|
         values["template_#{page}"] = File.read(root.join("templates/#{page}.liquid"))
       end
-      Blog::BlogTheme.save(values, user: admin)
+      create_blog_theme(values, user: admin)
     end
 
     it "previews each page with the local identity and preserves the discussion and live theme" do
@@ -139,7 +139,7 @@ RSpec.describe "Blog themes", type: :request do
         )
       Blog::Path.create!(publication: publication, path: publication.path)
       active = Blog::BlogTheme.active
-      token = Blog::BlogTheme.preview_token(reference_theme)
+      token = Blog::ThemePreview.token_for(reference_theme)
 
       {
         "/" => 200,
@@ -163,7 +163,7 @@ RSpec.describe "Blog themes", type: :request do
     end
 
     it "renders an empty listing and carries the preview through archive searches" do
-      token = Blog::BlogTheme.preview_token(reference_theme)
+      token = Blog::ThemePreview.token_for(reference_theme)
       get "https://blog.example.com/archive",
           params: {
             blog_theme_preview: token,
@@ -355,7 +355,7 @@ RSpec.describe "Blog themes", type: :request do
   describe "ZIP endpoints" do
     it "exports the saved draft and imports the download as a new inactive draft" do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      theme = Blog::BlogTheme.save(attributes.stringify_keys, user: admin)
+      theme = create_blog_theme(attributes.stringify_keys, user: admin)
 
       get "https://test.localhost/admin/plugins/blog/themes/#{theme["id"]}/export"
 
@@ -383,7 +383,7 @@ RSpec.describe "Blog themes", type: :request do
     end
 
     it "restricts imports and exports to admins on the discussion host" do
-      theme = Blog::BlogTheme.save(attributes.stringify_keys, user: admin)
+      theme = create_blog_theme(attributes.stringify_keys, user: admin)
       get "https://test.localhost/admin/plugins/blog/themes/#{theme["id"]}/export"
       expect(response.status).to eq(403)
       post "https://test.localhost/admin/plugins/blog/themes/import.json",

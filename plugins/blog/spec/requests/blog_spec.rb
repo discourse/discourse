@@ -117,7 +117,7 @@ RSpec.describe "Blog publication", type: :request do
   describe "GET /blog-editor/preview/:topic_id" do
     it "allows a staff-only uncached preview without publishing" do
       design =
-        Blog::BlogTheme.save(
+        create_blog_theme(
           {
             "name" => "Spec design",
             "accent_color" => "d64b2a",
@@ -128,7 +128,7 @@ RSpec.describe "Blog publication", type: :request do
           },
           user: admin,
         )
-      Blog::BlogTheme.activate(design["id"], revision: 1, user: admin)
+      activate_blog_theme(design, user: admin)
 
       get "/blog-editor/preview/#{topic.id}"
       expect(response.status).to eq(404)

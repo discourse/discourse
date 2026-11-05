@@ -35,8 +35,8 @@ RSpec.describe Blog::ThemeImporter do
   describe ".import_file" do
     it "round-trips all theme fields into an independent draft without activating it" do
       source = { "repository" => "https://github.com/example/theme", "commit" => "abc" }
-      theme = Blog::BlogTheme.save(attributes, user: admin, source: source)
-      active = Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
+      theme = create_blog_theme(attributes, user: admin, source: source)
+      active = activate_blog_theme(theme, user: admin)
       exported = Blog::ThemeExporter.export(theme)
 
       Zip::File.open_buffer(exported) do |archive|

@@ -51,7 +51,7 @@ module ::Blog
           read_values do |name, limit, required: false|
             read_file(importer, name, limit, required: required)
           end
-        BlogTheme.save(
+        save(
           values,
           user: user,
           id: id,
@@ -82,7 +82,7 @@ module ::Blog
               Encoding::UTF_8,
             ) || ""
           end
-        BlogTheme.save(values, user: user)
+        save(values, user: user)
       end
     rescue Compression::SafeZipReader::Error, Zip::Error, Zlib::Error
       raise Discourse::InvalidParameters.new(I18n.t("blog.themes.archive_invalid"))
@@ -109,6 +109,31 @@ module ::Blog
       raise Discourse::InvalidParameters.new(I18n.t("blog.themes.manifest_invalid"))
     end
     private_class_method :read_values
+
+    def self.save(values, user:, id: nil, revision: nil, source: nil)
+      service = id ? BlogTheme::Update : BlogTheme::Create
+      service.call(
+        params: values.merge("theme_id" => id, "revision" => revision),
+        options: {
+          source: source,
+        },
+        guardian: user.guardian,
+      ) do
+        on_success { |theme:, revised_theme: nil| revised_theme || theme }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:within_theme_limit) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_model_not_found(:theme) { raise Discourse::NotFound }
+        on_failed_policy(:revision_is_current) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+      end
+    end
+    private_class_method :save
 
     def self.read_file(importer, name, limit, required: false)
       path = importer.real_path(name)
