@@ -845,7 +845,7 @@ RSpec.describe PostsController do
         private_message_post.topic.trash!
 
         get "/posts/#{private_message_reply.id}.json"
-        expect(response).to be_not_found
+        expect(response).to be_forbidden
         expect(response.body).not_to include(private_message_reply.raw)
 
         put "/posts/#{private_message_reply.id}.json",
