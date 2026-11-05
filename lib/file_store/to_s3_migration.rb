@@ -175,15 +175,19 @@ module FileStore
       log "Uploading files to S3..."
       log " - Listing local files"
 
-      local_files = []
-      IO
-        .popen(
-          ["find", "uploads/#{@current_db}/original", "-type", "f", "-print0"],
-          chdir: public_directory,
-        )
-        .each("\0", chomp: true) do |file|
-          local_files << file
-          putc "." if local_files.size % 1000 == 0
+      originals = "uploads/#{@current_db}/original"
+      local_files =
+        if Dir.exist?(File.join(public_directory, originals))
+          Discourse::Utils.execute_command(
+            "find",
+            originals,
+            "-type",
+            "f",
+            "-print0",
+            chdir: public_directory,
+          ).split("\0")
+        else
+          []
         end
 
       log " => #{local_files.size} files"
