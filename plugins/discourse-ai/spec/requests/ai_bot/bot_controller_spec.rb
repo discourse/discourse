@@ -285,8 +285,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         )
 
       aggregate_failures do
-        expect(Guardian.new(moderator).can_see_upload?(secure_upload)).to eq(true)
-        expect(Guardian.new(user).can_see_upload?(secure_upload)).to eq(false)
+        expect(Guardian.new(moderator).can_see?(secure_upload.access_control_post)).to eq(true)
+        expect(Guardian.new(user).can_see?(secure_upload.access_control_post)).to eq(false)
       end
 
       reply_post =

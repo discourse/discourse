@@ -56,7 +56,7 @@ RSpec.describe PostsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_id"]).to eq(conversation.id)
-      expect(user.guardian.can_see_upload?(secure_upload)).to eq(false)
+      expect(user.guardian.can_see?(secure_upload.access_control_post)).to eq(false)
       expect(prompts.first.messages.flat_map { |message| Array(message[:content]) }).not_to include(
         { upload_id: secure_upload.id },
       )
