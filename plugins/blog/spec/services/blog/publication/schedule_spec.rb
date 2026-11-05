@@ -106,13 +106,14 @@ RSpec.describe Blog::Publication::Schedule do
 
       it "enqueues the release at the scheduled time" do
         result
+        publication.reload
         expect_job_enqueued(
           job: :publish_blog_revision,
           args: {
             publication_id: publication.id,
-            token: publication.reload.schedule_token,
+            token: publication.schedule_token,
           },
-          at: scheduled_at,
+          at: publication.scheduled_at,
         )
       end
 
