@@ -670,6 +670,14 @@ class Guardian
     other && authenticated? && other.is_a?(User) && @user == other
   end
 
+  def category_group_moderator_scope
+    Category.joins(category_moderation_groups: { group: :group_users }).where(
+      group_users: {
+        user_id: user.id,
+      },
+    )
+  end
+
   private
 
   def is_my_own?(obj)
@@ -714,13 +722,5 @@ class Guardian
 
   def category_group_moderation_allowed?
     authenticated? && SiteSetting.enable_category_group_moderation
-  end
-
-  def category_group_moderator_scope
-    Category.joins(category_moderation_groups: { group: :group_users }).where(
-      group_users: {
-        user_id: user.id,
-      },
-    )
   end
 end
