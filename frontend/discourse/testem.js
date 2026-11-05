@@ -345,7 +345,7 @@ if (pluginTestPages) {
 
 module.exports.proxies["/*/*"] = { target, xfwd: true };
 
-if (process.env.TEST_IMPACT_RECORD === "1" && !themeTestPages) {
+if (process.env.TEST_IMPACT_RECORD === "1") {
   const pages = module.exports.test_page;
   module.exports.test_page = Array.isArray(pages)
     ? pages.map((page) => `${page}&test_impact`)

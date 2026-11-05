@@ -29,10 +29,15 @@ mode, reason, files =
   else
     begin
       changes, source = TestImpact::Diff.against(options[:base])
-      selection = TestImpact::Map.load(options[:map]).select(changes, source:)
+      map = TestImpact::Map.load(options[:map])
       # Official plugins are cloned beside the ones in the repository.
       bundled = IO.popen(%w[git ls-tree --name-only -d HEAD plugins/], &:read).split
-      job.run(selection, bundled: bundled.map { File.basename(_1) }, exists: File.method(:exist?))
+      job.run(
+        map.select(changes, source:),
+        recorded: map.specs,
+        bundled: bundled.map { File.basename(_1) },
+        exists: File.method(:exist?),
+      )
     rescue RuntimeError => e
       ["full", e.message]
     end

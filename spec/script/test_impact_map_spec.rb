@@ -469,14 +469,16 @@ RSpec.describe TestImpact::Job do
       plugins/poll/test/javascripts/poll-test.gjs
       themes/horizon/spec/system/horizon_spec.rb
       tmp/themes/discourse-tag-icons/spec/system/icons_spec.rb
+      themes/horizon/test/acceptance/card-test.gjs
       spec/deleted_spec.rb
     ]
   end
 
-  def run(name, specs: self.specs, unmapped: [])
+  def run(name, specs: self.specs, unmapped: [], recorded: self.specs)
     selection = TestImpact::Map::Selection.new(specs:, unmapped:, untested: [])
     described_class.new(name).run(
       selection,
+      recorded:,
       bundled: %w[chat poll],
       exists: ->(path) { path != "spec/deleted_spec.rb" },
     )
@@ -496,6 +498,7 @@ RSpec.describe TestImpact::Job do
         themes/horizon/spec/system/horizon_spec.rb
         tmp/themes/discourse-tag-icons/spec/system/icons_spec.rb
       ],
+      "frontend/themes" => ["themes/horizon/test/acceptance/card-test.gjs"],
     }
 
     lists.each do |name, files|
@@ -515,11 +518,11 @@ RSpec.describe TestImpact::Job do
     expect(run("frontend/core", specs: tests).first).to eq("full")
   end
 
-  it "runs theme QUnit whole when the change reaches a browser test, and not otherwise" do
-    expect(run("frontend/themes", specs: ["spec/system/composer_spec.rb"]).first).to eq("full")
-    expect(
-      run("frontend/themes", specs: ["plugins/poll/test/javascripts/poll-test.gjs"]).first,
-    ).to eq("full")
-    expect(run("frontend/themes", specs: ["spec/models/post_spec.rb"]).first).to eq("none")
+  it "runs a job whole when the map records none of its tests" do
+    recorded = specs - ["themes/horizon/test/acceptance/card-test.gjs"]
+
+    expect(run("frontend/themes", recorded:)).to match(
+      ["full", "the map records no tests for frontend/themes", []],
+    )
   end
 end
