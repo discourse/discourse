@@ -113,9 +113,9 @@ When the second list isn't empty, the selection is incomplete.
 
 ## Selecting in CI
 
-Tests run a nightly scheduled recording on main, which uploads the map. Pull
+Every push to main runs everything and records, and uploads the map. Pull
 requests run a selection, unless labeled `test-impact-full` (or
-`test-impact-record`); pushes to main and release branches run everything.
+`test-impact-record`); pushes to release branches run everything.
 Each job of `.github/workflows/tests.yml` downloads the newest
 `test-impact-map` artifact recorded on main, or failing that on the branch the
 pull request merges into or its own, from runs of this repository, and
@@ -131,3 +131,9 @@ Theme tests, in `themes/` and the official themes cloned into `tmp/themes/`,
 are selected like the rest; theme QUnit runs the selected tests' themes whole
 (`TEST_IMPACT_THEMES`). A job the map records no tests for runs whole. The
 job's setup still runs when it selects none.
+
+The map has the line numbers of the commit it was recorded at, which
+`build_map` notes. A pull request's base is usually a few commits past it, so
+`select` and `ci_select` move each hunk into the map's line numbers through the
+file's changes in between (fetching the map's commit in CI); a hunk on lines
+that changed in between covers everything that replaced them.

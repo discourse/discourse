@@ -41,7 +41,9 @@ module TestImpact
       %r{\Aconfig/initializers/|/(?:pre-|instance-|api-)?initializers/|/connectors/|-route-map\.g?[jt]s\z}
     JS_SOURCE = /\.g?[jt]s\z/
 
-    def self.build(recording_paths)
+    # `commit` is the commit the recordings ran on, whose line numbers the map
+    # has.
+    def self.build(recording_paths, commit: nil)
       specs = []
       spec_ids = {}
       ranges = Hash.new { |h, path| h[path] = Hash.new { |r, range| r[range] = Set.new } }
@@ -78,6 +80,7 @@ module TestImpact
         }
       end
       new(
+        "commit" => commit,
         "specs" => specs,
         "seconds" => specs.each_index.map { |id| seconds[id].round(2) },
         "files" => files,
@@ -100,6 +103,11 @@ module TestImpact
 
     def dump(path)
       Zlib::GzipWriter.open(path) { |gz| gz.write(JSON.generate(@data)) }
+    end
+
+    # The commit the map's line numbers are from, if it was built with one.
+    def commit
+      @data["commit"]
     end
 
     def spec_count
@@ -138,8 +146,10 @@ module TestImpact
     # unless it runs by convention, which is outside the map.
     #
     # `source` returns a changed file's content before the change, for the
-    # settings and keys its hunks fall in.
-    def select(changes, source: ->(_path) {})
+    # settings and keys its hunks fall in. `translate` takes a recorded file
+    # and hunks in the base's line numbers and returns them in the map's, for a
+    # base other than the commit the map was recorded at (Diff.translator).
+    def select(changes, source: ->(_path) {}, translate: ->(_path, hunks) { hunks })
       ids = Set.new
       specs = Set.new
       unmapped = []
@@ -220,28 +230,31 @@ module TestImpact
           file["ranges"].each { |_, _, spec_ids| ids.merge(spec_ids) }
           next
         end
-        change.hunks.each do |first, last|
-          touched = file["methods"].select { |s, e| s <= last && e >= first }
-          # JavaScript functions nest (closures, classes, module wrappers):
-          # what a hunk changes is the innermost ones it falls in.
-          innermost =
-            touched.reject do |s, e|
-              touched.any? { |ts, te| [ts, te] != [s, e] && ts >= s && te <= e }
+        translate
+          .call(old, change.hunks)
+          .each do |first, last|
+            touched = file["methods"].select { |s, e| s <= last && e >= first }
+            # JavaScript functions nest (closures, classes, module wrappers):
+            # what a hunk changes is the innermost ones it falls in.
+            innermost =
+              touched.reject do |s, e|
+                touched.any? { |ts, te| [ts, te] != [s, e] && ts >= s && te <= e }
+              end
+            # Boot ran it before any spec, so no spec is charged with it.
+            unmapped << path if innermost.any? { |range| file["boot"]&.include?(range) }
+            if innermost.any?
+              reached = file["ranges"].select { |s, e, _| innermost.include?([s, e]) }
+              reached.each { |_, _, spec_ids| ids.merge(spec_ids) }
+              untested << "#{old}:#{first}-#{last}" if reached.empty?
             end
-          # Boot ran it before any spec, so no spec is charged with it.
-          unmapped << path if innermost.any? { |range| file["boot"]&.include?(range) }
-          if innermost.any?
-            reached = file["ranges"].select { |s, e, _| innermost.include?([s, e]) }
-            reached.each { |_, _, spec_ids| ids.merge(spec_ids) }
-            untested << "#{old}:#{first}-#{last}" if reached.empty?
-          end
 
-          outside = (first..last).reject { |line| touched.any? { |s, e| line.between?(s, e) } }
-          next if outside.empty?
-          reached = file["ranges"].select { |s, e, _| outside.any? { |line| line.between?(s, e) } }
-          reached = file["ranges"] if reached.empty?
-          reached.each { |_, _, spec_ids| ids.merge(spec_ids) }
-        end
+            outside = (first..last).reject { |line| touched.any? { |s, e| line.between?(s, e) } }
+            next if outside.empty?
+            reached =
+              file["ranges"].select { |s, e, _| outside.any? { |line| line.between?(s, e) } }
+            reached = file["ranges"] if reached.empty?
+            reached.each { |_, _, spec_ids| ids.merge(spec_ids) }
+          end
       end
 
       specs.merge(ids.map { |id| @specs[id] })
@@ -502,7 +515,44 @@ module TestImpact
       source = ->(path) do
         IO.popen(["git", "show", "#{merge_base}:#{path}"], err: File::NULL, &:read)
       end
-      [parse(diff), source]
+      [parse(diff), source, merge_base]
+    end
+
+    # For Map#select: moves hunks in `from`'s line numbers to `to`'s, through
+    # the file's changes between the two.
+    def self.translator(from, to)
+      diffs = {}
+      lambda do |path, hunks|
+        diff =
+          diffs[path] ||= IO
+            .popen(["git", "diff", "-U0", "--no-color", from, to, "--", path], &:read)
+            .scan(/^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/)
+            .map do |old_first, old_count, new_first, new_count|
+              [old_first.to_i, (old_count || "1").to_i, new_first.to_i, (new_count || "1").to_i]
+            end
+        hunks.map { |first, last| [line_in(first, diff, :first), line_in(last, diff, :last)] }
+      end
+    end
+
+    # A line's number after `diff` ([old first, old count, new first, new
+    # count] per hunk). A line the diff changed becomes the start or end of
+    # what replaced it, so a range over it widens to cover all of that.
+    def self.line_in(line, diff, side)
+      shift = 0
+      diff.each do |old_first, old_count, new_first, new_count|
+        if old_count == 0
+          # Lines added after old_first.
+          break if old_first >= line
+          shift += new_count
+        elsif old_first + old_count - 1 < line
+          shift += new_count - old_count
+        elsif old_first <= line
+          return side == :first ? new_first : new_first + [new_count, 1].max - 1
+        else
+          break
+        end
+      end
+      line + shift
     end
   end
 end

@@ -21,13 +21,23 @@ OptionParser
   end
   .parse!
 
-changes, source =
+changes, source, merge_base =
   begin
     TestImpact::Diff.against(base)
   rescue RuntimeError => e
     abort "select: #{e.message}"
   end
-selection = TestImpact::Map.load(map_path).select(changes, source:)
+map = TestImpact::Map.load(map_path)
+# Hunks in the line numbers of the commit the map was recorded at, when it's
+# a different one this checkout has.
+translate =
+  if map.commit && map.commit != merge_base &&
+       system("git", "cat-file", "-e", "#{map.commit}^{commit}", err: File::NULL)
+    TestImpact::Diff.translator(merge_base, map.commit)
+  else
+    ->(_path, hunks) { hunks }
+  end
+selection = map.select(changes, source:, translate:)
 puts selection.specs
 
 if selection.untested.any?
