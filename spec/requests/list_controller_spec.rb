@@ -28,12 +28,12 @@ RSpec.describe ListController do
     end
 
     context "when params are invalid" do
-      it "should return a 400 response when `page` param is a string that represent a negative integer" do
+      it "returns a 400 response when `page` param is a string that represent a negative integer" do
         get "/latest?page=-1"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `page` param is a string larger than maximum integer value" do
+      it "returns a 400 response when `page` param is a string larger than maximum integer value" do
         get "/latest?page=2147483648"
         expect(response.status).to eq(400)
 
@@ -41,117 +41,117 @@ RSpec.describe ListController do
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `before` param is not a string represetning an integer" do
+      it "returns a 400 response when `before` param is not a string represetning an integer" do
         get "/latest?before[1]=haxx"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `bumped_before` param is not a string representing an integer" do
+      it "returns a 400 response when `bumped_before` param is not a string representing an integer" do
         get "/latest?bumped_before[1]=haxx"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `topic_ids` param is not a string representing an integer" do
+      it "returns a 400 response when `topic_ids` param is not a string representing an integer" do
         get "/latest?topic_ids[1]=haxx"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `category` param is not a string representing an integer" do
+      it "returns a 400 response when `category` param is not a string representing an integer" do
         get "/latest?category[1]=haxx"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `order` param is not a string" do
+      it "returns a 400 response when `order` param is not a string" do
         get "/latest?order[1]=haxx"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `ascending` param is not a string that is either `true` or `false`" do
+      it "returns a 400 response when `ascending` param is not a string that is either `true` or `false`" do
         get "/latest?ascending=maybe"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `min_posts` param is a string that does not represent an integer" do
+      it "returns a 400 response when `min_posts` param is a string that does not represent an integer" do
         get "/latest?min_posts=bob"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `max_posts` param is a string that does not represent an integer" do
+      it "returns a 400 response when `max_posts` param is a string that does not represent an integer" do
         get "/latest?max_posts=bob"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `max_posts` param is a string larger than maximum integer value" do
+      it "returns a 400 response when `max_posts` param is a string larger than maximum integer value" do
         get "/latest?max_posts=1111111111111111111111111111111111111111"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `status` param is not a string" do
+      it "returns a 400 response when `status` param is not a string" do
         get "/latest?status%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `filter` param is not a string" do
+      it "returns a 400 response when `filter` param is not a string" do
         get "/latest?filter%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `state` param is not a string" do
+      it "returns a 400 response when `state` param is not a string" do
         get "/latest?state%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `search` param is not a string" do
+      it "returns a 400 response when `search` param is not a string" do
         get "/latest?search%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `q` param is not a string" do
+      it "returns a 400 response when `q` param is not a string" do
         get "/latest?q%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `f` param is not a string" do
+      it "returns a 400 response when `f` param is not a string" do
         get "/latest?f%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `subset` param is not a string" do
+      it "returns a 400 response when `subset` param is not a string" do
         get "/latest?subset%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `group_name` param is not a string" do
+      it "returns a 400 response when `group_name` param is not a string" do
         get "/latest?group_name%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `tags` param is not an array or string" do
+      it "returns a 400 response when `tags` param is not an array or string" do
         get "/latest?tags[1]=hello"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `filter` param is not a string" do
+      it "returns a 400 response when `filter` param is not a string" do
         get "/latest?filter%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `match_all_tags` param is not a string that is either `true` or `false`" do
+      it "returns a 400 response when `match_all_tags` param is not a string that is either `true` or `false`" do
         get "/latest?match_all_tags=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `no_subcategories` param is not a string that is either `true` or `false`" do
+      it "returns a 400 response when `no_subcategories` param is not a string that is either `true` or `false`" do
         get "/latest?no_subcategories=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `no_tags` param is not a string that is either `true` or `false`" do
+      it "returns a 400 response when `no_tags` param is not a string that is either `true` or `false`" do
         get "/latest?no_tags=something"
         expect(response.status).to eq(400)
       end
 
-      it "should return a 400 response when `exclude_tag` param is not a string" do
+      it "returns a 400 response when `exclude_tag` param is not a string" do
         get "/latest?exclude_tag%5Bsomehash%5D=something"
         expect(response.status).to eq(400)
       end
@@ -500,13 +500,13 @@ RSpec.describe ListController do
       Fabricate(:topic_tag, tag: tag, topic: private_message)
     end
 
-    it "should fail for non-staff users" do
+    it "fails for non-staff users" do
       sign_in(user)
       get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
       expect(response.status).to eq(404)
     end
 
-    it "should fail for staff users if empty" do
+    it "fails for staff users if empty" do
       SiteSetting.pm_tags_allowed_for_groups = ""
 
       [moderator, admin].each do |user|
@@ -516,7 +516,7 @@ RSpec.describe ListController do
       end
     end
 
-    it "should be success for staff users" do
+    it "is success for staff users" do
       [moderator, admin].each do |user|
         sign_in(user)
         get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
@@ -524,7 +524,7 @@ RSpec.describe ListController do
       end
     end
 
-    it "should work for tag with unicode name" do
+    it "works for tag with unicode name" do
       unicode_tag = Fabricate(:tag, name: "hello-🇺🇸")
       Fabricate(:topic_tag, tag: unicode_tag, topic: private_message)
 
@@ -534,7 +534,7 @@ RSpec.describe ListController do
       expect(response.parsed_body["topic_list"]["topics"].first["id"]).to eq(private_message.id)
     end
 
-    it "should work for users who are allowed and direct links" do
+    it "works for users who are allowed and direct links" do
       SiteSetting.pm_tags_allowed_for_groups = group.name
       group.add(user)
       sign_in(user)
@@ -593,7 +593,7 @@ RSpec.describe ListController do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
       end
 
-      it "should display group private messages for an admin" do
+      it "displays group private messages for an admin" do
         sign_in(Fabricate(:admin))
 
         get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
@@ -603,7 +603,7 @@ RSpec.describe ListController do
         expect(response.parsed_body["topic_list"]["topics"].first["id"]).to eq(topic.id)
       end
 
-      it "should display moderator group private messages for a moderator" do
+      it "displays moderator group private messages for a moderator" do
         moderator = Fabricate(:moderator)
         group = Group.find(Group::AUTO_GROUPS[:moderators])
         Fabricate(:private_message_topic, allowed_groups: [group])
@@ -614,7 +614,7 @@ RSpec.describe ListController do
         expect(response.status).to eq(200)
       end
 
-      it "should not display group private messages for a moderator's group" do
+      it "does not display group private messages for a moderator's group" do
         moderator = Fabricate(:moderator)
         sign_in(moderator)
 
@@ -623,7 +623,7 @@ RSpec.describe ListController do
         expect(response.status).to eq(404)
       end
 
-      it "should sort group private messages by posts_count" do
+      it "sorts group private messages by posts_count" do
         topic2 = Fabricate(:private_message_topic, allowed_groups: [group])
         topic3 = Fabricate(:private_message_topic, allowed_groups: [group])
         2.times { Fabricate(:post, topic: topic2) }
@@ -650,7 +650,7 @@ RSpec.describe ListController do
         SiteSetting.unicode_usernames = false
       end
 
-      it "should return the right response when user does not belong to group" do
+      it "returns the right response when user does not belong to group" do
         Fabricate(:private_message_topic, allowed_groups: [group])
 
         group.remove(user)
@@ -660,7 +660,7 @@ RSpec.describe ListController do
         expect(response.status).to eq(404)
       end
 
-      it "should return the right response" do
+      it "returns the right response" do
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
         get "/topics/private-messages-group/#{user.username}/awesomegroup.json"
 
@@ -702,7 +702,7 @@ RSpec.describe ListController do
     let!(:another_topic) { Fabricate(:topic) }
 
     describe "when an invalid group name is given" do
-      it "should return the right response" do
+      it "returns the right response" do
         get "/topics/groups/something.json"
 
         expect(response.status).to eq(404)
@@ -711,7 +711,7 @@ RSpec.describe ListController do
 
     describe "for an anon user" do
       describe "public visible group" do
-        it "should return the right response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(200)
@@ -722,7 +722,7 @@ RSpec.describe ListController do
       describe "group restricted to logged-on-users" do
         before { group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) }
 
-        it "should return the right response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -732,7 +732,7 @@ RSpec.describe ListController do
       describe "restricted group" do
         before { group.update!(visibility_level: Group.visibility_levels[:staff]) }
 
-        it "should return the right response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -744,7 +744,7 @@ RSpec.describe ListController do
           group.update!(members_visibility_level: Group.visibility_levels[:logged_on_users])
         end
 
-        it "should return the right response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -758,7 +758,7 @@ RSpec.describe ListController do
       describe "restricted group" do
         before { group.update!(visibility_level: Group.visibility_levels[:staff]) }
 
-        it "should return the right response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(403)
@@ -768,7 +768,7 @@ RSpec.describe ListController do
       describe "group restricted to logged-on-users" do
         before { group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) }
 
-        it "should return the right response" do
+        it "returns the right response" do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(200)
@@ -779,7 +779,7 @@ RSpec.describe ListController do
     describe "for a group user" do
       before { sign_in(user) }
 
-      it "should be able to view the topics started by group users" do
+      it "is able to view the topics started by group users" do
         get "/topics/groups/#{group.name}.json"
 
         expect(response.status).to eq(200)
@@ -1362,14 +1362,14 @@ RSpec.describe ListController do
       sign_in(user2)
     end
 
-    it "should respond with a list" do
+    it "responds with a list" do
       get "/topics/created-by/#{user.username}.json"
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
-    it "should work with period in username" do
+    it "works with period in username" do
       user.update!(username: "myname.test")
       get "/topics/created-by/#{user.username}", xhr: true
       expect(response.status).to eq(200)
@@ -1380,7 +1380,7 @@ RSpec.describe ListController do
     context "with unicode usernames" do
       before { SiteSetting.unicode_usernames = true }
 
-      it "should return the more_topics_url in the encoded form" do
+      it "returns the more_topics_url in the encoded form" do
         stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
           user.update!(username: "快快快")
 
@@ -1405,7 +1405,7 @@ RSpec.describe ListController do
         expect(response.status).to eq(404)
       end
 
-      it "should respond with a list when `allow_users_to_hide_profile` is false" do
+      it "responds with a list when `allow_users_to_hide_profile` is false" do
         SiteSetting.allow_users_to_hide_profile = false
         get "/topics/created-by/#{user.username}.json"
         expect(response.status).to eq(200)
@@ -1784,7 +1784,7 @@ RSpec.describe ListController do
     fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
     fab!(:user2, :user)
 
-    it "should not return topics that the user is not allowed to view" do
+    it "does not return topics that the user is not allowed to view" do
       sign_in(user)
 
       get "/filter.json"
@@ -1796,7 +1796,7 @@ RSpec.describe ListController do
       ).to contain_exactly(topic.id)
     end
 
-    it "should not return topics that an anon user is not allowed to view" do
+    it "does not return topics that an anon user is not allowed to view" do
       get "/filter.json"
 
       expect(response.status).to eq(200)
@@ -1840,7 +1840,7 @@ RSpec.describe ListController do
       ).to contain_exactly(topic.id)
     end
 
-    it "should accept the `page` query parameter" do
+    it "accepts the `page` query parameter" do
       topic_with_tag = Fabricate(:topic, tags: [tag])
       topic2_with_tag = Fabricate(:topic, tags: [tag])
 
@@ -1891,7 +1891,7 @@ RSpec.describe ListController do
       end
     end
 
-    it "should include filter_option_info in the response" do
+    it "includes filter_option_info in the response" do
       get "/filter.json"
       parsed = response.parsed_body
       expect(response.status).to eq(200)
@@ -1900,7 +1900,7 @@ RSpec.describe ListController do
       )
     end
 
-    it "should filter with tag_group option" do
+    it "filters with tag_group option" do
       topic_with_tag = Fabricate(:topic, tags: [tag])
       topic2_with_tag = Fabricate(:topic, tags: [tag])
       tag_group = Fabricate(:tag_group, tags: [tag])
@@ -2319,7 +2319,7 @@ RSpec.describe ListController do
       end
     end
 
-    it "should not have N+1s when loading localizations" do
+    it "does not have N+1s when loading localizations" do
       Fabricate.times(5, :topic, category:, locale: "en")
       Topic.all.each { |t| Fabricate(:topic_localization, topic: t, locale: "ja") }
 
