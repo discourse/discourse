@@ -3,14 +3,15 @@
 require "compression/safe_zip_reader"
 
 module ::Blog
+  # Reads a theme from an archive or a Git repository without saving it.
   class ThemeImporter
-    # Failures an import reports for invalid input or an unreachable source.
-    ERRORS = [
-      Discourse::InvalidParameters,
-      Discourse::InvalidAccess,
-      Discourse::NotFound,
-      RemoteTheme::ImportError,
-    ].freeze
+    MANIFEST = "blog-theme.json"
+    MANIFEST_VERSIONS = [1, 2].freeze
+    MAX_MANIFEST_BYTES = 4096
+    MAX_ARCHIVE_ENTRIES = 1000
+
+    InvalidTheme = Class.new(StandardError)
+    ImportedTheme = Data.define(:attributes, :source)
 
     class GitSource < ThemeStore::GitImporter
       def import!
@@ -38,122 +39,87 @@ module ::Blog
       end
     end
 
-    def self.import(repository:, branch:, user:, id: nil, revision: nil)
-      if !repository.is_a?(String) || (!branch.nil? && !branch.is_a?(String))
-        raise Discourse::InvalidParameters.new(:repository)
+    # Reads a checkout through the same interface as Compression::SafeZipReader.
+    class Checkout
+      def initialize(importer)
+        @importer = importer
       end
-      uri = URI.parse(repository)
-      unless repository.length <= 1000 && uri.is_a?(URI::HTTPS) && uri.host.present? &&
-               !uri.userinfo && !uri.query && !uri.fragment
-        raise Discourse::InvalidParameters.new(I18n.t("blog.themes.repository_invalid"))
+
+      def read_entry(name, max_bytes:, required: false)
+        path = contained_file(name)
+        if !path
+          raise InvalidTheme, I18n.t("blog.themes.manifest_invalid") if required
+          return
+        end
+        if File.size(path) > max_bytes
+          raise InvalidTheme, I18n.t("blog.themes.file_too_large", file: name)
+        end
+        File.read(path)
       end
-      branch = branch.presence
-      if branch && (branch.length > 200 || branch.start_with?("-") || branch.match?(/[\x00-\x20]/))
-        raise Discourse::InvalidParameters.new(:branch)
+
+      private
+
+      # Symlinks must not escape the checkout.
+      def contained_file(name)
+        path = @importer.real_path(name)
+        return if !path&.start_with?("#{@importer.temp_folder}/")
+        path if File.file?(path)
       end
-      user.guardian.ensure_allowed_theme_repo_import!(repository)
-      importer = GitSource.new(repository, branch: branch)
-      begin
-        importer.import!
-        values =
-          read_values do |name, limit, required: false|
-            read_file(importer, name, limit, required: required)
-          end
-        save(
-          values,
-          user: user,
-          id: id,
-          revision: revision,
-          source: {
-            "repository" => repository,
-            "branch" => branch,
-            "commit" => importer.version,
-          },
-        )
-      ensure
-        importer.cleanup!
-      end
-    rescue JSON::ParserError, URI::InvalidURIError
-      raise Discourse::InvalidParameters.new(I18n.t("blog.themes.manifest_invalid"))
     end
 
-    def self.import_file(file:, user:)
-      unless file.is_a?(ActionDispatch::Http::UploadedFile) &&
-               File.extname(file.original_filename).downcase == ".zip" && file.size <= 2.megabytes
-        raise Discourse::InvalidParameters.new(:file)
-      end
-
-      Compression::SafeZipReader.open(file.path, max_entries: 1000) do |reader|
-        values =
-          read_values do |name, limit, required: false|
-            reader.read_entry(name, max_bytes: limit, required: required)&.force_encoding(
-              Encoding::UTF_8,
-            ) || ""
-          end
-        save(values, user: user)
+    def self.read_archive(path)
+      Compression::SafeZipReader.open(path, max_entries: MAX_ARCHIVE_ENTRIES) do |reader|
+        ImportedTheme.new(attributes: read_attributes(reader), source: nil)
       end
     rescue Compression::SafeZipReader::Error, Zip::Error, Zlib::Error
-      raise Discourse::InvalidParameters.new(I18n.t("blog.themes.archive_invalid"))
+      raise InvalidTheme, I18n.t("blog.themes.archive_invalid")
     end
 
-    def self.read_values
-      manifest = JSON.parse(yield("blog-theme.json", 4096, required: true))
-      unless manifest.is_a?(Hash) && [1, 2].include?(manifest["version"])
-        raise Discourse::InvalidParameters.new(I18n.t("blog.themes.manifest_invalid"))
-      end
-      values = manifest.slice("name", "accent_color", "paper_color", "ink_color")
-      values["css"] = yield("blog.css", BlogTheme::MAX_CODE_BYTES)
-      values["javascript"] = yield("blog.js", BlogTheme::MAX_CODE_BYTES)
-      if manifest["version"] == 2
-        TemplateRenderer::PAGES.each do |page|
-          values["template_#{page}"] = yield(
-            "templates/#{page}.liquid",
-            TemplateRenderer::MAX_TEMPLATE_BYTES
-          )
-        end
-      end
-      values
-    rescue JSON::ParserError
-      raise Discourse::InvalidParameters.new(I18n.t("blog.themes.manifest_invalid"))
-    end
-    private_class_method :read_values
-
-    def self.save(values, user:, id: nil, revision: nil, source: nil)
-      service = id ? BlogTheme::Update : BlogTheme::Create
-      service.call(
-        params: values.merge("theme_id" => id, "revision" => revision),
-        options: {
-          source: source,
+    def self.read_repository(repository, branch:)
+      git = GitSource.new(repository, branch:)
+      git.import!
+      ImportedTheme.new(
+        attributes: read_attributes(Checkout.new(git)),
+        source: {
+          "repository" => repository,
+          "branch" => branch,
+          "commit" => git.version,
         },
-        guardian: user.guardian,
-      ) do
-        on_success { |theme:, revised_theme: nil| revised_theme || theme }
-        on_failed_contract do |contract|
-          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
-        end
-        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
-        on_failed_policy(:within_theme_limit) do |policy|
-          raise Discourse::InvalidParameters.new(policy.reason)
-        end
-        on_model_not_found(:theme) { raise Discourse::NotFound }
-        on_failed_policy(:revision_is_current) do |policy|
-          raise Discourse::InvalidParameters.new(policy.reason)
-        end
-      end
+      )
+    ensure
+      git&.cleanup!
     end
-    private_class_method :save
 
-    def self.read_file(importer, name, limit, required: false)
-      path = importer.real_path(name)
-      unless path && path.start_with?("#{importer.temp_folder}/") && File.file?(path)
-        return "" unless required
-        raise Discourse::InvalidParameters.new(I18n.t("blog.themes.manifest_invalid"))
+    def self.read_attributes(files)
+      manifest = read_manifest(files)
+      attributes = manifest.slice("name", *BlogTheme::COLOR_FIELDS)
+      attributes["css"] = read(files, "blog.css", BlogTheme::MAX_CODE_BYTES)
+      attributes["javascript"] = read(files, "blog.js", BlogTheme::MAX_CODE_BYTES)
+      return attributes if manifest["version"] == 1
+
+      TemplateRenderer::PAGES.each do |page|
+        attributes["template_#{page}"] = read(
+          files,
+          "templates/#{page}.liquid",
+          TemplateRenderer::MAX_TEMPLATE_BYTES,
+        )
       end
-      if importer.file_size(name) > limit
-        raise Discourse::InvalidParameters.new(I18n.t("blog.themes.file_too_large", file: name))
-      end
-      importer[name]
+      attributes
     end
-    private_class_method :read_file
+    private_class_method :read_attributes
+
+    def self.read_manifest(files)
+      manifest = JSON.parse(read(files, MANIFEST, MAX_MANIFEST_BYTES, required: true))
+      return manifest if manifest.is_a?(Hash) && MANIFEST_VERSIONS.include?(manifest["version"])
+      raise InvalidTheme, I18n.t("blog.themes.manifest_invalid")
+    rescue JSON::ParserError
+      raise InvalidTheme, I18n.t("blog.themes.manifest_invalid")
+    end
+    private_class_method :read_manifest
+
+    def self.read(files, name, max_bytes, required: false)
+      files.read_entry(name, max_bytes:, required:)&.force_encoding(Encoding::UTF_8) || ""
+    end
+    private_class_method :read
   end
 end

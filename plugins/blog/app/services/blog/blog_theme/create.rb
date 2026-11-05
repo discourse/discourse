@@ -20,7 +20,7 @@ class Blog::BlogTheme::Create
     end
   end
 
-  # Provenance of a Git import, set by the importer rather than by request params.
+  # Provenance of a Git import, set by ImportRepository rather than by request params.
   options { attribute :source }
 
   policy :can_manage_themes
