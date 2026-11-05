@@ -12,10 +12,12 @@
 #   {"spec": "spec/models/post_spec.rb", "files": {"app/models/post.rb": [[12, 30]]},
 #    "settings": ["max_post_length"], "keys": ["post.edit"], "locales": ["en"],
 #    "reads": ["spec/fixtures/images/logo.png"], "tables": ["posts", "users"],
+#    "gems": ["sanitize"],
 #    "js": {"app-a1b2.digested.js": [[1, 52, 1, 90]]}}
 #   {"methods": {"app/models/post.rb": [[12, 30]]},
 #    "js_functions": {"app-a1b2.digested.js": [[1, 52, 1, 90]]},
-#    "boot": {"lib/plugin/instance.rb": [[40, 52]]}}  (last line)
+#    "boot": {"lib/plugin/instance.rb": [[40, 52]]},
+#    "gems": {"loaded": ["sanitize"], "boot": ["rack"], "native": ["oj"]}}  (last line)
 #
 # JavaScript is recorded as bundle line/column ranges of the functions that
 # ran; script/test_impact/resolve_js maps them to source files through the
@@ -34,7 +36,7 @@ module TestImpact
 
     EXCLUDED = %r{\A(?:vendor|node_modules|tmp|public|frontend)/|_spec\.rb\z}
 
-    NOTES = %i[settings keys locales reads tables].freeze
+    NOTES = %i[settings keys locales reads tables gems].freeze
 
     # The tables a query names. Aliases and CTE names are dropped by keeping
     # only names of real tables.
@@ -64,6 +66,9 @@ module TestImpact
       @js_ran = Hash.new { |h, script| h[script] = Set.new }
       @js_functions = Hash.new { |h, script| h[script] = Set.new }
       @loaded = {}
+      @gem_of = {}
+      @gems_loaded = Set.new
+      @boot_gems = Set.new
     end
 
     # What a spec file reads and looks up as it loads, such as the data file
@@ -83,7 +88,11 @@ module TestImpact
     end
 
     def loading(file)
-      @boot ||= boot_methods(Coverage.result(stop: false, clear: true))
+      if !@boot
+        result = Coverage.result(stop: false, clear: true)
+        @boot = boot_methods(result)
+        @boot_gems.merge(gems_ran(result))
+      end
       @notes.each_value(&:clear)
       yield
     ensure
@@ -237,6 +246,7 @@ module TestImpact
       if !@running
         @running = true
         @boot = (@boot || {}).merge(boot_methods(result)) { |_, a, b| (a | b).sort }
+        @boot_gems.merge(gems_ran(result))
       end
       @notes.each_value(&:clear)
       @started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -259,7 +269,13 @@ module TestImpact
       return if !@out
       methods = @methods.transform_values { |m| m[:ranges].to_a.sort }
       js_functions = @js_functions.transform_values { |ranges| ranges.to_a.sort }
-      @out.puts(JSON.generate(methods:, js_functions:, boot: @boot || {}))
+      native = Gem.loaded_specs.values.select { |spec| spec.extensions.any? }.map(&:name)
+      gems = {
+        loaded: @gems_loaded.to_a.sort,
+        boot: @boot_gems.to_a.sort,
+        native: (native & @gems_loaded.to_a).sort,
+      }
+      @out.puts(JSON.generate(methods:, js_functions:, boot: @boot || {}, gems:))
       @out.close
     end
 
@@ -287,10 +303,38 @@ module TestImpact
       Coverage
         .result(stop: false, clear: true)
         .each_with_object({}) do |(absolute, coverage), files|
+          if (gem = gem_of(absolute))
+            note(:gems, gem) if !@notes[:gems].include?(gem) && ran_method?(coverage)
+            next
+          end
           path = relative(absolute) or next
           ran = ran(path, coverage)
           files[path] = ran if ran.any?
         end
+    end
+
+    # The gem a loaded file belongs to, by its install directory
+    # (gems/<name>-<version>/, or bundler/gems/<name>-<revision>/ for git gems).
+    def gem_of(absolute)
+      @gem_of.fetch(absolute) do
+        @gem_dirs ||=
+          Gem.loaded_specs.values.to_h { |spec| [File.basename(spec.full_gem_path), spec.name] }
+        # The first /gems/ can be the Ruby version's gem home (gems/4.0.0/gems/...).
+        dir = absolute.scan(%r{/gems/([^/]+)/}).flatten.find { |name| @gem_dirs.key?(name) }
+        gem = dir && @gem_dirs[dir]
+        @gems_loaded << gem if gem
+        @gem_of[absolute] = gem
+      end
+    end
+
+    def ran_method?(coverage)
+      (coverage[:methods] || {}).each_value.any?(&:positive?)
+    end
+
+    def gems_ran(result)
+      result.filter_map do |absolute, coverage|
+        (gem = gem_of(absolute)) && ran_method?(coverage) && gem
+      end
     end
 
     def boot_methods(result)
