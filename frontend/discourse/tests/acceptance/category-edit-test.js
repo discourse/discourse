@@ -44,7 +44,7 @@ acceptance("Category Edit", function (needs) {
     await visit("/c/bug/edit/topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/topic-template",
@@ -54,7 +54,7 @@ acceptance("Category Edit", function (needs) {
     await visit("/c/bug/edit/settings");
     await formKit().field("search_priority").select(1);
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
@@ -92,14 +92,14 @@ acceptance("Category Edit", function (needs) {
     await tagGroupChooser.expand();
     await tagGroupChooser.selectRowByValue("TagGroup1");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
     assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
 
     await click(".delete-required-tag-group");
     assert.dom(".form-kit__collection").doesNotExist();
 
     assert
-      .dom(".admin-changes-banner")
+      .dom(".d-floating-control-bar")
       .exists("save banner stays visible when collection is emptied");
   });
 
@@ -109,7 +109,7 @@ acceptance("Category Edit", function (needs) {
     await formKit().field("allowed_tags").selectByName("monkey");
     await formKit().control("#category-allowed-tag-groups").select("TagGroup1");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     const payload = latestCategorySavePayload();
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
@@ -120,7 +120,7 @@ acceptance("Category Edit", function (needs) {
       .control("#category-allowed-tag-groups")
       .deselectByValue("TagGroup1");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     const removePayload = latestCategorySavePayload();
     assert.deepEqual(removePayload.allowed_tags, []);
@@ -181,7 +181,7 @@ acceptance("Category Edit", function (needs) {
 
     // eslint-disable-next-line ember/require-valid-css-selector-in-test-helpers -- FormKit fillIn(value), not Ember fillIn(selector)
     await formKit().field("email_in").fillIn("duplicate@example.com");
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -202,7 +202,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(1002);
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -441,7 +441,7 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(3);
 
-      await click(".admin-changes-banner .btn-primary");
+      await click(".d-floating-control-bar .btn-primary");
 
       const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
@@ -454,7 +454,7 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(6);
 
-      await click(".admin-changes-banner .btn-primary");
+      await click(".d-floating-control-bar .btn-primary");
 
       const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { custom_group: 1 });
@@ -467,7 +467,7 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(4);
 
-      await click(".admin-changes-banner .btn-primary");
+      await click(".d-floating-control-bar .btn-primary");
 
       const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
@@ -483,7 +483,7 @@ acceptance(
       assert.true(Boolean(clearButton), "shows the clear button");
       await click(clearButton);
 
-      await click(".admin-changes-banner .btn-primary");
+      await click(".d-floating-control-bar .btn-primary");
 
       const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
@@ -496,7 +496,7 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(4);
 
-      await click(".admin-changes-banner .btn-primary");
+      await click(".d-floating-control-bar .btn-primary");
 
       const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { everyone: 3, staff: 1 });
@@ -509,7 +509,7 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(6);
 
-      await click(".admin-changes-banner .btn-primary");
+      await click(".d-floating-control-bar .btn-primary");
 
       const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { custom_group: 1 });
@@ -585,7 +585,7 @@ acceptance("Category Edit - resetting selects to default", function (needs) {
       .dom("[data-name='sort_ascending']")
       .doesNotExist("hides the sort direction once the sort order is cleared");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     const payload = latestCategorySavePayload();
 
@@ -622,7 +622,7 @@ acceptance(
         );
 
       await formKit().field("sort_order").select(NO_VALUE_OPTION);
-      await click(".admin-changes-banner .btn-primary");
+      await click(".d-floating-control-bar .btn-primary");
 
       assert.strictEqual(
         latestCategorySavePayload().sort_order,
@@ -702,7 +702,7 @@ acceptance("Category Edit - saved value types", function (needs) {
 
     await visit("/c/bug/edit/images");
     await formKit().field("sort_ascending").select("true");
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.true(
       latestCategorySavePayload().sort_ascending,
@@ -716,7 +716,7 @@ acceptance("Category Edit - saved value types", function (needs) {
 
     await visit("/c/bug/edit/images");
     await formKit().field("sort_ascending").select("false");
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.false(
       latestCategorySavePayload().sort_ascending,
@@ -730,7 +730,7 @@ acceptance("Category Edit - saved value types", function (needs) {
 
     await visit("/c/bug/edit/settings");
     await formKit().field("search_priority").select(1);
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.strictEqual(
       latestCategorySavePayload().search_priority,
@@ -745,7 +745,7 @@ acceptance("Category Edit - saved value types", function (needs) {
 
     await visit("/c/bug/edit/settings");
     await formKit().field("search_priority").select(0);
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.strictEqual(
       latestCategorySavePayload().search_priority,
@@ -763,7 +763,7 @@ acceptance("Category Edit - saved value types", function (needs) {
     const typesBefore = cloneJSON(model.category_types);
 
     await fillIn("input.category-name", "renamed");
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.deepEqual(
       latestCategorySavePayload().category_types,
