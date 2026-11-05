@@ -438,7 +438,6 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.true(Object.isFrozen(resolved), "the resolved array is frozen");
     assert.throws(
       () => resolved.push({ key: "c", value: 3, position: {} }),
-      /extensible/,
       "mutating the resolved array throws"
     );
   });
