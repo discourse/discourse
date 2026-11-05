@@ -467,6 +467,8 @@ RSpec.describe TestImpact::Job do
       plugins/discourse-events/spec/system/event_spec.rb
       frontend/discourse/tests/unit/lib/thing-test.js
       plugins/poll/test/javascripts/poll-test.gjs
+      themes/horizon/spec/system/horizon_spec.rb
+      tmp/themes/discourse-tag-icons/spec/system/icons_spec.rb
       spec/deleted_spec.rb
     ]
   end
@@ -490,6 +492,10 @@ RSpec.describe TestImpact::Job do
       "system/official-plugins" => ["plugins/discourse-events/spec/system/event_spec.rb"],
       "frontend/core" => ["frontend/discourse/tests/unit/lib/thing-test.js"],
       "frontend/plugins" => ["plugins/poll/test/javascripts/poll-test.gjs"],
+      "system/themes" => %w[
+        themes/horizon/spec/system/horizon_spec.rb
+        tmp/themes/discourse-tag-icons/spec/system/icons_spec.rb
+      ],
     }
 
     lists.each do |name, files|
@@ -509,7 +515,11 @@ RSpec.describe TestImpact::Job do
     expect(run("frontend/core", specs: tests).first).to eq("full")
   end
 
-  it "doesn't record themes" do
-    expect(described_class.new("frontend/themes")).not_to be_recorded
+  it "runs theme QUnit whole when the change reaches a browser test, and not otherwise" do
+    expect(run("frontend/themes", specs: ["spec/system/composer_spec.rb"]).first).to eq("full")
+    expect(
+      run("frontend/themes", specs: ["plugins/poll/test/javascripts/poll-test.gjs"]).first,
+    ).to eq("full")
+    expect(run("frontend/themes", specs: ["spec/models/post_spec.rb"]).first).to eq("none")
   end
 end

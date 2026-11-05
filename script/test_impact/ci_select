@@ -24,9 +24,7 @@ abort "ci_select: --map, --base, --job and --out are required" if options.size <
 
 job = TestImpact::Job.new(options[:job])
 mode, reason, files =
-  if !job.recorded?
-    ["full", "#{options[:job]} isn't recorded"]
-  elsif !File.exist?(options[:map])
+  if !File.exist?(options[:map])
     ["full", "no map at #{options[:map]}"]
   else
     begin

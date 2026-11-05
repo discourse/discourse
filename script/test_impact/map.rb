@@ -410,16 +410,12 @@ module TestImpact
       @name = name
     end
 
-    # Theme tests aren't recorded.
-    def recorded?
-      @target != "themes"
-    end
-
     # ["full" | "none" | "list", reason, files]
     def run(selection, bundled:, exists:)
       if selection.unmapped.any?
         return "full", "outside the map: #{selection.unmapped.first(5).join(", ")}", []
       end
+      return theme_qunit(selection) if [@build_type, @target] == %w[frontend themes]
       files = selection.specs.select { |path| exists.call(path) && runs?(path, bundled) }
       return "none", "nothing selected for #{@name}", [] if files.empty?
       if @build_type == "frontend" && files.sum { |file| file.size + 1 } > QUNIT_FILTER_LIMIT
@@ -430,17 +426,29 @@ module TestImpact
 
     private
 
+    # Theme QUnit isn't recorded: its tests are compiled into modules named by
+    # theme id. They run in the browser on core's JavaScript, so they run whole
+    # when a change reaches any browser test, and not at all otherwise.
+    def theme_qunit(selection)
+      browser =
+        selection.specs.any? { |path| path.include?("spec/system/") || !path.end_with?("_spec.rb") }
+      return "full", "theme QUnit isn't recorded; the change reaches browser tests", [] if browser
+      ["none", "the change reaches no browser test", []]
+    end
+
     def runs?(path, bundled)
       plugin = path[%r{\Aplugins/([^/]+)/}, 1]
       spec = path.end_with?("_spec.rb")
       system = path.start_with?("spec/system/") || path.include?("/spec/system/")
       case [@build_type, @target]
       in ["backend", "core"]
-        spec && !plugin && !system
+        spec && path.start_with?("spec/") && !system
       in ["backend", "plugins"]
         spec && plugin && !system
       in ["system", "core"]
-        spec && !plugin && system
+        spec && path.start_with?("spec/system/")
+      in ["system", "themes"]
+        spec && system && path.match?(%r{\A(?:tmp/)?themes/})
       in ["system", "chat"]
         spec && plugin == "chat" && system
       in ["system", "core-plugins"]
