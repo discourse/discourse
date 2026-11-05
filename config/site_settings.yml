@@ -514,6 +514,11 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_trusted_hosts:
+    default: "fcm.googleapis.com|updates.push.services.mozilla.com|push.apple.com|notify.windows.com"
+    type: host_list
+    list_type: simple
+    area: "notifications"
   short_title:
     default: ""
     max: 12
