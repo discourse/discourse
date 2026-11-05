@@ -5,10 +5,14 @@ import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
+import { resetLocalCache, setLocalCache } from "pretty-text/oneboxer-cache";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse/lib/object";
 import DiscourseMarkdownIt from "discourse-markdown-it";
-import { extractDataAttribute } from "discourse-markdown-it/engine";
+import {
+  extractDataAttribute,
+  unhoistForCooked,
+} from "discourse-markdown-it/engine";
 import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
 
 const rawOpts = {
@@ -1150,6 +1154,58 @@ eviltrout</p>
       "`$&`",
       "<p><code>$&amp;</code></p>",
       "works even when hoisting special replacement patterns"
+    );
+  });
+
+  test("hoisted raw HTML is not restored inside an attribute value", function (assert) {
+    const onebox = document.createElement("aside");
+    onebox.className = "onebox";
+    onebox.title = "injected=1 y=";
+    setLocalCache("http://test.com", onebox);
+
+    try {
+      assert.true(
+        build().cook("http://test.com").includes('title="injected=1 y="'),
+        "restores a cached onebox that stands where text may stand"
+      );
+
+      assert.false(
+        build()
+          .cook("<div data-x='\n\nhttp://test.com\n\n</div '>hello</div>")
+          .includes("injected=1"),
+        "leaves the cached onebox out of the attribute value the post placed it in"
+      );
+    } finally {
+      resetLocalCache();
+    }
+  });
+
+  test("hoisted raw HTML is not restored inside a tag during nested substitution", function (assert) {
+    // A hoisted value may itself hold another key, which is how a nested block
+    // is restored. Where that inner key lands is decided by the outer value, so
+    // it has to be re-checked between substitutions rather than once up front.
+    const outer = "1b4e28ba-2fa1-4d9b-b3f8-2e1dd3f7a0c1";
+    const inner = "9f2c17e5-8b3d-4a62-91c4-6d0ab5e7f3d2";
+
+    assert.strictEqual(
+      unhoistForCooked(
+        {
+          [outer]: `<div class="wrap">${inner}</div>`,
+          [inner]: "<p>nested</p>",
+        },
+        outer
+      ),
+      '<div class="wrap"><p>nested</p></div>',
+      "restores a nested key that stands where text may stand"
+    );
+
+    assert.strictEqual(
+      unhoistForCooked(
+        { [outer]: `<div data-x="${inner}">`, [inner]: '" id="pwn" y="' },
+        outer
+      ),
+      '<div data-x="">',
+      "drops a nested key that the outer value put inside a tag"
     );
   });
 
