@@ -3526,6 +3526,58 @@ RSpec.describe TopicsController do
       )
     end
 
+    it "does not expose linkbacks from hidden or whisper source posts to non-staff viewers" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+      public_post = Fabricate(:post, user: post_author1)
+      public_topic = public_post.topic
+      link_url =
+        "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}"
+
+      visible_source_topic = Fabricate(:topic, user: post_author1, title: "Visible source topic")
+      Fabricate(:post, topic: visible_source_topic, user: post_author1, raw: "op body")
+      visible_source_post =
+        Fabricate(:post, topic: visible_source_topic, user: post_author1, raw: link_url)
+
+      hidden_source_topic = Fabricate(:topic, user: post_author1, title: "Hidden source topic")
+      Fabricate(:post, topic: hidden_source_topic, user: post_author1, raw: "op body")
+      hidden_source_post =
+        Fabricate(:post, topic: hidden_source_topic, user: post_author1, raw: link_url)
+
+      whisper_source_topic = Fabricate(:topic, user: post_author1, title: "Whisper source topic")
+      Fabricate(:post, topic: whisper_source_topic, user: post_author1, raw: "op body")
+      whisper_source_post =
+        Fabricate(:post, topic: whisper_source_topic, user: post_author1, raw: link_url)
+
+      TopicLink.extract_from(visible_source_post)
+      TopicLink.extract_from(hidden_source_post)
+      TopicLink.extract_from(whisper_source_post)
+
+      hidden_source_post.hide!(PostActionType.types[:off_topic])
+      whisper_source_post.update!(post_type: Post.types[:whisper])
+
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response.parsed_body.dig("post_stream", "posts").find { |p| p["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"].map { |l| l["title"] }).to contain_exactly(
+        "Visible source topic",
+      )
+
+      sign_in(moderator)
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response.parsed_body.dig("post_stream", "posts").find { |p| p["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"].map { |l| l["title"] }).to contain_exactly(
+        "Visible source topic",
+        "Hidden source topic",
+        "Whisper source topic",
+      )
+    end
+
     it "does not expose hidden post link counts", :aggregate_failures do
       first_post = Fabricate(:post, user: post_author1)
       test_topic = first_post.topic
