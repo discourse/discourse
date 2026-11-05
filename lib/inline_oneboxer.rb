@@ -2,6 +2,7 @@
 
 class InlineOneboxer
   MIN_TITLE_LENGTH = 2
+  MAX_TITLE_LENGTH = 500
 
   def initialize(urls, opts = nil)
     @urls = urls
@@ -113,6 +114,8 @@ class InlineOneboxer
 
   def self.onebox_for(url, title, opts, css_class: nil)
     title = title && Emoji.gsub_emoji_to_unicode(title)
+    title = title.truncate(MAX_TITLE_LENGTH) if title
+
     if title && opts[:post_number]
       title += " - "
       if opts[:post_author]
