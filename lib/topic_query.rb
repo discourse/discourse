@@ -307,11 +307,7 @@ class TopicQuery
   end
 
   def list_filter
-    query = @options[:q]
-    if @user&.unified_new_enabled? && %w[new new-topics new-replies].include?(@options[:subset])
-      query = "#{query} in:#{@options[:subset]}"
-    end
-    results, topics_filter = filter_results(query)
+    results, topics_filter = filter_results
     @invalid_filters = topics_filter.invalid_filters
     results = apply_ordering(results) if results.order_values.empty?
 
@@ -331,7 +327,8 @@ class TopicQuery
         if candidate_ids.empty?
           []
         else
-          matches, = filter_results
+          # candidates come from the new/unread report; match the raw q=, no subset decoration
+          matches, = filter_results(@options[:q])
           matches.where(id: candidate_ids).except(:limit, :offset, :order).distinct.pluck(:id)
         end
     end
@@ -810,9 +807,7 @@ class TopicQuery
     return nil if category_id_or_slug.blank?
     category_id = category_id_or_slug.to_i
 
-    if category_id == 0
-      category_id = Category.where(slug: category_id_or_slug, parent_category_id: nil).pick(:id)
-    end
+    category_id = Category.ids_from_slugs([category_id_or_slug]).first if category_id == 0
 
     category_id
   end
@@ -843,19 +838,8 @@ class TopicQuery
 
     category_id = get_category_id(options[:category])
     @options[:category_id] = category_id
+    options[:category_id] = category_id
     if category_id
-      if ActiveModel::Type::Boolean.new.cast(options[:no_subcategories])
-        result = result.where("topics.category_id = ?", category_id)
-      else
-        result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
-        if !SiteSetting.show_category_definitions_in_topic_lists
-          result =
-            result.where(
-              "categories.topic_id IS DISTINCT FROM topics.id OR topics.category_id = ?",
-              category_id,
-            )
-        end
-      end
       result = result.references(:categories)
 
       if !@options[:order]
@@ -882,7 +866,6 @@ class TopicQuery
         else
           result.preload(:tags)
         end
-      result = filter_by_tags(result)
     end
 
     result = apply_ordering(result, options) if !options[:skip_ordering]
@@ -922,56 +905,6 @@ class TopicQuery
       result = result.offset(offset) if offset > 0
     end
 
-    if options[:topic_ids]
-      result = result.where("topics.id in (?)", options[:topic_ids]).references(:topics)
-    end
-
-    if search = options[:search].presence
-      result =
-        result.where(
-          "topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})",
-        )
-    end
-
-    if state = options[:state]
-      # Special handling for watching_first_post - it's a category/tag level notification
-      # not a topic level notification, so we need to query CategoryUser and TagUser tables
-      if state == "watching_first_post"
-        result = TopicQuery.watching_first_post_filter(result, @user)
-      elsif @user && TopicUser.notification_levels.keys.map(&:to_s).include?(state)
-        result =
-          result.where(
-            "topics.id IN (
-              SELECT topic_id
-              FROM topic_users
-              WHERE user_id = ? AND notification_level = ?
-            )",
-            @user.id,
-            TopicUser.notification_levels[state.to_sym],
-          )
-      end
-    end
-
-    if before = options[:before]
-      if (before = before.to_i) > 0
-        result = result.where("topics.created_at < ?", before.to_i.days.ago)
-      end
-    end
-
-    if bumped_before = options[:bumped_before]
-      if (bumped_before = bumped_before.to_i) > 0
-        result = result.where("topics.bumped_at < ?", bumped_before.to_i.days.ago)
-      end
-    end
-
-    if status = options[:status]
-      result =
-        TopicsFilter.new(scope: result, guardian: @guardian).filter_status(
-          status: options[:status],
-          category_id: options[:category],
-        )
-    end
-
     if (filter = options[:filter] || options[:f]) && @user
       action = (PostActionType.types[:like] if filter == "liked")
       if action
@@ -992,14 +925,19 @@ class TopicQuery
       result = TopicQuery.tracked_filter(result, @user.id) if filter == "tracked"
     end
 
-    result = result.where("topics.posts_count <= ?", options[:max_posts]) if options[
-      :max_posts
-    ].present?
-    result = result.where("topics.posts_count >= ?", options[:min_posts]) if options[
-      :min_posts
-    ].present?
-
     result = TopicQuery.apply_custom_filters(result, self)
+
+    topics_filter =
+      TopicsFilter.new(
+        scope: result,
+        guardian: @guardian,
+        loaded_topic_users_reference: @user.present?,
+      )
+    topics_filter.filter_from_options(options)
+    topics_filter.filter_from_query_string(options[:q]) if options[:q].present?
+    result = topics_filter.scope
+    @options[:tag_ids] = topics_filter.tag_ids if topics_filter.tag_ids.present?
+    @applied_topics_filter = topics_filter
 
     result
   end
@@ -1337,15 +1275,18 @@ class TopicQuery
 
   private
 
-  def filter_results(query = @options[:q])
-    topics_filter =
-      TopicsFilter.new(
-        guardian: @guardian,
-        scope: latest_results(include_muted: false, skip_ordering: true),
-        loaded_topic_users_reference: @guardian.authenticated?,
-      )
+  def subset_decorated_query
+    query = @options[:q]
+    if @user&.unified_new_enabled? &&
+         %w[new new-topics new-replies].include?(@options[:subset].to_s)
+      query = "#{query} in:#{@options[:subset]}"
+    end
+    query
+  end
 
-    results = topics_filter.filter_from_query_string(query)
+  def filter_results(query = subset_decorated_query)
+    results = latest_results(include_muted: false, skip_ordering: true, q: query)
+    topics_filter = @applied_topics_filter
 
     if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
       results = remove_muted_topics(results, @user)
@@ -1375,64 +1316,5 @@ class TopicQuery
       results = results.where("topics.#{age_column} >= ?", unread_at)
     end
     results
-  end
-
-  def filter_by_tags(result)
-    tags_arg = @options[:tags]
-
-    if tags_arg && tags_arg.size > 0
-      tags_arg = tags_arg.split if String === tags_arg
-      tags_query = DiscourseTagging.visible_tags(@guardian)
-      tags_query =
-        tags_arg[0].is_a?(String) ? tags_query.where_name(tags_arg) : tags_query.where(id: tags_arg)
-      tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
-
-      if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
-        # ALL of the given tags:
-        if tags_arg.length == tags.length
-          tag_subqueries = tags.map { |tag| TopicTag.select(:topic_id).where(tag_id: tag).to_sql }
-
-          joined_subqueries = nil
-
-          tag_subqueries.each_with_index do |sql, index|
-            alias_name = "t#{index}"
-            subquery_with_alias = "(#{sql}) #{alias_name}"
-
-            if joined_subqueries
-              joined_subqueries =
-                "#{joined_subqueries} INNER JOIN #{subquery_with_alias} ON #{alias_name}.topic_id = t0.topic_id"
-            else
-              joined_subqueries = subquery_with_alias
-            end
-          end
-
-          result = result.where("topics.id IN (SELECT t0.topic_id FROM #{joined_subqueries})")
-        else
-          result = result.none # don't return any results unless all tags exist in the database
-        end
-      else
-        # ANY of the given tags:
-        result = result.joins(:tags).where("tags.id in (?)", tags)
-      end
-
-      @options[:tag_ids] = tags
-    elsif ActiveModel::Type::Boolean.new.cast(@options[:no_tags])
-      # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
-      result = result.where.not(id: TopicTag.distinct.select(:topic_id))
-    end
-
-    if @options[:exclude_tag].present? &&
-         !DiscourseTagging.hidden_tag_names(@guardian).include?(@options[:exclude_tag])
-      result = result.where(<<~SQL, name: @options[:exclude_tag])
-        topics.id NOT IN (
-          SELECT topic_tags.topic_id
-          FROM topic_tags
-          INNER JOIN tags ON tags.id = topic_tags.tag_id
-          WHERE tags.name = :name
-        )
-        SQL
-    end
-
-    result
   end
 end

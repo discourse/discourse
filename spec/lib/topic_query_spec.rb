@@ -51,6 +51,32 @@ RSpec.describe TopicQuery do
 
       expect(topic_query.invalid_filters).to eq(["status:nonsense"])
     end
+
+    it "decorates the q= DSL with the unified-new subset sugar" do
+      SiteSetting.enable_unified_new = true
+      old_topic = Fabricate(:topic, created_at: 2.months.ago, bumped_at: 2.months.ago)
+      new_topic = Fabricate(:topic)
+
+      all = TopicQuery.new(user, q: "status:open").list_filter.topics.map(&:id)
+      only_new =
+        TopicQuery.new(user, q: "status:open", subset: "new-topics").list_filter.topics.map(&:id)
+
+      expect(all).to include(new_topic.id)
+      expect(only_new).to include(new_topic.id)
+      expect(only_new).not_to include(old_topic.id)
+    end
+
+    it "leaves subset inert outside list_filter, even with unified new enabled" do
+      SiteSetting.enable_unified_new = true
+      old_topic = Fabricate(:topic, created_at: 2.months.ago, bumped_at: 2.months.ago)
+      new_topic = Fabricate(:topic)
+
+      plain = TopicQuery.new(user).list_latest.topics.map(&:id)
+      subsetted = TopicQuery.new(user, subset: "new-topics").list_latest.topics.map(&:id)
+
+      expect(subsetted).to eq(plain)
+      expect(subsetted).to include(old_topic.id, new_topic.id)
+    end
   end
 
   describe "secure category" do
