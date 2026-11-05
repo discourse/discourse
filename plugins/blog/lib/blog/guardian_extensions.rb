@@ -3,30 +3,16 @@
 module ::Blog
   module GuardianExtensions
     def can_edit_post?(post)
-      if post.is_first_post? && post.topic&.blog_published_discussion?
-        return(
-          Thread.current[:blog_publishing_topic] == post.topic_id && is_blog_publisher? &&
-            can_see?(post.topic)
-        )
-      end
-      if post.is_first_post? && can_edit_blog_draft?(post.topic) && !post.hidden? &&
-           !post.deleted_at && (!post.locked? || is_staff?)
-        return true
-      end
+      return super if !post.is_first_post?
+      topic = post.topic
+      return can_edit_published_blog_discussion?(topic) if topic&.blog_published_discussion?
+      return true if can_edit_blog_draft_post?(post)
       super
     end
 
     def can_edit_topic?(topic)
-      if topic&.blog_published_discussion?
-        return(
-          Thread.current[:blog_publishing_topic] == topic.id && is_blog_publisher? &&
-            can_see?(topic)
-        )
-      end
-      if can_edit_blog_draft?(topic) && !topic.first_post&.hidden? &&
-           (!topic.first_post&.locked? || is_staff?)
-        return true
-      end
+      return can_edit_published_blog_discussion?(topic) if topic&.blog_published_discussion?
+      return true if can_edit_blog_draft_topic?(topic)
       super
     end
 
@@ -46,10 +32,11 @@ module ::Blog
     end
 
     # Editorial work on an article's working copy or its Blog-category topic.
-    # Contributors may only work on articles they started.
     def can_edit_blog_topic?(topic)
-      is_blog_contributor? && can_see?(topic) && (is_blog_editor? || topic.user_id == user.id) &&
-        blog_article_topic?(topic)
+      return false if !is_blog_contributor?
+      return false if !can_see?(topic)
+      return false if !is_blog_editor? && topic.user_id != user.id
+      blog_article_topic?(topic)
     end
 
     def can_publish_blog_topic?(topic)
@@ -57,6 +44,25 @@ module ::Blog
     end
 
     private
+
+    def can_edit_published_blog_discussion?(topic)
+      return false if Thread.current[:blog_publishing_topic] != topic.id
+      return false if !is_blog_publisher?
+      can_see?(topic)
+    end
+
+    def can_edit_blog_draft_post?(post)
+      return false if !can_edit_blog_draft?(post.topic)
+      return false if post.hidden?
+      return false if post.deleted_at
+      !post.locked? || is_staff?
+    end
+
+    def can_edit_blog_draft_topic?(topic)
+      return false if !can_edit_blog_draft?(topic)
+      return false if topic.first_post&.hidden?
+      !topic.first_post&.locked? || is_staff?
+    end
 
     def can_edit_blog_draft?(topic)
       return false if !topic&.blog_editorial_draft?
@@ -72,8 +78,11 @@ module ::Blog
     end
 
     def blog_role_user?
-      UpcomingChanges.enabled?(:blog_enabled) && authenticated? && user.active? &&
-        !user.suspended? && !user.silenced?
+      return false if !UpcomingChanges.enabled?(:blog_enabled)
+      return false if !authenticated?
+      return false if !user.active?
+      return false if user.suspended?
+      !user.silenced?
     end
 
     def in_blog_role_groups?(group_ids)
@@ -85,8 +94,12 @@ module ::Blog
 
     def blog_article_topic?(topic)
       categories = [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i]
-      !topic.private_message? && !topic.shared_draft? && categories.include?(topic.category_id) &&
-        topic.category&.topic_id != topic.id && !topic.deleted_at && topic.visible
+      return false if topic.private_message?
+      return false if topic.shared_draft?
+      return false if !categories.include?(topic.category_id)
+      return false if topic.category&.topic_id == topic.id
+      return false if topic.deleted_at
+      topic.visible
     end
   end
 end
