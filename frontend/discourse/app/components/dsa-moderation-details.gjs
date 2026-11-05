@@ -23,7 +23,10 @@ const CategoryHelp = <template>
 
 export function defaultClassification(options) {
   const rules = options?.community_rules;
-  return rules?.length === 1 ? { community_rule: rules[0].id } : {};
+  return {
+    ...(rules?.length === 1 && { community_rule: rules[0].id }),
+    ...(options?.default_category && { category: options.default_category }),
+  };
 }
 
 function ruleName(rules, ruleId) {
