@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require Rails.root.join(
-          "plugins/live/db/migrate/20260925151909_rename_voice_patron_badge.rb"
-        )
+require Rails.root.join("plugins/live/db/migrate/20260925151909_rename_voice_patron_badge.rb")
 
 RSpec.describe RenameVoicePatronBadge do
   before do
@@ -33,7 +31,7 @@ RSpec.describe RenameVoicePatronBadge do
   it "hands a badge the site already owned back instead of renaming it" do
     restore_old_badge_name
     DB.exec(
-      "UPDATE badges SET created_at = NOW() - INTERVAL '1 year', system = true WHERE name = 'Patron'"
+      "UPDATE badges SET created_at = NOW() - INTERVAL '1 year', system = true WHERE name = 'Patron'",
     )
 
     described_class.new.up
@@ -46,23 +44,59 @@ RSpec.describe RenameVoicePatronBadge do
     restore_old_badge_name
     Fabricate(:group, name: "patrons")
     grouping = BadgeGrouping.create!(name: "Supporters", position: 20)
-    Fabricate(
-      :badge,
-      name: "Old Supporter",
-      badge_grouping_id: grouping.id
-    ).update_columns(created_at: 2.years.ago)
-    patron = Badge.find_by(name: "Patron")
-    patron.update_columns(
-      badge_grouping_id: grouping.id,
-      created_at: 1.year.ago,
-      system: true
+    Fabricate(:badge, name: "Old Supporter", badge_grouping_id: grouping.id).update_columns(
+      created_at: 2.years.ago,
     )
+    patron = Badge.find_by(name: "Patron")
+    patron.update_columns(badge_grouping_id: grouping.id, created_at: 1.year.ago, system: true)
 
     described_class.new.up
 
     expect(patron.reload.name).to eq("Patron")
     expect(patron.system).to eq(false)
     expect(Badge.find_by(name: "Frequenter")).to be_nil
+  end
+
+  it "renames the badge while its grouping still has the plugin's old name" do
+    restore_old_badge_name
+    DB.exec("UPDATE badge_groupings SET name = 'Voice' WHERE name = 'Live'")
+    badge_id = Badge.find_by(name: "Patron").id
+
+    described_class.new.up
+
+    expect(Badge.find(badge_id).name).to eq("Frequenter")
+  end
+
+  context "when the site kept its badge in a grouping of its own" do
+    fab!(:grouping) { BadgeGrouping.create!(name: "Supporters", position: 20) }
+
+    def move_patron_to_site_grouping
+      restore_old_badge_name
+      Badge
+        .find_by(name: "Patron")
+        .tap { |badge| badge.update_columns(badge_grouping_id: grouping.id, system: true) }
+    end
+
+    it "hands the badge back when it is alone in that grouping" do
+      patron = move_patron_to_site_grouping
+
+      described_class.new.up
+
+      expect(patron.reload.name).to eq("Patron")
+      expect(patron.system).to eq(false)
+    end
+
+    it "hands the badge back when that grouping holds an older badge" do
+      Fabricate(:badge, name: "Old Supporter", badge_grouping_id: grouping.id).update_columns(
+        created_at: 2.years.ago,
+      )
+      patron = move_patron_to_site_grouping
+
+      described_class.new.up
+
+      expect(patron.reload.name).to eq("Patron")
+      expect(patron.system).to eq(false)
+    end
   end
 
   it "ignores a Patron badge that live never seeded over" do
