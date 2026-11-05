@@ -128,7 +128,7 @@ export default class DesignWizardPanel extends Component {
       {{/if}}
       <aside
         aria-hidden={{if this.hidden "true"}}
-        aria-labelledby="design-wizard-title"
+        aria-label={{i18n "design_wizard.title"}}
         class={{dConcatClass
           "design-wizard"
           (unless this.designWizard.animateEntrance "--no-entrance")
@@ -154,11 +154,9 @@ export default class DesignWizardPanel extends Component {
             {{dIcon "angles-left"}}
             <span class="design-wizard__expand-label">
               <span>{{i18n "design_wizard.title"}}</span>
-              {{#unless this.designWizard.showIntro}}
-                <span class="design-wizard__expand-progress">
-                  {{this.stepProgress}}
-                </span>
-              {{/unless}}
+              <span class="design-wizard__expand-progress">
+                {{this.stepProgress}}
+              </span>
             </span>
           </DButton>
         {{/if}}
@@ -195,11 +193,9 @@ export default class DesignWizardPanel extends Component {
           <span class="design-wizard__restore-title">
             {{i18n "design_wizard.title"}}
           </span>
-          {{#unless this.designWizard.showIntro}}
-            <span class="design-wizard__restore-progress">
-              {{this.stepProgress}}
-            </span>
-          {{/unless}}
+          <span class="design-wizard__restore-progress">
+            {{this.stepProgress}}
+          </span>
           {{dIcon "chevron-up"}}
         </DButton>
       {{/if}}

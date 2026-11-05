@@ -27,14 +27,13 @@ const designWizardData = () => ({
       name: "Foundation",
       default: true,
       color_scheme_id: null,
-      dark_color_scheme_id: null,
+      dark_color_scheme_id: -2,
       screenshot_light_url: null,
       screenshot_dark_url: null,
       palette_pairs: [
         {
           key: "default",
           name: "Default",
-          dark_only: false,
           light: {
             id: -1,
             name: "Light",
@@ -131,9 +130,10 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click(".design-wizard__next");
-    await click(".design-wizard__color-mode:last-child");
+    await click(
+      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+    );
     await click(
       ".design-wizard__font-group:first-child .design-wizard__font-select"
     );
@@ -197,8 +197,10 @@ acceptance("Design wizard - admin launch", function (needs) {
       .dom(".design-wizard__minimize")
       .isFocused("returns focus to the panel");
     assert
-      .dom(".design-wizard__color-mode:last-child")
-      .hasAria("pressed", "true", "preserves the color mode selection");
+      .dom(
+        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+      )
+      .hasAria("pressed", "true", "preserves the palette selection");
     assert
       .dom(".design-wizard__font-group:first-child .design-wizard__font-select")
       .hasText("Arial", "preserves the unsaved font selection");
@@ -222,7 +224,7 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(".dialog-footer .btn-primary");
   });
 
-  test("the intro can be minimized and a new run opens expanded", async function (assert) {
+  test("the wizard can be minimized and a new run opens expanded", async function (assert) {
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
     await click(".design-wizard__minimize");
@@ -232,10 +234,10 @@ acceptance("Design wizard - admin launch", function (needs) {
       .includesText("Customize your site", "labels the way back to the wizard");
     assert
       .dom(".design-wizard__restore-progress")
-      .doesNotExist("does not show step progress before the wizard starts");
+      .hasText("Step 1/3", "shows the step progress");
 
     await click(".design-wizard__restore");
-    assert.dom(".design-wizard__intro").exists("restores the introduction");
+    assert.dom(".design-wizard__theme-card").exists("restores the first step");
     await click(".design-wizard__close");
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
@@ -261,9 +263,8 @@ acceptance("Design wizard - admin launch", function (needs) {
     assert.dom(".design-wizard").hasClass("--docked");
     assert
       .dom(".design-wizard__step-progress")
-      .doesNotExist("does not show step progress before the wizard starts");
+      .hasText("Step 1/3", "opens on the first step");
 
-    await click(".design-wizard__intro-start");
     await click(".design-wizard__next");
 
     assert
@@ -323,11 +324,10 @@ acceptance("Design wizard - admin launch", function (needs) {
       .doesNotHaveClass("design-wizard-docked", "gives the space back");
   });
 
-  test("saves a dark-only palette for both system color modes", async function (assert) {
+  test("saves one palette for both system color modes", async function (assert) {
     wizardData.themes[0].palette_pairs.push({
       key: "dracula",
       name: "Dracula",
-      dark_only: true,
       light: null,
       dark: {
         id: -11,
@@ -339,8 +339,8 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click(".design-wizard__next");
+    await click(".design-wizard__palette-modes input[value='dark']");
     await click('[data-pair-key="dracula"]');
     await click(".design-wizard__next");
 
@@ -369,6 +369,177 @@ acceptance("Design wizard - admin launch", function (needs) {
     );
   });
 
+  test("each step has its own title and description", async function (assert) {
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(".design-wizard")
+      .hasAria("label", "Customize your site", "the panel keeps one name");
+    assert.dom(".design-wizard__title").hasText("Choose a theme");
+    assert
+      .dom(".design-wizard__description")
+      .hasText(
+        "Pick the overall look for your site. You can fine-tune it in the next steps."
+      );
+    assert
+      .dom(".design-wizard__section-title")
+      .doesNotExist("the step title already names the theme choice");
+
+    await click(".design-wizard__next");
+
+    assert.dom(".design-wizard__title").hasText("Make it yours");
+    assert
+      .dom(".design-wizard__description")
+      .hasText("Choose your site's colors and fonts.");
+
+    await click(".design-wizard__next");
+
+    assert.dom(".design-wizard__title").hasText("Site layout");
+  });
+
+  test("a single color mode uses its palette for both", async function (assert) {
+    wizardData.themes[0].palette_pairs.push(
+      {
+        key: "wcag",
+        name: "WCAG",
+        light: {
+          id: -3,
+          name: "WCAG",
+          colors: { primary: "000000", secondary: "ffffff" },
+        },
+        dark: {
+          id: -10,
+          name: "WCAG Dark",
+          colors: { primary: "ffffff", secondary: "000000" },
+        },
+      },
+      {
+        key: "dracula",
+        name: "Dracula",
+        light: null,
+        dark: {
+          id: -11,
+          name: "Dracula",
+          colors: { primary: "f8f8f2", secondary: "282a36" },
+        },
+      }
+    );
+    const LIGHT_ROW = ".design-wizard__palette-row[data-mode='light']";
+    const DARK_ROW = ".design-wizard__palette-row[data-mode='dark']";
+    const MODE = (value) =>
+      `.design-wizard__palette-modes input[value='${value}']`;
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+
+    assert.dom(MODE("both")).isChecked("starts with both modes");
+    assert
+      .dom(`${LIGHT_ROW} [data-pair-key='dracula']`)
+      .doesNotExist("a dark-only palette is not offered for light mode");
+    assert
+      .dom(LIGHT_ROW)
+      .hasAttribute("role", "group")
+      .hasAria("label", "Light palette", "labels the light row");
+    assert
+      .dom(DARK_ROW)
+      .hasAria("label", "Dark palette", "labels the dark row");
+
+    await click(`${LIGHT_ROW} [data-pair-key='wcag']`);
+    await click(`${DARK_ROW} [data-pair-key='dracula']`);
+    await click(MODE("dark"));
+
+    assert.dom(LIGHT_ROW).doesNotExist("hides the light row");
+    assert
+      .dom(`${DARK_ROW} [data-pair-key='dracula']`)
+      .hasAria("pressed", "true");
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "saves the dark palette for light systems too"
+    );
+    assert.strictEqual(savedPayloads.at(-1).dark_palette_id, "-11");
+
+    await click(".design-wizard__back");
+    await click(MODE("light"));
+
+    assert.dom(DARK_ROW).doesNotExist("hides the dark row");
+    assert
+      .dom(`${LIGHT_ROW} [data-pair-key='wcag']`)
+      .hasAria("pressed", "true", "keeps the light palette picked earlier");
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-3",
+      "saves the light palette"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      undefined,
+      "saves no dark palette, so the site is light only"
+    );
+
+    await click(".design-wizard__back");
+    await click(MODE("both"));
+
+    assert
+      .dom(`${DARK_ROW} [data-pair-key='dracula']`)
+      .hasAria("pressed", "true", "restores the dark palette picked earlier");
+  });
+
+  test("a site using one palette for both modes is dark only", async function (assert) {
+    wizardData.themes[0].color_scheme_id = 11;
+    wizardData.themes[0].dark_color_scheme_id = 11;
+    wizardData.themes[0].palette_pairs.push({
+      key: "dracula",
+      name: "Dracula",
+      light: null,
+      dark: {
+        id: 11,
+        name: "Dracula",
+        colors: { primary: "f8f8f2", secondary: "282a36" },
+      },
+    });
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+
+    assert
+      .dom(
+        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='dracula']"
+      )
+      .hasAria("pressed", "true", "reflects the saved dark palette");
+    assert
+      .dom(".design-wizard__palette-modes input[value='dark']")
+      .isChecked("the same palette in both modes is dark only");
+    assert.dom(".design-wizard__palette-row[data-mode='light']").doesNotExist();
+  });
+
+  test("a theme without a dark palette is light only", async function (assert) {
+    wizardData.themes[0].dark_color_scheme_id = null;
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__palette-modes input[value='light']")
+      .isChecked();
+    assert.dom(".design-wizard__palette-row[data-mode='dark']").doesNotExist();
+    assert
+      .dom(
+        ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
+      )
+      .hasAria("pressed", "true");
+  });
+
   test("installs a remote theme before navigating to its preview", async function (assert) {
     const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
     wizardData.themes.push({
@@ -381,7 +552,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click('[data-theme-id="concord"] input');
 
     assert.deepEqual(
@@ -418,7 +588,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click('[data-theme-id="concord"] input');
 
     assert
@@ -459,7 +628,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click(".design-wizard__next");
     await click(".design-wizard__next");
     assert
@@ -507,7 +675,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click(".design-wizard__next");
     await click(".design-wizard__next");
 
@@ -539,7 +706,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
       await visit("/admin");
       await click(APPEARANCE_LAUNCH_BUTTON);
-      await click(".design-wizard__intro-start");
       await click(".design-wizard__next");
       assert.strictEqual(
         savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
@@ -593,7 +759,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
 
     wizardData.additional_homepages = [];
     wizardData.homepage_settings = {};
@@ -640,7 +805,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
         await visit("/admin");
         await click(APPEARANCE_LAUNCH_BUTTON);
-        await click(".design-wizard__intro-start");
         await click(".design-wizard__next");
         await click(".design-wizard__next");
         await click('[data-homepage="chat"]');
@@ -686,7 +850,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click('[data-theme-id="-1"] input');
     const wizard = this.owner.lookup("service:design-wizard");
     await wizard.start({ resuming: true });
@@ -732,11 +895,8 @@ acceptance("Design wizard - admin launch", function (needs) {
       "leaves the admin interface, so the page behind the sheet is the preview"
     );
     assert
-      .dom(".design-wizard__intro")
-      .exists("a re-run says what it is about to change before changing it");
-    assert
       .dom(".design-wizard__theme-card")
-      .doesNotExist("the steps wait until the intro is acknowledged");
+      .exists("opens straight on the first step");
     assert.strictEqual(savedPayloads.length, 0, "nothing is saved yet");
 
     // close the sheet so the palette preview does not leak into other tests
@@ -749,9 +909,7 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await waitFor(".design-wizard__intro-start");
-
-    await click(".design-wizard__intro-start");
+    await waitFor(".design-wizard__theme-card");
     assert.dom(".design-wizard__theme-card").exists("the first step is shown");
 
     await click(".design-wizard__next");
@@ -793,7 +951,7 @@ acceptance("Design wizard - admin launch", function (needs) {
       "discourse_design_wizard_panel_state",
       JSON.stringify({
         themeId: -1,
-        selectedPairKeys: [],
+        paletteSelections: [],
         source: "onboarding",
         returnUrl: "/somewhere-else",
         progressSaved: true,
@@ -805,8 +963,8 @@ acceptance("Design wizard - admin launch", function (needs) {
     await waitFor(".design-wizard");
 
     assert
-      .dom(".design-wizard__intro")
-      .exists("the abandoned run does not skip this one's intro");
+      .dom(".design-wizard__theme-card")
+      .exists("the abandoned run's steps are not resumed");
 
     await click(".design-wizard__close");
     assert

@@ -19,14 +19,13 @@ const designWizardData = () => ({
       name: "Foundation",
       default: true,
       color_scheme_id: null,
-      dark_color_scheme_id: null,
+      dark_color_scheme_id: -2,
       screenshot_light_url: null,
       screenshot_dark_url: null,
       palette_pairs: [
         {
           key: "default",
           name: "Default",
-          dark_only: false,
           light: {
             id: -1,
             name: "Light",
@@ -60,7 +59,6 @@ const designWizardData = () => ({
         {
           key: "horizon",
           name: "Horizon",
-          dark_only: false,
           light: {
             id: 23,
             name: "Horizon",
@@ -83,7 +81,6 @@ const designWizardData = () => ({
         {
           key: "marigold",
           name: "Marigold",
-          dark_only: false,
           light: {
             id: 25,
             name: "Marigold",
@@ -590,10 +587,14 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .doesNotExist("theme cards are left behind on the colors step");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
+      .dom(
+        ".design-wizard__palette-row[data-mode='light'] .design-wizard__palette-card"
+      )
+      .exists({ count: 1 }, "the colors step shows the theme's light palettes");
 
-    await click(".design-wizard__swatch[data-pair-key='default']");
+    await click(
+      ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
+    );
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
@@ -645,8 +646,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".design-wizard__back");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "back returns to the colors step");
+      .dom(".design-wizard__palette-row[data-mode='light']")
+      .exists("back returns to the colors step");
 
     await click(".design-wizard__close");
     assert.dom(".design-wizard").doesNotExist("closing removes the sheet");
@@ -659,7 +660,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isNotChecked();
   });
 
-  test("the design wizard activates the stylesheet for the selected color mode", async function (assert) {
+  test("the design wizard activates the stylesheet for the mode of the picked palette", async function (assert) {
     const darkLink = this.addSchemeLink(
       "dark-scheme",
       "data:text/css,design-wizard-dark",
@@ -674,7 +675,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await visit("/");
     await withStep("select_theme", assert).clickAction();
     await click(".design-wizard__next");
-    await click(".design-wizard__color-mode:not(.--active)");
+    await click(
+      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+    );
 
     assert
       .dom(lightLink)
@@ -749,7 +752,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .exists({ count: 2 }, "a failed progress save does not advance the step");
     assert
-      .dom(".design-wizard__swatch")
+      .dom(".design-wizard__palette-row")
       .doesNotExist("the colors step is not reached");
     assert
       .dom(".design-wizard__next")

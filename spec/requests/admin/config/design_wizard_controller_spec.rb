@@ -53,10 +53,9 @@ RSpec.describe Admin::Config::DesignWizardController do
           "screenshot_dark_url" => "/images/design-wizard/foundation-dark.webp",
         )
         expect(foundation["palette_pairs"].map { |pair| pair["key"] }).to eq(
-          %w[default wcag solarized dracula],
+          DesignWizard::PalettePairs::BUILT_IN_PAIRS.map { |pair| pair[:key] },
         )
         dracula = foundation["palette_pairs"].find { |pair| pair["key"] == "dracula" }
-        expect(dracula["dark_only"]).to eq(true)
         expect(dracula["light"]).to be_nil
       end
 
@@ -253,6 +252,7 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "reports palettes as not user selectable when only a custom default theme's palettes are selectable" do
+        ColorScheme.update_all(user_selectable: false)
         theme = Fabricate(:theme)
         Fabricate(:color_scheme, theme_id: theme.id, user_selectable: true)
         theme.set_default!
