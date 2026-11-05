@@ -191,12 +191,14 @@ class ChatSetupInit {
 
             modal.show(GifsModal, {
               model: {
-                customPickHandler: buildGifPickHandler({
-                  api,
-                  draft: this.draft,
-                  isThread: context === "thread",
-                  currentUser,
-                }),
+                customPickHandler:
+                  this.sendPickedGif ||
+                  buildGifPickHandler({
+                    api,
+                    draft: this.draft,
+                    isThread: context === "thread",
+                    currentUser,
+                  }),
               },
             });
           },

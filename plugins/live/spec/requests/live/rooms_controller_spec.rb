@@ -2258,6 +2258,30 @@ RSpec.describe Live::RoomsController do
     end
 
     describe "#chat_message" do
+      it "accepts attachments without text and returns the accepted message ID" do
+        SiteSetting.chat_allow_uploads = true
+        upload = Fabricate(:upload, user: user)
+        sign_in(user)
+        join_room!(user)
+
+        post "/live/rooms/#{room.id}/chat_message.json", params: { upload_ids: [upload.id] }
+
+        expect(response.status).to eq(200)
+        thread = Chat::Thread.find(response.parsed_body["thread_id"])
+        expect(response.parsed_body["message_id"]).to eq(thread.original_message_id)
+        expect(thread.original_message.uploads).to contain_exactly(upload)
+      end
+
+      it "rejects requests without content instead of creating an automatic opener" do
+        sign_in(user)
+        join_room!(user)
+
+        post "/live/rooms/#{room.id}/chat_message.json", params: { message: " " }
+
+        expect(response.status).to eq(422)
+        expect(channel.chat_messages).to be_empty
+      end
+
       it "requires authentication" do
         post "/live/rooms/#{room.id}/chat_message.json", params: { message: "hi" }
 

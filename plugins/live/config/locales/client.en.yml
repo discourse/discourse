@@ -78,6 +78,7 @@ en:
           other: "Show %{count} more participants"
         overflow_count: "+%{count}"
       chat:
+        retry: "Retry loading conversation"
         title: "Chat"
         open: "Open chat"
         close: "Close chat"
@@ -86,7 +87,6 @@ en:
         empty_title: "No chat yet"
         empty_body: "Send a message to get the conversation started."
         composer_placeholder: "Message the room…"
-        send: "Send"
         open_in_chat: "Open in chat"
         back_to_live_room: "Back to live room"
       video:

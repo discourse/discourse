@@ -39,3 +39,31 @@ Live adds lightweight WebRTC live rooms to Discourse without proxying audio/vide
 3. On mesh calls, each participant receiving the broadcast spins up `RTCPeerConnection` objects (only lower user IDs send offers to avoid glare) and relays SDP/ICE payloads via `POST /live/rooms/:id/signal`. On LiveKit calls the client instead opens a single connection to the SFU and publishes/subscribes there; the `signal` endpoint rejects payloads for those rooms.
 4. Audio flows directly peer-to-peer (or through the site's own LiveKit server); Discourse only transports JSON signaling events.
 5. Sidebar avatars and the room screen update automatically as MessageBus notifications arrive — the roster is driven by Redis presence on both transports, never by media state.
+
+## Room chat
+
+A room can link to an existing Chat channel with threading enabled. Opening its
+chat panel follows that channel and loads the current session, without creating
+a message or thread. The empty panel uses Chat's pending-thread composer with a
+real channel and a local message draft. It has the normal editor and uploader,
+but no thread typing subscription until a persisted thread exists.
+
+The first send posts text and upload IDs to `POST /live/rooms/:id/chat_message`.
+`Live::ChatSession` serializes initial sends with a room lock, creates the original
+message with a room hashtag and opens its thread, or posts into a thread another
+participant just created. Attachment-only messages are supported. The response
+includes the accepted message ID; a later thread-loading failure retries loading
+rather than resubmitting that message. If thread creation fails after the opener
+was published, Chat's deletion service retracts it and repairs channel tracking.
+
+Session updates contain no message content or channel identifiers. Clients fetch
+state through the permission-checked session endpoint. The panel defers switching
+to Chat's normal thread UI while a first send or upload is in progress, then
+transfers unsent text, completed uploads, focus, and selection. An existing thread
+draft is retained when merging a pending room draft.
+
+`live-chat-drafts` retains pending drafts in memory by user, room, and linked
+channel, allowing the panel to close and reopen without losing its draft. Pending
+drafts do not survive a full page reload or move across devices. Persisted thread
+drafts use Chat's normal draft manager. Unsent room conversations create no empty
+threads or automatic messages; abandoned uploads use the existing upload cleanup.
