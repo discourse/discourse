@@ -17,6 +17,7 @@ module ::Blog
       @page_title = I18n.t("blog.not_found_title")
       @description = I18n.t("blog.not_found_body")
       @canonical_url = "#{Configuration.base_url}#{blog_path}"
+      @template_variables = template_variables
       response.headers["Cache-Control"] = "private, no-store"
       response.headers["X-Robots-Tag"] = "noindex"
       render "blog/articles/not_found", formats: [:html], status: :not_found
@@ -27,17 +28,21 @@ module ::Blog
         service_params.deep_merge(params: { query: params[:q], tag_slug: params[:tag] }),
       ) do
         on_success do |params:, tag:, listing:|
-          @page = params.page
-          @query = params.query
           @archive = params.archive
-          @tag = tag
-          @publications = listing[:publications]
-          @more = listing[:has_more]
-          @page_title = @tag&.name || (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
+          @page_title = tag&.name || (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
           @description = SiteSetting.blog_description
           @canonical_url = "#{Configuration.base_url}#{blog_path}"
-          @canonical_url += "?page=#{@page}" if @page > 1
-          response.headers["X-Robots-Tag"] = "noindex" if @query.present?
+          @canonical_url += "?page=#{params.page}" if params.page > 1
+          @template_variables =
+            template_variables(
+              publications: listing[:publications],
+              page: params.page,
+              more: listing[:has_more],
+              query: params.query,
+              archive: @archive,
+              tag:,
+            )
+          response.headers["X-Robots-Tag"] = "noindex" if params.query.present?
         end
         on_failure { raise Discourse::NotFound }
       end
@@ -46,12 +51,15 @@ module ::Blog
     def show
       Article::Find.call(service_params.deep_merge(params: { path: blog_path })) do
         on_success do |publication:|
-          @publication = publication
           @topic = publication.discussion_topic
-          @article = publication.article
-          @page_title = @article.title
+          @page_title = publication.article.title
           @description = publication.display_excerpt
           @canonical_url = publication.url
+          @article_metadata = ArticleMetadata.new(publication, description: @description)
+          @template_variables =
+            template_variables(
+              article: ArticleVariables.new(publication, preview_token: @theme_preview_token),
+            )
         end
         on_failed_policy(:requested_path_is_current) do |publication:|
           redirect_to(publication.url, status: :moved_permanently, allow_other_host: true)
@@ -64,6 +72,7 @@ module ::Blog
       @page_title = I18n.t("blog.about")
       @description = SiteSetting.blog_description
       @canonical_url = "#{Configuration.base_url}/about"
+      @template_variables = template_variables
     end
 
     def feed
@@ -122,6 +131,15 @@ module ::Blog
 
     def blog_path
       @blog_path ||= Configuration.relative_path(request)
+    end
+
+    def template_variables(**variables)
+      TemplateVariables.new(
+        title: @page_title,
+        preview_token: @theme_preview_token,
+        path: blog_path,
+        **variables,
+      )
     end
 
     def load_blog_theme

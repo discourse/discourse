@@ -165,8 +165,7 @@ module ::Blog
     end
 
     def self.snapshot_html(post)
-      helper = Object.new.extend(BlogHelper)
-      doc = Nokogiri::HTML5.fragment(PrettyText.sanitize(helper.blog_article_html(post)))
+      doc = Nokogiri::HTML5.fragment(PrettyText.sanitize(ArticleHtml.render(post.cooked)))
       doc.css("script, iframe, object, embed, form, input, button, style, link, meta").remove
       doc.css("a").each { |link| link["rel"] = "noopener noreferrer" }
       html = doc.to_html

@@ -6,7 +6,6 @@ module ::Blog
     LISTING_SAMPLE_SIZE = 10
     WORKING_PREVIEWS_PER_MINUTE = 20
 
-    helper Blog::BlogHelper
     requires_plugin PLUGIN_NAME
     skip_before_action :check_xhr, only: :export
     before_action :ensure_discussion_host
@@ -15,17 +14,17 @@ module ::Blog
     def authoring
       BlogTheme::ListSampleArticles.call(service_params) do
         on_success do |publications:, publication:|
-          # The template helpers read these to build the variables a theme receives.
-          @publications = publications.first(LISTING_SAMPLE_SIZE)
-          @publication = publication
-          @article = publication&.article
-          @topic = publication&.discussion_topic
-          @page = 1
+          variables =
+            TemplateVariables.new(
+              publications: publications.first(LISTING_SAMPLE_SIZE),
+              article:
+                publication ? ArticleVariables.new(publication) : ArticleVariables.placeholder,
+            )
           render json:
                    ThemeAuthoringSerializer.new(
                      publications,
                      root: false,
-                     variables: view_context.blog_authoring_template_assigns,
+                     variables: variables.to_h,
                    ).as_json
         end
         on_failed_contract do |contract|
