@@ -81,6 +81,8 @@ class TopicsFilter
       filters[FILTER_ALIASES[key] || key] << [key_prefix, value]
     end
 
+    negated_topic_scopes = []
+
     filters.each do |filter, pairs|
       if SELF_NEGATING_FILTERS.include?(filter)
         positive, negated = pairs, []
@@ -93,8 +95,13 @@ class TopicsFilter
 
       apply_filter(**filter_arguments(filter, positive)) if positive.present?
 
-      negated.each { |pair| apply_negated_filter(**filter_arguments(filter, [pair])) }
+      negated.each do |pair|
+        matched_topics = apply_negated_filter(**filter_arguments(filter, [pair]))
+        negated_topic_scopes << matched_topics if matched_topics
+      end
     end
+
+    negated_topic_scopes.each { |matched_topics| @scope = @scope.where.not(id: matched_topics) }
 
     keywords = query_string.scan(TOKENIZER_PATTERN).reject { |word| word.include?(":") }.join(" ")
 
@@ -363,8 +370,9 @@ class TopicsFilter
     @loaded_topic_users_reference = loaded_topic_users_reference
     @topic_notification_levels = topic_notification_levels
     @topic_ids = topic_ids
+    @scope = scope_before_filter
 
-    @scope = filter_acted ? scope_before_filter.where.not(id: matched_topics) : scope_before_filter
+    matched_topics if filter_acted
   end
 
   def invalid_filter!(token)
