@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 class UserHistorySerializer < ApplicationSerializer
-  # Names are logged unescaped, so each name runs to the last label of the field
-  # that the logger writes after the author line.
-  USER_NAME_PATTERNS =
+  # Names are logged unescaped. The author is always the third line, and each name ends at the
+  # first label of the field the logger writes next, so post content can't move either boundary.
+  FIELD_AFTER_USER_NAME =
     {
       delete_post: "topic",
       post_rejected: "topic",
       delete_topic: "title",
       recover_topic: "title",
       recover_post: "raw",
-    }.to_h { |action, field| [UserHistory.actions[action], /^(user: \S+) \(.*\)(?=\n#{field}: )/m] }
-      .freeze
+    }.transform_keys { |action| UserHistory.actions[action] }.freeze
 
   attributes :action_name,
              :details,
@@ -82,8 +81,8 @@ class UserHistorySerializer < ApplicationSerializer
 
     if object.action == UserHistory.actions[:delete_user]
       value.sub(/^name: .*\n(?=created_at: )/m, "")
-    elsif (pattern = USER_NAME_PATTERNS[object.action])
-      value.sub(pattern, "\\1")
+    elsif (field = FIELD_AFTER_USER_NAME[object.action])
+      value.sub(/\A((?:[^\n]*\n){2}user: \S+) \(.*?\)(?=\n#{field}: )/m, "\\1")
     else
       value
     end
