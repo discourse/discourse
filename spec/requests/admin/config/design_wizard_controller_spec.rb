@@ -252,6 +252,7 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "reports palettes as not user selectable when only a custom default theme's palettes are selectable" do
+        ColorScheme.update_all(user_selectable: false)
         theme = Fabricate(:theme)
         Fabricate(:color_scheme, theme_id: theme.id, user_selectable: true)
         theme.set_default!
