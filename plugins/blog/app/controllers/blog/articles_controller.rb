@@ -151,7 +151,7 @@ module ::Blog
 
     def load_blog_theme
       if params[:blog_theme_preview].present?
-        @blog_theme = BlogTheme.from_preview(params[:blog_theme_preview])
+        @blog_theme = ThemePreview.theme_for(params[:blog_theme_preview])
         @theme_preview_token = params[:blog_theme_preview]
         response.headers.delete("X-Frame-Options")
         policy =

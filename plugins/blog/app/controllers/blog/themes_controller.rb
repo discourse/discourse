@@ -81,49 +81,99 @@ module ::Blog
         else
           raise Discourse::InvalidParameters.new(:page)
         end
-      token = BlogTheme.working_preview(theme_params, user: current_user)
-      render json: {
-               url: "#{Configuration.base_url}#{path}?#{{ blog_theme_preview: token }.to_query}",
-             },
-             status: :created
+      # Liquid syntax isn't checked so the preview can show its diagnostics.
+      working_copy = BlogTheme::AttributesContract.new(**theme_params)
+      if working_copy.invalid?
+        raise Discourse::InvalidParameters.new(working_copy.errors.full_messages.first)
+      end
+      token = ThemePreview.store_working_copy(working_copy.theme_attributes, user: current_user)
+      render json: { url: ThemePreview.url(token, path:) }, status: :created
     end
 
     def index
       render json: {
-               themes: BlogTheme.all.map { |theme| present(theme) },
+               themes:
+                 ActiveModel::ArraySerializer.new(
+                   BlogTheme.all,
+                   each_serializer: BlogThemeSerializer,
+                 ).as_json,
                active: BlogTheme.active,
              }
     end
 
     def show
-      render json: { theme: present(BlogTheme.find(params[:id])), active: BlogTheme.active }
+      render json: {
+               theme: BlogThemeSerializer.new(BlogTheme.find(params[:id]), root: false).as_json,
+               active: BlogTheme.active,
+             }
     end
 
     def create
-      theme = BlogTheme.save(theme_params, user: current_user)
-      render json: present(theme), status: :created
+      BlogTheme::Create.call(service_params.deep_merge(params: theme_params)) do
+        on_success do |theme:|
+          render json: BlogThemeSerializer.new(theme, root: false).as_json, status: :created
+        end
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:within_theme_limit) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def update
-      theme =
-        BlogTheme.save(
-          theme_params,
-          id: params[:id],
-          revision: params.require(:revision),
-          user: current_user,
-        )
-      render json: present(theme)
+      BlogTheme::Update.call(
+        service_params.deep_merge(params: theme_params.merge(theme_id: params[:id])),
+      ) do
+        on_success do |revised_theme:|
+          render json: BlogThemeSerializer.new(revised_theme, root: false).as_json
+        end
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_model_not_found(:theme) { raise Discourse::NotFound }
+        on_failed_policy(:revision_is_current) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+      end
     end
 
     def destroy
-      BlogTheme.destroy(params[:id], revision: params.require(:revision), user: current_user)
-      head :no_content
+      BlogTheme::Destroy.call(service_params.deep_merge(params: { theme_id: params[:id] })) do
+        on_success { head :no_content }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_model_not_found(:theme) { raise Discourse::NotFound }
+        on_failed_policy(:revision_is_current) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_policy(:theme_is_inactive) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.themes.active_delete"))
+        end
+      end
     end
 
     def activate
-      theme =
-        BlogTheme.activate(params[:id], revision: params.require(:revision), user: current_user)
-      render json: present(theme)
+      BlogTheme::Activate.call(service_params.deep_merge(params: { theme_id: params[:id] })) do
+        on_success do |active_theme:|
+          render json: BlogThemeSerializer.new(active_theme, root: false).as_json
+        end
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_model_not_found(:theme) { raise Discourse::NotFound }
+        on_failed_policy(:revision_is_current) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def export
@@ -136,14 +186,14 @@ module ::Blog
     def import
       if params[:file]
         theme = ThemeImporter.import_file(file: params[:file], user: current_user)
-        return render json: present(theme), status: :created
+        return(render json: BlogThemeSerializer.new(theme, root: false).as_json, status: :created)
       end
 
       repository = params.require(:repository)
       branch = params[:branch]
       hijack do
         theme = ThemeImporter.import(repository: repository, branch: branch, user: current_user)
-        render json: present(theme), status: :created
+        render json: BlogThemeSerializer.new(theme, root: false).as_json, status: :created
       end
     end
 
@@ -161,18 +211,11 @@ module ::Blog
             id: theme["id"],
             revision: revision,
           )
-        render json: present(updated)
+        render json: BlogThemeSerializer.new(updated, root: false).as_json
       end
     end
 
     private
-
-    def present(theme)
-      token = BlogTheme.preview_token(theme)
-      theme.merge(
-        "preview_url" => "#{Configuration.base_url}/?#{{ blog_theme_preview: token }.to_query}",
-      )
-    end
 
     def theme_params
       params.require(:theme).permit(*BlogTheme::FIELDS).to_h

@@ -129,7 +129,7 @@ RSpec.describe "External draft review", type: :request do
       raw: "New unpublished changes should not reach the reviewer automatically.",
     )
     theme =
-      Blog::BlogTheme.save(
+      create_blog_theme(
         {
           "name" => "Spec design",
           "accent_color" => "d64b2a",
@@ -140,7 +140,7 @@ RSpec.describe "External draft review", type: :request do
         },
         user: admin,
       )
-    Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
+    activate_blog_theme(theme, user: admin)
 
     get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(200)
