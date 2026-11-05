@@ -6,6 +6,7 @@ module DesignWizard
       name: "Concord",
       remote_url: "https://github.com/discourse/discourse-concord-theme",
       default_homepage: "chat",
+      description_key: "design_wizard.themes.concord.description",
       supports_welcome_banner: false,
       supports_search: false,
       screenshot_light_url: "/images/design-wizard/concord-light.webp",
@@ -30,7 +31,7 @@ module DesignWizard
           screenshot_light_url: Discourse.base_path + CONCORD[:screenshot_light_url],
           screenshot_dark_url: Discourse.base_path + CONCORD[:screenshot_dark_url],
           id: "concord",
-          description: I18n.t("design_wizard.themes.concord.description"),
+          description: I18n.t(CONCORD[:description_key]),
           palette_pairs: [],
         ),
       ]

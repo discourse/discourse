@@ -188,6 +188,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
         expect(themes.find { |theme| theme["id"] == concord.id }).to include(
           "default" => true,
+          "description" => I18n.t("design_wizard.themes.concord.description"),
           "default_homepage" => "chat",
           "color_scheme_id" => palette.id,
           "supports_welcome_banner" => false,

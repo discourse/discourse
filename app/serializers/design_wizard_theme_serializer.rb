@@ -23,7 +23,11 @@ class DesignWizardThemeSerializer < ApplicationSerializer
   end
 
   def description
-    object.description(preloaded_locale_fields: object.locale_fields)
+    if definition[:description_key]
+      I18n.t(definition[:description_key])
+    else
+      object.description(preloaded_locale_fields: object.locale_fields)
+    end
   end
 
   def default
