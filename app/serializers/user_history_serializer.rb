@@ -81,7 +81,7 @@ class UserHistorySerializer < ApplicationSerializer
     if object.action == UserHistory.actions[:delete_user]
       value.sub(/^name: .*\n(?=created_at: )/m, "")
     elsif USER_NAME_DETAIL_ACTIONS.include?(object.action)
-      value.sub(/^(user: \S+) \(.*?\)(?=\n(?:topic|title|raw): )/m, "\\1")
+      value.sub(/^(user: \S+) \(.*\)(?=\n(?:topic|title|raw): )/m, "\\1")
     else
       value
     end

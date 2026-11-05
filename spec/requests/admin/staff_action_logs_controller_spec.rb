@@ -227,7 +227,7 @@ RSpec.describe Admin::StaffActionLogsController do
 
       it "hides stored full names when names are disabled" do
         SiteSetting.enable_names = false
-        user.update!(name: "Current Private\nFull Name")
+        user.update!(name: "Current Private)\ntopic: Full Name")
         StaffActionLogger.new(admin).log_user_deletion(user)
         StaffActionLogger.new(admin).log_post_deletion(Fabricate(:post, user: user))
         StaffActionLogger.new(admin).log_name_change(
