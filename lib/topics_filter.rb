@@ -334,11 +334,13 @@ class TopicsFilter
       filter_in(values: ["untagged"]) if BOOLEAN_CASTER.cast(options[:no_tags])
 
       if options[:exclude_tag].present?
-        apply_negated_filter(
-          filter: "tag",
-          filter_values: [options[:exclude_tag]],
-          key_prefixes: ["-"],
-        )
+        excluded_topics =
+          apply_negated_filter(
+            filter: "tag",
+            filter_values: [options[:exclude_tag]],
+            key_prefixes: ["-"],
+          )
+        @scope = @scope.where.not(id: excluded_topics) if excluded_topics
       end
     end
 
