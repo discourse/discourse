@@ -270,4 +270,125 @@ RSpec.describe Blog::GuardianExtensions do
       end
     end
   end
+
+  describe "#is_blog_publisher?" do
+    fab!(:publishers, :group)
+    fab!(:publisher) { Fabricate(:user, groups: [publishers]) }
+
+    before { SiteSetting.blog_publisher_groups = publishers.id.to_s }
+
+    it "allows admins and members of the publisher groups" do
+      expect(admin.guardian.is_blog_publisher?).to eq(true)
+      expect(publisher.guardian.is_blog_publisher?).to eq(true)
+    end
+
+    it "denies other staff, editors, contributors and anonymous users" do
+      expect(moderator.guardian.is_blog_publisher?).to eq(false)
+      expect(editor.guardian.is_blog_publisher?).to eq(false)
+      expect(writer.guardian.is_blog_publisher?).to eq(false)
+      expect(Guardian.new.is_blog_publisher?).to eq(false)
+    end
+
+    it "matches staff auto groups by role" do
+      SiteSetting.blog_publisher_groups = Group::AUTO_GROUPS[:moderators].to_s
+
+      expect(moderator.guardian.is_blog_publisher?).to eq(true)
+    end
+
+    it "denies inactive, suspended and silenced publishers" do
+      inactive = Fabricate(:user, groups: [publishers], active: false)
+      suspended = Fabricate(:user, groups: [publishers], suspended_till: 1.day.from_now)
+      silenced = Fabricate(:user, groups: [publishers], silenced_till: 1.day.from_now)
+
+      expect(inactive.guardian.is_blog_publisher?).to eq(false)
+      expect(suspended.guardian.is_blog_publisher?).to eq(false)
+      expect(silenced.guardian.is_blog_publisher?).to eq(false)
+    end
+
+    it "denies admins when the blog is disabled" do
+      SiteSetting.blog_enabled = false
+
+      expect(admin.guardian.is_blog_publisher?).to eq(false)
+    end
+  end
+
+  describe "#is_blog_editor?" do
+    it "allows members of the editor groups and publishers" do
+      expect(editor.guardian.is_blog_editor?).to eq(true)
+      expect(admin.guardian.is_blog_editor?).to eq(true)
+    end
+
+    it "denies contributors and anonymous users" do
+      expect(writer.guardian.is_blog_editor?).to eq(false)
+      expect(Guardian.new.is_blog_editor?).to eq(false)
+    end
+  end
+
+  describe "#is_blog_contributor?" do
+    it "allows members of the contributor groups, editors and publishers" do
+      expect(writer.guardian.is_blog_contributor?).to eq(true)
+      expect(editor.guardian.is_blog_contributor?).to eq(true)
+      expect(admin.guardian.is_blog_contributor?).to eq(true)
+    end
+
+    it "denies other users and anonymous users" do
+      expect(Fabricate(:user).guardian.is_blog_contributor?).to eq(false)
+      expect(Guardian.new.is_blog_contributor?).to eq(false)
+    end
+  end
+
+  describe "#can_edit_blog_topic?" do
+    it "allows contributors their own articles and editors any article" do
+      expect(writer.guardian.can_edit_blog_topic?(writer_draft)).to eq(true)
+      expect(editor.guardian.can_edit_blog_topic?(admin_draft)).to eq(true)
+      expect(editor.guardian.can_edit_blog_topic?(article)).to eq(true)
+    end
+
+    it "denies contributors someone else's article" do
+      expect(writer.guardian.can_edit_blog_topic?(admin_draft)).to eq(false)
+    end
+
+    it "denies editors who cannot see the topic" do
+      drafts.set_permissions(:staff => :full, writers.name => :full)
+      drafts.save!
+
+      expect(editor.guardian.can_edit_blog_topic?(admin_draft)).to eq(false)
+    end
+
+    it "denies topics outside the blog categories and category description topics" do
+      drafts.update_columns(topic_id: admin_draft.id)
+
+      expect(admin.guardian.can_edit_blog_topic?(Fabricate(:topic))).to eq(false)
+      expect(admin.guardian.can_edit_blog_topic?(admin_draft)).to eq(false)
+    end
+
+    it "denies unlisted, deleted and shared draft topics" do
+      unlisted = Fabricate(:topic, category: drafts, user: admin, visible: false)
+      deleted = Fabricate(:topic, category: drafts, user: admin, deleted_at: Time.current)
+      shared_draft = Fabricate(:topic, category: drafts, user: admin)
+      SharedDraft.create!(topic: shared_draft, category: category)
+
+      expect(admin.guardian.can_edit_blog_topic?(unlisted)).to eq(false)
+      expect(admin.guardian.can_edit_blog_topic?(deleted)).to eq(false)
+      expect(admin.guardian.can_edit_blog_topic?(shared_draft.reload)).to eq(false)
+    end
+
+    it "denies anonymous users" do
+      expect(Guardian.new.can_edit_blog_topic?(article)).to eq(false)
+    end
+  end
+
+  describe "#can_publish_blog_topic?" do
+    it "allows publishers to publish an article they can edit" do
+      expect(admin.guardian.can_publish_blog_topic?(writer_draft)).to eq(true)
+    end
+
+    it "denies editors" do
+      expect(editor.guardian.can_publish_blog_topic?(admin_draft)).to eq(false)
+    end
+
+    it "denies publishers topics outside the blog categories" do
+      expect(admin.guardian.can_publish_blog_topic?(Fabricate(:topic))).to eq(false)
+    end
+  end
 end

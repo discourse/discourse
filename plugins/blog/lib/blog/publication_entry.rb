@@ -3,18 +3,16 @@
 module ::Blog
   # The editorial view of one article, shared by the editor endpoints and the topic page.
   class PublicationEntry
-    def self.for_viewer(topic, user)
+    def self.for_viewer(topic, guardian)
       return unless UpcomingChanges.enabled?(:blog_enabled)
       return if topic.private_message?
       categories = [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i]
       return if categories.exclude?(topic.category_id)
-      return unless Configuration.contributor?(user)
+      return unless guardian.is_blog_contributor?
 
       publication = Publication.for_topic(topic)
-      Configuration.ensure_editor!(user, publication.editorial_topic || publication.topic)
-      new(publication, user: user, viewed_topic: topic).to_h
-    rescue Discourse::InvalidAccess
-      nil
+      return unless guardian.can_edit_blog_topic?(publication.editorial_topic || publication.topic)
+      new(publication, user: guardian.user, viewed_topic: topic).to_h
     end
 
     def initialize(publication, user:, topic: nil, viewed_topic: nil, live: nil)
@@ -57,7 +55,7 @@ module ::Blog
         live: live.nil? ? publication.publicly_visible? : live,
         draft: !publication.published? && source.present?,
         replies: [publication.discussion_topic&.posts_count.to_i - 1, 0].max,
-        can_publish: Configuration.publisher?(user),
+        can_publish: user.guardian.is_blog_publisher?,
         review_feedback_count: source ? feedback_count(source) : 0,
         active_review_links: source ? Review.where(topic_id: source.id).unexpired.count : 0,
         awaiting_approval: awaiting_approval?,

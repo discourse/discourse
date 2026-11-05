@@ -134,10 +134,10 @@ module ::Blog
     end
 
     def save_metadata!(user, attributes)
-      Configuration.ensure_ready!
+      Readiness.ensure!
       topic.with_lock do
         reload if persisted?
-        Configuration.ensure_editor!(user, editorial_topic || topic)
+        user.guardian.ensure_can_edit_blog_topic!(editorial_topic || topic)
         values = editorial_metadata.merge(attributes.to_h.stringify_keys.slice(*METADATA))
         values["published_at"] = published_at if published_revision_id &&
           values["published_at"].blank?
@@ -157,10 +157,10 @@ module ::Blog
     end
 
     def prepare_draft!(user)
-      Configuration.ensure_ready!
+      Readiness.ensure!
       topic.with_lock do
         reload if persisted?
-        Configuration.ensure_editor!(user, editorial_topic || topic)
+        user.guardian.ensure_can_edit_blog_topic!(editorial_topic || topic)
         save! unless persisted?
         unless editorial_topic
           source = discussion_topic || topic
@@ -193,7 +193,7 @@ module ::Blog
       topic.with_lock do
         reload
         source.with_lock do
-          Configuration.ensure_editor!(user, source)
+          user.guardian.ensure_can_edit_blog_topic!(source)
           ensure_source!(source)
           source.first_post.with_lock do
             revision =
@@ -217,7 +217,7 @@ module ::Blog
     def approve!(user, revision_id)
       topic.with_lock do
         reload
-        Configuration.ensure_publisher!(user, editorial_topic || topic)
+        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
         revision = revisions.find(revision_id)
         unless revision.id == submitted_revision_id
           raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.stale"))
@@ -243,7 +243,7 @@ module ::Blog
       topic.with_lock do
         reload
         revision = revisions.find(revision_id)
-        Configuration.ensure_publisher!(user, editorial_topic || topic)
+        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
         unless approved_revision_id == revision.id
           raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.stale"))
         end
@@ -265,8 +265,8 @@ module ::Blog
       end
       topic.with_lock do
         reload
-        Configuration.ensure_ready!
-        Configuration.ensure_publisher!(user, editorial_topic || topic)
+        Readiness.ensure!
+        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
         revision = revisions.find(revision_id)
         unless approved_revision_id == revision.id && revision.approved_at
           raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.approval_required"))
@@ -295,7 +295,7 @@ module ::Blog
     def cancel_schedule!(user)
       topic.with_lock do
         reload
-        Configuration.ensure_publisher!(user, editorial_topic || topic)
+        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
         clear_schedule!
       end
     end
@@ -331,7 +331,7 @@ module ::Blog
     def unpublish!(user)
       topic.with_lock do
         reload
-        Configuration.ensure_publisher!(user, editorial_topic || topic)
+        user.guardian.ensure_can_publish_blog_topic!(editorial_topic || topic)
         update!(published: false)
         clear_schedule!
         StaffActionLogger.new(user).log_custom("blog_unpublish", topic_id: topic_id)
@@ -393,14 +393,15 @@ module ::Blog
     end
 
     def publish_revision!(user, revision)
-      Configuration.ensure_ready!
+      Readiness.ensure!
       source = editorial_topic
       unless source && revision&.approved_at && revision.publication_id == id
         raise Discourse::InvalidAccess
       end
       ensure_source!(source)
-      Configuration.ensure_publisher!(user, source)
-      Configuration.ensure_publisher!(revision.approver, source)
+      # A scheduled publish runs after its scheduler or approver may have been deleted.
+      Guardian.new(user).ensure_can_publish_blog_topic!(source)
+      Guardian.new(revision.approver).ensure_can_publish_blog_topic!(source)
       user.guardian.ensure_can_create_topic_on_category!(SiteSetting.blog_category.to_i)
       if PublishedPage.exists?(topic_id: source.id)
         raise Discourse::InvalidParameters.new(I18n.t("blog.errors.published_page"))
