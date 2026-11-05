@@ -12,9 +12,10 @@ module DesignWizard
       %w[latest categories] + additional_options.map { |option| option[:id] }
     end
 
-    # a revert has to put back a homepage the wizard doesn't offer as a choice
+    # a revert has to put back a topic list homepage the wizard no longer offers;
+    # plugin homepages stay limited to `ids`, which only lists them while usable
     def self.restorable_ids
-      ids | HomepageSiteSetting.choices
+      ids | TopMenu.homepage_choices
     end
 
     def self.current_settings
