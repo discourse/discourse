@@ -315,6 +315,8 @@ class InviteRedeemer
       .where("topics.archetype = ?", Archetype.private_message)
       .where("invites.email = ?", email)
       .find_each do |topic_invite|
+        next if topic_invite.invite_id != invite.id && !topic_invite.invite.redeemable?
+
         topic = topic_invite.topic
         inviter = topic_invite.invite.invited_by
         next if inviter.blank? || !inviter.guardian.can_invite_to?(topic)
