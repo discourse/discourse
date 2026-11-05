@@ -127,19 +127,92 @@ RSpec.describe TestImpact::Map do
       expect(selection).to have_attributes(specs: [], untested: ["app/models/thing.rb:10-10"])
     end
 
-    it "selects a changed spec file and reports files outside the map" do
-      selection = select(diff("spec/other_spec.rb", "@@ -1 +1 @@") + <<~DIFF)
-        diff --git a/app/models/new.rb b/app/models/new.rb
+    def new_file(path)
+      <<~DIFF
+        diff --git a/#{path} b/#{path}
         new file mode 100644
         --- /dev/null
-        +++ b/app/models/new.rb
+        +++ b/#{path}
         @@ -0,0 +1 @@
       DIFF
+    end
+
+    it "selects a changed spec file and reports a new file as reached through what loads it" do
+      selection = select(diff("spec/other_spec.rb", "@@ -1 +1 @@") + new_file("app/models/new.rb"))
 
       expect(selection).to have_attributes(
         specs: ["spec/other_spec.rb"],
-        unmapped: ["app/models/new.rb"],
+        unmapped: [],
+        untested: ["app/models/new.rb: new, selected through what loads it"],
       )
+    end
+
+    it "reports a new file loaded by convention as outside the map" do
+      selection =
+        select(
+          new_file("config/initializers/100-new.rb") +
+            new_file("plugins/chat/assets/javascripts/discourse/connectors/outlet/new.gjs") +
+            new_file("frontend/discourse/app/instance-initializers/new.js"),
+        )
+
+      expect(selection.unmapped).to eq(
+        %w[
+          config/initializers/100-new.rb
+          frontend/discourse/app/instance-initializers/new.js
+          plugins/chat/assets/javascripts/discourse/connectors/outlet/new.gjs
+        ],
+      )
+    end
+
+    it "selects for a new file the specs that read the files beside it" do
+      selection = select(new_file("spec/fixtures/banner.png"))
+
+      expect(selection.specs).to eq(["spec/block_spec.rb"])
+    end
+
+    it "selects every spec that ran a file converted to TypeScript" do
+      selection = select(<<~DIFF + new_file("frontend/discourse/app/thing.ts"))
+        diff --git a/frontend/discourse/app/thing.js b/frontend/discourse/app/thing.js
+        deleted file mode 100644
+        --- a/frontend/discourse/app/thing.js
+        +++ /dev/null
+        @@ -1,20 +0,0 @@
+      DIFF
+
+      expect(selection).to have_attributes(
+        specs: %w[spec/block_spec.rb spec/double_spec.rb],
+        unmapped: [],
+        untested: [],
+      )
+    end
+
+    it "selects every spec that ran a renamed file the map knows by its new path" do
+      selection = select(<<~DIFF)
+        diff --git a/app/models/old_thing.rb b/app/models/thing.rb
+        similarity index 80%
+        rename from app/models/old_thing.rb
+        rename to app/models/thing.rb
+        --- a/app/models/old_thing.rb
+        +++ b/app/models/thing.rb
+        @@ -40 +40 @@
+      DIFF
+
+      expect(selection).to have_attributes(
+        specs: %w[spec/block_spec.rb spec/double_spec.rb],
+        unmapped: [],
+      )
+    end
+
+    it "selects nothing for files the Tests workflow never runs" do
+      selection =
+        select(
+          diff("migrations/lib/converter.rb", "@@ -1 +1 @@") +
+            diff("script/bulk_import/base.rb", "@@ -1 +1 @@") + diff(".gitignore", "@@ -1 +1 @@") +
+            diff("plugins/chat/.gitignore", "@@ -1 +1 @@") + diff("CODEOWNERS", "@@ -1 +1 @@") +
+            diff(".rubocop.yml", "@@ -1 +1 @@"),
+        )
+
+      expect(selection).to have_attributes(specs: [], unmapped: [])
     end
 
     it "selects every spec that ran a renamed file" do

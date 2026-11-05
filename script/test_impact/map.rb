@@ -22,9 +22,23 @@ module TestImpact
     MIGRATION = %r{\A(?:plugins/[^/]+/)?db/(?:post_)?migrate/[^/]+\.rb\z}
     # Test support no test ran, documentation, which runs nowhere, type tests,
     # which only the type checker reads, and the schema dump: the test
-    # database is migrated, and CI checks the dump in a step of its own.
+    # database is migrated, and CI checks the dump in a step of its own. Also
+    # what the Tests workflow ignores or never runs: the migrations tooling,
+    # import and benchmark scripts, linter and editor configuration.
     NOT_RUN =
-      %r{\A(?:frontend/[^/]+/(?:tests|type-tests)/|plugins/[^/]+/test/|docs/|db/structure\.sql\z)|\.md\z}
+      %r{
+        \A(?:
+          frontend/[^/]+/(?:tests|type-tests)/ | plugins/[^/]+/test/ | docs/ | db/structure\.sql\z |
+          migrations/ | script/(?:import_scripts|bulk_import|benchmarks)/ | bin/qunit\z |
+          \.devcontainer/ | \.github/(?:labeler|dependabot)\.yml\z | CODEOWNERS\z |
+          \.rubocop\.yml\z | eslint\.config\.mjs\z
+        ) | (?:\A|/)\.gitignore\z | \.md\z
+      }x
+    # Files that run without other code naming them, so a new one can
+    # change what existing specs do.
+    LOADED_BY_CONVENTION =
+      %r{\Aconfig/initializers/|/(?:pre-|instance-|api-)?initializers/|/connectors/|-route-map\.g?[jt]s\z}
+    JS_SOURCE = /\.g?[jt]s\z/
 
     def self.build(recording_paths)
       specs = []
@@ -109,7 +123,9 @@ module TestImpact
     # documentation and type tests no spec ran or read select nothing, and so
     # does deleting a file no spec loaded or read. Dependency changes, and
     # changes to methods that ran at boot, are reported as outside the map. A
-    # migration selects the specs that queried the tables it names.
+    # migration selects the specs that queried the tables it names. A new file
+    # selects the specs that read files beside it and is reported as untested,
+    # unless it runs by convention, which is outside the map.
     #
     # `source` returns a changed file's content before the change, for the
     # settings and keys its hunks fall in.
@@ -119,6 +135,7 @@ module TestImpact
       unmapped = []
       untested = []
 
+      changes = pair_conversions(changes)
       changes.each do |change|
         path = change.new_path || change.old_path
         if path.end_with?("_spec.rb") || QUNIT_TEST.match?(path)
@@ -155,6 +172,22 @@ module TestImpact
         end
 
         file = old && @files[old]
+        if !old
+          # A new file runs when something loads it: a change to existing
+          # code, which selects its own specs, or a new spec. What loads
+          # files by globbing their directory read the ones beside it.
+          if LOADED_BY_CONVENTION.match?(path)
+            unmapped << path
+          else
+            ids.merge(sibling_readers(path))
+            untested << "#{path}: new, selected through what loads it" if !NOT_RUN.match?(path)
+          end
+          next
+        end
+        # A map recorded after a rename landed knows the file by its new path,
+        # where the old side's line numbers don't apply.
+        renamed = !file && change.new_path != old && @files[change.new_path]
+        file ||= renamed
         if !file
           readers = @indexes["reads"][old]
           if readers
@@ -165,7 +198,7 @@ module TestImpact
           next
         end
         # A rename or mode change: the constant's path is what moved.
-        if change.hunks.empty?
+        if change.hunks.empty? || renamed
           file["ranges"].each { |_, _, spec_ids| ids.merge(spec_ids) }
           next
         end
@@ -198,6 +231,37 @@ module TestImpact
     end
 
     private
+
+    # A file converted between JavaScript and TypeScript changes too much
+    # for git to see a rename: the deletion and addition become one.
+    def pair_conversions(changes)
+      deleted =
+        changes
+          .select { |c| !c.new_path && JS_SOURCE.match?(c.old_path) }
+          .group_by { |c| c.old_path.sub(JS_SOURCE, "") }
+          .transform_values(&:first)
+      paired = []
+      converted =
+        changes.filter_map do |c|
+          next c if c.old_path || !JS_SOURCE.match?(c.new_path)
+          before = deleted[c.new_path.sub(JS_SOURCE, "")] or next c
+          paired << before
+          Diff::Change.new(
+            old_path: before.old_path,
+            new_path: c.new_path,
+            hunks: [],
+            added: c.added,
+          )
+        end
+      converted - paired
+    end
+
+    def sibling_readers(path)
+      dir = File.dirname(path)
+      @indexes["reads"].each_with_object(Set.new) do |(read, ids), readers|
+        readers.merge(ids) if File.dirname(read) == dir
+      end
+    end
 
     # The specs that queried a table a migration names, by name in its SQL or
     # its schema calls, or as a model class in a data change (`Post` for
