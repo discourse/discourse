@@ -10,7 +10,7 @@
 #   bundle exec ruby ../tooling/scripts/compare_intermediate_dbs.rb \
 #     /path/to/sequential.db /path/to/concurrent.db
 
-require "extralite"
+require "migrations-core"
 require "digest"
 
 # `schema_migrations.applied_at` is a wall-clock time and always differs.
@@ -38,8 +38,8 @@ end
 seq_path, conc_path = ARGV
 abort "usage: compare_intermediate_dbs.rb SEQUENTIAL_DB CONCURRENT_DB" unless seq_path && conc_path
 
-seq = Extralite::Database.new(seq_path)
-conc = Extralite::Database.new(conc_path)
+seq = Migrations::Database::Connection.open_database(path: seq_path)
+conc = Migrations::Database::Connection.open_database(path: conc_path)
 
 seq_tables = tables(seq)
 conc_tables = tables(conc)

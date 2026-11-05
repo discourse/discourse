@@ -22,7 +22,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       # shards stay empty even when the run DB already has rows.
       @shard_manager =
         Migrations::Conversion::ShardManager.new(canonical_path: @db_path, migrations_path:)
-      @writer = Migrations::Database::Connection.new(path: @db_path)
+      @writer = Migrations::Database::Connection.new(path: @db_path, reopenable: true)
       Migrations::Database::IntermediateDB.setup(@writer)
       begin
         example.run
@@ -613,6 +613,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
   it "adds new, non-colliding rows to an existing IntermediateDB" do
     # A row from a previous run already lives in the DB.
     Migrations::Database::IntermediateDB.insert("INSERT INTO keyed VALUES (?, ?)", 1, "existing")
+    @writer.commit_transaction
 
     Object.const_set(
       "TempIntegrationSteps",
@@ -659,6 +660,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     # already in the run DB is a genuine double-write: it fails the run loudly
     # instead of being silently dropped, matching the single-writer contract.
     Migrations::Database::IntermediateDB.insert("INSERT INTO keyed VALUES (?, ?)", 1, "existing")
+    @writer.commit_transaction
 
     Object.const_set(
       "TempIntegrationSteps",

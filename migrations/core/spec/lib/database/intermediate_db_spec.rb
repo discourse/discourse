@@ -17,13 +17,13 @@ RSpec.describe Migrations::Database::IntermediateDB do
         db_path = File.join(storage_path, "test.db")
         connection = Migrations::Database::Connection.new(path: db_path)
 
-        connection.db.execute("CREATE TABLE foo (id INTEGER)")
+        connection.execute("CREATE TABLE foo (id INTEGER)")
 
         described_class.setup(connection)
         described_class.insert("INSERT INTO foo (id) VALUES (?)", 1)
         described_class.insert("INSERT INTO foo (id) VALUES (?)", 2)
 
-        expect(connection.db.query_splat("SELECT id FROM foo")).to contain_exactly(1, 2)
+        expect(connection.query_splat("SELECT id FROM foo")).to contain_exactly(1, 2)
 
         connection.close
       end
