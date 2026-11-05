@@ -1203,13 +1203,13 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(deleted_topic_id)
       end
 
-      it "should ignore status filter when query string is `status:deleted` and user cannot see deleted topics" do
+      it "should return empty when query string is `status:deleted` and user cannot see deleted topics" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
             .filter_from_query_string("status:deleted")
             .pluck(:id),
-        ).to contain_exactly(topic.id, closed_topic.id, archived_topic.id, foobar_topic.id)
+        ).to be_empty
       end
 
       it "should only return topics that have been archived when query string is `status:archived`" do
