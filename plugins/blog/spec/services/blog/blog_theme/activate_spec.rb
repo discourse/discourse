@@ -83,6 +83,22 @@ RSpec.describe Blog::BlogTheme::Activate do
         end
       end
 
+      context "when the theme is a preset" do
+        let(:preset) { Blog::ThemePresets.find("discourse-blog") }
+        let(:params) { { theme_id: preset["id"], revision: preset["revision"] } }
+
+        it { is_expected.to run_successfully }
+
+        it "stores only the preset id so readers follow the shipped files" do
+          result
+          expect(PluginStore.get(Blog::BlogTheme::STORE, "active")).to eq(
+            "id" => "discourse-blog",
+            "preset" => true,
+          )
+          expect(Blog::BlogTheme.active).to eq(preset)
+        end
+      end
+
       it "logs the activation" do
         expect { result }.to change {
           UserHistory.where(

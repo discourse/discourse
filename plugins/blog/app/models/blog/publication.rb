@@ -123,6 +123,7 @@ module ::Blog
         "path" => metadata["path"] != live["path"],
         "excerpt" => metadata["excerpt"] != live["excerpt"],
         "featured" => metadata["featured"] != live["featured"],
+        "tags" => source.tags.visible(Guardian.new).pluck(:name).sort != Array(live["tags"]).sort,
         "published_at" => draft_date_changed?(metadata["published_at"]),
         "revision" => submitted_revision_differs?,
       }

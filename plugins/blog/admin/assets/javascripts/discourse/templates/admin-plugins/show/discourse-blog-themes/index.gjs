@@ -1,5 +1,4 @@
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
-import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import BlogThemeCard from "../../../../components/blog-theme-card.gjs";
@@ -25,17 +24,10 @@ export default <template>
         />
       </:actions>
     </DPageSubheader>
-    {{#if @model.themes.length}}
-      <div class="themes-cards-container">
-        {{#each @model.themes key="id" as |theme|}}
-          <BlogThemeCard @activeThemeId={{@model.active.id}} @theme={{theme}} />
-        {{/each}}
-      </div>
-    {{else}}
-      <DEmptyState
-        @body={{i18n "blog.admin.no_themes_description"}}
-        @title={{i18n "blog.admin.no_themes"}}
-      />
-    {{/if}}
+    <div class="themes-cards-container">
+      {{#each @model.themes key="id" as |theme|}}
+        <BlogThemeCard @activeThemeId={{@model.active.id}} @theme={{theme}} />
+      {{/each}}
+    </div>
   </section>
 </template>

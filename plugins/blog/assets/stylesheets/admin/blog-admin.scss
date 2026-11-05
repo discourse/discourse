@@ -15,54 +15,66 @@
 
 .blog-themes {
   .themes-cards-container {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));
-  }
-
-  &__active {
-    margin-inline-start: 0.5em;
-    color: var(--success);
-    font-size: var(--font-down-1);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
   }
 }
 
 .blog-theme-card {
-  .admin-config-area-card__content {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: auto 1fr;
+  &.--active {
+    border-color: var(--tertiary-medium);
+    box-shadow: 0 0 0 3px var(--tertiary-low);
   }
 
+  // Screenshots are captured at 4:3; palette samples share the frame so card
+  // titles line up across a row.
   .theme-card-preview__image-wrapper {
-    grid-column: 1 / -1;
     height: auto;
-    min-height: 14rem;
+    aspect-ratio: 4 / 3;
   }
 
-  .theme-card-preview__content {
-    padding-block: 1rem;
-    justify-content: center;
+  .blog-theme-thumbnail {
+    height: 100%;
   }
 
-  .theme-card__footer {
-    align-self: center;
-    padding: 1rem;
-    padding-inline-start: 0;
+  // Core reveals this on hover; here it stays visible so the light and dark
+  // screenshots are discoverable.
+  .theme-card-preview__screenshot-toggle {
+    opacity: 0.75;
+    padding: 0.3rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--secondary) 70%, transparent);
+    transition:
+      opacity 0.2s,
+      background 0.2s;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:hover,
+    &:focus-visible {
+      opacity: 1;
+      background: var(--secondary);
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
   }
 
-  .theme-card__controls {
-    gap: 0.5rem;
-    margin: 0;
-  }
-
-  .theme-card__description {
-    margin: 0;
+  .theme-card__description,
+  .theme-card-preview__description {
+    margin: 0.25rem 0 0.5rem;
     font-size: var(--font-down-1);
     color: var(--primary-high);
   }
 
-  .theme-card__badges {
-    min-height: 0;
-    margin-top: 0.5rem;
+  .theme-card__badge.--active {
+    background: var(--success-low);
+
+    svg {
+      color: var(--success);
+    }
   }
 }
 
@@ -70,7 +82,7 @@
   width: 100%;
   min-width: 0;
   align-self: stretch;
-  padding: 1.5rem 1.75rem;
+  padding: 1.25rem;
   background: var(--blog-theme-paper);
   color: var(--blog-theme-ink);
 
@@ -81,9 +93,9 @@
   }
 
   &__headline {
-    margin-block: 1rem 0.5rem;
+    margin-block: 0.75rem 0.5rem;
     font-family: Georgia, "Times New Roman", serif;
-    font-size: 2.75rem;
+    font-size: 1.85rem;
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: -0.04em;
@@ -132,6 +144,19 @@
 }
 
 .blog-theme-editor {
+  &__start-from {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-bottom: 1rem;
+
+    label {
+      margin: 0;
+      font-weight: 700;
+    }
+  }
+
   &__template-field {
     .ace-wrapper,
     .ace-wrapper > .loading-container {

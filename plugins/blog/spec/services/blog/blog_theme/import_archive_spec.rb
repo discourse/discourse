@@ -88,7 +88,7 @@ RSpec.describe Blog::BlogTheme::ImportArchive do
           "source" => nil,
         )
         expect(Blog::BlogTheme.find(result.theme["id"])).to eq(result.theme)
-        expect(Blog::BlogTheme.active["id"]).to be_nil
+        expect(Blog::BlogTheme.active["id"]).to eq(Blog::ThemePresets::DEFAULT_ID)
       end
     end
   end
