@@ -157,13 +157,21 @@ module DiscourseDataExplorer
     end
 
     def create
-      query_params = params.require(:query).permit(:name, :description, :sql, tags: [])
-      group_ids = params.require(:query)[:group_ids]
-
-      query =
-        QueryCreator.create(query_params: query_params, group_ids: group_ids, user: current_user)
-
-      render_serialized query, QueryDetailsSerializer, root: "query"
+      CreateQuery.call(service_params.merge(params: create_params)) do
+        on_success { |query:| render_serialized query, QueryDetailsSerializer, root: "query" }
+        on_failed_policy(:can_create_query) { raise Discourse::InvalidAccess }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(:name) if contract.errors.include?(:name)
+          render_json_error(contract)
+        end
+        on_model_not_found(:groups) do |failure|
+          raise failure.exception unless failure.exception.is_a?(ActiveRecord::RecordNotFound)
+          raise Discourse::NotFound
+        end
+        on_model_errors(:query) { |query| render_json_error(query, type: :record_invalid) }
+        on_model_not_found(:query) { |failure| raise failure.exception }
+        on_exceptions(ActiveRecord::RecordInvalid) { |error| raise error }
+      end
     end
 
     def generate_with_ai
@@ -302,6 +310,21 @@ module DiscourseDataExplorer
     end
 
     private
+
+    def create_params
+      params
+        .require(:query)
+        .then do |submitted_query|
+          submitted_query
+            .permit(:name, :description, :sql, tags: [])
+            .to_h
+            .tap do |attributes|
+              attributes[:group_ids] = submitted_query[:group_ids] if submitted_query.key?(
+                :group_ids,
+              )
+            end
+        end
+    end
 
     def rate_limit_query_runs!
       return if !is_api? && !is_user_api?
