@@ -4,33 +4,20 @@ RSpec.describe Blog::BlogTheme::ListSampleArticles do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
+    include_context "with a public blog"
+
     fab!(:acting_user, :admin)
-    fab!(:category)
-    fab!(:older_publication) { publish_article(published_at: 2.days.ago) }
-    fab!(:newer_publication) { publish_article(published_at: 1.day.ago) }
+    fab!(:older_publication) { publish_blog_article(published_at: 2.days.ago) }
+    fab!(:newer_publication) { publish_blog_article(published_at: 1.day.ago) }
     fab!(:private_publication) do
-      publish_article(
+      publish_blog_article(
+        Fabricate(:topic, category: Fabricate(:private_category, group: Group[:staff])),
         published_at: 1.hour.ago,
-        category: Fabricate(:private_category, group: Group[:staff]),
       )
     end
 
     let(:params) { {} }
     let(:dependencies) { { guardian: acting_user.guardian } }
-
-    before { enable_blog!(category:) }
-
-    def publish_article(published_at:, category: self.category)
-      topic = Fabricate(:topic, category:)
-      Fabricate(:post, topic:)
-      Blog::Publication.create!(
-        topic:,
-        discussion_topic: topic,
-        path: "/story-#{topic.id}",
-        published: true,
-        published_at:,
-      )
-    end
 
     context "when the user is not an admin" do
       fab!(:acting_user, :moderator)
