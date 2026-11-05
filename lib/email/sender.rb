@@ -24,6 +24,24 @@ BYPASS_DISABLE_TYPES = %w[
 
 module Email
   class Sender
+    # Transport routing is independent of EmailLog's delivery-policy exemptions.
+    # General invitations, including token links, can be bulk mail and stay on
+    # the default route; password setup for an already invited user is critical.
+    CRITICAL_SMTP_EMAIL_TYPES = %w[
+      signup
+      activation_reminder
+      forgot_password
+      account_created
+      email_login
+      email_login_code
+      admin_login
+      confirm_old_email
+      confirm_old_email_add
+      confirm_new_email
+      invite_password_instructions
+      admin_confirmation_message
+    ].freeze
+
     def initialize(message, email_type, user = nil)
       @message = message
       @message_attachments_index = {}
@@ -237,8 +255,10 @@ module Email
           end
         end
 
+      smtp_settings = apply_critical_smtp || ActionMailer::Base.smtp_settings
+
       # pass the original message_id when using mailjet/mandrill/sparkpost
-      case ActionMailer::Base.smtp_settings[:address]
+      case smtp_settings[:address]
       when /\.mailjet\.com/
         @message.header["X-MJ-CustomID"] = @message.message_id
       when "smtp.mandrillapp.com"
@@ -350,6 +370,25 @@ module Email
     end
 
     private
+
+    # Returns the critical settings when they replace the message's transport.
+    def apply_critical_smtp
+      return if CRITICAL_SMTP_EMAIL_TYPES.exclude?(@email_type.to_s)
+      return unless settings = GlobalSetting.critical_smtp_settings
+      # Keep local mail capture
+      return if Rails.env.profile?
+      return if Rails.env.development? && !GlobalSetting.try(:use_smtp_environment_in_development)
+
+      # SMTP settings that differ from the defaults retain precedence, as do
+      # test, file and sendmail transports.
+      delivery = @message.delivery_method
+      return unless delivery.instance_of?(Mail::SMTP)
+      default = Mail::SMTP.new(ActionMailer::Base.smtp_settings).settings
+      return if delivery.settings.except(:return_response) != default.except(:return_response)
+
+      @message.delivery_method(:smtp, settings.merge(return_response: true))
+      settings
+    end
 
     def digest_posts
       Post.where(id: header_value("X-Discourse-Post-Ids")&.split(","))
