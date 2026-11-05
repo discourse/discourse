@@ -1939,6 +1939,18 @@ RSpec.describe ListController do
       ).to contain_exactly(topic.id)
     end
 
+    it "keeps anonymous repeated negated filters from amplifying SQL" do
+      query = Array.new(8, "-status:closed").join(" ")
+
+      sql_queries = track_sql_queries { get "/filter.json", params: { q: query } }
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id)
+      expect(sql_queries.sum(&:bytesize)).to be < 50_000
+    end
+
     it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do
       category_topic = Fabricate(:topic, category: category)
       category.update!(topic: category_topic)
