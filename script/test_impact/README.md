@@ -23,6 +23,13 @@ QUnit records the same JavaScript per test file, through testem
 (`frontend/discourse/patch-testem-test-impact.js`): the page waits at each
 new top-level module while coverage of the one before is taken.
 
+Theme QUnit (`bin/rake themes:qunit_all_official`) records the same way.
+Themes are compiled by the server, so the recorder saves their source maps
+(inline for a theme's tests) to `tmp/test_impact/js-maps/`, and the rake task
+writes each theme's directory by id to `tmp/test_impact/themes.json`;
+`resolve_js` then maps a theme's `theme-<id>/` sources to its files, in
+`themes/<name>` or `tmp/themes/<name>`.
+
 Settings and translations are loaded once at boot, so the lookups are what
 tell specs apart. Recordings go to `tmp/test_impact/recording-*.jsonl.gz`.
 Then merge them:
@@ -47,7 +54,7 @@ system specs. It can't run together with `COVERAGE=1`, since both use Ruby's
 `Coverage`.
 
 In CI, a pull request labeled `test-impact-record` records in the backend,
-system and frontend jobs (not themes) and uploads `test-impact-recordings-*`
+system and frontend jobs and uploads `test-impact-recordings-*`
 artifacts. The label takes effect on the next push. `build_map` merges
 recordings from several jobs when they are in one directory; the run's
 `Test impact map` job does that and uploads the map as `test-impact-map`.
@@ -120,8 +127,7 @@ changes against the branch it merges into:
 - `none`: no tests, when nothing selected belongs to the job;
 - `list`: the selected spec or test files that belong to the job.
 
-Theme system specs, in `themes/` and the official themes cloned into
-`tmp/themes/`, are recorded and selected like the rest. Theme QUnit isn't
-recorded, since its tests are compiled into modules named by theme id: it runs
-whole when a change reaches any browser test (a QUnit test or system spec), and
-not at all otherwise. The job's setup still runs when it selects none.
+Theme tests, in `themes/` and the official themes cloned into `tmp/themes/`,
+are selected like the rest; theme QUnit runs the selected tests' themes whole
+(`TEST_IMPACT_THEMES`). A job the map records no tests for runs whole. The
+job's setup still runs when it selects none.

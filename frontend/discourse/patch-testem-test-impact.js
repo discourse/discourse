@@ -232,6 +232,7 @@ class Recording {
   // Offsets of each line's start, in UTF-16 code units as V8 counts them.
   async #starts(url) {
     const source = await (await fetch(url)).text();
+    await saveThemeSourceMap(url, source);
     const starts = [0];
     for (let index = 0; index < source.length; index++) {
       if (source.charCodeAt(index) === 10) {
@@ -287,6 +288,38 @@ class Recording {
       console.error(`[test-impact] not recording: ${error.message}`);
     }
     this.#failed = true;
+  }
+}
+
+// Themes are compiled by the server, so their source maps aren't in the build
+// for resolve_js to read: they're saved beside the recordings, named like the
+// build's (<script>.map). A theme's tests carry theirs inline.
+async function saveThemeSourceMap(url, source) {
+  const script = new URL(url);
+  if (!script.pathname.startsWith("/theme-javascripts/")) {
+    return;
+  }
+  const reference = [...source.matchAll(/\/\/# sourceMappingURL=(\S+)/g)].pop();
+  if (!reference) {
+    return;
+  }
+  try {
+    const inline = reference[1].match(/^data:application\/json;base64,(.+)$/);
+    const map = inline
+      ? Buffer.from(inline[1], "base64").toString("utf8")
+      : await (await fetch(new URL(reference[1], script))).text();
+    const dir = path.join(OUTPUT_DIR, "js-maps");
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, `${path.basename(script.pathname)}.map`),
+      map
+    );
+  } catch (error) {
+    // Its functions go unresolved; the rest of the recording is still good.
+    // eslint-disable-next-line no-console
+    console.error(
+      `[test-impact] no source map for ${script.pathname}: ${error.message}`
+    );
   }
 }
 

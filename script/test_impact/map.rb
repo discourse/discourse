@@ -15,7 +15,8 @@ module TestImpact
 
     SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
     LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
-    QUNIT_TEST = %r{\A(?:frontend/[^/]+/tests|plugins/[^/]+/test)/.*-test\.g?[jt]s\z}
+    QUNIT_TEST =
+      %r{\A(?:frontend/[^/]+/tests|plugins/[^/]+/test|(?:tmp/)?themes/[^/]+/test)/.*-test\.g?[jt]s\z}
     # Dependency changes can change any code path.
     DEPENDENCIES =
       %r{\A(?:Gemfile(?:\.lock)?|pnpm-lock\.yaml|pnpm-workspace\.yaml|(?:.+/)?package\.json)\z}
@@ -103,6 +104,11 @@ module TestImpact
 
     def spec_count
       @specs.size
+    end
+
+    # The spec and test files the map recorded.
+    def specs
+      @specs
     end
 
     # Recorded run time of the given spec files (all of them by default), in
@@ -410,12 +416,15 @@ module TestImpact
       @name = name
     end
 
-    # ["full" | "none" | "list", reason, files]
-    def run(selection, bundled:, exists:)
+    # ["full" | "none" | "list", reason, files]. `recorded` is every spec and
+    # test file in the map: a job none of them belong to wasn't recorded.
+    def run(selection, recorded:, bundled:, exists:)
       if selection.unmapped.any?
         return "full", "outside the map: #{selection.unmapped.first(5).join(", ")}", []
       end
-      return theme_qunit(selection) if [@build_type, @target] == %w[frontend themes]
+      if recorded.none? { |path| runs?(path, bundled) }
+        return "full", "the map records no tests for #{@name}", []
+      end
       files = selection.specs.select { |path| exists.call(path) && runs?(path, bundled) }
       return "none", "nothing selected for #{@name}", [] if files.empty?
       if @build_type == "frontend" && files.sum { |file| file.size + 1 } > QUNIT_FILTER_LIMIT
@@ -425,16 +434,6 @@ module TestImpact
     end
 
     private
-
-    # Theme QUnit isn't recorded: its tests are compiled into modules named by
-    # theme id. They run in the browser on core's JavaScript, so they run whole
-    # when a change reaches any browser test, and not at all otherwise.
-    def theme_qunit(selection)
-      browser =
-        selection.specs.any? { |path| path.include?("spec/system/") || !path.end_with?("_spec.rb") }
-      return "full", "theme QUnit isn't recorded; the change reaches browser tests", [] if browser
-      ["none", "the change reaches no browser test", []]
-    end
 
     def runs?(path, bundled)
       plugin = path[%r{\Aplugins/([^/]+)/}, 1]
@@ -459,6 +458,8 @@ module TestImpact
         !spec && path.start_with?("frontend/")
       in ["frontend", "plugins"]
         !spec && plugin
+      in ["frontend", "themes"]
+        !spec && path.match?(%r{\A(?:tmp/)?themes/[^/]+/test/})
       end
     end
   end

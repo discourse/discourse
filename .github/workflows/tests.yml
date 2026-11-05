@@ -82,7 +82,7 @@ jobs:
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
-      TEST_IMPACT_RECORD: ${{ (matrix.build_type == 'backend' || matrix.build_type == 'system' || (matrix.build_type == 'frontend' && matrix.target != 'themes')) && (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'schedule') && '1' || '' }}
+      TEST_IMPACT_RECORD: ${{ (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'schedule') && '1' || '' }}
       # test-impact-full runs a pull request's whole suite.
       TEST_IMPACT_SELECT: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'test-impact-full') && !contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
 
@@ -396,7 +396,13 @@ jobs:
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes' && env.TEST_IMPACT_MODE != 'none'
-        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+        run: |
+          if [ "$TEST_IMPACT_MODE" = list ]; then
+            # The selected tests' themes, each run whole.
+            TEST_IMPACT_THEMES=$(sed -E 's|^((tmp/)?themes/[^/]+)/.*|\1|' tmp/test-impact-files.txt | sort -u | paste -sd, -)
+            export TEST_IMPACT_THEMES
+          fi
+          DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'

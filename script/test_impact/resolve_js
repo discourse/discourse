@@ -5,7 +5,9 @@
 // ranges of the functions each system spec ran) to source files through the
 // build's source maps, rewriting the recordings in place. Afterwards a
 // JavaScript file appears in "files" and "methods" just like a Ruby file.
-// Run it where the build that served the specs is, before build_map.
+// Run it where the build that served the specs is, before build_map. Theme
+// scripts resolve through the source maps the recorder saved in js-maps/, and
+// themes.json names each theme's directory by id.
 //
 //   script/test_impact/resolve_js [recordings dir]
 
@@ -17,9 +19,42 @@ const {
 } = require("../../frontend/discourse/lib/deprecation-report");
 
 const ROOT = path.resolve(__dirname, "..", "..");
+const dir = process.argv[2] || "tmp/test_impact";
 const resolver = new DeprecationStackResolver();
+const themeResolver = new DeprecationStackResolver({
+  mapRoots: [path.join(dir, "js-maps")],
+});
+const themeDirectories = fs.existsSync(path.join(dir, "themes.json"))
+  ? JSON.parse(fs.readFileSync(path.join(dir, "themes.json"), "utf8"))
+  : {};
 const resolved = new Map();
 const exists = new Map();
+
+// A theme's sources are named theme-<id>/: its JavaScript under discourse/,
+// which is javascripts/discourse/ in the theme, and the rest as in the theme.
+function themeFile(file) {
+  const match = file.match(/(?:^|\/)theme-(-?\d+)\/(.+)$/);
+  if (!match) {
+    return file;
+  }
+  const [, id, rest] = match;
+  const directory = themeDirectories[id];
+  if (!directory) {
+    return file;
+  }
+  return path.join(
+    directory,
+    rest.startsWith("discourse/") ? `javascripts/${rest}` : rest
+  );
+}
+
+function resolveFrame(frame) {
+  let found = resolver.resolveFrame(frame);
+  if (!found.resolved) {
+    found = themeResolver.resolveFrame(frame);
+  }
+  return found.resolved ? { ...found, file: themeFile(found.file) } : found;
+}
 
 // Dependencies change through lockfiles, which select everything anyway, and
 // some name their sources by paths outside the repository.
@@ -41,13 +76,13 @@ function resolve(script, [startLine, startColumn, endLine, endColumn]) {
   }
 
   let result = null;
-  const start = resolver.resolveFrame({
+  const start = resolveFrame({
     url: script,
     line: startLine,
     column: startColumn,
   });
   if (start.resolved && !start.approximate && ownFile(start.file)) {
-    const end = resolver.resolveFrame({
+    const end = resolveFrame({
       url: script,
       line: endLine,
       column: endColumn,
@@ -83,7 +118,6 @@ function bySourceFile(byScript) {
   );
 }
 
-const dir = process.argv[2] || "tmp/test_impact";
 const recordings = fs
   .readdirSync(dir)
   .filter((name) => /^recording-.*\.jsonl\.gz$/.test(name));
@@ -101,7 +135,7 @@ for (const name of recordings) {
     // QUnit records where a module's first test is defined.
     if (entry.spec_location) {
       const [script, specLine, column] = entry.spec_location;
-      const frame = resolver.resolveFrame({
+      const frame = resolveFrame({
         url: script,
         line: specLine,
         column,
