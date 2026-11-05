@@ -3408,14 +3408,7 @@ RSpec.describe SessionController do
   end
 
   describe "#create" do
-    [
-      { value: "myawesomepassword" },
-      ["myawesomepassword"],
-      719_384_625_018,
-      719_384_625.5,
-      true,
-      false,
-    ].each do |password|
+    shared_examples "a rejected non-string JSON password" do |password|
       it "rejects a non-string JSON password #{password.inspect} without logging in" do
         EmailToken.confirm(email_token.token)
         user.update!(password: password.to_s) if password.is_a?(Numeric)
@@ -3430,7 +3423,7 @@ RSpec.describe SessionController do
       end
     end
 
-    [nil, {}, []].each do |password|
+    shared_examples "a rejected missing or empty JSON password" do |password|
       it "rejects a missing or empty JSON password #{password.inspect} with a bad request" do
         post "/session.json", params: { login: user.username, password: }, as: :json
 
@@ -3439,6 +3432,17 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to be_nil
       end
     end
+
+    include_examples "a rejected non-string JSON password", { value: "myawesomepassword" }
+    include_examples "a rejected non-string JSON password", ["myawesomepassword"]
+    include_examples "a rejected non-string JSON password", 719_384_625_018
+    include_examples "a rejected non-string JSON password", 719_384_625.5
+    include_examples "a rejected non-string JSON password", true
+    include_examples "a rejected non-string JSON password", false
+
+    include_examples "a rejected missing or empty JSON password", nil
+    include_examples "a rejected missing or empty JSON password", {}
+    include_examples "a rejected missing or empty JSON password", []
 
     context "when read only mode" do
       before do
