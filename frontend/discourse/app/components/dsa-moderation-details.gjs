@@ -2,8 +2,10 @@ import Component from "@glimmer/component";
 import { array, fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -50,6 +52,14 @@ export default class DsaModerationDetails extends Component {
       @onSubmit={{@onSubmit}}
       as |form data|
     >
+      <PluginOutlet
+        @name="dsa-moderation-details-before-fields"
+        @outletArgs={{lazyHash
+          form=form
+          options=@options
+          reviewable=@reviewable
+        }}
+      />
       <form.Field
         @format="full"
         @name="community_rule"
