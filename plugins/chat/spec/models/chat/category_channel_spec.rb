@@ -118,6 +118,14 @@ RSpec.describe Chat::CategoryChannel do
         channel.validate!
         expect(channel.slug).to eq("some-category-stuff")
       end
+
+      it "truncates the slug when the name is long" do
+        channel.name = "word " * 40
+        expect(channel).to be_valid
+        expect(channel.slug.length).to be <= Chat::Channel::SLUG_MAX_LENGTH
+        expect(channel.slug).to start_with("word-word")
+        expect(channel.slug).not_to end_with("-")
+      end
     end
 
     context "when slug is provided" do
