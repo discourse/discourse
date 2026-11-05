@@ -49,6 +49,6 @@ class EmailValidator < ActiveModel::EachValidator
   end
 
   def self.is_developer?(value)
-    Developer.email?(value)
+    Developer.configured_email?(value)
   end
 end
