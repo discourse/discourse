@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def notification_form
-        PageObjects::Components::FormKit.new(".c-channel-settings__notification-form")
+        PageObjects::Components::FormKit.new(".c-channel-preferences__form")
       end
 
       def select_emoji(value)
