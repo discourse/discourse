@@ -165,6 +165,12 @@ RSpec.describe Blog::GuardianExtensions do
         expect(editor.guardian.can_edit_post?(writer_draft_post.reload)).to eq(false)
       end
 
+      it "denies editors a deleted first post" do
+        admin_draft_post.update_columns(deleted_at: Time.current)
+
+        expect(editor.guardian.can_edit_post?(admin_draft_post)).to eq(false)
+      end
+
       it "allows staff to edit a locked first post" do
         admin_draft_post.update_columns(locked_by_id: admin.id)
 

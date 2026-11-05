@@ -32,11 +32,9 @@ module ::Blog
 
     # A Blog-category topic whose article has gone live at least once.
     def blog_published_discussion?
-      UpcomingChanges.enabled?(:blog_enabled) && category_id == SiteSetting.blog_category.to_i &&
-        Blog::Publication
-          .where(discussion_topic_id: id)
-          .where.not(published_revision_id: nil)
-          .exists?
+      return false if !UpcomingChanges.enabled?(:blog_enabled)
+      return false if category_id != SiteSetting.blog_category.to_i
+      Blog::Publication.where(discussion_topic_id: id).where.not(published_revision_id: nil).exists?
     end
 
     def blog_editorial_draft?
