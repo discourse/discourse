@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
 class UserHistorySerializer < ApplicationSerializer
-  USER_NAME_DETAIL_ACTIONS =
-    %i[delete_post delete_topic recover_post recover_topic post_rejected]
-      .map { |action| UserHistory.actions[action] }
+  # Names are logged unescaped, so each name runs to the last label of the field
+  # that the logger writes after the author line.
+  USER_NAME_PATTERNS =
+    {
+      delete_post: "topic",
+      post_rejected: "topic",
+      delete_topic: "title",
+      recover_topic: "title",
+      recover_post: "raw",
+    }.to_h { |action, field| [UserHistory.actions[action], /^(user: \S+) \(.*\)(?=\n#{field}: )/m] }
       .freeze
 
   attributes :action_name,
@@ -80,8 +87,8 @@ class UserHistorySerializer < ApplicationSerializer
 
     if object.action == UserHistory.actions[:delete_user]
       value.sub(/^name: .*\n(?=created_at: )/m, "")
-    elsif USER_NAME_DETAIL_ACTIONS.include?(object.action)
-      value.sub(/^(user: \S+) \(.*\)(?=\n(?:topic|title|raw): )/m, "\\1")
+    elsif (pattern = USER_NAME_PATTERNS[object.action])
+      value.sub(pattern, "\\1")
     else
       value
     end
