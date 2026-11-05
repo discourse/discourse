@@ -120,7 +120,12 @@ class PrivateMessageTopicTrackingState
     return if post.small_action?
     return unless tracked_topic?(topic)
 
-    scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
+    scope =
+      TopicUser
+        .tracking(post.topic_id)
+        .where(user_id: topic.all_allowed_users.select(:id))
+        .includes(user: %i[user_stat user_option])
+    scope = scope.where(user_id: User.whisperers.select(:id)) if post.whisper?
 
     group_ids = post.whisper? ? [Group::AUTO_GROUPS[:staff]] : topic.allowed_groups.pluck(:id)
 
