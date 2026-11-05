@@ -1286,16 +1286,59 @@ RSpec.describe UsersController do
           expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
 
-        it "won't create the developer as active" do
-          UsernameCheckerService.expects(:is_developer?).returns(true)
+        it "does not create the developer as active" do
+          Rails.configuration.stubs(:developer_emails).returns([post_user_params[:email]])
 
           post "/u.json",
-               params: post_user_params.merge(active: true),
+               params: post_user_params.merge(password: "strongpassword12345", active: true),
                headers: {
                  HTTP_API_KEY: api_key.key,
                }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["active"]).to be_falsy
+          expect(response.parsed_body["active"]).to eq(false)
+          expect(User.find_by_email(post_user_params[:email]).active).to eq(false)
+        end
+
+        it "does not activate a developer email with different case" do
+          Rails.configuration.stubs(:developer_emails).returns(["foobar@example.com"])
+
+          post "/u.json",
+               params:
+                 post_user_params.merge(
+                   email: "Foobar@example.com",
+                   password: "strongpassword12345",
+                   active: true,
+                 ),
+               headers: {
+                 HTTP_API_KEY: api_key.key,
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["active"]).to eq(false)
+          new_user = User.find_by_email("foobar@example.com")
+          expect(new_user.active).to eq(false)
+          expect(new_user.admin).to eq(false)
+        end
+
+        it "does not activate a developer email with surrounding whitespace" do
+          Rails.configuration.stubs(:developer_emails).returns(["foobar@example.com"])
+
+          post "/u.json",
+               params:
+                 post_user_params.merge(
+                   email: " Foobar@example.com ",
+                   password: "strongpassword12345",
+                   active: true,
+                 ),
+               headers: {
+                 HTTP_API_KEY: api_key.key,
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["active"]).to eq(false)
+          new_user = User.find_by_email("foobar@example.com")
+          expect(new_user.active).to eq(false)
+          expect(new_user.admin).to eq(false)
         end
 
         it "won't set the new user's locale to the admin's locale" do
