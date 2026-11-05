@@ -133,54 +133,15 @@ module TestImpact
         end
       File.singleton_class.prepend(reads)
 
-      # Migrations change tables, not code a spec ran. ActiveRecord and the
-      # mini_sql DB helper both query through the pg driver; a prepared
-      # statement's text comes with its prepare. Most texts repeat, so each
-      # one's tables are kept.
+      # Migrations change tables, not code a spec ran. Queries through the
+      # mini_sql DB helper send no notification, so their tables are missed.
       tables = ActiveRecord::Base.connection.tables.to_set
-      named = {}
-      prepared = {}
-      tables_of =
-        lambda do |sql|
-          named.clear if named.size > 50_000
-          named[sql] ||= sql.scan(SQL_TABLE).flatten.select { |name| tables.include?(name) }.uniq
+      ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
+        next if payload[:name] == "SCHEMA"
+        payload[:sql].scan(SQL_TABLE) do |(name)|
+          recorder.note(:tables, name) if tables.include?(name)
         end
-      queries =
-        Module.new do
-          %i[
-            exec
-            async_exec
-            sync_exec
-            exec_params
-            async_exec_params
-            sync_exec_params
-          ].each do |method|
-            next if !PG::Connection.method_defined?(method)
-            define_method(method) do |sql, *args, &block|
-              recorder.note_tables(tables_of.call(sql)) if sql.is_a?(String)
-              super(sql, *args, &block)
-            end
-          end
-          %i[prepare async_prepare sync_prepare].each do |method|
-            next if !PG::Connection.method_defined?(method)
-            define_method(method) do |name, sql, *args, &block|
-              prepared[[object_id, name]] = tables_of.call(sql)
-              super(name, sql, *args, &block)
-            end
-          end
-          %i[exec_prepared async_exec_prepared sync_exec_prepared].each do |method|
-            next if !PG::Connection.method_defined?(method)
-            define_method(method) do |name, *args, &block|
-              recorder.note_tables(prepared[[object_id, name]] || [])
-              super(name, *args, &block)
-            end
-          end
-        end
-      PG::Connection.prepend(queries)
-    end
-
-    def note_tables(names)
-      @notes[:tables].merge(names)
+      end
     end
 
     def note(kind, value)
