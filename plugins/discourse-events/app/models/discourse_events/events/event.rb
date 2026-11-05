@@ -616,47 +616,6 @@ module DiscourseEvents
         { starts_at: next_starts_at, ends_at: derive_next_ends_at(next_starts_at) }
       end
 
-      def recurring_occurrences(after:, limit:, before: nil)
-        return [] if recurrence.blank? || limit <= 0
-
-        occurrences = []
-        if original_starts_at > after
-          return [] if before && original_starts_at >= before
-
-          occurrences << { starts_at: original_starts_at, ends_at: original_ends_at }
-          return occurrences if limit == 1
-
-          after = original_starts_at + 1.second
-        end
-
-        timezone_starts_at = original_starts_at.in_time_zone(timezone)
-        timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
-        after_in_tz = after.in_time_zone(timezone)
-        before_in_tz = before&.in_time_zone(timezone)
-
-        dates =
-          RRule::Rule
-            .new(
-              DiscourseEvents::Events::RRuleConfigurator.rule(
-                recurrence_until: timezone_recurrence_until,
-                recurrence: recurrence,
-                starts_at: timezone_starts_at,
-              ),
-              dtstart: timezone_starts_at,
-              tzid: rrule_timezone,
-            )
-            .each(floor_date: after_in_tz)
-            .lazy
-            .drop_while { |starts_at| starts_at < after_in_tz }
-            .take_while { |starts_at| before_in_tz.nil? || starts_at < before_in_tz }
-
-        occurrences.concat(
-          dates
-            .first(limit - occurrences.size)
-            .map { |starts_at| { starts_at:, ends_at: derive_next_ends_at(starts_at) } },
-        )
-      end
-
       def duration
         return nil unless original_starts_at
 
