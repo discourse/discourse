@@ -5,13 +5,13 @@ module ::Blog
     def can_edit_post?(post)
       return super if !post.is_first_post?
       topic = post.topic
-      return can_edit_published_blog_discussion?(topic) if topic&.blog_published_discussion?
+      return false if topic&.blog_published_discussion?
       return true if can_edit_blog_draft_post?(post)
       super
     end
 
     def can_edit_topic?(topic)
-      return can_edit_published_blog_discussion?(topic) if topic&.blog_published_discussion?
+      return false if topic&.blog_published_discussion?
       return true if can_edit_blog_draft_topic?(topic)
       super
     end
@@ -45,12 +45,6 @@ module ::Blog
 
     private
 
-    def can_edit_published_blog_discussion?(topic)
-      return false if Thread.current[:blog_publishing_topic] != topic.id
-      return false if !is_blog_publisher?
-      can_see?(topic)
-    end
-
     def can_edit_blog_draft_post?(post)
       return false if !can_edit_blog_draft?(post.topic)
       return false if post.hidden?
@@ -73,8 +67,9 @@ module ::Blog
     end
 
     def valid_blog_drafts_category?(category)
-      return @valid_blog_drafts_category if defined?(@valid_blog_drafts_category)
-      @valid_blog_drafts_category = Blog::Readiness.valid_drafts_category?(category)
+      cache = (@valid_blog_drafts_categories ||= {})
+      return cache[category.id] if cache.key?(category.id)
+      cache[category.id] = Blog::Readiness.valid_drafts_category?(category)
     end
 
     def blog_role_user?

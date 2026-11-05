@@ -632,6 +632,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "defaults to boxes with subcategories"
       );
 
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists("keeps onboarding visible on the categories preview");
     assert.dom(".design-wizard__next").doesNotExist("no next on the last step");
     assert.dom(".design-wizard__save").exists("the last step offers save");
 
@@ -646,7 +649,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom("link[data-scheme-id]", document.documentElement)
       .doesNotExist("the palette preview is reverted");
 
-    // previewing a categories homepage routed away from the banner's page
+    // closing without saving leaves the step incomplete
     await visit("/");
     step.isNotChecked();
   });
@@ -892,15 +895,21 @@ acceptance("Admin - Onboarding Banner - registered homepage", function (needs) {
     homepage_options: [{ id: "custom", path: "/tags", server_side: false }],
   });
 
-  test("shows the checklist on a registered homepage and hides it elsewhere", async function (assert) {
+  test("shows the checklist on homepage choices and hides it elsewhere", async function (assert) {
     await visit("/latest");
     setDefaultHomepage("custom");
     await visit("/tags");
 
     assert
       .dom(".admin-onboarding-banner")
-      .exists("shows onboarding outside discovery routes");
-    await visit("/categories");
+      .exists("shows onboarding on a registered homepage");
+    for (const homepagePath of ["/latest", "/categories"]) {
+      await visit(homepagePath);
+      assert
+        .dom(".admin-onboarding-banner")
+        .exists(`shows onboarding on ${homepagePath}`);
+    }
+    await visit("/about");
     assert
       .dom(".admin-onboarding-banner")
       .doesNotExist("keeps onboarding off other pages");

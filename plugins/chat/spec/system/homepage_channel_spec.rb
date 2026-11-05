@@ -83,7 +83,7 @@ RSpec.describe "Chat channel as the homepage" do
       other_channel.add(current_user)
     end
 
-    it "lets the owner see the checklist under the channel header on the Chat homepage but not another channel" do
+    it "lets the owner see the checklist under the channel header on the Chat homepage and other channels" do
       visit("/")
 
       expect(channel_page.messages).to have_message(id: message_1.id)
@@ -102,7 +102,7 @@ RSpec.describe "Chat channel as the homepage" do
       sidebar.open_channel(other_channel)
 
       expect(channel_page.messages).to have_message(id: other_message.id)
-      expect(banner).to be_not_visible
+      expect(channel_page).to have_onboarding_banner_below_header
       expect_composer_in_viewport
     end
 

@@ -25,7 +25,7 @@ class Blog::Publication::Unpublish
   end
 
   def lock_publication(topic:)
-    Blog::Publication.lock_for_topic(topic)
+    Blog::Publication.lock_existing_for_topic(topic)
   end
 
   def can_publish_article(guardian:, publication:)

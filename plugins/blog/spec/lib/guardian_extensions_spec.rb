@@ -38,15 +38,6 @@ RSpec.describe Blog::GuardianExtensions do
     SiteSetting.blog_editor_groups = editors.id.to_s
   end
 
-  after { Thread.current[:blog_publishing_topic] = nil }
-
-  def while_publishing(topic)
-    Thread.current[:blog_publishing_topic] = topic.id
-    yield
-  ensure
-    Thread.current[:blog_publishing_topic] = nil
-  end
-
   def share_drafts_with(group)
     drafts.set_permissions(
       :staff => :full,
@@ -59,39 +50,10 @@ RSpec.describe Blog::GuardianExtensions do
 
   describe "#can_edit_post?" do
     context "with the first post of a published article" do
-      it "denies even admins outside of publishing" do
+      it "denies everyone, including admins" do
         expect(admin.guardian.can_edit_post?(article_post)).to eq(false)
-      end
-
-      it "allows a publisher while that topic is being published" do
-        while_publishing(article) do
-          expect(admin.guardian.can_edit_post?(article_post)).to eq(true)
-        end
-      end
-
-      it "denies a publisher while a different topic is being published" do
-        while_publishing(admin_draft) do
-          expect(admin.guardian.can_edit_post?(article_post)).to eq(false)
-        end
-      end
-
-      it "denies editors and anonymous users while the topic is being published" do
-        while_publishing(article) do
-          expect(editor.guardian.can_edit_post?(article_post)).to eq(false)
-          expect(Guardian.new.can_edit?(article_post)).to eq(false)
-        end
-      end
-
-      it "denies a publisher who cannot see the topic" do
-        publishers = Fabricate(:group)
-        publisher = Fabricate(:user, groups: [publishers])
-        SiteSetting.blog_publisher_groups = publishers.id.to_s
-        category.set_permissions(staff: :full)
-        category.save!
-
-        while_publishing(article) do
-          expect(publisher.guardian.can_edit_post?(article_post)).to eq(false)
-        end
+        expect(editor.guardian.can_edit_post?(article_post)).to eq(false)
+        expect(Guardian.new.can_edit?(article_post)).to eq(false)
       end
 
       it "falls back to core rules when the blog is disabled" do
@@ -254,25 +216,10 @@ RSpec.describe Blog::GuardianExtensions do
 
   describe "#can_edit_topic?" do
     context "with a published article's topic" do
-      it "denies even admins outside of publishing" do
+      it "denies everyone, including admins" do
         expect(admin.guardian.can_edit_topic?(article)).to eq(false)
-      end
-
-      it "allows a publisher while that topic is being published" do
-        while_publishing(article) { expect(admin.guardian.can_edit_topic?(article)).to eq(true) }
-      end
-
-      it "denies a publisher while a different topic is being published" do
-        while_publishing(admin_draft) do
-          expect(admin.guardian.can_edit_topic?(article)).to eq(false)
-        end
-      end
-
-      it "denies editors and anonymous users while the topic is being published" do
-        while_publishing(article) do
-          expect(editor.guardian.can_edit_topic?(article)).to eq(false)
-          expect(Guardian.new.can_edit?(article)).to eq(false)
-        end
+        expect(editor.guardian.can_edit_topic?(article)).to eq(false)
+        expect(Guardian.new.can_edit?(article)).to eq(false)
       end
 
       it "falls back to core rules when the blog is disabled" do
@@ -377,6 +324,22 @@ RSpec.describe Blog::GuardianExtensions do
         SiteSetting.tl2_post_edit_time_limit = 1
 
         expect(writer.guardian.can_edit_topic?(writer_draft)).to eq(false)
+      end
+
+      it "checks a new drafts category's sharing when the same guardian is reused" do
+        members = Fabricate(:group)
+        shared_drafts = Fabricate(:private_category, group: Group[:staff])
+        shared_drafts.set_permissions(:staff => :full, editors.name => :full, members.name => :full)
+        shared_drafts.save!
+        member_topic =
+          Fabricate(:topic, category: shared_drafts, user: Fabricate(:user, groups: [members]))
+        guardian = editor.guardian
+
+        expect(guardian.can_edit_topic?(admin_draft)).to eq(true)
+
+        SiteSetting.blog_drafts_category = shared_drafts.id
+
+        expect(guardian.can_edit_topic?(member_topic)).to eq(false)
       end
     end
   end

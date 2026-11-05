@@ -145,6 +145,10 @@ class TopicsFilter
 
       if @guardian.can_see_deleted_topics?(category)
         @scope = @scope.unscope(where: :deleted_at).where.not(topics: { deleted_at: nil })
+
+        if !@guardian.can_delete_all_posts_and_topics?
+          @scope = @scope.where(category_id: @guardian.category_group_moderator_scope.select(:id))
+        end
       else
         @scope = @scope.none
       end
