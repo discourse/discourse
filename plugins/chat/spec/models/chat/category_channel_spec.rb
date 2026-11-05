@@ -126,6 +126,13 @@ RSpec.describe Chat::CategoryChannel do
         expect(channel.slug).to start_with("word-word")
         expect(channel.slug).not_to end_with("-")
       end
+
+      it "leaves the slug blank when a long encoded slug can't be truncated" do
+        SiteSetting.slug_generation_method = "encoded"
+        channel.name = "测试" * 6
+        expect(channel).to be_valid
+        expect(channel.slug).to eq("")
+      end
     end
 
     context "when slug is provided" do
