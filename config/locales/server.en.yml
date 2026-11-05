@@ -6359,7 +6359,7 @@ en:
   design_wizard:
     themes:
       concord:
-        description: "Replaces the sidebar with a single channel list made of categories, chat channels and live audio/video rooms."
+        description: "A chat-first layout with a single list of categories, chat channels and voice rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."

@@ -391,11 +391,28 @@ export default class DesignWizardService extends Service {
     // the theme being previewed rather than carrying the old theme's values
     this.welcomeBanner = undefined;
     this.searchExperience = undefined;
+
+    const themeHomepage = theme?.default_homepage;
+    let previewPath = "/";
+
+    if (this.#supportedHomepages.includes(themeHomepage)) {
+      const homepage = themeHomepage;
+      const homepageOption = this.additionalHomepages.find(
+        ({ id }) => id === homepage
+      );
+
+      this.homepage = homepage;
+      this.homepageSettings = {
+        ...this.#originalHomepageSettings,
+        ...homepageOption?.settings,
+      };
+      previewPath = homepageOption?.path ?? `/${homepage}`;
+    }
     this.#persistState();
 
     // a different theme is a different asset build, so previewing it means
     // reloading the page; state is restored from the store afterwards
-    this.#navigateToThemePreview(themeId);
+    this.#navigateToThemePreview(themeId, previewPath);
   }
 
   /**
@@ -808,9 +825,9 @@ export default class DesignWizardService extends Service {
     }
   }
 
-  #navigateToThemePreview(themeId) {
+  #navigateToThemePreview(themeId, path = "/") {
     DiscourseURL.redirectTo(
-      `/?preview_theme_id=${encodeURIComponent(themeId)}`
+      `${path}?preview_theme_id=${encodeURIComponent(themeId)}`
     );
   }
 

@@ -26,6 +26,7 @@ const designWizardData = () => ({
       id: -1,
       name: "Foundation",
       default: true,
+      default_homepage: "latest",
       color_scheme_id: null,
       dark_color_scheme_id: -2,
       screenshot_light_url: null,
@@ -574,6 +575,195 @@ acceptance("Design wizard - admin launch", function (needs) {
       "the installed ID survives the preview reload"
     );
     await click(".design-wizard__close");
+  });
+
+  test("switches to Concord's default chat homepage", async function (assert) {
+    const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
+    wizardData.themes.push({
+      id: "concord",
+      name: "Concord",
+      remote_url: remoteUrl,
+      default_homepage: "chat",
+      palette_pairs: [],
+    });
+    wizardData.homepage_settings = { chat_homepage_channel: null };
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        path: "/chat",
+        settings: { chat_homepage_channel: "12" },
+      },
+    ];
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="concord"] input');
+
+    assert.true(
+      redirect.calledWith("/chat?preview_theme_id=42"),
+      "previews the installed theme on the chat homepage"
+    );
+    const stored = JSON.parse(
+      this.owner
+        .lookup("service:key-value-store")
+        .get("design_wizard_panel_state")
+    );
+    assert.strictEqual(stored.homepage, "chat", "selects the chat homepage");
+    assert.strictEqual(
+      stored.homepageSettings.chat_homepage_channel,
+      "12",
+      "uses the General channel"
+    );
+
+    // the preview reload now reports the installed theme
+    wizardData.themes[1] = {
+      id: 42,
+      name: "Concord",
+      default_homepage: "chat",
+      palette_pairs: [],
+    };
+    const wizard = this.owner.lookup("service:design-wizard");
+    wizard.applyingTheme = false;
+    await wizard.start({ resuming: true });
+
+    assert.strictEqual(
+      wizard.homepage,
+      "chat",
+      "restores the homepage preview"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "chat",
+      "saves chat as the underlying homepage"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+      "12",
+      "saves the General channel"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).theme_id,
+      "42",
+      "saves the installed theme"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("switches to the selected theme's default homepage", async function (assert) {
+    wizardData.themes[0].default = false;
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default: true,
+      default_homepage: "chat",
+      palette_pairs: [],
+    });
+    wizardData.homepage = "categories";
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="-1"] input');
+
+    assert.true(
+      redirect.calledWith("/latest?preview_theme_id=-1"),
+      "previews the default theme's homepage"
+    );
+    const stored = JSON.parse(
+      this.owner
+        .lookup("service:key-value-store")
+        .get("design_wizard_panel_state")
+    );
+    assert.strictEqual(stored.homepage, "latest", "selects the theme default");
+
+    const wizard = this.owner.lookup("service:design-wizard");
+    wizard.applyingTheme = false;
+    await wizard.start({ resuming: true });
+
+    assert.strictEqual(
+      wizard.homepage,
+      "latest",
+      "restores the homepage preview"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "latest",
+      "saves the theme default as the underlying homepage"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).theme_id,
+      "-1",
+      "saves the selected theme"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("keeps the current homepage when the theme's default is unavailable", async function (assert) {
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default_homepage: "chat",
+      palette_pairs: [],
+    });
+    wizardData.homepage = "categories";
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="42"] input');
+
+    const wizard = this.owner.lookup("service:design-wizard");
+    assert.strictEqual(
+      wizard.homepage,
+      "categories",
+      "keeps the current choice"
+    );
+    wizard.applyingTheme = false;
+    await wizard.start({ resuming: true });
+
+    assert.strictEqual(
+      wizard.homepage,
+      "categories",
+      "restores the current choice"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "categories",
+      "advancing preserves the current homepage"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
   });
 
   test("a failed theme install restores the selection and allows retrying", async function (assert) {
