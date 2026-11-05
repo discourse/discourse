@@ -158,6 +158,166 @@ RSpec.describe UserAction do
       end
     end
 
+    describe "deleted posts" do
+      def stream(viewer = nil)
+        UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer))
+      end
+
+      fab!(:category)
+      fab!(:topic) { Fabricate(:topic, user: user, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:cat_moderator, :user)
+      fab!(:mod_group, :group)
+
+      before do
+        UserAction.log_action!(
+          action_type: UserAction::REPLY,
+          user_id: user.id,
+          acting_user_id: user.id,
+          target_topic_id: topic.id,
+          target_post_id: post.id,
+        )
+      end
+
+      it "hides deleted posts from regular users" do
+        post.trash!
+        expect(stream(user)).to eq([])
+      end
+
+      it "shows deleted posts to category group moderators in their category" do
+        SiteSetting.enable_category_group_moderation = true
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: category, group: mod_group)
+
+        post.trash!
+        expect(stream(cat_moderator).map(&:action_type)).to contain_exactly(UserAction::REPLY)
+      end
+
+      it "hides deleted posts from category group moderators outside their category" do
+        SiteSetting.enable_category_group_moderation = true
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: Fabricate(:category), group: mod_group)
+
+        post.trash!
+        expect(stream(cat_moderator)).to eq([])
+      end
+
+      it "hides deleted posts when category group moderation is disabled" do
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: category, group: mod_group)
+
+        post.trash!
+        expect(stream(cat_moderator)).to eq([])
+      end
+    end
+
+    describe "hidden posts" do
+      def stream(viewer = nil)
+        UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer))
+      end
+
+      fab!(:category)
+      fab!(:topic) { Fabricate(:topic, user: user, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:cat_moderator, :user)
+      fab!(:mod_group, :group)
+
+      before do
+        UserAction.log_action!(
+          action_type: UserAction::REPLY,
+          user_id: user.id,
+          acting_user_id: user.id,
+          target_topic_id: topic.id,
+          target_post_id: post.id,
+        )
+      end
+
+      it "shows hidden posts only to their author" do
+        post.update!(hidden: true)
+        expect(stream(user).map(&:action_type)).to contain_exactly(UserAction::REPLY)
+        expect(stream(Fabricate(:user))).to eq([])
+      end
+
+      it "shows hidden posts to category group moderators in their category" do
+        SiteSetting.enable_category_group_moderation = true
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: category, group: mod_group)
+
+        post.update!(hidden: true)
+        expect(stream(cat_moderator).map(&:action_type)).to contain_exactly(UserAction::REPLY)
+      end
+
+      it "hides hidden posts from category group moderators outside their category" do
+        SiteSetting.enable_category_group_moderation = true
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: Fabricate(:category), group: mod_group)
+
+        post.update!(hidden: true)
+        expect(stream(cat_moderator)).to eq([])
+      end
+
+      it "hides hidden posts when category group moderation is disabled" do
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: category, group: mod_group)
+
+        post.update!(hidden: true)
+        expect(stream(cat_moderator)).to eq([])
+      end
+    end
+
+    describe "invisible topics" do
+      def stream(viewer = nil)
+        UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer))
+      end
+
+      fab!(:category)
+      fab!(:topic) { Fabricate(:topic, user: user, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:cat_moderator, :user)
+      fab!(:mod_group, :group)
+
+      before do
+        UserAction.log_action!(
+          action_type: UserAction::REPLY,
+          user_id: user.id,
+          acting_user_id: user.id,
+          target_topic_id: topic.id,
+          target_post_id: post.id,
+        )
+      end
+
+      it "hides invisible topics from regular users" do
+        topic.update!(visible: false)
+        expect(stream(Fabricate(:user))).to eq([])
+      end
+
+      it "shows invisible topics to category group moderators in their category" do
+        SiteSetting.enable_category_group_moderation = true
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: category, group: mod_group)
+
+        topic.update!(visible: false)
+        expect(stream(cat_moderator).map(&:action_type)).to contain_exactly(UserAction::REPLY)
+      end
+
+      it "hides invisible topics from category group moderators outside their category" do
+        SiteSetting.enable_category_group_moderation = true
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: Fabricate(:category), group: mod_group)
+
+        topic.update!(visible: false)
+        expect(stream(cat_moderator)).to eq([])
+      end
+
+      it "hides invisible topics when category group moderation is disabled" do
+        mod_group.add(cat_moderator)
+        Fabricate(:category_moderation_group, category: category, group: mod_group)
+
+        topic.update!(visible: false)
+        expect(stream(cat_moderator)).to eq([])
+      end
+    end
+
     describe "assignments" do
       let(:stream) { UserAction.stream(user_id: user.id, guardian: user.guardian) }
 

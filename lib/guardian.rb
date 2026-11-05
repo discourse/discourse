@@ -157,8 +157,12 @@ class Guardian
     return false if !category
     return false if !category_group_moderation_allowed?
 
-    @moderated_category_ids ||= category_group_moderator_scope.pluck(:id).to_set
-    @moderated_category_ids.include?(category.id)
+    moderated_category_ids.include?(category.id)
+  end
+
+  def moderated_category_ids
+    return [] if !category_group_moderation_allowed?
+    @moderated_category_ids ||= category_group_moderator_scope.pluck(:id)
   end
 
   def is_silenced?
