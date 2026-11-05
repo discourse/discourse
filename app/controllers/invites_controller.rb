@@ -48,6 +48,8 @@ class InvitesController < ApplicationController
 
     show_invite(invite)
   rescue RateLimiter::LimitExceeded => e
+    raise if request.format.json?
+
     flash.now[:error] = e.description
     render layout: "no_ember"
   end
@@ -654,6 +656,10 @@ class InvitesController < ApplicationController
   end
 
   def show_irredeemable_invite(invite)
+    if request.format.json?
+      return render_json_error(I18n.t("invite.not_found_json"), status: :not_found)
+    end
+
     flash.now[:error] = if invite.blank?
       I18n.t("invite.not_found", base_url: Discourse.base_url)
     elsif invite.redeemed?

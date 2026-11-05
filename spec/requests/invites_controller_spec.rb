@@ -389,6 +389,87 @@ RSpec.describe InvitesController do
       end
     end
 
+    it "returns a generic JSON not-found error for a missing invite" do
+      get "/invites/missing", headers: { "ACCEPT" => "application/json" }
+
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
+    end
+
+    it "returns a generic JSON not-found error for an expired invite" do
+      invite.update!(expires_at: 1.day.ago)
+
+      get "/invites/#{invite.invite_key}", headers: { "ACCEPT" => "application/json" }
+
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
+    end
+
+    it "returns a generic JSON not-found error for a redeemed email invite" do
+      invite.redeem
+
+      get "/invites/#{invite.invite_key}", headers: { "ACCEPT" => "application/json" }
+
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
+    end
+
+    it "returns a generic JSON not-found error for a fully redeemed link invite" do
+      invite.redeem
+      invite.update!(email: nil)
+
+      get "/invites/#{invite.invite_key}", headers: { "ACCEPT" => "application/json" }
+
+      expect(response.status).to eq(404)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq("errors" => [I18n.t("invite.not_found_json")])
+      expect(server_session["invite-key"]).to be_nil
+    end
+
+    context "when rate limited" do
+      before do
+        freeze_time
+        RateLimiter.enable
+        100.times { RateLimiter.new(nil, "invites-show-192.0.2.1", 100, 1.minute).performed! }
+      end
+
+      it "returns a JSON rate-limit error with retry information" do
+        get "/invites/#{invite.invite_key}",
+            headers: {
+              "REMOTE_ADDR" => "192.0.2.1",
+              "ACCEPT" => "application/json",
+            }
+
+        expect(response.status).to eq(429)
+        expect(response.media_type).to eq("application/json")
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("rate_limiter.too_many_requests", time_left: RateLimiter.time_left(60))],
+        )
+        expect(response.parsed_body["error_type"]).to eq("rate_limit")
+        expect(response.parsed_body.dig("extras", "wait_seconds")).to eq(60)
+        expect(response.headers["Retry-After"]).to eq("60")
+        expect(response.body).not_to include(invite.email)
+        expect(server_session["invite-key"]).to be_nil
+      end
+
+      it "preserves the HTML rate-limit error page" do
+        get "/invites/#{invite.invite_key}", headers: { "REMOTE_ADDR" => "192.0.2.1" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).to include(
+          I18n.t("rate_limiter.too_many_requests", time_left: RateLimiter.time_left(60)),
+        )
+        expect(response.body).not_to include(invite.email)
+      end
+    end
+
     it "fails if invite does not exist" do
       get "/invites/missing"
       expect(response.status).to eq(200)
