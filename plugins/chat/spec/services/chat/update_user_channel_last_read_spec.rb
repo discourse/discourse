@@ -21,7 +21,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
     let(:params) { { channel_id: channel.id, message_id: message_1.id } }
     let(:dependencies) { { guardian: } }
 
-    before { SiteSetting.chat_allowed_groups = chatters }
+    before { SiteSetting.chat_allowed_groups = chatters.id }
 
     context "when params are not valid" do
       before { params.delete(:message_id) }
