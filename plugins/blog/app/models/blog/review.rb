@@ -22,8 +22,8 @@ module ::Blog
 
     def self.issue!(topic:, user:, label: "")
       topic.with_lock do
-        Configuration.ensure_ready!
-        Configuration.ensure_editor!(user, topic)
+        Readiness.ensure!
+        user.guardian.ensure_can_edit_blog_topic!(topic)
         raise Discourse::InvalidAccess unless eligible_topic?(topic)
         if where(topic_id: topic.id).unexpired.count >= 20
           raise Discourse::InvalidParameters.new(I18n.t("blog.review.limit"))
@@ -120,10 +120,7 @@ module ::Blog
 
     def self.creator_allowed?(creator, topic)
       return false unless creator&.active? && !creator.suspended?
-      Configuration.ensure_editor!(creator, topic)
-      true
-    rescue Discourse::InvalidAccess
-      false
+      creator.guardian.can_edit_blog_topic?(topic)
     end
 
     def submit_feedback!(attributes)
@@ -142,7 +139,7 @@ module ::Blog
 
     def revoke!(user)
       topic.with_lock do
-        Configuration.ensure_editor!(user, topic)
+        user.guardian.ensure_can_edit_blog_topic!(topic)
         update!(revoked_at: Time.current) unless revoked_at
         StaffActionLogger.new(user).log_custom(
           "blog_review_revoke",

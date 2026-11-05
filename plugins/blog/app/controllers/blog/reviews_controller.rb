@@ -98,7 +98,7 @@ module ::Blog
     def find_topic
       raise Discourse::NotFound if Configuration.blog_host?(request)
       @topic = Topic.find(params[:topic_id])
-      Configuration.ensure_editor!(current_user, @topic)
+      guardian.ensure_can_edit_blog_topic!(@topic)
       response.headers["Cache-Control"] = "private, no-store"
     end
 

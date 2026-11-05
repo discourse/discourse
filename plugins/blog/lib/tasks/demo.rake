@@ -57,7 +57,7 @@ namespace :blog do
       These sample articles are demo content. Replace them with your own when you are ready.
     MD
     SiteSetting.blog_enabled = true
-    Blog::Configuration.ensure_ready!
+    Blog::Readiness.ensure!
     SiteSetting.embed_full_app = true
     SiteSetting.embed_full_app_signin_flow = true
     blog_uri = URI(Blog::Configuration.origin)

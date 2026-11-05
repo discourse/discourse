@@ -45,7 +45,7 @@ module ::Blog
           live_topic_ids =
             Publication.publicly_visible.where(topic_id: selected.map(&:id)).pluck(:topic_id).to_set
           render json: {
-                   error: Configuration.error,
+                   error: Readiness.new.error,
                    blog_url: Configuration.base_url,
                    more: selected.size > PAGE_SIZE,
                    topics:
@@ -161,7 +161,7 @@ module ::Blog
     private
 
     def ensure_blog_editor
-      raise Discourse::InvalidAccess unless Configuration.contributor?(current_user)
+      raise Discourse::InvalidAccess unless guardian.is_blog_contributor?
     end
 
     def ensure_discussion_host
@@ -172,7 +172,7 @@ module ::Blog
       requested = Topic.find(params[:topic_id])
       @publication = Publication.for_topic(requested)
       @topic = @publication.topic
-      Configuration.ensure_editor!(current_user, @publication.editorial_topic || @topic)
+      guardian.ensure_can_edit_blog_topic!(@publication.editorial_topic || @topic)
     end
 
     def entry(topic, publication, live: nil)
