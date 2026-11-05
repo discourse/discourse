@@ -59,8 +59,16 @@ module ::Blog
     private
 
     def can_edit_blog_draft?(topic)
-      topic&.blog_editorial_draft? && is_blog_contributor? &&
-        (is_blog_editor? || topic.user_id == user.id) && can_see?(topic)
+      return false if !topic&.blog_editorial_draft?
+      return false if !is_blog_contributor?
+      return false if !is_blog_editor? && topic.user_id != user.id
+      return false if !can_see?(topic)
+      valid_blog_drafts_category?(topic.category)
+    end
+
+    def valid_blog_drafts_category?(category)
+      return @valid_blog_drafts_category if defined?(@valid_blog_drafts_category)
+      @valid_blog_drafts_category = Blog::Readiness.valid_drafts_category?(category)
     end
 
     def blog_role_user?

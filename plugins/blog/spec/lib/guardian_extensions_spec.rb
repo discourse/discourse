@@ -47,6 +47,16 @@ RSpec.describe Blog::GuardianExtensions do
     Thread.current[:blog_publishing_topic] = nil
   end
 
+  def share_drafts_with(group)
+    drafts.set_permissions(
+      :staff => :full,
+      writers.name => :full,
+      editors.name => :full,
+      group.name => :full,
+    )
+    drafts.save!
+  end
+
   describe "#can_edit_post?" do
     context "with the first post of a published article" do
       it "denies even admins outside of publishing" do
@@ -213,6 +223,26 @@ RSpec.describe Blog::GuardianExtensions do
 
         expect(writer.guardian.can_edit_post?(own_post)).to eq(false)
       end
+
+      it "denies editors other members' topics when the drafts category is shared with another group" do
+        members = Fabricate(:group)
+        member = Fabricate(:user, groups: [members])
+        share_drafts_with(members)
+        member_topic = Fabricate(:topic, category: drafts, user: member)
+        member_post = Fabricate(:post, topic: member_topic, user: member)
+
+        expect(editor.guardian.can_edit_post?(member_post)).to eq(false)
+        expect(admin.guardian.can_edit_post?(member_post)).to eq(true)
+      end
+
+      it "denies contributors their own post past the edit time limit when the drafts category is shared with another group" do
+        share_drafts_with(Fabricate(:group))
+        writer_draft_post.update_columns(created_at: 1.hour.ago)
+        SiteSetting.post_edit_time_limit = 1
+        SiteSetting.tl2_post_edit_time_limit = 1
+
+        expect(writer.guardian.can_edit_post?(writer_draft_post)).to eq(false)
+      end
     end
   end
 
@@ -321,6 +351,26 @@ RSpec.describe Blog::GuardianExtensions do
         SiteSetting.blog_drafts_category = public_drafts.id
 
         expect(writer.guardian.can_edit_topic?(own_topic)).to eq(false)
+      end
+
+      it "denies editors other members' topics when the drafts category is shared with another group" do
+        members = Fabricate(:group)
+        member = Fabricate(:user, groups: [members])
+        share_drafts_with(members)
+        member_topic = Fabricate(:topic, category: drafts, user: member)
+        Fabricate(:post, topic: member_topic, user: member)
+
+        expect(editor.guardian.can_edit_topic?(member_topic)).to eq(false)
+        expect(moderator.guardian.can_edit_topic?(member_topic)).to eq(true)
+      end
+
+      it "denies contributors their own topic past the edit time limit when the drafts category is shared with another group" do
+        share_drafts_with(Fabricate(:group))
+        writer_draft.update_columns(created_at: 1.hour.ago)
+        SiteSetting.post_edit_time_limit = 1
+        SiteSetting.tl2_post_edit_time_limit = 1
+
+        expect(writer.guardian.can_edit_topic?(writer_draft)).to eq(false)
       end
     end
   end
