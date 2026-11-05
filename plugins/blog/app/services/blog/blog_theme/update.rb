@@ -12,7 +12,7 @@ class Blog::BlogTheme::Update
     validates :theme_id, :revision, presence: true
   end
 
-  # Provenance of a Git pull, set by the importer rather than by request params.
+  # Provenance of a Git pull, set by Pull rather than by request params.
   options { attribute :source }
 
   policy :can_manage_themes

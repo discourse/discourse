@@ -4,6 +4,7 @@ module ::Blog
   class ThemesController < ::Admin::AdminController
     # Matches the blog's own listing page, which the sample variables imitate.
     LISTING_SAMPLE_SIZE = 10
+    WORKING_PREVIEWS_PER_MINUTE = 20
 
     helper Blog::BlogHelper
     requires_plugin PLUGIN_NAME
@@ -167,7 +168,16 @@ module ::Blog
           on_failed_policy(:imported_from_repository) do
             render_json_error I18n.t("invalid_params", message: "source"), status: :bad_request
           end
+          on_failed_policy(:can_import_repository) do
+            render_json_error I18n.t("invalid_access"), status: :forbidden
+          end
+          on_failed_policy(:revision_is_current) do |policy|
+            render_json_error policy.reason, status: :bad_request
+          end
           on_exceptions { |error| render_import_error(error) }
+          on_failed_step(:revise_theme) do |step|
+            render_json_error step.error, status: :bad_request
+          end
         end
       end
     end
@@ -181,7 +191,8 @@ module ::Blog
         end
         on_failed_contract { raise Discourse::InvalidParameters.new(:file) }
         on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
-        on_exceptions { |error| raise error }
+        on_exceptions { |error| raise Discourse::InvalidParameters.new(error.message) }
+        on_failed_step(:create_theme) { |step| raise Discourse::InvalidParameters.new(step.error) }
       end
     end
 
@@ -198,23 +209,19 @@ module ::Blog
           on_failed_policy(:can_manage_themes) do
             render_json_error I18n.t("invalid_access"), status: :forbidden
           end
+          on_failed_policy(:can_import_repository) do
+            render_json_error I18n.t("invalid_access"), status: :forbidden
+          end
           on_exceptions { |error| render_import_error(error) }
+          on_failed_step(:create_theme) do |step|
+            render_json_error step.error, status: :bad_request
+          end
         end
       end
     end
 
     def render_import_error(error)
-      status =
-        case error
-        when Discourse::InvalidAccess
-          :forbidden
-        when Discourse::NotFound
-          :not_found
-        when RemoteTheme::ImportError
-          :unprocessable_entity
-        else
-          :bad_request
-        end
+      status = error.is_a?(RemoteTheme::ImportError) ? :unprocessable_entity : :bad_request
       render_json_error error.message, status:
     end
 
@@ -223,7 +230,12 @@ module ::Blog
     end
 
     def rate_limit_working_preview
-      RateLimiter.new(current_user, "blog-theme-preview", 20, 1.minute).performed!
+      RateLimiter.new(
+        current_user,
+        "blog-theme-preview",
+        WORKING_PREVIEWS_PER_MINUTE,
+        1.minute,
+      ).performed!
     end
 
     def ensure_discussion_host

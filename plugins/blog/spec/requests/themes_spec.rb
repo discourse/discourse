@@ -471,6 +471,34 @@ RSpec.describe "Blog themes", type: :request do
            }
       expect(response.status).to eq(404)
     end
+
+    it "rejects disallowed repositories and themes that fail validation" do
+      Dir.mktmpdir do |directory|
+        File.write(
+          File.join(directory, "blog-theme.json"),
+          attributes.merge(accent_color: "red", version: 1).to_json,
+        )
+        importer = ThemeStore::DirectoryImporter.new(directory)
+        importer.stubs(:version).returns("a" * 40)
+        Blog::ThemeImporter::GitSource.stubs(:new).returns(importer)
+        get "https://test.localhost/session/#{admin.encoded_username}/become"
+
+        post "https://test.localhost/admin/plugins/blog/themes/import.json",
+             params: {
+               repository: "https://github.com/example/theme",
+             }
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to eq([I18n.t("blog.themes.invalid")])
+
+        GlobalSetting.stubs(:allowed_theme_repos).returns("https://github.com/example/other")
+        post "https://test.localhost/admin/plugins/blog/themes/import.json",
+             params: {
+               repository: "https://github.com/example/theme",
+             }
+        expect(response.status).to eq(403)
+      end
+      expect(Blog::BlogTheme.all).to be_empty
+    end
   end
 
   describe "preview" do
