@@ -2,16 +2,16 @@
 
 # Records what each spec file depends on (TEST_IMPACT_RECORD=1), for
 # script/test_impact/build_map and select: the application code it ran, the
-# site settings it read, the translation keys and locales it looked up, and
-# the data files it read, and for system specs the browser JavaScript it
-# ran. Started before the app loads, so Coverage sees every file; what boot
-# did is dropped before each spec file, since eager loading runs every class
-# body and loads every setting.
+# site settings it read, the translation keys and locales it looked up, the
+# data files it read, the tables its queries named, and for system specs the
+# browser JavaScript it ran. Started before the app loads, so Coverage sees
+# every file; what boot did is dropped before each spec file, since eager
+# loading runs every class body and loads every setting.
 #
 # Writes tmp/test_impact/recording-<TEST_ENV_NUMBER>-<pid>.jsonl.gz:
 #   {"spec": "spec/models/post_spec.rb", "files": {"app/models/post.rb": [[12, 30]]},
 #    "settings": ["max_post_length"], "keys": ["post.edit"], "locales": ["en"],
-#    "reads": ["spec/fixtures/images/logo.png"],
+#    "reads": ["spec/fixtures/images/logo.png"], "tables": ["posts", "users"],
 #    "js": {"app-a1b2.digested.js": [[1, 52, 1, 90]]}}
 #   {"methods": {"app/models/post.rb": [[12, 30]]},
 #    "js_functions": {"app-a1b2.digested.js": [[1, 52, 1, 90]]},
@@ -34,7 +34,11 @@ module TestImpact
 
     EXCLUDED = %r{\A(?:vendor|node_modules|tmp|public|frontend)/|_spec\.rb\z}
 
-    NOTES = %i[settings keys locales reads].freeze
+    NOTES = %i[settings keys locales reads tables].freeze
+
+    # The tables a query names. Aliases and CTE names are dropped by keeping
+    # only names of real tables.
+    SQL_TABLE = /\b(?:from|join|into|update)\s+(?:only\s+)?(?:"?public"?\.)?"?(\w+)/i
 
     def self.start
       raise "TEST_IMPACT_RECORD and COVERAGE both need Coverage; set one" if ENV["COVERAGE"]
@@ -127,6 +131,15 @@ module TestImpact
           end
         end
       File.singleton_class.prepend(reads)
+
+      # Migrations change tables, not code a spec ran.
+      tables = ActiveRecord::Base.connection.tables.to_set
+      ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
+        next if payload[:name] == "SCHEMA"
+        payload[:sql].scan(SQL_TABLE) do |(name)|
+          recorder.note(:tables, name) if tables.include?(name)
+        end
+      end
     end
 
     def note(kind, value)

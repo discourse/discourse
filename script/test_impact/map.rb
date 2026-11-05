@@ -11,7 +11,7 @@ module TestImpact
   class Map
     Selection = Struct.new(:specs, :unmapped, :untested, keyword_init: true)
 
-    INDEXES = %w[settings keys locales reads].freeze
+    INDEXES = %w[settings keys locales reads tables].freeze
 
     SETTINGS_FILE = %r{\A(?:config/site_settings\.yml|plugins/[^/]+/config/settings\.yml)\z}
     LOCALE_FILE = %r{\A(?:plugins/[^/]+/)?config/locales/server\.([A-Za-z_]+)\.yml\z}
@@ -19,9 +19,12 @@ module TestImpact
     # Dependency changes can change any code path.
     DEPENDENCIES =
       %r{\A(?:Gemfile(?:\.lock)?|pnpm-lock\.yaml|pnpm-workspace\.yaml|(?:.+/)?package\.json)\z}
-    # Test support no test ran, documentation, which runs nowhere, and type
-    # tests, which only the type checker reads.
-    NOT_RUN = %r{\A(?:frontend/[^/]+/(?:tests|type-tests)/|plugins/[^/]+/test/|docs/)|\.md\z}
+    MIGRATION = %r{\A(?:plugins/[^/]+/)?db/(?:post_)?migrate/[^/]+\.rb\z}
+    # Test support no test ran, documentation, which runs nowhere, type tests,
+    # which only the type checker reads, and the schema dump: the test
+    # database is migrated, and CI checks the dump in a step of its own.
+    NOT_RUN =
+      %r{\A(?:frontend/[^/]+/(?:tests|type-tests)/|plugins/[^/]+/test/|docs/|db/structure\.sql\z)|\.md\z}
 
     def self.build(recording_paths)
       specs = []
@@ -105,7 +108,8 @@ module TestImpact
     # file. Other files select the specs that read them. Test support,
     # documentation and type tests no spec ran or read select nothing, and so
     # does deleting a file no spec loaded or read. Dependency changes, and
-    # changes to methods that ran at boot, are reported as outside the map.
+    # changes to methods that ran at boot, are reported as outside the map. A
+    # migration selects the specs that queried the tables it names.
     #
     # `source` returns a changed file's content before the change, for the
     # settings and keys its hunks fall in.
@@ -124,6 +128,13 @@ module TestImpact
 
         if DEPENDENCIES.match?(path)
           unmapped << path
+          next
+        end
+
+        if MIGRATION.match?(path)
+          touched =
+            tables_named([change.added, change.old_path && source.call(change.old_path)].join("\n"))
+          touched.empty? ? unmapped << path : ids.merge(touched)
           next
         end
 
@@ -187,6 +198,23 @@ module TestImpact
     end
 
     private
+
+    # The specs that queried a table a migration names, by name in its SQL or
+    # its schema calls, or as a model class in a data change (`Post` for
+    # posts). Over-selecting on a word that happens to be a table is fine.
+    def tables_named(text)
+      # Chat::Message is chat_messages.
+      namespaced = text.scan(/\b[A-Z]\w*(?:::[A-Z]\w*)+/).map { |name| name.delete(":") }
+      words = (text.scan(/\b[A-Za-z_]\w*\b/) + namespaced).uniq
+      names =
+        words.flat_map do |word|
+          next [word] if word.match?(/\A[a-z_0-9]+\z/)
+          next [] if !word.match?(/\A[A-Z][A-Za-z0-9]*\z/)
+          snake = word.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
+          [snake.sub(/y\z/, "ies"), snake.sub(/(s|x|ch|sh)\z/, '\1es'), "#{snake}s"]
+        end
+      names.uniq.flat_map { |name| @indexes["tables"][name] || [] }
+    end
 
     # nil when a hunk touches a category rather than a setting.
     def settings_reached(lines, hunks)
@@ -255,17 +283,20 @@ module TestImpact
   end
 
   module Diff
-    Change = Struct.new(:old_path, :new_path, :hunks, keyword_init: true)
+    Change = Struct.new(:old_path, :new_path, :hunks, :added, keyword_init: true)
 
     # `git diff -U0` output: each file's old path, new path (nil when added
-    # or deleted) and the old-side line range of each hunk. A pure insertion
-    # covers the lines on either side of it.
+    # or deleted), the old-side line range of each hunk and the added lines'
+    # text. A pure insertion covers the lines on either side of it.
     def self.parse(text)
       changes = []
       text.each_line(chomp: true) do |line|
         case line
         when %r{\Adiff --git a/(.+) b/(.+)\z}
-          changes << Change.new(old_path: $1, new_path: $2, hunks: [])
+          changes << Change.new(old_path: $1, new_path: $2, hunks: [], added: +"")
+        when /\A\+/
+          # Before the first hunk it's the +++ header.
+          changes.last.added << line[1..] << "\n" if changes.last.hunks.any?
         when /\Anew file mode /
           changes.last.old_path = nil
         when /\Adeleted file mode /

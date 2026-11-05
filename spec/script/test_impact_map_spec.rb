@@ -39,6 +39,7 @@ RSpec.describe TestImpact::Map do
           settings: ["max_post_length"],
           keys: ["post"],
           locales: ["en"],
+          tables: ["posts"],
         }.to_json,
       )
       gz.puts(
@@ -52,6 +53,7 @@ RSpec.describe TestImpact::Map do
           settings: ["min_post_length"],
           keys: %w[post.edit topic.title],
           locales: %w[en fr],
+          tables: %w[topics chat_messages],
           reads: ["spec/fixtures/logo.png"],
         }.to_json,
       )
@@ -258,6 +260,62 @@ RSpec.describe TestImpact::Map do
       DIFF
 
       expect(selection.specs).to eq(%w[spec/block_spec.rb spec/double_spec.rb])
+    end
+
+    def new_migration(path, body)
+      <<~DIFF + body.lines.map { |line| "+#{line}" }.join
+        diff --git a/#{path} b/#{path}
+        new file mode 100644
+        --- /dev/null
+        +++ b/#{path}
+        @@ -0,0 +1,#{body.lines.size} @@
+      DIFF
+    end
+
+    it "selects the specs that queried a table a migration changes" do
+      selection = select(new_migration("db/migrate/20261104000000_add_thing.rb", <<~RUBY))
+        class AddThing < ActiveRecord::Migration[8.0]
+          def change
+            add_column :posts, :thing, :integer
+          end
+        end
+      RUBY
+
+      expect(selection).to have_attributes(specs: ["spec/double_spec.rb"], unmapped: [])
+    end
+
+    it "selects the specs that queried a model's table a data migration changes" do
+      selection =
+        select(new_migration("plugins/chat/db/post_migrate/20261104000000_fix.rb", <<~RUBY))
+        class Fix < ActiveRecord::Migration[8.0]
+          def up
+            Chat::Message.where(deleted_at: nil).update_all(thing: 1)
+          end
+        end
+      RUBY
+
+      expect(selection).to have_attributes(specs: ["spec/block_spec.rb"], unmapped: [])
+    end
+
+    it "reports a migration that names no table a spec queried" do
+      selection = select(new_migration("db/migrate/20261104000000_create_widgets.rb", <<~RUBY))
+        class CreateWidgets < ActiveRecord::Migration[8.0]
+          def change
+            create_table :widgets
+          end
+        end
+      RUBY
+
+      expect(selection).to have_attributes(
+        specs: [],
+        unmapped: ["db/migrate/20261104000000_create_widgets.rb"],
+      )
+    end
+
+    it "selects nothing for the schema dump" do
+      selection = select(diff("db/structure.sql", "@@ -10 +10 @@"))
+
+      expect(selection).to have_attributes(specs: [], unmapped: [])
     end
   end
 
