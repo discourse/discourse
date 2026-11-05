@@ -447,6 +447,30 @@ RSpec.describe "Blog themes", type: :request do
         expect(File.exist?(importer.temp_folder)).to eq(false)
       end
     end
+
+    it "renders Git failures as errors rather than raising inside the hijacked request" do
+      theme = create_blog_theme(attributes, user: admin)
+      get "https://test.localhost/session/#{admin.encoded_username}/become"
+
+      post "https://test.localhost/admin/plugins/blog/themes/import.json",
+           params: {
+             repository: "http://example.com/theme",
+           }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("blog.themes.repository_invalid")])
+
+      post "https://test.localhost/admin/plugins/blog/themes/#{theme["id"]}/pull.json",
+           params: {
+             revision: 1,
+           }
+      expect(response.status).to eq(400)
+
+      post "https://test.localhost/admin/plugins/blog/themes/missing/pull.json",
+           params: {
+             revision: 1,
+           }
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "preview" do

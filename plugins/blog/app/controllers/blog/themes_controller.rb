@@ -2,92 +2,53 @@
 
 module ::Blog
   class ThemesController < ::Admin::AdminController
+    # Matches the blog's own listing page, which the sample variables imitate.
+    LISTING_SAMPLE_SIZE = 10
+
     helper Blog::BlogHelper
     requires_plugin PLUGIN_NAME
     skip_before_action :check_xhr, only: :export
     before_action :ensure_discussion_host
-
-    rescue_from RemoteTheme::ImportError do |error|
-      render_json_error error.message, status: :unprocessable_entity
-    end
+    before_action :rate_limit_working_preview, only: :working_preview
 
     def authoring
-      publications =
-        Publication
-          .publicly_visible
-          .newest
-          .limit(30)
-          .includes(:published_revision, discussion_topic: %i[first_post user image_upload tags])
-      @publication =
-        (
-          if params[:article_id].present?
-            publications.find(params[:article_id])
-          else
-            publications.first
-          end
-        )
-      @publications = publications.first(10)
-      @article = @publication&.article
-      @topic = @publication&.discussion_topic
-      @page = 1
-      sample = view_context.blog_template_assigns
-      sample["article"] ||= {
-        "title" => I18n.t("blog.themes.sample_article"),
-        "url" => "#{Configuration.base_url}/example",
-        "excerpt" => I18n.t("blog.themes.sample_body"),
-        "standfirst" => "",
-        "author" => "",
-        "published_at" => nil,
-        "date" => "",
-        "relative_date" => "",
-        "reading_time" => "",
-        "featured" => false,
-        "image_url" => nil,
-        "discussion_url" => Discourse.base_url,
-        "replies" => 0,
-        "replies_label" => "",
-        "index" => "01",
-        "updated_label" => nil,
-        "body_html" => "<p>#{ERB::Util.html_escape(I18n.t("blog.themes.sample_body"))}</p>",
-        "tags" => [],
-      }
-      render json: {
-               templates:
-                 TemplateRenderer::PAGES.to_h { |page|
-                   ["template_#{page}", TemplateRenderer.builtin(page)]
-                 },
-               articles:
-                 publications.map { |publication|
-                   { id: publication.id, title: publication.article.title }
-                 },
-               variables: sample,
-             }
+      BlogTheme::ListSampleArticles.call(service_params) do
+        on_success do |publications:, publication:|
+          # The template helpers read these to build the variables a theme receives.
+          @publications = publications.first(LISTING_SAMPLE_SIZE)
+          @publication = publication
+          @article = publication&.article
+          @topic = publication&.discussion_topic
+          @page = 1
+          render json:
+                   ThemeAuthoringSerializer.new(
+                     publications,
+                     root: false,
+                     variables: view_context.blog_authoring_template_assigns,
+                   ).as_json
+        end
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_failed_policy(:requested_article_is_sample) { raise Discourse::NotFound }
+      end
     end
 
     def working_preview
-      RateLimiter.new(current_user, "blog-theme-preview", 20, 1.minute).performed!
-      path =
-        case params[:page]
-        when "index"
-          "/"
-        when "archive"
-          "/archive"
-        when "about"
-          "/about"
-        when "not_found"
-          "/theme-preview-not-found-#{SecureRandom.hex(16)}"
-        when "article"
-          Publication.publicly_visible.find(params.require(:article_id)).path
-        else
-          raise Discourse::InvalidParameters.new(:page)
+      BlogTheme::CreateWorkingPreview.call(service_params.deep_merge(params: theme_params)) do
+        on_success do |preview_token:, preview_path:|
+          render json: {
+                   url: ThemePreview.url(preview_token, path: preview_path),
+                 },
+                 status: :created
         end
-      # Liquid syntax isn't checked so the preview can show its diagnostics.
-      working_copy = BlogTheme::AttributesContract.new(**theme_params)
-      if working_copy.invalid?
-        raise Discourse::InvalidParameters.new(working_copy.errors.full_messages.first)
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_model_not_found(:preview_path) { raise Discourse::NotFound }
       end
-      token = ThemePreview.store_working_copy(working_copy.theme_attributes, user: current_user)
-      render json: { url: ThemePreview.url(token, path:) }, status: :created
     end
 
     def index
@@ -184,41 +145,85 @@ module ::Blog
     end
 
     def import
-      if params[:file]
-        theme = ThemeImporter.import_file(file: params[:file], user: current_user)
-        return(render json: BlogThemeSerializer.new(theme, root: false).as_json, status: :created)
-      end
-
-      repository = params.require(:repository)
-      branch = params[:branch]
-      hijack do
-        theme = ThemeImporter.import(repository: repository, branch: branch, user: current_user)
-        render json: BlogThemeSerializer.new(theme, root: false).as_json, status: :created
-      end
+      params[:file] ? import_archive : import_repository
     end
 
+    # Exceptions raised inside `hijack` surface as a 500, so the Git actions
+    # render every outcome instead.
     def pull
-      theme = BlogTheme.find(params[:id])
-      source = theme["source"]
-      raise Discourse::InvalidParameters.new(:source) unless source
-      revision = params.require(:revision)
+      service_args = service_params.deep_merge(params: { theme_id: params[:id] })
       hijack do
-        updated =
-          ThemeImporter.import(
-            repository: source["repository"],
-            branch: source["branch"],
-            user: current_user,
-            id: theme["id"],
-            revision: revision,
-          )
-        render json: BlogThemeSerializer.new(updated, root: false).as_json
+        BlogTheme::Pull.call(service_args) do
+          on_success do |pulled_theme:|
+            render json: BlogThemeSerializer.new(pulled_theme, root: false).as_json
+          end
+          on_failed_contract do |contract|
+            render_json_error contract.errors.full_messages.first, status: :bad_request
+          end
+          on_failed_policy(:can_manage_themes) do
+            render_json_error I18n.t("invalid_access"), status: :forbidden
+          end
+          on_model_not_found(:theme) { render_json_error I18n.t("not_found"), status: :not_found }
+          on_failed_policy(:imported_from_repository) do
+            render_json_error I18n.t("invalid_params", message: "source"), status: :bad_request
+          end
+          on_exceptions { |error| render_import_error(error) }
+        end
       end
     end
 
     private
 
+    def import_archive
+      BlogTheme::ImportArchive.call(service_params) do
+        on_success do |theme:|
+          render json: BlogThemeSerializer.new(theme, root: false).as_json, status: :created
+        end
+        on_failed_contract { raise Discourse::InvalidParameters.new(:file) }
+        on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_exceptions { |error| raise error }
+      end
+    end
+
+    def import_repository
+      service_args = service_params
+      hijack do
+        BlogTheme::ImportRepository.call(service_args) do
+          on_success do |theme:|
+            render json: BlogThemeSerializer.new(theme, root: false).as_json, status: :created
+          end
+          on_failed_contract do |contract|
+            render_json_error contract.errors.full_messages.first, status: :bad_request
+          end
+          on_failed_policy(:can_manage_themes) do
+            render_json_error I18n.t("invalid_access"), status: :forbidden
+          end
+          on_exceptions { |error| render_import_error(error) }
+        end
+      end
+    end
+
+    def render_import_error(error)
+      status =
+        case error
+        when Discourse::InvalidAccess
+          :forbidden
+        when Discourse::NotFound
+          :not_found
+        when RemoteTheme::ImportError
+          :unprocessable_entity
+        else
+          :bad_request
+        end
+      render_json_error error.message, status:
+    end
+
     def theme_params
       params.require(:theme).permit(*BlogTheme::FIELDS).to_h
+    end
+
+    def rate_limit_working_preview
+      RateLimiter.new(current_user, "blog-theme-preview", 20, 1.minute).performed!
     end
 
     def ensure_discussion_host

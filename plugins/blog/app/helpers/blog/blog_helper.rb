@@ -152,6 +152,36 @@ module ::Blog
       }
     end
 
+    # Theme authors still need an article to reference before anything is published.
+    def blog_authoring_template_assigns
+      blog_template_assigns.merge(
+        "article" => blog_template_assigns["article"] || blog_placeholder_article,
+      )
+    end
+
+    def blog_placeholder_article
+      {
+        "title" => I18n.t("blog.themes.sample_article"),
+        "url" => "#{Configuration.base_url}/example",
+        "excerpt" => I18n.t("blog.themes.sample_body"),
+        "standfirst" => "",
+        "author" => "",
+        "published_at" => nil,
+        "date" => "",
+        "relative_date" => "",
+        "reading_time" => "",
+        "featured" => false,
+        "image_url" => nil,
+        "discussion_url" => Discourse.base_url,
+        "replies" => 0,
+        "replies_label" => "",
+        "index" => "01",
+        "updated_label" => nil,
+        "body_html" => "<p>#{ERB::Util.html_escape(I18n.t("blog.themes.sample_body"))}</p>",
+        "tags" => [],
+      }
+    end
+
     def blog_template_article(publication, article, topic, index: 0, body: false)
       date = publication.published_at
       values = {
