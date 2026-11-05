@@ -29,7 +29,7 @@ class UsernameCheckerService
   end
 
   def is_developer?(value)
-    Developer.email?(value)
+    Developer.configured_email?(value)
   end
 
   def self.is_developer?(email)

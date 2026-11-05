@@ -30,6 +30,6 @@ class UserPasswordValidator < ActiveModel::EachValidator
   private
 
   def is_developer?(value)
-    Developer.email?(value)
+    Developer.configured_email?(value)
   end
 end
