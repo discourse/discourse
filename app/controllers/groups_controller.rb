@@ -620,6 +620,7 @@ class GroupsController < ApplicationController
 
     group = find_group(:name)
 
+    raise Discourse::InvalidAccess if guardian.is_silenced?
     raise Discourse::InvalidAccess unless group.allow_membership_requests?
     raise Discourse::InvalidAccess if group.users.exists?(id: current_user.id)
 
