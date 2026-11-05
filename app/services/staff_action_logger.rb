@@ -39,6 +39,17 @@ class StaffActionLogger
     )
   end
 
+  def log_bot_creation(user)
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:create_bot],
+        target_user_id: user.id,
+        subject: user.username,
+        details: "trust_level: #{user.trust_level}",
+      ),
+    )
+  end
+
   def log_custom(custom_type, details = nil)
     raise Discourse::InvalidParameters.new(:custom_type) unless custom_type
 
@@ -415,6 +426,26 @@ class StaffActionLogger
     )
   end
 
+  def log_add_access_control_list_owner(target, user, opts = {})
+    log_access_control_list_owner_change(:add_access_control_list_owner, target, user, opts)
+  end
+
+  def log_remove_access_control_list_owner(target, user, opts = {})
+    log_access_control_list_owner_change(:remove_access_control_list_owner, target, user, opts)
+  end
+
+  def log_assume_access_control_ownership(owner_acl, user_id:, username:, deleted_at:)
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:assume_access_control_ownership],
+        subject: "#{owner_acl.target_type} (#{owner_acl.target_id})",
+        target_user_id: @admin.id,
+        context:
+          "deleted_user_id: #{user_id}\ndeleted_username: #{username}\ndeleted_at: #{deleted_at.iso8601}",
+      ),
+    )
+  end
+
   def theme_json(theme)
     ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
@@ -556,6 +587,7 @@ class StaffActionLogger
         action: UserHistory.actions[:suspend_user],
         target_user_id: user.id,
         details: details,
+        expires_at: user.suspended_till,
       )
     args[:post_id] = opts[:post_id] if opts[:post_id]
     UserHistory.create!(args)
@@ -821,6 +853,7 @@ class StaffActionLogger
         action: UserHistory.actions[:silence_user],
         target_user_id: user.id,
         details: opts[:details],
+        expires_at: user.silenced_till,
       )
     create_args[:post_id] = opts[:post_id] if opts[:post_id]
 
@@ -1292,6 +1325,18 @@ class StaffActionLogger
   end
 
   private
+
+  def log_access_control_list_owner_change(action, target, user, opts)
+    raise Discourse::InvalidParameters.new(:user) if !user.is_a?(User)
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[action],
+        subject: "#{target.class.polymorphic_name} (#{target.id})",
+        target_user_id: user.id,
+      ),
+    )
+  end
 
   def json_params(previous_value, new_value)
     if (previous_value && previous_value.length > UserHistory::MAX_JSON_LENGTH) ||

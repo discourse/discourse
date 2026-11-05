@@ -9,10 +9,14 @@ Use this reference when working with `AccessControlList`, `AclTarget`, `Acl::Tar
 Important columns:
 
 - `target_type`, `target_id`: polymorphic target.
-- `permission`: string ID declared by the target's `ACL_PERMISSIONS`, such as `view`, `edit`, or `manage`. The manager enforces this vocabulary; direct bulk inserts bypass that policy.
+- `permission`: string ID declared by the target's `ACL_PERMISSIONS`, such as `view`, `edit`, `manage`, or the built-in `owner`. The manager enforces this vocabulary; direct bulk inserts bypass that policy.
 - `allowed_group_ids`: bigint array of groups that hold the permission.
 - `allowed_user_ids`: bigint array of users that hold the permission. Backend storage/lookups and the frontend search picker support user grants; mandatory user ACL display still needs explicit UI support.
-- `owner`: string identifying the owning subsystem, usually `"core"` or a plugin name.
+- `source`: string identifying the subsystem that produced the ACL row, usually `"core"` or a plugin name. This provenance column is unrelated to the `owner` permission.
+
+`owner` is a reserved, user-only permission automatically included by `Acl::Permissions`. Owners implicitly satisfy every other permission lookup for their target. Do not grant it to groups or expose it through an ordinary permission picker.
+
+The system user is a valid owner even though its ID is negative. Owner contracts may accept `Discourse::SYSTEM_USER_ID` as the sole non-positive user ID, but must still verify that every requested owner resolves to an existing user.
 
 The model has a uniqueness validation and DB index for target + permission. Multiple groups for the same permission collapse into one row.
 
@@ -27,7 +31,7 @@ The frontend and service params use flattened entries:
 ]
 ```
 
-`AccessControlList.expand_list_for_bulk_insert(list, target, owner)` groups those entries by permission and returns rows suitable for `insert_all!`. It fills both `allowed_group_ids` and `allowed_user_ids`.
+`AccessControlList.expand_list_for_bulk_insert(list, target, source)` groups those entries by permission and returns rows suitable for `insert_all!`. It fills both `allowed_group_ids` and `allowed_user_ids`.
 
 `AccessControlList.where(target: target).flattened_list` returns one entry per group or user per permission. Group entries include group metadata:
 
@@ -89,6 +93,8 @@ user.permission_acl.target_ids_with_any_permissions(TargetClass, %w[view edit])
 
 `User#permission_acl` and `Guardian::AnonymousUser#permission_acl` cache these lookups. Reload target records before reusing `target.permission_acl` after ACL writes.
 
+For user lookups, an `owner` grant satisfies `has_*permission?`, `permission_user_ids`, and target-id queries for every other permission. Group lookups remain exact because groups cannot own ACL targets.
+
 ## Guardian Helpers
 
 Use the helper methods on `Guardian` instead of reaching into `user.permission_acl` from controllers:
@@ -96,6 +102,8 @@ Use the helper methods on `Guardian` instead of reaching into `user.permission_a
 ```ruby
 guardian.has_acl_permission?(target, "view")
 guardian.has_any_acl_permission?(target, %w[edit manage])
+guardian.is_acl_owner?(target)
+guardian.can_manage_acl_owner?(target)
 guardian.target_ids_with_acl_permission(TargetClass, "view")
 guardian.target_ids_with_any_acl_permissions(TargetClass, %w[view edit manage])
 ```
@@ -106,6 +114,8 @@ Models that include `AclTarget` also get visibility scopes:
 Board.with_acl_permission(guardian, "view")
 Board.with_any_acl_permissions(guardian, %w[view edit manage])
 ```
+
+These scopes include targets owned directly by the current user, even when `owner` is not listed explicitly.
 
 Prefer these scopes for model index queries when they compose better with other filters. Use Guardian target-id helpers when the caller needs ids for more custom query construction.
 
@@ -138,7 +148,7 @@ class Board < ActiveRecord::Base
 end
 ```
 
-Every target must define or inherit `ACL_PERMISSIONS`. Use named readers such as `ACL_PERMISSIONS.manage` in mandatory, banned, and loss-warning declarations; an unknown reader raises `NoMethodError`. The permission set and its string values are frozen. The manager validates the final ACL list, including injected mandatory entries, against `ACL_PERMISSIONS.values` before replacing any rows. A missing constant raises `NameError` to expose an incorrectly implemented target; an unknown submitted permission fails the service policy.
+Every target must define or inherit `ACL_PERMISSIONS`. `Acl::Permissions` automatically adds the reserved `owner` permission and exposes `ACL_PERMISSIONS.owner`. Use named readers such as `ACL_PERMISSIONS.manage` in mandatory, banned, and loss-warning declarations; an unknown reader raises `NoMethodError`. The permission set and its string values are frozen. The manager validates the final ACL list, including injected mandatory and owner entries, against `ACL_PERMISSIONS.values` before replacing any rows. A missing constant raises `NameError` to expose an incorrectly implemented target; an unknown submitted permission fails the service policy.
 
 The concern provides:
 
@@ -178,13 +188,13 @@ end
 Mandatory entries are consumed by both backend writes and frontend rendering:
 
 - `AccessControlList.inject_mandatory_acl(flattened_acl, target)` appends missing mandatory entries.
-- `AccessControlListManager` calls that method before inserting rows.
+- `AccessControlList::Apply` calls that method before inserting rows.
 - `flattened_list` marks matching entries with `mandatory: true`.
 - `Site#access_control` exposes mandatory ACL metadata for registered targets.
 
 Banned entries are consumed by both backend writes and frontend rendering:
 
-- `AccessControlListManager` rejects submitted ACLs that match the target class's `banned_acl` via the `has_no_banned_acl` policy.
+- `AccessControlList::Apply` rejects submitted ACLs that match the target class's `banned_acl` via the `has_no_banned_acl` policy.
 - `Site#access_control` exposes banned ACL metadata for registered targets.
 - `DAccessControl` filters banned permission options for the matching grantee.
 
@@ -201,6 +211,8 @@ end
 ```
 
 This is advisory, unlike `mandatory_acl` or `banned_acl`. It does not prevent persistence. `AccessControlList::EvaluateModification` checks the proposed ACL before save and reports when it would not grant the current user every configured permission.
+
+For creation evaluations, where `target_id` is absent, the evaluator includes the current user's prospective `owner` grant. An owner satisfies all loss-warning permissions, matching the authoritative owner record that the target's create service will persist.
 
 The concern provides:
 

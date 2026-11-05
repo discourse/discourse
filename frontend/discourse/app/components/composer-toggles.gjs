@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 

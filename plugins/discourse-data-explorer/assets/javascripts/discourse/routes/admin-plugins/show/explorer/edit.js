@@ -78,4 +78,8 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
       controller.releasePanes();
     }
   }
+
+  titleToken() {
+    return this.currentModel?.model?.name;
+  }
 }

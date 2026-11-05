@@ -5,7 +5,6 @@ import type DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 import autoCloseToast from "discourse/float-kit/modifiers/auto-close-toast";
 import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
-import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dSwipe, { type SwipeState } from "discourse/ui-kit/modifiers/d-swipe";
 

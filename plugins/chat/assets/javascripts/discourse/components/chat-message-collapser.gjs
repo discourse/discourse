@@ -6,7 +6,6 @@ import { modifier } from "ember-modifier";
 import domFromString from "discourse/lib/dom-from-string";
 import applyLightbox from "discourse/lib/lightbox";
 import { escapeExpression } from "discourse/lib/utilities";
-import { and } from "discourse/truth-helpers";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
@@ -99,7 +98,7 @@ export default class ChatMessageCollapser extends Component {
 
         if (this.siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {
           const link = escapeExpression(videoAttributes.url);
-          const title = videoAttributes.title;
+          const title = escapeExpression(videoAttributes.title);
           const header = trustHTML(
             `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`
           );

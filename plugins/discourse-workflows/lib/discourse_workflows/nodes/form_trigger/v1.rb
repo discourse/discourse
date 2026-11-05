@@ -4,6 +4,28 @@ module DiscourseWorkflows
   module Nodes
     module FormTrigger
       class V1 < NodeType
+        TEXT_FIELD_SCHEMA = { "type" => %w[string null] }.freeze
+        FIELD_SCHEMAS = {
+          "number" => {
+            "type" => %w[number null],
+          },
+          "checkbox" => {
+            "type" => %w[boolean null],
+          },
+        }.freeze
+        METADATA_PROPERTIES = {
+          "submitted_at" => {
+            "type" => "string",
+          },
+          "form_mode" => {
+            "type" => "string",
+          },
+          "form_query_parameters" => {
+            "type" => "object",
+            "x-optional" => true,
+          },
+        }.freeze
+
         description(
           name: NodeDataShape::FORM_TRIGGER_TYPE,
           version: "1.0",
@@ -52,6 +74,25 @@ module DiscourseWorkflows
             { name: "default", path: WorkflowDocument.node_webhook_id_key, http_method: "GET" },
           ],
         )
+
+        def self.output_schemas(configuration = {}, input_schemas: [])
+          fields =
+            Schemas::FormFields.with_keys(
+              CollectionParameters.rows(configuration || {}, "form_fields"),
+            )
+          properties =
+            fields
+              .reject do |field|
+                field["field_type"] == Schemas::FormFields::DISPLAY_ONLY_FIELD_TYPE
+              end
+              .to_h { |field| [field["key"], field_schema(field["field_type"])] }
+
+          [Schema.document(properties.merge(METADATA_PROPERTIES))]
+        end
+
+        def self.field_schema(field_type)
+          FIELD_SCHEMAS.fetch(field_type) { expression_value?(field_type) ? {} : TEXT_FIELD_SCHEMA }
+        end
 
         def initialize(
           form_data:,

@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";

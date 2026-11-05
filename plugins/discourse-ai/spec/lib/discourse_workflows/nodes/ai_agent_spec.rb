@@ -106,6 +106,25 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     end
   end
 
+  it "cancels the agent reply once the execution deadline passes" do
+    cancel_manager = nil
+    allow(bot).to receive(:reply) do |bot_context|
+      cancel_manager = bot_context.cancel_manager
+      cancel_manager.wait_for_cancel(5)
+    end
+
+    expect {
+      execute_node_output(
+        configuration: {
+          "agent_id" => agent.id,
+          "prompt" => "Hello",
+        },
+        deadline: 0.05.seconds.from_now,
+      )
+    }.to raise_error(DiscourseWorkflows::Executor::ExecutionTimedOut)
+    expect(cancel_manager).to be_cancelled
+  end
+
   it "runs the agent once per input item with item-specific parameters" do
     items =
       execute_node_output(

@@ -200,13 +200,9 @@ class PostActionCreator
                                          likes_count: @post.like_count + 1,
                                          user_id: @created_by.id,
                                        }
-    elsif self.class.notify_types.include?(@post_action_name)
+    elsif flagging_post?
       @post.publish_change_to_clients! :acted
     end
-  end
-
-  def self.notify_types
-    @notify_types ||= PostActionType.notify_flag_types.keys
   end
 
   def enforce_rules

@@ -1,8 +1,7 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { action, computed, set } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { action, get } from "@ember/object";
 import AdminReportTableHeader from "discourse/admin/components/admin-report-table-header";
 import AdminReportTableRow from "discourse/admin/components/admin-report-table-row";
 import { makeArray } from "discourse/lib/helpers";
@@ -12,28 +11,23 @@ import { i18n } from "discourse-i18n";
 
 const PAGES_LIMIT = 8;
 
-@tagName("")
 export default class AdminReportTable extends Component {
-  sortable = false;
-  sortDirection = 1;
+  @tracked page = 0;
+  @tracked sortDirection = 1;
+  @tracked sortLabel;
 
-  page = 0;
+  get data() {
+    return get(this.args.model, "data");
+  }
 
-  @computed("options.perPage")
   get perPage() {
-    return this.options?.perPage;
+    return this.args.options?.perPage;
   }
 
-  set perPage(value) {
-    set(this, "options.perPage", value);
-  }
-
-  @computed("model.computedLabels.length")
   get twoColumns() {
-    return this.model?.computedLabels?.length === 2;
+    return this.args.model?.computedLabels?.length === 2;
   }
 
-  @computed("totalsForSample", "options.total", "model.dates_filtering")
   get showTotalForSample() {
     // check if we have at least one cell which contains a value
     const sum = this.totalsForSample
@@ -41,42 +35,44 @@ export default class AdminReportTable extends Component {
       .filter((item) => item != null)
       .reduce((s, v) => s + v, 0);
 
-    return sum >= 1 && this.options?.total && this.model?.dates_filtering;
+    return (
+      sum >= 1 &&
+      this.args.options?.total &&
+      get(this.args.model, "dates_filtering")
+    );
   }
 
-  @computed("model.total", "options.total", "twoColumns")
   get showTotal() {
-    return this.model?.total && this.options?.total && this.twoColumns;
+    return (
+      get(this.args.model, "total") &&
+      this.args.options?.total &&
+      this.twoColumns
+    );
   }
 
-  @computed("model.{average,data}", "totalsForSample.1.value", "twoColumns")
   get showAverage() {
     return (
-      this.model?.average &&
-      this.model?.data.length > 0 &&
+      get(this.args.model, "average") &&
+      this.data.length > 0 &&
       this.totalsForSample?.[1]?.value &&
       this.twoColumns
     );
   }
 
-  @computed("totalsForSample.1.value", "model.data.length")
   get averageForSample() {
-    const averageLabel = this.model.computedLabels.at(-1);
+    const averageLabel = this.args.model.computedLabels.at(-1);
     return averageLabel.compute({
-      y: (this.totalsForSample?.[1]?.value / this.model?.data?.length).toFixed(
-        0
-      ),
+      y: (this.totalsForSample?.[1]?.value / this.data?.length).toFixed(0),
     }).formattedValue;
   }
 
-  @computed("model.data.length")
   get showSortingUI() {
-    return this.model?.data?.length >= 5;
+    return this.data?.length >= 5;
   }
 
-  @computed("totalsForSampleRow", "model.computedLabels")
+  @cached
   get totalsForSample() {
-    return this.model?.computedLabels?.map((label) => {
+    return this.args.model?.computedLabels?.map((label) => {
       const computedLabel = label.compute(this.totalsForSampleRow);
       computedLabel.type = label.type;
       computedLabel.property = label.mainProperty;
@@ -84,21 +80,22 @@ export default class AdminReportTable extends Component {
     });
   }
 
-  @computed("model.total", "model.computedLabels")
   get formattedTotal() {
-    const totalLabel = this.model?.computedLabels?.at(-1);
-    return totalLabel.compute({ y: this.model?.total }).formattedValue;
+    const totalLabel = this.args.model?.computedLabels?.at(-1);
+    return totalLabel.compute({ y: get(this.args.model, "total") })
+      .formattedValue;
   }
 
-  @computed("model.data", "model.computedLabels")
+  @cached
   get totalsForSampleRow() {
-    if (!this.model?.data || !this.model?.data?.length) {
+    const data = this.data;
+    if (!data || !data.length) {
       return {};
     }
 
     let totalsRow = {};
 
-    this.model?.computedLabels?.forEach((label) => {
+    this.args.model?.computedLabels?.forEach((label) => {
       const reducer = (sum, row) => {
         const computedLabel = label.compute(row);
         const value = computedLabel.value;
@@ -110,19 +107,17 @@ export default class AdminReportTable extends Component {
         }
       };
 
-      const total = this.model?.data?.reduce(reducer, 0);
+      const total = data.reduce(reducer, 0);
       totalsRow[label.mainProperty] =
-        label.type === "percent"
-          ? Math.round(total / this.model?.data?.length)
-          : total;
+        label.type === "percent" ? Math.round(total / data.length) : total;
     });
 
     return totalsRow;
   }
 
-  @computed("sortLabel", "sortDirection", "model.data.[]")
+  @cached
   get sortedData() {
-    const data = makeArray(this.model?.data);
+    const data = makeArray(this.data);
 
     if (this.sortLabel) {
       const compare = (label, direction) => {
@@ -140,7 +135,6 @@ export default class AdminReportTable extends Component {
     return data;
   }
 
-  @computed("sortedData.[]", "perPage", "page")
   get paginatedData() {
     if (this.perPage < this.sortedData?.length) {
       const start = this.perPage * this.page;
@@ -150,18 +144,14 @@ export default class AdminReportTable extends Component {
     return this.sortedData;
   }
 
-  @computed("model.data", "perPage", "page")
   get pages() {
-    if (!this.model?.data || this.model?.data?.length <= this.perPage) {
+    const data = this.data;
+    if (!data || data.length <= this.perPage) {
       return [];
     }
 
     const pagesIndexes = [];
-    for (
-      let i = 0;
-      i < Math.ceil(this.model?.data?.length / this.perPage);
-      i++
-    ) {
+    for (let i = 0; i < Math.ceil(data.length / this.perPage); i++) {
       pagesIndexes.push(i);
     }
 
@@ -184,15 +174,15 @@ export default class AdminReportTable extends Component {
 
   @action
   changePage(page) {
-    this.set("page", page);
+    this.page = page;
   }
 
   @action
   sortByLabel(label) {
     if (this.sortLabel === label) {
-      this.set("sortDirection", this.sortDirection === 1 ? -1 : 1);
+      this.sortDirection = this.sortDirection === 1 ? -1 : 1;
     } else {
-      this.set("sortLabel", label);
+      this.sortLabel = label;
     }
   }
 
@@ -200,7 +190,6 @@ export default class AdminReportTable extends Component {
     <div
       class={{dConcatClass
         "admin-report-table"
-        (if this.sortable "sortable")
         (if this.twoColumns "two-columns")
       }}
       ...attributes
@@ -208,7 +197,7 @@ export default class AdminReportTable extends Component {
       <table class="table">
         <thead>
           <tr>
-            {{#each this.model.computedLabels as |label|}}
+            {{#each @model.computedLabels as |label|}}
               <AdminReportTableHeader
                 @currentSortDirection={{this.sortDirection}}
                 @currentSortLabel={{this.sortLabel}}
@@ -217,7 +206,7 @@ export default class AdminReportTable extends Component {
                 @sortByLabel={{fn this.sortByLabel label}}
               />
             {{else}}
-              {{#each this.model.data as |data|}}
+              {{#each this.data as |data|}}
                 <th>{{data.x}}</th>
               {{/each}}
             {{/each}}
@@ -228,8 +217,8 @@ export default class AdminReportTable extends Component {
             <AdminReportTableRow
               @data={{data}}
               @hasRelatedItems={{@hasRelatedItems}}
-              @labels={{this.model.computedLabels}}
-              @options={{this.options}}
+              @labels={{@model.computedLabels}}
+              @options={{@options}}
               @reportFilters={{@reportFilters}}
               @reportType={{@reportType}}
             />
@@ -285,7 +274,7 @@ export default class AdminReportTable extends Component {
       </table>
 
       <div class="pagination">
-        {{#each this.pages as |pageState|}}
+        {{#each this.pages key="index" as |pageState|}}
           <DButton
             class={{pageState.class}}
             @action={{fn this.changePage pageState.index}}

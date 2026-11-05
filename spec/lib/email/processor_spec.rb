@@ -206,6 +206,27 @@ RSpec.describe Email::Processor do
     end
   end
 
+  describe "when the site is archived" do
+    let(:mail) { file_from_fixtures("new_user.eml", "emails").read }
+
+    before { SiteSetting.site_archived = true }
+
+    it "rejects the email and tells the sender the site is archived" do
+      processor = Email::Processor.new(mail)
+      processor.process!
+
+      expect(IncomingEmail.last.error).to eq("Email::Receiver::SiteArchivedError")
+      expect(EmailLog.last.email_type).to eq("email_reject_site_archived")
+      expect(ActionMailer::Base.deliveries.first.body.to_s).to eq(
+        I18n.t(
+          "system_messages.email_reject_site_archived.text_body_template",
+          destination: processor.receiver.mail.to,
+          former_title: processor.receiver.mail.subject,
+        ),
+      )
+    end
+  end
+
   describe "when group email recipients exceeds maximum_recipients_per_new_group_email site setting" do
     let(:mail) { file_from_fixtures("cc.eml", "emails").read }
 

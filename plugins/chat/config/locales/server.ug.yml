@@ -9,7 +9,6 @@ ug:
     chat_separate_sidebar_mode: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ."
     chat_enabled: "سۆھبەتنى قوزغىتىدۇ."
     enable_public_channels: "سەھىپە ئاساسىدىكى ئاممىۋى قانال قوزغىتىلدى."
-    chat_channel_retention_days: "ئادەتتىكى قانالدىكى سۆھبەت ئۇچۇرى بۇ كۈنلەردە ساقلىنىدۇ. «0» گە تەڭشەلسە ئۇچۇرلار مەڭگۈلۈك ساقلىنىدۇ."
     chat_dm_retention_days: "شەخسىي سۆھبەت قانىلىدىكى سۆھبەت ئۇچۇرى بۇ كۈنلەردە ساقلىنىدۇ. «0» گە تەڭشەلسە ئۇچۇرلار مەڭگۈلۈك ساقلىنىدۇ."
     chat_auto_silence_duration: "ئىشلەتكۈچى سۆھبەت ئۇچۇرى قۇرۇش چېكىدىن ھالقىغاندا ئۈنسىزلەيدىغان مىنۇت سانى. «0» گە تەڭشەلسە ئۆزلۈكىدىكى ئۈنسىزلەشنى چەكلەيدۇ."
     chat_allowed_messages_for_trust_level_0: "ئىشەنچ دەرىجىسى 0 بولغان ئىشلەتكۈچىنىڭ 30 سېكۇنتتا يوللىيالايدىغان ئۇچۇر سانى. «0» گە تەڭشەلسە چەكلىمە بولمايدۇ."
@@ -56,7 +55,17 @@ ug:
 
         قايتا سىناش ئۈچۈن %{channel_url} قانالنى زىيارەت قىلىڭ.
   chat:
+    design_wizard_homepage_name: "سۆھبەت"
     deleted_chat_username: ئۆچۈرۈلدى
+    crawler:
+      directory_title: "سۆھبەت قانىلى"
+      nav_title: "سۆھبەت"
+      members_count:
+        one: "%{count} ئەزا"
+        other: "%{count} ئەزا"
+      thread_replies:
+        one: "%{count} جاۋاب"
+        other: "%{count} جاۋاب"
     errors:
       users_cant_be_added_to_channel: "ئىشلەتكۈچىنى بۇ قانالغا قوشقىلى بولمايدۇ."
       user_cant_be_removed_from_channel: "ئىشلەتكۈچىنى بۇ قانالدىن چىقىرىۋەتكىلى بولمايدۇ"

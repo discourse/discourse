@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -28,7 +27,7 @@ export default class UppyImageUploader extends Component {
   @tracked imageWidth;
   @tracked imageHeight;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: this.args.id,
     type: this.args.type,
     additionalParams: this.args.additionalParams,

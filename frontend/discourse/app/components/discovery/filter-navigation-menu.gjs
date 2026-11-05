@@ -12,7 +12,6 @@ import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";

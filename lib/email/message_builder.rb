@@ -211,6 +211,10 @@ module Email
           @template_args[key] = escaped_template_arg(key) if @template_args.key?(key)
         end
 
+        if @opts.key?(:body_topic_title)
+          @template_args[:topic_title] = ERB::Util.html_escape(@opts[:body_topic_title])
+        end
+
         augmented_template_args =
           @template_args.merge(
             optional_re: "",
@@ -222,6 +226,11 @@ module Email
         body = I18n.t("#{@opts[:template]}.text_body_template", augmented_template_args).dup
       else
         body = @opts[:body].dup
+      end
+
+      if key = @template_args[:body_suffix_key]
+        paragraph = I18n.t(key, @template_args)
+        body = "#{body.rstrip}\n\n#{paragraph}"
       end
 
       if @template_args[:unsubscribe_instructions].present?

@@ -36,7 +36,6 @@ ru:
       admins_only: "Исследование данных доступно только для администраторов."
       allow_groups: "Разрешить группам доступ к этому запросу"
       title: "Проводник данных"
-      create: "Создать"
       create_placeholder: "Имя запроса..."
       description_placeholder: "Введите описание"
       ai:
@@ -50,9 +49,7 @@ ru:
         save_query: "Сохранить запрос"
         write_manually: "Напишите SQL-запрос вручную."
         sql_label: "SQL"
-        optional: "необязательно"
       import:
-        label: "Импорт"
         unparseable_json: "Невозможно распарсить JSON-файл."
         wrong_json: "Неверный формат JSON-файла. Файл должен содержать объект 'запрос', у которого как минимум должно быть свойство 'sql'."
       help:
@@ -85,7 +82,6 @@ ru:
         label: "Экспортировать как…"
         results_json: "Результаты (JSON)"
         results_csv: "Результаты (CSV)"
-      others_dirty: "Запрос имеет несохранённые изменения, которые будут потеряны, если вы уйдёте со страницы."
       run_time: "Запрос завершен за %{value} мс."
       cached_result_notice: "Отображение кэшированных результатов из %{relative_time}."
       result_count:
@@ -98,7 +94,7 @@ ru:
         few: "Показаны %{count} лучших результата."
         many: "Показаны %{count} лучших результатов."
         other: "Показаны %{count} лучшего результата."
-      query_name: "Запрос"
+      name: "Название"
       query_groups: "Группы"
       query_tags: "Теги"
       link: "Ссылка для"
@@ -109,7 +105,6 @@ ru:
       column: "Колонка %{number}"
       save_params: "Установить значения по умолчанию"
       reset_params: "Сбросить"
-      search_placeholder: "Поиск…"
       no_search_results: "К сожалению, мы не смогли найти результаты, соответствующие вашему запросу."
       form:
         errors:

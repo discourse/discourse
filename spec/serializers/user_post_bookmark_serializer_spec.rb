@@ -22,6 +22,7 @@ RSpec.describe UserPostBookmarkSerializer do
       expect(serializer.highest_post_number).to eq(3)
 
       user.groups << whisperers_group
+      user.reload
 
       expect(serializer.highest_post_number).to eq(4)
     end

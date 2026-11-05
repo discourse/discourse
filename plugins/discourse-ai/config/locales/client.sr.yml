@@ -72,6 +72,8 @@ sr:
         filters:
           all: "Sve"
           reset: "Reset"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraži"
         admin_dashboard:
@@ -115,6 +117,8 @@ sr:
             other: "%{count} poruka"
       spam:
         short_title: "Nepoželjno"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         last_seven_days: "Последњих 7 дана"
         enable: "Omogući"
         test_modal:
@@ -204,6 +208,15 @@ sr:
         delete: "Obriši"
         tools_modal:
           required: "Potrebno"
+      models:
+        name: "Ime foruma"
+        type: "Tip"
+        edit: "Izmeni"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
       llms:
         display_name: "Ime foruma"
         vision_modes:
@@ -273,6 +286,14 @@ sr:
             category: "Kategorija"
           table:
             total_count: "Ukupno"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Teme"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Teme"

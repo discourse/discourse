@@ -17,7 +17,7 @@ lt:
         chat_usage:
           author: Jūs
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} minutė"
             few: "%{count} minutės"

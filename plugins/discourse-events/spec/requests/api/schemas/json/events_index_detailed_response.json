@@ -282,6 +282,15 @@
           "is_zoom_livestream": {
             "type": "boolean"
           },
+          "recording_url": {
+            "type": "string"
+          },
+          "recording_onebox": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "max_attendees": {
             "type": [
               "integer",

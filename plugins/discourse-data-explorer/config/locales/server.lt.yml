@@ -13,4 +13,3 @@ lt:
       default_tag_reserved: "Numatytoji žyma rezervuota sistemos užklausoms."
       tag_contains_comma: "Žymose negali būti kablelių."
       tag_too_long: "Žyma gali turėti daugiausia %{max} simbolių."
-      too_many_tags: "Užklausa gali turėti daugiausia %{max} žymų."

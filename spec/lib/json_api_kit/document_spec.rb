@@ -25,13 +25,96 @@ RSpec.describe JsonApiKit::Document do
   let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:parameters) { {} }
 
+  describe ".from" do
+    subject(:document) { described_class.from(value) { { resource: instance, input:, client: } } }
+
+    let(:resource) { Class.new(super()) { scope { Topic.none } } }
+    let(:instance) { resource.new(guardian:, edition:) }
+    let(:input) do
+      JsonApiKit::Request::Input::Individual.new(parameters, resource: instance, edition:)
+    end
+    let(:rendered_ids) { document.to_h.fetch(:data).map { it.fetch(:id) } }
+
+    context "when the input is a record" do
+      let(:value) { topic }
+
+      it "renders an individual resource" do
+        expect(document.to_h.fetch(:data)).to include(id: topic.id.to_s)
+      end
+    end
+
+    context "when the input is an array" do
+      let(:value) { [other_topic, topic] }
+
+      it "preserves the supplied order" do
+        expect(rendered_ids).to eq([other_topic.id.to_s, topic.id.to_s])
+      end
+    end
+
+    context "when the array contains one record" do
+      let(:value) { [topic] }
+
+      it "preserves the collection representation" do
+        expect(rendered_ids).to eq([topic.id.to_s])
+      end
+    end
+
+    context "when the array is empty" do
+      let(:value) { [] }
+
+      it "renders an empty collection" do
+        expect(document.to_h.fetch(:data)).to be_empty
+      end
+    end
+
+    context "when the input is a relation" do
+      fab!(:excluded_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 3)) }
+
+      let(:value) { Topic.where(id: [topic.id, other_topic.id]).order(created_at: :desc) }
+
+      it "preserves its selection and order" do
+        expect(rendered_ids).to eq([other_topic.id.to_s, topic.id.to_s])
+      end
+    end
+
+    context "when the adapter recognizes another collection type" do
+      let(:value) { [other_topic, topic].each }
+
+      before { allow(instance.adapter).to receive(:collection?).with(value).and_return(true) }
+
+      it "preserves the supplied collection order" do
+        expect(rendered_ids).to eq([other_topic.id.to_s, topic.id.to_s])
+      end
+    end
+
+    context "when the input is an existing document" do
+      subject(:document) { described_class.from(value) { raise "Unexpected request context" } }
+
+      let(:value) { JsonApiKit::Document::Collection.for(parameters, resource:, client:) }
+
+      it "returns the document without evaluating the context" do
+        expect(document).to equal(value)
+      end
+
+      context "when the document contains errors" do
+        let(:value) do
+          JsonApiKit::Document::Errors.new(JsonApiKit::BadRequest.new("Invalid input"))
+        end
+
+        it "returns the errors without evaluating the context" do
+          expect(document).to equal(value)
+        end
+      end
+    end
+  end
+
   describe "Collection.for" do
     subject(:document) do
       JsonApiKit::Document::Collection.for(parameters, resource:, client:, scoped_to:)
     end
 
     let(:scoped_to) { nil }
-    let(:listed_ids) { document.to_h[:data].map { it[:id] } }
+    let(:listed_ids) { document.to_h.fetch(:data).map { it.fetch(:id) } }
 
     it "renders every record of the listing" do
       expect(listed_ids).to eq([topic.id.to_s, other_topic.id.to_s])
@@ -47,28 +130,18 @@ RSpec.describe JsonApiKit::Document do
       before do
         allow(resource).to receive(:new).and_return(instance)
         allow(JsonApiKit::Request::Input::Collection).to receive(:new).and_call_original
-        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        allow(instance).to receive(:all).and_call_original
         document
       end
 
-      it "uses the instance for input validation" do
+      it "reuses one resource for validation and execution", :aggregate_failures do
+        expect(resource).to have_received(:new).with(guardian:, edition:).once
         expect(JsonApiKit::Request::Input::Collection).to have_received(:new).with(
           parameters,
           resource: instance,
           edition:,
         )
-      end
-
-      it "uses the same instance for execution" do
-        expect(JsonApiKit::Query::Collection).to have_received(:new).with(
-          instance,
-          an_instance_of(JsonApiKit::Request::Collection),
-          scoped_to:,
-        )
-      end
-
-      it "creates one instance for the request" do
-        expect(resource).to have_received(:new).once
+        expect(instance).to have_received(:all).once
       end
     end
 
@@ -83,30 +156,23 @@ RSpec.describe JsonApiKit::Document do
       end
       let(:resource) { Class.new(super()).tap { it.has_one(:user, resource: users_resource) } }
       let(:users) { users_resource.new(guardian:, edition:) }
+      let(:included_ids) { document.to_h.fetch(:included).map { it.fetch(:id) } }
 
       before do
         allow(users_resource).to receive(:new).and_return(users)
-        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        allow(users).to receive(:all).and_call_original
         document
       end
 
-      it "creates one resource instance for the related listing" do
-        expect(users_resource).to have_received(:new).with(guardian:, edition:).once
-      end
-
-      it "queries the related records through that instance" do
-        expect(JsonApiKit::Query::Collection).to have_received(:new).with(
-          users,
-          an_instance_of(JsonApiKit::Request::Collection),
-          scoped_to: an_instance_of(JsonApiKit::Scoping::PerOwner),
-        )
+      it "reuses one resource for the related listing", :aggregate_failures do
+        expect(users_resource).to have_received(:new).with(
+          a_hash_including(guardian:, edition:),
+        ).once
+        expect(users).to have_received(:all).once
       end
 
       it "renders all related records" do
-        expect(document.to_h[:included].map { it[:id] }).to contain_exactly(
-          topic.user_id.to_s,
-          other_topic.user_id.to_s,
-        )
+        expect(included_ids).to contain_exactly(topic.user_id.to_s, other_topic.user_id.to_s)
       end
     end
 
@@ -124,7 +190,7 @@ RSpec.describe JsonApiKit::Document do
       it { is_expected.to be_a(JsonApiKit::Document::Errors) }
 
       it "renders the error as a document" do
-        expect(document.to_h[:errors].sole).to include(status: "400", title: "No such sort")
+        expect(document.to_h.fetch(:errors).sole).to include(status: "400", title: "No such sort")
       end
     end
   end
@@ -135,7 +201,7 @@ RSpec.describe JsonApiKit::Document do
     let(:id) { topic.id }
 
     it "renders the record as a document" do
-      expect(document.to_h[:data][:id]).to eq(topic.id.to_s)
+      expect(document.to_h.dig(:data, :id)).to eq(topic.id.to_s)
     end
 
     context "when the resource supplies request context" do
@@ -144,27 +210,18 @@ RSpec.describe JsonApiKit::Document do
       before do
         allow(resource).to receive(:new).and_return(instance)
         allow(JsonApiKit::Request::Input::Individual).to receive(:new).and_call_original
-        allow(JsonApiKit::Query::Individual).to receive(:new).and_call_original
+        allow(instance).to receive(:find).and_call_original
         document
       end
 
-      it "uses the instance for input validation" do
+      it "reuses one resource for validation and execution", :aggregate_failures do
+        expect(resource).to have_received(:new).with(guardian:, edition:).once
         expect(JsonApiKit::Request::Input::Individual).to have_received(:new).with(
           parameters,
           resource: instance,
           edition:,
         )
-      end
-
-      it "uses the same instance for execution" do
-        expect(JsonApiKit::Query::Individual).to have_received(:new).with(
-          instance,
-          an_instance_of(JsonApiKit::Request::Individual),
-        )
-      end
-
-      it "creates one instance for the request" do
-        expect(resource).to have_received(:new).once
+        expect(instance).to have_received(:find).once
       end
     end
 
@@ -174,7 +231,7 @@ RSpec.describe JsonApiKit::Document do
       it { is_expected.to be_a(JsonApiKit::Document::Errors) }
 
       it "renders the error as a document" do
-        expect(document.to_h[:errors].sole).to include(status: "404", title: "No such record")
+        expect(document.to_h.fetch(:errors).sole).to include(status: "404", title: "No such record")
       end
     end
   end

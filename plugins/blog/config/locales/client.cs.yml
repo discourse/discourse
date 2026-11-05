@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Vzhled
+        overridden: Přizpůsobené
+        insert: Vložit
+        array_value: Seznam
+        preview_home: Domovská stránka
+        preview_archive: Archív
+        desktop: Desktop
+        mobile: Mobilní verze
+        back_to_themes: Zpět na motivy
+        new_theme_short: Nový motiv
+        themes: Motivy
+        theme_name: Název motivu
+        edit: Upravit
+        activate: Aktivace
+        preview: Náhled
+        import: Import
+        export: Export
+        active: Aktivní
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Koncept
+        preview: Náhled
+        change:
+          title: název
+          body: tělo
+      review:
+        create: Vytvořit odkaz
+        copy: Kopírovat
+        open: Otevřeno
+        status:
+          active: Aktivní
+          expired: Platnost vypršela
+          revoked: Zrušeno
+          inactive: Neaktivní
+        closed_on: "Uzavřeno %{date}"
+        revoke: Odvolat
+        message: Zpětná vazba
+      editor_table:
+        edit: Upravit
+        status: Stav
+        replies: Odpovědi
+      drafts: Koncepty
+      preview: Náhled
+      unpublish: Zrušit publikování
+      appearance_link: Vzhled

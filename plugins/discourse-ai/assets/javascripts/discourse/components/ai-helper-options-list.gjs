@@ -1,5 +1,4 @@
 import { fn } from "@ember/helper";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import AiHelperCustomPrompt from "../components/ai-helper-custom-prompt.gjs";

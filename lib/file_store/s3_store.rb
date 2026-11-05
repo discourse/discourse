@@ -346,8 +346,8 @@ module FileStore
       update_access_control(file_path, secure, remove_existing_acl:)
     end
 
-    def download_file(upload, destination_path)
-      s3_helper.download_file(get_upload_key(upload), destination_path)
+    def download_file(upload, destination_path, **options)
+      s3_helper.download_file(get_upload_key(upload), destination_path, **options)
     end
 
     def copy_from(source_path)

@@ -18,7 +18,7 @@ sk:
           author: Vy
           author_others: "%{username}"
           status_online: "● online"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} minúta"
             few: "%{count} minúty"

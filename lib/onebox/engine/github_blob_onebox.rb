@@ -18,6 +18,10 @@ module Onebox
 
       def i18n
         {
+          header: {
+            binary_file: I18n.t("onebox.github.header.binary_file"),
+            file: I18n.t("onebox.github.header.file"),
+          },
           binary_file: I18n.t("onebox.github.binary_file"),
           truncated_file: I18n.t("onebox.github.truncated_file"),
           show_original: I18n.t("onebox.github.show_original"),
@@ -46,7 +50,11 @@ module Onebox
       private
 
       def data
-        super.merge({ domain: "github.com/#{match[:org]}/#{match[:repo]}" })
+        super.merge(
+          domain: "github.com/#{match[:org]}/#{match[:repo]}",
+          repository: "#{match[:org]}/#{match[:repo]}",
+          layout_class: "github-onebox",
+        )
       end
     end
   end

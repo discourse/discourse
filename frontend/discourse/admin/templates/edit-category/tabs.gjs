@@ -15,7 +15,6 @@ import EditCategoryTypeSchemaFields from "discourse/components/edit-category-typ
 import Form from "discourse/components/form";
 import { bind } from "discourse/lib/decorators";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
-import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const TAB_COMPONENTS = {

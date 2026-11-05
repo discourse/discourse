@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import DiscourseURL, { rewritePath } from "discourse/lib/url";
+import resolvePermalink from "discourse/lib/permalink-check";
+import { rewritePath } from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class UnknownRoute extends DiscourseRoute {
@@ -19,33 +19,8 @@ export default class UnknownRoute extends DiscourseRoute {
       return;
     }
 
-    const permalinkResults = await ajax("/permalink-check.json", {
-      data: { path },
-    });
-
-    if (permalinkResults.found) {
-      let url = permalinkResults.target_url;
-
-      if (transition._discourse_anchor) {
-        // Remove the anchor from the permalink if present
-        url = url.split("#")[0];
-
-        // Add the anchor from the transition
-        url += `#${transition._discourse_anchor}`;
-      }
-
-      if (permalinkResults.internal) {
-        // Redirect within the routing system so the transition is tracked
-        return this.router.replaceWith(url);
-      }
-
-      // Avoid polluting the history stack for external links
-      transition.abort();
-      DiscourseURL.routeTo(url);
-      return "";
-    } else {
-      // 404 body HTML
-      return permalinkResults.html;
-    }
+    const result = await resolvePermalink(path, transition, this.router);
+    // 404 body HTML, unless the permalink redirect already took over
+    return result.type === "redirect" ? "" : result.html;
   }
 }

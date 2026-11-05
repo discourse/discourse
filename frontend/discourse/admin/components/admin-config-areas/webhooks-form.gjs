@@ -12,7 +12,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import { i18n } from "discourse-i18n";
 

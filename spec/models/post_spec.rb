@@ -1623,6 +1623,25 @@ RSpec.describe Post do
       custom_flag.destroy!
     end
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        enable_dsa_reporting
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the hidden post notice" do
+        custom_flag = Fabricate(:flag, name: "custom flag")
+        post.hide!(PostActionType.types[:custom_custom_flag])
+
+        jobs = Jobs::SendSystemMessage.jobs
+
+        Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+
+        custom_flag.destroy!
+      end
+    end
+
     it "decreases user_stat topic_count for the first post" do
       expect do post.hide!(PostActionType.types[:off_topic]) end.to change {
         post.user.user_stat.reload.topic_count
@@ -2433,6 +2452,42 @@ RSpec.describe Post do
       other_message = messages.select { |msg| msg.data[:type] == :anything }.first
       expect(other_message).to be_present
       expect(other_message.data.key?(:skip_topic_stats)).to be_falsey
+    end
+
+    it "includes moderators only when they can see the private message" do
+      moderator = Fabricate(:moderator)
+      original_subtype = topic.subtype
+      expect(created_audience).not_to include(moderator.id)
+
+      topic.update!(subtype: TopicSubtype.moderator_warning)
+      expect(created_audience).to include(moderator.id)
+
+      topic.update!(subtype: original_subtype)
+      expect(created_audience).not_to include(moderator.id)
+
+      PostActionCreator.create(user1, post, :off_topic)
+      expect(created_audience).to include(moderator.id)
+    end
+
+    it "excludes staff who cannot see the private message from whisper audiences" do
+      moderator = Fabricate(:moderator)
+      admin = Fabricate(:admin)
+      whisper = Fabricate(:whisper, topic: topic, user: admin)
+
+      audience = created_audience(whisper)
+
+      expect(audience).to include(admin.id)
+      expect(audience).not_to include(moderator.id)
+    end
+
+    def created_audience(target = post)
+      target.reload # the topic association memoizes attributes this audience depends on
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}") do
+          target.publish_change_to_clients!(:created)
+        end
+
+      messages.find { |message| message.data[:type] == :created }.user_ids
     end
   end
 

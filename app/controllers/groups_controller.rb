@@ -67,7 +67,7 @@ class GroupsController < ApplicationController
       group = find_group_for_show
 
       format.html do
-        @title = group.full_name.present? ? group.full_name.capitalize : group.name
+        @title = group.full_name.presence || group.name
         @full_title = "#{@title} - #{SiteSetting.title}"
         @description_meta = group.bio_summary || @title
         render :show
@@ -438,7 +438,12 @@ class GroupsController < ApplicationController
     notification_level = params.require(:notification_level)
 
     user_id = current_user.id
-    user_id = params[:user_id] || user_id if guardian.is_staff?
+    if guardian.is_staff?
+      if params[:user_id] && params[:user_id].to_i != user_id
+        guardian.ensure_can_see_group_members!(group)
+      end
+      user_id = params[:user_id] || user_id
+    end
 
     group_user = GroupUser.find_by(group_id: group.id, user_id: user_id)
     raise Discourse::InvalidParameters.new(:user_id) if group_user.blank?

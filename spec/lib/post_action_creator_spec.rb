@@ -68,6 +68,22 @@ RSpec.describe PostActionCreator do
       expect(post_action.related_post).to be_present
       expect(post_action.related_post.raw).to include("another special message")
     end
+
+    context "with a custom flag created after an earlier flag" do
+      after { Flag.reset_flag_settings! }
+
+      it "notifies subscribers" do
+        PostActionCreator.spam(admin, Fabricate(:post))
+        flag = Fabricate(:flag, name: "custom flag", notify_type: true)
+
+        messages =
+          MessageBus.track_publish("/topic/#{post.topic_id}") do
+            PostActionCreator.new(user, post, flag.id).perform
+          end
+
+        expect(messages.map { |message| message.data[:type] }).to include(:acted)
+      end
+    end
   end
 
   describe "perform" do

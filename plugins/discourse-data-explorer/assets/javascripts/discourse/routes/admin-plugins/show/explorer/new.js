@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
+import { i18n } from "discourse-i18n";
 
 export default class AdminPluginsExplorerNew extends DiscourseRoute {
   async model() {
@@ -25,5 +26,9 @@ export default class AdminPluginsExplorerNew extends DiscourseRoute {
 
   resetController(controller) {
     controller.resetState();
+  }
+
+  titleToken() {
+    return i18n("explorer.new_query");
   }
 }

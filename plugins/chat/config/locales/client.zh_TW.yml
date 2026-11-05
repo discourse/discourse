@@ -617,7 +617,7 @@ zh_TW:
           alphabetical: "名稱字母順序"
           recent_activity: "近期活動"
           priority: "優先級"
-          priority_description: "先顯示有提及的頻道，再顯示有未讀訊息的頻道，最後依近期活動排序"
+          priority_description_dms: "先顯示有提及的頻道，再顯示有未讀訊息的頻道，最後依近期活動排序"
         empty:
           filtered: "沒有符合此篩選條件的頻道。"
           show_all: "顯示所有頻道"

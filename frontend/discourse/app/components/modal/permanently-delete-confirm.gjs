@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import discourseDebounce from "discourse/lib/debounce";
 import getURL from "discourse/lib/get-url";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";

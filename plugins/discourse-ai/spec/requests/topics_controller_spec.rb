@@ -13,9 +13,6 @@ RSpec.describe TopicsController do
     before { sign_in(user) }
 
     it "preloads agents without N+1 queries for an HTML request when the bot is disabled" do
-      get post.topic.relative_url
-      expect(response.status).to eq(200)
-
       agents = []
       query_counts =
         [1, 2].map do |agent_count|
@@ -28,6 +25,8 @@ RSpec.describe TopicsController do
               tools: [],
             )
           end
+          get post.topic.relative_url
+          expect(response.status).to eq(200)
           AiAgent.agent_cache.flush!
 
           queries = track_sql_queries { get post.topic.relative_url }

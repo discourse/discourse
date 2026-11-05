@@ -574,6 +574,10 @@ export default class ChatChannelsManager extends Service {
       if (priority) {
         return priority;
       }
+
+      if (section !== "dms") {
+        return this.#compareChannelsAlphabetically(channelA, channelB);
+      }
     }
 
     return (

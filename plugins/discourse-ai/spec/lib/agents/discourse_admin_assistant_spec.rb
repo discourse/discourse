@@ -9,8 +9,8 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
   before { enable_current_plugin }
 
   it "combines Discourse knowledge, general administration, and site-setting tools" do
-    expect(assistant.tools).to eq(
-      [
+    expect(assistant.tools).to start_with(
+      *[
         DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage,
         DiscourseAi::Agents::Tools::DiscourseMetaSearch,
         DiscourseAi::Agents::Tools::ListCategories,

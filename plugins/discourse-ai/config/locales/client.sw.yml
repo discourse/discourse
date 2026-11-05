@@ -68,6 +68,8 @@ sw:
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
+        sentiment:
+          enabled: "Imeruhusiwa"
         search:
           name: "Tafuta"
         image_caption:
@@ -106,6 +108,8 @@ sw:
             other: "%{count} machapisho"
       spam:
         short_title: "Barua Taka"
+        no_llm_selected: "Hakuna"
+        no_decision_model_selected: "Hakuna"
         enable: "Wezesha"
         test_modal:
           spam: "Barua Taka"
@@ -196,6 +200,13 @@ sw:
         delete: "Futa"
         tools_modal:
           required: "Muhimu na Inahitajika"
+      models:
+        name: "Jina"
+        type: "Aina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        types:
+          embedding: "Ambatanisha"
       llms:
         display_name: "Jina"
         provider: "Mkimu"
@@ -262,6 +273,13 @@ sw:
             category: "Kikundi"
           table:
             total_count: "Jumla"
+      ai_search:
+        related_replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        tabs:
+          topics: "Mada"
+          messages: "Ujumbe"
       discobot_discoveries:
         legacy:
           regular_results: "Mada"

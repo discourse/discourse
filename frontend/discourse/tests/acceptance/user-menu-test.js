@@ -37,6 +37,7 @@ acceptance("User menu", function (needs) {
   });
 
   needs.settings({
+    enable_user_menu_mentions_tab: true,
     allow_anonymous_mode: true,
   });
 
@@ -56,6 +57,110 @@ acceptance("User menu", function (needs) {
 
   needs.hooks.afterEach(() => {
     requestHeaders = {};
+  });
+
+  test("plugin-owned notifications reveals no unrelated core filters", async function (assert) {
+    updateCurrentUser({
+      available_notification_types: [NOTIFICATION_TYPES.chat_mention],
+    });
+    withPluginApi((api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          id = "plugin-notifications";
+          icon = "comment";
+          panelComponent = DButton;
+          notificationTypes = ["chat_mention"];
+
+          get title() {
+            return "Plugin notifications";
+          }
+        };
+      });
+    });
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+
+    assert
+      .dom("#user-menu-button-plugin-notifications")
+      .exists("plugin visibility rules remain unchanged");
+    assert
+      .dom("#user-menu-button-other-notifications")
+      .doesNotExist("an empty core filter remains hidden");
+  });
+
+  test("new notification filters appear on the next menu opening", async function (assert) {
+    updateCurrentUser({ available_notification_types: [] });
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    assert
+      .dom("#user-menu-button-likes")
+      .doesNotExist("a new user has no Likes tab");
+
+    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
+      available_notification_types: [NOTIFICATION_TYPES.liked],
+      grouped_unread_notifications: { [NOTIFICATION_TYPES.liked]: 1 },
+    });
+    assert
+      .dom("#user-menu-button-likes")
+      .doesNotExist("the open menu does not rearrange itself");
+
+    await click(".d-header-icons .current-user button");
+    await click(".d-header-icons .current-user button");
+    assert
+      .dom("#user-menu-button-likes")
+      .exists("the first like reveals the tab on reopening");
+    assert
+      .dom("#user-menu-button-likes .badge-notification")
+      .hasText("1", "the new tab shows its unread count");
+
+    const tabIds = findAll(".user-menu-tab").map((tab) => tab.id);
+    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
+      available_notification_types: [NOTIFICATION_TYPES.liked],
+      grouped_unread_notifications: { [NOTIFICATION_TYPES.liked]: 2 },
+    });
+    assert
+      .dom("#user-menu-button-likes .badge-notification")
+      .hasText(
+        "2",
+        "an already-visible tab updates its badge without reopening"
+      );
+    assert
+      .dom("#user-menu-button-all-notifications")
+      .isFocused("a badge update preserves keyboard focus");
+    assert.deepEqual(
+      findAll(".user-menu-tab").map((tab) => tab.id),
+      tabIds,
+      "badge updates preserve tab order"
+    );
+
+    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
+      available_notification_types: [NOTIFICATION_TYPES.liked],
+      grouped_unread_notifications: {},
+    });
+    assert
+      .dom("#user-menu-button-likes .badge-notification")
+      .doesNotExist("the unread badge clears while the menu is still open");
+    await click(".d-header-icons .current-user button");
+    await click(".d-header-icons .current-user button");
+    assert
+      .dom("#user-menu-button-likes")
+      .exists("reading all likes does not hide the revealed tab");
+    assert
+      .dom("#user-menu-button-likes .badge-notification")
+      .doesNotExist("the badge clears independently of visibility");
+
+    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
+      available_notification_types: [],
+      grouped_unread_notifications: {},
+    });
+    assert
+      .dom("#user-menu-button-likes")
+      .exists("deletion does not move open tabs");
+    await click(".d-header-icons .current-user button");
+    await click(".d-header-icons .current-user button");
+    assert
+      .dom("#user-menu-button-likes")
+      .doesNotExist("deleting the last like hides its filter on reopening");
   });
 
   test("notifications panel has a11y attributes", async function (assert) {
@@ -183,6 +288,7 @@ acceptance("User menu", function (needs) {
       "user-menu-button-replies": i18n("user_menu.tabs.replies_with_unread", {
         count: 2,
       }),
+      "user-menu-button-mentions": i18n("user_menu.tabs.mentions"),
       "user-menu-button-likes": i18n("user_menu.tabs.likes"),
       "user-menu-button-messages": i18n("user_menu.tabs.messages"),
       "user-menu-button-bookmarks": i18n("user_menu.tabs.bookmarks"),
@@ -262,13 +368,14 @@ acceptance("User menu", function (needs) {
     const expectedTabOrder = {
       "user-menu-button-all-notifications": "0",
       "user-menu-button-replies": "1",
-      "user-menu-button-likes": "2",
-      "user-menu-button-messages": "3",
-      "user-menu-button-bookmarks": "4",
-      "user-menu-button-custom-tab-1": "5",
-      "user-menu-button-custom-tab-2": "6",
-      "user-menu-button-review-queue": "7",
-      "user-menu-button-other-notifications": "8",
+      "user-menu-button-mentions": "2",
+      "user-menu-button-likes": "3",
+      "user-menu-button-messages": "4",
+      "user-menu-button-bookmarks": "5",
+      "user-menu-button-custom-tab-1": "6",
+      "user-menu-button-custom-tab-2": "7",
+      "user-menu-button-review-queue": "8",
+      "user-menu-button-other-notifications": "9",
     };
 
     await visit("/");
@@ -295,7 +402,7 @@ acceptance("User menu", function (needs) {
       .dom(".tabs-list.bottom-tabs .btn")
       .hasAttribute(
         "data-tab-number",
-        "9",
+        "10",
         "bottom tab has the correct data-tab-number"
       );
 
@@ -751,6 +858,7 @@ acceptance("User menu", function (needs) {
     const tabs = [
       ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
       ["#user-menu-button-replies", "/u/eviltrout/notifications/responses"],
+      ["#user-menu-button-mentions", "/u/eviltrout/notifications/mentions"],
       ["#user-menu-button-messages", "/u/eviltrout/messages"],
       ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
       ["#user-menu-button-likes", "/u/eviltrout/notifications/likes-received"],
@@ -1056,7 +1164,7 @@ acceptance("User menu - avatars", function (needs) {
     await click("#user-menu-button-messages");
 
     assert.dom("li.notification.private-message .icon-avatar").exists();
-    assert.dom("li.message .icon-avatar").exists();
+    assert.dom("li.message .icon-avatar.user-avatar").exists();
   });
 
   test("shows user avatars for bookmark items and bookmark reminder notification items", async function (assert) {

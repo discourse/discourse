@@ -223,7 +223,7 @@ he:
         approved: "אושר"
         rejected: "נדחה"
       default_llm:
-        title: "מודל LLM/מש״ג ברירת מחדל"
+        title: "מודל שפה כברירת מחדל"
       llm_selector:
         none: "ללא"
       features:
@@ -237,6 +237,7 @@ he:
         no_llm: "לא נבחר מש״ג/LLM"
         no_agent: "לא מוגדר"
         no_groups: "ללא"
+        classification_model: "מודל:"
         edit: "הגדרות"
         expand_list:
           one: "(עוד %{count})"
@@ -254,6 +255,13 @@ he:
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
         no_automations: "אין אוטומציות עדיין"
+        sentiment:
+          sentiment: "רגש"
+          emotion: "רגש"
+          enabled: "פעיל"
+          setting_groups:
+            sentiment: "רגש"
+            emotion: "רגש"
         summarization:
           name: "סיכומים"
           description: "להנגיש את כפתור הסיכום שמאפשר למבקרים לסכם נושאים"
@@ -375,6 +383,8 @@ he:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
+        no_llm_selected: "ללא"
+        no_decision_model_selected: "ללא"
         custom_instructions: "הנחיות מותאמות אישית"
         custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
@@ -664,6 +674,18 @@ he:
         tools_modal:
           parameters: "משתנים"
           required: "נדרש"
+      models:
+        new: "מודל חדש"
+        name: "שם"
+        type: "סוג"
+        provider: "ספק"
+        edit: "עריכה"
+        select_type: "בחירה"
+        types:
+          embedding: "שילוב (embedding)"
+        filters:
+          all: "כל הסוגים"
+          reset: "איפוס מסננים"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -872,6 +894,7 @@ he:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "מותאם"
         provider_fields:
@@ -971,10 +994,7 @@ he:
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
           editing_post: "רשומה נערכת"
       sentiments:
-        dashboard:
-          title: "רגש"
         sidebar:
-          overview: "סקירת הבעה"
           analysis: "ניתוח הבעות"
         sentiment_analysis:
           share_chart: "העתקת קישור לתרשים"
@@ -1011,6 +1031,16 @@ he:
             compact: "מצומצם"
             expanded: "מורחב"
             expanded_description: "עם סיכוי בינה מלאכותית"
+      ai_search:
+        related_topics: "נושאים קשורים"
+        related_replies:
+          one: "תגובה"
+          two: "שתי תגובות"
+          other: "שתי תגובות"
+        tabs:
+          ask: "לשאול בינה מלאכותית"
+          topics: "נושאים"
+          messages: "הודעות"
       discobot_discoveries:
         main_title: "לשאול בינה מלאכותית"
         loading_convo: "הדיון נטען"

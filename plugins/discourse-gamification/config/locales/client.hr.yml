@@ -40,9 +40,7 @@ hr:
       close: "Zatvori"
       delete: "Izbriši"
       edit: "Uredi"
-      back: "Natrag"
       save: "Spremi"
-      apply: "Primijeni"
       update_range:
         last_10_days: "Zadnjih 10 dana"
         last_30_days: "Zadnjih 30 dana"
@@ -52,8 +50,10 @@ hr:
       admin:
         title: "Gamifikacija"
         name: "Ime"
+        created_by: "Napravio"
     discourse_workflows:
       gamification_score:
         username: "Korisnik"
         date: "Datum"
         description: "Opis"
+        category_id: "Kategorija"

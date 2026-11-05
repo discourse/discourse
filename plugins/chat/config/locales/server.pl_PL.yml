@@ -10,8 +10,8 @@ pl_PL:
     chat_enabled: "Włącz czat."
     chat_pinned_messages: "Włącz przypinanie wiadomości na kanałach czatu."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
-    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
-    chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
+    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Dodanie użytkowników anonimowych pozwala również wyszukiwarkom indeksować kanały publiczne. Należy pamiętać, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
+    chat_channel_retention_days: "Wiadomości czatu w standardowych kanałach będą przechowywane przez tyle dni. Ustaw „0”, aby zachować wiadomości na zawsze. Gdy anonimowi użytkownicy mogą przeglądać czat, usunięte wiadomości z czasem znikają z wyników wyszukiwania, więc krótki czas przechowywania ogranicza liczbę historii czatu, którą można znaleźć za pomocą wyszukiwarki."
     chat_dm_retention_days: "Wiadomości czatu na prywatnych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
     chat_allowed_messages_for_trust_level_0: "Liczba wiadomości, które użytkownicy o poziomie zaufania 0 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
@@ -63,7 +63,35 @@ pl_PL:
 
         Odwiedź kanał pod adresem %{channel_url}, aby spróbować ponownie.
   chat:
+    design_wizard_homepage_name: "Czat"
+    design_wizard_homepage_description: "Otwórz kanał %{channel} , gdy członkowie odwiedzą Twoją stronę główną."
     deleted_chat_username: usunięte
+    crawler:
+      directory_title: "Kanały czatu"
+      nav_title: "Czat"
+      last_activity: "Ostatnia aktywność"
+      retention_notice:
+        one: "Wiadomości starsze niż %{count} dzień są usuwane, z wyjątkiem wiadomości przypiętych."
+        few: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        many: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        other: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+      messages_count:
+        one: "%{count} wiadomość"
+        few: "%{count} wiadomości"
+        many: "%{count} wiadomości"
+        other: "%{count} wiadomości"
+      members_count:
+        one: "%{count} członek"
+        few: "%{count} członków"
+        many: "%{count} członków"
+        other: "%{count} członków"
+      thread_title: "Wątek w %{channel}"
+      channel_day_title: "%{channel} – %{date}"
+      thread_replies:
+        one: "%{count} odpowiedź"
+        few: "%{count} odpowiedzi"
+        many: "%{count} odpowiedzi"
+        other: "%{count} odpowiedzi"
     errors:
       users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       user_cant_be_removed_from_channel: "Użytkownik nie może zostać usunięty z tego kanału"
@@ -289,11 +317,13 @@ pl_PL:
         recipient_inactive: "'%{username}' nie aktywował jeszcze swojego konta."
         recipient_chat_disabled: "Użytkownik '%{username}' wyłączył czat w swoich preferencjach."
         recipient_cannot_chat: "'%{username}' nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
-        sender_anonymous: "Wiadomości bezpośrednich nie można wysyłać anonimowo. Wybierz użytkownika jako nadawcę."
+        sender_anonymous: "Wiadomości czatu nie można wysyłać anonimowo. Wybierz użytkownika jako nadawcę."
         sender_chat_disabled: "Nadawca '%{sender}' wyłączył czat w swoich preferencjach."
         sender_cannot_chat: "Nadawca „%{sender}” nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
         sender_cannot_create_dm: "Nadawca '%{sender}' nie ma uprawnień do wysyłania wiadomości bezpośrednich (zobacz ustawienie „grupy z włączonymi wiadomościami bezpośrednimi”)."
         sender_dms_disabled: "Nadawca '%{sender}' wyłączył wiadomości prywatne w swoich preferencjach."
+        sender_cannot_post: "Nadawca „%{sender}” nie ma uprawnień do publikowania wpisów na kanale %{channel_id}."
+        sender_not_member: "Nadawca „%{sender}” nie jest członkiem kanału %{channel_id}. Najpierw dołącz do kanału jako ten użytkownik."
         user_blocked: "'%{sender}' nie można wysłać bezpośredniej wiadomości do '%{username}': %{reason}"
         group_blocked: "'%{sender}' nie można wysłać wiadomości grupowej bezpośrednio do %{usernames}: %{reason}"
       chat_approval:
@@ -317,7 +347,7 @@ pl_PL:
         preferences_bypassed: "„%{username}” nie przyjmuje bezpośrednich wiadomości od „%{sender}”, ale wiadomość została dostarczona, bo nadawca jest członkiem personelu."
     logs:
       send_chat_message:
-        sent_to_channel: "Element %{item_index}: wysłano wiadomość %{message_id} na kanał %{channel_id}."
+        sent_to_channel: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} na kanał %{channel_id}."
         sent_to_user: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do '%{username}'."
         sent_to_group: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do grupy w wiadomościach bezpośrednich za pomocą %{usernames}."
   reviewable_score_types:

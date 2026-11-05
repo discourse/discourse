@@ -32,7 +32,6 @@ import {
 import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 
 export const SEARCH_TYPE_DEFAULT = "topics_posts";
@@ -118,6 +117,7 @@ export default class FullPageSearchController extends Controller {
 
   /** @type {string | null | undefined} */
   error = null;
+  #syncedQ;
   _searchOnSortChange = true;
 
   init() {
@@ -414,6 +414,7 @@ export default class FullPageSearchController extends Controller {
   }
 
   setSearchTerm(term) {
+    this.#syncedQ = term;
     this._searchOnSortChange = false;
     term = this.cleanTerm(term);
     this._searchOnSortChange = true;
@@ -454,6 +455,12 @@ export default class FullPageSearchController extends Controller {
 
   @observes("search_type")
   triggerSearchOnTypeChange() {
+    // Runs before the `q` observer, so a URL change to both would otherwise
+    // search with the previous term.
+    if (this.q !== this.#syncedQ) {
+      this.setSearchTerm(this.q);
+    }
+
     if (this.searchActive) {
       this.set("page", 1);
       this._search();
@@ -473,6 +480,8 @@ export default class FullPageSearchController extends Controller {
     if (model && this.get("model.q") !== this.q) {
       this.setSearchTerm(this.q);
       this.send("search");
+    } else {
+      this.#syncedQ = this.q;
     }
   }
 
@@ -506,20 +515,9 @@ export default class FullPageSearchController extends Controller {
   }
 
   @action
-  createTopic(searchTerm, event) {
+  createTopic(event) {
     event?.preventDefault();
-    let topicCategory;
-    if (searchTerm.includes("category:")) {
-      const match = searchTerm.match(/category:(\S*)/);
-      if (match && match[1]) {
-        topicCategory = match[1];
-      }
-    }
-    this.composer.open({
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-      topicCategory,
-    });
+    this.composer.openNewTopic();
   }
 
   @action

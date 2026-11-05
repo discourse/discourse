@@ -5,7 +5,6 @@ import { debounce } from "discourse/lib/decorators";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
 import Category from "discourse/models/category";
-import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllCategoriesSectionLink from "../common/all-categories-section-link.gjs";
 import CommonCategoriesSection from "../common/categories-section.gjs";

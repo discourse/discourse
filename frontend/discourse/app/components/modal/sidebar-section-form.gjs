@@ -22,7 +22,6 @@ import { afterRender, bind } from "discourse/lib/decorators";
 import { isSameLocale } from "discourse/lib/locale-normalizer";
 import { sanitize } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DNativeSelect from "discourse/ui-kit/d-native-select";

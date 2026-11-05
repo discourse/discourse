@@ -80,7 +80,6 @@ loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("jquery", () => importSync("jquery"));
-loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
 loaderShim("discourse/truth-helpers", () =>
@@ -142,9 +141,6 @@ loaderShim("pretty-text/mentions", () => importSync("pretty-text/mentions"));
 loaderShim("pretty-text/oneboxer", () => importSync("pretty-text/oneboxer"));
 loaderShim("pretty-text/oneboxer-cache", () =>
   importSync("pretty-text/oneboxer-cache")
-);
-loaderShim("pretty-text/pretty-text", () =>
-  importSync("pretty-text/pretty-text")
 );
 loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
 loaderShim("pretty-text/text-replace", () =>

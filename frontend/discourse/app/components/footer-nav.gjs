@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 

@@ -245,9 +245,10 @@ class ReviewableAiToolAction < Reviewable
     tool =
       tool_class.new(
         tool_action.tool_parameters.symbolize_keys,
-        bot_user: bot_user,
+        agent_options: tool_action.tool_options,
+        bot_user:,
         llm: nil,
-        context: context,
+        context:,
       )
 
     [tool, tool_class, context]

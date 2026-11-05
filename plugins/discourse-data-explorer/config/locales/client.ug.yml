@@ -12,10 +12,8 @@ ug:
     explorer:
       view_query: "كۆرۈنۈش"
       or: "ياكى"
-      create: "قۇر"
       ai:
         generate: "ھاسىللا"
-        optional: "تاللاشچان"
       help:
         label: "ياردەم"
       types:
@@ -31,6 +29,7 @@ ug:
       result_count:
         one: "%{count} نەتىجە."
         other: "%{count} نەتىجە."
+      name: "ئىسمى"
       query_groups: "گۇرۇپپا"
       query_tags: "بەلگە"
       report_name: "دوكلات"

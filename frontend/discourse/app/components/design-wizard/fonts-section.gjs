@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { MAIN_FONTS, MORE_FONTS } from "discourse/admin/lib/constants";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { fontClass } from "discourse/lib/design-wizard-preview";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

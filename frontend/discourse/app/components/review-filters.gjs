@@ -4,7 +4,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
 import { i18n } from "discourse-i18n";

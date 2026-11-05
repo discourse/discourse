@@ -1,4 +1,3 @@
-import { eq } from "discourse/truth-helpers";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 const SECTIONS = [

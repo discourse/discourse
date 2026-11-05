@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -11,7 +10,7 @@ import { i18n } from "discourse-i18n";
 export default class TagsUploader extends Component {
   @service dialog;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     type: "csv",
     id: this.args.id,
     uploadUrl: "/tags/upload",

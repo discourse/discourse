@@ -195,7 +195,8 @@ RSpec.describe DiscourseWorkflows::WorkflowVariablesController do
                  { key: "priority", variable_type: "string" },
                  { key: "notify_categories", variable_type: "category_list" },
                ],
-             }
+             },
+             as: :json
       }.to change { workflow.reload.version_counter }.by(1)
 
       expect(response).to have_http_status(:ok)
@@ -203,6 +204,23 @@ RSpec.describe DiscourseWorkflows::WorkflowVariablesController do
       expect(json["imported_count"]).to eq(2)
       expect(json["skipped_keys"]).to eq([])
       expect(workflow.variables.pluck(:key)).to contain_exactly("priority", "notify_categories")
+    end
+
+    it "keeps nested type options from the JSON body" do
+      post "/admin/plugins/discourse-workflows/workflows/#{workflow.id}/variables/import.json",
+           params: {
+             variables: [
+               { key: "plain", variable_type: "boolean", type_options: {} },
+               { key: "priority", variable_type: "enum", type_options: { choices: %w[low high] } },
+             ],
+           },
+           as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["imported_count"]).to eq(2)
+      expect(workflow.variables.find_by(key: "priority").type_options).to eq(
+        "choices" => %w[low high],
+      )
     end
 
     it "skips variables whose key already exists on the workflow" do
@@ -219,7 +237,8 @@ RSpec.describe DiscourseWorkflows::WorkflowVariablesController do
       post "/admin/plugins/discourse-workflows/workflows/#{workflow.id}/variables/import.json",
            params: {
              variables: [{ key: "priority", variable_type: "string" }],
-           }
+           },
+           as: :json
 
       expect(response).to have_http_status(:ok)
       json = response.parsed_body
@@ -232,7 +251,8 @@ RSpec.describe DiscourseWorkflows::WorkflowVariablesController do
       post "/admin/plugins/discourse-workflows/workflows/-1/variables/import.json",
            params: {
              variables: [{ key: "priority", variable_type: "string" }],
-           }
+           },
+           as: :json
       expect(response).to have_http_status(:not_found)
     end
   end

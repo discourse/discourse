@@ -92,6 +92,7 @@ fa_IR:
         groups: "گروه‌ها:"
         no_agent: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
+        classification_model: "مدل:"
         edit: "تنظیم"
         expand_list:
           one: "(%{count} مورد دیگر)"
@@ -102,6 +103,8 @@ fa_IR:
         filters:
           all: "همه"
           reset: "بازنشانی"
+        sentiment:
+          enabled: "فعال شده"
         search:
           name: "جستجو"
         embeddings:
@@ -148,6 +151,8 @@ fa_IR:
             other: "%{count} نوشته"
       spam:
         short_title: "هرز‌نامه"
+        no_llm_selected: "هیچ‌کدام"
+        no_decision_model_selected: "هیچ‌کدام"
         last_seven_days: "۷ روز گذشته"
         enable: "فعال کردن"
         save_button: "ذخیر تغییرات"
@@ -270,6 +275,16 @@ fa_IR:
         delete: "حذف"
         tools_modal:
           required: "مورد نیاز"
+      models:
+        name: "نام"
+        type: "نوع"
+        provider: "ارائه‌دهنده"
+        edit: "ویرایش"
+        select_type: "انتخاب"
+        types:
+          embedding: "جاسازی"
+        filters:
+          all: "همه نوع‌ها"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
@@ -390,6 +405,13 @@ fa_IR:
       summarization:
         chat:
           summarize: "خلاصه کن"
+      ai_search:
+        related_replies:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
+        tabs:
+          topics: "موضوعات"
+          messages: "پیام‌ها"
       discobot_discoveries:
         create_topic: "ایجاد موضوع"
         legacy:

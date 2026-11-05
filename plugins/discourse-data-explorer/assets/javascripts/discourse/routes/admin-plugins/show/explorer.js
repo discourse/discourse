@@ -11,4 +11,8 @@ export default class extends DiscourseRoute {
       });
     }
   }
+
+  titleToken() {
+    return i18n("explorer.queries");
+  }
 }

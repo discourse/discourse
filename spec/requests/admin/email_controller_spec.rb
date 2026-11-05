@@ -343,6 +343,18 @@ RSpec.describe Admin::EmailController do
         expect(response.status).to eq(200)
         expect(response.body).to eq("email has been received and is queued for processing")
       end
+
+      it "enqueues the email job when the site is archived" do
+        SiteSetting.site_archived = true
+
+        expect_enqueued_with(job: :process_email, args: { mail: email("cc") }) do
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(email("cc")),
+               }
+        end
+        expect(response.status).to eq(200)
+      end
     end
 
     shared_examples "email handling not allowed" do

@@ -108,6 +108,7 @@ class Groups::Create
   end
 
   policy :can_create_group
+  policy :can_use_flair_upload
   policy :can_request_access
   model :user_attributes, :build_user_attributes, optional: true
   model :group, :instantiate_group
@@ -122,6 +123,10 @@ class Groups::Create
 
   def can_create_group(guardian:)
     guardian.can_create_group?
+  end
+
+  def can_use_flair_upload(guardian:, params:)
+    guardian.can_use_flair_upload?(params.flair_upload_id)
   end
 
   def can_request_access(params:)

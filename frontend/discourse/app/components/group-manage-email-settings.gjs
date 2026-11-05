@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class GroupManageEmailSettings extends Component {

@@ -36,3 +36,4 @@ pl_PL:
       gamification_score:
         invalid_points: "Punkty muszą być liczbą całkowitą różną od zera, otrzymano: %{points}"
         invalid_date: "Nieprawidłowa data: %{date}"
+        invalid_category: "Nie znaleziono kategorii: %{category_id}"

@@ -6,8 +6,8 @@ module Onebox
       Onebox.options.load_paths.select(&method(:template?))
     end
 
-    def template?(path)
-      File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
+    def template?(path, name = template_name)
+      File.exist?(File.join(path, "#{name}.#{template_extension}"))
     end
   end
 end

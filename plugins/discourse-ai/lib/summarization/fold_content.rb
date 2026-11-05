@@ -169,14 +169,15 @@ module DiscourseAi
           end
         end
 
-        context = summary_context(content_in_window, user)
-        prompt = bot.agent.craft_prompt(context, llm:)
-        size, capacity = prompt_capacity(llm, prompt, max_tokens:)
-        if size > capacity
-          max_tokens -= size - capacity
-          if max_tokens <= 0
-            raise DiscourseAi::Completions::ContextPreparation::Error.new("hard_overflow")
-          end
+        context = nil
+        # Raw text estimates do not include provider serialization or attachment expansion.
+        loop do
+          context = summary_context(content_in_window, user)
+          prompt = bot.agent.craft_prompt(context, llm:)
+          size, capacity = prompt_capacity(llm, prompt, max_tokens:)
+          break if size <= capacity || content_in_window.empty?
+
+          content_in_window.pop
         end
 
         summary = +""

@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import A11yDialog from "a11y-dialog";
 import { modifier } from "ember-modifier";
-import { notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class DialogHolder extends Component {
@@ -71,7 +70,7 @@ export default class DialogHolder extends Component {
               </div>
             {{/if}}
 
-            {{#if (notEq this.dialog.type "notice")}}
+            {{#if (neq this.dialog.type "notice")}}
               <div class="dialog-footer">
                 {{#each this.dialog.buttons as |button|}}
                   <DButton

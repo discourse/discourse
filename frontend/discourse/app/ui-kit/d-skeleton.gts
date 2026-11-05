@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { type TrustedHTML, trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DEFAULT_COUNT = 1;

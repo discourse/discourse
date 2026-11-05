@@ -21,13 +21,9 @@ pt:
       or: "ou"
       admins_only: "O explorador de dados está disponível apenas para os administradores."
       title: "Explorador de Dados"
-      create: "Criar"
       create_placeholder: "Nome da consulta..."
       ai:
         generate: "Gerar"
-        optional: "opcional"
-      import:
-        label: "Importar"
       help:
         label: "Ajuda"
       schema:
@@ -44,17 +40,16 @@ pt:
         form:
           label: "Tipo de gráfico"
           bar: "Barras"
-      others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
       run_time: "Consulta concluída em %{value} ms."
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
+      name: "Nome"
       query_groups: "Grupos"
       query_tags: "Etiquetas"
       query_description: "Descrição"
       column: "Coluna %{number}"
       reset_params: "Repor"
-      search_placeholder: "Pesquisar..."
     group:
       reports: "Relatórios"
     discourse_workflows:

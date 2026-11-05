@@ -82,6 +82,7 @@ module("Unit | Utils | multi-cache", function (hooks) {
     const response2 = cache.fetch([10]);
 
     assert.strictEqual(requests.length, 1);
+    assert.false(Boolean(cache.hadTooManyCalls()));
     const [request] = requests;
     assert.deepEqual(request.ids, [10]);
 

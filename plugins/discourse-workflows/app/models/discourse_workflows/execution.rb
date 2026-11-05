@@ -29,6 +29,14 @@ module DiscourseWorkflows
           -> { where.not(started_at: nil, finished_at: nil).where(status: %i[success error]) }
 
     scope :expired_waiting, -> { where(status: :waiting).where("waiting_until < ?", Time.current) }
+    scope :stale, ->(cutoff) { where(status: %i[pending running]).where("updated_at < ?", cutoff) }
+
+    CLEARED_WAIT_STATE = {
+      resume_token: nil,
+      waiting_node_id: nil,
+      waiting_until: nil,
+      timeout_action: nil,
+    }.freeze
 
     scope :with_snapshot_summary,
           -> do
@@ -192,25 +200,9 @@ module DiscourseWorkflows
       node_id = waiting_node_id
       claimed =
         transaction do
-          run_time_ms = execution_data && self.class.compute_run_time_ms(execution_data.steps_array)
+          guards = { status: :waiting, resume_token:, waiting_until:, timeout_action: }
+          next false unless fail_if_unchanged!(message, guards)
 
-          affected =
-            self
-              .class
-              .where(id:, status: :waiting, resume_token:, waiting_until:, timeout_action:)
-              .update_all(
-                status: self.class.statuses[:error],
-                error: message,
-                finished_at: Time.current,
-                run_time_ms:,
-                waiting_node_id: nil,
-                waiting_until: nil,
-                resume_token: nil,
-                timeout_action: nil,
-                updated_at: Time.current,
-              )
-
-          next false if affected.zero?
           update_step_status_in_data!(
             node_id,
             Executor::Step::WAITING,
@@ -221,11 +213,14 @@ module DiscourseWorkflows
         end
       return false unless claimed
 
-      reload
-      trigger_error_workflow(StandardError.new(message))
-      DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
-      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)
-      true
+      notify_failure!(StandardError.new(message))
+    end
+
+    def fail_as_stale!
+      error = Executor::ExecutionTimedOut.new(pending? ? :queue_timed_out : :run_timed_out)
+      return false unless fail_if_unchanged!(error.message, { status:, updated_at: })
+
+      notify_failure!(error)
     end
 
     def trigger_error_workflow(error, steps: execution_data&.steps_array || [])
@@ -295,6 +290,31 @@ module DiscourseWorkflows
         end
       end
       execution_data.update!(data: full_data)
+    end
+
+    def fail_if_unchanged!(message, guards)
+      now = Time.current
+
+      self
+        .class
+        .where(id:, **guards)
+        .update_all(
+          status: self.class.statuses[:error],
+          error: message,
+          finished_at: now,
+          run_time_ms: execution_data && self.class.compute_run_time_ms(execution_data.steps_array),
+          updated_at: now,
+          **CLEARED_WAIT_STATE,
+        )
+        .positive?
+    end
+
+    def notify_failure!(error)
+      reload
+      trigger_error_workflow(error)
+      DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
+      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)
+      true
     end
   end
 end

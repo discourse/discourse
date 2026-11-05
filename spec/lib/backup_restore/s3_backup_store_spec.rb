@@ -200,15 +200,6 @@ RSpec.describe BackupRestore::S3BackupStore do
     %r{\Ahttps://#{bucket}.*#{prefix}/#{filename}\?.*X-Amz-Expires=#{expires}.*X-Amz-Signature=.*\z}
   end
 
-  def upload_url_regex(db_name, filename, multisite:)
-    bucket = Regexp.escape(SiteSetting.s3_backup_bucket)
-    prefix = file_prefix(db_name, multisite)
-    filename = Regexp.escape(filename)
-    expires = BackupRestore::S3BackupStore::UPLOAD_URL_EXPIRES_AFTER_SECONDS
-
-    %r{\Ahttps://#{bucket}.*#{prefix}/#{filename}\?.*X-Amz-Expires=#{expires}.*X-Amz-Signature=.*\z}
-  end
-
   def file_prefix(db_name, multisite)
     multisite ? "\\/#{db_name}" : ""
   end

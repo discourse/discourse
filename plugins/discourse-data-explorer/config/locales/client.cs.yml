@@ -12,12 +12,8 @@ cs:
     explorer:
       view_query: "Zobrazit"
       or: "nebo"
-      create: "Vytvořit"
       ai:
         generate: "Vygenerovat API klíč"
-        optional: "volitelné"
-      import:
-        label: "Import"
       help:
         label: "Nápověda"
       schema:
@@ -38,13 +34,13 @@ cs:
         few: "%{count} výsledky."
         many: "%{count} výsledky."
         other: "%{count} výsledků."
+      name: "Jméno"
       query_groups: "Skupiny"
       query_tags: "Tagy"
       report_name: "Sestava"
       query_description: "Popis"
       query_user: "Vytvořil/a"
       reset_params: "obnovit výchozí"
-      search_placeholder: "Hledat…"
       form:
         errors:
           invalid_date: "%{date} je neplatné datum"

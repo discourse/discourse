@@ -4,7 +4,6 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

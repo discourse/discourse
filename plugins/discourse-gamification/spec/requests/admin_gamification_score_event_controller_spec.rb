@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
+  fab!(:category)
+
   let(:current_user) { Fabricate(:admin) }
   let(:another_user) { Fabricate(:user) }
   let(:score_events) { [] }
@@ -108,6 +110,76 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
           leaderboard_id: leaderboard.id,
         ).sum(:score)
       expect(user_score).to eq(13)
+    end
+  end
+
+  describe "#create" do
+    it "assigns the score event to a category" do
+      post "/admin/plugins/gamification/score_events.json",
+           params: {
+             points: 10,
+             user_id: another_user.id,
+             date: Date.today,
+             category_id: category.id,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["category_id"]).to eq(category.id)
+      expect(DiscourseGamification::GamificationScoreEvent.last.category_id).to eq(category.id)
+    end
+
+    it "rejects a category that does not exist" do
+      expect {
+        post "/admin/plugins/gamification/score_events.json",
+             params: {
+               points: 10,
+               user_id: another_user.id,
+               date: Date.today,
+               category_id: "abc",
+             }
+      }.not_to change { DiscourseGamification::GamificationScoreEvent.count }
+
+      expect(response.status).to eq(422)
+    end
+  end
+
+  describe "#update" do
+    it "keeps the category when omitted and clears it when blank" do
+      event = score_events.last
+
+      put "/admin/plugins/gamification/score_events.json",
+          params: {
+            id: event.id,
+            points: 13,
+            category_id: category.id,
+          }
+
+      expect(response.status).to eq(200)
+      expect(event.reload.category_id).to eq(category.id)
+
+      put "/admin/plugins/gamification/score_events.json", params: { id: event.id, points: 14 }
+
+      expect(event.reload.category_id).to eq(category.id)
+
+      put "/admin/plugins/gamification/score_events.json",
+          params: {
+            id: event.id,
+            points: 14,
+            category_id: "",
+          }
+
+      expect(event.reload.category_id).to be_nil
+    end
+
+    it "updates points after the assigned category is deleted" do
+      event = score_events.last
+      event.update!(category_id: category.id)
+      category.destroy!
+
+      put "/admin/plugins/gamification/score_events.json", params: { id: event.id, points: 14 }
+
+      expect(response.status).to eq(200)
+      expect(event.reload.points).to eq(14)
     end
   end
 end

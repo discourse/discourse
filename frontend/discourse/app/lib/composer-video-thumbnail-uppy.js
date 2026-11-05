@@ -1,6 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { getOwner, setOwner } from "@ember/owner";
+import { destroy } from "@ember/destroyable";
+import { setOwner } from "@ember/owner";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -42,6 +44,12 @@ export default class ComposerVideoThumbnailUppy {
     // Clean up object URL when done
     const cleanup = () => {
       URL.revokeObjectURL(objectUrl);
+      // Deferred because this can run inside one of Uppy's own event handlers
+      next(() => {
+        if (this._uppyUpload) {
+          destroy(this._uppyUpload);
+        }
+      });
     };
 
     // These attributes are needed for thumbnail generation on mobile.
@@ -118,7 +126,7 @@ export default class ComposerVideoThumbnailUppy {
               }
 
               try {
-                this._uppyUpload = new UppyUpload(getOwner(this), {
+                this._uppyUpload = new UppyUpload(this, {
                   id: "video-thumbnail",
                   type: "thumbnail",
                   useMultipartUploadsIfAvailable: true,

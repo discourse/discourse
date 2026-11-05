@@ -28,6 +28,7 @@ export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.
   // Similar to discourse/discourse#25504
   @service a11y;
+  @service appEvents;
 
   @tracked discovery = "";
   @tracked lastQuery = "";
@@ -98,6 +99,9 @@ export default class DiscobotDiscoveries extends Service {
 
     if (update.answerable !== undefined) {
       this.answerable = update.answerable;
+      if (update.done && update.answerable === false) {
+        this.appEvents.trigger("discourse-ai:answer-failed");
+      }
     }
 
     if (update.ai_discover_follow_up !== undefined) {
@@ -195,8 +199,23 @@ export default class DiscobotDiscoveries extends Service {
     this.lastQuery = "";
   }
 
+  /**
+   * @returns {Promise<Object|undefined>} the server's reply when a request was
+   *   made, which carries the decision model's intent when one was asked for
+   */
   @action
-  async triggerDiscovery(query) {
+  async triggerDiscovery(
+    query,
+    {
+      scope,
+      trigger,
+      triggerReason,
+      intentHeuristic,
+      classifyIntent,
+      deferIfPrecise,
+      deferredAskLogId,
+    } = {}
+  ) {
     const normalizedQuery = query?.trim();
 
     // an answer that failed or timed out is worth asking again, even though the
@@ -218,25 +237,43 @@ export default class DiscobotDiscoveries extends Service {
     const requestId = buildRequestId();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
-    this.a11y.announce(
-      i18n("discourse_ai.discobot_discoveries.asking"),
-      "polite"
-    );
+    // a search that may defer its answer is not an ask until the server says so
+    if (!deferIfPrecise) {
+      this.#noteAsking(normalizedQuery);
+    }
 
     this.scheduleDiscoveryTimeout();
 
     try {
       this.lastQuery = normalizedQuery;
-      this.rememberAsk(normalizedQuery);
 
       const response = await ajax("/discourse-ai/discoveries/reply", {
         type: "POST",
-        data: { query: normalizedQuery, request_id: requestId },
+        data: {
+          query: normalizedQuery,
+          request_id: requestId,
+          ...(scope && { scope }),
+          ...(trigger && { trigger }),
+          ...(triggerReason && { trigger_reason: triggerReason }),
+          ...(intentHeuristic && { intent_heuristic: intentHeuristic }),
+          ...(classifyIntent && { classify_intent: true }),
+          ...(deferIfPrecise && { defer_if_precise: true }),
+          ...(deferredAskLogId && { deferred_ask_log_id: deferredAskLogId }),
+        },
       });
 
       if (response.request_id !== requestId) {
         throw new Error("Discovery request ID mismatch");
       }
+      if (deferIfPrecise && this.activeRequestId === requestId) {
+        if (response.answer_deferred) {
+          this.cancelDiscoveryTimeout();
+          this.loadingDiscoveries = false;
+        } else {
+          this.#noteAsking(normalizedQuery);
+        }
+      }
+      return response;
     } catch {
       if (this.activeRequestId === requestId) {
         this.failDiscovery(
@@ -260,6 +297,7 @@ export default class DiscobotDiscoveries extends Service {
     this.activeRequestId = "";
     this.smoothStreamer.resetStreaming();
     this.a11y.announce(message, "assertive");
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   timeoutDiscovery() {
@@ -279,6 +317,7 @@ export default class DiscobotDiscoveries extends Service {
       i18n("discourse_ai.discobot_discoveries.timed_out"),
       "assertive"
     );
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   scheduleDiscoveryTimeout() {
@@ -295,5 +334,13 @@ export default class DiscobotDiscoveries extends Service {
       cancel(this.discoveryTimeout);
       this.discoveryTimeout = null;
     }
+  }
+
+  #noteAsking(query) {
+    this.a11y.announce(
+      i18n("discourse_ai.discobot_discoveries.asking"),
+      "polite"
+    );
+    this.rememberAsk(query);
   }
 }

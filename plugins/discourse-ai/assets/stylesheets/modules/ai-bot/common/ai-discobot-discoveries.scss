@@ -3,7 +3,7 @@
 .header-search--enabled
   .floating-search-input
   .search-banner-inner.wrap
-  .search-menu
+  .search-menu:not(:has(> .search-icon))
   .search-input-wrapper.--with-ask-ai
   .search-input {
   // 😩

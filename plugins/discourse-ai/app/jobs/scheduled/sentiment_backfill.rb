@@ -6,7 +6,7 @@ module Jobs
     cluster_concurrency 1
 
     def execute(_args)
-      return if !SiteSetting.ai_sentiment_enabled
+      return if !DiscourseAi::Sentiment::PostClassification.any_enabled?
 
       base_budget = SiteSetting.ai_sentiment_backfill_maximum_posts_per_hour
       return if base_budget.zero?

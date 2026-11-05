@@ -26,9 +26,7 @@ be:
       close: "зачыніць"
       delete: "Выдаліць"
       edit: "Рэдагаваць"
-      back: "Назад"
       save: "Захаваць"
-      apply: "Прымяніць"
       update_range:
         all_time: "За ўвесь час"
       custom_range_from: "ад"
@@ -38,3 +36,4 @@ be:
       gamification_score:
         username: "Карыстальнік"
         description: "Апісанне"
+        category_id: "Катэгорыя"

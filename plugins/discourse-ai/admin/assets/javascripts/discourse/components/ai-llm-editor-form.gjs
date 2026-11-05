@@ -13,7 +13,6 @@ import {
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { groupPath } from "discourse/lib/url";
-import { eq, gt, not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -326,7 +325,7 @@ export default class AiLlmEditorForm extends Component {
           .then(() => {
             removeValueFromArray(this.args.llms.content, this.args.model);
             this.router.transitionTo(
-              "adminPlugins.show.discourse-ai-llms.index"
+              "adminPlugins.show.discourse-ai-models.index"
             );
           })
           .catch(popupAjaxError);

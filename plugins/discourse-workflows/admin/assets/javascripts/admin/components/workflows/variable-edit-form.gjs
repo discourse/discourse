@@ -8,7 +8,6 @@ import SimpleList from "discourse/admin/components/simple-list";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
   WORKFLOW_VARIABLE_TYPE_VALUES,

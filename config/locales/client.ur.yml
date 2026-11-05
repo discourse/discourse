@@ -6,6 +6,14 @@
 
 ur:
   js:
+    dsa_notice:
+      choice_title: "یہ غیر قانونی ہے"
+      title: "غیر قانونی مواد کی اطلاع دیں"
+      content_url: "مواد کا URL"
+      email: "ای میل"
+      resend_email_code: "کوڈ دوبارہ بھیجیں"
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "صرف انتظامی رجسٹریشن"
     ace_editor:
       resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
     user_api_key:
@@ -57,6 +65,7 @@ ur:
       manage:
         access_permission_editor: "ایڈیٹر"
         access_permission_editor_description: "اس اکائی کے مواد کی تخلیق اور ترمیم ہو سکتی ہے"
+        access_permission_owner: "مالک"
         access_permission_viewer: "دیکھنے والا"
         access_permission_viewer_description: "اس اکائی کا مواد دیکھا جا سکتا ہے"
         access_permission_remove: "مٹائیں"
@@ -374,7 +383,14 @@ ur:
       removed: "%{label} ہٹا دیا گیا"
       move_up: "اوپر جائیں"
       move_down: "نیچے جائیں"
+      move_to_top: "اوپر جائیں"
+      move_to_bottom: "نیچے جائیں"
+      move_to_list: "%{list} میں منتقل کریں"
       position: "%{total} میں سے %{position}"
+      at_start: "%{label} پہلے ہی پہلا ہے"
+      at_end: "%{label} پہلے ہی آخری ہے"
+      move_refused: "%{label} منتقل نہیں ہوسکا"
+      add_item: "ایک آئٹم شامل کریں"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
     emails_are_disabled_no_smtp: "تمام باہر جانے والی ای میل غیر فعال ہیں کیونکہ کوئی SMTP سرور ترتیب نہیں دیا گیا۔ کسی بھی قسم کی ای میل نہیں بھیجی جا سکتی۔"
     emails_are_disabled_non_staff: "جانے والی ای میل اراکین جوعملہ میں نہیں، کے لیے غیر فعال کر دی گئی ہیں"
@@ -550,17 +566,24 @@ ur:
         completed: "مزید خیالات دیکھیں"
         choose_option: "آپ کیسے شروع کرنا چاہیں گے؟"
         predefined_topics: "بحث کے موضوع کے سانچے"
-        predefined_topics_subtitle: "نئے اراکین کو بات کرنے کے لیے موضوع دیں، کسی ایک سانچے کو چنیں ترمیم کریں اور اپنا بنائیں۔"
         predefined_topics_description: "بحث کو آگے بڑھانے کے لیے گفتگو شروع کرنے والے موضوعات میں سے انتخاب کریں"
         use_predefined: "سانچے پرکھیں"
         back: "واپس"
+        category_unavailable: "اس زمرے میں پوسٹ کرنا ممکن نہیں ہے۔"
         icebreakers:
+          plan_categories:
+            title: "ہمیں کون سی زمروں سے آغاز کرنا چاہیے؟"
+            body: "آئیے لانچ کرنے سے پہلے چیزوں کو منظم کرنے کا طریقہ طے کریں! لوگ سب سے زیادہ کس موضوع پر بات کرنا چاہیں گے؟ ہم صرف چند زمروں سے آغاز کر سکتے ہیں اور بعد میں مزید شامل کر سکتے ہیں۔"
+          plan_invites:
+            body: "ایک ایسی کمیونٹی میں شامل ہونا ہمیشہ بہتر ہوتا ہے جس میں پہلے ہی کچھ لوگ موجود ہوں۔ ہمیں سب سے پہلے کسے مدعو کرنا چاہیے؟ ایسے لوگوں کے بارے میں سوچیں جو بات چیت کرنا پسند کرتے ہیں، دوسروں کی مدد کرتے ہیں، اور جلد شامل ہونے کے لیے پرجوش ہوں۔"
           introduce_yourself:
             title: "اپنا تعارف کروائیں"
             body: "کمیونٹی میں خوش آمدید! آئیے ایک دوسرے کو جانیں۔ براہِ کرم اپنا تعارف کروائیں اور اپنی دلچسپیوں کو رقم کریں۔ میں پہل کرتا ہوں: مجھے ٹیکنالوجی کا بہت شوق ہے اور دوسروں کو سکھانا پسند ہے!"
+          write_your_own:
+            title: "اپنی طرف سے لکھیں"
+            description: "اپنی کمیونٹی کے مطابق بنائے گئے موضوع کے ساتھ بات چیت شروع کریں۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
-      subtitle: "رنگ، خط اور آپ کے فورم کی ترتیب کا انتخاب کریں۔"
       step_label: "%{index} مرحلے پر جائیں"
       save: "محفوظ اور ختم کریں"
       back: "واپس"
@@ -879,9 +902,12 @@ ur:
         search: "پیغام کے لئے تلاش کریں"
         placeholder: "پیغام کا عنوان، یو آر ایل یا آئی ڈی یہاں ٹائپ کریں"
     dsa_statements:
+      title: "DSA درجہ بندی"
+      rule: "کمیونٹی کا قانون"
+      rule_prompt: "ایک کمیونٹی کا قاعدہ منتخب کریں"
       category: "زُمرَہ"
       category_prompt: "ایک زمرہ منتخب کریں"
-      saving: "محفوظ کیا جا رہا۔۔۔"
+      save: "درجہ بندی محفوظ کریں"
     review:
       show_more: "مزید دکھائیں"
       show_less: "کم دکھائیں"
@@ -1712,7 +1738,7 @@ ur:
       collapse_profile: "بند کریں"
       sr_collapse_profile: "پروفائل کی تفصیلات کو سکیڑیں"
       bookmarks: "بُکمارکس"
-      bio: "سائٹ کے بارے میں"
+      bio: "میرے بارے میں"
       timezone: "خطہ کے وقت"
       invited_by: "کی طرف سے مدعو کیا گیا:"
       trust_level: "فعالیت کا درجہ"
@@ -2154,6 +2180,8 @@ ur:
         letter_based: "سسٹم تفویض کردہ پروفائل تصویر"
         uploaded_avatar: "اپنی مرضی کی تصویر"
         uploaded_avatar_empty: "اپنی مرضی کی تصویر شامل کریں"
+        current_avatar: "موجودہ تصویر"
+        associated_account: "%{provider} تصویر"
         upload_title: "آپنی تصویر اَپ لوڈ کریں"
         image_is_not_a_square: "انتباہ: ہم نے آپ کی تصویر کو کراپ کیا ہے؛ چوڑائی اور اونچائی برابر نہیں تھے۔"
         logo_small: "سائٹ کے چھوٹے لوگو کو طے شدہ طور پر استعمال کیا جاتا ہے۔"
@@ -2610,6 +2638,7 @@ ur:
     user_status:
       save: "محفوظ کریں"
       set_custom_status: "حسب ضرورت حیثیت"
+      edit_status: "حیثیت میں ترمیم کریں"
       what_are_you_doing: "آپ کیا کر رہے ہو؟"
       pause_notifications: "اطلاعات کو روکیں"
       remove_status: "حیثیت ہٹا دیں"
@@ -2825,7 +2854,7 @@ ur:
     search_hint: "اسم صارف یا ای میل (جدا کرنے کے لیے کامہ یا خالی جگہ)، یا ایک آئی پی"
     create_account:
       header_title: "خوش آمدید!"
-      disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پردہ داری کی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
+      disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'> راز داری کی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
       title: "سائن اپ"
       failed: "کچھ غلط ہو گیا، شاید یہ ای میل پہلے ہی سے رجسٹرڈ ہے، پاسورڈ بھول جانے والا رابطہ استعمال کر کے دیکھیں"
       associate: "پہلے سے ہی اکاؤنٹ ہے؟ <a href='%{associate_link}'>اپنے %{provider} اکاؤنٹ کو جوڈنے کرنے کے لیے</a> لاگ ان کریں۔"
@@ -3153,6 +3182,7 @@ ur:
       clear: "فلٹر مٹائیں"
     filter_controls:
       reset: "ری سیٹ"
+      sort_label: "ترتیب بہ"
     d_icon_grid_picker:
       select_icon: "آئیکن منتخب کریں"
       search_label: "آئیکنز ڈھونڈھیں"
@@ -3313,8 +3343,6 @@ ur:
       show_preview: "جھلک دکھائیں"
       hide_preview: "جھلک چھپائیں"
       resize: "کمپوزر کا سائز تبدیل کریں"
-      switch_to_markdown: "معیاری مارک ڈاؤن ایڈیٹر پر سوئچ کریں (%{keyboardShortcut})"
-      switch_to_rich_text: "نئے رچ ٹیکسٹ ایڈیٹر پر جائیں (%{keyboardShortcut})"
       quote_post_title: "پوری پوسٹ کا اقتباس کریں"
       bold_label: "B"
       bold_title: "گہرا"
@@ -4784,6 +4812,9 @@ ur:
           one: "کیا آپ واقعی ان پوسٹس کا ضم چاہتے ہیں؟"
           other: "کیا آپ واقعی ان %{count} پوسٹس کا ضم چاہتے ہیں؟"
       revisions:
+        visibility:
+          hidden:
+            title: "مخفی"
         locale:
           no_locale_set: "کوئی زبان سیٹ نہیں"
           locale_removed: "زبان ہٹا دی"
@@ -4794,9 +4825,6 @@ ur:
           previous: "پچھلی رَوِیژن"
           next: "اگلی رَوِیژن"
           last: "آخری رَوِیژن"
-          hide: "رَوِیژن چھپائیں"
-          show: "رَوِیژن دکھائیں"
-          destroy: "نظرثانی حذف"
           destroy_confirm: "کیا آپ کو یقین ہے کہ آپ اس پوسٹ پر موجود تمام نظرثانیوں کو حذف کرنا چاہتے ہیں؟ یہ عمل مستقل ہے۔"
           revert: "نظر ثانی %{revision}پر واپس جائیں"
           edit_wiki: "وِیکی میں ترمیم کریں"
@@ -4873,7 +4901,6 @@ ur:
     category:
       none: "(کوئی زمرہ نہیں)"
       all: "تمام زمرہ جات"
-      choose: "زمرہ&hellip;"
       edit: "ترمیم"
       edit_title: "اس زمرے میں ترمیم"
       edit_dialog_title: "ترمیم: %{categoryName}"
@@ -5805,7 +5832,7 @@ ur:
                 one: "عنوان %{count} حرف سے چھوٹا ہونا چاہیے"
                 other: "عنوان %{count} حروف سے چھوٹا ہونا چاہیے۔"
         about:
-          header_link_text: "بارے میں"
+          header_link_text: "فورم کے متعلق"
         messages:
           header_link_text: "پیغامات"
           header_action_title: "ایک ذاتی پیغام بنائیں"
@@ -5835,7 +5862,7 @@ ur:
             header_dropdown: "مرضی کے مطابق بنائیں"
           links:
             about:
-              content: "بارے میں"
+              content: "فورم کے متعلق"
               title: "اس سائٹ کے بارے میں مزید تفصیلات"
             admin:
               content: "منتظم"
@@ -5941,63 +5968,6 @@ ur:
           other: "ان پٹ %{count}سے زیادہ ہونا چاہیے۔"
         pattern_mismatch: "براہ کرم درخواست کردہ فارمیٹ سے مماثل ہوں۔"
         bad_input: "براہ کرم ایک درست ان پٹ درج کریں۔"
-    table_builder:
-      title: "ٹیبل بنانے والا"
-      modal:
-        title: "ٹیبل بنانے والا"
-        create: "ٹیبل بنائیں"
-        help:
-          title: "اسپریڈشیٹ ایڈیٹر کا استعمال"
-          enter_key: "اَینٹر"
-          tab_key: "ٹیب"
-          new_row: "ایک قطار کے آخر میں ایک نئی قطار داخل کرنے کے لیے۔"
-          new_col: "ایک نیا کالم داخل کرنے کے لیے کالم کے آخر میں۔"
-          options: "ڈراپ ڈاؤن مینو میں مزید اختیارات تک رسائی کے لیے سیلز پر دائیں کلک کریں۔"
-        confirm_close: "کیا آپ واقعی ٹیبل بلڈر کو بند کرنا چاہتے ہیں؟ کوئی بھی غیر محفوظ شدہ تبدیلیاں ضائع ہو جائیں گی۔"
-      edit:
-        btn_edit: "ٹیبل میں ترمیم"
-        modal:
-          title: "ٹیبل میں ترمیم"
-          cancel: "منسوخ"
-          create: "محفوظ کریں"
-          reason: "آپ ترمیم کیوں کر رہے ہیں؟"
-          trigger_reason: "ترمیم کی وجہ شامل کریں"
-        default_edit_reason: "ٹیبل ایڈیٹر کے ساتھ ٹیبل کو اپ ڈیٹ کریں"
-      default_header:
-        col_1: "کالم 1"
-        col_2: "کالم 2"
-        col_3: "کالم 3"
-        col_4: "کالم 4"
-      spreadsheet:
-        no_records_found: "کوئی ریکارڈ نہیں ملا"
-        show: "دکھائیں"
-        entries: "اندراجات"
-        about: "بارے میں"
-        prompts:
-          delete_selected_rows: "کیا آپ واقعی منتخب قطاروں کو حذف کرنا چاہتے ہیں؟"
-          delete_selected_cols: "کیا آپ واقعی منتخب کالموں کو حذف کرنا چاہتے ہیں؟"
-          will_destroy_merged_cells: "یہ عمل کسی بھی موجودہ ضم شدہ سیل کو ختم کر دے گا۔ کیا آپ کو یقین ہے؟"
-          will_clear_search_results: "یہ عمل کسی بھی موجودہ ضم شدہ سیل کو ختم کر دے گا۔ کیا آپ کو یقین ہے؟"
-          conflicts_with_merged_cells: "دوسرے ضم شدہ سیل کے ساتھ تنازعہ ہے"
-        invalid_merge_props: "غلط ضم شدہ خصوصیات"
-        cells_already_merged: "سیل پہلے ہی ضم ہو چکا"
-        no_cells_selected: "کوئی سیل منتخب نہیں"
-        context_menu:
-          row:
-            before: "اس سے پہلے ایک نئی قطار داخل کریں"
-            after: "اس کے بعد ایک نئی قطار داخل کریں"
-            delete: "منتخب قطاروں کو حذف کریں"
-          col:
-            before: "اس سے پہلے ایک نیا کالم داخل کریں"
-            after: "اس کے بعد ایک نیا کالم داخل کریں"
-            delete: "منتخب کالموں کو حذف کریں"
-            rename: "اس کالم کا نام تبدیل کریں"
-          order:
-            ascending: "چڑھتے ہوئے ترتیب دیں"
-            descending: "نزولی ترتیب"
-          copy: "کاپی۔۔۔"
-          paste: "چسپاں۔۔۔"
-          save: "محفوظ کرنا۔۔۔"
     powered_by_discourse: "تقویت بذریعہ Discourse"
     safari_15_warning: "آپ کا براؤزر جلد ہی اس کمیونٹی کے ساتھ مطابقت کھو دے گا۔ یہاں شرکت جاری رکھنے کے لیے، براہ کرم اپنا براؤزر اپ گریڈ کریں یا <a href='%{url}'>مزید جانیں</a>۔"
     filter:
@@ -6172,6 +6142,9 @@ ur:
           impact_role_moderators: "نگران"
           impact_role_staff: "عملہ"
           impact_role_all_members: "تمام صارفین"
+        sort:
+          status: "حیثیت"
+          name: "نام"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -6259,7 +6232,7 @@ ur:
           header_description: "وہ ترتیبات جو فائل کے سائز اور قسم کی حدود، اوتار کے سائز اور ذرائع، فائل اسٹوریج، تصویر کا معیار اور کمپریشن وغیرہ کو کنٹرول کرتی ہیں"
         legal:
           title: "قانونی"
-          header_description: "قانونی ترتیبات کو ترتیب دیں، جیسے سروس کی شرائط، پردہ داری کی پالیسی، رابطے کی تفصیلات، اور EU کے مخصوص تحفظات"
+          header_description: "قانونی ترتیبات کو ترتیب دیں، جیسے سروس کی شرائط، راز داری کی پالیسی، رابطے کی تفصیلات، اور EU کے مخصوص تحفظات"
         theme_site_settings:
           title: "سائٹ تھیم کی ترتیبات"
           header_description: "سائٹ تھیم کی تمام ترتیبات اور تھیمز دکھاتا ہے جو فی الحال ان کو اوور رائیڈ کر رہے"
@@ -6696,36 +6669,17 @@ ur:
           likely_crawler: "ممکنہ کرالر"
       dashboard:
         title: "ڈَیش بورڈ"
-        last_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا:"
-        discourse_last_updated: "Discourse اَپ ڈیٹ کیا گیا:"
         version: "ورژن"
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
-        please_update: "براہ کرم اپ ڈیٹ کریں!"
-        no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
-        stale_data: "اَپ ڈیٹس کے لئے حال ہی میں چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
         version_check_pending: "ایسا لگتا ہے کہ آپ نے حال ہی میں اپ ڈیٹ کیا ہے۔ لاجواب!"
-        installed_version: "انسٹال کیا ہوا"
-        latest_version: "دستیاب"
-        github: "گٹ ہب"
         commit_on_github: "GitHub پر کمٹ %{sha} دیکھیں"
-        changelog: "تغیراتی کھاتہ"
-        problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
         dismiss_notice: "نظر انداز کریں"
         new_features:
           title: "نیا کیا ہے؟"
           subtitle: "ہم وقتاً فوقتاً نئی خصوصیات اور بہتریاں جاری کر رہے ہیں۔ یہ صفحہ نمایاں نکات کا احاطہ کرتا ہے، لیکن آپ 'مزید جانیں' پر کلک کر کے اجرا کی تفصیلات دیکھ سکتے ہیں"
           learn_more: "مزید جانیں..."
-        last_checked: "آخری دفعہ چیک کیا گیا"
         refresh_problems: "رِیفریش"
-        no_problems: "کوئی مسائل نہیں پائے گئے۔"
-        moderators: "نگران:"
-        admins: "منتظمین:"
-        silenced: "خاموش:"
-        suspended: "معطل کردہ:"
-        private_messages_short: "پغم"
-        private_messages_title: "پیغامات"
-        mobile_title: "موبائل"
         space_used: "%{usedSize} استعمال کیا گیا"
         space_used_and_free: "%{usedSize} (%{freeSize} فارغ)"
         uploads: "اَپ لوڈز"
@@ -6734,20 +6688,7 @@ ur:
           one: "%{location}پر %{count} بیک اپ"
           other: "%{location} پر %{count} بیک اپ"
         lastest_backup: "تازہ ترین: %{date}"
-        traffic_short: "ٹریفک"
-        traffic: "ایپلیکیشن ویب رِیکَویسٹس"
-        page_views: "صفحہ کے مشاہدات"
-        page_views_short: "صفحہ کے مشاہدات"
-        show_traffic_report: "تفصیلی ٹریفک رپورٹ دکھائیں"
-        community_health: کمیونٹی صحت
-        moderators_activity: نگرانوں کی سرگرمی
         whats_new_in_discourse: Discourse میں نیا کیا ہے؟
-        activity_metrics: سرگرمی مَیٹرِکس
-        all_reports: "تمام رپورٹیں"
-        general_tab: "عام"
-        moderation_tab: "ماڈریٹر کا کام"
-        security_tab: "سیکورٹی"
-        reports_tab: "رپورٹیں"
         report_filter_any: "کوئی بھی"
         disabled: غیر فعال
         timeout_error: معذرت، استفسار بہت لمبا ہو گیا ہے، براہ کرم ایک چھوٹا وقفہ منتخب کریں
@@ -6887,7 +6828,6 @@ ur:
             storage: "سٹوریج"
             status: "حیثیت"
             discourse_updated: "Discourse اَپ ڈیٹ کیا گیا"
-            dashboard_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا"
         reports_section:
           header_action: "منتظمی"
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
@@ -6975,11 +6915,6 @@ ur:
             crawlers: "کرالرز"
           see_details: "تفصیلات دیکھیں"
           crawler_learn_more: "مزید جانیں"
-        period:
-          last_7_days: "پچھلے 7 دن"
-          last_30_days: "پچھلے 30 دن"
-          last_3_months: "گزشتہ 3 ماہ"
-          custom: "اپنی مرضی کا"
         reports:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           percent_change_tooltip: "تبدیلی: %{percent}"
@@ -7021,9 +6956,6 @@ ur:
             posts_count:
               one: "%{count} دھاگہ"
               other: "%{count} دھاگے"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">تلاشی کے لاگز</a>'
-            disabled: 'ٹرینڈنگ سرچ رپورٹ غیر فعال ہے۔ ڈیٹا اکٹھا کرنے کے لیے <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ سرچ سوالات</a> کو فعال کریں۔'
           sort_button: "%{column}کے حساب سے ترتیب دیں"
           sort_ascending: "ترتیب صعودی"
           sort_descending: "ترتیب نزولی"
@@ -7203,7 +7135,6 @@ ur:
               list: نئی اور پرائیویٹ پوسٹس دکھائیں۔ آر ایس ایس کی سہولت بھی دستیاب ہے
             revisions:
               read: "جدید ترین یا کسی خاص ترمیم کو حاصل کریں"
-              modify: "ترمیمات کو چھپائیں، دکھائیں یا واپس لوٹائیں"
               permanently_delete: "کسی ترمیم کو مستقل طور پر حذف کریں"
             tags:
               list: ٹیگز کی فہرست بنائیں
@@ -7482,10 +7413,7 @@ ur:
           site_contact_group_help: |
             وہ گروپ جو خود بخود بھیجے گئے تمام ذاتی پیغامات میں مدعو کیا جاتا ہے۔
           your_organization: "آپ کی تنظیم"
-          your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور پردہ داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
           company_name: "نام"
-          company_name_warning: |
-            اگر خالی چھوڑ دیا جائے تو، کوئی بوائلر پلیٹ سروس کی شرائط یا پردہ داری کا نوٹس فراہم نہیں کیا جائے گا۔
           company_url: "ویب سائٹ"
           company_url_placeholder: "https://example-co.com"
           governing_law: "گورنمنٹ قانون"
@@ -7691,7 +7619,6 @@ ur:
           uploading: "اپ لوڈ ہو رہا۔۔۔"
           uploading_progress: "اپ لوڈ ہو رہا… %{progress}%"
           success: "'%{filename}' کامیابی سے اَپ لوڈ کردی گئی ہے۔ فائل پر اب کام جا ری ہے اور فہرست میں ظاہر ہونے کیلئے ایک منٹ تک لگ سکتا ہے۔"
-          error: "اَپ لوڈ کرتے وقت ایک خرابی کا سامنا کرنا پڑا '%{filename}': %{message}"
         settings: "ترتیبات"
         operations:
           is_running: "فی الحال ایک آپریشن چل رہا…"
@@ -8515,6 +8442,11 @@ ur:
           activated: "فعال"
           not_activated: "فعال نہیں"
         approved: "منظورشدہ؟"
+        source: "بذریعہ"
+        bots:
+          name: "نام"
+          username: "اسمِ صارف"
+          trust_level: "فعالیت کا درجہ"
         titles:
           active: "فعال اراکین"
           new: "نئے اراکین"
@@ -8555,16 +8487,14 @@ ur:
           no_constructive_purpose: "کمیونٹی میں اختلاف پیدا کرنے کے علاوہ ان کے اعمال کا کوئی تعمیری مقصد نہیں"
           custom: "حسب ضرورت…"
         suspend_message: "ای میل پیغام"
-        suspend_message_placeholder: "اختیاریطور پر معطلی کے بارے میں مزید معلومات فراہم کریں اور یہ صارف کو ای میل کر دی جائیں گی۔"
         suspended_by: "کی طرف سے معطل کیا گیا"
         silence_reason: "وجہ"
         silenced_by: "جس نے خاموش کیا"
         silence_modal_title: "صارف خاموش کریں"
         silence_duration: "صارف کب تک خاموش رہے گا؟"
-        silence_reason_label: "آپ اِس صارف کو کیوں خاموش کر رہے ہیں؟"
+        silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
         silence_message: "ای میل پیغام"
-        silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"
         suspended_until: "(%{until} تک)"
         suspend_forever: "ہمیشہ کے لیے معطل کریں"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"

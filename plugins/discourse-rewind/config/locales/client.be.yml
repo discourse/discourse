@@ -17,7 +17,7 @@ be:
         chat_usage:
           author: Вы
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} хв"
             few: "%{count} хв"

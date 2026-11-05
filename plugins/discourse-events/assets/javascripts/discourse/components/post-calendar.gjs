@@ -294,6 +294,7 @@ export default class PostCalendar extends Component {
         @height={{@height}}
         @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @onLoadEvents={{this.loadEvents}}
+        @placeholder={{true}}
         @refreshKey={{@post.id}}
         @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
       />

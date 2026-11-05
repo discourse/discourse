@@ -8,6 +8,7 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { forceMobile } from "discourse/lib/mobile";
 import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import DiscourseURL from "discourse/lib/url";
 import { Placeholder } from "discourse/models/post-stream";
 import pretender, {
   response,
@@ -25,6 +26,19 @@ module("Unit | Controller | topic", function (hooks) {
 
   hooks.beforeEach(function () {
     this.store = getOwner(this).lookup("service:store");
+  });
+
+  test("jumpToIndex on mega topics routes to the post number and keeps filters", function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = topicWithStream.call(this, { isMegaTopic: true });
+    controller.setProperties({ model });
+    const routeTo = sinon.stub(DiscourseURL, "routeTo");
+
+    controller.jumpToIndex(9999);
+
+    assert.true(
+      routeTo.calledOnceWith(model.urlForPostNumber(9999), { keepFilter: true })
+    );
   });
 
   test("revised messages skip only the originating optimistic refresh", function (assert) {
@@ -855,6 +869,40 @@ module("Unit | Controller | topic", function (hooks) {
     assert.true(
       stub.calledOnce,
       "regular user's post is fetched into the stream"
+    );
+  });
+
+  test("pinning keeps the server's shape for pinned_at", async function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = this.store.createRecord("topic", { id: 1 });
+    sinon.stub(model, "saveStatus").resolves();
+    controller.setProperties({ model });
+
+    await controller.togglePinned();
+    assert.strictEqual(
+      typeof model.pinned_at,
+      "string",
+      "pinning in the category stores a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(model.pinned_at).toISOString(),
+      model.pinned_at,
+      "pinning in the category stores an ISO 8601 timestamp"
+    );
+
+    await controller.togglePinned();
+    assert.strictEqual(model.pinned_at, null, "unpinning clears it");
+
+    await controller.pinGlobally();
+    assert.strictEqual(
+      typeof model.pinned_at,
+      "string",
+      "pinning globally stores a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(model.pinned_at).toISOString(),
+      model.pinned_at,
+      "pinning globally stores an ISO 8601 timestamp"
     );
   });
 });

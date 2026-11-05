@@ -36,3 +36,4 @@ zh_CN:
       gamification_score:
         invalid_points: "积分必须是非零整数，输入的是： %{points}"
         invalid_date: "日期无效： %{date}"
+        invalid_category: "未找到类别： %{category_id}"

@@ -5,40 +5,27 @@ import loadScript from "discourse/lib/load-script";
 module("Unit | Utility | load-script", function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function () {
-    this.originalCreateElement = document.createElement.bind(document);
-    this.appendedScripts = [];
-    this.mockScriptBehavior = null;
+  let mockScriptBehavior;
 
-    const testContext = this;
-    document.createElement = function (tagName) {
-      const element = testContext.originalCreateElement(tagName);
-      if (tagName.toLowerCase() === "script") {
-        testContext.appendedScripts.push(element);
-        const originalAppendChild = document.head.appendChild.bind(
-          document.head
-        );
-        document.head.appendChild = function (child) {
-          if (child === element && testContext.mockScriptBehavior) {
-            setTimeout(() => {
-              testContext.mockScriptBehavior(element);
-            }, 0);
-            return child;
-          }
-          return originalAppendChild(child);
-        };
+  hooks.beforeEach(function () {
+    mockScriptBehavior = null;
+
+    const originalAppendChild = document.head.appendChild.bind(document.head);
+    document.head.appendChild = function (child) {
+      if (child.tagName === "SCRIPT" && mockScriptBehavior) {
+        setTimeout(() => mockScriptBehavior(child), 0);
+        return child;
       }
-      return element;
+      return originalAppendChild(child);
     };
   });
 
   hooks.afterEach(function () {
-    document.createElement = this.originalCreateElement;
-    this.appendedScripts.forEach((script) => script.remove?.());
+    delete document.head.appendChild;
   });
 
   test("loadScript rejects when script fails to load", async function (assert) {
-    this.mockScriptBehavior = (script) => {
+    mockScriptBehavior = (script) => {
       script.onerror?.();
     };
 
@@ -57,7 +44,7 @@ module("Unit | Utility | load-script", function (hooks) {
     const uniqueUrl = "/test-scripts/retry-test-" + Date.now() + ".js";
     let callCount = 0;
 
-    this.mockScriptBehavior = (script) => {
+    mockScriptBehavior = (script) => {
       callCount++;
       if (callCount === 1) {
         script.onerror?.();

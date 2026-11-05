@@ -56,6 +56,7 @@ class UserNotifications < ActionMailer::Base
     build_email(
       user.email,
       template: "user_notifications.post_approved",
+      **Dsa::AppealInstructions.message_options,
       locale: locale,
       base_url: Discourse.base_url,
       post_url: post_url,
@@ -68,6 +69,7 @@ class UserNotifications < ActionMailer::Base
     build_email(
       user.email,
       template: "user_notifications.signup_after_reject",
+      **Dsa::AppealInstructions.message_options,
       locale: locale,
       reject_reason: opts[:reject_reason],
       recipient_user: user,
@@ -173,22 +175,35 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
+    locale = user_locale(user)
+
     if user.silenced_forever?
       build_email(
         user.email,
         template: "user_notifications.account_silenced_forever",
-        locale: user_locale(user),
+        **Dsa::AppealInstructions.message_options,
+        locale:,
         reason: user_history.details,
         recipient_user: user,
       )
     else
-      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone.presence || "UTC")
+      timezone =
+        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
+          ActiveSupport::TimeZone["UTC"]
+      silenced_till = user.silenced_till.in_time_zone(timezone)
       build_email(
         user.email,
         template: "user_notifications.account_silenced",
-        locale: user_locale(user),
+        **Dsa::AppealInstructions.message_options,
+        locale:,
         reason: user_history.details,
-        silenced_till: I18n.l(silenced_till, format: :long),
+        silenced_till:
+          I18n.t(
+            "user_notifications.account_silenced.date_with_timezone",
+            locale:,
+            date: I18n.l(silenced_till, format: :long, locale:),
+            offset: silenced_till.formatted_offset,
+          ),
         recipient_user: user,
       )
     end
@@ -208,7 +223,12 @@ class UserNotifications < ActionMailer::Base
 
     flag_reason ||= I18n.t("flag_reasons.spam")
 
-    build_email(email, template: "user_notifications.account_deleted", flag_reason: flag_reason)
+    build_email(
+      email,
+      template: "user_notifications.account_deleted",
+      **Dsa::AppealInstructions.message_options,
+      flag_reason: flag_reason,
+    )
   end
 
   def account_suspended(user, opts = nil)
@@ -216,22 +236,35 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
+    locale = user_locale(user)
+
     if user.suspended_forever?
       build_email(
         user.email,
         template: "user_notifications.account_suspended_forever",
-        locale: user_locale(user),
+        **Dsa::AppealInstructions.message_options,
+        locale:,
         reason: user_history.details,
         recipient_user: user,
       )
     else
-      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone.presence || "UTC")
+      timezone =
+        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
+          ActiveSupport::TimeZone["UTC"]
+      suspended_till = user.suspended_till.in_time_zone(timezone)
       build_email(
         user.email,
         template: "user_notifications.account_suspended",
-        locale: user_locale(user),
+        **Dsa::AppealInstructions.message_options,
+        locale:,
         reason: user_history.details,
-        suspended_till: I18n.l(suspended_till, format: :long),
+        suspended_till:
+          I18n.t(
+            "user_notifications.account_suspended.date_with_timezone",
+            locale:,
+            date: I18n.l(suspended_till, format: :long, locale:),
+            offset: suspended_till.formatted_offset,
+          ),
         recipient_user: user,
       )
     end
@@ -818,14 +851,29 @@ class UserNotifications < ActionMailer::Base
           invite_template,
           username: username,
           group_name: group_name,
-          topic_title: ERB::Util.html_escape(gsub_emoji_to_unicode(title)),
+          topic_title: "%{topic_title}",
           topic_excerpt: topic_excerpt,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
           topic_url: topic_url,
         )
 
-      html = PrettyText.cook(message, sanitize: false).html_safe
+      # the title is substituted after cooking so it always renders as literal
+      # text and can never alter the template's Markdown structure
+      topic_title_text = gsub_emoji_to_unicode(title).to_s
+      html =
+        PrettyText
+          .cook(message, sanitize: false)
+          .gsub("%{topic_title}") { ERB::Util.html_escape(topic_title_text) }
+          .html_safe
+      # Customized bodies cook both %{message} and %{topic_title} as Markdown.
+      # Keep the subject unchanged, but use the same escaped title in both body values.
+      if translation_override_exists
+        body_topic_title =
+          topic_title_text.gsub(/[!"\#$%&'()*+,\-.\/:;<=>?@\[\]\\^_`{|}~]/) { |char| "\\#{char}" }
+        topic_title_text = ERB::Util.html_escape(body_topic_title)
+      end
+      message = message.gsub("%{topic_title}") { topic_title_text }
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
       reached_limit &&=
@@ -902,6 +950,7 @@ class UserNotifications < ActionMailer::Base
       locale: locale,
     }
 
+    email_opts[:body_topic_title] = body_topic_title if body_topic_title
     email_opts[:recipient_user] = user
     email_opts[:html_override] = html unless translation_override_exists
 

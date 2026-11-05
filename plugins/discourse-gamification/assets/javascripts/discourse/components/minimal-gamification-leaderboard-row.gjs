@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { or } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { eq } from "discourse/truth-helpers";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

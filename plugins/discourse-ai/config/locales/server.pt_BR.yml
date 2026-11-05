@@ -49,7 +49,6 @@ pt_BR:
         description: "Aplicar tags em tópicos automaticamente usando IA."
   site_settings:
     discourse_ai_enabled: "Ative o plugin de IA do Discourse."
-    ai_default_llm_model: "O modelo de LLM padrão a ser usado para todos os recursos de IA"
     ai_artifact_security: "O sistema de artefatos de IA gera IFRAMEs com código executável. with runnable code. O modo restrito obriga o(a) usuário(a) a clicar mais uma vez para executar o código. O modo Lax permite que ele(a) forneça uma execução automática de artefatos com IA para exibição automática. o modo desativado destiva o sistema de artefatos."
     ai_toxicity_enabled: "Ative o módulo de toxicidade."
     ai_toxicity_inference_service_api_endpoint: "URL em que a API está em execução para o módulo de toxicidade"
@@ -64,7 +63,6 @@ pt_BR:
     ai_toxicity_flag_threshold_threat: "Ameaça"
     ai_toxicity_flag_threshold_sexual_explicit: "Conteúdo sexual explícito"
     ai_toxicity_groups_bypass: "Os(as) usuários(as) não terão suas postagens classificadas pelo módulo de toxicidade."
-    ai_sentiment_enabled: "Ative o módulo de sentimento."
     ai_sentiment_inference_service_api_endpoint: "URL em que a API está em execução para o módulo de sentimento"
     ai_sentiment_inference_service_api_key: "Chave de API para a API de sentimento"
     ai_nsfw_detection_enabled: "Ative o módulo NSFW."
@@ -135,88 +133,60 @@ pt_BR:
       yaxis: "Data"
     emotion_admiration:
       title: "🤩 Admiração"
-      description: "Postagens classificadas com o gesto de admiração pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_amusement:
       title: "😄 Diversão"
-      description: "Postagens classificadas com o gesto de diversão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_anger:
       title: "😠 Raiva"
-      description: "Postagens classificadas com o gesto de raiva pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_annoyance:
       title: "😒 Aborrecimento"
-      description: "Postagens classificadas com o gesto de aborrecimento pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_approval:
       title: "👍 Aprovação"
-      description: "Postagens classificadas com o gesto de aprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_caring:
       title: "🤗 Carinho"
-      description: "Postagens classificadas com o gesto de carinho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_confusion:
       title: "😕 Confusão"
-      description: "Postagens classificadas com o gesto de confusão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_curiosity:
       title: "🤔 Curiosidade"
-      description: "Postagens classificadas com o gesto de curiosidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_desire:
       title: "😍 Desejo"
-      description: "Postagens classificadas com o gesto de desejo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disappointment:
       title: "😞 Decepção"
-      description: "Postagens classificadas com o gesto de decepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disapproval:
       title: "👎 Desaprovação"
-      description: "Postagens classificadas com o gesto de desaprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disgust:
       title: "🤢 Repulsa"
-      description: "Postagens classificadas com o gesto de desgosto pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_embarrassment:
       title: "😳 Vergonha"
-      description: "Postagens classificadas com o gesto de vergonha pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_excitement:
       title: "🤪 Empolgação"
-      description: "Postagens classificadas com o gesto de empolgação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_fear:
       title: "😨 Medo"
-      description: "Postagens classificadas com o gesto de medo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_gratitude:
       title: "🙏 Gratidão"
-      description: "Postagens classificadas com o gesto de gratidão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_grief:
       title: "😢 Pesar"
-      description: "Postagens classificadas com o gesto de pesar pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
       title: "😊 Alegria"
-      description: "Postagens classificadas com o gesto de alegria pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_love:
       title: '❤️ Amor'
-      description: "Postagens classificadas com o gesto de amor pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_nervousness:
       title: "😰 Nervosismo"
-      description: "Postagens classificadas com o gesto de nervosismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_neutral:
       title: "😐 Neutro"
-      description: "Postagens classificadas com o gesto de neutralidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_optimism:
       title: "🌟 Otimismo"
-      description: "Postagens classificadas com o gesto de otimismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_pride:
       title: "🦁 Orgulho"
-      description: "Postagens classificadas com o gesto de orgulho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_realization:
       title: "💡 Percepção"
-      description: "Postagens classificadas com o gesto de percepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_relief:
       title: "😌 Alívio"
-      description: "Postagens classificadas com o gesto de alívio pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_remorse:
       title: "😔 Remorso"
-      description: "Postagens classificadas com o gesto de remorso pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_sadness:
       title: "😭 Tristeza"
-      description: "Postagens classificadas com o gesto de tristeza pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_surprise:
       title: "😲 Surpresa"
-      description: "Postagens classificadas com o gesto de surpresa pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
     ai_artifact:
       errors:
@@ -308,6 +278,9 @@ pt_BR:
       configuration_missing: "Não foi encontrada a configuração de detecção de spam de IA. Adicione a configuração em \"Administração > Plugins > Discourse AI > Spam\" antes de ativar."
       logging_subject: "Detecção de spam"
     ai_bot:
+      sources:
+        historical: "Discourse IA"
+        spam_detection: "Detecção de spam"
       navigation:
         settings:
           title: "Configurações do site"
@@ -652,6 +625,14 @@ pt_BR:
       assign:
         errors:
           not_found: "Tópico não encontrado."
+    appearance_authoring:
+      default_theme: "Tema padrão"
+      colors:
+        light:
+          header_background: "Cabeçalho"
+      fonts:
+        base_font: "Fonte do corpo"
+        heading_font: "Fonte do cabeçalho"
     reviewables:
       ai_tool_action:
         title: "Ação de ferramenta de IA"
@@ -706,6 +687,7 @@ pt_BR:
       cannot_edit_builtin: "Não é possível editar um modelo integrado."
       secret_required: "É necessário selecionar uma credencial."
       secret_not_found: "A credencial selecionada não existe"
+      missing_provider_param: "%{param} Não pode ficar em branco"
       configuration:
         disable_embeddings: "Você precisa desativar \"incorporações com IA ativadas\" primeiro."
         choose_model: "Defina o \"modelo selecionado de incorporações com IA\" primeiro."

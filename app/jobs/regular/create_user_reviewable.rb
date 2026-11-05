@@ -29,7 +29,7 @@ class Jobs::CreateUserReviewable < ::Jobs::Base
         @reviewable.update!(payload: payload) unless @reviewable.created_new
       end
 
-      if @reviewable.created_new
+      if @reviewable.created_new || @reviewable.reopened
         @reviewable.add_score(
           Discourse.system_user,
           ReviewableScore.types[:needs_approval],

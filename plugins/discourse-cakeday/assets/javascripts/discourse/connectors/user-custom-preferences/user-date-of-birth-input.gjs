@@ -9,7 +9,10 @@ import { i18n } from "discourse-i18n";
 export default class UserDateOfBirthInput extends Component {
   @service siteSettings;
 
+  /** @type {number | null} */
   @tracked month = null;
+
+  /** @type {string | null} */
   @tracked day = null;
 
   months = moment.months().map((name, index) => ({ name, value: index + 1 }));

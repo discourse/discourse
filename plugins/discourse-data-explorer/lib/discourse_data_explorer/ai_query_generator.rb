@@ -6,6 +6,10 @@ module DiscourseDataExplorer
       false
     end
 
+    def thinking_effort
+      "medium"
+    end
+
     def tools
       [
         DiscourseAi::Agents::Tools::DbSchema,

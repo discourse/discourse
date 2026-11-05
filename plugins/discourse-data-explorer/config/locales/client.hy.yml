@@ -18,14 +18,10 @@ hy:
       or: "կամ"
       admins_only: "Տվյալների ուսումնասիրումը հասանելի է միասյն ադմիններին:"
       title: "Տվյալների Ուսումնասիրում"
-      create: "Ստեղծել"
       create_placeholder: "Հարցման անուն..."
       description_placeholder: "Մուտքագրեք նկարագրություն այստեղ"
       ai:
         generate: "Գեներացնել"
-        optional: "ընտրովի"
-      import:
-        label: "Ներմուծել"
       help:
         label: "Օգնություն"
       schema:
@@ -39,18 +35,16 @@ hy:
           null_: "Զրոյական"
       run: "Գործարկել"
       delete: "Ջնջել"
-      others_dirty: "Հարցումն ունի չպահպանված փոփոխություններ, որոնք կկորչեն, եթե Դուք տեղափոխվեք:"
       result_count:
         one: "%{count} արդյունք"
         other: "%{count} արդյունք"
-      query_name: "Հարցում"
+      name: "Անուն"
       query_groups: "Խմբեր"
       query_tags: "Պիտակներ"
       query_description: "Նկարագրություն"
       query_time: "Վերջին գործարկումը"
       query_user: "Ստեղծել է՝"
       reset_params: "Վերահաստատե;"
-      search_placeholder: "Որոնում..."
       no_search_results: "Ներողություն, մենք չկարողացանք գտնել Ձեր տեքստի հետ համընկնող որևէ արդյունք:"
     group:
       reports: "Հաշվետվություններ"

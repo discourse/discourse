@@ -15,9 +15,10 @@ module JsonApiKit
           self.declared_scope = block
         end
 
+        def scope_definition = declared_scope
+
         def scope_for(guardian)
-          return model.all unless declared_scope
-          declared_scope.call(guardian)
+          new(guardian:).scope_for(guardian)
         end
 
         def all(params = {}, guardian:, scoped_to: nil, edition: Edition.current)
@@ -29,12 +30,14 @@ module JsonApiKit
         end
       end
 
-      delegate :scope_for, to: :class
+      delegate :scope_definition, to: :class
+      delegate :scope_for, :record_for, :related_scope, :related_records, to: :adapter
       delegate :default_sorts, to: :edition, private: true
 
+      def current_values(id) = CurrentValues.new(self, id:)
+
       def all(params = {}, scoped_to: nil)
-        Query::Collection.new(
-          self,
+        adapter.all(
           Request::Collection.new(
             Request::Input.with_defaults(params, resource: self, default_sorts:),
             guardian:,
@@ -45,8 +48,7 @@ module JsonApiKit
       end
 
       def find(id, params = {})
-        Query::Individual.new(
-          self,
+        adapter.find(
           Request::Individual.new(
             Request::Input.with_defaults(params, resource: self, default_sorts:).merge(id:),
             guardian:,

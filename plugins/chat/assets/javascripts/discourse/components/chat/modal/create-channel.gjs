@@ -12,7 +12,6 @@ import discourseDebounce from "discourse/lib/debounce";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

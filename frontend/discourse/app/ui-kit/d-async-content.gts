@@ -10,7 +10,6 @@ import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 

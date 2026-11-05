@@ -85,6 +85,9 @@ module Email
     class ReplyToDigestError < ProcessingError
     end
 
+    class SiteArchivedError < ProcessingError
+    end
+
     class TooManyRecipientsError < ProcessingError
       attr_reader :recipients_count
 
@@ -182,6 +185,7 @@ module Email
       raise NoSenderDetectedError if @from_email.blank?
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
+      raise SiteArchivedError if SiteSetting.site_archived
 
       user = @from_user
 

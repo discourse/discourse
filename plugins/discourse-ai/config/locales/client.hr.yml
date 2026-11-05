@@ -80,6 +80,8 @@ hr:
         filters:
           all: "Sve"
           reset: "Resetirati"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraživanje"
         image_caption:
@@ -127,6 +129,8 @@ hr:
             other: "%{count} objava"
       spam:
         short_title: "Nepoželjno"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         last_seven_days: "Zadnjih 7 dana"
         enable: "Omogućiti"
         test_modal:
@@ -239,6 +243,17 @@ hr:
         delete: "Izbriši"
         tools_modal:
           required: "Potrebno"
+      models:
+        name: "Ime"
+        type: "Tip"
+        provider: "Pružatelj usluga"
+        edit: "Uredi"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
+          reset: "Poništi filtere"
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"
@@ -335,6 +350,14 @@ hr:
             one: "Posljednji sat"
             few: "Posljednja %{count} sata"
             other: "Posljednjih %{count} sati"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Tema"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Tema"

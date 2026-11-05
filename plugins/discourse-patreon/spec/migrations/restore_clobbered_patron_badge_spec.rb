@@ -50,6 +50,16 @@ RSpec.describe RestoreClobberedPatronBadge do
     expect(badge.enabled).to eq(false)
   end
 
+  it "restores a badge reseeded after the live plugin renamed its tables" do
+    Fabricate(:group, name: "patrons")
+    badge = clobbered_badge
+    badge.update_columns(query: badge.query.sub("voice_sessions", "live_sessions"))
+
+    described_class.new.up
+
+    expect(badge.reload.query).to include("group_users")
+  end
+
   it "leaves the badge alone on a site that never had the patrons group" do
     badge = clobbered_badge
 

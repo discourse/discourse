@@ -12,7 +12,7 @@
   "dependencies": {
     "discourse": "workspace:*",
     "discourse-i18n": "workspace:1.0.0",
-    "xss": "^1.0.15"
+    "xss": "1.0.15"
   },
   "devDependencies": {
     "ember-source": "~7.3.0"

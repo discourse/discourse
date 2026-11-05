@@ -8,7 +8,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
-import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class Types extends Component {

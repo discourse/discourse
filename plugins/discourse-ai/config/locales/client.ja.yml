@@ -233,7 +233,7 @@ ja:
         approved: "承認済み"
         rejected: "拒否"
       default_llm:
-        title: "デフォルトの LLM モデル"
+        title: "デフォルトの言語モデル"
       llm_selector:
         none: "なし"
       features:
@@ -246,6 +246,7 @@ ja:
         no_llm: "LLM が選択されていません"
         no_agent: "未設定"
         no_groups: "なし"
+        classification_model: "モデル:"
         edit: "設定"
         expand_list:
           other: "(他 %{count})"
@@ -266,6 +267,13 @@ ja:
           no_results: "フィルタに一致する機能は見つかりませんでした。"
           reset: "リセット"
         no_automations: "まだ自動化はありません"
+        sentiment:
+          sentiment: "センチメント"
+          emotion: "感情"
+          enabled: "有効"
+          setting_groups:
+            sentiment: "センチメント"
+            emotion: "感情"
         summarization:
           name: "要約"
           description: "訪問者がトピックを要約できる要約ボタンを使用可能にします"
@@ -411,6 +419,8 @@ ja:
         short_title: "迷惑"
         title: "迷惑処理の構成"
         select_llm: "LLM を選択してください"
+        no_llm_selected: "なし"
+        no_decision_model_selected: "なし"
         custom_instructions: "カスタム指示"
         custom_instructions_help: "AI による迷惑行為の識別を誘導しやすくする、サイト固有のカスタム指示。例: 「英語以外の投稿をより積極的にスキャンする」。"
         last_seven_days: "過去 7 日間"
@@ -709,6 +719,18 @@ ja:
         tools_modal:
           parameters: "パラメーター"
           required: "必須"
+      models:
+        new: "新しいモデル"
+        name: "名前"
+        type: "タイプ"
+        provider: "プロバイダー"
+        edit: "編集"
+        select_type: "選択"
+        types:
+          embedding: "埋め込み"
+        filters:
+          all: "全タイプ"
+          reset: "フィルタをリセット"
       llms:
         short_title: "LLM"
         no_llms: "まだ LLM がありません"
@@ -932,6 +954,7 @@ ja:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "カスタム"
         provider_fields:
@@ -1035,10 +1058,7 @@ ja:
           scroll_to_bottom: "一番下にスクロール"
           editing_post: "投稿を編集中"
       sentiments:
-        dashboard:
-          title: "センチメント"
         sidebar:
-          overview: "センチメントの概要"
           analysis: "センチメント分析"
         sentiment_analysis:
           share_chart: "チャートへのリンクをコピー"
@@ -1077,6 +1097,14 @@ ja:
             compact: "コンパクト"
             expanded: "展開"
             expanded_description: "AI 要約を使用"
+      ai_search:
+        related_topics: "関連トピック"
+        related_replies:
+          other: "返信: %{count} 件"
+        tabs:
+          ask: "AI に尋ねる"
+          topics: "トピック"
+          messages: "メッセージ"
       discobot_discoveries:
         main_title: "AI に尋ねる"
         loading_convo: "会話を読み込み中"

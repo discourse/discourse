@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const EMAIL_FREQUENCY_OPTIONS = [

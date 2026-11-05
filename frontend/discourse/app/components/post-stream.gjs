@@ -11,7 +11,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
-import { and, not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import Post from "./post.gjs";
@@ -58,6 +57,9 @@ export default class PostStream extends Component {
     // jumpToPost owns scrolling; letting focus scroll too makes the page jump
     body.focus({ preventScroll: true });
   });
+
+  quoteHighlightFor = (post) =>
+    this.args.postStream.quoteHighlights.get(post.post_number);
 
   constructor() {
     super(...arguments);
@@ -386,6 +388,7 @@ export default class PostStream extends Component {
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}
                 @post={{post}}
                 @prevPost={{previousPost}}
+                @quoteHighlight={{this.quoteHighlightFor post}}
                 @rebakePost={{fn @rebakePost post}}
                 @recoverPost={{fn @recoverPost post}}
                 @removeAllowedGroup={{@removeAllowedGroup}}

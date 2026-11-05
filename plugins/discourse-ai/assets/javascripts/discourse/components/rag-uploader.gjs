@@ -4,7 +4,6 @@ import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
@@ -27,7 +26,7 @@ export default class RagUploader extends Component {
   @tracked ragIndexingStatuses = null;
   @autoTrackedArray ragUploads = null;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "discourse-ai-rag-uploader",
     maxFiles: 20,
     type: "discourse_ai_rag_upload",
@@ -46,7 +45,7 @@ export default class RagUploader extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off(
-      `upload-mixin:${this.uppyUpload.config}:all-uploads-complete`,
+      `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`,
       this,
       "_updateTargetWithUploads"
     );

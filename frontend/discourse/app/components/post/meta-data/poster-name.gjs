@@ -12,7 +12,6 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { formatUsername } from "discourse/lib/utilities";
-import { and, or } from "discourse/truth-helpers";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

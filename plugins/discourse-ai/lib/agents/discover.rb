@@ -7,6 +7,10 @@ module DiscourseAi
         true
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def tools
         [Tools::Read, Tools::Search]
       end

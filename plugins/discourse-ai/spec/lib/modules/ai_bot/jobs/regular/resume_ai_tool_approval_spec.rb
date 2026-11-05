@@ -175,7 +175,7 @@ RSpec.describe Jobs::ResumeAiToolApproval do
       topic.update!(archetype: Archetype.default)
       original_raw = approval_post.raw
       previous_prompt = [["I will create the category.", ai_agent.user.username]]
-      approval_post.create_post_custom_prompt!(custom_prompt: previous_prompt)
+      PostCustomPrompt.create!(post: approval_post, custom_prompt: previous_prompt)
       reviewable.perform(admin, :approve, post_id: approval_post.id)
 
       expect {

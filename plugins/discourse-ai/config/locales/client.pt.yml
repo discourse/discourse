@@ -95,8 +95,6 @@ pt:
         reject: "Rejeitar"
         approved: "Aprovado"
         rejected: "Rejeitado"
-      default_llm:
-        title: "Modelo de LLM Predefinido"
       llm_selector:
         none: "Nenhuma"
       features:
@@ -109,6 +107,7 @@ pt:
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não definido"
         no_groups: "Nenhuma"
+        classification_model: "Modelo:"
         edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
@@ -123,6 +122,11 @@ pt:
         filters:
           all: "Todos"
           reset: "Repor"
+        sentiment:
+          emotion: "Emoção"
+          enabled: "Ativado"
+          setting_groups:
+            emotion: "Emoção"
         summarization:
           name: "Resumos"
           topic_summaries: "Resumos de tópico"
@@ -200,6 +204,8 @@ pt:
         short_title: "Spam"
         title: "Configurar manipulação do lixo eletrónico"
         select_llm: "Selecionar LLM"
+        no_llm_selected: "Nenhuma"
+        no_decision_model_selected: "Nenhuma"
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
@@ -323,6 +329,16 @@ pt:
         delete: "Eliminar"
         tools_modal:
           required: "Necessário"
+      models:
+        name: "Nome"
+        type: "Tipo"
+        provider: "Provedor"
+        edit: "Editar"
+        select_type: "Selecionar"
+        types:
+          embedding: "Incorporação"
+        filters:
+          all: "Todos os tipos"
       llms:
         display_name: "Nome"
         provider: "Provedor"
@@ -413,6 +429,13 @@ pt:
           summarize: "Resumir"
         topic:
           regenerate_summaries_option: "Resumos de tópico"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
         legacy:
           regular_results: "Tópicos"

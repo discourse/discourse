@@ -575,10 +575,7 @@ export default class KeyboardShortcutLib extends Service {
     }
 
     // create new topic: default action
-    this.composer.open({
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-    });
+    this.composer.openNewTopic();
   }
 
   focusComposer(event) {

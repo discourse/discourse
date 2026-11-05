@@ -1,12 +1,9 @@
-/* eslint-disable ember/no-classic-components, ember/no-observers */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import cookie, { removeCookie } from "discourse/lib/cookie";
-import { bind } from "discourse/lib/decorators";
 import { isDevelopment } from "discourse/lib/environment";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
@@ -69,21 +66,14 @@ class Notice extends EmberObject {
   }
 }
 
-@tagName("")
 export default class GlobalNotice extends Component {
+  @service currentUser;
   @service keyValueStore;
   @service("logsNotice") logsNoticeService;
   @service router;
-
-  /** @type {Notice | null} */
-  logNotice = null;
-
-  constructor() {
-    super(...arguments);
-
-    this.logsNoticeService.addObserver("hidden", this._handleLogsNoticeUpdate);
-    this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
-  }
+  @service session;
+  @service site;
+  @service siteSettings;
 
   get visible() {
     return !this.router.currentRouteName.startsWith("wizard.");
@@ -213,8 +203,19 @@ export default class GlobalNotice extends Component {
       );
     }
 
-    if (this.get("logNotice")) {
-      notices.push(this.get("logNotice"));
+    const logsNotice = this.logsNoticeService;
+    if (!logsNotice.hidden) {
+      notices.push(
+        Notice.create({
+          text: logsNotice.message,
+          id: "alert-logs-notice",
+          options: {
+            dismissable: true,
+            persistentDismiss: false,
+            onDismiss: () => logsNotice.set("text", ""),
+          },
+        })
+      );
     }
 
     return notices.concat(Array.from(_pluginNotices)).filter((notice) => {
@@ -244,16 +245,6 @@ export default class GlobalNotice extends Component {
     });
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
-    this.logsNoticeService.removeObserver(
-      "hidden",
-      this._handleLogsNoticeUpdate
-    );
-  }
-
   @action
   dismissNotice(notice) {
     notice.options.onDismiss?.(notice);
@@ -269,22 +260,6 @@ export default class GlobalNotice extends Component {
     if (alert) {
       alert.style.display = "none";
     }
-  }
-
-  @bind
-  _handleLogsNoticeUpdate() {
-    const logNotice = Notice.create({
-      text: trustHTML(this.logsNoticeService.message),
-      id: "alert-logs-notice",
-      options: {
-        dismissable: true,
-        persistentDismiss: false,
-        visibility: () => !this.logsNoticeService.hidden,
-        onDismiss: () => this.logsNoticeService.set("text", ""),
-      },
-    });
-
-    this.set("logNotice", logNotice);
   }
 
   <template>

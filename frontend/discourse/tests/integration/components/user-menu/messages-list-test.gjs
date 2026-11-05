@@ -10,56 +10,9 @@ import { i18n } from "discourse-i18n";
 
 function getMessage(overrides = {}) {
   return deepMerge(
-    {
-      id: 8092,
-      title: "Test ToPic 4422",
-      fancy_title: "Test topic 4422",
-      slug: "test-topic-4422",
-      posts_count: 1,
-      reply_count: 0,
-      highest_post_number: 2,
-      image_url: null,
-      created_at: "2019-07-26T01:29:24.008Z",
-      last_posted_at: "2019-07-26T01:29:24.177Z",
-      bumped: true,
-      bumped_at: "2019-07-26T01:29:24.177Z",
-      unseen: false,
-      last_read_post_number: 2,
-      unread_posts: 0,
-      pinned: false,
-      unpinned: null,
-      visible: true,
-      closed: false,
-      archived: false,
-      notification_level: 3,
-      bookmarked: false,
-      bookmarks: [],
-      liked: false,
-      views: 5,
-      like_count: 0,
-      has_summary: false,
-      archetype: "private_message",
-      last_poster_username: "mixtape",
-      category_id: null,
-      pinned_globally: false,
-      featured_link: null,
-      posters: [
-        {
-          extras: "latest single",
-          description: "Original Poster, Most Recent Poster",
-          user_id: 13,
-          primary_group_id: null,
-        },
-      ],
-      participants: [
-        {
-          extras: "latest",
-          description: null,
-          user_id: 13,
-          primary_group_id: null,
-        },
-      ],
-    },
+    cloneJSON(
+      UserMenuFixtures["/u/:username/user-menu-private-messages"].topics[0]
+    ),
     overrides
   );
 }

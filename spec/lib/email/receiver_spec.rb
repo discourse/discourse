@@ -15,6 +15,20 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  context "when email is addressed to an automatic group" do
+    let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+    before { group.update!(incoming_email: "meat@bar.com") }
+
+    it "creates a private message in the group inbox" do
+      expect { process(:encoded_display_name) }.to change(Topic, :count).by(1)
+
+      topic = Topic.last
+      expect(topic).to be_private_message
+      expect(topic.allowed_groups).to contain_exactly(group)
+    end
+  end
+
   it "raises an EmptyEmailError when 'mail_string' is blank" do
     expect { Email::Receiver.new(nil) }.to raise_error(Email::Receiver::EmptyEmailError)
     expect { Email::Receiver.new("") }.to raise_error(Email::Receiver::EmptyEmailError)
@@ -23,6 +37,11 @@ RSpec.describe Email::Receiver do
   it "raises a ScreenedEmailError when email address is screened" do
     ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
     expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
+  end
+
+  it "raises a SiteArchivedError when the site is archived" do
+    SiteSetting.site_archived = true
+    expect { process(:new_user) }.to raise_error(Email::Receiver::SiteArchivedError)
   end
 
   it "raises EmailNotAllowed when email address is not on allowlist" do
@@ -860,17 +879,31 @@ RSpec.describe Email::Receiver do
         expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
       end
 
-      {
-        "X-Spam-Flag" => :spam_x_spam_flag,
-        "X-Spam-Status" => :spam_x_spam_status,
-        "X-SES-Spam-Verdict" => :spam_x_ses_spam_verdict,
-      }.each do |header, fixture|
-        it "enqueues the post and silences the user for #{header}" do
+      shared_examples "moderating email identified as spam" do |header:, fixture:|
+        it "queues the post and silences the sender" do
           SiteSetting.email_in_spam_header = header
 
           expect { process(fixture) }.to change { ReviewableQueuedPost.count }.by(1)
           expect(user.reload.silenced?).to be(true)
         end
+      end
+
+      context "with the X-Spam-Flag header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Flag",
+                         fixture: :spam_x_spam_flag
+      end
+
+      context "with the X-Spam-Status header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Status",
+                         fixture: :spam_x_spam_status
+      end
+
+      context "with the X-SES-Spam-Verdict header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-SES-Spam-Verdict",
+                         fixture: :spam_x_ses_spam_verdict
       end
 
       it "enqueues the post for a failed Authentication-Results header" do

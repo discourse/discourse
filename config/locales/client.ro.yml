@@ -6,6 +6,9 @@
 
 ro:
   js:
+    dsa_notice:
+      choice_title: "Este ilegal"
+      email: "Adresă email"
     user_api_key:
       title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
@@ -52,6 +55,7 @@ ro:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Deținător"
         access_permission_remove: "Elimină"
     number:
       format:
@@ -2291,6 +2295,7 @@ ro:
       clear: "Elimină filtrul"
     filter_controls:
       reset: "Resetare"
+      sort_label: "Sortează după"
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
@@ -2358,10 +2363,6 @@ ro:
       saving: "Se salvează"
       saved: "Salvat!"
       saved_draft: "Postează schița în curs. Atinge pentru a relua."
-      switch_to_markdown: "Comută la editorul standard Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Comută la noul editor de text îmbogățit (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Comută la editorul standard Markdown"
-      switch_to_rich_text_no_shortcut: "Comută la noul editor de text îmbogățit"
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
       bold_title: "Aldin"
@@ -3193,6 +3194,9 @@ ro:
           few: "Ești sigur că vrei să ștergi acele %{count} postări?"
           other: "Ești sigur că vrei să ștergi acele %{count} postări?"
       revisions:
+        visibility:
+          hidden:
+            title: "Ascuns"
         locale:
           no_locale_set: "Nicio limbă setată"
           locale_removed: "Limbă înlăturată"
@@ -3201,8 +3205,6 @@ ro:
           previous: "Revizie precedentă"
           next: "Următoarea revizie"
           last: "Ultima revizie"
-          hide: "Ascunde revizia"
-          show: "Afișează revizia"
           edit_post: "Modifică postarea"
         displays:
           inline:
@@ -3897,63 +3899,6 @@ ro:
       errors:
         type_mismatch:
           default: "Introduceţi o valoare validă."
-    table_builder:
-      title: "Constructor de tabel"
-      modal:
-        title: "Constructor de tabel"
-        create: "Construiește tabel"
-        help:
-          title: "Folosind Editorul de foi de calcul"
-          enter_key: "Enter"
-          tab_key: "Filă"
-          new_row: "la sfârșitul unui rând pentru a introduce un rând nou."
-          new_col: "la sfârșitul unei coloane pentru a introduce o coloană nouă."
-          options: "Dă clic dreapta pe celule pentru a accesa mai multe opțiuni într-un meniu derulant."
-        confirm_close: "Sigur vrei să închizi constructorul de tabel? Toate modificările nesalvate vor fi pierdute."
-      edit:
-        btn_edit: "Editează tabel"
-        modal:
-          title: "Editează tabel"
-          cancel: "anulează"
-          create: "Salvează"
-          reason: "De ce editezi?"
-          trigger_reason: "Adăugă motiv pentru editare"
-        default_edit_reason: "Actualizează tabel cu editor de tabele"
-      default_header:
-        col_1: "Coloana 1"
-        col_2: "Coloana 2"
-        col_3: "Coloana 3"
-        col_4: "Coloana 4"
-      spreadsheet:
-        no_records_found: "Nu s-a găsit nicio înregistrare"
-        show: "Arată"
-        entries: "intrări"
-        about: "Despre"
-        prompts:
-          delete_selected_rows: "Sigur vrei să ștergi rândurile selectate?"
-          delete_selected_cols: "Sigur vrei să ștergi coloanele selectate?"
-          will_destroy_merged_cells: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
-          will_clear_search_results: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
-          conflicts_with_merged_cells: "Există un conflict cu o altă celulă fuzionată"
-        invalid_merge_props: "Proprietăți fuzionate nevalide"
-        cells_already_merged: "Celulă deja fuzionată"
-        no_cells_selected: "Nicio celulă selectată"
-        context_menu:
-          row:
-            before: "Introdu un rând nou înainte"
-            after: "Introdu un rând nou după"
-            delete: "Șterge rândurile selectate"
-          col:
-            before: "Introdu o coloană nouă înainte"
-            after: "Introdu o coloană nouă după"
-            delete: "Șterge coloanele selectate"
-            rename: "Redenumește această coloană"
-          order:
-            ascending: "Ordine crescătoare"
-            descending: "Ordine descrescătoare"
-          copy: "Copiază..."
-          paste: "Lipește..."
-          save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
     safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
     filter:
@@ -4042,6 +3987,9 @@ ro:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Echipa"
+        sort:
+          status: "Stare"
+          name: "Nume"
       config:
         about:
           title: "Despre site-ul tău"
@@ -4411,34 +4359,14 @@ ro:
         version: "Versiune"
         up_to_date: "Ești la zi!"
         updates_available: "Sunt disponibile actualizări."
-        no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
-        stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."
-        installed_version: "Instalată"
-        github: "GitHub"
         dismiss_notice: "Ignoră"
         new_features:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
           learn_more: "Află mai multe..."
-        last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
-        no_problems: "Nu a apărut nicio problemă."
-        moderators: "Moderatori:"
-        admins: "Admini:"
-        suspended: "Suspendați:"
-        private_messages_short: "Mesje"
-        private_messages_title: "Mesaje"
-        mobile_title: "Mobil"
         uploads: "Urcări"
         backups: "Copii de siguranță"
-        traffic_short: "Trafic"
-        traffic: "Cereri web"
-        page_views: "Vizualizări"
-        page_views_short: "Vizualizări"
-        show_traffic_report: "Arată raportul detaliat cu privire la trafic"
-        general_tab: "General"
-        security_tab: "Securitate"
-        reports_tab: "Rapoarte"
         report_filter_any: "oricare"
         disabled: Dezactivat
         sections:
@@ -4488,10 +4416,6 @@ ro:
             crawlers: "Crawlere"
           see_details: "Vezi detalii"
           crawler_learn_more: "Află mai multe"
-        period:
-          last_7_days: "Ultimele 7 zile"
-          last_30_days: "Ultimele 30 de zile"
-          custom: "Personalizat"
         reports:
           percent_change_tooltip_previous_value:
             yesterday:
@@ -4629,7 +4553,6 @@ ro:
               recover: Recuperează un articol.
             revisions:
               read: "Ia ultima revizie sau una anumită."
-              modify: "Ascunde, afișează sau anulează reviziile."
               permanently_delete: "Șterge definitiv o revizie."
             logs:
               messages: Listează mesajele din /logs sau obține un anumit mesaj din jurnal.
@@ -4769,7 +4692,6 @@ ro:
           site_contact_name_help: |
             Un nume de utilizator al personalului de la care se trimit toate mesajele automate. Dacă este lăsat gol, va fi utilizat contul de sistem implicit.
           your_organization: "Organizația ta"
-          your_organization_description: "Vom utiliza aceste informații în Termenele serviciului și în Notificarea privind confidențialitatea pentru a arăta cine operează site-ul și sub ce jurisdicție."
           company_name: "Nume"
           company_url: "Site web"
           company_url_placeholder: "https://example-co.com"
@@ -4938,7 +4860,6 @@ ro:
         upload:
           label: "Încarcă"
           title: "Încarcă un backup în această instanță."
-          error: "A apărut o eroare la încărcarea fișierului '%{filename}': %{message}"
         settings: "Setări"
         operations:
           failed: "operația %{operation} nu s-a finalizat. Te rugăm verifică rapoartele."
@@ -5467,6 +5388,9 @@ ro:
         activation_filter:
           all: "Toți utilizatorii"
         approved: "Aprobați?"
+        bots:
+          name: "Nume"
+          username: "Nume utilizator"
         titles:
           active: "Utilizatori activi"
           new: "Utilizatori noi"
@@ -5498,7 +5422,6 @@ ro:
         silence_reason: "Motiv"
         silence_modal_title: "Suspendă utilizatorul"
         silence_message: "Mesaj email"
-        silence_message_placeholder: "(lăsați necompletat pentru a trimite mesajul implicit)"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"

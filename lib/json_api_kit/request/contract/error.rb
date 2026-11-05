@@ -26,7 +26,10 @@ module JsonApiKit
         def meta = @meta&.call(self) || {}
 
         def parameter
-          ParameterName.new(*error.attribute.to_s.split(".").map { member_value(member(it)) })
+          ParameterName.new(
+            *error.attribute.to_s.split(".").map { member_value(member(it)) },
+            *options.fetch(:members, []),
+          )
         end
 
         def name = member_value(options[:name])
@@ -37,7 +40,8 @@ module JsonApiKit
 
         def relationship_path = options[:path]
 
-        def member_parameter(member = name) = parameter.member(member)
+        def member_parameter(member = name) =
+          parameter.member(options.fetch(:parameter_member, member))
 
         def window_parameters = base.page.window_names.map { page_parameter(it) }
 

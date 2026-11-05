@@ -8,7 +8,6 @@ import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
-import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllTagsSectionLink from "../common/all-tags-section-link.gjs";
 import Section from "../section.gjs";

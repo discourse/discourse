@@ -7,7 +7,6 @@ import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import { and } from "discourse/truth-helpers";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";

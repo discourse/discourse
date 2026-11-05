@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import SiteTextSummary from "discourse/admin/components/site-text-summary";
 import SiteTextThemeSelector from "discourse/admin/components/site-text-theme-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { not } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";

@@ -10,9 +10,21 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { eq, gte, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiSecretSelector from "discourse/plugins/discourse-ai/discourse/components/ai-secret-selector";
+
+function presetFields(preset) {
+  return {
+    display_name: preset.display_name,
+    name: preset.name,
+    provider: preset.provider,
+    url: preset.url,
+    vision_enabled: preset.vision_enabled,
+    custom_headers: (preset.custom_headers ?? []).map((header) => ({
+      ...header,
+    })),
+  };
+}
 
 export default class AiDecisionModelEditorForm extends Component {
   @service dialog;
@@ -25,8 +37,7 @@ export default class AiDecisionModelEditorForm extends Component {
   @cached
   get formData() {
     const { model } = this.args;
-
-    return {
+    const data = {
       display_name: model.display_name,
       name: model.name,
       provider: model.provider || this.providers[0],
@@ -35,6 +46,17 @@ export default class AiDecisionModelEditorForm extends Component {
       vision_enabled: model.vision_enabled ?? false,
       custom_headers: model.custom_headers ?? [],
     };
+
+    const preset =
+      model.isNew &&
+      this.presets.find((item) => item.preset_id === this.args.preset);
+    if (preset) {
+      Object.assign(data, presetFields(preset), {
+        preset: preset.preset_id,
+      });
+    }
+
+    return data;
   }
 
   get customHeaderLimits() {
@@ -69,7 +91,7 @@ export default class AiDecisionModelEditorForm extends Component {
             this.args.model
           );
           this.router.transitionTo(
-            "adminPlugins.show.discourse-ai-decision-models.index"
+            "adminPlugins.show.discourse-ai-models.index"
           );
         } catch (e) {
           popupAjaxError(e);
@@ -110,14 +132,12 @@ export default class AiDecisionModelEditorForm extends Component {
     await set("preset", value);
     const preset = this.presets.find((item) => item.preset_id === value);
     if (preset) {
-      for (const name of ["display_name", "name", "url", "vision_enabled"]) {
-        await set(name, preset[name]);
+      const { provider, custom_headers, ...fields } = presetFields(preset);
+      for (const [name, fieldValue] of Object.entries(fields)) {
+        await set(name, fieldValue);
       }
-      await this.selectProvider(preset.provider, { set });
-      await set(
-        "custom_headers",
-        (preset.custom_headers ?? []).map((header) => ({ ...header }))
-      );
+      await this.selectProvider(provider, { set });
+      await set("custom_headers", custom_headers);
     }
     this.testResult = null;
   }
@@ -146,8 +166,8 @@ export default class AiDecisionModelEditorForm extends Component {
 
   <template>
     <BackButton
-      @label="discourse_ai.decision_models.back"
-      @route="adminPlugins.show.discourse-ai-decision-models"
+      @label="discourse_ai.models.back"
+      @route="adminPlugins.show.discourse-ai-models"
     />
     <Form
       class="ai-decision-model-editor"

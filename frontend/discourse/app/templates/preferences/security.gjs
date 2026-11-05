@@ -7,7 +7,6 @@ import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
 import UserMcpAuthorizations from "discourse/components/user-preferences/user-mcp-authorizations";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

@@ -4,7 +4,6 @@ import { isEmpty } from "@ember/utils";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
-import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";

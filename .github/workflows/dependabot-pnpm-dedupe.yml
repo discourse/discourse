@@ -39,6 +39,15 @@ jobs:
         run: |
           git config --global user.email "team@discourse.org"
           git config --global user.name "discoursebot"
-          git add pnpm-lock.yaml
-          git status
-          git commit -m "pnpm dedupe [dependabot skip]" && git push || echo "done"
+
+          # The Font Awesome sprite sync may push to this branch at the same time, so retry on a rejected push
+          for _ in 1 2 3; do
+            git add pnpm-lock.yaml
+            git diff --cached --quiet && exit 0
+            git commit -m "pnpm dedupe [dependabot skip]"
+            git push origin "HEAD:$GITHUB_REF_NAME" && exit 0
+            git fetch --depth=1 origin "$GITHUB_REF_NAME"
+            git reset --hard FETCH_HEAD
+            pnpm dedupe --ignore-scripts
+          done
+          exit 1

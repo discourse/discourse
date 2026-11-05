@@ -21,7 +21,6 @@ import type Site from "discourse/models/site";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DFlashMessage, {

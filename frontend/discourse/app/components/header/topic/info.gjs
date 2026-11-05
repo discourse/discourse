@@ -10,7 +10,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import { and, gt, not, or } from "discourse/truth-helpers";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -178,7 +177,12 @@ export default class Info extends Component {
             {{/if}}
 
             <div class="topic-header-extra">
-              {{trustHTML this.tags}}
+              <PluginOutlet
+                @name="header-tags-wrapper"
+                @outletArgs={{lazyHash topic=@topicInfo tags=@topicInfo.tags}}
+              >
+                {{trustHTML this.tags}}
+              </PluginOutlet>
               {{#if this.showPM}}
                 <div class="topic-header-participants">
                   {{#each this.participants as |participant|}}

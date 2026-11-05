@@ -73,6 +73,8 @@ te:
         filters:
           all: "అన్నీ"
           reset: "రీసెట్ చేయండి"
+        sentiment:
+          enabled: "ప్రారంభించబడింది"
         search:
           name: "శోధించండి"
         image_caption:
@@ -113,6 +115,8 @@ te:
             other: "%{count} పోస్ట్‌లు"
       spam:
         short_title: "స్పామ్"
+        no_llm_selected: "ఏదీ లేదు"
+        no_decision_model_selected: "ఏదీ లేదు"
         enable: "ప్రారంభించండి"
         test_modal:
           spam: "స్పామ్"
@@ -206,6 +210,13 @@ te:
         delete: "తొలగించండి"
         tools_modal:
           required: "అవసరం"
+      models:
+        name: "పేరు"
+        type: "రకం"
+        edit: "సవరించండి"
+        select_type: "ఎంచుకోండి"
+        types:
+          embedding: "పొందుపరచడం"
       llms:
         display_name: "పేరు"
         vision_modes:
@@ -282,6 +293,13 @@ te:
             tag: "ట్యాగ్"
           table:
             total_count: "మొత్తం"
+      ai_search:
+        related_replies:
+          one: "%{count} ప్రత్యుత్తరం"
+          other: "%{count} ప్రత్యుత్తరాలు"
+        tabs:
+          topics: "విషయాలు"
+          messages: "సందేశాలు"
       discobot_discoveries:
         legacy:
           regular_results: "విషయాలు"

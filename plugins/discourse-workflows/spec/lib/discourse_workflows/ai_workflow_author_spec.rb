@@ -51,6 +51,19 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
     expect(described_class.new.tools).to include(DiscourseWorkflows::Ai::Tools::SearchChatChannels)
   end
 
+  it "keeps chat channel search available when chat is enabled after the tool registry is cached" do
+    skip "Chat plugin is not available" if !defined?(::Chat::Channel)
+
+    SiteSetting.chat_enabled = false
+    described_class.instance_variable_set(:@external_registry_signature, nil)
+    described_class.new.available_tools
+
+    SiteSetting.chat_enabled = true
+    expect(described_class.new.available_tools).to include(
+      DiscourseWorkflows::Ai::Tools::SearchChatChannels,
+    )
+  end
+
   it "includes external chat integration channel search only when the integration is enabled" do
     skip "Chat Integration plugin is not available" if !defined?(DiscourseChatIntegration::Channel)
 

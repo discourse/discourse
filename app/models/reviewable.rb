@@ -21,7 +21,7 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  attr_accessor :created_new
+  attr_accessor :created_new, :reopened
   validates :type, :status, :created_by_id, presence: true
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: "User"
@@ -238,8 +238,9 @@ class Reviewable < ActiveRecord::Base
         if old_status != statuses[:pending]
           # If we're transitioning back from reviewed to pending, we should recalculate
           # the score to prevent posts from being hidden.
-          reviewable.recalculate_score
-          reviewable.log_history(:transitioned, created_by)
+          reviewable.recalculate_score(event: :skip)
+          reviewable.log_history(:transitioned, Discourse.system_user)
+          reviewable.reopened = true
         end
       end
     end
@@ -289,7 +290,11 @@ class Reviewable < ActiveRecord::Base
     # Used flags cannot be deleted or update by admins, only disabled.
     Flag.reset_flag_settings! if PostActionType.notify_flag_type_ids.include?(reviewable_score_type)
 
-    DiscourseEvent.trigger(:reviewable_score_updated, self)
+    if reopened && !take_action
+      DiscourseEvent.trigger(:reviewable_transitioned_to, :pending, self)
+    else
+      DiscourseEvent.trigger(:reviewable_score_updated, self)
+    end
 
     rs
   end
@@ -452,15 +457,11 @@ class Reviewable < ActiveRecord::Base
           )
 
         if attributes
-          DsaStatementOfRecord.create!(
-            reviewable_id: id,
-            payload:
-              attributes.merge(
-                application_date: Date.current.iso8601,
-                territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
-                source_type: "SOURCE_VOLUNTARY",
-                decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
-              ),
+          DsaStatementOfRecord.record!(
+            reviewable: self,
+            attributes:,
+            performed_by:,
+            classification: args[:dsa_classification],
           )
         end
       end
@@ -489,9 +490,9 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  # Includes pending scores plus disagreed ones, so re-approving a previously
-  # rejected reviewable correctly flips those scores back to "agreed".
   def updatable_reviewable_scores
+    return reviewable_scores.pending if !rejected?
+
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
@@ -502,14 +503,20 @@ class Reviewable < ActiveRecord::Base
       ReviewableClaimedTopic.release_manual_claim(topic_id, performed_by)
     end
 
+    scores = updatable_reviewable_scores
     self.status = status_symbol
     save!
 
     log_history(:transitioned, performed_by)
-    DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
+    DiscourseEvent.trigger(
+      :reviewable_transitioned_to,
+      status_symbol,
+      self,
+      acting_user: performed_by,
+    )
 
     if score_status = ReviewableScore.score_transitions[status_symbol]
-      updatable_reviewable_scores.update_all(
+      scores.update_all(
         status: score_status,
         reviewed_by_id: performed_by.id,
         reviewed_at: Time.zone.now,
@@ -789,7 +796,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.user_menu_list_for(user, limit: 30)
-    list_for(user, limit: limit, status: :pending, include_claimed_by_others: false).to_a
+    list_for(user, limit:, status: :pending, include_claimed_by_others: false, preload: false).to_a
   end
 
   def self.basic_serializers_for_list(reviewables, user)
@@ -881,7 +888,7 @@ class Reviewable < ActiveRecord::Base
     SQL
   end
 
-  def recalculate_score
+  def recalculate_score(event: :trigger)
     # pending/agreed scores count
     sql = <<~SQL
       UPDATE reviewables
@@ -923,8 +930,9 @@ class Reviewable < ActiveRecord::Base
     )
 
     self.score = result[0].score
+    clear_attribute_changes([:score])
 
-    DiscourseEvent.trigger(:reviewable_score_updated, self)
+    DiscourseEvent.trigger(:reviewable_score_updated, self) if event == :trigger
 
     score
   end
@@ -936,7 +944,12 @@ class Reviewable < ActiveRecord::Base
     target_type == "User" ? target : target_created_by
   end
 
-  def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
+  def delete_user_actions(
+    actions,
+    bundle = nil,
+    require_reject_reason: false,
+    dsa_classification_required: false
+  )
     bundle ||=
       actions.add_bundle(
         "#{id}-reject_user",
@@ -949,7 +962,7 @@ class Reviewable < ActiveRecord::Base
     username = target_user&.username
     confirmable = !require_reject_reason && username.present?
 
-    actions.add(:delete_user, bundle: bundle) do |a|
+    actions.add(:delete_user, bundle: bundle, dsa_classification_required:) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.description = "reviewables.actions.reject_user.delete.description"
@@ -961,7 +974,7 @@ class Reviewable < ActiveRecord::Base
       end
     end
 
-    actions.add(:delete_user_block, bundle: bundle) do |a|
+    actions.add(:delete_user_block, bundle: bundle, dsa_classification_required:) do |a|
       a.icon = "ban"
       a.label = "reviewables.actions.reject_user.block.title"
       a.require_reject_reason = require_reject_reason

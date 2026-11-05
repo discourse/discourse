@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { eq } from "discourse/truth-helpers";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 

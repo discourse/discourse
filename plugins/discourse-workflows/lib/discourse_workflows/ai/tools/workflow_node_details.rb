@@ -73,6 +73,7 @@ module DiscourseWorkflows
             name: node["name"],
             type: node["type"],
             type_version: node["typeVersion"],
+            deprecation: DiscourseWorkflows::NodeData.node_type(node)&.deprecation,
             parameters: DiscourseWorkflows::NodeData.parameters(node),
             incoming: connections_where("target_node_id", node_id, "source_node_id"),
             outgoing: connections_where("source_node_id", node_id, "target_node_id"),

@@ -129,7 +129,8 @@ module DiscourseWorkflows
       end
 
       SORT_DIRECTIONS = { "asc" => "ASC", "desc" => "DESC" }.freeze
-      MAX_LIMIT = 100
+      MAX_LIMIT = DiscourseWorkflows::Pagination::MAX_LIMIT
+      TOTAL_COUNT_COLUMN = "total-count"
 
       attr_reader :data_table
 
@@ -176,31 +177,27 @@ module DiscourseWorkflows
         with_statement_timeout do
           um = build_update_manager(row_input.columns)
           um.where(@table[:id].eq(row_id))
-          connection
-            .exec_query("#{um.to_sql} RETURNING *")
-            .to_a
-            .first
-            &.then { |row| serialize_row(row) }
+          returning_rows(um.to_sql)[:rows].first
         end
       end
 
-      def update(query:, row_input:)
+      def update(query:, row_input:, returning: :count)
         return 0 if row_input.columns.empty?
 
         validate_storage_limit!
         with_statement_timeout do
           um = build_update_manager(row_input.columns)
           um = apply_filters(um, query.normalized_filter)
-          connection.exec_update(um.to_sql)
+          execute(um.to_sql, returning:, limit: query.limit)
         end
       end
 
-      def delete(query:)
+      def delete(query:, returning: :count)
         with_statement_timeout do
           dm = Arel::DeleteManager.new
           dm.from(@table)
           dm = apply_filters(dm, query.normalized_filter)
-          connection.exec_delete(dm.to_sql)
+          execute(dm.to_sql, returning:, limit: query.limit)
         end
       end
 
@@ -248,18 +245,22 @@ module DiscourseWorkflows
 
       def validate_storage_limit!
         return if self.class.within_storage_limit?
-        raise ArgumentError, "Data table storage limit exceeded"
+        raise InvalidInput, "Data table storage limit exceeded"
       end
 
       def query_rows(data_query)
-        query = @table.project(Arel.star, Arel.sql("COUNT(*) OVER() AS _total_count"))
+        query = @table.project(Arel.star, Arel.sql("COUNT(*) OVER() AS \"#{TOTAL_COUNT_COLUMN}\""))
         query = apply_filters(query, data_query.normalized_filter)
         query = apply_ordering(query, data_query.sort_by, data_query.sort_direction)
         query = apply_pagination(query, data_query.limit, data_query.offset)
 
-        results = connection.exec_query(query.to_sql).to_a
-        total_count = results.first&.[]("_total_count") || 0
-        rows = results.map { |row| serialize_row(row.except("_total_count")) }
+        rows_with_count(query.to_sql)
+      end
+
+      def rows_with_count(sql)
+        results = connection.exec_query(sql).to_a
+        total_count = results.first&.[](TOTAL_COUNT_COLUMN) || 0
+        rows = results.map { |row| serialize_row(row.except(TOTAL_COUNT_COLUMN)) }
 
         { rows: rows, count: total_count }
       end
@@ -271,23 +272,26 @@ module DiscourseWorkflows
       end
 
       def insert_row(normalized_data)
-        result =
-          if normalized_data.empty?
-            im = Arel::InsertManager.new
-            im.into(@table)
-            connection.exec_query("#{im.to_sql} DEFAULT VALUES RETURNING *").to_a.first
-          else
-            execute_insert(normalized_data)
-          end
-
-        serialize_row(result)
-      end
-
-      def execute_insert(normalized_data)
         im = Arel::InsertManager.new
         im.into(@table)
+        return returning_rows("#{im.to_sql} DEFAULT VALUES")[:rows].first if normalized_data.empty?
+
         im.insert(normalized_data.map { |name, value| [@table[name], value] })
-        connection.exec_query("#{im.to_sql} RETURNING *").to_a.first
+        returning_rows(im.to_sql)[:rows].first
+      end
+
+      def execute(sql, returning:, limit:)
+        return connection.exec_update(sql) if returning == :count
+
+        returning_rows(sql, limit:)
+      end
+
+      def returning_rows(sql, limit: nil)
+        select =
+          "WITH affected AS (#{sql} RETURNING *) SELECT *, COUNT(*) OVER() AS \"#{TOTAL_COUNT_COLUMN}\" FROM affected ORDER BY id"
+        capped = capped_limit(limit)
+        select = "#{select} LIMIT #{capped}" if capped
+        rows_with_count(select)
       end
 
       def build_update_manager(normalized_data)
@@ -312,7 +316,7 @@ module DiscourseWorkflows
         return query.order(@table[:id].asc) if sort_by.blank?
 
         if valid_sort_columns.exclude?(sort_by.to_s)
-          raise ArgumentError, "Invalid sort column: #{sort_by.inspect}"
+          raise InvalidInput, "Invalid sort column: #{sort_by.inspect}"
         end
 
         direction = SORT_DIRECTIONS[sort_direction.to_s.downcase] || "ASC"
@@ -327,15 +331,26 @@ module DiscourseWorkflows
       end
 
       def apply_pagination(query, limit, offset)
-        if limit.present?
-          parsed_limit = [Integer(limit), MAX_LIMIT].min
-          query = query.take(parsed_limit) if parsed_limit > 0
-        end
+        capped = capped_limit(limit)
+        query = query.take(capped) if capped
         if offset.present?
-          parsed_offset = Integer(offset)
+          parsed_offset = parse_integer(offset, "offset")
           query = query.skip(parsed_offset) if parsed_offset > 0
         end
         query
+      end
+
+      def capped_limit(limit)
+        return if limit.blank?
+
+        parsed = [parse_integer(limit, "limit"), MAX_LIMIT].min
+        parsed if parsed > 0
+      end
+
+      def parse_integer(value, name)
+        Integer(value)
+      rescue ArgumentError, TypeError
+        raise InvalidInput, "#{name} must be an integer"
       end
 
       def build_arel_condition(filter)
@@ -391,8 +406,6 @@ module DiscourseWorkflows
           connection.execute("SET LOCAL lock_timeout = '#{LOCK_TIMEOUT_MS}ms'")
           yield
         end
-      rescue PG::LockNotAvailable
-        raise
       end
     end
   end

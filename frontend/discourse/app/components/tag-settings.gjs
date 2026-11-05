@@ -13,7 +13,6 @@ import getURL from "discourse/lib/get-url";
 import { slugify } from "discourse/lib/utilities";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
-import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";

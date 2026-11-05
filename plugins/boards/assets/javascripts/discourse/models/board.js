@@ -34,6 +34,7 @@ export default class Board {
   @tracked archived;
   @tracked can_archive;
   @tracked can_manage;
+  @tracked can_manage_acl_owner;
   @tracked can_unarchive;
   @tracked can_write;
   @tracked card_style;
@@ -42,6 +43,7 @@ export default class Board {
   @tracked id;
   @tracked name;
   @tracked old_slug_used;
+  @tracked owners;
   @tracked require_confirmation;
   @tracked show_tags;
   @tracked show_topic_thumbnail;

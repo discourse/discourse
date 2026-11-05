@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import CONTROL_REGISTRY from "../../../lib/workflows/control-registry.js";
 import {
@@ -116,6 +115,7 @@ export default class PropertyEngineConfigurator extends Component {
               @nodeType={{this.nodeType}}
               @nodeTypes={{@nodeTypes}}
               @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @onChange={{@onChange}}
               @schema={{field}}
               @session={{@session}}
             />

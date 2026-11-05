@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 

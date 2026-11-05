@@ -29,16 +29,16 @@ ug:
       close: "تاقا"
       delete: "ئۆچۈر"
       edit: "تەھرىر"
-      back: "كەينى"
       save: "ساقلا"
-      apply: "قوللان"
       update_range:
         all_time: "ھەممە ۋاقىت"
       custom_range_from: "كىمدىن"
       admin:
         name: "ئىسمى"
+        created_by: "قۇرغۇچى"
     discourse_workflows:
       gamification_score:
         username: "ئىشلەتكۈچى"
         date: "چېسلا"
         description: "چۈشەندۈرۈش"
+        category_id: "سەھىپە"

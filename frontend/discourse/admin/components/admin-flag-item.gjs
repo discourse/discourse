@@ -11,7 +11,6 @@ import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";

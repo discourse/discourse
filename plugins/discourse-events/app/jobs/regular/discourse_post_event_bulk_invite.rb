@@ -108,6 +108,7 @@ module Jobs
       invitee.status = status
       invitee.recurring = @recurring && invitee.going?
       invitee.save!
+      invitee.publish_status_changed!(acting_user: @current_user) if invitee.saved_change_to_status?
     end
 
     def save_log(message)

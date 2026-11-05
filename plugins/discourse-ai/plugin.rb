@@ -41,6 +41,7 @@ register_asset "stylesheets/modules/admin-dashboard/common/admin-dashboard-highl
 register_asset "stylesheets/modules/ai-bot/common/bot-replies.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-agent.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
+register_asset "stylesheets/modules/ai-bot/common/ai-search.scss"
 register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"
@@ -84,12 +85,46 @@ require_relative "lib/mcp/oauth_flow"
 
 # Other plugins can register features through this register.
 DiscoursePluginRegistry.define_filtered_register(:external_ai_features)
+DiscoursePluginRegistry.define_filtered_register(:external_ai_tools)
 
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end
 
 after_initialize do
+  reloadable_patch { ::BotUser.prepend DiscourseAi::BotUserExtensions }
+
+  add_to_serializer(
+    :admin_user_list,
+    :sources,
+    respect_plugin_enabled: false,
+    include_condition: -> { scope.is_admin? && object.bot? && @options[:user_ids].present? },
+  ) do
+    # Collection serializers share options, keeping these lookups bounded to one batch per page.
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, [])
+  end
+
+  # Disabling an agent deactivates its bot; a disabled plugin only dims them in the list.
+  add_to_serializer(
+    :admin_user_list,
+    :bot_inactive,
+    respect_plugin_enabled: false,
+    include_condition: -> do
+      !SiteSetting.discourse_ai_enabled && scope.is_admin? && object.bot? &&
+        @options[:user_ids].present?
+    end,
+  ) do
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, []).present?
+  end
+
   register_admin_dashboard_section(
     id: "ask_ai",
     enabled: -> { SiteSetting.ai_ask_ai_enabled },
@@ -125,6 +160,7 @@ after_initialize do
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::PostLocaleDetected::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
@@ -146,6 +182,7 @@ after_initialize do
   register_problem_check ProblemCheck::AiLlmStatus
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
+  register_problem_check ProblemCheck::AiAskAiExternalSource
 
   register_modifier(:reviewable_automated_detection) do |automated, reviewable|
     scores = reviewable.reviewable_scores
@@ -242,6 +279,10 @@ after_initialize do
 
   on(:post_process_localized_cooked) do |doc, post, post_localization|
     DiscourseAi::PostImageCaptions.process_cooked(doc, post, locale: post_localization.locale)
+  end
+
+  register_modifier(:deliver_push_notification_localization_pending) do |pending, post, user|
+    pending || DiscourseAi::Translation.post_localization_pending?(post, user.effective_locale)
   end
 
   register_modifier(:post_search_index_text) do |text, post_id, cooked, locale|

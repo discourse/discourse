@@ -1,5 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { REVEAL_EVENT } from "discourse/lib/highlight-html";
 import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
 
 module("Spoiler Alert | Unit | apply-spoiler", function (hooks) {
@@ -112,5 +113,16 @@ module("Spoiler Alert | Unit | apply-spoiler", function (hooks) {
     } finally {
       spoiler.remove();
     }
+  });
+
+  test("reveals on the reveal event", function (assert) {
+    const spoiler = buildSpoiler();
+    applySpoiler(spoiler);
+
+    spoiler.dispatchEvent(new Event(REVEAL_EVENT));
+
+    assert
+      .dom(spoiler)
+      .hasAttribute("data-spoiler-state", "revealed", "reveals the spoiler");
   });
 });

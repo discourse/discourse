@@ -65,16 +65,10 @@ module DiscourseWorkflows
       end
 
       def finish!(steps:)
-        save!(steps)
-        execution.update!(
-          status: :success,
-          finished_at: Time.current,
-          run_time_ms: Execution.compute_run_time_ms(steps),
-          resume_token: nil,
-          waiting_node_id: nil,
-          waiting_until: nil,
-          timeout_action: nil,
-        )
+        unless persist_if_active!(steps, status: :success, **finished_attributes(steps))
+          return execution
+        end
+
         publish_execution_run_data
         publish_progress(refresh: true)
         if @options.workflow_call_child?
@@ -84,17 +78,13 @@ module DiscourseWorkflows
       end
 
       def fail!(error:, steps: [])
-        save!(steps)
-        execution.update!(
+        attributes = {
           status: :error,
           error: error.message.to_s.truncate(1000),
-          finished_at: Time.current,
-          run_time_ms: Execution.compute_run_time_ms(steps),
-          resume_token: nil,
-          waiting_node_id: nil,
-          waiting_until: nil,
-          timeout_action: nil,
-        )
+          **finished_attributes(steps),
+        }
+        return execution unless persist_if_active!(steps, **attributes)
+
         execution.trigger_error_workflow(error, steps:)
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
@@ -121,16 +111,14 @@ module DiscourseWorkflows
       end
 
       def pause_waiting_execution!(node:, waiting_until: nil, timeout_action: nil, steps: [])
-        execution.transaction do
-          execution.update!(
-            status: :waiting,
-            waiting_node_id: node.id,
-            waiting_until:,
-            resume_token: @execution_context.resume_token,
-            timeout_action:,
-          )
-          save!(steps)
-        end
+        attributes = {
+          status: :waiting,
+          waiting_node_id: node.id,
+          waiting_until:,
+          resume_token: @execution_context.resume_token,
+          timeout_action:,
+        }
+        return unless persist_if_active!(steps, **attributes)
 
         publish_waiting_form_notification(node)
         publish_progress(refresh: true)
@@ -138,13 +126,7 @@ module DiscourseWorkflows
       end
 
       def clear_waiting_execution!
-        execution.update!(
-          status: :running,
-          waiting_node_id: nil,
-          waiting_until: nil,
-          resume_token: nil,
-          timeout_action: nil,
-        )
+        execution.update!(status: :running, **Execution::CLEARED_WAIT_STATE)
       end
 
       def publish_progress(step: nil, refresh: false)
@@ -152,6 +134,30 @@ module DiscourseWorkflows
       end
 
       private
+
+      def persist_if_active!(steps, **attributes)
+        execution.transaction do
+          if Execution.where(id: execution.id, status: %i[running waiting]).lock.exists?
+            save!(steps)
+            execution.update!(attributes)
+            true
+          else
+            Rails.logger.warn(
+              "discourse-workflows: execution #{execution.id} is no longer active, " \
+                "discarding its #{attributes[:status]} update",
+            )
+            false
+          end
+        end
+      end
+
+      def finished_attributes(steps)
+        {
+          finished_at: Time.current,
+          run_time_ms: Execution.compute_run_time_ms(steps),
+          **Execution::CLEARED_WAIT_STATE,
+        }
+      end
 
       def persist_execution!(status:, trigger_data:, finished_at: nil, error: nil)
         @execution = @options.existing_execution || Execution.new

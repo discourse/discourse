@@ -58,6 +58,8 @@ en:
         Visit the channel at %{channel_url} to retry.
 
   chat:
+    design_wizard_homepage_name: "Chat"
+    design_wizard_homepage_description: "Open the %{channel} channel when members visit your homepage."
     deleted_chat_username: deleted
     crawler:
       directory_title: "Chat channels"
@@ -286,11 +288,13 @@ en:
         recipient_inactive: "'%{username}' hasn't activated their account yet."
         recipient_chat_disabled: "'%{username}' has disabled chat in their preferences."
         recipient_cannot_chat: "'%{username}' can't use chat because they aren't in a group allowed by the 'chat allowed groups' setting."
-        sender_anonymous: "Direct messages can't be sent anonymously. Choose a user as the sender."
+        sender_anonymous: "Chat messages can't be sent anonymously. Choose a user as the sender."
         sender_chat_disabled: "Sender '%{sender}' has disabled chat in their preferences."
         sender_cannot_chat: "Sender '%{sender}' can't use chat because they aren't in a group allowed by the 'chat allowed groups' setting."
         sender_cannot_create_dm: "Sender '%{sender}' isn't allowed to send direct messages (see the 'direct message enabled groups' setting)."
         sender_dms_disabled: "Sender '%{sender}' has disabled personal messages in their preferences."
+        sender_cannot_post: "Sender '%{sender}' isn't allowed to post in channel %{channel_id}."
+        sender_not_member: "Sender '%{sender}' isn't a member of channel %{channel_id}. Join the channel as that user first."
         user_blocked: "'%{sender}' can't send a direct message to '%{username}': %{reason}"
         group_blocked: "'%{sender}' can't send a group direct message to %{usernames}: %{reason}"
       chat_approval:
@@ -314,7 +318,7 @@ en:
         preferences_bypassed: "'%{username}' doesn't accept direct messages from '%{sender}', but the message was delivered because the sender is staff."
     logs:
       send_chat_message:
-        sent_to_channel: "Item %{item_index}: sent message %{message_id} to channel %{channel_id}."
+        sent_to_channel: "Item %{item_index}: '%{sender}' sent message %{message_id} to channel %{channel_id}."
         sent_to_user: "Item %{item_index}: '%{sender}' sent message %{message_id} to '%{username}'."
         sent_to_group: "Item %{item_index}: '%{sender}' sent message %{message_id} to the group direct message with %{usernames}."
 

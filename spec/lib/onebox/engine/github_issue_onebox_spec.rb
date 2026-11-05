@@ -19,6 +19,14 @@ RSpec.describe Onebox::Engine::GithubIssueOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
+    it "shows the preview type and repository in the header" do
+      header = Nokogiri::HTML5.fragment(html).at_css("aside > header")
+
+      expect(header.at_css(".github-onebox__label").text.strip).to eq("Open issue")
+      expect(header.at_css("a").text.strip).to eq("discourse/discourse")
+      expect(header.at_css("a")["href"]).to eq(link)
+    end
+
     it "sanitizes the input and transform the emoji into an img tag" do
       sanitized_label =
         "Test <img src=\"/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}\" title=\"+1\" class=\"emoji\" alt=\"+1\" loading=\"lazy\" width=\"20\" height=\"20\">"
@@ -27,6 +35,17 @@ RSpec.describe Onebox::Engine::GithubIssueOnebox do
 
     it "sets the data-github-private-repo attr to false" do
       expect(html).to include("data-github-private-repo=\"false\"")
+    end
+
+    it "shows a closed issue header when the issue has been closed" do
+      response = MultiJson.load(onebox_response("github_issue_onebox"))
+      response["closed_at"] = "2026-10-15T06:00:00Z"
+      response["closed_by"] = response["user"]
+      stub_request(:get, issue_uri).to_return(body: MultiJson.dump(response))
+
+      preview = Nokogiri::HTML5.fragment(html)
+
+      expect(preview.at_css(".github-onebox__label").text.strip).to eq("Closed issue")
     end
 
     context "when the PR is in a private repo" do

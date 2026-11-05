@@ -14,6 +14,7 @@ en:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Chat bot discoverability changed"
             chat_channel_status_change: "Chat channel status changed"
             chat_channel_delete: "Chat channel deleted"
             chat_auto_remove_membership: "Memberships automatically removed from channels"
@@ -40,6 +41,12 @@ en:
 
     chat:
       homepage_option: "Chat channel"
+      admin_onboarding:
+        start_posting:
+          title: "Start chatting"
+          description: "Send your first message in #%{channel}."
+          action: "Write a message"
+          completed: "Keep chatting"
       edit_category:
         tab_title: "Chat"
         channel: "Channel"
@@ -313,6 +320,7 @@ en:
         read_only: "Channel is read only, you cannot send new messages right now."
       placeholder_silenced: "You cannot send messages at this time."
       remove_upload: "Remove file"
+      preview_upload: "Preview %{filename}"
       react: "React with emoji"
       reply: "Reply"
       message_actions: "Message actions"
@@ -618,6 +626,9 @@ en:
         members_label: "Members"
 
       admin:
+        bot_discoverability:
+          label: "Show in chat"
+          description: "Let people find this bot when starting a chat direct message"
         title: "Chat"
         export_messages:
           title: "Export chat messages"
@@ -671,7 +682,8 @@ en:
           alphabetical: "Alphabetically"
           recent_activity: "Recent activity"
           priority: "Priority"
-          priority_description: "Mentions, then unreads, then recent activity"
+          priority_description: "Mentions, then unreads, then recent activity, each sorted alphabetically"
+          priority_description_dms: "Mentions, then unreads, then recent activity"
         empty:
           filtered: "No channels match this filter."
           show_all: "Show all channels"
@@ -951,11 +963,13 @@ en:
           user: "Users (a direct message each)"
           group: "Group (one direct message with everyone)"
         channel_id: "Channel"
+        thread_id: "Thread ID"
+        thread_id_description: "Reply in this thread instead of the main channel. Leave blank to post in the channel."
         target_usernames: "Recipients"
         target_usernames_description: "Users to message. Use an expression such as $trigger.user.username to pick them from each item."
         message: "Message"
         actor_username: "Sender"
-        actor_username_description: "Direct messages are sent as this user, and recipients see them as written by them."
+        actor_username_description: "Messages are sent as this user, and everyone sees them as written by them. When posting to a channel, the user must be a member of it."
       chat_approval:
         message: "Message"
         buttons: "Buttons"

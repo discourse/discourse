@@ -325,16 +325,32 @@ This matcher expects the service to succeed.
 
 ## Steps
 
-### `params(name = :default, default_values_from: nil, base_class: Service::ContractBase, &block)`
+### `params(name = :default, default_values_from: nil, base_class: Service::ContractBase, from_resource: nil, only: nil, except: nil, &block)`
 
 **Arguments**
 
 - _name_: the name of the contract, in the case there is more than one. Defaults to `default`.
 - _default_values_from_: name of a model to use to pre-fill the contract values. This is useful when you want some values of a model to be updated through a contract while applying other default values. A real-world example is available in the [`Chat::UpdateChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/update_channel.rb#L39) service.
 - _base_class_: the base class to use for the contract. This is particularly useful for reusing an existing contract (for example, you could have very similar contracts between a `Create` and a `Update` service). Defaults to `Service::ContractBase`.
+- _from_resource_: a resource whose writable attribute names and ActiveModel types are imported into the contract.
+- _only_: writable attribute names to import. Accepts strings or symbols. An empty array imports no attributes.
+- _except_: writable attribute names to exclude from the import. Accepts strings or symbols.
 - _block_: the block containing all the validations, attribute definitions, etc.
 
 This step declares the use of a contract to validate input parameters. Parameters provided to the service will be passed to the contract if their name matches the attributes defined in the contract.
+
+With `from_resource`, all writable attributes are imported by default. Use `only:` or `except:` to select the attributes for an action:
+
+```ruby
+params(from_resource: TopicResource, only: %i[title]) do
+  attribute :notify, :boolean, default: false
+  validates :title, presence: true
+end
+```
+
+Imports run before the block. Explicit attribute declarations override imported types through normal ActiveModel behavior. A declaration that omits the type preserves the imported type. Selection applies only to imports, so the block can declare additional parameters or declare an excluded attribute explicitly.
+
+Selection options require `from_resource:` and cannot be combined. Unknown or read-only selection names raise an error when the service is defined. Imports include only names and types.
 
 With `default_values_from`, nested hashes are merged recursively. Supplied values override model values, including `nil`, `false`, and `0`. An empty hash keeps the defaults at that level. A supplied array replaces the whole model array; an empty array clears it.
 

@@ -1,4 +1,3 @@
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 
 const PostMetaDataSelectPost = <template>

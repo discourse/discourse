@@ -4,6 +4,7 @@ RSpec.describe Boards::Publisher do
   fab!(:admin)
   fab!(:write_group, :group)
   fab!(:read_group, :group)
+  fab!(:direct_user, :user)
 
   before { enable_current_plugin }
 
@@ -11,10 +12,11 @@ RSpec.describe Boards::Publisher do
     board =
       Boards::Board.create!(name: "Test Board", slug: "test-publisher", created_by_id: admin.id)
     Fabricate(
-      :access_control_list_with_groups,
+      :access_control_list_with_users_and_groups,
       target: board,
       permission: "edit",
       groups: [write_group],
+      users: [direct_user],
     )
     Fabricate(
       :access_control_list_with_groups,
@@ -22,6 +24,7 @@ RSpec.describe Boards::Publisher do
       permission: "view",
       groups: [read_group],
     )
+    Fabricate(:access_control_list_with_users, target: board, permission: "owner", users: [admin])
     board
   end
   fab!(:column) { board.columns.create!(title: "To Do", position: 0) }
@@ -41,7 +44,7 @@ RSpec.describe Boards::Publisher do
   let(:test_client_id) { "abc123" }
 
   describe ".publish_card_created!" do
-    it "publishes a card_created message with group_ids and client_id" do
+    it "publishes a card_created message to group, direct user, and owner audiences" do
       messages =
         MessageBus.track_publish(channel) do
           described_class.publish_card_created!(board, card_data, client_id: test_client_id)
@@ -53,6 +56,7 @@ RSpec.describe Boards::Publisher do
       expect(msg.data[:client_id]).to eq(test_client_id)
       expect(msg.data[:card]).to eq(card_data)
       expect(msg.group_ids).to contain_exactly(write_group.id, read_group.id)
+      expect(msg.user_ids).to contain_exactly(direct_user.id, admin.id)
     end
   end
 
@@ -241,14 +245,23 @@ RSpec.describe Boards::Publisher do
 
   context "with a public board" do
     fab!(:public_board) do
-      Boards::Board.create!(
-        name: "Public Board",
-        slug: "test-publisher-public",
-        created_by_id: admin.id,
+      board =
+        Boards::Board.create!(
+          name: "Public Board",
+          slug: "test-publisher-public",
+          created_by_id: admin.id,
+        )
+      Fabricate(
+        :access_control_list_with_groups,
+        target: board,
+        permission: "view",
+        groups: [Group.find(Group::AUTO_GROUPS[:anonymous_users])],
       )
+      Fabricate(:access_control_list_with_users, target: board, permission: "owner", users: [admin])
+      board
     end
 
-    it "publishes without group_ids restriction" do
+    it "publishes without audience restrictions when anonymous users can read" do
       messages =
         MessageBus.track_publish("/boards/#{public_board.id}") do
           described_class.publish_board_updated!(public_board, client_id: test_client_id)
@@ -256,6 +269,7 @@ RSpec.describe Boards::Publisher do
 
       expect(messages.size).to eq(1)
       expect(messages.first.group_ids).to be_nil
+      expect(messages.first.user_ids).to be_nil
     end
   end
 

@@ -10,7 +10,6 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";

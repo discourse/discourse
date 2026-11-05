@@ -21,7 +21,14 @@ fa_IR:
     chat_channel_archive_failed_no_topic:
       title: "بایگانی کانال چت ناموفق بود"
   chat:
+    design_wizard_homepage_name: "گفتگو"
     deleted_chat_username: حذف شد
+    crawler:
+      directory_title: "کانال‌های چت"
+      nav_title: "گفتگو"
+      thread_replies:
+        one: "%{count} پاسخ"
+        other: "%{count} پاسخ"
     errors:
       channel_exists_for_category: "یک کانال دیگر از قبل برای این دسته‌بندی و نام وجود دارد"
       draft_too_long: "پیش‌نویس خیلی طولانی است."

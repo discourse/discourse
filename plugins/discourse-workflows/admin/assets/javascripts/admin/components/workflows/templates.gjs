@@ -6,7 +6,6 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";

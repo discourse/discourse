@@ -493,6 +493,15 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_trusted_hosts:
+    default: "fcm.googleapis.com|updates.push.services.mozilla.com|push.apple.com|notify.windows.com"
+    type: host_list
+    list_type: simple
+    area: "notifications"
+  push_notification_localization_max_wait_mins:
+    default: 3
+    min: 0
+    hidden: true
   short_title:
     default: ""
     max: 12
@@ -553,7 +562,7 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   about_page_extra_groups:
     client: true
@@ -1668,11 +1677,6 @@ posting:
     default: 7
     max: 36500
     client: true
-    area: "posts_and_topics"
-  short_progress_text_threshold:
-    client: true
-    default: 10000
-    max: 99000
     area: "posts_and_topics"
   default_code_lang:
     client: true
@@ -4295,6 +4299,9 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
+  concord_in_wizard:
+    default: false
+    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4731,40 +4738,6 @@ tags:
     area: "categories_and_tags|categories"
 
 dashboard:
-  dashboard_hidden_reports:
-    client: true
-    type: list
-    list_type: compact
-    default: ""
-    allow_any: true
-    area: "reports"
-  dashboard_visible_tabs:
-    client: true
-    type: list
-    list_type: compact
-    default: "moderation|security|reports|features"
-    allow_any: false
-    choices:
-      - moderation
-      - security
-      - reports
-      - features
-    area: "reports"
-  dashboard_general_tab_activity_metrics:
-    client: true
-    type: list
-    list_type: compact
-    default: "page_view_total_reqs|visits|time_to_first_response|likes|flags|user_to_user_private_messages_with_replies"
-    allow_any: false
-    choices:
-      - page_view_total_reqs
-      - visits
-      - time_to_first_response
-      - likes
-      - flags
-      - user_to_user_private_messages_with_replies
-      - signups
-    area: "reports"
   site_traffic_explorer_event_limit:
     default: 200000
     type: integer
@@ -4786,6 +4759,14 @@ dashboard:
     client: true
 
 experimental:
+  enable_user_menu_mentions_tab:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415579"
   enable_markdown_endpoints:
     default: false
     hidden: true
@@ -4794,6 +4775,7 @@ experimental:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413006"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_generated_llms_txt:
@@ -4897,26 +4879,37 @@ experimental:
     client: true
     default: true
   dsa_reporting_enabled:
+    client: true
     default: false
-    hidden: true
+    area: "experimental"
+  dsa_notice_group:
+    default: "1"
+    type: group
     area: "experimental"
   dsa_community_rules:
     type: objects
     default: []
     area: "experimental"
     schema:
-      name: community_rule
+      name: Community rule
+      identifier: ground
       properties:
         ground:
           type: string
+          textarea: true
           required: true
           validations:
             max_length: 500
         explanation:
           type: string
+          textarea: true
           required: true
           validations:
-            max_length: 2000
+            max_length: 500
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    area: "experimental"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -5013,7 +5006,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   improved_crawler_detection:

@@ -12,7 +12,7 @@ module DiscourseAi
       end
 
       def tools
-        [
+        base_tools = [
           Tools::LoadDiscourseWebsitePage,
           Tools::DiscourseMetaSearch,
           Tools::ListCategories,
@@ -38,7 +38,14 @@ module DiscourseAi
           Tools::SuspendUser,
           Tools::SilenceUser,
           Tools::MarkAsSolved,
+          Tools::GenerateAppearanceChange,
+          Tools::SaveAppearanceChange,
+          Tools::ActivateAppearanceChange,
+          Tools::RevertAppearanceChange,
+          Tools::ListAppearanceChanges,
         ]
+
+        DiscoursePluginRegistry.apply_modifier(:admin_assistant_tools, base_tools, self).uniq
       end
 
       def system_prompt

@@ -57,9 +57,13 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: %i[show feed]
 
   def id_for_slug
-    topic = Topic.find_by_slug(params[:slug])
+    # a deleted topic with the same slug must not shadow the live one
+    topic = Topic.find_by_slug(params[:slug]) || Topic.with_deleted.find_by_slug(params[:slug])
+    raise Discourse::NotFound if topic.blank?
+
+    raise Discourse::NotFound if !guardian.can_see?(topic) && deleted_for_permalink?(topic)
+
     guardian.ensure_can_see!(topic)
-    raise Discourse::NotFound unless topic
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
   end
 
@@ -149,9 +153,7 @@ class TopicsController < ApplicationController
       # If the user can't see the topic, clean up notifications for it.
       Notification.remove_for(current_user.id, params[:topic_id]) if current_user
 
-      deleted =
-        guardian.can_see_topic?(ex.obj, false) ||
-          (!guardian.can_see_topic?(ex.obj) && ex.obj&.access_topic_via_group && ex.obj.deleted_at)
+      deleted = deleted_for_permalink?(ex.obj)
 
       if SiteSetting.detailed_404
         if deleted
@@ -195,7 +197,11 @@ class TopicsController < ApplicationController
         url = @topic_view.topic.relative_url
         url += ".json" if request.format.json?
         url += ".md" if request.format.md?
-        url += "?page=#{last_page}" if last_page > 1
+        locale = params[Discourse::LOCALE_PARAM]
+        query = {}
+        query[:page] = last_page if last_page > 1
+        query[Discourse::LOCALE_PARAM] = locale if locale.present?
+        url += "?#{query.to_query}" if query.present?
         return redirect_to url, status: :moved_permanently
       end
     end
@@ -218,9 +224,11 @@ class TopicsController < ApplicationController
       @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
 
-    response.headers["X-Robots-Tag"] = "noindex" unless @topic_view.topic.visible
+    response.headers["X-Robots-Tag"] = noindex_header_value if topic_noindex?(@topic_view.topic)
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
+    # The canonical can be an embedding page, which has no translated versions.
+    @hreflang_url = UrlHelper.absolute_without_cdn(@topic_view.current_page_path)
 
     # provide hint to crawlers only for now
     # we would like to give them a bit more signal about age of data
@@ -1383,6 +1391,11 @@ class TopicsController < ApplicationController
     topic_id.to_s if topic_id.to_s.match?(/\A\d+\z/)
   end
 
+  def deleted_for_permalink?(topic)
+    guardian.can_see_topic?(topic, false) ||
+      (!guardian.can_see_topic?(topic) && topic&.access_topic_via_group && topic.deleted_at)
+  end
+
   def render_topic_with_tags(topic)
     payload = serialize_data(topic, BasicTopicSerializer)
     payload[:tags] = topic
@@ -1470,9 +1483,9 @@ class TopicsController < ApplicationController
 
     opts =
       params.slice(
-        *%i[page print filter_top_level_replies preview_theme_id include_raw].concat(
-          additional_allowed_query_parameters,
-        ),
+        *%i[page print filter_top_level_replies preview_theme_id include_raw],
+        Discourse::LOCALE_PARAM,
+        *additional_allowed_query_parameters,
       )
     opts.delete(:page) if params[:page] == 0
 

@@ -143,7 +143,8 @@ module Chat
 
       channels = channels.where(status: options[:status]) if options[:status].present?
 
-      if options[:chatable_id].present? && options[:chatable_type].present?
+      if options[:chatable_id].present? &&
+           Chat::Channel.public_channel_chatable_types.include?(options[:chatable_type])
         filter_chatable = options[:chatable_type].constantize&.find_by_id(options[:chatable_id])
         if filter_chatable.present? && guardian.can_see_chatable?(filter_chatable)
           chatable_ids =

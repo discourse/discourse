@@ -360,29 +360,5 @@ RSpec.shared_examples "remote backup store" do
         end
       end
     end
-
-    describe "#generate_upload_url" do
-      it "generates upload URL" do
-        filename = "foo.tar.gz"
-        url = store.generate_upload_url(filename)
-
-        expect(url).to match(upload_url_regex("default", filename, multisite: false))
-      end
-
-      it "raises an exception when a file with same filename exists" do
-        expect { store.generate_upload_url(backup1.filename) }.to raise_exception(
-          BackupRestore::BackupStore::BackupFileExists,
-        )
-      end
-
-      it "works with multisite", type: :multisite do
-        test_multisite_connection("second") do
-          filename = "foo.tar.gz"
-          url = store.generate_upload_url(filename)
-
-          expect(url).to match(upload_url_regex("second", filename, multisite: true))
-        end
-      end
-    end
   end
 end

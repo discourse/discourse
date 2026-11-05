@@ -20,7 +20,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { eq, gt } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

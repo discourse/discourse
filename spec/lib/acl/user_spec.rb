@@ -7,12 +7,14 @@ RSpec.describe Acl::User do
   fab!(:topic)
 
   fab!(:other_topic, :topic)
+  fab!(:absent_topic, :topic)
 
   let(:flattened_acl_list) do
     [
       { type: :group, id: 10, permission: "view", target_type: "Category", target_id: category.id },
       { type: :group, id: 10, permission: "edit", target_type: "Category", target_id: category.id },
       { type: :group, id: 11, permission: "view", target_type: "Topic", target_id: topic.id },
+      { type: :user, id: 12, permission: "owner", target_type: "Topic", target_id: other_topic.id },
     ]
   end
 
@@ -35,7 +37,12 @@ RSpec.describe Acl::User do
     end
 
     it "returns nil for a target absent from the list" do
-      expect(user_acl.has_target_permission?(other_topic, "view")).to be_nil
+      expect(user_acl.has_target_permission?(absent_topic, "view")).to eq(false)
+    end
+
+    it "grants every permission for an owned target" do
+      expect(user_acl.has_target_permission?(other_topic, "view")).to eq(true)
+      expect(user_acl.has_target_permission?(other_topic, "manage")).to eq(true)
     end
   end
 
@@ -49,7 +56,11 @@ RSpec.describe Acl::User do
     end
 
     it "returns false for a target absent from the list" do
-      expect(user_acl.has_any_target_permission?(other_topic, %w[view edit])).to eq(false)
+      expect(user_acl.has_any_target_permission?(absent_topic, %w[view edit])).to eq(false)
+    end
+
+    it "grants any requested permission for an owned target" do
+      expect(user_acl.has_any_target_permission?(other_topic, %w[edit manage])).to eq(true)
     end
   end
 
@@ -59,7 +70,10 @@ RSpec.describe Acl::User do
     end
 
     it "scopes the ids to the requested target class" do
-      expect(user_acl.target_ids_with_permission(Topic, "view")).to contain_exactly(topic.id)
+      expect(user_acl.target_ids_with_permission(Topic, "view")).to contain_exactly(
+        topic.id,
+        other_topic.id,
+      )
     end
 
     it "returns an empty array when no target of that class holds the permission" do
@@ -67,7 +81,11 @@ RSpec.describe Acl::User do
     end
 
     it "returns an empty array when the class has no entry for the permission" do
-      expect(user_acl.target_ids_with_permission(Topic, "edit")).to eq([])
+      expect(user_acl.target_ids_with_permission(Topic, "edit")).to contain_exactly(other_topic.id)
+    end
+
+    it "returns only owned targets for the owner permission" do
+      expect(user_acl.target_ids_with_permission(Topic, "owner")).to contain_exactly(other_topic.id)
     end
 
     it "returns a defensive copy" do
@@ -87,6 +105,7 @@ RSpec.describe Acl::User do
     it "scopes the combined ids to the requested target class" do
       expect(user_acl.target_ids_with_any_permissions(Topic, %w[view edit])).to contain_exactly(
         topic.id,
+        other_topic.id,
       )
     end
 

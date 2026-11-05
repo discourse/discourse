@@ -210,6 +210,30 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:classify" => [
+            {
+              name: "Decide whether the trigger post is a support request",
+              parameters: {
+                decision_model_id: 123,
+                text: "={{ $json.post.raw }}",
+                questions: {
+                  values: [
+                    {
+                      name: "support_request",
+                      type: "yes_no",
+                      instructions: "Is the author asking for help with a problem?",
+                    },
+                    {
+                      name: "topic_area",
+                      type: "choice",
+                      instructions: "Which product area is the post about?",
+                      choices: %w[billing hosting plugins other],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
           "action:topic_tags" => [
             {
               name: "Add a tag to the trigger topic",
@@ -265,8 +289,19 @@ module DiscourseWorkflows
         }.freeze
 
         MAX_TYPES = 10
+        # Longer option lists are left to workflow_resolve_entity so the model never
+        # mistakes a partial list for every possible value.
+        MAX_LISTED_OPTIONS = 25
 
         NOTES = {
+          "action:classify" => [
+            "Prefer this node over action:ai_agent for labelling, routing, or gating items: it answers yes_no, choice, and score questions with probabilities instead of free text, and is cheaper and faster than an LLM agent.",
+            "Set decision_model_id to an id from load_options; do not use it when no decision model is listed.",
+            "Each question name becomes a key under $json.classification. yes_no answers expose probability (0-1); choice answers expose choice, probabilities, and confidence; score answers expose score, level, probabilities, and confidence. Call workflow_validate_patch for the exact fields.",
+            "Branch with condition:if on a threshold such as $json.classification.support_request.probability gte 0.8, or on $json.classification.topic_area.choice equals billing.",
+            "Question names must be unique identifiers such as support_request. Choice questions need 2 or more choices; score questions need 2-10 levels ordered from lowest to highest.",
+            "The model may refuse a question; its answer then has type refusal and a reason but no probability, choice, or score, so a threshold check on it fails.",
+          ],
           "action:code" => [
             "The default value of the code property documents the runtime variables: $input, $json, $(\"Node name\"), $vars, $workflow_vars, $site_settings, $execution, $current_user, $helpers and console.",
             "runOnceForAllItems must return an array of items such as [{ json: { ... } }]; plain objects are normalized under json.",
@@ -279,7 +314,7 @@ module DiscourseWorkflows
           {
             name: name,
             description:
-              "Returns the full definition of the given node types: version, parameters, credentials, capabilities, output contracts, examples and notes. Pick types from the node menu in your instructions.",
+              "Returns the full definition of the given node types: version, parameters, credentials, capabilities, the current choices for id-picker parameters (load_options, keyed by the parameter's load_options_method), output contracts, examples and notes. Pick types from the node menu in your instructions.",
             json_schema: {
               type: "object",
               additionalProperties: false,
@@ -339,10 +374,24 @@ module DiscourseWorkflows
             properties: json_safe(node_class.properties || {}),
             credentials: json_safe(node_class.credentials),
             capabilities: json_safe(node_class.description[:capabilities] || {}),
+            load_options: listed_options(node_class),
             output_contracts: serialized_output_contracts(node_class),
             examples: EXAMPLES[identifier],
             notes: NOTES[identifier],
           }.compact
+        end
+
+        def listed_options(node_class)
+          DiscourseWorkflows::PreloadedOptions
+            .for(node_class, guardian: context.user&.guardian)
+            .filter_map do |method_name, options|
+              options = Array(options)
+              next if options.empty? || options.length > MAX_LISTED_OPTIONS
+
+              [method_name, json_safe(options)]
+            end
+            .to_h
+            .presence
         end
 
         def serialized_output_contracts(node_class)

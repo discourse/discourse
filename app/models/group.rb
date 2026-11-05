@@ -419,7 +419,7 @@ class Group < ActiveRecord::Base
   end
 
   def incoming_email_validator
-    return if automatic || incoming_email.blank?
+    return if incoming_email.blank?
 
     incoming_email
       .split("|")

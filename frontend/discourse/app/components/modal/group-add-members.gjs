@@ -9,7 +9,6 @@ import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";

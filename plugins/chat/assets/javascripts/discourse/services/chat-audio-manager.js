@@ -2,30 +2,15 @@ import { cancel } from "@ember/runloop";
 import Service from "@ember/service";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import { i18n } from "discourse-i18n";
 
-export const CHAT_SOUNDS = {
-  classic: {},
-  soft: {},
-  retro: {},
-  bubble: {},
-  ethereal: {},
-};
-
-export const DEFAULT_SOUND_NAME = "classic";
+const BUILT_IN_DEFAULT_SOUND = "classic";
 
 const THROTTLE_TIME = 3000; // 3 seconds
 const RESUME_TIMEOUT = 500;
 const MIN_GAIN = 0.001;
 
 let sharedAudioContext;
-
-export function normalizeChatSoundName(name) {
-  if (!name) {
-    return null;
-  }
-
-  return CHAT_SOUNDS[name] ? name : DEFAULT_SOUND_NAME;
-}
 
 async function getAudioContext() {
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -102,7 +87,7 @@ function playSweep(ctx, options) {
   oscillator.stop(options.endTime);
 }
 
-const SOUND_SEQUENCES = {
+const BUILT_IN_SOUNDS = {
   classic: {
     incoming(ctx, now) {
       playOscillator(ctx, "sine", 587.33, now, 0.1, 0.15);
@@ -197,6 +182,68 @@ const SOUND_SEQUENCES = {
   },
 };
 
+const sounds = new Map();
+let defaultSound;
+resetChatSounds();
+
+/**
+ * @param {string} name
+ * @param {Object} options
+ * @param {string|function} options.incoming - audio file URL, or a function receiving `(audioContext, startTime)`
+ * @param {string|function} [options.mention] - same as `incoming`, defaults to it
+ * @param {string} [options.label] - translation key for the preference option
+ * @param {string} [options.translatedLabel] - preference option text
+ */
+export function registerChatSound(
+  name,
+  { incoming, mention, label, translatedLabel }
+) {
+  sounds.set(name, {
+    incoming,
+    mention,
+    label: label ?? `chat.sounds.${name}`,
+    translatedLabel,
+  });
+}
+
+/**
+ * @param {string} name - a registered sound, used when the user's choice is
+ *   unset or unknown
+ */
+export function setDefaultChatSound(name) {
+  defaultSound = name;
+}
+
+export function defaultChatSoundName() {
+  // checked on read so the default can be set before its sound is registered
+  return sounds.has(defaultSound) ? defaultSound : BUILT_IN_DEFAULT_SOUND;
+}
+
+export function resetChatSounds() {
+  sounds.clear();
+  defaultSound = BUILT_IN_DEFAULT_SOUND;
+
+  Object.entries(BUILT_IN_SOUNDS).forEach(([name, sequence]) =>
+    registerChatSound(name, sequence)
+  );
+}
+
+export function chatSoundOptions() {
+  return [...sounds].map(([value, { label, translatedLabel }]) => ({
+    name: translatedLabel ?? i18n(label),
+    value,
+  }));
+}
+
+export function normalizeChatSoundName(name) {
+  if (!name) {
+    return null;
+  }
+
+  // also covers sounds from a theme that has since been removed
+  return sounds.has(name) ? name : defaultChatSoundName();
+}
+
 export default class ChatAudioManager extends Service {
   canPlay = true;
 
@@ -233,10 +280,17 @@ export default class ChatAudioManager extends Service {
   }
 
   async #tryPlay(name, type) {
+    const sound = sounds.get(normalizeChatSoundName(name));
+    const source = sound[type] || sound.incoming;
+
     try {
-      const ctx = await getAudioContext();
-      const sequence = SOUND_SEQUENCES[normalizeChatSoundName(name)];
-      (sequence[type] || sequence.incoming)(ctx, ctx.currentTime);
+      if (typeof source === "string") {
+        // rejects when autoplay is blocked or the file can't be loaded
+        await new Audio(source).play();
+      } else {
+        const ctx = await getAudioContext();
+        source(ctx, ctx.currentTime);
+      }
       return true;
     } catch {
       if (!isTesting()) {

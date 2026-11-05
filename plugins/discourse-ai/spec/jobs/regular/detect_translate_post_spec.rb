@@ -46,12 +46,51 @@ describe Jobs::DetectTranslatePost do
     job.execute({ post_id: post.id })
   end
 
-  it "detects locale" do
+  describe "finishing with a post" do
+    it "reports it is done after translating the post" do
+      post.update!(locale: "en")
+      DiscourseAi::Translation::PostLocalizer.stubs(:localize)
+
+      events =
+        DiscourseEvent.track_events(:post_localizations_finished) do
+          job.execute({ post_id: post.id })
+        end
+
+      expect(events.map { |e| e[:params] }).to eq([[post.id]])
+    end
+
+    it "reports it is done when it skips the post" do
+      SiteSetting.discourse_ai_enabled = false
+
+      events =
+        DiscourseEvent.track_events(:post_localizations_finished) do
+          job.execute({ post_id: post.id })
+        end
+
+      expect(events.map { |e| e[:params] }).to eq([[post.id]])
+    end
+  end
+
+  it "detects locale and triggers post_locale_detected" do
     allow(DiscourseAi::Translation::PostLocaleDetector).to receive(:detect_locale).with(
       post,
     ).and_return("zh_CN")
 
-    job.execute({ post_id: post.id })
+    event =
+      DiscourseEvent.track(:post_locale_detected) do
+        job.execute({ post_id: post.id, skip_workflows: true })
+      end
+
+    expect(event[:params].first).to eq(post)
+    expect(event[:params].last[:skip_workflows]).to eq(true)
+  end
+
+  it "does not trigger post_locale_detected when no locale is detected" do
+    allow(DiscourseAi::Translation::PostLocaleDetector).to receive(:detect_locale).and_return(nil)
+
+    event = DiscourseEvent.track(:post_locale_detected) { job.execute({ post_id: post.id }) }
+
+    expect(event).to be_nil
   end
 
   it "skips locale detection when post has a locale" do

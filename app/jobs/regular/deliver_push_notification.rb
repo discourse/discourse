@@ -3,6 +3,22 @@
 module Jobs
   class DeliverPushNotification < ::Jobs::Base
     def execute(args)
+      payload = args[:payload].with_indifferent_access
+      token = args[:localization_wait_token]
+      return if token && !PushNotificationLocalizationWait.claim(payload[:post_id], token)
+
+      begin
+        deliver(args, payload, held: token.present?)
+      rescue StandardError
+        # Lets the retry or the wait limit's delivery send it instead.
+        PushNotificationLocalizationWait.unclaim(payload[:post_id], token) if token
+        raise
+      end
+    end
+
+    private
+
+    def deliver(args, payload, held:)
       user = User.find_by(id: args[:user_id])
       push_window = SiteSetting.push_notification_time_window_mins
       if !user ||
@@ -13,43 +29,66 @@ module Jobs
         return
       end
 
-      payload = args[:payload].with_indifferent_access
-
       if SiteSetting.content_localization_enabled
-        I18n.with_locale(user.effective_locale) { localize_content!(payload) }
+        post = Post.includes(:localizations).find_by(id: payload[:post_id]) if payload[:post_id]
+        topic = post&.topic || (Topic.find_by(id: payload[:topic_id]) if payload[:topic_id])
+
+        return if !held && localization_pending?(post, user) && held?(post, user, args)
+
+        translated =
+          I18n.with_locale(user.effective_locale) do
+            ContentLocalization.translated_notification_fields(
+              topic: topic,
+              post: post,
+              scope: user.guardian,
+            )
+          end
+        translated.delete(:excerpt) if args[:keep_excerpt]
+        payload.merge!(translated)
       end
 
       PushNotificationPusher.push(user, payload.deep_dup) if user.push_subscriptions.exists?
       HubPushNotificationPusher.push(user, payload.deep_dup)
     end
 
-    private
+    # Translations are usually stored seconds after the post, so a push sent right
+    # away would carry the original text. Plugins producing translations decide
+    # whether one is still on its way for this recipient.
+    def localization_pending?(post, user)
+      return false if post.nil?
+      return false if SiteSetting.push_notification_localization_max_wait_mins <= 0
+      return false if !ContentLocalization.automatically_translate?(user.guardian)
+      return false if ContentLocalization.understands?(post.locale, user.guardian)
+      return false if PushNotificationLocalizationWait.done?(post.id)
 
-    def localize_content!(payload)
-      locale = I18n.locale.to_s.sub("-", "_")
+      DiscoursePluginRegistry.apply_modifier(
+        :deliver_push_notification_localization_pending,
+        false,
+        post,
+        user,
+      )
+    end
 
-      if (topic_id = payload[:topic_id])
-        topic_localization =
-          TopicLocalization.find_by(topic_id: topic_id, locale: locale) ||
-            TopicLocalization.matching_locale(locale).find_by(topic_id: topic_id)
-        payload[:topic_title] = topic_localization.title if topic_localization
+    def held?(post, user, args)
+      token =
+        PushNotificationLocalizationWait.hold(
+          post_id: post.id,
+          locale: user.effective_locale,
+          job_args: args,
+        )
+
+      # A translation stored between the check and the hold has already fired its
+      # release, so look again rather than wait for the limit.
+      begin
+        post.reload
+        still_pending = localization_pending?(post, user)
+      rescue StandardError
+        # Otherwise the held push would be sent alongside this job's retry.
+        raise if PushNotificationLocalizationWait.claim(post.id, token)
+        return true
       end
 
-      if (post_id = payload[:post_id])
-        post_localization =
-          PostLocalization.find_by(post_id: post_id, locale: locale) ||
-            PostLocalization.matching_locale(locale).find_by(post_id: post_id)
-        if post_localization
-          payload[:excerpt] = Post.excerpt(
-            post_localization.cooked,
-            400,
-            text_entities: true,
-            strip_links: true,
-            remap_emoji: true,
-            plain_hashtags: true,
-          )
-        end
-      end
+      still_pending || !PushNotificationLocalizationWait.claim(post.id, token)
     end
   end
 end

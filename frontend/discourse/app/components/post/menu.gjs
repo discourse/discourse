@@ -18,7 +18,6 @@ import {
   applyMutableValueTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
-import { and } from "discourse/truth-helpers";
 import DSmallUserList, {
   smallUserAttrs,
 } from "discourse/ui-kit/d-small-user-list";

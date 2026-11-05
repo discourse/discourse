@@ -2,7 +2,10 @@ import {
   defaultMarkdownSerializer,
   MarkdownSerializerState,
 } from "prosemirror-markdown";
+import { Fragment, Node } from "prosemirror-model";
 import expelBoundaryPunctuation from "../lib/expel-boundary-punctuation.ts";
+
+const LINKIFY_BOUNDARY = /^[*[\]]/;
 
 export default class Serializer {
   #afterSerializers;
@@ -13,7 +16,16 @@ export default class Serializer {
       state.write(state.inTable ? "<br>" : "\n");
 
     this.nodes.text = (state, node) => {
-      state.text(node.text, !state.inAutolink);
+      if (
+        state.out.length !== state.linkifyEnd ||
+        !LINKIFY_BOUNDARY.test(node.text)
+      ) {
+        state.text(node.text, !state.inAutolink);
+        return;
+      }
+
+      state.text(node.text[0], false);
+      state.text(node.text.slice(1));
     };
 
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};
@@ -24,7 +36,21 @@ export default class Serializer {
 
   convert(doc) {
     const state = new MarkdownSerializerState(this.nodes, this.marks, {});
-    state.renderContent(expelBoundaryPunctuation(doc).content);
+    const normalized = expelBoundaryPunctuation(doc);
+    const content =
+      normalized instanceof Fragment ? normalized : normalized.content;
+    if (content.firstChild?.isInline) {
+      const parent =
+        normalized instanceof Node
+          ? normalized
+          : content.firstChild.type.schema.nodes.paragraph.create(
+              null,
+              content
+            );
+      state.renderInline(parent);
+    } else {
+      state.renderContent(content);
+    }
 
     if (this.#afterSerializers) {
       for (const afterSerializer of this.#afterSerializers) {

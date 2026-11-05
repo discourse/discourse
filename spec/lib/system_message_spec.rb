@@ -10,6 +10,28 @@ RSpec.describe SystemMessage do
 
     before { SiteSetting.site_contact_username = admin.username }
 
+    it "appends a paragraph in the recipient locale to a custom body before the plugin event" do
+      SiteSetting.allow_user_locale = true
+      user.update!(locale: "fr")
+      TranslationOverride.upsert!(:fr, "system_messages.private_topic_title", "Sujet %{id}")
+      expected_raw = "Custom outcome.\n\nSujet 42"
+
+      event =
+        DiscourseEvent.track(:before_system_message_sent) do
+          SystemMessage.create(
+            user,
+            :plugin_notice,
+            message_title: "Custom notice",
+            message_raw: "Custom outcome.",
+            body_suffix_key: "system_messages.private_topic_title",
+            id: 42,
+          )
+        end
+
+      expect(Post.last.raw).to eq(expected_raw)
+      expect(event[:params].first[:post_creator_args].last[:raw]).to eq(expected_raw)
+    end
+
     it "creates the expected post" do
       system_message = SystemMessage.new(user)
       post = system_message.create(:welcome_invite)

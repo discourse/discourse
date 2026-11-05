@@ -107,6 +107,9 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     board = Boards::Board.find(output.fetch("board_id"))
 
     expect(board).to have_attributes(slug: "project-board", created_by: Discourse.system_user)
+    expect(board.permission_acl.permission_user_ids(Acl::Permissions::OWNER)).to eq(
+      [Discourse::SYSTEM_USER_ID],
+    )
     expect(output).to match_node_output_schema(described_class)
   end
 
@@ -208,7 +211,10 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
         execute_node(configuration.merge("actor_username" => user.username))
       }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.create_board.forbidden"),
+        I18n.t(
+          "discourse_workflows.errors.create_board.forbidden",
+          policy_reason: I18n.t("boards.errors.board_create_forbidden"),
+        ),
       )
     end.not_to change { Boards::Board.count }
   end

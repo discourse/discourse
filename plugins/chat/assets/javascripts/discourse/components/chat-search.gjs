@@ -13,7 +13,6 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";

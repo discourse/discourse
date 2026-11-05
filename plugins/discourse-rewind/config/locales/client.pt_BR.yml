@@ -132,7 +132,7 @@ pt_BR:
           message_4: "O tamanho médio de suas mensagens foi de <strong>%{length}</strong> caracteres"
           message_5: "Seus canais favoritos:"
           dancing_baby_alt: "Bebê dançante"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} minuto"
             other: "%{count} minutos"

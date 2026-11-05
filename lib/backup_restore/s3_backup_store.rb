@@ -2,8 +2,6 @@
 
 module BackupRestore
   class S3BackupStore < BackupStore
-    UPLOAD_URL_EXPIRES_AFTER_SECONDS = 6.hours.to_i
-
     delegate :abort_multipart,
              :presign_multipart_part,
              :list_multipart_parts,
@@ -47,20 +45,6 @@ module BackupRestore
 
       s3_helper.upload_file(filename, source_path, content_type: content_type)
       reset_cache
-    end
-
-    def generate_upload_url(filename)
-      obj = s3_helper.object(filename)
-      raise BackupFileExists.new if obj.exists?
-
-      @s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
-
-      presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
-    rescue Aws::Errors::ServiceError => e
-      Rails.logger.warn(
-        "Failed to generate upload URL for S3: #{e.message.presence || e.class.name}",
-      )
-      raise StorageError.new(e.message.presence || e.class.name)
     end
 
     def temporary_upload_path(file_name)

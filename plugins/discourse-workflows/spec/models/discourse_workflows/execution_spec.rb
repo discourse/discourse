@@ -128,6 +128,38 @@ RSpec.describe DiscourseWorkflows::Execution do
     end
   end
 
+  describe "#fail_as_stale!" do
+    fab!(:execution) { Fabricate(:discourse_workflows_execution, status: :running) }
+
+    before { SiteSetting.discourse_workflows_run_timeout_minutes = 10 }
+
+    it "fails a running execution for running too long" do
+      expect(execution.fail_as_stale!).to be(true)
+      expect(execution.reload).to have_attributes(
+        status: "error",
+        error: "Execution ran for more than 10 minutes without pausing",
+      )
+    end
+
+    it "fails a pending execution for waiting too long in the queue" do
+      execution.update!(status: :pending)
+
+      execution.fail_as_stale!
+
+      expect(execution.reload).to have_attributes(
+        status: "error",
+        error: "Execution was queued for more than 10 minutes without starting",
+      )
+    end
+
+    it "leaves an execution that moved on since being loaded alone" do
+      described_class.find(execution.id).update!(status: :success)
+
+      expect(execution.fail_as_stale!).to be(false)
+      expect(execution.reload.status).to eq("success")
+    end
+  end
+
   describe ".compute_run_time_ms" do
     def build_step(node_type: "action:code", started_at: nil, finished_at: nil)
       node = Struct.new(:id, :name, :type).new(SecureRandom.uuid, "Node", node_type)

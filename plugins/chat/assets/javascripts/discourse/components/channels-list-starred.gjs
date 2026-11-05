@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle.gjs";
 import ChatChannelListOptionsButton from "./chat-channel-list-options-button.gjs";

@@ -217,6 +217,8 @@ class Topic < ActiveRecord::Base
                   !SiteSetting.allow_uncategorized_topics && (t.archetype.nil? || t.regular?)
               }
 
+  validate :ensure_archetype_is_registered, if: :will_save_change_to_archetype?
+
   validates :featured_link, allow_nil: true, url: true
   validate if: :featured_link do
     if featured_link_changed? && !Guardian.new(user).can_edit_featured_link?(category_id)
@@ -2097,6 +2099,10 @@ class Topic < ActiveRecord::Base
     errors.add(:featured_link, :invalid)
   end
 
+  def ensure_archetype_is_registered
+    errors.add(:archetype, :inclusion) if !Archetype.exists?(archetype)
+  end
+
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
     private_messages
       .with_subtype(topic_subtype)
@@ -2267,9 +2273,8 @@ class Topic < ActiveRecord::Base
     target_audience = {}
 
     if private_message?
-      target_audience[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
-      target_audience[:user_ids] |= allowed_users.pluck(:id)
-      target_audience[:user_ids] |= allowed_group_users.pluck(:id)
+      target_audience[:user_ids] = User.human_users.where(admin: true).pluck(:id)
+      target_audience[:user_ids] |= all_allowed_users.pluck(:id)
     else
       target_audience[:group_ids] = secure_group_ids
     end

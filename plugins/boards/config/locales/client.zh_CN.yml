@@ -129,7 +129,8 @@ zh_CN:
         constraint_fix_tags: "添加看板标签"
         constraint_fix_confirm: "移动和更新"
         constraint_tooltip: "本看板中只允许有这些类别和标签的主题。"
-        created_by: "创建者"
+        owners:
+          other: "所有者"
         show_older_cards: "显示 %{count} 旧卡片"
         errors:
           category_unavailable: "该目标类别已不再可用。请在创建主题前更新看板或列设置。"

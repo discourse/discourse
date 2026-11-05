@@ -3,10 +3,40 @@
 module JsonApiKit
   class Document
     class << self
+      def from(value)
+        case value
+        when Document, Errors
+          value
+        else
+          from_resource(value, **yield)
+        end
+      end
+
       private
 
+      def from_resource(value, resource:, input:, client:)
+        if resource.adapter.collection?(value)
+          Collection.from(value, resource:, input:, client:)
+        else
+          Individual.from(value, resource:, input:, client:)
+        end
+      end
+
+      def from_records(records, resource:, input:, client:)
+        request = Request.new(input.to_h, guardian: client.guardian, edition: client.edition)
+        assemble(
+          new(Query::Result.new(resource, request, records:), client:, fieldsets: input.fieldsets),
+        )
+      end
+
       def build(raw, resource:, client:)
-        resource = resource.new(guardian: client.guardian, edition: client.edition)
+        resource =
+          case resource
+          when Class
+            resource.new(guardian: client.guardian, edition: client.edition)
+          else
+            resource
+          end
         input = input_class.new(raw, resource:, edition: client.edition)
         return Errors.new(*input.refusals) if input.invalid?
         assemble(new(yield(input.to_h, resource), client:, fieldsets: input.fieldsets))
@@ -28,6 +58,8 @@ module JsonApiKit
     def to_h = @to_h ||= { data:, included:, links: }
 
     def status = "200"
+
+    def headers(**) = {}
 
     private
 

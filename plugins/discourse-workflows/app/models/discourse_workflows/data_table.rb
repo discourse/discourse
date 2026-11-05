@@ -10,13 +10,17 @@ module DiscourseWorkflows
 
     validates :name,
               presence: true,
-              uniqueness: true,
+              uniqueness: {
+                case_sensitive: false,
+              },
               length: {
                 maximum: 100,
               },
               format: {
                 with: /\A[a-zA-Z_][a-zA-Z0-9_ ]*\z/,
               }
+
+    scope :named, ->(names) { where("LOWER(name) IN (?)", Array(names).map(&:downcase)) }
 
     before_destroy :drop_storage_table
 
@@ -73,6 +77,6 @@ end
 # Indexes
 #
 #  idx_dwf_data_tables_on_created_by_id  (created_by_id)
-#  idx_dwf_data_tables_on_name           (name) UNIQUE
+#  idx_dwf_data_tables_on_lower_name     (lower((name)::text)) UNIQUE
 #  idx_dwf_data_tables_on_updated_by_id  (updated_by_id)
 #

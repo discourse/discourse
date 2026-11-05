@@ -12,12 +12,13 @@ RSpec.describe UserResource do
     JsonApiKit::Document::Individual.for(user.id, {}, resource: described_class, client:)
   end
 
-  it "shows the username and nothing else" do
+  it "shows the username and the avatar template" do
     expect(document.to_h[:data]).to eq(
       type: "users",
       id: user.id.to_s,
       attributes: {
         "username" => "someone",
+        "avatarTemplate" => user.avatar_template,
       },
       links: {
         self: "https://example.com/api/users/#{user.id}",

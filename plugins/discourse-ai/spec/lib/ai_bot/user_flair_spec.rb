@@ -28,7 +28,8 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
   end
 
   it "preserves pre-upgrade historical members during a full sync" do
-    group = Group.find_by(name: described_class::GROUP_NAME)
+    group =
+      Group.find_or_create_by!(name: described_class::GROUP_NAME) { |group| group.automatic = true }
     group.add(bot_user, automatic: true)
     bot_user.update!(flair_group_id: group.id)
 

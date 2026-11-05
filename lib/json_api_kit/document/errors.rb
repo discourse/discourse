@@ -9,6 +9,8 @@ module JsonApiKit
 
       def status = errors.first.status
 
+      def headers(**) = {}
+
       def to_h = { errors: errors.map { ErrorObject.new(it).to_h } }
 
       private

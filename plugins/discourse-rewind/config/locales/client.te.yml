@@ -17,7 +17,7 @@ te:
         chat_usage:
           author: మీరు
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} నిమిషం"
             other: "%{count} నిమిషాలు"

@@ -239,10 +239,9 @@ pt_BR:
         approved: "Aprovado (approved)"
         rejected: "Recusados(as)"
       default_llm:
-        title: "Modelo de LLM padrão"
+        title: "Modelo de linguagem padrão"
       llm_selector:
         none: "Nenhum"
-        saved: "Modelo LLM padrão atualizado com sucesso"
       features:
         short_title: "Recursos"
         settings_save_error: "Algumas configurações não puderam ser salvas."
@@ -254,6 +253,7 @@ pt_BR:
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não configurado"
         no_groups: "Nenhum"
+        classification_model: "Modelo:"
         edit: "Configurações"
         expand_list:
           one: "(mais %{count})"
@@ -275,6 +275,13 @@ pt_BR:
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
           reset: "Redefinir"
         no_automations: "Ainda não há nenhuma automação"
+        sentiment:
+          sentiment: "Sentimento"
+          emotion: "Gesto"
+          enabled: "Ativados"
+          setting_groups:
+            sentiment: "Sentimento"
+            emotion: "Gesto"
         summarization:
           name: "Resumos"
           description: "Ativa o botão de criação de resumo para os visitantes resumirem os tópicos"
@@ -426,6 +433,8 @@ pt_BR:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
         select_llm: "Selecionar LLM"
+        no_llm_selected: "Nenhum"
+        no_decision_model_selected: "Nenhum"
         custom_instructions: "Instruções personalizadas"
         custom_instructions_help: "Instruções específicas para seu site para ajudar a orientar a IA na identificação de spam, por exemplo: \"Verificar com mais intensidade postagens que não estão em inglês\"."
         last_seven_days: "Últimos sete dias"
@@ -746,6 +755,18 @@ pt_BR:
         tools_modal:
           parameters: "Parâmetros"
           required: "Necessário(a)"
+      models:
+        new: "Novo modelo"
+        name: "Nome"
+        type: "Tipo"
+        provider: "Provedor"
+        edit: "Editar"
+        select_type: "Selecionar"
+        types:
+          embedding: "Incorporar"
+        filters:
+          all: "Todos os tipos"
+          reset: "Redefinir filtros"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"
@@ -972,6 +993,7 @@ pt_BR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizados(as)"
         provider_fields:
@@ -1078,10 +1100,7 @@ pt_BR:
           scroll_to_bottom: "Rolar para a parte inferior"
           editing_post: "Editando postagem"
       sentiments:
-        dashboard:
-          title: "Sentimento"
         sidebar:
-          overview: "Visão geral de sentimento"
           analysis: "Análise de sentimento"
         sentiment_analysis:
           share_chart: "Copiar link para o gráfico"
@@ -1123,6 +1142,15 @@ pt_BR:
             compact: "Compactar"
             expanded: "Expandido(a)"
             expanded_description: "com resumos de IA"
+      ai_search:
+        related_topics: "Tópicos relacionados"
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          ask: "Perguntar à IA"
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
         main_title: "Perguntar à IA"
         loading_convo: "Carregando conversa"

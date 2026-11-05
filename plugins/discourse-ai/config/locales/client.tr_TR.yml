@@ -266,14 +266,11 @@ tr_TR:
         approved: "Onaylandı"
         rejected: "Reddedilen"
       default_llm:
-        title: "Varsayılan LLM modeli"
-        description: "Tüm AI özellikleri için kullanılacak varsayılan LLM modeli. Bu, özellik yapılandırmasında veya ajanda herhangi bir LLM belirtilmediğinde kullanılır. Varsayılan bir LLM belirtilmezse, en son oluşturulan LLM kullanılır."
+        title: "Varsayılan dil modeli"
       llm_selector:
         none: "Hiçbiri"
-        saved: "Varsayılan LLM modeli başarıyla güncellendi"
       features:
         short_title: "Özellikler"
-        description: "Bunlar, sitenizdeki ziyaretçilerin kullanabileceği yapay zeka özellikleridir. Bu özellikler, belirli ajanlar ve büyü LLM'ler kullanacak şekilde yapılandırılabilir ve gruplara göre erişim kontrolü uygulanabilir."
         back: "AI özelliklerine geri dön"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
         disabled: "(devre Dışı)"
@@ -287,6 +284,7 @@ tr_TR:
         no_llm: "LLM seçilmedi"
         no_agent: "Ayarlanmamış"
         no_groups: "Hiçbiri"
+        classification_model: "Model:"
         edit: "Ayarlar"
         expand_list:
           one: "(%{count} tane Daha)"
@@ -305,10 +303,17 @@ tr_TR:
           enabled: "Etkin mi"
         filters:
           all: "Tümü"
-          text: "Arama özellikleri, ajanlar, büyük dil modelleri veya gruplar..."
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"
+        sentiment:
+          sentiment: "Duyarlılık"
+          emotion: "Duygu"
+          enabled: "Etkin mi"
+          agent: "Ajan"
+          setting_groups:
+            sentiment: "Duyarlılık"
+            emotion: "Duygu"
         summarization:
           name: "Özetler"
           description: "Ziyaretçilerin konuları özetlemesine olanak tanıyan bir özetleme düğmesi sunar"
@@ -470,6 +475,8 @@ tr_TR:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
         select_llm: "LLM seç"
+        no_llm_selected: "Hiçbiri"
+        no_decision_model_selected: "Hiçbiri"
         select_agent: "Ajanı seç"
         custom_instructions: "Özel talimatlar"
         custom_instructions_help: "YZ'nin istenmeyen içerikleri tespit etmesine yardımcı olmak için sitenize özel talimatlar, ör. \"İngilizce olmayan gönderileri tarama konusunda daha agresif ol\"."
@@ -927,6 +934,18 @@ tr_TR:
         test_summary:
           one: "%{version} protokolü kullanılarak %{count} aracı keşfedildi."
           other: "%{version} protokolü kullanılarak %{count} aracı keşfedildi."
+      models:
+        new: "Yeni model"
+        name: "Ad"
+        type: "Tür"
+        provider: "Sağlayıcı"
+        edit: "Düzenle"
+        select_type: "Seç"
+        types:
+          embedding: "Gömme"
+        filters:
+          all: "Bütün türler"
+          reset: "Filtreleri sıfırla"
       llms:
         short_title: "LLM'ler"
         no_llms: "Henüz LLM yok"
@@ -1164,6 +1183,7 @@ tr_TR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Özel"
         provider_fields:
@@ -1283,10 +1303,7 @@ tr_TR:
           scroll_to_bottom: "En alta kaydır"
           editing_post: "Gönderi düzenleniyor"
       sentiments:
-        dashboard:
-          title: "Duyarlılık"
         sidebar:
-          overview: "Duyarlılığa genel bakış"
           analysis: "Duyarlılık analizi"
         sentiment_analysis:
           share_chart: "Bağlantıyı grafiğe kopyala"
@@ -1328,6 +1345,15 @@ tr_TR:
             compact: "Kompakt"
             expanded: "Genişletilmiş"
             expanded_description: "YZ özetleriyle"
+      ai_search:
+        related_topics: "İlgili konular"
+        related_replies:
+          one: "%{count} yanıt"
+          other: "%{count} yanıt"
+        tabs:
+          ask: "YZ'ye sor"
+          topics: "Konular"
+          messages: "İletiler"
       discobot_discoveries:
         main_title: "YZ'ye sor"
         loading_convo: "Konuşma yükleniyor"

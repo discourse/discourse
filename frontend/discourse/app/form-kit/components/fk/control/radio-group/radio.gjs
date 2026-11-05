@@ -2,7 +2,6 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import withEventValue from "discourse/helpers/with-event-value";
-import { eq } from "discourse/truth-helpers";
 import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
 const radioTitle = <template>

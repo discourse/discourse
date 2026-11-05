@@ -232,12 +232,8 @@ RSpec.describe Chat::Workflows::Approval::ResumeInteraction do
       it "returns the configured value, channel, and clicking user as one paired item" do
         expect(result).to run_successfully
 
-        expected_user = {
-          "id" => clicking_user.id,
-          "username" => clicking_user.username,
-          "name" => clicking_user.name,
-          "avatar_template" => clicking_user.avatar_template,
-        }
+        expected_user =
+          DiscourseWorkflows::EntitySerializers.serialize_user(clicking_user).deep_stringify_keys
         expected_channel = {
           "id" => channel.id,
           "title" => channel.title(clicking_user),
@@ -254,6 +250,7 @@ RSpec.describe Chat::Workflows::Approval::ResumeInteraction do
                 "value" => "needs:changes",
                 "channel" => expected_channel,
                 "user" => expected_user,
+                "actor" => expected_user,
               },
               "pairedItem" => {
                 "item" => 0,
@@ -261,6 +258,9 @@ RSpec.describe Chat::Workflows::Approval::ResumeInteraction do
             },
           ],
         )
+        expect(
+          execution.execution_data.context_data.dig("Wait", 0, "json"),
+        ).to match_node_output_schema(DiscourseWorkflows::Nodes::ChatApproval::V2)
         expect(execution.execution_data.context_data.dig("After", 0, "json")).to include(
           "value" => "needs:changes",
           "current_user_id" => clicking_user.id,

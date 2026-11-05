@@ -11,9 +11,9 @@ describe DiscourseAi::Agents::AskAiSynthesis do
     expect(agent.response_format).to eq(
       [
         { "key" => "answerable", "type" => "boolean" },
-        { "key" => "source_refs", "type" => "array", "array_type" => "string", "max_items" => 4 },
         { "key" => "title", "type" => "string" },
         { "key" => "answer", "type" => "string" },
+        { "key" => "source_refs", "type" => "array", "array_type" => "string", "max_items" => 4 },
         { "key" => "follow_up", "type" => "string" },
       ],
     )

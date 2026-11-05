@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -31,10 +30,16 @@ export default class OnboardingStep extends Component {
     return this.completed ? "circle-check" : "far-circle";
   }
 
+  get title() {
+    return i18n(`${this.i18nKey}${this.name}.title`);
+  }
+
+  get description() {
+    return i18n(`${this.i18nKey}${this.name}.description`);
+  }
+
   get buttonLabel() {
-    return this.completed
-      ? `admin_onboarding_banner.${this.name}.completed`
-      : `admin_onboarding_banner.${this.name}.action`;
+    return `${this.i18nKey}${this.name}.${this.completed ? "completed" : "action"}`;
   }
 
   @action
@@ -81,14 +86,12 @@ export default class OnboardingStep extends Component {
             "onboarding-step__checkbox-icon" (if this.completed "--completed")
           )
         }}
-        <span class="onboarding-step__title">{{i18n
-            (concat this.i18nKey this.name ".title")
-          }}</span>
+        <span class="onboarding-step__title">{{this.title}}</span>
 
       </div>
 
       <div class="onboarding-step__description">
-        {{i18n (concat this.i18nKey this.name ".description")}}
+        {{this.description}}
       </div>
       <div class="onboarding-step__action">
         <DButton

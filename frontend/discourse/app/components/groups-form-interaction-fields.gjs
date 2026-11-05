@@ -47,11 +47,7 @@ export default class GroupsFormInteractionFields extends Component {
   }
 
   get showEmailSettings() {
-    return (
-      this.siteSettings.email_in &&
-      this.currentUser?.admin &&
-      !this.args.model?.automatic
-    );
+    return this.siteSettings.email_in && this.currentUser?.admin;
   }
 
   get canAdminGroup() {

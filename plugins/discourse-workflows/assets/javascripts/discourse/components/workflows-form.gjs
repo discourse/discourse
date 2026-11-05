@@ -8,7 +8,6 @@ import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
 import { ajax } from "discourse/lib/ajax";
-import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";

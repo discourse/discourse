@@ -1,14 +1,13 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
+import { action, get, set } from "@ember/object";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -47,49 +46,40 @@ function periodString(periodValue) {
   }
 }
 
-@tagName("")
 export default class GamificationLeaderboard extends Component {
-  @service router;
+  @service currentUser;
   @service modal;
+  @service router;
+  @service site;
+  @service siteSettings;
 
-  eyelineSelector = ".user";
+  @tracked loading = false;
+  @resettableTracked
+  period = periodString(this.args.model.leaderboard.default_period);
+
   page = 1;
-  loading = false;
   canLoadMore = true;
-  period = "all";
 
-  init() {
-    super.init(...arguments);
-    const default_leaderboard_period = periodString(
-      this.model.leaderboard.default_period
-    );
-    this.set("period", default_leaderboard_period);
-  }
-
-  @computed("model.reason")
   get isNotReady() {
-    return this.model?.reason !== undefined;
+    return get(this.args.model, "reason") !== undefined;
   }
 
-  @computed("model.users")
   get currentUserRanking() {
-    const user = this.model.personal;
-    return user || null;
+    return get(this.args.model, "personal") || null;
   }
 
-  @computed("model.users")
   get winners() {
-    return this.model?.users?.slice(0, 3);
+    return get(this.args.model, "users")?.slice(0, 3);
   }
 
-  @computed("model.users.[]")
   get ranking() {
-    this.model?.users.forEach((user) => {
+    const users = get(this.args.model, "users");
+    users.forEach((user) => {
       if (user.id === this.currentUser?.id) {
         user.isCurrentUser = "true";
       }
     });
-    return this.model?.users.slice(3);
+    return users.slice(3);
   }
 
   @action
@@ -103,38 +93,39 @@ export default class GamificationLeaderboard extends Component {
       return;
     }
 
-    this.set("loading", true);
+    this.loading = true;
+    const model = this.args.model;
 
     return ajax(
-      `/leaderboard/${this.model.leaderboard.id}?page=${this.page}&period=${this.period}`
+      `/leaderboard/${model.leaderboard.id}?page=${this.page}&period=${this.period}`
     )
       .then((result) => {
         if (result.users.length === 0) {
-          this.set("canLoadMore", false);
+          this.canLoadMore = false;
         }
-        this.set("page", (this.page += 1));
-        this.set("model.users", this.model.users.concat(result.users));
+        this.page += 1;
+        set(model, "users", model.users.concat(result.users));
       })
-      .finally(() => this.set("loading", false))
+      .finally(() => (this.loading = false))
       .catch(popupAjaxError);
   }
 
   @action
   changePeriod(period) {
-    this.set("period", period);
-    return ajax(
-      `/leaderboard/${this.model.leaderboard.id}?period=${this.period}`
-    )
+    this.period = period;
+    const model = this.args.model;
+
+    return ajax(`/leaderboard/${model.leaderboard.id}?period=${this.period}`)
       .then((result) => {
         if (result.users.length === 0) {
-          this.set("canLoadMore", false);
-          this.set("model.reason", result.reason);
+          this.canLoadMore = false;
+          set(model, "reason", result.reason);
         }
-        this.set("page", 1);
-        this.set("model.users", result.users);
-        this.set("model.personal", result.personal);
+        this.page = 1;
+        set(model, "users", result.users);
+        set(model, "personal", result.personal);
       })
-      .finally(() => this.set("loading", false))
+      .finally(() => (this.loading = false))
       .catch(popupAjaxError);
   }
 
@@ -146,7 +137,7 @@ export default class GamificationLeaderboard extends Component {
   <template>
     <div class="leaderboard">
       <div class="page__header">
-        <h1 class="page__title">{{this.model.leaderboard.name}}</h1>
+        <h1 class="page__title">{{@model.leaderboard.name}}</h1>
         <DButton
           class="-ghost"
           @action={{this.showLeaderboardInfo}}
@@ -160,9 +151,7 @@ export default class GamificationLeaderboard extends Component {
           class="leaderboard__period-chooser"
           @action={{this.changePeriod}}
           @fullDay={{false}}
-          @options={{hash
-            disabled=this.model.leaderboard.period_filter_disabled
-          }}
+          @options={{hash disabled=@model.leaderboard.period_filter_disabled}}
           @period={{this.period}}
         />
         {{#if this.currentUser.staff}}
@@ -181,7 +170,7 @@ export default class GamificationLeaderboard extends Component {
 
       {{#if this.isNotReady}}
         <div class="leaderboard__not-ready">
-          <p>{{this.model.reason}}</p>
+          <p>{{@model.reason}}</p>
           <DButton
             class="btn-primary refresh"
             @action={{this.refresh}}

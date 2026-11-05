@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
-import { and, eq, notEq } from "discourse/truth-helpers";
 
 export default class Logo extends Component {
   @service interfaceColor;
@@ -17,7 +16,7 @@ export default class Logo extends Component {
   }
 
   <template>
-    {{#if (and @darkUrl (notEq @url @darkUrl))}}
+    {{#if (and @darkUrl (neq @url @darkUrl))}}
       <picture>
         <source media={{this.darkMediaQuery}} srcset={{getURL @darkUrl}} />
         <img

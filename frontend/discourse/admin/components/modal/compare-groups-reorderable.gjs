@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ManageableRowListItemReorderable from "discourse/admin/components/manageable-row-list-item-reorderable";
 import ToggleableOrderedList from "discourse/admin/lib/toggleable-ordered-list";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DModal from "discourse/ui-kit/d-modal";

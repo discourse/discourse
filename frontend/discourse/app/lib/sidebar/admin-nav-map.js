@@ -6,7 +6,7 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_home",
-        route: "admin.dashboard.general",
+        route: "admin.dashboard",
         label: "admin.config.dashboard.title",
         description: "admin.config.dashboard.header_description",
         icon: "house",

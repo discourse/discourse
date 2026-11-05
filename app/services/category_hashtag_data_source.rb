@@ -24,7 +24,7 @@ class CategoryHashtagDataSource
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text =
         (
-          if category.parent_category
+          if category.parent_category && !SiteSetting.enable_category_hashtag_cards
             "#{category.parent_category.name} > #{category.name}"
           else
             category.name

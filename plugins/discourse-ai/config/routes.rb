@@ -37,6 +37,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :discover, path: "/discoveries", defaults: { format: :json } do
     post "reply" => "discoveries#reply"
+    put "tabs" => "discoveries#record_tabs"
     get "recent" => "discoveries#recent"
     delete "recent" => "discoveries#clear_recent"
     post "continue-convo" => "discoveries#continue_convo"
@@ -114,9 +115,6 @@ end
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
-  get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
-      :constraints => StaffConstraint.new
-
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
     get "/ask-ai-reports/:report_id/subjects/:subject_id/asks" =>
           "discourse_ai/admin/ask_ai_reports#asks",
@@ -189,6 +187,9 @@ Discourse::Application.routes.draw do
          to: "discourse_ai/admin/rag_document_fragments#upload_file"
     get "/rag-document-fragments/files/status",
         to: "discourse_ai/admin/rag_document_fragments#indexing_status_check"
+
+    get "/ai-models" => "admin/plugins#index"
+    get "/ai-models/new" => "admin/plugins#index"
 
     get "/ai-usage", to: "discourse_ai/admin/ai_usage#show"
     get "/ai-usage-report", to: "discourse_ai/admin/ai_usage#report"

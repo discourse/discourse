@@ -265,14 +265,11 @@ es:
         approved: "Aprobado"
         rejected: "Rechazados"
       default_llm:
-        title: "Modelo LLM por defecto"
-        description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
+        title: "Modelo lingüístico por defecto"
       llm_selector:
         none: "Ninguna"
-        saved: "El modelo LLM por defecto se ha actualizado correctamente"
       features:
         short_title: "Características"
-        description: "Estas son las características de IA disponibles para los visitantes de tu sitio. Se pueden configurar para usar agentes y LLM específicos, y los grupos pueden controlar su acceso."
         back: "Volver a las características de IA"
         settings_save_error: "Algunos ajustes no se han podido guardar."
         disabled: "(desactivado)"
@@ -286,6 +283,7 @@ es:
         no_llm: "No hay LLM seleccionados"
         no_agent: "No establecido"
         no_groups: "Ninguna"
+        classification_model: "Modelo:"
         edit: "Ajustes"
         expand_list:
           one: "(%{count} más)"
@@ -304,10 +302,17 @@ es:
           enabled: "Activado"
         filters:
           all: "Todo"
-          text: "Buscar características, agentes, LLM o grupos..."
           no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
         no_automations: "Aún no hay automatizaciones"
+        sentiment:
+          sentiment: "Sentimiento"
+          emotion: "Emoción"
+          enabled: "Activado"
+          agent: "Agente"
+          setting_groups:
+            sentiment: "Sentimiento"
+            emotion: "Emoción"
         summarization:
           name: "Resúmenes"
           description: "Pone a disposición un botón de resumen que permite que los visitantes puedan resumir temas"
@@ -466,6 +471,8 @@ es:
         short_title: "Spam"
         title: "Configurar el manejo de spam"
         select_llm: "Seleccionar LLM"
+        no_llm_selected: "Ninguna"
+        no_decision_model_selected: "Ninguna"
         select_agent: "Seleccionar agente"
         custom_instructions: "Instrucciones personalizadas"
         custom_instructions_help: "Instrucciones personalizadas específicas de tu sitio para ayudar a guiar a la IA en la identificación de spam, por ejemplo: «Sé más agresivo a la hora de escanear las publicaciones que no estén en inglés»."
@@ -923,6 +930,18 @@ es:
         test_summary:
           one: "Se ha descubierto %{count} herramienta usando el protocolo %{version}."
           other: "Se han descubierto %{count} herramientas usando el protocolo %{version}."
+      models:
+        new: "Nuevo modelo"
+        name: "Nombre"
+        type: "Tipo"
+        provider: "Proveedor"
+        edit: "Editar"
+        select_type: "Seleccionar"
+        types:
+          embedding: "Incrustado"
+        filters:
+          all: "Todos los tipos"
+          reset: "Restablecer filtros"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -1160,6 +1179,7 @@ es:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizado"
         provider_fields:
@@ -1272,10 +1292,7 @@ es:
           scroll_to_bottom: "Desplazar hacia abajo"
           editing_post: "Editando publicación"
       sentiments:
-        dashboard:
-          title: "Sentimiento"
         sidebar:
-          overview: "Visión general de sentimiento"
           analysis: "Análisis de sentimiento"
         sentiment_analysis:
           share_chart: "Copiar enlace al gráfico"
@@ -1317,6 +1334,15 @@ es:
             compact: "Compacto"
             expanded: "Ampliado"
             expanded_description: "con resúmenes de IA"
+      ai_search:
+        related_topics: "Temas relacionados"
+        related_replies:
+          one: "%{count} respuesta"
+          other: "%{count} respuestas"
+        tabs:
+          ask: "Preguntar a la IA"
+          topics: "Temas"
+          messages: "Mensajes"
       discobot_discoveries:
         main_title: "Preguntar a la IA"
         loading_convo: "Cargando conversación"

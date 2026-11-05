@@ -12,7 +12,6 @@ import {
 } from "discourse/float-kit/lib/constants";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import type TooltipService from "discourse/float-kit/services/tooltip";
-import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 

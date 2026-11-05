@@ -89,4 +89,15 @@ module("Integration | Component | ComposerEditor", function (hooks) {
       "Rich editor placeholder text is correct"
     );
   });
+
+  test("enables autocorrect and disables autocomplete on the textarea", async function (assert) {
+    await render(<template><ComposerEditor /></template>);
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("autocorrect", "on", "enables autocorrect suggestions");
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("autocomplete", "off", "keeps browser autofill disabled");
+  });
 });

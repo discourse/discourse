@@ -1,0 +1,59 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Дизайн
+        overridden: Користувацька
+        insert: Вставити
+        array_value: Список
+        preview_home: Головна сторінка
+        preview_archive: Архів
+        desktop: Десктоп
+        mobile: Мобільний
+        back_to_themes: Назад до тем
+        new_theme_short: Нова тема
+        themes: Стилі
+        theme_name: Назва теми
+        edit: Редагувати
+        activate: Активувати
+        preview: Попередній перегляд
+        import: Імпорт
+        export: Експорт
+        active: Активний
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Чернетка
+        preview: Попередній перегляд
+        submit: Надіслати на затвердження
+        change:
+          title: назва
+          body: тіло
+      review:
+        label: Мітка
+        create: Створити посилання
+        copy: Копіювати
+        open: Відкрити
+        status:
+          active: Активний
+          expired: Термін дії закінчився
+          revoked: Скасовано
+          inactive: Неактивно
+        closed_on: "Закрито %{date}"
+        revoke: Відкликати
+        message: Зворотній зв'язок
+      editor_table:
+        edit: Редагувати
+        status: Статус
+        replies: Відповіді
+      drafts: Чернетки
+      preview: Попередній перегляд
+      unpublish: Скасувати публікацію
+      appearance_link: Зовнішній вигляд

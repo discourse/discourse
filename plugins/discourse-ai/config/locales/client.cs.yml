@@ -78,6 +78,7 @@ cs:
         groups: "Skupiny:"
         no_agent: "Nenastaveno"
         no_groups: "Žádná"
+        classification_model: "Model:"
         edit: "Nastavení"
         expand_list:
           one: "(%{count} další)"
@@ -90,6 +91,11 @@ cs:
         filters:
           all: "Vše"
           reset: "obnovit výchozí"
+        sentiment:
+          sentiment: "Sentiment"
+          enabled: "Zapnuto"
+          setting_groups:
+            sentiment: "Sentiment"
         search:
           name: "Vyhledávání"
           ask_ai: "Zeptejte se AI"
@@ -149,6 +155,8 @@ cs:
             other: "%{count} příspěvky"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Žádný"
+        no_decision_model_selected: "Žádný"
         last_seven_days: "Posledních 7 dní"
         enable: "Zapnout"
         save_button: "Uložit změny"
@@ -283,6 +291,16 @@ cs:
         delete: "Smazat"
         tools_modal:
           required: "Povinné"
+      models:
+        name: "Jméno"
+        type: "Typ"
+        edit: "Upravit"
+        select_type: "Vybrat"
+        types:
+          embedding: "Zabudování"
+        filters:
+          all: "Všechny typy"
+          reset: "Odstranit filtry"
       llms:
         display_name: "Název"
         vision_modes:
@@ -383,6 +401,7 @@ cs:
           hugging_face: "Hugging Face"
           open_ai: "OpenAI"
           google: "Google"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Přizpůsobené"
         semantic_search_tooltips:
@@ -470,8 +489,6 @@ cs:
           scroll_to_bottom: "Přejít na konec"
           editing_post: "Příspěvek je upravován"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sentiment_analysis:
           filter_types:
             all: "Vše"
@@ -499,6 +516,17 @@ cs:
             compact: "Kompaktní"
             expanded: "Rozšířený"
             expanded_description: "se souhrny AI"
+      ai_search:
+        related_topics: "Související témata"
+        related_replies:
+          one: "%{count} odpověď"
+          few: "%{count} odpovědí"
+          many: "%{count} odpovědí"
+          other: "%{count} odpovědí"
+        tabs:
+          ask: "Zeptejte se AI"
+          topics: "Témata"
+          messages: "Zprávy"
       discobot_discoveries:
         main_title: "Zeptejte se AI"
         legacy:

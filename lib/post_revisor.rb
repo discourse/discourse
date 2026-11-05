@@ -334,9 +334,12 @@ class PostRevisor
     @topic.acting_user = @editor
     @revised_at = @opts[:revised_at] || Time.now
     @last_version_at = @post.last_version_at || Time.now
+    @latest_revision_unlisted =
+      @post.version > 1 &&
+        PostRevision.where(post_id: @post.id, number: @post.version).pick(:unlisted)
 
     if guardian.affected_by_slow_mode?(@topic) && !grace_period_edit? &&
-         SiteSetting.slow_mode_prevents_editing
+         SiteSetting.slow_mode_prevents_editing && !@opts[:bypass_slow_mode]
       @post.errors.add(:base, I18n.t("cannot_edit_on_slow_mode"))
       return false
     end
@@ -485,11 +488,17 @@ class PostRevisor
       return true
     end
     edited_by_another_user? || flagged? || !grace_period_edit? || owner_changed? ||
-      force_new_version? || edit_reason_specified?
+      force_new_version? || edit_reason_specified? || latest_revision_unlisted?
   end
 
   def edit_reason_specified?
     @fields[:edit_reason].present? && @fields[:edit_reason] != @post.edit_reason
+  end
+
+  # Folding a new edit into an unlisted revision would also skip it for non-staff.
+  # Read up front because `should_create_new_version?` is re-checked after the bump.
+  def latest_revision_unlisted?
+    @latest_revision_unlisted
   end
 
   def flagged?
@@ -677,7 +686,7 @@ class PostRevisor
   end
 
   def remove_flags_and_unhide_post
-    return if @opts[:deleting_post]
+    return if @opts[:deleting_post] || @opts[:recovering_post]
     return unless editing_a_flagged_and_hidden_post?
 
     flaggers = []

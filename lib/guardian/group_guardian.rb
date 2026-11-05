@@ -39,4 +39,13 @@ module GroupGuardian
   def can_associate_groups?
     is_admin? && AssociatedGroup.has_provider?
   end
+
+  def can_use_flair_upload?(upload_id)
+    return true if upload_id.blank?
+    return true if is_admin?
+    return false if user.blank?
+    return true if Upload.exists?(id: upload_id, user_id: user.id)
+
+    UserUpload.exists?(upload_id:, user_id: user.id)
+  end
 end

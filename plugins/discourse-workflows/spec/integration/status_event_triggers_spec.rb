@@ -73,6 +73,24 @@ RSpec.describe "Workflow status event triggers" do
     end
   end
 
+  it "dispatches flags re-opening a handled reviewable with the new score" do
+    post = Fabricate(:post, topic:)
+    PostActionCreator
+      .inappropriate(Fabricate(:user, refresh_auto_groups: true), post)
+      .reviewable
+      .perform(admin, :ignore_and_do_nothing)
+    create_workflow("pending", "trigger:reviewable_pending")
+
+    result = PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
+
+    expect(enqueued_jobs.map { |job| job["trigger_node_id"] }).to eq(%w[pending])
+    expect(enqueued_jobs.first.dig("trigger_data", "reviewable")).to include(
+      "id" => result.reviewable.id,
+      "status" => "pending",
+      "score" => result.reviewable_score.score,
+    )
+  end
+
   it "dispatches promotions with both trust levels and the execution user" do
     user.update!(trust_level: TrustLevel.levels[:basic])
     create_workflow(

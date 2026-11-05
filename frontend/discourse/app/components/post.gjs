@@ -33,7 +33,6 @@ import {
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { and, eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -562,6 +561,7 @@ export default class Post extends Component {
                           @decoratorState={{this.decoratorState}}
                           @highlightTerm={{@highlightTerm}}
                           @post={{@post}}
+                          @quoteHighlight={{@quoteHighlight}}
                           @streamElement={{@streamElement}}
                         />
                       </PluginOutlet>

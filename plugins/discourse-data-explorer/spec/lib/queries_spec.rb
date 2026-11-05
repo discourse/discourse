@@ -8,6 +8,7 @@ describe DiscourseDataExplorer::Queries do
   before { SiteSetting.data_explorer_enabled = true }
 
   describe ".default" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     described_class.default.each do |id, attributes|
       it "runs #{attributes[:name]} with its declared parameters" do
         query =
@@ -47,5 +48,6 @@ describe DiscourseDataExplorer::Queries do
         end
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 end

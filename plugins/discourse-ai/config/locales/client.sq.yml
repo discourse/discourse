@@ -73,6 +73,8 @@ sq:
         filters:
           all: "Të gjitha"
           reset: "Rivendosni"
+        sentiment:
+          enabled: "Aktivizuar"
         search:
           name: "Kërko"
         image_caption:
@@ -114,6 +116,8 @@ sq:
             other: "%{count} postime"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Asnjë"
+        no_decision_model_selected: "Asnjë"
         enable: "Aktivizo"
         test_modal:
           spam: "Spam"
@@ -207,6 +211,15 @@ sq:
         delete: "Fshij"
         tools_modal:
           required: "E nevojshme"
+      models:
+        name: "Emri"
+        type: "Lloji"
+        edit: "Redaktoni"
+        select_type: "Zgjidhni"
+        types:
+          embedding: "Embedding"
+        filters:
+          all: "Të gjitha llojet"
       llms:
         display_name: "Emri"
         vision_modes:
@@ -286,6 +299,13 @@ sq:
       summarization:
         chat:
           summarize: "Përmblidhni"
+      ai_search:
+        related_replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+        tabs:
+          topics: "Topics"
+          messages: "Mesazhet"
       discobot_discoveries:
         legacy:
           regular_results: "Topics"

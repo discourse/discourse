@@ -4,7 +4,6 @@ import FieldInputDescription from "discourse/admin/components/schema-setting/fie
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import { and, not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeCategories extends SchemaSettingTypeModels {
   @tracked

@@ -2,6 +2,8 @@
 
 module DiscourseAi
   module Translation
+    PENDING_LOCALIZATION_WINDOW = 5.minutes
+
     def self.enabled?
       SiteSetting.discourse_ai_enabled && SiteSetting.ai_translation_enabled && has_llm_model? &&
         SiteSetting.content_localization_supported_locales.present?
@@ -146,6 +148,42 @@ module DiscourseAi
       end
     end
 
+    # Whether new posts like this one get translated as soon as they are created.
+    def self.post_translatable?(post)
+      return false if post.user_id <= 0 && !SiteSetting.ai_translation_include_bot_content
+
+      topic = post.topic
+      return false if topic.blank?
+
+      if topic.archetype == Archetype.private_message
+        case SiteSetting.ai_translation_personal_messages
+        when "all"
+          true
+        when "group"
+          TopicAllowedGroup.exists?(topic_id: topic.id)
+        else
+          false
+        end
+      else
+        category_allowed?(topic.category)
+      end
+    end
+
+    # Whether a translation of a just-created post into `locale` is still being produced.
+    def self.post_localization_pending?(post, locale)
+      return false if !enabled?
+      return false if post.created_at < PENDING_LOCALIZATION_WINDOW.ago
+      return false if locales.none? { |l| LocaleNormalizer.is_same?(l, locale) }
+      return false if !post_translatable?(post)
+      return false if !credits_available_for_post_detection?
+
+      # Detection hasn't run yet, so a translation may still be needed.
+      return true if post.locale.blank?
+      return false if LocaleNormalizer.is_same?(post.locale, locale)
+
+      post.localizations.none? { |l| LocaleNormalizer.is_same?(l.locale, locale) }
+    end
+
     def self.llm_model_for_agent(agent_id)
       return nil if agent_id.blank?
 
@@ -166,23 +204,30 @@ module DiscourseAi
       models.all? { |model| LlmCreditAllocation.credits_available?(model) }
     end
 
+    def self.locale_detector_configured?
+      DecisionLocaleDetector.decision_model.present? ||
+        llm_model_for_agent(SiteSetting.ai_translation_locale_detector_agent).present?
+    end
+
+    # The detector agent only fills in for a decision model, so the decision model's credits
+    # are what detection depends on.
+    def self.credits_available_for_locale_detection?
+      if (decision_model = DecisionLocaleDetector.decision_model)
+        DecisionModelCreditAllocation.credits_available?(
+          decision_model,
+          DecisionLocaleDetector::FEATURE_NAME,
+        )
+      else
+        credits_available_for_agent_ids?([SiteSetting.ai_translation_locale_detector_agent])
+      end
+    end
+
     def self.credits_available_for_post_detection?
-      credits_available_for_agent_ids?(
-        [
-          SiteSetting.ai_translation_locale_detector_agent,
-          SiteSetting.ai_translation_post_raw_translator_agent,
-        ],
-      )
+      credits_available_for_locale_detection? && credits_available_for_post_localization?
     end
 
     def self.credits_available_for_topic_detection?
-      credits_available_for_agent_ids?(
-        [
-          SiteSetting.ai_translation_locale_detector_agent,
-          SiteSetting.ai_translation_topic_title_translator_agent,
-          SiteSetting.ai_translation_post_raw_translator_agent,
-        ],
-      )
+      credits_available_for_locale_detection? && credits_available_for_topic_localization?
     end
 
     def self.credits_available_for_post_localization?

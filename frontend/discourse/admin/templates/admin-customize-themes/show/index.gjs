@@ -12,7 +12,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";

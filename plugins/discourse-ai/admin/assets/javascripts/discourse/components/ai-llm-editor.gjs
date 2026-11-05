@@ -3,8 +3,8 @@ import AiLlmEditorForm from "./ai-llm-editor-form.gjs";
 
 const AiLlmEditor = <template>
   <BackButton
-    @label="discourse_ai.llms.back"
-    @route="adminPlugins.show.discourse-ai-llms"
+    @label="discourse_ai.models.back"
+    @route="adminPlugins.show.discourse-ai-models"
   />
   <AiLlmEditorForm
     @llms={{@llms}}

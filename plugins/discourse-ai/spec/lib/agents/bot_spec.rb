@@ -194,6 +194,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       (DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1).times do
         expect(state.reserve_completion).to eq(true)
       end
+
       context =
         DiscourseAi::Agents::BotContext.new(
           user: user,
@@ -355,7 +356,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       let(:agent_class) { agent_record.class_instance }
 
-      %i[text tools final].each do |mode|
+      shared_examples "admitted output within a tight context window" do |mode:|
         it "prepares tight-window #{mode} calls with their admitted output instead of the model ceiling" do
           gpt_4.update!(max_prompt_tokens: 16_000, max_output_tokens: 12_000)
           agent_record.update!(
@@ -400,6 +401,18 @@ RSpec.describe DiscourseAi::Agents::Bot do
             expect(execution.work_budget.limit).to eq(4000)
           end
         end
+      end
+
+      context "with text output" do
+        include_examples "admitted output within a tight context window", mode: :text
+      end
+
+      context "with tool output" do
+        include_examples "admitted output within a tight context window", mode: :tools
+      end
+
+      context "with a final reply" do
+        include_examples "admitted output within a tight context window", mode: :final
       end
 
       it "starts fresh work for a second root reply while retaining the actual usage tracker" do
@@ -951,6 +964,9 @@ RSpec.describe DiscourseAi::Agents::Bot do
       tool =
         DiscourseAi::Agents::Tools::CloseTopic.new(
           { topic_id: topic.id, closed: true, reason: "Off-topic" },
+          agent_options: {
+            "max_closes" => "1",
+          },
           bot_user: test_bot_user,
           llm: bot.llm,
         )
@@ -961,7 +977,12 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       expect(result[:status]).to eq("pending_approval")
       expect(topic.reload.closed).to eq(false)
-      expect(AiToolAction.last.tool_name).to eq("close_topic")
+      expect(AiToolAction.last).to have_attributes(
+        tool_name: "close_topic",
+        tool_options: {
+          "max_closes" => "1",
+        },
+      )
       expect(ReviewableAiToolAction.count).to eq(1)
     end
 

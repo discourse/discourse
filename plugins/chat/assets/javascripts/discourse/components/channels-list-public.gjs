@@ -6,7 +6,6 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and } from "discourse/truth-helpers";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -66,7 +65,7 @@ export default class ChannelsListPublic extends Component {
           {{i18n "chat.my_threads.title"}}
         </span>
         {{#if this.hasUnreadThreads}}
-          <div class="c-unread-indicator">
+          <div class="c-unread-indicator d-new-indicator">
             <div class="c-unread-indicator__number">&nbsp;</div>
           </div>
         {{/if}}

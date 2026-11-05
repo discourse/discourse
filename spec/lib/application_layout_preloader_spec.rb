@@ -38,6 +38,16 @@ RSpec.describe ApplicationLayoutPreloader do
     context "when the user is logged in" do
       fab!(:user)
 
+      it "preloads permanent changes as enabled for users outside the stored groups" do
+        group = Fabricate(:group)
+        Fabricate(:site_setting_group, name: :enable_upload_debug_mode, group_ids: group.id.to_s)
+        mock_upcoming_change_metadata(enable_upload_debug_mode: { status: :permanent })
+
+        expect(JSON.parse(preloaded_data["upcomingChanges"])["enable_upload_debug_mode"]).to eq(
+          true,
+        )
+      end
+
       it "preloads the current user keys" do
         expect(preloaded_data.keys).to contain_exactly(
           "site",

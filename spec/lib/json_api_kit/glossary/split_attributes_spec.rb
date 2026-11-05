@@ -217,7 +217,9 @@ RSpec.describe JsonApiKit::Glossary do
 
     describe "#declared_attributes" do
       it "splits the source before merging its destinations" do
-        expect(glossary.declared_attributes(size => %w[640 480])).to eq(dimensions => [640, 480])
+        expect(glossary.declared_attributes({ size => %w[640 480] })).to eq(
+          dimensions => [640, 480],
+        )
       end
     end
 

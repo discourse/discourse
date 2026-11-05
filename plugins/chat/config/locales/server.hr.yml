@@ -19,7 +19,14 @@ hr:
 
         Posjetite kanal na %{channel_url} kako biste ponovno pokušali.
   chat:
+    design_wizard_homepage_name: "Čavrljanje"
     deleted_chat_username: izbrisao
+    crawler:
+      nav_title: "Čavrljanje"
+      thread_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
     errors:
       not_accepting_dms: "Žao nam je, %{username} trenutno ne prihvaća poruke."
     reviewables:

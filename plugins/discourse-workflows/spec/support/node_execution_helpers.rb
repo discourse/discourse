@@ -11,6 +11,7 @@ module NodeExecutionHelpers
     workflow: nil,
     node_settings: {},
     node: nil,
+    deadline: nil,
     &block
   )
     item = { "json" => {} } if item.nil? && input_items.nil?
@@ -34,6 +35,7 @@ module NodeExecutionHelpers
       resolver_context: resolver_context,
       user: user,
       node_settings: node_settings,
+      deadline: deadline,
     }
     kwargs[:node_context] = node_context if node_context
     kwargs[:workflow] = workflow if workflow

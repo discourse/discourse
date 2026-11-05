@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { and } from "discourse/truth-helpers";
 import {
   DangerButton,
   DefaultButton,

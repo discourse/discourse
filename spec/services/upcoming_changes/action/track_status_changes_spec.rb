@@ -209,6 +209,50 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
       end
     end
 
+    context "when a change is permanent" do
+      let(:enable_upload_debug_mode_status) { :permanent }
+
+      def latest_permanent_event
+        scoped_events.where(
+          event_type: :status_changed,
+          upcoming_change_name: :enable_upload_debug_mode,
+        ).last
+      end
+
+      it "records that the change is displayed on the new status event" do
+        result
+        expect(latest_permanent_event.event_data["was_conditionally_displayed"]).to eq(true)
+      end
+
+      it "records that the change is hidden when conditional display hides it" do
+        UpcomingChanges::ConditionalDisplay.stubs(:should_display?).returns(false)
+
+        result
+        expect(latest_permanent_event.event_data["was_conditionally_displayed"]).to eq(false)
+      end
+
+      it "updates an existing permanent event when the display state changes" do
+        event =
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: :enable_upload_debug_mode,
+            event_data: {
+              "previous_value" => "stable",
+              "new_value" => "permanent",
+            },
+          )
+        UpcomingChanges::ConditionalDisplay.stubs(:should_display?).returns(false)
+
+        expect { result }.not_to change {
+          scoped_events.where(
+            event_type: :status_changed,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }
+        expect(event.reload.event_data["was_conditionally_displayed"]).to eq(false)
+      end
+    end
+
     context "when status has not changed" do
       let(:show_user_menu_avatars_status) { :beta }
 

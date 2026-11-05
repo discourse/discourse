@@ -22,7 +22,7 @@ class RestoreClobberedPatronBadge < ActiveRecord::Migration[8.1]
           target_posts = false,
           show_posts = false,
           trigger = 0
-      WHERE name = 'Patron' AND query LIKE '%voice_sessions%'
+      WHERE name = 'Patron' AND (query LIKE '%voice_sessions%' OR query LIKE '%live_sessions%')
     SQL
   end
 

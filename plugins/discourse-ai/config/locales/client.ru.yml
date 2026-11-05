@@ -261,14 +261,11 @@ ru:
         approved: "Одобренные"
         rejected: "Отклонено"
       default_llm:
-        title: "Модель LLM по умолчанию"
-        description: "Модель LLM по умолчанию для всех ИИ функций. Используется, если в настройке функции или персоны не указана конкретная модель LLM. При отсутствии модели по умолчанию используется последняя добавленная LLM."
+        title: "Языковая модель по умолчанию"
       llm_selector:
         none: "Нет"
-        saved: "Модель LLM по умолчанию успешно обновлена."
       features:
         short_title: "Функции"
-        description: "Это функции ИИ, доступные посетителям вашего сайта. Их можно настроить для использования определенных агентов и LLM, а также контролировать доступ к ним для отдельных групп."
         back: "Вернуться к функциям ИИ"
         settings_save_error: "Некоторые настройки не удалось сохранить."
         disabled: "(отключено)"
@@ -286,6 +283,7 @@ ru:
         no_llm: "LLM не выбрана"
         no_agent: "Не установлено"
         no_groups: "Отсутствует"
+        classification_model: "Модель:"
         edit: "Настроек"
         expand_list:
           one: "(еще %{count})"
@@ -306,10 +304,17 @@ ru:
           enabled: "Включено"
         filters:
           all: "Все"
-          text: "Поиск по функциям, агентам, ИИ или группам..."
           no_results: "Не найдено функций, соответствующих вашим фильтрам."
           reset: "Сбросить"
         no_automations: "Автоматизации пока нет."
+        sentiment:
+          sentiment: "Настроение"
+          emotion: "Эмоция"
+          enabled: "Включено"
+          agent: "Агент"
+          setting_groups:
+            sentiment: "Настроение"
+            emotion: "Эмоция"
         summarization:
           name: "Cводки"
           description: "Добавляет кнопку сводки по теме, которая позволяет посетителям получать краткое содержание темы"
@@ -466,6 +471,8 @@ ru:
         short_title: "Спам"
         title: "Настройте обработку спама"
         select_llm: "Выберите LLM"
+        no_llm_selected: "Нет"
+        no_decision_model_selected: "Нет"
         select_agent: "Выберите агента"
         custom_instructions: "Пользовательские инструкции"
         custom_instructions_help: "Пользовательские инструкции для вашего сайта помогут AI выявить спам, например, «Более придирчиво проверяй публикации не на английском языке»."
@@ -789,6 +796,18 @@ ru:
         tools_modal:
           parameters: "Параметры"
           required: "Обязательный"
+      models:
+        new: "Новая модель"
+        name: "Название"
+        type: "Тип"
+        provider: "Поставщик"
+        edit: "Изменить"
+        select_type: "Выбрать"
+        types:
+          embedding: "Встраивание"
+        filters:
+          all: "Все типы"
+          reset: "Сбросить фильтры"
       llms:
         short_title: "Большие языковые модели"
         no_llms: "Еще нет LLM"
@@ -1017,6 +1036,7 @@ ru:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Другое"
         provider_fields:
@@ -1124,10 +1144,7 @@ ru:
           scroll_to_bottom: "Прокрутка вниз"
           editing_post: "Редактирование поста"
       sentiments:
-        dashboard:
-          title: "Настроение"
         sidebar:
-          overview: "Обзор настроений"
           analysis: "Анализ настроений"
         sentiment_analysis:
           share_chart: "Копировать ссылку на диаграмму"
@@ -1161,6 +1178,17 @@ ru:
             compact: "Компактная"
             expanded: "Расширенная"
             expanded_description: "со сводками от AI"
+      ai_search:
+        related_topics: "Связанные темы"
+        related_replies:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответов"
+          other: "%{count} ответ"
+        tabs:
+          ask: "Спросить AI"
+          topics: "Новые темы"
+          messages: "Сообщений"
       discobot_discoveries:
         main_title: "Спросить AI"
         loading_convo: "Загрузка разговора"

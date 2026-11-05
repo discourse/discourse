@@ -6,14 +6,11 @@ class DsaStatementOfRecord::Classify
   policy :staff
   policy :classification_enabled
 
-  params do
+  params base_class: DsaStatementOfRecord::ClassificationContract do
     attribute :reviewable_id, :integer
-    attribute :community_rule, :string
-    attribute :category, :string
     attribute :statement_ids, :array
 
-    validates :reviewable_id, :community_rule, :statement_ids, presence: true
-    validates :category, inclusion: { in: DsaStatementOfRecord::CATEGORIES }
+    validates :reviewable_id, :statement_ids, presence: true
   end
 
   model :community_rule
@@ -37,7 +34,7 @@ class DsaStatementOfRecord::Classify
   end
 
   def fetch_community_rule(params:)
-    DsaStatementOfRecord.community_rules.find { |rule| rule["id"] == params.community_rule }
+    params.rule
   end
 
   def fetch_reviewable(params:, guardian:)
@@ -61,23 +58,9 @@ class DsaStatementOfRecord::Classify
     end
   end
 
-  def save_note(reviewable:, community_rule:, params:, guardian:)
+  def save_note(reviewable:, statements:, guardian:)
     note = reviewable.reviewable_notes.new
-
-    note.update(
-      user: guardian.user,
-      content:
-        I18n.t(
-          "dsa_statements.classification_note",
-          locale: SiteSetting.default_locale,
-          ground: community_rule["ground"],
-          category:
-            I18n.t(
-              "dsa_statements.categories.#{params.category}",
-              locale: SiteSetting.default_locale,
-            ),
-        ),
-    )
+    note.update(user: guardian.user, content: statements.first.classification_note)
     note
   end
 end

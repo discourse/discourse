@@ -4,7 +4,6 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { gt, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 module DiscourseGamification
   class ReactionReceived < Scorable
+    def self.supports_category_scoping?
+      true
+    end
+
     def self.enabled?(leaderboard: nil)
       defined?(DiscourseReactions) && SiteSetting.discourse_reactions_enabled && super
     end

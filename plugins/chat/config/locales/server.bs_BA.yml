@@ -7,6 +7,11 @@
 bs_BA:
   chat:
     deleted_chat_username: obrisano
+    crawler:
+      thread_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
     reviewables:
       actions:
         agree_and_suspend:

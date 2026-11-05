@@ -32,7 +32,6 @@ import FKRow from "discourse/form-kit/components/fk/row";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import deprecated from "discourse/lib/deprecated";
-import { and, eq, not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const RowColWrapper = <template>

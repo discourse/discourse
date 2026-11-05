@@ -20,7 +20,6 @@ import {
   WEB_LINK_KINDS,
   webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

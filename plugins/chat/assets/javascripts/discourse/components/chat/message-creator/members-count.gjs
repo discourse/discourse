@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { gte } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 

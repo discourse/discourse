@@ -3,7 +3,6 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { gt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";

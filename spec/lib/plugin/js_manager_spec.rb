@@ -1,6 +1,31 @@
 # frozen_string_literal: true
 
 RSpec.describe Plugin::JsManager do
+  describe ".bundle_analysis_assets" do
+    let(:directory_name) { "js-manager-spec-plugin" }
+    let(:generated) { Rails.root.join("app/assets/generated/#{directory_name}/js/plugins") }
+
+    before do
+      described_class.instance_variable_set(:@production_cache, nil)
+      allow(Discourse).to receive(:plugins).and_return([stub(directory_name:)])
+    end
+
+    after { FileUtils.rm_rf(generated.dirname.dirname) }
+
+    it "is keyed by the directory name of the plugin the report came from" do
+      FileUtils.mkdir_p(generated)
+      FileUtils.touch(generated.join("#{directory_name}_bundle-analysis-abc123.digested.json"))
+
+      expect(described_class.bundle_analysis_assets).to eq(
+        directory_name => "js/plugins/#{directory_name}_bundle-analysis-abc123.digested.json",
+      )
+    end
+
+    it "leaves out a plugin that has not written one" do
+      expect(described_class.bundle_analysis_assets).to eq({})
+    end
+  end
+
   describe ".route_bundle_for_path" do
     let(:manifest) do
       {

@@ -3,9 +3,8 @@
 module JsonApiKit
   class Document
     class RelationshipObject
-      delegate :pages, to: :linkage, private: true
+      delegate :pages, :filtering, to: :linkage, private: true
       delegate :urls, :glossary, to: :client, private: true
-      delegate :member_type, to: :glossary, private: true
 
       def initialize(linkage, client:, owner:, name:)
         @linkage = linkage
@@ -23,14 +22,20 @@ module JsonApiKit
       def data = linkage.collapse { identifier(it) }
 
       def identifier(record)
-        { type: member_type(record.type), id: record.id }
+        ResourceIdentifier.new(record, glossary:).to_h
       end
 
       def links = { self: relationship_url.to_s, related: related_url.to_s }.merge(page_links)
 
-      def relationship_url = owner_url.relationship(name)
+      def relationship_url = owner_url.relationship(name, parameters: link_parameters)
 
-      def related_url = owner_url.related(name)
+      def related_url = owner_url.related(name, parameters: link_parameters)
+
+      def link_parameters
+        @link_parameters ||= {
+          filter: filtering.transform_keys { it.member_name(glossary) },
+        }.compact_blank
+      end
 
       def owner_url = @owner_url ||= urls.for(owner)
 

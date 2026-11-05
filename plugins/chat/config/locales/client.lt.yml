@@ -717,7 +717,7 @@ lt:
           alphabetical: "Abėcėlės tvarka"
           recent_activity: "Naujausia veikla"
           priority: "Prioritetas"
-          priority_description: "Paminėjimai, tada neskaityti, tada naujausia veikla"
+          priority_description_dms: "Paminėjimai, tada neskaityti, tada naujausia veikla"
         empty:
           filtered: "Nėra kanalų, atitinkančių šį filtrą."
           show_all: "Rodyti visus kanalus"
@@ -1002,7 +1002,6 @@ lt:
         target_usernames_description: "Naudotojai, kuriems siųsti pranešimą. Norėdami juos pasirinkti iš kiekvieno elemento, naudokite tokią išraišką kaip `$trigger.user.username`."
         message: "Žinutės"
         actor_username: "Siuntėjas"
-        actor_username_description: "Asmeninės žinutės siunčiamos šio naudotojo vardu, o gavėjai mato jas kaip parašytas paties naudotojo."
       chat_approval:
         message: "Žinutės"
         buttons: "Mygtukai"

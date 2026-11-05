@@ -91,4 +91,8 @@ module DiscourseAi
       plugin,
     )
   end
+
+  def self.register_tools(tool_classes, plugin:)
+    tool_classes.each { |klass| DiscoursePluginRegistry.register_external_ai_tool(klass, plugin) }
+  end
 end

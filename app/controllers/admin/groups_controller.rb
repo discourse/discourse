@@ -16,6 +16,10 @@ class Admin::GroupsController < Admin::StaffController
     ) do |result|
       on_success { |group:| render_serialized(group.reload, BasicGroupSerializer) }
       on_failed_policy(:can_create_group) { |policy| raise Discourse::InvalidAccess }
+      on_failed_policy(:can_use_flair_upload) do
+        render json: failed_json.merge(errors: [I18n.t("groups.errors.flair_upload_not_owned")]),
+               status: :unprocessable_entity
+      end
       on_failed_policy(:can_request_access) do
         render json:
                  failed_json.merge(
@@ -62,7 +66,11 @@ class Admin::GroupsController < Admin::StaffController
 
     users = User.where(username: group_params[:usernames].split(","))
     users.each { |user| guardian.ensure_can_change_primary_group!(user, group) }
-    users.update_all(primary_group_id: params[:primary] == "true" ? group.id : nil)
+    if params[:primary] == "true"
+      users.update_all(primary_group_id: group.id)
+    else
+      users.where(primary_group_id: group.id).update_all(primary_group_id: nil)
+    end
 
     render json: success_json
   end

@@ -5,6 +5,8 @@ module DiscourseAi
     class ContinueConversation
       MAX_QUESTION_LENGTH = 1000
       TOPIC_REQUEST_ID_FIELD = "ai_discovery_request_id"
+      # the answer's sources, kept apart from it when the conversation lists them
+      TOPIC_SOURCES_FIELD = "ai_discovery_sources"
 
       class ResultExpired < StandardError
       end
@@ -121,7 +123,7 @@ module DiscourseAi
                   DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => route.agent_id,
                   DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => route.llm_model_id,
                   TOPIC_REQUEST_ID_FIELD => request_token(request_id),
-                },
+                }.merge(sources_field(result)),
               },
               custom_fields: {
                 DiscourseAi::AiBot::Playground::BYPASS_AI_REPLY_CUSTOM_FIELD => true,
@@ -174,7 +176,22 @@ module DiscourseAi
         topic
       end
 
+      # The combined search lists the sources beside the conversation, so they
+      # are not repeated under an answer. Without an answer they are all there is.
+      def sources_listed_beside?(result)
+        result["answer"].present? && DiscourseAi::Discoveries.combined_search_for?(@user)
+      end
+
+      def sources_field(result)
+        return {} if !sources_listed_beside?(result)
+
+        sources = result.fetch("sources").map { |source| source.slice("topic_id", "title", "url") }
+        { TOPIC_SOURCES_FIELD => sources }
+      end
+
       def model_turn(result)
+        return neutralize_mentions(result.fetch("answer")) if sources_listed_beside?(result)
+
         context = []
         context << neutralize_mentions(result.fetch("answer")) if result["answer"].present?
 

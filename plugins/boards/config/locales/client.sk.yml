@@ -39,7 +39,11 @@ sk:
         unassign_from_topic: "Zrušenie priradenia @%{username} z témy"
         unassign_from_post: "Zrušenie priradenia @%{username} z #%{post_number}"
         edit_assignments: "Úprava priradenia..."
-        created_by: "Vytvoril"
+        owners:
+          one: "Vlastník"
+          few: "Vlastníci"
+          many: "Vlastníci"
+          other: "Vlastníci"
       manage:
         name: "Meno"
         slug: "Slug"

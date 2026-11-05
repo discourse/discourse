@@ -103,4 +103,61 @@ RSpec.describe JsonApiKit::Resource do
       expect(ordering).to eq("created_at" => :desc)
     end
   end
+
+  describe "#record_for" do
+    subject(:record) { resource.record_for(id) }
+
+    fab!(:topic) { Fabricate(:topic, closed: false) }
+
+    let(:id) { topic.id }
+    let(:resource_class) { Class.new(super()) { scope { Topic.where(closed: false) } } }
+
+    it "returns the model record" do
+      expect(record).to eq(topic)
+    end
+
+    context "when the record is outside the resource scope" do
+      fab!(:closed_topic) { Fabricate(:topic, closed: true) }
+
+      let(:id) { closed_topic.id }
+
+      it "refuses the lookup" do
+        expect { record }.to raise_error(JsonApiKit::NotFound)
+      end
+    end
+
+    context "when the record does not exist" do
+      let(:id) { 0 }
+
+      it "refuses the lookup" do
+        expect { record }.to raise_error(JsonApiKit::NotFound)
+      end
+    end
+  end
+
+  describe "#related_scope" do
+    subject(:scope) { resource.related_scope(:posts, owner_id:) }
+
+    fab!(:topic) { Fabricate(:topic, closed: false) }
+    fab!(:post) { Fabricate(:post, topic:) }
+    fab!(:unrelated_post, :post)
+
+    let(:changes) { [] }
+    let(:owner_id) { topic.id }
+    let(:resource_class) { Class.new(super()) { scope { Topic.where(closed: false) } } }
+
+    it "restricts the association to the owner" do
+      expect(scope).to contain_exactly(post)
+    end
+
+    context "when the owner is outside the resource scope" do
+      fab!(:closed_topic) { Fabricate(:topic, closed: true) }
+
+      let(:owner_id) { closed_topic.id }
+
+      it "refuses the lookup" do
+        expect { scope }.to raise_error(JsonApiKit::NotFound)
+      end
+    end
+  end
 end

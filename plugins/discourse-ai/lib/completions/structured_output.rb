@@ -107,6 +107,12 @@ module DiscourseAi
         chunk
       end
 
+      # Until a later key starts or the response finishes, a streamed value may
+      # still be growing, e.g. an array whose last item is half written.
+      def property_complete?(prop_name)
+        @done || @partial_json_tracker.last_key != prop_name.to_s
+      end
+
       def notify_progress(key, value)
         key_sym = key.to_sym
         return if !@property_names.include?(key_sym)

@@ -2,9 +2,12 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
+import OnboardingStep from "discourse/components/admin-onboarding/step";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { setDefaultHomepage } from "discourse/lib/utilities";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -16,14 +19,13 @@ const designWizardData = () => ({
       name: "Foundation",
       default: true,
       color_scheme_id: null,
-      dark_color_scheme_id: null,
+      dark_color_scheme_id: -2,
       screenshot_light_url: null,
       screenshot_dark_url: null,
       palette_pairs: [
         {
           key: "default",
           name: "Default",
-          dark_only: false,
           light: {
             id: -1,
             name: "Light",
@@ -57,7 +59,6 @@ const designWizardData = () => ({
         {
           key: "horizon",
           name: "Horizon",
-          dark_only: false,
           light: {
             id: 23,
             name: "Horizon",
@@ -80,7 +81,6 @@ const designWizardData = () => ({
         {
           key: "marigold",
           name: "Marigold",
-          dark_only: false,
           light: {
             id: 25,
             name: "Marigold",
@@ -483,6 +483,65 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .isDisabled("card is disabled after step completion");
   });
 
+  test("a registered step can stand in for `start_posting`", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("admin-onboarding-steps", ({ value }) =>
+        value.map((Step) =>
+          Step.name === "start_posting"
+            ? class StartChatting extends OnboardingStep {
+                static name = "start_posting";
+
+                i18nKey = "admin_onboarding_banner.custom.";
+
+                get description() {
+                  return "Say hello in #general.";
+                }
+
+                @action
+                performAction() {
+                  this.markAsCompleted();
+                }
+              }
+            : Step
+        )
+      );
+    });
+
+    const step = withStep("start_posting", assert);
+    await visit("/");
+
+    assert.deepEqual(
+      [...document.querySelectorAll(".onboarding-step")].map((el) => el.id),
+      ["select_theme", "start_posting", "invite_collaborators"],
+      "keeps the stand-in step in the posting step's place"
+    );
+    assert
+      .dom("#start_posting .onboarding-step__title")
+      .includesText(
+        "custom.start_posting.title",
+        "reads the title from the step's own locale keys"
+      );
+    assert
+      .dom("#start_posting .onboarding-step__description")
+      .hasText("Say hello in #general.", "renders the step's own description");
+    assert
+      .dom("#start_posting .onboarding-step__action .btn")
+      .includesText(
+        "custom.start_posting.action",
+        "reads the action label from the step's own locale keys"
+      );
+    step.isNotChecked();
+
+    await step.clickAction();
+
+    step.isChecked();
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "step_completed", step: "start_posting" }],
+      "logs the completion under the posting step"
+    );
+  });
+
   test("it can complete `invite_collaborators` step", async function (assert) {
     const step = withStep("invite_collaborators", assert);
     await visit("/");
@@ -528,10 +587,14 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .doesNotExist("theme cards are left behind on the colors step");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
+      .dom(
+        ".design-wizard__palette-row[data-mode='light'] .design-wizard__palette-card"
+      )
+      .exists({ count: 1 }, "the colors step shows the theme's light palettes");
 
-    await click(".design-wizard__swatch[data-pair-key='default']");
+    await click(
+      ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
+    );
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
@@ -578,13 +641,16 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__option-row[data-topic-page]")
       .doesNotExist("the topic page types are hidden for categories");
 
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists("keeps onboarding visible on the categories preview");
     assert.dom(".design-wizard__next").doesNotExist("no next on the last step");
     assert.dom(".design-wizard__save").exists("the last step offers save");
 
     await click(".design-wizard__back");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "back returns to the colors step");
+      .dom(".design-wizard__palette-row[data-mode='light']")
+      .exists("back returns to the colors step");
 
     await click(".design-wizard__close");
     assert.dom(".design-wizard").doesNotExist("closing removes the sheet");
@@ -592,12 +658,12 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom("link[data-scheme-id]", document.documentElement)
       .doesNotExist("the palette preview is reverted");
 
-    // previewing a categories homepage routed away from the banner's page
+    // closing without saving leaves the step incomplete
     await visit("/");
     step.isNotChecked();
   });
 
-  test("the design wizard activates the stylesheet for the selected color mode", async function (assert) {
+  test("the design wizard activates the stylesheet for the mode of the picked palette", async function (assert) {
     const darkLink = this.addSchemeLink(
       "dark-scheme",
       "data:text/css,design-wizard-dark",
@@ -612,7 +678,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await visit("/");
     await withStep("select_theme", assert).clickAction();
     await click(".design-wizard__next");
-    await click(".design-wizard__color-mode:not(.--active)");
+    await click(
+      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+    );
 
     assert
       .dom(lightLink)
@@ -687,7 +755,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .exists({ count: 2 }, "a failed progress save does not advance the step");
     assert
-      .dom(".design-wizard__swatch")
+      .dom(".design-wizard__palette-row")
       .doesNotExist("the colors step is not reached");
     assert
       .dom(".design-wizard__next")
@@ -792,5 +860,67 @@ acceptance("Admin - Onboarding Banner - setting disabled", function (needs) {
     assert
       .dom(".admin-onboarding-banner")
       .doesNotExist("does not show onboarding banner");
+  });
+});
+
+acceptance("Admin - Onboarding Banner - relocated banner", function (needs) {
+  needs.user({ admin: true, show_site_owner_onboarding: true });
+  needs.settings({ enable_site_owner_onboarding: true });
+
+  test("renders only at the render point matching the transformed location", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "admin-onboarding-banner-location",
+        () => "custom_spot"
+      );
+      api.renderInOutlet(
+        "below-site-header",
+        <template>
+          <div class="custom-spot">
+            <AdminOnboardingBanner @location="custom_spot" />
+          </div>
+        </template>
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists({ count: 1 }, "renders the banner once");
+    assert
+      .dom(".custom-spot .admin-onboarding-banner")
+      .exists("renders at the render point that claimed the location");
+    assert
+      .dom("#main-outlet .admin-onboarding-banner")
+      .doesNotExist("leaves the default render point empty");
+  });
+});
+
+acceptance("Admin - Onboarding Banner - registered homepage", function (needs) {
+  needs.user({ admin: true, show_site_owner_onboarding: true });
+  needs.settings({ enable_site_owner_onboarding: true });
+  needs.site({
+    homepage_options: [{ id: "custom", path: "/tags", server_side: false }],
+  });
+
+  test("shows the checklist on homepage choices and hides it elsewhere", async function (assert) {
+    await visit("/latest");
+    setDefaultHomepage("custom");
+    await visit("/tags");
+
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists("shows onboarding on a registered homepage");
+    for (const homepagePath of ["/latest", "/categories"]) {
+      await visit(homepagePath);
+      assert
+        .dom(".admin-onboarding-banner")
+        .exists(`shows onboarding on ${homepagePath}`);
+    }
+    await visit("/about");
+    assert
+      .dom(".admin-onboarding-banner")
+      .doesNotExist("keeps onboarding off other pages");
   });
 });

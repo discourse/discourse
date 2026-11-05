@@ -7,7 +7,6 @@ import { trustHTML } from "@ember/template";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import { capabilities } from "discourse/services/capabilities";
 import { extraKeyboardShortcutsHelp } from "discourse/services/keyboard-shortcuts";
-import { eq } from "discourse/truth-helpers";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DModal from "discourse/ui-kit/d-modal";

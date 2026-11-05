@@ -64,6 +64,14 @@ pl_PL:
             declined: "Ostatnie kliknięcie prawym przyciskiem: odrzucone, przeglądarka je przyjęła"
         multi_select:
           title: "Wybór wielokrotny"
+          choose_item: "Wybierz element"
+          create_item: "Utwórz element"
+          footer_empty_title: "Stopka bez wyników"
+          footer_empty_description: "Czynność stopki pozostaje dostępna, jeśli nie ma pasujących wyników."
+          footer_empty_try_this: "Otwórz menu i wyszukaj element. Stopka pozostaje widoczna."
+          footer_scroll_title: "Stopka z długą listą wyników"
+          footer_scroll_description: "Lista wyników przewija się niezależnie od czynności stopki."
+          footer_scroll_try_this: "Otwórz menu i przewiń wyniki. Stopka pozostaje na swoim miejscu."
         reorderable_list:
           title: "Lista z możliwością zmiany kolejności"
           groups:

@@ -6,6 +6,11 @@
 
 el:
   js:
+    dsa_notice:
+      choice_title: "Είναι παράνομο"
+      go_back: "Μετάβαση πίσω"
+      title: "Αναφορά παράνομου περιεχομένου"
+      email: "Διεύθυνση email"
     user_api_key:
       title: 'Εξουσιοδότηση "%{application_name}"'
       authorize: "Εξουσιοδότηση"
@@ -44,6 +49,7 @@ el:
     access_control:
       manage:
         access_permission_editor: "Επεξεργαστής"
+        access_permission_owner: "Ιδιοκτήτης"
         access_permission_remove: "Αφαίρεση"
     carousel:
       go_to_slide: "Μετάβαση στη διαφάνεια %{index}"
@@ -507,7 +513,6 @@ el:
         action: "Δείτε ιδέες"
         choose_option: "Πώς θα θέλατε να ξεκινήσετε;"
         predefined_topics: "Πρότυπα για το σπάσιμο του πάγου"
-        predefined_topics_subtitle: "Δώστε στα νέα μέλη κάτι για να συζητήσουν, επιλέξτε ένα πρότυπο για επεξεργασία και δημιουργήστε το δικό σας."
         predefined_topics_description: "Διαλέξτε από μια συλλογή από αφορμές για συζήτηση για να ξεκινήσουν οι συζητήσεις"
         use_predefined: "Περιήγηση προτύπων"
         back: "Πίσω"
@@ -793,7 +798,6 @@ el:
     dsa_statements:
       category: "Κατηγορία"
       category_prompt: "Επιλέξτε κατηγορία"
-      saving: "Αποθηκεύεται"
     review:
       show_more: "Δείτε περισσότερα"
       show_less: "Δείξε λιγότερα"
@@ -2933,6 +2937,7 @@ el:
     filter_controls:
       reset: "Επαναφορά"
       toggle: "Εναλλαγή αναπτυσσόμενων φίλτρων"
+      sort_label: "Ταξινόμηση κατά"
     d_icon_grid_picker:
       select_icon: "Επιλογή εικονιδίου"
       search_label: "Αναζητήστε εικονίδια"
@@ -3071,8 +3076,6 @@ el:
       show_preview: "εμφάνιση προεπισκόπησης"
       hide_preview: "απόκρυψη προεπισκόπησης"
       resize: "Αλλαγή μεγέθους συνθέτη"
-      switch_to_markdown: "Εναλλαγή στον τυπικό επεξεργαστή Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Εναλλαγή στο νέο επεξεργαστή πλούσιου κειμένου (%{keyboardShortcut})"
       quote_post_title: "Παράθεση ολόκληρης ανάρτησης"
       bold_label: "B"
       bold_title: "Έντονα"
@@ -4490,6 +4493,9 @@ el:
           one: "Σίγουρα θέλετε να συγχωνεύσετε αυτές τις αναρτήσεις;"
           other: "Σίγουρα θέλετε να συγχωνεύσετε αυτές τις %{count} αναρτήσεις;"
       revisions:
+        visibility:
+          hidden:
+            title: "Κρυφό"
         locale:
           no_locale_set: "Δεν έχει οριστεί γλώσσα"
           locale_removed: "Η γλώσσα αφαιρέθηκε"
@@ -4500,9 +4506,6 @@ el:
           previous: "Προηγούμενη αναθεώρηση"
           next: "Επόμενη αναθεώρηση"
           last: "Τελευταία αναθεώρηση"
-          hide: "Κρύψε την αναθεώρηση"
-          show: "Εμφάνισε την αναθεώρηση"
-          destroy: "Διαγραφή αναθεωρήσεων"
           destroy_confirm: "Σίγουρα θέλετε να διαγράψετε όλες τις αναθεωρήσεις σε αυτήν την ανάρτηση; Αυτή η ενέργεια είναι μόνιμη."
           revert: "Επαναφορά στην αναθεώρηση %{revision}"
           edit_wiki: "Επεξεργασία του Βίκι"
@@ -4569,7 +4572,6 @@ el:
     category:
       none: "(χωρίς κατηγορία)"
       all: "Όλες οι κατηγορίες"
-      choose: "Κατηγορία&hellip;"
       edit: "Επεξεργασία"
       edit_title: "Επεξεργασία αυτής της κατηγορίας"
       edit_dialog_title: "Επεξεργασία: %{categoryName}"
@@ -5642,61 +5644,6 @@ el:
           other: "Η είσοδος πρέπει να είναι μεγαλύτερη από %{count}."
         pattern_mismatch: "Παρακαλούμε αντιστοιχίστε την απαιτούμενη μορφή."
         bad_input: "Παρακαλούμε εισάγετε μια έγκυρη είσοδο."
-    table_builder:
-      title: "Κατασκευαστής Πίνακα"
-      modal:
-        title: "Κατασκευαστής Πίνακα"
-        create: "Δημιουργία πίνακα"
-        help:
-          title: "Χρήση του Επεξεργαστή Υπολογιστικού Φύλλου"
-          enter_key: "Enter"
-          tab_key: "Καρτέλα"
-          new_row: "στο τέλος μιας γραμμής για εισαγωγή μιας νέας γραμμής."
-          new_col: "στο τέλος μιας στήλης για εισαγωγή μιας νέας στήλης."
-          options: "Κάντε δεξί κλικ στα κελιά για πρόσβαση σε περισσότερες επιλογές από ένα αναπτυσσόμενο μενού."
-        confirm_close: "Σίγουρα θέλετε να κλείσετε το εργαλείο δημιουργίας πινάκων; Οποιεσδήποτε μη αποθηκευμένες αλλαγές θα χαθούν."
-      edit:
-        btn_edit: "Επεξεργασία Πίνακα"
-        modal:
-          title: "Επεξεργασία Πίνακα"
-          cancel: "ακύρωση"
-          create: "Αποθήκευση"
-          reason: "Γιατί κάνετε επεξεργασία;"
-          trigger_reason: "Προσθήκη λόγου επεξεργασίας"
-        default_edit_reason: "Ενημέρωση πίνακα με τον επεξεργαστή πίνακα"
-      default_header:
-        col_1: "Στήλη 1"
-        col_2: "Στήλη 2"
-        col_3: "Στήλη 3"
-        col_4: "Στήλη 4"
-      spreadsheet:
-        no_records_found: "Δεν βρέθηκαν εγγραφές"
-        show: "Εμφάνιση"
-        entries: "καταχωρήσεις"
-        about: "Σχετικά"
-        prompts:
-          delete_selected_rows: "Σίγουρα θέλετε να διαγράψετε τις επιλεγμένες γραμμές;"
-          delete_selected_cols: "Σίγουρα θέλετε να διαγράψετε τις επιλεγμένες στήλες;"
-          conflicts_with_merged_cells: "Υπάρχει σύγκρουση με ένα άλλο συγχωνευμένο κελί"
-        invalid_merge_props: "Μη έγκυρες συγχωνευμένες ιδιότητες"
-        cells_already_merged: "Το κελί έχει ήδη συγχωνευθεί"
-        no_cells_selected: "Δεν επιλέχθηκαν κελιά"
-        context_menu:
-          row:
-            before: "Εισαγωγή νέας γραμμής πριν"
-            after: "Εισαγωγή νέας γραμμής μετά"
-            delete: "Διαγραφή επιλεγμένων γραμμών"
-          col:
-            before: "Εισαγωγή νέας στήλης πριν"
-            after: "Εισαγωγή νέας στήλης μετά"
-            delete: "Διαγραφή επιλεγμένων στηλών"
-            rename: "Μετονομασία αυτής της στήλης"
-          order:
-            ascending: "Αύξουσα σειρά"
-            descending: "Φθίνουσα σειρά"
-          copy: "Αντιγραφή..."
-          paste: "Επικόλληση..."
-          save: "Αποθήκευση ως..."
     powered_by_discourse: "Βασισμένο στο Discourse"
     safari_15_warning: "Το πρόγραμμα περιήγησής σας σύντομα δεν θα είναι συμβατό με αυτήν την κοινότητα. Για να συνεχίσετε να συμμετέχετε εδώ, παρακαλούμε αναβαθμίστε το πρόγραμμα περιήγησής σας ή <a href='%{url}'>μάθετε περισσότερα</a>."
     filter:
@@ -5880,6 +5827,9 @@ el:
           impact_role_staff: "Συνεργάτες"
           impact_role_all_members: "Όλα τα μέλη"
           impact_role_developers: "Προγραμματιστές"
+        sort:
+          status: "Κατάσταση"
+          name: "Όνομα"
       config:
         about:
           title: "Σχετικά με τον ιστότοπο σας"
@@ -6339,32 +6289,15 @@ el:
           anonymous_human: "Ανώνυμοι"
       dashboard:
         title: "Πίνακας ελέγχου"
-        last_updated: "Το ταμπλό ενημερώθηκε:"
-        discourse_last_updated: "Το Discourse ενημερώθηκε:"
         version: "Έκδοση"
         up_to_date: "Είσαι ενήμερος!"
         updates_available: "Υπάρχουν διαθέσιμες ενημερώσεις"
-        please_update: "Παρακαλούμε ενημερώστε!"
-        no_check_performed: "Δεν έγινε έλεγχος για ενημερώσεις. Βεβαιωθείτε ότι το Sidekiq εκτελείται."
-        stale_data: "Δεν έγινε έλεγχος για ενημερώσεις τον τελευταίο καιρό. Βεβαιωθείτε ότι το Sidekiq εκτελείται."
         version_check_pending: "Φαίνεται ότι ενημερώσατε πρόσφατα. Φανταστικά!"
-        installed_version: "Εγκατεστημένα"
-        github: "GitHub"
-        problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
         dismiss_notice: "Αγνόηση"
         new_features:
           title: "Τι νέο υπάρχει;"
           learn_more: "Μάθε περισσότερα..."
-        last_checked: "Τελευταίος έλεγχος"
         refresh_problems: "Ανανέωση"
-        no_problems: "Δεν βρέθηκε κανένα πρόβλημα."
-        moderators: "Συντονιστές: "
-        admins: "Διαχειριστές:"
-        silenced: "Σιγήθηκαν:"
-        suspended: "Αποβλημένοι:"
-        private_messages_short: "Μνμτ."
-        private_messages_title: "Μηνύματα"
-        mobile_title: "Κινητό"
         space_used: "%{usedSize} χρησιμοποιημένα"
         space_used_and_free: "%{usedSize} (%{freeSize} ελεύθερα)"
         uploads: "Μεταφορτώσεις"
@@ -6373,20 +6306,7 @@ el:
           one: "%{count} αντίγραφο ασφαλείας στο %{location}"
           other: "%{count} αντίγραφα ασφαλείας στο %{location}"
         lastest_backup: "Τελευταίο: %{date}"
-        traffic_short: "Κίνηση"
-        traffic: "Web requests της εφαρμογής"
-        page_views: "Προβολές σελίδας"
-        page_views_short: "Προβολές σελίδας"
-        show_traffic_report: "Δείξε λεπτομερή αναφορά κίνησης"
-        community_health: Υγεία κοινότητας
-        moderators_activity: Δραστηριότητα συντονιστών
         whats_new_in_discourse: Τι νέο υπάρχει στο Discourse;
-        activity_metrics: Μετρήσεις δραστηριότητας
-        all_reports: "Όλες οι αναφορές"
-        general_tab: "Γενικά"
-        moderation_tab: "Συντονισμός"
-        security_tab: "Ασφάλεια"
-        reports_tab: "Αναφορές"
         report_filter_any: "καθένα"
         disabled: Απενεργοποιημένο
         timeout_error: Λυπάμαι, το ερώτημα αργεί πάρα πολύ, παρακαλώ επιλέξτε ένα μικρότερο διάστημα
@@ -6470,7 +6390,6 @@ el:
             title: "Σύστημα"
             status: "Κατάσταση"
             discourse_updated: "Το Discourse ενημερώθηκε"
-            dashboard_updated: "Το ταμπλό ενημερώθηκε"
         reports_section:
           header_action: "Διαχειριστείτε"
           add: "Προσθήκη αναφοράς"
@@ -6546,12 +6465,6 @@ el:
             crawlers: "Ανιχνευτές"
           see_details: "Δείτε λεπτομέρειες"
           crawler_learn_more: "Μάθετε περισσότερα"
-        period:
-          last_7_days: "Τελευταίες 7 ημέρες"
-          last_30_days: "Τελευταίες 30 ημέρες"
-          last_3_months: "Τελευταίοι 3 μήνες"
-          custom: "Προσαρμοσμένο"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "%{percent} αλλαγή. Επί του παρόντος %{current}, ήταν %{prev} στην προηγούμενη περίοδο."
           percent_change_tooltip: "%{percent} αλλαγή."
@@ -6596,9 +6509,6 @@ el:
               one: "%{count} ανάρτηση"
               other: "%{count} αναρτήσεις"
             deselect: "Αποεπιλογή %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Αναζήτηση αρχείων καταγραφής</a>'
-            disabled: 'Η αναφορά τάσεων αναζήτησης είναι απενεργοποιημένη. Ενεργοποιήστε <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">την καταγραφή των ερωτημάτων αναζήτησης</a> για τη συλλογή δεδομένων.'
           average_chart_label: Εμφάνιση μέσων όρων, όχι συνόλων
           sort_button: "Ταξινόμηση κατά %{column}"
           sort_button_current: "Ταξινόμηση κατά %{column}, %{direction}"
@@ -6768,7 +6678,6 @@ el:
               recover: Ανάκτηση ανάρτησης.
             revisions:
               read: "Πάρτε την τελευταία ή μια συγκεκριμένη αναθεώρηση."
-              modify: "Απόκρυψη, εμφάνιση ή επαναφορά αναθεωρήσεων."
               permanently_delete: "Μόνιμη διαγραφή αναθεώρησης."
             tags:
               list: Λίστα ετικετών.
@@ -7222,7 +7131,6 @@ el:
           uploading: "Μεταφορτώνεται…"
           uploading_progress: "Μεταφορτώνεται… %{progress}%"
           success: "Το «%{filename}» επιφορτώθηκε με επιτυχία. Το αρχείο βρίσκεται υπό επεξεργασία και θα χρειαστεί έως και ένα λεπτό για να εμφανιστεί στη λίστα."
-          error: "Παρουσιάστηκε ένα σφάλμα κατά το ανέβασμα του '%{filename}': %{message}"
         settings: "Ρυθμίσεις"
         operations:
           is_running: "Αυτή τη στιγμή εκτελείται μια λειτουργία…"
@@ -8043,6 +7951,11 @@ el:
           all: "Όλοι οι χρήστες"
           activated: "Ενεργοποιήθηκε"
         approved: "Εγκεκριμένο;"
+        source: "Πηγή"
+        bots:
+          name: "Όνομα"
+          username: "Όνομα χρήστη"
+          trust_level: "Επίπεδο εμπιστοσύνης"
         titles:
           active: "Ενεργοί χρήστες"
           new: "Νέοι χρήστες"
@@ -8082,16 +7995,13 @@ el:
           no_constructive_purpose: "Δεν υπάρχει εποικοδομητικός σκοπός στις πράξεις τους πέρα από τη δημιουργία διαφωνίας εντός της κοινότητας"
           custom: "Προσαρμοσμένο…"
         suspend_message: "Μήνυμα Email"
-        suspend_message_placeholder: "Προαιρετικά, δώστε περισσότερες πληροφορίες σχετικά με την αναστολή και αυτή θα αποσταλεί στον χρήστη μέσω email."
         suspended_by: "Αποβλήθηκε από τον/την"
         silence_reason: "Αιτία"
         silenced_by: "Σίγαση Από"
         silence_modal_title: "Σίγαση Χρήστη"
         silence_duration: "Για πόσο χρονικό διάστημα ο χρήστης θα σιωπηθεί;"
-        silence_reason_label: "Γιατί εσείς σιωπάτε αυτό τον χρήστη;"
         silence_reason_placeholder: "Αιτία σιώπησης"
         silence_message: "Μήνυμα email"
-        silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"
         suspended_until: "(έως %{until})"
         suspend_forever: "Αναστολή για πάντα"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."

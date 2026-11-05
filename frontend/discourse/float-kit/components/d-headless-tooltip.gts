@@ -1,7 +1,6 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import DInlineFloat from "discourse/float-kit/components/d-inline-float";
 import type DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
-import { and } from "discourse/truth-helpers";
 
 interface DHeadlessTooltipSignature {
   Args: {

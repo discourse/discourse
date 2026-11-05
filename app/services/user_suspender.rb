@@ -82,7 +82,7 @@ class UserSuspender
       suspended_till: @user.suspended_till.iso8601(TIMESTAMP_PRECISION),
     )
 
-    if @message.present?
+    if @message.present? || SiteSetting.dsa_reporting_enabled
       Jobs.enqueue(
         Jobs::CriticalUserEmail,
         type: "account_suspended",

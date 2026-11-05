@@ -1,4 +1,3 @@
-import { or } from "discourse/truth-helpers";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -6,6 +5,7 @@ const Group = <template>
   <div class="group-result {{if @result.flairUrl '--with-flair'}}">
     {{#if @result.flairUrl}}
       <DAvatarFlair
+        class="--has-background"
         @flairBgColor={{@result.flairBgColor}}
         @flairColor={{@result.flairColor}}
         @flairName={{@result.name}}

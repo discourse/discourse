@@ -7,7 +7,6 @@ import { next } from "@ember/runloop";
 import { isEmpty, isPresent } from "@ember/utils";
 import TopicStatus from "discourse/components/topic-status";
 import { searchForTerm } from "discourse/lib/search";
-import { eq, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";

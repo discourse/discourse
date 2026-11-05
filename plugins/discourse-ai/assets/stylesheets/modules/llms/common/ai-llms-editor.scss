@@ -8,7 +8,6 @@
     margin: 0 0 1em 0;
   }
 
-  &__configured,
   &__templates {
     margin-top: 2em;
 
@@ -63,15 +62,8 @@
   }
 }
 
-.ai-llms-list-editor__configured {
-  .d-toggle-switch {
-    justify-content: center;
-  }
-}
-
 .ai-tool-list-editor__current,
-.ai-agent-list-editor__current,
-.ai-llms-list-editor__configured {
+.ai-agent-list-editor__current {
   .d-table {
     @include viewport.from(md) {
       th,
@@ -162,11 +154,6 @@
   font-size: var(--font-down-1);
 }
 
-.ai-decision-models-list-editor__seeded {
-  color: var(--primary-high);
-  font-size: var(--font-down-1);
-}
-
 @include viewport.until(md) {
   .ai-llm-list__description {
     max-width: 80%;
@@ -175,5 +162,48 @@
   .ai-secret-list-editor__table .ai-secret-list__usage {
     flex-direction: column;
     gap: var(--space-1);
+  }
+}
+
+.ai-models-list {
+  &__controls {
+    display: flex;
+    gap: var(--space-2);
+    margin-block: var(--space-4);
+
+    .filter-input-container {
+      flex: 6 1 auto;
+    }
+
+    .d-native-select {
+      flex: 1 1 auto;
+      max-width: 16em;
+    }
+  }
+
+  &__type {
+    white-space: nowrap;
+  }
+
+  &__no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-block: var(--space-6);
+  }
+
+  .d-table {
+    @include viewport.from(md) {
+      th,
+      td {
+        &:first-child {
+          padding-left: 0;
+        }
+
+        &:last-child {
+          padding-right: 0;
+        }
+      }
+    }
   }
 }

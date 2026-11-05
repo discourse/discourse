@@ -187,7 +187,7 @@ fi:
         approved: "Hyväksytty"
         rejected: "Hylätty"
       default_llm:
-        title: "Oletusarvoinen LLM-malli"
+        title: "Oletuskielimalli"
       llm_selector:
         none: "Ei valittu"
       features:
@@ -200,6 +200,7 @@ fi:
         no_llm: "LLM:ää ei ole valittu"
         no_agent: "Ei asetettu"
         no_groups: "Ei valittu"
+        classification_model: "Malli:"
         edit: "Asetukset"
         expand_list:
           one: "(%{count} muuta)"
@@ -216,6 +217,13 @@ fi:
           no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."
           reset: "Palauta"
         no_automations: "Automaatioita ei ole vielä"
+        sentiment:
+          sentiment: "Sävy"
+          emotion: "Tunne"
+          enabled: "Käytössä"
+          setting_groups:
+            sentiment: "Sävy"
+            emotion: "Tunne"
         summarization:
           name: "Yhteenvedot"
           description: "Tarjoaa yhteenvetopainikkeen, jonka avulla kävijät voivat tehdä yhteenvetoja aiheita"
@@ -320,6 +328,8 @@ fi:
         short_title: "Roskaposti"
         title: "Määritä roskapostin käsittely"
         select_llm: "Valitse LLM"
+        no_llm_selected: "Ei valittu"
+        no_decision_model_selected: "Ei valittu"
         custom_instructions: "Mukautetut ohjeet"
         custom_instructions_help: "Sivustoasi koskevat mukautetut ohjeet, jotka auttavat tekoälyä tunnistamaan roskapostia, esim. \"ole aggressiivisempi skannattaessa viestejä, jotka eivät ole englanninkielisiä\"."
         last_seven_days: "Viimeiset 7 päivää"
@@ -604,6 +614,18 @@ fi:
         tools_modal:
           parameters: "Parametrit"
           required: "Pakollinen"
+      models:
+        new: "Uusi malli"
+        name: "Nimi"
+        type: "Tyyppi"
+        provider: "Palveluntarjoaja"
+        edit: "Muokkaa"
+        select_type: "Valitse"
+        types:
+          embedding: "Upottaminen"
+        filters:
+          all: "Kaikki tyypit"
+          reset: "Palauta suodattimet"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"
@@ -806,6 +828,7 @@ fi:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Mukautettu"
         provider_fields:
@@ -908,10 +931,7 @@ fi:
           uploads_in_progress: "Lähettäminen ei onnistu, kun latauksia on käynnissä"
           scroll_to_bottom: "Vieritä alas"
       sentiments:
-        dashboard:
-          title: "Sävy"
         sidebar:
-          overview: "Sävyn yleiskatsaus"
           analysis: "Sävyanalyysi"
         sentiment_analysis:
           share_chart: "Kopioi linkki kaavioon"
@@ -943,6 +963,15 @@ fi:
             compact: "Kompakti"
             expanded: "Laajennettu"
             expanded_description: "tekoäly-yhteenvedoilla"
+      ai_search:
+        related_topics: "Liittyvät ketjut"
+        related_replies:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+        tabs:
+          ask: "Kysy tekoälyltä"
+          topics: "Aiheet"
+          messages: "Viestit"
       discobot_discoveries:
         main_title: "Kysy tekoälyltä"
         loading_convo: "Ladataan keskustelua"

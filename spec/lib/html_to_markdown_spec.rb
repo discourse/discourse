@@ -231,10 +231,28 @@ RSpec.describe HtmlToMarkdown do
     ).to eq("![|200x100](https://www.discourse.org/logo.svg)")
   end
 
-  (1..6).each do |n|
-    it "converts <h#{n}>" do
-      expect(html_to_markdown("<h#{n}>Header #{n}</h#{n}>")).to eq("#" * n + " Header #{n}")
-    end
+  it "converts <h1>" do
+    expect(html_to_markdown("<h1>Header 1</h1>")).to eq("#" * 1 + " Header 1")
+  end
+
+  it "converts <h2>" do
+    expect(html_to_markdown("<h2>Header 2</h2>")).to eq("#" * 2 + " Header 2")
+  end
+
+  it "converts <h3>" do
+    expect(html_to_markdown("<h3>Header 3</h3>")).to eq("#" * 3 + " Header 3")
+  end
+
+  it "converts <h4>" do
+    expect(html_to_markdown("<h4>Header 4</h4>")).to eq("#" * 4 + " Header 4")
+  end
+
+  it "converts <h5>" do
+    expect(html_to_markdown("<h5>Header 5</h5>")).to eq("#" * 5 + " Header 5")
+  end
+
+  it "converts <h6>" do
+    expect(html_to_markdown("<h6>Header 6</h6>")).to eq("#" * 6 + " Header 6")
   end
 
   it "converts <br>" do
@@ -260,6 +278,7 @@ RSpec.describe HtmlToMarkdown do
   end
 
   describe "when HTML is used within Markdown" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     HtmlToMarkdown::ALLOWED.each do |tag|
       it "keeps mandatory HTML entities in text of <#{tag}>" do
         expect(html_to_markdown("<#{tag}>Less than: &lt;</#{tag}>")).to eq(
@@ -286,6 +305,7 @@ RSpec.describe HtmlToMarkdown do
         )
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   it "supports <ins>" do

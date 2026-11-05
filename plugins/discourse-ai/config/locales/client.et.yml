@@ -73,6 +73,8 @@ et:
         filters:
           all: "Kõik"
           reset: "Nulli"
+        sentiment:
+          enabled: "Sisse lülitatud"
         search:
           name: "Otsi"
         image_caption:
@@ -114,6 +116,8 @@ et:
             other: "%{count} postitust"
       spam:
         short_title: "Spämm"
+        no_llm_selected: "Pole"
+        no_decision_model_selected: "Pole"
         enable: "Luba"
         test_modal:
           spam: "Spämm"
@@ -207,6 +211,13 @@ et:
         delete: "Kustuta"
         tools_modal:
           required: "Nõutud"
+      models:
+        name: "Nimi"
+        type: "Tüüp"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        types:
+          embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"
@@ -281,6 +292,13 @@ et:
             category: "Kategooriad"
           table:
             total_count: "Kokku"
+      ai_search:
+        related_replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        tabs:
+          topics: "Teemasid"
+          messages: "Sõnumid"
       discobot_discoveries:
         legacy:
           regular_results: "Teemasid"

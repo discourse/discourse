@@ -88,7 +88,7 @@ pl_PL:
           fetch_error: "Nie udało się załadować metryk Zapytaj AI."
         emotion:
           title: "Emocje"
-          description: "Tabela zawiera liczbę wpisów sklasyfikowanych według określonej emocji. W zależności od wybranej metody klasyfikacji emocji wpisy są klasyfikowane albo za pomocą skonfigurowanego modelu klasyfikacji emocji („SamLowe/roberta-base-go_emotions”), albo skonfigurowanego agenta klasyfikacji emocji."
+          description: "Tabela zlicza posty sklasyfikowane według danej emocji, korzystając z wybranego zaplecza klasyfikacji emocji."
         reports:
           filters:
             group_by:
@@ -130,12 +130,15 @@ pl_PL:
       node_unavailable:
         requires_ai: "Wymaga włączenia wtyczki AI"
         requires_decision_model: "Wymaga modelu decyzyjnego"
+        requires_ai_translation: "Wymaga skonfigurowania tłumaczenia AI"
       nodes:
         "action:ai_agent": "Agent AI"
         "action:classify": "Klasyfikuj"
+        "trigger:post_locale_detected": "Wykryto język wpisu"
       node_descriptions:
         "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
         "action:classify": "Zadaj modelowi decyzyjnemu pytania dotyczące każdego elementu"
+        "trigger:post_locale_detected": "Uruchamia się, gdy zostanie wykryty język nowego lub edytowanego wpisu"
     discourse_automation:
       scriptables:
         llm_report:
@@ -382,14 +385,14 @@ pl_PL:
         rejected: "Odrzucony"
         awaiting_staff: "Oczekiwanie na zatwierdzenie przez personel"
       default_llm:
-        title: "Domyślny model LLM"
-        description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
+        title: "Domyślny model językowy"
+        description: "Używane przez dowolną funkcję AI lub agenta, który nie określa własnego modelu języka. Jeśli żaden nie jest ustawiony, używany jest ostatnio dodany model języka."
       llm_selector:
         none: "Brak"
-        saved: "Domyślny model LLM został pomyślnie zaktualizowany"
+        saved: "Zapisano domyślny model języka"
       features:
         short_title: "Cechy"
-        description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych agentów i LLM, a dostęp do nich może być kontrolowany przez grupy."
+        description: "Skonfiguruj funkcje AI dla swojej witryny, w tym ich agentów, modeli i uprawnień dostępu, jeśli są obsługiwane."
         back: "Powrót do funkcji AI"
         settings_save_error: "Niektórych ustawień nie udało się zapisać."
         disabled: "(wyłączone)"
@@ -407,6 +410,14 @@ pl_PL:
         no_llm: "Nie wybrano LLM"
         no_agent: "Nie ustawiony"
         no_groups: "Brak"
+        backend: "Zaplecze:"
+        backends:
+          agent: "Agent LLM"
+          decision_model: "Model decyzyjny"
+          classification_model: "Dedykowany punkt końcowy klasyfikacji"
+        decision_model: "Model decyzyjny:"
+        classification_model: "Model:"
+        not_configured: "Nie skonfigurowano"
         edit: "Ustawień"
         expand_list:
           one: "(%{count} więcej)"
@@ -428,10 +439,32 @@ pl_PL:
           not_enabled: "Nie włączono"
         filters:
           all: "Wszystkie"
-          text: "Wyszukaj funkcje, agentów, LLM-y lub grupy..."
+          text: "Szukaj funkcji, agentów, modeli lub grup..."
           no_results: "Nie znaleziono funkcji spełniających kryteria filtrów."
           reset: "Przywróć"
         no_automations: "Nie ma jeszcze żadnych automatyzacji"
+        sentiment:
+          name: "Sentyment i emocje"
+          description: "W tle klasyfikuje nastrój i emocje zawarte we wpisach"
+          sentiment: "Sentiment"
+          emotion: "Emocje"
+          backend: "Zaplecze"
+          enabled: "Włączone"
+          agent: "Agent"
+          decision_model: "Model decyzyjny"
+          posts_per_hour: "Wpisy na godzinę"
+          post_age_limit: "Limit wieku dla wpisów (dni)"
+          posts_per_hour_description: "Przybliżona częstotliwość. 0 zatrzymuje skanowanie, wliczając nowe wpisy. Edytowane wpisy są sprawdzane osobno."
+          background_description: "Sprawdza niesklasyfikowane wpisy co 5 minut, w ramach tych wspólnych limitów. Każdy włączony klasyfikator może generować żądanie na wpis. Odmowy mogą być ponawiane."
+          emotion_scores: "Wyniki rozdzielane są na 28 emocji."
+          model_change_warning: "Zmiana wybranego modelu nie powoduje reklasyfikacji istniejących wyników."
+          dedicated_description: "Dedykowane punkty końcowe klasyfikacji są konfigurowane w ustawieniach witryny."
+          configure_dedicated: "Skonfiguruj dedykowane punkty końcowe klasyfikacji"
+          manage_decision_models: "Zarządzaj modelami decyzyjnymi"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emocje"
+            background_processing: "Przetwarzanie w tle"
         summarization:
           name: "Podsumowania"
           description: "Udostępnia przycisk podsumowania, który umożliwia odwiedzającym podsumowanie tematów"
@@ -715,6 +748,10 @@ pl_PL:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"
         select_llm: "Wybierz LLM"
+        no_llm_selected: "Brak"
+        select_decision_model: "Wybierz model decyzyjny"
+        no_decision_model_selected: "Brak"
+        decision_model_help: "Model decyzyjny samodzielnie ocenia każdy wpis, gdy jest pewien, a te, co do których nie ma pewności, przekazuje do LLM. Bez LLM model decyzyjny sam rozstrzyga o każdym poście."
         select_agent: "Wybierz agenta"
         custom_instructions: "Instrukcje niestandardowe"
         custom_instructions_help: "Niestandardowe instrukcje specyficzne dla Twojej witryny, aby pomóc sztucznej inteligencji w identyfikacji spamu, np. \"Bądź bardziej agresywny w skanowaniu postów nie w języku angielskim\"."
@@ -739,6 +776,8 @@ pl_PL:
           result: "Wynik"
           reason: "Rozumowanie"
           llm: "LLM"
+          decision_model: "Model decyzyjny"
+          spam_probability: "Prawdopodobieństwo spamu"
           scan_history: "Historia skanowania"
           sent_message: "Wysłana wiadomość"
           system_prompt: "Monit systemowy"
@@ -906,6 +945,9 @@ pl_PL:
             summary_forever: "Ładunki przechowywane %{detailed} dni, podsumowania przechowywane na zawsze"
             finite: "Ładunki były przechowywane przez %{detailed} dni, podsumowania trwały %{summary} dni, a następnie usuwane"
       ai_agent:
+        new_bot_option:
+          label: "Agent AI"
+          description: "Tworzy bota wraz z jego modelem językowym, podpowiedziami, narzędziami i uprawnieniami."
         ai_tools: "Narzędzia"
         native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"
@@ -1217,15 +1259,18 @@ pl_PL:
         modal:
           title: "Utwórz nowe poświadczenie"
       decision_models:
-        short_title: "Modele decyzyjne"
-        description: "Modele, które odpowiadają na pytania dotyczące treści (tak/nie, wybór, wynik) z prawdopodobieństwem, szybciej i taniej niż LLM."
-        create_new: "Nowy model decyzyjny"
-        no_decision_models: "Brak jeszcze modeli decyzyjnych"
         seeded_description: "Model wstępnie skonfigurowany"
         manage: "Zarządzaj modelami decyzyjnymi"
-        back: "Powrót do modeli decyzyjnych"
         start_from: "Zacznij od"
         no_preset: "Brak"
+        preset_descriptions:
+          none: "Ustawienia dla dowolnego zgodnego punktu końcowego modelu decyzyjnego"
+          jev-latest: "Hostowany model decyzyjny TypeSafe, tylko tekst"
+          jev-latest-vision: "Hostowany model decyzyjny TypeSafe z obsługą eksperymentalnych obrazów"
+          vllm-sr-d3: "Model decyzyjny multimodalny typu open source, samodzielnie hostowany za pomocą vLLM"
+          cloudflare-clef: "Otwarty model decyzyjny multimodalny Cloudflare oparty na sztucznej inteligencji pracowników"
+          cloudflare-clef-flash: "Mniejsza, szybsza wersja Clef na platformie Workers AI"
+          gpt-6-luna: "Model decyzyjny OpenAI w API Decisions z obsługą obrazów"
         display_name: "Nazwa"
         model: "Model"
         provider: "Dostawca"
@@ -1240,7 +1285,7 @@ pl_PL:
           remove: "Usuń nagłówek"
         edit: "Edytuj"
         delete: "Delete"
-        confirm_delete: "Czy na pewno chcesz usunąć ten model decyzyjny? Przepływy pracy, które go używają, przestaną działać."
+        confirm_delete: "Czy na pewno chcesz usunąć ten model decyzyjny? Funkcje i przepływy pracy, które go używają, przestaną działać."
         saved: "Model decyzyjny zapisany"
         test: "Przeprowadź test"
         test_success: "Model decyzyjny odpowiedział na pytanie testowe (tak: %{percentage}%)."
@@ -1335,6 +1380,44 @@ pl_PL:
           few: "Odkryto %{count} narzędzia używające protokołu %{version}."
           many: "Odkryto %{count} narzędzi używających protokołu %{version}."
           other: "Odkryto %{count} narzędzi używających protokołu %{version}."
+      models:
+        short_title: "Modele"
+        description: "Połącz modele, które napędzają funkcje AI i przepływy pracy."
+        new: "Nowy model"
+        back: "Powrót do modeli"
+        back_to_types: "Powrót do typów modeli"
+        empty: "Nie skonfigurowałeś jeszcze żadnych modeli"
+        name: "Nazwa"
+        type: "Typ"
+        provider: "Dostawca"
+        edit: "Edytuj"
+        choose_type: "Jaki rodzaj modelu chcesz dodać?"
+        select_type: "Wybierz"
+        types:
+          llm: "Duży język"
+          embedding: "Osadzanie"
+          decision: "Decyzja"
+        type_titles:
+          llm: "Duży model językowy"
+          embedding: "Model osadzania"
+          decision: "Model decyzyjny"
+        type_descriptions:
+          llm: "Generuje tekst dla funkcji, takich jak bot AI, podsumowania i pomocnik AI"
+          embedding: "Zamienia treść w wektory do wyszukiwania semantycznego i powiązanych tematów"
+          decision: "Odpowiedzi na pytania dotyczące treści (tak/nie, wybór, ocena) wraz z prawdopodobieństwami, do wykorzystania w funkcjach AI i procesach roboczych"
+        type_filters:
+          llm: "Duże modele językowe"
+          embedding: "Modele osadzania"
+          decision: "Modele decyzyjne"
+        templates:
+          llm: "Wybierz szablon modelu językowego"
+          embedding: "Wybierz szablon osadzania"
+          decision: "Wybierz szablon modelu decyzyjnego"
+        filters:
+          all: "Wszystkie typy"
+          text: "Filtruj według nazwy lub dostawcy"
+          no_results: "Brak modeli spełniających Twoje filtry"
+          reset: "Zresetuj filtry"
       llms:
         short_title: "LLMs"
         no_llms: "Nie ma jeszcze LLM"
@@ -1599,6 +1682,16 @@ pl_PL:
         empty: "Nie skonfigurowałeś jeszcze osadzeń"
         presets: "Wybierz ustawienie wstępne..."
         configure_manually: "Skonfiguruj ręcznie"
+        preset_descriptions:
+          manual: "Ustawienia dla dowolnej usługi osadzania, w tym usług hostowanych samodzielnie"
+          bge-large-en: "Model open-source wyłącznie w języku angielskim, samodzielnie hostowany"
+          bge-m3: "Model wielojęzyczny z otwartym kodem źródłowym dla dłuższych treści, hostowany samodzielnie"
+          multilingual-e5-large: "Model wielojęzyczny o otwartym kodzie źródłowym, samodzielnie hostowany"
+          cohere-embed-v4: "Wielojęzyczny model Cohere, hostowany na platformie AWS Bedrock"
+          gemini-embedding-001: "Hostowany wielojęzyczny model Google"
+          text-embedding-3-large: "Najdokładniejszy model osadzania OpenAI"
+          text-embedding-3-small: "Szybszy i tańszy model osadzania OpenAI"
+          text-embedding-ada-002: "Poprzednia generacja modelu OpenAI została zastąpiona przez osadzanie tekstu w 3 małych czcionkach"
         edit: "Edytuj"
         seeded_warning: "To jest wstępnie skonfigurowane na twojej stronie i nie może być edytowane."
         tests:
@@ -1608,6 +1701,7 @@ pl_PL:
           failure: "Próba wygenerowania osadzenia spowodowała: %{error}"
         hints:
           dimensions_warning: "Po zapisaniu wartość ta nie może zostać zmieniona."
+          bedrock_api_key: "Klucz API Bedrock lub tajny klucz dostępu, gdy ustawiony jest identyfikator klucza dostępu. Pozostaw puste, aby użyć roli IAM lub danych uwierzytelniających AWS serwera."
           matryoshka_dimensions: "Definiuje rozmiar zagnieżdżonych osadzeń używanych do hierarchicznej lub wielowarstwowej reprezentacji danych, podobnie jak zagnieżdżone lalki dopasowują się do siebie."
           embed_prompt: "Prefiks instrukcji zadania podczas generowania osadzeń treści forum. TYLKO dla modeli osadzeń wymagających prefiksów, takich jak nomic-embed lub stella. Nie jest wymagany w przypadku większości modeli."
           search_prompt: "Prefiks instrukcji zadania podczas generowania osadzeń zapytań wyszukiwania. TYLKO dla modeli osadzeń wymagających prefiksów, takich jak nomic-embed lub stella. Nie jest wymagany w przypadku większości modeli."
@@ -1632,10 +1726,15 @@ pl_PL:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Niestandardowe"
         provider_fields:
           model_name: "Nazwa modelu"
+          model_id: "Identyfikator modelu lub profil wnioskowania"
+          region: "Region AWS"
+          access_key_id: "Identyfikator klucza dostępu AWS"
+          role_arn: "Rola IAM ARN"
         semantic_search: "Tematy (semantyczne)"
         semantic_search_results:
           toggle: "Powiązane wyniki"
@@ -1826,10 +1925,7 @@ pl_PL:
           streaming_below: "Nowa treść poniżej"
           editing_post: "Edycja wpisu"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Przegląd nastrojów"
           analysis: "Analiza sentymentu"
         sentiment_analysis:
           share_chart: "Skopiuj link do wykresu"
@@ -1879,6 +1975,33 @@ pl_PL:
             compact: "Kompaktowy"
             expanded: "Rozszerzony"
             expanded_description: "z podsumowaniami AI"
+      ai_search:
+        related_topics: "Powiązane tematy"
+        related_replies:
+          one: "%{count} odpowiedź"
+          few: "%{count} odpowiedzi"
+          many: "%{count} odpowiedzi"
+          other: "%{count} odpowiedzi"
+        answer_label: "Odpowiedź AI"
+        follow_up_label: "Zadaj pytanie uzupełniające"
+        follow_up_placeholder: "Zadaj kolejne pytanie…"
+        ask: "Zapytaj"
+        references_title: "Cytowane tematy"
+        references_empty: "Tutaj pojawiają się tematy, na które powołują się odpowiedzi."
+        tabs:
+          label: "Wyniki wyszukiwania"
+          ask: "Zapytaj AI"
+          topics: "Tematy"
+          this_topic: "Ten temat"
+          messages: "Wiadomości"
+          no_answer: "Nie znaleziono odpowiedzi AI"
+        no_keyword_matches: "Nie znaleziono pasujących słów kluczowych."
+        no_answer: "AI nie znalazła jednoznacznej odpowiedzi. %{askLink}"
+        ask_community: "Zapytaj społeczność."
+        scope:
+          this_topic: "ten temat"
+          messages: "twoje wiadomości"
+          fallback: "Nie znaleziono niczego w %{name}, więc ta odpowiedź pochodzi z całej witryny."
       discobot_discoveries:
         main_title: "Zapytaj AI"
         loading_convo: "Ładowanie rozmowy"

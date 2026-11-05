@@ -1,7 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import { eq } from "discourse/truth-helpers";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";

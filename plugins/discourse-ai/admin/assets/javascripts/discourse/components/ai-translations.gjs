@@ -16,7 +16,6 @@ import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
-import { eq, not } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";

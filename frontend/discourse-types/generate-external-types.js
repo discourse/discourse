@@ -27,7 +27,6 @@ const packageNames = [
   "ember-modifier",
   "ember-qunit",
   "ember-source",
-  "ember-truth-helpers",
   "pretender",
 ];
 

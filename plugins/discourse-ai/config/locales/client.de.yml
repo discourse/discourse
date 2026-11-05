@@ -31,7 +31,6 @@ de:
             failed: "Fehlgeschlagen"
         emotion:
           title: "Emotion"
-          description: "Die Tabelle zeigt die Anzahl der Beiträge an, die einer bestimmten Emotion zugeordnet wurden. Je nach gewählter Methode zur Emotionsklassifizierung werden die Beiträge entweder mit dem konfigurierten Emotionsklassifizierungsmodell („SamLowe/roberta-base-go_emotions“) oder mit dem konfigurierten Emotionsklassifizierungsagenten klassifiziert."
         reports:
           filters:
             group_by:
@@ -291,14 +290,11 @@ de:
         rejected: "Abgelehnt"
         awaiting_staff: "Warte auf Genehmigung durch das Team"
       default_llm:
-        title: "Standard-LLM-Modell"
-        description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
+        title: "Standard-Sprachmodell"
       llm_selector:
         none: "Keine Auswahl"
-        saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
-        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Agenten und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück zu KI-Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
@@ -312,6 +308,7 @@ de:
         no_llm: "Kein LLM ausgewählt"
         no_agent: "Nicht festgelegt"
         no_groups: "Keine"
+        classification_model: "Modell:"
         edit: "Einstellungen"
         expand_list:
           one: "(%{count} weitere)"
@@ -331,10 +328,17 @@ de:
           not_enabled: "Nicht aktiviert"
         filters:
           all: "Gesamt"
-          text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
+        sentiment:
+          sentiment: "Stimmung"
+          emotion: "Emotion"
+          enabled: "Aktiviert"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Stimmung"
+            emotion: "Emotion"
         summarization:
           name: "Zusammenfassungen"
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
@@ -565,6 +569,8 @@ de:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
+        no_llm_selected: "Keine Erfassung"
+        no_decision_model_selected: "Keine Erfassung"
         select_agent: "Agent auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
@@ -1034,6 +1040,18 @@ de:
         test_summary:
           one: "%{count} Tool entdeckt mit Protokoll %{version}."
           other: "%{count} Tools entdeckt mit Protokoll %{version}."
+      models:
+        new: "Neues Modell"
+        name: "Name"
+        type: "Typ"
+        provider: "Anbieter"
+        edit: "Bearbeiten"
+        select_type: "Auswählen"
+        types:
+          embedding: "Einbettung"
+        filters:
+          all: "Alle Arten"
+          reset: "Filter zurücksetzen"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -1299,6 +1317,7 @@ de:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Benutzerdefiniert"
         provider_fields:
@@ -1423,10 +1442,7 @@ de:
           streaming_below: "Neuer Inhalt unten"
           editing_post: "Beitrag wird bearbeitet "
       sentiments:
-        dashboard:
-          title: "Stimmung"
         sidebar:
-          overview: "Stimmungsübersicht"
           analysis: "Stimmungsanalyse"
         sentiment_analysis:
           share_chart: "Link zur Tabelle kopieren"
@@ -1470,6 +1486,15 @@ de:
             compact: "Kompakt"
             expanded: "Erweitert"
             expanded_description: "mit KI-Zusammenfassungen"
+      ai_search:
+        related_topics: "Verwandte Themen"
+        related_replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        tabs:
+          ask: "KI fragen"
+          topics: "Themen"
+          messages: "Nachrichten"
       discobot_discoveries:
         main_title: "KI fragen"
         loading_convo: "Unterhaltung wird geladen"

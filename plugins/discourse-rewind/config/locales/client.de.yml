@@ -132,7 +132,7 @@ de:
           message_4: "Deine durchschnittliche Nachrichtenlänge betrug <strong>%{length}</strong> Zeichen"
           message_5: "Deine Lieblingskanäle:"
           dancing_baby_alt: "Tanzendes Baby"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"

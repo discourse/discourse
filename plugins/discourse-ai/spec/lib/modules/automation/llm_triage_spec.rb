@@ -279,6 +279,64 @@ describe DiscourseAi::Automation::LlmTriage do
     end
   end
 
+  it "keeps one reviewable when review and spam rules flag the post concurrently" do
+    review_started = Queue.new
+    release_review = Queue.new
+    review_thread = nil
+    spam_thread = nil
+
+    allow(ReviewablePost).to receive(:needs_review!).and_wrap_original do |original, **args|
+      review_started << true
+      release_review.pop
+      original.call(**args)
+    end
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+      review_thread =
+        Thread.new do
+          triage(
+            post: Post.find(post.id),
+            triage_agent_id: ai_agent.id,
+            search_for_text: "bad",
+            flag_post: true,
+            flag_type: :review,
+          )
+        end
+
+      Timeout.timeout(5) { review_started.pop }
+      spam_thread =
+        Thread.new do
+          triage(
+            post: Post.find(post.id),
+            triage_agent_id: ai_agent.id,
+            search_for_text: "bad",
+            flag_post: true,
+            flag_type: :spam,
+          )
+        end
+
+      spam_thread.join(1)
+      release_review << true
+      Timeout.timeout(5) do
+        review_thread.value
+        spam_thread.value
+      end
+    end
+
+    reviewable = Reviewable.where(target: post).sole
+    expect(reviewable).to be_a(ReviewableFlaggedPost)
+    expect(reviewable.reviewable_scores.map(&:reviewable_score_type)).to contain_exactly(
+      ReviewableScore.types[:needs_approval],
+      ReviewableScore.types[:spam],
+    )
+  ensure
+    release_review << true
+    [review_thread, spam_thread].compact.each do |thread|
+      thread.kill if thread.alive?
+      thread.join
+    end
+  end
+
   it "can handle spam+silence flags" do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(

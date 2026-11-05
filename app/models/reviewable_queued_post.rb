@@ -48,9 +48,21 @@ class ReviewableQueuedPost < Reviewable
           label: "reviewables.actions.reject_post_bundle.title",
         )
 
-      build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
+      build_action(
+        actions,
+        :reject_post,
+        bundle: reject_bundle,
+        icon: "xmark",
+        dsa_classification_required: true,
+      )
       if target_created_by.present?
-        build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+        build_action(
+          actions,
+          :revise_and_reject_post,
+          bundle: reject_bundle,
+          icon: "envelope",
+          dsa_classification_required: true,
+        )
       end
 
       build_penalty_actions(
@@ -58,9 +70,12 @@ class ReviewableQueuedPost < Reviewable
         bundle: reject_bundle,
         silence: :reject_and_silence,
         suspend: :reject_and_suspend,
+        dsa_classification_required: true,
       )
 
-      delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
+      if guardian.can_delete_user?(target_created_by)
+        delete_user_actions(actions, reject_bundle, dsa_classification_required: true)
+      end
     end
 
     build_action(actions, :delete) if guardian.can_delete?(self)
@@ -88,6 +103,9 @@ class ReviewableQueuedPost < Reviewable
     result[:cooking_options].symbolize_keys! if result[:cooking_options]
     result[:topic_id] = topic_id if topic_id
     result[:category] = category_id if category_id
+    if result[:tags].present? && !result[:tags].is_a?(Array)
+      raise Discourse::InvalidParameters.new(:tags)
+    end
     if result[:tags].is_a?(Array)
       result[:tags] = result[:tags].map { |t| t.is_a?(Hash) ? t["name"] : t }
     end
@@ -190,6 +208,7 @@ class ReviewableQueuedPost < Reviewable
       end
 
     pm_translation_args = {
+      **Dsa::AppealInstructions.message_options,
       topic_title: topic&.title || payload["title"],
       topic_url: topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],

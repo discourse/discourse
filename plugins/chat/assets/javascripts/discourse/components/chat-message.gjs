@@ -19,7 +19,6 @@ import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
-import { eq, lt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";

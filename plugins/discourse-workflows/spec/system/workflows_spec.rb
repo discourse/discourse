@@ -71,6 +71,32 @@ RSpec.describe "Discourse Workflows" do
     expect(editor_page).to have_legacy_topic_tag_fields
   end
 
+  it "upgrades a deprecated node to its latest version" do
+    node_id = "post-edited"
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "trigger:post_edited",
+            "typeVersion" => "1.0",
+            "name" => "Post edited",
+            "parameters" => {
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+    find(".workflows-deprecation-notice__upgrade").click
+
+    expect(editor_page).to have_node_configurator
+    expect(page).to have_no_css(".workflows-deprecation-notice")
+    expect(workflow.reload.nodes.first["typeVersion"]).to eq("2.0")
+  end
+
   it "creates a workflow with condition node" do
     editor_page.visit_new
     editor_page.click_empty_state_add_node
@@ -181,21 +207,38 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
   end
 
-  it "opens a user card from the creator and last editor avatars" do
+  it "opens a user card from the creator" do
     creator = Fabricate(:user)
-    editor = Fabricate(:user)
     workflow = Fabricate(:discourse_workflows_workflow, created_by: creator)
-    workflow.update!(updated_by: editor)
     user_card = PageObjects::Components::UserCard.new
 
     workflows_page.visit_index
 
     workflows_page.click_creator(workflow)
     expect(user_card).to be_showing_user(creator.username)
+  end
 
-    page.send_keys(:escape)
-    workflows_page.click_last_editor(workflow)
-    expect(user_card).to be_showing_user(editor.username)
+  it "opens a workflow from the edit button" do
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+    workflows_page.visit_index
+    workflows_page.click_edit(workflow)
+
+    expect(page).to have_current_path("/admin/plugins/discourse-workflows/workflows/#{workflow.id}")
+  end
+
+  it "deletes a workflow from the row menu" do
+    workflow = Fabricate(:discourse_workflows_workflow, name: "Doomed", created_by: admin)
+    Fabricate(:discourse_workflows_workflow, name: "Survivor", created_by: admin)
+    dialog = PageObjects::Components::Dialog.new
+
+    workflows_page.visit_index
+    workflows_page.click_delete(workflow)
+    dialog.click_danger
+
+    expect(workflows_page).to have_no_workflow("Doomed")
+    expect(workflows_page).to have_workflow("Survivor")
+    expect(DiscourseWorkflows::Workflow.exists?(workflow.id)).to eq(false)
   end
 
   context "with workflow tags" do

@@ -20,7 +20,6 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, eq, gt, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -71,6 +70,10 @@ export default class AgentEditor extends Component {
     this.formDataCache = data;
 
     return data;
+  }
+
+  get cameFromBots() {
+    return this.router.currentRoute?.queryParams?.source === "bots";
   }
 
   get chatPluginEnabled() {
@@ -240,7 +243,8 @@ export default class AgentEditor extends Component {
         addUniqueValueToArray(this.args.agents.content, agentToSave);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-agents.edit",
-          agentToSave
+          agentToSave,
+          { queryParams: { source: this.cameFromBots ? "bots" : null } }
         );
       }
       this.toasts.success({
@@ -701,10 +705,18 @@ export default class AgentEditor extends Component {
   }
 
   <template>
-    <BackButton
-      @label="discourse_ai.ai_agent.back"
-      @route="adminPlugins.show.discourse-ai-agents"
-    />
+    {{#if this.cameFromBots}}
+      <BackButton
+        @label="admin.users.bots.back"
+        @model="bots"
+        @route="adminUsersList.show"
+      />
+    {{else}}
+      <BackButton
+        @label="discourse_ai.ai_agent.back"
+        @route="adminPlugins.show.discourse-ai-agents"
+      />
+    {{/if}}
     <div
       class="ai-agent-editor"
       {{didInsert this.updateAllGroups @model.id}}

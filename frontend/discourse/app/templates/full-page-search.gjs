@@ -13,7 +13,6 @@ import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
@@ -280,15 +279,9 @@ export default <template>
                       <div class="no-results-suggestion">
                         {{i18n "search.cant_find"}}
                         {{#if @controller.canCreateTopic}}
-                          <a
-                            href
-                            {{on
-                              "click"
-                              (fn
-                                @controller.createTopic @controller.searchTerm
-                              )
-                            }}
-                          >{{i18n "search.start_new_topic"}}</a>
+                          <a href {{on "click" @controller.createTopic}}>{{i18n
+                              "search.start_new_topic"
+                            }}</a>
                           {{#unless @controller.siteSettings.login_required}}
                             {{i18n "search.or_search_google"}}
                           {{/unless}}

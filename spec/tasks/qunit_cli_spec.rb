@@ -25,6 +25,10 @@ describe "bin/qunit" do
 
   let(:chat_test_file) { Dir.glob("#{Rails.root.join("plugins/chat/test/**/*-test.js")}").first }
 
+  def core_test_files_in(dir)
+    Dir.glob(Rails.root.join("frontend/discourse/tests/#{dir}/**/*-test.{js,gjs,ts,gts}")).sort
+  end
+
   let(:default_watchdog_env) do
     {
       "QUNIT_BROWSER_WATCHDOG" => "1",
@@ -182,6 +186,36 @@ describe "bin/qunit" do
     expect(result.status).to eq(0)
     expect(result.args).to include("target=chat&testem=1")
     expect(result.env).to include("LOAD_PLUGINS" => "1")
+  end
+
+  it "passes core directories as a path prefix" do
+    result = run("frontend/discourse/tests/integration/components")
+    expect(result.status).to eq(0)
+    expect(result.args).to include("--file-path", "./integration/components/")
+  end
+
+  it "skips the path filter for the core tests root" do
+    result = run("frontend/discourse/tests")
+    expect(result.status).to eq(0)
+    expect(result.args).not_to include("--file-path")
+  end
+
+  it "passes plugin directories as a path prefix" do
+    result = run("plugins/chat/test/javascripts")
+    expect(result.status).to eq(0)
+    expect(result.args).to include("--file-path", "discourse/plugins/chat/")
+  end
+
+  it "rejects directories outside the test directories" do
+    result = run("frontend/discourse")
+    expect(result.status).to eq(1)
+    expect(result.err).to include("frontend/discourse is not a test directory")
+  end
+
+  it "aborts when a file list is too long for the test page URL" do
+    result = run(*core_test_files_in("acceptance"))
+    expect(result.status).to eq(1)
+    expect(result.err).to include("Too many test files", "Pass directories instead")
   end
 
   it "prevents running files from multiple targets" do

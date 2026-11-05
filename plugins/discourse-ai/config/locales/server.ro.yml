@@ -26,7 +26,6 @@ ro:
 
             Referință: %{post_url}
   site_settings:
-    ai_default_llm_model: "Modelul LLM implicit de utilizat pentru toate funcționalitățile IA"
     ai_embeddings_semantic_search_use_hyde: "Folosește HyDE pentru căutare semantică pe întreaga pagină. Folosește un LLM pentru a crea o postare ipotetică pe baza termenului de căutare al utilizatorului, pentru a ajuta la găsirea potrivirilor."
     ai_translation_enabled: "Activează funcționalitatea de traducere cu IA"
   reports:
@@ -40,6 +39,8 @@ ro:
     spam_detection:
       logging_subject: "Detectare spam"
     ai_bot:
+      sources:
+        spam_detection: "Detectare spam"
       navigation:
         settings:
           title: "Setări site"
@@ -115,6 +116,13 @@ ro:
       assign:
         errors:
           not_found: "Subiectul nu a fost găsit."
+    appearance_authoring:
+      default_theme: "Temă implicită"
+      colors:
+        light:
+          header_background: "Antet"
+      fonts:
+        heading_font: "Font titlu"
     reviewables:
       ai_tool_action:
         approve:

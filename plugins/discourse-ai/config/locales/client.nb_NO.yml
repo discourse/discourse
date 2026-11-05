@@ -75,6 +75,8 @@ nb_NO:
         filters:
           all: "Alle"
           reset: "Tilbakestill"
+        sentiment:
+          enabled: "Aktivert"
         search:
           name: "Søk"
         image_caption:
@@ -117,6 +119,8 @@ nb_NO:
             other: "%{count} innlegg"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Siste 7 dager"
         enable: "Aktiver"
         test_modal:
@@ -220,6 +224,16 @@ nb_NO:
         delete: "Slett"
         tools_modal:
           required: "Påkrevd"
+      models:
+        name: "Navn"
+        type: "Type"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        select_type: "Velg"
+        types:
+          embedding: "Innbygging"
+        filters:
+          all: "Alle typer"
       llms:
         display_name: "Navn"
         provider: "Tilbyder"
@@ -305,6 +319,13 @@ nb_NO:
       summarization:
         chat:
           summarize: "Oppsummer"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Emner"
+          messages: "Meldinger"
       discobot_discoveries:
         legacy:
           regular_results: "Emner"

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
-import { eq, has } from "discourse/truth-helpers";
+import { has } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 

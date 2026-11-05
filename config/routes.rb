@@ -171,6 +171,11 @@ Discourse::Application.routes.draw do
       end
       resources :groups, only: [:destroy], constraints: AdminConstraint.new
 
+      get "users/bots/new" => "users#new_bot"
+      get "users/bots/username_suggestion" => "users#bot_username_suggestion",
+          :constraints => AdminConstraint.new
+      post "users/bots" => "users#create_bot", :constraints => AdminConstraint.new
+
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
           get "list" => "users#index"
@@ -380,10 +385,6 @@ Discourse::Application.routes.draw do
       put "dashboard/sections/:section_id/settings/:setting_key" =>
             "dashboard#update_section_settings",
           :constraints => AdminConstraint.new
-      get "dashboard/general" => "dashboard#general"
-      get "dashboard/moderation" => "dashboard#moderation"
-      get "dashboard/security" => "dashboard#security"
-      get "dashboard/reports" => "dashboard#reports"
       post "dashboard/reports/bulk" => "dashboard#bulk_reports"
       get "dashboard/reports/available" => "dashboard#available_reports",
           :constraints => AdminConstraint.new
@@ -444,7 +445,6 @@ Discourse::Application.routes.draw do
           put "readonly" => "backups#readonly"
           get "upload" => "backups#check_backup_chunk"
           post "upload" => "backups#upload_backup_chunk"
-          get "upload_url" => "backups#create_upload_url"
         end
       end
 
@@ -684,6 +684,10 @@ Discourse::Application.routes.draw do
     get "password-reset" => "static#show", :id => "password_reset"
     get "privacy" => "static#show", :id => "privacy", :as => "privacy"
     get "tos" => "static#show", :id => "tos", :as => "tos"
+    get "dsa/report-illegal-content" => "dsa_notices#index"
+    post "dsa/report-illegal-content" => "dsa_notices#create"
+    post "dsa/report-illegal-content/verify-email" => "dsa_notices#verify_email"
+    post "dsa/report-illegal-content/verify-code" => "dsa_notices#verify_code"
     get "faq" => "static#show", :id => "faq"
     %w[guidelines rules conduct].each do |guidelines_alias|
       get guidelines_alias => "static#show", :id => "guidelines", :as => guidelines_alias
@@ -1362,6 +1366,14 @@ Discourse::Application.routes.draw do
       get "revisions/:revision" => "posts#revisions", :constraints => { revision: /\d+/ }
       put "revisions/:revision/hide" => "posts#hide_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
+      put "revisions/:revision/unlist" => "posts#unlist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
+      put "revisions/:revision/relist" => "posts#relist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
       delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
       get "permanently_delete_check" => "posts#permanently_delete_check",
@@ -1432,6 +1444,7 @@ Discourse::Application.routes.draw do
     get "/c", to: redirect(relative_url_root + "categories")
 
     resources :categories, only: %i[index create update destroy]
+    post "categories/evaluate_permissions" => "categories#evaluate_permissions"
     post "categories/:id/convert_nested_replies" => "categories#convert_nested_replies"
     post "categories/reorder" => "categories#reorder"
     get "categories/types" => "categories#types"
@@ -2047,6 +2060,8 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
+    get "/bundle-analysis.json" => "bundle_analysis#index"
+
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
@@ -2098,6 +2113,10 @@ Discourse::Application.routes.draw do
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
       get "/test_net_http_headers" => "test_requests#test_net_http_headers"
       get "/test_postgres_readonly" => "test_requests#test_postgres_readonly"
+    end
+
+    namespace :api do
+      resources :groups, only: :show
     end
 
     # This catch-all route should always be last

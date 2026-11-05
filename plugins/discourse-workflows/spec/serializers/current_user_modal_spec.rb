@@ -41,4 +41,34 @@ RSpec.describe CurrentUserSerializer do
       )
     end
   end
+
+  describe "discourse_workflows_composer_message_last_id" do
+    it "is omitted when no workflow uses a composer message node" do
+      expect(serialized_user).not_to have_key("discourse_workflows_composer_message_last_id")
+    end
+
+    it "is the channel's last id when a workflow uses a composer message node" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "t1", "trigger:composer_paused"
+          g.node "c1",
+                 "action:composer_message",
+                 configuration: {
+                   "title" => "Food resources",
+                   "body" => "Our community can help.",
+                 }
+          g.chain "t1", "c1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
+      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
+      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow, version:)
+
+      channel = DiscourseWorkflows::Nodes::ComposerMessage::V1.user_channel(user.id)
+      MessageBus.publish(channel, { type: "show_composer_message" }, user_ids: [user.id])
+
+      expect(serialized_user["discourse_workflows_composer_message_last_id"]).to eq(
+        MessageBus.last_id(channel),
+      )
+    end
+  end
 end

@@ -1014,7 +1014,9 @@ RSpec.describe Upload do
       upload
     end
 
-    it "correctly identifies and stores an image's dominant color" do
+    it "correctly identifies and stores an image's dominant color with ImageMagick" do
+      global_setting :enable_vips_image_processing, false
+
       expect(white_image.dominant_color).to eq(nil)
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
       expect(white_image.dominant_color).to eq("FFFFFF")
@@ -1119,6 +1121,7 @@ RSpec.describe Upload do
     end
 
     it "raises when ImageMagick returns an invalid dominant color" do
+      global_setting :enable_vips_image_processing, false
       ImageMagick.stubs(:magick).returns("someinvalidoutput")
 
       expect(invalid_image.dominant_color).to eq(nil)

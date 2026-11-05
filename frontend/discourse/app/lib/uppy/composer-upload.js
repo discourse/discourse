@@ -1,4 +1,9 @@
+import ApplicationInstance from "@ember/application/instance";
 import { warn } from "@ember/debug";
+import {
+  associateDestroyableChild,
+  registerDestructor,
+} from "@ember/destroyable";
 import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
@@ -10,6 +15,7 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import getURL from "discourse/lib/get-url";
 import {
   bindFileInputChangeListener,
@@ -64,8 +70,12 @@ export default class UppyComposerUpload {
   #fileInputEl;
   #editorEl;
 
+  /**
+   * @param {object} parent The component (or other destroyable) using this upload. It's torn down when the parent is destroyed.
+   * @param {object} options
+   */
   constructor(
-    owner,
+    parent,
     {
       composerEventPrefix,
       composerModel,
@@ -75,8 +85,20 @@ export default class UppyComposerUpload {
       fileUploadElementId,
     }
   ) {
-    setOwner(this, owner);
-    this.uppyWrapper = new UppyWrapper(owner);
+    if (parent instanceof ApplicationInstance) {
+      deprecated(
+        "Passing an owner to `new UppyComposerUpload()` is deprecated. Pass the component that uses it instead, so it's torn down with that component.",
+        { id: "discourse.uppy-composer-upload-owner", since: "2026.10.0" }
+      );
+      setOwner(this, parent);
+    } else {
+      setOwner(this, getOwner(parent));
+    }
+
+    associateDestroyableChild(parent, this);
+    registerDestructor(this, () => this.teardown());
+
+    this.uppyWrapper = new UppyWrapper(getOwner(this));
     this.composerEventPrefix = composerEventPrefix;
     this.composerModel = composerModel;
     this.uploadMarkdownResolvers = uploadMarkdownResolvers;
@@ -265,9 +287,6 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("upload-progress", (file, progress) => {
       run(() => {
-        if (this.isDestroying) {
-          return;
-        }
         const upload = this.#inProgressUploads.find(
           (upl) => upl.id === file.id
         );
@@ -286,11 +305,9 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
       run(() => {
-        this.uppyWrapper.addNeedProcessing(files.length);
-
         this.composer.setProperties({
           isProcessingUpload: true,
-          isCancellable: false,
+          isCancellable: true,
         });
 
         files.forEach((file) => {

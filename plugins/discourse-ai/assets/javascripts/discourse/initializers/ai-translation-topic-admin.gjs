@@ -22,16 +22,7 @@ export default apiInitializer((api) => {
       return;
     }
 
-    const allowedGroups = settings.content_localization_allowed_groups
-      .split("|")
-      .map((id) => parseInt(id, 10));
-
-    const userGroupIds = currentUser.groups.map((g) => g.id);
-    const hasPermission = allowedGroups.some((groupId) =>
-      userGroupIds.includes(groupId)
-    );
-
-    if (!hasPermission) {
+    if (!currentUser.in_any_content_localization_allowed_groups) {
       return;
     }
 

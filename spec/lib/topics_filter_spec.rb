@@ -323,6 +323,26 @@ RSpec.describe TopicsFilter do
         expect(filtered("group:group1+group2")).not_to include(topic.id)
       end
 
+      it "ignores small actions when matching participation" do
+        topic = Fabricate(:post, user: u3).topic
+        Fabricate(:small_action, topic:, user: u1)
+
+        expect(filtered("users:alice")).not_to include(topic.id)
+        expect(filtered("group:group1")).not_to include(topic.id)
+        expect(filtered("-group:group1")).to include(topic.id)
+      end
+
+      it "does not match a topic just because a group member changed its status" do
+        topic = Fabricate(:post, user: u3).topic
+        topic.update_status("closed", true, u1)
+        topic.update_status("closed", false, u1)
+
+        expect(topic.posts.where(post_type: Post.types[:small_action], user_id: u1.id)).to exist
+
+        expect(filtered("users:alice")).not_to include(topic.id)
+        expect(filtered("group:group1")).not_to include(topic.id)
+      end
+
       context "with whispers" do
         fab!(:whisperer_group, :group)
         fab!(:whisperer_user) { Fabricate(:user).tap { |u| whisperer_group.add(u) } }
@@ -339,6 +359,14 @@ RSpec.describe TopicsFilter do
 
             expect(ids).not_to include(topic_with_whisper_only.id), query
             expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id), query
+          end
+        end
+
+        it "counts whisper participation for whisperers" do
+          %w[users:alice group:group1].each do |query|
+            ids = filtered(query, Guardian.new(whisperer_user))
+
+            expect(ids).to include(topic_with_whisper_only.id), query
           end
         end
       end

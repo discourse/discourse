@@ -24,7 +24,6 @@ import {
 import NavItem from "discourse/models/nav-item";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
 import TagCategoryAdminDropdown from "discourse/select-kit/components/tag-category-admin-dropdown";
-import { and, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 
 @tagName("")

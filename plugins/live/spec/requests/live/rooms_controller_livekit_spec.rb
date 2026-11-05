@@ -1,0 +1,577 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe Live::RoomsController do
+  fab!(:user)
+  fab!(:other_user, :user)
+  fab!(:room) { Fabricate(:live_room, public: true) }
+
+  before do
+    SiteSetting.live_enabled = true
+    SiteSetting.live_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+  end
+
+  after { Live::ParticipantTracker.clear(room.id) }
+
+  def configure_livekit!
+    SiteSetting.live_livekit_url = "wss://livekit.example.com"
+    SiteSetting.live_livekit_api_key = "lk_api_key"
+    SiteSetting.live_livekit_api_secret = "lk_api_secret"
+    SiteSetting.live_livekit_room_policy = "all_rooms"
+  end
+
+  describe "#join" do
+    before { sign_in(user) }
+
+    it "resolves to mesh with no livekit payload when unconfigured" do
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.keys).to contain_exactly(
+        "transport",
+        "participant_session_id",
+        "ice",
+        "room",
+      )
+      expect(response.parsed_body["transport"]).to eq("mesh")
+    end
+
+    it "resolves to livekit with a url and a decodable token when configured" do
+      configure_livekit!
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["transport"]).to eq("livekit")
+      expect(response.parsed_body["livekit"]["url"]).to eq("wss://livekit.example.com")
+
+      payload =
+        JWT.decode(
+          response.parsed_body["livekit"]["token"],
+          SiteSetting.live_livekit_api_secret,
+          true,
+          algorithm: "HS256",
+        ).first
+      expect(payload["sub"]).to eq(user.id.to_s)
+      expect(payload["video"]["room"]).to eq(Live::Livekit.room_name(room))
+    end
+
+    it "never leaks the api secret in the response" do
+      configure_livekit!
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.body).not_to include(SiteSetting.live_livekit_api_secret)
+    end
+
+    it "holds the pinned transport across a config change" do
+      configure_livekit!
+      post "/live/rooms/#{room.id}/join.json"
+      expect(response.parsed_body["transport"]).to eq("livekit")
+
+      SiteSetting.live_livekit_room_policy = "disabled"
+
+      sign_in(other_user)
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.parsed_body["transport"]).to eq("livekit")
+      expect(response.parsed_body["livekit"]["token"]).to be_present
+    end
+
+    it "re-resolves the transport once the room has emptied" do
+      configure_livekit!
+      post "/live/rooms/#{room.id}/join.json"
+      expect(response.parsed_body["transport"]).to eq("livekit")
+
+      SiteSetting.live_livekit_room_policy = "disabled"
+      # The last leave also deletes the now-empty room from the SFU.
+      stub_request(:post, "https://livekit.example.com/twirp/livekit.RoomService/DeleteRoom")
+      delete "/live/rooms/#{room.id}/leave.json"
+      expect(Live::ParticipantTracker.pinned_transport(room.id)).to be_nil
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.parsed_body["transport"]).to eq("mesh")
+    end
+
+    it "fails the join with a 503 when the token cannot be minted" do
+      configure_livekit!
+      Live::Livekit.stubs(:mint_token).raises(Live::Livekit::MintError.new("boom"))
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(503)
+      expect(response.parsed_body["errors"]).to include(I18n.t("live.errors.livekit_unavailable"))
+      expect(Live::ParticipantTracker.user_ids(room.id)).to be_empty
+    end
+
+    it "falls back to mesh on mint failure only when opted in and the room is empty" do
+      configure_livekit!
+      SiteSetting.live_livekit_mesh_fallback = true
+      Live::Livekit.stubs(:mint_token).raises(Live::Livekit::MintError.new("boom"))
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["transport"]).to eq("mesh")
+      expect(Live::ParticipantTracker.pinned_transport(room.id)).to eq("mesh")
+    end
+
+    it "never falls back on mint failure while the room is occupied on livekit" do
+      configure_livekit!
+      SiteSetting.live_livekit_mesh_fallback = true
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      Live::Livekit.stubs(:mint_token).raises(Live::Livekit::MintError.new("boom"))
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(503)
+      expect(Live::ParticipantTracker.pinned_transport(room.id)).to eq("livekit")
+    end
+
+    it "cleans up an agent-only call before falling back to mesh" do
+      configure_livekit!
+      SiteSetting.live_livekit_mesh_fallback = true
+      bot_id = Fabricate(:user, id: -1400).id
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, bot_id)
+      Live::Livekit.stubs(:mint_token).raises(Live::Livekit::MintError.new("boom"))
+      Live::Livekit::RoomServiceClient.expects(:remove_participant).with(room, bot_id)
+      Live::Livekit::RoomServiceClient.expects(:delete_room).with(room)
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["transport"]).to eq("mesh")
+      expect(Live::ParticipantTracker.user_ids(room.id)).to contain_exactly(user.id)
+      expect(Live::ParticipantTracker.pinned_transport(room.id)).to eq("mesh")
+    end
+
+    it "fails a livekit-pinned join when the config was half-deleted" do
+      configure_livekit!
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      SiteSetting.live_livekit_api_secret = ""
+
+      post "/live/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(503)
+    end
+  end
+
+  describe "#livekit_token" do
+    before { configure_livekit! }
+
+    it "requires login" do
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+
+      post "/live/rooms/#{room.id}/livekit_token.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "refuses a token for a new participant when the room is full" do
+      full_room_participant = Fabricate(:user)
+      room.update!(max_participants: 2)
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      Live::ParticipantTracker.add(room.id, full_room_participant.id)
+      sign_in(user)
+
+      post "/live/rooms/#{room.id}/livekit_token.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("live.errors.room_full"))
+      expect(response.parsed_body).not_to have_key("token")
+      expect(Live::ParticipantTracker.user_ids(room.id)).to contain_exactly(
+        other_user.id,
+        full_room_participant.id,
+      )
+    end
+
+    it "reissues a token, re-adds lapsed presence, and mints a fresh participant session" do
+      sign_in(user)
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+
+      post "/live/rooms/#{room.id}/livekit_token.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["url"]).to eq("wss://livekit.example.com")
+      expect(response.parsed_body["token"]).to be_present
+      expect(Live::ParticipantTracker.user_ids(room.id)).to include(user.id)
+      expect(
+        Live::ParticipantTracker.valid_participant_session?(
+          room.id,
+          user.id,
+          response.parsed_body["participant_session_id"],
+        ),
+      ).to eq(true)
+    end
+
+    it "re-establishes presence even for a user who recently left" do
+      sign_in(user)
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.mark_left(room.id, user.id)
+
+      post "/live/rooms/#{room.id}/livekit_token.json"
+
+      expect(response.status).to eq(200)
+      expect(Live::ParticipantTracker.user_ids(room.id)).to include(user.id)
+      expect(Live::ParticipantTracker.recently_left?(room.id, user.id)).to eq(false)
+    end
+
+    it "returns 410 when the room instance ended or runs on mesh" do
+      sign_in(user)
+
+      post "/live/rooms/#{room.id}/livekit_token.json"
+      expect(response.status).to eq(410)
+
+      Live::ParticipantTracker.pin_transport!(room.id, "mesh")
+      post "/live/rooms/#{room.id}/livekit_token.json"
+      expect(response.status).to eq(410)
+    end
+
+    it "returns 503 when the pinned room's token cannot be minted" do
+      sign_in(user)
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      SiteSetting.live_livekit_api_secret = ""
+
+      post "/live/rooms/#{room.id}/livekit_token.json"
+
+      expect(response.status).to eq(503)
+    end
+
+    it "rate limits repeated mints" do
+      RateLimiter.enable
+      sign_in(user)
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+
+      10.times do
+        post "/live/rooms/#{room.id}/livekit_token.json"
+        expect(response.status).to eq(200)
+      end
+
+      post "/live/rooms/#{room.id}/livekit_token.json"
+      expect(response.status).to eq(429)
+    end
+  end
+
+  describe "#heartbeat" do
+    before { sign_in(user) }
+
+    it "refreshes the transport pin ttl" do
+      configure_livekit!
+      post "/live/rooms/#{room.id}/join.json"
+      participant_session_id = response.parsed_body["participant_session_id"]
+
+      key = "#{Live::ParticipantTracker::KEY_NAMESPACE}:#{room.id}:transport"
+      Discourse.redis.expire(key, 1)
+
+      post "/live/rooms/#{room.id}/heartbeat.json",
+           params: {
+             participant_session_id: participant_session_id,
+           }
+
+      expect(Discourse.redis.ttl(key)).to be > 1
+    end
+  end
+
+  describe "#kick" do
+    fab!(:admin)
+
+    before { sign_in(admin) }
+
+    it "evicts the kicked user's media session from a livekit-pinned room" do
+      configure_livekit!
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: other_user.id.to_s, room: Live::Livekit.room_name(room) }.to_json)
+
+      delete "/live/rooms/#{room.id}/kick.json", params: { user_id: other_user.id }
+
+      expect(response.status).to eq(204)
+      expect(stub).to have_been_requested
+    end
+
+    it "still succeeds when LiveKit is down" do
+      configure_livekit!
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      stub_request(
+        :post,
+        "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+      ).to_timeout
+
+      delete "/live/rooms/#{room.id}/kick.json", params: { user_id: other_user.id }
+
+      expect(response.status).to eq(204)
+    end
+
+    it "makes zero HTTP calls for a mesh room" do
+      configure_livekit!
+      Live::ParticipantTracker.pin_transport!(room.id, "mesh")
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      stub = stub_request(:post, %r{\Ahttps://livekit\.example\.com/twirp/})
+
+      delete "/live/rooms/#{room.id}/kick.json", params: { user_id: other_user.id }
+
+      expect(response.status).to eq(204)
+      expect(stub).not_to have_been_requested
+    end
+  end
+
+  describe "#destroy" do
+    fab!(:admin)
+
+    before { sign_in(admin) }
+
+    it "deletes a livekit-pinned room from the SFU and clears the pin" do
+      configure_livekit!
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/DeleteRoom",
+        ).with(body: { room: Live::Livekit.room_name(room) }.to_json)
+
+      delete "/live/rooms/#{room.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(stub).to have_been_requested
+      expect(Live::ParticipantTracker.pinned_transport(room.id)).to be_nil
+    end
+
+    it "makes zero HTTP calls for a mesh room" do
+      configure_livekit!
+      Live::ParticipantTracker.pin_transport!(room.id, "mesh")
+      stub = stub_request(:post, %r{\Ahttps://livekit\.example\.com/twirp/})
+
+      delete "/live/rooms/#{room.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(stub).not_to have_been_requested
+    end
+  end
+
+  describe "#leave" do
+    before do
+      configure_livekit!
+      sign_in(user)
+    end
+
+    it "deletes the SFU room when the last participant leaves" do
+      post "/live/rooms/#{room.id}/join.json"
+      expect(response.parsed_body["transport"]).to eq("livekit")
+      stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/DeleteRoom",
+        ).with(body: { room: Live::Livekit.room_name(room) }.to_json)
+
+      delete "/live/rooms/#{room.id}/leave.json"
+
+      expect(response.status).to eq(204)
+      expect(stub).to have_been_requested
+      expect(Live::ParticipantTracker.pinned_transport(room.id)).to be_nil
+    end
+
+    it "keeps the SFU room while other participants remain" do
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      post "/live/rooms/#{room.id}/join.json"
+      stub = stub_request(:post, %r{\Ahttps://livekit\.example\.com/twirp/})
+
+      delete "/live/rooms/#{room.id}/leave.json"
+
+      expect(response.status).to eq(204)
+      expect(stub).not_to have_been_requested
+      expect(Live::ParticipantTracker.pinned_transport(room.id)).to eq("livekit")
+    end
+  end
+
+  describe "#signal" do
+    before { sign_in(user) }
+
+    it "rejects signaling in a livekit-pinned room" do
+      configure_livekit!
+      post "/live/rooms/#{room.id}/join.json"
+      participant_session_id = response.parsed_body["participant_session_id"]
+
+      post "/live/rooms/#{room.id}/signal.json",
+           params: {
+             payload: {
+               recipient_id: other_user.id,
+               type: "offer",
+               sdp: "sdp",
+             },
+             participant_session_id: participant_session_id,
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("live.errors.livekit_no_signaling"))
+    end
+
+    it "still relays signals in a mesh room" do
+      Live::ParticipantTracker.add(room.id, other_user.id)
+      Live::ParticipantTracker.create_participant_session!(room.id, other_user.id)
+      post "/live/rooms/#{room.id}/join.json"
+      participant_session_id = response.parsed_body["participant_session_id"]
+
+      messages =
+        MessageBus.track_publish(Live.room_channel(room.id)) do
+          post "/live/rooms/#{room.id}/signal.json",
+               params: {
+                 payload: {
+                   recipient_id: other_user.id,
+                   type: "offer",
+                   sdp: "sdp",
+                 },
+                 participant_session_id: participant_session_id,
+               }
+        end
+
+      expect(response.status).to eq(204)
+      expect(messages.map(&:user_ids)).to eq([[other_user.id]])
+    end
+  end
+
+  describe "per-room policy" do
+    fab!(:managed_room) { Fabricate(:live_room, creator: user, public: true) }
+
+    before do
+      configure_livekit!
+      SiteSetting.live_livekit_room_policy = "per_room"
+    end
+
+    after { Live::ParticipantTracker.clear(managed_room.id) }
+
+    describe "#join" do
+      before { sign_in(user) }
+
+      it "resolves the transport from the room's flag" do
+        post "/live/rooms/#{room.id}/join.json"
+        expect(response.parsed_body["transport"]).to eq("mesh")
+
+        managed_room.update!(livekit_enabled: true)
+        post "/live/rooms/#{managed_room.id}/join.json"
+        expect(response.parsed_body["transport"]).to eq("livekit")
+      end
+
+      it "keeps a live livekit call on livekit when the flag is disabled mid-call" do
+        managed_room.update!(livekit_enabled: true)
+        post "/live/rooms/#{managed_room.id}/join.json"
+        expect(response.parsed_body["transport"]).to eq("livekit")
+
+        managed_room.update!(livekit_enabled: false)
+
+        sign_in(other_user)
+        post "/live/rooms/#{managed_room.id}/join.json"
+        expect(response.parsed_body["transport"]).to eq("livekit")
+      end
+
+      it "keeps a live mesh call on mesh when the flag is enabled mid-call" do
+        post "/live/rooms/#{managed_room.id}/join.json"
+        expect(response.parsed_body["transport"]).to eq("mesh")
+
+        managed_room.update!(livekit_enabled: true)
+
+        sign_in(other_user)
+        post "/live/rooms/#{managed_room.id}/join.json"
+        expect(response.parsed_body["transport"]).to eq("mesh")
+        expect(response.parsed_body["livekit"]).to be_nil
+      end
+    end
+
+    describe "#create" do
+      it "accepts livekit_enabled" do
+        SiteSetting.live_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
+        sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+
+        post "/live/rooms.json",
+             params: {
+               room: {
+                 name: "Town hall",
+                 public: true,
+                 livekit_enabled: true,
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(Live::Room.find_by(name: "Town hall").livekit_enabled).to eq(true)
+      end
+    end
+
+    describe "#update" do
+      it "lets a room manager toggle the flag" do
+        sign_in(user)
+
+        put "/live/rooms/#{managed_room.id}.json", params: { room: { livekit_enabled: true } }
+
+        expect(response.status).to eq(200)
+        expect(managed_room.reload.livekit_enabled).to eq(true)
+        expect(response.parsed_body["room"]["livekit_enabled"]).to eq(true)
+      end
+
+      it "accepts a stale form's flag but the resolver ignores it once the policy changed" do
+        SiteSetting.live_livekit_room_policy = "disabled"
+        sign_in(user)
+
+        put "/live/rooms/#{managed_room.id}.json", params: { room: { livekit_enabled: true } }
+
+        expect(response.status).to eq(200)
+        expect(managed_room.reload.livekit_enabled).to eq(true)
+
+        post "/live/rooms/#{managed_room.id}/join.json"
+        expect(response.parsed_body["transport"]).to eq("mesh")
+      end
+    end
+
+    describe "#show" do
+      it "serializes the flag to managers only" do
+        sign_in(user)
+        get "/live/rooms/#{managed_room.id}.json"
+        expect(response.parsed_body["room"]).to have_key("livekit_enabled")
+
+        sign_in(other_user)
+        get "/live/rooms/#{managed_room.id}.json"
+        expect(response.parsed_body["room"]).not_to have_key("livekit_enabled")
+      end
+    end
+  end
+
+  describe "expected_transport in the serialized room" do
+    before { sign_in(user) }
+
+    it "predicts mesh when livekit is unconfigured" do
+      get "/live/rooms/#{room.id}.json"
+
+      expect(response.parsed_body["room"]["expected_transport"]).to eq("mesh")
+    end
+
+    it "predicts livekit when configured and allowed for the room" do
+      configure_livekit!
+
+      get "/live/rooms/#{room.id}.json"
+
+      expect(response.parsed_body["room"]["expected_transport"]).to eq("livekit")
+    end
+
+    it "reports the pinned transport of a live call over the current resolution" do
+      post "/live/rooms/#{room.id}/join.json"
+      expect(response.parsed_body["transport"]).to eq("mesh")
+
+      configure_livekit!
+
+      get "/live/rooms/#{room.id}.json"
+
+      expect(response.parsed_body["room"]["expected_transport"]).to eq("mesh")
+    end
+  end
+end

@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiSecretSelector from "./ai-secret-selector.gjs";
 

@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import OptionRow from "discourse/components/design-wizard/option-row";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const EXPERIENCES = ["search_icon", "search_field"];

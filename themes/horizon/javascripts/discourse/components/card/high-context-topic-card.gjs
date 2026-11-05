@@ -191,6 +191,10 @@ export default class HighContextTopicCard extends Component {
               {{/if}}
             </span>
           {{/if}}
+          <PluginOutlet
+            @name="topic-list-before-link"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
         </div>
       </div>
 

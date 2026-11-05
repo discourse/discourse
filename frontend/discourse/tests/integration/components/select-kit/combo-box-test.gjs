@@ -1,4 +1,5 @@
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -124,5 +125,82 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
     assert
       .dom(`.d-icon-${this.caretUpIcon}`, header)
       .exists("uses the icon provided");
+  });
+
+  test("refocuses the header after a change", async function (assert) {
+    setDefaultState(this, { onChange: () => {} });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
+
+    assert.dom(".select-kit-header").isFocused();
+  });
+
+  test("keeps focus that onChange moved elsewhere", async function (assert) {
+    setDefaultState(this, {
+      onChange: () => document.querySelector(".other-input").focus(),
+    });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
+        <input class="other-input" />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
+
+    assert.dom(".other-input").isFocused();
+  });
+
+  test("implicit mutation updates its own instance", async function (assert) {
+    // An `@action` gives the class an `actions` object on its prototype
+    class ActionComboBox extends ComboBox {
+      @action
+      noop() {}
+    }
+
+    setDefaultState(this, { firstValue: 1, secondValue: 1 });
+
+    await render(
+      <template>
+        <ActionComboBox
+          class="first"
+          @content={{this.content}}
+          @value={{this.firstValue}}
+        />
+        <ActionComboBox
+          class="second"
+          @content={{this.content}}
+          @value={{this.secondValue}}
+        />
+      </template>
+    );
+
+    const first = selectKit(".first");
+    const second = selectKit(".second");
+
+    await first.expand();
+    await first.selectRowByValue(2);
+    await second.expand();
+    await second.selectRowByValue(3);
+
+    assert.strictEqual(first.header().value(), "2", "keeps the first value");
+    assert.strictEqual(second.header().value(), "3", "updates the second");
   });
 });

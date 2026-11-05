@@ -9,8 +9,6 @@ he:
     chat_separate_sidebar_mode: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט."
     chat_enabled: "הפעלת צ׳אט."
     enable_public_channels: "הפעלת ערוצים ציבוריים על בסיס קטגוריות."
-    chat_allowed_groups: "משתמשים בקבוצות אלה יכולים להתכתב בצ׳אט, למעט משתמשים אלמוניים שיכולים רק לצפות בצ׳אט. נא לשים לב שמנהלים ומפקחים יכולים תמיד לגשת לצ׳אט."
-    chat_channel_retention_days: "הודעות הצ׳אט בערוצים הרגילים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
     chat_dm_retention_days: "הודעות הצ׳אט בערוצי הצ׳אט האישיים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
     chat_auto_silence_duration: "מספר הדקות שבמהלכן שמשתמשים יושתקו כאשר הם חורגים ממגבלת קצב יצירת הודעת בצ׳אט. 0 משבית את ההשתקה האוטומטית."
     chat_allowed_messages_for_trust_level_0: "מספר ההודעות שמשתמשים בדרגת אמון 0 רשאים לשלוח תוך 30 שניות. ‚0’ כדי להשבית את המגבלה."
@@ -58,7 +56,15 @@ he:
 
         ניתן לבקר בערוץ דרך %{channel_url} כדי לנסות שוב.
   chat:
+    design_wizard_homepage_name: "צ׳אט"
     deleted_chat_username: נמחק
+    crawler:
+      directory_title: "ערוצי צ׳אט"
+      nav_title: "צ׳אט"
+      thread_replies:
+        one: "תגובה"
+        two: "שתי תגובות"
+        other: "שתי תגובות"
     errors:
       users_cant_be_added_to_channel: "אי אפשר להוסיף משתמשים לערוץ הזה."
       user_cant_be_removed_from_channel: "אי אפשר להסיר את המשתמש מהערוץ הזה"

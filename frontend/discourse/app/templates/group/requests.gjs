@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";

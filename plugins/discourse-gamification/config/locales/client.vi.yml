@@ -54,7 +54,6 @@ vi:
         scoring_configuration: "Cấu hình tính điểm"
         scoring_configuration_description: "Ghi đè quy tắc tính điểm chung cho bảng xếp hạng này. Để trống các trường nếu muốn dùng thiết lập mặc định hệ thống."
         scorable_categories: "Chuyên mục tính điểm"
-        scorable_categories_help: "Danh sách chuyên mục được tính điểm. Để trống để áp dụng cài đặt chung."
         score_overrides: "Trọng số điểm thưởng"
         score_overrides_help: "Thay đổi giá trị điểm cho từng thao tác. Để trống để dùng mặc định, hoặc nhập 0 để tắt tính điểm cho thao tác đó."
         weight:
@@ -86,9 +85,7 @@ vi:
       close: "Đóng lại"
       delete: "Xóa"
       edit: "Sửa"
-      back: "Quay lại"
       save: "Lưu lại"
-      apply: "Áp dụng"
       recalculate: "Tính toán lại điểm số"
       recalculating: "Đang tính toán lại điểm số..."
       completed: "Xong! Điểm số đã được tính toán lại thành công."
@@ -106,9 +103,11 @@ vi:
       admin:
         title: "Trò chơi hóa"
         name: "Tên"
+        created_by: "Tạo bởi"
         period: "Giai đoạn"
     discourse_workflows:
       gamification_score:
         username: "Người dùng"
         date: "Ngày"
         description: "Mô tả"
+        category_id: "Danh mục"

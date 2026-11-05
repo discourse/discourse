@@ -13,7 +13,6 @@ import { isHttpUrl } from "discourse/lib/url";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";

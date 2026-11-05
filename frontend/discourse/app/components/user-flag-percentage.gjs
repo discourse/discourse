@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { gte } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 

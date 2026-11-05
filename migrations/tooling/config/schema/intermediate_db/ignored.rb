@@ -3,6 +3,7 @@
 Migrations::Tooling::Schema.ignored do
   # Plugins — all their tables and columns on core tables are auto-ignored via manifest
   plugin :automation, "Not migrated yet"
+  plugin :blog, "Not migrated yet"
   plugin :boards, "Not migrated yet"
   plugin :chat, "Not migrated yet"
   plugin :discourse_adplugin, "Not migrated yet"
@@ -117,7 +118,8 @@ Migrations::Tooling::Schema.ignored do
          :group_requests,
          :group_tag_notification_defaults
 
-  tables :child_themes,
+  tables :appearance_changes,
+         :child_themes,
          :color_scheme_colors,
          :color_schemes,
          :remote_themes,
@@ -132,7 +134,8 @@ Migrations::Tooling::Schema.ignored do
 
   tables :incoming_domains, :incoming_emails, :incoming_links, :incoming_referers
 
-  tables :dsa_statement_of_records,
+  tables :dsa_notices,
+         :dsa_statement_of_records,
          :reviewable_claimed_topics,
          :reviewable_histories,
          :reviewable_notes,
@@ -195,6 +198,12 @@ Migrations::Tooling::Schema.ignored do
          :invited_users,
          :invites,
          :javascript_caches,
+         :live_co_presences,
+         :live_invites,
+         :live_recordings,
+         :live_room_memberships,
+         :live_rooms,
+         :live_sessions,
          :mcp_audit_logs,
          :mcp_group_scopes,
          :mcp_oauth_access_tokens,
@@ -241,12 +250,6 @@ Migrations::Tooling::Schema.ignored do
          :translation_overrides,
          :unsubscribe_keys,
          :upcoming_change_events,
-         :voice_co_presences,
-         :voice_invites,
-         :voice_recordings,
-         :voice_room_memberships,
-         :voice_rooms,
-         :voice_sessions,
          :watched_word_groups,
          :watched_words,
          :web_crawler_requests

@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { action } from "@ember/object";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 import { i18n } from "discourse-i18n";

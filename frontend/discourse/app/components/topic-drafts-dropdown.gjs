@@ -10,7 +10,6 @@ import {
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";

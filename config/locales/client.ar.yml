@@ -6,6 +6,12 @@
 
 ar:
   js:
+    dsa_notice:
+      choice_title: "إنه غير قانوني"
+      go_back: "العودة"
+      title: "الإبلاغ عن المحتوى غير القانوني"
+      email: "عنوان البريد الإلكتروني"
+      resend_email_code: "إعادة إرسال الرمز"
     user_api_key:
       title: 'تفويض "%{application_name}"'
       authorize: "تفويض"
@@ -55,6 +61,7 @@ ar:
       manage:
         access_permission_editor: "المحرِّر"
         access_permission_editor_description: "يمكن إنشاء وتعديل المحتوى لهذا الكيان"
+        access_permission_owner: "المالك"
         access_permission_viewer: "مشاهد"
         access_permission_viewer_description: "يمكنه عرض محتوى هذا الكيان"
         access_permission_remove: "إزالة"
@@ -662,7 +669,6 @@ ar:
         action: "اطّلع على الأفكار"
         choose_option: "كيف تود أن تبدأ؟"
         predefined_topics: "قوالب لكسر حالة السكوت"
-        predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
         predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
         use_predefined: "تصفح القوالب"
         back: "رجوع"
@@ -1050,7 +1056,6 @@ ar:
         placeholder: "اكتب عنوان الرسالة أو عنوان URL أو المُعرِّف هنا"
     dsa_statements:
       category: "الفئة"
-      saving: "جارٍ الحفظ…"
     review:
       show_more: "عرض المزيد"
       show_less: "عرض أقل"
@@ -3610,6 +3615,7 @@ ar:
     filter_controls:
       reset: "إعادة التعيين"
       toggle: "تفعيل/إيقاف عوامل تصفية القائمة المنسدلة"
+      sort_label: "الترتيب حسب"
     d_icon_grid_picker:
       select_icon: "تحديد أيقونة"
       search_label: "بحث عن أيقونات"
@@ -3865,8 +3871,6 @@ ar:
       show_preview: "إظهار المعاينة"
       hide_preview: "إخفاء المعاينة"
       resize: "تغيير حجم أداة الإنشاء"
-      switch_to_markdown: "التحويل إلى محرر Markdown القياسي باستخدام الاختصار (%{keyboardShortcut})"
-      switch_to_rich_text: "التحويل إلى المحرر الجديد للنصوص المنسقة باستخدام الاختصار (%{keyboardShortcut})"
       quote_post_title: "اقتباس المنشور بأكمله"
       bold_label: "B"
       bold_title: "غامق"
@@ -4018,6 +4022,8 @@ ar:
         visit: "افتح الرابط"
         remove_preview: "إزالة المعاينة"
         link_copied: "تم نسخ الرابط!"
+      table:
+        default_heading: "العمود %{number}"
       unsupported_token: "لا يدعم محرر النص المنسق جميع الميزات المستخدمة في هذا المنشور؛ مما يحولك إلى محرر Markdown."
     notifications:
       tooltip:
@@ -5797,6 +5803,9 @@ ar:
       revisions:
         diff_too_complex: "أدى هذا التعديل إلى تغيير جزء كبير من المنشور دفعة واحدة، ولا يمكن عرضه."
         diff_hidden: "تم إخفاء جزء من سجل تعديلات هذا المنشور، لذا لا يمكن عرض هذا التعديل."
+        visibility:
+          hidden:
+            title: "مخفي"
         locale:
           no_locale_set: "لم تُحدد أي لغة بعد"
           locale_removed: "تمت إزالة اللغة"
@@ -5807,9 +5816,6 @@ ar:
           previous: "المراجعة السابقة"
           next: "المراجعة التالية"
           last: "آخر مراجعة"
-          hide: "إخفاء المراجعة"
-          show: "إظهار المراجعة"
-          destroy: "حذف المراجعات"
           destroy_confirm: "هل تريد بالتأكيد حذف كل المراجعات على هذا المنشور؟ هذا الإجراء نهائي."
           revert: "العودة إلى المراجعة %{revision}"
           edit_wiki: "تعديل Wiki"
@@ -5882,7 +5888,6 @@ ar:
     category:
       none: "(بلا فئة)"
       all: "جميع الفئات"
-      choose: "الفئة&hellip;"
       edit: "تعديل"
       edit_title: "تعديل هذه الفئة"
       edit_dialog_title: "تعديل: %{categoryName}"
@@ -7215,63 +7220,6 @@ ar:
           other: "يجب ان يكون الإدخال أطول من %{count}."
         pattern_mismatch: "يُرجى مطابقة التنسيق المطلوب."
         bad_input: "يُرجى إدخال قيمة صالحة."
-    table_builder:
-      title: "أداة إنشاء الجداول"
-      modal:
-        title: "أداة إنشاء الجداول"
-        create: "إنشاء جدول"
-        help:
-          title: "استخدام محرر جداول البيانات"
-          enter_key: "مفتاح Enter"
-          tab_key: "مفتاح Tab"
-          new_row: "في نهاية الصف لإدراج صف جديد."
-          new_col: "في نهاية العمود لإدراج عمود جديد."
-          options: "انقر بزر الماوس الأيمن على الخلايا للوصول إلى خيارات إضافية في قائمة منسدلة."
-        confirm_close: "هل تريد بالتأكيد إغلاق أداة إنشاء الجداول؟ سيتم فقدان أي تغييرات غير محفوظة."
-      edit:
-        btn_edit: "تعديل الجدول"
-        modal:
-          title: "تعديل الجدول"
-          cancel: "إلغاء"
-          create: "حفظ"
-          reason: "ما سبب التعديل؟"
-          trigger_reason: "أضِف سبب التعديل"
-        default_edit_reason: "تحديث الجدول باستخدام محرر الجداول"
-      default_header:
-        col_1: "العمود 1"
-        col_2: "العمود 2"
-        col_3: "العمود 3"
-        col_4: "العمود 4"
-      spreadsheet:
-        no_records_found: "لم يتم العثور على سجلات"
-        show: "إظهار"
-        entries: "إدخالات"
-        about: "نبذة"
-        prompts:
-          delete_selected_rows: "هل تريد بالتأكيد حذف الصفوف المحدَّدة؟"
-          delete_selected_cols: "هل تريد بالتأكيد حذف الأعمدة المحدَّدة؟"
-          will_destroy_merged_cells: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          will_clear_search_results: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          conflicts_with_merged_cells: "هناك تعارض مع خلية مدمجة أخرى"
-        invalid_merge_props: "خصائص الدمج غير صالحة"
-        cells_already_merged: "تم دمج الخلية بالفعل"
-        no_cells_selected: "لم يتم تحديد أي خلايا"
-        context_menu:
-          row:
-            before: "إدراج صف جديد قبله"
-            after: "إدراج صف جديد بعده"
-            delete: "حذف الصفوف المحدَّدة"
-          col:
-            before: "إدراج عمود جديد قبله"
-            after: "إدراج عمود جديد بعده"
-            delete: "حذف الأعمدة المحدَّدة"
-            rename: "إعادة تسمية هذا العمود"
-          order:
-            ascending: "ترتيب تصاعدي"
-            descending: "ترتيب تنازلي"
-          copy: "نسخ..."
-          paste: "لصق..."
-          save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
     safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>معرفة المزيد</a>."
     filter:
@@ -7485,6 +7433,9 @@ ar:
           impact_role_staff: "فريق العمل"
           impact_role_all_members: "جميع الأعضاء"
           impact_role_developers: "المطوّرون"
+        sort:
+          status: "الحالة"
+          name: "الاسم"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -8067,8 +8018,6 @@ ar:
           anonymous_human: "مجهول"
       dashboard:
         title: "لوحة المعلومات"
-        last_updated: "تم تحديث لوحة المعلومات:"
-        discourse_last_updated: "تحديث Discourse:"
         version: "الإصدار"
         up_to_date: "أنت على اطِّلاع بآخر المستجدات!"
         up_to_date_newer_commits:
@@ -8079,15 +8028,8 @@ ar:
           many: "أنت على أحدث إصدار، لكن يوجد %{count} تغييرًا متوفرًا."
           other: "أنت على أحدث إصدار، لكن يوجد %{count} تغيير متوفر."
         updates_available: "تتوفَّر تحديثات."
-        please_update: "يُرجى التحديث!"
-        no_check_performed: "لم يتم التحقُّق من وجود تحديثات. تأكَّد أن sidekiq قيد التشغيل."
-        stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
         version_check_pending: "يبدو أنك قمت بالتحديث مؤخرًا. رائع!"
-        installed_version: "مثبَّت"
-        latest_version: "متوفر"
-        github: "GitHub"
         commit_on_github: "عرض الإصدار %{sha} على GitHub"
-        changelog: "سجل التغييرات"
         commits_ahead:
           zero: "لا توجد تغييرات إضافية منذ بدء سلسلة الإصدارات هذه."
           one: "يوجد تغيير واحد إضافي منذ بدء سلسلة الإصدارات هذه."
@@ -8095,7 +8037,6 @@ ar:
           few: "يوجد %{count} تغييرات إضافية منذ بدء سلسلة الإصدارات هذه."
           many: "يوجد %{count} تغييرًا إضافيًا منذ بدء سلسلة الإصدارات هذه."
           other: "يوجد %{count} تغيير إضافي منذ بدء سلسلة الإصدارات هذه."
-        problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         dismiss_notice: "تجاهل"
         site_advice:
           title:
@@ -8111,16 +8052,7 @@ ar:
           no_new_features_found: "لا توجد عناصر في الموجز أو أن عامل التصفية الذي اخترته لم يُظهر أي نتائج. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة على <a href='%{url}' target='_blank'>موقع إصدارات Discourse</a>."
           no_new_features_error: "حدث خطأ أثناء تحميل الموجز. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة في <a href='%{url}' target='_blank'>موقع إصدارات Discourse</a>."
           learn_more: "معرفة المزيد..."
-        last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
-        no_problems: "لم يتم العثور على مشكلات."
-        moderators: "المشرفون:"
-        admins: "المسؤولون:"
-        silenced: "المكتومون:"
-        suspended: "المعلَّقون:"
-        private_messages_short: "الرسائل"
-        private_messages_title: "الرسائل"
-        mobile_title: "الجوَّال"
         space_used: "تم استخدام %{usedSize}"
         space_used_and_free: "%{usedSize} (%{freeSize} فارغة)"
         uploads: "التحميلات"
@@ -8133,20 +8065,7 @@ ar:
           many: "%{count} نسخة احتياطية في %{location}"
           other: "%{count} نسخة احتياطية في %{location}"
         lastest_backup: "تاريخ آخر نسخ احتياطي: %{date}"
-        traffic_short: "الزيارات"
-        traffic: "طلبات الويب للتطبيق"
-        page_views: "مرات عرض الصفحة"
-        page_views_short: "مرات عرض الصفحة"
-        show_traffic_report: "عرض تقرير مفصَّل عن الزيارات"
-        community_health: صحة المجتمع
-        moderators_activity: نشاط المشرفين
         whats_new_in_discourse: ما الجديد في Discourse؟
-        activity_metrics: مقاييس النشاط
-        all_reports: "جميع التقارير"
-        general_tab: "عام"
-        moderation_tab: "الإشراف"
-        security_tab: "الأمان"
-        reports_tab: "التقارير"
         report_filter_any: "أي"
         disabled: متوقفة
         timeout_error: عذرًا، يستغرق الاستعلام وقتًا طويلًا، يُرجى اختيار فترة زمنية أقصر
@@ -8286,7 +8205,6 @@ ar:
             title: "النظام"
             status: "الحالة"
             discourse_updated: "تحديث Discourse"
-            dashboard_updated: "تم تحديث لوحة المعلومات"
         reports_section:
           header_action: "إدارة"
           description: "قم بتثبيت التقارير القياسية أو استعلامات مستكشف البيانات لتتبُّع ما يهم مجتمعك."
@@ -8410,12 +8328,6 @@ ar:
             crawlers: "زاحفات الويب"
           see_details: "عرض التفاصيل"
           crawler_learn_more: "معرفة المزيد"
-        period:
-          last_7_days: "آخر 7 أيام"
-          last_30_days: "آخر 30 يومًا"
-          last_3_months: "آخر 3 أشهر"
-          custom: "مخصَّصة"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "تغيير بنسبة %{percent}. الحالي %{current}، كان %{prev} في فترة سابقة."
           percent_change_tooltip: "تغيير بنسبة %{percent}."
@@ -8479,9 +8391,6 @@ ar:
               few: "منشوران %{count})"
               many: "منشوران %{count})"
               other: "منشوران %{count})"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
-            disabled: 'تقرير عبارات البحث الرائجة متوقف. قم بتفعيل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
           average_chart_label: عرض المتوسطات، وليس الإجمالي
           sort_button: "الترتيب حسب %{column}"
           sort_button_current: "مرتب حسب %{column}، %{direction}"
@@ -8678,7 +8587,6 @@ ar:
               list: إدراج أحدث المنشورات والمنشورات الخاصة. يتم دعم RSS أيضًا.
             revisions:
               read: "الحصول على أحدث إصدار أو إصدار محدَّد"
-              modify: "إخفاء الإصدارات أو إظهارها أو الرجوع فيها"
               permanently_delete: "حذف إصدار نهائيًا"
             tags:
               list: إدراج الوسوم.
@@ -8975,11 +8883,8 @@ ar:
           site_contact_group_help: |
             المجموعة التي تتم دعوتها إلى جميع الرسائل الشخصية التي يتم إرسالها تلقائيًا.
           your_organization: "مؤسستك"
-          your_organization_description: "سنستخدم هذه المعلومات في شروط الخدمة وإشعار الخصوصية لتوضيح المسؤول عن تشغيل الموقع وتحت أي ولاية قضائية."
           company_name: "الاسم"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            إذا تُرك فارغًا، فلن يتم توفير شروط خدمة أو إشعار خصوصية نمطية.
           company_url: "الموقع الإلكتروني"
           company_url_placeholder: "https://example-co.com"
           governing_law: "القانون الحاكم"
@@ -9205,7 +9110,6 @@ ar:
           uploading: "جارٍ التحميل…"
           uploading_progress: "جارٍ التحميل: %{progress}%"
           success: "تم تحميل الملف \"%{filename}\" بنجاح. تجري الآن معالجة الملف وسيستغرق دقيقة قبل ظهوره في القائمة."
-          error: "حدثت مشكلة في أثناء تحميل '%{filename}': %{message}"
         settings: "الإعدادات"
         operations:
           is_running: "توجد عملية جارية حاليًا…"
@@ -10252,6 +10156,11 @@ ar:
           activated: "نشط"
           not_activated: "غير مفعَّل"
         approved: "تمت الموافقة عليه؟"
+        source: "المصدر"
+        bots:
+          name: "الاسم"
+          username: "اسم المستخدم"
+          trust_level: "مستوى الثقة"
         titles:
           active: "المستخدمون النشطون"
           new: "المستخدمون الجُدد"
@@ -10278,6 +10187,7 @@ ar:
           title: "حذف جميع الحسابات المرتبطة لهذا المستخدم"
           text: "حذف الحسابات المرتبطة"
       user:
+        bot: "روبوت"
         suspend_failed: "حدث خطأ في أثناء تعليق هذا المستخدم %{error}"
         unsuspend_failed: "حدث خطأ في أثناء إلغاء تعليق هذا المستخدم %{error}"
         suspend_duration: "تعليق المستخدم حتى:"
@@ -10293,16 +10203,14 @@ ar:
           no_constructive_purpose: "لا يوجد غرض بنَّاء لأفعاله بخلاف خلق المعارضة داخل المجتمع"
           custom: "مخصَّصة…"
         suspend_message: "رسالة إلكترونية"
-        suspend_message_placeholder: "قدِّم المزيد من المعلومات عن التعليق بشكلٍ اختياري وسيتم إرسالها عبر البريد الالكتروني إلى المستخدم."
         suspended_by: "تم التعليق بواسطة"
         silence_reason: "السبب"
         silenced_by: "كتمه"
         silence_modal_title: "كتم المستخدم"
         silence_duration: "إلى متى سيتم كتم المستخدم؟"
-        silence_reason_label: "لماذا تكتم هذا المستخدم؟"
+        silence_reason_title: "سبب الكتم"
         silence_reason_placeholder: "سبب الكتم"
         silence_message: "رسالة إلكترونية"
-        silence_message_placeholder: "(اتركه فارغا لإرسال الرسالة الافتراضية)"
         suspended_until: "(حتى %{until})"
         suspend_forever: "التعليق للأبد"
         cant_suspend: "لا يمكن تعليق هذا المستخدم."

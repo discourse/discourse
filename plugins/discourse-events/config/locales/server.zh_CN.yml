@@ -149,6 +149,11 @@ zh_CN:
     livestream:
       chat:
         topic_reference_message: "此频道用于活动 [%{title}](%{url}) — 访问话题了解详情并回复参与活动。"
+        transcript_heading: "聊天记录"
+        transcript_heading_dated: "%{date} 的聊天记录"
+        transcript_edit_reason: "已添加直播聊天记录"
+        transcript_earlier_messages:
+          other: "%{count} 之前的消息在 [聊天频道](%{url})中。"
       zoom:
         frame_title: "Zoom网络研讨会"
         frame_join: "加入网络研讨会"
@@ -168,6 +173,21 @@ zh_CN:
       date_with_timezone: "%{date} (%{timezone})"
       date_format: "%Y 年 %B %-d 日"
       datetime_format: "%Y 年 %B %-d 日，-I:%M %p"
+    filter:
+      description:
+        event: "显示包含该活动的主题"
+        event_any_of: "显示处于指定状态（以逗号分隔）且包含事件的主题"
+        exclude_event: "排除具有指定状态下事件的主题"
+        event_any: "显示包含该活动的主题"
+        event_upcoming: "显示尚未开始的事件主题"
+        event_ongoing: "显示当前正在发生的事件相关话题"
+        event_past: "显示已结束事件的相关话题"
+        event_after: "显示事件开始日期在指定日期（YYYY-MM-DD）或之后的主题"
+        event_before: "显示事件开始日期早于指定日期（YYYY-MM-DD）的主题"
+        event_attending: "显示用户即将参加的活动的相关主题。"
+        event_attending_me: "你将参加的活动"
+        order_event_start: "按事件开始日期排序（最新在前）"
+        order_event_start_asc: "按事件开始日期排序（最早在前）"
     notifications:
       before_event_reminder: "%{title} 即将开始。"
       after_event_reminder: "%{title} 已结束。"
@@ -193,6 +213,7 @@ zh_CN:
           invalid_recurrence: "循环必须是以下之一： %{recurrences}。"
           invalid_timezone: "无法识别时区。"
           invalid_url: "URL 必须是有效的网址。"
+          invalid_recording_url: "录制内容必须是有效的网址。"
           acting_user_not_allowed_to_create_event: "当前用户不能创建活动。"
           acting_user_not_allowed_to_act_on_this_event: "当前用户不能在此活动上执行操作。"
           invalid_allowed_groups: "允许的群组无效。"
@@ -209,6 +230,8 @@ zh_CN:
             length: "活动 URL 限制为 %{maximum} 个字符。"
           location:
             length: "事件地点限制为 %{maximum} 个字符。"
+          recording:
+            length: "事件录制链接限制为 %{maximum} 个字符。"
   discourse_push_notifications:
     popup:
       event_reminder: "活动提醒"

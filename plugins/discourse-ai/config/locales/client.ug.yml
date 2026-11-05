@@ -91,6 +91,8 @@ ug:
         filters:
           all: "ھەممىسى"
           reset: "ئەسلىگە قايتۇر"
+        sentiment:
+          enabled: "قوزغىتىلدى"
         search:
           name: "ئىزدە"
         ai_helper:
@@ -138,6 +140,8 @@ ug:
             other: "%{count} يازما"
       spam:
         short_title: "ئەخلەت خەت"
+        no_llm_selected: "يوق"
+        no_decision_model_selected: "يوق"
         enable: "قوزغات"
         save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:
@@ -259,6 +263,16 @@ ug:
         delete: "ئۆچۈر"
         tools_modal:
           required: "زۆرۈر"
+      models:
+        name: "ئىسمى"
+        type: "تىپى"
+        edit: "تەھرىر"
+        select_type: "تاللا"
+        types:
+          embedding: "سىڭدۈرمە"
+        filters:
+          all: "ھەممە تىپ"
+          reset: "سۈزگۈچنى ئەسلىگە قايتۇرىدۇ"
       llms:
         display_name: "ئىسمى"
         vision_modes:
@@ -358,6 +372,13 @@ ug:
           since:
             one: "ئاخىرقى %{count} سائەت"
             other: "ئاخىرقى %{count} سائەت"
+      ai_search:
+        related_replies:
+          one: "%{count} جاۋاب"
+          other: "%{count} جاۋاب"
+        tabs:
+          topics: "تېما"
+          messages: "ئۇچۇر"
       discobot_discoveries:
         legacy:
           regular_results: "تېما"

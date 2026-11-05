@@ -57,6 +57,39 @@ RSpec.describe Email::Styles do
     end
   end
 
+  describe "custom formatter" do
+    shared_examples "applying CSS beside an unsupported selector" do |selector:|
+      it "skips the unsupported selector and applies supported styles" do
+        SiteSetting.email_custom_css_compiled = <<~CSS
+          p { color: red; }
+          #{selector}, a:first-child { letter-spacing: 3px; }
+          a { background-color: green; }
+        CSS
+
+        frag =
+          html_fragment(
+            '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
+          )
+
+        expect(frag.at("p")["style"]).to include("color:red")
+        expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
+        expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
+      end
+    end
+
+    context "with the a:visited selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:visited"
+    end
+
+    context "with the a:hover selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:hover"
+    end
+
+    context "with the a[ selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a["
+    end
+  end
+
   describe "html template formatter" do
     it "attaches a style to h3 tags" do
       frag = html_fragment("<h3>hello</h3>")

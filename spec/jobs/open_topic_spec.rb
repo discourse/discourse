@@ -28,6 +28,19 @@ RSpec.describe Jobs::OpenTopic do
     end
   end
 
+  it "keeps the topic closed while its author has deleted it" do
+    Fabricate(:post, topic:, user_deleted: true)
+
+    freeze_time(61.minutes.from_now) do
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+      expect(topic.reload).to be_closed
+      expect(topic.public_topic_timer.execute_at).to eq_time(
+        SiteSetting.num_hours_to_close_topic.hours.from_now,
+      )
+    end
+  end
+
   describe "when category has auto close configured" do
     fab!(:category) do
       Fabricate(:category, auto_close_based_on_last_post: true, auto_close_hours: 5)

@@ -8,7 +8,6 @@ import DButtonTooltip from "discourse/float-kit/components/d-button-tooltip";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { bind } from "discourse/lib/decorators";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

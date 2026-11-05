@@ -4,7 +4,6 @@ import BadgeTitle from "discourse/components/badge-title";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and } from "discourse/truth-helpers";
 import DBadgeCard from "discourse/ui-kit/d-badge-card";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";

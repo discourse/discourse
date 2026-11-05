@@ -3,7 +3,6 @@ import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 @classNames("form-kit__section")

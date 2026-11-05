@@ -85,6 +85,9 @@ class AiAgent < ActiveRecord::Base
   after_update :sync_spam_detection_model, if: :saved_change_to_default_llm_id?
   before_destroy :ensure_not_system
   after_destroy :remove_destroyed_agent_from_subagents
+  after_destroy :sync_bot_user_activation
+  after_save :sync_bot_user_activation,
+             if: -> { saved_change_to_enabled? || saved_change_to_user_id? }
 
   def self.agent_cache
     @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
@@ -363,11 +366,8 @@ class AiAgent < ActiveRecord::Base
             klass = DiscourseAi::Agents::Tools::Custom.class_instance(custom_tool_id)
           end
         else
-          inner_name = inner_name.gsub("Tool", "")
-          inner_name = "List#{inner_name}" if %w[Categories Tags Users].include?(inner_name)
-
           klass =
-            "DiscourseAi::Agents::Tools::#{inner_name}".safe_constantize ||
+            DiscourseAi::Agents::Agent.builtin_tool_by_name(inner_name) ||
               DiscourseAi::Agents::Agent.external_tool_by_name(inner_name)
           options[klass] = current_options if klass && current_options
         end
@@ -453,7 +453,13 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  def self.automatic_user_provisioning_enabled?
+    SiteSetting.discourse_ai_enabled && SiteSetting.ai_bot_enabled
+  end
+
   def self.ensure_users!
+    return if !automatic_user_provisioning_enabled?
+
     where(enabled: true).find_each { |agent| agent.ensure_user! if agent.needs_user? }
   end
 
@@ -475,7 +481,7 @@ class AiAgent < ActiveRecord::Base
   end
 
   def needs_user?
-    enabled? && supports_bot_user? &&
+    self.class.automatic_user_provisioning_enabled? && enabled? && supports_bot_user? &&
       (
         force_default_llm? || allow_topic_mentions? || allow_personal_messages? ||
           allow_chat_direct_messages? || allow_chat_channel_mentions?
@@ -530,6 +536,23 @@ class AiAgent < ActiveRecord::Base
 
   private
 
+  def sync_bot_user_activation
+    user_ids = [user_id]
+    user_ids.concat(saved_change_to_user_id) if !destroyed? && saved_change_to_user_id?
+
+    User
+      .bot_users
+      .where(id: user_ids.compact.uniq)
+      .order(:id)
+      .lock
+      .each do |bot_user|
+        next if bot_user.is_system_user? || bot_user.staff?
+
+        active = self.class.where(user_id: bot_user.id, enabled: true).exists?
+        bot_user.update!(active:) if bot_user.active? != active
+      end
+  end
+
   # Spam scans use an explicit model setting, so agent edits must update it too.
   # Clearing the agent default preserves the model selected for spam detection.
   def sync_spam_detection_model
@@ -547,10 +570,10 @@ class AiAgent < ActiveRecord::Base
         email: "#{SecureRandom.hex}@does-not-exist.invalid",
         name: name.titleize,
         username: UserNameSuggester.suggest(name + "_bot"),
-        active: true,
+        active: enabled?,
         approved: true,
         trust_level: TrustLevel[4],
-        id: DiscourseAi::BotUser.next_id,
+        id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id,
       )
     user.save!(validate: false)
 
@@ -625,13 +648,9 @@ class AiAgent < ActiveRecord::Base
       if tool_name.to_s.start_with?("custom-")
         AiTool.find_by(id: tool_name.to_s.split("-", 2).last.to_i)&.function_call_name
       else
-        normalized_name = tool_name.to_s.gsub("Tool", "")
-        normalized_name = "List#{normalized_name}" if %w[Categories Tags Users].include?(
-          normalized_name,
-        )
         tool_class =
-          "DiscourseAi::Agents::Tools::#{normalized_name}".safe_constantize ||
-            DiscourseAi::Agents::Agent.external_tool_by_name(normalized_name)
+          DiscourseAi::Agents::Agent.builtin_tool_by_name(tool_name) ||
+            DiscourseAi::Agents::Agent.external_tool_by_name(tool_name.to_s)
         tool_class&.signature&.[](:name)
       end
     end

@@ -10,7 +10,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 

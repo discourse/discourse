@@ -9,6 +9,11 @@ import {
   registerTranscriptSourceType,
   resetTranscriptSourceTypes,
 } from "discourse/plugins/chat/discourse/lib/transcript-source-types";
+import {
+  registerChatSound,
+  resetChatSounds,
+  setDefaultChatSound,
+} from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
 
 /**
@@ -148,6 +153,42 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * });
  */
 
+/**
+ * Registers a chat notification sound users can pick in their preferences.
+ * Registering a built-in name (eg: "classic") replaces that sound.
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function registerChatSound
+ * @param {string} name - stored in the user's `chat_sound` option
+ * @param {Object} options
+ * @param {string|function} options.incoming - audio file URL, or a function receiving `(audioContext, startTime)` that schedules Web Audio nodes
+ * @param {string|function} [options.mention] - played for mentions, defaults to `incoming`
+ * @param {string} [options.label] - translation key for the preference option
+ * @param {string} [options.translatedLabel] - preference option text
+ * @example
+ *
+ * api.registerChatSound("ping", {
+ *   incoming: settings.theme_uploads.ping,
+ *   mention: settings.theme_uploads.ping_mention,
+ *   label: themePrefix("chat_sounds.ping"),
+ * });
+ */
+
+/**
+ * Sets the sound used when a user hasn't picked one for new messages in the
+ * open channel, or picked one that no longer exists. Users who haven't opted
+ * into notification sounds stay silent.
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function setDefaultChatSound
+ * @param {string} name - a built-in or registered sound
+ * @example
+ *
+ * api.setDefaultChatSound("ping");
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -209,6 +250,22 @@ export default {
         );
       }
 
+      if (!apiPrototype.hasOwnProperty("registerChatSound")) {
+        Object.defineProperty(apiPrototype, "registerChatSound", {
+          value(name, options) {
+            registerChatSound(name, options);
+          },
+        });
+      }
+
+      if (!apiPrototype.hasOwnProperty("setDefaultChatSound")) {
+        Object.defineProperty(apiPrototype, "setDefaultChatSound", {
+          value(name) {
+            setDefaultChatSound(name);
+          },
+        });
+      }
+
       if (!apiPrototype.hasOwnProperty("removeChatComposerSecondaryActions")) {
         Object.defineProperty(
           apiPrototype,
@@ -226,5 +283,6 @@ export default {
   teardown() {
     resetChatMessageDecorators();
     resetTranscriptSourceTypes();
+    resetChatSounds();
   },
 };

@@ -2,7 +2,6 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import FKLabel from "discourse/form-kit/components/fk/label";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 

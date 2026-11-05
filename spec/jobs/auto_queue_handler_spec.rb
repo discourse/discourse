@@ -61,4 +61,36 @@ RSpec.describe Jobs::AutoQueueHandler do
       expect(old_user.reload.pending?).to eq(true)
     end
   end
+
+  describe "re-opened flag" do
+    fab!(:moderator)
+    fab!(:post)
+    fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:other_flagger) { Fabricate(:user, refresh_auto_groups: true) }
+
+    let!(:reviewable) do
+      freeze_time(100.days.ago) do
+        PostActionCreator
+          .spam(flagger, post)
+          .reviewable
+          .tap { |flag| flag.perform(moderator, :ignore_and_do_nothing) }
+      end
+    end
+
+    before { SiteSetting.auto_handle_queued_age = 60 }
+
+    it "leaves a flag re-opened within auto_handle_queued_age days pending" do
+      PostActionCreator.spam(other_flagger, post)
+
+      job
+
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "ignores a flag re-opened more than auto_handle_queued_age days ago" do
+      freeze_time(61.days.ago) { PostActionCreator.spam(other_flagger, post) }
+
+      expect { job }.to change { reviewable.reload.status }.from("pending").to("ignored")
+    end
+  end
 end

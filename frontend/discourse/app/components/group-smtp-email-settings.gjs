@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, getProperties } from "@ember/object";
@@ -10,7 +10,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import { or } from "discourse/truth-helpers";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
@@ -20,6 +19,20 @@ export default class GroupSmtpEmailSettings extends Component {
   @tracked smtpSettingsValid = false;
   @tracked testingSettings = false;
 
+  formData = {
+    ...getProperties(
+      this.args.group,
+      "email_username",
+      "email_password",
+      "email_from_alias",
+      "smtp_server",
+      "smtp_port"
+    ),
+    smtp_ssl_mode: this.args.group.smtp_ssl_mode ?? GROUP_SMTP_SSL_MODES.none,
+  };
+
+  #testedData;
+
   get sslModes() {
     return Object.keys(GROUP_SMTP_SSL_MODES).map((key) => {
       return {
@@ -27,23 +40,6 @@ export default class GroupSmtpEmailSettings extends Component {
         name: i18n(`groups.manage.email.ssl_modes.${key}`),
       };
     });
-  }
-
-  @cached
-  get formData() {
-    const form = getProperties(
-      this.args.group,
-      "email_username",
-      "email_password",
-      "email_from_alias",
-      "smtp_server",
-      "smtp_port",
-      "smtp_ssl_mode"
-    );
-
-    form.smtp_ssl_mode ??= GROUP_SMTP_SSL_MODES.none;
-
-    return form;
   }
 
   @action
@@ -55,6 +51,8 @@ export default class GroupSmtpEmailSettings extends Component {
   @action
   prefillSettings(provider, setData, event) {
     event?.preventDefault();
+    this.#testedData = null;
+    this.changeSmtpSettingsValid(false);
     const providerDefaults = emailProviderDefaultSettings(provider, "smtp");
     Object.keys(providerDefaults).forEach((key) => {
       setData(key, providerDefaults[key]);
@@ -71,6 +69,7 @@ export default class GroupSmtpEmailSettings extends Component {
       password: data.email_password,
     };
 
+    this.#testedData = data;
     this.testingSettings = true;
     this.changeSmtpSettingsValid(false);
 
@@ -79,6 +78,10 @@ export default class GroupSmtpEmailSettings extends Component {
       data: Object.assign(settings, { protocol: "smtp" }),
     })
       .then(() => {
+        if (this.#testedData !== data) {
+          return;
+        }
+
         this.changeSmtpSettingsValid(true);
 
         this.args.group.setProperties({
@@ -101,6 +104,7 @@ export default class GroupSmtpEmailSettings extends Component {
 
   @action
   resetTestingSettings(field, value, { set }) {
+    this.#testedData = null;
     this.changeSmtpSettingsValid(false);
     set(field, value);
   }
@@ -187,6 +191,7 @@ export default class GroupSmtpEmailSettings extends Component {
                 "groups.manage.email.settings.from_alias_hint"
               }}
               @name="email_from_alias"
+              @onSet={{fn this.resetTestingSettings "email_from_alias"}}
               @title={{i18n "groups.manage.email.settings.from_alias"}}
               @type="input"
               as |field|
@@ -199,7 +204,7 @@ export default class GroupSmtpEmailSettings extends Component {
         <form.Submit
           class="btn-primary group-smtp-form__test-smtp-settings"
           tabindex="7"
-          @disabled={{or this.testingSettings}}
+          @disabled={{this.testingSettings}}
           @icon="gear"
           @label="groups.manage.email.test_settings"
           @title="groups.manage.email.settings_required"

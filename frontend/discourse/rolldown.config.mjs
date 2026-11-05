@@ -1,6 +1,9 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import brotliAssetsPlugin from "./lib/brotli-assets-plugin.mjs";
+import bundleAnalyzerPlugin from "./lib/bundle-analyzer-plugin.mjs";
+import chunkImportMapPlugin from "./lib/chunk-import-map-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
 import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
@@ -56,6 +59,8 @@ export function buildConfig({ devMode } = {}) {
     process.env.NODE_ENV = "development";
   }
 
+  let importMap = {};
+
   return {
     tsconfig: false,
     resolve: {
@@ -110,6 +115,11 @@ export function buildConfig({ devMode } = {}) {
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
+      chunkImportMapPlugin({
+        root: import.meta.dirname,
+        noImportMap: (chunk) => chunk.facadeModuleId?.includes("/app/workers/"),
+        onImportMap: (map) => (importMap = map),
+      }),
       {
         name: "require-relative-import-extensions",
         resolveId: {
@@ -199,6 +209,8 @@ export function buildConfig({ devMode } = {}) {
           }
         },
       },
+      brotliAssetsPlugin({ enabled: isProduction }),
+      bundleAnalyzerPlugin({ compress: isProduction }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {
@@ -206,6 +218,7 @@ export function buildConfig({ devMode } = {}) {
             entrypoints: {},
             dynamicEntrypoints: {},
             chunks: {},
+            importMap,
           };
 
           for (const [fileName, chunk] of Object.entries(bundle)) {

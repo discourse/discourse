@@ -66,6 +66,36 @@ class ContentLocalization
     topic.get_localization&.fancy_title.presence
   end
 
+  # Expects I18n.locale to be the recipient's locale.
+  # @param topic [Topic, nil]
+  # @param post [Post, nil]
+  # @param scope [Guardian] The recipient's guardian
+  # @return [Hash] translated `:topic_title` and `:excerpt`, for whichever are available
+  def self.translated_notification_fields(topic:, post:, scope:)
+    fields = {}
+
+    if (title = translated_topic_title(topic, scope))
+      fields[:topic_title] = title
+    end
+
+    if show_translated_post?(post, scope)
+      localization = post.get_localization
+      # Stale translations would describe an earlier revision of the post.
+      if localization&.post_version == post.version && localization.cooked.present?
+        fields[:excerpt] = Post.excerpt(
+          localization.cooked,
+          400,
+          text_entities: true,
+          strip_links: true,
+          remap_emoji: true,
+          plain_hashtags: true,
+        )
+      end
+    end
+
+    fields
+  end
+
   # This method returns true when we should try to show the translated category.
   # @param category [Category] The category record
   # @param scope [Object] The serializer scope from which the method is called
@@ -96,6 +126,19 @@ class ContentLocalization
   def self.crawler_locale_param_enabled?
     SiteSetting.content_localization_enabled && SiteSetting.content_localization_crawler_param &&
       SiteSetting.set_locale_from_param
+  end
+
+  PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV = "discourse.plain_url_serves_default_locale"
+
+  # Whether an anonymous client gets the default locale at the plain URL, so that URL can stand in
+  # for the default locale's locale param URL. A locale cookie written from the locale param can
+  # change what the plain URL serves between requests, so it is never guaranteed then.
+  # @param request [Rack::Request]
+  # @return [Boolean]
+  def self.plain_url_serves_default_locale?(request)
+    return false if SiteSetting.set_locale_from_cookie
+
+    Discourse.anonymous_locale(request, include_param: false) == SiteSetting.default_locale
   end
 
   # These are the same conditions the header renders the switcher on. Keeping the two set-equal

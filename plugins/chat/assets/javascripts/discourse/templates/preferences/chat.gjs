@@ -7,7 +7,6 @@ import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
   CHAT_ATTRS,

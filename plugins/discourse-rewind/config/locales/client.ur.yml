@@ -18,7 +18,7 @@ ur:
           author: آپ
           author_others: "%{username}"
           status_online: "● آن لائن"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} منٹ"
             other: "%{count} منٹ"

@@ -37,7 +37,7 @@ describe "Data Explorer MCP tools" do
     @token = McpOauthAccessToken.issue!(authorization:)
   end
 
-  def call_run_query
+  def call_run_query(arguments = {})
     post "/mcp",
          params: {
            jsonrpc: "2.0",
@@ -45,9 +45,7 @@ describe "Data Explorer MCP tools" do
            method: "tools/call",
            params: {
              name: "discourse_run_query",
-             arguments: {
-               id: query.id,
-             },
+             arguments: { id: query.id }.merge(arguments),
            },
          }.to_json,
          headers: {
@@ -80,6 +78,17 @@ describe "Data Explorer MCP tools" do
       "columns" => ["value"],
       "rows" => [[1]],
     )
+  end
+
+  it "does not return explain output for an assigned query" do
+    query.update!(sql: "SELECT id FROM users WHERE username = 'admin-only-query-predicate'")
+    authorize(DiscourseDataExplorer::McpTools::READ_SCOPE)
+
+    call_run_query(explain: true)
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent")).not_to have_key("explain")
+    expect(response.body).not_to include("admin-only-query-predicate")
   end
 
   it "does not run a query when the token has scope but the user lacks query access" do

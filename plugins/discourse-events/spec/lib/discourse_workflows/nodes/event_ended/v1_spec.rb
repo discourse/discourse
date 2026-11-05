@@ -43,14 +43,38 @@ RSpec.describe DiscourseWorkflows::Nodes::EventEnded::V1 do
   describe "#output" do
     it "returns the event, post, topic and RSVP counts", :aggregate_failures do
       DiscourseEvents::Events::Invitee.create_attendance!(Fabricate(:user).id, event.id, :going)
+      channel = Fabricate(:category_channel)
+      event.update_column(:chat_channel_id, channel.id)
 
       output = described_class.new(event, event_date).output
 
-      expect(output[:event]).to include(id: event.id, name: event.name)
-      expect(output[:post]).to include(id: event.post.id)
+      expect(output[:event]).to include(id: event.id, name: event.name, chat_channel_id: channel.id)
+      expect(output[:post]).to include(id: event.post.id, username: event.post.user.username)
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output[:stats][:going]).to eq(1)
       expect(output).to match_node_output_schema(described_class)
+    end
+
+    it "lists the usernames going, excluding suspended, silenced and staged users" do
+      going = Fabricate(:user)
+      DiscourseEvents::Events::Invitee.create_attendance!(going.id, event.id, :going)
+      DiscourseEvents::Events::Invitee.create_attendance!(
+        Fabricate(:user).id,
+        event.id,
+        :interested,
+      )
+
+      %i[suspended silenced staged].each do |trait|
+        user = Fabricate(:user)
+        DiscourseEvents::Events::Invitee.create_attendance!(user.id, event.id, :going)
+        user.update_columns(
+          trait == :staged ? { staged: true } : { "#{trait}_till": 1.year.from_now },
+        )
+      end
+
+      output = described_class.new(event, event_date).output
+
+      expect(output[:event][:going_usernames]).to contain_exactly(going.username)
     end
 
     it "reports the dates of the occurrence that ended, not the next one" do

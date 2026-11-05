@@ -13,7 +13,9 @@ discourse_templates:
     type: boolean
   discourse_templates_groups_allowed_private_templates:
     default: ""
+    mandatory_values: "1|2"
     type: group_list
+    disallowed_groups: "4"
   discourse_templates_private_templates_tags:
     default: ""
     type: tag_list

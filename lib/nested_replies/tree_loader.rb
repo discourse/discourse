@@ -11,7 +11,7 @@ module NestedReplies
     SIBLINGS_PER_ANCESTOR = 5
 
     POST_INCLUDES = [
-      { user: %i[primary_group flair_group] },
+      { user: %i[primary_group flair_group uploaded_avatar] },
       :reply_to_user,
       :deleted_by,
       :incoming_email,

@@ -65,4 +65,18 @@ describe Jobs::DeleteHiddenQueries do
     described_class.new.execute(nil)
     expect(DiscourseDataExplorer::Query.all.length).to eq(4)
   end
+
+  it "unmounts dashboard cards for hidden and deleted queries" do
+    visible = Fabricate(:query)
+    hidden = Fabricate(:query, hidden: true)
+    %W[#{visible.id} #{hidden.id} 999999 -1].each do |identifier|
+      AdminDashboardReport.create!(source: "data_explorer_query", identifier:)
+    end
+
+    described_class.new.execute(nil)
+
+    expect(
+      AdminDashboardReport.where(source: "data_explorer_query").pluck(:identifier),
+    ).to contain_exactly(visible.id.to_s, "-1")
+  end
 end

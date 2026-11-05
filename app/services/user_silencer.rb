@@ -44,7 +44,7 @@ class UserSilencer
         @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
       end
 
-      silence_message_params = {}
+      silence_message_params = Dsa::AppealInstructions.message_options
       DiscourseEvent.trigger(
         :user_silenced,
         user: @user,
@@ -102,7 +102,7 @@ class UserSilencer
     @user.silenced_till = nil
     if @user.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)
-      SystemMessage.create(@user, :unsilenced)
+      SystemMessage.create(@user, :unsilenced, Dsa::AppealInstructions.message_options)
       if @by_user
         StaffActionLogger.new(@by_user).log_unsilence_user(
           @user,

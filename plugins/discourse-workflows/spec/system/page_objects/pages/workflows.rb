@@ -78,10 +78,16 @@ module PageObjects
           self
         end
 
-        def click_last_editor(workflow)
+        def click_edit(workflow)
+          find(".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__edit").click
+          self
+        end
+
+        def click_delete(workflow)
           find(
-            ".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__last-editor-link",
+            ".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__menu-trigger",
           ).click
+          find(".workflows-index__delete").click
           self
         end
       end

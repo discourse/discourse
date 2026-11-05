@@ -1,7 +1,6 @@
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import { and, not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
   type = "tags";

@@ -39,7 +39,11 @@ cs:
         unassign_from_topic: "Zrušit přiřazení @%{username} k tématu"
         unassign_from_post: "Zrušit přiřazení @%{username} z #%{post_number}"
         edit_assignments: "Upravit přidělení..."
-        created_by: "Vytvořil/a"
+        owners:
+          one: "Vlastník"
+          few: "Vlastníci"
+          many: "Vlastníci"
+          other: "Vlastníci"
       manage:
         name: "Jméno"
         slug: "URL"

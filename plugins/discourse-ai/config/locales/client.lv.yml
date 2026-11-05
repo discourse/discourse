@@ -74,6 +74,8 @@ lv:
         filters:
           all: "Visi"
           reset: "Atlikt"
+        sentiment:
+          enabled: "Ieslēgts"
         search:
           name: "Meklēt"
         image_caption:
@@ -115,6 +117,8 @@ lv:
             other: "%{count} raksti"
       spam:
         short_title: "Spams"
+        no_llm_selected: "Nav"
+        no_decision_model_selected: "Nav"
         last_seven_days: "Pēdējās 7 dienas"
         enable: "Ieslēgt"
         test_modal:
@@ -210,6 +214,14 @@ lv:
         delete: "Dzēst"
         tools_modal:
           required: "Nepieciešams"
+      models:
+        name: "Vārds"
+        type: "Tips"
+        edit: "Labot"
+        types:
+          embedding: "Ieguldīšana"
+        filters:
+          all: "Visi veidi"
       llms:
         display_name: "Vārds"
         vision_modes:
@@ -279,6 +291,14 @@ lv:
             category: "Sadaļa"
           table:
             total_count: "Kopā"
+      ai_search:
+        related_replies:
+          zero: "%{count} atbildes"
+          one: "%{count} atbilde"
+          other: "%{count} atbildes"
+        tabs:
+          topics: "Tēmas"
+          messages: "Ziņās"
       discobot_discoveries:
         legacy:
           regular_results: "Tēmas"

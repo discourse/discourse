@@ -9,7 +9,6 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import { and, eq, not, or } from "discourse/truth-helpers";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import AuthButtons from "./header/auth-buttons.gjs";
 import Contents from "./header/contents.gjs";
