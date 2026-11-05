@@ -3,6 +3,7 @@ import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import domFromString from "discourse/lib/dom-from-string";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 
 const checkedHashtags = new Set();
 let seenHashtags = {};
@@ -91,7 +92,7 @@ export function generatePlaceholderHashtagHTML(type, spanEl, data) {
 
   const hashtagTypeClass = getHashtagTypeClasses()[type];
   const iconHTML = hashtagTypeClass?.generateIconHTML(data) ?? "";
-  link.innerHTML = `${iconHTML}<span>${emojiUnescape(data.text)}</span>`;
+  link.innerHTML = `${iconHTML}<span>${emojiUnescape(escapeExpression(data.text))}</span>`;
   spanEl.replaceWith(link);
 }
 
