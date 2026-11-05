@@ -809,8 +809,8 @@ class PostRevisor
 
   def bump_topic
     @topic.update_column(:bumped_at, Time.now)
-    TopicTrackingState.publish_muted(@topic)
-    TopicTrackingState.publish_unmuted(@topic)
+    TopicTrackingState.publish_muted(@topic, whisper: @post.whisper?)
+    TopicTrackingState.publish_unmuted(@topic, whisper: @post.whisper?)
     TopicTrackingState.publish_latest(@topic)
   end
 
