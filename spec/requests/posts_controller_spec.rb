@@ -4991,7 +4991,7 @@ RSpec.describe PostsController do
 
         context "when there are existing pending posts" do
           let!(:owner_pending_posts) do
-            Fabricate.times(2, :reviewable_queued_post, created_by: user)
+            Fabricate.times(2, :reviewable_queued_post, target_created_by: user)
           end
           let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
           let(:expected_keys) do
@@ -5011,8 +5011,29 @@ RSpec.describe PostsController do
 
           it "returns user's pending posts" do
             request
-            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+            expect(pending_posts.pluck("id")).to contain_exactly(*owner_pending_posts.map(&:id))
             expect(pending_posts).to all include(*expected_keys)
+          end
+
+          it "returns the user's own pending posts from categories they cannot access" do
+            private_category = Fabricate(:private_category, group: Fabricate(:group))
+            private_topic = Fabricate(:topic, category: private_category)
+            restricted_pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                topic: private_topic,
+                category: private_category,
+                payload: {
+                  raw: "own restricted pending post content",
+                },
+              )
+
+            request
+
+            expect(response).to have_http_status(:ok)
+            expect(pending_posts.pluck("id")).to include(restricted_pending_post.id)
+            expect(response.body).to include(restricted_pending_post.payload["raw"])
           end
         end
 
@@ -5029,7 +5050,7 @@ RSpec.describe PostsController do
 
         context "when there are existing pending posts" do
           let!(:owner_pending_posts) do
-            Fabricate.times(2, :reviewable_queued_post, created_by: user)
+            Fabricate.times(2, :reviewable_queued_post, target_created_by: user)
           end
           let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
           let(:expected_keys) do
@@ -5049,8 +5070,74 @@ RSpec.describe PostsController do
 
           it "returns user's pending posts" do
             request
-            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+            expect(pending_posts.pluck("id")).to contain_exactly(*owner_pending_posts.map(&:id))
             expect(pending_posts).to all include(*expected_keys)
+          end
+        end
+
+        context "when the user has pending posts in categories the staff member cannot access" do
+          it "excludes them from the response" do
+            visible_pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                payload: {
+                  raw: "visible",
+                },
+              )
+            private_category = Fabricate(:private_category, group: Fabricate(:group))
+            private_topic = Fabricate(:topic, category: private_category)
+            restricted_pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                topic: private_topic,
+                category: private_category,
+                payload: {
+                  raw: "restricted pending post content",
+                },
+              )
+
+            request
+
+            expect(response).to have_http_status(:ok)
+            expect(pending_posts.pluck("id")).to contain_exactly(visible_pending_post.id)
+            expect(response.body).not_to include(restricted_pending_post.payload["raw"])
+          end
+        end
+
+        context "when the user's pending posts have different scores" do
+          it "orders them by created_at descending" do
+            newer_pending_post =
+              Fabricate(:reviewable_queued_post, target_created_by: user, created_at: 1.hour.ago)
+            older_pending_post =
+              Fabricate(:reviewable_queued_post, target_created_by: user, created_at: 2.hours.ago)
+            older_pending_post.update_columns(score: 10)
+
+            request
+
+            ids = pending_posts.pluck("id")
+            expect(ids).to contain_exactly(newer_pending_post.id, older_pending_post.id)
+            expect(ids.index(newer_pending_post.id)).to be < ids.index(older_pending_post.id)
+          end
+        end
+
+        context "when a pending post is in a category with several moderation groups" do
+          it "returns it once" do
+            SiteSetting.enable_category_group_moderation = true
+            category = Fabricate(:category)
+            category.moderating_groups = [Fabricate(:group), Fabricate(:group)]
+            pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                topic: Fabricate(:topic, category: category),
+                category: category,
+              )
+
+            request
+
+            expect(pending_posts.pluck("id")).to contain_exactly(pending_post.id)
           end
         end
 
