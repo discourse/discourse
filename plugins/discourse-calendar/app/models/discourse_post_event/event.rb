@@ -536,14 +536,7 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date
       return nil unless next_starts_at
 
-      next_ends_at =
-        if original_ends_at
-          next_starts_at + (original_ends_at - original_starts_at)
-        elsif all_day
-          next_starts_at.end_of_day
-        else
-          next_starts_at + 3600
-        end
+      next_ends_at = derive_next_ends_at(next_starts_at)
       [next_starts_at, next_ends_at]
     end
 
@@ -556,15 +549,38 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date_from(from_time)
       return nil unless next_starts_at
 
-      next_ends_at =
-        if original_ends_at
-          next_starts_at + (original_ends_at - original_starts_at)
-        elsif all_day
-          next_starts_at.end_of_day
-        else
-          next_starts_at + 3600
-        end
+      next_ends_at = derive_next_ends_at(next_starts_at)
       { starts_at: next_starts_at, ends_at: next_ends_at }
+    end
+
+    def recurring_occurrences(after:, limit:, before: nil)
+      return [] if recurrence.blank? || limit <= 0
+
+      occurrences = []
+      if original_starts_at > after
+        return [] if before && original_starts_at >= before
+
+        occurrences << { starts_at: original_starts_at, ends_at: original_ends_at }
+        return occurrences if limit == 1
+
+        after = original_starts_at + 1.second
+      end
+
+      after_in_tz = after.in_time_zone(timezone)
+      before_in_tz = before&.in_time_zone(timezone)
+
+      dates =
+        recurrence_rule
+          .each(floor_date: after_in_tz)
+          .lazy
+          .drop_while { |starts_at| starts_at < after_in_tz }
+          .take_while { |starts_at| before_in_tz.nil? || starts_at < before_in_tz }
+
+      occurrences.concat(
+        dates
+          .first(limit - occurrences.size)
+          .map { |starts_at| { starts_at:, ends_at: derive_next_ends_at(starts_at) } },
+      )
     end
 
     def duration
@@ -644,6 +660,16 @@ module DiscoursePostEvent
       end
     end
 
+    def derive_next_ends_at(next_starts_at)
+      if original_ends_at
+        next_starts_at + (original_ends_at - original_starts_at)
+      elsif all_day
+        next_starts_at.end_of_day
+      else
+        next_starts_at + 3600
+      end
+    end
+
     def calculate_next_recurring_date
       timezone_starts_at = original_starts_at.in_time_zone(timezone)
       timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
@@ -658,22 +684,26 @@ module DiscoursePostEvent
     end
 
     def calculate_next_recurring_date_from(from_time)
-      timezone_starts_at = original_starts_at.in_time_zone(timezone)
-      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
       from_time_in_tz = from_time.in_time_zone(timezone)
 
-      RRule::Rule
-        .new(
-          RRuleConfigurator.rule(
-            recurrence_until: timezone_recurrence_until,
-            recurrence: recurrence,
-            starts_at: timezone_starts_at,
-          ),
-          dtstart: timezone_starts_at,
-          tzid: rrule_timezone,
-        )
+      recurrence_rule
         .between(from_time_in_tz - 1.hour, from_time_in_tz + 1.year)
         .find { |date| date >= from_time_in_tz }
+    end
+
+    def recurrence_rule
+      timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
+
+      RRule::Rule.new(
+        RRuleConfigurator.rule(
+          recurrence_until: timezone_recurrence_until,
+          recurrence: recurrence,
+          starts_at: timezone_starts_at,
+        ),
+        dtstart: timezone_starts_at,
+        tzid: rrule_timezone,
+      )
     end
   end
 end
