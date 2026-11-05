@@ -140,12 +140,14 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      # The newest map recorded on main, or failing that on the pull request's
-      # own branch, from runs of this repository: forks can upload one too.
+      # The newest map recorded on main, or failing that on the branch the pull
+      # request merges into or its own, from runs of this repository: forks can
+      # upload one too.
       - name: Find the newest test impact map
         if: env.TEST_IMPACT_SELECT == '1'
         env:
           GH_TOKEN: ${{ github.token }}
+          BASE_REF: ${{ github.base_ref }}
           HEAD_REF: ${{ github.head_ref }}
         run: |
           run_id=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
@@ -155,7 +157,7 @@ jobs:
                 run = artifact["workflow_run"]
                 !artifact["expired"] && run["head_repository_id"] == run["repository_id"]
               end
-              map = %W[main #{ENV["HEAD_REF"]}].lazy.filter_map do |branch|
+              map = %W[main #{ENV["BASE_REF"]} #{ENV["HEAD_REF"]}].lazy.filter_map do |branch|
                 maps.find { |artifact| artifact.dig("workflow_run", "head_branch") == branch }
               end.first
               puts map&.dig("workflow_run", "id")

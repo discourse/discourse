@@ -492,7 +492,9 @@ RSpec.describe TestImpact::Job do
       "frontend/plugins" => ["plugins/poll/test/javascripts/poll-test.gjs"],
     }
 
-    lists.each { |name, files| expect(run(name)).to match(["list", anything, files]), name }
+    lists.each do |name, files|
+      expect(run(name)).to match(["list", a_string_including("of the job's files"), files]), name
+    end
   end
 
   it "runs a job whole when the selection is incomplete, and nothing when it selects none" do
