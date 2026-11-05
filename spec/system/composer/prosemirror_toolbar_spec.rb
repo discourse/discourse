@@ -245,11 +245,11 @@ describe "Composer - ProseMirror - Toolbar" do
 
       composer.type_content("## This is a test\n#### And this is another test")
       expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
-      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h4")
+      expect(composer).to have_heading_level(4)
 
       composer.send_keys(:up)
       expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
-      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
+      expect(composer).to have_heading_level(2)
 
       composer.select_all
       expect(page).to have_no_css(".toolbar__button.heading.--active")
@@ -267,7 +267,7 @@ describe "Composer - ProseMirror - Toolbar" do
       heading_menu.collapse
 
       composer.select_range_rich_editor(0, 0)
-      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
+      expect(composer).to have_heading_level(2)
       heading_menu.expand
       expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
       heading_menu.collapse

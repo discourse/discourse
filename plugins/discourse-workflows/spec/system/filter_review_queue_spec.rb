@@ -13,7 +13,6 @@ RSpec.describe "Filter review queue by workflow" do
     )
   end
 
-  let(:editor_page) { PageObjects::Pages::DiscourseWorkflows::WorkflowEditor.new }
   let(:review_index_page) { PageObjects::Pages::ReviewIndex.new }
   let(:review_page) { PageObjects::Pages::Review.new }
 
@@ -61,16 +60,13 @@ RSpec.describe "Filter review queue by workflow" do
       end
     workflow_name = "AI content review"
     workflow =
-      Fabricate(:discourse_workflows_workflow, created_by: admin, name: workflow_name, **graph)
-
-    editor_page.visit(workflow.id)
-    expect(editor_page).to have_name(workflow_name)
-    editor_page.publish
-    editor_page.visit(workflow.id)
-    expect(editor_page).to have_name(workflow_name)
-    expect(editor_page).to have_node_count(4)
-    expect(editor_page).to have_connection_count(3)
-    screenshot_marker(label: "workflow-review-name", only: :desktop)
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        name: workflow_name,
+        published: true,
+        **graph,
+      )
 
     post = create_post(title: "Community guidelines", raw: "This post needs a moderator's review.")
     DiscourseAi::Completions::Llm.with_prepared_responses([{ verdict: "reject" }.to_json]) do

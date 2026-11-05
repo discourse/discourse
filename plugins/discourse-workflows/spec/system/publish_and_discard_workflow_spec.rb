@@ -60,6 +60,7 @@ RSpec.describe "Publish and discard a workflow" do
       editor_page.visit(workflow.id)
       expect(editor_page).to have_publish_banner
       expect(editor_page).to have_node_count(2)
+      screenshot_marker(label: "workflow-review-name", only: :desktop)
 
       editor_page.click_publish
       expect(editor_page).to have_no_publish_banner

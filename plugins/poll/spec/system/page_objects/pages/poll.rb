@@ -26,8 +26,10 @@ module PageObjects
       end
 
       def vote_for_option(post, option)
-        post_element = @topic_page.post_by_number(post.post_number)
-        post_element.find("li[data-poll-option-id] button", text: option).click
+        locator(@topic_page.post_by_number_selector(post.post_number))
+          .locator("li[data-poll-option-id] button")
+          .filter(hasText: /#{Regexp.escape(option)}/)
+          .click
       end
 
       def has_vote_count?(post, count)

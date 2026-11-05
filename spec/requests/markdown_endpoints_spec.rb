@@ -263,7 +263,10 @@ RSpec.describe "Markdown endpoints" do
     SiteSetting.tagging_enabled = true
     topic.tags << Fabricate(:tag)
 
-    ["/t/#{topic.slug}/#{topic.id}.md", "/t/#{topic.slug}/#{topic.id}/1.md"].each do |path|
+    [
+      ["/t/#{topic.slug}/#{topic.id}.md", "Page"],
+      ["/t/#{topic.slug}/#{topic.id}/1.md", "Showing post"],
+    ].each do |path, metadata_label|
       get path
 
       expect(response).to have_http_status(:ok)
@@ -271,17 +274,10 @@ RSpec.describe "Markdown endpoints" do
       expect(heading).to eq("# #{topic.title}")
       rows = metadata.lines.map(&:chomp)
       expect(rows.map { |row| row[/\A\*\*(.+):\*\*/, 1] }).to eq(
-        [
-          "URL",
-          "Category",
-          "Tags",
-          "Created",
-          "Posts on this page",
-          path.end_with?("/1.md") ? "Showing post" : "Page",
-        ],
+        ["URL", "Category", "Tags", "Created", "Posts on this page", metadata_label],
       )
       expect(rows[0...-1]).to all(end_with("\\"))
-      expect(rows.last).to eq(path.end_with?("/1.md") ? "**Showing post:** 1" : "**Page:** 1")
+      expect(rows.last).to eq("**#{metadata_label}:** 1")
       expect(rows.first).to eq("**URL:** <#{topic.url}>\\")
       rendered_metadata = Nokogiri::HTML5.fragment(PrettyText.cook(metadata))
       expect(rendered_metadata.at_css("a")["href"]).to eq(topic.url)
@@ -463,6 +459,8 @@ RSpec.describe "Markdown endpoints" do
   end
 
   it "renders plugin action translations as text and escapes action targets" do
+    I18n.reload!
+    I18n.locale = :en
     I18n.backend.store_translations(
       :en,
       js: {
@@ -568,15 +566,18 @@ RSpec.describe "Markdown endpoints" do
   end
 
   it "wraps each post's metadata separately from its body with Markdown block boundaries" do
-    reply = Fabricate(:post, topic: topic, user: user, raw: "Another visible body")
+    topic = Fabricate(:topic, user: user, category: category)
+    post = Fabricate(:post, topic: topic, user: user, raw: "Visible body")
+    reply =
+      Fabricate(:post, topic: topic, user: user, raw: "Another visible body", post_number: topic.id)
 
     [
-      "/t/#{topic.slug}/#{topic.id}.md",
-      "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md",
-    ].each do |path|
+      ["/t/#{topic.slug}/#{topic.id}.md", [post, reply]],
+      ["/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md", [reply]],
+    ].each do |path, posts|
       get path
 
-      posts = path.end_with?("/#{reply.post_number}.md") ? [reply] : [post, reply]
+      expect(response).to have_http_status(:ok)
       metadata = response.body.scan(%r{<div class="post-metadata">\n\n(.*?)\n\n</div>}m).flatten
       expect(metadata.size).to eq(posts.size)
       posts

@@ -318,6 +318,28 @@ RSpec.describe "AI logs admin page" do
     expect(ai_logs_page).to have_log(log)
   end
 
+  it "clears filters while a search is queued" do
+    ai_logs_page.visit("model=#{llm_model.id}&period=day")
+    expect(ai_logs_page).to have_log(log)
+    page.driver.with_playwright_page { |browser| browser.clock.install }
+
+    PageObjects::CDP
+      .new
+      .with_paused_request(%r{/admin/plugins/discourse-ai/ai-logs.json}) do |request|
+        ai_logs_page.search_and_clear(log.id)
+        request.wait
+        page.driver.with_playwright_page { |browser| browser.clock.run_for(1000) }
+        request.resume
+        page.driver.with_playwright_page do |browser|
+          browser.evaluate("() => window.clientSettled(30000)")
+        end
+      end
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-logs")
+    expect(page).to have_css(".d-filter-controls__input:focus")
+    expect(ai_logs_page).to have_log(log)
+  end
+
   it "lets an admin inspect a raw log and open retention configuration" do
     ai_logs_page.visit
     expect(ai_logs_page).to have_log(log)

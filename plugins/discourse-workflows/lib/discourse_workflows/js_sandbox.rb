@@ -24,13 +24,15 @@ module DiscourseWorkflows
       vars: nil,
       workflow_vars: nil,
       capture_logs: false,
-      budget_tracker: nil
+      budget_tracker: nil,
+      monotonic_clock: -> { Process.clock_gettime(Process::CLOCK_MONOTONIC) }
     )
       @workflow_context = workflow_context
       @user = user
       @vars = vars || DiscourseWorkflows::Variable.where(workflow_id: nil).pluck(:key, :value).to_h
       @workflow_vars = workflow_vars || {}
       @budget_tracker = budget_tracker
+      @monotonic_clock = monotonic_clock
       @site_setting_store = SiteSettingStore.new
       @js_context = create_js_context
       setup_core_environment!
@@ -38,7 +40,7 @@ module DiscourseWorkflows
     end
 
     def eval(code)
-      started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      started_at = @monotonic_clock.call
       @js_context.eval(code)
     rescue MiniRacer::ScriptTerminatedError
       raise BudgetExceededError, "JavaScript evaluation exceeded #{EVAL_TIMEOUT_MS}ms time limit"
@@ -308,7 +310,7 @@ module DiscourseWorkflows
     def finish_eval!(started_at)
       return unless started_at
 
-      elapsed_ms = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000.0
+      elapsed_ms = (@monotonic_clock.call - started_at) * 1000.0
       @budget_tracker&.charge!(elapsed_ms)
     end
 

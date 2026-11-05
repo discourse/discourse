@@ -49,6 +49,12 @@ RSpec.describe ::Jobs::Base do
     end
   end
 
+  class InterruptedJob < ::Jobs::Base
+    def execute(args)
+      throw :cancel_job
+    end
+  end
+
   it "handles job concurrency" do
     ConcurrentJob.clear_cluster_concurrency_lock!
 
@@ -74,6 +80,21 @@ RSpec.describe ::Jobs::Base do
     job = GoodJob.new
     job.perform({})
     expect(job.count).to eq(1)
+  end
+
+  it "restores logging context after successful and interrupted jobs" do
+    previous_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+    context = { request_id: "parent_request" }
+
+    [InterruptedJob, GoodJob].each do |job_class|
+      Thread.current[Logster::Logger::LOGSTER_ENV] = context
+
+      catch(:cancel_job) { job_class.new.perform({}) }
+
+      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to equal(context)
+    end
+  ensure
+    Thread.current[Logster::Logger::LOGSTER_ENV] = previous_env
   end
 
   it "handles errors in multisite" do

@@ -225,6 +225,21 @@ RSpec.describe ExtraLocalesController do
       TranslationOverride.upsert!(I18n.locale, "js.some_key", "client-side translation")
       expect(ExtraLocalesController.client_overrides_exist?).to eq(true)
     end
+
+    it "clears rolled back client overrides during test setup after an I18n reload" do
+      ActiveRecord::Base.transaction(requires_new: true) do
+        TranslationOverride.upsert!("en", "js.some_key", "client-side translation")
+        expect(ExtraLocalesController.client_overrides_exist?(locale: :en)).to eq(true)
+        raise ActiveRecord::Rollback
+      end
+
+      I18n.reload!
+      I18n.t("js.sidebar.sections.community.links.my_messages.content")
+
+      TestSetup.test_setup
+
+      expect(ExtraLocalesController.client_overrides_exist?(locale: :en)).to eq(false)
+    end
   end
 
   describe ".bundle_js_with_hash" do

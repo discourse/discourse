@@ -43,8 +43,8 @@ RSpec.describe "Chat message - thread" do
 
       thread_page.messages.copy_text(thread_message_1)
 
-      cdp.clipboard_has_text?(thread_message_1.message)
       expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.text_copied"))
+      cdp.clipboard_has_text?(thread_message_1.message)
     end
   end
 
@@ -58,11 +58,11 @@ RSpec.describe "Chat message - thread" do
 
       thread_page.messages.copy_link(thread_message_1)
 
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
       cdp.clipboard_has_text?(
         "/chat/c/-/#{channel_1.id}/t/#{thread_message_1.thread.id}/#{thread_message_1.id}",
         strict: false,
       )
-      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
     end
 
     it "[mobile] copies the link to the thread", mobile: true do
@@ -70,11 +70,11 @@ RSpec.describe "Chat message - thread" do
 
       thread_page.messages.copy_link(thread_message_1)
 
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
       cdp.clipboard_has_text?(
         "/chat/c/-/#{channel_1.id}/t/#{thread_message_1.thread.id}/#{thread_message_1.id}",
         strict: false,
       )
-      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
     end
   end
 end

@@ -14,7 +14,7 @@ module PageObjects
       end
 
       def click
-        find(SELECTOR).click
+        locator(SELECTOR).click
         self
       end
     end

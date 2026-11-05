@@ -3,9 +3,9 @@
 RSpec.describe Acl::Target do
   subject(:target_acl) { described_class.new(flattened_acl_list) }
 
-  fab!(:group)
-  fab!(:user)
-  fab!(:owner, :user)
+  let(:group) { Fabricate.build(:group, id: 1) }
+  let(:user) { Fabricate.build(:user, id: 1) }
+  let(:owner) { Fabricate.build(:user, id: 2) }
 
   let(:flattened_acl_list) do
     [

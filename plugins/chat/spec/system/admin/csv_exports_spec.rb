@@ -7,13 +7,11 @@ RSpec.describe "Admin Chat CSV exports" do
   fab!(:current_user, :admin)
 
   before do
-    Jobs.run_immediately!
     sign_in(current_user)
     chat_system_bootstrap
   end
 
   it "exports chat messages" do
-    Jobs.run_immediately!
     message_1 = Fabricate(:chat_message, created_at: 12.months.ago)
     message_2 = Fabricate(:chat_message, created_at: 6.months.ago)
     message_3 = Fabricate(:chat_message, created_at: 1.month.ago)
@@ -22,6 +20,10 @@ RSpec.describe "Admin Chat CSV exports" do
     visit "/admin/plugins/chat"
     click_button I18n.t("js.chat.admin.export_messages.create_export")
     dialog.click_yes
+
+    expect(dialog).to have_content(I18n.t("js.chat.admin.export_messages.export_has_started"))
+    dialog.click_ok
+    Jobs::ExportCsvFile.drain
 
     visit "/u/#{current_user.username}/messages"
     click_link I18n.t(

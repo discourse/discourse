@@ -110,6 +110,7 @@ export function showColorMode(mode) {
  * @param {number} options.themeId - compile against this theme's color
  *   definitions instead of the default theme's (default: none)
  * @param {"light" | "dark"} options.mode - stylesheet to replace
+ * @param {AbortSignal} [options.signal] - cancel applying an obsolete preview
  * @returns {Promise}
  */
 
@@ -119,6 +120,7 @@ export async function applyColorScheme(scheme, options = {}) {
     save = false,
     themeId = null,
     mode = "light",
+    signal,
   } = options;
 
   try {
@@ -180,6 +182,10 @@ export async function applyColorScheme(scheme, options = {}) {
     const data = await ajax(
       `/color-scheme-stylesheet/${id}${themeSegment}.json`
     );
+
+    if (signal?.aborted) {
+      return;
+    }
 
     const targetTag =
       mode === "dark" ? (darkTag ?? lightTag) : (lightTag ?? darkTag);

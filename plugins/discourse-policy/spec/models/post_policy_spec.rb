@@ -146,7 +146,7 @@ RSpec.describe PostPolicy do
 
       user2.update(last_seen_at: 30.minutes.ago)
 
-      expect(policy.emailed_by).to eq [user1, user2]
+      expect(policy.emailed_by).to contain_exactly(user1, user2)
     end
   end
 

@@ -149,7 +149,8 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
     it "shares elapsed sandbox time through workflow context" do
       budget_state = {}
 
-      Process.stubs(:clock_gettime).returns(0.0)
+      current_time = 0.0
+      monotonic_clock = -> { current_time }
 
       first_sandbox =
         described_class.new(
@@ -157,6 +158,7 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
           user: user,
           vars: vars,
           budget_tracker: DiscourseWorkflows::SandboxBudget.new(budget_state, budget_ms: 100),
+          monotonic_clock: monotonic_clock,
         )
       second_sandbox =
         described_class.new(
@@ -164,17 +166,24 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
           user: user,
           vars: vars,
           budget_tracker: DiscourseWorkflows::SandboxBudget.new(budget_state, budget_ms: 100),
+          monotonic_clock: monotonic_clock,
         )
 
-      Process.stubs(:clock_gettime).with(Process::CLOCK_MONOTONIC).returns(0.0, 0.06, 0.06, 0.12)
+      first_sandbox.attach("__advanceClock", -> { current_time += 0.06 })
+      second_sandbox.attach("__advanceClock", -> { current_time += 0.06 })
 
-      first_sandbox.eval("1 + 1")
+      expect(first_sandbox.eval("__advanceClock(); 1 + 1")).to eq(2)
+      expect(budget_state[DiscourseWorkflows::SandboxBudget::CONTEXT_KEY]).to be_within(0.001).of(
+        60,
+      )
 
-      expect { second_sandbox.eval("2 + 2") }.to raise_error(
+      expect { second_sandbox.eval("__advanceClock(); 2 + 2") }.to raise_error(
         described_class::BudgetExceededError,
         /100ms/,
       )
-      expect(budget_state[DiscourseWorkflows::SandboxBudget::CONTEXT_KEY]).to be > 100
+      expect(budget_state[DiscourseWorkflows::SandboxBudget::CONTEXT_KEY]).to be_within(0.001).of(
+        120,
+      )
     ensure
       first_sandbox&.dispose
       second_sandbox&.dispose

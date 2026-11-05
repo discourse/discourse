@@ -166,7 +166,8 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".private_message")
     end
 
-    it "redirects to a route with a query parameters after login and keeps the query parameters" do
+    it "opens the requested category in the composer after login" do
+      SiteSetting.create_topic_allowed_groups = "0"
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       category = Fabricate(:category)
@@ -174,7 +175,10 @@ shared_examples "login scenarios" do
       visit "/new-topic?category_id=#{category.id}"
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(PageObjects::Components::Composer.new.category_chooser).to have_selected_value(
+        category.id,
+      )
+      expect(page).to have_current_path("/c/#{category.id}")
     end
 
     it "does not leak category metadata if homepage is /categories" do
@@ -222,7 +226,8 @@ shared_examples "login scenarios" do
       expect(page).to have_css("#topic-title")
     end
 
-    it "redirects to a route with a query parameters after login and keeps the query parameters" do
+    it "opens the requested category in the composer after login" do
+      SiteSetting.create_topic_allowed_groups = "0"
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       category = Fabricate(:category)
@@ -230,7 +235,10 @@ shared_examples "login scenarios" do
       visit "/new-topic?category_id=#{category.id}"
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(PageObjects::Components::Composer.new.category_chooser).to have_selected_value(
+        category.id,
+      )
+      expect(page).to have_current_path("/c/#{category.id}")
     end
 
     context "with user api key and omniauth" do

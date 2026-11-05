@@ -257,7 +257,7 @@ RSpec.describe TagsController do
       end
 
       it "works for tags in groups" do
-        _tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+        _tag_group = Fabricate(:tag_group, tags: [topic_tag, test_tag, synonym])
 
         get "/tags.json"
 
@@ -266,11 +266,9 @@ RSpec.describe TagsController do
         expect(tags.length).to eq(0)
         group = response.parsed_body.dig("extras", "tag_groups")&.first
         expect(group).to be_present
-        expect(group["tags"]).to match(
-          [
-            include(name: test_tag.name, id: test_tag.id),
-            include(name: topic_tag.name, id: topic_tag.id),
-          ],
+        expect(group["tags"]).to contain_exactly(
+          include(name: test_tag.name, id: test_tag.id),
+          include(name: topic_tag.name, id: topic_tag.id),
         )
       end
 

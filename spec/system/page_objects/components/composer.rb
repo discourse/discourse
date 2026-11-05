@@ -54,6 +54,10 @@ module PageObjects
         self
       end
 
+      def has_heading_level?(level)
+        has_css?("#{@composer_id} .toolbar__button.heading .d-icon-discourse-h#{level}")
+      end
+
       def heading_menu
         PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.heading"))
       end

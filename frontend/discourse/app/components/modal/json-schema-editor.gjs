@@ -11,8 +11,9 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class JsonSchemaEditorModal extends Component {
-  /** @type {{ destroy: () => void, validate: () => { message: string }[], getValue: () => unknown } | null} */
+  /** @type {{ destroy: () => void, validate: () => { message: string }[], getValue: () => unknown, on: (event: string, callback: () => void) => void } | null} */
   @tracked editor = null;
+  @tracked editorReady = false;
   @tracked value = this.args.model.value;
   @tracked flash;
   @tracked flashType;
@@ -46,6 +47,10 @@ export default class JsonSchemaEditorModal extends Component {
     waitForPromise(promise);
     const { JSONEditor } = await promise;
 
+    if (this.isDestroying) {
+      return;
+    }
+
     JSONEditor.defaults.options.theme = "barebones";
     JSONEditor.defaults.iconlibs = {
       discourseIcons: DiscourseJsonSchemaEditorIconlib,
@@ -67,6 +72,11 @@ export default class JsonSchemaEditorModal extends Component {
       disable_collapse: false,
       show_errors: "never",
       startval: this.value ? JSON.parse(this.value) : null,
+    });
+    this.editor.on("ready", () => {
+      if (!this.isDestroying) {
+        this.editorReady = true;
+      }
     });
   }
 
@@ -94,6 +104,7 @@ export default class JsonSchemaEditorModal extends Component {
         <DButton
           class="btn-primary"
           @action={{this.saveChanges}}
+          @disabled={{not this.editorReady}}
           @label="save"
         />
       </:footer>

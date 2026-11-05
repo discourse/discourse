@@ -122,6 +122,8 @@ module DiscourseGamification
     end
 
     def total_scores_query(period)
+      ranking_tiebreaker = ", lu.id ASC" if SiteSetting.score_ranking_strategy == "row_number"
+
       <<~SQL
         WITH leaderboard AS (
           SELECT * FROM gamification_leaderboards WHERE id = :leaderboard_id
@@ -206,7 +208,7 @@ module DiscourseGamification
         SELECT
          lu.id AS user_id,
          SUM(COALESCE(s.score, 0)) AS total_score,
-         #{ranking_function} OVER (ORDER BY SUM(COALESCE(s.score, 0)) DESC) AS position
+         #{ranking_function} OVER (ORDER BY SUM(COALESCE(s.score, 0)) DESC#{ranking_tiebreaker}) AS position
         FROM
           leaderboard_users lu
         INNER JOIN

@@ -28,7 +28,7 @@ RSpec.describe "Invite users to channel" do
       it "loads the channel" do
         visit("/")
         user_menu.open
-        find("[title='#{I18n.t("js.notifications.titles.chat_invitation")}']").click
+        user_menu.click_notification_with_href("/chat/c/#{channel_1.slug}/#{channel_1.id}")
 
         expect(chat_drawer_page).to have_open_channel(channel_1)
       end
@@ -51,7 +51,9 @@ RSpec.describe "Invite users to channel" do
       it "loads the channel" do
         visit("/")
         user_menu.open
-        find("[title='#{I18n.t("js.notifications.titles.chat_invitation")}']").click
+        user_menu.click_notification_with_href(
+          "/chat/c/#{channel_1.slug}/#{channel_1.id}/#{message_1.id}",
+        )
 
         expect(chat_drawer_page).to have_open_channel(channel_1)
       end

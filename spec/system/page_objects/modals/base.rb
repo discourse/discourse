@@ -66,6 +66,14 @@ module PageObjects
         footer.find(".btn-primary").click
       end
 
+      def has_disabled_primary_button?
+        has_css?("#{footer_selector} .btn-primary[disabled]")
+      end
+
+      def has_enabled_primary_button?
+        has_css?("#{footer_selector} .btn-primary:not([disabled])")
+      end
+
       def has_content?(content)
         body.has_content?(content)
       end

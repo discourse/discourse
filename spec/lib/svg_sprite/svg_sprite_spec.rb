@@ -344,10 +344,11 @@ RSpec.describe SvgSprite do
     end
 
     it "ignores sources belonging to disabled plugins" do
+      icon = "test-disabled-plugin-icon"
       plugin.enabled = false
-      DiscoursePluginRegistry.register_svg_icon_source(-> { ["blender"] }, plugin)
+      DiscoursePluginRegistry.register_svg_icon_source(-> { [icon] }, plugin)
 
-      expect(SvgSprite.all_icons).not_to include("blender")
+      expect(SvgSprite.all_icons).not_to include(icon)
     end
 
     it "does not call the source until the sprite is built" do

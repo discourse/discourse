@@ -759,7 +759,7 @@ describe "AI combined search" do
       ask(query, input: "#icon-search-input")
       expect(page).to have_css(".search-menu .search-result-topic", text: inside.title)
 
-      find(".search-menu .search-result-topic a", text: inside.title).click
+      locator(".search-menu .search-result-topic a").filter(hasText: inside.title).click
       expect(page).to have_current_path(%r{/t/})
 
       open_header_search

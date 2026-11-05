@@ -94,6 +94,19 @@ module PageObjects
           message.exists?(**args)
         end
 
+        def has_message_in_viewport?(chat_message)
+          page.has_css?(
+            "#{context} #{SELECTOR} .chat-message-container[data-id='#{chat_message.id}']",
+          ) { |element| element.evaluate_script(<<~JS) }
+              (() => {
+                const bounds = this.getBoundingClientRect();
+                const viewport = this.closest(".chat-messages-scroller").getBoundingClientRect();
+                return bounds.width > 0 && bounds.height > 0 &&
+                  bounds.top >= viewport.top && bounds.bottom <= viewport.bottom;
+              })()
+            JS
+        end
+
         def has_no_message?(**args)
           message.does_not_exist?(**args)
         end

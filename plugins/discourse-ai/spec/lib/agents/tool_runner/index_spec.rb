@@ -58,10 +58,14 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       end
 
       def stub_embeddings
-        @counter = 0
         stub_request(:post, cloudflare_embedding_def.url).to_return(
           status: 200,
-          body: lambda { |req| { result: { data: [[@counter += 2] * 1024] } }.to_json },
+          body:
+            lambda do |request|
+              text = JSON.parse(request.body).fetch("text").first
+              value = text.start_with?("testing ") ? 100 : Integer(text.split.first)
+              { result: { data: [[value] * 1024] } }.to_json
+            end,
           headers: {
           },
         )
@@ -87,7 +91,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
           }
         JS
 
-        RagDocumentFragment.link_target_and_uploads(tool, [upload1.id, upload2.id])
+        RagDocumentFragment.link_target_and_uploads(tool, [upload2.id, upload1.id])
 
         result = tool.runner({}, llm: nil, bot_user: nil).invoke
 
@@ -110,7 +114,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
         result = tool.runner({}, llm: nil, bot_user: nil).invoke
 
         expect(result.length).to eq(2)
-        expect(result[0][0]["fragment"].length).to eq(8)
+        expect(result[0][0]["fragment"]).to eq("48 49 50")
         expect(result[1].length).to eq(3)
       end
     end

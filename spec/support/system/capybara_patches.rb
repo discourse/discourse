@@ -167,7 +167,7 @@ module CapybaraPlaywrightBrowserPatch
   # is added to the root element (`#main`) once Ember mounts.
   def wait_for_ember_boot
     session = @driver.send(:session)
-    return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+    return unless session.has_css?("discourse-assets", wait: 0, visible: :all)
     session.assert_selector("#main.ember-application", visible: :all)
   end
 end

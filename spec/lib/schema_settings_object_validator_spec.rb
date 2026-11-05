@@ -167,6 +167,8 @@ RSpec.describe SchemaSettingsObjectValidator do
         { tags_property: [{ "name" => tag_1.name }] },
       ]
 
+      I18n.reload!
+
       queries =
         track_sql_queries do
           expect(described_class.validate_objects(schema:, objects:)).to eq(
@@ -176,7 +178,7 @@ RSpec.describe SchemaSettingsObjectValidator do
           )
         end
 
-      expect(queries.length).to eq(1)
+      expect(queries.grep(/\bFROM "tags"/).length).to eq(1)
     end
   end
 

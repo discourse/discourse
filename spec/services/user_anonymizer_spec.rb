@@ -391,9 +391,15 @@ RSpec.describe UserAnonymizer do
         end
 
         it "does not affect records without the username" do
-          StaffActionLogger.new(admin).log_check_email(user, context: "/some/other/path")
+          Fabricate(
+            :user_history,
+            target_user_id: user.id,
+            action: UserHistory.actions[:change_name],
+          )
+          check_email =
+            StaffActionLogger.new(admin).log_check_email(user, context: "/some/other/path")
           make_anonymous
-          expect(UserHistory.find_by(target_user_id: user.id).context).to eq("/some/other/path")
+          expect(check_email.reload.context).to eq("/some/other/path")
         end
       end
     end

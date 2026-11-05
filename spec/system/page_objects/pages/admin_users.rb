@@ -47,6 +47,10 @@ module PageObjects
         find(".d-filter-controls__input")
       end
 
+      def search(value)
+        locator(".d-filter-controls__input").fill(value)
+      end
+
       def user_row(id)
         UserRow.new(find(".directory-table__row[data-user-id=\"#{id}\"]"))
       end

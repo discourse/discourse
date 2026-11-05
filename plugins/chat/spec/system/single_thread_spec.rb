@@ -36,12 +36,13 @@ describe "Single thread in side panel" do
 
     context "when returning to a thread where last read is not last message" do
       it "scrolls to the correct last read message" do
+        Fabricate.times(30, :chat_message, thread: thread, chat_channel: channel, user: user_2)
         message_1 = Fabricate(:chat_message, thread: thread, chat_channel: channel)
         thread.membership_for(current_user).update!(last_read_message: message_1)
-        messages = Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel)
+        Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel, user: user_2)
         chat_page.visit_thread(thread)
 
-        expect(page).to have_css("[data-id='#{message_1.id}'].-highlighted")
+        expect(thread_page.messages).to have_message_in_viewport(message_1)
       end
     end
 
@@ -257,13 +258,19 @@ describe "Single thread in side panel" do
     end
 
     context "when messages are separated by a day" do
+      let!(:thread) { chat_thread_chain_bootstrap(channel: channel, users: [current_user, user_2]) }
+
       before do
-        Fabricate(:chat_message, chat_channel: channel, thread: thread, created_at: 2.days.ago)
+        Fabricate(:chat_message, chat_channel: channel, thread: thread, created_at: 1.day.ago)
       end
 
-      it "shows a date separator" do
+      it "shows a date separator", time: Time.utc(2026, 1, 15, 12) do
         chat_page.visit_thread(thread)
 
+        expect(page).to have_selector(
+          ".chat-thread .chat-message-separator__text",
+          text: "Yesterday",
+        )
         expect(page).to have_selector(".chat-thread .chat-message-separator__text", text: "Today")
       end
     end

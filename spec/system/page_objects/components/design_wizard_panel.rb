@@ -35,8 +35,9 @@ module PageObjects
         has_css?("#{WIZARD_SELECTOR}__next[disabled]")
       end
 
-      def select_palette(pair_key)
-        find("#{WIZARD_SELECTOR}__swatch[data-pair-key='#{pair_key}']").click
+      def select_palette(pair_key, wait_for_requests: true)
+        selector = "#{WIZARD_SELECTOR}__swatch[data-pair-key='#{pair_key}']"
+        wait_for_requests ? find(selector).click : locator(selector).click
       end
 
       def toggle_user_selectable_palettes
@@ -83,8 +84,9 @@ module PageObjects
         ).click
       end
 
-      def has_palette_preview?
-        has_css?("link[data-scheme-id]", visible: :all)
+      def has_palette_preview?(scheme = nil)
+        selector = scheme ? "link[data-scheme-id='#{scheme.id}']" : "link[data-scheme-id]"
+        has_css?(selector, visible: :all)
       end
 
       def has_no_palette_preview?
@@ -117,8 +119,9 @@ module PageObjects
         find("#{WIZARD_SELECTOR}__save").click
       end
 
-      def close
-        find("#{WIZARD_SELECTOR}__close").click
+      def close(wait_for_requests: true)
+        selector = "#{WIZARD_SELECTOR}__close"
+        wait_for_requests ? find(selector).click : locator(selector).click
       end
 
       private

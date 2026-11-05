@@ -570,18 +570,19 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
     end
 
     it "propagates workflow budget errors from the shared sandbox" do
-      Process.stubs(:clock_gettime).returns(0.0)
+      current_time = 0.0
 
       sandbox =
         DiscourseWorkflows::JsSandbox.new(
           {},
           budget_tracker: DiscourseWorkflows::SandboxBudget.new({}, budget_ms: 10),
+          monotonic_clock: -> { current_time },
         )
       resolver = described_class.new({ "$json" => { "a" => 1 } }, sandbox: sandbox)
 
-      Process.stubs(:clock_gettime).with(Process::CLOCK_MONOTONIC).returns(0.0, 0.02)
+      sandbox.attach("__advanceClock", -> { current_time += 0.02 })
 
-      expect { resolver.resolve("={{ $json.a }}") }.to raise_error(
+      expect { resolver.resolve("={{ $json.a + __advanceClock() }}") }.to raise_error(
         DiscourseWorkflows::JsSandbox::BudgetExceededError,
       )
     ensure

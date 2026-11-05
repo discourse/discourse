@@ -150,11 +150,10 @@ RSpec.describe "Chat channel" do
   context "when returning to a channel where last read is not last message" do
     it "scrolls to the correct last read message" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
-      messages = Fabricate.times(50, :chat_message, chat_channel: channel_1)
+      Fabricate.times(50, :chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
-      expect(page).to have_css("[data-id='#{messages.first.id}']")
-      expect(page).to have_no_css("[data-id='#{messages.last.id}']")
+      expect(channel_page.messages).to have_message_in_viewport(message_1)
     end
   end
 
