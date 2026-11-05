@@ -13,7 +13,8 @@ depends on. Experimental.
 - the translation keys and locales it looked up;
 - the non-Ruby files in the repository it read (fixtures, templates, data);
 - the tables its queries named;
-- what it did as it loaded, such as generating examples from a data file;
+- what it read and looked up as it loaded, such as a data file it generates
+  examples from;
 - for system specs, the browser JavaScript functions it ran.
 
 QUnit records the same JavaScript per test file, through testem
