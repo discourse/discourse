@@ -82,7 +82,10 @@ RSpec.describe Blog::Publication::Approve do
 
       it "approves the revision and logs it" do
         result
-        expect(revision.reload).to have_attributes(approver: acting_user, approved_at: Time.current)
+        expect(revision.reload).to have_attributes(
+          approver: acting_user,
+          approved_at: eq_time(Time.current),
+        )
         expect(publication.reload.approved_revision).to eq(revision)
         expect(UserHistory.find_by(custom_type: "blog_approve")).to have_attributes(
           acting_user_id: acting_user.id,
