@@ -71,6 +71,21 @@ RSpec.describe UserApiKeysController do
         expect(response.parsed_body["padding"]).to eq("oaep")
       end
 
+      it "shows the stored client name when authorizing an existing application" do
+        client =
+          Fabricate(
+            :user_api_key_client,
+            client_id: args[:client_id],
+            application_name: "Original app 猫",
+          )
+
+        get "/user-api-key/new.json", params: args.merge(application_name: "Different app")
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["state"]).to eq("ready")
+        expect(response.parsed_body["application_name"]).to eq(client.application_name)
+      end
+
       it "rejects invalid padding parameter" do
         get "/user-api-key/new", params: args.merge(padding: "invalid")
         expect(response.status).to eq(400)
@@ -250,6 +265,26 @@ RSpec.describe UserApiKeysController do
       encrypted = Base64.decode64(response.parsed_body["payload"])
       parsed = JSON.parse(decrypt_payload(encrypted))
       expect(UserApiKey.with_key(parsed["key"]).first.user_id).to eq(user.id)
+    end
+
+    it "preserves the shared client name when another user creates a key" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      first_user = Fabricate(:user, trust_level: TrustLevel[0])
+      second_user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(first_user)
+
+      post "/user-api-key.json", params: args.except(:auth_redirect)
+      expect(response.status).to eq(200)
+      first_key = first_user.user_api_keys.sole
+      expect(first_key.client.application_name).to eq(args[:application_name])
+
+      sign_in(second_user)
+      post "/user-api-key.json",
+           params: args.except(:auth_redirect).merge(application_name: "Different app 猫")
+
+      expect(response.status).to eq(200)
+      expect(second_user.user_api_keys.sole.client).to eq(first_key.client)
+      expect(first_key.client.reload.application_name).to eq(args[:application_name])
     end
 
     it "creates keys with a requested expiry" do
