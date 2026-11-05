@@ -159,6 +159,8 @@ module PostGuardian
 
     return true if is_admin?
 
+    post.topic ||= Topic.with_deleted.find_by(id: post.topic_id) if post.topic_id
+
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
