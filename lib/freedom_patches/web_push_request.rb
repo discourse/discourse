@@ -12,6 +12,7 @@ module WebPushPatch
     http.ssl_timeout = @options[:ssl_timeout] unless @options[:ssl_timeout].nil?
     http.open_timeout = @options[:open_timeout] unless @options[:open_timeout].nil?
     http.read_timeout = @options[:read_timeout] unless @options[:read_timeout].nil?
+    http.total_timeout = @options[:total_timeout] unless @options[:total_timeout].nil?
 
     req = FinalDestination::HTTP::Post.new(uri.request_uri, headers)
     req.body = body
