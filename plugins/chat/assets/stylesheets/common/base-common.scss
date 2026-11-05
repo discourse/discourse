@@ -96,8 +96,8 @@ html.ios-device.has-full-page-chat body #main-outlet {
 
 .header-dropdown-toggle.chat-header-icon .icon {
   .chat-channel-unread-indicator {
-    // match the urgent badge's box (1em height + 0.21em padding top/bottom)
-    --d-new-indicator-size: 1.42em;
+    // match the urgent badge's box (1em height + 0.2em padding top/bottom)
+    --d-new-indicator-size: 1.4em;
     border: 2px solid var(--header_background);
     position: absolute;
     top: var(--d-header-badge-top);
