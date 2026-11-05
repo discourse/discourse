@@ -193,13 +193,32 @@ RSpec.describe Admin::EmailController do
         expect(response.status).to eq(400)
       end
 
-      it "previews the digest" do
+      it "previews the digest without creating unsubscribe links or keys" do
+        Fabricate(:topic, created_at: 1.day.ago)
+
+        expect do
+          get "/admin/email/preview-digest.json",
+              params: {
+                last_seen_at: 1.week.ago,
+                username: admin.username,
+              }
+        end.not_to change { UnsubscribeKey.count }
+
+        expect(response.status).to eq(200)
+        rendered_contents = response.parsed_body.values_at("html_content", "text_content")
+        expect(rendered_contents).to all(be_present)
+        expect(rendered_contents).to all(exclude("/email/unsubscribe/"))
+      end
+
+      it "returns no preview when the digest has no content" do
         get "/admin/email/preview-digest.json",
             params: {
               last_seen_at: 1.week.ago,
               username: admin.username,
             }
+
         expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("html_content" => "", "text_content" => "")
       end
 
       it "does not turn a post attribute into executable HTML" do
