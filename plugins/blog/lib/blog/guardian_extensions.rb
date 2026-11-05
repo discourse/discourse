@@ -23,7 +23,10 @@ module ::Blog
             can_see?(topic)
         )
       end
-      return true if can_edit_blog_draft?(topic) && (!topic.first_post&.locked? || is_staff?)
+      if can_edit_blog_draft?(topic) && !topic.first_post&.hidden? &&
+           (!topic.first_post&.locked? || is_staff?)
+        return true
+      end
       super
     end
 

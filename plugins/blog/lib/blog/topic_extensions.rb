@@ -40,9 +40,13 @@ module ::Blog
     end
 
     def blog_editorial_draft?
-      UpcomingChanges.enabled?(:blog_enabled) &&
-        category_id == SiteSetting.blog_drafts_category.to_i && !deleted_at && !archived? &&
-        !private_message? && category&.topic_id != id
+      return false if !UpcomingChanges.enabled?(:blog_enabled)
+      return false if category_id != SiteSetting.blog_drafts_category.to_i
+      # In a public category, editors would gain edit rights over ordinary members' topics.
+      return false if !category&.read_restricted?
+      return false if category.topic_id == id
+      return false if !visible || deleted_at || archived? || private_message?
+      !shared_draft?
     end
 
     def blog_live_publication
