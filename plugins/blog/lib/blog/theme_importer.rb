@@ -4,6 +4,14 @@ require "compression/safe_zip_reader"
 
 module ::Blog
   class ThemeImporter
+    # Failures an import reports for invalid input or an unreachable source.
+    ERRORS = [
+      Discourse::InvalidParameters,
+      Discourse::InvalidAccess,
+      Discourse::NotFound,
+      RemoteTheme::ImportError,
+    ].freeze
+
     class GitSource < ThemeStore::GitImporter
       def import!
         # Blog sources do not use framework compatibility refs or additional fetches.
