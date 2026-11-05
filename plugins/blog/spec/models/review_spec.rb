@@ -182,9 +182,32 @@ RSpec.describe Blog::Review do
     end
   end
 
-  describe ".issue!" do
+  describe ".accessible_ids" do
+    fab!(:user)
+
+    let(:review) { issue_blog_review(topic, user: admin) }
+    let!(:reviews) { [review, revoked_review, other_creator_review] }
+    let(:revoked_review) do
+      issue_blog_review(topic, user: admin).tap { |r| r.update!(revoked_at: Time.current) }
+    end
+    let(:other_creator_review) do
+      issue_blog_review(topic, user: admin).tap { |r| r.update_columns(creator_id: user.id) }
+    end
+
+    it "returns current links whose creator can still edit the draft" do
+      expect(described_class.accessible_ids(reviews, topic)).to eq([review.id])
+    end
+
+    it "returns nothing once the draft is no longer eligible" do
+      first_post.update_columns(hidden: true)
+
+      expect(described_class.accessible_ids(reviews, topic)).to be_empty
+    end
+  end
+
+  describe "after create" do
     it "retains snapshot uploads after the working draft removes them" do
-      review = described_class.issue!(topic: topic, user: admin)
+      review = issue_blog_review(topic, user: admin)
       first_post.update!(raw: "Image removed", cooked: "<p>Image removed</p>")
       first_post.link_post_uploads
 
@@ -198,12 +221,12 @@ RSpec.describe Blog::Review do
     end
   end
 
-  describe "#revoke!" do
+  describe "after revocation" do
     it "releases snapshot references without removing the draft's references" do
-      review = described_class.issue!(topic: topic, user: admin)
+      review = issue_blog_review(topic, user: admin)
       expect(UploadReference.where(target: review)).to exist
 
-      review.revoke!(admin)
+      review.update!(revoked_at: Time.current)
 
       expect(UploadReference.where(target: review)).not_to exist
       expect(UploadReference.where(target: first_post).pluck(:upload_id)).to eq([upload.id])
@@ -212,7 +235,7 @@ RSpec.describe Blog::Review do
 
   describe ".revoke_for_topic!" do
     it "releases references for every revoked snapshot" do
-      reviews = 2.times.map { described_class.issue!(topic: topic, user: admin) }
+      reviews = 2.times.map { issue_blog_review(topic, user: admin) }
       expect(UploadReference.where(target: reviews).count).to eq(2)
 
       described_class.revoke_for_topic!(topic.id)
@@ -225,7 +248,7 @@ RSpec.describe Blog::Review do
 
   describe "#destroy!" do
     it "releases references when the snapshot is deleted" do
-      review = described_class.issue!(topic: topic, user: admin)
+      review = issue_blog_review(topic, user: admin)
       expect(UploadReference.where(target: review)).to exist
 
       review.destroy!
