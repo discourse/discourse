@@ -110,8 +110,8 @@ Tests run a nightly scheduled recording on main, which uploads the map. Pull
 requests run a selection, unless labeled `test-impact-full` (or
 `test-impact-record`); pushes to main and release branches run everything.
 Each job of `.github/workflows/tests.yml` downloads the newest
-`test-impact-map` artifact recorded on main, or failing that on the pull
-request's own branch, from runs of this repository, and
+`test-impact-map` artifact recorded on main, or failing that on the branch the
+pull request merges into or its own, from runs of this repository, and
 `script/test_impact/ci_select` decides what it runs of the pull request's
 changes against the branch it merges into:
 
