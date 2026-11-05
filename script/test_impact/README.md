@@ -65,15 +65,22 @@ bin/qunit $(grep -v '_spec\.rb$' <<< "$specs")
 - a change outside any method selects the specs that ran that code, or, when
   nothing ran it (constants, associations, validations, which only run at
   load), every spec that ran the file;
-- a rename selects every spec that ran the file;
+- a rename selects every spec that ran the file, under either path; a
+  JavaScript file deleted and added back as TypeScript (or the reverse) is a
+  rename;
+- a new file selects the specs that read files in its directory, and
+  otherwise nothing: it runs through the changed code or new specs that load
+  it, which select their own. Initializers, plugin outlet connectors and
+  route maps, which run without being named, are outside the map;
 - a change in `config/site_settings.yml` or a plugin's `settings.yml` selects
   the specs that read the setting it is in, and those that read the file;
 - a change in a server locale file selects the specs that looked up its key,
   or a key above or below it; outside English, only those that used that
   locale, plus those that read the file;
 - any other changed file selects the specs that read it, except QUnit tests,
-  type tests and documentation, which select nothing when no spec ran or
-  read them;
+  type tests, documentation and what the Tests workflow ignores or never runs
+  (the migrations tooling, import and benchmark scripts, linter and editor
+  configuration), which select nothing when no spec ran or read them;
 - a migration selects the specs that queried a table it names, in its schema
   calls, its SQL, or as a model class (`Chat::Message` for `chat_messages`);
 - `db/structure.sql` selects nothing: the test database is migrated, and CI
@@ -81,7 +88,8 @@ bin/qunit $(grep -v '_spec\.rb$' <<< "$specs")
 - deleting a file no spec loaded or read selects nothing.
 
 On stderr it lists changed methods no spec ran, and changed files the map
-doesn't cover: new files, JavaScript no system spec loads, client locales,
+doesn't cover: new files that run by convention, JavaScript no spec loads,
+client locales,
 migrations that name no table a spec queried, settings or locale changes that
 name no setting or key, changes to methods that ran at boot or in the suite
 hooks (which no spec is charged with), and dependency changes (`Gemfile`,
