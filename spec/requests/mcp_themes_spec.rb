@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "zip"
+require "rubygems/package"
 
 describe "MCP theme administration" do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
@@ -33,11 +34,12 @@ describe "MCP theme administration" do
     @token = McpOauthAccessToken.issue!(authorization: grant)
   end
 
-  def call_tool(name, arguments = {})
+  def call_tool(name, arguments = {}, request_env = {})
     McpPrimitive.find_or_create_by!(kind: "tool", identifier: name) do |primitive|
       primitive.enabled = true
     end
     post "/mcp",
+         env: request_env,
          params: {
            jsonrpc: "2.0",
            id: 1,
@@ -117,6 +119,60 @@ describe "MCP theme administration" do
     gzip.write(tar.string)
     gzip.close
     Base64.strict_encode64(buffer.string)
+  end
+
+  it "defers theme imports, repository operations and asset uploads" do
+    authorize
+    requests = {
+      "discourse_install_theme" => {
+        filename: "theme.zip",
+        archive_data: archive_data("about.json" => { name: "Deferred theme" }.to_json),
+        confirm_external_code: true,
+      },
+      "discourse_sync_remote_theme" => {
+        theme_id: theme.id,
+        action: "check",
+      },
+      "discourse_upload_theme_asset" => {
+        filename: "logo.png",
+        file_data: Base64.strict_encode64(File.binread(file_from_fixtures("logo.png"))),
+      },
+    }
+    requests.each do |name, arguments|
+      io = StringIO.new
+      Scheduler::Defer.capture_later do
+        call_tool(name, arguments, { "rack.hijack" => -> { io } })
+        expect(response.status).to eq(418)
+        expect(io.string).to be_empty
+      end
+      expect(io.string).to start_with("HTTP/1.1 200")
+      result = JSON.parse(io.string.split("\r\n\r\n", 2).last).fetch("result")
+      expect(result["isError"]).to eq(name == "discourse_sync_remote_theme"), "#{name}: #{result}"
+    end
+  end
+
+  it "refuses to queue a disabled tool or a call without its scope" do
+    authorize
+    primitive =
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_install_theme", enabled: false)
+    arguments = {
+      remote_url: "https://example.com/theme.git",
+      confirm_external_code: true,
+      confirm_run_migrations: true,
+    }
+    io = StringIO.new
+    Scheduler::Defer.capture_later do
+      call_tool("discourse_install_theme", arguments, { "rack.hijack" => -> { io } })
+      expect(response.status).to eq(400)
+      expect(io.string).to be_empty
+    end
+    primitive.update!(enabled: true)
+    authorize(admin, scopes: [])
+    Scheduler::Defer.capture_later do
+      call_tool("discourse_install_theme", arguments, { "rack.hijack" => -> { io } })
+      expect(response.status).to eq(403)
+      expect(io.string).to be_empty
+    end
   end
 
   it "imports archives with uppercase extensions and tar-gzip aliases" do
@@ -352,6 +408,96 @@ describe "MCP theme administration" do
     call_tool("discourse_list_themes", { limit: 101 })
     expect(response.status).to eq(400)
     expect(response.parsed_body.dig("error", "code")).to eq(-32_602)
+  end
+
+  it "rejects values that do not match the declared setting type" do
+    theme.set_field(target: :settings, name: "yaml", value: "count: 3\nshow_heading: true\n")
+    theme.save!
+    authorize
+
+    { "count" => true, "show_heading" => 1 }.each do |name, value|
+      call_tool(
+        "discourse_update_theme_setting",
+        theme_id: theme.id,
+        name:,
+        operation: "set",
+        value:,
+      )
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    end
+    expect(theme.reload.cached_settings).to include(count: 3, show_heading: true)
+
+    call_tool(
+      "discourse_update_theme_setting",
+      theme_id: theme.id,
+      name: "count",
+      operation: "set",
+      value: 4,
+    )
+    expect(response.parsed_body.dig("result", "isError")).to eq(false)
+    expect(theme.reload.cached_settings[:count]).to eq(4)
+  end
+
+  it "updates system theme settings and translations with the required scope and permissions" do
+    SystemThemesManager.sync_theme!("horizon")
+    horizon = Theme.find(-2)
+    authorize
+    call_tool(
+      "discourse_update_theme_setting",
+      theme_id: horizon.id,
+      name: "topic_card_high_context",
+      operation: "set",
+      value: false,
+    )
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "isError")).to eq(false)
+    expect(horizon.reload.cached_settings[:topic_card_high_context]).to eq(false)
+
+    call_tool(
+      "discourse_update_theme_translations",
+      theme_id: horizon.id,
+      expected_name: horizon.name,
+      locale: "en",
+      translations: {
+        "solved" => "Solved 猫",
+      },
+    )
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "isError")).to eq(false)
+    expect(horizon.reload.translations.find { |entry| entry.key == "solved" }.value).to eq(
+      "Solved 猫",
+    )
+  end
+
+  it "denies system theme updates without scope or administrator access" do
+    SystemThemesManager.sync_theme!("horizon")
+    horizon = Theme.find(-2)
+    [[admin, []], [moderator, %w[mcp:themes:write]]].each do |actor, scopes|
+      authorize(actor, scopes:)
+      call_tool(
+        "discourse_update_theme_setting",
+        theme_id: horizon.id,
+        name: "topic_card_high_context",
+        operation: "set",
+        value: false,
+      )
+      expect(response.status).to eq(403)
+      call_tool(
+        "discourse_update_theme_translations",
+        theme_id: horizon.id,
+        expected_name: horizon.name,
+        locale: "en",
+        translations: {
+          "solved" => "Forbidden",
+        },
+      )
+      expect(response.status).to eq(403)
+    end
+    expect(horizon.reload.cached_settings[:topic_card_high_context]).to eq(true)
+    expect(horizon.reload.translations.find { |entry| entry.key == "solved" }.value).not_to eq(
+      "Forbidden",
+    )
   end
 
   it "sets object settings as arrays and restores their declared default" do

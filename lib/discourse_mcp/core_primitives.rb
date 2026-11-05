@@ -1850,6 +1850,7 @@ module DiscourseMcp
         description:
           "Installs executable theme code from exactly one repository URL or base64 archive. Requires administrator access and confirmation. Repository installs always run migrations and require confirm_run_migrations. Archive migrations are opt-in. Archive component imports default to none; merge and sync require run_migrations and confirm_run_migrations. Only archives can replace an existing theme; confirm its current name before replacement. Returns a theme summary without source code and reports any archive components that could not be imported.",
         implementation: Tools::InstallTheme,
+        defer: true,
         input_schema:
           object_schema(
             {
@@ -1884,6 +1885,7 @@ module DiscourseMcp
         description:
           "Checks a theme repository for updates or installs its latest code. Requires edit permission. Updating runs migrations and requires both code and migration confirmation. Checking also updates stored remote-version metadata. Returns a theme summary. When completing a pending installation, also reports skipped components with their errors.",
         implementation: Tools::SyncRemoteTheme,
+        defer: true,
         input_schema:
           object_schema(
             {
@@ -1912,6 +1914,7 @@ module DiscourseMcp
         description:
           "Uploads base64 asset data for use in a theme. Requires administrator access. Returns an unattached upload ID; use discourse_update_theme to attach it to a theme field. Site upload and MCP request-size limits apply.",
         implementation: Tools::UploadThemeAsset,
+        defer: true,
         input_schema:
           object_schema({ filename:, file_data: encoded_file }, required: %w[filename file_data]),
         annotations: WRITE,
@@ -1927,7 +1930,9 @@ module DiscourseMcp
         input_schema:
           object_schema(
             {
-              theme_id:,
+              theme_id: {
+                type: "integer",
+              },
               name:,
               operation: {
                 type: "string",
@@ -1958,7 +1963,9 @@ module DiscourseMcp
         input_schema:
           object_schema(
             {
-              theme_id:,
+              theme_id: {
+                type: "integer",
+              },
               expected_name: name,
               locale: {
                 type: "string",

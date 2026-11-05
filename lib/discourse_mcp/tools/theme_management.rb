@@ -249,7 +249,6 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
         theme = ThemeManagementSupport.find!(guardian, arguments.fetch("theme_id"))
-        raise Discourse::InvalidAccess if theme.system?
         name = arguments.fetch("name")
         setting = theme.settings[name.to_sym]
         raise Discourse::NotFound unless setting
@@ -264,8 +263,19 @@ module DiscourseMcp
             raise ToolError, I18n.t("mcp.errors.theme_setting_value_invalid")
           end
           value = arguments["value"]
-          if value.is_a?(Array) && setting.type_name != :objects
-            raise ToolError, I18n.t("mcp.errors.theme_setting_value_invalid")
+          value = JSON.parse(value) if setting.type_name == :objects && value.is_a?(String)
+          valid_type =
+            case setting.type_name
+            when :string
+              value.is_a?(String)
+            when :upload
+              value.is_a?(String) || value.is_a?(Integer)
+            else
+              ThemeSettingsValidator.is_valid_value_type?(value, setting.type)
+            end
+          unless valid_type
+            raise ToolError,
+                  I18n.t("mcp.errors.theme_setting_type_invalid", name:, type: setting.type_name)
           end
         end
         ThemeSettingUpdater.update(guardian, theme, name, value)
@@ -293,7 +303,6 @@ module DiscourseMcp
         end
         I18n.with_locale(locale) do
           theme = ThemeManagementSupport.find!(guardian, arguments.fetch("theme_id"))
-          raise Discourse::InvalidAccess if theme.system?
           ThemeManagementSupport.check_name!(theme, arguments.fetch("expected_name"))
           original = ThemeSerializer.new(theme, root: false).to_json
           ::Theme.transaction do

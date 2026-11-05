@@ -38,6 +38,37 @@ class McpController < ApplicationController
     end
 
     payload = JSON.parse(raw_payload)
+    if deferred_tool_call?(payload, request_context)
+      hijack { render_mcp_response(payload) }
+    else
+      render_mcp_response(payload, request_context:)
+    end
+  rescue RateLimiter::LimitExceeded => error
+    render_rate_limit_error(error, request_context)
+  rescue JSON::ParserError
+    render json: jsonrpc_error(nil, -32_700, "Parse error"), status: :bad_request
+  rescue DiscourseMcp::AuthenticationError => error
+    render_authentication_error(error)
+  end
+
+  def method_not_allowed
+    head :method_not_allowed, allow: "POST"
+  end
+
+  private
+
+  def deferred_tool_call?(payload, request_context)
+    return false unless payload.is_a?(Hash) && payload["method"] == "tools/call"
+    params = payload["params"]
+    return false unless params.is_a?(Hash) && params["name"].is_a?(String)
+
+    primitive = DiscourseMcp.registry.find(:tool, params["name"])
+    primitive&.deferred? &&
+      DiscourseMcp::Catalog.new(request_context:).find(:tool, primitive.identifier).present?
+  end
+
+  def render_mcp_response(payload, request_context: nil)
+    request_context ||= DiscourseMcp::Authenticator.new(request).authenticate!
     mcp_response =
       DiscourseMcp::Server.new(request: request, request_context: request_context).call(payload)
     mcp_response.headers.each { |name, value| response.set_header(name, value) }
@@ -53,24 +84,24 @@ class McpController < ApplicationController
 
     render json: encoded_response, status: mcp_response.http_status
   rescue RateLimiter::LimitExceeded => error
+    render_rate_limit_error(error, request_context)
+  rescue DiscourseMcp::AuthenticationError => error
+    render_authentication_error(error)
+  end
+
+  def render_rate_limit_error(error, request_context)
     record_rate_limited_audit(request_context)
     response.set_header("Retry-After", error.available_in.to_s)
     render json: jsonrpc_error(nil, -32_000, "Rate limit exceeded"), status: :too_many_requests
-  rescue JSON::ParserError
-    render json: jsonrpc_error(nil, -32_700, "Parse error"), status: :bad_request
-  rescue DiscourseMcp::AuthenticationError => error
+  end
+
+  def render_authentication_error(error)
     response.set_header(
       "WWW-Authenticate",
       DiscourseMcp::Authenticator.challenge(error: error.oauth_error),
     )
     render json: jsonrpc_error(nil, -32_001, "Authorization required"), status: :unauthorized
   end
-
-  def method_not_allowed
-    head :method_not_allowed, allow: "POST"
-  end
-
-  private
 
   def enforce_rate_limits!(request_context)
     limit = SiteSetting.mcp_global_rate_limit_per_minute

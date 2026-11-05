@@ -149,6 +149,7 @@ en:
       theme_not_remote: "The theme does not have a Git repository"
       theme_remote_mismatch: "The repository URL has changed. Read the theme again before proceeding"
       theme_setting_value_invalid: "Provide a value when setting a theme setting and omit it when reverting"
+      theme_setting_type_invalid: "Theme setting %{name} requires a value of type %{type}"
       theme_setting_not_found: "The theme does not declare this setting"
       theme_translation_not_found: "The theme does not declare one or more translation keys"
       topic_not_found: "Topic not found"
