@@ -64,6 +64,37 @@ RSpec.describe Jobs::PollMailbox do
         )
       end
 
+      it "clears the pop3 auth error admin notice after a subsequent successful poll" do
+        Net::POP3.any_instance.expects(:start).raises(Net::POPAuthenticationError.new).at_least_once
+
+        poller.poll_pop3
+
+        expect(AdminNotice.find_by(identifier: "poll_pop3_auth_error")).to be_present
+
+        Net::POP3.any_instance.unstub(:start)
+        Net::POP3.any_instance.stubs(:start)
+
+        poller.poll_pop3
+
+        expect(AdminNotice.find_by(identifier: "poll_pop3_auth_error")).to be_nil
+      end
+
+      it "clears the pop3 timeout admin notice after a subsequent successful poll" do
+        Net::POP3.any_instance.expects(:start).raises(Net::OpenTimeout.new).at_least_once
+
+        4.times { poller.poll_pop3 }
+
+        expect(AdminNotice.find_by(identifier: "poll_pop3_timeout")).to be_present
+
+        Net::POP3.any_instance.unstub(:start)
+        Net::POP3.any_instance.stubs(:start)
+
+        poller.poll_pop3
+
+        expect(AdminNotice.find_by(identifier: "poll_pop3_timeout")).to be_nil
+        expect(Discourse.redis.get(Jobs::PollMailbox::POLL_MAILBOX_TIMEOUT_ERROR_KEY)).to be_nil
+      end
+
       it "logs an error when pop fails and continues with next message" do
         mail1 = Net::POPMail.new(1, nil, nil, nil)
         mail2 = Net::POPMail.new(2, nil, nil, nil)
