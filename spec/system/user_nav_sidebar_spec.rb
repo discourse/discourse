@@ -40,10 +40,10 @@ RSpec.describe "User nav sidebar" do
     visit("/u/alice/activity")
     expect(page).to have_css(panel)
 
-    visit("/u/alice/preferences/account")
+    navigate_to("/u/alice/preferences/account")
     expect(page).to have_css(panel)
 
-    visit("/latest")
+    navigate_to("/latest")
 
     expect(page).to have_no_css(panel)
     expect(page).to have_css("#d-sidebar .sidebar-section-wrapper")

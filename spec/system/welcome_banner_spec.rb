@@ -87,15 +87,15 @@ describe "Welcome banner" do
       topic = Fabricate(:topic)
       visit "/"
       expect(banner).to be_visible
-      visit "/latest"
+      navigate_to "/latest"
       expect(banner).to be_visible
-      visit "/new"
+      navigate_to "/new"
       expect(banner).to be_visible
-      visit "/hot"
+      navigate_to "/hot"
       expect(banner).to be_visible
-      visit "/tags"
+      navigate_to "/tags"
       expect(banner).to be_hidden
-      visit topic.relative_url
+      navigate_to topic.relative_url
       expect(banner).to be_hidden
     end
 

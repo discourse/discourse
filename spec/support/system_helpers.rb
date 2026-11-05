@@ -63,6 +63,20 @@ module SystemHelpers
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
+  # Use after the first visit when the example does not need fresh boot-time state.
+  def navigate_to(path)
+    page.execute_script("require('discourse/lib/url').default.routeTo(arguments[0]);", path)
+    expect(page).to have_current_path(path)
+
+    result = page.evaluate_async_script(<<~JS)
+      const done = arguments[0];
+      window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+        .then(done)
+        .catch(error => done(error.message));
+    JS
+    raise result if result.is_a?(String)
+  end
+
   def setup_system_test
     # `time:` freezes Ruby and the page's JavaScript clock, but not the browser's cookie-store
     # clock. Persistent cookies use an absolute expiry based on Ruby time, so historical examples
