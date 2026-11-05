@@ -58,4 +58,50 @@ RSpec.describe Group do
       expect(group.can_show_assigned_tab?).to eq(true)
     end
   end
+
+  describe "#remove" do
+    fab!(:member, :user)
+    fab!(:other_member, :user)
+    fab!(:topic, :topic_with_op)
+
+    before { SiteSetting.assign_allow_multiple_topic_assignees = true }
+
+    it "preserves direct responsibility and the other group member's notification" do
+      group.add(member)
+      group.add(other_member)
+      group_assignment = Fabricate(:topic_assignment, topic: topic, assigned_to: group)
+      direct_assignment = Fabricate(:topic_assignment, topic: topic, assigned_to: member)
+      group_assignment.create_missing_notifications!
+      notification = member.notifications.assigned.find_by!(topic: topic)
+      notification.update!(read: true)
+
+      group.remove(member)
+
+      expect(notification.reload).to be_read
+      expect(notification.data_hash[:assignment_id]).to eq(direct_assignment.id)
+      expect(other_member.notifications.for_assignment(group_assignment).count).to eq(1)
+    end
+  end
+
+  describe "#destroy!" do
+    fab!(:member, :user)
+    fab!(:topic, :topic_with_op)
+
+    before { SiteSetting.assign_allow_multiple_topic_assignees = true }
+
+    it "preserves the notification for a surviving direct assignment" do
+      group.add(member)
+      group_assignment = Fabricate(:topic_assignment, topic: topic, assigned_to: group)
+      direct_assignment = Fabricate(:topic_assignment, topic: topic, assigned_to: member)
+      group_assignment.create_missing_notifications!
+      notification = member.notifications.assigned.find_by!(topic: topic)
+      notification.update!(read: true)
+
+      group.destroy!
+
+      expect(notification.reload).to be_read
+      expect(notification.data_hash[:assignment_id]).to eq(direct_assignment.id)
+      expect(member.notifications.assigned.where(topic: topic).count).to eq(1)
+    end
+  end
 end

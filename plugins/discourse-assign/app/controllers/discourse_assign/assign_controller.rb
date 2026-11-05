@@ -9,6 +9,55 @@ module DiscourseAssign
 
     before_action :ensure_logged_in, :ensure_assign_allowed
 
+    def topic_assignments
+      topic = assignment_topic
+      render json: assignment_editor_payload(topic)
+    end
+
+    def replace_topic_assignments
+      topic = assignment_topic
+      entries = params.permit(assignments: %i[id username group_name note status])[:assignments]
+      raise Discourse::InvalidParameters.new(:assignments) unless entries.is_a?(Array)
+      replace_assignments(topic, entries.map(&:to_h), params.require(:expected_version))
+    end
+
+    def add_topic_assignment
+      topic = assignment_topic
+      version = Assignment.version_for(topic)
+      entries = assignment_entries(topic)
+      entries << params.permit(:username, :group_name, :note, :status).to_h
+      replace_assignments(topic, entries, version, status: :created)
+    end
+
+    def update_assignment
+      assignment = Assignment.find(params.require(:id))
+      raise Discourse::InvalidParameters if assignment.target_type != "Topic"
+      topic = assignment.topic
+      raise Discourse::NotFound unless guardian.can_see?(topic)
+      guardian.ensure_can_assign!(topic)
+      version = Assignment.version_for(topic)
+      entries = assignment_entries(topic)
+      entry = entries.find { |row| row[:id] == assignment.id }
+      raise Discourse::NotFound unless entry
+      entry.merge!(params.permit(:note, :status).to_h.symbolize_keys)
+      replace_assignments(topic, entries, version)
+    end
+
+    def remove_assignment
+      assignment = Assignment.find(params.require(:id))
+      target = assignment.target
+      raise Discourse::NotFound unless target && guardian.can_see?(target)
+      guardian.ensure_can_assign!(target)
+      if target.is_a?(Post) || !assignment.active
+        Assigner.new(target, current_user, assignment:).unassign
+        head :no_content
+      else
+        version = Assignment.version_for(target)
+        entries = assignment_entries(target).reject { |row| row[:id] == assignment.id }
+        replace_assignments(target, entries, version, status: :no_content)
+      end
+    end
+
     def suggestions
       target = optional_assignable_target
 
@@ -81,32 +130,24 @@ module DiscourseAssign
           .joins(
             "JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic' AND a.assigned_to_id IS NOT NULL",
           )
-          .order("a.assigned_to_id, topics.bumped_at desc")
+          .group("topics.id")
+          .order("MIN(a.assigned_to_id), topics.bumped_at desc")
           .offset(offset)
           .limit(limit)
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
-      topic_assignments =
+      assignments =
         Assignment
-          .where(target_id: topics.map(&:id), target_type: "Topic", active: true)
-          .pluck(:target_id, :assigned_to_id)
-          .to_h
-
-      users =
-        User
-          .where("users.id IN (?)", topic_assignments.values.uniq)
-          .joins("join user_emails on user_emails.user_id = users.id AND user_emails.primary")
-          .select(UserLookup.lookup_columns)
-          .to_a
-
-      User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
-
-      users_map = users.index_by(&:id)
-
+          .active
+          .where(target_type: "Topic", target_id: topics.map(&:id))
+          .order(:id)
+          .includes(:assigned_to)
+          .group_by(&:target_id)
       topics.each do |topic|
-        user_id = topic_assignments[topic.id]
-        topic.preload_assigned_to(users_map[user_id]) if user_id
+        rows = assignments.fetch(topic.id, [])
+        topic.preload_topic_assignments(rows)
+        topic.preload_assigned_to(rows.first&.assigned_to)
       end
 
       render json: { topics: serialize_data(topics, AssignedTopicSerializer) }
@@ -161,6 +202,73 @@ module DiscourseAssign
 
     private
 
+    def assignment_topic
+      topic = Topic.find(params.require(:topic_id))
+      raise Discourse::NotFound unless guardian.can_see?(topic)
+      guardian.ensure_can_assign!(topic)
+      topic
+    end
+
+    def assignment_entries(topic)
+      topic.active_topic_assignments.map do |assignment|
+        {
+          id: assignment.id,
+          username: assignment.assigned_to_user? ? assignment.assigned_to.username : nil,
+          group_name: assignment.assigned_to_group? ? assignment.assigned_to.name : nil,
+          note: assignment.note,
+          status: assignment.status,
+        }
+      end
+    end
+
+    def assignment_editor_payload(topic)
+      topic.with_lock do
+        topic.reset_assignment_cache
+        topic.preload_topic_assignments(
+          Assignment.where(target: topic).order(:id).includes(:assigned_to).to_a,
+        )
+        {
+          topic_assignments: serialize_data(topic.active_topic_assignments, AssignmentSerializer),
+          version: Assignment.version_for(topic),
+          max_assignments: SiteSetting.assign_max_assignments_per_topic,
+          active_post_assignments: Assignment.active.where(topic:, target_type: "Post").count,
+          can_add_multiple:
+            SiteSetting.assign_allow_multiple_topic_assignees &&
+              Assignment.multiple_assignments_ready?,
+        }
+      end
+    end
+
+    def replace_assignments(topic, entries, version, status: :ok)
+      Assignments::Replace.call(
+        **service_params.deep_merge(
+          params: {
+            topic_id: topic.id,
+            assignments: entries,
+            expected_version: version,
+          },
+        ),
+      ) do
+        on_success do
+          if status == :no_content
+            head :no_content
+          else
+            render json: assignment_editor_payload(topic.reload), status:
+          end
+        end
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_assign) { raise Discourse::InvalidAccess }
+        on_failed_step(:replace_assignments) do |step|
+          failure = step.error
+          render json: {
+                   error: Assigner.failure_message(failure[:reason], failure[:assignee]),
+                 },
+                 status: failure[:reason] == :stale_assignments ? :conflict : :bad_request
+        end
+      end
+    end
+
     def ensure_assign_allowed
       raise Discourse::InvalidAccess.new unless current_user.can_assign?
     end
@@ -203,6 +311,8 @@ module DiscourseAssign
             SELECT assigned_to_id user_id, MAX(created_at) last_assigned
             FROM assignments
             WHERE assignments.assigned_to_type = 'User'
+              AND assignments.target_type = 'Topic'
+              AND assignments.active
             GROUP BY assigned_to_id
             HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
           ) as X ON X.user_id = users.id

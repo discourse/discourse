@@ -20,6 +20,7 @@ import {
 import { extendTopicModel } from "../models/topic.js";
 
 const DEPENDENT_KEYS = [
+  "topic.topic_assignments",
   "topic.assigned_to_user",
   "topic.assigned_to_group",
   "topic.can_assign",
@@ -135,7 +136,14 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return canAssignTopic(this) && this.site.mobileView;
+      return (
+        canAssignTopic(this) &&
+        this.site.mobileView &&
+        !(
+          this.siteSettings.assign_allow_multiple_topic_assignees ||
+          this.topic.topic_assignments?.length > 1
+        )
+      );
     },
   });
 
@@ -176,7 +184,13 @@ function registerTopicFooterButtons(api) {
     displayed() {
       // only display the button in the mobile view
       return (
-        canAssignTopic(this) && this.site.mobileView && this.topic.isAssigned()
+        canAssignTopic(this) &&
+        this.site.mobileView &&
+        !(
+          this.siteSettings.assign_allow_multiple_topic_assignees ||
+          this.topic.topic_assignments?.length > 1
+        ) &&
+        this.topic.isAssigned()
       );
     },
   });
@@ -264,7 +278,14 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return canAssignTopic(this) && this.site.mobileView;
+      return (
+        canAssignTopic(this) &&
+        this.site.mobileView &&
+        !(
+          this.siteSettings.assign_allow_multiple_topic_assignees ||
+          this.topic.topic_assignments?.length > 1
+        )
+      );
     },
   });
 }
@@ -320,6 +341,7 @@ function initialize(api) {
       : {}
   );
 
+  api.addModelField("bookmark", "topic_assignments");
   api.addModelGetter("bookmark", "assignedToUserPath", function () {
     return assignedToUserPath(this.assigned_to_user);
   });
@@ -357,10 +379,13 @@ function initialize(api) {
       )
     );
 
-    const topicAssignee = {
-      assignee: assignedToUser || assignedToGroup,
-      note: topicNote,
-    };
+    const topicAssignees =
+      topic.topic_assignments !== undefined
+        ? topic.topic_assignments.map((assignment) => ({
+            assignee: assignment.assigned_to,
+            note: assignment.note,
+          }))
+        : [{ assignee: assignedToUser || assignedToGroup, note: topicNote }];
 
     let assignedToIndirectly;
     if (topic.indirectly_assigned_to) {
@@ -375,7 +400,7 @@ function initialize(api) {
     }
     const assignedTo = []
       .concat(
-        topicAssignee,
+        topicAssignees,
         assignedToIndirectly.map((assigned) => ({
           assignee: assigned.assigned_to,
           note: assigned.assignment_note,
@@ -426,11 +451,21 @@ function initialize(api) {
         subscribe() {
           super.subscribe(...arguments);
 
-          this.messageBus.subscribe("/staff/topic-assignment", (data) => {
+          this.messageBus.subscribe("/staff/topic-assignment", async (data) => {
             const topic = this.model;
             const topicId = topic.id;
 
             if (data.topic_id === topicId) {
+              if (
+                data.type === "changed" ||
+                (!data.post_id && topic.topic_assignments !== undefined)
+              ) {
+                await getOwner(this)
+                  .lookup("service:task-actions")
+                  .refreshTopicAssignments(topic);
+                this.appEvents.trigger("header:update-topic", topic);
+                return;
+              }
               let post;
               if (data.post_id) {
                 post = topic.postStream.posts.find(

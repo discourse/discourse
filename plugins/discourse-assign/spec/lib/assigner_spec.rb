@@ -98,6 +98,14 @@ RSpec.describe Assigner do
       }.by(-1).and change { moderator_2.notifications.count }.by(1)
     end
 
+    it "records singleton reassignment without separate unassignment activity" do
+      described_class.new(topic, admin).assign(moderator)
+
+      expect { described_class.new(topic, admin).assign(moderator_2) }.to change {
+        topic.posts.where(action_code: "reassigned").count
+      }.by(1).and not_change { topic.posts.where(action_code: "unassigned").count }
+    end
+
     it "can assign with note" do
       assigner.assign(moderator, note: "tomtom best mom")
 
@@ -335,6 +343,8 @@ RSpec.describe Assigner do
     end
 
     describe "forbidden reasons" do
+      before { SiteSetting.assign_max_assignments_per_topic = 5 }
+
       it "doesn't assign if the topic has more than 5 assignments" do
         other_post = nil
 
@@ -342,7 +352,7 @@ RSpec.describe Assigner do
         expect(status[:success]).to eq(true)
 
         # Assign many posts to reach the limit
-        1.upto(described_class::ASSIGNMENTS_PER_TOPIC_LIMIT - 1) do
+        1.upto(SiteSetting.assign_max_assignments_per_topic - 1) do
           other_post = Fabricate(:post, topic: topic)
           user = Fabricate(:moderator)
           status = described_class.new(other_post, admin).assign(user)
@@ -421,7 +431,7 @@ RSpec.describe Assigner do
 
       it "reassigns a post even when at the assignments limit" do
         posts =
-          described_class::ASSIGNMENTS_PER_TOPIC_LIMIT.times.map { Fabricate(:post, topic: topic) }
+          SiteSetting.assign_max_assignments_per_topic.times.map { Fabricate(:post, topic: topic) }
 
         posts.each do |post|
           user = Fabricate(:moderator)
@@ -967,9 +977,16 @@ RSpec.describe Assigner do
     end
 
     it "invites user to the PM" do
-      user = Fabricate(:user)
+      user = Fabricate(:moderator)
       assigner.assign(user)
       expect(topic.allowed_users).to include(user)
+    end
+
+    it "keeps an ineligible user outside the PM when assignment fails" do
+      user = Fabricate(:user)
+
+      expect(assigner.assign(user)).to eq(success: false, reason: :forbidden_assign_to)
+      expect(topic.allowed_users.reload).not_to include(user)
     end
 
     it "doesn't invite user to the PM when already a member of an allowed group" do

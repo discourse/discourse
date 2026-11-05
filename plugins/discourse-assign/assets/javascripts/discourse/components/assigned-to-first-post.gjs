@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { bind } from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
@@ -18,12 +19,38 @@ export default class AssignedToFirstPost extends Component {
     return this.args.post?.topic?.assigned_to_user;
   }
 
+  get topicAssignments() {
+    const assignments = this.args.post?.topic?.topic_assignments;
+    if (
+      !this.siteSettings.assign_allow_multiple_topic_assignees &&
+      !(assignments?.length > 1)
+    ) {
+      return;
+    }
+    return assignments?.map((assignment) => ({
+      ...assignment,
+      path:
+        assignment.assigned_to_type === "User"
+          ? assignedToUserPath(assignment.assigned_to)
+          : assignedToGroupPath(assignment.assigned_to),
+    }));
+  }
+
+  get hasNotes() {
+    return this.topicAssignments?.some((assignment) => assignment.note);
+  }
+
   get assignedToGroup() {
     return this.args.post?.topic?.assigned_to_group;
   }
 
   get icon() {
-    return this.assignedToUser ? "user-plus" : "group-plus";
+    return this.assignedToUser ||
+      this.topicAssignments?.some(
+        (assignment) => assignment.assigned_to_type === "User"
+      )
+      ? "user-plus"
+      : "group-plus";
   }
 
   get indirectlyAssignedTo() {
@@ -53,6 +80,7 @@ export default class AssignedToFirstPost extends Component {
 
   get isAssigned() {
     return !!(
+      this.topicAssignments?.length ||
       this.assignedToUser ||
       this.assignedToGroup ||
       this.hasIndirectAssignments
@@ -80,8 +108,40 @@ export default class AssignedToFirstPost extends Component {
   <template>
     {{#if this.isAssigned}}
       <p class="assigned-to">
-        {{dIcon this.icon}}
-        {{#if this.assignedToUser}}
+        {{#unless this.topicAssignments.length}}{{dIcon this.icon}}{{/unless}}
+        {{#if this.topicAssignments.length}}
+          <span class="assigned-to__label">
+            {{dIcon this.icon}}
+            {{i18n "discourse_assign.assigned_topic_label"}}
+          </span>
+          <span
+            class={{if
+              this.hasNotes
+              "assigned-to__assignments --with-notes"
+              "assigned-to__assignments"
+            }}
+          >
+            {{#each this.topicAssignments key="id" as |assignment|}}
+              <span class="assigned-to__assignment">
+                <a class="assigned-to__assignee" href={{assignment.path}}>
+                  {{#if (eq assignment.assigned_to_type "User")}}
+                    {{dAvatar assignment.assigned_to imageSize="small"}}
+                    <span>@{{assignment.assigned_to.username}}</span>
+                  {{else}}
+                    {{dIcon "group-plus"}}
+                    <span>@{{assignment.assigned_to.name}}</span>
+                  {{/if}}
+                </a>
+                {{#if assignment.status}}<span
+                    class="assigned-to__status"
+                  >{{assignment.status}}</span>{{/if}}
+                {{#if assignment.note}}<span
+                    class="assigned-to__note"
+                  >{{assignment.note}}</span>{{/if}}
+              </span>
+            {{/each}}
+          </span>
+        {{else if this.assignedToUser}}
           <span class="assignee">
             <span class="assigned-to--user">
               {{trustHTML
@@ -97,7 +157,7 @@ export default class AssignedToFirstPost extends Component {
           </span>
         {{/if}}
 
-        {{#if this.assignedToGroup}}
+        {{#if (and (not this.topicAssignments.length) this.assignedToGroup)}}
           <span class="assignee">
             <span class="assigned-to--group">
               {{trustHTML

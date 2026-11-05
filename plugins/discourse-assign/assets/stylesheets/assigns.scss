@@ -11,6 +11,55 @@
 }
 
 .assigned-to {
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    color: var(--primary-high);
+    margin-block-end: 0.65em;
+  }
+
+  &__assignments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75em 1.25em;
+
+    &.--with-notes {
+      flex-direction: column;
+    }
+  }
+
+  &__assignment {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  &__assignee {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    overflow-wrap: anywhere;
+  }
+
+  &__note {
+    display: block;
+    flex-basis: 100%;
+    margin-inline-start: 2.5em;
+    padding: 0.5em 0.75em;
+    border-inline-start: 2px solid var(--primary-low);
+    background: var(--primary-very-low);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  &__status {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
   .d-icon,
   i.fa {
     margin-right: 0.25em;
@@ -25,6 +74,44 @@
     padding-left: 0.3em;
     padding-right: 0.3em;
     vertical-align: middle;
+  }
+}
+
+.topic-assignments-editor {
+  &__row {
+    padding-block: 0.75em;
+    border-block-end: 1px solid var(--primary-low);
+    min-width: 0;
+  }
+
+  &__person {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+
+  &__note-action {
+    margin-inline-start: auto;
+  }
+
+  &__note {
+    display: block;
+    margin-block-start: 0.5em;
+    color: var(--primary-high);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+.assignment-avatars {
+  display: inline-flex;
+  align-items: center;
+
+  .avatar + .avatar {
+    margin-inline-start: -0.4em;
+    outline: 2px solid var(--secondary);
   }
 }
 

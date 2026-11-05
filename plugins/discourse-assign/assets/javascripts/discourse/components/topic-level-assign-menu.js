@@ -7,6 +7,7 @@ import { i18n } from "discourse-i18n";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments.gjs";
 
 const DEPENDENT_KEYS = [
+  "topic.topic_assignments",
   "topic.assigned_to_user",
   "topic.assigned_to_group",
   "topic.can_assign",
@@ -55,6 +56,13 @@ export default {
         break;
       }
       default: {
+        if (id.startsWith("unassign-assignment-")) {
+          await taskActions.removeAssignment(
+            id.slice("unassign-assignment-".length),
+            this.topic
+          );
+          break;
+        }
         if (id.startsWith("unassign-from-post-")) {
           const postId = extractPostId(id);
           await taskActions.unassign(postId, "Post");
@@ -70,13 +78,41 @@ export default {
   },
 
   noneItem() {
-    return topicLevelUnassignButton(this.topic.uniqueAssignees());
+    return topicLevelUnassignButton(
+      this.topic.uniqueAssignees(),
+      this.siteSettings.assign_allow_multiple_topic_assignees ||
+        this.topic.topic_assignments?.length > 1
+    );
   },
 
   content() {
     const content = [];
 
-    if (this.topic.isAssigned()) {
+    if (
+      this.siteSettings.assign_allow_multiple_topic_assignees ||
+      this.topic.topic_assignments?.length > 1
+    ) {
+      content.push(
+        ...this.topic.topic_assignments.map((assignment) => {
+          const assignee = assignment.assigned_to;
+          const label = i18n(
+            "discourse_assign.topic_level_menu.unassign_from_topic",
+            {
+              username: escapeExpression(assignee.username || assignee.name),
+            }
+          );
+          const icon =
+            assignment.assigned_to_type === "User"
+              ? avatarHtml(assignee, "small")
+              : iconHTML("group-times");
+          return {
+            id: `unassign-assignment-${assignment.id}`,
+            name: trustHTML(label),
+            label: trustHTML(`${icon} ${label}`),
+          };
+        })
+      );
+    } else if (this.topic.isAssigned()) {
       content.push(
         unassignFromTopicButton(
           this.topic,
@@ -89,7 +125,14 @@ export default {
       content.push(...unassignFromPostButtons(this.topic));
     }
 
-    if (this.topic.isAssigned() && !this.topic.isAssignedTo(this.currentUser)) {
+    if (
+      !(
+        this.siteSettings.assign_allow_multiple_topic_assignees ||
+        this.topic.topic_assignments?.length > 1
+      ) &&
+      this.topic.isAssigned() &&
+      !this.topic.isAssignedTo(this.currentUser)
+    ) {
       content.push(reassignToSelfButton());
     }
 
@@ -101,7 +144,9 @@ export default {
   displayed() {
     return (
       canAssignTopic(this) &&
-      this.site.desktopView &&
+      (this.siteSettings.assign_allow_multiple_topic_assignees ||
+        this.topic.topic_assignments?.length > 1 ||
+        this.site.desktopView) &&
       (this.topic.isAssigned() || this.topic.hasAssignedPosts())
     );
   },
@@ -204,30 +249,24 @@ function unassignFromPostButton(postId, assignment) {
   };
 }
 
-function topicLevelUnassignButton(assignees) {
+function topicLevelUnassignButton(assignees, multiple) {
+  const labelKey = multiple
+    ? "discourse_assign.assigned"
+    : "discourse_assign.topic_level_menu.unassign_with_ellipsis";
   const avatars = topicLevelUnassignButtonAvatars(assignees);
-  const label = `<span class="unassign-label">${i18n(
-    "discourse_assign.topic_level_menu.unassign_with_ellipsis"
-  )}</span>`;
+  const label = `<span class="unassign-label">${i18n(labelKey)}</span>`;
 
   return {
     id: null,
-    name: trustHTML(
-      i18n("discourse_assign.topic_level_menu.unassign_with_ellipsis")
-    ),
+    name: trustHTML(i18n(labelKey)),
     label: trustHTML(`${avatars}${label}`),
   };
 }
 
 function topicLevelUnassignButtonAvatars(assignees) {
   const users = assignees.filter((a) => a.username);
-  let avatars = "";
-  if (users.length === 1) {
-    avatars = avatarHtml(users[0], "tiny");
-  } else if (users.length > 1) {
-    avatars =
-      avatarHtml(users[0], "tiny", "overlap") + avatarHtml(users[1], "tiny");
-  }
-
-  return avatars;
+  return `<span class="assignment-avatars">${users
+    .slice(0, 3)
+    .map((user) => avatarHtml(user, "tiny"))
+    .join("")}</span>`;
 }

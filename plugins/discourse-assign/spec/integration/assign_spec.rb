@@ -213,7 +213,7 @@ describe "integration tests" do
   describe "move post" do
     fab!(:old_topic, :topic)
     fab!(:post) { Fabricate(:post, topic: old_topic) }
-    fab!(:user)
+    fab!(:user, :moderator)
     fab!(:assignment) do
       Assignment.create!(
         target_id: post.id,
@@ -241,6 +241,60 @@ describe "integration tests" do
       expect(assignment.topic_id).to eq(new_topic.id)
       expect(assignment.target_type).to eq("Post")
       expect(assignment.target_id).to eq(post.id)
+    end
+
+    it "keeps a post assignment when its user already has a direct destination assignment" do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      direct_assignment = Fabricate(:topic_assignment, topic: new_topic, assigned_to: user)
+      post.update!(topic: new_topic)
+
+      DiscourseEvent.trigger(:post_moved, post, old_topic.id)
+
+      expect(assignment.reload).to have_attributes(
+        topic_id: new_topic.id,
+        target_type: "Post",
+        target_id: post.id,
+        active: true,
+      )
+      expect(direct_assignment.reload).to be_active
+    end
+
+    it "keeps a post assignment when the destination already has a different assigned group" do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      incoming_group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone])
+      destination_group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone])
+      SiteSetting.assign_allowed_on_groups += "|#{incoming_group.id}|#{destination_group.id}"
+      assignment.update!(assigned_to: incoming_group)
+      direct_assignment =
+        Fabricate(:topic_assignment, topic: new_topic, assigned_to: destination_group)
+      post.update!(topic: new_topic)
+
+      DiscourseEvent.trigger(:post_moved, post, old_topic.id)
+
+      expect(assignment.reload).to have_attributes(
+        topic_id: new_topic.id,
+        target_type: "Post",
+        target_id: post.id,
+        active: true,
+      )
+      expect(direct_assignment.reload.assigned_to).to eq(destination_group)
+    end
+
+    it "retains the moved assignment inactive when the destination is already at capacity" do
+      SiteSetting.assign_allow_multiple_topic_assignees = true
+      SiteSetting.assign_max_assignments_per_topic = 1
+      Fabricate(:topic_assignment, topic: new_topic, assigned_to: Fabricate(:moderator))
+      assignment.update!(note: "Retain the moved notes")
+      post.update!(topic: new_topic)
+
+      DiscourseEvent.trigger(:post_moved, post, old_topic.id)
+
+      expect(assignment.reload).to have_attributes(
+        topic_id: new_topic.id,
+        active: false,
+        note: "Retain the moved notes",
+      )
+      expect(Assignment.active.where(topic: new_topic).count).to eq(1)
     end
   end
 end

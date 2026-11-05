@@ -26,6 +26,21 @@ class Assignment < ActiveRecord::Base
   validate :validate_status, if: -> { SiteSetting.enable_assign_status }
 
   class << self
+    def version_for(topic)
+      Digest::SHA256.hexdigest(
+        where(topic:).order(:id).pluck(:id, :updated_at, :active, :note, :status).to_json,
+      )
+    end
+
+    def multiple_assignments_ready?
+      !connection.index_exists?(
+        :assignments,
+        %i[target_id target_type],
+        name: "index_assignments_on_target_id_and_target_type",
+        unique: true,
+      )
+    end
+
     def valid_type?(type)
       VALID_TYPES.include?(type.downcase)
     end
@@ -43,11 +58,11 @@ class Assignment < ActiveRecord::Base
     end
 
     def deactivate!(topic:)
-      active.where(topic: topic).find_each(&:deactivate!)
+      topic.with_lock { active.where(topic: topic).find_each(&:deactivate!) }
     end
 
     def reactivate!(topic:)
-      inactive.where(topic: topic).find_each(&:reactivate!)
+      topic.with_lock { inactive.where(topic: topic).find_each(&:reactivate!) }
     end
   end
 
@@ -77,32 +92,51 @@ class Assignment < ActiveRecord::Base
   end
 
   def create_missing_notifications!(user_id: nil)
-    assigned_users(user_id:).each do |user|
-      next if user.notifications.for_assignment(self).exists?
-      DiscourseAssign::CreateNotification.call(
-        assignment: self,
-        user: user,
-        mark_as_read: assigned_by_user == user,
-      )
+    return unless active && target && assigned_to
+
+    topic.with_lock do
+      return unless Assignment.active.exists?(id: id)
+      assigned_users(user_id:).each do |user|
+        next if user.notifications.for_assignment(self).where(topic_id:).exists?
+        if target_type == "Topic"
+          direct_ids = Assignment.where(topic_id:, target_type: "Topic").select(:id)
+          next if user.notifications.for_assignment(direct_ids).exists?
+        end
+        DiscourseAssign::CreateNotification.call(
+          assignment: self,
+          user: user,
+          mark_as_read: assigned_by_user == user,
+        )
+      end
     end
   end
 
   def reactivate!
     return unless target
-    update!(active: true)
-    Jobs.enqueue(:assign_notification, assignment_id: id)
-    publish_topic_assignment
+    topic.with_lock do
+      if !active &&
+           Assignment.active.where(topic:).count >= SiteSetting.assign_max_assignments_per_topic
+        return
+      end
+      update!(active: true)
+      ActiveRecord.after_all_transactions_commit do
+        Jobs.enqueue(:assign_notification, assignment_id: id)
+        publish_topic_assignment
+      end
+    end
   end
 
   def deactivate!
     update!(active: false)
-    Jobs.enqueue(
-      :unassign_notification,
-      topic_id: topic_id,
-      assigned_to_id: assigned_to_id,
-      assigned_to_type: assigned_to_type,
-      assignment_id: id,
-    )
+    ActiveRecord.after_all_transactions_commit do
+      Jobs.enqueue(
+        :unassign_notification,
+        topic_id: topic_id,
+        assigned_to_id: assigned_to_id,
+        assigned_to_type: assigned_to_type,
+        assignment_id: id,
+      )
+    end
   end
 
   def publish_topic_assignment
@@ -111,6 +145,15 @@ class Assignment < ActiveRecord::Base
     allowed_user_ids =
       DiscourseAssign::AssignmentPermissions.assignable_user_ids(target || topic).pluck(:id)
     return if allowed_user_ids.blank?
+
+    if target_type == "Topic" && SiteSetting.assign_allow_multiple_topic_assignees
+      MessageBus.publish(
+        "/staff/topic-assignment",
+        { type: "changed", topic_id: },
+        user_ids: allowed_user_ids,
+      )
+      return
+    end
 
     serializer_class = assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
     MessageBus.publish(
@@ -163,7 +206,9 @@ end
 #
 #  index_assignments_on_active                               (active)
 #  index_assignments_on_assigned_to_id_and_assigned_to_type  (assigned_to_id,assigned_to_type)
-#  index_assignments_on_target_id_and_target_type            (target_id,target_type) UNIQUE
+#  index_assignments_on_post_target                          (target_id,target_type) UNIQUE WHERE ((target_type)::text = 'Post'::text)
+#  index_assignments_on_target                               (target_id,target_type)
+#  index_assignments_on_topic_group                          (target_id,target_type) UNIQUE WHERE (((target_type)::text = 'Topic'::text) AND ((assigned_to_type)::text = 'Group'::text))
 #  index_assignments_on_topic_id                             (topic_id)
 #  unique_target_and_assigned                                (assigned_to_id,assigned_to_type,target_id,target_type) UNIQUE
 #

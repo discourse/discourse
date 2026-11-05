@@ -357,7 +357,11 @@ export default class BoardsCard extends Component {
   async unassignTarget(assignment, close) {
     close?.();
     const taskActions = getOwner(this).lookup("service:task-actions");
-    await taskActions.unassign(assignment.target_id, assignment.target_type);
+    if (assignment.id) {
+      await taskActions.removeAssignment(assignment.id);
+    } else {
+      await taskActions.unassign(assignment.target_id, assignment.target_type);
+    }
     this.args.onRefreshBoard?.();
   }
 

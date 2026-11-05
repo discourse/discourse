@@ -32,6 +32,17 @@ module PageObjects
         find("[data-value='reassign']").click
       end
 
+      def has_topic_assignee?(user, note: nil)
+        within("#post_1 .assigned-to") do
+          row = find(".assigned-to__assignment", text: "@#{user.username}")
+          note ? row.has_css?(".assigned-to__note", text: note) : row.has_content?(user.username)
+        end
+      end
+
+      def has_no_topic_assignee?(user)
+        has_no_css?("#post_1 .assigned-to__assignee", text: "@#{user.username}")
+      end
+
       def find_post_assign(post_number)
         within("#post_#{post_number}") { find(".assigned-to") }
       end

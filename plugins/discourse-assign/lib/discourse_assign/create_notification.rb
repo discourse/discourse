@@ -69,22 +69,6 @@ module DiscourseAssign
 
     def call
       return if topic.nil?
-      Assigner.publish_topic_tracking_state(topic, user.id)
-      unless mark_as_read?
-        PostAlerter.new(post).create_notification_alert(
-          user: user,
-          post: post,
-          username: assigned_by_user.username,
-          notification_type: Notification.types[:assigned],
-          excerpt:
-            I18n.t(
-              excerpt_key,
-              title: topic.title,
-              group: assigned_to.name,
-              locale: user.effective_locale,
-            ),
-        )
-      end
       user.notifications.assigned.create!(
         created_at: created_at,
         updated_at: updated_at,
@@ -99,6 +83,24 @@ module DiscourseAssign
           assignment_id: id,
         }.to_json,
       )
+      ActiveRecord.after_all_transactions_commit do
+        Assigner.publish_topic_tracking_state(topic, user.id)
+        unless mark_as_read?
+          PostAlerter.new(post).create_notification_alert(
+            user: user,
+            post: post,
+            username: assigned_by_user.username,
+            notification_type: Notification.types[:assigned],
+            excerpt:
+              I18n.t(
+                excerpt_key,
+                title: topic.title,
+                group: assigned_to.name,
+                locale: user.effective_locale,
+              ),
+          )
+        end
+      end
     end
   end
 end
