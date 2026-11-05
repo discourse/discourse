@@ -206,7 +206,7 @@ RSpec.describe Admin::StaffActionLogsController do
 
       it "hides stored full names when names are disabled" do
         SiteSetting.enable_names = false
-        user.update!(name: "Current Private Name")
+        user.update!(name: "Current Private\nFull Name")
         StaffActionLogger.new(admin).log_user_deletion(user)
         StaffActionLogger.new(admin).log_post_deletion(Fabricate(:post, user: user))
         StaffActionLogger.new(admin).log_name_change(
@@ -218,10 +218,12 @@ RSpec.describe Admin::StaffActionLogsController do
         get "/admin/logs/staff_action_logs.json"
 
         expect(response.status).to eq(200)
-        expect(response.body).not_to include(user.name, "Previous Private Name", "New Private Name")
+        expect(response.body).not_to include("Previous Private Name", "New Private Name")
 
         logs_by_action =
           response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        name_details = logs_by_action.values_at("delete_user", "delete_post").pluck("details").join
+        expect(name_details).not_to include(*user.name.lines(chomp: true))
         expect(logs_by_action["delete_user"]["details"]).to include("username: #{user.username}")
         expect(logs_by_action["delete_post"]["details"]).to include("user: #{user.username}\n")
         expect(logs_by_action["change_name"]).to include(
