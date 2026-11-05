@@ -12,6 +12,11 @@ module DesignWizard
       %w[latest categories] + additional_options.map { |option| option[:id] }
     end
 
+    # a revert has to put back a homepage the wizard doesn't offer as a choice
+    def self.restorable_ids
+      ids | HomepageSiteSetting.choices
+    end
+
     def self.current_settings
       additional_options
         .flat_map { |option| option.fetch(:settings, {}).keys }

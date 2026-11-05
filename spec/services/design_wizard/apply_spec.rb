@@ -65,7 +65,11 @@ RSpec.describe DesignWizard::Apply do
       ).allow_nil
     end
 
-    it { is_expected.to validate_inclusion_of(:homepage).in_array(%w[latest categories]).allow_nil }
+    it do
+      is_expected.to validate_inclusion_of(:homepage).in_array(
+        %w[latest categories new hot top],
+      ).allow_nil
+    end
 
     it do
       is_expected.to validate_inclusion_of(:category_page_style).in_array(

@@ -35,7 +35,11 @@ class DesignWizard::Apply
                 in: BaseFontSetting.values.map { |font| font[:value] },
               },
               allow_blank: true
-    validates :homepage, inclusion: { in: ->(_) { DesignWizard::Homepages.ids } }, allow_blank: true
+    validates :homepage,
+              inclusion: {
+                in: ->(_) { DesignWizard::Homepages.restorable_ids },
+              },
+              allow_blank: true
     validates :category_page_style,
               inclusion: {
                 in: CategoryPageStyle.values.map { |style| style[:value] },

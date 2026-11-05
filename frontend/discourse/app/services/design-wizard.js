@@ -119,6 +119,13 @@ export default class DesignWizardService extends Service {
     ];
   }
 
+  get #restorableHomepages() {
+    return [
+      ...this.#supportedHomepages,
+      ...(this.data?.restorable_homepages ?? []),
+    ];
+  }
+
   get pairs() {
     return this.selectedTheme?.palette_pairs ?? [];
   }
@@ -677,9 +684,8 @@ export default class DesignWizardService extends Service {
       palettes_user_selectable: this.data.palettes_user_selectable,
       base_font: this.data.base_font,
       heading_font: this.data.heading_font,
-      // a homepage the wizard cannot express is left alone rather than replaced
-      // with the one it fell back to
-      homepage: this.#supportedHomepages.includes(this.data.homepage)
+      // one the site can no longer use is left alone rather than failing the revert
+      homepage: this.#restorableHomepages.includes(this.data.homepage)
         ? this.data.homepage
         : null,
       homepage_settings: this.data.homepage_settings,
@@ -728,7 +734,7 @@ export default class DesignWizardService extends Service {
       this.#snapshot.homepage_settings = this.#availableHomepageSettings(
         this.#snapshot.homepage_settings
       );
-      if (!this.#supportedHomepages.includes(this.#snapshot.homepage)) {
+      if (!this.#restorableHomepages.includes(this.#snapshot.homepage)) {
         this.#snapshot.homepage = null;
       }
     }

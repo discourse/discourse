@@ -230,6 +230,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["base_font"]).to eq("lato")
         expect(response.parsed_body["heading_font"]).to eq("merriweather")
         expect(response.parsed_body["homepage"]).to eq("categories")
+        expect(response.parsed_body["restorable_homepages"]).to include("new", "hot")
       end
 
       it "does not include current_theme when the default theme is a core theme" do
@@ -382,6 +383,19 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to be_present
+      end
+
+      it "restores a homepage the wizard does not offer as a choice" do
+        SiteSetting.default_homepage = "categories"
+
+        put "/admin/config/design-wizard.json",
+            params: {
+              theme_id: Theme::CORE_THEMES["horizon"],
+              homepage: "new",
+            }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.default_homepage).to eq("new")
       end
 
       it "returns a 400 with errors for an invalid contract" do

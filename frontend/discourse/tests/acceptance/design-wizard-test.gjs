@@ -942,6 +942,31 @@ acceptance("Design wizard - admin launch", function (needs) {
     );
   });
 
+  test("reverting restores a homepage the wizard does not offer", async function (assert) {
+    wizardData.homepage = "new";
+    wizardData.restorable_homepages = ["latest", "categories", "new", "hot"];
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    await click('[data-homepage="categories"]');
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.saveProgress();
+    assert.strictEqual(savedPayloads.at(-1).homepage, "categories");
+
+    // a theme preview reloads the page, so the snapshot comes back from the store
+    await wizard.start({ resuming: true });
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-danger");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "new",
+      "puts the original homepage back"
+    );
+  });
+
   test("saves a change back from a homepage saved earlier in the run", async function (assert) {
     sinon.stub(DiscourseURL, "redirectTo");
 
