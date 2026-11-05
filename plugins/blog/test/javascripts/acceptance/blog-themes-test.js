@@ -895,6 +895,36 @@ acceptance("Blog themes and identity", function (needs) {
       .hasValue("795ee8", "the copy starts from the preset's design");
   });
 
+  test("New theme starts from Default after customizing another theme", async function (assert) {
+    const builtIn = {
+      ...active,
+      id: "default",
+      name: "Default",
+      revision: 1,
+      preset: true,
+    };
+    const bundled = {
+      ...builtIn,
+      id: "discourse-blog",
+      name: "Discourse Blog",
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({ themes: [builtIn, bundled], active: builtIn })
+    );
+
+    await visit("/admin/plugins/blog/themes");
+    await click(`.theme-card[data-theme-id="discourse-blog"] .customize`);
+    await click('a[href="/admin/plugins/blog/themes"]');
+    await click(".d-page-subheader .btn-primary");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new",
+      "the previous starting point does not stick"
+    );
+    assert.dom("#blog-theme-start-from").hasValue("default");
+  });
+
   test("new themes start from a chosen theme, Default unless picked", async function (assert) {
     const builtIn = {
       ...active,

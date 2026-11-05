@@ -33,4 +33,12 @@ export default class BlogThemesNewRoute extends DiscourseRoute {
       },
     };
   }
+
+  // Query params are sticky, so a later plain "New theme" would otherwise
+  // reuse the last starting point.
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.from = null;
+    }
+  }
 }
