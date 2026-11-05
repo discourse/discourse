@@ -95,6 +95,9 @@ export default class DesignWizardService extends Service {
   #prefetched = false;
   // what the server holds, so a step save only writes choices that differ from it
   #savedSelections;
+  // until the admin or a theme switch picks one, the shown homepage may only be
+  // the fallback for one the wizard can't offer, which must not be saved
+  #homepageChosen = false;
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -226,11 +229,12 @@ export default class DesignWizardService extends Service {
 
   get #homepageChanged() {
     return (
-      this.homepage !== this.#savedSelections.homepage ||
-      !deepEqual(
-        this.homepageSettings ?? {},
-        this.#savedSelections.homepageSettings
-      )
+      this.#homepageChosen &&
+      (this.homepage !== this.#savedSelections.homepage ||
+        !deepEqual(
+          this.homepageSettings ?? {},
+          this.#savedSelections.homepageSettings
+        ))
     );
   }
 
@@ -399,6 +403,7 @@ export default class DesignWizardService extends Service {
       );
 
       this.homepage = homepage;
+      this.#homepageChosen = true;
       this.homepageSettings = {
         ...this.#originalHomepageSettings,
         ...homepageOption?.settings,
@@ -467,6 +472,7 @@ export default class DesignWizardService extends Service {
 
   selectHomepage(homepage) {
     this.homepage = homepage;
+    this.#homepageChosen = true;
     const additionalHomepage = this.additionalHomepages.find(
       ({ id }) => id === homepage
     );
@@ -651,6 +657,7 @@ export default class DesignWizardService extends Service {
     this.#originalSiteSettings = undefined;
     this.#originalHomepageSettings = undefined;
     this.#savedSelections = undefined;
+    this.#homepageChosen = false;
   }
 
   // captured before anything is previewed or saved, from the values the server
@@ -702,6 +709,7 @@ export default class DesignWizardService extends Service {
     this.headingFont = this.data.heading_font;
     this.colorMode = renderedColorMode();
     this.homepage = this.#supportedHomepage(this.data.homepage);
+    this.#homepageChosen = false;
     this.#originalHomepageSettings = this.data.homepage_settings ?? {};
     this.homepageSettings = this.#originalHomepageSettings;
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
@@ -738,6 +746,7 @@ export default class DesignWizardService extends Service {
     this.homepage = this.#supportedHomepage(
       stored.homepage ?? this.data.homepage
     );
+    this.#homepageChosen = stored.homepageChosen ?? false;
     this.homepageSettings = this.#availableHomepageSettings(
       stored.homepageSettings ?? this.data.homepage_settings
     );
@@ -754,7 +763,7 @@ export default class DesignWizardService extends Service {
   // never previewed, so both reflect what the server holds
   #initSavedSelections() {
     this.#savedSelections = {
-      homepage: this.#supportedHomepage(this.data.homepage),
+      homepage: this.data.homepage,
       homepageSettings: this.#availableHomepageSettings(
         this.data.homepage_settings
       ),
@@ -793,6 +802,7 @@ export default class DesignWizardService extends Service {
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
         homepage: this.homepage,
+        homepageChosen: this.#homepageChosen,
         homepageSettings: this.homepageSettings,
         originalHomepageSettings: this.#originalHomepageSettings,
         categoryPageStyle: this.categoryPageStyle,

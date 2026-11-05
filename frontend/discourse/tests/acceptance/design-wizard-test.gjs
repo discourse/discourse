@@ -929,21 +929,37 @@ acceptance("Design wizard - admin launch", function (needs) {
       "saving a step does not replace it with the fallback"
     );
 
-    await click('[data-homepage="categories"]');
+    assert
+      .dom('[data-homepage="topics"]')
+      .hasAttribute("aria-pressed", "true", "shows the fallback as selected");
+    await click('[data-homepage="topics"]');
     const wizard = this.owner.lookup("service:design-wizard");
     await wizard.saveProgress();
     assert.strictEqual(
       savedPayloads.at(-1).homepage,
-      "categories",
-      "saves a chosen homepage"
+      "latest",
+      "explicitly choosing the fallback saves it"
     );
+  });
+
+  test("saves a change back from a homepage saved earlier in the run", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    await click('[data-homepage="categories"]');
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.saveProgress();
+    assert.strictEqual(savedPayloads.at(-1).homepage, "categories");
 
     await click('[data-homepage="topics"]');
     await wizard.saveProgress();
     assert.strictEqual(
       savedPayloads.at(-1).homepage,
       "latest",
-      "saves a change back from a homepage saved earlier in the run"
+      "compares against what was saved, not what the page loaded with"
     );
   });
 
