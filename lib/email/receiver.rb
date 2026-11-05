@@ -558,16 +558,21 @@ module Email
     def extract_from_outlook(doc)
       # Outlook properly identifies the signature and any replied/forwarded email
       # Use their id to remove them and anything that comes after
-      elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
-      to_markdown(doc.to_html, elided.to_html)
+      elided =
+        remove_with_following_siblings(
+          doc,
+          selector: "#Signature, #divRplyFwdMsg",
+          additional_selector: "hr",
+        )
+      to_markdown(doc.to_html, elided)
     end
 
     def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
       signature_start = ".WordSection1 > :not(p):not(ul):not(ol):first-of-type"
-      elided = doc.css("#{signature_start}, #{signature_start} ~ *").remove
-      to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
+      elided = remove_with_following_siblings(doc, selector: signature_start)
+      to_markdown(doc.at(".WordSection1").to_html, elided)
     end
 
     def extract_from_exchange(doc)
@@ -591,26 +596,30 @@ module Email
     def extract_from_apple_mail(doc)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
-      elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
-      to_markdown(doc.to_html, elided.to_html)
+      elided =
+        remove_with_following_siblings(
+          doc,
+          selector: "#AppleMailSignature:last-of-type",
+          include_match: false,
+        )
+      to_markdown(doc.to_html, elided)
     end
 
     def extract_from_mozilla(doc)
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided =
-        doc.css(
-          "*[class^='moz-cite'], *[class^='moz-cite'] ~ *, " \
-            "*[class^='moz-signature'], *[class^='moz-signature'] ~ *, " \
-            "*[class^='moz-forward'], *[class^='moz-forward'] ~ *",
-        ).remove
-      to_markdown(doc.to_html, elided.to_html)
+        remove_with_following_siblings(
+          doc,
+          selector: "*[class^='moz-cite'], *[class^='moz-signature'], *[class^='moz-forward']",
+        )
+      to_markdown(doc.to_html, elided)
     end
 
     def extract_from_protonmail(doc)
       # Removes anything that has a class starting with "protonmail_" and everything after that
-      elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
-      to_markdown(doc.to_html, elided.to_html)
+      elided = remove_with_following_siblings(doc, selector: "*[class^='protonmail_']")
+      to_markdown(doc.to_html, elided)
     end
 
     def extract_from_zimbra(doc)
@@ -1698,6 +1707,41 @@ module Email
       return false if post.blank?
       num_of_days = SiteSetting.disallow_reply_by_email_after_days
       num_of_days > 0 && post.created_at < num_of_days.days.ago
+    end
+
+    private
+
+    def remove_with_following_siblings(
+      doc,
+      selector:,
+      additional_selector: nil,
+      include_match: true
+    )
+      matches = doc.css(selector).to_set
+      additional = additional_selector ? doc.css(additional_selector).to_set : Set.new
+      elided_parents = Set.new
+      elided = Set.new
+      roots = doc.element_children
+      root_siblings_added = false
+
+      roots.each_with_index do |root, index|
+        [root, *root.css("*")].each do |node|
+          matched = matches.include?(node)
+          if elided_parents.include?(node.parent) || additional.include?(node) ||
+               (include_match && matched)
+            elided.add(node)
+          end
+          elided_parents.add(node.parent) if matched
+        end
+
+        if !root_siblings_added && matches.include?(root)
+          roots.drop(index + 1).each { |sibling| elided.add(sibling) }
+          root_siblings_added = true
+        end
+      end
+
+      elided.each(&:remove)
+      elided.map(&:to_html).join
     end
   end
 end
