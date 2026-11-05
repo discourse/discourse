@@ -2802,6 +2802,63 @@ RSpec.describe UsersController do
   end
 
   describe "#invited" do
+    it "respects the inviter's profile visibility" do
+      SiteSetting.allow_users_to_hide_profile = true
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      invite = Fabricate(:invite, invited_by: inviter)
+      Fabricate(:invited_user, invite: invite, user: invitee)
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+
+      get "/u/#{inviter.username}/invited.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["invites"].first["user"]["id"]).to eq(invitee.id)
+      expect(response.parsed_body["counts"]["redeemed"]).to eq(1)
+
+      inviter.user_option.update!(hide_profile: true)
+
+      get "/u/#{inviter.username}/invited.json"
+
+      expect(response.parsed_body["invites"]).to be_nil
+      expect(response.status).to eq(404)
+      expect(response.parsed_body).not_to have_key("counts")
+    end
+
+    it "allows owners and staff to view a hidden profile's invitations" do
+      SiteSetting.allow_users_to_hide_profile = true
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      inviter.user_option.update!(hide_profile: true)
+      invite = Fabricate(:invite, invited_by: inviter)
+      Fabricate(:invited_user, invite: invite, user: invitee)
+
+      [inviter, moderator, admin].each do |viewer|
+        sign_in(viewer)
+
+        get "/u/#{inviter.username}/invited.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["invites"].first["user"]["id"]).to eq(invitee.id)
+        expect(response.parsed_body["counts"]["redeemed"]).to eq(1)
+      end
+    end
+
+    it "protects hidden profile counts across invitation filters" do
+      SiteSetting.allow_users_to_hide_profile = true
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      inviter.user_option.update!(hide_profile: true)
+      invite = Fabricate(:invite, invited_by: inviter)
+      Fabricate(:invited_user, invite: invite, user: invitee)
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+
+      %w[redeemed pending expired].each do |filter|
+        get "/u/#{inviter.username}/invited/#{filter}.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body).not_to have_key("invites")
+        expect(response.parsed_body).not_to have_key("counts")
+      end
+    end
+
     it "fails for anonymous users" do
       get "/u/#{user1.username}/invited.json", params: { username: user1.username }
 

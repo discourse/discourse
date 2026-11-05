@@ -556,6 +556,8 @@ class UsersController < ApplicationController
         fetch_user_from_params(
           include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts,
         )
+      raise Discourse::NotFound unless guardian.can_see_profile?(inviter)
+
       can_see_invite_details = guardian.can_see_invite_details?(inviter)
 
       invites =
