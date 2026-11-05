@@ -187,11 +187,9 @@ module ::Blog
     end
 
     def copy_post!(creator, source, category_id)
-      previous = Thread.current[:blog_copy]
-      Thread.current[:blog_copy] = { source_id: source.id, category_id: category_id }
-      creator.create!
-    ensure
-      Thread.current[:blog_copy] = previous
+      Blog::Current.set(copy_source_id: source.id, copy_category_id: category_id) do
+        creator.create!
+      end
     end
 
     def clear_schedule!(error: "")
@@ -363,9 +361,7 @@ module ::Blog
              discussion_topic.category_id != SiteSetting.blog_category.to_i
           raise Discourse::InvalidAccess
         end
-        previous = Thread.current[:blog_publishing_topic]
-        begin
-          Thread.current[:blog_publishing_topic] = discussion_topic_id
+        Blog::Current.set(publishing_topic_id: discussion_topic_id) do
           unless PostRevisor.new(discussion_topic.first_post).revise!(
                    user,
                    { raw: data["raw"], title: data["title"], tags: data["tags"] },
@@ -373,8 +369,6 @@ module ::Blog
                  )
             raise ActiveRecord::RecordInvalid.new(discussion_topic.first_post)
           end
-        ensure
-          Thread.current[:blog_publishing_topic] = previous
         end
       else
         creator =
