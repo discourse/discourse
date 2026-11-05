@@ -3427,6 +3427,21 @@ RSpec.describe GroupsController do
       expect(GroupRequest.where(group: group, user: user).exists?).to eq(false)
     end
 
+    it "rejects membership requests from silenced users" do
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      new_user.update!(silenced_till: 1.year.from_now)
+      reason = "Attacker-controlled message to a non-staff owner"
+      sign_in(new_user)
+
+      post "/groups/#{group.name}/request_membership.json", params: { reason: }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      expect(GroupRequest.where(group:, user: new_user)).not_to exist
+      expect(Post.where(user: new_user, raw: reason)).not_to exist
+    end
+
     it "requires a reason" do
       sign_in(new_user)
 
