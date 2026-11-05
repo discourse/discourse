@@ -5,6 +5,8 @@ module DiscourseEvents
     module Action
       class ExpandOccurrences < Service::ActionBase
         MAX_LIMIT = 200
+        MAX_YEARS_AHEAD = 10
+        private_constant :MAX_YEARS_AHEAD
 
         option :event
         option :after
@@ -39,24 +41,13 @@ module DiscourseEvents
         end
 
         def build_recurring_occurrences
-          occurrences = []
-          current_time = after
-          count = 0
-          capped_limit = limit.clamp(1, MAX_LIMIT)
+          return { event:, occurrences: [] } if after > MAX_YEARS_AHEAD.years.from_now
 
-          while count < capped_limit
-            occurrence = event.calculate_next_occurrence_from(current_time)
-            break unless occurrence
-
-            occurrence_starts_at = occurrence[:starts_at]
-            break if before && occurrence_starts_at >= before
-
-            occurrences << { starts_at: occurrence_starts_at, ends_at: occurrence[:ends_at] }
-            current_time = occurrence_starts_at + 1.second
-            count += 1
-          end
-
-          { event: event, occurrences: occurrences }
+          {
+            event:,
+            occurrences:
+              event.recurring_occurrences(after:, before:, limit: limit.clamp(1, MAX_LIMIT)),
+          }
         end
       end
     end

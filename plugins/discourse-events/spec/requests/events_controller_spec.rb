@@ -132,6 +132,70 @@ module DiscourseEvents::Events
         expect(response.parsed_body["events"]).not_to be_empty
       end
 
+      it "returns no recurring occurrences beyond the listing horizon" do
+        freeze_time Time.utc(2026, 11, 5)
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: Time.utc(2026, 11, 6, 14),
+            original_ends_at: Time.utc(2026, 11, 6, 15),
+            recurrence: "every_two_weeks",
+            name: "Sprint review",
+          )
+
+        get "/discourse-post-event/events.json", params: { after: "2200-01-01", limit: 1 }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"]).to contain_exactly(
+          hash_including("id" => event.id, "occurrences" => []),
+        )
+
+        get "/discourse-post-event/events.ics",
+            params: {
+              after: "2200-01-01",
+              before: "2201-01-01",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("BEGIN:VCALENDAR")
+        expect(response.body).not_to include("SUMMARY:#{event.name}")
+      end
+
+      it "preserves interval recurrence dates and durations in a normal listing" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 11, 6, 14),
+          original_ends_at: Time.utc(2026, 11, 6, 15),
+          recurrence: "every_two_weeks",
+        )
+
+        get "/discourse-post-event/events.json",
+            params: {
+              after: "2026-11-05",
+              before: "2026-12-01",
+              limit: 2,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"].first["occurrences"]).to eq(
+          [
+            { "starts_at" => "2026-11-06T14:00:00.000Z", "ends_at" => "2026-11-06T15:00:00.000Z" },
+            { "starts_at" => "2026-11-20T14:00:00.000Z", "ends_at" => "2026-11-20T15:00:00.000Z" },
+          ],
+        )
+      end
+
+      it "returns the full occurrence limit for a monthly recurrence" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(:event, original_starts_at: Time.utc(2026, 11, 6, 14), recurrence: "every_month")
+
+        get "/discourse-post-event/events.json", params: { after: "2026-11-05", limit: 200 }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"].first["occurrences"].size).to eq(200)
+      end
+
       it "filters by tags, text, and status" do
         tag = Fabricate(:tag, name: "launch")
         tagged_event =
