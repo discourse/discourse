@@ -25,10 +25,12 @@ class Blog::BlogTheme::Create
 
   policy :can_manage_themes
 
-  transaction do
-    policy :within_theme_limit, class_name: Blog::BlogTheme::Policy::WithinThemeLimit
-    model :theme, :create_theme
-    step :log_save
+  lock do
+    transaction do
+      policy :within_theme_limit, class_name: Blog::BlogTheme::Policy::WithinThemeLimit
+      model :theme, :create_theme
+      step :log_save
+    end
   end
 
   private

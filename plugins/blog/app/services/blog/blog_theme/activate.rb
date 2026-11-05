@@ -13,12 +13,14 @@ class Blog::BlogTheme::Activate
 
   policy :can_manage_themes
 
-  transaction do
-    model :theme
-    policy :revision_is_current, class_name: Blog::BlogTheme::Policy::RevisionIsCurrent
-    model :active_theme, :activate_theme
-    step :prune_snapshots
-    step :log_activation
+  lock do
+    transaction do
+      model :theme
+      policy :revision_is_current, class_name: Blog::BlogTheme::Policy::RevisionIsCurrent
+      model :active_theme, :activate_theme
+      step :prune_snapshots
+      step :log_activation
+    end
   end
 
   private

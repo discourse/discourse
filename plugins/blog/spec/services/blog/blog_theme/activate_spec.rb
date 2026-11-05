@@ -51,6 +51,16 @@ RSpec.describe Blog::BlogTheme::Activate do
       it { is_expected.to fail_a_policy(:revision_is_current) }
     end
 
+    context "when another activation holds the lock" do
+      before { DistributedMutex.stubs(:synchronize).returns(nil) }
+
+      it "publishes nothing" do
+        expect(result).to be_a_failure
+        expect(result["result.lock."]).to be_a_failure
+        expect(PluginStore.get(Blog::BlogTheme::STORE, "active")).to be_nil
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

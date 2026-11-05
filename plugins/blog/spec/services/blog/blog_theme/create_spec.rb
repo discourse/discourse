@@ -66,6 +66,16 @@ RSpec.describe Blog::BlogTheme::Create do
       it { is_expected.to fail_a_policy(:within_theme_limit) }
     end
 
+    context "when another create holds the lock" do
+      before { DistributedMutex.stubs(:synchronize).returns(nil) }
+
+      it "saves nothing" do
+        expect(result).to be_a_failure
+        expect(result["result.lock."]).to be_a_failure
+        expect(Blog::BlogTheme.count).to eq(0)
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

@@ -120,6 +120,7 @@ module ::Blog
         on_failed_policy(:within_theme_limit) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
 
@@ -171,6 +172,7 @@ module ::Blog
         on_failed_policy(:revision_is_current) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
 
