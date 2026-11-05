@@ -684,6 +684,11 @@ discourse_ai:
       - 2
       - 3
       - 4
+  ai_dsa_classification_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
   ai_rag_images_enabled:
     default: false
     hidden: true

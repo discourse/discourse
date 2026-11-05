@@ -1,0 +1,147 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
+  fab!(:moderator)
+  fab!(:decision_model) { Fabricate(:decision_model, id: -1) }
+  fab!(:reviewable, :reviewable_flagged_post)
+
+  let(:rules) do
+    [
+      { ground: "Be respectful", explanation: "Personal attacks are not allowed." },
+      { ground: "No advertising", explanation: "Unsolicited advertising is not allowed." },
+    ]
+  end
+  let(:answers) do
+    {
+      community_rule: "No advertising: Unsolicited advertising is not allowed.",
+      category: "Scams and fraud",
+    }
+  end
+
+  before do
+    enable_current_plugin
+    enable_dsa_reporting(community_rules: rules)
+    SiteSetting.ai_dsa_classification_decision_model = decision_model.id
+  end
+
+  def suggest(reviewable_id = reviewable.id)
+    post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable_id}/suggest.json"
+  end
+
+  describe "#suggest" do
+    it "requires a login" do
+      suggest
+
+      expect(response.status).to eq(403)
+    end
+
+    it "denies users who cannot see the review queue" do
+      sign_in(Fabricate(:user))
+
+      suggest
+
+      expect(response.status).to eq(403)
+    end
+
+    context "when signed in as staff" do
+      before { sign_in(moderator) }
+
+      it "returns the suggested classification" do
+        DiscourseAi::Decisions.with_canned_answers(**answers) { suggest }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(
+          "community_rule" =>
+            DsaStatementOfRecord.community_rules.find { |rule| rule["ground"] == "No advertising" }[
+              "id"
+            ],
+          "category" => "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+        )
+      end
+
+      it "returns blank fields the decision model refused" do
+        DiscourseAi::Decisions.with_canned_answers(community_rule: :refusal, category: :refusal) do
+          suggest
+        end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("community_rule" => nil, "category" => nil)
+      end
+
+      it "returns not found for an unknown reviewable" do
+        suggest(0)
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns not found for a reviewable the moderator cannot see" do
+        hidden = Fabricate(:reviewable_flagged_post, reviewable_by_moderator: false)
+
+        suggest(hidden.id)
+
+        expect(response.status).to eq(404)
+      end
+
+      it "denies access without a decision model" do
+        SiteSetting.ai_dsa_classification_decision_model = ""
+
+        suggest
+
+        expect(response.status).to eq(403)
+      end
+
+      it "denies access when DSA reporting is disabled" do
+        SiteSetting.dsa_reporting_enabled = false
+
+        suggest
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns an error when the decision request fails" do
+        stub_request(:post, decision_model.url).to_return(status: 400, body: "{}")
+
+        suggest
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("discourse_ai.dsa_classification.suggestion_failed"),
+        )
+      end
+
+      it "returns too many requests when the decision model is out of credits" do
+        Fabricate(:decision_model_credit_allocation, decision_model:, daily_used: 10_000)
+
+        suggest
+
+        expect(response.status).to eq(429)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("discourse_ai.dsa_classification.credit_limit_exceeded"),
+        )
+      end
+
+      it "does not hide unexpected errors as failed decisions" do
+        allow_any_instance_of(DecisionModel).to receive(:decide).and_raise(ArgumentError, "bug")
+
+        suggest
+
+        expect(response.status).to eq(500)
+      end
+
+      it "rate limits suggestions" do
+        RateLimiter.enable
+
+        DiscourseAi::Decisions.with_canned_answers(**answers) do
+          DiscourseAi::AiModeration::DsaClassification::SUGGESTIONS_PER_MINUTE.times do
+            suggest
+            expect(response.status).to eq(200)
+          end
+
+          suggest
+        end
+
+        expect(response.status).to eq(429)
+      end
+    end
+  end
+end

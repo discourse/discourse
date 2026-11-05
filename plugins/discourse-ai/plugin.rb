@@ -58,6 +58,7 @@ register_asset "stylesheets/modules/embeddings/common/ai-embedding-editor.scss"
 
 register_asset "stylesheets/modules/llms/common/usage.scss"
 register_asset "stylesheets/modules/llms/common/spam.scss"
+register_asset "stylesheets/modules/ai-moderation/common/dsa-classification-suggestion.scss"
 register_asset "stylesheets/modules/llms/common/ai-llm-quotas.scss"
 register_asset "stylesheets/modules/llms/common/ai-credit-bar.scss"
 
