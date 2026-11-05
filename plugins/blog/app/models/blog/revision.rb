@@ -41,6 +41,15 @@ module ::Blog
       data["raw"]
     end
 
+    def public_tags
+      Tag.visible(Guardian.new).where(name: data["tags"])
+    end
+
+    def absolute_image_url
+      url = data["image_url"]
+      UrlHelper.absolute(url) if url.present?
+    end
+
     private
 
     def retain_uploads

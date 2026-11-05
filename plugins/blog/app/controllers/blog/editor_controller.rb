@@ -240,14 +240,20 @@ module ::Blog
       @preview = true
       @canonical_url = @publication.url
       source = @publication.editable_topic
-      @article =
+      revision =
         if params[:revision_id].present?
           @publication.revisions.find(params[:revision_id])
         else
           Revision.new(data: Revision.capture(@publication, source))
         end
-      @page_title = @article.title
-      @description = @article.data["excerpt"]
+      @page_title = revision.title
+      @description = revision.data["excerpt"]
+      @article_metadata = ArticleMetadata.new(@publication, revision:, description: @description)
+      @template_variables =
+        TemplateVariables.new(
+          title: @page_title,
+          article: ArticleVariables.new(@publication, revision:, topic: @topic),
+        )
       response.headers["X-Robots-Tag"] = "noindex, nofollow"
       response.headers["Cache-Control"] = "private, no-store"
       render "blog/articles/show", layout: "blog"

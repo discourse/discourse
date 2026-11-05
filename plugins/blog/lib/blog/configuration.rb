@@ -35,6 +35,12 @@ module ::Blog
       custom_domain? ? SiteSetting.blog_url : "#{Discourse.base_url}#{PATH_PREFIX}"
     end
 
+    def self.url(path = "", preview_token: nil)
+      url = "#{base_url}#{path}"
+      return url if preview_token.blank?
+      "#{url}#{path.include?("?") ? "&" : "?"}#{{ blog_theme_preview: preview_token }.to_query}"
+    end
+
     # The reader keeps the prefix on a custom domain too, so one client route serves both modes.
     def self.review_url
       "#{custom_domain? ? origin : Discourse.base_url}#{PATH_PREFIX}/review"
