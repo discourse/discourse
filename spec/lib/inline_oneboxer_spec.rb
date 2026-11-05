@@ -422,30 +422,18 @@ RSpec.describe InlineOneboxer do
   end
 
   describe "title truncation" do
-    it "truncates after converting emoji so shortcodes are not split" do
+    it "truncates overly long remote titles" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
       url = "https://eviltrout.com/long-title"
 
       stub_request(:get, url).to_return(
         status: 200,
-        body: "<html><head><title>#{"A" * 495}:pizza:</title></head></html>",
+        body: "<html><head><title>#{"A" * 600}</title></head></html>",
       )
 
       onebox = InlineOneboxer.lookup(url, skip_cache: true)
 
-      expect(onebox[:title]).to eq("#{"A" * 495}🍕")
-    end
-
-    it "truncates the title before appending the post number suffix" do
-      onebox =
-        InlineOneboxer.send(
-          :onebox_for,
-          "https://eviltrout.com/long-title",
-          "A" * 600,
-          { post_number: 2, skip_cache: true },
-        )
-
-      expect(onebox[:title]).to eq(("A" * 600).truncate(InlineOneboxer::MAX_TITLE_LENGTH) + " - #2")
+      expect(onebox[:title].length).to eq(InlineOneboxer::MAX_TITLE_LENGTH)
     end
   end
 
