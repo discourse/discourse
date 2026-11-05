@@ -18,6 +18,7 @@ zh_CN:
         acl_failed: "无法创建看板的访问权限。请检查所选的组和权限。"
         failed: "无法创建看板。"
   site_settings:
+    boards_enabled: "将主题和轻量级的独立“浮动”卡片组织成可配置的、拖放式的看板式看板和列，所有这些都通过专门设计的管理用户界面和每个看板的访问控制来实现。访问 <a href='%{base_path}/boards'>/boards</a> 即可开始使用。"
     boards_manage_board_allowed_groups: "允许创建和配置看板的群组。"
   access_control_list:
     errors:
@@ -32,6 +33,7 @@ zh_CN:
       slug_unavailable: "该看版的 slug 已被使用，请选择其他 slug。"
       board_not_found: "看板未找到"
       board_read_forbidden: "您没有权限查看此看板"
+      board_create_forbidden: "您没有创建看板的权限。"
       board_write_forbidden: "您无权修改此看板"
       board_manage_forbidden: "你没有权限管理这个看板"
       column_not_found: "未找到列"

@@ -522,6 +522,8 @@ zh_CN:
     site_settings:
       invalid_site_setting: "不存在名为 '%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
+      dsa_community_rules_required: "启用DSA报告之前，至少需要添加一条社区规则。"
+      dsa_community_rules_in_use: "在移除所有社区规则之前，请先禁用DSA报告功能。"
       site_settings_are_deprecated: "以下设置已弃用：%{old_names}。请改用 %{new_names}。"
       site_settings_are_hidden: "您无权更改隐藏设置：%{setting_names}"
       site_settings_are_shadowed_globally: "您无法更改这些设置，因为它们在全局范围内配置：%{setting_names}"
@@ -749,6 +751,7 @@ zh_CN:
   edit_conflict: "该帖子已由其他用户编辑，您的变更无法再保存。"
   revert_version_same: "当前版本与您尝试还原到的版本相同。"
   reverted_to_version: "已还原到版本 #%{version}"
+  cannot_unlist_hidden_revision: "隐藏的版本无法取消列出。请先显示该版本，然后再取消列出。"
   cannot_edit_on_slow_mode: "此话题处于慢速模式。为了鼓励深思熟虑的讨论，目前不允许编辑此话题中的旧帖子。"
   excerpt_image: "图片"
   bookmarks:
@@ -1021,6 +1024,7 @@ zh_CN:
       description_too_long:
         other: "描述过长（最多 %{count} 个字符）。"
       special_category_permissions: "这是一个预先设置的类别，安全设置无法编辑。如果您不想使用此类别，请将其删除，而不是重新用于其他用途。"
+      anonymous_permissions_not_supported: "使用“所有人”组允许匿名用户访问某个类别。"
       permission_conflict: "任何被允许访问子类别的组也必须被允许访问父类别。以下群组可以访问子类别之一，但无法访问父类别：%{group_names}。"
       disallowed_topic_tags: "此话题包含此类别不允许的标签：%{tags}"
       disallowed_tags_generic: "此话题包含禁止的标签。"
@@ -1931,6 +1935,7 @@ zh_CN:
       email_polling_errored_recently:
         other: "电子邮件轮询在过去 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>了解更多详细信息。"
       missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
+      missing_aws_sns_topic_arn: "此服务器已配置为通过 Amazon SES 发送电子邮件。如果您使用 Amazon SNS 将退信通知发送到 Discourse，则必须将您的 SNS 主题 ARN 添加到 ` <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a>` 中。来自未列出主题的 SNS Webhook 通知将被拒绝。"
       qq_mail_smtp: "您的 SMTP 服务器 (%{smtp_address}) 已知会导致 Discourse 发送重复电子邮件。QQ 邮件无法返回正确的确认信息，导致 Discourse 重试已成功发送的邮件。 <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>请参阅推荐的替代方案</a>。"
       bad_favicon_url: "网站图标无法加载。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的网站图标设置。"
       poll_pop3_timeout: "连接到 POP3 服务器超时。无法检索收到的电子邮件。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务提供商。"
@@ -1948,6 +1953,10 @@ zh_CN:
   random_username:
     unavailable: "无法生成随机用户名。请检查网站设置中的随机用户名词库。"
   site_settings:
+    dsa_reporting_enabled: "启用欧盟数字服务法案 (DSA) 报告和审核工具。需要 {{setting:dsa_community_rules}}。"
+    dsa_notice_group: "接收非法内容举报的群组及举报人联系方式。默认为管理员。"
+    dsa_moderation_appeal_email: "启用 DSA 报告后，审核邮件和系统消息中将显示此电子邮件地址。留空则不会在这些消息中显示申诉说明。"
+    dsa_community_rules: "根据您的服务条款或社区准则制定规则。每条规则的参考资料和解释都会包含在版主选择该规则时提交的 DSA 理由声明中。"
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示当地时间。"
@@ -2509,6 +2518,7 @@ zh_CN:
     ignore_by_title_regex: "使用正则表达式根据邮件标题忽略收到的邮件。"
     mailgun_api_key: "用于验证网络钩子消息的 Mailgun Secret API 密钥。"
     sendgrid_verification_key: "用于验证网络钩子消息的 Sendgrid 验证密钥。"
+    aws_sns_topic_arn_allowlist: "允许 SNS 主题向此站点的 AWS Webhook 端点发送 Amazon SES 退信通知。在 Amazon SNS → 主题中，复制为 Amazon SES 退信通知配置的完整主题 ARN，例如：arn:aws:sns:eu-west-1:123456789012:DiscourseBounces。将每个 ARN 添加为单独的条目。如果您不使用 SNS 发送退信通知，请留空。 <a href='https://docs.aws.amazon.com/ses/latest/dg/configure-sns-notifications.html'>设置说明</a>"
     mailjet_webhook_token: "用于验证网络钩子负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "用于验证网络钩子有效负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "用于验证网络钩子消息的 Mandrill 身份验证密钥。"
@@ -2818,6 +2828,7 @@ zh_CN:
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
+    concord_in_wizard: "在设计向导中提供 Concord 和通用聊天主页。"
     enable_site_owner_onboarding: "在首页上向新管理员显示面板以帮助他们开始。重新启用此设置以再次查看入门步骤。"
     site_owner_onboarding_max_days: "站点创建后显示入门横幅的最大天数。"
     enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎成员并允许他们搜索站点内容"
@@ -4971,6 +4982,8 @@ zh_CN:
     group_smtp_post_deleted: "帖子已被删除"
     group_smtp_topic_deleted: "话题已被删除"
     group_smtp_disabled_for_group: "smtp 已对该群组禁用"
+  appearance_changes:
+    dark_palette_name: "%{name} 黑暗"
   color_schemes:
     base_theme_name: "基础"
     light: "浅色"
@@ -5455,6 +5468,9 @@ zh_CN:
     enable_rack_mini_profiler: "启用 Rack Mini Profiler，使其在会话切换后保持 1 小时。"
     enter: "进入开发者模式"
   design_wizard:
+    themes:
+      concord:
+        description: "将侧边栏替换为由类别、聊天频道和实时音频/视频房间组成的单个频道列表。"
     errors:
       palette_unavailable: "所选调色板中有一个不可用于选定的主题。"
       site_settings_update_failed: "网站设置无法更新。"
@@ -5510,6 +5526,7 @@ zh_CN:
         every_two_weeks: "每隔一个%{weekday}"
         every_four_weeks: "每 4 周的%{weekday}"
         every_month: "每个月的%{ordinal}%{weekday}"
+        until: "%{recurrence} 直到 %{date}"
         ordinals:
           first: "第一个"
           second: "第二个"
