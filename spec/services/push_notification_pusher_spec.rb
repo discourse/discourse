@@ -26,7 +26,7 @@ RSpec.describe PushNotificationPusher do
     def create_subscription
       data = <<~JSON
       {
-        "endpoint": "endpoint",
+        "endpoint": "https://fcm.googleapis.com/fcm/send/endpoint",
         "keys": {
           "p256dh": "p256dh",
           "auth": "auth"
@@ -169,7 +169,20 @@ RSpec.describe PushNotificationPusher do
       expect(PushSubscription.where(id: sub.id).exists?).to eq(false)
     end
 
+    it "deletes stored subscriptions with revoked endpoints without contacting them" do
+      Jobs.run_immediately!
+      subscription =
+        create_untrusted_subscription("https://permanently-removed.invalid/fcm/send/abc")
+      WebPush.expects(:payload_send).never
+
+      execute_push
+
+      expect(PushSubscription.exists?(subscription.id)).to eq(false)
+    end
+
     it "deletes invalid subscriptions during send" do
+      Jobs.run_immediately!
+
       missing_endpoint =
         PushSubscription.create!(
           user_id: user.id,
@@ -179,20 +192,30 @@ RSpec.describe PushNotificationPusher do
       missing_p256dh =
         PushSubscription.create!(
           user_id: user.id,
-          data: { endpoint: "endpoint 1", keys: { auth: "private ECDH key" } }.to_json,
+          data: {
+            endpoint: "https://fcm.googleapis.com/fcm/send/1",
+            keys: {
+              auth: "private ECDH key",
+            },
+          }.to_json,
         )
 
       missing_auth =
         PushSubscription.create!(
           user_id: user.id,
-          data: { endpoint: "endpoint 2", keys: { p256dh: "public ECDH key" } }.to_json,
+          data: {
+            endpoint: "https://fcm.googleapis.com/fcm/send/2",
+            keys: {
+              p256dh: "public ECDH key",
+            },
+          }.to_json,
         )
 
       valid_subscription =
         PushSubscription.create!(
           user_id: user.id,
           data: {
-            endpoint: "endpoint 3",
+            endpoint: "https://fcm.googleapis.com/fcm/send/3",
             keys: {
               p256dh: "public ECDH key",
               auth: "private ECDH key",
@@ -209,7 +232,11 @@ RSpec.describe PushNotificationPusher do
       WebPush
         .expects(:payload_send)
         .with(
-          has_entries(endpoint: "endpoint 3", p256dh: "public ECDH key", auth: "private ECDH key"),
+          has_entries(
+            endpoint: "https://fcm.googleapis.com/fcm/send/3",
+            p256dh: "public ECDH key",
+            auth: "private ECDH key",
+          ),
         )
         .once
 
@@ -250,6 +277,140 @@ RSpec.describe PushNotificationPusher do
 
       subscription.reload
       expect(subscription.error_count).to eq(1)
+    end
+
+    def create_untrusted_subscription(endpoint = "https://push.attacker.test/1")
+      PushSubscription.create!(
+        user: user,
+        data: { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } }.to_json,
+      )
+    end
+
+    it "delivers to trusted push services inline and defers other hosts to a background job" do
+      trusted = create_subscription
+      create_untrusted_subscription
+      WebPush
+        .expects(:payload_send)
+        .with(has_entries(endpoint: trusted.parsed_data["endpoint"]))
+        .once
+
+      expect_enqueued_with(job: :deliver_untrusted_push_notifications) { execute_push }
+    end
+
+    it "delivers only to the newest subscriptions" do
+      subscriptions =
+        Array.new(PushNotificationPusher::MAX_SUBSCRIPTIONS_PER_USER + 1) do |index|
+          PushSubscription.create!(
+            user: user,
+            data: {
+              endpoint: "https://fcm.googleapis.com/fcm/send/#{index}",
+              keys: {
+                p256dh: "p256dh",
+                auth: "auth",
+              },
+            }.to_json,
+          )
+        end
+      delivered = []
+      WebPush.stubs(:payload_send).with { |args| delivered << args[:endpoint] }
+
+      execute_push
+
+      expect(delivered).to match_array(
+        subscriptions.drop(1).map { |subscription| subscription.parsed_data["endpoint"] },
+      )
+    end
+
+    it "passes a total delivery deadline to the push request" do
+      create_subscription
+      WebPush.expects(:payload_send).with(
+        has_entries(total_timeout: PushNotificationPusher::DELIVERY_DEADLINE_SECONDS),
+      )
+
+      execute_push
+    end
+
+    it "does not count slow deliveries to trusted push services as errors" do
+      subscription = create_subscription
+      WebPush.stubs(:payload_send)
+      PushNotificationPusher.stubs(:monotonic_now).returns(0, 10)
+
+      execute_push
+
+      expect(subscription.reload.error_count).to eq(0)
+    end
+
+    describe ".push_untrusted" do
+      let(:message) { { title: "title", body: "body", url: "/t/1/2" } }
+
+      it "removes an untrusted subscription after a timeout and a slow delivery" do
+        subscription = create_untrusted_subscription
+        WebPush.stubs(:payload_send).raises(Net::ReadTimeout.new).then.returns(nil)
+        PushNotificationPusher.stubs(:monotonic_now).returns(0, 0, 10)
+
+        PushNotificationPusher.push_untrusted(user, message)
+        expect(subscription.reload.error_count).to eq(1)
+
+        PushNotificationPusher.push_untrusted(user, message)
+        expect(PushSubscription.exists?(subscription.id)).to eq(false)
+      end
+
+      it "delivers to at most two untrusted subscriptions" do
+        3.times { |index| create_untrusted_subscription("https://push.attacker.test/#{index}") }
+        delivered = []
+        WebPush.stubs(:payload_send).with { |args| delivered << args[:endpoint] }
+
+        PushNotificationPusher.push_untrusted(user, message)
+
+        expect(delivered).to contain_exactly(
+          "https://push.attacker.test/2",
+          "https://push.attacker.test/1",
+        )
+      end
+    end
+
+    describe ".subscribe" do
+      def subscribe(endpoint, send_confirmation: "false")
+        PushNotificationPusher.subscribe(
+          user,
+          { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
+          send_confirmation,
+        )
+      end
+
+      it "keeps the newest ten subscriptions with at most two on untrusted hosts" do
+        trusted = Array.new(10) { |index| "https://fcm.googleapis.com/fcm/send/#{index}" }
+        untrusted = Array.new(3) { |index| "https://push.attacker.test/#{index}" }
+        (trusted + untrusted).each { |endpoint| subscribe(endpoint) }
+
+        endpoints =
+          user.push_subscriptions.map { |subscription| subscription.parsed_data["endpoint"] }
+
+        expect(endpoints).to match_array(untrusted.last(2) + trusted.last(8))
+      end
+
+      it "ignores revoked endpoints on the .invalid TLD" do
+        subscribe("https://permanently-removed.invalid/fcm/send/abc", send_confirmation: "true")
+
+        expect(user.push_subscriptions).to be_empty
+      end
+
+      it "treats subdomains of configured trusted hosts as trusted" do
+        SiteSetting.push_notification_trusted_hosts = "push.example.com"
+        3.times { |index| subscribe("https://eu.push.example.com/#{index}") }
+
+        expect(user.push_subscriptions.count).to eq(3)
+      end
+
+      it "sends the confirmation for an untrusted subscription from the background job" do
+        Jobs.run_immediately!
+        WebPush
+          .expects(:payload_send)
+          .with(has_entries(endpoint: "https://push.attacker.test/1"))
+          .once
+
+        subscribe("https://push.attacker.test/1", send_confirmation: "true")
+      end
     end
 
     describe "`watching_category_or_tag` notifications" do
