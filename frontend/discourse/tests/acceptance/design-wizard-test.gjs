@@ -599,7 +599,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click('[data-theme-id="concord"] input');
 
     assert.true(
@@ -675,7 +674,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click('[data-theme-id="-1"] input');
 
     assert.true(
@@ -732,7 +730,6 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await click(".design-wizard__intro-start");
     await click('[data-theme-id="42"] input');
 
     const wizard = this.owner.lookup("service:design-wizard");
