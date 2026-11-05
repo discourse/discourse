@@ -1545,6 +1545,23 @@ RSpec.describe Guardian do
   end
 
   describe "#can_see_flags?" do
+    it "does not allow TL4 members to see private flags on topics they can moderate" do
+      guardian = Guardian.new(trust_level_4)
+
+      expect(guardian.can_moderate?(topic)).to be_truthy
+      expect(guardian.can_see_flags?(topic)).to be_falsey
+    end
+
+    it "does not grant private flag access through category moderation" do
+      SiteSetting.enable_category_group_moderation = true
+      group.add(trust_level_4)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
+      guardian = Guardian.new(trust_level_4)
+
+      expect(guardian.can_review_topic?(topic)).to eq(true)
+      expect(guardian.can_see_flags?(topic)).to be_falsey
+    end
+
     it "returns false when there is no post" do
       expect(Guardian.new(moderator).can_see_flags?(nil)).to be_falsey
     end
