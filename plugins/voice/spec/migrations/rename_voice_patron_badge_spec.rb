@@ -40,6 +40,23 @@ RSpec.describe RenameVoicePatronBadge do
     expect(Badge.find_by(name: "Patron").system).to eq(false)
   end
 
+  it "hands a Patreon badge back even when its grouping makes it look newest" do
+    restore_old_badge_name
+    Fabricate(:group, name: "patrons")
+    grouping = BadgeGrouping.create!(name: "Supporters", position: 20)
+    Fabricate(:badge, name: "Old Supporter", badge_grouping_id: grouping.id).update_columns(
+      created_at: 2.years.ago,
+    )
+    patron = Badge.find_by(name: "Patron")
+    patron.update_columns(badge_grouping_id: grouping.id, created_at: 1.year.ago, system: true)
+
+    described_class.new.up
+
+    expect(patron.reload.name).to eq("Patron")
+    expect(patron.system).to eq(false)
+    expect(Badge.find_by(name: "Frequenter")).to be_nil
+  end
+
   it "ignores a Patron badge that voice never seeded over" do
     badge = Fabricate(:badge, name: "Patron", query: "SELECT 1", system: false)
 

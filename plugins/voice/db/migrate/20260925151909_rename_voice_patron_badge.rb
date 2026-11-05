@@ -10,6 +10,14 @@ class RenameVoicePatronBadge < ActiveRecord::Migration[8.1]
 
     return if badge.nil?
 
+    # Patreon seeds its patrons group alongside its Patron badge, so on a site
+    # with that group this record is Patreon's whatever its age or grouping.
+    # Hand it back untouched so Patreon's restore migration can find it by name.
+    if DB.query_single("SELECT 1 FROM groups WHERE name = 'patrons'").present?
+      DB.exec("UPDATE badges SET system = false WHERE id = :id", id: badge.id)
+      return
+    end
+
     # The rest of the voice badges were seeded in one run, so a Patron badge
     # older than all of them belonged to the site before voice claimed the name.
     seeded_at =
