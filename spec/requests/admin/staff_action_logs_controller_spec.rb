@@ -208,7 +208,10 @@ RSpec.describe Admin::StaffActionLogsController do
         SiteSetting.enable_names = false
         user.update!(name: "Current Private)\ntopic: Full Name")
         StaffActionLogger.new(admin).log_user_deletion(user)
-        StaffActionLogger.new(admin).log_post_deletion(Fabricate(:post, user: user))
+        topic = Fabricate(:topic, user: user, title: "Welcome to the community (2026 edition)")
+        post = Fabricate(:post, user: user, topic: topic)
+        StaffActionLogger.new(admin).log_post_deletion(post)
+        StaffActionLogger.new(admin).log_topic_delete_recover(topic)
         StaffActionLogger.new(admin).log_name_change(
           user.id,
           "Previous Private Name",
@@ -222,8 +225,13 @@ RSpec.describe Admin::StaffActionLogsController do
 
         logs_by_action =
           response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
-        name_details = logs_by_action.values_at("delete_user", "delete_post").pluck("details").join
+        name_details =
+          logs_by_action
+            .values_at("delete_user", "delete_post", "delete_topic")
+            .pluck("details")
+            .join
         expect(name_details).not_to include(*user.name.lines(chomp: true))
+        expect(logs_by_action["delete_topic"]["details"]).to include("title: #{topic.title}\n")
         expect(logs_by_action["delete_user"]["details"]).to include("username: #{user.username}")
         expect(logs_by_action["delete_post"]["details"]).to include("user: #{user.username}\n")
         expect(logs_by_action["change_name"]).to include(
