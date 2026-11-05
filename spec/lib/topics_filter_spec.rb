@@ -2521,9 +2521,19 @@ RSpec.describe TopicsFilter do
         expect(ids).not_to include(plain_topic.id, hidden_match_topic.id)
       end
 
-      it "ignores terms shorter than min_search_term_length" do
+      it "filters terms shorter than min_search_term_length, as search= always has" do
         SiteSetting.min_search_term_length = 5
-        expect(filter_by_options(search: "ele")).to include(plain_topic.id)
+        expect(filter_by_options(search: "ele")).to contain_exactly(match_topic.id)
+      end
+
+      it "still ignores keywords shorter than min_search_term_length in the q= DSL" do
+        SiteSetting.min_search_term_length = 5
+        topics =
+          TopicsFilter
+            .new(guardian: Guardian.new, scope: Topic.all)
+            .filter_from_query_string("ele")
+            .pluck(:id)
+        expect(topics).to include(plain_topic.id)
       end
     end
 

@@ -378,7 +378,7 @@ class TopicsFilter
       )
     end
 
-    filter_by_search(options[:search]) if options[:search].present?
+    filter_by_search(options[:search], enforce_min_length: false) if options[:search].present?
 
     if options[:topic_ids].present?
       ids = Array(options[:topic_ids]).map(&:to_i).select(&:positive?)
@@ -1008,8 +1008,10 @@ class TopicsFilter
     resolved
   end
 
-  def filter_by_search(term)
-    return if term.blank? || term.length < SiteSetting.min_search_term_length
+  def filter_by_search(term, enforce_min_length: true)
+    if term.blank? || (enforce_min_length && term.length < SiteSetting.min_search_term_length)
+      return
+    end
     ts_query = Search.ts_query(term: term)
     @scope = @scope.where(<<~SQL)
       topics.id IN (
