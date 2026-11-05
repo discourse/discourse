@@ -1,10 +1,11 @@
 import { deleteOne } from "discourse/data/builders/helpers";
+import type { WarpRequest } from "discourse/data/warp-rest-model";
 
-export function deleteBookmark(id) {
+export function deleteBookmark(id: string | number) {
   return deleteOne("bookmark", id, `/bookmarks/${encodeURIComponent(id)}.json`);
 }
 
-export function togglePinBookmark(id) {
+export function togglePinBookmark(id: string | number): WarpRequest {
   return {
     url: `/bookmarks/${encodeURIComponent(id)}/toggle_pin`,
     method: "PUT",
@@ -12,7 +13,10 @@ export function togglePinBookmark(id) {
 }
 
 // `operation` is a `{ type, ...args }` object passed through as the body.
-export function bulkBookmarkOperation(bookmarkIds, operation) {
+export function bulkBookmarkOperation(
+  bookmarkIds: Array<string | number>,
+  operation: { type: string; [arg: string]: unknown }
+): WarpRequest {
   return {
     url: `/bookmarks/bulk`,
     method: "PUT",

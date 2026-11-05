@@ -1,7 +1,7 @@
-import { attrs, belongsTo, withDefaults } from "./helpers.js";
+import type { LegacyResourceSchema } from "@warp-drive/core/types/schema/fields";
+import { attrs, belongsTo, withDefaults } from "./helpers.ts";
 
-/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */
-export const BadgeSchema = withDefaults({
+export const BadgeSchema: LegacyResourceSchema = withDefaults({
   type: "badge",
   fields: [
     ...attrs(
