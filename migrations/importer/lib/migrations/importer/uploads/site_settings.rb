@@ -9,6 +9,24 @@ module Migrations
         class S3UploadsConfigurationError < StandardError
         end
 
+        # A migration has to accept whatever the old site accepted.
+        AUTHORIZED_EXTENSIONS = "*"
+        MAX_ATTACHMENT_SIZE_KB = 102_400
+        MAX_IMAGE_SIZE_KB = 102_400
+        MAX_IMAGE_MEGAPIXELS = 150
+
+        # `enable_s3_uploads` comes first, so that turning S3 off again is done
+        # before the other values are put back.
+        S3_SETTINGS = %i[
+          enable_s3_uploads
+          s3_access_key_id
+          s3_secret_access_key
+          s3_upload_bucket
+          s3_region
+          s3_cdn_url
+          s3_endpoint
+        ].freeze
+
         def initialize(options)
           @options = options
         end
@@ -32,10 +50,10 @@ module Migrations
 
         def configure_basic_uploads
           SiteSetting.clean_up_uploads = false
-          SiteSetting.authorized_extensions = @options[:authorized_extensions]
-          SiteSetting.max_attachment_size_kb = @options[:max_attachment_size_kb]
-          SiteSetting.max_image_size_kb = @options[:max_image_size_kb]
-          SiteSetting.max_image_megapixels = @options[:max_image_megapixels]
+          SiteSetting.authorized_extensions = AUTHORIZED_EXTENSIONS
+          SiteSetting.max_attachment_size_kb = MAX_ATTACHMENT_SIZE_KB
+          SiteSetting.max_image_size_kb = MAX_IMAGE_SIZE_KB
+          SiteSetting.max_image_megapixels = MAX_IMAGE_MEGAPIXELS
           SiteSetting.secure_uploads = @options[:secure_uploads]
           SiteSetting.s3_enable_access_control_tags = @options[:s3_enable_access_control_tags]
         end
@@ -56,12 +74,20 @@ module Migrations
           RailsMultisite::ConnectionManagement.current_db_override = @options[:multisite_db_name]
         end
 
+        # When the check fails, the previous S3 settings are put back, so the
+        # site is not left with the values from the settings file (for example
+        # the template's placeholders).
         def configure_s3
+          previous_values = S3_SETTINGS.to_h { |name| [name, SiteSetting.get(name)] }
+
           SiteSetting.s3_access_key_id = @options[:s3_access_key_id]
           SiteSetting.s3_secret_access_key = @options[:s3_secret_access_key]
           SiteSetting.s3_upload_bucket = @options[:s3_upload_bucket]
           SiteSetting.s3_region = @options[:s3_region]
           SiteSetting.s3_cdn_url = @options[:s3_cdn_url]
+          # Blank means AWS. Assigned even when the file omits it, so an endpoint
+          # left on the target site can't quietly send the run somewhere else.
+          SiteSetting.s3_endpoint = @options[:s3_endpoint].to_s
           SiteSetting.enable_s3_uploads = true
 
           if SiteSetting.enable_s3_uploads != true
@@ -69,6 +95,9 @@ module Migrations
           end
 
           verify_s3_uploads_configuration!
+        rescue StandardError
+          previous_values&.each { |name, value| SiteSetting.set(name, value) }
+          raise
         end
 
         def verify_s3_uploads_configuration!

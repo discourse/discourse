@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "fileutils"
+
 module Migrations
   module Importer
     module Uploads
@@ -18,6 +20,7 @@ module Migrations
         def initialize(cache_path:, downloads:)
           @cache_path = cache_path
           @downloads = downloads.freeze
+          FileUtils.mkdir_p(cache_path)
         end
 
         def download(url:, id:)

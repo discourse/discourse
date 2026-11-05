@@ -40,6 +40,8 @@ module Migrations
         @transaction_batch_size = transaction_batch_size
         @db = self.class.open_database(path:, journal_mode:)
         @statement_counter = 0
+        @savepoint_depth = 0
+        @savepoint_sequence = 0
         @statement_cache = PreparedStatementCache.new(PREPARED_STATEMENT_CACHE_SIZE)
 
         @fork_hooks = setup_fork_handling
@@ -63,7 +65,7 @@ module Migrations
         stmt = @statement_cache.getset(sql) { @db.prepare(sql) }
         stmt.execute(parameters)
 
-        if (@statement_counter += 1) >= @transaction_batch_size
+        if (@statement_counter += 1) >= @transaction_batch_size && @savepoint_depth == 0
           commit_transaction
         end
 
@@ -130,6 +132,33 @@ module Migrations
           @db.execute("COMMIT")
           @statement_counter = 0
         end
+      end
+
+      def with_savepoint
+        savepoint_created = false
+        depth_incremented = false
+        begin_transaction
+        statement_counter = @statement_counter
+        name = "migrations_#{@savepoint_sequence += 1}"
+        @db.savepoint(name)
+        savepoint_created = true
+        @savepoint_depth += 1
+        depth_incremented = true
+
+        result = yield
+        @db.release(name)
+        savepoint_created = false
+        result
+      rescue StandardError
+        if savepoint_created
+          @db.rollback_to(name)
+          @db.release(name)
+          @statement_counter = statement_counter
+        end
+        raise
+      ensure
+        @savepoint_depth -= 1 if depth_incremented
+        commit_transaction if @savepoint_depth == 0 && @statement_counter >= @transaction_batch_size
       end
 
       private
