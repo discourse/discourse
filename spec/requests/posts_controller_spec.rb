@@ -2562,6 +2562,33 @@ RSpec.describe PostsController do
         end
       end
 
+      it "bounds remote inline onebox titles persisted in cooked posts" do
+        Jobs.run_immediately!
+        sign_in(user_trust_level_1)
+        url = "https://attacker.example.com/oversized-title"
+        remote_title = "A" * 50_000
+        stub_request(:get, url).to_return(
+          status: 200,
+          body: "<html><head><title>#{remote_title}</title></head></html>",
+        )
+
+        post "/posts.json",
+             params: {
+               raw: "See #{url} for details",
+               title: "Remote inline onebox title",
+             }
+
+        created_post = Post.find(response.parsed_body["id"])
+        inline_onebox = Nokogiri::HTML5.fragment(created_post.cooked).at_css("a.inline-onebox")
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.body).to include(%("id":#{created_post.id}))
+          expect(inline_onebox.text.length).to eq(500)
+          expect(created_post.cooked.bytesize).to be < remote_title.bytesize
+        end
+      end
+
       it "does not persist an iframe whose encoded userinfo points to an unallowlisted host" do
         iframe_source = "https://www.instagram.com%2f@attacker.example/"
 
