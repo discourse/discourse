@@ -1349,6 +1349,27 @@ RSpec.describe UsersController do
           expect(new_user.admin).to eq(false)
         end
 
+        it "does not activate a developer email with surrounding whitespace" do
+          Rails.configuration.stubs(:developer_emails).returns(["foobar@example.com"])
+
+          post "/u.json",
+               params:
+                 post_user_params.merge(
+                   email: " Foobar@example.com ",
+                   password: "strongpassword12345",
+                   active: true,
+                 ),
+               headers: {
+                 HTTP_API_KEY: api_key.key,
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["active"]).to eq(false)
+          new_user = User.find_by_email("foobar@example.com")
+          expect(new_user.active).to eq(false)
+          expect(new_user.admin).to eq(false)
+        end
+
         it "does not copy the administrator's locale to the new user" do
           SiteSetting.allow_user_locale = true
           admin.update!(locale: :fr)
