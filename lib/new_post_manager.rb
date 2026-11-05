@@ -231,6 +231,13 @@ class NewPostManager
   end
 
   def perform
+    if SiteSetting.block_posting_from_blocked_ips && @args[:ip_address].present? &&
+         ScreenedIpAddress.should_block?(@args[:ip_address])
+      result = NewPostResult.new(:created_post, false)
+      result.errors.add(:base, I18n.t("post_not_allowed_from_ip_address"))
+      return result
+    end
+
     if !self.class.exempt_user?(@user) &&
          matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
       result = NewPostResult.new(:created_post, false)

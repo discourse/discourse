@@ -18,6 +18,49 @@ RSpec.describe NewPostManager do
     end
   end
 
+  describe "posting from a blocked IP address" do
+    fab!(:blocked_ip) do
+      Fabricate(
+        :screened_ip_address,
+        ip_address: "1.2.3.4",
+        action_type: ScreenedIpAddress.actions[:block],
+      )
+    end
+
+    def perform_from(ip_address)
+      NewPostManager.new(
+        user,
+        raw: "this is a new post",
+        topic_id: topic.id,
+        ip_address: ip_address,
+      ).perform
+    end
+
+    it "rejects the post when the setting is enabled and the IP is blocked" do
+      SiteSetting.block_posting_from_blocked_ips = true
+
+      expect { @result = perform_from("1.2.3.4") }.not_to change { Post.count }
+      expect(@result).not_to be_success
+      expect(@result.errors[:base]).to eq([I18n.t("post_not_allowed_from_ip_address")])
+    end
+
+    it "creates the post when the setting is enabled and the IP is not blocked" do
+      SiteSetting.block_posting_from_blocked_ips = true
+
+      expect(perform_from("5.6.7.8")).to be_success
+    end
+
+    it "creates the post when the setting is disabled and the IP is blocked" do
+      expect(perform_from("1.2.3.4")).to be_success
+    end
+
+    it "creates the post when there is no IP address" do
+      SiteSetting.block_posting_from_blocked_ips = true
+
+      expect(perform_from(nil)).to be_success
+    end
+  end
+
   describe "default action for private messages" do
     fab!(:other_user, :user)
 
