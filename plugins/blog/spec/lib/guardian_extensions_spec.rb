@@ -185,14 +185,33 @@ RSpec.describe Blog::GuardianExtensions do
         expect(editor.guardian.can_edit_post?(reply)).to eq(false)
       end
 
+      it "denies editors unlisted and shared drafts" do
+        admin_draft.update_columns(visible: false)
+        SharedDraft.create!(topic: writer_draft, category: category)
+
+        expect(editor.guardian.can_edit_post?(admin_draft_post.reload)).to eq(false)
+        expect(editor.guardian.can_edit_post?(writer_draft_post.reload)).to eq(false)
+      end
+
       it "denies editors other members' topics when the drafts category is public" do
-        pending "the editorial grant does not require a private drafts category"
         public_drafts = Fabricate(:category)
         member_topic = Fabricate(:topic, category: public_drafts)
         member_post = Fabricate(:post, topic: member_topic, user: member_topic.user)
         SiteSetting.blog_drafts_category = public_drafts.id
 
         expect(editor.guardian.can_edit_post?(member_post)).to eq(false)
+        expect(admin.guardian.can_edit_post?(member_post)).to eq(true)
+      end
+
+      it "denies contributors their own post past the edit time limit when the drafts category is public" do
+        public_drafts = Fabricate(:category)
+        own_topic = Fabricate(:topic, category: public_drafts, user: writer)
+        own_post = Fabricate(:post, topic: own_topic, user: writer, created_at: 1.hour.ago)
+        SiteSetting.blog_drafts_category = public_drafts.id
+        SiteSetting.post_edit_time_limit = 1
+        SiteSetting.tl2_post_edit_time_limit = 1
+
+        expect(writer.guardian.can_edit_post?(own_post)).to eq(false)
       end
     end
   end
@@ -267,6 +286,41 @@ RSpec.describe Blog::GuardianExtensions do
         drafts.update_columns(topic_id: admin_draft.id)
 
         expect(editor.guardian.can_edit_topic?(admin_draft)).to eq(false)
+      end
+
+      it "denies editors a draft whose first post is hidden" do
+        admin_draft_post.update_columns(hidden: true)
+
+        expect(editor.guardian.can_edit_topic?(admin_draft.reload)).to eq(false)
+      end
+
+      it "denies editors unlisted and shared drafts" do
+        admin_draft.update_columns(visible: false)
+        SharedDraft.create!(topic: writer_draft, category: category)
+
+        expect(editor.guardian.can_edit_topic?(admin_draft.reload)).to eq(false)
+        expect(editor.guardian.can_edit_topic?(writer_draft)).to eq(false)
+      end
+
+      it "denies editors other members' topics when the drafts category is public" do
+        public_drafts = Fabricate(:category)
+        member_topic = Fabricate(:topic, category: public_drafts)
+        Fabricate(:post, topic: member_topic, user: member_topic.user)
+        SiteSetting.blog_drafts_category = public_drafts.id
+
+        expect(editor.guardian.can_edit_topic?(member_topic)).to eq(false)
+        expect(moderator.guardian.can_edit_topic?(member_topic)).to eq(true)
+      end
+
+      it "denies contributors their own topic in a public drafts category they cannot post in" do
+        public_drafts = Fabricate(:category)
+        own_topic = Fabricate(:topic, category: public_drafts, user: writer)
+        Fabricate(:post, topic: own_topic, user: writer)
+        public_drafts.set_permissions(everyone: :readonly)
+        public_drafts.save!
+        SiteSetting.blog_drafts_category = public_drafts.id
+
+        expect(writer.guardian.can_edit_topic?(own_topic)).to eq(false)
       end
     end
   end
