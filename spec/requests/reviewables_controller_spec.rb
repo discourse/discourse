@@ -79,6 +79,7 @@ RSpec.describe ReviewablesController do
           "id" => "STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH",
           "name" => "Illegal or harmful speech",
         )
+        expect(options["default_category"]).to eq("STATEMENT_CATEGORY_OTHER_VIOLATION_TC")
         expect(queries.count { |sql| sql.include?('FROM "dsa_statement_of_records"') }).to eq(1)
       end
 
