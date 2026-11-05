@@ -115,9 +115,13 @@ pull request merges into or its own, from runs of this repository, and
 `script/test_impact/ci_select` decides what it runs of the pull request's
 changes against the branch it merges into:
 
-- `full`: the job's whole suite, when anything changed is outside the map,
-  there's no map, or the job isn't recorded (themes);
+- `full`: the job's whole suite, when anything changed is outside the map or
+  there's no map;
 - `none`: no tests, when nothing selected belongs to the job;
 - `list`: the selected spec or test files that belong to the job.
 
-The job's setup still runs when it selects none.
+Theme system specs, in `themes/` and the official themes cloned into
+`tmp/themes/`, are recorded and selected like the rest. Theme QUnit isn't
+recorded, since its tests are compiled into modules named by theme id: it runs
+whole when a change reaches any browser test (a QUnit test or system spec), and
+not at all otherwise. The job's setup still runs when it selects none.

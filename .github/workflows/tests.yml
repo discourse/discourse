@@ -172,17 +172,6 @@ jobs:
           run-id: ${{ env.TEST_IMPACT_MAP_RUN }}
           github-token: ${{ github.token }}
 
-      # Sets TEST_IMPACT_MODE: full runs the job's whole suite, none skips its
-      # tests, list runs the files in tmp/test-impact-files.txt.
-      - name: Select tests by test impact
-        if: env.TEST_IMPACT_SELECT == '1'
-        run: |
-          mkdir -p tmp
-          mode=$(script/test_impact/ci_select --map tmp/test-impact-map.json.gz --base HEAD^1 \
-            --job ${{ matrix.build_type }}/${{ matrix.target }} --out tmp/test-impact-files.txt)
-          echo "TEST_IMPACT_MODE=$mode" >> $GITHUB_ENV
-          cat tmp/test-impact-files.txt
-
       - name: Start redis
         run: redis-server /etc/redis/redis.conf --daemonize yes --logfile ""
 
@@ -237,6 +226,19 @@ jobs:
       - name: Checkout official themes
         if: matrix.target == 'themes'
         run: bin/rake themes:clone_all_official themes:pull_compatible_all
+
+      # Sets TEST_IMPACT_MODE: full runs the job's whole suite, none skips its
+      # tests, list runs the files in tmp/test-impact-files.txt. After the
+      # official plugins and themes are cloned, since their specs are selected
+      # too.
+      - name: Select tests by test impact
+        if: env.TEST_IMPACT_SELECT == '1'
+        run: |
+          mkdir -p tmp
+          mode=$(script/test_impact/ci_select --map tmp/test-impact-map.json.gz --base HEAD^1 \
+            --job ${{ matrix.build_type }}/${{ matrix.target }} --out tmp/test-impact-files.txt)
+          echo "TEST_IMPACT_MODE=$mode" >> $GITHUB_ENV
+          cat tmp/test-impact-files.txt
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -393,7 +395,7 @@ jobs:
           fi
 
       - name: Theme QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'themes'
+        if: matrix.build_type == 'frontend' && matrix.target == 'themes' && env.TEST_IMPACT_MODE != 'none'
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
@@ -429,10 +431,10 @@ jobs:
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || 'plugins/chat/spec/system' }}
 
       - name: Theme System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'themes'
+        if: matrix.build_type == 'system' && matrix.target == 'themes' && env.TEST_IMPACT_MODE != 'none'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation tmp/themes/*/spec/system themes/*/spec/system
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || 'tmp/themes/*/spec/system themes/*/spec/system' }}
 
       - name: Prepare JS deprecation reports
         if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
