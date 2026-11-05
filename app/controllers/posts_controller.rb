@@ -803,8 +803,16 @@ class PostsController < ApplicationController
     user = fetch_user_from_params
     raise Discourse::NotFound unless guardian.can_edit_user?(user)
 
+    pending_posts = user.pending_posts
+    if user != current_user
+      # viewable_by joins category moderation groups, which repeats rows for categories
+      # moderated by several of the viewer's groups, so filter by id instead of merging
+      pending_posts =
+        pending_posts.where(id: Reviewable.viewable_by(current_user, preload: false).select(:id))
+    end
+
     render_serialized(
-      user.pending_posts.order(created_at: :desc),
+      pending_posts.reorder(created_at: :desc),
       PendingPostSerializer,
       root: :pending_posts,
     )
