@@ -116,7 +116,7 @@ function rule(state) {
           );
         }
 
-        token.content = token.content.replace(locator, attrs.join(" "));
+        token.content = token.content.replace(locator, () => attrs.join(" "));
       } else if (token.tag === "img") {
         if (mapped) {
           token.attrs[srcIndex][1] = mapped.url;
