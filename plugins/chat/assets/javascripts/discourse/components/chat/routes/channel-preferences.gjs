@@ -26,6 +26,11 @@ export default class ChatRouteChannelPreferences extends Component {
   }
 
   @action
+  registerFormApi(api) {
+    this.formApi = api;
+  }
+
+  @action
   async onNotificationSettingChange(value, { name, set }) {
     const previousValue = this.formData[name];
     set(name, value);
@@ -43,6 +48,7 @@ export default class ChatRouteChannelPreferences extends Component {
       this.toasts.success({ data: { message: i18n("saved") } });
     } catch (error) {
       set(name, previousValue);
+      this.formApi.commitField(name);
       popupAjaxError(error);
     }
   }
@@ -57,6 +63,7 @@ export default class ChatRouteChannelPreferences extends Component {
       <Form
         class="c-channel-preferences__form"
         @data={{this.formData}}
+        @onRegisterApi={{this.registerFormApi}}
         as |form transientData|
       >
         <form.Field
