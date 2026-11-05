@@ -8,6 +8,7 @@ zh_CN:
   js:
     dsa_notice:
       choice_title: "非法"
+      choice_description: "请提交一份详细报告，解释为什么此内容违法。"
       go_back: "返回"
       title: "举报非法内容"
       content_url: "内容的确切 URL"
@@ -16,6 +17,7 @@ zh_CN:
       name: "全名或组织名称"
       email: "电子邮件地址"
       declaration_section: "声明"
+      declaration: "我真心相信这份报告中的事实和说法都是真实完整的。"
       submit: "提交报告"
       get_email_code: "获取电子邮件验证码"
       resend_email_code: "重新发送验证码"
@@ -559,6 +561,7 @@ zh_CN:
         completed: "查看更多想法"
         choose_option: "您想如何开始？"
         predefined_topics: "破冰模板"
+        predefined_topics_subtitle: "给成员们一些讨论的话题"
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
         back: "返回"
@@ -566,11 +569,15 @@ zh_CN:
         icebreakers:
           plan_categories:
             title: "我们应该从哪些类别开始？"
+            description: "询问你的团队应该先推出哪些类别。"
             body: "让我们在正式上线前先理清思路！大家最想讨论什么？我们可以先从几个类别开始，以后再添加更多。"
           plan_invites:
+            title: "发布前我们应该邀请哪些人？"
+            description: "与你的团队商定优先邀请哪些人。"
             body: "加入一个已经有成员的社区总是令人愉快的。我们应该先邀请谁呢？想想那些喜欢聊天、乐于助人，并且会很兴奋能尽早参与进来的人吧。"
           introduce_yourself:
             title: "自我介绍"
+            description: "鼓励成员们分享一些关于他们自己的信息。"
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
           write_your_own:
             title: "写你自己的"
@@ -578,6 +585,11 @@ zh_CN:
     design_wizard:
       title: "自定义您的网站"
       step_label: "转到步骤 %{index}"
+      step_progress: "步骤 %{current}/%{total}"
+      minimize: "最小化设计向导"
+      restore: "恢复设计向导"
+      collapse: "折叠设计向导"
+      expand: "展开设计向导"
       save: "保存并完成"
       back: "返回"
       next: "下一步"
@@ -873,9 +885,13 @@ zh_CN:
         placeholder: "在此处输入消息标题、URL 或 ID"
     dsa_statements:
       title: "DSA分类"
+      help_title: "关于欧盟数字服务法案分类"
+      help: "欧盟《数字服务法》要求平台记录内容审核的原因。<br><a href='https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms' rel='noopener noreferrer' target='_blank'>了解更多…</a>"
       rule: "社区规则"
+      rule_help: "请选择此审核决定所依据的社区规则。"
       rule_prompt: "选择一条社区规则"
       category: "类别"
+      category_help: "请选择最能描述违规行为的《欧盟数字服务法》类别。 <a href='https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification' rel='noopener noreferrer' target='_blank'>查看类别定义…</a>"
       category_prompt: "选择一个类别"
       save: "保存分类"
     review:
@@ -1124,6 +1140,7 @@ zh_CN:
         target_created_by: "帖子由 %{username} 创建 · %{relativeDate}"
         target_deleted: "帖子已删除"
         target_deleted_by: "帖子已被 %{username} 删除 · %{relativeDate}"
+        queued_post_deleted_by: "已排队的帖子已被 %{username} · %{relativeDate} 删除"
         flagged: "被举报"
         flagged_as_by: "被 %{username} 举报为%{flagReason} · %{relativeDate}"
         claimed: "已申领"
@@ -1620,6 +1637,7 @@ zh_CN:
       optional: '（可选）'
     user:
       said: "%{username}："
+      bot_account: "自动账户"
       profile: "个人资料"
       profile_possessive: "%{username} 的个人资料"
       mute: "免打扰"
@@ -4915,6 +4933,7 @@ zh_CN:
     category:
       none: "（无类别）"
       all: "所有类别"
+      choose: "类别…"
       edit: "编辑"
       edit_title: "编辑此类别"
       edit_dialog_title: "编辑: %{categoryName}"
@@ -7935,6 +7954,7 @@ zh_CN:
           site_contact_group_help: |
             受邀接收所有自动发送的个人消息的群组。
           your_organization: "您的组织"
+          your_organization_description: "本网站的运营方及其管辖范围等详细信息。"
           company_name: "名称"
           company_name_placeholder: "ExampleCo"
           company_url: "网站"
@@ -8759,6 +8779,7 @@ zh_CN:
             permanently_delete_post_revisions: "永久删除帖子修订"
             mcp_client_updated: "更新 MCP OAuth 客户端"
             delete_user: "删除用户"
+            create_bot: "创建机器人"
             change_trust_level: "更改信任级别"
             change_username: "更改用户名"
             change_site_setting: "更改站点设置"
@@ -9144,6 +9165,7 @@ zh_CN:
           suspended: "被封禁"
           silenced: "被禁言"
           staged: "暂存"
+          bots: "机器人"
         activation_filter:
           label: "激活状态"
           all: "所有用户"
@@ -9156,9 +9178,22 @@ zh_CN:
         approved: "已批准？"
         source: "来源"
         bots:
+          new: "新机器人"
+          new_options:
+            bot:
+              label: "通用机器人"
+              description: "用于集成、Webhook 或通过 API 自动发布内容的帐户。"
+          back: "返回机器人"
+          help: "机器人是无法登录的用户帐户，用于集成和自动发布。"
+          generate_api_key: "生成 API 密钥"
+          generate_api_key_description: "仅当外部服务充当此机器人时才需要。Discourse 插件不需要。"
+          scope_mode_description: "该密钥仅拥有此机器人的权限。"
           name: "名称"
           username: "用户名"
           trust_level: "信任级别"
+          create: "创建机器人"
+          created: "机器人@%{username} 已创建。"
+          created_by: "由 @%{username} 创建"
         titles:
           active: "活跃用户"
           new: "新用户"
@@ -9174,6 +9209,7 @@ zh_CN:
           silenced: "被禁言的用户"
           suspended: "被封禁的用户"
           staged: "暂存用户"
+          bots: "机器人"
         not_verified: "未验证"
         check_email:
           title: "显示此用户的电子邮件地址"
@@ -9185,6 +9221,7 @@ zh_CN:
           title: "删除此用户的所有关联帐户"
           text: "删除关联帐户"
       user:
+        account_type: "账户类型"
         bot: "机器人"
         suspend_failed: "封禁此用户时出错 %{error}"
         unsuspend_failed: "取消封禁此用户时出错 %{error}"
@@ -9201,14 +9238,18 @@ zh_CN:
           no_constructive_purpose: "除了在社区内引起异议外，该用户的行动没有任何建设性的目的"
           custom: "自定义…"
         suspend_message: "电子邮件消息"
+        suspend_message_placeholder: "（可选）提供有关此操作的更多信息，这些信息将包含在发送给被暂停用户的电子邮件中。"
         suspended_by: "封禁操作者："
         silence_reason: "原因"
         silenced_by: "禁言操作者："
         silence_modal_title: "禁言用户"
         silence_duration: "该用户将被禁言多久？"
+        silence_reason_label: "你为什么要静音？这段文字 <b>将对该用户个人资料页面上的所有人</b> 可见。请言简意赅。"
+        silence_reason_hidden_label: "你为什么要静音？这个文本只会对员工和这个用户可见。请保持简短。"
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "禁言原因"
         silence_message: "电子邮件消息"
+        silence_message_placeholder: "（可选）提供有关此操作的更多信息，这些信息将包含在发送给被禁言用户的电子邮件中。"
         suspended_until: "（直到 %{until}）"
         suspend_forever: "永久封禁"
         cant_suspend: "无法封禁此用户。"
