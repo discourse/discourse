@@ -50,7 +50,7 @@ RSpec.describe Blog::PublicationSerializer do
   it "describes a scheduled revision" do
     revision = submit_blog_draft(publication, admin)
     approve_blog_revision(publication, revision, admin)
-    publication.schedule!(admin, revision_id: revision.id, at: 2.hours.from_now.iso8601)
+    schedule_blog_revision(publication, revision, admin)
 
     json = serialize
     expect(json[:status]).to eq("scheduled")

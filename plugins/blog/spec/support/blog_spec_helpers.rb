@@ -91,6 +91,23 @@ module BlogSpecHelpers
     publication.reload
   end
 
+  def schedule_blog_revision(publication, revision, user, at: 2.hours.from_now)
+    Blog::Publication::Schedule.call!(
+      params: {
+        topic_id: publication.topic_id,
+        revision_id: revision.id,
+        scheduled_at: at,
+      },
+      guardian: user.guardian,
+    )
+    publication.reload
+  end
+
+  def run_blog_schedule(publication, token)
+    Blog::Publication::RunSchedule.call(params: { publication_id: publication.id, token: })
+    publication.reload
+  end
+
   def unpublish_blog_article(publication, user)
     Blog::Publication::Unpublish.call!(
       params: {

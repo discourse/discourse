@@ -32,6 +32,18 @@ RSpec.describe Blog::Publication::Unpublish do
       it { is_expected.to fail_to_find_a_model(:topic) }
     end
 
+    context "when the topic was never published" do
+      fab!(:untracked) { Fabricate(:topic, category: drafts, user: writer) }
+      fab!(:untracked_post) { Fabricate(:post, topic: untracked, user: writer) }
+
+      let(:params) { { topic_id: untracked.id } }
+
+      it "leaves no publication behind" do
+        expect(result).to fail_to_find_a_model(:publication)
+        expect(Blog::Publication.where(topic: untracked)).not_to exist
+      end
+    end
+
     context "when the user is not a publisher" do
       fab!(:acting_user) { writer }
 
@@ -42,7 +54,7 @@ RSpec.describe Blog::Publication::Unpublish do
       before do
         revision = submit_blog_draft(publication, publisher)
         approve_blog_revision(publication, revision, publisher)
-        publication.schedule!(publisher, revision_id: revision.id, at: 2.hours.from_now.iso8601)
+        schedule_blog_revision(publication, revision, publisher)
       end
 
       it { is_expected.to run_successfully }
