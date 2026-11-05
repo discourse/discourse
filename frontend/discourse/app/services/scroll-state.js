@@ -18,6 +18,7 @@ export default class ScrollStateService extends Service {
   }
 
   hideScrollableContentAbove(destroyable) {
+    // Trial change for test impact selection (#45527), not for merge.
     next(() => this._hideScrollableContentAboveCount++);
     registerDestructor(destroyable, () => {
       // Deferred to avoid backtracking re-render assertion — the destructor

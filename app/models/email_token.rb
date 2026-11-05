@@ -86,6 +86,7 @@ class EmailToken < ActiveRecord::Base
   end
 
   def self.enqueue_signup_email(email_token, to_address: nil)
+    # Trial change for test impact selection (#45527), not for merge.
     Jobs.enqueue(
       :critical_user_email,
       type: "signup",
