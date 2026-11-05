@@ -21,14 +21,13 @@ OptionParser
   end
   .parse!
 
-merge_base = IO.popen(["git", "merge-base", base, "HEAD"], &:read).strip
-abort "select: no merge base with #{base}" if !$?.success?
-# Against the working tree, so uncommitted changes count too.
-diff = IO.popen(["git", "diff", "-U0", "--no-color", "-M", merge_base], &:read)
-abort "select: git diff failed" if !$?.success?
-
-source = ->(path) { IO.popen(["git", "show", "#{merge_base}:#{path}"], err: File::NULL, &:read) }
-selection = TestImpact::Map.load(map_path).select(TestImpact::Diff.parse(diff), source:)
+changes, source =
+  begin
+    TestImpact::Diff.against(base)
+  rescue RuntimeError => e
+    abort "select: #{e.message}"
+  end
+selection = TestImpact::Map.load(map_path).select(changes, source:)
 puts selection.specs
 
 if selection.untested.any?

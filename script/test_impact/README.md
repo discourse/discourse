@@ -48,8 +48,9 @@ system specs. It can't run together with `COVERAGE=1`, since both use Ruby's
 
 In CI, a pull request labeled `test-impact-record` records in the backend,
 system and frontend jobs (not themes) and uploads `test-impact-recordings-*`
-artifacts. The label takes effect on the next push. `build_map` merges recordings from several jobs when
-they are in one directory.
+artifacts. The label takes effect on the next push. `build_map` merges
+recordings from several jobs when they are in one directory; the run's
+`Test impact map` job does that and uploads the map as `test-impact-map`.
 
 ## Selecting specs
 
@@ -102,3 +103,18 @@ lockfile changes to a gem that ran at boot, has a native extension (whose C
 code Coverage doesn't see), or that no spec ran, or to anything but gem
 entries.
 When the second list isn't empty, the selection is incomplete.
+
+## Selecting in CI
+
+A pull request labeled `test-impact-select` (and not `test-impact-record`)
+runs a selection. Each job of `.github/workflows/tests.yml` downloads the
+newest `test-impact-map` artifact from a run of one of this repository's
+branches, and `script/test_impact/ci_select` decides what it runs of the pull
+request's changes against the branch it merges into:
+
+- `full`: the job's whole suite, when anything changed is outside the map,
+  there's no map, or the job isn't recorded (themes);
+- `none`: no tests, when nothing selected belongs to the job;
+- `list`: the selected spec or test files that belong to the job.
+
+The job's setup still runs when it selects none.

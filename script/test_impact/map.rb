@@ -399,6 +399,62 @@ module TestImpact
     end
   end
 
+  # One job of .github/workflows/tests.yml, named BUILD_TYPE/TARGET, and what
+  # it runs of a selection.
+  class Job
+    # bin/qunit filters by path in the test page's URL, which allows 8KB.
+    QUNIT_FILTER_LIMIT = 7 * 1024
+
+    def initialize(name)
+      @build_type, @target = name.split("/", 2)
+      @name = name
+    end
+
+    # Theme tests aren't recorded.
+    def recorded?
+      @target != "themes"
+    end
+
+    # ["full" | "none" | "list", reason, files]
+    def run(selection, bundled:, exists:)
+      if selection.unmapped.any?
+        return "full", "outside the map: #{selection.unmapped.first(5).join(", ")}", []
+      end
+      files = selection.specs.select { |path| exists.call(path) && runs?(path, bundled) }
+      return "none", "nothing selected for #{@name}", [] if files.empty?
+      if @build_type == "frontend" && files.sum { |file| file.size + 1 } > QUNIT_FILTER_LIMIT
+        return "full", "#{files.size} test files are too many to filter by path", []
+      end
+      ["list", "#{files.size} of the job's files", files]
+    end
+
+    private
+
+    def runs?(path, bundled)
+      plugin = path[%r{\Aplugins/([^/]+)/}, 1]
+      spec = path.end_with?("_spec.rb")
+      system = path.start_with?("spec/system/") || path.include?("/spec/system/")
+      case [@build_type, @target]
+      in ["backend", "core"]
+        spec && !plugin && !system
+      in ["backend", "plugins"]
+        spec && plugin && !system
+      in ["system", "core"]
+        spec && !plugin && system
+      in ["system", "chat"]
+        spec && plugin == "chat" && system
+      in ["system", "core-plugins"]
+        spec && system && bundled.include?(plugin) && plugin != "chat"
+      in ["system", "official-plugins"]
+        spec && system && plugin && !bundled.include?(plugin)
+      in ["frontend", "core"]
+        !spec && path.start_with?("frontend/")
+      in ["frontend", "plugins"]
+        !spec && plugin
+      end
+    end
+  end
+
   module Diff
     Change = Struct.new(:old_path, :new_path, :hunks, :added, keyword_init: true)
 
@@ -425,6 +481,19 @@ module TestImpact
         end
       end
       changes
+    end
+
+    # The working tree's changes since its merge base with `base` (so
+    # uncommitted changes count too), and a reader of files at that base.
+    def self.against(base)
+      merge_base = IO.popen(["git", "merge-base", base, "HEAD"], &:read).strip
+      raise "no merge base with #{base}" if !$?.success?
+      diff = IO.popen(["git", "diff", "-U0", "--no-color", "-M", merge_base], &:read)
+      raise "git diff failed" if !$?.success?
+      source = ->(path) do
+        IO.popen(["git", "show", "#{merge_base}:#{path}"], err: File::NULL, &:read)
+      end
+      [parse(diff), source]
     end
   end
 end

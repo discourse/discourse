@@ -455,3 +455,59 @@ RSpec.describe TestImpact::Map do
     end
   end
 end
+
+RSpec.describe TestImpact::Job do
+  let(:specs) do
+    %w[
+      spec/models/post_spec.rb
+      spec/system/composer_spec.rb
+      plugins/chat/spec/models/chat_message_spec.rb
+      plugins/chat/spec/system/drawer_spec.rb
+      plugins/poll/spec/system/poll_spec.rb
+      plugins/discourse-events/spec/system/event_spec.rb
+      frontend/discourse/tests/unit/lib/thing-test.js
+      plugins/poll/test/javascripts/poll-test.gjs
+      spec/deleted_spec.rb
+    ]
+  end
+
+  def run(name, specs: self.specs, unmapped: [])
+    selection = TestImpact::Map::Selection.new(specs:, unmapped:, untested: [])
+    described_class.new(name).run(
+      selection,
+      bundled: %w[chat poll],
+      exists: ->(path) { path != "spec/deleted_spec.rb" },
+    )
+  end
+
+  it "gives each job the selected files it runs" do
+    lists = {
+      "backend/core" => ["spec/models/post_spec.rb"],
+      "backend/plugins" => ["plugins/chat/spec/models/chat_message_spec.rb"],
+      "system/core" => ["spec/system/composer_spec.rb"],
+      "system/chat" => ["plugins/chat/spec/system/drawer_spec.rb"],
+      "system/core-plugins" => ["plugins/poll/spec/system/poll_spec.rb"],
+      "system/official-plugins" => ["plugins/discourse-events/spec/system/event_spec.rb"],
+      "frontend/core" => ["frontend/discourse/tests/unit/lib/thing-test.js"],
+      "frontend/plugins" => ["plugins/poll/test/javascripts/poll-test.gjs"],
+    }
+
+    lists.each { |name, files| expect(run(name)).to match(["list", anything, files]), name }
+  end
+
+  it "runs a job whole when the selection is incomplete, and nothing when it selects none" do
+    expect(run("backend/core", unmapped: ["Gemfile"]).first).to eq("full")
+    expect(run("backend/core", specs: ["spec/system/composer_spec.rb"]).first).to eq("none")
+  end
+
+  it "runs QUnit whole when the files are too many to filter by path" do
+    tests =
+      (1..200).map { |n| "frontend/discourse/tests/unit/lib/a-long-test-file-name-#{n}-test.js" }
+
+    expect(run("frontend/core", specs: tests).first).to eq("full")
+  end
+
+  it "doesn't record themes" do
+    expect(described_class.new("frontend/themes")).not_to be_recorded
+  end
+end
