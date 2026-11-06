@@ -79,6 +79,9 @@ module TopicGuardian
         end
       )
 
+    return true if is_admin?
+    return false if !can_see_category?(category)
+
     is_staff? ||
       (can_create_topic_on_category?(category) && !topic_posting_review_required?(category))
   end
