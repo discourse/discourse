@@ -224,6 +224,9 @@ module("Integration | Component | code-editor", function (hooks) {
       1,
       "and Escape collapses them to one"
     );
+    view.dispatch({ selection: { anchor: 1, head: 4 } });
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    assert.true(view.state.selection.main.empty, "and a selection to a cursor");
 
     assert.dom(".cm-activeLine").exists("the active line is marked");
     assert

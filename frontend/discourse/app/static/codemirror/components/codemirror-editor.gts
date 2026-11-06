@@ -292,10 +292,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
       if (completionStatus(view.state)) {
         closeCompletion(view);
-      } else if (
-        !closeSearchPanel(view) &&
-        !(view.state.selection.ranges.length > 1 && simplifySelection(view))
-      ) {
+      } else if (!closeSearchPanel(view) && !simplifySelection(view)) {
         if (!codeMode) {
           view.contentDOM.blur();
           event.preventDefault();
