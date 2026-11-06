@@ -5,7 +5,7 @@ class CSRFTokenVerifier
   class InvalidCSRFToken < StandardError
   end
 
-  include ActiveSupport::Configurable
+  class_attribute :config, instance_predicate: false, default: ActiveSupport::OrderedOptions.new
   include ActionController::RequestForgeryProtection
 
   # Use config from ActionController::Base
