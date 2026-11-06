@@ -3,7 +3,7 @@
 RSpec.describe PostRevisionSerializer do
   fab!(:post) { Fabricate(:post, version: 2) }
 
-  it "suppresses diffs that inherit content from a distant hidden revision" do
+  it "does not include body or title diffs when an earlier revision is hidden" do
     SiteSetting.editing_grace_period = 0
     revised_post = Fabricate(:post)
     revised_post.revise(revised_post.user, raw: "Hidden historical content")
