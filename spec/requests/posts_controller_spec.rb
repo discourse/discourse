@@ -1433,6 +1433,24 @@ RSpec.describe PostsController do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
+    it "does not spend quadratic time cooking a post full of unclosed bbcode tags" do
+      # A TL0 user can submit a post (well within max_post_length) whose server
+      # side cooking is quadratic in its length, tying up the web worker for
+      # several seconds regardless of whether the post is ultimately accepted.
+      sign_in(user_trust_level_0)
+      PrettyText.cook("warm up the v8 context")
+
+      raw = (["[quote]"] * 2000).join("\n")
+
+      elapsed =
+        Benchmark.realtime do
+          post "/posts.json", params: { raw: raw, title: "a perfectly ordinary topic title" }
+        end
+
+      expect(response.status).to be_between(200, 499)
+      expect(elapsed).to be < 2
+    end
+
     it "prevents regular users from publishing a global banner while creating a topic" do
       ApplicationLayoutPreloader.banner_json_cache.clear
       sign_in(user_trust_level_1)
