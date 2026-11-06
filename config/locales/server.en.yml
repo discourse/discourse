@@ -6376,7 +6376,7 @@ en:
       concord:
         description: "A chat-first layout with a single list of categories, chat channels and voice rooms."
       places:
-        description: "A colorful theme with upbeat banners above the topic lists."
+        description: "A playful theme that adds banners and a handy sidebar to topic lists."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."
