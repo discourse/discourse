@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import noop from "discourse/helpers/noop";
@@ -109,6 +109,51 @@ module(
       assert
         .dom(`.form-template-field[data-field-type='checkbox']`)
         .exists("checkbox component renders");
+    });
+
+    test("shows an error when the template fails to load", async function (assert) {
+      pretender.get("/form-templates/1.json", () => response(504, {}));
+
+      this.set("formTemplateId", [1]);
+      await render(
+        <template>
+          <Wrapper @id={{this.formTemplateId}} @onChange={{noop}} />
+        </template>
+      );
+
+      assert.dom(".alert-error").exists("an error message is shown");
+    });
+
+    test("loads the template again when retrying after it failed to load", async function (assert) {
+      let requests = 0;
+      pretender.get("/form-templates/1.json", () => {
+        requests++;
+
+        if (requests === 1) {
+          return response(504, {});
+        }
+
+        return response({
+          form_template: {
+            id: 1,
+            name: "Bug Reports",
+            template: "- type: checkbox\n  id: options",
+          },
+        });
+      });
+
+      this.set("formTemplateId", [1]);
+      await render(
+        <template>
+          <Wrapper @id={{this.formTemplateId}} @onChange={{noop}} />
+        </template>
+      );
+      await click(".form-template-form__retry");
+
+      assert
+        .dom(`.form-template-field[data-field-type='checkbox']`)
+        .exists("the template renders after retrying");
+      assert.dom(".alert-error").doesNotExist("the error message is removed");
     });
   }
 );
