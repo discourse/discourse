@@ -11,7 +11,11 @@ module Live
     SIGNAL_EVENTS_PER_USER_PER_MINUTE = 5_000
     SIGNAL_EVENTS_PER_ROOM_PER_MINUTE = 100_000
 
-    STATE_FIELDS = %i[muted deafened video screen watching transcribing]
+    # Generous enough for a burst of applause, low enough that one user can't
+    # flood every participant's MessageBus.
+    REACTIONS_PER_USER = 15 # per 10 seconds
+
+    STATE_FIELDS = %i[muted deafened video screen watching transcribing recording_locally]
 
     # Anonymous visitors may browse the directory; the guardian still limits the
     # listing to public rooms, and only when access is open to everyone.
@@ -40,6 +44,7 @@ module Live
                     stop_recording
                     request_to_speak
                     withdraw_request_to_speak
+                    reaction
                   ]
 
     def index
@@ -117,7 +122,7 @@ module Live
     end
 
     def destroy
-      guardian.ensure_can_manage_live_room!(@room)
+      guardian.ensure_can_delete_live_room!(@room)
       # Built before the destroy so the broadcast still targets the members
       # whose memberships the destroy cascades away.
       broadcaster = Live::DirectoryBroadcaster.new(@room, :destroyed)
@@ -482,6 +487,11 @@ module Live
         end
       end
 
+      if params.key?(:recording_locally) && bool.cast(params[:recording_locally]) &&
+           !guardian.can_record_live_locally?
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.local_recording_not_allowed"))
+      end
+
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)
       previous_metadata = metadata.dup
       metadata[:is_muted] = bool.cast(params[:muted]) if params.key?(:muted)
@@ -490,6 +500,9 @@ module Live
       metadata[:is_screen_sharing] = bool.cast(params[:screen]) if params.key?(:screen)
       metadata[:watching_video] = bool.cast(params[:watching]) if params.key?(:watching)
       metadata[:is_transcribing] = bool.cast(params[:transcribing]) if params.key?(:transcribing)
+      if params.key?(:recording_locally)
+        metadata[:is_recording_locally] = bool.cast(params[:recording_locally])
+      end
 
       # A request that changes nothing must not become a full-roster
       # rebroadcast to every participant.
@@ -626,6 +639,21 @@ module Live
         Live::RoomBroadcaster.publish_hand_raise(@room, target_id, raised: false, reason: reason)
         Live::RoomBroadcaster.publish_participants(@room)
       end
+
+      head :no_content
+    end
+
+    def reaction
+      guardian.ensure_can_join_live_room!(@room)
+      ensure_participant_session!
+
+      # Before validation, which may look the emoji up in shared caches.
+      RateLimiter.new(current_user, "live-reactions", REACTIONS_PER_USER, 10.seconds).performed!
+
+      emoji = params.require(:emoji)
+      raise Discourse::InvalidParameters.new(:emoji) if !Live::Reactions.valid?(emoji)
+
+      Live::RoomBroadcaster.publish_reaction(@room, current_user, emoji)
 
       head :no_content
     end

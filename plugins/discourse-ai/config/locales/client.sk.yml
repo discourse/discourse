@@ -200,6 +200,7 @@ sk:
         no_llm: "Nie je vybraný žiadny LLM"
         no_agent: "Nie je nastavené"
         no_groups: "Žiadny"
+        classification_model: "Model:"
         edit: "Nastavení"
         expand_list:
           one: "(%{count} ďalší)"
@@ -217,6 +218,13 @@ sk:
           all: "Všetky"
           no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."
           reset: "Resetovať"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Emócia"
+          enabled: "Povolené"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emócia"
         summarization:
           name: "Súhrny"
           description: "Sprístupňuje tlačidlo na zhrnutie, ktoré umožňuje návštevníkom zhrnúť témy"
@@ -321,6 +329,8 @@ sk:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
         select_llm: "Vyberte si LLM"
+        no_llm_selected: "Žiadny"
+        no_decision_model_selected: "Žiadny"
         custom_instructions: "Vlastné pokyny"
         custom_instructions_help: "Prispôsobené pokyny špecifické pre vašu stránku, ktoré pomôžu umelej inteligencii identifikovať spam, napr. „Buďte agresívnejší pri skenovaní príspevkov, ktoré nie sú v angličtine“."
         last_seven_days: "Posledných 7 dní"
@@ -822,6 +832,7 @@ sk:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Vlastné"
         provider_fields:
@@ -925,10 +936,7 @@ sk:
           uploads_in_progress: "Nemožno odoslať, keď prebieha nahrávanie"
           scroll_to_bottom: "Prejdite nadol"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Prehľad nálad"
           analysis: "Analýza nálad"
         sentiment_analysis:
           share_chart: "Skopírujte odkaz na graf"

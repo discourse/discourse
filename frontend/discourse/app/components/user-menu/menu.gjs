@@ -2,14 +2,12 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuTab from "discourse/components/user-menu/menu-tab";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
@@ -204,18 +202,6 @@ const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
   }
 };
 
-function resolvePanelComponent(owner, panelComponent) {
-  if (typeof panelComponent === "string") {
-    const nameForConsole = JSON.stringify(panelComponent);
-    deprecated(
-      `user-menu tab panelComponent must be passed as a component class (passed ${nameForConsole})`,
-      { id: "discourse.user-menu.panel-component-class" }
-    );
-    return owner.resolveRegistration(`component:${panelComponent}`);
-  }
-  return panelComponent;
-}
-
 export default class UserMenu extends Component {
   @service appEvents;
   @service currentUser;
@@ -333,10 +319,7 @@ export default class UserMenu extends Component {
     event.preventDefault();
 
     this.currentTabId = tab.id;
-    this.currentPanelComponent = resolvePanelComponent(
-      getOwner(this),
-      tab.panelComponent
-    );
+    this.currentPanelComponent = tab.panelComponent;
 
     this.appEvents.trigger("user-menu:tab-click", tab.id);
     this.currentNotificationTypes = tab.notificationTypes;

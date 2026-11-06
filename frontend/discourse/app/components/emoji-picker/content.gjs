@@ -13,7 +13,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import noop from "discourse/helpers/noop";
 import withEventValue from "discourse/helpers/with-event-value";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
@@ -364,7 +363,7 @@ export default class EmojiPicker extends Component {
     this.loading = true;
 
     try {
-      this.emojiStore.list = await ajax("/emojis.json");
+      await this.emojiStore.loadList();
 
       // we cant filter an empty list so have to wait for it
       this.didInputFilter(this.term);

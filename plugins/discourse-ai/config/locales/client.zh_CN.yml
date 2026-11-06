@@ -82,7 +82,7 @@ zh_CN:
           fetch_error: "询问 AI 指标无法加载。"
         emotion:
           title: "情绪"
-          description: "该表格列出了按特定情绪分类的帖子数量。根据所选情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"
+          description: "该表格统计了使用所选情绪分类后端对每种情绪进行分类的帖子数量。"
         reports:
           filters:
             group_by:
@@ -124,12 +124,15 @@ zh_CN:
       node_unavailable:
         requires_ai: "需要启用 AI 插件"
         requires_decision_model: "需要决策模型"
+        requires_ai_translation: "需要配置 AI 翻译"
       nodes:
         "action:ai_agent": "AI 智能体"
         "action:classify": "分类"
+        "trigger:post_locale_detected": "检测到的帖子"
       node_descriptions:
         "action:ai_agent": "运行 AI 智能体来处理数据或生成内容"
         "action:classify": "针对每个项目，向决策模型提出问题"
+        "trigger:post_locale_detected": "当检测到新帖子或已编辑帖子时触发。"
     discourse_automation:
       scriptables:
         llm_report:
@@ -383,7 +386,7 @@ zh_CN:
         saved: "已保存默认语言模型"
       features:
         short_title: "功能"
-        description: "这些是您站点的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的智能体和 LLM，并按群组控制访问权限。"
+        description: "为您的网站配置 AI 功能，包括其代理、模型和访问权限（如果支持）。"
         back: "返回 AI 功能"
         settings_save_error: "某些设置无法保存。"
         disabled: "（已禁用）"
@@ -395,6 +398,14 @@ zh_CN:
         no_llm: "未选择 LLM"
         no_agent: "未设置"
         no_groups: "无"
+        backend: "后端："
+        backends:
+          agent: "LLM代理"
+          decision_model: "决策模型"
+          classification_model: "专用分类端点"
+        decision_model: "决策模型:"
+        classification_model: "模型："
+        not_configured: "未配置"
         edit: "设置"
         expand_list:
           other: "（其他 %{count} 个）"
@@ -413,10 +424,32 @@ zh_CN:
           not_enabled: "未启用"
         filters:
           all: "所有"
-          text: "搜索功能、智能体、LLM 或群组…"
+          text: "搜索功能、代理、模型或群组……"
           no_results: "找不到符合您的筛选条件的功能。"
           reset: "重置"
         no_automations: "尚无自动化"
+        sentiment:
+          name: "情感与情绪"
+          description: "在后台对帖子中的情感和情绪进行分类。"
+          sentiment: "情绪"
+          emotion: "情绪"
+          backend: "后端"
+          enabled: "已启用"
+          agent: "智能体"
+          decision_model: "决策模型"
+          posts_per_hour: "每小时发帖数"
+          post_age_limit: "发布年龄限制（天数）"
+          posts_per_hour_description: "大致扫描频率。0 表示停止扫描，包括新发布的帖子。已编辑的帖子会单独检查。"
+          background_description: "每 5 分钟检查一次未分类帖子，检查范围在共享限制内。每个已启用的分类器每次处理帖子都可能产生一次请求。拒绝请求后可能会重试。"
+          emotion_scores: "分数分布在 28 种情绪上。"
+          model_change_warning: "更改所选模型不会重新分类现有结果。"
+          dedicated_description: "专用分类端点在站点设置中配置。"
+          configure_dedicated: "配置专用分类端点"
+          manage_decision_models: "管理决策模型"
+          setting_groups:
+            sentiment: "情绪"
+            emotion: "情绪"
+            background_processing: "后台处理"
         summarization:
           name: "总结"
           description: "提供总结按钮，允许访客总结话题"
@@ -637,6 +670,10 @@ zh_CN:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"
         select_llm: "选择 LLM"
+        no_llm_selected: "无"
+        select_decision_model: "选择决策模型"
+        no_decision_model_selected: "无"
+        decision_model_help: "决策模型会在有把握的情况下自行对每个帖子进行评分，并将不确定的帖子留给逻辑逻辑模型 LLM 进行评分。如果没有逻辑逻辑模型，则由决策模型自行决定每个帖子的评分。"
         select_agent: "选择智能体"
         custom_instructions: "自定义指令"
         custom_instructions_help: "特定于您的站点的自定义指令，帮助指导 AI 识别垃圾信息，例如“更积极地扫描非英语帖子”。"
@@ -661,6 +698,8 @@ zh_CN:
           result: "结果"
           reason: "推理"
           llm: "LLM"
+          decision_model: "决策模型"
+          spam_probability: "垃圾邮件概率"
           scan_history: "扫描历史记录"
           sent_message: "发送消息"
           system_prompt: "系统提示"
@@ -825,6 +864,9 @@ zh_CN:
             summary_forever: "有效载荷保留 %{detailed} 天，摘要永久保留"
             finite: "有效载荷保留 %{detailed} 天，摘要保留 %{summary} 天，然后删除"
       ai_agent:
+        new_bot_option:
+          label: "AI 智能体"
+          description: "创建机器人及其语言模型、提示、工具和权限。"
         ai_tools: "工具"
         native_tools_help: "启用“始终使用默认语言模型”且所选默认语言模型支持提供商原生工具时，这些工具（例如网络搜索或页面获取）将显示。"
         mcp_servers: "MCP 服务器"
@@ -1130,7 +1172,7 @@ zh_CN:
           remove: "移除请求头"
         edit: "编辑"
         delete: "删除"
-        confirm_delete: "您确定要删除此决策模型吗？使用该模型的工作流将停止运行。"
+        confirm_delete: "您确定要删除此决策模型吗？使用该模型的功能和工作流程将停止运行。"
         saved: "决策模型已保存"
         test: "运行测试"
         test_success: "决策模型回答了测试问题（是： %{percentage}%）。"
@@ -1240,7 +1282,7 @@ zh_CN:
         type_descriptions:
           llm: "为 AI 机器人、摘要和 AI 助手等功能生成文本"
           embedding: "将内容转化为语义搜索和相关主题的向量"
-          decision: "回答有关内容的文本问题（是/否、选择题、评分题），并给出概率，用于工作流程中。"
+          decision: "回答有关内容的文本问题（是/否、选择题、评分），并给出概率，用于人工智能功能和工作流程。"
         type_filters:
           llm: "大型语言模型"
           embedding: "嵌入模型"
@@ -1520,6 +1562,7 @@ zh_CN:
           bge-large-en: "开源的纯英文模型，自托管"
           bge-m3: "适用于较长内容的开源多语言模型，可自行托管"
           multilingual-e5-large: "开源多语言模型，自托管"
+          cohere-embed-v4: "Cohere 的多语言模型托管在 AWS Bedrock 上"
           gemini-embedding-001: "谷歌托管的多语言模型"
           text-embedding-3-large: "OpenAI 最精确的嵌入模型"
           text-embedding-3-small: "OpenAI 更快、更低成本的嵌入模型"
@@ -1533,6 +1576,7 @@ zh_CN:
           failure: "尝试生成嵌入向量导致以下错误：%{error}"
         hints:
           dimensions_warning: "保存后，此值将无法更改。"
+          bedrock_api_key: "Bedrock API 密钥，或者当设置了访问密钥 ID 时使用的秘密访问密钥。留空则使用 IAM 角色或服务器的 AWS 凭证。"
           matryoshka_dimensions: "定义用于分层或多层数据表示的嵌套嵌入向量的大小，类似于套娃相互嵌套的方式。"
           embed_prompt: "生成论坛内容嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
           search_prompt: "生成搜索查询嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
@@ -1557,10 +1601,15 @@ zh_CN:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "自定义"
         provider_fields:
           model_name: "模型名称"
+          model_id: "模型 ID 或推理配置文件"
+          region: "AWS 区域"
+          access_key_id: "AWS 访问密钥 ID"
+          role_arn: "IAM 角色 ARN"
         semantic_search: "话题（语义）"
         semantic_search_results:
           toggle: "相关结果"
@@ -1745,10 +1794,7 @@ zh_CN:
           streaming_below: "下方新增内容"
           editing_post: "正在编辑帖子"
       sentiments:
-        dashboard:
-          title: "情绪"
         sidebar:
-          overview: "情绪概述"
           analysis: "情绪分析"
         sentiment_analysis:
           share_chart: "复制图表链接"

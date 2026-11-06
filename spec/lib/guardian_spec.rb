@@ -714,6 +714,19 @@ RSpec.describe Guardian do
         it "returns true when archetype is unchanged" do
           expect(Guardian.new(user).can_change_archetype?(topic, topic.archetype)).to eq(true)
         end
+
+        it "does not allow anyone to change archetype to an unregistered one" do
+          expect(Guardian.new(user).can_change_archetype?(topic, "unknown")).to eq(false)
+          expect(Guardian.new(admin).can_change_archetype?(topic, "unknown")).to eq(false)
+        end
+
+        it "allows changing archetype to one registered by a plugin" do
+          Archetype.register("plugin_archetype")
+
+          expect(Guardian.new(user).can_change_archetype?(topic, "plugin_archetype")).to eq(true)
+        ensure
+          Archetype.deregister("plugin_archetype")
+        end
       end
 
       it "respects category group moderator settings" do
@@ -1532,6 +1545,23 @@ RSpec.describe Guardian do
   end
 
   describe "#can_see_flags?" do
+    it "does not allow TL4 members to see private flags on topics they can moderate" do
+      guardian = Guardian.new(trust_level_4)
+
+      expect(guardian.can_moderate?(topic)).to be_truthy
+      expect(guardian.can_see_flags?(topic)).to be_falsey
+    end
+
+    it "does not grant private flag access through category moderation" do
+      SiteSetting.enable_category_group_moderation = true
+      group.add(trust_level_4)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
+      guardian = Guardian.new(trust_level_4)
+
+      expect(guardian.can_review_topic?(topic)).to eq(true)
+      expect(guardian.can_see_flags?(topic)).to be_falsey
+    end
+
     it "returns false when there is no post" do
       expect(Guardian.new(moderator).can_see_flags?(nil)).to be_falsey
     end
@@ -3420,6 +3450,24 @@ RSpec.describe Guardian do
   end
 
   describe "#can_remove_allowed_users?" do
+    it "requires current visibility for a TL2 PM creator, including access through a group" do
+      creator = Fabricate(:user, trust_level: 2)
+      private_topic = Fabricate(:private_message_topic, user: creator)
+      group = Fabricate(:group)
+      group.add(creator)
+
+      expect(creator.guardian.can_remove_allowed_users?(private_topic)).to eq(true)
+
+      private_topic.allowed_users.delete(creator)
+
+      expect(creator.guardian.can_remove_allowed_users?(private_topic)).to eq(false)
+      expect(moderator.guardian.can_remove_allowed_users?(private_topic)).to eq(true)
+
+      private_topic.allowed_groups << group
+
+      expect(creator.guardian.can_remove_allowed_users?(private_topic)).to eq(true)
+    end
+
     context "with staff users" do
       it "allows moderators to remove allowed users" do
         expect(Guardian.new(moderator).can_remove_allowed_users?(topic)).to eq(true)

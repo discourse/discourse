@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Diseño
+        overridden: Personalizado
+        insert: Insertar
+        array_value: Lista
+        preview_home: Página de inicio
+        preview_archive: Archivo
+        desktop: Escritorio
+        mobile: Móvil
+        back_to_themes: Volver a los temas
+        new_theme_short: Nuevo tema
+        themes: Tema
+        theme_name: Nombre del tema
+        edit: Editar
+        activate: Activar
+        preview: Vista previa
+        import: Importar
+        export: Exportar
+        active: Activo
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Borrador
+        preview: Vista previa
+        change:
+          title: título
+          body: cuerpo
+      review:
+        create: Crear enlace
+        copy: Copiar
+        open: Abierto
+        status:
+          active: Activo
+          expired: Caducado
+          revoked: Revocada
+          inactive: Inactivo
+        closed_on: "Cerrado %{date}"
+        revoke: Revocar
+        message: Comentarios
+      editor_table:
+        edit: Editar
+        status: Estado
+        replies: Respuestas
+      drafts: Borradores
+      preview: Vista previa
+      unpublish: Despublicar
+      appearance_link: Aspecto

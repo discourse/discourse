@@ -465,6 +465,54 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(run_data.dig(set_fields_step["node_name"], 0, "inputs", 0, "item_count")).to eq(1)
     end
 
+    context "with a rich node error" do
+      let(:node_class) do
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(name: "action:rich_error_test", version: "1.0")
+
+          def execute(exec_ctx)
+            raise_node_error!("Failure", html: '<strong onclick="alert(1)">Failure</strong>')
+          end
+        end
+      end
+
+      before do
+        DiscoursePluginRegistry.register_discourse_workflows_node(node_class, Plugin::Instance.new)
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      after { unregister_workflow_nodes(node_class) }
+
+      it "stores and publishes sanitized HTML alongside the plain error" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "action-1", "action:rich_error_test"
+            g.chain "trigger-1", "action-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+        execution = nil
+
+        messages =
+          MessageBus.track_publish do
+            execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+          end
+
+        expect(execution.reload.status).to eq("error")
+        expect(execution.error).to eq("Failure")
+        step = execution.execution_data.find_step(node_id: "action-1")
+        expect(step).to include("error" => "Failure", "error_html" => "<strong>Failure</strong>")
+        expect(messages.filter_map { |message| message.data[:step] }).to include(
+          include("error" => "Failure", "error_html" => "<strong>Failure</strong>"),
+        )
+        serialized = DiscourseWorkflows::ExecutionSerializer.new(execution, root: false).as_json
+        expect(serialized[:steps]).to include(
+          include(error: "Failure", error_html: "<strong>Failure</strong>"),
+        )
+      end
+    end
+
     it "fails the step when expression errors are logged" do
       graph =
         build_workflow_graph do |g|

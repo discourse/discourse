@@ -2302,7 +2302,6 @@ hu:
     enable_names: "Mutassa meg a felhasználó teljes nevét a profilján, felhasználói kártyáján és e-mailjeiben. Kapcsolja ki a teljes név elrejtését mindenhol."
     display_name_on_posts: "A felhasználó teljes nevének megjelenítése a bejegyzéseiben a @felhasználónév mellett."
     show_time_gap_days: "Ha két bejegyzés ennyi nap eltéréssel készül, jelenítse meg az időbeli eltérést a témában."
-    short_progress_text_threshold: "Miután egy témában a bejegyzések száma meghaladja ezt a számot, a folyamatjelző sáv csak az aktuális bejegyzés számát mutatja. Ha módosítja a folyamatjelző sáv szélességét, előfordulhat, hogy módosítania kell ezt az értéket."
     highlighted_languages: "Tartalmazza a szintaxis kiemelési szabályokat. (Figyelem: túl sok nyelv használata befolyásolhatja a teljesítményt) lásd: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> a bemutatóért"
     show_copy_button_on_codeblocks: "Adjon hozzá egy gombot a kódblokkokhoz, hogy a blokk tartalmát a felhasználó vágólapjára másolja."
     embed_any_origin: "Beágyazható tartalom engedélyezése származástól függetlenül. Ez szükséges a statikus HTML-kóddal rendelkező mobilalkalmazásokhoz."
@@ -2417,7 +2416,7 @@ hu:
     create_post_for_category_and_tag_changes: "Suttogó hozzászólás létrehozása, amikor egy téma kategóriája vagy címkéi megváltoznak, a suttogó hozzászólások engedélyezése szükséges."
     automatically_clean_unused_tags: "Naponta automatikusan törölje azokat a címkéket, amelyeket nem használ semmilyen témában vagy személyes üzenetben."
     default_watched_precedence_over_muted: "Értesítés küldése a felhasználóknak azokról a figyelt kategóriákba vagy címkékhez tartozó témákról, amelyek egyúttal elnémított kategóriához vagy címkéhez is tartoznak."
-    company_name: "Cége vagy szervezete neve. Ha üresen hagyja, akkor a szolgáltatási feltételek vagy az adatvédelmi nyilatkozat nem jelenik meg."
+    company_name: "Cége vagy szervezet neve."
     governing_law: "Adja meg azt a joghatóságot, amely szabályozza a webhely jogi vonatkozásait, beleértve a Szolgáltatási feltételeket és az Adatvédelmi irányelveket. Ez általában az az ország vagy állam, ahol a webhelyet üzemeltető vállalat be van jegyezve vagy üzleti tevékenységet folytat."
     city_for_disputes: "Adja meg azt a várost, amely a fórum használatával kapcsolatos viták rendezésének joghatósága alá tartozik. Ezt az információt általában jogi dokumentumok tartalmazzák, például a fórum használati feltételei."
     shared_drafts_category: "A Megosztott vázlatok funkció engedélyezése egy kategória kijelölésével a téma vázlatok számára. Az ebben a kategóriában lévő témák el lesznek rejtve a személyzeti felhasználók téma listáiból."
@@ -2433,9 +2432,6 @@ hu:
     enable_user_status: "A felhasználók egyéni állapotüzenetet állíthatnak be (emoji + leírás)."
     enable_user_tips: "Új felhasználói tippek engedélyezése, amelyek ismertetik a legfontosabb funkciókat a felhasználók számára."
     short_title: "A rövid cím a felhasználó kezdőképernyőjén, az alkalmazásindítóban vagy más olyan helyeken jelenik meg, ahol korlátozott a rendelkezésre álló hely. Legfeljebb 12 karakterből állhat. Vegye figyelembe, hogy a cím módosítása után a PWA-felhasználók egy értesítést kaphatnak, amely az alkalmazás frissítésére vagy eltávolítására kéri őket."
-    dashboard_hidden_reports: "Engedélyezze a megadott jelentések elrejtését a vezérlőpulton."
-    dashboard_visible_tabs: "Válassza ki, hogy a vezérlőpult mely lapjai legyenek láthatóak."
-    dashboard_general_tab_activity_metrics: "Válassza ki azokat a jelentéseket, amelyek aktivitási mutatóként jelenjenek meg az általános fülön."
     gravatar_enabled: "A <a href='https://gravatar.com/'>Gravatar</a> szolgáltatás használata a felhasználói avatarokhoz. Ennek letiltása megakadályozza, hogy a felhasználók Gravatarra váltsanak, de nem érinti azokat a felhasználókat, akik már jelenleg is azt használják."
     gravatar_name: "Adja meg a Gravatar szolgáltató nevét. Ezt a nevet általában a Gravatar avatarokat biztosító forrás azonosítására használják a webhelyen."
     gravatar_base_url: "Adja meg a Gravatar szolgáltató API-jának elérési URL-jét. Ez a beállítás kulcsfontosságú az e-mail címek Gravatar URL-é alakításához, ahol az avatar képek tárolva vannak."
@@ -4715,6 +4711,19 @@ hu:
     graph_title: "Keresés száma"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Naponta"
+        every_weekday: "Minden hétköznap"
+        ordinals:
+          last: "legutóbbi"
+        weekdays:
+          sunday: "Vasárnap"
+          monday: "Hétfő"
+          tuesday: "Kedd"
+          wednesday: "Szerda"
+          thursday: "Csütörtök"
+          friday: "Péntek"
+          saturday: "Szombat"
       user_joined_community: "Csatlakozott %{date}"
     google_meet:
       meeting_code: "Kód:"
@@ -4722,6 +4731,9 @@ hu:
       truncated_file: "Ez a fájl csonkolva lett."
       show_original: "eredeti megjelenítése"
     github:
+      header:
+        file: "Fájl"
+        success: "Sikeres"
       binary_file: "Ez a fájl bináris."
       truncated_file: "Ez a fájl csonkolva lett."
       show_original: "eredeti megjelenítése"
@@ -4735,21 +4747,12 @@ hu:
       review_by: "Jóváhagyta:"
       pr_summary: "%{commits} véglegesíti a megváltozott %{changed_files} fájlokat %{additions} kiegészítéssel és %{deletions} törléssel"
       no_description: "Hozzájáruljon a %{repo} fejlesztéséhez a GitHubon való fiók létrehozásával."
-      pr_title:
-        default: "Lekérési kérelem"
-        draft: "Vázlat lekérési kérelem"
-        open: "Nyitott lekérési kérelem"
-        approved: "Jóváhagyott lekérési kérelem"
-        changes_requested: "Módosításokat kértek"
-        merged: "Összefésült lekérési kérelem"
-        closed: "Lezárt lekérési kérelem"
-      status_date:
-        open: "nyitott"
-        draft: "vázlat"
-        approved: "jóváhagyott"
-        changes_requested: "módosításokat kértek"
-        merged: "összefésült"
-        closed: "lezárva"
+      pr_status:
+        draft: "Vázlat"
+        open: "Nyitott"
+        approved: "Jóváhagyott"
+        merged: "Összefésült"
+        closed: "Lezárva"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'

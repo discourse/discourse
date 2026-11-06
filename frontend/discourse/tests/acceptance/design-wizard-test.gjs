@@ -1,6 +1,7 @@
 import {
   click,
   currentURL,
+  find,
   visit,
   waitFor,
   waitUntil,
@@ -13,6 +14,7 @@ import {
 } from "discourse/admin/lib/color-scheme-manager";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import DiscourseURL from "discourse/lib/url";
+import DesignWizardService from "discourse/services/design-wizard";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const APPEARANCE_LAUNCH_BUTTON =
@@ -24,15 +26,15 @@ const designWizardData = () => ({
       id: -1,
       name: "Foundation",
       default: true,
+      default_homepage: "latest",
       color_scheme_id: null,
-      dark_color_scheme_id: null,
+      dark_color_scheme_id: -2,
       screenshot_light_url: null,
       screenshot_dark_url: null,
       palette_pairs: [
         {
           key: "default",
           name: "Default",
-          dark_only: false,
           light: {
             id: -1,
             name: "Light",
@@ -56,6 +58,10 @@ const designWizardData = () => ({
 
 acceptance("Design wizard - admin launch", function (needs) {
   let savedPayloads = [];
+  let wizardData;
+  let importRequests;
+  let importFails;
+  let docked;
 
   needs.user({
     admin: true,
@@ -65,7 +71,16 @@ acceptance("Design wizard - admin launch", function (needs) {
 
   needs.hooks.beforeEach(function () {
     savedPayloads = [];
+    wizardData = designWizardData();
+    importRequests = [];
+    importFails = false;
     this.originalSchemeLinks = captureColorSchemeLinks();
+
+    // docking follows the viewport, which the test runner doesn't control
+    docked = false;
+    sinon.stub(DesignWizardService.prototype, "docked").get(function () {
+      return this.active && docked;
+    });
   });
 
   // A wizard preview swaps the test page's real color-scheme links, and an
@@ -77,8 +92,15 @@ acceptance("Design wizard - admin launch", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/admin/config/design-wizard.json", () =>
-      helper.response(200, designWizardData())
+      helper.response(200, wizardData)
     );
+
+    server.post("/admin/themes/import", (request) => {
+      importRequests.push(helper.parsePostData(request.requestBody));
+      return importFails
+        ? helper.response(422, { errors: ["Unable to install theme"] })
+        : helper.response(201, { theme: { id: 42, name: "Concord" } });
+    });
 
     server.put("/admin/config/design-wizard.json", (request) => {
       savedPayloads.push(helper.parsePostData(request.requestBody));
@@ -104,6 +126,948 @@ acceptance("Design wizard - admin launch", function (needs) {
     );
   });
 
+  test("minimizing preserves the preview and selections while browsing", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+    await click(
+      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+    );
+    await click(
+      ".design-wizard__font-group:first-child .design-wizard__font-select"
+    );
+    await click("[data-identifier='design-wizard-base-font'] .body-font-arial");
+
+    const previewLinks = captureColorSchemeLinks();
+    const sections = find(".design-wizard__sections");
+    const savedCount = savedPayloads.length;
+
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(".design-wizard")
+      .hasAttribute("inert", "", "hides controls from keyboard navigation");
+    assert
+      .dom(".design-wizard")
+      .hasAria("hidden", "true", "hides controls from assistive technology");
+    assert
+      .dom(".design-wizard__restore")
+      .isFocused("moves focus to the restore button");
+    assert
+      .dom(".design-wizard__restore")
+      .hasAria("expanded", "false", "exposes the collapsed state");
+    assert
+      .dom(".design-wizard__restore")
+      .includesText("Step 2/3", "shows the current step");
+    assert
+      .dom(".dialog-footer")
+      .doesNotExist("minimizing does not ask about saved changes");
+    assert.strictEqual(
+      savedPayloads.length,
+      savedCount,
+      "minimizing does not save changes"
+    );
+    assert.deepEqual(
+      captureColorSchemeLinks(),
+      previewLinks,
+      "keeps the palette preview applied"
+    );
+
+    await visit("/categories");
+
+    assert
+      .dom(".design-wizard__restore")
+      .exists("keeps the restore button available on another page");
+    await click(".design-wizard__restore");
+
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("removes the restore bar when expanded");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "restores keyboard access");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute(
+        "aria-hidden",
+        "restores access for assistive technology"
+      );
+    assert
+      .dom(".design-wizard__minimize")
+      .isFocused("returns focus to the panel");
+    assert
+      .dom(
+        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+      )
+      .hasAria("pressed", "true", "preserves the palette selection");
+    assert
+      .dom(".design-wizard__font-group:first-child .design-wizard__font-select")
+      .hasText("Arial", "preserves the unsaved font selection");
+    assert.strictEqual(
+      find(".design-wizard__sections"),
+      sections,
+      "keeps the controls mounted to retain their scroll position"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      savedCount,
+      "restoring does not save changes"
+    );
+    assert.deepEqual(
+      captureColorSchemeLinks(),
+      previewLinks,
+      "restoring keeps the palette preview applied"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("the wizard can be minimized and a new run opens expanded", async function (assert) {
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(".design-wizard__restore")
+      .includesText("Customize your site", "labels the way back to the wizard");
+    assert
+      .dom(".design-wizard__restore-progress")
+      .hasText("Step 1/3", "shows the step progress");
+
+    await click(".design-wizard__restore");
+    assert.dom(".design-wizard__theme-card").exists("restores the first step");
+    await click(".design-wizard__close");
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "a fresh run is expanded");
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("a fresh run has no minimized bar");
+    await click(".design-wizard__close");
+  });
+
+  test("docks beside the page and collapses to a rail on wide screens", async function (assert) {
+    docked = true;
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(document.documentElement)
+      .hasClass("design-wizard-docked", "reserves space beside the page");
+    assert.dom(".design-wizard").hasClass("--docked");
+    assert
+      .dom(".design-wizard__step-progress")
+      .hasText("Step 1/3", "opens on the first step");
+
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__step-progress")
+      .hasText("Step 2/3", "shows the current step as text");
+
+    const sections = find(".design-wizard__sections");
+    await click(".design-wizard__minimize");
+
+    assert
+      .dom(document.documentElement)
+      .hasClass("design-wizard-collapsed", "narrows the reserved space");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("inert", "keeps the rail reachable by keyboard");
+    assert
+      .dom(".design-wizard")
+      .doesNotHaveAttribute("aria-hidden", "keeps the rail announced");
+    assert
+      .dom(".design-wizard__restore")
+      .doesNotExist("uses the rail instead of the restore bar");
+    assert
+      .dom(".design-wizard__expand")
+      .isFocused("moves focus to the expand button");
+    assert
+      .dom(".design-wizard__expand")
+      .includesText("Step 2/3", "names the current step");
+    assert
+      .dom(".design-wizard__expand")
+      .hasAria("expanded", "false", "exposes the collapsed state");
+
+    await visit("/categories");
+
+    assert
+      .dom(".design-wizard__expand")
+      .exists("stays collapsed while browsing");
+
+    await click(".design-wizard__expand");
+
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass("design-wizard-collapsed", "widens the reserved space");
+    assert
+      .dom(".design-wizard__minimize")
+      .isFocused("returns focus to the panel");
+    assert.strictEqual(
+      find(".design-wizard__sections"),
+      sections,
+      "keeps the controls mounted to retain their scroll position"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass("design-wizard-docked", "gives the space back");
+  });
+
+  test("saves one palette for both system color modes", async function (assert) {
+    wizardData.themes[0].palette_pairs.push({
+      key: "dracula",
+      name: "Dracula",
+      light: null,
+      dark: {
+        id: -11,
+        name: "Dracula",
+        colors: { primary: "f8f8f2", secondary: "282a36" },
+      },
+    });
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+    await click(".design-wizard__palette-modes input[value='dark']");
+    await click('[data-pair-key="dracula"]');
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "progress saves Dracula as the default palette for light systems"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "progress saves Dracula for dark systems"
+    );
+
+    await click(".design-wizard__save");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "the final save keeps Dracula as the default palette"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "the final save keeps Dracula for dark systems"
+    );
+  });
+
+  test("each step has its own title and description", async function (assert) {
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    assert
+      .dom(".design-wizard")
+      .hasAria("label", "Customize your site", "the panel keeps one name");
+    assert.dom(".design-wizard__title").hasText("Choose a theme");
+    assert
+      .dom(".design-wizard__description")
+      .hasText(
+        "Pick the overall look for your site. You can fine-tune it in the next steps."
+      );
+    assert
+      .dom(".design-wizard__section-title")
+      .doesNotExist("the step title already names the theme choice");
+
+    await click(".design-wizard__next");
+
+    assert.dom(".design-wizard__title").hasText("Make it yours");
+    assert
+      .dom(".design-wizard__description")
+      .hasText("Choose your site's colors and fonts.");
+
+    await click(".design-wizard__next");
+
+    assert.dom(".design-wizard__title").hasText("Site layout");
+  });
+
+  test("a single color mode uses its palette for both", async function (assert) {
+    wizardData.themes[0].palette_pairs.push(
+      {
+        key: "wcag",
+        name: "WCAG",
+        light: {
+          id: -3,
+          name: "WCAG",
+          colors: { primary: "000000", secondary: "ffffff" },
+        },
+        dark: {
+          id: -10,
+          name: "WCAG Dark",
+          colors: { primary: "ffffff", secondary: "000000" },
+        },
+      },
+      {
+        key: "dracula",
+        name: "Dracula",
+        light: null,
+        dark: {
+          id: -11,
+          name: "Dracula",
+          colors: { primary: "f8f8f2", secondary: "282a36" },
+        },
+      }
+    );
+    const LIGHT_ROW = ".design-wizard__palette-row[data-mode='light']";
+    const DARK_ROW = ".design-wizard__palette-row[data-mode='dark']";
+    const MODE = (value) =>
+      `.design-wizard__palette-modes input[value='${value}']`;
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+
+    assert.dom(MODE("both")).isChecked("starts with both modes");
+    assert
+      .dom(`${LIGHT_ROW} [data-pair-key='dracula']`)
+      .doesNotExist("a dark-only palette is not offered for light mode");
+    assert
+      .dom(LIGHT_ROW)
+      .hasAttribute("role", "group")
+      .hasAria("label", "Light palette", "labels the light row");
+    assert
+      .dom(DARK_ROW)
+      .hasAria("label", "Dark palette", "labels the dark row");
+
+    await click(`${LIGHT_ROW} [data-pair-key='wcag']`);
+    await click(`${DARK_ROW} [data-pair-key='dracula']`);
+    await click(MODE("dark"));
+
+    assert.dom(LIGHT_ROW).doesNotExist("hides the light row");
+    assert
+      .dom(`${DARK_ROW} [data-pair-key='dracula']`)
+      .hasAria("pressed", "true");
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "saves the dark palette for light systems too"
+    );
+    assert.strictEqual(savedPayloads.at(-1).dark_palette_id, "-11");
+
+    await click(".design-wizard__back");
+    await click(MODE("light"));
+
+    assert.dom(DARK_ROW).doesNotExist("hides the dark row");
+    assert
+      .dom(`${LIGHT_ROW} [data-pair-key='wcag']`)
+      .hasAria("pressed", "true", "keeps the light palette picked earlier");
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-3",
+      "saves the light palette"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      undefined,
+      "saves no dark palette, so the site is light only"
+    );
+
+    await click(".design-wizard__back");
+    await click(MODE("both"));
+
+    assert
+      .dom(`${DARK_ROW} [data-pair-key='dracula']`)
+      .hasAria("pressed", "true", "restores the dark palette picked earlier");
+  });
+
+  test("a site using one palette for both modes is dark only", async function (assert) {
+    wizardData.themes[0].color_scheme_id = 11;
+    wizardData.themes[0].dark_color_scheme_id = 11;
+    wizardData.themes[0].palette_pairs.push({
+      key: "dracula",
+      name: "Dracula",
+      light: null,
+      dark: {
+        id: 11,
+        name: "Dracula",
+        colors: { primary: "f8f8f2", secondary: "282a36" },
+      },
+    });
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+
+    assert
+      .dom(
+        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='dracula']"
+      )
+      .hasAria("pressed", "true", "reflects the saved dark palette");
+    assert
+      .dom(".design-wizard__palette-modes input[value='dark']")
+      .isChecked("the same palette in both modes is dark only");
+    assert.dom(".design-wizard__palette-row[data-mode='light']").doesNotExist();
+  });
+
+  test("a theme without a dark palette is light only", async function (assert) {
+    wizardData.themes[0].dark_color_scheme_id = null;
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__palette-modes input[value='light']")
+      .isChecked();
+    assert.dom(".design-wizard__palette-row[data-mode='dark']").doesNotExist();
+    assert
+      .dom(
+        ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
+      )
+      .hasAria("pressed", "true");
+  });
+
+  test("installs a remote theme before navigating to its preview", async function (assert) {
+    const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
+    wizardData.themes.push({
+      id: "concord",
+      name: "Concord",
+      remote_url: remoteUrl,
+      palette_pairs: [],
+    });
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click('[data-theme-id="concord"] input');
+
+    assert.deepEqual(
+      importRequests,
+      [{ remote: remoteUrl }],
+      "imports the offered repository once"
+    );
+    assert.true(
+      redirect.calledWith("/?preview_theme_id=42"),
+      "previews the installed theme ID"
+    );
+    const stored = JSON.parse(
+      this.owner
+        .lookup("service:key-value-store")
+        .get("design_wizard_panel_state")
+    );
+    assert.strictEqual(
+      stored.themeId,
+      42,
+      "the installed ID survives the preview reload"
+    );
+    await click(".design-wizard__close");
+  });
+
+  test("switches to Concord's default chat homepage", async function (assert) {
+    const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
+    wizardData.themes.push({
+      id: "concord",
+      name: "Concord",
+      remote_url: remoteUrl,
+      default_homepage: "chat",
+      palette_pairs: [],
+    });
+    wizardData.homepage_settings = { chat_homepage_channel: null };
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        path: "/chat",
+        settings: { chat_homepage_channel: "12" },
+      },
+    ];
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="concord"] input');
+
+    assert.true(
+      redirect.calledWith("/chat?preview_theme_id=42"),
+      "previews the installed theme on the chat homepage"
+    );
+    const stored = JSON.parse(
+      this.owner
+        .lookup("service:key-value-store")
+        .get("design_wizard_panel_state")
+    );
+    assert.strictEqual(stored.homepage, "chat", "selects the chat homepage");
+    assert.strictEqual(
+      stored.homepageSettings.chat_homepage_channel,
+      "12",
+      "uses the General channel"
+    );
+
+    // the preview reload now reports the installed theme
+    wizardData.themes[1] = {
+      id: 42,
+      name: "Concord",
+      default_homepage: "chat",
+      palette_pairs: [],
+    };
+    const wizard = this.owner.lookup("service:design-wizard");
+    wizard.applyingTheme = false;
+    await wizard.start({ resuming: true });
+
+    assert.strictEqual(
+      wizard.homepage,
+      "chat",
+      "restores the homepage preview"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "chat",
+      "saves chat as the underlying homepage"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+      "12",
+      "saves the General channel"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).theme_id,
+      "42",
+      "saves the installed theme"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("switches to the selected theme's default homepage", async function (assert) {
+    wizardData.themes[0].default = false;
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default: true,
+      default_homepage: "chat",
+      palette_pairs: [],
+    });
+    wizardData.homepage = "categories";
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="-1"] input');
+
+    assert.true(
+      redirect.calledWith("/latest?preview_theme_id=-1"),
+      "previews the default theme's homepage"
+    );
+    const stored = JSON.parse(
+      this.owner
+        .lookup("service:key-value-store")
+        .get("design_wizard_panel_state")
+    );
+    assert.strictEqual(stored.homepage, "latest", "selects the theme default");
+
+    const wizard = this.owner.lookup("service:design-wizard");
+    wizard.applyingTheme = false;
+    await wizard.start({ resuming: true });
+
+    assert.strictEqual(
+      wizard.homepage,
+      "latest",
+      "restores the homepage preview"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "latest",
+      "saves the theme default as the underlying homepage"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).theme_id,
+      "-1",
+      "saves the selected theme"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("keeps the current homepage when the theme's default is unavailable", async function (assert) {
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default_homepage: "chat",
+      palette_pairs: [],
+    });
+    wizardData.homepage = "categories";
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="42"] input');
+
+    const wizard = this.owner.lookup("service:design-wizard");
+    assert.strictEqual(
+      wizard.homepage,
+      "categories",
+      "keeps the current choice"
+    );
+    wizard.applyingTheme = false;
+    await wizard.start({ resuming: true });
+
+    assert.strictEqual(
+      wizard.homepage,
+      "categories",
+      "restores the current choice"
+    );
+    assert.strictEqual(
+      savedPayloads.length,
+      0,
+      "resuming does not save changes"
+    );
+
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "categories",
+      "advancing preserves the current homepage"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-primary");
+  });
+
+  test("a failed theme install restores the selection and allows retrying", async function (assert) {
+    wizardData.themes.push({
+      id: "concord",
+      name: "Concord",
+      remote_url: "https://github.com/discourse/discourse-concord-theme",
+      palette_pairs: [],
+    });
+    importFails = true;
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click('[data-theme-id="concord"] input');
+
+    assert
+      .dom(".dialog-body")
+      .includesText("Unable to install theme", "shows the installation error");
+    assert
+      .dom('[data-theme-id="-1"] input')
+      .isChecked("restores the previous selection");
+    assert
+      .dom('[data-theme-id="concord"] input')
+      .isNotDisabled("allows another attempt");
+    assert.false(redirect.called, "does not navigate to a missing theme");
+
+    await click(".dialog-footer .btn-primary");
+    importFails = false;
+    await click('[data-theme-id="concord"] input');
+    assert.true(
+      redirect.calledWith("/?preview_theme_id=42"),
+      "a successful retry opens the preview"
+    );
+    await click(".design-wizard__close");
+  });
+
+  test("previews and saves an additional homepage without a destination picker", async function (assert) {
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        description:
+          "Open the General channel when members visit your homepage.",
+        icon: "comments",
+        illustration: "conversation",
+        settings: { chat_homepage_channel: "12" },
+        path: "/categories",
+      },
+    ];
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    assert
+      .dom('[data-homepage="chat"] .design-wizard__mock-message')
+      .exists({ count: 3 });
+    assert.dom('[data-homepage="chat"] .design-wizard__mock-composer').exists();
+    await click('[data-homepage="chat"]');
+
+    assert.strictEqual(
+      currentURL(),
+      "/categories",
+      "previews the path provided by the server"
+    );
+    assert
+      .dom('[data-homepage="chat"]')
+      .hasAttribute("aria-pressed", "true", "selects Chat");
+    assert
+      .dom('[data-homepage="topics"]')
+      .hasAttribute("aria-pressed", "false", "clears the topic selection");
+    assert
+      .dom(".design-wizard__detail-group")
+      .includesText("General", "explains the fixed destination");
+    assert.dom("[data-topic-page]").doesNotExist("hides topic list choices");
+    assert
+      .dom(".design-wizard__detail-group select")
+      .doesNotExist("does not offer a channel picker");
+    await click(".design-wizard__save");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "chat",
+      "saves the registered homepage"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+      "12",
+      "uses the General channel provided by the server"
+    );
+    assert.true(redirect.called, "finishes the wizard");
+  });
+
+  test("omits unsupported welcome and search choices", async function (assert) {
+    wizardData.themes[0].supports_welcome_banner = false;
+    wizardData.themes[0].supports_search = false;
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+
+    assert.dom(".design-wizard__sections").doesNotIncludeText("Welcome banner");
+    assert.dom(".design-wizard__sections").doesNotIncludeText("Search");
+    await click(".design-wizard__save");
+    for (const key of [
+      "enable_welcome_banner",
+      "welcome_banner_location",
+      "search_experience",
+    ]) {
+      assert.false(key in savedPayloads.at(-1), `${key} is not saved`);
+    }
+  });
+
+  ["chat", "latest"].forEach((homepage) => {
+    test(`preserves and restores the chat destination from ${homepage}`, async function (assert) {
+      wizardData.homepage = homepage;
+      wizardData.homepage_settings = { chat_homepage_channel: "23" };
+      wizardData.additional_homepages = [
+        {
+          id: "chat",
+          name: "Chat",
+          path: "/categories",
+          settings: { chat_homepage_channel: "12" },
+        },
+      ];
+      sinon.stub(DiscourseURL, "redirectTo");
+
+      await visit("/admin");
+      await click(APPEARANCE_LAUNCH_BUTTON);
+      await click(".design-wizard__next");
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "23",
+        "Next preserves the existing channel"
+      );
+      await click(".design-wizard__next");
+      await click('[data-homepage="chat"]');
+      const wizard = this.owner.lookup("service:design-wizard");
+      await wizard.saveProgress();
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "12",
+        "explicitly selecting Chat chooses General"
+      );
+
+      await wizard.start({ resuming: true });
+      await wizard.saveProgress();
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "12",
+        "the selection survives a preview reload"
+      );
+      await click(".design-wizard__close");
+      await click(".dialog-footer .btn-danger");
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage,
+        homepage,
+        "reverts the original homepage"
+      );
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "23",
+        "reverts the original channel after resuming"
+      );
+    });
+  });
+
+  test("resuming drops homepage options that are no longer available", async function (assert) {
+    wizardData.homepage = "chat";
+    wizardData.homepage_settings = { chat_homepage_channel: "23" };
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        path: "/categories",
+        settings: { chat_homepage_channel: "12" },
+      },
+    ];
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+
+    wizardData.additional_homepages = [];
+    wizardData.homepage_settings = {};
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.start({ resuming: true });
+    await wizard.saveProgress();
+
+    assert.strictEqual(savedPayloads.at(-1).homepage, "latest");
+    assert.strictEqual(savedPayloads.at(-1).homepage_settings, undefined);
+
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    await click('[data-homepage="categories"]');
+    await wizard.saveProgress();
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings,
+      undefined,
+      "selecting a homepage does not reintroduce unavailable original settings"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-danger");
+    assert.strictEqual(savedPayloads.at(-1).homepage, "");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings,
+      undefined,
+      "reverting does not send unavailable snapshot settings"
+    );
+  });
+
+  ["topics", "categories"].forEach((choice) => {
+    [false, true].forEach((resume) => {
+      test(`switching from Chat to ${choice} preserves the original channel${resume ? " after a preview reload" : ""}`, async function (assert) {
+        wizardData.homepage_settings = { chat_homepage_channel: "23" };
+        wizardData.additional_homepages = [
+          {
+            id: "chat",
+            name: "Chat",
+            path: "/categories",
+            settings: { chat_homepage_channel: "12" },
+          },
+        ];
+        sinon.stub(DiscourseURL, "redirectTo");
+
+        await visit("/admin");
+        await click(APPEARANCE_LAUNCH_BUTTON);
+        await click(".design-wizard__next");
+        await click(".design-wizard__next");
+        await click('[data-homepage="chat"]');
+
+        if (resume) {
+          const wizard = this.owner.lookup("service:design-wizard");
+          await wizard.saveProgress();
+          wizardData.homepage = "chat";
+          wizardData.homepage_settings = { chat_homepage_channel: "12" };
+          await wizard.start({ resuming: true });
+          await click(".design-wizard__next");
+          await click(".design-wizard__next");
+        }
+
+        await click(`[data-homepage="${choice}"]`);
+        await click(".design-wizard__save");
+        assert.strictEqual(
+          savedPayloads.at(-1).homepage,
+          choice === "topics" ? "latest" : "categories",
+          "saves the selected forum homepage"
+        );
+        assert.strictEqual(
+          savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+          "23",
+          "restores the channel configured before the wizard started"
+        );
+      });
+    });
+  });
+
+  test("reverts the welcome banner location after switching from Concord", async function (assert) {
+    wizardData.themes[0].default = false;
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default: true,
+      supports_welcome_banner: false,
+      supports_search: false,
+      palette_pairs: [],
+    });
+    this.siteSettings.welcome_banner_location = "top_menu";
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click('[data-theme-id="-1"] input');
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.start({ resuming: true });
+    wizard.applyingTheme = false;
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    wizard.selectWelcomeBannerLocation("all");
+    await click(".design-wizard__back");
+    await click(".design-wizard__next");
+    assert.strictEqual(
+      savedPayloads.at(-1).welcome_banner_location,
+      "all",
+      "saves the changed site-wide location"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-danger");
+    assert.strictEqual(
+      savedPayloads.at(-1).theme_id,
+      "42",
+      "reverts to Concord"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).welcome_banner_location,
+      "top_menu",
+      "restores the original site-wide location"
+    );
+  });
+
   test("the appearance section launches the wizard on the forum", async function (assert) {
     await visit("/admin");
 
@@ -121,11 +1085,8 @@ acceptance("Design wizard - admin launch", function (needs) {
       "leaves the admin interface, so the page behind the sheet is the preview"
     );
     assert
-      .dom(".design-wizard__intro")
-      .exists("a re-run says what it is about to change before changing it");
-    assert
       .dom(".design-wizard__theme-card")
-      .doesNotExist("the steps wait until the intro is acknowledged");
+      .exists("opens straight on the first step");
     assert.strictEqual(savedPayloads.length, 0, "nothing is saved yet");
 
     // close the sheet so the palette preview does not leak into other tests
@@ -138,9 +1099,7 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
-    await waitFor(".design-wizard__intro-start");
-
-    await click(".design-wizard__intro-start");
+    await waitFor(".design-wizard__theme-card");
     assert.dom(".design-wizard__theme-card").exists("the first step is shown");
 
     await click(".design-wizard__next");
@@ -182,7 +1141,7 @@ acceptance("Design wizard - admin launch", function (needs) {
       "discourse_design_wizard_panel_state",
       JSON.stringify({
         themeId: -1,
-        selectedPairKeys: [],
+        paletteSelections: [],
         source: "onboarding",
         returnUrl: "/somewhere-else",
         progressSaved: true,
@@ -194,8 +1153,8 @@ acceptance("Design wizard - admin launch", function (needs) {
     await waitFor(".design-wizard");
 
     assert
-      .dom(".design-wizard__intro")
-      .exists("the abandoned run does not skip this one's intro");
+      .dom(".design-wizard__theme-card")
+      .exists("the abandoned run's steps are not resumed");
 
     await click(".design-wizard__close");
     assert

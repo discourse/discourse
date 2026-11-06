@@ -10,7 +10,6 @@ bg:
       or: "или"
       ai:
         generate: "Генраирай"
-        optional: "по избор"
       help:
         label: "Помощ"
       schema:
@@ -26,6 +25,7 @@ bg:
       result_count:
         one: "%{count} резултат."
         other: "%{count} резултата."
+      name: "Име"
       query_groups: "Групи"
       query_tags: "Етикети"
       query_description: "Описание"

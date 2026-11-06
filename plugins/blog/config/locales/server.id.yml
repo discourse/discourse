@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  blog:
+    home: Beranda
+    posted_by: Dibuat oleh
+    permalink: Permalink
+    time_ago: "%{time} yang lalu"
+    archive: Arsip
+    about: Tentang
+    search: Cari
+    replies:
+      other: "%{count} balasan"

@@ -38,7 +38,9 @@ nl:
         unassign_from_topic: "Toewijzing van @%{username} aan topic opheffen"
         unassign_from_post: "Toewijzing van @%{username} aan %{post_number} opheffen"
         edit_assignments: "Toewijzingen bewerken..."
-        created_by: "Gemaakt door"
+        owners:
+          one: "Eigenaar"
+          other: "Eigenaren"
       manage:
         name: "Naam"
         slug: "Slug"

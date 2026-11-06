@@ -114,7 +114,11 @@ uk:
         constraint_fix_tags: "Додати тег дошки"
         constraint_fix_confirm: "Перемістити та оновити"
         constraint_tooltip: "На цьому форумі дозволені лише теми з цими категоріями та тегами."
-        created_by: "Створено"
+        owners:
+          one: "Власник"
+          few: "Власники"
+          many: "Власники"
+          other: "Власники"
         show_older_cards: "Показати %{count} старіших карток"
         errors:
           acl_update_failed: "Не вдалося оновити дозволи дошки."

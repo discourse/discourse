@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  admin_js:
+    blog:
+      admin:
+        insert: Masukkan
+        preview_archive: Arsip
+        edit: Ubah
+        export: Ekspor
+        active: Aktif
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Konsep
+        change:
+          title: judul
+          body: konten
+      review:
+        copy: Salin
+        open: Buka
+        status:
+          active: Aktif
+        closed_on: "Ditutup %{date}"
+        revoke: Cabut
+        message: Umpan balik
+      editor_table:
+        edit: Ubah
+        status: Status
+        replies: balasan
+      drafts: Konsep

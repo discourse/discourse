@@ -21,6 +21,7 @@ const EXPECTED_ORDER = [
   "safe-mode",
   "verbose-localization",
   "styleguide",
+  "bundle-analyzer",
   "disable-dev-tools",
 ];
 
@@ -32,6 +33,7 @@ const SELECTORS = {
   "safe-mode": ".toggle-safe-mode",
   "verbose-localization": ".toggle-verbose-localization",
   styleguide: ".open-styleguide",
+  "bundle-analyzer": ".bundle-analyzer-button",
   "disable-dev-tools": ".disable-dev-tools",
 };
 

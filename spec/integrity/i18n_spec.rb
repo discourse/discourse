@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Discourse/NoIterationOverRSpecDefinitions
 
 def extract_locale(path)
   path[/\.([^.]{2,})\.yml$/, 1]
@@ -125,3 +126,4 @@ RSpec.describe "fallbacks" do
     end
   end
 end
+# rubocop:enable Discourse/NoIterationOverRSpecDefinitions

@@ -10,7 +10,6 @@ lt:
       or: "arba"
       ai:
         generate: "Generuoti"
-        optional: "pasirinktinai"
       help:
         label: "Pagalba"
       schema:
@@ -35,6 +34,7 @@ lt:
         few: "%{count} rezultatai."
         many: "%{count} rezultatai."
         other: "%{count} rezultatai."
+      name: "Vardas"
       query_groups: "Grupės"
       query_tags: "Žymos"
       query_description: "Aprašymas"

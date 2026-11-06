@@ -83,7 +83,7 @@ class UserApiKeysController < ApplicationController
     expires_at = requested_expires_at(parse_expires_in_seconds!)
 
     @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
-    @client.application_name = params[:application_name] if params[:application_name].present?
+    @client.application_name = params[:application_name] if @client.new_record?
     @client.save! if @client.new_record? || @client.changed?
 
     # destroy any old keys the user had with the client
@@ -496,7 +496,7 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    application_name = params[:application_name] || @client&.application_name
+    application_name = @client&.application_name || params[:application_name]
     scopes = params[:scopes]
     expires_at = requested_expires_at(expires_in_seconds)
 

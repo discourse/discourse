@@ -75,6 +75,8 @@ gl:
         filters:
           all: "Todas"
           reset: "Restabelecer"
+        sentiment:
+          enabled: "Activado"
         search:
           name: "Buscar"
         image_caption:
@@ -117,6 +119,8 @@ gl:
             other: "%{count} publicacións"
       spam:
         short_title: "Lixo"
+        no_llm_selected: "Ningunha"
+        no_decision_model_selected: "Ningunha"
         enable: "Activar"
         test_modal:
           spam: "Lixo"

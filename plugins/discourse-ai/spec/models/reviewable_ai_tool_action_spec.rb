@@ -550,7 +550,7 @@ RSpec.describe ReviewableAiToolAction do
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "records a statement when an AI tool reviewable closes a topic" do

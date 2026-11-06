@@ -7,7 +7,6 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
   before do
-    SiteSetting.dashboard_improvements = true
     AdminDashboardSectionConfiguration.update(
       [
         { id: "traffic", visible: true },
@@ -177,11 +176,6 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
   context "with top countries, top referrers, and top entry URLs cards" do
     before do
-      UpcomingChangeEvent.create!(
-        upcoming_change_name: "dashboard_improvements",
-        event_type: :manual_opt_in,
-        created_at: Time.zone.local(2026, 4, 30, 9),
-      )
       Discourse.stubs(:current_hostname).returns("test.localhost")
       Discourse.cache.clear
     end

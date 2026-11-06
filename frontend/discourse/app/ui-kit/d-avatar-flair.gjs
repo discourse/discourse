@@ -51,6 +51,7 @@ export default class DAvatarFlair extends Component {
       }}
       style={{this.style}}
       title={{this.title}}
+      ...attributes
     >
       {{#if this.isIcon}}
         {{dIcon this.icon}}

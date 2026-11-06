@@ -7,6 +7,9 @@
 zh_CN:
   js:
     dsa_notice:
+      choice_title: "非法"
+      choice_description: "请提交一份详细报告，解释为什么此内容违法。"
+      go_back: "返回"
       title: "举报非法内容"
       content_url: "内容的确切 URL"
       explanation: "你为什么认为这些内容是非法的？"
@@ -14,7 +17,7 @@ zh_CN:
       name: "全名或组织名称"
       email: "电子邮件地址"
       declaration_section: "声明"
-      declaration: "我确认我真诚地相信本通知中的信息和指控是准确完整的。"
+      declaration: "我真心相信这份报告中的事实和说法都是真实完整的。"
       submit: "提交报告"
       get_email_code: "获取电子邮件验证码"
       resend_email_code: "重新发送验证码"
@@ -79,6 +82,8 @@ zh_CN:
       manage:
         access_permission_editor: "编辑者"
         access_permission_editor_description: "可以创建和编辑此实体的内容"
+        access_permission_owner: "所有者"
+        access_permission_owner_description: "所有者对 %{target}拥有完全控制权，可以添加或删除其他所有者。"
         access_permission_viewer: "查看者"
         access_permission_viewer_description: "可以查看此实体的内容"
         access_permission_remove: "移除"
@@ -88,6 +93,7 @@ zh_CN:
         mandatory: "必要"
         disallowed: "不允许"
         required_permission_not_added: "此 %{typeName} 至少需要一名授权对象拥有 %{permission} 权限"
+        owner_required: "至少必须有一位用户保留此 %{typeName} 的所有权。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -555,7 +561,7 @@ zh_CN:
         completed: "查看更多想法"
         choose_option: "您想如何开始？"
         predefined_topics: "破冰模板"
-        predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自行制作。"
+        predefined_topics_subtitle: "给成员们一些讨论的话题"
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
         back: "返回"
@@ -563,20 +569,27 @@ zh_CN:
         icebreakers:
           plan_categories:
             title: "我们应该从哪些类别开始？"
+            description: "询问你的团队应该先推出哪些类别。"
             body: "让我们在正式上线前先理清思路！大家最想讨论什么？我们可以先从几个类别开始，以后再添加更多。"
           plan_invites:
-            title: "在正式上线之前，我们应该邀请哪些成员？"
+            title: "发布前我们应该邀请哪些人？"
+            description: "与你的团队商定优先邀请哪些人。"
             body: "加入一个已经有成员的社区总是令人愉快的。我们应该先邀请谁呢？想想那些喜欢聊天、乐于助人，并且会很兴奋能尽早参与进来的人吧。"
           introduce_yourself:
             title: "自我介绍"
+            description: "鼓励成员们分享一些关于他们自己的信息。"
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
           write_your_own:
             title: "写你自己的"
-            body: "选择一个适合您社区的话题，开启一场讨论。"
+            description: "选择一个适合您社区的话题，开启一场讨论。"
     design_wizard:
       title: "自定义您的网站"
-      subtitle: "选择颜色、字体以及网站的布局。"
       step_label: "转到步骤 %{index}"
+      step_progress: "步骤 %{current}/%{total}"
+      minimize: "最小化设计向导"
+      restore: "恢复设计向导"
+      collapse: "折叠设计向导"
+      expand: "展开设计向导"
       save: "保存并完成"
       back: "返回"
       next: "下一步"
@@ -872,19 +885,21 @@ zh_CN:
         placeholder: "在此处输入消息标题、URL 或 ID"
     dsa_statements:
       title: "DSA分类"
-      help_title: "关于DSA分类"
-      help: "请选择解释此审核决定的社区规则和类别。这些信息将与《数字服务法案》规定的理由声明一同保存。"
+      help_title: "关于欧盟数字服务法案分类"
+      help: "欧盟《数字服务法》要求平台记录内容审核的原因。<br><a href='https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms' rel='noopener noreferrer' target='_blank'>了解更多…</a>"
       rule: "社区规则"
+      rule_help: "请选择此审核决定所依据的社区规则。"
       rule_prompt: "选择一条社区规则"
       category: "类别"
+      category_help: "请选择最能描述违规行为的《欧盟数字服务法》类别。 <a href='https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification' rel='noopener noreferrer' target='_blank'>查看类别定义…</a>"
       category_prompt: "选择一个类别"
-      pending: "DSA分类待定"
-      confirm_title: "保留DSA分类？"
-      confirm_message: "请查看社区规则和类别。保存后无法更改此分类。"
       save: "保存分类"
-      saving: "正在保存…"
-      saved: "分类已保存"
     review:
+      continue_to_editor: "继续编辑"
+      moderation_steps:
+        label: "审核步骤"
+        action: "操作详情"
+        confirm: "确认操作"
       show_more: "展开"
       show_less: "收起"
       back_to_queue: "返回队列"
@@ -1125,6 +1140,7 @@ zh_CN:
         target_created_by: "帖子由 %{username} 创建 · %{relativeDate}"
         target_deleted: "帖子已删除"
         target_deleted_by: "帖子已被 %{username} 删除 · %{relativeDate}"
+        queued_post_deleted_by: "已排队的帖子已被 %{username} · %{relativeDate} 删除"
         flagged: "被举报"
         flagged_as_by: "被 %{username} 举报为%{flagReason} · %{relativeDate}"
         claimed: "已申领"
@@ -1621,6 +1637,7 @@ zh_CN:
       optional: '（可选）'
     user:
       said: "%{username}："
+      bot_account: "自动账户"
       profile: "个人资料"
       profile_possessive: "%{username} 的个人资料"
       mute: "免打扰"
@@ -1746,6 +1763,8 @@ zh_CN:
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
         您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
+      no_mentions_title: "你还没被提到呢。"
+      no_mentions_body: "当有人在帖子中提及你的 @用户名 时，通知将显示在此处。"
       no_other_notifications_title: "您还没有任何其他通知"
       no_other_notifications_body: >
         您将在此面板中收到可能与您相关的其他类型活动的通知 – 例如，当有人链接到或编辑您的帖子时。
@@ -3136,6 +3155,8 @@ zh_CN:
     filter_controls:
       reset: "重置"
       toggle: "切换下拉筛选器"
+      sort_label: "排序依据"
+      sort_trigger_label: "排序： %{sort}"
     d_icon_grid_picker:
       select_icon: "选择图标"
       search_label: "搜索图标"
@@ -3498,6 +3519,7 @@ zh_CN:
         link_copied: "链接已复制！"
         load_preview: "加载预览"
         preview_failed: "无法加载预览"
+        preview_limit_reached: "此帖子已达到预览的最大数量"
       onebox_toolbar:
         copy: "复制链接"
         visit: "打开链接"
@@ -4810,6 +4832,20 @@ zh_CN:
       revisions:
         diff_too_complex: "此次编辑一次性更改了帖子太多内容，因此无法显示。"
         diff_hidden: "该帖子的部分编辑历史已被隐藏，因此无法显示此次编辑。"
+        unlisted:
+          label: "未列出"
+          description: "当浏览编辑历史记录时，此编辑会被跳过，但其内容仍然是公开的。"
+        show_all_edits: "显示所有编辑"
+        visibility:
+          listed:
+            title: "已列出"
+            description: "浏览编辑历史时显示。"
+          unlisted:
+            title: "未列出"
+            description: "浏览编辑历史时跳过。"
+          hidden:
+            title: "已隐藏"
+            description: "已从公开编辑历史以及旁边的差异中移除。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
@@ -4820,9 +4856,7 @@ zh_CN:
           previous: "上一个修订"
           next: "下一个修订"
           last: "上次修订"
-          hide: "隐藏修订"
-          show: "显示修订"
-          destroy: "删除修订"
+          destroy: "删除所有修订版本"
           destroy_confirm: "确定要删除此帖子的所有修订吗？此操作无法撤消。"
           revert: "还原到修订 %{revision}"
           edit_wiki: "编辑 Wiki"
@@ -4899,7 +4933,7 @@ zh_CN:
     category:
       none: "（无类别）"
       all: "所有类别"
-      choose: "类别&hellip;"
+      choose: "类别…"
       edit: "编辑"
       edit_title: "编辑此类别"
       edit_dialog_title: "编辑: %{categoryName}"
@@ -6257,6 +6291,10 @@ zh_CN:
           impact_role_staff: "管理人员"
           impact_role_all_members: "所有成员"
           impact_role_developers: "开发者"
+        sort:
+          recently_updated: "最近更新"
+          status: "状态"
+          name: "名称"
       config:
         about:
           title: "关于您的站点"
@@ -7051,25 +7089,15 @@ zh_CN:
           combined: "结果包含最近 %{limit} 次页面浏览量，从 %{pageviewLimitDate} 到 %{pageviewLimitTime}。所选日期范围内的早期页面浏览量不包含在内； %{date} 之前的页面浏览量数据不再可用。"
       dashboard:
         title: "信息中心"
-        last_updated: "信息中心更新："
-        discourse_last_updated: "Discourse 更新："
         version: "版本"
         up_to_date: "您已经是最新版本！"
         up_to_date_newer_commits:
           other: "您当前使用的是最新版本，但有 %{count} 条可用的新更改。"
         updates_available: "有可用的更新。"
-        please_update: "请更新！"
-        no_check_performed: "尚未执行更新检查。确保 sidekiq 正在运行。"
-        stale_data: "最近尚未执行更新检查。确保 sidekiq 正在运行。"
         version_check_pending: "看起来您最近更新了。太棒了！"
-        installed_version: "已安装"
-        latest_version: "可用"
-        github: "GitHub"
         commit_on_github: "在 GitHub 上查看提交 %{sha}"
-        changelog: "更改日志"
         commits_ahead:
           other: "正在运行自此版本系列开始以来的 %{count} 条其他更改"
-        problems_found: "基于您当前站点设置的一些建议"
         dismiss_notice: "忽略"
         site_advice:
           title:
@@ -7080,16 +7108,7 @@ zh_CN:
           no_new_features_found: "Feed 中没有条目，或者您的所选筛选器没有返回结果。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           no_new_features_error: "加载 Feed 时出错。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           learn_more: "了解详情…"
-        last_checked: "上次检查"
         refresh_problems: "刷新"
-        no_problems: "找不到问题。"
-        moderators: "版主："
-        admins: "管理员："
-        silenced: "已禁言："
-        suspended: "已封禁："
-        private_messages_short: "消息"
-        private_messages_title: "消息"
-        mobile_title: "移动"
         space_used: "%{usedSize} 已使用"
         space_used_and_free: "%{usedSize}（%{freeSize} 可用）"
         uploads: "上传"
@@ -7097,20 +7116,7 @@ zh_CN:
         backup_count:
           other: "%{count} 个备份，%{location}"
         lastest_backup: "最新：%{date}"
-        traffic_short: "流量"
-        traffic: "应用程序 Web 请求"
-        page_views: "页面浏览量"
-        page_views_short: "页面浏览量"
-        show_traffic_report: "显示详细的流量报告"
-        community_health: 社区健康状况
-        moderators_activity: 版主活动
         whats_new_in_discourse: Discourse 最新变化
-        activity_metrics: 活动指标
-        all_reports: "所有报告"
-        general_tab: "常规"
-        moderation_tab: "审核"
-        security_tab: "安全性"
-        reports_tab: "报告"
         report_filter_any: "任意"
         disabled: 已禁用
         timeout_error: 抱歉，查询时间过长，请选择更短的时间间隔
@@ -7341,7 +7347,6 @@ zh_CN:
             latest_backup: "最新备份 %{date}"
             manage_backups: "管理备份"
             discourse_updated: "Discourse 已更新"
-            dashboard_updated: "仪表盘已更新"
         reports_section:
           header_action: "管理"
           description: "固定标准报告或数据浏览器查询，以跟踪对您的社区至关重要的内容。"
@@ -7445,12 +7450,6 @@ zh_CN:
             crawlers: "抓取工具"
           see_details: "查看详细信息"
           crawler_learn_more: "了解详情"
-        period:
-          last_7_days: "过去 7 天"
-          last_30_days: "过去 30 天"
-          last_3_months: "过去 3 个月"
-          custom: "自定义"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
           percent_change_tooltip: "%{percent} 变化。"
@@ -7492,9 +7491,6 @@ zh_CN:
               other: "%{count} 个帖子"
             deselect: "取消选择 %{name}"
             fetch_error: "无法加载此组的用户。"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
-            disabled: '趋势搜索报告已禁用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
           average_chart_label: 显示平均数，而不是总数
           sort_button: "按%{column}排序"
           sort_button_current: "按%{column}排序，%{direction}"
@@ -7676,7 +7672,7 @@ zh_CN:
               list: 列出最新帖子和不公开帖子。也支持 RSS。
             revisions:
               read: "获取最新修订或特定修订。"
-              modify: "隐藏、显示或恢复修订。"
+              modify: "隐藏、显示、取消列出、重新列出或还原版本。"
               permanently_delete: "永久删除修订。"
             tags:
               list: 列出标签。
@@ -7958,11 +7954,9 @@ zh_CN:
           site_contact_group_help: |
             受邀接收所有自动发送的个人消息的群组。
           your_organization: "您的组织"
-          your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
+          your_organization_description: "本网站的运营方及其管辖范围等详细信息。"
           company_name: "名称"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            如果留空，将不提供样板《服务条款》或《隐私声明》。
           company_url: "网站"
           company_url_placeholder: "https://example-co.com"
           governing_law: "适用法律"
@@ -8191,7 +8185,6 @@ zh_CN:
           uploading: "正在上传…"
           uploading_progress: "正在上传… %{progress}%"
           success: "'%{filename}' 已成功上传。文件正在处理，将在几分钟后显示在列表中。"
-          error: "上传 '%{filename}' 时出错：%{message}"
         settings: "设置"
         operations:
           is_running: "一个操作当前正在运行…"
@@ -8427,6 +8420,8 @@ zh_CN:
           duplicate_remote_theme: "主题组件“%{name}”已安装，确定要安装另一个副本吗？"
           force_install: "该主题无法安装，因为 Git 仓库无法访问。确定要继续安装吗？"
           create_placeholder: "创建占位符"
+          placeholder_type_tip: "安装完成后，将使用版本库的 about.json 中的类型。"
+          skipped_components: "%{name} 已安装，但无法安装这些组件。从 “组件” 选项卡安装它们，然后将它们添加到此主题中："
           about_theme: "关于"
           license: "许可证"
           version: "版本："
@@ -8784,6 +8779,7 @@ zh_CN:
             permanently_delete_post_revisions: "永久删除帖子修订"
             mcp_client_updated: "更新 MCP OAuth 客户端"
             delete_user: "删除用户"
+            create_bot: "创建机器人"
             change_trust_level: "更改信任级别"
             change_username: "更改用户名"
             change_site_setting: "更改站点设置"
@@ -8909,6 +8905,9 @@ zh_CN:
             configure_category_type: "配置类别类型"
             unconfigure_category_type: "取消配置类别类型"
             change_access_control_list_permissions: "更改访问控制列表权限"
+            add_access_control_list_owner: "添加访问控制列表所有者"
+            remove_access_control_list_owner: "移除访问控制列表所有者"
+            assume_access_control_ownership: "接管访问控制所有权"
             admin_onboarding_step_completed: "完成管理员入门步骤"
             admin_onboarding_completed: "完成管理员入门"
             admin_onboarding_dismissed: "忽略管理员入门"
@@ -9166,6 +9165,7 @@ zh_CN:
           suspended: "被封禁"
           silenced: "被禁言"
           staged: "暂存"
+          bots: "机器人"
         activation_filter:
           label: "激活状态"
           all: "所有用户"
@@ -9176,6 +9176,24 @@ zh_CN:
           bot: "机器人帐户"
           all: "所有账户"
         approved: "已批准？"
+        source: "来源"
+        bots:
+          new: "新机器人"
+          new_options:
+            bot:
+              label: "通用机器人"
+              description: "用于集成、Webhook 或通过 API 自动发布内容的帐户。"
+          back: "返回机器人"
+          help: "机器人是无法登录的用户帐户，用于集成和自动发布。"
+          generate_api_key: "生成 API 密钥"
+          generate_api_key_description: "仅当外部服务充当此机器人时才需要。Discourse 插件不需要。"
+          scope_mode_description: "该密钥仅拥有此机器人的权限。"
+          name: "名称"
+          username: "用户名"
+          trust_level: "信任级别"
+          create: "创建机器人"
+          created: "机器人@%{username} 已创建。"
+          created_by: "由 @%{username} 创建"
         titles:
           active: "活跃用户"
           new: "新用户"
@@ -9191,6 +9209,7 @@ zh_CN:
           silenced: "被禁言的用户"
           suspended: "被封禁的用户"
           staged: "暂存用户"
+          bots: "机器人"
         not_verified: "未验证"
         check_email:
           title: "显示此用户的电子邮件地址"
@@ -9202,6 +9221,8 @@ zh_CN:
           title: "删除此用户的所有关联帐户"
           text: "删除关联帐户"
       user:
+        account_type: "账户类型"
+        bot: "机器人"
         suspend_failed: "封禁此用户时出错 %{error}"
         unsuspend_failed: "取消封禁此用户时出错 %{error}"
         suspend_duration: "将用户封禁至："
@@ -9217,16 +9238,18 @@ zh_CN:
           no_constructive_purpose: "除了在社区内引起异议外，该用户的行动没有任何建设性的目的"
           custom: "自定义…"
         suspend_message: "电子邮件消息"
-        suspend_message_placeholder: "或者，提供有关封禁的更多信息，它将通过电子邮件发送给用户。"
+        suspend_message_placeholder: "（可选）提供有关此操作的更多信息，这些信息将包含在发送给被暂停用户的电子邮件中。"
         suspended_by: "封禁操作者："
         silence_reason: "原因"
         silenced_by: "禁言操作者："
         silence_modal_title: "禁言用户"
         silence_duration: "该用户将被禁言多久？"
-        silence_reason_label: "您为什么禁言此用户？"
+        silence_reason_label: "你为什么要静音？这段文字 <b>将对该用户个人资料页面上的所有人</b> 可见。请言简意赅。"
+        silence_reason_hidden_label: "你为什么要静音？这个文本只会对员工和这个用户可见。请保持简短。"
+        silence_reason_title: "禁言原因"
         silence_reason_placeholder: "禁言原因"
         silence_message: "电子邮件消息"
-        silence_message_placeholder: "（留空以发送默认消息）"
+        silence_message_placeholder: "（可选）提供有关此操作的更多信息，这些信息将包含在发送给被禁言用户的电子邮件中。"
         suspended_until: "（直到 %{until}）"
         suspend_forever: "永久封禁"
         cant_suspend: "无法封禁此用户。"

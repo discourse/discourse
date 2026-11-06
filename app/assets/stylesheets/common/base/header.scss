@@ -15,6 +15,8 @@
 }
 
 .d-header {
+  --d-header-badge-top: -4px;
+  --d-header-badge-right: -3px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -227,10 +229,11 @@
   .badge-notification {
     border: 2px solid var(--header_background);
     position: absolute;
-    top: -4px;
+    top: var(--d-header-badge-top);
     min-width: 0.6em;
     left: auto;
-    right: -3px;
+    right: var(--d-header-badge-right);
+    z-index: 1; // overhangs the neighboring icon's hover background
 
     &.with-icon {
       &.new-pms {

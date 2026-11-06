@@ -1,0 +1,157 @@
+html.discourse-blog-discussion {
+  color-scheme: light dark;
+
+  --blog-canvas: light-dark(
+    var(--blog-paper-color, var(--secondary)),
+    var(--secondary)
+  );
+  --blog-foreground: light-dark(
+    var(--blog-ink-color, var(--primary)),
+    var(--primary)
+  );
+  --blog-muted: color-mix(
+    in srgb,
+    var(--blog-foreground) 72%,
+    var(--blog-canvas)
+  );
+  --blog-rule: color-mix(
+    in srgb,
+    var(--blog-foreground) 23%,
+    var(--blog-canvas)
+  );
+  --blog-tint: color-mix(
+    in srgb,
+    var(--blog-foreground) 5%,
+    var(--blog-canvas)
+  );
+  --blog-link: light-dark(
+    color-mix(
+      in srgb,
+      var(--blog-accent-color, var(--tertiary)) 85%,
+      var(--blog-ink-color, var(--primary))
+    ),
+    color-mix(
+      in srgb,
+      var(--blog-accent-color, var(--tertiary)) 35%,
+      var(--primary)
+    )
+  );
+
+  body.embed-mode {
+    --primary: var(--blog-foreground);
+    --secondary: var(--blog-canvas);
+    --primary-low: var(--blog-rule);
+    --primary-very-low: var(--blog-tint);
+    --primary-medium: var(--blog-muted);
+    --primary-high: var(--blog-foreground);
+    --tertiary: var(--blog-link);
+    --content-background: var(--blog-canvas);
+    --content-border-color: var(--blog-rule);
+    --d-input-bg-color: var(--blog-canvas);
+    background: var(--blog-canvas);
+    color: var(--blog-foreground);
+    font-family: system-ui, sans-serif;
+
+    #main-outlet {
+      padding-bottom: 0;
+    }
+
+    #main-outlet-wrapper {
+      grid-template-areas: "content";
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .topic-area {
+      padding: 0;
+    }
+
+    // The invisible original post must not inflate the frame’s scroll height.
+    .post-stream .topic-post.topic-owner:first-child,
+    .nested-view__op {
+      overflow: hidden;
+    }
+
+    .topic-avatar {
+      flex-shrink: 0;
+      min-width: max-content;
+    }
+
+    .topic-body {
+      flex: 1;
+      min-width: 0;
+      width: auto;
+      max-width: none;
+    }
+
+    .topic-avatar,
+    .topic-body {
+      border-color: var(--blog-rule);
+      padding-top: 1.5em;
+    }
+
+    .cooked {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .names .username a {
+      color: var(--blog-foreground);
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      --d-button-primary-bg-color: var(--blog-foreground);
+      --d-button-primary-text-color: var(--blog-canvas);
+      --d-button-primary-icon-color: var(--blog-canvas);
+      --d-button-primary-bg-color--hover: var(--blog-link);
+      border-radius: 100px;
+      padding-inline: 1.25em;
+    }
+
+    .embed-topic-footer {
+      margin-top: 0;
+
+      &__first-reply {
+        padding: 1.5em 1em 0.5em;
+        gap: 0.75em;
+        color: var(--blog-foreground);
+
+        > .d-icon {
+          color: var(--blog-link);
+        }
+      }
+
+      &__powered-by {
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .embed-mode-composer {
+      padding-inline: 0;
+
+      .docked-composer {
+        --docked-composer-input-min-height: 6em;
+      }
+    }
+
+    nav.post-controls {
+      --primary-low-mid: var(--blog-muted);
+      --d-post-control-text-color: var(--blog-muted);
+      --d-post-control-icon-color: var(--blog-muted);
+      --d-post-control-create-text-color: var(--blog-foreground);
+      --d-post-control-create-icon-color: var(--blog-foreground);
+    }
+
+    #topic-footer-buttons,
+    #topic-progress-wrapper,
+    .topic-map,
+    .topic-navigation,
+    .embed-floating-buttons,
+    .small-action,
+    .dev-tools-toolbar,
+    .profiler-results {
+      display: none;
+    }
+  }
+}

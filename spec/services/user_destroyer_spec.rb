@@ -15,6 +15,21 @@ RSpec.describe UserDestroyer do
   end
 
   describe "#destroy" do
+    it "transfers ownership and records the assumption during quiet deletion" do
+      freeze_time
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+
+      expect { UserDestroyer.new(admin).destroy(user, quiet: true) }.to change {
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count
+      }.by(1)
+
+      expect(user).to be_destroyed
+      expect(owner_acl.reload.allowed_user_ids).to eq([admin.id])
+      expect(UserHistory.last.context).to eq(
+        "deleted_user_id: #{user.id}\ndeleted_username: #{user.username}\ndeleted_at: #{Time.current.iso8601}",
+      )
+    end
+
     it "raises an error when user is nil" do
       expect { UserDestroyer.new(admin).destroy(nil) }.to raise_error(Discourse::InvalidParameters)
     end

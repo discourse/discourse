@@ -7,6 +7,13 @@
 zh_CN:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            gamification:
+              read_score_events: "阅读游戏化评分事件。"
+              create_score_events: "创建游戏化积分事件，以奖励或扣除积分。"
+              update_score_events: "更新现有的游戏化评分事件。"
       site_settings:
         categories:
           discourse_gamification: "Discourse Gamification"
@@ -26,6 +33,8 @@ zh_CN:
         name: "名称"
         name_placeholder: "名称…"
         new: "新排行榜"
+        edit: "编辑排行榜"
+        view: "查看排行榜"
         create_success: "排行榜已创建"
         delete_success: "排行榜已删除"
         save_success: "排行榜已保存"
@@ -86,6 +95,7 @@ zh_CN:
       close: "关闭"
       delete: "删除"
       edit: "编辑"
+      back_to_leaderboards: "返回排行榜"
       save: "保存"
       recalculate: "重新计算分数"
       recalculating: "正在重新计算分数…"

@@ -27,6 +27,9 @@ bg:
         topic_reply_count:
           one: "%{count} отговор"
           other: "%{count} отговора"
+        owners:
+          one: "Собественик"
+          other: "Собственици"
       manage:
         name: "Име"
         slug: "Slug"

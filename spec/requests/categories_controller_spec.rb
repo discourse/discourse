@@ -554,9 +554,10 @@ RSpec.describe CategoriesController do
     context "when a moderator evaluates public permissions" do
       fab!(:moderator)
 
-      [false, true].each do |granular_permissions|
-        it "retains access with granular pseudogroup behavior #{granular_permissions}" do
-          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
+      shared_examples "evaluating moderator access to category grants" do |granular_permissions_enabled:|
+        it "retains moderator access when evaluating an everyone grant" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+            granular_permissions_enabled
           sign_in(moderator)
           category.set_permissions(everyone: :readonly)
           category.save!
@@ -575,6 +576,16 @@ RSpec.describe CategoriesController do
             "current_user_will_lose_access" => false,
           )
         end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: true
       end
     end
 

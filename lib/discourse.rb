@@ -382,29 +382,35 @@ module Discourse
   def self.activate_plugins!
     @plugins = []
     @plugins_by_name = {}
-    Plugin::Instance
-      .find_all("#{Rails.root.join("plugins")}")
-      .each do |p|
-        v = p.metadata.required_version || Discourse::VERSION::STRING
-        if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
-          p.activate!
-          @plugins << p
-          @plugins_by_name[p.name] = p
+    plugins =
+      Plugin::Instance
+        .find_all("#{Rails.root.join("plugins")}")
+        .select do |p|
+          v = p.metadata.required_version || Discourse::VERSION::STRING
+          next true if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
 
-          # The plugin directory name and metadata name should match, but that
-          # is not always the case
-          dir_name = p.path.split("/")[-2]
-          if p.name != dir_name
-            STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
-            # Plugins are looked up by directory name in SiteSettingExtension
-            # because SiteSetting.load_settings uses directory name as plugin
-            # name. We alias the two names just to make sure the look up works
-            @plugins_by_name[dir_name] = p
-          end
-        else
           STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
+          false
         end
+
+    PluginGem.activate_gemfiles(plugins)
+
+    plugins.each do |p|
+      p.activate!
+      @plugins << p
+      @plugins_by_name[p.name] = p
+
+      # The plugin directory name and metadata name should match, but that
+      # is not always the case
+      dir_name = p.path.split("/")[-2]
+      if p.name != dir_name
+        STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
+        # Plugins are looked up by directory name in SiteSettingExtension
+        # because SiteSetting.load_settings uses directory name as plugin
+        # name. We alias the two names just to make sure the look up works
+        @plugins_by_name[dir_name] = p
       end
+    end
     DiscourseEvent.trigger(:after_plugin_activation)
   end
 
@@ -1379,8 +1385,8 @@ module Discourse
     Theme.expire_site_cache!
   end
 
-  def self.anonymous_locale(request)
-    locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
+  def self.anonymous_locale(request, include_param: true)
+    locale = request.params[LOCALE_PARAM] if include_param && SiteSetting.set_locale_from_param
     locale ||= locale_from_cookie(request)
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header

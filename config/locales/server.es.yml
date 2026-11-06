@@ -2320,7 +2320,6 @@ es:
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y correos electrónicos. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
-    short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
     highlighted_languages: "Incluye reglas de resaltado sintáctico. (Advertencia: incluir demasiados idiomas puede afectar al rendimiento) ver: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> para ver una demostración"
     show_copy_button_on_codeblocks: "Añadir un botón para copiar el contenido de los bloques de código al portapapeles."
     embed_any_origin: "Permitir la inserción de contenido sin importar su origen. Esto se requiere para aplicaciones móviles con HTML estático."
@@ -2438,7 +2437,7 @@ es:
     create_post_for_category_and_tag_changes: "Crear una publicación de susurro cuando cambie la categoría o las etiquetas de un tema, requiere que las publicaciones de susurro estén activadas."
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se utilicen en ningún tema o mensaje personal a diario."
     default_watched_precedence_over_muted: "Notificar a los usuarios sobre temas en categorías o etiquetas que están observando y que también pertenezcan a una que hayan silenciado"
-    company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."
+    company_name: "Nombre de tu empresa u organización."
     governing_law: "Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y la Política de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades."
     city_for_disputes: "Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro."
     shared_drafts_category: "Activa la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del personal."
@@ -2454,9 +2453,6 @@ es:
     enable_user_status: "Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
     enable_user_tips: "Activar nuevos consejos de usuario que describan las funciones clave a los usuarios"
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio pueda ser limitado. Debe limitarse a 12 caracteres. Ten en cuenta que cambiar este título puede enviar un aviso a los usuarios de la PWA pidiéndoles que actualicen o desinstalen la aplicación."
-    dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
-    dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
-    dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
     gravatar_enabled: "Usa el servicio <a href='https://gravatar.com/'>Gravatar</a> para los avatares de usuario. Desactivar esto evitará que los usuarios cambien a Gravatar para sus avatares, pero no afectará a quienes ya lo usan."
     gravatar_name: "Especifica el nombre del proveedor del servicio Gravatar. Este nombre se utiliza normalmente para identificar la fuente que proporciona avatares Gravatar al sitio."
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
@@ -4870,6 +4866,19 @@ es:
     graph_title: "Análisis de búsquedas"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Cada día"
+        every_weekday: "Todos los días de la semana"
+        ordinals:
+          last: "últimos"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Lunes"
+          tuesday: "Martes"
+          wednesday: "Miércoles"
+          thursday: "Jueves"
+          friday: "Viernes"
+          saturday: "Sábado"
       user_joined_community: "Se unió el %{date}"
     google_meet:
       meeting_code: "Código:"
@@ -4877,6 +4886,9 @@ es:
       truncated_file: "Este archivo se ha truncado."
       show_original: "mostrar original"
     github:
+      header:
+        file: "Archivo"
+        success: "Éxito"
       binary_file: "Este archivo es binario."
       truncated_file: "Este archivo se ha truncado."
       show_original: "mostrar original"
@@ -4890,21 +4902,12 @@ es:
       review_by: "Revisado por"
       pr_summary: "%{commits} commits cambiaron %{changed_files} archivos con %{additions} adiciones y %{deletions} eliminaciones"
       no_description: "Contribuye al desarrollo de %{repo} creando una cuenta en GitHub."
-      pr_title:
-        default: "Pull request"
-        draft: "Borrador de pull request"
-        open: "Pull request abierta"
-        approved: "Pull request aprobada"
-        changes_requested: "Cambios solicitados"
-        merged: "Pull request fusionada"
-        closed: "Pull request cerrada"
-      status_date:
-        open: "abierto"
-        draft: "borrador"
-        approved: "aprobado"
-        changes_requested: "cambios solicitados"
-        merged: "fusionado"
-        closed: "cerrado"
+      pr_status:
+        draft: "Borrador"
+        open: "Abierto"
+        approved: "Aprobado"
+        merged: "Fusionado"
+        closed: "Cerrado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te mencionó en «%{topic}» - %{site_title}'

@@ -1,6 +1,7 @@
 import Service from "@ember/service";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AiModelNew from "discourse/plugins/discourse-ai/discourse/components/ai-model-new";
 
@@ -45,5 +46,38 @@ module("Integration | Component | AiModelNew", function (hooks) {
         "[data-model-type='decision'] .admin-section-landing-item__description a"
       )
       .hasAttribute("href", /\/414738$/);
+  });
+  test("offers decision creation with workflows disabled and no configured models", async function (assert) {
+    this.siteSettings.enable_discourse_workflows = false;
+    const empty = { content: [], resultSetMeta: { presets: [] } };
+    await render(
+      <template>
+        <AiModelNew
+          @decisionModels={{empty}}
+          @embeddings={{empty}}
+          @llms={{empty}}
+          @type="decision"
+        />
+      </template>
+    );
+    const transitionTo = sinon.spy();
+    this.owner.lookup("service:router").transitionTo = transitionTo;
+    assert
+      .dom(".admin-section-landing-item")
+      .exists("offers a manual decision model template");
+    assert
+      .dom(".admin-section-landing-item")
+      .includesText(
+        "Manual configuration",
+        "can configure a decision model without a preset"
+      );
+    await click('[data-template-id="none"] button');
+    assert.true(
+      transitionTo.calledWith(
+        "adminPlugins.show.discourse-ai-decision-models.new",
+        { queryParams: { preset: null } }
+      ),
+      "opens decision model creation"
+    );
   });
 });

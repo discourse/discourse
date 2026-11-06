@@ -14,21 +14,24 @@ class ThemesInstallTask
           counts[:skipped] += 1
         elsif installer.update
           log << "#{name}: is already installed. Updating from remote."
+          installer.skipped_components.each do |component|
+            log << "#{name}: couldn't install component #{component[:url]}: #{component[:error]}"
+          end
           counts[:updated] += 1
         else
           log << "#{name}: is already installed, but there was an error updating from remote."
           counts[:errors] += 1
         end
       else
-        begin
-          installer.install
-          log << "#{name}: installed from #{installer.url}"
-          counts[:installed] += 1
-        rescue RemoteTheme::ImportError, Discourse::InvalidParameters => err
-          log << "#{name}: #{err.message}"
-          counts[:errors] += 1
-        end
+        installer.install
+        log << "#{name}: installed from #{installer.url}"
+        counts[:installed] += 1
       end
+    rescue RemoteTheme::ImportError,
+           ActiveRecord::RecordInvalid,
+           Discourse::InvalidParameters => err
+      log << "#{name}: #{err.message}"
+      counts[:errors] += 1
     end
 
     [log, counts]
@@ -73,8 +76,12 @@ class ThemesInstallTask
     add_component_to_all_themes
   end
 
+  def skipped_components
+    @remote_theme.skipped_child_components
+  end
+
   def update
-    @remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+    @remote_theme.update_from_remote
     add_component_to_all_themes
     @remote_theme.last_error_text.nil?
   end

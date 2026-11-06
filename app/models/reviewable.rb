@@ -457,15 +457,11 @@ class Reviewable < ActiveRecord::Base
           )
 
         if attributes
-          DsaStatementOfRecord.create!(
-            reviewable_id: id,
-            payload:
-              attributes.merge(
-                application_date: Date.current.iso8601,
-                territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
-                source_type: "SOURCE_VOLUNTARY",
-                decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
-              ),
+          DsaStatementOfRecord.record!(
+            reviewable: self,
+            attributes:,
+            performed_by:,
+            classification: args[:dsa_classification],
           )
         end
       end
@@ -948,7 +944,12 @@ class Reviewable < ActiveRecord::Base
     target_type == "User" ? target : target_created_by
   end
 
-  def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
+  def delete_user_actions(
+    actions,
+    bundle = nil,
+    require_reject_reason: false,
+    dsa_classification_required: false
+  )
     bundle ||=
       actions.add_bundle(
         "#{id}-reject_user",
@@ -961,7 +962,7 @@ class Reviewable < ActiveRecord::Base
     username = target_user&.username
     confirmable = !require_reject_reason && username.present?
 
-    actions.add(:delete_user, bundle: bundle) do |a|
+    actions.add(:delete_user, bundle: bundle, dsa_classification_required:) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.description = "reviewables.actions.reject_user.delete.description"
@@ -973,7 +974,7 @@ class Reviewable < ActiveRecord::Base
       end
     end
 
-    actions.add(:delete_user_block, bundle: bundle) do |a|
+    actions.add(:delete_user_block, bundle: bundle, dsa_classification_required:) do |a|
       a.icon = "ban"
       a.label = "reviewables.actions.reject_user.block.title"
       a.require_reject_reason = require_reject_reason

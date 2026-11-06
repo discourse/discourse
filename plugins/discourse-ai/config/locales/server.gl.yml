@@ -86,6 +86,13 @@ gl:
       assign:
         errors:
           not_found: "Non foi posíbel atopar o tema."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Cabeceira"
+      fonts:
+        base_font: "Tipo de letra do corpo"
+        heading_font: "Tipo de letra de título"
     reviewables:
       ai_tool_action:
         approve:

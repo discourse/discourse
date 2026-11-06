@@ -10,7 +10,6 @@ sq:
       or: "ose"
       ai:
         generate: "Gjenero"
-        optional: "opsionale"
       help:
         label: "Ndihmë"
       types:
@@ -21,6 +20,7 @@ sq:
       result_count:
         one: "%{count} rezultat."
         other: "%{count} rezultate."
+      name: "Emri"
       query_groups: "Grupet"
       query_tags: "Etiketat"
       query_description: "Përshkrimi"

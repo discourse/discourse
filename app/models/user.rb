@@ -196,7 +196,19 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  after_destroy :reassign_acl_ownership, unless: :new_record?
   after_destroy :clear_acls
+
+  def reassign_acl_ownership
+    AccessControlList::ReassignDeletedUserOwnership.call!(
+      guardian: Discourse.system_user.guardian,
+      params: {
+        user_id: id,
+        username: username,
+        deleted_at: Time.current,
+      },
+    )
+  end
 
   def clear_acls
     Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
@@ -1612,7 +1624,14 @@ class User < ActiveRecord::Base
       if admin? && !SiteSetting.suppress_secured_categories_from_admin
         Category.unscoped.where(read_restricted: true)
       else
-        secure_categories.references(:categories)
+        Category.where(id: secure_categories.select(:id)).or(
+          Category.where(
+            id:
+              CategoryGroup.where(group_id: Group::AUTO_GROUPS[:logged_in_users]).select(
+                :category_id,
+              ),
+          ),
+        )
       end
 
     cats.pluck("categories.id").sort

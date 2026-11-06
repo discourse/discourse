@@ -30,7 +30,8 @@ vi:
         assigned_to: "Được chỉ định cho"
         topic_reply_count:
           other: "%{count} trả lời"
-        created_by: "Tạo bởi"
+        owners:
+          other: "Chủ sở hữu"
       manage:
         name: "Tên"
         slug: "tên đường dẫn"

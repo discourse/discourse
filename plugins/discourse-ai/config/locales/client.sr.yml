@@ -72,6 +72,8 @@ sr:
         filters:
           all: "Sve"
           reset: "Reset"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraži"
         admin_dashboard:
@@ -115,6 +117,8 @@ sr:
             other: "%{count} poruka"
       spam:
         short_title: "Nepoželjno"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         last_seven_days: "Последњих 7 дана"
         enable: "Omogući"
         test_modal:

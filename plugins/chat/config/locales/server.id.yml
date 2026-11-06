@@ -47,6 +47,7 @@ id:
 
         Kunjungi kanal di %{channel_url} untuk mencoba lagi.
   chat:
+    design_wizard_homepage_name: "Obrolan"
     deleted_chat_username: dihapus
     crawler:
       nav_title: "Obrolan"

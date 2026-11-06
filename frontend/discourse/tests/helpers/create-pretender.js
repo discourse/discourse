@@ -1571,6 +1571,13 @@ export function applyDefaultHandlers() {
 }
 
 export function resetPretender() {
+  // A response still pending here, e.g. to a request sent while the app was torn down,
+  // would land in the next test, possibly before its app has booted
+  for (const { request } of pretender.requestReferences) {
+    // Stops pretender's progress polling without dispatching events
+    request.aborted = true;
+  }
+  pretender.requestReferences = [];
   pretender.handlers = [];
   pretender.handledRequests = [];
   pretender.unhandledRequests = [];
