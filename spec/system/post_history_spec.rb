@@ -97,6 +97,20 @@ describe "Post history with a hidden revision" do
     expect(post_history_modal).to have_hidden_diff_notice
   end
 
+  it "explains hidden history to anonymous users across later visible edits" do
+    post.revise(post_owner, title: "Later public title edit")
+    post.revise(post_owner, raw: "Final public version")
+
+    topic_page.visit_topic(topic)
+    topic_page.open_post_history(post)
+
+    expect(post_history_modal).to have_hidden_diff_notice
+
+    post_history_modal.click_previous_revision
+
+    expect(post_history_modal).to have_hidden_diff_notice
+  end
+
   it "still shows the diffs around the hidden revision to staff" do
     sign_in(admin)
     topic_page.visit_topic(topic)
