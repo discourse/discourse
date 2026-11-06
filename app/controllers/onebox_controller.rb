@@ -7,7 +7,7 @@ class OneboxController < ApplicationController
     unless params[:refresh] == "true"
       preview = Oneboxer.cached_preview(params[:url])
       preview = preview.strip if preview.present?
-      return render(plain: preview) if preview.present?
+      return render_preview(preview) if preview.present?
     end
 
     # only 1 outgoing preview per user
@@ -41,8 +41,20 @@ class OneboxController < ApplicationController
         Oneboxer.cache_failed!(url)
         render body: nil, status: :not_found
       else
-        render plain: preview
+        render_preview(preview)
       end
     end
+  end
+
+  private
+
+  def render_preview(preview)
+    if SiteSetting.block_hotlinked_media
+      fragment = Nokogiri::HTML5.fragment(preview)
+      PrettyText.sanitize_hotlinked_media(fragment)
+      preview = fragment.to_html
+    end
+
+    render plain: preview
   end
 end

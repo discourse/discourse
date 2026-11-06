@@ -74,6 +74,64 @@ describe "Composer - ProseMirror - Oneboxing" do
     expect(composer).to have_value("https://example.com")
   end
 
+  it "blocks external onebox images when hotlinked media is blocked" do
+    SiteSetting.block_hotlinked_media = true
+    external_url = "https://example.com/external-image"
+    external_image = "https://images.example.com/photo.jpg"
+
+    stub_request(:get, external_url).to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <meta property="og:title" content="External image page">
+          <meta property="og:description" content="A useful summary">
+          <meta property="og:image" content="#{external_image}">
+        </head></html>
+      HTML
+    cdp.allow_clipboard
+    open_composer
+    composer.fill_title("Onebox hotlink policy")
+    composer.focus
+    cdp.copy_paste(external_url)
+    page.send_keys(:enter)
+
+    expect(composer).to have_onebox(
+      url: external_url,
+      title: "External image page",
+      description: "A useful summary",
+    )
+    expect(composer).to have_no_onebox_images(url: external_url)
+
+    composer.create
+
+    post = PageObjects::Components::Post.new(1)
+    expect(post).to have_cooked_content("External image page")
+    expect(post).to have_no_onebox_image(url: external_url, image_url: external_image)
+  end
+
+  it "retains public images in onebox previews" do
+    public_url = "https://example2.com/public-image"
+    public_image = "https://images.example.com/photo.jpg"
+
+    stub_request(:get, public_url).to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <meta property="og:title" content="Public image page">
+          <meta property="og:description" content="Another useful summary">
+          <meta property="og:image" content="#{public_image}">
+        </head></html>
+      HTML
+
+    cdp.allow_clipboard
+    open_composer
+    cdp.copy_paste(public_url)
+    page.send_keys(:enter)
+
+    expect(composer).to have_onebox(
+      url: public_url,
+      title: "Public image page",
+      description: "Another useful summary",
+    )
+    expect(composer).to have_onebox_image(url: public_url, image_url: public_image)
+  end
+
   it "creates an inline onebox for links that are part of a paragraph" do
     cdp.allow_clipboard
     open_composer
