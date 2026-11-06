@@ -46,13 +46,42 @@ module("Unit | Utility | uploads", function (hooks) {
     assert.true(dialog.alert.calledWith(i18n("post.errors.too_many_uploads")));
   });
 
+  test("users who can't embed media cannot upload media", function (assert) {
+    this.siteSettings.authorized_extensions = "png|mp4|mp3|txt";
+    sinon.stub(dialog, "alert");
+    const user = this.store.createRecord("user", { trust_level: 2 });
+
+    for (const name of ["image.png", "clip.mp4", "song.mp3"]) {
+      assert.false(
+        validateUploadedFiles([{ name }], {
+          user,
+          siteSettings: this.siteSettings,
+        }),
+        `${name} is not valid`
+      );
+    }
+    assert.true(
+      dialog.alert.alwaysCalledWith(
+        i18n("post.errors.media_upload_not_allowed")
+      )
+    );
+
+    assert.true(
+      validateUploadedFiles([{ name: "roman.txt" }], {
+        user,
+        siteSettings: this.siteSettings,
+      }),
+      "attachments are valid"
+    );
+  });
+
   test("new user cannot upload images", function (assert) {
     this.siteSettings.newuser_max_embedded_media = 0;
     sinon.stub(dialog, "alert");
 
     assert.false(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: this.store.createRecord("user"),
+        user: this.store.createRecord("user", { can_embed_media: true }),
         siteSettings: this.siteSettings,
       }),
       "the upload is not valid"
@@ -72,7 +101,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.true(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: this.store.createRecord("user"),
+        user: this.store.createRecord("user", { can_embed_media: true }),
         siteSettings: this.siteSettings,
       })
     );
@@ -84,7 +113,10 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.true(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: this.store.createRecord("user", { trust_level: 1 }),
+        user: this.store.createRecord("user", {
+          trust_level: 1,
+          can_embed_media: true,
+        }),
         siteSettings: this.siteSettings,
       })
     );
@@ -215,7 +247,10 @@ module("Unit | Utility | uploads", function (hooks) {
   test("allows valid uploads to go through", function (assert) {
     sinon.stub(dialog, "alert");
 
-    let user = this.store.createRecord("user", { trust_level: 1 });
+    let user = this.store.createRecord("user", {
+      trust_level: 1,
+      can_embed_media: true,
+    });
 
     // image
     let image = { name: "image.png", size: imageSize };
