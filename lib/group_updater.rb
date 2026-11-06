@@ -100,6 +100,16 @@ class GroupUpdater
   def update
     guardian.ensure_can_edit!(group) if !can_admin_group?
 
+    # The staff checks below read the group's members, and the membership
+    # services read the group's settings, so both hold the group row lock.
+    group.with_lock { update_settings }
+  end
+
+  private
+
+  attr_reader :guardian, :group, :attributes, :update_existing_users
+
+  def update_settings
     @attributes = ActionController::Parameters.new(attributes).permit(*permitted_params).to_h
     group_attributes = attributes_without_disabled_email_settings
     return false if !valid_flair_upload?(group_attributes)
@@ -129,10 +139,6 @@ class GroupUpdater
 
     true
   end
-
-  private
-
-  attr_reader :guardian, :group, :attributes, :update_existing_users
 
   def can_admin_group?
     return @can_admin_group if defined?(@can_admin_group)

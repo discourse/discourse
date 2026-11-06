@@ -66,12 +66,17 @@ class GroupMemberAdder
     end
 
     unique_users = users.uniq
-    unique_users.each do |user|
-      next if already_in_group.include?(user.username)
-      raise GroupMutations::OtherStaffAccount if !guardian.can_add_group_member?(user, group)
-    end
+    added_user_ids =
+      group
+        .with_lock do
+          unique_users.each do |user|
+            next if already_in_group.include?(user.username)
+            raise GroupMutations::OtherStaffAccount if !guardian.can_add_group_member?(user, group)
+          end
 
-    added_user_ids = add_users(unique_users).to_set
+          add_users(unique_users)
+        end
+        .to_set
     added_users, skipped_users = unique_users.partition { |user| added_user_ids.include?(user.id) }
     invite_emails.each do |email|
       Invite.generate(guardian.user, email:, group_ids: [group.id], skip_email: skip_invite_email?)

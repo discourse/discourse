@@ -19,19 +19,21 @@ class GroupOwnerManager
     users = authorized_users
     logger = GroupActionLogger.new(guardian.user, group)
     user_ids = users.map(&:id)
-    member_ids = group.group_users.where(user_id: user_ids).pluck(:user_id).to_set
-    users.each do |user|
-      next if member_ids.include?(user.id)
-      raise GroupMutations::OtherStaffAccount if !guardian.can_add_group_member?(user, group)
-    end
+    group.with_lock do
+      member_ids = group.group_users.where(user_id: user_ids).pluck(:user_id).to_set
+      users.each do |user|
+        next if member_ids.include?(user.id)
+        raise GroupMutations::OtherStaffAccount if !guardian.can_add_group_member?(user, group)
+      end
 
-    users.each do |user|
-      next if member_ids.include?(user.id)
-      group.add(user)
-      logger.log_add_user_to_group(user)
-    end
+      users.each do |user|
+        next if member_ids.include?(user.id)
+        group.add(user)
+        logger.log_add_user_to_group(user)
+      end
 
-    group.group_users.where(user_id: user_ids).update_all(owner: true)
+      group.group_users.where(user_id: user_ids).update_all(owner: true)
+    end
     users.each { |user| logger.log_make_user_group_owner(user) }
     if notify_users && user_ids.present?
       Jobs.enqueue(:notify_users_added_to_group, user_ids:, group_id: group.id, owner: true)

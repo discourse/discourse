@@ -19,14 +19,19 @@ class GroupMemberRemover
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
-    group
-      .users
-      .where(id: users.map(&:id))
-      .each do |member|
-        raise GroupMutations::OtherStaffAccount if !guardian.can_remove_group_member?(member, group)
-      end
+    removed_user_ids =
+      group.with_lock do
+        group
+          .users
+          .where(id: users.map(&:id))
+          .each do |member|
+            if !guardian.can_remove_group_member?(member, group)
+              raise GroupMutations::OtherStaffAccount
+            end
+          end
 
-    removed_user_ids = GroupManager.new(group).remove(users.map(&:id))
+        GroupManager.new(group).remove(users.map(&:id))
+      end
     GroupActionLogger.new(guardian.user, group).bulk_log_remove_users_from_group(removed_user_ids)
 
     removed_usernames = []
