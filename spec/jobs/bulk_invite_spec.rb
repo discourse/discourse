@@ -107,6 +107,30 @@ RSpec.describe Jobs::BulkInvite do
       expect(existing_user.reload.groups).to eq([group1])
     end
 
+    context "when an unactivated account holds the address" do
+      fab!(:unactivated_user) { Fabricate(:user, email: "test@discourse.org", active: false) }
+
+      it "invites the address instead of adding the account to groups" do
+        described_class.new.execute(
+          current_user_id: admin.id,
+          invites: [{ email: unactivated_user.email, groups: "group1" }],
+        )
+
+        expect(unactivated_user.reload.groups).to be_empty
+        expect(Invite.find_by(email: unactivated_user.email).groups).to eq([group1])
+      end
+
+      it "still invites the address when the row has a locale" do
+        described_class.new.execute(
+          current_user_id: admin.id,
+          invites: [{ email: unactivated_user.email, groups: "group1", locale: "fr" }],
+        )
+
+        expect(unactivated_user.reload.locale).not_to eq("fr")
+        expect(Invite.find_by(email: unactivated_user.email).groups).to eq([group1])
+      end
+    end
+
     it "can create staged users and prepopulate user fields" do
       user_field = Fabricate(:user_field, name: "Location")
       user_field_color = Fabricate(:user_field, field_type: "dropdown", name: "Color")

@@ -263,8 +263,9 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+  # An unactivated account hasn't proven it owns the address yet.
   def self.find_user_by_email(email)
-    User.with_email(Email.downcase(email)).where(staged: false).first
+    User.with_email(Email.downcase(email)).where(staged: false).activated.first
   end
 
   def self.pending(inviter)
