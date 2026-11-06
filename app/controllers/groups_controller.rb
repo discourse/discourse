@@ -392,7 +392,11 @@ class GroupsController < ApplicationController
         .split(",")
         .each do |email|
           existing_user = User.find_by_email(email)
-          existing_user.present? ? users.push(existing_user) : emails.push(email)
+          if existing_user&.active || existing_user&.staged
+            users.push(existing_user)
+          else
+            emails.push(email)
+          end
         end
     end
 

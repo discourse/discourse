@@ -2237,6 +2237,20 @@ RSpec.describe GroupsController do
           expect(response.status).to eq(200)
         end
 
+        it "invites the address instead of adding an unactivated account that claimed it" do
+          unactivated_user =
+            Fabricate(:user, email: "claimed@example.com", active: false, approved: false)
+
+          expect do
+            put "/groups/#{group.id}/members.json", params: { emails: unactivated_user.email }
+          end.not_to change { group.users.count }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["emails"]).to eq([unactivated_user.email])
+          expect(response.parsed_body["usernames"]).to be_empty
+          expect(Invite.find_by(email: unactivated_user.email).groups).to eq([group])
+        end
+
         it "sends invites to new users and ignores existing users" do
           user1.update!(username: "john")
           user2.update!(username: "alice")
