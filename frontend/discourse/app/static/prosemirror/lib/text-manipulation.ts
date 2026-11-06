@@ -444,13 +444,13 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   emojiSelected(code: string): void {
     let index = 0;
 
-    const value = this.autocompleteHandler.getValue();
-    const match = /\B:([\p{L}\p{N}_]*)$/u.exec(value);
+    // only the text before the caret can hold the partial `:term`
+    const { $from, from, to } = this.view.state.selection;
+    const value = $from.nodeBefore?.isText ? $from.nodeBefore.text! : "";
+    const match = /\B:([\p{L}\p{N}_-]*)$/u.exec(value);
     if (match) {
       index = value.length - match.index;
     }
-
-    const { from, to } = this.view.state.selection;
 
     this.view.dispatch(
       this.view.state.tr

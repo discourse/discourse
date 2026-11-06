@@ -31,7 +31,6 @@ export default class Form extends Component {
         <FilterableList
           @onAfterInsertTemplate={{@closeModal}}
           @onInsertTemplate={{@model.onInsertTemplate}}
-          @textarea={{@model.textarea}}
         />
       </:body>
     </DModal>

@@ -12,6 +12,10 @@ module PageObjects
           @context = context
         end
 
+        def context_name
+          context.include?("thread") ? "thread" : "channel"
+        end
+
         def blank?
           has_value?("")
         end
@@ -40,17 +44,53 @@ module PageObjects
           find(context).find(SELECTOR)
         end
 
-        def fill_in(**args)
-          input.fill_in(**args)
+        def fill_in(with:)
+          if rich_editor?
+            input.click
+            input.send_keys([PLATFORM_KEY_MODIFIER, "a"], :backspace)
+            input.send_keys(with) if with.present?
+          else
+            input.fill_in(with: with)
+          end
+
           self
         end
 
+        def rich_editor?
+          component.has_css?(".chat-composer__input.ProseMirror", wait: 0)
+        end
+
+        def has_rich_editor?
+          component.has_css?(".chat-composer__input.ProseMirror")
+        end
+
+        def has_markdown_editor?
+          component.has_css?("textarea.chat-composer__input")
+        end
+
         def value
-          input.value
+          return input.value unless rich_editor?
+
+          page.evaluate_script(
+            "Discourse.lookup('service:chat-#{context_name}-composer').editor?.value",
+          )
         end
 
         def has_value?(expected)
-          has_field?(input[:id], with: expected)
+          return has_field?(input[:id], with: expected) unless rich_editor?
+
+          try_until_success { expect(value).to match(expected) }
+          true
+        rescue RSpec::Expectations::ExpectationNotMetError
+          false
+        end
+
+        def toggle_editor
+          rich = rich_editor?
+          component.find(".chat-composer-dropdown__trigger-btn").click
+          find(".chat-composer-dropdown__action-btn.toggle-editor").click
+          rich ? has_markdown_editor? : has_rich_editor?
+          self
         end
 
         def reply_to_last_message_shortcut
@@ -63,9 +103,12 @@ module PageObjects
           input.send_keys(%i[up])
         end
 
+        # The markdown editor inserts placeholder text for an empty selection;
+        # the rich editor only toggles the mark, so type the same text there.
         def emphasized_text_shortcut
           input.click
           input.send_keys([PLATFORM_KEY_MODIFIER, "i"])
+          input.send_keys(I18n.t("js.composer.italic_text")) if rich_editor?
         end
 
         def cancel_shortcut
@@ -81,6 +124,7 @@ module PageObjects
         def bold_text_shortcut
           input.click
           input.send_keys([PLATFORM_KEY_MODIFIER, "b"])
+          input.send_keys(I18n.t("js.composer.bold_text")) if rich_editor?
         end
 
         def open_emoji_picker

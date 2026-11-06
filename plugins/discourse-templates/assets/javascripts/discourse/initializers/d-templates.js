@@ -50,11 +50,9 @@ function addKeyboardShortcut(api, container) {
       }
 
       for (const target of _templateShortcutTargets) {
-        if (
-          dTemplates.isTextAreaFocused &&
-          target?.isFocused?.(document.activeElement)
-        ) {
-          dTemplates.showTextAreaUI(target?.variables);
+        const editor = target.editor();
+        if (editor && editor.element === document.activeElement) {
+          dTemplates.showEditorUI(editor.textManipulation, target.variables);
           return;
         }
       }
@@ -123,15 +121,16 @@ function addChatIntegration(api, container) {
           contextVariablesExtractor = null;
       }
 
-      const textarea = this.composer?.textarea?.textarea; // this.composer.textarea is a TextareaInteractor instance
-
       container
         .lookup("service:d-templates")
-        .showTextAreaUI(contextVariablesExtractor, textarea);
+        .showEditorUI(
+          this.composer.editor.textManipulation,
+          contextVariablesExtractor
+        );
     },
     displayed() {
       return (
-        this.composer?.textarea &&
+        this.composer?.editor &&
         (this.context === "channel" || this.context === "thread")
       );
     },
@@ -140,11 +139,11 @@ function addChatIntegration(api, container) {
   // add custom keyboard shortcut handlers for the chat channel composer and chat thread composer
   _templateShortcutTargets.push(
     {
-      isFocused: (element) => element?.id === "channel-composer",
+      editor: () => container.lookup("service:chat-channel-composer").editor,
       variables: channelVariablesExtractor,
     },
     {
-      isFocused: (element) => element?.id === "thread-composer",
+      editor: () => container.lookup("service:chat-thread-composer").editor,
       variables: threadVariablesExtractor,
     }
   );

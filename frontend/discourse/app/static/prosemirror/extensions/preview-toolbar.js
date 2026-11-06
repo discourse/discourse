@@ -131,7 +131,7 @@ class PreviewToolbarPluginView {
     this.#menuTrigger = null;
 
     if (this.#replacedToolbar) {
-      this.#getContext().replaceToolbar(null, this.#replacedToolbar);
+      this.#getContext().replaceToolbar?.(null, this.#replacedToolbar);
       this.#replacedToolbar = null;
     }
   }
@@ -196,7 +196,7 @@ class PreviewToolbarPluginView {
     } else if (this.#replacedToolbar !== this.#toolbar) {
       // replacing again on every transaction would re-render the whole bar for
       // each keystroke typed into the source
-      this.#getContext().replaceToolbar(this.#toolbar);
+      this.#getContext().replaceToolbar?.(this.#toolbar);
       this.#replacedToolbar = this.#toolbar;
     }
   }
