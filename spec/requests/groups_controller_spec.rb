@@ -15,6 +15,22 @@ RSpec.describe GroupsController do
       Fabricate(:group, name: "staff_group", visibility_level: Group.visibility_levels[:staff])
     end
 
+    it "prevents crawlers from indexing the group directory" do
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
     it "ensures that groups can be paginated" do
       50.times { Fabricate(:group) }
 
@@ -2109,6 +2125,22 @@ RSpec.describe GroupsController do
 
     fab!(:bot)
     let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
+
+    it "prevents crawlers from indexing group member lists" do
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
 
     it "lists bot members of automatic groups not created by core" do
       group.update_columns(automatic: true)
