@@ -554,7 +554,7 @@ export default class DesignWizardService extends Service {
     try {
       await ajax("/admin/config/design-wizard.json", {
         type: "PUT",
-        data: this.#selectionsPayload,
+        data: { ...this.#selectionsPayload, finishing: true },
       });
 
       this.keyValueStore.remove(STATE_KEY);

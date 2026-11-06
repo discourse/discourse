@@ -522,22 +522,163 @@ RSpec.describe DesignWizard::Apply do
       fab!(:wizard_scheme) { Fabricate(:color_scheme, via_wizard: true, user_selectable: true) }
 
       let(:theme_id) { Theme::CORE_THEMES["horizon"] }
-      let(:params) { { theme_id:, palettes_user_selectable: true } }
+      let(:light_palette) { ColorScheme.find_by(theme_id: horizon_theme.id, name: "Royal") }
+      let(:dark_palette) { ColorScheme.find_by(theme_id: horizon_theme.id, name: "Royal Dark") }
+      let(:theme_schemes) { ColorScheme.where(theme_id: horizon_theme.id) }
+      let(:params) do
+        {
+          theme_id:,
+          light_palette_id: light_palette.id,
+          dark_palette_id: dark_palette.id,
+          palettes_user_selectable: true,
+        }
+      end
 
       it { is_expected.to run_successfully }
 
       it "makes the theme palettes user selectable and preserves selectable wizard palettes" do
         expect(result).to run_successfully
 
-        theme_schemes = ColorScheme.where(theme_id: horizon_theme.id)
         expect(theme_schemes).to be_present
         expect(theme_schemes.pluck(:user_selectable)).to all(eq(true))
         expect(wizard_scheme.reload.user_selectable).to eq(true)
       end
+
+      context "when the site is light only" do
+        let(:params) do
+          { theme_id:, light_palette_id: light_palette.id, palettes_user_selectable: true }
+        end
+
+        it "offers only the light palettes" do
+          expect(result).to run_successfully
+
+          expect(theme_schemes.where(user_selectable: true).map(&:is_dark?)).to all(eq(false))
+          expect(theme_schemes.where(user_selectable: false).map(&:is_dark?)).to all(eq(true))
+          expect(theme_schemes.where(user_selectable: false)).to be_present
+        end
+      end
+
+      context "when finishing a light-only setup" do
+        fab!(:dark_pick, :user)
+        fab!(:no_dark) { Fabricate(:user).tap { |u| u.user_option.update!(dark_scheme_id: -1) } }
+        fab!(:dark_as_light, :user)
+        fab!(:light_pick, :user)
+
+        let(:params) do
+          {
+            theme_id:,
+            light_palette_id: light_palette.id,
+            palettes_user_selectable: true,
+            finishing: true,
+          }
+        end
+
+        before do
+          dark_pick.user_option.update!(dark_scheme_id: dark_palette.id)
+          dark_as_light.user_option.update!(color_scheme_id: dark_palette.id)
+          light_pick.user_option.update!(color_scheme_id: light_palette.id)
+        end
+
+        it "clears members' dark palette choices so they follow the site's light palette" do
+          expect(result).to run_successfully
+
+          expect(dark_pick.user_option.reload.dark_scheme_id).to be_nil
+          expect(dark_as_light.user_option.reload.color_scheme_id).to be_nil
+        end
+
+        it "keeps light choices and opting out of dark mode" do
+          expect(result).to run_successfully
+
+          expect(light_pick.user_option.reload.color_scheme_id).to eq(light_palette.id)
+          expect(no_dark.user_option.reload.dark_scheme_id).to eq(-1)
+        end
+
+        it "leaves members' choices alone on a step save, which can still be reverted" do
+          described_class.call(params: params.merge(finishing: false), **dependencies)
+
+          expect(dark_pick.user_option.reload.dark_scheme_id).to eq(dark_palette.id)
+          expect(dark_as_light.user_option.reload.color_scheme_id).to eq(dark_palette.id)
+        end
+
+        it "leaves members' choices alone when the site keeps dark mode" do
+          described_class.call(
+            params: params.merge(dark_palette_id: dark_palette.id),
+            **dependencies,
+          )
+
+          expect(dark_pick.user_option.reload.dark_scheme_id).to eq(dark_palette.id)
+        end
+      end
+
+      context "when finishing a dark-only setup" do
+        fab!(:light_pick, :user)
+        fab!(:dark_as_light, :user)
+        fab!(:dark_pick, :user)
+
+        let(:params) do
+          {
+            theme_id:,
+            light_palette_id: dark_palette.id,
+            dark_palette_id: dark_palette.id,
+            palettes_user_selectable: true,
+            finishing: true,
+          }
+        end
+
+        before do
+          light_pick.user_option.update!(color_scheme_id: light_palette.id)
+          dark_as_light.user_option.update!(color_scheme_id: dark_palette.id)
+          dark_pick.user_option.update!(dark_scheme_id: dark_palette.id)
+        end
+
+        it "clears members' light palette choices so they follow the site's dark palette" do
+          expect(result).to run_successfully
+
+          expect(light_pick.user_option.reload.color_scheme_id).to be_nil
+        end
+
+        it "keeps members' dark palette choices" do
+          expect(result).to run_successfully
+
+          expect(dark_as_light.user_option.reload.color_scheme_id).to eq(dark_palette.id)
+          expect(dark_pick.user_option.reload.dark_scheme_id).to eq(dark_palette.id)
+        end
+
+        it "leaves members' choices alone on a step save, which can still be reverted" do
+          described_class.call(params: params.merge(finishing: false), **dependencies)
+
+          expect(light_pick.user_option.reload.color_scheme_id).to eq(light_palette.id)
+        end
+      end
+
+      context "when the site is dark only" do
+        let(:params) do
+          {
+            theme_id:,
+            light_palette_id: dark_palette.id,
+            dark_palette_id: dark_palette.id,
+            palettes_user_selectable: true,
+          }
+        end
+
+        it "offers only the dark palettes" do
+          expect(result).to run_successfully
+
+          expect(theme_schemes.where(user_selectable: true).map(&:is_dark?)).to all(eq(true))
+          expect(theme_schemes.where(user_selectable: false).map(&:is_dark?)).to all(eq(false))
+          expect(theme_schemes.where(user_selectable: false)).to be_present
+        end
+      end
     end
 
     context "when offering built-in palettes on a theme without its own" do
-      let(:params) { { theme_id:, palettes_user_selectable: true } }
+      let(:params) do
+        {
+          theme_id:,
+          dark_palette_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+          palettes_user_selectable: true,
+        }
+      end
 
       before { ColorScheme.where(via_wizard: true).destroy_all }
 

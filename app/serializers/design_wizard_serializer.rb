@@ -45,7 +45,8 @@ class DesignWizardSerializer < ApplicationSerializer
   def palettes_user_selectable
     offered = ColorScheme.where(theme_id: preselected_theme&.id)
     offered = ColorScheme.where(via_wizard: true) if offered.none?
-    offered.exists? && offered.where(user_selectable: false).none?
+    # a single-mode site keeps the other mode's palettes unselectable
+    offered.where(user_selectable: true).exists?
   end
 
   private
