@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RemoveDuplicateUserApiKeyScopes < ActiveRecord::Migration[8.1]
+class RemoveDuplicateUserApiKeyScopes < ActiveRecord::Migration[8.0]
   def up
     execute <<~SQL
       DELETE FROM user_api_key_scopes
