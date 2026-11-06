@@ -1909,7 +1909,10 @@ class UsersController < ApplicationController
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      UserAuthToken.where(user_id: user.id).each(&:destroy!)
+      UserAuthToken.transaction do
+        UserAuthToken.where(user_id: user.id).each(&:destroy!)
+        PushNotificationPusher.clear_subscriptions(user)
+      end
     end
 
     render json: success_json
