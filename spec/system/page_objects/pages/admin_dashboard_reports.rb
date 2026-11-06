@@ -9,18 +9,6 @@ module PageObjects
         has_css?(SECTION_SELECTOR)
       end
 
-      def has_footer_content?(text)
-        has_css?("#{SECTION_SELECTOR} .reports-footer-content", text: text)
-      end
-
-      def footer_content_height
-        find("#{SECTION_SELECTOR} .reports-footer-content").native.bounding_box.fetch("height")
-      end
-
-      def report_card_height
-        first("#{SECTION_SELECTOR} .db-report__card").native.bounding_box.fetch("height")
-      end
-
       def card_identifiers
         within(SECTION_SELECTOR) { all(".db-report__card").map { |el| el["data-identifier"] } }
       end
