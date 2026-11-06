@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class PostAnalyzer
+  MEDIA_ONEBOX_ENGINES = [
+    Onebox::Engine::ImageOnebox,
+    Onebox::Engine::VideoOnebox,
+    Onebox::Engine::AudioOnebox,
+  ]
+
   def initialize(raw, topic_id)
     @raw = raw
     @topic_id = topic_id
@@ -59,15 +65,17 @@ class PostAnalyzer
   def embedded_media_count
     return 0 if @raw.blank?
 
-    # TODO - do we need to look for tags other than img, video and audio?
-    cooked_stripped
-      .css("img", "video", "audio")
-      .reject do |t|
-        if dom_class = t["class"]
-          (Post.allowed_image_classes & dom_class.split).count > 0
-        end
-      end
-      .count
+    doc = Nokogiri::HTML5.fragment(cooked)
+    doc.css("aside.onebox, .elided").remove
+
+    rendered =
+      doc
+        .css("img, video, audio, .video-placeholder-container")
+        .reject { |node| node.classes.intersect?(Post.allowed_image_classes) }
+    pending =
+      doc.css("a.onebox").select { |link| link.at_css("img").nil? && media_onebox?(link["href"]) }
+
+    rendered.size + pending.size
   end
 
   # How many attachments are present in the post
@@ -143,15 +151,30 @@ class PostAnalyzer
   end
 
   def cooked_stripped
-    @cooked_stripped ||=
-      begin
-        cooked = cook(@raw, topic_id: @topic_id)
-        fragment = Nokogiri::HTML5.fragment(cooked)
-        PostStripper.strip(fragment)
-      end
+    @cooked_stripped ||= PostStripper.strip(Nokogiri::HTML5.fragment(cooked))
   end
 
   private
+
+  def cooked
+    @cooked ||= cook(@raw, topic_id: @topic_id)
+  end
+
+  def media_onebox?(url)
+    uri = URI(url)
+
+    if route = Discourse.route_for(uri)
+      extension = File.extname(uri.path)
+      return(
+        route[:controller] == "uploads" &&
+          (extension.match?(Oneboxer::VIDEO_REGEX) || extension.match?(Oneboxer::AUDIO_REGEX))
+      )
+    end
+
+    MEDIA_ONEBOX_ENGINES.any? { |engine| engine === uri }
+  rescue URI::Error
+    false
+  end
 
   def link_is_a_mention?(l)
     href = l["href"].to_s
