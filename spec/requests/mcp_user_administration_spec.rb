@@ -407,6 +407,27 @@ describe "MCP user administration tools" do
     )
   end
 
+  it "hides full names from moderators listing users when names are disabled" do
+    SiteSetting.enable_names = false
+    target_user = Fabricate(:user, username: "private_name_cat", name: "Private MCP Name")
+    authorize("mcp:users:read", auth_user: moderator)
+
+    call_tool("discourse_list_users", { filter: target_user.username })
+
+    expect(response).to have_http_status(:ok)
+    expect(structured_content["users"]).to contain_exactly(
+      include("username" => target_user.username, "name" => nil),
+    )
+
+    authorize("mcp:users:read")
+    call_tool("discourse_list_users", { filter: target_user.username })
+
+    expect(response).to have_http_status(:ok)
+    expect(structured_content["users"]).to contain_exactly(
+      include("username" => target_user.username, "name" => target_user.name),
+    )
+  end
+
   it "creates a user as an administrator without returning the password" do
     authorize("mcp:users:write")
 
