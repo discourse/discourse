@@ -338,6 +338,10 @@ class Reviewable < ActiveRecord::Base
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
     raise Discourse::InvalidAccess if !can_review_target?(performed_by.guardian)
+    if params[:category_id].present? &&
+         !performed_by.guardian.can_move_topic_to_category?(params[:category_id])
+      raise Discourse::InvalidAccess
+    end
 
     (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)

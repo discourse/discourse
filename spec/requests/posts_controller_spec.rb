@@ -1128,6 +1128,23 @@ RSpec.describe PostsController do
       expect(post.topic.reload.category_id).not_to eq(category.id)
     end
 
+    it "does not let a moderator move a topic to a category they cannot see" do
+      post = create_post
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      sign_in(moderator)
+
+      put "/posts/#{post.id}.json",
+          params: {
+            post: {
+              category_id: private_category.id,
+              raw: "this is a test edit to post",
+            },
+          }
+
+      expect(response.status).to eq(403)
+      expect(post.topic.reload.category_id).not_to eq(private_category.id)
+    end
+
     describe "trying to add a link without permission" do
       it "returns an error message if links are added to posts when not allowed" do
         post = create_post
