@@ -227,6 +227,29 @@ RSpec.describe Email::Processor do
     end
   end
 
+  describe "when the message has a deeply nested MIME structure" do
+    it "drops the message without recording it or replying to the sender" do
+      expect(Email::Processor.process!(nested_mime_email(50), source: :pop3_poll)).to be_nil
+
+      expect(IncomingEmail.count).to eq(0)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+  end
+
+  describe "when the message has too many MIME parts" do
+    it "drops the message without recording it or replying to the sender" do
+      expect(
+        Email::Processor.process!(
+          wide_mime_email(Email::Receiver::MAX_MIME_PARTS + 10),
+          source: :pop3_poll,
+        ),
+      ).to be_nil
+
+      expect(IncomingEmail.count).to eq(0)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+  end
+
   describe "when group email recipients exceeds maximum_recipients_per_new_group_email site setting" do
     let(:mail) { file_from_fixtures("cc.eml", "emails").read }
 
