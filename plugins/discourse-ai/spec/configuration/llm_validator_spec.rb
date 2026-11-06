@@ -78,5 +78,29 @@ RSpec.describe DiscourseAi::Configuration::LlmValidator do
 
       expect(validator.last_failed_mode).to eq(:streaming)
     end
+
+    it "gives up with a timeout error when the provider is too slow to respond" do
+      stub_const(described_class, :TEST_TIMEOUT_SECONDS, 0.1) do
+        gemini =
+          Fabricate(
+            :llm_model,
+            provider: "google",
+            url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-test",
+          )
+
+        stub_request(:post, /generativelanguage.googleapis.com/).to_return do
+          sleep 1
+          { status: 503, body: { error: { code: 503, status: "UNAVAILABLE" } }.to_json }
+        end
+
+        expect { validator.run_test(gemini) }.to raise_error(
+          DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+          I18n.t("discourse_ai.llm.configuration.test_timeout", count: 0.1),
+        )
+      end
+
+      expect(validator.last_failed_mode).to eq(:non_streaming)
+      expect(WebMock).to have_requested(:post, /generativelanguage.googleapis.com/).once
+    end
   end
 end
