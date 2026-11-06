@@ -15,6 +15,34 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  describe "MIME structure depth" do
+    it "raises a MaxMimeDepthExceededError when the message is nested too deeply" do
+      expect {
+        Email::Receiver.new(nested_mime_email(Email::Receiver::MAX_MIME_DEPTH + 10))
+      }.to raise_error(Email::Receiver::MaxMimeDepthExceededError)
+    end
+
+    it "accepts a message nested within the maximum depth" do
+      expect {
+        Email::Receiver.new(nested_mime_email(Email::Receiver::MAX_MIME_DEPTH - 1))
+      }.to_not raise_error
+    end
+  end
+
+  describe "MIME structure width" do
+    it "raises a MaxMimePartsExceededError when the message has too many parts" do
+      expect {
+        Email::Receiver.new(wide_mime_email(Email::Receiver::MAX_MIME_PARTS + 10))
+      }.to raise_error(Email::Receiver::MaxMimePartsExceededError)
+    end
+
+    it "accepts a message within the maximum number of parts" do
+      expect {
+        Email::Receiver.new(wide_mime_email(Email::Receiver::MAX_MIME_PARTS - 1))
+      }.to_not raise_error
+    end
+  end
+
   context "when email is addressed to an automatic group" do
     let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
 
