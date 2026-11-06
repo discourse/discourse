@@ -52,7 +52,7 @@ export function matchValue({
   expected: unknown;
 }): boolean {
   // Handle arrays first (before checking for `any`/`not` properties)
-  // because Ember prototype extensions add `any()` method to arrays
+  // because Ember arrays made with `A()` have an `any()` method
   if (Array.isArray(expected)) {
     if (expected.length > 0 && !isSimpleValueArray(expected)) {
       // AND logic: Array of non-primitive conditions, all must pass
