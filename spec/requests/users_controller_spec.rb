@@ -5687,6 +5687,58 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "anonymous account penalty privacy" do
+    it "keeps shared penalty expiry dates private on public cards and profiles" do
+      freeze_time
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      member = Fabricate(:user, trust_level: 1)
+      shadow = AnonymousShadowCreator.get(member)
+      member.user_stat.update!(post_count: 1)
+      shadow.user_stat.update!(post_count: 1)
+      expiry = 3.days.from_now
+
+      UserSilencer.new(member, admin, keep_posts: true, silenced_till: expiry).silence
+      UserSuspender.new(member, suspended_till: expiry, reason: "spam", by_user: admin).suspend
+
+      ["/u/#{member.username}/card.json", "/u/#{member.username}.json"].each do |path|
+        get path
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]).to include(
+          "silenced_till" => expiry.iso8601(3),
+          "suspended_till" => expiry.iso8601(3),
+        )
+      end
+
+      ["/u/#{shadow.username}/card.json", "/u/#{shadow.username}.json"].each do |path|
+        get path
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]).not_to have_key("silenced_till")
+        expect(response.parsed_body["user"]).not_to have_key("suspended_till")
+      end
+
+      get "/user-cards.json", params: { user_ids: "#{member.id},#{shadow.id}" }
+      expect(response.status).to eq(200)
+      shadow_card = response.parsed_body["users"].find { |card| card["id"] == shadow.id }
+      expect(shadow_card).not_to have_key("silenced_till")
+      expect(shadow_card).not_to have_key("suspended_till")
+
+      SiteSetting.allow_anonymous_mode = false
+      get "/u/#{shadow.username}/card.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user"]).not_to have_key("suspended_till")
+
+      SiteSetting.allow_anonymous_mode = true
+      sign_in(admin)
+      get "/u/#{shadow.username}/card.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user"]).to include(
+        "silenced_till" => expiry.iso8601(3),
+        "suspended_till" => expiry.iso8601(3),
+      )
+    end
+  end
+
   describe "#show_card" do
     context "when anon" do
       let(:user) { Discourse.system_user }
