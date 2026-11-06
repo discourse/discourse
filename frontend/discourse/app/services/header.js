@@ -64,8 +64,7 @@ export default class Header extends Service {
       return false;
     }
 
-    // With the tab bar, a topic keeps its title in the header, as a chat
-    // channel does
+    // With the tab bar, a titled page keeps its title in the header
     if (this.mobileTabBar.isTitledPage) {
       return true;
     }

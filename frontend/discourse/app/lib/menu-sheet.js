@@ -1,12 +1,10 @@
 /**
- * With the mobile tab bar showing, the header's menus become sheets rather
- * than sliding in from the side: the forum's menu rises from the bottom, by
- * the tab bar, and the user menu drops from the top, by its avatar. Keyed on
- * the same classes as their styles, so the two can't disagree.
+ * With the mobile tab bar showing, header menus open as sheets: the forum's
+ * menu from the bottom and the user menu from the top. Keyed on the classes
+ * their styles use, so the two agree.
  *
  * @param {HTMLElement} panel A header menu panel.
- * @returns {"bottom"|"top"|null} The edge the panel's sheet comes from, or
- * null when it slides in from the side.
+ * @returns {"bottom"|"top"|null} The sheet's edge, or null for a side menu.
  */
 export function menuSheetEdge(panel) {
   if (!document.documentElement.classList.contains("mobile-tab-bar-visible")) {
@@ -25,11 +23,10 @@ export function menuSheetEdge(panel) {
 }
 
 /**
- * A percentage, so the sheet stays fully hidden while its deferred content
- * renders and grows it.
+ * A percentage, so the sheet stays hidden while its deferred content grows it.
  *
  * @param {"bottom"|"top"} edge
- * @returns {string} The transform that hides a sheet past its edge.
+ * @returns {string}
  */
 export function menuSheetClosedTransform(edge) {
   return `translate3d(0, ${edge === "top" ? -100 : 100}%, 0)`;

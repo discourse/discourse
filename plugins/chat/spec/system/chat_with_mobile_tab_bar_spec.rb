@@ -69,10 +69,26 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
     expect(page).to have_css(".c-footer.--pills")
     expect(page).to have_no_css("#c-footer-search")
 
-    find(".d-header .c-header__search a").click
+    find(".d-header .c-header__search .search-dropdown button").click
 
     expect(page).to have_current_path("/chat/search")
-    expect(page).to have_css(".d-header .c-header__search .active")
+  end
+
+  it "searches a channel from the site's own search icon in the header" do
+    SiteSetting.chat_search_enabled = true
+
+    chat_page.visit_channel(channel_1)
+
+    expect(page).to have_no_css(".c-navbar__filter")
+
+    find(".d-header .c-navbar .search-dropdown button").click
+
+    expect(page).to have_css(".chat-channel__filter-bar")
+    expect(page).to have_css(".d-header .c-navbar .search-dropdown.active")
+
+    find(".d-header .c-navbar .search-dropdown button").click
+
+    expect(page).to have_no_css(".chat-channel__filter-bar")
   end
 
   it "lets the chat tabs name the list and holds its options beside them" do

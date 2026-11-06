@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
-import CategoryListSettingsMenu from "discourse/components/category-list-settings-menu";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
 import CreateTopicButton from "discourse/components/create-topic-button";
 import NavigationBar from "discourse/components/navigation-bar";
@@ -34,7 +33,27 @@ export default class DNavigation extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service discovery;
   @service mobileTabBar;
+
+  #topicCreator = {
+    canCreate: () => this.canCreateTopic,
+    create: () => this.clickCreateTopicButton(),
+  };
+
+  init() {
+    super.init(...arguments);
+    this.discovery.topicCreator = this.#topicCreator;
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    // The next list may already have registered its own
+    if (this.discovery.topicCreator === this.#topicCreator) {
+      this.discovery.topicCreator = null;
+    }
+  }
 
   @computed("siteSettings.fixed_category_positions")
   get fixedCategoryPositions() {
@@ -334,12 +353,24 @@ export default class DNavigation extends Component {
           {{#in-element this.mobileTabBar.viewsSlot insertBefore=null}}
             <NavigationBar
               @category={{this.category}}
+              @countAsBadge={{true}}
               @filterMode={{this.filterMode}}
               @navItems={{this.navItems}}
               @tag={{this.tag}}
             />
+            {{! Admins can fix category positions to reorder; others reorder
+              only once they're fixed }}
             <NavigationOptionsMenu
               @bulkSelectHelper={{@bulkSelectHelper}}
+              @canChangeCategorySettings={{and
+                this.showCategoryAdmin
+                this.currentUser.admin
+              }}
+              @canReorderCategories={{and
+                this.showCategoryAdmin
+                (or this.currentUser.admin this.fixedCategoryPositions)
+              }}
+              @reorderCategories={{this.reorderCategories}}
               @showBulkSelect={{this.showBulkSelectInNavControls}}
             />
           {{/in-element}}
@@ -375,8 +406,8 @@ export default class DNavigation extends Component {
 
       {{#if this.showCategoryAdmin}}
         {{#if this.mobileTabBar.enabled}}
-          {{! The row is the list's own, so creating takes it, with admins'
-            settings for the list beside it }}
+          {{! The row is the list's own, so creating takes it; the list's
+            settings sit in the options beside its views }}
           <DButton
             class="btn-default"
             id="create-category"
@@ -384,11 +415,6 @@ export default class DNavigation extends Component {
             @icon="plus"
             @label="category.create"
           />
-          {{#if this.currentUser.admin}}
-            <CategoryListSettingsMenu
-              @reorderCategories={{this.reorderCategories}}
-            />
-          {{/if}}
         {{else if this.fixedCategoryPositions}}
           <CategoriesAdminDropdown
             @onChange={{this.selectCategoryAdminDropdownAction}}

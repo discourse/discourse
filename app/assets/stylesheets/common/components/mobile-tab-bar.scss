@@ -5,7 +5,7 @@ html.mobile-tab-bar-visible {
   // Layouts across the app already clear the footer nav by this height
   --footer-nav-height: var(--mobile-tab-bar-controls-height);
 
-  &:has(.mobile-tab-bar__views:not(:empty)) {
+  &:has(.mobile-tab-bar__views > :not(.mobile-tab-bar__views-highlight)) {
     --footer-nav-height: calc(
       var(--mobile-tab-bar-controls-height) + var(--mobile-tab-bar-views-height)
     );
@@ -33,8 +33,12 @@ html.mobile-tab-bar-visible {
   padding: 0 var(--space-3) env(safe-area-inset-bottom);
   box-sizing: border-box;
 
-  // Content scrolls underneath, so fade it out behind the controls
-  background: linear-gradient(to bottom, transparent, var(--secondary) 1.85rem);
+  // Content scrolls underneath, so dim it behind the controls without hiding it
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(var(--secondary-rgb), 0.7) 1.85rem
+  );
   pointer-events: none;
 
   @include unselectable;
@@ -61,7 +65,8 @@ html.mobile-tab-bar-visible {
     // Lets the arrow sit behind the views but over the bubble's own fill
     isolation: isolate;
 
-    &:empty {
+    // Shown once a section renders its views into it
+    &:not(:has(> :not(.mobile-tab-bar__views-highlight))) {
       display: none;
     }
 
@@ -77,7 +82,14 @@ html.mobile-tab-bar-visible {
       position: absolute;
       z-index: -1;
       bottom: -4px;
-      left: var(--mobile-tab-bar-pointer-x, 50%);
+
+      // Offset from the bar's centre, which is the bubble's too, so the
+      // bubble's width never moves it; kept clear of the rounded ends
+      left: clamp(
+        1.5rem,
+        calc(50% + var(--mobile-tab-bar-pointer-offset, 0px)),
+        calc(100% - 1.5rem)
+      );
       width: 8px;
       height: 8px;
       background: var(--header_background);
@@ -106,29 +118,38 @@ html.mobile-tab-bar-visible {
     > li > a {
       padding: var(--space-1) var(--space-3);
       border-radius: 999px;
-      color: var(--header_primary-medium);
+      color: var(--header_primary-high);
       font-size: var(--font-down-1);
+
+      // The fill marks the current view, so the underline that nav links
+      // otherwise get for it, and on hover (on touch too, where taps leave
+      // hover behind), never shows here
+      &::after,
+      &:hover::after,
+      &.active::after {
+        display: none;
+      }
 
       &:not(.active) {
         @include hover {
           background: var(--d-hover);
           color: var(--header_primary);
-
-          &::after {
-            display: none;
-          }
         }
       }
 
+      // The views' highlight behind it is its pill
       &.active {
-        background: var(--d-selected);
         color: var(--d-nav-color--active);
         font-weight: bold;
-
-        &::after {
-          display: none;
-        }
       }
+    }
+
+    // On the view's corner, so it doesn't change the view's width as it comes
+    // and goes; level with its top, which the scrolling list would clip above
+    .navigation-item__count {
+      position: absolute;
+      top: 0;
+      right: calc(var(--space-1) * -1);
     }
 
     // Holds each label's bold width, so the bubble doesn't resize as the
@@ -167,6 +188,74 @@ html.mobile-tab-bar-visible {
     .d-icon {
       margin: 0;
       color: var(--header_primary-medium);
+    }
+  }
+
+  // Slides between the views as the current one changes, behind them but
+  // over the bubble's fill. Built from two round caps and a stretched middle,
+  // so resizing is all transforms, which keep animating while the page is
+  // busy loading the view; animating its width would stall.
+  &__views-highlight {
+    --cap: var(--mobile-tab-bar-views-highlight-height, 0px);
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: var(--cap);
+    opacity: var(--mobile-tab-bar-views-highlight-opacity, 1);
+    transform: translate(
+      var(--mobile-tab-bar-views-highlight-x, 0),
+      var(--mobile-tab-bar-views-highlight-y, 0)
+    );
+    pointer-events: none;
+
+    &::before,
+    &::after,
+    .mobile-tab-bar__views-highlight-middle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--d-selected);
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      width: var(--cap);
+      border-radius: 999px;
+    }
+
+    &::after {
+      transform: translateX(
+        calc(var(--mobile-tab-bar-views-highlight-width, 0px) - var(--cap))
+      );
+    }
+
+    .mobile-tab-bar__views-highlight-middle {
+      width: 1px;
+      transform: translateX(calc(var(--cap) / 2))
+        scaleX(var(--mobile-tab-bar-views-highlight-stretch, 0));
+      transform-origin: left;
+    }
+
+    [data-sliding] > & {
+      &,
+      &::after,
+      .mobile-tab-bar__views-highlight-middle {
+        transition:
+          transform 250ms ease,
+          opacity 250ms ease;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        &,
+        &::after,
+        .mobile-tab-bar__views-highlight-middle {
+          transition: none;
+        }
+      }
     }
   }
 
@@ -248,6 +337,7 @@ html.mobile-tab-bar-visible {
   &__track {
     --fade-before: 0px;
     --fade-after: 0px;
+    position: relative;
     display: flex;
     flex: 1 1 auto;
     align-items: stretch;
@@ -276,12 +366,36 @@ html.mobile-tab-bar-visible {
     }
 
     // Past four, the next tab peeks in to show the bar scrolls
-    &:has(> :nth-child(5)) .mobile-tab-bar__tab {
+    &:has(> :nth-child(5 of .mobile-tab-bar__tab)) .mobile-tab-bar__tab {
       flex-basis: 28.5%;
     }
   }
 
+  // Slides between tabs as the current section changes
+  &__highlight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--mobile-tab-bar-highlight-width, 0);
+    border-radius: 999px;
+    background: var(--d-selected);
+    transform: translateX(var(--mobile-tab-bar-highlight-x, 0));
+    pointer-events: none;
+
+    [data-sliding] > & {
+      transition:
+        transform 250ms ease,
+        width 250ms ease;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+  }
+
   &__tab {
+    position: relative;
     flex: 1 0 25%;
     scroll-snap-align: start;
     flex-direction: column;
@@ -291,10 +405,9 @@ html.mobile-tab-bar-visible {
     border-radius: 999px;
     color: var(--header_primary-medium);
 
-    // Colour alone doesn't mark the active tab, so it also gets a pill;
-    // outweighs the transparent button style it's built on
+    // The highlight behind it is its pill; outweighs the transparent button
+    // style it's built on
     &.--active.btn-transparent {
-      background: var(--d-selected);
       color: var(--d-nav-color--active);
     }
   }
@@ -331,7 +444,8 @@ html.mobile-tab-bar-visible {
     display: flex;
   }
 
-  &__count {
+  &__count,
+  &__views .navigation-item__count {
     min-width: 1rem;
     padding: 0 0.3em;
     box-sizing: border-box;
@@ -464,8 +578,8 @@ html.mobile-tab-bar-visible {
   }
 }
 
-// Next to a topic or channel title the small logo only crowds it; the tabs
-// already lead home
+// Next to a page's title the small logo only crowds it; the tabs already lead
+// home
 html.mobile-tab-bar-titled .d-header .title--minimized {
   display: none;
 }

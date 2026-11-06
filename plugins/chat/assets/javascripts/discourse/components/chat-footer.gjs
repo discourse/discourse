@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import HeaderDropdown from "discourse/components/header/dropdown";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   UnreadChannelsIndicator,
@@ -23,6 +24,7 @@ export default class ChatFooter extends Component {
   @service chatStateManager;
   @service currentUser;
   @service mobileTabBar;
+  @service router;
 
   get includeStarred() {
     return this.currentUser && this.chatChannelsManager.hasStarredChannels;
@@ -126,26 +128,22 @@ export default class ChatFooter extends Component {
     ].filter(Boolean);
   }
 
+  @action
+  openSearch() {
+    this.router.transitionTo("chat.search");
+  }
+
   <template>
     {{#if (and this.searchInHeader this.chatStateManager.headerNavbarSlot)}}
       {{#in-element this.chatStateManager.headerNavbarSlot insertBefore=null}}
-        {{! Built like the site header's own icons, so it sizes and spaces the same }}
-        <ul class="d-header-icons c-header__search">
-          <li
-            class={{dConcatClass
-              "header-dropdown-toggle"
-              (if (eq this.currentRouteName "chat.search") "active")
-            }}
-          >
-            <LinkTo
-              aria-label={{i18n "chat.search.aria_label"}}
-              class="btn btn-icon no-text icon btn-flat"
-              title={{i18n "chat.search.aria_label"}}
-              @route="chat.search"
-            >
-              {{dIcon "magnifying-glass"}}
-            </LinkTo>
-          </li>
+        {{! The site header's own search icon, opening chat's search }}
+        <ul class="icons d-header-icons c-header__search">
+          <HeaderDropdown
+            class="search-dropdown"
+            @icon="magnifying-glass"
+            @onClick={{this.openSearch}}
+            @title="chat.search.aria_label"
+          />
         </ul>
       {{/in-element}}
     {{/if}}

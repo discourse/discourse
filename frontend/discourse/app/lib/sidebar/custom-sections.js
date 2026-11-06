@@ -31,6 +31,12 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
     const owner = getOwnerWithFallback(this);
     const currentUser = owner.lookup("service:current-user");
     const composer = () => owner.lookup("service:composer");
+    const discovery = owner.lookup("service:discovery");
+    const router = owner.lookup("service:router");
+    const topicController = owner.lookup("controller:topic");
+    const topic = router.currentRouteName?.startsWith("topic.")
+      ? topicController.model
+      : null;
 
     return {
       label: i18n("mobile_tab_bar.topics"),
@@ -39,13 +45,26 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
       isNestedRoute: (routeInfo) => routeInfo.name.startsWith("topic."),
       showsTitleInHeader: () => true,
       createActions: [
-        currentUser?.can_create_topic && {
+        // Runs the topic page's own reply, so drafts and quotes carry over
+        topic?.details?.can_create_post && {
+          label: topic.isPrivateMessage
+            ? i18n("composer.composer_actions.reply_to_message.label")
+            : i18n("composer.composer_actions.reply_to_topic.label"),
+          icon: "reply",
+          action: () => topicController.replyToPost(),
+        },
+        (discovery.topicCreator?.canCreate() ??
+          currentUser?.can_create_topic) && {
           label: i18n("mobile_tab_bar.new_topic"),
           icon: "far-pen-to-square",
           action: () => {
-            // A category or topic page, or a tag's list, seeds the new topic
-            const attributes =
-              owner.lookup("service:router").currentRoute?.attributes;
+            if (discovery.topicCreator) {
+              discovery.topicCreator.create();
+              return;
+            }
+
+            // Elsewhere, a topic's category and tag seed the new topic
+            const attributes = router.currentRoute?.attributes;
 
             composer().openNewTopic({
               category: attributes?.category,

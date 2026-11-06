@@ -1759,7 +1759,6 @@ en:
       view_all: "view all"
       category: "Category"
       category_list: "Display category list"
-      settings: "Category list settings"
       page_layout: "Categories page layout"
       reorder:
         title: "Reorder Categories"
@@ -4656,8 +4655,6 @@ en:
       title: "Shared content"
       description: "What would you like to do with the shared content?"
       new_topic: "New topic"
-      new_personal_message: "New personal message"
-      create: "Create"
       new_message: "New message"
       add_to_reply: "Add to a reply"
       added_to_reply: "Saved. The content will be added the next time you open a reply."

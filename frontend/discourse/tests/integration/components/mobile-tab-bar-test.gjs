@@ -60,10 +60,10 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
 
     assert.deepEqual(tabKeys(), ["main", "primary", "one", "two", "three"]);
     assert
-      .dom(".mobile-tab-bar > :first-child")
+      .dom(".mobile-tab-bar__controls > :first-child")
       .hasClass("mobile-tab-bar__menu", "the menu button leads the bar");
     assert
-      .dom(".mobile-tab-bar > :last-child")
+      .dom(".mobile-tab-bar__controls > :last-child")
       .hasClass("mobile-tab-bar__create", "the create button ends the bar");
   });
 
@@ -127,6 +127,24 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
     await click(".mobile-tab-bar__menu");
 
     assert.false(this.owner.lookup("service:header").hamburgerVisible);
+  });
+
+  test("gives the current section a strip above the tabs for its views", async function (assert) {
+    const mobileTabBar = this.owner.lookup("service:mobile-tab-bar");
+
+    await render(<template><MobileTabBar /></template>);
+
+    assert
+      .dom(".mobile-tab-bar__views > :not(.mobile-tab-bar__views-highlight)")
+      .doesNotExist("the strip waits for a section to fill it");
+    assert
+      .dom(".mobile-tab-bar__views")
+      .isNotVisible("an empty strip stays out of the way");
+    assert.strictEqual(
+      mobileTabBar.viewsSlot,
+      document.querySelector(".mobile-tab-bar__views"),
+      "sections render into the strip through the service"
+    );
   });
 
   test("shows the tab's badge over its icon", async function (assert) {

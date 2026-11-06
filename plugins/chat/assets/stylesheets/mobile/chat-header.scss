@@ -1,5 +1,6 @@
 .has-full-page-chat {
-  .d-header-icons .search-dropdown,
+  // The site's own; chat's search icon takes its place
+  .d-header-icons:not(.c-header__search) .search-dropdown,
   .d-header-icons .hamburger-dropdown {
     display: none;
   }
@@ -62,10 +63,6 @@
   .c-header__search {
     margin-left: auto;
     margin-right: -0.5em;
-
-    .active .d-icon {
-      color: var(--d-nav-color--active);
-    }
   }
 }
 

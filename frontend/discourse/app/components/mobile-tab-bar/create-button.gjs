@@ -30,13 +30,13 @@ export default class MobileTabBarCreateButton extends Component {
       <DButton
         class="btn-primary mobile-tab-bar__create"
         @action={{fn this.run this.onlyAction null}}
-        @icon="plus"
+        @icon="pencil"
         @translatedAriaLabel={{this.onlyAction.label}}
       />
     {{else if this.createActions.length}}
       <DMenu
         @ariaLabel={{i18n "mobile_tab_bar.create"}}
-        @icon="plus"
+        @icon="pencil"
         @identifier="mobile-tab-bar-create"
         @modalForMobile={{true}}
         @triggerClass="btn-primary mobile-tab-bar__create"

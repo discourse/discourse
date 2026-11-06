@@ -108,13 +108,14 @@ export default class ApplicationController extends Controller {
     return this.siteSettings.login_required && !this.currentUser;
   }
 
-  // Inside the app, the tab bar takes over the footer and leads back to it
+  // The tab bar stands in for the footer nav: it has its own back button, and
+  // inside the app a tab back to the app's list of sites
   get showFooterNav() {
-    if (this.capabilities.isAppWebview) {
-      return !this.mobileTabBar.enabled;
+    if (this.mobileTabBar.enabled) {
+      return false;
     }
 
-    return this.capabilities.isiOSPWA;
+    return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   }
 
   get sidebarEnabled() {

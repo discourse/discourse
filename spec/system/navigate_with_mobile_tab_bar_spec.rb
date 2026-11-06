@@ -107,20 +107,24 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
 
     expect(page).to have_css("#create-category", text: "New category")
     expect(page).to have_no_css(".category-breadcrumb")
-    expect(page).to have_no_css(".navigation-options__trigger")
+
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
+
+    expect(page).to have_css(".navigation-options__reorder-categories")
+    expect(page).to have_no_css(".navigation-options__bulk-select")
   end
 
   it "fixes category positions while admins reorder from the category list, keeping them only once an order is saved" do
     SiteSetting.fixed_category_positions = false
 
     visit("/categories")
-    find(".category-list-settings__trigger").click
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
 
     expect(page).to have_css(
-      ".category-list-settings__page-layout[href*='/admin/config/category-management/settings?filter=category_page_style']",
+      ".navigation-options__page-layout[href*='/admin/config/category-management/settings?filter=category_page_style']",
     )
 
-    find(".category-list-settings__reorder").click
+    find(".navigation-options__reorder-categories").click
 
     expect(page).to have_css(".reorder-categories")
     try_until_success { expect(SiteSetting.fixed_category_positions).to eq(true) }
@@ -130,13 +134,51 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_no_css(".reorder-categories")
     try_until_success { expect(SiteSetting.fixed_category_positions).to eq(false) }
 
-    find(".category-list-settings__trigger").click
-    find(".category-list-settings__reorder").click
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
+    find(".navigation-options__reorder-categories").click
     first(".reorder-categories .move-down").click
     find(".d-modal__footer .btn-primary").click
 
     expect(page).to have_no_css(".reorder-categories")
     expect(SiteSetting.fixed_category_positions).to eq(true)
+  end
+
+  it "lets the user reply to the topic they're reading from the create button" do
+    topic = Fabricate(:post).topic
+
+    visit(topic.url)
+    tab_bar.click_create
+
+    expect(tab_bar).to have_create_actions("Reply to topic", "New topic", "New personal message")
+
+    tab_bar.click_create_action("Reply to topic")
+
+    expect(page).to have_css("#reply-control.open .composer-action-title", text: topic.title)
+  end
+
+  it "offers a new topic only where the topic list would" do
+    SiteSetting.hide_disabled_create_topic_button = true
+    SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    category = Fabricate(:category)
+    category.set_permissions(everyone: :readonly)
+    category.save!
+    sign_in(other_user)
+
+    visit(category.url)
+
+    expect(page).to have_css(".mobile-tab-bar__create[aria-label='New personal message']")
+  end
+
+  it "lets moderators who manage categories reorder them once their positions are fixed" do
+    SiteSetting.moderators_manage_categories = true
+    SiteSetting.fixed_category_positions = true
+    sign_in(Fabricate(:moderator, refresh_auto_groups: true))
+
+    visit("/categories")
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
+
+    expect(page).to have_css(".navigation-options__reorder-categories")
+    expect(page).to have_no_css(".navigation-options__page-layout")
   end
 
   it "lets the user start a topic in the category they're looking at from the create button" do
@@ -226,6 +268,26 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     tab_bar.open_menu
 
     expect(page).to have_css(forum_menu)
+  end
+
+  it "keeps each tab leading to its own section after a profile opened from it" do
+    visit("/admin/menu")
+    user_menu.open.click_profile_tab
+    find("#quick-access-profile .summary a").click
+
+    expect(page).to have_current_path("/u/#{current_user.username}/summary")
+    expect(tab_bar).to have_active_tab("admin")
+    expect(page).to have_no_css(".mobile-tab-bar-back")
+    expect(page).to have_no_css(".mobile-tab-bar-title")
+
+    tab_bar.click_tab("main")
+
+    expect(page).to have_no_current_path(%r{\A/u/})
+    expect(tab_bar).to have_active_tab("main")
+
+    tab_bar.click_tab("admin")
+
+    expect(page).to have_current_path("/admin/menu")
   end
 
   it "keeps notifications and the profile tab together in the user menu" do

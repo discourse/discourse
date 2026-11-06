@@ -10,6 +10,16 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 export default class DiscoveryService extends Service {
   @service router;
 
+  /**
+   * How the shown topic list starts a topic, so other ways of starting one
+   * keep the list's permissions, its tags and the plugins that change it.
+   * Null when no list is shown. Untracked, as the list sets it while
+   * rendering: read it when needed rather than caching it.
+   *
+   * @type {{canCreate: () => boolean, create: () => void}|null}
+   */
+  topicCreator = null;
+
   get onDiscoveryRoute() {
     const { currentRouteName } = this.router;
     return (

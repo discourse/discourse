@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
+import HeaderDropdown from "discourse/components/header/dropdown";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -15,11 +16,24 @@ import FullPageChat from "discourse/plugins/chat/discourse/components/full-page-
 const ChannelActions = <template>
   <NavbarActions as |a|>
     {{#if @canSearchChat}}
-      <a.Filter
-        @channel={{@channel}}
-        @isFiltering={{@isFiltering}}
-        @onToggleFilter={{@onToggleFilter}}
-      />
+      {{#if @inSiteHeader}}
+        {{! The site header's own search icon, searching this channel }}
+        <ul class="icons d-header-icons c-header__search">
+          <HeaderDropdown
+            class="search-dropdown"
+            @active={{@isFiltering}}
+            @icon="magnifying-glass"
+            @onClick={{@onToggleFilter}}
+            @title="chat.search.channel_aria_label"
+          />
+        </ul>
+      {{else}}
+        <a.Filter
+          @channel={{@channel}}
+          @isFiltering={{@isFiltering}}
+          @onToggleFilter={{@onToggleFilter}}
+        />
+      {{/if}}
     {{/if}}
 
     <a.OpenDrawerButton />
@@ -112,6 +126,7 @@ export default class ChatRoutesChannel extends Component {
             <ChannelActions
               @canSearchChat={{this.canSearchChat}}
               @channel={{@channel}}
+              @inSiteHeader={{true}}
               @isFiltering={{this.isFiltering}}
               @onToggleFilter={{this.toggleIsFiltering}}
             />

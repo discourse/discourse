@@ -5,20 +5,19 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import CreateButton from "discourse/components/mobile-tab-bar/create-button";
 import MenuButton from "discourse/components/mobile-tab-bar/menu-button";
 import Tab from "discourse/components/mobile-tab-bar/tab";
 import htmlClass from "discourse/helpers/html-class";
+import discourseLater from "discourse/lib/later";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
-// Keeps the arrow clear of the bubble's rounded ends
-const POINTER_INSET = 24;
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), Math.max(min, max));
-}
+// How long a tapped view holds the highlight before the current one takes it
+// back, if its navigation never completes
+const PENDING_VIEW_TIMEOUT = 3000;
 
 export default class MobileTabBar extends Component {
   @service composer;
@@ -28,8 +27,38 @@ export default class MobileTabBar extends Component {
   @tracked moreAfter = false;
 
   #track = null;
+  #pendingView = null;
+  #pendingViewTimer = null;
+  #viewsKey = null;
   #views = null;
+  #viewsFrame = null;
+  #viewsMutations = null;
   #viewsObserver = null;
+
+  // Moves the highlight as soon as a view is tapped, rather than once its
+  // list has loaded, so it slides while the page is idle
+  #previewViewsHighlight = (event) => {
+    const link = event.target.closest?.(".nav-pills a");
+
+    if (link && this.#views?.contains(link)) {
+      this.#pendingView = {
+        href: link.getAttribute("href"),
+        until: Date.now() + PENDING_VIEW_TIMEOUT,
+      };
+      this.#placeViewsHighlight();
+
+      cancel(this.#pendingViewTimer);
+      this.#pendingViewTimer = discourseLater(
+        this.#queueViewsHighlight,
+        PENDING_VIEW_TIMEOUT
+      );
+    }
+  };
+
+  #queueViewsHighlight = () => {
+    cancelAnimationFrame(this.#viewsFrame);
+    this.#viewsFrame = requestAnimationFrame(() => this.#placeViewsHighlight());
+  };
 
   get isVisible() {
     return this.mobileTabBar.enabled && !this.composer.isOpen;
@@ -40,18 +69,48 @@ export default class MobileTabBar extends Component {
     this.mobileTabBar.viewsSlot = element;
     this.#views = element;
 
-    // The bubble has no size until a section fills it, and the controls
-    // follow the viewport; either moves the tab it points at
-    this.#viewsObserver = new ResizeObserver(() => this.#pointAtActiveTab());
-    this.#viewsObserver.observe(element);
+    // The controls follow the viewport, which moves the tab it points at
+    this.#viewsObserver = new ResizeObserver(() => {
+      this.#placeTabHighlight();
+      this.#pointAtActiveTab();
+      this.#queueViewsHighlight();
+    });
     this.#viewsObserver.observe(element.nextElementSibling);
+    this.#viewsObserver.observe(element);
+
+    // Sections render their views here, so watch for the current one changing
+    this.#viewsMutations = new MutationObserver(this.#queueViewsHighlight);
+    this.#viewsMutations.observe(element, {
+      attributeFilter: ["class"],
+      childList: true,
+      subtree: true,
+    });
+    element.addEventListener("scroll", this.#queueViewsHighlight, {
+      capture: true,
+      passive: true,
+    });
+    element.addEventListener("click", this.#previewViewsHighlight, {
+      capture: true,
+    });
   }
 
   @action
   unregisterViewsSlot() {
     this.#viewsObserver?.disconnect();
     this.#viewsObserver = null;
+    this.#viewsMutations?.disconnect();
+    this.#viewsMutations = null;
+    cancelAnimationFrame(this.#viewsFrame);
+    this.#views?.removeEventListener("scroll", this.#queueViewsHighlight, {
+      capture: true,
+    });
+    this.#views?.removeEventListener("click", this.#previewViewsHighlight, {
+      capture: true,
+    });
+    cancel(this.#pendingViewTimer);
+    this.#pendingView = null;
     this.#views = null;
+    this.#viewsKey = null;
     this.mobileTabBar.viewsSlot = null;
   }
 
@@ -68,24 +127,131 @@ export default class MobileTabBar extends Component {
       .querySelector(".mobile-tab-bar__tab.--active")
       ?.scrollIntoView({ block: "nearest", inline: "nearest" });
     this.#updateEdges(track);
+    this.#placeTabHighlight();
     this.#pointAtActiveTab();
   }
 
-  // Aims the views bubble's arrow at the current section's tab, as far as
-  // the bubble's rounded ends allow
-  #pointAtActiveTab() {
-    const tab = this.#track?.querySelector(".mobile-tab-bar__tab.--active");
-    const bubble = this.#views?.getBoundingClientRect();
+  // Moves the highlight under the current section's tab: instantly the first
+  // time, so it doesn't slide in from the edge, then sliding
+  #placeTabHighlight() {
+    const track = this.#track;
+    const tab = track?.querySelector(".mobile-tab-bar__tab.--active");
 
-    if (!tab || !bubble?.width) {
+    if (!tab) {
       return;
     }
 
-    const tabRect = tab.getBoundingClientRect();
-    const center = tabRect.left + tabRect.width / 2 - bubble.left;
-    const pointer = clamp(center, POINTER_INSET, bubble.width - POINTER_INSET);
+    track.style.setProperty(
+      "--mobile-tab-bar-highlight-x",
+      `${tab.offsetLeft}px`
+    );
+    track.style.setProperty(
+      "--mobile-tab-bar-highlight-width",
+      `${tab.offsetWidth}px`
+    );
 
-    this.#views.style.setProperty("--mobile-tab-bar-pointer-x", `${pointer}px`);
+    if (!("sliding" in track.dataset)) {
+      requestAnimationFrame(() => (track.dataset.sliding = ""));
+    }
+  }
+
+  // Moves the views' highlight under the current view. Jumps rather than
+  // slides to a different set of views, as between sections; a list
+  // re-rendering the same views still slides.
+  #placeViewsHighlight() {
+    const views = this.#views;
+    const active =
+      this.#pendingViewLink() ?? views?.querySelector(".nav-pills a.active");
+
+    // Keeps its size while no view is current, as when a list re-renders, so
+    // it doesn't collapse and regrow
+    if (!active) {
+      views?.style.setProperty("--mobile-tab-bar-views-highlight-opacity", "0");
+      return;
+    }
+
+    views.style.setProperty("--mobile-tab-bar-views-highlight-opacity", "1");
+
+    const key = [...views.querySelectorAll(".nav-pills a")]
+      .map((link) => link.getAttribute("href"))
+      .join(" ");
+    const jump = key !== this.#viewsKey;
+    this.#viewsKey = key;
+
+    if (jump) {
+      delete views.dataset.sliding;
+    }
+
+    // Kept within the bubble when the view is partly scrolled out of sight
+    const box = views.getBoundingClientRect();
+    const rect = active.getBoundingClientRect();
+    const left = Math.max(rect.left, box.left) - box.left;
+    const right = Math.min(rect.right, box.right) - box.left;
+
+    views.style.setProperty("--mobile-tab-bar-views-highlight-x", `${left}px`);
+    views.style.setProperty(
+      "--mobile-tab-bar-views-highlight-y",
+      `${rect.top - box.top}px`
+    );
+    const width = Math.max(rect.height, right - left);
+    views.style.setProperty(
+      "--mobile-tab-bar-views-highlight-width",
+      `${width}px`
+    );
+    views.style.setProperty(
+      "--mobile-tab-bar-views-highlight-height",
+      `${rect.height}px`
+    );
+    // Unitless, as the middle stretches with a scale between the caps
+    views.style.setProperty(
+      "--mobile-tab-bar-views-highlight-stretch",
+      `${width - rect.height}`
+    );
+
+    if (jump) {
+      requestAnimationFrame(() => (views.dataset.sliding = ""));
+    }
+  }
+
+  // The tapped view until its list shows it as current, or the navigation
+  // gives up
+  #pendingViewLink() {
+    const pending = this.#pendingView;
+
+    if (!pending || !this.#views || Date.now() > pending.until) {
+      this.#pendingView = null;
+      return null;
+    }
+
+    const links = [...this.#views.querySelectorAll(".nav-pills a")];
+    const link = links.find((l) => l.getAttribute("href") === pending.href);
+
+    if (!link || link.classList.contains("active")) {
+      this.#pendingView = null;
+      return null;
+    }
+
+    return link;
+  }
+
+  // Aims the views bubble's arrow at the current section's tab, by its
+  // offset from the bar's centre, where the bubble is centred
+  #pointAtActiveTab() {
+    const tab = this.#track?.querySelector(".mobile-tab-bar__tab.--active");
+
+    if (!tab || !this.#views) {
+      return;
+    }
+
+    const bar = this.#views.nextElementSibling.getBoundingClientRect();
+    const tabRect = tab.getBoundingClientRect();
+    const offset =
+      tabRect.left + tabRect.width / 2 - (bar.left + bar.width / 2);
+
+    this.#views.style.setProperty(
+      "--mobile-tab-bar-pointer-offset",
+      `${offset}px`
+    );
   }
 
   // Fades the edges that have tabs scrolled past them
@@ -110,7 +276,9 @@ export default class MobileTabBar extends Component {
           class="mobile-tab-bar__views"
           {{didInsert this.registerViewsSlot}}
           {{willDestroy this.unregisterViewsSlot}}
-        ></div>
+        ><span aria-hidden="true" class="mobile-tab-bar__views-highlight"><span
+              class="mobile-tab-bar__views-highlight-middle"
+            ></span></span></div>
         <div class="mobile-tab-bar__controls">
           <MenuButton />
           <div class="mobile-tab-bar__tabs">
@@ -124,6 +292,7 @@ export default class MobileTabBar extends Component {
               {{didUpdate this.revealActiveTab this.mobileTabBar.sectionTabKey}}
               {{on "scroll" this.onTrackScroll passive=true}}
             >
+              <span aria-hidden="true" class="mobile-tab-bar__highlight"></span>
               {{#each this.mobileTabBar.tabs key="key" as |tab|}}
                 <Tab @tab={{tab}} />
               {{/each}}

@@ -35,7 +35,9 @@ export function clearAdditionalUserNavSidebarLinks() {
 export function profileUsernameForRoute(routeInfo) {
   for (let route = routeInfo; route; route = route.parent) {
     if (route.name === "user") {
-      return route.params.username;
+      // Links that pass the user rather than a username can leave the
+      // param unset
+      return route.params.username ?? route.attributes?.username;
     }
   }
 }

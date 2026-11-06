@@ -15,12 +15,10 @@ const HUB_TAB = "hub";
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
 /**
- * Drives the mobile tab bar. Each tab is a section of the site: a sidebar
- * panel that opted in through `mobileTab`. Tabs navigate and remember where
- * the user was. The menu button, always first, opens the forum's menu
- * wherever the user is, since other sections keep their navigation on their
- * own pages, and the create button, always last, starts something new in any
- * section.
+ * Drives the mobile tab bar. Each tab is a sidebar panel that opted in
+ * through `mobileTab`, and remembers where the user was in its section. The
+ * menu button always opens the forum's menu; other sections keep their
+ * navigation on their own pages.
  */
 @disableImplicitInjections
 export default class MobileTabBar extends Service {
@@ -46,10 +44,8 @@ export default class MobileTabBar extends Service {
   @tracked draftCount = this.currentUser?.draft_count ?? 0;
 
   /**
-   * A strip above the tabs where the current section can render the views
-   * of its top-level page, such as filters or list switchers, so they sit in
-   * reach of the thumb. Render into it with `in-element`; it's null while the
-   * bar is hidden.
+   * Where the current section renders its list views, above the tabs, with
+   * `in-element`. Null while the bar is hidden.
    *
    * @type {HTMLElement|null}
    */
@@ -74,6 +70,7 @@ export default class MobileTabBar extends Service {
     this.appEvents.off(USER_DRAFTS_CHANGED_EVENT, this, this.#updateDraftCount);
   }
 
+  /** Whether the tab bar stands in for the header's menu on this page view. */
   get enabled() {
     return (
       !!this.currentUser &&
@@ -82,21 +79,14 @@ export default class MobileTabBar extends Service {
     );
   }
 
-  /**
-   * The tabs to show between the menu and create buttons, which scroll when
-   * they don't all fit.
-   *
-   * @returns {Array<Object>}
-   */
+  /** @returns {Array<Object>} The tabs, in the order the bar shows them. */
   get tabs() {
     return this.#allTabs;
   }
 
   /**
-   * Every way to start something new, the current section's first, then a way
-   * back to unfinished drafts.
-   *
-   * @returns {Array<{label: string, icon: string, action: Function}>}
+   * @returns {Array<{label: string, icon: string, action: Function}>} Every
+   * way to start something new, the current section's first, then drafts.
    */
   get createActions() {
     const tabs = this.#allTabs;
@@ -195,12 +185,20 @@ export default class MobileTabBar extends Service {
     }
 
     const owner = this.#allTabs.find((tab) => tab.ownsRoute?.(route));
+    // A profile stays in the section that led there, but only borrows it: it
+    // keeps its own heading, and the tab still returns to the section's pages
+    const borrowed = !owner && !!profileUsernameForRoute(route);
 
-    // A profile stays in the section that led there
     if (owner) {
       this.sectionTabKey = owner.key;
-    } else if (!profileUsernameForRoute(route)) {
+    } else if (!borrowed) {
       this.sectionTabKey = MAIN_PANEL;
+    }
+
+    if (borrowed) {
+      this.isNestedPage = false;
+      this.isTitledPage = false;
+      return;
     }
 
     const url = this.router.currentURL;
@@ -216,9 +214,8 @@ export default class MobileTabBar extends Service {
 
   /**
    * Goes to where the user last was in the tab's section. On the current
-   * section, climbs one level at a time: from a nested page back to the list
-   * it was opened from, then to the section's top level, then to the top of
-   * the page.
+   * section, climbs a level instead: back to the list, then the section's
+   * top level, then the top of the page.
    *
    * @param {string} key
    */

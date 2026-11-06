@@ -30,7 +30,7 @@ export default class NavigationBarComponent extends Component {
   }
 
   get showDropdown() {
-    // The tab bar's pages lay their lists out as tabs, as chat's are
+    // The tab bar shows the views as pills beside it, not as a dropdown
     return applyValueTransformer(
       "navigation-bar-dropdown-mode",
       this.site.mobileView && !this.mobileTabBar.enabled
@@ -105,6 +105,7 @@ export default class NavigationBarComponent extends Component {
             class={{concat "nav-item_" navItem.name}}
             @category={{@category}}
             @content={{navItem}}
+            @countAsBadge={{@countAsBadge}}
             @filterMode={{@filterMode}}
           />
         {{/each}}
