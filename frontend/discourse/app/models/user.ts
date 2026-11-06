@@ -228,6 +228,7 @@ export interface UserFields {
   can_edit_name?: boolean;
   can_edit_tags?: boolean;
   can_edit_username?: boolean;
+  can_embed_media?: boolean;
   can_ignore_user?: boolean;
   can_ignore_users?: boolean;
   can_invite_to_forum?: true;
