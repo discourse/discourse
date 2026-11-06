@@ -444,6 +444,27 @@ RSpec.describe Reviewable, type: :model do
         expect(Reviewable.list_for(moderator)).to include(reviewable)
       end
     end
+
+    context "when the category has more than one moderation group" do
+      fab!(:moderator)
+      fab!(:group_1, :group)
+      fab!(:group_2, :group)
+      fab!(:category) { Fabricate(:category, moderating_groups: [group_1, group_2]) }
+      fab!(:group_moderator) { Fabricate(:user, groups: [group_1, group_2]) }
+      fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category:) }
+
+      before { SiteSetting.enable_category_group_moderation = true }
+
+      it "lists the reviewable once for moderators" do
+        expect(Reviewable.list_for(moderator)).to eq([reviewable])
+        expect(Reviewable.pending_count(moderator)).to eq(1)
+      end
+
+      it "lists the reviewable once for members of several moderation groups" do
+        expect(Reviewable.list_for(group_moderator)).to eq([reviewable])
+        expect(Reviewable.pending_count(group_moderator)).to eq(1)
+      end
+    end
   end
 
   describe ".unseen_list_for" do

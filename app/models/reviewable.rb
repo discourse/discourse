@@ -581,18 +581,20 @@ class Reviewable < ActiveRecord::Base
     group_ids =
       SiteSetting.enable_category_group_moderation? ? user.group_users.pluck(:group_id) : []
 
+    result = result.where(<<~SQL, moderator: user.moderator?, group_ids: group_ids)
+      (reviewables.reviewable_by_moderator AND :moderator) OR EXISTS (
+        SELECT 1
+        FROM category_moderation_groups
+        WHERE category_moderation_groups.category_id = reviewables.category_id
+          AND category_moderation_groups.group_id IN (:group_ids)
+      )
+    SQL
+
     result =
-      result
-        .left_joins(category: :category_moderation_groups)
-        .where(
-          "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
-          moderator: user.moderator?,
-          group_ids: group_ids,
-        )
-        .where(
-          "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-          user.guardian.allowed_category_ids,
-        )
+      result.where(
+        "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
+        user.guardian.allowed_category_ids,
+      )
 
     result = exclude_private_messages_hidden_from(result, user)
     visible_target =
