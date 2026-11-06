@@ -37,37 +37,50 @@ describe UsersController do
 
     after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
-    it "escapes the group DM channel name in fancy_title while the bookmark list keeps the raw title",
-       :aggregate_failures do
-      channel_name = '<img src=x onerror="alert(1)">& "\''
-      attacker = Fabricate(:user, group_ids: [chatters.id])
-      third_user = Fabricate(:user, group_ids: [chatters.id])
-      channel =
-        Fabricate(
-          :direct_message_channel,
-          users: [current_user, attacker, third_user],
-          name: channel_name,
+    context "when the channel title contains HTML" do
+      let(:html_title) { %q(<img src=x onerror="alert(1)">& "') }
+      let(:escaped_title) { "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;&amp; &quot;&#39;" }
+      let(:other_user) { Fabricate(:user, group_ids: [chatters.id]) }
+
+      def bookmark_message_in(channel)
+        message = Fabricate(:chat_message, chat_channel: channel, user: other_user)
+        Fabricate(:bookmark, user: current_user, bookmarkable: message)
+      end
+
+      it "escapes a group DM name in fancy_title and keeps title raw", :aggregate_failures do
+        third_user = Fabricate(:user, group_ids: [chatters.id])
+        bookmark_message_in(
+          Fabricate(
+            :direct_message_channel,
+            users: [current_user, other_user, third_user],
+            name: html_title,
+          ),
         )
-      message = Fabricate(:chat_message, chat_channel: channel, user: attacker, message: "hello")
-      Fabricate(:bookmark, user: current_user, bookmarkable: message)
 
-      get "/u/#{current_user.username}/user-menu-bookmarks"
+        get "/u/#{current_user.username}/user-menu-bookmarks"
 
-      menu_bookmark = response.parsed_body["bookmarks"].first
-      expect(response.status).to eq(200)
-      expect(menu_bookmark).not_to have_key("title")
-      expect(menu_bookmark["fancy_title"]).to eq(
-        "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;&amp; &quot;&#39;",
-      )
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["bookmarks"].first["fancy_title"]).to eq(escaped_title)
 
-      get "/u/#{current_user.username}/bookmarks.json"
+        get "/u/#{current_user.username}/bookmarks.json"
 
-      list_bookmark = response.parsed_body["user_bookmark_list"]["bookmarks"].first
-      expect(response.status).to eq(200)
-      expect(list_bookmark["title"]).to eq(channel_name)
-      expect(list_bookmark["fancy_title"]).to eq(
-        "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;&amp; &quot;&#39;",
-      )
+        bookmark = response.parsed_body["user_bookmark_list"]["bookmarks"].first
+        expect(response.status).to eq(200)
+        expect(bookmark["title"]).to eq(html_title)
+        expect(bookmark["fancy_title"]).to eq(escaped_title)
+      end
+
+      it "escapes a participant's full name in fancy_title for an unnamed DM" do
+        SiteSetting.display_name_on_posts = true
+        SiteSetting.prioritize_username_in_ux = false
+        other_user.update!(name: html_title)
+        bookmark_message_in(Fabricate(:direct_message_channel, users: [current_user, other_user]))
+
+        get "/u/#{current_user.username}/user-menu-bookmarks"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["bookmarks"].first["fancy_title"]).to eq(escaped_title)
+      end
     end
 
     it "does not return any unread notifications for chat bookmarks that the user no longer has access to" do

@@ -3,7 +3,7 @@
 module Chat
   class UserMessageBookmarkSerializer < UserBookmarkBaseSerializer
     def title
-      chat_message.chat_channel.title(scope.user)
+      @title ||= chat_message.chat_channel.title(scope.user)
     end
 
     def fancy_title
