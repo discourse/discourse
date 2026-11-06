@@ -37,6 +37,35 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(modal).to have_drag_controls
   end
 
+  it "keeps content below the reports compact instead of giving it a chart row" do
+    theme = Fabricate(:theme)
+    theme.set_field(
+      target: :extra_js,
+      type: :js,
+      name: "discourse/api-initializers/reports-footer.gjs",
+      value: <<~JS,
+        import { apiInitializer } from "discourse/lib/api";
+
+        export default apiInitializer((api) => {
+          api.renderInOutlet(
+            "admin-dashboard-reports-section-after",
+            <template>
+              <div class="reports-footer-content">Additional report information</div>
+            </template>
+          );
+        });
+      JS
+    )
+    theme.save!
+    SiteSetting.default_theme_id = theme.id
+    Fabricate(:admin_dashboard_report)
+
+    page.visit("/admin")
+
+    expect(dashboard).to have_footer_content("Additional report information")
+    expect(dashboard.footer_content_height).to be < dashboard.report_card_height
+  end
+
   it "disables the reorder arrows at the ends of the enabled list on mobile", mobile: true do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
