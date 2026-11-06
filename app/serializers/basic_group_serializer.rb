@@ -38,15 +38,19 @@ class BasicGroupSerializer < ApplicationSerializer
     return Set.new if !scope
 
     readable = Set.new
+    unreadable = Set.new
     (_attributes.keys | _associations.keys).each do |attribute|
-      next if !include?(attribute)
+      if !include?(attribute)
+        unreadable << attribute.to_s
+        next
+      end
 
       readable << attribute.to_s
       association = object.class.reflect_on_association(attribute)
       readable << association.foreign_key.to_s if association&.belongs_to?
     end
     readable << "flair_upload_id" if readable.include?("flair_url")
-    readable
+    readable.subtract(unreadable)
   end
 
   def include_display_name?
