@@ -96,19 +96,18 @@ html.ios-device.has-full-page-chat body #main-outlet {
 
 .header-dropdown-toggle.chat-header-icon .icon {
   .chat-channel-unread-indicator {
-    --d-new-indicator-size: 14px;
+    // match the urgent badge's box (1em height + 0.2em padding top/bottom)
+    --d-new-indicator-size: 1.4em;
     border: 2px solid var(--header_background);
     position: absolute;
-    top: 0;
-    right: 2px;
+    top: var(--d-header-badge-top);
+    right: var(--d-header-badge-right);
+    z-index: 1;
 
     &.-urgent {
       display: flex;
       align-items: center;
       justify-content: center;
-      top: var(--d-header-badge-top);
-      right: var(--d-header-badge-right);
-      z-index: 1;
     }
   }
 
