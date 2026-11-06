@@ -75,6 +75,13 @@ class Search
     OMISSION = "..."
     SCRUB_HEADLINE_REGEXP =
       %r{<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)</span>}
+    HIGHLIGHT_START_TAG = %(<span class="#{Search::HIGHLIGHT_CSS_CLASS}">)
+    HIGHLIGHT_END_TAG = "</span>"
+    ESCAPED_HIGHLIGHT_TAGS = {
+      ERB::Util.html_escape(HIGHLIGHT_START_TAG) => HIGHLIGHT_START_TAG,
+      ERB::Util.html_escape(HIGHLIGHT_END_TAG) => HIGHLIGHT_END_TAG,
+    }
+    private_constant :HIGHLIGHT_START_TAG, :HIGHLIGHT_END_TAG, :ESCAPED_HIGHLIGHT_TAGS
 
     def blurb(post, scope: nil)
       opts = { term: @blurb_term, blurb_length: @blurb_length }
@@ -95,7 +102,7 @@ class Search
           scrubbed_headline = post.headline.gsub(SCRUB_HEADLINE_REGEXP, '\1')
           prefix_omission = scrubbed_headline.start_with?(post.leading_raw_data) ? "" : OMISSION
           postfix_omission = scrubbed_headline.end_with?(post.trailing_raw_data) ? "" : OMISSION
-          return "#{prefix_omission}#{post.headline}#{postfix_omission}"
+          return "#{prefix_omission}#{escape_headline(post.headline)}#{postfix_omission}"
         else
           opts[:cooked] = post.post_search_data.raw_data
           opts[:scrub] = false
@@ -160,6 +167,15 @@ class Search
 
       blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
       Sanitize.clean(blurb)
+    end
+
+    private
+
+    def escape_headline(headline)
+      ERB::Util.html_escape(headline).gsub(
+        Regexp.union(ESCAPED_HIGHLIGHT_TAGS.keys),
+        ESCAPED_HIGHLIGHT_TAGS,
+      )
     end
   end
 end
