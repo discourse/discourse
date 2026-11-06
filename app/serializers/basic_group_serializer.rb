@@ -34,6 +34,21 @@ class BasicGroupSerializer < ApplicationSerializer
              :can_edit_group,
              :publish_read_state
 
+  def readable_group_fields
+    return Set.new if !scope
+
+    readable = Set.new
+    (_attributes.keys | _associations.keys).each do |attribute|
+      next if !include?(attribute)
+
+      readable << attribute.to_s
+      association = object.class.reflect_on_association(attribute)
+      readable << association.foreign_key.to_s if association&.belongs_to?
+    end
+    readable << "flair_upload_id" if readable.include?("flair_url")
+    readable
+  end
+
   def include_display_name?
     object.automatic
   end

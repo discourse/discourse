@@ -2999,6 +2999,158 @@ RSpec.describe GroupsController do
       end
     end
 
+    it "follows runtime serializer access rules for plugin settings" do
+      group.add_owner(user)
+      group.update!(assignable_level: 1)
+      GroupActionLogger.new(admin, group).log_change_group_settings
+      sign_in(user)
+      restricted = true
+
+      stub_const(Object, :GroupShowSerializer, Class.new(GroupShowSerializer)) do
+        Plugin::Instance
+          .new
+          .add_to_serializer(
+            :group_show,
+            :assignable_level,
+            respect_plugin_enabled: false,
+            include_condition: -> { !restricted || scope.is_admin? },
+          ) { object.assignable_level }
+
+        get "/groups/#{group.name}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("group")).not_to have_key("assignable_level")
+
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(200)
+        log =
+          response.parsed_body.fetch("logs").find { |entry| entry["subject"] == "assignable_level" }
+        expect(log.values_at("prev_value", "new_value")).to eq(
+          [I18n.t("staff_action_logs.redacted")] * 2,
+        )
+
+        restricted = false
+
+        get "/groups/#{group.name}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("group").fetch("assignable_level")).to eq(1)
+
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(200)
+        log =
+          response.parsed_body.fetch("logs").find { |entry| entry["subject"] == "assignable_level" }
+        expect(log.values_at("prev_value", "new_value")).to eq(%w[0 1])
+      end
+    end
+
+    it "keeps cleared icon history readable when its current value is omitted" do
+      group.add_owner(user)
+      group.update!(flair_icon: "fa-circle-half-stroke")
+      previous_icon = group.flair_icon
+      sign_in(user)
+
+      put "/groups/#{group.id}.json", params: { group: { flair_icon: "" } }
+      expect(response.status).to eq(200)
+
+      get "/groups/#{group.name}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.fetch("group")).not_to have_key("flair_icon")
+
+      get "/groups/#{group.name}/logs.json"
+      expect(response.status).to eq(200)
+      log = response.parsed_body.fetch("logs").find { |entry| entry["subject"] == "flair_icon" }
+      expect(log.values_at("prev_value", "new_value")).to eq([previous_icon, ""])
+    end
+
+    it "keeps cleared upload history readable through the public flair field" do
+      upload = Fabricate(:upload)
+      group.add_owner(user)
+      group.update!(flair_upload_id: upload.id)
+      sign_in(user)
+
+      put "/groups/#{group.id}.json", params: { group: { flair_upload_id: nil } }
+      expect(response.status).to eq(200)
+
+      get "/groups/#{group.name}/logs.json"
+      expect(response.status).to eq(200)
+      log =
+        response.parsed_body.fetch("logs").find { |entry| entry["subject"] == "flair_upload_id" }
+      expect(log.values_at("prev_value", "new_value")).to eq([upload.id.to_s, nil])
+    end
+
+    it "honors plugin access overrides while preserving presentation history" do
+      group.add_owner(user)
+      group.update!(flair_icon: "fa-circle-half-stroke")
+      previous_icon = group.flair_icon
+      sign_in(user)
+      put "/groups/#{group.id}.json", params: { group: { flair_icon: "" } }
+      expect(response.status).to eq(200)
+
+      stub_const(Object, :GroupShowSerializer, Class.new(GroupShowSerializer)) do
+        plugin = Plugin::Instance.new
+        plugin.add_to_serializer(:group_show, :flair_icon, respect_plugin_enabled: false) do
+          object.flair_icon
+        end
+
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(200)
+        log = response.parsed_body.fetch("logs").find { |entry| entry["subject"] == "flair_icon" }
+        expect(log.values_at("prev_value", "new_value")).to eq([previous_icon, ""])
+
+        plugin.add_to_serializer(
+          :group_show,
+          :flair_icon,
+          respect_plugin_enabled: false,
+          include_condition: -> { scope.is_admin? },
+        ) { object.flair_icon }
+
+        get "/groups/#{group.name}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("group")).not_to have_key("flair_icon")
+
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(200)
+        log = response.parsed_body.fetch("logs").find { |entry| entry["subject"] == "flair_icon" }
+        expect(log.values_at("prev_value", "new_value")).to eq(
+          [I18n.t("staff_action_logs.redacted"), ""],
+        )
+
+        sign_in(admin)
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(200)
+        log = response.parsed_body.fetch("logs").find { |entry| entry["subject"] == "flair_icon" }
+        expect(log.values_at("prev_value", "new_value")).to eq([previous_icon, ""])
+      end
+    end
+
+    it "redacts historical fields without a current group serializer declaration" do
+      group.add_owner(user)
+      Fabricate(
+        :group_history,
+        group: group,
+        acting_user: admin,
+        target_user: nil,
+        action: GroupHistory.actions[:change_group_setting],
+        subject: "retired_plugin_setting",
+        prev_value: "private previous value",
+        new_value: "private current value",
+      )
+
+      [user, admin].each do |reader|
+        sign_in(reader)
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+        log =
+          response
+            .parsed_body
+            .fetch("logs")
+            .find { |entry| entry["subject"] == "retired_plugin_setting" }
+        expect(log.values_at("prev_value", "new_value")).to eq(
+          [I18n.t("staff_action_logs.redacted")] * 2,
+        )
+      end
+    end
+
     context "with restricted settings" do
       let(:restricted_subjects) do
         %w[
