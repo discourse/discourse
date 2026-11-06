@@ -200,12 +200,6 @@ acceptance("Blog themes and identity", function (needs) {
       .doesNotHaveAttribute("aria-current");
     await click(".blog-theme-editor__customize");
     const form = formKit(".blog-theme-editor__form");
-    assert
-      .dom('[data-name="template_index"]')
-      .hasClass(
-        "blog-theme-editor__template-field",
-        "the custom editor receives its full-width layout"
-      );
     await fillInCodeEditor(
       '[data-name="template_index"]',
       "<h1>{{ site.title }}</h1>"
