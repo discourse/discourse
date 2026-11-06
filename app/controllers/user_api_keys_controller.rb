@@ -79,7 +79,7 @@ class UserApiKeysController < ApplicationController
 
     raise Discourse::InvalidAccess unless meets_tl?
 
-    scopes = params[:scopes].split(",")
+    scopes = params[:scopes].split(",").uniq
     expires_at = requested_expires_at(parse_expires_in_seconds!)
 
     @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
