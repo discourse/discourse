@@ -3,13 +3,14 @@ import { helperContext } from "discourse/lib/helpers";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
+export const consentPromptDismissedKey = "dismissed-prompt";
 
 export function userSubscriptionKey(user) {
   return `subscribed-${user.get("id")}`;
 }
 
 function sendSubscriptionToServer(subscription, sendConfirmation) {
-  ajax("/push_notifications/subscribe", {
+  return ajax("/push_notifications/subscribe", {
     type: "POST",
     data: {
       subscription: subscription.toJSON(),
@@ -43,11 +44,18 @@ export function isPushNotificationsEnabled(user) {
     user &&
     !user.isInDoNotDisturb() &&
     isPushNotificationsSupported() &&
-    keyValueStore.getItem(userSubscriptionKey(user))
+    keyValueStore.getItem(userSubscriptionKey(user)) === "subscribed"
   );
 }
 
-export function register(user, router, appEvents) {
+function pushSubscriptionOptions(applicationServerKey) {
+  return {
+    userVisibleOnly: true,
+    applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
+  };
+}
+
+export function register(user, router, appEvents, applicationServerKey) {
   if (!isPushNotificationsSupported()) {
     return;
   }
@@ -55,28 +63,64 @@ export function register(user, router, appEvents) {
     return;
   }
 
-  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-    serviceWorkerRegistration.pushManager
-      .getSubscription()
-      .then((subscription) => {
-        if (subscription) {
-          sendSubscriptionToServer(subscription, false);
-          // Resync localStorage
-          keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
-        }
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
-  });
-
   navigator.serviceWorker.addEventListener("message", (event) => {
     if ("url" in event.data) {
       router.transitionTo(event.data.url);
       appEvents.trigger("push-notification-opened", { url: event.data.url });
     }
   });
+
+  return navigator.serviceWorker.ready.then(
+    async (serviceWorkerRegistration) => {
+      const { pushManager } = serviceWorkerRegistration;
+      let subscription;
+
+      try {
+        subscription = await pushManager.getSubscription();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        // the existing subscription may still deliver
+        return true;
+      }
+
+      if (subscription) {
+        try {
+          await sendSubscriptionToServer(subscription, false);
+          return true;
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          return false;
+        }
+      }
+
+      if (keyValueStore.getItem(userSubscriptionKey(user)) !== "subscribed") {
+        return true;
+      }
+
+      // Browsers can drop a subscription while keeping the permission
+      try {
+        subscription = await pushManager.subscribe(
+          pushSubscriptionOptions(applicationServerKey)
+        );
+
+        // push was turned off while subscribing
+        if (keyValueStore.getItem(userSubscriptionKey(user)) !== "subscribed") {
+          await subscription.unsubscribe();
+          return true;
+        }
+
+        // the new endpoint delivers nothing until the server knows it
+        await sendSubscriptionToServer(subscription, false);
+        return true;
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        return false;
+      }
+    }
+  );
 }
 
 export function subscribe(callback, applicationServerKey) {
@@ -86,10 +130,7 @@ export function subscribe(callback, applicationServerKey) {
 
   return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
     return serviceWorkerRegistration.pushManager
-      .subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
-      })
+      .subscribe(pushSubscriptionOptions(applicationServerKey))
       .then((subscription) => {
         sendSubscriptionToServer(subscription, true);
         if (callback) {

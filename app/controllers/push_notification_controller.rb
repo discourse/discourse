@@ -11,6 +11,7 @@ class PushNotificationController < ApplicationController
   end
 
   def unsubscribe
+    PushSubscription.validate_endpoint!(push_params[:endpoint])
     PushNotificationPusher.unsubscribe(current_user, push_params)
     render json: success_json
   end
