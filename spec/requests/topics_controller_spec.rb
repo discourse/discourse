@@ -416,6 +416,47 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "moving posts as a TL4 user who can only read the source category" do
+      fab!(:read_only_group, :group)
+      fab!(:private_category) do
+        Fabricate(
+          :private_category,
+          group: read_only_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic, user: post_author2) }
+
+      before do
+        GroupUser.create!(group: read_only_group, user: trust_level_4)
+        sign_in(trust_level_4)
+      end
+
+      it "does not allow posts to be moved into a new public topic" do
+        post "/t/#{private_topic.id}/move-posts.json",
+             params: {
+               title: "Leaked private topic content",
+               post_ids: [private_post.id],
+               category_id: category.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(private_post.reload.topic_id).to eq(private_topic.id)
+      end
+
+      it "does not allow posts to be moved into an existing public topic" do
+        post "/t/#{private_topic.id}/move-posts.json",
+             params: {
+               post_ids: [private_post.id],
+               destination_topic_id: dest_topic.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(private_post.reload.topic_id).to eq(private_topic.id)
+      end
+    end
+
     describe "moving to an existing topic" do
       before { sign_in(moderator) }
 
