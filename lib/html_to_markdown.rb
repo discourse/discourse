@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "securerandom"
-
 class HtmlToMarkdown
   def initialize(html, opts = {})
     @opts = opts
@@ -54,44 +52,47 @@ class HtmlToMarkdown
       end
   end
 
+  # Splitting an inline element around its <br>s clones it once per segment, so
+  # nested inline elements around line breaks can multiply the size of the tree.
+  # Allow a few clones per element (far more than real mail needs) so the cost
+  # of converting a message tracks its size: once the budget is spent, the
+  # remaining line breaks stay inside their inline element.
+  MAX_LINE_BREAK_CLONES_PER_ELEMENT = 4
+
   # When there's a <br> inside an inline element, split the inline element around the <br>
   def hoist_line_breaks!(doc)
-    klass = "_" + SecureRandom.hex
-    doc.css("br").each { |br| br.add_class(klass) }
+    @line_break_clone_budget = MAX_LINE_BREAK_CLONES_PER_ELEMENT * doc.css("*").size
+    hoist_line_breaks_within!(doc)
+  end
 
-    loop do
-      changed = false
+  # Children first, so each element is split once, around every <br> hoisted into it.
+  def hoist_line_breaks_within!(node)
+    node.element_children.to_a.each { |child| hoist_line_breaks_within!(child) }
 
-      doc
-        .css("br.#{klass}")
-        .each do |br|
-          parent = br.parent
+    return if block?(node) || node.children.none? { |child| child.name == "br" }
 
-          if block?(parent)
-            br.remove_class(klass)
-          else
-            before, after = parent.children.slice_when { |n| n == br }.to_a
+    segments = node.children.slice_when { |a, b| a.name == "br" || b.name == "br" }.to_a
+    return if segments.size > @line_break_clone_budget
 
-            if before.size > 1
-              b = doc.document.create_element(parent.name)
-              before[0...-1].each { |c| b.add_child(c) }
-              parent.previous = b if b.inner_html.present?
-            end
+    segments.each do |segment|
+      if segment.first.name == "br"
+        node.add_previous_sibling(segment.first)
+      else
+        clone = node.document.create_element(node.name)
+        segment.each { |child| clone.add_child(child) }
 
-            if after.present?
-              a = doc.document.create_element(parent.name)
-              after.each { |c| a.add_child(c) }
-              parent.next = a if a.inner_html.present?
-            end
-
-            parent.replace(br)
-
-            changed = true
-          end
+        if has_content?(clone)
+          node.add_previous_sibling(clone)
+          @line_break_clone_budget -= 1
         end
-
-      break if !changed
+      end
     end
+
+    node.remove
+  end
+
+  def has_content?(node)
+    node.children.any? { |child| !child.text? || child.text.present? }
   end
 
   # Removes most of the unnecessary white spaces for better markdown conversion
