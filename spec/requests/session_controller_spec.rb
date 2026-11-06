@@ -2780,6 +2780,26 @@ RSpec.describe SessionController do
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
           expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
         end
+
+        it "does not log you in when the provider later verifies a different email" do
+          sso = get_sso("/a/")
+          sso.external_id = "666"
+          sso.email = "bob@bob.com"
+          sso.username = "sam"
+          sso.require_activation = true
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+          sso = get_sso("/a/")
+          sso.external_id = "666"
+          sso.email = "robert@bob.com"
+          sso.username = "sam"
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+          expect(response).to redirect_to("/u/account-created")
+          expect(User.find_by_email("bob@bob.com").active).to eq(false)
+          logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+          expect(logged_on_user).to eq(nil)
+        end
       end
 
       context "if you have activated your account" do

@@ -914,6 +914,42 @@ RSpec.describe DiscourseConnect do
       expect(user.active).to eq(true)
     end
 
+    it "activates an inactive user once the provider verifies the same email" do
+      sso.require_activation = true
+      sso.lookup_or_create_user(ip_address)
+
+      sso.require_activation = false
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.active).to eq(true)
+    end
+
+    it "keeps a user inactive when the provider verifies a different email" do
+      sso.require_activation = true
+      sso.lookup_or_create_user(ip_address)
+
+      sso.require_activation = false
+      sso.email = "other@example.com"
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.email).to eq("test@example.com")
+      expect(user.active).to eq(false)
+    end
+
+    it "activates an inactive user when the verified email overrides the stored one" do
+      SiteSetting.email_editable = false
+      SiteSetting.auth_overrides_email = true
+      sso.require_activation = true
+      sso.lookup_or_create_user(ip_address)
+
+      sso.require_activation = false
+      sso.email = "Other@example.com"
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.email).to eq("other@example.com")
+      expect(user.active).to eq(true)
+    end
+
     it "does not activate user when asked not to" do
       sso.require_activation = true
       user = sso.lookup_or_create_user(ip_address)

@@ -134,7 +134,8 @@ class DiscourseConnect < DiscourseConnectBase
 
     change_external_attributes_and_override(sso_record, user)
 
-    if sso_record && (user = sso_record.user) && !user.active && !require_activation
+    if sso_record && (user = sso_record.user) && !user.active && !require_activation &&
+         Email.downcase(user.email) == Email.downcase(email)
       user.active = true
       user.save!
       user.enqueue_welcome_message("welcome_user") unless suppress_welcome_message
