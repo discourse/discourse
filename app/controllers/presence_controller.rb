@@ -67,6 +67,10 @@ class PresenceController < ApplicationController
       raise Discourse::InvalidParameters.new("Too many present_channels")
     end
 
+    if leave_channels && leave_channels.length > MAX_CHANNELS_PER_REQUEST
+      raise Discourse::InvalidParameters.new("Too many leave_channels")
+    end
+
     response = {}
 
     present_channels&.each do |name|
