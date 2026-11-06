@@ -1,22 +1,6 @@
 # frozen_string_literal: true
 
 class BasicGroupHistorySerializer < ApplicationSerializer
-  RESTRICTED_SUBJECT_AUDIENCES = {
-    "incoming_email" => :staff,
-    "automatic_membership_email_domains" => :group_admin,
-    "email_password" => :admin,
-    "email_username" => :admin,
-    "email_from_alias" => :admin,
-    "smtp_server" => :admin,
-    "smtp_port" => :admin,
-    "smtp_ssl_mode" => :admin,
-    "smtp_enabled" => :admin,
-    "smtp_updated_at" => :admin,
-    "smtp_updated_by_id" => :admin,
-    "allow_unknown_sender_topic_replies" => :admin,
-  }.freeze
-  private_constant :RESTRICTED_SUBJECT_AUDIENCES
-
   attributes :action, :subject, :prev_value, :new_value, :created_at
 
   has_one :acting_user, embed: :objects, serializer: BasicUserSerializer
@@ -38,19 +22,18 @@ class BasicGroupHistorySerializer < ApplicationSerializer
 
   def redact_setting_value(value)
     return value if value.blank?
-    return value if !RESTRICTED_SUBJECT_AUDIENCES.key?(object.subject)
-
-    authorized =
-      case RESTRICTED_SUBJECT_AUDIENCES[object.subject]
-      when :staff
-        scope&.is_staff?
-      when :admin
-        scope&.is_admin?
-      when :group_admin
-        scope&.can_admin_group?(object.group)
-      end
-    return value if authorized
+    return value if scope && readable_group_fields.include?(object.subject)
 
     I18n.t("staff_action_logs.redacted")
+  end
+
+  def readable_group_fields
+    @readable_group_fields ||=
+      @options[:readable_group_fields] ||
+        GroupShowSerializer.new(
+          object.group,
+          scope: scope,
+          for_group_history: true,
+        ).readable_group_fields
   end
 end
