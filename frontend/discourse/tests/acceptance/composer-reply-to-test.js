@@ -9,6 +9,7 @@ acceptance("Composer - Reply target picker", function (needs) {
   // `store.find("post", ...)` has to fetch it fresh — mock that response
   // with a reply target set.
   needs.pretender((server, helper) => {
+    server.get("/t/280/excerpts.json", () => helper.response([]));
     server.get("/posts/3654", () =>
       helper.response({
         id: 3654,
@@ -60,5 +61,15 @@ acceptance("Composer - Reply target picker", function (needs) {
       .dom(".change-reply-to-modal .timeline-footer-controls")
       .exists()
       .isNotVisible();
+  });
+
+  test("the picker timeline does not render a 'Jump to' button", async function (assert) {
+    await openEditForReplyPost();
+    await click("button.composer-edit-reply-to");
+
+    assert.dom(".change-reply-to-modal .timeline-scrollarea").exists();
+    assert
+      .dom(".change-reply-to-modal .timeline-open-jump-to-post-prompt-btn")
+      .doesNotExist("the button has no handler inside the picker");
   });
 });
