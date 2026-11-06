@@ -46,6 +46,7 @@ class Invite::RedeemWithEmailCode
     lock(:email) do
       transaction do
         step :consume_code
+        only_if(:claiming_unactivated_account?) { step :revoke_previous_credentials }
         model :user, :redeem_invite
       end
     end
@@ -127,6 +128,17 @@ class Invite::RedeemWithEmailCode
 
   def consume_code(login_code:)
     fail!("code already redeemed") unless login_code.consume!
+  end
+
+  def claiming_unactivated_account?(existing_user:)
+    existing_user.present? && !existing_user.active?
+  end
+
+  # Whoever registered the address never proved they own it, so nothing they set up may survive.
+  def revoke_previous_credentials(existing_user:)
+    existing_user.user_password&.destroy!
+    existing_user.user_auth_tokens.destroy_all
+    existing_user.user_associated_accounts.destroy_all
   end
 
   def redeem_invite(existing_user:, invite:, params:, ip_address:)

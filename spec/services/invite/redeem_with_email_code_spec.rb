@@ -317,6 +317,40 @@ RSpec.describe Invite::RedeemWithEmailCode do
         expect(result).to run_successfully
         expect(invite.reload).to be_redeemed
       end
+
+      it "keeps the existing credentials of an activated account" do
+        existing_user.update!(password: "existing-password-123")
+
+        expect(result).to run_successfully
+        expect(existing_user.reload.confirm_password?("existing-password-123")).to eq(true)
+      end
+    end
+
+    context "when an unactivated account registered by someone else holds the address" do
+      fab!(:existing_user) do
+        Fabricate(
+          :user,
+          email: "invited@example.com",
+          password: "squatter-password-123",
+          active: false,
+        )
+      end
+      let(:username) { nil }
+
+      before do
+        UserAuthToken.generate!(user_id: existing_user.id)
+        Fabricate(:user_associated_account, user: existing_user)
+      end
+
+      it "removes everything the other person set up before activating the account" do
+        expect(result).to run_successfully
+
+        existing_user.reload
+        expect(existing_user).to be_active
+        expect(existing_user.confirm_password?("squatter-password-123")).to eq(false)
+        expect(UserAuthToken.where(user_id: existing_user.id)).to be_empty
+        expect(UserAssociatedAccount.where(user_id: existing_user.id)).to be_empty
+      end
     end
 
     context "when an invite grants group membership" do

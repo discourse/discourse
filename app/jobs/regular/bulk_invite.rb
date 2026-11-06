@@ -162,7 +162,8 @@ module Jobs
 
           user
         else
-          if user_fields.present? || locale.present?
+          if (user_fields.present? || locale.present?) &&
+               !User.where(staged: false).with_email(Email.downcase(email)).exists?
             user = User.where(staged: true).find_by_email(email)
             user ||=
               User.new(username: UserNameSuggester.suggest(email), email: email, staged: true)
