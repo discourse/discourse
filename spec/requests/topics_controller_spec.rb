@@ -6628,7 +6628,7 @@ RSpec.describe TopicsController do
 
       expect(response.status).to eq(200)
 
-      post_timing = PostTiming.first
+      post_timing = PostTiming.take
 
       expect(post_timing.topic).to eq(topic)
       expect(post_timing.user).to eq(user)
@@ -6654,7 +6654,7 @@ RSpec.describe TopicsController do
            }
 
       expect(response.status).to eq(200)
-      post_timing = PostTiming.first
+      post_timing = PostTiming.take
 
       expect(post_timing.topic).to eq(topic)
       expect(post_timing.user).to eq(user)
