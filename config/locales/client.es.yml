@@ -507,19 +507,17 @@ es:
       back: "Atrás"
       next: "Siguiente"
       sections:
-        theme: "Tema"
         fonts: "Tipos de letra"
+        logo: "Logo"
         homepage: "Página de inicio"
-        welcome_banner: "Banner de bienvenida"
-        search: "Buscar"
       theme:
         selected: "Seleccionado"
-      colors:
-        light: "Claro"
-        dark: "Oscuro"
       fonts:
-        base_font: "Fuente base"
-        heading_font: "Tipo de letra para encabezados"
+        base_font: "Cuerpo"
+        heading_font: "Encabezados"
+      logo:
+        description: "Aparece en la navegación superior del sitio, así como en la parte superior de las notificaciones por correo electrónico del sitio."
+        help_text: "El tamaño recomendado es 600 x 80 píxeles."
       homepage:
         topics: "Temas"
         categories: "Categorías"

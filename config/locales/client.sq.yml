@@ -319,9 +319,8 @@ sq:
     design_wizard:
       back: "Kthehu mbrapa"
       next: "Vazhdo përpara"
-      sections:
-        theme: "Tema"
-        search: "Kërko"
+      fonts:
+        base_font: "Trupi"
       homepage:
         topics: "Topics"
         categories: "Categories"

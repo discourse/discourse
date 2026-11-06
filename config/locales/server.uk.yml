@@ -5822,7 +5822,13 @@ uk:
       default: "Стандартна"
       wcag: "WCAG"
       solarized: "Соляризований"
+      neutral: "Нейтральна"
+      shades_of_blue: "Відтінки синього"
+      summer: "Літо"
       dracula: "Дракула"
+      grey_amber: "Сірий бурштин"
+      latte: "Латте"
+      dark_rose: "Темна троянда"
   wizard:
     title: "Налаштування Discourse"
     step:

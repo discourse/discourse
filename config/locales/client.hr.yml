@@ -482,19 +482,17 @@ hr:
       back: "Natrag"
       next: "Sljedeći"
       sections:
-        theme: "Tema"
         fonts: "Fontovi"
+        logo: "Logo"
         homepage: "Početna stranica"
-        welcome_banner: "Banner dobrodošlice"
-        search: "Pretraživanje"
       theme:
         selected: "Odabrano"
-      colors:
-        light: "Svjetlo"
-        dark: "Tamno"
       fonts:
-        base_font: "Osnovni font"
-        heading_font: "Font zaglavlja"
+        base_font: "Tijelo"
+        heading_font: "Naslovi"
+      logo:
+        description: "Pojavljuje se na gornjoj navigaciji web stranice, kao i na vrhu obavijesti putem e-pošte web stranice."
+        help_text: "Preporučena veličina je 600 x 80 piksela."
       homepage:
         topics: "Tema"
         categories: "Kategorije"

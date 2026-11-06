@@ -5973,7 +5973,13 @@ ar:
   design_wizard:
     palette_pairs:
       default: "افتراضي"
+      neutral: "محايدة"
+      shades_of_blue: "تدرجات الأزرق"
+      summer: "الصيف"
       dracula: "دراكولا"
+      grey_amber: "العنبر الرمادي"
+      latte: "اللاتيه"
+      dark_rose: "الوردي الداكن"
   wizard:
     title: "إعداد Discourse"
     step:

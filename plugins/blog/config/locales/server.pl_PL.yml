@@ -98,7 +98,7 @@ pl_PL:
       template_invalid: "Podaj prawidłowy szablon Liquid o rozmiarze nie większym niż 65 536 bajtów."
       template_parse_error: "Nieprawidłowy szablon Liquid: %{error}"
       current: Aktualny wygląd
-      invalid: "Podaj nazwę (do 100 znaków), układ redakcyjny lub minimalistyczny, sześciocyfrowe kolory szesnastkowe oraz kod CSS/JavaScript o rozmiarze nie większym niż 65 536 bajtów każdy."
+      invalid: "Podaj nazwę (do 100 znaków), sześciocyfrowe kolory szesnastkowe i kod CSS/JavaScript o rozmiarze nie większym niż 65 536 bajtów każdy."
       limit: Możesz zapisać do 30 motywów bloga. Najpierw usuń nieużywany motyw.
       stale: Ten motyw został zmieniony. Odśwież go i sprawdź najnowszy szkic, zanim przejdziesz dalej.
       active_delete: Przed usunięciem tego motywu aktywuj inny.

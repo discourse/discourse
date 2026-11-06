@@ -3549,6 +3549,12 @@ ko:
   design_wizard:
     palette_pairs:
       default: "기본"
+      neutral: "중립국"
+      shades_of_blue: "푸른 그늘"
+      summer: "여름"
+      grey_amber: "회색 호박색"
+      latte: "라떼"
+      dark_rose: "다크 로즈"
   wizard:
     title: "Discourse Setup"
     step:

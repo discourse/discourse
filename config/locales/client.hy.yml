@@ -322,12 +322,9 @@ hy:
       back: "Ետ"
       next: "Հաջորդը"
       sections:
-        theme: "Թեմա"
         homepage: "Գլխավոր էջ"
-        search: "Որոնում"
-      colors:
-        light: "Բաց"
-        dark: "Մութ"
+      fonts:
+        base_font: "Բովանդակություն"
       homepage:
         topics: "Թեմաներ"
         categories: "Կատեգորիաներ"

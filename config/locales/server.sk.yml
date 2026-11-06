@@ -4774,7 +4774,13 @@ sk:
   design_wizard:
     palette_pairs:
       default: "Predvolené"
+      neutral: "Neutrálna"
+      shades_of_blue: "Odtiene modrej"
+      summer: "Leto"
       dracula: "Dracula"
+      grey_amber: "Šedý jantár"
+      latte: "Laté"
+      dark_rose: "Tmavá ruža"
   wizard:
     title: "Nastavenie Discourse"
     step:

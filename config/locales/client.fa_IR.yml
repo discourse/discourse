@@ -381,14 +381,11 @@ fa_IR:
       back: "بازگشت"
       next: "بعدی"
       sections:
-        theme: "قالب"
         homepage: "صفحه اصلی"
-        search: "جستجو"
       theme:
         selected: "انتخاب شده"
-      colors:
-        light: "روشن"
-        dark: "تیره"
+      fonts:
+        base_font: "Body"
       homepage:
         topics: "موضوعات"
         categories: "دسته‌بندی‌ها"

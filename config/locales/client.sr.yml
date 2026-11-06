@@ -371,8 +371,9 @@ sr:
       title: "Prilagodite svoj sajt"
       back: "Nazad"
       next: "Dalje"
-      sections:
-        search: "Pretraži"
+      steps:
+        theme:
+          title: "Izaberite temu"
       homepage:
         topics: "Teme"
         categories: "Kategorije"

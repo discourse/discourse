@@ -4303,7 +4303,13 @@ cs:
   design_wizard:
     palette_pairs:
       default: "Výchozí"
+      neutral: "Neutrální"
+      shades_of_blue: "Odstíny modré"
+      summer: "Léto"
       dracula: "Drákula"
+      grey_amber: "Šedý jantar"
+      latte: "Latte"
+      dark_rose: "Temná růže"
   wizard:
     title: "Nastavení Discourse"
     step:
