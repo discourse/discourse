@@ -43,22 +43,14 @@
   }
 }
 
-// The core tab bar owns the bottom edge, so chat's own tabs move to the top
+// The core tab bar owns the bottom edge, so chat's own tabs become pills in
+// the strip it keeps above its tabs
 html.mobile-tab-bar-visible {
-  .full-page-chat #main-chat-outlet.chat-view {
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "footer"
-      "list";
-  }
-
   .c-footer.--pills {
     display: flex;
     align-items: center;
     gap: var(--space-2);
-
-    // Spaced like the topic lists' menu row above their list
-    padding: var(--space-4) var(--space-3) var(--space-2);
+    padding: 0;
     border-top: none;
 
     > :first-child {
@@ -80,15 +72,17 @@ html.mobile-tab-bar-visible {
       gap: var(--space-2);
       margin-left: auto;
 
-      // Bordered like the buttons beside the topic lists' menu
+      // Sits inside the tab bar's bubble, round like the lists beside it
       .btn {
-        padding: 0.5em 0.65em;
-        border: var(--d-button-default-border);
-        border-radius: var(--d-button-border-radius);
-        background: var(--d-button-default-bg-color);
+        width: 1.875rem;
+        height: 1.875rem;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
 
         .d-icon {
-          color: var(--d-button-default-icon-color);
+          color: var(--header_primary-medium);
         }
       }
     }
@@ -115,4 +109,9 @@ html.mobile-tab-bar-visible
   )
   > .c-navbar-container {
   display: none;
+}
+
+// The tab bar's bubble is their background
+.mobile-tab-bar__views .c-footer.--pills {
+  background: transparent;
 }

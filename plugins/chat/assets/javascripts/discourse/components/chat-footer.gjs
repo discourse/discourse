@@ -151,31 +151,43 @@ export default class ChatFooter extends Component {
     {{/if}}
 
     {{#if this.shouldRenderFooter}}
-      {{! The site's tab bar holds the bottom edge, so these become pills up top }}
+      {{! The site's tab bar holds the bottom edge, so these become pills in
+        the strip it keeps for a section's views }}
       {{#if this.mobileTabBar.enabled}}
-        <div class="c-footer --pills">
-          <DHorizontalOverflowNav>
-            {{#each this.items key="id" as |item|}}
-              <li>
-                <LinkTo
-                  class={{if (eq this.currentRouteName item.route) "active"}}
-                  id={{item.id}}
-                  @route={{item.route}}
-                >
-                  {{i18n item.label}}
-                  {{#if item.indicator}}
-                    <item.indicator />
-                  {{/if}}
-                </LinkTo>
-              </li>
-            {{/each}}
-          </DHorizontalOverflowNav>
-          {{#if this.listOptionsSection}}
-            <div class="c-footer__options">
-              <ChannelListOptionsButton @section={{this.listOptionsSection}} />
+        {{#if this.mobileTabBar.viewsSlot}}
+          {{#in-element this.mobileTabBar.viewsSlot insertBefore=null}}
+            <div class="c-footer --pills">
+              <DHorizontalOverflowNav>
+                {{#each this.items key="id" as |item|}}
+                  <li>
+                    <LinkTo
+                      class={{if
+                        (eq this.currentRouteName item.route)
+                        "active"
+                      }}
+                      id={{item.id}}
+                      @route={{item.route}}
+                    >
+                      <span data-label={{i18n item.label}}>{{i18n
+                          item.label
+                        }}</span>
+                      {{#if item.indicator}}
+                        <item.indicator />
+                      {{/if}}
+                    </LinkTo>
+                  </li>
+                {{/each}}
+              </DHorizontalOverflowNav>
+              {{#if this.listOptionsSection}}
+                <div class="c-footer__options">
+                  <ChannelListOptionsButton
+                    @section={{this.listOptionsSection}}
+                  />
+                </div>
+              {{/if}}
             </div>
-          {{/if}}
-        </div>
+          {{/in-element}}
+        {{/if}}
       {{else}}
         <nav class="c-footer">
           {{#each this.items key="id" as |item|}}

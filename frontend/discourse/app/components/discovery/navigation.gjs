@@ -95,7 +95,7 @@ export default class DiscoveryNavigation extends Component {
 
   @action
   reorderCategories() {
-    this.modal.show(ReorderCategories);
+    return this.modal.show(ReorderCategories);
   }
 
   <template>

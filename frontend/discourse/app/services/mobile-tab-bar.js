@@ -45,6 +45,16 @@ export default class MobileTabBar extends Service {
 
   @tracked draftCount = this.currentUser?.draft_count ?? 0;
 
+  /**
+   * A strip above the tabs where the current section can render the views
+   * of its top-level page, such as filters or list switchers, so they sit in
+   * reach of the thumb. Render into it with `in-element`; it's null while the
+   * bar is hidden.
+   *
+   * @type {HTMLElement|null}
+   */
+  @tracked viewsSlot = null;
+
   #lastURLs = new Map();
   #parentURLs = new Map();
 

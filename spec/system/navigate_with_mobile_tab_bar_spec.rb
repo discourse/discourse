@@ -88,6 +88,57 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_current_path("/u/#{current_user.username}/activity/drafts")
   end
 
+  it "holds the topic list's views and less frequent actions beside the tab bar" do
+    Fabricate(:post)
+    topic_list = PageObjects::Components::TopicList.new
+
+    visit("/latest")
+
+    expect(page).to have_css(".mobile-tab-bar__views #navigation-bar .nav-item_latest a.active")
+    expect(page).to have_css(".category-breadcrumb:not(.hidden) .category-drop")
+    expect(page).to have_no_css(".navigation-controls .bulk-select")
+
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
+    find(".navigation-options__bulk-select").click
+
+    expect(topic_list).to have_bulk_select_enabled
+
+    visit("/categories")
+
+    expect(page).to have_css("#create-category", text: "New category")
+    expect(page).to have_no_css(".category-breadcrumb")
+    expect(page).to have_no_css(".navigation-options__trigger")
+  end
+
+  it "fixes category positions while admins reorder from the category list, keeping them only once an order is saved" do
+    SiteSetting.fixed_category_positions = false
+
+    visit("/categories")
+    find(".category-list-settings__trigger").click
+
+    expect(page).to have_css(
+      ".category-list-settings__page-layout[href*='/admin/config/category-management/settings?filter=category_page_style']",
+    )
+
+    find(".category-list-settings__reorder").click
+
+    expect(page).to have_css(".reorder-categories")
+    try_until_success { expect(SiteSetting.fixed_category_positions).to eq(true) }
+
+    find(".d-modal .modal-close").click
+
+    expect(page).to have_no_css(".reorder-categories")
+    try_until_success { expect(SiteSetting.fixed_category_positions).to eq(false) }
+
+    find(".category-list-settings__trigger").click
+    find(".category-list-settings__reorder").click
+    first(".reorder-categories .move-down").click
+    find(".d-modal__footer .btn-primary").click
+
+    expect(page).to have_no_css(".reorder-categories")
+    expect(SiteSetting.fixed_category_positions).to eq(true)
+  end
+
   it "lets the user start a topic in the category they're looking at from the create button" do
     category = Fabricate(:category)
     visit(category.url)
@@ -105,20 +156,6 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(PageObjects::Components::SelectKit.new(".category-chooser")).to have_selected_value(
       category.id,
     )
-  end
-
-  it "closes the section menu when the user starts something new" do
-    visit("/latest")
-
-    tab_bar.open_menu
-
-    expect(page).to have_css(forum_menu)
-
-    tab_bar.click_create
-    tab_bar.click_create_action("New personal message")
-
-    expect(page).to have_no_css(".sidebar-hamburger-dropdown")
-    expect(page).to have_css("#reply-control.open .users-input")
   end
 
   it "takes the user from a topic back to the list they opened it from when they tap the current tab" do

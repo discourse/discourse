@@ -1739,6 +1739,8 @@ en:
       view_all: "view all"
       category: "Category"
       category_list: "Display category list"
+      settings: "Category list settings"
+      page_layout: "Categories page layout"
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
@@ -4343,6 +4345,7 @@ en:
 
     topics:
       new_messages_marker: "last visit"
+      list_options: "List options"
       bulk:
         select: "Bulk select"
         confirm: "Confirm"

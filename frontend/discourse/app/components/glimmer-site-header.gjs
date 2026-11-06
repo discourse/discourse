@@ -6,14 +6,21 @@ import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
+import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import {
+  menuSheetClosedTransform,
+  menuSheetEdge,
+} from "discourse/lib/menu-sheet";
 import scrollLock from "discourse/lib/scroll-lock";
 import {
+  dampenedOverdrag,
   getMaxAnimationTimeMs,
   shouldCloseMenu,
+  shouldDeferSwipeToContent,
 } from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -23,6 +30,12 @@ import ImpersonationNotice from "./impersonation-notice.gjs";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
+
+function isSheet(origin) {
+  return origin === "bottom" || origin === "top";
+}
+// Matches mobile modals' entrance
+const SHEET_ENTER_MS = 250;
 const DEBOUNCE_HEADER_DELAY = 10;
 
 export default class GlimmerSiteHeader extends Component {
@@ -244,18 +257,18 @@ export default class GlimmerSiteHeader extends Component {
       panel.classList.add(viewMode);
 
       if (this._animate) {
-        let animationFinished;
-        let finalPosition = PANEL_WIDTH;
+        const sheetEdge = this.slideInMode && menuSheetEdge(panel);
         this._swipeMenuOrigin = "right";
-        if (
+        if (sheetEdge) {
+          this._swipeMenuOrigin = sheetEdge;
+        } else if (
           this.slideInMode &&
           panel.parentElement.classList.contains(this.leftMenuClass)
         ) {
           this._swipeMenuOrigin = "left";
-          finalPosition = -PANEL_WIDTH;
         }
-        animationFinished = panel.animate(
-          [{ transform: `translate3d(${finalPosition}px, 0, 0)` }],
+        const animationFinished = panel.animate(
+          [{ transform: this.#closedTransform(panel, this._swipeMenuOrigin) }],
           {
             fill: "forwards",
           }
@@ -268,8 +281,13 @@ export default class GlimmerSiteHeader extends Component {
           cloakElement.style.display = "block";
         }
 
+        const origin = this._swipeMenuOrigin;
         animationFinished.then(() => {
-          if (isTesting()) {
+          if (isSheet(origin)) {
+            // Its content renders after a paint; moving before then would
+            // show an empty sheet that fills in partway
+            runAfterFramePaint(() => this._animateOpening(panel));
+          } else if (isTesting()) {
             this._animateOpening(panel);
           } else {
             discourseLater(() => this._animateOpening(panel));
@@ -297,10 +315,18 @@ export default class GlimmerSiteHeader extends Component {
           ele.classList.contains("header-cloak")
       );
 
-    if (
-      swipeOverValidElement &&
-      (swipeEvent.direction === "left" || swipeEvent.direction === "right")
-    ) {
+    // A sheet is dragged back past its edge to close, unless its content
+    // scrolls that way instead
+    const swipeClosesMenu = isSheet(this._swipeMenuOrigin)
+      ? swipeEvent.direction ===
+          (this._swipeMenuOrigin === "top" ? "up" : "down") &&
+        !shouldDeferSwipeToContent(
+          swipeEvent,
+          document.querySelector(".menu-panel")
+        )
+      : swipeEvent.direction === "left" || swipeEvent.direction === "right";
+
+    if (swipeOverValidElement && swipeClosesMenu) {
       scrollLock(true, document.querySelector(".panel-body"));
     } else {
       fullEvent.preventDefault();
@@ -335,28 +361,50 @@ export default class GlimmerSiteHeader extends Component {
     const movingElement = document.querySelector(".menu-panel");
     const cloakElement = document.querySelector(".header-cloak");
 
-    //origin left
-    this.pxClosed = Math.max(0, -swipeEvent.deltaX);
-    let translation = -this.pxClosed;
-    if (this._swipeMenuOrigin === "right") {
+    const origin = this._swipeMenuOrigin;
+    const travel = this.#travel(movingElement, origin);
+    let transform;
+
+    if (isSheet(origin)) {
+      // Resists being pulled past its open position, as modals do
+      const toward = origin === "top" ? -1 : 1;
+      const closing = swipeEvent.deltaY * toward;
+      const translation =
+        (closing >= 0 ? closing : -dampenedOverdrag(-closing)) * toward;
+      this.pxClosed = Math.max(0, closing);
+      transform = `translate3d(0, ${translation}px, 0)`;
+    } else if (origin === "right") {
       this.pxClosed = Math.max(0, swipeEvent.deltaX);
-      translation = this.pxClosed;
+      transform = `translate3d(${this.pxClosed}px, 0, 0)`;
+    } else {
+      this.pxClosed = Math.max(0, -swipeEvent.deltaX);
+      transform = `translate3d(${-this.pxClosed}px, 0, 0)`;
     }
 
-    movingElement.animate(
-      [{ transform: `translate3d(${translation}px, 0, 0)` }],
-      {
-        fill: "forwards",
-      }
-    );
-    cloakElement?.animate?.(
-      [
-        {
-          opacity: (PANEL_WIDTH - this.pxClosed) / PANEL_WIDTH,
-        },
-      ],
-      { fill: "forwards" }
-    );
+    movingElement.animate([{ transform }], { fill: "forwards" });
+    cloakElement?.animate?.([{ opacity: (travel - this.pxClosed) / travel }], {
+      fill: "forwards",
+    });
+  }
+
+  #travel(panel, origin) {
+    return isSheet(origin) ? panel.offsetHeight : PANEL_WIDTH;
+  }
+
+  #speed(event, origin) {
+    return Math.abs(isSheet(origin) ? event.velocityY : event.velocityX);
+  }
+
+  #closedTransform(panel, origin) {
+    switch (origin) {
+      case "bottom":
+      case "top":
+        return menuSheetClosedTransform(origin);
+      case "left":
+        return `translate3d(${-PANEL_WIDTH}px, 0, 0)`;
+      default:
+        return `translate3d(${PANEL_WIDTH}px, 0, 0)`;
+    }
   }
 
   _handleArrowKeysNav(event) {
@@ -392,7 +440,7 @@ export default class GlimmerSiteHeader extends Component {
     let durationMs = getMaxAnimationTimeMs();
     if (event && this.pxClosed > 0) {
       durationMs = getMaxAnimationTimeMs(
-        this.pxClosed / Math.abs(event.velocityX)
+        this.pxClosed / this.#speed(event, this._swipeMenuOrigin)
       );
     }
     const timing = {
@@ -400,6 +448,10 @@ export default class GlimmerSiteHeader extends Component {
       fill: "forwards",
       easing: "ease-out",
     };
+    if (!event && isSheet(this._swipeMenuOrigin) && durationMs > 0) {
+      timing.duration = SHEET_ENTER_MS;
+      timing.easing = "ease";
+    }
     panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
     cloakElement?.animate?.([{ opacity: 1 }], timing);
     this.pxClosed = null;
@@ -411,9 +463,9 @@ export default class GlimmerSiteHeader extends Component {
     const cloakElement = document.querySelector(".header-cloak");
     let durationMs = getMaxAnimationTimeMs();
     if (event && this.pxClosed > 0) {
-      const distancePx = PANEL_WIDTH - this.pxClosed;
+      const distancePx = this.#travel(panel, menuOrigin) - this.pxClosed;
       durationMs = getMaxAnimationTimeMs(
-        distancePx / Math.abs(event.velocityX)
+        distancePx / this.#speed(event, menuOrigin)
       );
     }
     const timing = {
@@ -421,12 +473,8 @@ export default class GlimmerSiteHeader extends Component {
       fill: "forwards",
     };
 
-    let endPosition = -PANEL_WIDTH; //origin left
-    if (menuOrigin === "right") {
-      endPosition = PANEL_WIDTH;
-    }
     panel.animate(
-      [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
+      [{ transform: this.#closedTransform(panel, menuOrigin) }],
       timing
     );
     if (cloakElement) {

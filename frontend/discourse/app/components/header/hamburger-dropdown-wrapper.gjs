@@ -6,6 +6,10 @@ import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import {
+  menuSheetClosedTransform,
+  menuSheetEdge,
+} from "discourse/lib/menu-sheet";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { prefersReducedMotion } from "discourse/lib/utilities";
@@ -69,8 +73,12 @@ export default class HamburgerDropdownWrapper extends Component {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition = isDocumentRTL() ? "340px" : "-340px";
+      const sheetEdge = menuSheetEdge(panel);
+      const transform = sheetEdge
+        ? menuSheetClosedTransform(sheetEdge)
+        : `translate3d(${finishPosition}, 0, 0)`;
       const panelAnimatePromise = panel
-        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+        .animate([{ transform }], {
           duration: isTesting() ? 0 : 200,
           fill: "forwards",
           easing: "ease-in",

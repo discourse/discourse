@@ -83,4 +83,15 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
     )
     expect(page).to have_no_css(".c-routes.--channels > .c-navbar-container")
   end
+
+  it "leaves starting chats to the create button rather than the list options" do
+    Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
+
+    visit("/chat/direct-messages")
+    find(".c-footer__options .chat-channel-list-options-button").click
+
+    expect(page).to have_css("[data-menu-option-id='filterChannels']")
+    expect(page).to have_no_css("[data-menu-option-id='startDm']")
+    expect(page).to have_no_css("[data-menu-option-id='startGroupChat']")
+  end
 end

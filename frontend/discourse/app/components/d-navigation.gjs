@@ -7,9 +7,11 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
+import CategoryListSettingsMenu from "discourse/components/category-list-settings-menu";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
 import CreateTopicButton from "discourse/components/create-topic-button";
 import NavigationBar from "discourse/components/navigation-bar";
+import NavigationOptionsMenu from "discourse/components/navigation-options-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagInfoButton from "discourse/components/tag-info-button";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
@@ -220,6 +222,16 @@ export default class DNavigation extends Component {
     return this.filterType !== "categories";
   }
 
+  // The tab bar's lists show the dropdowns everywhere but the category list,
+  // which they'd only filter down to itself
+  get showBreadCrumbs() {
+    return !(
+      this.mobileTabBar.enabled &&
+      !this.notCategoriesRoute &&
+      !this.category
+    );
+  }
+
   @action
   async changeTagNotificationLevel(notificationLevel) {
     const response = await this.tagNotification.update({
@@ -293,13 +305,15 @@ export default class DNavigation extends Component {
   }
 
   <template>
-    <BreadCrumbs
-      @additionalTags={{this.additionalTags}}
-      @categories={{this.categories}}
-      @category={{this.category}}
-      @noSubcategories={{this.noSubcategories}}
-      @tag={{this.tag}}
-    />
+    {{#if this.showBreadCrumbs}}
+      <BreadCrumbs
+        @additionalTags={{this.additionalTags}}
+        @categories={{this.categories}}
+        @category={{this.category}}
+        @noSubcategories={{this.noSubcategories}}
+        @tag={{this.tag}}
+      />
+    {{/if}}
 
     <PluginOutlet
       @name="after-breadcrumbs"
@@ -313,16 +327,38 @@ export default class DNavigation extends Component {
 
     {{#unless this.additionalTags}}
       {{! nav bar doesn't work with tag intersections }}
-      <NavigationBar
-        @category={{this.category}}
-        @filterMode={{this.filterMode}}
-        @navItems={{this.navItems}}
-        @tag={{this.tag}}
-      />
+      {{#if this.mobileTabBar.enabled}}
+        {{! Within the thumb's reach, in the strip the tab bar keeps for a
+          section's views; it's gone while the bar is hidden }}
+        {{#if this.mobileTabBar.viewsSlot}}
+          {{#in-element this.mobileTabBar.viewsSlot insertBefore=null}}
+            <NavigationBar
+              @category={{this.category}}
+              @filterMode={{this.filterMode}}
+              @navItems={{this.navItems}}
+              @tag={{this.tag}}
+            />
+            <NavigationOptionsMenu
+              @bulkSelectHelper={{@bulkSelectHelper}}
+              @showBulkSelect={{this.showBulkSelectInNavControls}}
+            />
+          {{/in-element}}
+        {{/if}}
+      {{else}}
+        <NavigationBar
+          @category={{this.category}}
+          @filterMode={{this.filterMode}}
+          @navItems={{this.navItems}}
+          @tag={{this.tag}}
+        />
+      {{/if}}
     {{/unless}}
 
     <div class="navigation-controls">
-      {{#if this.showBulkSelectInNavControls}}
+      {{! With the tab bar, these sit in the options menu beside the list's views }}
+      {{#if
+        (and this.showBulkSelectInNavControls (not this.mobileTabBar.enabled))
+      }}
         <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
       {{/if}}
 
@@ -338,7 +374,22 @@ export default class DNavigation extends Component {
       />
 
       {{#if this.showCategoryAdmin}}
-        {{#if this.fixedCategoryPositions}}
+        {{#if this.mobileTabBar.enabled}}
+          {{! The row is the list's own, so creating takes it, with admins'
+            settings for the list beside it }}
+          <DButton
+            class="btn-default"
+            id="create-category"
+            @action={{this.createCategory}}
+            @icon="plus"
+            @label="category.create"
+          />
+          {{#if this.currentUser.admin}}
+            <CategoryListSettingsMenu
+              @reorderCategories={{this.reorderCategories}}
+            />
+          {{/if}}
+        {{else if this.fixedCategoryPositions}}
           <CategoriesAdminDropdown
             @onChange={{this.selectCategoryAdminDropdownAction}}
             @options={{hash triggerOnChangeOnTab=false}}

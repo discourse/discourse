@@ -89,6 +89,7 @@ export default class NavigationItem extends Component {
       <a
         aria-current={{if this.active "page"}}
         class={{if this.active "active"}}
+        data-label={{@content.displayName}}
         href={{this.hrefLink}}
       >
         {{#if this.hasIcon}}

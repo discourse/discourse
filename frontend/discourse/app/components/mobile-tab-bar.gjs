@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import CreateButton from "discourse/components/mobile-tab-bar/create-button";
 import MenuButton from "discourse/components/mobile-tab-bar/menu-button";
@@ -12,6 +13,13 @@ import htmlClass from "discourse/helpers/html-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+// Keeps the arrow clear of the bubble's rounded ends
+const POINTER_INSET = 24;
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), Math.max(min, max));
+}
+
 export default class MobileTabBar extends Component {
   @service composer;
   @service mobileTabBar;
@@ -19,21 +27,65 @@ export default class MobileTabBar extends Component {
   @tracked moreBefore = false;
   @tracked moreAfter = false;
 
+  #track = null;
+  #views = null;
+  #viewsObserver = null;
+
   get isVisible() {
     return this.mobileTabBar.enabled && !this.composer.isOpen;
   }
 
   @action
+  registerViewsSlot(element) {
+    this.mobileTabBar.viewsSlot = element;
+    this.#views = element;
+
+    // The bubble has no size until a section fills it, and the controls
+    // follow the viewport; either moves the tab it points at
+    this.#viewsObserver = new ResizeObserver(() => this.#pointAtActiveTab());
+    this.#viewsObserver.observe(element);
+    this.#viewsObserver.observe(element.nextElementSibling);
+  }
+
+  @action
+  unregisterViewsSlot() {
+    this.#viewsObserver?.disconnect();
+    this.#viewsObserver = null;
+    this.#views = null;
+    this.mobileTabBar.viewsSlot = null;
+  }
+
+  @action
   onTrackScroll(event) {
     this.#updateEdges(event.target);
+    this.#pointAtActiveTab();
   }
 
   @action
   revealActiveTab(track) {
+    this.#track = track;
     track
       .querySelector(".mobile-tab-bar__tab.--active")
       ?.scrollIntoView({ block: "nearest", inline: "nearest" });
     this.#updateEdges(track);
+    this.#pointAtActiveTab();
+  }
+
+  // Aims the views bubble's arrow at the current section's tab, as far as
+  // the bubble's rounded ends allow
+  #pointAtActiveTab() {
+    const tab = this.#track?.querySelector(".mobile-tab-bar__tab.--active");
+    const bubble = this.#views?.getBoundingClientRect();
+
+    if (!tab || !bubble?.width) {
+      return;
+    }
+
+    const tabRect = tab.getBoundingClientRect();
+    const center = tabRect.left + tabRect.width / 2 - bubble.left;
+    const pointer = clamp(center, POINTER_INSET, bubble.width - POINTER_INSET);
+
+    this.#views.style.setProperty("--mobile-tab-bar-pointer-x", `${pointer}px`);
   }
 
   // Fades the edges that have tabs scrolled past them
@@ -54,24 +106,31 @@ export default class MobileTabBar extends Component {
       {{/if}}
 
       <nav aria-label={{i18n "mobile_tab_bar.label"}} class="mobile-tab-bar">
-        <MenuButton />
-        <div class="mobile-tab-bar__tabs">
-          <div
-            class={{dConcatClass
-              "mobile-tab-bar__track"
-              (if this.moreBefore "--more-before")
-              (if this.moreAfter "--more-after")
-            }}
-            {{didInsert this.revealActiveTab}}
-            {{didUpdate this.revealActiveTab this.mobileTabBar.sectionTabKey}}
-            {{on "scroll" this.onTrackScroll passive=true}}
-          >
-            {{#each this.mobileTabBar.tabs key="key" as |tab|}}
-              <Tab @tab={{tab}} />
-            {{/each}}
+        <div
+          class="mobile-tab-bar__views"
+          {{didInsert this.registerViewsSlot}}
+          {{willDestroy this.unregisterViewsSlot}}
+        ></div>
+        <div class="mobile-tab-bar__controls">
+          <MenuButton />
+          <div class="mobile-tab-bar__tabs">
+            <div
+              class={{dConcatClass
+                "mobile-tab-bar__track"
+                (if this.moreBefore "--more-before")
+                (if this.moreAfter "--more-after")
+              }}
+              {{didInsert this.revealActiveTab}}
+              {{didUpdate this.revealActiveTab this.mobileTabBar.sectionTabKey}}
+              {{on "scroll" this.onTrackScroll passive=true}}
+            >
+              {{#each this.mobileTabBar.tabs key="key" as |tab|}}
+                <Tab @tab={{tab}} />
+              {{/each}}
+            </div>
           </div>
+          <CreateButton />
         </div>
-        <CreateButton />
       </nav>
     {{/if}}
   </template>
