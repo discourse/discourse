@@ -1696,6 +1696,27 @@ RSpec.describe PostMover do
             expect(new_topic.first_post.custom_fields).to eq(custom_fields)
           end
 
+          it "preserves the saved form in the new post" do
+            template =
+              Fabricate(
+                :form_template,
+                template: [{ id: "description", type: "input" }].as_json.to_yaml,
+                output_template: "## Invitation\n{{ answers.description }}",
+              )
+            submission =
+              FormTemplate::Submission.from_template(
+                template,
+                answers: {
+                  "description" => "A sufficiently long description.",
+                },
+              )
+            p1.update!(raw: submission.render, form_data: submission.to_h)
+
+            new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
+
+            expect(new_topic.first_post.form_submission.answers).to eq(submission.answers)
+          end
+
           it "preserves the post revisions in the new post" do
             p1.revise(another_user, { raw: "A different raw content" })
 

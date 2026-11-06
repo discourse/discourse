@@ -59,6 +59,23 @@
     }
   }
 
+  &__upload-preview {
+    flex: 1;
+    min-width: 0;
+
+    img,
+    video {
+      max-height: 6rem;
+      max-width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__remove-upload {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
   &__textarea {
     min-height: 100px;
   }

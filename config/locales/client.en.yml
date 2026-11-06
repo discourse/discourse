@@ -1013,6 +1013,7 @@ en:
       category_prompt: "Choose a category"
       save: "Save classification"
     review:
+      form_managed_notice: "This post was created using a form. Its content can be edited through the form after approval."
       continue_to_editor: "Continue to editor"
       moderation_steps:
         label: "Moderation steps"
@@ -6743,6 +6744,7 @@ en:
       upload_field:
         upload: "Upload"
         uploading: "Uploading"
+        remove: "Remove"
       errors:
         value_missing:
           default: "Please fill out this field."

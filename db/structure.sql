@@ -1961,7 +1961,8 @@ CREATE TABLE public.posts (
     image_upload_id bigint,
     qa_vote_count integer DEFAULT 0,
     outbound_message_id character varying,
-    locale character varying(20)
+    locale character varying(20),
+    form_data jsonb
 );
 
 
@@ -26647,6 +26648,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261028093149'),
 ('20261028093146'),
 ('20261026214816'),
+('20261022212458'),
 ('20261022152814'),
 ('20261021180718'),
 ('20261021180714'),

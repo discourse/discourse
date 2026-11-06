@@ -9,6 +9,7 @@ import type {
 import Post, {
   _addTrackedPostProperty,
   clearAddedTrackedPostProperties,
+  type PostFormSubmission,
 } from "discourse/models/post";
 import type RestModel from "discourse/models/rest";
 import Topic, { TopicBasicUser } from "discourse/models/topic";
@@ -304,3 +305,7 @@ expectTypeOf(_addTrackedPostProperty).toEqualTypeOf<
   (propertyKey: string) => void
 >();
 expectTypeOf(clearAddedTrackedPostProperties).toEqualTypeOf<() => void>();
+
+expectTypeOf(post.form_submission).toEqualTypeOf<
+  PostFormSubmission | undefined
+>();
