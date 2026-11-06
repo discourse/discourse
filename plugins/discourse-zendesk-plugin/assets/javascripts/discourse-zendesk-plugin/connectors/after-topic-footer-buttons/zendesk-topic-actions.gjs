@@ -3,76 +3,93 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class ZendeskTopicActions extends Component {
   @service currentUser;
 
-  @tracked dirty;
-  @tracked zendesk_id;
-  @tracked zendesk_url;
+  @tracked creating = false;
 
-  constructor() {
-    super(...arguments);
-    const zendesk_id = this.args.topic.get(
-      "discourse_zendesk_plugin_zendesk_id"
-    );
-    if (zendesk_id && zendesk_id !== "") {
-      this.zendesk_id = zendesk_id;
+  @service("a11y") _a11y;
+
+  get showActions() {
+    if (
+      !this.currentUser?.discourse_zendesk_plugin_status &&
+      !this.currentUser?.staff
+    ) {
+      return false;
     }
-    this.zendesk_url = this.args.topic.get(
-      "discourse_zendesk_plugin_zendesk_url"
-    );
-  }
 
-  get valid_zendesk_credential() {
-    return this.currentUser?.discourse_zendesk_plugin_status;
+    return (
+      this.currentUser?.can_create_zendesk_ticket ||
+      (this.args.topic.discourse_zendesk_plugin_has_ticket &&
+        this.currentUser?.can_view_zendesk_ticket)
+    );
   }
 
   @action
-  createZendeskIssue() {
-    this.dirty = true;
-    ajax("/zendesk-plugin/issues", {
-      type: "POST",
-      data: {
-        topic_id: this.args.topic.get("id"),
-      },
-    }).then((topic) => {
-      this.zendesk_id = topic.discourse_zendesk_plugin_zendesk_id;
-      this.zendesk_url = topic.discourse_zendesk_plugin_zendesk_url;
-    });
+  async createZendeskIssue() {
+    if (this.creating) {
+      return;
+    }
+
+    const topic = this.args.topic;
+    this.creating = true;
+    try {
+      const updatedTopic = await ajax("/zendesk-plugin/issues", {
+        type: "POST",
+        data: { topic_id: topic.id },
+      });
+      topic.setProperties({
+        discourse_zendesk_plugin_has_ticket:
+          updatedTopic.discourse_zendesk_plugin_has_ticket,
+        discourse_zendesk_plugin_zendesk_url:
+          updatedTopic.discourse_zendesk_plugin_zendesk_url,
+      });
+      this._a11y.announce(i18n("zendesk.ticket_created"));
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.creating = false;
+    }
   }
 
   <template>
-    <span
-      class="after-topic-footer-buttons-outlet zendesk-topic-actions"
-      ...attributes
-    >
-      {{#if this.currentUser.staff}}
-        {{#if this.valid_zendesk_credential}}
-          {{#if this.zendesk_id}}
-            <a
-              class="btn-primary btn"
-              href={{this.zendesk_url}}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <i class="fa fa-clone"></i>
-              {{i18n "topic.view_zendesk_issue"}}
-            </a>
+    {{#if this.showActions}}
+      <span
+        class="after-topic-footer-buttons-outlet zendesk-topic-actions"
+        ...attributes
+      >
+        {{#if this.currentUser.discourse_zendesk_plugin_status}}
+          {{#if @topic.discourse_zendesk_plugin_has_ticket}}
+            {{#if this.currentUser.can_view_zendesk_ticket}}
+              <a
+                class="btn-primary btn"
+                href={{@topic.discourse_zendesk_plugin_zendesk_url}}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {{i18n "topic.view_zendesk_issue"}}
+              </a>
+            {{else}}
+              <span class="zendesk-topic-actions__confirmation">{{i18n
+                  "zendesk.ticket_created"
+                }}</span>
+            {{/if}}
           {{else}}
             <DButton
               class="btn-primary"
               @action={{this.createZendeskIssue}}
-              @disabled={{this.dirty}}
+              @disabled={{this.creating}}
               @label="topic.create_zendesk_issue"
             />
           {{/if}}
         {{else}}
           <p>{{i18n "zendesk.credentials_not_setup"}}</p>
         {{/if}}
-      {{/if}}
-    </span>
+      </span>
+    {{/if}}
   </template>
 }
