@@ -447,6 +447,45 @@ eviltrout</p>
       "handles nested quotes properly"
     );
 
+    assert.cooked(
+      `[b]hi[/b]\n[quote]\nx\n[/quote]\n\n> [quote]\n> y\n> [/quote]`,
+      `<p><span class="bbcode-b">hi</span></p>
+<aside class="quote no-group">
+<blockquote>
+<p>x</p>
+</blockquote>
+</aside>
+<blockquote>
+<aside class="quote no-group">
+<blockquote>
+<p>y</p>
+</blockquote>
+</aside>
+</blockquote>`,
+      "handles quotes nested inside blockquotes"
+    );
+
+    assert.cooked(
+      `- [quote]\n  y\n  [/quote]\n- [quote]\n  z\n  [/quote]`,
+      `<ul>
+<li>
+<aside class="quote no-group">
+<blockquote>
+<p>y</p>
+</blockquote>
+</aside>
+</li>
+<li>
+<aside class="quote no-group">
+<blockquote>
+<p>z</p>
+</blockquote>
+</aside>
+</li>
+</ul>`,
+      "handles quotes in separate list items"
+    );
+
     assert.cookedOptions(
       `[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`,
       { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
