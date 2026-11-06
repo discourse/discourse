@@ -107,7 +107,7 @@ class PostValidator < ActiveModel::Validator
     return if post.acting_user.nil?
     return if post.acting_user.staff?
 
-    if !post.acting_user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map)
+    if !post.acting_user.guardian.can_embed_media?
       add_error_if_count_exceeded(
         post,
         :no_embedded_media_allowed_group,
