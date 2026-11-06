@@ -610,9 +610,8 @@ class ApplicationController < ActionController::Base
   end
 
   def rate_limit_second_factor!(user)
-    return if params[:second_factor_token].blank?
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
-    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
+    rate_limit_second_factor_by_ip!
+    rate_limit_second_factor_by_account!(user)
   end
 
   def login_method
@@ -621,6 +620,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def rate_limit_second_factor_by_ip!
+    return if params[:second_factor_token].blank?
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
+  end
+
+  def rate_limit_second_factor_by_account!(user)
+    return if params[:second_factor_token].blank? || user.blank?
+    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
+  end
 
   # This method is intended to be a no-op.
   # The only reason this `before_action` callback continues to exist is for backwards compatibility purposes which we cannot easily
