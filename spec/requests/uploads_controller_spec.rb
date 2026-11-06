@@ -680,6 +680,17 @@ RSpec.describe UploadsController do
   end
 
   describe "#show_secure" do
+    it "recognizes heavily dotted paths without superlinear cost" do
+      dotted_path = "/secure-uploads/#{"a." * 500}-x"
+
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      get dotted_path
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+
+      expect(response.status).to eq(404)
+      expect(elapsed).to be < 3.0
+    end
+
     describe "local store" do
       fab!(:image_upload) { upload_file("smallest.png") }
 
@@ -724,6 +735,22 @@ RSpec.describe UploadsController do
         expect(response.redirect_url).to match("Amz-Expires")
         expect(response.location).not_to include(".?")
         expect(response.redirect_url).to include("response-content-disposition=inline")
+      end
+
+      it "serves requests with a non-HTML Accept header" do
+        sign_in(user)
+        get secure_url, headers: { "Accept" => "image/avif,image/webp,*/*;q=0.8" }
+
+        expect(response.status).to eq(302)
+      end
+
+      it "keeps the full path when the extension contains an underscore" do
+        upload.update!(extension: "not_image", url: upload.url.sub(".png", ".not_image"))
+        sign_in(user)
+        get secure_url
+
+        expect(response.status).to eq(302)
+        expect(URI.parse(response.redirect_url).path).to end_with("#{upload.sha1}.not_image")
       end
 
       it "returns the secure-upload URL during lookup" do
