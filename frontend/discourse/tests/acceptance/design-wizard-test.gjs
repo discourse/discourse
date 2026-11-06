@@ -349,8 +349,18 @@ acceptance("Design wizard - admin launch", function (needs) {
       "-11",
       "progress saves Dracula for dark systems"
     );
+    assert.strictEqual(
+      savedPayloads.at(-1).finishing,
+      undefined,
+      "a step save can still be reverted, so it is not final"
+    );
 
     await click(".design-wizard__save");
+    assert.strictEqual(
+      savedPayloads.at(-1).finishing,
+      "true",
+      "the final save is marked as finishing"
+    );
 
     assert.strictEqual(
       savedPayloads.at(-1).light_palette_id,

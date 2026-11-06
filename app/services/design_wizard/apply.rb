@@ -21,6 +21,9 @@ class DesignWizard::Apply
     attribute :homepage, :string
     attribute :homepage_settings, default: -> { {} }
     attribute :category_page_style, :string
+    # step saves can still be reverted, so only finishing may discard what
+    # members chose for themselves
+    attribute :finishing, :boolean, default: false
 
     before_validation do
       # the built-in light palette is represented by a theme without an
@@ -106,6 +109,9 @@ class DesignWizard::Apply
       step :offer_built_in_palettes
     end
     step :update_palette_selectability
+    only_if :finishing_single_mode do
+      step :reset_member_palette_choices
+    end
   end
 
   step :update_site_settings
@@ -175,10 +181,35 @@ class DesignWizard::Apply
     end
   end
 
-  def update_palette_selectability(params:, theme:)
+  # a single-mode site uses one palette for both slots: a dark one in the light
+  # slot for dark-only, and no dark one at all for light-only
+  def finishing_single_mode(params:, light_palette:, dark_palette:)
+    params.finishing && (dark_palette.nil? || !!light_palette&.is_dark?)
+  end
+
+  # Cleared rather than set to the theme's palettes, so members keep following
+  # whatever the admin picks next instead of an old pick coming back.
+  def reset_member_palette_choices(dark_palette:)
+    light_only = dark_palette.nil?
+    UserOption.where.not(dark_scheme_id: [nil, -1]).update_all(dark_scheme_id: nil) if light_only
+
+    unoffered_ids =
+      ColorScheme
+        .where(id: UserOption.where.not(color_scheme_id: nil).select(:color_scheme_id))
+        .includes(:color_scheme_colors)
+        .select { |palette| !!palette.is_dark? == light_only }
+        .map(&:id)
+    if unoffered_ids.any?
+      UserOption.where(color_scheme_id: unoffered_ids).update_all(color_scheme_id: nil)
+    end
+  end
+
+  def update_palette_selectability(params:, theme:, light_palette:, dark_palette:)
     DesignWizard::Action::UpdatePaletteSelectability.call(
       theme:,
       selectable: params.palettes_user_selectable,
+      light: !light_palette&.is_dark?,
+      dark: dark_palette.present?,
     )
   end
 

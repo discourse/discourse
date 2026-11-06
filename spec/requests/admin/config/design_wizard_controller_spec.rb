@@ -262,6 +262,17 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["palettes_user_selectable"]).to eq(false)
       end
 
+      it "reports palettes as user selectable when a single-mode site offers only one mode" do
+        Theme.horizon_theme.set_default!
+        horizon_palettes = ColorScheme.where(theme_id: Theme::CORE_THEMES["horizon"])
+        horizon_palettes.update_all(user_selectable: false)
+        horizon_palettes.where.not("name LIKE '% Dark'").update_all(user_selectable: true)
+
+        get "/admin/config/design-wizard.json"
+
+        expect(response.parsed_body["palettes_user_selectable"]).to eq(true)
+      end
+
       it "reports palettes as not user selectable when there are none to offer" do
         ColorScheme.where(theme_id: Theme::CORE_THEMES.values).destroy_all
         ColorScheme.where(via_wizard: true).destroy_all
@@ -309,6 +320,30 @@ RSpec.describe Admin::Config::DesignWizardController do
   describe "#update" do
     context "when signed in as an admin" do
       before { sign_in(admin) }
+
+      it "stops a member's own dark palette from overriding a light-only choice" do
+        horizon = Theme.horizon_theme
+        horizon.set_default!
+        light = ColorScheme.find_by(theme_id: horizon.id, name: "Royal")
+        dark = ColorScheme.find_by(theme_id: horizon.id, name: "Royal Dark")
+        ColorScheme.where(theme_id: horizon.id).update_all(user_selectable: true)
+        admin.user_option.update!(dark_scheme_id: dark.id)
+        dark_scheme_links = -> do
+          get "/"
+          Nokogiri.HTML5(response.body).css("link.dark-scheme")
+        end
+        expect(dark_scheme_links.call).to be_present
+
+        put "/admin/config/design-wizard.json",
+            params: {
+              theme_id: horizon.id,
+              light_palette_id: light.id,
+              palettes_user_selectable: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(dark_scheme_links.call).to be_empty
+      end
 
       it "applies the design choices" do
         horizon = Theme.horizon_theme
