@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# What one CI job of .github/workflows/tests.yml runs for a pull request:
+# prints `full` (the job's whole suite), `none`, or `list` with the job's
+# selected spec or test files written to --out, one per line. The reason goes
+# to stderr.
+#
+#   script/test_impact/ci_select --map PATH --base REF --job BUILD_TYPE/TARGET --out FILE
+
+require "optparse"
+require_relative "map"
+
+options = {}
+OptionParser
+  .new do |opts|
+    opts.on("--map PATH") { |v| options[:map] = v }
+    opts.on("--base REF") { |v| options[:base] = v }
+    opts.on("--job BUILD_TYPE/TARGET") { |v| options[:job] = v }
+    opts.on("--out FILE") { |v| options[:out] = v }
+  end
+  .parse!
+abort "ci_select: --map, --base, --job and --out are required" if options.size < 4
+
+# The base's hunks in the line numbers of the commit the map was recorded at,
+# fetched when the checkout doesn't have it. Without it they're taken as they
+# are, which is right for files that didn't change in between.
+def translator(map, base)
+  identity = ->(_path, hunks) { hunks }
+  return identity if !map.commit || map.commit == base
+  if !system("git", "cat-file", "-e", "#{map.commit}^{commit}", err: File::NULL) &&
+       !system("git", "fetch", "--quiet", "--depth=1", "origin", map.commit)
+    warn "ci_select: can't fetch the map's commit #{map.commit}; using line numbers as they are"
+    return identity
+  end
+  TestImpact::Diff.translator(base, map.commit)
+end
+
+job = TestImpact::Job.new(options[:job])
+mode, reason, files =
+  if !File.exist?(options[:map])
+    ["full", "no map at #{options[:map]}"]
+  else
+    begin
+      changes, source, base = TestImpact::Diff.against(options[:base])
+      map = TestImpact::Map.load(options[:map])
+      translate = translator(map, base)
+      # Official plugins are cloned beside the ones in the repository.
+      bundled = IO.popen(%w[git ls-tree --name-only -d HEAD plugins/], &:read).split
+      job.run(
+        map.select(changes, source:, translate:),
+        recorded: map.specs,
+        bundled: bundled.map { File.basename(_1) },
+        exists: File.method(:exist?),
+      )
+    rescue RuntimeError => e
+      ["full", e.message]
+    end
+  end
+
+warn "ci_select: #{mode}: #{reason}"
+File.write(options[:out], Array(files).map { |file| "#{file}\n" }.join)
+puts mode

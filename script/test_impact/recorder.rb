@@ -1,0 +1,378 @@
+# frozen_string_literal: true
+
+# Records what each spec file depends on (TEST_IMPACT_RECORD=1), for
+# script/test_impact/build_map and select: the application code it ran, the
+# site settings it read, the translation keys and locales it looked up, the
+# data files it read, the tables its queries named, and for system specs the
+# browser JavaScript it ran. Started before the app loads, so Coverage sees
+# every file; what boot did is dropped before each spec file, since eager
+# loading runs every class body and loads every setting.
+#
+# Writes tmp/test_impact/recording-<TEST_ENV_NUMBER>-<pid>.jsonl.gz:
+#   {"spec": "spec/models/post_spec.rb", "files": {"app/models/post.rb": [[12, 30]]},
+#    "settings": ["max_post_length"], "keys": ["post.edit"], "locales": ["en"],
+#    "reads": ["spec/fixtures/images/logo.png"], "tables": ["posts", "users"],
+#    "gems": ["sanitize"],
+#    "js": {"app-a1b2.digested.js": [[1, 52, 1, 90]]}}
+#   {"methods": {"app/models/post.rb": [[12, 30]]},
+#    "js_functions": {"app-a1b2.digested.js": [[1, 52, 1, 90]]},
+#    "boot": {"lib/plugin/instance.rb": [[40, 52]]},
+#    "gems": {"loaded": ["sanitize"], "boot": ["rack"], "native": ["oj"]}}  (last line)
+#
+# JavaScript is recorded as bundle line/column ranges of the functions that
+# ran; script/test_impact/resolve_js maps them to source files through the
+# build's source maps.
+require "coverage"
+require "fileutils"
+require "json"
+require "open3"
+require "socket"
+require "tmpdir"
+require "zlib"
+
+module TestImpact
+  class Recorder
+    ROOT = File.expand_path("../..", __dir__)
+
+    EXCLUDED = %r{\A(?:vendor|node_modules|tmp|public|frontend)/|_spec\.rb\z}
+
+    NOTES = %i[settings keys locales reads tables gems].freeze
+
+    # The tables a query names. Aliases and CTE names are dropped by keeping
+    # only names of real tables.
+    SQL_TABLE = /\b(?:from|join|into|update)\s+(?:only\s+)?(?:"?public"?\.)?"?(\w+)/i
+
+    def self.start
+      raise "TEST_IMPACT_RECORD and COVERAGE both need Coverage; set one" if ENV["COVERAGE"]
+      # eval: ActionView compiles templates with the template's path as the file.
+      Coverage.start(lines: true, methods: true, eval: true)
+      @instance = new
+    end
+
+    def self.install(rspec_config)
+      recorder = @instance or return
+      recorder.hook_lookups
+      recorder.hook_loading
+      rspec_config.before(:context) { recorder.reset }
+      rspec_config.after(:context) { recorder.record(self.class.metadata[:file_path]) }
+      rspec_config.before(:each, type: :system) { recorder.start_js(page) }
+      rspec_config.after(:each, type: :system) { recorder.stop_js(page) }
+      rspec_config.after(:suite) { recorder.finish }
+    end
+
+    def initialize
+      @methods = {}
+      @notes = NOTES.to_h { |kind| [kind, Set.new] }
+      @js_ran = Hash.new { |h, script| h[script] = Set.new }
+      @js_functions = Hash.new { |h, script| h[script] = Set.new }
+      @loaded = {}
+      @gem_of = {}
+      @gems_loaded = Set.new
+      @boot_gems = Set.new
+    end
+
+    # What a spec file reads and looks up as it loads, such as the data file
+    # it generates examples from, is its own, kept until it runs. Not the
+    # code it runs: a coverage snapshot per loaded file costs too much.
+    def hook_loading
+      recorder = self
+      loading =
+        Module.new do
+          private
+
+          define_method(:load_file_handling_errors) do |method, file|
+            recorder.loading(file) { super(method, file) }
+          end
+        end
+      RSpec::Core::Configuration.prepend(loading)
+    end
+
+    def loading(file)
+      if !@boot
+        result = Coverage.result(stop: false, clear: true)
+        @boot = boot_methods(result)
+        @boot_gems.merge(gems_ran(result))
+      end
+      @notes.each_value(&:clear)
+      yield
+    ensure
+      spec = File.expand_path(file.to_s).delete_prefix("#{ROOT}/")
+      @loaded[spec] = @notes.transform_values(&:dup)
+      @notes.each_value(&:clear)
+    end
+
+    # Settings and translations are loaded once at boot, so it's the lookups,
+    # not the files, that tell specs apart.
+    def hook_lookups
+      recorder = self
+
+      settings =
+        Module.new do
+          SiteSetting.defaults.all.keys.each do |name|
+            [name, :"#{name}?"].each do |method|
+              next if !SiteSetting.respond_to?(method)
+              define_method(method) do |*args, &block|
+                recorder.note(:settings, name.to_s)
+                super(*args, &block)
+              end
+            end
+          end
+        end
+      SiteSetting.singleton_class.prepend(settings)
+
+      translations =
+        Module.new do
+          %i[translate t exists?].each do |method|
+            define_method(method) do |*args, &block|
+              recorder.note_translation(args)
+              super(*args, &block)
+            end
+          end
+        end
+      I18n.singleton_class.prepend(translations)
+
+      reads =
+        Module.new do
+          %i[open read readlines foreach binread].each do |method|
+            define_method(method) do |*args, **kwargs, &block|
+              recorder.note_read(args.first)
+              super(*args, **kwargs, &block)
+            end
+          end
+        end
+      File.singleton_class.prepend(reads)
+
+      # Migrations change tables, not code a spec ran. Queries through the
+      # mini_sql DB helper send no notification, so their tables are missed.
+      tables = ActiveRecord::Base.connection.tables.to_set
+      ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
+        next if payload[:name] == "SCHEMA"
+        payload[:sql].scan(SQL_TABLE) do |(name)|
+          recorder.note(:tables, name) if tables.include?(name)
+        end
+      end
+    end
+
+    def note(kind, value)
+      @notes[kind] << value
+    end
+
+    def note_translation(args)
+      options = args.last.is_a?(Hash) ? args.last : {}
+      locale = options[:locale] || (args[1] if args[1].is_a?(Symbol) || args[1].is_a?(String))
+      note(:locales, (locale || I18n.locale).to_s)
+      scope = Array(options[:scope]).join(".")
+      Array(args.first).each do |key|
+        next if key.nil? || key.is_a?(Hash)
+        note(:keys, scope.empty? ? key.to_s : "#{scope}.#{key}")
+      end
+    end
+
+    def note_read(path)
+      return if !(path.is_a?(String) || path.is_a?(Pathname))
+      path = relative(File.expand_path(path.to_s)) or return
+      note(:reads, path) if !path.end_with?(".rb")
+    end
+
+    # A DevTools port for each browser the system specs launch, for
+    # cdp_coverage. Each Capybara session launches its own browser, so specs
+    # with several users have several per driver.
+    def self.chrome_args
+      return [] if !@instance
+      server = TCPServer.new("127.0.0.1", 0)
+      port = server.addr[1]
+      server.close
+      (@ports ||= []) << port
+      ["--remote-debugging-port=#{port}"]
+    end
+
+    def self.ports
+      @ports || []
+    end
+
+    # Coverage goes through script/test_impact/cdp_coverage's own connection:
+    # through the test's Playwright client a page's coverage takes minutes, and
+    # specs can't make HTTP requests (WebMock).
+    def start_js(page)
+      return if Recorder.ports.empty?
+      target_id =
+        page.driver.with_playwright_page do |pw|
+          session = pw.context.new_cdp_session(pw)
+          session.send_message("Target.getTargetInfo").dig("targetInfo", "targetId")
+        ensure
+          session&.detach
+        end
+      @js_output = File.join(Dir.tmpdir, "test-impact-js-#{Process.pid}.json")
+      @js_process =
+        Open3.popen2(
+          File.join(ROOT, "script/test_impact/cdp_coverage"),
+          Recorder.ports.join(","),
+          target_id,
+          @js_output,
+          File.join(ROOT, "tmp", "test_impact", "js-lines"),
+          err: File::NULL,
+        )
+      stdin, stdout, waiter = @js_process
+      return if IO.select([stdout], nil, nil, 30) && stdout.gets&.strip == "started"
+      stdin.close
+      waiter.join(5)
+      @js_process = nil
+    end
+
+    def stop_js(_page)
+      stdin, _stdout, waiter = @js_process
+      return if !waiter
+      @js_process = nil
+      stdin.puts("take")
+      stdin.close
+      return if !waiter.join(60)&.value&.success? || !File.exist?(@js_output)
+      JSON
+        .parse(File.read(@js_output))
+        .each do |script, functions|
+          functions.each do |*range, ran|
+            @js_functions[script] << range
+            @js_ran[script] << range if ran == 1
+          end
+        end
+    ensure
+      File.delete(@js_output) if @js_output && File.exist?(@js_output)
+    end
+
+    def reset
+      result = Coverage.result(stop: false, clear: true)
+      # Boot (plugin activation, initializers) and the suite hooks run before
+      # every spec but are recorded for none. Boot ends at the first spec
+      # file loaded after this hooks in, the suite hooks at the first reset.
+      if !@running
+        @running = true
+        @boot = (@boot || {}).merge(boot_methods(result)) { |_, a, b| (a | b).sort }
+        @boot_gems.merge(gems_ran(result))
+      end
+      @notes.each_value(&:clear)
+      @started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    end
+
+    def record(spec)
+      spec = spec.delete_prefix("./")
+      files = collect_files
+      @loaded.delete(spec)&.each { |kind, values| @notes[kind].merge(values) }
+      notes = @notes.transform_values { |values| values.to_a.sort }
+      # What selecting the spec costs, recording included.
+      seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started).round(2)
+      js = @js_ran.transform_values { |ranges| ranges.to_a.sort }
+      out.puts(JSON.generate(spec:, seconds:, files:, **notes, js:))
+      @notes.each_value(&:clear)
+      @js_ran.clear
+    end
+
+    def finish
+      return if !@out
+      methods = @methods.transform_values { |m| m[:ranges].to_a.sort }
+      js_functions = @js_functions.transform_values { |ranges| ranges.to_a.sort }
+      native = Gem.loaded_specs.values.select { |spec| spec.extensions.any? }.map(&:name)
+      gems = {
+        loaded: @gems_loaded.to_a.sort,
+        boot: @boot_gems.to_a.sort,
+        native: (native & @gems_loaded.to_a).sort,
+      }
+      @out.puts(JSON.generate(methods:, js_functions:, boot: @boot || {}, gems:))
+      @out.close
+    end
+
+    private
+
+    # Opened on the first spec file, so a process that runs none (turbo_rspec's
+    # parent loads rails_helper too) leaves no recording.
+    def out
+      @out ||=
+        begin
+          dir = File.join(ROOT, "tmp", "test_impact")
+          FileUtils.mkdir_p(dir)
+          name = "recording-#{ENV["TEST_ENV_NUMBER"] || "0"}-#{Process.pid}.jsonl.gz"
+          Zlib::GzipWriter.open(File.join(dir, name))
+        end
+    end
+
+    def relative(absolute)
+      return if !absolute.start_with?("#{ROOT}/")
+      path = absolute.delete_prefix("#{ROOT}/")
+      path if !EXCLUDED.match?(path)
+    end
+
+    def collect_files
+      Coverage
+        .result(stop: false, clear: true)
+        .each_with_object({}) do |(absolute, coverage), files|
+          if (gem = gem_of(absolute))
+            note(:gems, gem) if !@notes[:gems].include?(gem) && ran_method?(coverage)
+            next
+          end
+          path = relative(absolute) or next
+          ran = ran(path, coverage)
+          files[path] = ran if ran.any?
+        end
+    end
+
+    # The gem a loaded file belongs to, by its install directory
+    # (gems/<name>-<version>/, or bundler/gems/<name>-<revision>/ for git gems).
+    def gem_of(absolute)
+      @gem_of.fetch(absolute) do
+        @gem_dirs ||=
+          Gem.loaded_specs.values.to_h { |spec| [File.basename(spec.full_gem_path), spec.name] }
+        # The first /gems/ can be the Ruby version's gem home (gems/4.0.0/gems/...).
+        dir = absolute.scan(%r{/gems/([^/]+)/}).flatten.find { |name| @gem_dirs.key?(name) }
+        gem = dir && @gem_dirs[dir]
+        @gems_loaded << gem if gem
+        @gem_of[absolute] = gem
+      end
+    end
+
+    def ran_method?(coverage)
+      (coverage[:methods] || {}).each_value.any?(&:positive?)
+    end
+
+    def gems_ran(result)
+      result.filter_map do |absolute, coverage|
+        (gem = gem_of(absolute)) && ran_method?(coverage) && gem
+      end
+    end
+
+    def boot_methods(result)
+      result.each_with_object({}) do |(absolute, coverage), boot|
+        path = relative(absolute) or next
+        ran =
+          (coverage[:methods] || {}).filter_map do |(_klass, _name, first, _, last, _), count|
+            [first, last] if count > 0
+          end
+        boot[path] = ran.uniq.sort if ran.any?
+      end
+    end
+
+    # The methods that ran, plus runs of lines that ran outside every method:
+    # blocks handed to class-level DSL (scopes, callbacks, event handlers).
+    def ran(path, coverage)
+      methods = coverage[:methods] || {}
+      known = (@methods[path] ||= { ranges: Set.new, inside: Set.new })
+      ran = []
+      methods.each do |(_klass, _name, first, _, last, _), count|
+        range = [first, last]
+        known[:inside].merge(first..last) if known[:ranges].add?(range)
+        ran << range if count > 0
+      end
+
+      run_start = nil
+      lines = coverage[:lines] || []
+      lines.each_with_index do |count, index|
+        line = index + 1
+        if count.to_i > 0 && !known[:inside].include?(line)
+          run_start ||= line
+        elsif run_start
+          ran << [run_start, line - 1]
+          run_start = nil
+        end
+      end
+      ran << [run_start, lines.size] if run_start
+      ran.uniq.sort
+    end
+  end
+end

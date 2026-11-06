@@ -1,0 +1,166 @@
+#!/usr/bin/env node
+"use strict";
+
+// Maps the browser JavaScript in test impact recordings (bundle line/column
+// ranges of the functions each system spec ran) to source files through the
+// build's source maps, rewriting the recordings in place. Afterwards a
+// JavaScript file appears in "files" and "methods" just like a Ruby file.
+// Run it where the build that served the specs is, before build_map. Theme
+// scripts resolve through the source maps the recorder saved in js-maps/, and
+// themes.json names each theme's directory by id.
+//
+//   script/test_impact/resolve_js [recordings dir]
+
+const fs = require("node:fs");
+const path = require("node:path");
+const zlib = require("node:zlib");
+const {
+  DeprecationStackResolver,
+} = require("../../frontend/discourse/lib/deprecation-report");
+
+const ROOT = path.resolve(__dirname, "..", "..");
+const dir = process.argv[2] || "tmp/test_impact";
+const resolver = new DeprecationStackResolver();
+const themeResolver = new DeprecationStackResolver({
+  mapRoots: [path.join(dir, "js-maps")],
+});
+const themeDirectories = fs.existsSync(path.join(dir, "themes.json"))
+  ? JSON.parse(fs.readFileSync(path.join(dir, "themes.json"), "utf8"))
+  : {};
+const resolved = new Map();
+const exists = new Map();
+
+// A theme's sources are named theme-<id>/: its JavaScript under discourse/,
+// which is javascripts/discourse/ in the theme, and the rest as in the theme.
+function themeFile(file) {
+  const match = file.match(/(?:^|\/)theme-(-?\d+)\/(.+)$/);
+  if (!match) {
+    return file;
+  }
+  const [, id, rest] = match;
+  const directory = themeDirectories[id];
+  if (!directory) {
+    return file;
+  }
+  return path.join(
+    directory,
+    rest.startsWith("discourse/") ? `javascripts/${rest}` : rest
+  );
+}
+
+function resolveFrame(frame) {
+  let found = resolver.resolveFrame(frame);
+  if (!found.resolved) {
+    found = themeResolver.resolveFrame(frame);
+  }
+  return found.resolved ? { ...found, file: themeFile(found.file) } : found;
+}
+
+// Dependencies change through lockfiles, which select everything anyway, and
+// some name their sources by paths outside the repository.
+function ownFile(file) {
+  if (path.isAbsolute(file) || file.includes("node_modules/")) {
+    return false;
+  }
+  if (!exists.has(file)) {
+    exists.set(file, fs.existsSync(path.join(ROOT, file)));
+  }
+  return exists.get(file);
+}
+
+// [file, first line, last line] in the source, or null.
+function resolve(script, [startLine, startColumn, endLine, endColumn]) {
+  const key = `${script}:${startLine}:${startColumn}:${endLine}:${endColumn}`;
+  if (resolved.has(key)) {
+    return resolved.get(key);
+  }
+
+  let result = null;
+  const start = resolveFrame({
+    url: script,
+    line: startLine,
+    column: startColumn,
+  });
+  if (start.resolved && !start.approximate && ownFile(start.file)) {
+    const end = resolveFrame({
+      url: script,
+      line: endLine,
+      column: endColumn,
+    });
+    const last =
+      end.resolved && end.file === start.file && end.line >= start.line
+        ? end.line
+        : start.line;
+    result = [start.file, start.line, last];
+  }
+
+  resolved.set(key, result);
+  return result;
+}
+
+// { script: [ranges] } into { file: [[first, last]] }, without duplicates.
+function bySourceFile(byScript) {
+  const byFile = {};
+  for (const [script, ranges] of Object.entries(byScript)) {
+    for (const range of ranges) {
+      const found = resolve(script, range);
+      if (found) {
+        const [file, first, last] = found;
+        (byFile[file] ||= new Set()).add(`${first},${last}`);
+      }
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(byFile).map(([file, set]) => [
+      file,
+      [...set].map((pair) => pair.split(",").map(Number)),
+    ])
+  );
+}
+
+const recordings = fs
+  .readdirSync(dir)
+  .filter((name) => /^recording-.*\.jsonl\.gz$/.test(name));
+
+for (const name of recordings) {
+  const file = path.join(dir, name);
+  const lines = zlib
+    .gunzipSync(fs.readFileSync(file))
+    .toString("utf8")
+    .split("\n")
+    .filter(Boolean);
+
+  const rewritten = lines.flatMap((line) => {
+    const entry = JSON.parse(line);
+    // QUnit records where a module's first test is defined.
+    if (entry.spec_location) {
+      const [script, specLine, column] = entry.spec_location;
+      const frame = resolveFrame({
+        url: script,
+        line: specLine,
+        column,
+      });
+      if (!frame.resolved || !ownFile(frame.file)) {
+        return [];
+      }
+      entry.spec = frame.file;
+      delete entry.spec_location;
+      delete entry.module;
+    }
+    if (entry.js) {
+      entry.files = { ...entry.files, ...bySourceFile(entry.js) };
+      delete entry.js;
+    }
+    if (entry.js_functions) {
+      entry.methods = { ...entry.methods, ...bySourceFile(entry.js_functions) };
+      delete entry.js_functions;
+    }
+    return [JSON.stringify(entry)];
+  });
+
+  fs.writeFileSync(file, zlib.gzipSync(rewritten.join("\n") + "\n"));
+}
+
+process.stdout.write(
+  `resolve_js: ${recordings.length} recordings, ${resolved.size} functions resolved\n`
+);
