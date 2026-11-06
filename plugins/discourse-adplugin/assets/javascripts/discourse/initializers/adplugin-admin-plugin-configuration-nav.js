@@ -18,6 +18,10 @@ export default {
           label: "admin.adplugin.house_ads.title",
           route: "adminPlugins.show.houseAds",
         },
+        {
+          label: "admin.adplugin.dfp_settings.nav_title",
+          route: "adminPlugins.show.dfpSettings",
+        },
       ]);
     });
   },
