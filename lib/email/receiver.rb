@@ -550,7 +550,12 @@ module Email
     def extract_from_outlook(doc)
       # Outlook properly identifies the signature and any replied/forwarded email
       # Use their id to remove them and anything that comes after
-      elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
+      elided =
+        remove_with_following_siblings(
+          doc,
+          predicate: "@id='Signature' or @id='divRplyFwdMsg'",
+          standalone_predicate: "local-name()='hr'",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -583,7 +588,14 @@ module Email
     def extract_from_apple_mail(doc)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
-      elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
+      elided =
+        doc
+          .children
+          .xpath(
+            ".//*[@id='AppleMailSignature'][position()=last()]/following-sibling::* | " \
+              "self::*[@id='AppleMailSignature'][not(preceding-sibling::*[@id='AppleMailSignature'][1])]/following-sibling::*",
+          )
+          .remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -591,17 +603,18 @@ module Email
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided =
-        doc.css(
-          "*[class^='moz-cite'], *[class^='moz-cite'] ~ *, " \
-            "*[class^='moz-signature'], *[class^='moz-signature'] ~ *, " \
-            "*[class^='moz-forward'], *[class^='moz-forward'] ~ *",
-        ).remove
+        remove_with_following_siblings(
+          doc,
+          predicate:
+            "starts-with(@class, 'moz-cite') or " \
+              "starts-with(@class, 'moz-signature') or starts-with(@class, 'moz-forward')",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_protonmail(doc)
       # Removes anything that has a class starting with "protonmail_" and everything after that
-      elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
+      elided = remove_with_following_siblings(doc, predicate: "starts-with(@class, 'protonmail_')")
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -1690,6 +1703,16 @@ module Email
       return false if post.blank?
       num_of_days = SiteSetting.disallow_reply_by_email_after_days
       num_of_days > 0 && post.created_at < num_of_days.days.ago
+    end
+
+    private
+
+    def remove_with_following_siblings(doc, predicate:, standalone_predicate: nil)
+      matches = "descendant-or-self::*[#{predicate}]"
+      first_matches = "#{matches}[not(preceding-sibling::*[#{predicate}][1])]"
+      query = "#{matches} | #{first_matches}/following-sibling::*"
+      query += " | descendant-or-self::*[#{standalone_predicate}]" if standalone_predicate
+      doc.children.xpath(query).remove
     end
   end
 end
