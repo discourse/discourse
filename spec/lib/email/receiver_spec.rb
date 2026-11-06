@@ -111,6 +111,11 @@ RSpec.describe Email::Receiver do
     expect { process(:inactive_sender) }.to raise_error(Email::Receiver::InactiveUserError)
   end
 
+  it "raises a SuspendedUserError when the sender is suspended" do
+    Fabricate(:user, email: "silenced@bar.com", suspended_till: 1.year.from_now)
+    expect { process(:silenced_sender) }.to raise_error(Email::Receiver::SuspendedUserError)
+  end
+
   it "raises a SilencedUserError when the sender has been silenced" do
     Fabricate(:user, email: "silenced@bar.com", silenced_till: 1.year.from_now)
     expect { process(:silenced_sender) }.to raise_error(Email::Receiver::SilencedUserError)

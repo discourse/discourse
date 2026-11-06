@@ -335,6 +335,49 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to eq("email has been received and is queued for processing")
       end
 
+      it "rejects group email from a suspended sender and accepts it after suspension expires" do
+        SiteSetting.email_in = true
+        group = Fabricate(:group, incoming_email: "inbox@example.com")
+        user.update!(suspended_till: 1.day.from_now)
+        Jobs.run_immediately!
+
+        sender_email = user.email
+        mail =
+          Mail.new do
+            from sender_email
+            to group.incoming_email
+            subject "Message to the group inbox"
+            body "This message should not bypass a posting suspension."
+          end
+        mail.message_id = "suspended-sender@example.com"
+
+        expect do
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(mail.to_s),
+               }
+        end.not_to change { Post.where(user: user).count }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("email has been received and is queued for processing")
+        incoming = IncomingEmail.find_by!(message_id: mail.message_id)
+        expect(incoming.error).to eq("Email::Receiver::SuspendedUserError")
+        expect(incoming.rejection_message).to include("suspended")
+
+        user.update!(suspended_till: 1.minute.ago)
+        mail.message_id = "expired-suspension@example.com"
+        expect do
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(mail.to_s),
+               }
+        end.to change { Post.where(user: user).count }.by(1)
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("email has been received and is queued for processing")
+        topic = Post.where(user: user).last.topic
+        expect(topic.allowed_groups).to contain_exactly(group)
+      end
+
       it "normalizes invalid UTF-8 bytes before enqueueing" do
         post "/admin/email/handle_mail.json",
              params: {
