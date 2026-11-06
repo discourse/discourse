@@ -6455,6 +6455,39 @@ RSpec.describe UsersController do
     end
 
     context "when searching usernames" do
+      it "does not expose members of hidden category moderation groups through can_review" do
+        SiteSetting.enable_category_group_moderation = true
+        hidden_category_mod = Fabricate(:user)
+        ordinary_user = Fabricate(:user)
+        group_owner = Fabricate(:user)
+        hidden_group =
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:owners],
+            members_visibility_level: Group.visibility_levels[:owners],
+          )
+        hidden_group.add(hidden_category_mod)
+        hidden_group.add_owner(group_owner)
+        Fabricate(:category_moderation_group, group: hidden_group)
+        params = {
+          usernames: [hidden_category_mod.username, ordinary_user.username].join(","),
+          can_review: true,
+        }
+
+        get "/u/search/users.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"]).to be_empty
+
+        sign_in(group_owner)
+        get "/u/search/users.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["users"].map { |found_user| found_user["username"] },
+        ).to contain_exactly(hidden_category_mod.username)
+      end
+
       it "searches when provided a list of usernames" do
         users = Fabricate.times(3, :user)
 
