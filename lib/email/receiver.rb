@@ -561,18 +561,18 @@ module Email
       elided =
         remove_with_following_siblings(
           doc,
-          selector: "#Signature, #divRplyFwdMsg",
-          additional_selector: "hr",
+          predicate: "@id='Signature' or @id='divRplyFwdMsg'",
+          standalone_predicate: "local-name()='hr'",
         )
-      to_markdown(doc.to_html, elided)
+      to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
       signature_start = ".WordSection1 > :not(p):not(ul):not(ol):first-of-type"
-      elided = remove_with_following_siblings(doc, selector: signature_start)
-      to_markdown(doc.at(".WordSection1").to_html, elided)
+      elided = doc.css("#{signature_start}, #{signature_start} ~ *").remove
+      to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
     end
 
     def extract_from_exchange(doc)
@@ -597,12 +597,14 @@ module Email
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
       elided =
-        remove_with_following_siblings(
-          doc,
-          selector: "#AppleMailSignature:last-of-type",
-          include_match: false,
-        )
-      to_markdown(doc.to_html, elided)
+        doc
+          .children
+          .xpath(
+            ".//*[@id='AppleMailSignature'][position()=last()]/following-sibling::* | " \
+              "self::*[@id='AppleMailSignature'][not(preceding-sibling::*[@id='AppleMailSignature'][1])]/following-sibling::*",
+          )
+          .remove
+      to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_mozilla(doc)
@@ -611,15 +613,17 @@ module Email
       elided =
         remove_with_following_siblings(
           doc,
-          selector: "*[class^='moz-cite'], *[class^='moz-signature'], *[class^='moz-forward']",
+          predicate:
+            "starts-with(@class, 'moz-cite') or " \
+              "starts-with(@class, 'moz-signature') or starts-with(@class, 'moz-forward')",
         )
-      to_markdown(doc.to_html, elided)
+      to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_protonmail(doc)
       # Removes anything that has a class starting with "protonmail_" and everything after that
-      elided = remove_with_following_siblings(doc, selector: "*[class^='protonmail_']")
-      to_markdown(doc.to_html, elided)
+      elided = remove_with_following_siblings(doc, predicate: "starts-with(@class, 'protonmail_')")
+      to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_zimbra(doc)
@@ -1711,37 +1715,12 @@ module Email
 
     private
 
-    def remove_with_following_siblings(
-      doc,
-      selector:,
-      additional_selector: nil,
-      include_match: true
-    )
-      matches = doc.css(selector).to_set
-      additional = additional_selector ? doc.css(additional_selector).to_set : Set.new
-      elided_parents = Set.new
-      elided = Set.new
-      roots = doc.element_children
-      root_siblings_added = false
-
-      roots.each_with_index do |root, index|
-        [root, *root.css("*")].each do |node|
-          matched = matches.include?(node)
-          if elided_parents.include?(node.parent) || additional.include?(node) ||
-               (include_match && matched)
-            elided.add(node)
-          end
-          elided_parents.add(node.parent) if matched
-        end
-
-        if !root_siblings_added && matches.include?(root)
-          roots.drop(index + 1).each { |sibling| elided.add(sibling) }
-          root_siblings_added = true
-        end
-      end
-
-      elided.each(&:remove)
-      elided.map(&:to_html).join
+    def remove_with_following_siblings(doc, predicate:, standalone_predicate: nil)
+      matches = "descendant-or-self::*[#{predicate}]"
+      first_matches = "#{matches}[not(preceding-sibling::*[#{predicate}][1])]"
+      query = "#{matches} | #{first_matches}/following-sibling::*"
+      query += " | descendant-or-self::*[#{standalone_predicate}]" if standalone_predicate
+      doc.children.xpath(query).remove
     end
   end
 end
