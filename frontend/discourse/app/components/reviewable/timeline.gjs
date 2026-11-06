@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, get, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -32,17 +31,8 @@ const HISTORY_UNCLAIMED_ID = 4;
 export default class ReviewableTimeline extends Component {
   @service currentUser;
 
-  /**
-   * Array of notes associated with the reviewable
-   *
-   * @type {Array<ReviewableNote>}
-   */
-  @tracked reviewableNotes = [];
-
-  constructor() {
-    super(...arguments);
-
-    this.reviewableNotes = this.args.reviewable.reviewable_notes || [];
+  get reviewableNotes() {
+    return get(this.args.reviewable, "reviewable_notes") || [];
   }
 
   /**
@@ -211,8 +201,10 @@ export default class ReviewableTimeline extends Component {
       noteData.user = this.currentUser;
     }
 
-    this.reviewableNotes = [...this.reviewableNotes, noteData];
-    this.args.reviewable.reviewable_notes = this.reviewableNotes;
+    set(this.args.reviewable, "reviewable_notes", [
+      ...this.reviewableNotes,
+      noteData,
+    ]);
   }
 
   /**
@@ -222,14 +214,17 @@ export default class ReviewableTimeline extends Component {
    */
   @action
   async deleteNote(noteId) {
+    const { reviewable } = this.args;
+
     try {
-      await ajax(`/review/${this.args.reviewable.id}/notes/${noteId}`, {
+      await ajax(`/review/${reviewable.id}/notes/${noteId}`, {
         type: "DELETE",
       });
 
-      // Remove the note from the local array
-      this.reviewableNotes = this.reviewableNotes.filter(
-        (note) => note.id !== noteId
+      set(
+        reviewable,
+        "reviewable_notes",
+        get(reviewable, "reviewable_notes").filter((note) => note.id !== noteId)
       );
     } catch (error) {
       popupAjaxError(error);
