@@ -2429,6 +2429,16 @@ RSpec.describe TopicsController do
         expect(topic.reload.category_id).not_to eq(category.id)
       end
 
+      it "does not let a moderator move a topic to a category they cannot see" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        sign_in(moderator)
+
+        put "/t/#{topic.id}.json", params: { category_id: private_category.id }
+
+        expect(response.status).to eq(403)
+        expect(topic.reload.category_id).not_to eq(private_category.id)
+      end
+
       context "when updating shared drafts" do
         fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
         fab!(:shared_draft) do
@@ -6905,6 +6915,23 @@ RSpec.describe TopicsController do
         sign_in(moderator)
         put "/t/#{topic.id}/convert-topic/public.json"
         expect(response).to be_forbidden
+      end
+
+      it "does not let a moderator convert into a category they cannot see" do
+        own_message = Fabricate(:private_message_topic, user: moderator)
+        Fabricate(:post, user: moderator, topic: own_message)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        sign_in(moderator)
+        put "/t/#{own_message.id}/convert-topic/public.json?category_id=#{private_category.id}"
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed"),
+        )
+        own_message.reload
+        expect(own_message.archetype).to eq(Archetype.private_message)
+        expect(own_message.category_id).to be_nil
       end
 
       context "with success" do
