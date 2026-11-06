@@ -268,6 +268,24 @@ RSpec.describe Email::Receiver do
       ).and not_change(Topic, :count)
     end
 
+    it "bounds the body of posts created without validations" do
+      SiteSetting.max_post_length = 100
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: Someone <someone@example.com>
+        To: team@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      post = Email::Receiver.new(mail).process!
+
+      expect(post.raw.length).to be <= SiteSetting.max_post_length
+    end
+
     context "with reply_by_email configured" do
       before { configure_reply_by_email }
 
@@ -846,6 +864,47 @@ RSpec.describe Email::Receiver do
 
     it "raises a StrangersNotAllowedError when 'email_in_allow_strangers' is disabled" do
       expect { process(:new_user) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
+    end
+
+    it "bounds the body of posts from staged users" do
+      SiteSetting.max_post_length = 100
+      category.update_columns(email_in_allow_strangers: true)
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: Someone <someone@example.com>
+        To: category@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      post = Email::Receiver.new(mail).process!
+
+      expect(post.raw.length).to be <= SiteSetting.max_post_length
+    end
+
+    it "rejects oversized posts from users that require validation" do
+      SiteSetting.max_post_length = 100
+      Fabricate(
+        :user,
+        email: "existing@bar.com",
+        trust_level: TrustLevel[2],
+        refresh_auto_groups: true,
+      )
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: existing@bar.com
+        To: category@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      expect { Email::Receiver.new(mail).process! }.to raise_error(Email::Receiver::InvalidPost)
     end
 
     it "raises an InsufficientTrustLevelError when user's trust level isn't enough" do
