@@ -39,19 +39,18 @@ module DiscourseAi
 
       def run_test(val)
         llm = DiscourseAi::Completions::Llm.proxy(val)
-        cancel_manager = DiscourseAi::Completions::CancelManager.new
-        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + TEST_TIMEOUT_SECONDS
-        cancel_manager.start_monitor { Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline }
+        cancel_manager = DiscourseAi::Completions::CancelManager.new(timeout: TEST_TIMEOUT_SECONDS)
+        cancel_manager.start_monitor { cancel_manager.expired? }
 
         @last_failed_mode = :non_streaming
-        response = probe(llm, cancel_manager)
-        raise timeout_error if cancel_manager.cancelled?
+        response = within_deadline(cancel_manager) { probe(llm, cancel_manager) }
         raise empty_response_error if response.blank?
 
         @last_failed_mode = :streaming
         streamed = +""
-        probe(llm, cancel_manager) { |partial| streamed << partial.to_s if partial.is_a?(String) }
-        raise timeout_error if cancel_manager.cancelled?
+        within_deadline(cancel_manager) do
+          probe(llm, cancel_manager) { |partial| streamed << partial.to_s if partial.is_a?(String) }
+        end
         raise empty_response_error if streamed.blank?
 
         @last_failed_mode = nil
@@ -109,6 +108,17 @@ module DiscourseAi
           cancel_manager: cancel_manager,
           &blk
         )
+      end
+
+      # A transport timeout can fire just before the monitor cancels, surfacing as a
+      # network error instead, so judge by the deadline rather than the error type.
+      def within_deadline(cancel_manager)
+        result = yield
+        raise timeout_error if cancel_manager.cancelled?
+        result
+      rescue StandardError => e
+        raise timeout_error if cancel_manager.expired?
+        raise
       end
 
       def timeout_error
