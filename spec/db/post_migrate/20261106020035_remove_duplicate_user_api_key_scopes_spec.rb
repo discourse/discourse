@@ -39,4 +39,28 @@ RSpec.describe RemoveDuplicateUserApiKeyScopes do
       other_key_read.id,
     )
   end
+
+  it "keeps one row per scope of a client" do
+    client = user_api_key.client
+    other_client = other_user_api_key.client
+
+    read = Fabricate(:user_api_key_client_scope, user_api_key_client_id: client.id, name: "read")
+    Fabricate(:user_api_key_client_scope, user_api_key_client_id: client.id, name: "read")
+    notifications =
+      Fabricate(
+        :user_api_key_client_scope,
+        user_api_key_client_id: client.id,
+        name: "notifications",
+      )
+    other_client_read =
+      Fabricate(:user_api_key_client_scope, user_api_key_client_id: other_client.id, name: "read")
+
+    described_class.new.up
+
+    expect(UserApiKeyClientScope.pluck(:id)).to contain_exactly(
+      read.id,
+      notifications.id,
+      other_client_read.id,
+    )
+  end
 end
