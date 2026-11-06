@@ -18,7 +18,7 @@ module DesignWizard
       {
         id: "places",
         setting: :places_in_wizard,
-        name: "Go Places",
+        name: "Places",
         remote_url: "https://github.com/nolosb/discourse-places-theme",
         default_homepage: "latest",
         palettes_from: "horizon",

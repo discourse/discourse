@@ -168,7 +168,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
         expect(response.parsed_body["themes"].find { |theme| theme["id"] == "places" }).to include(
           "default_homepage" => "latest",
-          "name" => "Go Places",
+          "name" => "Places",
           "remote_url" => "https://github.com/nolosb/discourse-places-theme",
           "description" => I18n.t("design_wizard.themes.places.description"),
           "palette_pairs" => [],
@@ -177,7 +177,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
       end
 
-      it "returns installed Go Places as a selectable theme next to an offered Concord" do
+      it "returns installed Places as a selectable theme next to an offered Concord" do
         SiteSetting.concord_in_wizard = true
         SiteSetting.places_in_wizard = true
         places_theme =
