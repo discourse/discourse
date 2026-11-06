@@ -4141,6 +4141,47 @@ RSpec.describe SessionController do
           expect(json["error_type"]).to eq("rate_limit")
         end
       end
+
+      it "does not count wrong-password attempts toward the per-account second factor rate limit" do
+        EmailToken.confirm(email_token.token)
+        user_second_factor = Fabricate(:user_second_factor_totp, user: user)
+
+        wrong_password_params = {
+          login: user.username,
+          password: "wrongpassword",
+          second_factor_token: "000000",
+          second_factor_method: UserSecondFactor.methods[:totp],
+        }
+
+        6.times do
+          post "/session.json", params: wrong_password_params, env: { REMOTE_ADDR: "1.2.3.4" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t("login.incorrect_username_email_or_password"),
+          )
+        end
+
+        post "/session.json", params: wrong_password_params, env: { REMOTE_ADDR: "1.2.3.4" }
+
+        expect(response.status).to eq(429)
+        expect(response.parsed_body["error_type"]).to eq("rate_limit")
+
+        post "/session.json",
+             params: {
+               login: user.username,
+               password: "myawesomepassword",
+               second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+               second_factor_method: UserSecondFactor.methods[:totp],
+             },
+             env: {
+               REMOTE_ADDR: "5.6.7.8",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).not_to be_present
+        expect(session[:current_user_id]).to eq(user.id)
+      end
     end
   end
 
