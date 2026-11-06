@@ -2137,6 +2137,7 @@ class User < ActiveRecord::Base
     if @raw_password
       # Association in model may be out-of-sync
       UserAuthToken.where(user_id: id).destroy_all
+      PushNotificationPusher.clear_subscriptions(self)
 
       email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
 
