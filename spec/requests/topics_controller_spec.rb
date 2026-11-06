@@ -7000,6 +7000,46 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    describe "converting a system message PM" do
+      fab!(:victim, :user)
+      fab!(:system_pm) { Fabricate(:system_message_topic, user: victim) }
+      fab!(:secret_post) do
+        Fabricate(
+          :post,
+          topic: system_pm,
+          user: Discourse.system_user,
+          raw: "Your data export is ready: upload://topsecretexport.zip",
+        )
+      end
+
+      it "allows a participant moderator to convert it to a public topic" do
+        system_pm.topic_allowed_users.create!(user: moderator)
+        sign_in(moderator)
+
+        put "/t/#{system_pm.id}/convert-topic/public.json", params: { category_id: category.id }
+
+        expect(response.status).to eq(200)
+        expect(system_pm.reload.archetype).to eq(Archetype.default)
+        expect(system_pm.category_id).to eq(category.id)
+      end
+
+      it "does not let a non-participant moderator publish and leak it" do
+        sign_in(moderator)
+
+        get "/t/#{system_pm.id}.json"
+        expect(response.status).to eq(404)
+
+        put "/t/#{system_pm.id}/convert-topic/public.json?category_id=#{category.id}"
+        expect(response).to be_forbidden
+        expect(system_pm.reload.archetype).to eq(Archetype.private_message)
+
+        sign_out
+        get "/t/#{system_pm.id}.json"
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include("topsecretexport.zip")
+      end
+    end
   end
 
   describe "#timings" do

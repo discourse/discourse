@@ -467,7 +467,7 @@ module PostGuardian
     end
 
     is_pm = !!topic&.private_message?
-    return false if is_pm && topic.subtype != "system_message" && !can_see_topic?(topic)
+    return false if is_pm && !can_see_topic?(topic)
     return false if !is_pm && SpamRule::AutoSilence.prevent_posting?(@user)
 
     !topic || !topic.category ||
