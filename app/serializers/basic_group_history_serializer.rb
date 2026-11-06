@@ -56,11 +56,11 @@ class BasicGroupHistorySerializer < ApplicationSerializer
     return value if value.blank? || scope&.is_admin?
 
     allowed_subjects =
-      if scope&.can_admin_group?(object.group)
+      if scope&.can_admin_group?(object.group, is_group_owner: @options[:is_group_owner])
         GROUP_MANAGING_MODERATOR_ALLOWED_SUBJECTS
       elsif scope&.is_staff?
         STAFF_ALLOWED_SUBJECTS
-      elsif scope&.can_edit_group?(object.group)
+      elsif scope&.can_edit_group?(object.group, is_group_owner: @options[:is_group_owner])
         GROUP_OWNER_ALLOWED_SUBJECTS
       else
         []
