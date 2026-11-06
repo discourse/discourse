@@ -5,10 +5,7 @@ RSpec.describe Admin::DashboardController do
   fab!(:moderator)
   fab!(:user)
 
-  before do
-    AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
-    Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
-  end
+  before { Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true) }
 
   def configure_dashboard_sections(visible_ids)
     hidden = AdminDashboardSectionConfiguration::KNOWN_SECTIONS - visible_ids
@@ -40,64 +37,6 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#index" do
-    shared_examples "version info present" do
-      before { SiteSetting.dashboard_improvements = false }
-
-      it "returns discourse version info" do
-        get "/admin/dashboard.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["version_check"]).to be_present
-      end
-    end
-
-    shared_examples "version info absent" do
-      before do
-        SiteSetting.dashboard_improvements = false
-        SiteSetting.version_checks = false
-      end
-
-      it "does not return discourse version info" do
-        get "/admin/dashboard.json"
-
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["version_check"]).not_to be_present
-      end
-    end
-
-    context "when logged in as an admin" do
-      before { sign_in(admin) }
-
-      context "when version checking is enabled" do
-        before { SiteSetting.version_checks = true }
-
-        include_examples "version info present"
-      end
-
-      context "when version checking is disabled" do
-        before { SiteSetting.version_checks = false }
-
-        include_examples "version info absent"
-      end
-    end
-
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
-
-      context "when version checking is enabled" do
-        before { SiteSetting.version_checks = true }
-
-        include_examples "version info present"
-      end
-
-      context "when version checking is disabled" do
-        before { SiteSetting.version_checks = false }
-
-        include_examples "version info absent"
-      end
-    end
-
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
 
@@ -120,7 +59,6 @@ RSpec.describe Admin::DashboardController do
 
     describe "sections payload" do
       before do
-        SiteSetting.dashboard_improvements = true
         Discourse.cache.clear
         sign_in(admin)
       end
@@ -290,11 +228,6 @@ RSpec.describe Admin::DashboardController do
           normalized_referrer = "sensitive-referrer.example"
           entry_url = "/sensitive-entry"
           event_date = Time.zone.local(2026, 5, 2, 12)
-          UpcomingChangeEvent.create!(
-            upcoming_change_name: "dashboard_improvements",
-            event_type: :manual_opt_in,
-            created_at: Time.zone.local(2026, 5, 1, 9),
-          )
 
           2.times do
             Fabricate(
@@ -377,39 +310,6 @@ RSpec.describe Admin::DashboardController do
             "content_gaps" => [],
           )
         end
-      end
-
-      it "is omitted when enabled for no one" do
-        SiteSetting.dashboard_improvements = false
-
-        get "/admin/dashboard.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_nil
-        expect(response.parsed_body["configuration"]).to be_nil
-      end
-
-      it "is omitted when enabled for a group the admin is not in" do
-        group = Fabricate(:group)
-        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
-
-        get "/admin/dashboard.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_nil
-        expect(response.parsed_body["configuration"]).to be_nil
-      end
-
-      it "is returned when enabled for the admin's group" do
-        group = Fabricate(:group)
-        group.add(admin)
-        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
-
-        get "/admin/dashboard.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_present
-        expect(response.parsed_body["configuration"]).to be_present
       end
 
       it "falls back to default dates when date params are malformed" do
@@ -559,24 +459,10 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(200)
         expect(response.parsed_body).not_to have_key("version_check")
       end
-
-      it "includes version_check when the admin is not included" do
-        group = Fabricate(:group)
-        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
-        SiteSetting.version_checks = true
-
-        get "/admin/dashboard.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body).to have_key("version_check")
-      end
     end
 
     describe "problems payload" do
-      before do
-        SiteSetting.dashboard_improvements = true
-        Discourse.cache.clear
-      end
+      before { Discourse.cache.clear }
 
       fab!(:starttls_problem) do
         Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
@@ -636,10 +522,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     describe "configuration payload" do
-      before do
-        SiteSetting.dashboard_improvements = true
-        Discourse.cache.clear
-      end
+      before { Discourse.cache.clear }
 
       it "is included for admins and lists every known section with a visibility flag" do
         configure_dashboard_sections(%w[highlights reports])
@@ -691,22 +574,10 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(200)
         expect(response.parsed_body).not_to have_key("configuration")
       end
-
-      it "is omitted when the admin is not included" do
-        group = Fabricate(:group)
-        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
-        sign_in(admin)
-
-        get "/admin/dashboard.json"
-
-        expect(response.parsed_body).not_to have_key("configuration")
-      end
     end
   end
 
   describe "#update_configuration" do
-    before { SiteSetting.dashboard_improvements = true }
-
     it "persists the configuration and returns 204 for admins" do
       sign_in(admin)
 
@@ -826,8 +697,6 @@ RSpec.describe Admin::DashboardController do
     fab!(:category)
     fab!(:category_2, :category)
     fab!(:category_3, :category)
-
-    before { SiteSetting.dashboard_improvements = true }
 
     after do
       DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
@@ -1434,7 +1303,6 @@ RSpec.describe Admin::DashboardController do
 
     before do
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
-      SiteSetting.dashboard_improvements = true
       SiteSetting.improved_crawler_detection = true
       SiteSetting.use_legacy_pageviews = false
       Discourse.stubs(:current_hostname).returns("test.localhost")
@@ -2061,21 +1929,6 @@ RSpec.describe Admin::DashboardController do
     end
 
     it "does not allow anonymous users to read traffic details" do
-      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
-
-      expect(status: response.status, body: response.parsed_body).to eq(
-        status: 404,
-        body: {
-          "errors" => ["The requested URL or resource could not be found."],
-          "error_type" => "not_found",
-        },
-      )
-    end
-
-    it "does not allow access while dashboard improvements are disabled" do
-      sign_in(admin)
-      SiteSetting.dashboard_improvements = false
-
       get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
       expect(status: response.status, body: response.parsed_body).to eq(

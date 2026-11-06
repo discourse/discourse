@@ -169,6 +169,7 @@ lt:
         disabled: "(uždrausta)"
         groups: "Grupės:"
         no_groups: "Nieko"
+        classification_model: "Modelis:"
         edit: "Nustatymai"
         expand_list:
           one: "(%{count} daugiau)"
@@ -187,6 +188,11 @@ lt:
         filters:
           all: "Visi"
           reset: "Atstatyti"
+        sentiment:
+          emotion: "Emocija"
+          enabled: "Įgalinti"
+          setting_groups:
+            emotion: "Emocija"
         summarization:
           setting_groups:
             settings: "Pagrindiniai nustatymai"
@@ -303,6 +309,8 @@ lt:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"
         select_llm: "Pasirinkite teisės magistro laipsnį (LLM)"
+        no_llm_selected: "Nėra"
+        no_decision_model_selected: "Nėra"
         custom_instructions: "Individualūs nurodymai"
         custom_instructions_help: "Jūsų svetainei pritaikytos instrukcijos, padedančios dirbtiniam intelektui atpažinti šlamštą, pvz., „Aktyviau nuskaitykite įrašus ne anglų kalba“."
         last_seven_days: "Paskutinės 7 dienos"

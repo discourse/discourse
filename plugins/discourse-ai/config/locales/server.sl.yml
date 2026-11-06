@@ -55,6 +55,10 @@ sl:
         time: "Čas"
       tool_help:
         create_category: "Ustvari novo kategorijo"
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Glava"
     reviewables:
       ai_tool_action:
         approve:

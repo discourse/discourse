@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // One step above the fixed site header so a widget dragged to the top edge
 // stays visible and grabbable, while everything that already outranked the
 // header (mobile composer, fullscreen layers, modals) keeps outranking the
@@ -283,6 +285,7 @@ html.discourse-touch .live-call-widget {
   // and the control bar sits on the bottom row, level with the chat panel's
   // composer next door.
   &__stage {
+    position: relative;
     flex: 1;
     min-height: 0;
     display: flex;
@@ -676,6 +679,135 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   }
 }
 
+// Each item spans the overlay's full height with its content pinned to the
+// bottom, so a percentage translate rises relative to the overlay — keeping
+// the animation on the compositor regardless of how tall the stage is.
+.live-reactions {
+  position: absolute;
+  inset: 0 0 var(--live-reactions-bottom, 4rem);
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+
+  .live-call-widget & {
+    --live-reactions-bottom: 3.5rem;
+  }
+
+  &__item {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: var(--live-reaction-offset, 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    row-gap: 0.15rem;
+    animation: live-reaction-float 4s ease-out forwards;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation-name: live-reaction-fade;
+    }
+  }
+
+  // Outranks the core img.emoji sizing.
+  &__emoji.emoji {
+    width: 2.25rem;
+    height: 2.25rem;
+
+    .live-call-widget & {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &__username {
+    max-width: 8rem;
+    padding: 0 0.4em;
+    overflow: hidden;
+    border-radius: var(--d-border-radius);
+    background: rgb(0 0 0 / 55%);
+    color: #fff;
+    font-size: var(--font-down-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@keyframes live-reaction-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate(-50%, -8%) scale(1);
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(1);
+  }
+}
+
+@keyframes live-reaction-fade {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+
+  15%,
+  75% {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+// Same proportions as the post reactions picker (1.2em emoji, 0.25em
+// spacing, 1.5x hover), scaled up to our larger emoji.
+.live-reaction-picker {
+  --live-reaction-size: 1.75rem;
+  --live-reaction-spacing: calc(var(--live-reaction-size) * 0.25 / 1.2);
+
+  // So a full seven-column row still fits a phone.
+  @include viewport.until(sm) {
+    --live-reaction-size: 1.5rem;
+  }
+  display: grid;
+  grid-template-columns: repeat(var(--live-reaction-columns, 7), 1fr);
+  gap: var(--live-reaction-spacing);
+  padding: var(--live-reaction-spacing);
+
+  &__emoji,
+  &__more {
+    padding: var(--live-reaction-spacing);
+    margin: var(--live-reaction-spacing);
+    border-radius: var(--d-border-radius);
+
+    .emoji,
+    .d-icon {
+      width: var(--live-reaction-size);
+      height: var(--live-reaction-size);
+    }
+  }
+
+  // Scales the button, not the image: hovering swaps in the animated image,
+  // which would otherwise skip the transition.
+  &__emoji {
+    transition: transform 0.1s ease-out;
+
+    .discourse-no-touch &:hover,
+    &:focus-visible {
+      transform: scale(1.5);
+    }
+  }
+}
+
 @keyframes live-ns-badge-pulse {
   50% {
     opacity: 0.4;
@@ -1037,4 +1169,34 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     transform: scale(1.15);
     opacity: 1;
   }
+}
+
+// Tiles carry per-participant view-transition names (see followLayout in
+// LiveRoomPage); these classes time every tile's move together.
+.live-room-page .live-video-tile {
+  view-transition-class: live-tile;
+}
+
+.live-room-page__presentation-main .live-video-tile {
+  view-transition-class: live-tile live-stage-tile;
+}
+
+::view-transition-group(*.live-tile) {
+  z-index: 2;
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+// The stage tile travels the furthest; keep the other tiles moving over it
+// rather than disappearing underneath.
+::view-transition-group(*.live-stage-tile) {
+  z-index: 1;
+}
+
+// Fill the moving box so the old and new snapshots stay aligned while they
+// crossfade, instead of each keeping its own aspect and ghosting.
+::view-transition-old(*.live-tile),
+::view-transition-new(*.live-tile) {
+  height: 100%;
+  object-fit: cover;
 }

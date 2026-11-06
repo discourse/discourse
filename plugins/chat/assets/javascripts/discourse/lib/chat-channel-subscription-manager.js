@@ -13,11 +13,12 @@ export default class ChatChannelSubscriptionManager {
 
   @tracked channel;
 
-  constructor(context, channel, { onNewMessage } = {}) {
+  constructor(context, channel, { onNewMessage, onRemoveMessage } = {}) {
     setOwner(this, getOwner(context));
 
     this.channel = channel;
     this.onNewMessage = onNewMessage;
+    this.onRemoveMessage = onRemoveMessage;
 
     this.messageBus.subscribe(
       this.messageBusChannel,
@@ -199,6 +200,7 @@ export default class ChatChannelSubscriptionManager {
       targetMsg.deletedById = data.deleted_by_id;
       targetMsg.expanded = false;
     } else {
+      this.onRemoveMessage?.(targetMsg);
       this.messagesManager.removeMessage(targetMsg);
     }
 

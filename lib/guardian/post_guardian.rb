@@ -25,6 +25,7 @@ module PostGuardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
+    return false if action_key == :illegal && SiteSetting.dsa_reporting_enabled
     return false if !(can_see_post.nil? && can_see_post?(post)) && !can_see_post
 
     # no warnings except for staff
@@ -157,6 +158,8 @@ module PostGuardian
     return false if Discourse.static_doc_topic_ids.include?(post.topic_id) && !is_admin?
 
     return true if is_admin?
+
+    post.topic ||= Topic.with_deleted.find_by(id: post.topic_id) if post.topic_id
 
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
@@ -464,7 +467,7 @@ module PostGuardian
     end
 
     is_pm = !!topic&.private_message?
-    return false if is_pm && topic.subtype != "system_message" && !can_see_topic?(topic)
+    return false if is_pm && !can_see_topic?(topic)
     return false if !is_pm && SpamRule::AutoSilence.prevent_posting?(@user)
 
     !topic || !topic.category ||

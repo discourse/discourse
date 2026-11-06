@@ -140,6 +140,17 @@ module DiscourseAi
           details
         end
 
+        # Used instead of approval_details when they are longer than an approval
+        # surface allows, such as a chat message. Tools with large details can
+        # override this with a compact version of the same action.
+        def compact_approval_details(max_length:)
+          notice = I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened")
+          available = max_length - notice.length - 2
+          return notice.truncate(max_length) if available <= 0
+
+          "#{notice}\n\n#{approval_details.to_s.truncate(available)}"
+        end
+
         def approval_question
           I18n.t("discourse_ai.ai_bot.chat_tool_approval.question")
         end

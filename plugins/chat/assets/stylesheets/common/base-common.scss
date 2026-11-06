@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --message-left-width: 42px;
   --full-page-border-radius: 12px;
@@ -94,22 +96,18 @@ html.ios-device.has-full-page-chat body #main-outlet {
 
 .header-dropdown-toggle.chat-header-icon .icon {
   .chat-channel-unread-indicator {
+    // match the urgent badge's box (1em height + 0.2em padding top/bottom)
+    --d-new-indicator-size: 1.4em;
     border: 2px solid var(--header_background);
     position: absolute;
-    top: 0;
-    right: 2px;
-
-    @include chat-unread-indicator {
-      width: 14px;
-      height: 14px;
-    }
+    top: var(--d-header-badge-top);
+    right: var(--d-header-badge-right);
+    z-index: 1;
 
     &.-urgent {
       display: flex;
       align-items: center;
       justify-content: center;
-      top: -1px;
-      right: 0;
     }
   }
 
@@ -223,6 +221,39 @@ body.has-full-page-chat {
   .chat-messages-scroller {
     box-sizing: border-box;
     height: 100%;
+  }
+}
+
+// a zero-height region right above the message list: whatever it holds flows
+// in normal order below the status, filter and pinned bars, and overflows
+// downward over the list, which keeps its full height underneath
+.chat-channel__overlays {
+  position: relative;
+
+  // what the notices stacked at before they moved in here
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 0px;
+  min-height: 0;
+
+  .admin-onboarding-banner {
+    padding: var(--space-4) var(--space-6);
+    pointer-events: none;
+
+    @include viewport.until(sm) {
+      padding: var(--space-2);
+    }
+  }
+
+  .admin-onboarding-banner__wrap {
+    pointer-events: auto;
+    background: var(--secondary);
+    transition: box-shadow 150ms ease;
+  }
+
+  &.--over-content .admin-onboarding-banner__wrap {
+    box-shadow: var(--shadow-card);
   }
 }
 

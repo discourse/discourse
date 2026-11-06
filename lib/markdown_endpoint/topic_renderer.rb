@@ -4,6 +4,12 @@ require "digest"
 
 module MarkdownEndpoint
   class TopicRenderer
+    # Edits create new cache keys, so bound how long obsolete entries linger.
+    # Recent posts are more likely to be fetched again, so cache them for longer.
+    CACHE_TTL = 1.hour
+    RECENT_CACHE_TTL = 1.day
+    RECENT_POST_WINDOW = 1.month
+
     def initialize(topic_view, guardian:, post_number: nil, query: {})
       @topic_view = topic_view
       @topic = topic_view.topic
@@ -95,11 +101,36 @@ module MarkdownEndpoint
       )
       lines << metadata.join("\\\n")
       lines.concat(["", "</div>", ""])
-      lines << cached_body(cooked, post_url: post.full_url)
+      if (description = action_description(post)).present?
+        lines.concat([description, ""])
+      end
+      lines << cached_body(cooked, post)
       lines.join("\n")
     end
 
-    def cached_body(cooked, post_url:)
+    def action_description(post)
+      return if post.action_code.blank?
+
+      serializer = PostSerializer.new(post, scope: @guardian, root: false)
+      serializer.topic_view = @topic_view
+      who = serializer.action_code_who
+      description =
+        I18n.t(
+          "js.action_codes.#{serializer.action_code}",
+          who: ERB::Util.html_escape(who.present? ? "@#{who}" : ""),
+          when:
+            ERB::Util.html_escape(
+              I18n.t("js.dates.wrap_on", date: @timestamp.text(post.created_at)),
+            ),
+          path: ERB::Util.html_escape(serializer.action_code_path || @topic.relative_url),
+          default: "",
+        )
+
+      escape_text(Nokogiri::HTML5.fragment(description).text.strip)
+    end
+
+    def cached_body(cooked, post)
+      post_url = post.full_url
       context = [
         CookedProcessor::VERSION,
         Discourse.base_url,
@@ -111,9 +142,13 @@ module MarkdownEndpoint
       digest = Digest::SHA256.hexdigest(context)
       Discourse
         .cache
-        .fetch("markdown-endpoint:cooked:#{digest}", expires_in: 1.week) do
+        .fetch("markdown-endpoint:cooked:#{digest}", expires_in: cache_ttl(post)) do
           CookedProcessor.to_markdown(cooked, post_url:)
         end
+    end
+
+    def cache_ttl(post)
+      post.created_at >= RECENT_POST_WINDOW.ago ? RECENT_CACHE_TTL : CACHE_TTL
     end
 
     def escape_text(text)

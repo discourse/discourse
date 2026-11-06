@@ -25,7 +25,6 @@ import UserAutocompleteResults from "discourse/components/user-autocomplete-resu
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
-import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
@@ -59,13 +58,6 @@ export function addToolbarCallback(func) {
 }
 export function clearToolbarCallbacks() {
   _createCallbacks = [];
-}
-
-export function onToolbarCreate(func) {
-  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
-    id: "discourse.d-editor.on-toolbar-create",
-  });
-  addToolbarCallback(func);
 }
 
 @classNames("d-editor")

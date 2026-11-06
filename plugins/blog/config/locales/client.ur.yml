@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  admin_js:
+    blog:
+      admin:
+        overridden: اپنی مرضی کا
+        insert: شامل
+        preview_home: پہلا صفحہ
+        preview_archive: محفوظ شدہ
+        desktop: ڈیسک ٹاپ
+        mobile: موبائل
+        back_to_themes: تھیمز پر واپسی
+        new_theme_short: نئی تھیم
+        themes: تِھیمز
+        theme_name: تھیم نام
+        edit: ترمیم کریں
+        activate: متحرک
+        preview: جھلک دیکھیں
+        import: درآمد
+        export: برآمد
+        active: فعال
+  js:
+    blog:
+      panel:
+        badge:
+          draft: مسودہ
+        preview: جھلک دیکھیں
+        change:
+          title: عنوان
+          body: متن
+      review:
+        label: عنوان
+        create: رابطہ بنائیں
+        copy: کاپی
+        open: کھولیں
+        status:
+          active: فعال
+          expired: میعاد ختم ہوگئی
+          revoked: منسوخ
+          inactive: غیر فعال
+        closed_on: "%{date} پربند کیا گیا"
+        revoke: منسوخ کریں
+        message: آراء
+      editor_table:
+        edit: ترمیم کریں
+        status: حیثیت
+        replies: جوابات
+      drafts: مسودات
+      preview: جھلک دیکھیں
+      unpublish: اشاعت نہ کریں
+      appearance_link: ظاہری شکل

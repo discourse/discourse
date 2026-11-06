@@ -42,6 +42,11 @@ export default class AdminUserIndexController extends Controller {
   ssoLastPayload = null;
   isLoading = false;
 
+  @computed("model.id")
+  get isBot() {
+    return Number.isInteger(this.model?.id) && this.model.id <= 0;
+  }
+
   @computed("siteSettings.enable_badges")
   get showBadges() {
     return this.siteSettings.enable_badges;
@@ -321,7 +326,12 @@ export default class AdminUserIndexController extends Controller {
 
   @action
   grantModeration() {
-    return this.model.grantModeration();
+    return this.dialog.yesNoConfirm({
+      message: i18n("admin.user.grant_moderation_confirm", {
+        username: this.model.username,
+      }),
+      didConfirm: () => this.model.grantModeration(),
+    });
   }
 
   @action

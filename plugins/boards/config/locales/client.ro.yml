@@ -30,7 +30,10 @@ ro:
           one: "%{count} răspuns"
           few: "%{count} de răspunsuri"
           other: "%{count} răspunsuri"
-        created_by: "Creat de"
+        owners:
+          one: "Deținător"
+          few: "Proprietari"
+          other: "Proprietari"
       manage:
         name: "Nume"
         constraint_categories: "Categorii"

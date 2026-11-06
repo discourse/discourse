@@ -28,8 +28,10 @@ module JsonApiKit
       class_methods do
         include Ordering
 
+        def order(ordering) = adapter.order(self, ordering)
+
         def sort(name, **options)
-          self.declared_sorts = declared_sorts + [Declarations::Sort.for(name, **options)]
+          self.declared_sorts = declared_sorts + [Declarations::Sort.new(name, **options)]
         end
 
         def default_sort(ordering)
@@ -40,10 +42,12 @@ module JsonApiKit
           self.declared_unique_by = columns
         end
 
+        def unique_key = declared_unique_by
+
         def sort_names = declared_sorts.map(&:name)
 
         def sorts
-          Declarations::Sorts.new(declared_sorts, schema:, unique_by: declared_unique_by)
+          Declarations::Sorts.new(declared_sorts)
         end
 
         private
@@ -53,6 +57,7 @@ module JsonApiKit
 
       include Ordering
 
+      delegate :unique_key, to: :class
       delegate :names, to: :sorts, prefix: :sort
 
       def sorts = @sorts ||= self.class.sorts.with(edition.removed_sorts.for(type))

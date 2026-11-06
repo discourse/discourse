@@ -51,13 +51,14 @@ sq:
         status: "Status"
       models:
         event:
-          expired: "Skaduar"
           closed: "Mbyllur"
           status:
             public:
               title: "Publike"
             private:
               title: "Private"
+      recording_modal:
+        save: "Ruani"
       composer:
         url_placeholder: "Shto URL"
         reminder:

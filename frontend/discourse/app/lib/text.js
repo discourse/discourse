@@ -1,8 +1,11 @@
 import { waitForPromise } from "@ember/test-waiters";
 import AllowLister from "pretty-text/allow-lister";
-import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
+import {
+  buildAnimatedEmojiUrl,
+  buildEmojiUrl,
+  performEmojiUnescape,
+} from "pretty-text/emoji";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
-import deprecated from "discourse/lib/deprecated";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
@@ -17,16 +20,6 @@ async function withEngine(name, ...args) {
 
 export async function cook(text, options) {
   return await withEngine("cook", text, options);
-}
-
-// todo drop this function after migrating everything to cook()
-export function cookAsync(text, options) {
-  deprecated("cookAsync() is deprecated, call cook() instead", {
-    since: "3.2.0.beta2",
-    id: "discourse.text.cook-async",
-  });
-
-  return cook(text, options);
 }
 
 // Warm up the engine with a set of options and return a function
@@ -94,6 +87,13 @@ export function emojiUrlFor(code) {
   const opts = emojiOptions();
   if (opts) {
     return buildEmojiUrl(code, opts);
+  }
+}
+
+export function animatedEmojiUrlFor(code) {
+  const opts = emojiOptions();
+  if (opts) {
+    return buildAnimatedEmojiUrl(code, opts);
   }
 }
 

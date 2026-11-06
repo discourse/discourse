@@ -16,7 +16,6 @@ et:
       create_placeholder: "Päringu nimi..."
       ai:
         generate: "Genereeri"
-        optional: "valikuline"
       help:
         label: "Abi"
       schema:
@@ -29,6 +28,7 @@ et:
           null_: "Nulli"
       run: "Käivita"
       delete: "Kustuta"
+      name: "Nimi"
       query_groups: "Rühmad"
       query_tags: "Sildid"
       query_description: "Kirjeldus"

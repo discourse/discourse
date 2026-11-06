@@ -75,6 +75,7 @@ da:
         groups: "Grupper:"
         no_agent: "Ikke indstillet"
         no_groups: "Ingen"
+        classification_model: "Model:"
         edit: "Indstillinger"
         expand_list:
           one: "(%{count} mere)"
@@ -85,6 +86,8 @@ da:
         filters:
           all: "Alle"
           reset: "Nulstil"
+        sentiment:
+          enabled: "Aktiveret"
         search:
           name: "Søg"
         image_caption:
@@ -129,6 +132,8 @@ da:
             other: "%{count} indlæg"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Seneste 7 dage"
         enable: "Aktiver"
         save_button: "Gem ændringer"

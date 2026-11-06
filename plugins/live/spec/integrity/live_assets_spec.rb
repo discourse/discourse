@@ -28,6 +28,7 @@ RSpec.describe "discourse_voice_assets integrity" do
     mediapipe/wasm/
   ]
 
+  # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
   CLIENT_REFERENCED_ASSETS.each do |file|
     it "finds #{file} in the gem's vendor tree" do
       path = DiscourseVoiceAssets.vendor_path(file)
@@ -35,6 +36,7 @@ RSpec.describe "discourse_voice_assets integrity" do
       expect(exists).to be(true), "gem asset missing: #{file}"
     end
   end
+  # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
   it "mounts the gem's vendor tree at the version-stamped public path" do
     link = File.expand_path("../../public/javascripts/#{DiscourseVoiceAssets::VERSION}", __dir__)

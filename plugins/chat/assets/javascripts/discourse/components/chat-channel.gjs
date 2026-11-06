@@ -7,6 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -27,6 +28,7 @@ import { checkMessageTopVisibility } from "discourse/plugins/chat/discourse/lib/
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
+  maintainScrollPosition,
   scrollListToBottom,
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
@@ -76,6 +78,48 @@ export default class ChatChannel extends Component {
   jumpToPinnedMessage = (messageId) => {
     this.highlightOrFetchMessage(messageId, { position: "center" });
   };
+  // the overlays only read as raised while list content runs beneath them
+  elevateOverlays = modifier((element) => {
+    const scroller = element.parentElement.querySelector(
+      ".chat-messages-scroller"
+    );
+    const content = scroller?.querySelector(".chat-messages-container");
+    if (!scroller || !content) {
+      return;
+    }
+
+    // the topmost message, so the loading skeleton and the empty state don't count
+    const update = () => {
+      const card = element.querySelector(".admin-onboarding-banner__wrap");
+      const firstMessage = content.querySelector(".chat-message-container");
+      const covered =
+        !!card &&
+        !!firstMessage &&
+        firstMessage.getBoundingClientRect().top <
+          card.getBoundingClientRect().bottom;
+      element.classList.toggle("--over-content", covered);
+    };
+
+    const resizeObserver = new ResizeObserver(update);
+    resizeObserver.observe(scroller);
+    resizeObserver.observe(content);
+    const observeChildren = () => {
+      for (const child of element.children) {
+        resizeObserver.observe(child);
+      }
+      update();
+    };
+    const mutationObserver = new MutationObserver(observeChildren);
+    mutationObserver.observe(element, { childList: true });
+    observeChildren();
+    scroller.addEventListener("scroll", update, { passive: true });
+
+    return () => {
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+      scroller.removeEventListener("scroll", update);
+    };
+  });
   // real user input flips this, so onScroll drops the pinned-bar tap override
   // only on a scroll the user drove — not the programmatic jump that set it
   #userScrolled = false;
@@ -210,7 +254,11 @@ export default class ChatChannel extends Component {
     this.subscriptionManager = new ChatChannelSubscriptionManager(
       this,
       this.args.channel,
-      { onNewMessage: this.onNewMessage }
+      {
+        onNewMessage: this.onNewMessage,
+        onRemoveMessage: (message) =>
+          this.messagesLoader.releaseMessage(message),
+      }
     );
 
     if (targetMessageId) {
@@ -227,6 +275,7 @@ export default class ChatChannel extends Component {
   @bind
   onNewMessage(message) {
     const isOwnMessage = message.user.id === this.currentUser.id;
+    this.messagesLoader.trackLiveMessage(message);
 
     if (!isOwnMessage) {
       this.chatNewMessageAnnouncer.notify(message, {
@@ -235,12 +284,21 @@ export default class ChatChannel extends Component {
       });
     }
 
+    // the load in flight, or the one that already ran, brings it in
+    if (
+      !this.messagesLoader.fetchedOnce ||
+      this.messagesManager.findMessage(message.id)
+    ) {
+      return;
+    }
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
       shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({
         isAtLiveEdge: this.paneState.isAtLiveEdge,
         isOwnMessage,
       }),
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
       isOwnMessage,
@@ -282,7 +340,7 @@ export default class ChatChannel extends Component {
     this.maybeDebouncedUpdateLastReadMessage();
   }
 
-  async fetchMoreMessages({ direction }, opts = {}) {
+  async fetchMoreMessages({ direction }) {
     if (this.messagesLoader.loading) {
       return;
     }
@@ -292,19 +350,33 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // messages held while newer history was unloaded are part of this page
+    if (direction === FUTURE && !this.messagesLoader.canLoadMoreFuture) {
+      this.paneState.clearPendingMessages();
+    }
+
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const messages = this.processMessages(this.args.channel, result);
     if (!messages.length) {
       return;
     }
 
-    const targetMessageId = this.messagesManager.messages.at(-1).id;
-    this.messagesManager.addMessages(messages);
-
-    if (direction === FUTURE && !opts.noScroll) {
-      this.scrollToMessageId(targetMessageId, {
-        position: "end",
-        forceAuto: true,
-      });
+    if (direction === FUTURE) {
+      maintainScrollPosition(this.scroller, () =>
+        this.messagesManager.addMessages(messages)
+      );
+    } else {
+      this.messagesManager.addMessages(messages);
     }
 
     this.debounceFillPaneAttempt();
@@ -808,7 +880,6 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
     >
       <ChatChannelStatus @channel={{@channel}} />
-      <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
       <ChatChannelFilter
         @channel={{@channel}}
@@ -823,6 +894,11 @@ export default class ChatChannel extends Component {
         @onJumpToMessage={{this.jumpToPinnedMessage}}
         @viewportBottomMessageId={{this.lastVisibleMessageId}}
       />
+
+      <div class="chat-channel__overlays" {{this.elevateOverlays}}>
+        {{yield to="aboveMessages"}}
+        <ChatNotices @channel={{@channel}} />
+      </div>
 
       <ChatMessagesScroller
         @onRegisterScroller={{this.registerScroller}}

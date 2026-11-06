@@ -418,13 +418,13 @@ acceptance("Keyboard Shortcuts Help Modal - Search", function () {
 
   test("alternative key groups don't satisfy tokens across alternatives", async function (assert) {
     await openHelpModal();
-    await fillIn(".filter-input", "ctrl /");
+    await fillIn(".filter-input", "alt /");
 
-    // application.search has alternatives "/" or Ctrl+Alt+F. "ctrl /" must not
-    // match because "ctrl" lives in one alternative and "/" in the other.
+    // application.search has alternatives "/" or Ctrl+Alt+F. "alt /" must not
+    // match because "alt" lives in one alternative and "/" in the other.
     assert
-      .dom(".shortcut-category-application tbody")
-      .doesNotIncludeText(description("application.search"));
+      .dom(".shortcut-category-application")
+      .doesNotExist("tokens don't match across alternative key groups");
   });
 
   test("plugin-registered shortcut with raw 'esc' key matches escape alias", async function (assert) {

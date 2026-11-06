@@ -20,6 +20,7 @@ class CategorySerializer < SiteCategorySerializer
   attributes :locale,
              :read_restricted,
              :available_groups,
+             :permission_groups,
              :allowed_tags,
              :allowed_tag_groups,
              :auto_close_hours,
@@ -67,7 +68,14 @@ class CategorySerializer < SiteCategorySerializer
             .category_groups
             .joins(:group)
             .includes(:group)
-            .merge(Group.visible_groups(scope&.user, "groups.name ASC", include_everyone: true))
+            .merge(
+              Group.visible_groups(
+                scope&.user,
+                "groups.name ASC",
+                include_everyone: true,
+                include_pseudogroups: true,
+              ),
+            )
             .map do |cg|
               {
                 permission_type: cg.permission_type,
@@ -76,7 +84,7 @@ class CategorySerializer < SiteCategorySerializer
               }
             end
 
-        if perms.length == 0 && !object.read_restricted
+        if perms.length == 0 && !object.read_restricted && !object.category_groups.exists?
           perms << {
             permission_type: CategoryGroup.permission_types[:full],
             group_name: Group[:everyone]&.name.presence || :everyone,
@@ -98,6 +106,26 @@ class CategorySerializer < SiteCategorySerializer
 
   def include_available_groups?
     can_edit_category?
+  end
+
+  def include_permission_groups?
+    can_edit_category?
+  end
+
+  def permission_groups
+    # NOTE (martin): When we are moving category permissions fully to use ACLs,
+    # or when the everyone pseudogroup permission UC becomes permanent, we will
+    # need to include anonymous_users
+    Group
+      .visible_groups(
+        scope.user,
+        "groups.name ASC",
+        include_everyone: true,
+        include_pseudogroups: true,
+      )
+      .where.not(id: Group::AUTO_GROUPS[:anonymous_users])
+      .pluck(:id, :name)
+      .map { |id, name| { id: id, name: name } }
   end
 
   def available_groups

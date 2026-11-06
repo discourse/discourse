@@ -26,7 +26,7 @@ RSpec.describe PushNotificationController do
     before { sign_in(user) }
 
     it "rejects missing, blank, and non-string endpoints without storing subscriptions" do
-      [nil, "", " ", "#fragment", 1, false, true, [], {}].each do |endpoint|
+      [nil, "", " ", 1, false, true, [], {}].each do |endpoint|
         2.times do
           post "/push_notifications/subscribe.json",
                params: {
@@ -63,7 +63,7 @@ RSpec.describe PushNotificationController do
 
     it "rejects malformed unsubscribe endpoints without deleting valid subscriptions" do
       existing = Fabricate(:push_subscription, user: user)
-      [nil, "", " ", "#fragment", 1, false, true, [], {}].each do |endpoint|
+      [nil, "", " ", 1, false, true, [], {}].each do |endpoint|
         post "/push_notifications/unsubscribe.json",
              params: {
                subscription: {
@@ -81,10 +81,9 @@ RSpec.describe PushNotificationController do
       end
     end
 
-    it "rejects endpoints exceeding the index size budget after normalization" do
+    it "rejects endpoints exceeding the index size budget" do
       [
         "https://push.example/#{SecureRandom.hex(4096)}",
-        "https://push.example/#{"é" * 400}",
         "https://push.example/".ljust(PushSubscription::MAX_ENDPOINT_BYTES + 1, "a"),
       ].each do |endpoint|
         post "/push_notifications/subscribe.json",
@@ -187,7 +186,7 @@ RSpec.describe PushNotificationController do
 
       expect(response.status).to eq(200)
       expect(user.push_subscriptions.count).to eq(1)
-      expect(other_user.push_subscriptions).to be_empty
+      expect(other_user.push_subscriptions.reload).to be_empty
     end
 
     it "transfers an endpoint when its keys use equivalent base64 encodings" do
@@ -200,7 +199,7 @@ RSpec.describe PushNotificationController do
           auth: Base64.urlsafe_encode64("a" * 16, padding: false),
         },
       }
-      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
+      PushSubscription.create!(user: other_user, data: subscription.to_json)
       subscription[:keys].transform_values! do |key|
         Base64.urlsafe_encode64(Base64.urlsafe_decode64(key))
       end
@@ -213,17 +212,16 @@ RSpec.describe PushNotificationController do
 
       expect(response.status).to eq(200)
       expect(user.push_subscriptions.count).to eq(1)
-      expect(other_user.push_subscriptions).to be_empty
-      expect(existing.reload.parsed_data).to eq(subscription.deep_stringify_keys)
+      expect(other_user.push_subscriptions.reload).to be_empty
+      expect(user.push_subscriptions.sole.parsed_data).to eq(subscription.deep_stringify_keys)
 
       WebPush.expects(:payload_send).never
       PushNotificationPusher.push(other_user, notification_type: Notification.types[:mentioned])
     end
 
-    it "updates rotated keys without creating another owner for the endpoint" do
-      other_user = Fabricate(:user)
+    it "updates rotated keys on the user's existing subscription" do
       subscription = { endpoint: "endpoint", keys: { p256dh: "old-key", auth: "old-auth" } }
-      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
+      existing = PushSubscription.create!(user: user, data: subscription.to_json)
       subscription[:keys] = { auth: "new-auth", p256dh: "new-key" }
 
       post "/push_notifications/subscribe.json",
@@ -234,41 +232,17 @@ RSpec.describe PushNotificationController do
 
       expect(response.status).to eq(200)
       expect(user.push_subscriptions).to contain_exactly(existing)
-      expect(other_user.push_subscriptions).to be_empty
       expect(existing.reload.parsed_data).to eq(subscription.deep_stringify_keys)
     end
 
-    it "transfers equivalent endpoint URLs to a single owner" do
-      other_user = Fabricate(:user)
+    it "sends the confirmation for an endpoint the user already has" do
       subscription = {
-        endpoint: "https://push.example/subscription",
+        endpoint: "https://fcm.googleapis.com/fcm/send/existing",
         keys: {
-          p256dh: "key",
+          p256dh: "256dh",
           auth: "auth",
         },
       }
-      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
-      subscription[:endpoint] = "https://PUSH.example:443/a/../%73ubscription#ignored"
-
-      post "/push_notifications/subscribe.json",
-           params: {
-             subscription: subscription,
-             send_confirmation: false,
-           }
-
-      expect(response.status).to eq(200)
-      expect(user.push_subscriptions).to contain_exactly(existing)
-      expect(other_user.push_subscriptions).to be_empty
-      expect(existing.reload.parsed_data["endpoint"]).to eq("https://push.example/subscription")
-
-      post "/push_notifications/unsubscribe.json", params: { subscription: subscription }
-
-      expect(response.status).to eq(200)
-      expect(user.push_subscriptions.reload).to be_empty
-    end
-
-    it "sends the confirmation for an endpoint the user already has" do
-      subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       existing = PushSubscription.create!(user: user, data: subscription.to_json)
       PushNotificationPusher.expects(:send_notification).with(user, existing, anything)
 
@@ -279,6 +253,29 @@ RSpec.describe PushNotificationController do
            }
 
       expect(response.status).to eq(200)
+    end
+
+    it "rate limits registering new subscriptions" do
+      RateLimiter.enable
+
+      (PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR + 1).times do |index|
+        post "/push_notifications/subscribe.json",
+             params: {
+               subscription: {
+                 endpoint: "https://fcm.googleapis.com/fcm/send/#{index}",
+                 keys: {
+                   p256dh: "256dh",
+                   auth: "auth",
+                 },
+               },
+               send_confirmation: false,
+             }
+      end
+
+      expect(response.status).to eq(429)
+      expect(user.push_subscriptions.count).to eq(
+        PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR,
+      )
     end
 
     it "unsubscribes an existing subscription" do
@@ -331,7 +328,7 @@ RSpec.describe PushNotificationController do
       post "/push_notifications/unsubscribe.json", params: { subscription: subscription }
 
       expect(response.status).to eq(200)
-      expect(other_user.push_subscriptions).to contain_exactly(existing)
+      expect(other_user.push_subscriptions.reload).to contain_exactly(existing)
     end
   end
 end

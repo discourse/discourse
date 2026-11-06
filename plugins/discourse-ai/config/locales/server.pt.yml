@@ -19,6 +19,9 @@ pt:
         image_generation_custom:
           name: "Personalizar"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Deteção de lixo eletrónico"
       navigation:
         users:
           title: "Utilizadores"
@@ -97,6 +100,10 @@ pt:
       assign:
         errors:
           not_found: "Tópico não encontrado."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Cabeçalho"
     reviewables:
       ai_tool_action:
         approve:

@@ -102,6 +102,14 @@ module DiscourseWorkflows
       object.private_message?
     end
 
+    def include_fancy_title_localized?
+      true
+    end
+
+    def include_locale?
+      true
+    end
+
     def include_visibility_reason_id?
       object.visibility_reason_id.present?
     end

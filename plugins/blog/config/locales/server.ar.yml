@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  blog:
+    home: الصفحة الرئيسية
+    posted_by: تم النشر بواسطة
+    permalink: الرابط الثابت
+    time_ago: "منذ %{time}"
+    archive: أرشفة
+    about: نبذة
+    community: المجتمع
+    preview: معاينة
+    search: البحث
+    replies:
+      zero: "%{count} من الردود"
+      one: "رد واحد (%{count})"
+      two: "%{count} من الردود"
+      few: "%{count} من الردود"
+      many: "%{count} من الردود"
+      other: "%{count} من الردود"

@@ -54,13 +54,14 @@ hr:
         status: "Statust"
       models:
         event:
-          expired: "Isteklo"
           closed: "Zatvoreno"
           status:
             public:
               title: "Javnost"
             private:
               title: "Privatno"
+      recording_modal:
+        save: "Spremi"
       composer:
         url_placeholder: "Dodaj URL"
         reminder:

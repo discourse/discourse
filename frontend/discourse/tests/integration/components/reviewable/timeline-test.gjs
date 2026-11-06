@@ -5,7 +5,12 @@ import { module, test } from "qunit";
 import ReviewableTimeline from "discourse/components/reviewable/timeline";
 import UserCardContents from "discourse/components/user-card-contents";
 import DMenus from "discourse/float-kit/components/d-menus";
-import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
+import { DELETED, PENDING } from "discourse/models/reviewable";
+import {
+  CLAIMED,
+  TRANSITIONED,
+  UNCLAIMED,
+} from "discourse/models/reviewable-history";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -105,6 +110,49 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
     assert.dom(".timeline-event").exists({ count: 2 });
     assert.dom(".timeline-event__icon .d-icon-user-plus").exists();
     assert.dom(".timeline-event__icon .d-icon-user-xmark").exists();
+  });
+
+  test("renders a queued post deletion with its actor and timestamp", async function (assert) {
+    const reviewable = { type: "ReviewableQueuedPost", status: DELETED };
+    const deletedAt = "2026-10-29T02:24:51.539Z";
+    const historyEvents = [
+      {
+        reviewable_history_type: 0,
+        status: PENDING,
+        created_at: "2026-10-29T02:12:49.741Z",
+        created_by: { id: -1, username: "system" },
+      },
+      {
+        reviewable_history_type: TRANSITIONED,
+        status: DELETED,
+        created_at: deletedAt,
+        created_by: { id: 303494, username: "author" },
+      },
+    ];
+
+    await render(
+      <template>
+        <ReviewableTimeline
+          @historyEvents={{historyEvents}}
+          @reviewable={{reviewable}}
+        />
+      </template>
+    );
+
+    assert.dom(".timeline-event").exists({ count: 1 }, "renders the deletion");
+    assert
+      .dom(".timeline-event__title")
+      .includesText("Queued post deleted by author", "identifies the actor");
+    assert
+      .dom(".timeline-event__title a")
+      .hasAttribute("href", "/u/author", "links to the actor's profile");
+    assert
+      .dom(".timeline-event .relative-date")
+      .hasAttribute(
+        "data-time",
+        String(new Date(deletedAt).getTime()),
+        "uses the deletion timestamp"
+      );
   });
 
   test("renders the notes of the reviewable currently passed in", async function (assert) {

@@ -1,8 +1,41 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
+  describe ".dsa_reporting_enabled=" do
+    it "requires a community rule before enabling reporting" do
+      expect { SiteSetting.dsa_reporting_enabled = true }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.dsa_community_rules_required"),
+      )
+      expect(SiteSetting.dsa_reporting_enabled).to eq(false)
+
+      SiteSetting.dsa_community_rules = [
+        { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+      ].to_json
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect(SiteSetting.dsa_reporting_enabled).to eq(true)
+    end
+  end
+
   describe ".dsa_community_rules=" do
     let(:rule) { { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." } }
+
+    it "requires reporting to be disabled before removing the last community rule" do
+      SiteSetting.dsa_community_rules = [rule].to_json
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect { SiteSetting.dsa_community_rules = "[]" }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.dsa_community_rules_in_use"),
+      )
+      expect(JSON.parse(SiteSetting.dsa_community_rules)).to eq([rule.stringify_keys])
+
+      SiteSetting.dsa_reporting_enabled = false
+      SiteSetting.dsa_community_rules = "[]"
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules)).to eq([])
+    end
 
     it "accepts a 500 character contractual ground and rejects 501 characters" do
       rule[:ground] = "é" * 500
@@ -18,8 +51,8 @@ RSpec.describe SiteSetting do
       )
     end
 
-    it "accepts a 2000 character explanation and rejects 2001 characters" do
-      rule[:explanation] = "é" * 2000
+    it "accepts a 500 character explanation and rejects 501 characters" do
+      rule[:explanation] = "é" * 500
 
       SiteSetting.dsa_community_rules = [rule].to_json
 

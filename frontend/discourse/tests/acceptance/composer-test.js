@@ -11,6 +11,7 @@ import {
   triggerKeyEvent,
   visit,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -250,6 +251,13 @@ acceptance(`Composer`, function (needs) {
   test("the grippie is an operable separator", async function (assert) {
     await visit("/");
     await click("#create-topic");
+
+    // The announced height follows a ResizeObserver, which `settled()` doesn't wait for.
+    await waitUntil(
+      () =>
+        find(".grippie").getAttribute("aria-valuenow") ===
+        `${find("#reply-control").offsetHeight}`
+    );
 
     const { currentHeight, minimumHeight, maximumHeight } =
       composerResizeMeasurements();
@@ -2278,5 +2286,80 @@ acceptance(`composer buttons API`, function (needs) {
         /\/images\/custom-quote-avatar\.png/,
         "Quote avatar can be customized"
       );
+  });
+});
+
+acceptance("Composer - Typing paused", function (needs) {
+  needs.user();
+  needs.settings({ allow_uncategorized_topics: true });
+
+  function trackPauses(owner) {
+    const paused = [];
+    owner
+      .lookup("service:app-events")
+      .on("composer:typing-paused", (composer) => paused.push(composer.reply));
+    return paused;
+  }
+
+  test("fires once the user pauses after an edit", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Magic words");
+    await triggerKeyEvent(".d-editor-input", "keyup", "S");
+
+    assert.deepEqual(paused, ["Magic words"], "fires after the pause");
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "ArrowLeft");
+    assert.deepEqual(paused, ["Magic words"], "ignores keys without edits");
+
+    await fillIn(".d-editor-input", "Magic words and more");
+    await triggerKeyEvent(".d-editor-input", "keyup", "E");
+    assert.deepEqual(
+      paused,
+      ["Magic words", "Magic words and more"],
+      "fires again after the next edit"
+    );
+  });
+
+  test("fires right away at the end of a sentence", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Food stand. ");
+
+    // Dispatched directly so the assertion runs before the pause timer.
+    document
+      .querySelector(".d-editor-input")
+      .dispatchEvent(new KeyboardEvent("keyup", { key: " ", bubbles: true }));
+    assert.deepEqual(paused, ["Food stand. "], "fires immediately");
+
+    await settled();
+    assert.deepEqual(
+      paused,
+      ["Food stand. "],
+      "the pause that follows doesn't fire again"
+    );
+  });
+
+  test("editing earlier text waits for the pause", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Hello world.\n");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Enter");
+
+    await fillIn(".d-editor-input", "Hey, hello world.\n");
+    document
+      .querySelector(".d-editor-input")
+      .dispatchEvent(new KeyboardEvent("keyup", { key: "y", bubbles: true }));
+    assert.deepEqual(paused, ["Hello world.\n"], "doesn't fire right away");
+
+    await settled();
+    assert.deepEqual(
+      paused,
+      ["Hello world.\n", "Hey, hello world.\n"],
+      "fires after the pause"
+    );
   });
 });

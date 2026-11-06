@@ -6,7 +6,6 @@ describe Admin::DashboardController do
 
   before do
     enable_current_plugin
-    SiteSetting.dashboard_improvements = true
     SiteSetting.ai_ask_ai_enabled = true
     AdminDashboardSectionConfiguration.all_known_section_ids.each_with_index do |id, index|
       AdminDashboardSection.find_or_initialize_by(section_id: id).update!(

@@ -57,6 +57,17 @@ Discourse::Application.routes.draw do
     end
   end
 
+  # Defined outside the format-constrained scope: with `format: false` that
+  # scope's constraint would apply to the Accept header and reject media loads.
+  # The extension stays inside `path` because optional dotted segments after a
+  # glob make route recognition cubic in the number of dots.
+  #
+  # NOTE: secure-media-uploads is the old form, all new URLs generated for
+  # secure uploads will be secure-uploads, this is left in for backwards
+  # compat without needing to rebake all posts for each site.
+  get "secure-media-uploads/*path" => "uploads#_show_secure_deprecated", :format => false
+  get "secure-uploads/*path" => "uploads#show_secure", :format => false
+
   scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     relative_url_root =
       (
@@ -170,6 +181,11 @@ Discourse::Application.routes.draw do
         collection { put "automatic_membership_count" => "groups#automatic_membership_count" }
       end
       resources :groups, only: [:destroy], constraints: AdminConstraint.new
+
+      get "users/bots/new" => "users#new_bot"
+      get "users/bots/username_suggestion" => "users#bot_username_suggestion",
+          :constraints => AdminConstraint.new
+      post "users/bots" => "users#create_bot", :constraints => AdminConstraint.new
 
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
@@ -380,10 +396,6 @@ Discourse::Application.routes.draw do
       put "dashboard/sections/:section_id/settings/:setting_key" =>
             "dashboard#update_section_settings",
           :constraints => AdminConstraint.new
-      get "dashboard/general" => "dashboard#general"
-      get "dashboard/moderation" => "dashboard#moderation"
-      get "dashboard/security" => "dashboard#security"
-      get "dashboard/reports" => "dashboard#reports"
       post "dashboard/reports/bulk" => "dashboard#bulk_reports"
       get "dashboard/reports/available" => "dashboard#available_reports",
           :constraints => AdminConstraint.new
@@ -1250,18 +1262,6 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    # NOTE: secure-media-uploads is the old form, all new URLs generated for
-    # secure uploads will be secure-uploads, this is left in for backwards
-    # compat without needing to rebake all posts for each site.
-    get "secure-media-uploads/*path(.:extension)" => "uploads#_show_secure_deprecated",
-        :constraints => {
-          extension: /[a-z0-9\._]+/i,
-        }
-    get "secure-uploads/*path(.:extension)" => "uploads#show_secure",
-        :constraints => {
-          extension: /[a-z0-9\._]+/i,
-        }
-
     get "posts" => "posts#latest", :id => "latest_posts", :constraints => { format: /(json|rss)/ }
     get "private-posts" => "posts#latest",
         :id => "private_posts",
@@ -1365,6 +1365,14 @@ Discourse::Application.routes.draw do
       get "revisions/:revision" => "posts#revisions", :constraints => { revision: /\d+/ }
       put "revisions/:revision/hide" => "posts#hide_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
+      put "revisions/:revision/unlist" => "posts#unlist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
+      put "revisions/:revision/relist" => "posts#relist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
       delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
       get "permanently_delete_check" => "posts#permanently_delete_check",

@@ -38,7 +38,8 @@ ja:
         unassign_from_topic: "トピックから @%{username} の割り当てを解除"
         unassign_from_post: "#%{post_number} から @%{username} の割り当てを解除"
         edit_assignments: "割り当てを編集..."
-        created_by: "作成者"
+        owners:
+          other: "オーナー"
       manage:
         name: "名前"
         slug: "スラッグ"

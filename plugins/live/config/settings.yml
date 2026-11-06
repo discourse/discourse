@@ -145,6 +145,15 @@ plugins:
     disallowed_groups: "0|4"
     depends_on:
       - live_enabled
+  live_local_recording_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
+    depends_on:
+      - live_enabled
   live_video_max_publishers:
     default: 8
     min: 2

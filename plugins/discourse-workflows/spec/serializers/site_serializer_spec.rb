@@ -179,4 +179,91 @@ RSpec.describe SiteSerializer do
       )
     end
   end
+
+  describe "#composer_paused_workflows" do
+    before { DiscourseWorkflows::WorkflowDependency.clear_cache! }
+
+    fab!(:group)
+    fab!(:member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:category)
+
+    fab!(:everyone_workflow) do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:composer_paused",
+                 configuration: {
+                   "phrases" => ["Magic words", "bad food*"],
+                   "category_ids" => [category.id],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+    end
+
+    fab!(:group_workflow) do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:composer_paused",
+                 configuration: {
+                   "composer_actions" => ["reply"],
+                   "group_ids" => [group.id],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+    end
+
+    fab!(:draft_saved_workflow) do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:composer_paused",
+                 configuration: {
+                   "fire_on" => "draft_saved",
+                   "phrases" => ["food stand"],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+    end
+
+    def serialize(user)
+      guardian = Guardian.new(user)
+      described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    end
+
+    it "includes pause triggers for the user, as patterns and without group ids" do
+      expect(serialize(member)[:composer_paused_workflows]).to contain_exactly(
+        {
+          trigger_node_id: "trigger-1",
+          workflow_id: everyone_workflow.id,
+          patterns: [
+            WordWatcher.word_to_regexp("Magic words"),
+            WordWatcher.word_to_regexp("bad food*"),
+          ],
+          composer_actions: %w[create_topic reply],
+          category_ids: [category.id],
+          include_subcategories: true,
+        },
+        {
+          trigger_node_id: "trigger-1",
+          workflow_id: group_workflow.id,
+          patterns: [],
+          composer_actions: ["reply"],
+          category_ids: [],
+          include_subcategories: true,
+        },
+      )
+    end
+
+    it "leaves out triggers for other groups and draft-saved phrases" do
+      workflows = serialize(user)[:composer_paused_workflows]
+
+      expect(workflows.map { |workflow| workflow[:workflow_id] }).to eq([everyone_workflow.id])
+      expect(workflows.to_json).not_to include("food stand")
+    end
+
+    it "is not included for anonymous users" do
+      expect(serialize(nil)).not_to have_key(:composer_paused_workflows)
+    end
+  end
 end

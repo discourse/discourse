@@ -4,6 +4,21 @@ module DiscourseWorkflows
   module AdminAssistant
     class CreateWorkflow < DiscourseAi::Agents::Tools::Tool
       PREVIEW_KIND = "discourse_admin_assistant_workflow_preview_v1"
+      # Keys the preview needs to rebuild the graph, so they are never shortened.
+      PREVIEW_GRAPH_KEYS = %w[
+        op
+        client_id
+        node_id
+        from
+        to
+        from_node_id
+        to_node_id
+        connection_type
+        id
+        type
+        $ref
+      ].freeze
+      SHORTENED_VALUE_LENGTHS = [500, 160, 60].freeze
 
       def self.name
         "create_workflow"
@@ -59,10 +74,32 @@ module DiscourseWorkflows
           return I18n.t("discourse_workflows.admin_assistant.secret_draft")
         end
 
-        preview = JSON.pretty_generate(kind: PREVIEW_KIND, configuration:)
-        longest_run = preview.scan(/`+/).map(&:length).max.to_i
-        fence = "`" * [3, longest_run + 1].max
-        "#{fence}admin-assistant-workflow\n#{preview}\n#{fence}\n"
+        preview_details(configuration)
+      end
+
+      # Large drafts do not fit in a chat message, so the preview keeps the full
+      # graph and shortens long setting values, then drops settings entirely.
+      def compact_approval_details(max_length:)
+        return super if !draft || WorkflowDraft.contains_secret?(configuration)
+
+        candidates =
+          Enumerator.new do |yielder|
+            yielder << preview_details(configuration, pretty: false)
+            SHORTENED_VALUE_LENGTHS.each do |length|
+              yielder << preview_details(
+                shorten_values(configuration, length),
+                pretty: false,
+                shortened: true,
+              )
+            end
+            yielder << preview_details(
+              shorten_values(without_settings(configuration), SHORTENED_VALUE_LENGTHS.last),
+              pretty: false,
+              shortened: true,
+            )
+          end
+
+        candidates.find { |candidate| candidate.length <= max_length } || super
       end
 
       def validation_error
@@ -136,6 +173,58 @@ module DiscourseWorkflows
 
       def configuration
         draft.slice(:name, :operations, :script_validations)
+      end
+
+      def preview_details(preview_configuration, pretty: true, shortened: false)
+        payload = { kind: PREVIEW_KIND, configuration: preview_configuration }
+        payload[:shortened] = true if shortened
+        preview = pretty ? JSON.pretty_generate(payload) : JSON.generate(payload)
+        longest_run = preview.scan(/`+/).map(&:length).max.to_i
+        fence = "`" * [3, longest_run + 1].max
+        "#{fence}admin-assistant-workflow\n#{preview}\n#{fence}\n"
+      end
+
+      def shorten_values(value, length, key = nil)
+        case value
+        when Hash
+          value.to_h do |nested_key, nested_value|
+            [nested_key, shorten_values(nested_value, length, nested_key)]
+          end
+        when Array
+          value.map { |nested_value| shorten_values(nested_value, length, key) }
+        when String
+          PREVIEW_GRAPH_KEYS.include?(key.to_s) ? value : value.truncate(length)
+        else
+          value
+        end
+      end
+
+      def without_settings(preview_configuration)
+        operations =
+          Array
+            .wrap(preview_configuration[:operations])
+            .map do |operation|
+              next operation if !operation.is_a?(Hash)
+
+              case operation["op"]
+              when "add_node"
+                node = operation["node"]
+                if node.is_a?(Hash)
+                  operation.merge("node" => node.slice("id", "name", "type"))
+                else
+                  operation
+                end
+              when "create_ai_agent"
+                agent = operation["agent"]
+                agent.is_a?(Hash) ? operation.merge("agent" => agent.slice("name")) : operation
+              when "update_node_parameters"
+                operation.except("parameters")
+              else
+                operation
+              end
+            end
+
+        preview_configuration.merge(operations:)
       end
 
       def create_unpublished_workflow!

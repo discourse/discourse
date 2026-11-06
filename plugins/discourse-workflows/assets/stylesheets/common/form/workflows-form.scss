@@ -67,5 +67,23 @@
   &__completion-message,
   &__completion-text {
     color: var(--primary);
+
+    &:has(table, pre) {
+      text-align: left;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    th,
+    td {
+      padding: var(--space-1) var(--space-3) var(--space-1) 0;
+      vertical-align: top;
+    }
+
+    pre {
+      overflow-x: auto;
+    }
   }
 }

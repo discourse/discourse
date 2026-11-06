@@ -18,7 +18,6 @@ import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
-import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { STREAM_HTML_DECORATOR } from "discourse/components/post/cooked-html";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
@@ -164,8 +163,6 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
-
-const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -821,6 +818,10 @@ class _PluginApi {
    * You'll need to do this if you've added properties to a Topic and need them to be
    * automatically updated in the UI when there are changes in the model.
    *
+   * To type the properties for TypeScript, augment `TopicFields` from
+   * `discourse/models/topic`, as described in the "JS type hinting &
+   * validation" developer guide.
+   *
    * @param {...string} names - The names of the properties to be tracked.
    */
   addTrackedTopicProperties(...names) {
@@ -832,6 +833,10 @@ class _PluginApi {
    * (e.g. one included in the server payload) is reactive in the UI.
    *
    * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * To type the field for TypeScript, augment the model's fields interface,
+   * such as `TopicFields` from `discourse/models/topic`, as described in the
+   * "JS type hinting & validation" developer guide.
    *
    * @param {string} modelName - The model's resolver name, e.g. "bookmark".
    * @param {string} name - The name of the field to add.
@@ -1172,18 +1177,6 @@ class _PluginApi {
    **/
   addComposerToolbarPopupMenuOption(opts) {
     addPopupMenuOption(opts);
-  }
-
-  addToolbarPopupMenuOptionsCallback(opts) {
-    deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
-      {
-        id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.2",
-      }
-    );
-
-    this.addComposerToolbarPopupMenuOption(opts);
   }
 
   /**
@@ -1585,28 +1578,6 @@ class _PluginApi {
   }
 
   /**
-   * Adds a glyph to the legacy user menu after bookmarks
-   * WARNING: there is limited space there
-   *
-   * example:
-   *
-   * api.addUserMenuGlyph({
-   *    title: 'awesome.label',
-   *    className: 'my-class',
-   *    icon: 'my-icon',
-   *    data: { url: `/some/path` },
-   * });
-   *
-   * To customize the new user menu, see api.registerUserMenuTab
-   */
-  addUserMenuGlyph() {
-    deprecated(
-      "addUserMenuGlyph has been removed. Use api.registerUserMenuTab instead.",
-      { id: "discourse.add-user-menu-glyph" }
-    );
-  }
-
-  /**
    * Adds a callback to be called before rendering any post that
    * that returns custom classes to add to the post
    *
@@ -1693,6 +1664,8 @@ class _PluginApi {
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
+   *
+   * @param {import("discourse/models/nav-item").NavigationBarItem} item
    */
   addNavigationBarItem(item) {
     if (!item["name"]) {
@@ -2105,35 +2078,6 @@ class _PluginApi {
   }
 
   /**
-   *
-   * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
-   *
-   * `callback` will be called when it is time to decorate it.
-   *
-   * For example, to add a yellow background to a connector:
-   *
-   * ```
-   * api.decoratePluginOutlet(
-   *   "discovery-list-container-top",
-   *   (elem, args) => {
-   *     if (elem.classList.contains("foo")) {
-   *       elem.style.backgroundColor = "yellow";
-   *     }
-   *   }
-   * );
-   * ```
-   *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
-   **/
-  decoratePluginOutlet(outletName, callback, opts) {
-    deprecated(
-      "decoratePluginOutlet is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead",
-      { id: "discourse.decorate-plugin-outlet" }
-    );
-    addPluginOutletDecorator(outletName, callback, opts || {});
-  }
-
-  /**
    * Used to set the min and max height for the topic timeline scroll area on desktop. Pass object with min/max key value pairs.
    * Example:
    * api.setDesktopTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
@@ -2334,21 +2278,6 @@ class _PluginApi {
         }
       );
     }
-  }
-
-  /**
-   * @deprecated Use `addSaveableUserOption` instead
-   */
-  addSaveableUserOptionField(fieldName, options = {}) {
-    deprecated(
-      "`addSaveableUserOptionField` has been renamed to `addSaveableUserOption`",
-      {
-        id: "discourse.add-saveable-user-option-field",
-        since: "2026.3",
-      }
-    );
-
-    this.addSaveableUserOption(fieldName, options);
   }
 
   /**
@@ -3255,9 +3184,8 @@ class _PluginApi {
   }
 
   /**
-   * Registers a component to render a whole section in the redesigned admin
-   * dashboard (gated by the `dashboard_improvements` upcoming change). Pair it
-   * with the server-side `register_admin_dashboard_section`: the `id` here must
+   * Registers a component to render a whole section in the admin dashboard.
+   * Pair it with the server-side `register_admin_dashboard_section`: the `id` here must
    * match the one registered there, and the loader block registered there
    * produces the `@data` this component receives.
    *
@@ -3979,12 +3907,7 @@ class _PluginApi {
       return;
     }
 
-    let klass;
-    if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized) || lazyClassFor(normalized);
-    }
-
-    return klass;
+    return this.container.factoryFor(normalized) || lazyClassFor(normalized);
   }
 
   // Resolves the `model:<name>` class; `stamp` marks it so instances can

@@ -55,6 +55,7 @@ Renaming or removing an output key, or changing its meaning, breaks saved workfl
 - Services resolve the saved version with `NodeData.node_type(node)`, never a hard-coded `V1`.
 - Deprecated versions keep running for saved workflows, are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action. Remove them after a deprecation window.
 - Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones. `node_deprecation_spec` checks `superseded_by`.
+- Bump the node in `config/templates/*.json`, migrate its parameters, and check downstream expressions; `workflow_templates_spec` enforces the version and parameter names.
 
 ## Output conventions
 

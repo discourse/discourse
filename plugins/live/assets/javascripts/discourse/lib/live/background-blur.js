@@ -153,6 +153,13 @@ export default class BackgroundBlurManager {
     video.muted = true;
     video.playsInline = true;
     video.srcObject = rawStream;
+    video.setAttribute("aria-hidden", "true");
+    video.style.cssText =
+      "position:fixed;width:1px;height:1px;opacity:0;pointer-events:none";
+
+    // Some browsers reject playback unless the video is attached to the document.
+    this.#video = video;
+    document.body.appendChild(video);
 
     let playTimer;
     try {
@@ -169,7 +176,6 @@ export default class BackgroundBlurManager {
       clearTimeout(playTimer);
     }
 
-    this.#video = video;
     this.#outputCanvas = document.createElement("canvas");
     this.#outputCtx = this.#outputCanvas.getContext("2d");
     this.#personCanvas = document.createElement("canvas");
@@ -198,6 +204,7 @@ export default class BackgroundBlurManager {
 
     if (this.#video) {
       this.#video.srcObject = null;
+      this.#video.remove();
       this.#video = null;
     }
 

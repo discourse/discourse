@@ -13,11 +13,20 @@ class Gadget extends RestModel {
   declare label: string;
 }
 
+class Widget extends RestModel {
+  declare size: number;
+}
+
 // Plugins register their models the same way.
 declare module "discourse/services/store" {
   interface ModelRegistry {
     "test-gadget": Gadget;
     "test-draft": UserDraft;
+    "test-widget": Widget;
+  }
+
+  interface ModelCreateAttrsRegistry {
+    "test-widget": { size?: number | string };
   }
 }
 
@@ -42,6 +51,13 @@ expectTypeOf(
 store.createRecord("test-gadget", { label: 1 });
 // @ts-expect-error the type name is a string
 store.createRecord(1);
+
+// A registered creation shape replaces the model's field types as input.
+expectTypeOf(
+  store.createRecord("test-widget", { size: "3" })
+).toEqualTypeOf<Widget>();
+// @ts-expect-error the registered creation shape is still checked
+store.createRecord("test-widget", { size: true });
 
 // find: an id, or no find args, gives one model; an object or null gives a
 // ResultSet, or nothing when the response lacks the collection key

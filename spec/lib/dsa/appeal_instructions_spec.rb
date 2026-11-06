@@ -8,7 +8,7 @@ RSpec.describe Dsa::AppealInstructions do
     end
 
     context "when the dsa_reporting_enabled site setting is enabled" do
-      before { SiteSetting.dsa_reporting_enabled = true }
+      before { enable_dsa_reporting }
 
       it "uses the DSA appeal address" do
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"

@@ -63,11 +63,29 @@ class ReviewableFlaggedPost < Reviewable
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
     if post.user_deleted? || post.trashed?
-      build_action(actions, :agree_and_keep_deleted, icon: "far-eye-slash", bundle: agree_bundle)
+      build_action(
+        actions,
+        :agree_and_keep_deleted,
+        icon: "far-eye-slash",
+        bundle: agree_bundle,
+        dsa_classification_required: true,
+      )
     elsif post.hidden?
-      build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree_bundle)
+      build_action(
+        actions,
+        :agree_and_keep_hidden,
+        icon: "far-eye-slash",
+        bundle: agree_bundle,
+        dsa_classification_required: true,
+      )
     else
-      build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree_bundle)
+      build_action(
+        actions,
+        :agree_and_hide,
+        icon: "far-eye-slash",
+        bundle: agree_bundle,
+        dsa_classification_required: true,
+      )
       build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree_bundle)
       build_action(
         actions,
@@ -75,6 +93,7 @@ class ReviewableFlaggedPost < Reviewable
         icon: "pencil",
         bundle: agree_bundle,
         client_action: "edit",
+        dsa_classification_required: true,
       )
     end
 
@@ -83,7 +102,13 @@ class ReviewableFlaggedPost < Reviewable
       can_delete_post_or_topic && !post.user_deleted? && !post.trashed?
 
     if can_delete_existing_post_or_topic
-      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: agree_bundle)
+      build_action(
+        actions,
+        :delete_and_agree,
+        icon: "trash-can",
+        bundle: agree_bundle,
+        dsa_classification_required: true,
+      )
 
       if post.reply_count > 0
         build_action(
@@ -92,6 +117,7 @@ class ReviewableFlaggedPost < Reviewable
           icon: "trash-can",
           bundle: agree_bundle,
           confirm: true,
+          dsa_classification_required: true,
         )
       end
     end
@@ -101,10 +127,11 @@ class ReviewableFlaggedPost < Reviewable
       bundle: agree_bundle,
       silence: :agree_and_silence,
       suspend: :agree_and_suspend,
+      dsa_classification_required: true,
     )
 
     if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
-      delete_user_actions(actions, agree_bundle)
+      delete_user_actions(actions, agree_bundle, dsa_classification_required: true)
     end
 
     if post.user_deleted? && !post.trashed? && !user_penalized_for_deleted_post?
@@ -153,7 +180,13 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :ignore_and_do_nothing, icon: "xmark", bundle: disagree_bundle)
     end
     if can_delete_existing_post_or_topic
-      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: disagree_bundle)
+      build_action(
+        actions,
+        :delete_and_ignore,
+        icon: "trash-can",
+        bundle: disagree_bundle,
+        dsa_classification_required: true,
+      )
       if post.reply_count > 0
         build_action(
           actions,
@@ -161,6 +194,7 @@ class ReviewableFlaggedPost < Reviewable
           icon: "trash-can",
           confirm: true,
           bundle: disagree_bundle,
+          dsa_classification_required: true,
         )
       end
     end
