@@ -112,9 +112,8 @@ export default class MobileTabBar extends Service {
     return this.header.hamburgerVisible;
   }
 
-  // Forum leads, then primary sections, so they show without scrolling. Other
-  // sections follow, then admin. Inside the app, a tab back to its list of
-  // sites leads the bar.
+  // Forum, then primary sections so they show without scrolling, then the
+  // rest and admin. Inside the app, a tab back to its list of sites leads.
   get #allTabs() {
     const panelTabs = this.sidebarState.panels
       .map((panel) => panel.mobileTab && { key: panel.key, ...panel.mobileTab })
