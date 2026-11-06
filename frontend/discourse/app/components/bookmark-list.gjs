@@ -341,7 +341,7 @@ export default class BookmarkList extends Component {
                           href={{bookmark.bookmarkable_url}}
                           role="heading"
                         >
-                          {{bookmark.fancy_title}}
+                          {{bookmark.title}}
                         </a>
                       {{/if}}
                     </div>
