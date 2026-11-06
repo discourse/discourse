@@ -23,6 +23,10 @@ en:
       A short description for the homepage, feed, and search
       engines.
     blog_about: Markdown content for the blog About page.
+    blog_path_format:
+      The address given to new articles. Dated formats use the UTC date the
+      article is first published, or its publication date when one is set.
+      Existing articles keep their current addresses.
     blog_posts_per_page:
       Number of articles shown on each homepage or archive
       page.

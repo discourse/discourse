@@ -7,6 +7,7 @@ module ::Blog
     RESERVED_SEGMENTS =
       (Routes::RESERVED_SEGMENTS + Configuration::ASSET_PREFIXES + MIDDLEWARE_SEGMENTS).freeze
     METADATA = %w[path excerpt featured published_at].freeze
+    PATH_DATE_FORMATS = { "year_month_slug" => "%Y/%m", "year_month_day_slug" => "%Y/%m/%d" }.freeze
 
     belongs_to :topic
     belongs_to :draft_topic, class_name: "Topic", optional: true
@@ -79,9 +80,14 @@ module ::Blog
       publication if guardian.can_edit_blog_topic?(publication.editable_topic)
     end
 
-    def self.default_path(topic)
-      path = "/#{topic.slug.presence || topic.id}"
+    def self.default_path(topic, date: nil)
+      path = "#{path_date_prefix(date || Time.current)}/#{topic.slug.presence || topic.id}"
       reserved_path?(path) ? "#{path}-#{topic.id}" : path
+    end
+
+    def self.path_date_prefix(date)
+      format = PATH_DATE_FORMATS[SiteSetting.blog_path_format]
+      format ? "/#{date.utc.strftime(format)}" : ""
     end
 
     def self.reserved_path?(path)
@@ -158,11 +164,16 @@ module ::Blog
     end
 
     def stage_metadata(changes)
-      values = editorial_metadata.merge(changes.to_h.stringify_keys.slice(*METADATA))
+      changes = changes.to_h.stringify_keys.slice(*METADATA)
+      staged = editorial_metadata
+      values = staged.merge(changes)
       values["published_at"] = published_at if published_revision_id &&
         values["published_at"].blank?
       live = attributes.slice(*METADATA)
       assign_attributes(values)
+      if !published_revision_id && changes.key?("published_at") && path == staged["path"]
+        self.path = redated_path(path, published_at)
+      end
       return self if invalid?
       self.draft_metadata = attributes.slice(*METADATA).as_json
       assign_attributes(live) if published_revision_id
@@ -202,13 +213,35 @@ module ::Blog
       )
     end
 
+    # A first release moves a generated dated path to the date the article goes live.
+    def release_revision(revision)
+      return revision if published_revision_id
+      path = redated_path(revision.data["path"], release_date(revision))
+      return revision if path == revision.data["path"]
+
+      successor =
+        revisions.create!(
+          source_topic: revision.source_topic,
+          creator: revision.creator,
+          approver: revision.approver,
+          approved_at: revision.approved_at,
+          data: revision.data.merge("path" => path),
+        )
+      self.submitted_revision = successor if submitted_revision_id == revision.id
+      self.approved_revision = successor if approved_revision_id == revision.id
+      if draft_metadata["path"] == revision.data["path"]
+        self.draft_metadata = draft_metadata.merge("path" => path)
+      end
+      successor
+    end
+
     def stage_release(revision, publisher)
       data = revision.data
       assign_attributes(
         path: data["path"],
         excerpt: data["excerpt"],
         featured: data["featured"],
-        published_at: data["published_at"].presence || published_at || Time.current,
+        published_at: release_date(revision),
         last_published_at: Time.current,
         published_revision: revision,
         publisher:,
@@ -218,6 +251,31 @@ module ::Blog
     end
 
     private
+
+    def release_date(revision)
+      date = revision.data["published_at"].presence
+      (date && Time.zone.parse(date.to_s)) || published_at || Time.current
+    end
+
+    # Hand-typed paths are left alone: only the site's dated shape ending in the topic slug moves.
+    def redated_path(path, date)
+      format = PATH_DATE_FORMATS[SiteSetting.blog_path_format]
+      segments = path.to_s.split("/").drop(1)
+      return path if !format || !date || segments.size != format.count("/") + 2
+      return path if !segments[..-2].join("/").match?(%r{\A\d{4}(?:/\d{2}){1,2}\z})
+      return path if generated_slugs.exclude?(segments.last)
+
+      redated = "#{self.class.path_date_prefix(date)}/#{segments.last}"
+      path_available?(redated) ? redated : path
+    end
+
+    def generated_slugs
+      [topic, editorial_topic].compact.flat_map { |source| [source.slug, source.id.to_s] }
+    end
+
+    def path_available?(candidate)
+      !Path.where(path: candidate).where.not(publication_id: id).exists?
+    end
 
     def draft_date_changed?(value)
       return false if value.blank?
@@ -259,8 +317,7 @@ module ::Blog
     end
 
     def available_path
-      if reserved_path? || path.to_s.split("/").intersect?(%w[. ..]) ||
-           Path.where(path: path).where.not(publication_id: id).exists?
+      if reserved_path? || path.to_s.split("/").intersect?(%w[. ..]) || !path_available?(path)
         errors.add(:path, I18n.t("blog.errors.path_taken"))
       end
     end

@@ -659,6 +659,40 @@ acceptance("Blog themes and identity", function (needs) {
     await form.submit();
   });
 
+  test("saves the article URL format with the identity", async function (assert) {
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      const values = new URLSearchParams(request.requestBody);
+      assert.strictEqual(
+        values.get("settings[blog_path_format][value]"),
+        "year_month_slug",
+        "the chosen format is saved"
+      );
+      assert.step("saved");
+      return response(204);
+    });
+    await visit("/admin/plugins/blog/identity");
+    const today = moment.utc();
+    assert
+      .dom(".blog-identity__form")
+      .includesText("/my-article", "the slug format shows an example")
+      .includesText(
+        `/${today.format("YYYY/MM")}/my-article`,
+        "the monthly format shows today's example"
+      )
+      .includesText(
+        `/${today.format("YYYY/MM/DD")}/my-article`,
+        "the daily format shows today's example"
+      );
+    const form = formKit(".blog-identity__form");
+    assert
+      .form(".blog-identity__form")
+      .field("blog_path_format")
+      .hasValue("slug");
+    await form.field("blog_path_format").select("year_month_slug");
+    await form.submit();
+    assert.verifySteps(["saved"]);
+  });
+
   test("warns before leaving a theme with unsaved changes", async function (assert) {
     await visit("/admin/plugins/blog/themes/candidate/edit");
     await formKit(".blog-theme-editor__form")
