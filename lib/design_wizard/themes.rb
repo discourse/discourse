@@ -22,6 +22,7 @@ module DesignWizard
         remote_url: "https://github.com/nolosb/discourse-places-theme",
         default_homepage: "latest",
         palettes_from: "horizon",
+        default_palette: "marigold",
         description_key: "design_wizard.themes.places.description",
         screenshot_light_url: "/images/design-wizard/places-light.webp",
         screenshot_dark_url: "/images/design-wizard/places-dark.webp",
@@ -43,7 +44,7 @@ module DesignWizard
         next if !guardian.allowed_theme_repo_import?(definition[:remote_url])
         next if themes.any? { |theme| definition_for(theme) == definition }
 
-        definition.except(:setting, :palettes_from).merge(
+        definition.except(:setting, :palettes_from, :default_palette).merge(
           screenshot_light_url: Discourse.base_path + definition[:screenshot_light_url],
           screenshot_dark_url: Discourse.base_path + definition[:screenshot_dark_url],
           description: I18n.t(definition[:description_key]),

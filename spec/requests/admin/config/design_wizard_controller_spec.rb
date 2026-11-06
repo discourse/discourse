@@ -200,9 +200,11 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
         places = themes.find { |theme| theme["id"] == places_theme.id }
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
-        expect(places["palette_pairs"].map { |pair| pair["key"] }).to eq(
-          horizon["palette_pairs"].map { |pair| pair["key"] },
+        expect(places["palette_pairs"].map { |pair| pair["key"] }).to contain_exactly(
+          *horizon["palette_pairs"].map { |pair| pair["key"] },
         )
+        expect(places["palette_pairs"].first["key"]).to eq("marigold")
+        expect(horizon["palette_pairs"].first["key"]).to eq("horizon")
         expect(places).to include(
           "description" => I18n.t("design_wizard.themes.places.description"),
           "default_homepage" => "latest",

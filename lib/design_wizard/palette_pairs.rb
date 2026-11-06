@@ -32,8 +32,18 @@ module DesignWizard
           .order(:id)
           .to_a
       pairs = new(theme)
-      (owned.present? ? pairs.theme_pairs(owned) : pairs.built_in_pairs) + pairs.custom_pairs
+      offered = owned.present? ? pairs.theme_pairs(owned) : pairs.built_in_pairs
+      default_first(offered, DesignWizard::Themes.definition_for(theme)&.dig(:default_palette)) +
+        pairs.custom_pairs
     end
+
+    # the wizard preselects the first pair, so a theme's default palette leads
+    def self.default_first(pairs, key)
+      return pairs if key.nil?
+
+      pairs.partition { |pair| pair[:key] == key }.flatten(1)
+    end
+    private_class_method :default_first
 
     def initialize(theme)
       @theme = theme
