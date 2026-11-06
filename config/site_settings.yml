@@ -4302,6 +4302,9 @@ uncategorized:
   concord_in_wizard:
     default: false
     hidden: true
+  places_in_wizard:
+    default: false
+    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true

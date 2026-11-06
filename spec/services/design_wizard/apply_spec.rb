@@ -22,6 +22,25 @@ RSpec.describe DesignWizard::Apply do
       end
     end
 
+    it "accepts an installed theme only while its own setting is enabled" do
+      SiteSetting.concord_in_wizard = true
+      theme =
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/nolosb/discourse-places-theme",
+            ),
+        )
+
+      expect(described_class.new(theme_id: theme.id)).to be_invalid
+
+      SiteSetting.places_in_wizard = true
+
+      expect(described_class.new(theme_id: theme.id)).to be_valid
+    end
+
     it "rejects custom themes, similarly named repositories, and components" do
       SiteSetting.concord_in_wizard = true
       custom_theme = Fabricate(:theme, name: "Concord")

@@ -157,6 +157,55 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
       end
 
+      it "offers each installable theme only while its own setting is enabled" do
+        SiteSetting.places_in_wizard = true
+
+        get "/admin/config/design-wizard.json"
+
+        expect(response.parsed_body["themes"].map { |theme| theme["id"] }).to contain_exactly(
+          *Theme::CORE_THEMES.values,
+          "places",
+        )
+        expect(response.parsed_body["themes"].find { |theme| theme["id"] == "places" }).to include(
+          "default_homepage" => "latest",
+          "name" => "Go Places",
+          "remote_url" => "https://github.com/nolosb/discourse-places-theme",
+          "description" => I18n.t("design_wizard.themes.places.description"),
+          "palette_pairs" => [],
+          "screenshot_light_url" => "/images/design-wizard/places-light.webp",
+          "screenshot_dark_url" => "/images/design-wizard/places-dark.webp",
+        )
+      end
+
+      it "returns installed Go Places as a selectable theme next to an offered Concord" do
+        SiteSetting.concord_in_wizard = true
+        SiteSetting.places_in_wizard = true
+        places_theme =
+          Fabricate(
+            :theme,
+            remote_theme:
+              Fabricate(
+                :remote_theme,
+                remote_url: "https://github.com/nolosb/discourse-places-theme.git",
+              ),
+          )
+
+        get "/admin/config/design-wizard.json"
+
+        themes = response.parsed_body["themes"]
+        expect(themes.map { |theme| theme["id"] }).to contain_exactly(
+          *Theme::CORE_THEMES.values,
+          places_theme.id,
+          "concord",
+        )
+        expect(themes.find { |theme| theme["id"] == places_theme.id }).to include(
+          "description" => I18n.t("design_wizard.themes.places.description"),
+          "default_homepage" => "latest",
+          "screenshot_light_url" => "/images/design-wizard/places-light.webp",
+          "screenshot_dark_url" => "/images/design-wizard/places-dark.webp",
+        )
+      end
+
       it "returns installed Concord as a selectable default with its palette state" do
         SiteSetting.concord_in_wizard = true
         concord =

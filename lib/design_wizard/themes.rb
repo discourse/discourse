@@ -2,56 +2,79 @@
 
 module DesignWizard
   class Themes
-    CONCORD = {
-      name: "Concord",
-      remote_url: "https://github.com/discourse/discourse-concord-theme",
-      default_homepage: "chat",
-      description_key: "design_wizard.themes.concord.description",
-      screenshot_light_url: "/images/design-wizard/concord-light.webp",
-      screenshot_dark_url: "/images/design-wizard/concord-dark.webp",
-    }.freeze
+    # Remote themes the wizard can offer next to the core themes, each behind its
+    # own hidden site setting while they're tested more broadly
+    INSTALLABLE = [
+      {
+        id: "concord",
+        setting: :concord_in_wizard,
+        name: "Concord",
+        remote_url: "https://github.com/discourse/discourse-concord-theme",
+        default_homepage: "chat",
+        description_key: "design_wizard.themes.concord.description",
+        screenshot_light_url: "/images/design-wizard/concord-light.webp",
+        screenshot_dark_url: "/images/design-wizard/concord-dark.webp",
+      }.freeze,
+      {
+        id: "places",
+        setting: :places_in_wizard,
+        name: "Go Places",
+        remote_url: "https://github.com/nolosb/discourse-places-theme",
+        default_homepage: "latest",
+        description_key: "design_wizard.themes.places.description",
+        screenshot_light_url: "/images/design-wizard/places-light.webp",
+        screenshot_dark_url: "/images/design-wizard/places-dark.webp",
+      }.freeze,
+    ].freeze
 
     def self.selectable
-      Theme.where(id: Theme::CORE_THEMES.values).or(installed_concord)
+      Theme.where(id: Theme::CORE_THEMES.values).or(installed)
     end
 
     def self.ids
-      Theme::CORE_THEMES.values + installed_concord.pluck(:id)
+      Theme::CORE_THEMES.values + installed.pluck(:id)
     end
 
     def self.available_to_install(themes, guardian:)
-      return [] if !SiteSetting.concord_in_wizard || !guardian.can_create_theme?
-      return [] if !guardian.allowed_theme_repo_import?(CONCORD[:remote_url])
-      return [] if themes.any? { |theme| definition_for(theme) }
+      return [] if !guardian.can_create_theme?
 
-      [
-        CONCORD.merge(
-          screenshot_light_url: Discourse.base_path + CONCORD[:screenshot_light_url],
-          screenshot_dark_url: Discourse.base_path + CONCORD[:screenshot_dark_url],
-          id: "concord",
-          description: I18n.t(CONCORD[:description_key]),
+      enabled.filter_map do |definition|
+        next if !guardian.allowed_theme_repo_import?(definition[:remote_url])
+        next if themes.any? { |theme| definition_for(theme) == definition }
+
+        definition.except(:setting).merge(
+          screenshot_light_url: Discourse.base_path + definition[:screenshot_light_url],
+          screenshot_dark_url: Discourse.base_path + definition[:screenshot_dark_url],
+          description: I18n.t(definition[:description_key]),
           palette_pairs: [],
-        ),
-      ]
+        )
+      end
     end
 
     def self.definition_for(theme)
-      return if !SiteSetting.concord_in_wizard
+      remote_url = theme.remote_theme&.remote_url&.delete_suffix(".git")
+      return if remote_url.blank?
 
-      CONCORD if theme.remote_theme&.remote_url&.delete_suffix(".git") == CONCORD[:remote_url]
+      enabled.find { |definition| definition[:remote_url] == remote_url }
     end
 
-    def self.installed_concord
-      return Theme.none if !SiteSetting.concord_in_wizard
+    def self.enabled
+      INSTALLABLE.select { |definition| SiteSetting.public_send(definition[:setting]) }
+    end
+    private_class_method :enabled
+
+    def self.installed
+      remote_urls =
+        enabled.flat_map do |definition|
+          [definition[:remote_url], "#{definition[:remote_url]}.git"]
+        end
+      return Theme.none if remote_urls.empty?
 
       Theme.where(
         component: false,
-        remote_theme_id:
-          RemoteTheme.where(
-            remote_url: [CONCORD[:remote_url], "#{CONCORD[:remote_url]}.git"],
-          ).select(:id),
+        remote_theme_id: RemoteTheme.where(remote_url: remote_urls).select(:id),
       )
     end
-    private_class_method :installed_concord
+    private_class_method :installed
   end
 end
