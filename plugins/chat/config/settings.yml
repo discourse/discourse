@@ -10,6 +10,7 @@ chat:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397571"
+      group_setting: "chat_pinning_messages_allowed_groups"
   enable_public_channels:
     default: true
     client: true

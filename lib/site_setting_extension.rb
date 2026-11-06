@@ -173,10 +173,12 @@ module SiteSettingExtension
   #     status: "alpha" (see UpcomingChanges.statuses.keys)
   #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
   #     learn_more_url: ""
-  #     allow_enabled_for: (optional) array restricting which "Enabled for" dropdown
-  #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
-  #       is always present. If `everyone` is included it must be the only value.
-  #       Omit to allow all options (the default permissive behavior).
+  #     group_setting: (optional) name of an existing group_list setting to use as the audience.
+  #       Cannot combine with allow_enabled_for.
+  #     allow_enabled_for: (optional) array restricting the audience admins can pick.
+  #       Valid values: everyone, staff, specific_groups. `everyone` must be the only
+  #       value and marks the change as unscopable, shown locked to the impact role's groups.
+  #       Omit to let admins pick any groups.
   #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
   #       useful for scoping style changes related to the change.
   #     permanent_warning: (optional) boolean, defaults to true. When the change reaches
@@ -1215,10 +1217,8 @@ module SiteSettingExtension
       end
     end
 
-    # Upcoming change settings have a supplemental array of group IDs that are used to opt-in
-    # certain groups to the change early. We use the data from SiteSettingGroup to define
-    # a getter with _groups_map on the end, e.g. allow_unlimited_uploads_groups_map,
-    # to avoid having to manually split and convert to integer for these settings.
+    # Upcoming changes expose their audience IDs through _groups_map, using either
+    # their linked group-list setting or a supplemental SiteSettingGroup restriction.
     if UpcomingChanges.exists?(name) && type_supervisor.get_type(name) == :bool
       define_singleton_method("#{clean_name}_groups_map") { UpcomingChanges.group_ids_for(name) }
     end
@@ -1362,7 +1362,13 @@ module SiteSettingExtension
         hide_settings = opts[:upcoming_change][:hide_settings]
         hide_settings = Array(hide_settings).map(&:to_sym) if hide_settings
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact, :allow_enabled_for, :hide_settings),
+          **opts[:upcoming_change].except(
+            :impact,
+            :allow_enabled_for,
+            :hide_settings,
+            :group_setting,
+          ),
+          group_setting: opts[:upcoming_change][:group_setting]&.to_sym,
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
