@@ -1091,6 +1091,21 @@ RSpec.describe Search do
       )
     end
 
+    it "escapes HTML from the indexed text while keeping highlights" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      reply.update!(
+        raw: %(elephant [link](https://example.com "<img src=x onerror=alert(1)>") AT&T elephant),
+      )
+
+      result = Search.execute("elephant")
+      post = result.posts.first
+
+      expect(result.blurb(post)).to eq(
+        "<span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">elephant</span> &lt;img src=x onerror=alert(1)&gt; https://example.com link AT &amp; T <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">elephant</span>",
+      )
+    end
+
     it "returns the right post and blurb for searches with phrase" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
