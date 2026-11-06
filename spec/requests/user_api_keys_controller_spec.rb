@@ -254,6 +254,21 @@ RSpec.describe UserApiKeysController do
       )
     end
 
+    it "stores a repeated scope only once" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      post "/user-api-key.json", params: args.merge(scopes: "read,notifications,read,read")
+      expect(response.status).to eq(200)
+
+      expect(user.user_api_keys.first.scopes.map(&:name)).to contain_exactly(
+        "read",
+        "notifications",
+      )
+    end
+
     it "returns payload without redirect when auth_redirect not provided" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       user = Fabricate(:user, trust_level: TrustLevel[0])

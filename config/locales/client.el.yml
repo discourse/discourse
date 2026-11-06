@@ -524,20 +524,20 @@ el:
       title: "Προσαρμόστε τον ιστότοπό σας"
       back: "Πίσω"
       next: "Επόμενο"
+      steps:
+        theme:
+          title: "Επιλέξτε ένα θέμα"
       sections:
-        theme: "Θέμα"
         fonts: "Γραμματοσειρές"
+        logo: "Λογότυπο"
         homepage: "Αρχική Σελίδα"
-        welcome_banner: "Banner καλωσορίσματος"
-        search: "Αναζήτηση"
       theme:
         selected: "Επιλεγμένο"
-      colors:
-        light: "Φωτεινή"
-        dark: "Σκοτεινή"
       fonts:
-        base_font: "Βασική γραμματοσειρά"
-        heading_font: "Γραμματοσειρά επικεφαλίδας"
+        base_font: "Κύριο μέρος"
+        heading_font: "Επικεφαλίδες"
+      logo:
+        help_text: "Το συνιστώμενο μέγεθος είναι 600 x 80 pixel."
       homepage:
         topics: "Θέματα"
         categories: "Κατηγορίες"

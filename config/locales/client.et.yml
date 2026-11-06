@@ -267,12 +267,9 @@ et:
       back: "Tagasi"
       next: "Järgmine"
       sections:
-        theme: "Kujundusteema"
         homepage: "Avaleht"
-        search: "Otsi"
-      colors:
-        light: "Hele"
-        dark: "Tume"
+      fonts:
+        base_font: "Sisu"
       homepage:
         topics: "Teemasid"
         categories: "Liigid"

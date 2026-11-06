@@ -6,10 +6,9 @@ import { service } from "@ember/service";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import FontsSection from "discourse/components/design-wizard/fonts-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
-import SearchSection from "discourse/components/design-wizard/search-section";
+import LogoSection from "discourse/components/design-wizard/logo-section";
 import Section from "discourse/components/design-wizard/section";
 import ThemeSection from "discourse/components/design-wizard/theme-section";
-import WelcomeBannerSection from "discourse/components/design-wizard/welcome-banner-section";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -139,18 +138,13 @@ export default class DesignWizardControls extends Component {
   }
 
   @action
-  toggleWelcomeBanner() {
-    this.designWizard.selectWelcomeBanner(!this.designWizard.welcomeBanner);
+  uploadLogo(upload) {
+    this.designWizard.selectLogo(upload);
   }
 
   @action
-  selectWelcomeBannerLocation(location) {
-    this.designWizard.selectWelcomeBannerLocation(location);
-  }
-
-  @action
-  selectSearchExperience(experience) {
-    this.designWizard.selectSearchExperience(experience);
+  removeLogo() {
+    this.designWizard.selectLogo(null);
   }
 
   @action
@@ -182,6 +176,15 @@ export default class DesignWizardControls extends Component {
             />
           </Section>
         {{else if (eq this.currentStep "colors")}}
+          <Section @title={{i18n "design_wizard.sections.logo"}} @type="logo">
+            <LogoSection
+              @disabled={{this.busy}}
+              @logoUrl={{this.designWizard.logo}}
+              @onRemove={{this.removeLogo}}
+              @onUpload={{this.uploadLogo}}
+            />
+          </Section>
+
           <Section
             @title={{i18n "design_wizard.sections.colors"}}
             @type="colors"
@@ -198,7 +201,7 @@ export default class DesignWizardControls extends Component {
               @showsLightPalettes={{this.designWizard.showsLightPalettes}}
             />
           </Section>
-
+        {{else}}
           <Section @title={{i18n "design_wizard.sections.fonts"}} @type="fonts">
             <FontsSection
               @bodyFont={{this.designWizard.bodyFont}}
@@ -207,7 +210,7 @@ export default class DesignWizardControls extends Component {
               @onSelectHeadingFont={{this.selectHeadingFont}}
             />
           </Section>
-        {{else}}
+
           <Section
             @title={{i18n "design_wizard.sections.homepage"}}
             @type="homepage"
@@ -221,32 +224,6 @@ export default class DesignWizardControls extends Component {
               @themeId={{this.designWizard.themeId}}
             />
           </Section>
-
-          {{#if this.designWizard.supportsWelcomeBanner}}
-            <Section
-              @title={{i18n "design_wizard.sections.welcome_banner"}}
-              @type="welcome-banner"
-            >
-              <WelcomeBannerSection
-                @enabled={{this.designWizard.welcomeBanner}}
-                @location={{this.designWizard.welcomeBannerLocation}}
-                @onSelectLocation={{this.selectWelcomeBannerLocation}}
-                @onToggle={{this.toggleWelcomeBanner}}
-              />
-            </Section>
-
-          {{/if}}
-          {{#if this.designWizard.supportsSearch}}
-            <Section
-              @title={{i18n "design_wizard.sections.search"}}
-              @type="search"
-            >
-              <SearchSection
-                @onSelect={{this.selectSearchExperience}}
-                @searchExperience={{this.designWizard.searchExperience}}
-              />
-            </Section>
-          {{/if}}
         {{/if}}
       </div>
 

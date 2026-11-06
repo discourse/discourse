@@ -65,6 +65,14 @@ module DiscourseMcp
           created_at: theme.created_at.iso8601,
           updated_at: theme.updated_at.iso8601,
           theme_fields: theme.theme_fields.map { |field| theme_field_json(field) },
+          settings:
+            theme.settings.values.map do |setting|
+              ThemeSettingsSerializer.new(setting, root: false).as_json
+            end,
+          translations:
+            theme.translations.map do |translation|
+              { key: translation.key, value: translation.value, default: translation.default }
+            end,
         }
       end
 

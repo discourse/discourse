@@ -3997,6 +3997,44 @@ RSpec.describe User do
     end
   end
 
+  describe ".whisperers" do
+    subject(:whisperers) { User.whisperers.where(id: candidates) }
+
+    fab!(:group)
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:member, :user)
+    fab!(:regular_user, :user)
+
+    let(:candidates) { [admin, moderator, member, regular_user] }
+
+    before { group.add(member) }
+
+    context "when a group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = group.id.to_s }
+
+      it "returns administrators and members of the whisper groups" do
+        expect(whisperers).to contain_exactly(admin, member)
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
+    end
+
+    context "when no group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = "" }
+
+      it "returns no user" do
+        expect(whisperers).to be_empty
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
+    end
+  end
+
   describe "#whisperer?" do
     fab!(:group)
 

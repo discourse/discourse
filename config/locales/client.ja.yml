@@ -434,19 +434,17 @@ ja:
       back: "戻る"
       next: "次へ"
       sections:
-        theme: "テーマ"
         fonts: "フォント"
+        logo: "ロゴ"
         homepage: "ホームページ"
-        welcome_banner: "ウェルカムバナー"
-        search: "検索"
       theme:
         selected: "選択済み"
-      colors:
-        light: "ライト"
-        dark: "ダーク"
       fonts:
-        base_font: "ベースフォント"
-        heading_font: "見出しのフォント"
+        base_font: "本文"
+        heading_font: "見出し"
+      logo:
+        description: "サイトのトップナビゲーションと、サイトのメール通知の上部に表示されます。"
+        help_text: "推奨サイズは 600 x 80 ピクセルです。"
       homepage:
         topics: "トピック"
         categories: "カテゴリ"

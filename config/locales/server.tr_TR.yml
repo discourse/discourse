@@ -4880,7 +4880,13 @@ tr_TR:
   design_wizard:
     palette_pairs:
       default: "Varsayılan"
+      neutral: "Nötr"
+      shades_of_blue: "Mavi Tonları"
+      summer: "Yaz"
       dracula: "Drakula"
+      grey_amber: "Gri Kehribar"
+      latte: "Latte"
+      dark_rose: "Kara Gül"
   wizard:
     title: "Discourse Kurulumu"
     step:

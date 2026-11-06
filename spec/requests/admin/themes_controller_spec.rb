@@ -1390,6 +1390,15 @@ RSpec.describe Admin::ThemesController do
         expect(response.parsed_body["errors"]).to eq(
           ["The property at JSON Pointer '/0/links/0/name' must be at most 20 characters long."],
         )
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: "{}",
+            }
+
+        expect(response.status).to eq(422)
+        expect(theme.reload.settings[:objects_setting].value).to be_an(Array)
       end
 
       it "updates an objects theme setting" do

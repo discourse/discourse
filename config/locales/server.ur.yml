@@ -3606,7 +3606,13 @@ ur:
   design_wizard:
     palette_pairs:
       default: "ڈِیفالٹ"
+      neutral: "نیوٹرل"
+      shades_of_blue: "نیلے رنگ کے شَیڈ"
+      summer: "موسمِ گرما"
       dracula: "ڈریکولا"
+      grey_amber: "گرے امبر"
+      latte: "لا ٹَیے"
+      dark_rose: "گہرا گلابی"
   wizard:
     title: "ڈِسکورس سَیٹ اَپ"
     step:

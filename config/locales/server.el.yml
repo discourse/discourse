@@ -3027,6 +3027,9 @@ el:
   design_wizard:
     palette_pairs:
       default: "Προεπιλογή"
+      neutral: "Ουδέτερο"
+      summer: "Καλοκαίρι"
+      dark_rose: "Σκούρο Τριαντάφυλλο"
   wizard:
     title: "Εγκατάσταση Discourse"
     step:

@@ -96,12 +96,26 @@ module Email
       end
     end
 
+    class MaxMimeDepthExceededError < ProcessingError
+    end
+
+    class MaxMimePartsExceededError < ProcessingError
+    end
+
     attr_reader :incoming_email
     attr_reader :raw_email
     attr_reader :mail
     attr_reader :message_id
 
     COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
+
+    # The mail gem walks nested MIME parts recursively, so bound the nesting
+    # before any traversal to keep one message from exhausting the stack.
+    MAX_MIME_DEPTH = 20
+
+    # Bound the total number of MIME parts so a wide message can't monopolise
+    # the mail worker.
+    MAX_MIME_PARTS = 1_000
 
     def self.formats
       @formats ||= Enum.new(plaintext: 1, markdown: 2)
@@ -122,6 +136,8 @@ module Email
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
       @destinations ||= opts[:destinations]
+
+      ensure_shallow_mime_structure!
     end
 
     def process!
@@ -163,6 +179,42 @@ module Email
           return true
         end
       end
+      false
+    end
+
+    def ensure_shallow_mime_structure!
+      pending = [[@mail, 1]]
+      part_count = 1
+
+      until pending.empty?
+        part, depth = pending.pop
+        raise MaxMimeDepthExceededError if depth > MAX_MIME_DEPTH
+
+        next unless part.multipart?
+
+        # Mail parses every sibling as soon as `parts` is called, so check the
+        # raw source first to avoid building a huge tree only to reject it.
+        raise MaxMimePartsExceededError if too_many_mime_parts?(part)
+
+        children = part.parts
+        part_count += children.size
+        raise MaxMimePartsExceededError if part_count > MAX_MIME_PARTS
+
+        pending.concat(children.map { |child| [child, depth + 1] })
+      end
+    end
+
+    def too_many_mime_parts?(part)
+      boundary = part.boundary
+      return false if boundary.blank?
+
+      count = 0
+      part
+        .raw_source
+        .scan(/(?:\A|\r?\n)--#{Regexp.escape(boundary)}(?:--)?(?=\s*$)/) do
+          count += 1
+          return true if count > MAX_MIME_PARTS
+        end
       false
     end
 
@@ -558,7 +610,12 @@ module Email
     def extract_from_outlook(doc)
       # Outlook properly identifies the signature and any replied/forwarded email
       # Use their id to remove them and anything that comes after
-      elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
+      elided =
+        remove_with_following_siblings(
+          doc,
+          predicate: "@id='Signature' or @id='divRplyFwdMsg'",
+          standalone_predicate: "local-name()='hr'",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -591,7 +648,14 @@ module Email
     def extract_from_apple_mail(doc)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
-      elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
+      elided =
+        doc
+          .children
+          .xpath(
+            ".//*[@id='AppleMailSignature'][position()=last()]/following-sibling::* | " \
+              "self::*[@id='AppleMailSignature'][not(preceding-sibling::*[@id='AppleMailSignature'][1])]/following-sibling::*",
+          )
+          .remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -599,17 +663,18 @@ module Email
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided =
-        doc.css(
-          "*[class^='moz-cite'], *[class^='moz-cite'] ~ *, " \
-            "*[class^='moz-signature'], *[class^='moz-signature'] ~ *, " \
-            "*[class^='moz-forward'], *[class^='moz-forward'] ~ *",
-        ).remove
+        remove_with_following_siblings(
+          doc,
+          predicate:
+            "starts-with(@class, 'moz-cite') or " \
+              "starts-with(@class, 'moz-signature') or starts-with(@class, 'moz-forward')",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_protonmail(doc)
       # Removes anything that has a class starting with "protonmail_" and everything after that
-      elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
+      elided = remove_with_following_siblings(doc, predicate: "starts-with(@class, 'protonmail_')")
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -1698,6 +1763,16 @@ module Email
       return false if post.blank?
       num_of_days = SiteSetting.disallow_reply_by_email_after_days
       num_of_days > 0 && post.created_at < num_of_days.days.ago
+    end
+
+    private
+
+    def remove_with_following_siblings(doc, predicate:, standalone_predicate: nil)
+      matches = "descendant-or-self::*[#{predicate}]"
+      first_matches = "#{matches}[not(preceding-sibling::*[#{predicate}][1])]"
+      query = "#{matches} | #{first_matches}/following-sibling::*"
+      query += " | descendant-or-self::*[#{standalone_predicate}]" if standalone_predicate
+      doc.children.xpath(query).remove
     end
   end
 end

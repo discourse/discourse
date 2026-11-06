@@ -2807,6 +2807,7 @@ zh_CN:
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
     enable_desktop_push_notifications: "激活桌面界面的推送通知。此功能可将实时警报从网站直接发送到您的桌面，从而增强参与度并确保用户始终获得最新信息。不过，此功能的有效性依赖于浏览器对推送通知的支持。"
     push_notification_time_window_mins: "在发送推送通知前等待 (n) 分钟。有助于避免向活跃的在线用户发送推送通知。"
+    push_notification_trusted_hosts: "推送服务：其订阅可以立即交付，并且可以容忍临时中断。子域名包括在内。 其他主机上的订阅限制为每个用户两次， 在两次交货失败或缓慢交货之后，一次在整个工地上交货。"
     push_notification_localization_max_wait_mins: "在将新帖子翻译成收件人语言之前，推送通知的最长等待时间（以分钟为单位）。设置为 0 则无需等待即可发送。"
     base_font: "用于网站上大多数文本的基础字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
     heading_font: "用于网站上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
@@ -5470,7 +5471,7 @@ zh_CN:
   design_wizard:
     themes:
       concord:
-        description: "将侧边栏替换为由类别、聊天频道和实时音频/视频房间组成的单个频道列表。"
+        description: "以聊天为主导的布局，包含一个类别、聊天频道和语音室列表。"
     errors:
       palette_unavailable: "所选调色板中有一个不可用于选定的主题。"
       site_settings_update_failed: "网站设置无法更新。"
@@ -5478,7 +5479,13 @@ zh_CN:
       default: "默认"
       wcag: "WCAG"
       solarized: "Solarized"
+      neutral: "中性"
+      shades_of_blue: "蓝黑"
+      summer: "夏季"
       dracula: "Dracula"
+      grey_amber: "灰琥珀色"
+      latte: "棕色"
+      dark_rose: "黑红"
   wizard:
     title: "Discourse 设置"
     step:

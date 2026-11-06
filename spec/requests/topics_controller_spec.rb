@@ -416,6 +416,47 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "moving posts as a TL4 user who can only read the source category" do
+      fab!(:read_only_group, :group)
+      fab!(:private_category) do
+        Fabricate(
+          :private_category,
+          group: read_only_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic, user: post_author2) }
+
+      before do
+        GroupUser.create!(group: read_only_group, user: trust_level_4)
+        sign_in(trust_level_4)
+      end
+
+      it "does not allow posts to be moved into a new public topic" do
+        post "/t/#{private_topic.id}/move-posts.json",
+             params: {
+               title: "Leaked private topic content",
+               post_ids: [private_post.id],
+               category_id: category.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(private_post.reload.topic_id).to eq(private_topic.id)
+      end
+
+      it "does not allow posts to be moved into an existing public topic" do
+        post "/t/#{private_topic.id}/move-posts.json",
+             params: {
+               post_ids: [private_post.id],
+               destination_topic_id: dest_topic.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(private_post.reload.topic_id).to eq(private_topic.id)
+      end
+    end
+
     describe "moving to an existing topic" do
       before { sign_in(moderator) }
 
@@ -3310,6 +3351,17 @@ RSpec.describe TopicsController do
       )
     end
 
+    it "omits page values treated as zero from the redirect" do
+      get "/t/external_id/asdf.json", params: { page: "0" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+
+      get "/t/external_id/asdf.json", params: { page: "00" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+
+      get "/t/external_id/asdf.json", params: { page: "abc" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+    end
+
     describe "when user does not have access to the topic" do
       it "returns a not-found response" do
         sign_in(user)
@@ -3523,6 +3575,58 @@ RSpec.describe TopicsController do
             "#{Discourse.base_url_no_prefix}#{public_source_topic.relative_url(public_source_post.post_number)}",
           "title" => public_source_topic.title,
         ),
+      )
+    end
+
+    it "does not expose linkbacks from hidden or whisper source posts to non-staff viewers" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+      public_post = Fabricate(:post, user: post_author1)
+      public_topic = public_post.topic
+      link_url =
+        "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}"
+
+      visible_source_topic = Fabricate(:topic, user: post_author1, title: "Visible source topic")
+      Fabricate(:post, topic: visible_source_topic, user: post_author1, raw: "op body")
+      visible_source_post =
+        Fabricate(:post, topic: visible_source_topic, user: post_author1, raw: link_url)
+
+      hidden_source_topic = Fabricate(:topic, user: post_author1, title: "Hidden source topic")
+      Fabricate(:post, topic: hidden_source_topic, user: post_author1, raw: "op body")
+      hidden_source_post =
+        Fabricate(:post, topic: hidden_source_topic, user: post_author1, raw: link_url)
+
+      whisper_source_topic = Fabricate(:topic, user: post_author1, title: "Whisper source topic")
+      Fabricate(:post, topic: whisper_source_topic, user: post_author1, raw: "op body")
+      whisper_source_post =
+        Fabricate(:post, topic: whisper_source_topic, user: post_author1, raw: link_url)
+
+      TopicLink.extract_from(visible_source_post)
+      TopicLink.extract_from(hidden_source_post)
+      TopicLink.extract_from(whisper_source_post)
+
+      hidden_source_post.hide!(PostActionType.types[:off_topic])
+      whisper_source_post.update!(post_type: Post.types[:whisper])
+
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response.parsed_body.dig("post_stream", "posts").find { |p| p["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"].map { |l| l["title"] }).to contain_exactly(
+        "Visible source topic",
+      )
+
+      sign_in(moderator)
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response.parsed_body.dig("post_stream", "posts").find { |p| p["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"].map { |l| l["title"] }).to contain_exactly(
+        "Visible source topic",
+        "Hidden source topic",
+        "Whisper source topic",
       )
     end
 
@@ -3959,6 +4063,23 @@ RSpec.describe TopicsController do
       get "/t/wrong-slug/#{topic.id}", params: { Discourse::LOCALE_PARAM => "ja" }
 
       expect(response).to redirect_to("#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=ja")
+    end
+
+    it "omits page zero when redirecting to the correct slug" do
+      get "/t/wrong-slug/#{topic.id}", params: { page: 0 }
+
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it "encodes the locale param when redirecting to the correct slug" do
+      locale = "en，但他们的解决方案"
+
+      get "/t/wrong-slug/#{topic.id}", params: { Discourse::LOCALE_PARAM => locale }
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.location).to eq(
+        "#{Discourse.base_url}#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=en%EF%BC%8C%E4%BD%86%E4%BB%96%E4%BB%AC%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88",
+      )
     end
 
     context "with registered redirect_to_correct_topic_additional_query_parameters" do

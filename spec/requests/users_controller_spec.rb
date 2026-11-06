@@ -387,6 +387,35 @@ RSpec.describe UsersController do
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
       end
 
+      it "stops private message pushes to previously authorized browsers after a password reset" do
+        Fabricate(:push_subscription, user: user1)
+        allow(WebPush).to receive(:payload_send)
+
+        put "/u/password-reset/#{email_token.token}.json", params: { password: "hg9ow8yHG32O" }
+
+        expect(response.status).to eq(200)
+        expect(user1.reload.confirm_password?("hg9ow8yHG32O")).to eq(true)
+        expect(UserAuthToken.exists?(user_auth_token.id)).to eq(false)
+
+        private_post = Fabricate(:private_message_post, recipient: user1)
+        Jobs::DeliverPushNotification.new.execute(
+          user_id: user1.id,
+          bypass_time_window: true,
+          payload: {
+            notification_type: Notification.types[:private_message],
+            topic_id: private_post.topic_id,
+            post_id: private_post.id,
+            topic_title: private_post.topic.title,
+            excerpt: private_post.raw,
+            username: private_post.user.username,
+            post_url: private_post.url,
+          },
+        )
+
+        expect(WebPush).not_to have_received(:payload_send)
+        expect(user1.push_subscriptions).to be_empty
+      end
+
       it "disallows double password reset" do
         put "/u/password-reset/#{email_token.token}", params: { password: "hg9ow8yHG32O" }
         put "/u/password-reset/#{email_token.token}", params: { password: "test123987AsdfXYZ" }
@@ -6455,6 +6484,39 @@ RSpec.describe UsersController do
     end
 
     context "when searching usernames" do
+      it "does not expose members of hidden category moderation groups through can_review" do
+        SiteSetting.enable_category_group_moderation = true
+        hidden_category_mod = Fabricate(:user)
+        ordinary_user = Fabricate(:user)
+        group_owner = Fabricate(:user)
+        hidden_group =
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:owners],
+            members_visibility_level: Group.visibility_levels[:owners],
+          )
+        hidden_group.add(hidden_category_mod)
+        hidden_group.add_owner(group_owner)
+        Fabricate(:category_moderation_group, group: hidden_group)
+        params = {
+          usernames: [hidden_category_mod.username, ordinary_user.username].join(","),
+          can_review: true,
+        }
+
+        get "/u/search/users.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"]).to be_empty
+
+        sign_in(group_owner)
+        get "/u/search/users.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["users"].map { |found_user| found_user["username"] },
+        ).to contain_exactly(hidden_category_mod.username)
+      end
+
       it "searches when provided a list of usernames" do
         users = Fabricate.times(3, :user)
 
@@ -8058,6 +8120,7 @@ RSpec.describe UsersController do
       before { 2.times { sign_in(user1) } }
 
       it "logs user out" do
+        subscription = Fabricate(:push_subscription, user: user1)
         ids = user1.user_auth_tokens.order(:created_at).pluck(:id)
 
         post "/u/#{user1.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
@@ -8067,6 +8130,7 @@ RSpec.describe UsersController do
         user1.user_auth_tokens.reload
         expect(user1.user_auth_tokens.count).to eq(1)
         expect(user1.user_auth_tokens.first.id).to eq(ids[1])
+        expect(PushSubscription.exists?(subscription.id)).to eq(true)
       end
 
       it "checks if token exists" do
@@ -8104,10 +8168,15 @@ RSpec.describe UsersController do
       end
 
       it "logs user out from everywhere if token_id is not present" do
+        Fabricate(:push_subscription, user: user1)
+        other_subscription = Fabricate(:push_subscription, user: another_user)
+
         post "/u/#{user1.username}/preferences/revoke-auth-token.json"
 
         expect(response.status).to eq(200)
         expect(user1.user_auth_tokens.count).to eq(0)
+        expect(user1.push_subscriptions).to be_empty
+        expect(PushSubscription.exists?(other_subscription.id)).to eq(true)
       end
     end
   end

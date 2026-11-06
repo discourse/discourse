@@ -304,9 +304,9 @@ bg:
       back: "Назад"
       next: "Напред"
       sections:
-        theme: "Тема"
         homepage: "Начална страница"
-        search: "Търсене"
+      fonts:
+        base_font: "Тяло"
       homepage:
         topics: "Теми"
         categories: "Категории"

@@ -34,7 +34,7 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
         expect(horizon["description"]).to eq("A simple, beautiful theme")
-        expect(horizon).to include("supports_welcome_banner" => true, "supports_search" => true)
+        expect(horizon).to include("default_homepage" => "latest")
         expect(horizon["palette_pairs"].map { |pair| pair["key"] }).to include(
           "horizon",
           "royal",
@@ -86,12 +86,11 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["themes"].find { |theme| theme["id"] == "concord" }).to include(
+          "default_homepage" => "chat",
           "name" => "Concord",
           "remote_url" => "https://github.com/discourse/discourse-concord-theme",
           "description" => I18n.t("design_wizard.themes.concord.description"),
           "palette_pairs" => [],
-          "supports_welcome_banner" => false,
-          "supports_search" => false,
           "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
           "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
@@ -182,9 +181,9 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
         expect(themes.find { |theme| theme["id"] == concord.id }).to include(
           "default" => true,
+          "description" => I18n.t("design_wizard.themes.concord.description"),
+          "default_homepage" => "chat",
           "color_scheme_id" => palette.id,
-          "supports_welcome_banner" => false,
-          "supports_search" => false,
           "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
           "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
@@ -231,6 +230,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["base_font"]).to eq("lato")
         expect(response.parsed_body["heading_font"]).to eq("merriweather")
         expect(response.parsed_body["homepage"]).to eq("categories")
+        expect(response.parsed_body["restorable_homepages"]).to include("new", "hot")
       end
 
       it "does not include current_theme when the default theme is a core theme" do
@@ -325,7 +325,6 @@ RSpec.describe Admin::Config::DesignWizardController do
               heading_font: "merriweather",
               homepage: "categories",
               category_page_style: "categories_boxes",
-              welcome_banner_location: "below_site_header",
             }
 
         expect(response.status).to eq(200)
@@ -336,7 +335,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.heading_font).to eq("merriweather")
         expect(SiteSetting.default_homepage).to eq("categories")
         expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
-        expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
         expect(light.reload.user_selectable).to eq(true)
       end
 
@@ -387,30 +385,17 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["errors"]).to be_present
       end
 
-      it "applies the welcome banner and search choices to the chosen theme" do
-        horizon = Theme.horizon_theme
+      it "restores a homepage the wizard does not offer as a choice" do
+        SiteSetting.default_homepage = "categories"
 
-        put "/admin/config/design-wizard.json",
-            params: {
-              theme_id: horizon.id,
-              enable_welcome_banner: false,
-              search_experience: "search_field",
-            }
-
-        expect(response.status).to eq(200)
-        expect(SiteSetting.enable_welcome_banner(theme_id: horizon.id)).to eq(false)
-        expect(SiteSetting.search_experience(theme_id: horizon.id)).to eq("search_field")
-      end
-
-      it "returns a 400 for an unsupported search experience" do
         put "/admin/config/design-wizard.json",
             params: {
               theme_id: Theme::CORE_THEMES["horizon"],
-              search_experience: "not_an_experience",
+              homepage: "new",
             }
 
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"]).to be_present
+        expect(response.status).to eq(200)
+        expect(SiteSetting.default_homepage).to eq("new")
       end
 
       it "returns a 400 with errors for an invalid contract" do

@@ -620,7 +620,7 @@ en:
       dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose colors, fonts, and how your site is laid out."
+        description: "Make your site your own with logo, colors, and layout."
         action: "See options"
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
@@ -684,16 +684,15 @@ en:
           description: "Pick the overall look for your site. You can fine-tune it in the next steps."
         colors:
           title: "Make it yours"
-          description: "Choose your site's colors and fonts."
+          description: "Add your logo and choose your site's colors."
         homepage:
-          title: "Site layout"
-          description: "Choose what members see first and how they find their way around."
+          title: "Look & feel"
+          description: "Choose your fonts and what members see first."
       sections:
         colors: "Site color modes"
         fonts: "Fonts"
+        logo: "Logo"
         homepage: "Homepage"
-        welcome_banner: "Welcome banner"
-        search: "Search"
       theme:
         selected: "Selected"
         applying: "Applying…"
@@ -710,34 +709,17 @@ en:
       fonts:
         base_font: "Body"
         heading_font: "Headings"
+      logo:
+        description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
+        help_text: "Recommended size is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categories"
-        topic_page_type: "Topic page type"
-        topic_pages:
-          latest: "Topics sorted by their most recent activity, newest first."
-          new: "Topics created in the last few days, newest first."
-          hot: "Topics trending right now, blending overall popularity with recent engagement."
         category_page_style: "Category page style"
         styles:
           boxes: "Boxes"
           with_topics: "Categories with topics"
           only: "Categories only"
-      welcome_banner:
-        enable: "Show a welcome banner"
-        enable_description: "Greet visitors with your site name and a search box"
-        location: "Banner location"
-        locations:
-          below_site_header: "Below the site header"
-          above_topic_content: "Above the topic list"
-      search:
-        experiences:
-          search_icon:
-            title: "Search icon"
-            description: "A magnifying glass in the header that opens search."
-          search_field:
-            title: "Search field"
-            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"
