@@ -112,6 +112,8 @@ class Groups::Create
   policy :can_request_access
   model :user_attributes, :build_user_attributes, optional: true
   model :group, :instantiate_group
+  policy :can_add_initial_members
+  policy :can_auto_add_members
   only_if(:should_associate_groups) { step :associate_groups }
 
   transaction do
@@ -143,6 +145,18 @@ class Groups::Create
         options.dynamic_attributes,
       ),
     ) { it.group_users.build(user_attributes) }
+  end
+
+  def can_add_initial_members(guardian:, group:, params:)
+    User
+      .where(id: params.owner_ids + params.user_ids)
+      .all? { |member| guardian.can_add_group_member?(member, group) }
+  end
+
+  def can_auto_add_members(guardian:, group:)
+    GroupMutations
+      .staff_matching_email_domains(group.automatic_membership_email_domains)
+      .all? { |member| guardian.can_add_group_member?(member, group) }
   end
 
   def should_associate_groups(guardian:, params:)

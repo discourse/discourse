@@ -448,6 +448,7 @@ class GroupsController < ApplicationController
 
     group_user = GroupUser.find_by(group_id: group.id, user_id: user_id)
     raise Discourse::InvalidParameters.new(:user_id) if group_user.blank?
+    guardian.ensure_can_edit_user!(group_user.user)
 
     group_user.update!(notification_level: notification_level)
 

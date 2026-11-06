@@ -98,6 +98,278 @@ describe GroupUpdater do
       }.to raise_error(Discourse::InvalidAccess)
     end
 
+    context "when changing the primary group flag" do
+      fab!(:member, :user)
+
+      before do
+        SiteSetting.moderators_manage_groups = true
+        group.add(member)
+      end
+
+      it "does not let a moderator change it while another staff account is a member" do
+        [admin, Fabricate(:moderator)].each do |staff_user|
+          staff_group = Fabricate(:group)
+          staff_group.add(member)
+          staff_group.add(staff_user)
+
+          expect {
+            described_class.update(moderator.guardian, staff_group, { "primary_group" => true })
+          }.to raise_error(Discourse::InvalidAccess)
+
+          expect(staff_group.reload.primary_group).to eq(false)
+          expect(staff_user.reload.primary_group_id).to eq(nil)
+          expect(member.reload.primary_group_id).to eq(nil)
+        end
+      end
+
+      it "does not let a moderator clear it while another staff account is a member" do
+        group.update!(primary_group: true)
+        group.add(admin)
+        expect(admin.reload.primary_group_id).to eq(group.id)
+
+        expect {
+          described_class.update(moderator.guardian, group, { "primary_group" => "false" })
+        }.to raise_error(Discourse::InvalidAccess)
+
+        expect(group.reload.primary_group).to eq(true)
+        expect(admin.reload.primary_group_id).to eq(group.id)
+      end
+
+      it "lets an admin clear it while staff accounts are members" do
+        group.update!(primary_group: true)
+        group.add(moderator)
+
+        described_class.update(admin.guardian, group, { "primary_group" => "false" })
+
+        expect(group.reload.primary_group).to eq(false)
+        expect(moderator.reload.primary_group_id).to eq(nil)
+      end
+
+      it "lets a moderator save other settings when the flag is unchanged" do
+        group.add(admin)
+
+        described_class.update(
+          moderator.guardian,
+          group,
+          { "primary_group" => false, "bio_raw" => "We write docs" },
+        )
+
+        expect(group.reload.bio_raw).to eq("We write docs")
+      end
+
+      it "lets a moderator change it when the only staff member is themselves" do
+        group.add(moderator)
+
+        described_class.update(moderator.guardian, group, { "primary_group" => true })
+
+        expect(group.reload.primary_group).to eq(true)
+        expect(member.reload.primary_group_id).to eq(group.id)
+        expect(moderator.reload.primary_group_id).to eq(group.id)
+      end
+
+      it "lets an admin change it while staff accounts are members" do
+        group.add(moderator)
+
+        described_class.update(admin.guardian, group, { "primary_group" => true })
+
+        expect(moderator.reload.primary_group_id).to eq(group.id)
+      end
+    end
+
+    context "when changing the title" do
+      before { SiteSetting.moderators_manage_groups = true }
+
+      it "does not let a moderator change it while another staff account would receive it" do
+        blank_title_group = Fabricate(:group)
+        blank_title_group.add(admin)
+        titled_group = Fabricate(:group, title: "Docs team")
+        peer_moderator = Fabricate(:moderator)
+        titled_group.add(peer_moderator)
+        expect(peer_moderator.reload.title).to eq("Docs team")
+
+        changes = [[blank_title_group, "Writers"], [titled_group, "Writers"], [titled_group, ""]]
+        changes.each do |staff_group, new_title|
+          expect {
+            described_class.update(moderator.guardian, staff_group, { "title" => new_title })
+          }.to raise_error(Discourse::InvalidAccess)
+        end
+
+        expect(blank_title_group.reload.title).to eq(nil)
+        expect(titled_group.reload.title).to eq("Docs team")
+        expect(admin.reload.title).to eq(nil)
+        expect(peer_moderator.reload.title).to eq("Docs team")
+      end
+
+      it "lets a moderator change it when other staff accounts keep their own title" do
+        admin.update!(title: "Site admin")
+        group.add(admin)
+        group.add(user)
+
+        described_class.update(moderator.guardian, group, { "title" => "Writers" })
+
+        expect(group.reload.title).to eq("Writers")
+        expect(user.reload.title).to eq("Writers")
+        expect(admin.reload.title).to eq("Site admin")
+
+        titled_group = Fabricate(:group, title: "Docs team")
+        peer_moderator = Fabricate(:moderator)
+        titled_group.add(peer_moderator)
+        peer_moderator.update_columns(title: nil)
+
+        described_class.update(moderator.guardian, titled_group, { "title" => "" })
+
+        expect(titled_group.reload.title).to be_blank
+      end
+
+      it "lets a moderator change it when the only staff member is themselves" do
+        group.add(moderator)
+
+        described_class.update(moderator.guardian, group, { "title" => "Writers" })
+
+        expect(moderator.reload.title).to eq("Writers")
+      end
+
+      it "lets a moderator save other settings when the title is unchanged" do
+        group.update!(title: "Docs team")
+        group.add(admin)
+        admin.update_columns(title: nil)
+
+        described_class.update(
+          moderator.guardian,
+          group,
+          { "title" => "Docs team", "bio_raw" => "We write docs" },
+        )
+
+        expect(group.reload.bio_raw).to eq("We write docs")
+      end
+
+      it "lets an admin change it while staff accounts would receive it" do
+        group.add(moderator)
+
+        described_class.update(admin.guardian, group, { "title" => "Writers" })
+
+        expect(moderator.reload.title).to eq("Writers")
+      end
+    end
+
+    context "when the group adds members by email domain" do
+      fab!(:domain_admin) { Fabricate(:admin, email: "boss@staff.test") }
+
+      before { SiteSetting.moderators_manage_groups = true }
+
+      it "does not let a moderator save settings that would change another staff account joining by domain" do
+        category = Fabricate(:category)
+        settings = [
+          { "primary_group" => true },
+          { "title" => "Docs team" },
+          { "grant_trust_level" => 3 },
+          { "watching_category_ids" => [category.id] },
+        ]
+
+        settings.each do |setting|
+          domain_group = Fabricate(:group)
+
+          expect {
+            described_class.update(
+              moderator.guardian,
+              domain_group,
+              { "automatic_membership_email_domains" => "staff.test", **setting },
+            )
+          }.to raise_error(Discourse::InvalidAccess)
+
+          expect(domain_group.reload.automatic_membership_email_domains).to eq(nil)
+        end
+      end
+
+      it "does not let a moderator add a domain or a setting when the other is already there" do
+        titled_group = Fabricate(:group, title: "Docs team")
+        defaults_group = Fabricate(:group)
+        GroupTagNotificationDefault.create!(
+          group: defaults_group,
+          tag: Fabricate(:tag),
+          notification_level: NotificationLevels.all[:watching],
+        )
+        domain_group = Fabricate(:group, automatic_membership_email_domains: "staff.test")
+
+        [titled_group, defaults_group].each do |configured_group|
+          expect {
+            described_class.update(
+              moderator.guardian,
+              configured_group,
+              { "automatic_membership_email_domains" => "@Staff.test" },
+            )
+          }.to raise_error(Discourse::InvalidAccess)
+          expect(configured_group.reload.automatic_membership_email_domains).to eq(nil)
+        end
+
+        expect {
+          described_class.update(moderator.guardian, domain_group, { "title" => "Docs team" })
+        }.to raise_error(Discourse::InvalidAccess)
+        expect(domain_group.reload.title).to eq(nil)
+      end
+
+      it "lets a moderator add a domain to a group whose settings leave joining accounts alone" do
+        described_class.update(
+          moderator.guardian,
+          group,
+          { "automatic_membership_email_domains" => "staff.test" },
+        )
+
+        expect(group.reload.automatic_membership_email_domains).to eq("staff.test")
+      end
+
+      it "lets a moderator save it when only regular users and themselves would join" do
+        moderator.primary_email.update!(email: "mod@crew.test")
+        Fabricate(:user, email: "writer@crew.test")
+        category = Fabricate(:category)
+
+        described_class.update(
+          moderator.guardian,
+          group,
+          {
+            "automatic_membership_email_domains" => "crew.test",
+            "primary_group" => true,
+            "watching_category_ids" => [category.id],
+          },
+          update_existing_users: false,
+        )
+
+        expect(group.reload).to have_attributes(
+          automatic_membership_email_domains: "crew.test",
+          primary_group: true,
+        )
+      end
+
+      it "lets a moderator save it when the matching staff accounts are already members" do
+        group.add(domain_admin)
+
+        described_class.update(
+          moderator.guardian,
+          group,
+          { "automatic_membership_email_domains" => "staff.test", "grant_trust_level" => 3 },
+        )
+
+        expect(group.reload.grant_trust_level).to eq(3)
+      end
+
+      it "lets an admin save it" do
+        category = Fabricate(:category)
+
+        described_class.update(
+          admin.guardian,
+          group,
+          {
+            "automatic_membership_email_domains" => "staff.test",
+            "primary_group" => true,
+            "watching_category_ids" => [category.id],
+          },
+          update_existing_users: false,
+        )
+
+        expect(group.reload.primary_group).to eq(true)
+      end
+    end
+
     it "returns false and keeps the model errors when the group is invalid" do
       expect(described_class.update(admin.guardian, group, { "name" => "" })).to eq(false)
       expect(group.errors).to be_present
@@ -172,6 +444,83 @@ describe GroupUpdater do
         )
 
         expect(CategoryUser.find_by(user: member, category:).notification_level).to eq(
+          NotificationLevels.all[:watching],
+        )
+      end
+
+      it "does not apply a moderator's defaults to other staff accounts" do
+        SiteSetting.moderators_manage_groups = true
+        tag = Fabricate(:tag)
+        other_moderator = Fabricate(:moderator)
+        group.add(other_moderator)
+        group.add(moderator)
+
+        described_class.update(
+          moderator.guardian,
+          group,
+          {
+            "default_notification_level" => NotificationLevels.all[:muted],
+            "watching_category_ids" => [category.id],
+            "tracking_tags" => [tag.name],
+          },
+          update_existing_users: true,
+        )
+
+        expect(GroupUser.find_by(group:, user: other_moderator).notification_level).not_to eq(
+          NotificationLevels.all[:muted],
+        )
+        expect(CategoryUser.where(user: other_moderator, category:)).to be_empty
+        expect(TagUser.where(user: other_moderator, tag:)).to be_empty
+
+        expect(GroupUser.find_by(group:, user: member).notification_level).to eq(
+          NotificationLevels.all[:muted],
+        )
+        expect(CategoryUser.find_by(user: member, category:).notification_level).to eq(
+          NotificationLevels.all[:watching],
+        )
+        expect(TagUser.find_by(user: member, tag:).notification_level).to eq(
+          NotificationLevels.all[:tracking],
+        )
+        expect(GroupUser.find_by(group:, user: moderator).notification_level).to eq(
+          NotificationLevels.all[:muted],
+        )
+      end
+
+      it "keeps a staff account's existing preference when a group owner changes the default" do
+        group.add(admin)
+        described_class.update(
+          admin.guardian,
+          group,
+          { "watching_category_ids" => [category.id] },
+          update_existing_users: true,
+        )
+
+        described_class.update(
+          owner.guardian,
+          group.reload,
+          { "tracking_category_ids" => [category.id] },
+          update_existing_users: true,
+        )
+
+        expect(CategoryUser.find_by(user: admin, category:).notification_level).to eq(
+          NotificationLevels.all[:watching],
+        )
+        expect(CategoryUser.find_by(user: member, category:).notification_level).to eq(
+          NotificationLevels.all[:tracking],
+        )
+      end
+
+      it "applies an admin's defaults to staff accounts" do
+        group.add(moderator)
+
+        described_class.update(
+          admin.guardian,
+          group,
+          { "watching_category_ids" => [category.id] },
+          update_existing_users: true,
+        )
+
+        expect(CategoryUser.find_by(user: moderator, category:).notification_level).to eq(
           NotificationLevels.all[:watching],
         )
       end

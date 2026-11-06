@@ -55,6 +55,26 @@ describe GroupOwnerManager do
         Discourse::InvalidAccess,
       )
     end
+
+    it "refuses to add another staff account to a group whose settings would change it" do
+      group.update!(primary_group: true)
+
+      expect {
+        described_class.add(owner.guardian, group, usernames: [user.username, admin.username])
+      }.to raise_error(Discourse::InvalidAccess)
+
+      expect(group.reload.users).to contain_exactly(owner)
+      expect(admin.reload.primary_group_id).to eq(nil)
+    end
+
+    it "makes a staff account that is already a member an owner" do
+      group.update!(primary_group: true)
+      group.add(admin)
+
+      described_class.add(owner.guardian, group, usernames: admin.username)
+
+      expect(group.group_users.find_by(user: admin).owner).to eq(true)
+    end
   end
 
   describe ".remove" do

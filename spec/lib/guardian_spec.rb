@@ -1505,6 +1505,23 @@ RSpec.describe Guardian do
       it "returns true as an admin" do
         expect(Guardian.new(admin).can_edit?(user)).to be_truthy
       end
+
+      it "returns false as a moderator editing a staff account" do
+        guardian = Guardian.new(moderator)
+
+        expect(guardian.can_edit?(admin)).to eq(false)
+        expect(guardian.can_edit?(Fabricate(:moderator))).to eq(false)
+        expect(guardian.can_edit?(Discourse.system_user)).to eq(false)
+        expect(guardian.can_edit?(moderator)).to eq(true)
+      end
+
+      it "returns true as an admin editing a staff account" do
+        guardian = Guardian.new(admin)
+
+        expect(guardian.can_edit?(Fabricate(:admin))).to eq(true)
+        expect(guardian.can_edit?(moderator)).to eq(true)
+        expect(guardian.can_edit?(Discourse.system_user)).to eq(true)
+      end
     end
   end
 
@@ -2474,6 +2491,15 @@ RSpec.describe Guardian do
       ).to be_falsey
     end
 
+    it "is false for moderators to edit a staff account's username" do
+      guardian = Guardian.new(moderator)
+
+      expect(guardian.can_edit_username?(admin)).to eq(false)
+      expect(guardian.can_edit_username?(Fabricate(:moderator))).to eq(false)
+      expect(guardian.can_edit_username?(Discourse.system_user)).to eq(false)
+      expect(guardian.can_edit_username?(moderator)).to eq(true)
+    end
+
     shared_examples "staff can always change usernames" do
       it "is true for moderators" do
         expect(Guardian.new(moderator).can_edit_username?(user)).to be_truthy
@@ -2666,6 +2692,14 @@ RSpec.describe Guardian do
       expect(
         Guardian.new(Fabricate(:user)).can_edit_name?(Fabricate(:user, created_at: 1.minute.ago)),
       ).to be_falsey
+    end
+
+    it "is false for moderators to edit a staff account's name" do
+      guardian = Guardian.new(moderator)
+
+      expect(guardian.can_edit_name?(admin)).to eq(false)
+      expect(guardian.can_edit_name?(Fabricate(:moderator))).to eq(false)
+      expect(guardian.can_edit_name?(moderator)).to eq(true)
     end
 
     context "for anonymous user" do

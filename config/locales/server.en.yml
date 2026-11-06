@@ -906,6 +906,7 @@ en:
         other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
       flair_upload_not_owned: "You can only use an image you have uploaded as the group flair."
+      other_staff_account_settings: "Only admins can do this, because it would change another staff account's primary group, flair, title, trust level or notification settings."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."

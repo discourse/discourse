@@ -202,6 +202,18 @@ RSpec.describe UsersController do
       expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
+    it "does not let a moderator remove a staff account's password" do
+      SiteSetting.enable_passkeys = true
+      Fabricate(:passkey_with_random_credential, user: admin)
+      sign_in(moderator)
+      stub_server_session_confirmed
+
+      put "/u/#{admin.username}/remove-password.json"
+
+      expect(response.status).to eq(403)
+      expect(admin.reload.user_password).to be_present
+    end
+
     context "when logged in with no associated account, no passkeys" do
       before { sign_in(user) }
 
@@ -2153,6 +2165,29 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
+    it "does not let a moderator rename a staff account" do
+      sign_in(moderator)
+      original_admin_username = admin.username
+
+      put "/u/#{admin.username}/preferences/username.json", params: { new_username: "admin_old" }
+      expect(response.status).to eq(403)
+
+      put "/u/system/preferences/username.json", params: { new_username: "system_old" }
+      expect(response.status).to eq(403)
+
+      expect(admin.reload.username).to eq(original_admin_username)
+      expect(Discourse.system_user.reload.username).to eq("system")
+    end
+
+    it "lets a moderator rename a regular user" do
+      sign_in(moderator)
+
+      put "/u/#{user1.username}/preferences/username.json", params: { new_username: "renamed_user" }
+
+      expect(response.status).to eq(200)
+      expect(user1.reload.username).to eq("renamed_user")
+    end
+
     context "while logged in" do
       let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
@@ -3171,6 +3206,30 @@ RSpec.describe UsersController do
       it "raises an error" do
         put "/u/guest.json"
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "as a moderator" do
+      before { sign_in(moderator) }
+
+      it "does not allow editing a staff account" do
+        other_moderator = Fabricate(:moderator)
+
+        put "/u/#{admin.username}.json", params: { title: "Retired" }
+        expect(response.status).to eq(403)
+
+        put "/u/#{other_moderator.username}.json", params: { title: "Retired" }
+        expect(response.status).to eq(403)
+
+        expect(admin.reload.title).not_to eq("Retired")
+        expect(other_moderator.reload.title).not_to eq("Retired")
+      end
+
+      it "allows editing a regular user" do
+        put "/u/#{user1.username}.json", params: { title: "Retired" }
+
+        expect(response.status).to eq(200)
+        expect(user1.reload.title).to eq("Retired")
       end
     end
 
@@ -4294,6 +4353,20 @@ RSpec.describe UsersController do
   end
 
   describe "#pick_avatar" do
+    it "does not let a moderator change a staff account's avatar" do
+      upload = Fabricate(:upload, user: moderator)
+      sign_in(moderator)
+
+      put "/u/#{admin.username}/preferences/avatar/pick.json",
+          params: {
+            type: "uploaded",
+            upload_id: upload.id,
+          }
+
+      expect(response.status).to eq(403)
+      expect(admin.reload.uploaded_avatar_id).not_to eq(upload.id)
+    end
+
     context "with an associated account avatar" do
       subject(:pick_associated_avatar) do
         put "/u/#{user1.username}/preferences/avatar/pick.json",
@@ -4918,6 +4991,23 @@ RSpec.describe UsersController do
           expect(
             IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id),
           ).to be_present
+        end
+
+        it "does not allow a moderator to change the ignore status for a staff account" do
+          ignored_user.destroy!
+          sign_in(moderator)
+
+          put "/u/#{another_user.username}/notification_level.json",
+              params: {
+                notification_level: "ignore",
+                acting_user_id: admin.id,
+                expiring_at: 3.days.from_now,
+              }
+
+          expect(response.status).to eq(422)
+          expect(IgnoredUser.find_by(user_id: admin.id, ignored_user_id: another_user.id)).to eq(
+            nil,
+          )
         end
 
         it "does not allow a regular user to change the ignore status for anyone but themself" do
@@ -8073,6 +8163,22 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
+    it "errors for a moderator acting on a staff account" do
+      sign_in(moderator)
+
+      post "/u/#{admin.username}/preferences/revoke-account.json",
+           params: {
+             provider_name: "facebook",
+           }
+      expect(response.status).to eq(403)
+
+      post "/u/#{user1.username}/preferences/revoke-account.json",
+           params: {
+             provider_name: "facebook",
+           }
+      expect(response.status).to eq(404)
+    end
+
     context "while logged in" do
       before { sign_in(user1) }
 
@@ -8201,6 +8307,16 @@ RSpec.describe UsersController do
   end
 
   describe "#revoke_auth_token" do
+    it "does not let a moderator log a staff account out" do
+      UserAuthToken.generate!(user_id: admin.id)
+      sign_in(moderator)
+
+      post "/u/#{admin.username}/preferences/revoke-auth-token.json"
+
+      expect(response.status).to eq(403)
+      expect(admin.user_auth_tokens.count).to eq(1)
+    end
+
     context "while logged in" do
       before { 2.times { sign_in(user1) } }
 
@@ -8536,6 +8652,15 @@ RSpec.describe UsersController do
         topic.update(user_id: another_user.id)
         put "/u/#{another_user.username}/feature-topic.json", params: { topic_id: topic.id }
         expect(response.status).to eq(403)
+      end
+
+      it "returns an error if a moderator tries to set for a staff account" do
+        sign_in(moderator)
+
+        put "/u/#{admin.username}/feature-topic.json", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(403)
+        expect(admin.user_profile.reload.featured_topic_id).to eq(nil)
       end
 
       it "returns an error if the topic is a PM" do

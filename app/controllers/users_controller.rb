@@ -306,7 +306,7 @@ class UsersController < ApplicationController
       render_json_error(user.errors.full_messages.join(","))
     end
   rescue Discourse::InvalidAccess
-    if current_user&.staff?
+    if current_user&.staff? && SiteSetting.auth_overrides_username?
       render_json_error(I18n.t("errors.messages.auth_overrides_username"))
     else
       render json: failed_json, status: :forbidden
@@ -1496,13 +1496,12 @@ class UsersController < ApplicationController
     target_user = fetch_user_from_params
     acting_user = current_user
 
-    # the admin should be able to change notification levels
-    # on behalf of other users, so we cannot rely on current_user
-    # for this case
+    # Staff can change notification levels on behalf of the users they can edit,
+    # so we cannot rely on current_user for this case.
     if params[:acting_user_id].present? && params[:acting_user_id].to_i != current_user.id
-      if current_user.staff?
-        acting_user = User.find(params[:acting_user_id])
-      else
+      acting_user = User.find_by(id: params[:acting_user_id])
+
+      if !guardian.can_edit_user?(acting_user)
         @error_message = "error"
         raise Discourse::InvalidAccess
       end

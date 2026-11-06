@@ -100,9 +100,22 @@ class GroupUpdater
   def update
     guardian.ensure_can_edit!(group) if !can_admin_group?
 
+    # The staff checks below read the group's members, and the membership
+    # services read the group's settings, so both hold the group row lock.
+    group.with_lock { update_settings }
+  end
+
+  private
+
+  attr_reader :guardian, :group, :attributes, :update_existing_users
+
+  def update_settings
     @attributes = ActionController::Parameters.new(attributes).permit(*permitted_params).to_h
     group_attributes = attributes_without_disabled_email_settings
     return false if !valid_flair_upload?(group_attributes)
+    ensure_can_change_members_primary_group!(group_attributes)
+    ensure_can_change_members_title!(group_attributes)
+    ensure_can_auto_add_staff!(group_attributes)
     notification_level, categories, tags = nil
 
     if !group.automatic || guardian.is_admin?
@@ -127,13 +140,96 @@ class GroupUpdater
     true
   end
 
-  private
-
-  attr_reader :guardian, :group, :attributes, :update_existing_users
-
   def can_admin_group?
     return @can_admin_group if defined?(@can_admin_group)
     @can_admin_group = guardian.can_admin_group?(group)
+  end
+
+  # Toggling the flag rewrites every member's primary group, so the editor must be
+  # allowed to change it for each staff member.
+  def ensure_can_change_members_primary_group!(group_attributes)
+    return if !group_attributes.key?(:primary_group)
+
+    new_value = ActiveModel::Type::Boolean.new.cast(group_attributes[:primary_group])
+    return if new_value == group.primary_group
+
+    group
+      .users
+      .where(admin: true)
+      .or(group.users.where(moderator: true))
+      .find_each do |member|
+        if !guardian.can_change_primary_group?(member, group)
+          raise GroupMutations::OtherStaffAccount
+        end
+      end
+  end
+
+  # A new title is copied to every member whose title is blank or matches the old
+  # one, so only admins can change it when that includes other staff accounts.
+  def ensure_can_change_members_title!(group_attributes)
+    return if !group_attributes.key?(:title) || guardian.is_admin?
+
+    new_title = group_attributes[:title].to_s
+    return if new_title == group.title.to_s
+
+    receiving_staff =
+      group
+        .users
+        .where(admin: true)
+        .or(group.users.where(moderator: true))
+        .where.not(id: guardian.user.id)
+        .where(title: [group.title, "", nil].uniq)
+        .where("COALESCE(users.title, '') <> ?", new_title)
+    raise GroupMutations::OtherStaffAccount if receiving_staff.exists?
+  end
+
+  # Every save of a group with email domains adds the matching accounts that are not
+  # members yet, so only admins can save one whose settings would change other
+  # staff accounts that join this way.
+  def ensure_can_auto_add_staff!(group_attributes)
+    return if guardian.is_admin?
+
+    updated_group = group.dup
+    updated_group.assign_attributes(
+      group_attributes.slice(
+        :automatic_membership_email_domains,
+        :primary_group,
+        :title,
+        :grant_trust_level,
+      ),
+    )
+    # The copy has no notification defaults, so they are checked separately.
+    notification_defaults = notification_defaults_after_update?(group_attributes)
+
+    GroupMutations
+      .staff_matching_email_domains(updated_group.automatic_membership_email_domains, group.id)
+      .where.not(id: guardian.user.id)
+      .find_each do |member|
+        if notification_defaults || !guardian.can_add_group_member?(member, updated_group)
+          raise GroupMutations::OtherStaffAccount
+        end
+      end
+  end
+
+  def notification_defaults_after_update?(group_attributes)
+    if group.group_category_notification_defaults.exists? ||
+         group.group_tag_notification_defaults.exists?
+      return true
+    end
+
+    NOTIFICATION_DEFAULT_LEVELS.any? do |level|
+      (Array(group_attributes[:"#{level}_category_ids"]) - BLANK_SELECTION).present? ||
+        (Array(group_attributes[:"#{level}_tags"]) - BLANK_SELECTION).present?
+    end
+  end
+
+  # Only admins can change the notification preferences of other staff accounts.
+  def affected_group_users
+    return group.group_users if guardian.is_admin?
+
+    other_staff_ids =
+      User.where(admin: true).or(User.where(moderator: true)).where.not(id: guardian.user.id)
+    group.group_users.where.not(user_id: other_staff_ids.select(:id))
   end
 
   def valid_flair_upload?(group_attributes)
@@ -243,7 +339,7 @@ class GroupUpdater
   def apply_to_existing_users(notification_level, categories, tags, mutate:)
     return 0 if notification_level.blank? && categories.blank? && tags.blank?
 
-    group_users = group.group_users
+    group_users = affected_group_users
     user_ids = []
 
     if notification_level.present?

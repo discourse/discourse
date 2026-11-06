@@ -58,12 +58,13 @@ module UserGuardian
   end
 
   def can_edit_user?(user)
-    is_me?(user) || is_staff?
+    # Only admins can edit staff accounts other than their own.
+    is_me?(user) || (user && is_staff? && (!user.staff? || is_admin?))
   end
 
   def can_edit_username?(user)
     return false if SiteSetting.auth_overrides_username?
-    return true if is_staff?
+    return true if is_staff? && can_edit_user?(user)
     return false if SiteSetting.username_change_period <= 0
     return false if is_anonymous?
     is_me?(user) && user.created_at > SiteSetting.username_change_period.days.ago
@@ -83,7 +84,7 @@ module UserGuardian
     return false if SiteSetting.auth_overrides_name?
     return true if is_admin?
     return false unless SiteSetting.enable_names?
-    return true if is_moderator?
+    return true if is_moderator? && can_edit_user?(user)
     return false if is_anonymous?
     can_edit?(user)
   end
@@ -248,7 +249,7 @@ module UserGuardian
   def can_feature_topic?(user, topic)
     return false if topic.nil?
     return false if !SiteSetting.allow_featured_topic_on_user_profiles?
-    return false if !is_me?(user) && !is_staff?
+    return false if !can_edit_user?(user)
     return false if !topic.visible
     return false if topic.read_restricted_category? || topic.private_message?
     true

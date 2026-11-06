@@ -388,7 +388,7 @@ class Guardian
   end
 
   def can_activate?(target)
-    is_staff? && target && not(target.active?)
+    is_staff? && target && not(target.active?) && (!target.staff? || is_admin?)
   end
 
   def can_suspend?(user)
@@ -447,7 +447,9 @@ class Guardian
   end
 
   def can_change_primary_group?(user, group)
-    user && can_edit_group?(group)
+    # Group owners can manage their members' primary group, but only admins can
+    # change it for staff accounts other than their own.
+    user && can_edit_group?(group) && (!user.staff? || is_admin? || is_me?(user))
   end
 
   def can_change_trust_level?(user)
