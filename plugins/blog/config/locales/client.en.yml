@@ -72,10 +72,18 @@ en:
         js_description:
           Plain JavaScript, up to 65,536 bytes. Script tags are not parsed — load
           another script by appending a script element (document.createElement("script")).
-        save: Save identity
-        saved: Blog identity saved. Reload the blog to see your changes.
+        save: Save
+        saved: Blog settings saved. Reload the blog to see your changes.
         identity_tab: Identity
-        identity_description: The name, introduction, and About content shared by all blog themes.
+        identity_description: The name, introduction, About content, and article addresses shared by all blog themes.
+        article_urls: Article URLs
+        path_format: Address format
+        path_format_description: Applies to new articles. Published articles keep their addresses, and dated addresses use the day an article goes live.
+        path_format_sample_slug: my-article
+        path_formats:
+          slug: Article name
+          year_month_slug: Month and name
+          year_month_day_slug: Date and name
         themes_index_description: Choose the design readers see. Customize an included theme or edit your own; changes stay private until you activate them.
         thumbnail:
           journal: The journal
@@ -297,6 +305,10 @@ en:
       path_hint:
         Start with / and use lowercase letters, numbers, hyphens, and optional
         path segments. Old paths redirect automatically after a change.
+      path_hint_dated:
+        Start with / and use lowercase letters, numbers, hyphens, and optional
+        path segments. Until the article is first published, a dated path follows
+        its publication date. Old paths redirect automatically after a change.
       excerpt: Excerpt
       excerpt_hint:
         A short introduction for article cards and search previews. Leave

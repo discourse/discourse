@@ -48,6 +48,7 @@ export default class BlogPublicationPanel extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
+  @service siteSettings;
   @service toasts;
 
   @tracked busy = false;
@@ -125,6 +126,12 @@ export default class BlogPublicationPanel extends Component {
     return url.host === window.location.host
       ? url.pathname
       : `${url.host}${url.pathname}`;
+  }
+
+  get pathHint() {
+    return this.siteSettings.blog_path_format === "slug"
+      ? i18n("blog.path_hint")
+      : i18n("blog.path_hint_dated");
   }
 
   // Always relative ("6 days ago"); the exact time is in the tooltip.
@@ -977,7 +984,7 @@ export default class BlogPublicationPanel extends Component {
                   as |form|
                 >
                   <form.Field
-                    @description={{i18n "blog.path_hint"}}
+                    @description={{this.pathHint}}
                     @format="full"
                     @name="path"
                     @title={{i18n "blog.path"}}
