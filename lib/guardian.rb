@@ -251,7 +251,10 @@ class Guardian
           (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4]) && can_see_topic?(obj))
       )
   end
-  alias can_see_flags? can_moderate?
+
+  def can_see_flags?(obj)
+    is_staff? && can_moderate?(obj)
+  end
 
   def can_tag?(topic)
     return false if topic.blank?
