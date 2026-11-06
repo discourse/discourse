@@ -1,8 +1,21 @@
 # frozen_string_literal: true
 
 class BasicGroupHistorySerializer < ApplicationSerializer
-  EMAIL_SETTING_SUBJECTS =
-    Set.new(%w[email_password email_username smtp_server smtp_port smtp_ssl_mode])
+  RESTRICTED_SUBJECT_AUDIENCES = {
+    "incoming_email" => :staff,
+    "automatic_membership_email_domains" => :group_admin,
+    "email_password" => :admin,
+    "email_username" => :admin,
+    "email_from_alias" => :admin,
+    "smtp_server" => :admin,
+    "smtp_port" => :admin,
+    "smtp_ssl_mode" => :admin,
+    "smtp_enabled" => :admin,
+    "smtp_updated_at" => :admin,
+    "smtp_updated_by_id" => :admin,
+    "allow_unknown_sender_topic_replies" => :admin,
+  }.freeze
+  private_constant :RESTRICTED_SUBJECT_AUDIENCES
 
   attributes :action, :subject, :prev_value, :new_value, :created_at
 
@@ -14,19 +27,29 @@ class BasicGroupHistorySerializer < ApplicationSerializer
   end
 
   def prev_value
-    redact_email_setting_value(object.prev_value)
+    redact_setting_value(object.prev_value)
   end
 
   def new_value
-    redact_email_setting_value(object.new_value)
+    redact_setting_value(object.new_value)
   end
 
   private
 
-  def redact_email_setting_value(value)
+  def redact_setting_value(value)
     return value if value.blank?
-    return value if !EMAIL_SETTING_SUBJECTS.include?(object.subject)
-    return value if scope&.is_admin?
+    return value if !RESTRICTED_SUBJECT_AUDIENCES.key?(object.subject)
+
+    authorized =
+      case RESTRICTED_SUBJECT_AUDIENCES[object.subject]
+      when :staff
+        scope&.is_staff?
+      when :admin
+        scope&.is_admin?
+      when :group_admin
+        scope&.can_admin_group?(object.group)
+      end
+    return value if authorized
 
     I18n.t("staff_action_logs.redacted")
   end

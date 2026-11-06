@@ -3396,6 +3396,97 @@ RSpec.describe GroupsController do
         expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
       end
     end
+
+    context "with restricted settings" do
+      let(:restricted_subjects) do
+        %w[
+          incoming_email
+          automatic_membership_email_domains
+          email_password
+          email_username
+          email_from_alias
+          smtp_server
+          smtp_port
+          smtp_ssl_mode
+          smtp_enabled
+          smtp_updated_at
+          smtp_updated_by_id
+          allow_unknown_sender_topic_replies
+        ]
+      end
+
+      before do
+        restricted_subjects.each do |subject|
+          Fabricate(
+            :group_history,
+            group: group,
+            acting_user: admin,
+            target_user: nil,
+            action: GroupHistory.actions[:change_group_setting],
+            subject: subject,
+            prev_value: "previous #{subject}",
+            new_value: "current #{subject}",
+          )
+        end
+      end
+
+      def expect_history_visibility(visible_subjects:)
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+        logs = response.parsed_body.fetch("logs")
+        expect(logs.map { |log| log["subject"] }).to match_array(restricted_subjects)
+
+        logs.each do |log|
+          subject = log.fetch("subject")
+          expected_values =
+            if visible_subjects.include?(subject)
+              ["previous #{subject}", "current #{subject}"]
+            else
+              [I18n.t("staff_action_logs.redacted")] * 2
+            end
+          expect(log.values_at("prev_value", "new_value")).to eq(expected_values),
+          "unexpected history visibility for #{subject}"
+        end
+      end
+
+      it "redacts restricted values for an ordinary owner" do
+        group.add_owner(user)
+        sign_in(user)
+
+        expect_history_visibility(visible_subjects: [])
+      end
+
+      it "shows incoming email to a moderator owner without group administration" do
+        group.add_owner(moderator)
+        sign_in(moderator)
+
+        expect_history_visibility(visible_subjects: %w[incoming_email])
+      end
+
+      it "shows membership domains to a delegated moderator without administrator settings" do
+        SiteSetting.moderators_manage_groups = true
+        sign_in(moderator)
+
+        expect_history_visibility(
+          visible_subjects: %w[incoming_email automatic_membership_email_domains],
+        )
+      end
+
+      it "keeps restricted values redacted for ordinary owners when moderators manage groups" do
+        SiteSetting.moderators_manage_groups = true
+        group.add_owner(user)
+        sign_in(user)
+
+        expect_history_visibility(visible_subjects: [])
+      end
+
+      it "shows restricted values to administrators" do
+        sign_in(admin)
+
+        expect_history_visibility(visible_subjects: restricted_subjects)
+      end
+    end
   end
 
   describe "#request_membership" do
