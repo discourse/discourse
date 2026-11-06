@@ -62,7 +62,9 @@ module Live
       def grant(badge_name, user)
         return if user.bot?
 
-        badge = live_badges.find_by(name: badge_name)
+        # Seeding steps aside for a site badge with this name, so only a system
+        # badge is ours. The grouping is not checked because admins can move it.
+        badge = Badge.find_by(name: badge_name, system: true)
         BadgeGranter.grant(badge, user) if badge&.enabled?
       end
 
@@ -103,7 +105,7 @@ module Live
         time.in_time_zone(tz).hour
       end
 
-      # A badge of the site's own may share a name or the grouping; it is never ours to touch.
+      # A badge of the site's own may sit in the grouping; it is never ours to toggle.
       def live_badges
         Badge.joins(:badge_grouping).where(
           system: true,

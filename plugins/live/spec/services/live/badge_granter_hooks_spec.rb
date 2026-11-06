@@ -211,6 +211,15 @@ RSpec.describe Live::BadgeGranterHooks do
       expect(user.badges.pluck(:name)).to include("Host")
     end
 
+    it "still grants Host after an admin moves it to another grouping" do
+      grouping = BadgeGrouping.create!(name: "Hosting", position: 20)
+      Badge.find_by(name: "Host").update!(badge_grouping: grouping)
+
+      described_class.on_room_create(user)
+
+      expect(user.badges.pluck(:name)).to include("Host")
+    end
+
     it "leaves a Host badge the site owns alone" do
       DB.exec("DELETE FROM badges WHERE name = 'Host'")
       site_badge = Fabricate(:badge, name: "Host", system: false, enabled: true)
