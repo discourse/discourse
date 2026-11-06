@@ -99,6 +99,9 @@ module Email
           :email_reject_reply_to_digest
         when Email::Receiver::TooManyRecipientsError
           :email_reject_too_many_recipients
+        when Email::Receiver::MaxMimeDepthExceededError, Email::Receiver::MaxMimePartsExceededError
+          # the structure is too deeply nested or too wide to process, don't bounce back
+          return nil
         else
           :email_reject_unrecognized_error
         end
