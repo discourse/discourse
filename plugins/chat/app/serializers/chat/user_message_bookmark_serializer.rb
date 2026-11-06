@@ -3,11 +3,11 @@
 module Chat
   class UserMessageBookmarkSerializer < UserBookmarkBaseSerializer
     def title
-      fancy_title
+      @title ||= chat_message.chat_channel.title(scope.user)
     end
 
     def fancy_title
-      @fancy_title ||= chat_message.chat_channel.title(scope.user)
+      @fancy_title ||= ERB::Util.html_escape(title)
     end
 
     def cooked
