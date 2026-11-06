@@ -37,6 +37,39 @@ describe UsersController do
 
     after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
+    it "escapes the group DM channel name in fancy_title while the bookmark list keeps the raw title",
+       :aggregate_failures do
+      channel_name = '<img src=x onerror="alert(1)">& "\''
+      attacker = Fabricate(:user, group_ids: [chatters.id])
+      third_user = Fabricate(:user, group_ids: [chatters.id])
+      channel =
+        Fabricate(
+          :direct_message_channel,
+          users: [current_user, attacker, third_user],
+          name: channel_name,
+        )
+      message = Fabricate(:chat_message, chat_channel: channel, user: attacker, message: "hello")
+      Fabricate(:bookmark, user: current_user, bookmarkable: message)
+
+      get "/u/#{current_user.username}/user-menu-bookmarks"
+
+      menu_bookmark = response.parsed_body["bookmarks"].first
+      expect(response.status).to eq(200)
+      expect(menu_bookmark).not_to have_key("title")
+      expect(menu_bookmark["fancy_title"]).to eq(
+        "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;&amp; &quot;&#39;",
+      )
+
+      get "/u/#{current_user.username}/bookmarks.json"
+
+      list_bookmark = response.parsed_body["user_bookmark_list"]["bookmarks"].first
+      expect(response.status).to eq(200)
+      expect(list_bookmark["title"]).to eq(channel_name)
+      expect(list_bookmark["fancy_title"]).to eq(
+        "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;&amp; &quot;&#39;",
+      )
+    end
+
     it "does not return any unread notifications for chat bookmarks that the user no longer has access to" do
       bookmark_with_reminder =
         Fabricate(:bookmark, user: current_user, bookmarkable: bookmark_message)
