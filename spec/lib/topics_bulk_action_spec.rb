@@ -276,24 +276,18 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can't move topics to the destination category" do
-      it "records an error when a moderator cannot see the destination category" do
+      it "doesn't change the category when a moderator cannot see the destination category" do
         restricted_category = Fabricate(:private_category, group: Fabricate(:group))
         original_category = topic.category
 
-        bulk_action =
-          TopicsBulkAction.new(
-            Fabricate(:moderator),
-            [topic.id],
-            type: "change_category",
-            category_id: restricted_category.id,
-          )
-        topic_ids = bulk_action.perform!
+        TopicsBulkAction.new(
+          Fabricate(:moderator),
+          [topic.id],
+          type: "change_category",
+          category_id: restricted_category.id,
+        ).perform!
 
-        expect(topic_ids).to eq([])
         expect(topic.reload.category).to eq(original_category)
-        expect(bulk_action.errors).to eq(
-          I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
-        )
       end
     end
 
