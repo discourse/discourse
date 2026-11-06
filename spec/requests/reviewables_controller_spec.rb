@@ -1614,6 +1614,21 @@ RSpec.describe ReviewablesController do
         expect(json["payload"]["extra"]).to be_blank
         expect(json["category_id"]).to eq(new_category_id.to_s)
       end
+
+      it "does not let a moderator move a queued topic to a category they cannot see" do
+        original_category_id = reviewable_topic.category_id
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        put "/review/#{reviewable_topic.id}.json?version=#{reviewable_topic.version}",
+            params: {
+              reviewable: {
+                category_id: private_category.id,
+              },
+            }
+
+        expect(response.code).to eq("403")
+        expect(reviewable_topic.reload.category_id).to eq(original_category_id)
+      end
     end
 
     describe "#destroy" do
