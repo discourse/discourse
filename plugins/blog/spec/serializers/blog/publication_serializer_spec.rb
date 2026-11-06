@@ -40,6 +40,18 @@ RSpec.describe Blog::PublicationSerializer do
     expect(serialize[:status]).to eq("unpublished")
   end
 
+  it "flags public tag edits as pending changes" do
+    SiteSetting.tagging_enabled = true
+    publish_blog_draft(publication, admin)
+    expect(serialize[:changes]).to be_empty
+
+    DiscourseTagging.tag_topic_by_names(topic, admin.guardian, %w[code mobile])
+    publication.reload
+
+    expect(serialize[:status]).to eq("changes_pending")
+    expect(serialize[:changes]).to contain_exactly("tags")
+  end
+
   it "reports public visibility unless the caller already knows it" do
     publish_blog_draft(publication, admin)
 

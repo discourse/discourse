@@ -15,7 +15,6 @@ module ::Blog
     TEMPLATE_FIELDS = TemplateRenderer::PAGES.map { |page| "template_#{page}" }.freeze
     FIELDS = (%w[name] + COLOR_FIELDS + CODE_FIELDS + TEMPLATE_FIELDS).freeze
 
-    # Readers fall back to this until a theme is activated.
     BUILT_IN_PALETTE = {
       "accent_color" => "d64b2a",
       "paper_color" => "f5f0e6",
@@ -24,7 +23,7 @@ module ::Blog
 
     def self.defaults
       {
-        "name" => I18n.t("blog.themes.current"),
+        "name" => I18n.t("blog.themes.default"),
         **BUILT_IN_PALETTE,
         "css" => "",
         "javascript" => "",
@@ -54,8 +53,12 @@ module ::Blog
       PluginStore.cast_value(row.type_name, row.value) if row
     end
 
+    # Readers see the built-in preset until a theme is activated. An active
+    # preset is stored by id only and resolved from the shipped files.
     def self.active
-      PluginStore.get(STORE, "active") || defaults
+      stored = PluginStore.get(STORE, "active")
+      return stored if stored && !stored["preset"]
+      (stored && ThemePresets.find(stored["id"])) || ThemePresets.default
     end
 
     def self.active?(theme)
@@ -96,6 +99,11 @@ module ::Blog
 
     # Readers use a copy, never the mutable draft or its Git source.
     def self.activate(theme)
+      if theme["preset"]
+        PluginStore.set(STORE, "active", theme.slice("id", "preset"))
+        return theme
+      end
+
       snapshot = theme.merge("snapshot" => SecureRandom.uuid)
       PluginStore.set(STORE, "snapshot:#{snapshot["snapshot"]}", snapshot)
       PluginStore.set(STORE, "active", snapshot)

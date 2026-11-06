@@ -67,6 +67,29 @@ module ::Blog
       end
     end
 
+    # Reads a theme folder shipped with the plugin.
+    class Directory
+      def initialize(root)
+        @root = root
+      end
+
+      def read_entry(name, max_bytes:, required: false)
+        path = File.join(@root, name)
+        if !File.file?(path)
+          raise InvalidTheme, I18n.t("blog.themes.manifest_invalid") if required
+          return
+        end
+        if File.size(path) > max_bytes
+          raise InvalidTheme, I18n.t("blog.themes.file_too_large", file: name)
+        end
+        File.read(path)
+      end
+    end
+
+    def self.read_directory(path)
+      read_attributes(Directory.new(path))
+    end
+
     def self.read_archive(path)
       Compression::SafeZipReader.open(path, max_entries: MAX_ARCHIVE_ENTRIES) do |reader|
         ImportedTheme.new(attributes: read_attributes(reader), source: nil)

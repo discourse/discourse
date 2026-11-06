@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Publishes a frozen snapshot of a theme draft to readers.
+# Publishes a frozen snapshot of a theme draft, or a preset, to readers.
 class Blog::BlogTheme::Activate
   include Service::Base
 
@@ -30,7 +30,7 @@ class Blog::BlogTheme::Activate
   end
 
   def fetch_theme(params:)
-    Blog::BlogTheme.find_and_lock(params.theme_id)
+    Blog::ThemePresets.find(params.theme_id) || Blog::BlogTheme.find_and_lock(params.theme_id)
   end
 
   def activate_theme(theme:)
