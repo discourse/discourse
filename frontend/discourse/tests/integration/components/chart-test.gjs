@@ -1,7 +1,9 @@
 import { tracked } from "@glimmer/tracking";
-import { render, settled } from "@ember/test-helpers";
+import { run } from "@ember/runloop";
+import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Chart from "discourse/admin/components/chart";
+import loadChartJS from "discourse/lib/load-chart-js";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Chart", function (hooks) {
@@ -101,6 +103,69 @@ module("Integration | Component | Chart", function (hooks) {
       firstCanvasDataURL,
       secondCanvasDataURL,
       "The canvases are not identical, so the chart rerendered successfully"
+    );
+  });
+
+  test("uses the latest config when it changes while the chart is loading", async function (assert) {
+    this.model = {
+      title: "Test Chart",
+      data: generateData(),
+    };
+
+    const showChart = tracked(false);
+    const chartConfig = tracked(generateChartConfig(this.model));
+    const redChartConfig = generateChartConfig(this.model, {
+      backgroundColor: "red",
+    });
+
+    await render(
+      <template>
+        {{#if showChart.value}}
+          <Chart @chartConfig={{chartConfig.value}} />
+        {{/if}}
+      </template>
+    );
+
+    run(() => (showChart.value = true));
+    run(() => (chartConfig.value = redChartConfig));
+    await settled();
+
+    const ChartJS = await loadChartJS();
+    assert.strictEqual(
+      ChartJS.getChart(find("canvas.chart-canvas"))?.data.datasets[0]
+        .backgroundColor,
+      "red",
+      "The canvas shows the chart for the latest config"
+    );
+  });
+
+  test("does not create a chart when removed while the chart is loading", async function (assert) {
+    this.model = {
+      title: "Test Chart",
+      data: generateData(),
+    };
+
+    const showChart = tracked(false);
+    const chartConfig = generateChartConfig(this.model);
+
+    await render(
+      <template>
+        {{#if showChart.value}}
+          <Chart @chartConfig={{chartConfig}} />
+        {{/if}}
+      </template>
+    );
+
+    run(() => (showChart.value = true));
+    const canvas = find("canvas.chart-canvas");
+    run(() => (showChart.value = false));
+    await settled();
+
+    const ChartJS = await loadChartJS();
+    assert.strictEqual(
+      ChartJS.getChart(canvas),
+      undefined,
+      "No chart is left on the removed canvas"
     );
   });
 });
