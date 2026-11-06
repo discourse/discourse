@@ -6421,6 +6421,23 @@ RSpec.describe UsersController do
     it "renders fine by default" do
       get "/u/#{user1.username}/badges"
       expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "prevents crawlers from indexing profile badges" do
+      get "/u/#{user1.username}/badges", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/u/#{user1.username}/badges", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
     end
 
     it "fails if badges are disabled" do
