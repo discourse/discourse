@@ -14,6 +14,9 @@ class GroupMembershipRequestHandler
 
   def handle
     guardian.ensure_can_edit!(group)
+    if !GroupRequest.exists?(group_id: group.id, user_id: user.id)
+      raise Discourse::InvalidParameters.new(:user_id)
+    end
     request_topic = accept ? find_request_topic : nil
 
     Group.transaction do

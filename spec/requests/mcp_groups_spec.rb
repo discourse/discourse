@@ -698,6 +698,23 @@ describe "MCP group tools" do
         expect(response.status).to eq(200)
       end
 
+      it "does not let a moderator create a group that would change another staff account" do
+        SiteSetting.moderators_manage_groups = true
+        admin = Fabricate(:admin)
+        moderator = Fabricate(:moderator, refresh_auto_groups: true)
+        authorize("mcp:groups:write", auth_user: moderator)
+
+        expect {
+          call_tool(
+            "discourse_create_group",
+            { name: "primaries", primary_group: true, usernames: [admin.username] },
+          )
+        }.not_to change { Group.count }
+
+        expect(response.status).to eq(403)
+        expect(admin.reload.primary_group_id).to eq(nil)
+      end
+
       it "reports validation errors without creating a group" do
         admin = Fabricate(:admin, refresh_auto_groups: true)
         authorize("mcp:groups:write", auth_user: admin)

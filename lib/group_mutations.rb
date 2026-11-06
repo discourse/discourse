@@ -15,10 +15,28 @@ module GroupMutations
     end
   end
 
+  # Raised when a non-admin's change would apply a group's settings to, or remove
+  # them from, another staff account.
+  class OtherStaffAccount < Discourse::InvalidAccess
+    def initialize
+      super(nil, nil, custom_message: "groups.errors.other_staff_account_settings")
+    end
+  end
+
   module_function
 
   def ensure_not_automatic!(group)
     raise AutomaticGroup if group.automatic
+  end
+
+  # Staff accounts that saving a group with these email domains would add as
+  # members, normalizing the domains the same way the group validation does.
+  def staff_matching_email_domains(domains, group_id = nil)
+    domains = Group.get_valid_email_domains(domains.to_s).join("|")
+    return User.none if domains.blank?
+
+    matching = Group.automatic_membership_users(domains, group_id)
+    matching.where(admin: true).or(matching.where(moderator: true))
   end
 
   def resolve_users(

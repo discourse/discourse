@@ -45,6 +45,30 @@ describe GroupMembershipRequestHandler do
       }.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "refuses to handle a request that was never made" do
+      admin = Fabricate(:admin)
+      group.update!(primary_group: true, title: "Docs team")
+
+      [true, false].each do |accept|
+        expect { described_class.handle(owner.guardian, group, admin, accept:) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+
+      expect(group.reload.users).not_to include(admin)
+      expect(admin.reload).to have_attributes(primary_group_id: nil, title: nil)
+    end
+
+    it "accepts a staff account's own request to join" do
+      moderator = Fabricate(:moderator)
+      group.update!(primary_group: true)
+      GroupMembershipRequester.request(moderator.guardian, group, "I review the docs")
+
+      described_class.handle(owner.guardian, group, moderator, accept: true)
+
+      expect(moderator.reload.primary_group_id).to eq(group.id)
+    end
+
     it "still accepts the request when the original message is gone" do
       Topic.private_messages.last.destroy!
 

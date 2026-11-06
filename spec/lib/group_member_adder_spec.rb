@@ -96,5 +96,86 @@ describe GroupMemberAdder do
       expect(group.users).not_to include(user)
       expect(Invite.where(invited_by: owner)).to be_empty
     end
+
+    it "refuses to add another staff account to a group whose settings would change it" do
+      category = Fabricate(:category)
+      tag = Fabricate(:tag)
+      groups = [
+        Fabricate(:group, primary_group: true),
+        Fabricate(:group, title: "Docs team"),
+        Fabricate(:group, grant_trust_level: 3),
+        Fabricate(:group).tap do |configured|
+          GroupCategoryNotificationDefault.create!(
+            group: configured,
+            category:,
+            notification_level: NotificationLevels.all[:watching],
+          )
+        end,
+        Fabricate(:group).tap do |configured|
+          GroupTagNotificationDefault.create!(
+            group: configured,
+            tag:,
+            notification_level: NotificationLevels.all[:watching],
+          )
+        end,
+      ]
+
+      groups.each do |configured_group|
+        configured_group.add_owner(owner)
+
+        expect {
+          described_class.add(
+            owner.guardian,
+            configured_group,
+            usernames: [user.username, admin.username],
+          )
+        }.to raise_error(Discourse::InvalidAccess)
+
+        expect(configured_group.reload.users).to contain_exactly(owner)
+      end
+      expect(admin.reload.primary_group_id).to eq(nil)
+      expect(admin.title).to eq(nil)
+    end
+
+    it "does not let a moderator add a peer moderator to a primary group" do
+      SiteSetting.moderators_manage_groups = true
+      moderator = Fabricate(:moderator)
+      peer_moderator = Fabricate(:moderator)
+      group.update!(primary_group: true)
+
+      expect {
+        described_class.add(moderator.guardian, group, usernames: peer_moderator.username)
+      }.to raise_error(Discourse::InvalidAccess)
+
+      expect(peer_moderator.reload.primary_group_id).to eq(nil)
+    end
+
+    it "adds another staff account to a group whose settings leave it unchanged" do
+      described_class.add(owner.guardian, group, usernames: admin.username)
+
+      expect(group.reload.users).to include(admin)
+    end
+
+    it "adds regular users to a primary group that staff accounts already belong to" do
+      group.update!(primary_group: true)
+      group.add(admin)
+
+      described_class.add(owner.guardian, group, usernames: [user.username, admin.username])
+
+      expect(user.reload.primary_group_id).to eq(group.id)
+    end
+
+    it "lets admins, and moderators adding themselves, add staff accounts to a primary group" do
+      SiteSetting.moderators_manage_groups = true
+      moderator = Fabricate(:moderator)
+      group.update!(primary_group: true)
+
+      described_class.add(moderator.guardian, group, usernames: moderator.username)
+      described_class.add(admin.guardian, group, usernames: Fabricate(:moderator).username)
+
+      expect(group.reload.users.where(moderator: true).pluck(:primary_group_id)).to eq(
+        [group.id, group.id],
+      )
+    end
   end
 end

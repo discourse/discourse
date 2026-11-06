@@ -337,6 +337,8 @@ module DiscourseMcp
         Groups::Create.call(guardian:, params: arguments.symbolize_keys) do
           on_success { |group:| created = group }
           on_failed_policy(:can_create_group) { raise Discourse::InvalidAccess }
+          on_failed_policy(:can_add_initial_members) { raise GroupMutations::OtherStaffAccount }
+          on_failed_policy(:can_auto_add_members) { raise GroupMutations::OtherStaffAccount }
           on_failed_policy(:can_request_access) do
             message = I18n.t("groups.errors.cant_allow_membership_requests")
           end

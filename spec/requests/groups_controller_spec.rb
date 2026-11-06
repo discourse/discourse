@@ -1938,6 +1938,27 @@ RSpec.describe GroupsController do
         sign_in(moderator)
       end
 
+      it "explains why it cannot change settings that would apply to another staff account" do
+        group.add(admin)
+        Fabricate(:admin, email: "boss@staff.test")
+        settings = [
+          { title: "Writers" },
+          { primary_group: true },
+          { automatic_membership_email_domains: "staff.test", grant_trust_level: 3 },
+        ]
+
+        settings.each do |change|
+          put "/groups/#{group.id}.json", params: { group: change }
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to eq(
+            [I18n.t("groups.errors.other_staff_account_settings")],
+          )
+        end
+
+        expect(admin.reload).to have_attributes(title: nil, primary_group_id: nil)
+      end
+
       it "can update an automatic group's incoming email but not its SMTP credentials" do
         group = Group.find(Group::AUTO_GROUPS[:moderators])
 
@@ -2353,6 +2374,33 @@ RSpec.describe GroupsController do
       end
 
       expect(group.users).to contain_exactly(user)
+    end
+
+    it "does not let a group owner change an admin's primary group through membership" do
+      refusal = [I18n.t("groups.errors.other_staff_account_settings")]
+      group.update!(primary_group: true)
+      group.add_owner(user)
+      sign_in(user)
+
+      put "/groups/#{group.id}/members.json", params: { usernames: admin.username }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq(refusal)
+
+      put "/groups/#{group.id}/owners.json", params: { usernames: admin.username }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq(refusal)
+
+      expect(group.reload.users).not_to include(admin)
+      expect(admin.reload.primary_group_id).to eq(nil)
+
+      group.add(admin)
+      expect(admin.reload.primary_group_id).to eq(group.id)
+
+      delete "/groups/#{group.id}/members.json", params: { usernames: admin.username }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq(refusal)
+      expect(group.reload.users).to include(admin)
+      expect(admin.reload.primary_group_id).to eq(group.id)
     end
 
     describe "#add_members" do
@@ -3159,6 +3207,20 @@ RSpec.describe GroupsController do
     before do
       group.add_owner(user)
       sign_in(user)
+    end
+
+    it "does not accept a request that was never made" do
+      group.update!(primary_group: true)
+
+      put "/groups/#{group.id}/handle_membership_request.json",
+          params: {
+            user_id: admin.id,
+            accept: true,
+          }
+
+      expect(response.status).to eq(400)
+      expect(group.reload.users).not_to include(admin)
+      expect(admin.reload.primary_group_id).to eq(nil)
     end
 
     it "sends a reply to the request membership topic when accepted" do

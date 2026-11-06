@@ -200,6 +200,24 @@ RSpec.describe Admin::GroupsController do
           expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
         end
 
+        it "does not create a group that would change another staff account" do
+          Fabricate(:admin, email: "boss@staff.test")
+          [
+            { usernames: admin.username },
+            { automatic_membership_email_domains: "staff.test" },
+          ].each do |members|
+            params = { group: { name: "primaries", primary_group: true, **members } }
+
+            expect do post "/admin/groups.json", params: end.not_to change { Group.count }
+
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["errors"]).to eq(
+              [I18n.t("groups.errors.other_staff_account_settings")],
+            )
+          end
+          expect(admin.reload.primary_group_id).to eq(nil)
+        end
+
         it "does not allow setting the flair to an upload the moderator does not own" do
           secret_upload = Fabricate(:secure_upload, user: admin)
 

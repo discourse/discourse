@@ -20,6 +20,10 @@ class GroupOwnerManager
     logger = GroupActionLogger.new(guardian.user, group)
     user_ids = users.map(&:id)
     member_ids = group.group_users.where(user_id: user_ids).pluck(:user_id).to_set
+    users.each do |user|
+      next if member_ids.include?(user.id)
+      raise GroupMutations::OtherStaffAccount if !guardian.can_add_group_member?(user, group)
+    end
 
     users.each do |user|
       next if member_ids.include?(user.id)

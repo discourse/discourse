@@ -149,6 +149,91 @@ RSpec.describe Groups::Create do
       it { is_expected.to fail_a_policy(:can_request_access) }
     end
 
+    context "when a moderator adds another staff account to a group that would change it" do
+      let(:guardian) { Fabricate(:moderator).guardian }
+
+      before { SiteSetting.moderators_manage_groups = true }
+
+      it "fails a policy for initial members and owners alike" do
+        [{ usernames: admin.username }, { owner_usernames: admin.username }].each do |members|
+          result =
+            described_class.call(
+              params: {
+                name: "primaries",
+                primary_group: true,
+                **members,
+              },
+              guardian:,
+            )
+
+          expect(result).to fail_a_policy(:can_add_initial_members)
+        end
+
+        expect(Group.where(name: "primaries")).to be_empty
+        expect(admin.reload.primary_group_id).to eq(nil)
+      end
+    end
+
+    context "when a moderator adds themselves and regular users to a group that would change them" do
+      let(:moderator) { Fabricate(:moderator) }
+      let(:guardian) { moderator.guardian }
+      let(:params) do
+        {
+          name: "primaries",
+          primary_group: true,
+          title: "Primaries",
+          usernames: member_1.username,
+          owner_usernames: moderator.username,
+        }
+      end
+
+      before { SiteSetting.moderators_manage_groups = true }
+
+      it "creates the group and applies its settings to them" do
+        expect(result).to run_successfully
+        expect([moderator.reload.primary_group_id, member_1.reload.primary_group_id]).to eq(
+          [result.group.id, result.group.id],
+        )
+      end
+    end
+
+    context "when a moderator creates a group that would change another staff account joining by domain" do
+      let(:guardian) { Fabricate(:moderator).guardian }
+      let(:params) do
+        {
+          name: "domain-primaries",
+          primary_group: true,
+          automatic_membership_email_domains: "staff.test",
+        }
+      end
+
+      before do
+        SiteSetting.moderators_manage_groups = true
+        Fabricate(:admin, email: "boss@staff.test")
+      end
+
+      it { is_expected.to fail_a_policy(:can_auto_add_members) }
+    end
+
+    context "when a moderator creates a group whose domain only matches regular users" do
+      let(:guardian) { Fabricate(:moderator).guardian }
+      let(:params) do
+        {
+          name: "domain-primaries",
+          primary_group: true,
+          automatic_membership_email_domains: "crew.test",
+        }
+      end
+
+      before do
+        SiteSetting.moderators_manage_groups = true
+        Fabricate(:admin, email: "boss@staff.test")
+        Fabricate(:user, email: "writer@crew.test")
+      end
+
+      it { is_expected.to run_successfully }
+    end
+
     context "when data is invalid" do
       let(:params) { { name: nil } }
 
