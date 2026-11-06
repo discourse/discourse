@@ -3351,6 +3351,17 @@ RSpec.describe TopicsController do
       )
     end
 
+    it "omits page values treated as zero from the redirect" do
+      get "/t/external_id/asdf.json", params: { page: "0" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+
+      get "/t/external_id/asdf.json", params: { page: "00" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+
+      get "/t/external_id/asdf.json", params: { page: "abc" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+    end
+
     describe "when user does not have access to the topic" do
       it "returns a not-found response" do
         sign_in(user)
@@ -4052,6 +4063,23 @@ RSpec.describe TopicsController do
       get "/t/wrong-slug/#{topic.id}", params: { Discourse::LOCALE_PARAM => "ja" }
 
       expect(response).to redirect_to("#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=ja")
+    end
+
+    it "omits page zero when redirecting to the correct slug" do
+      get "/t/wrong-slug/#{topic.id}", params: { page: 0 }
+
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it "encodes the locale param when redirecting to the correct slug" do
+      locale = "en，但他们的解决方案"
+
+      get "/t/wrong-slug/#{topic.id}", params: { Discourse::LOCALE_PARAM => locale }
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.location).to eq(
+        "#{Discourse.base_url}#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=en%EF%BC%8C%E4%BD%86%E4%BB%96%E4%BB%AC%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88",
+      )
     end
 
     context "with registered redirect_to_correct_topic_additional_query_parameters" do
