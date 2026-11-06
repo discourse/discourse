@@ -192,10 +192,7 @@ export interface TopicFields {
   pm_with_non_human_user?: boolean;
   post_stream?: object;
   posted?: boolean;
-  posters?: TopicPoster[] & {
-    /** Present on legacy array wrappers; plain arrays do not supply this property. */
-    firstObject?: TopicPoster;
-  };
+  posters?: TopicPoster[];
   posts_count?: number;
   published_page?: TopicPublishedPage;
   queued_posts_count?: number;
@@ -854,9 +851,9 @@ export default class Topic extends RestModel {
     return this.last_read_post_number! >= this.highest_post_number!;
   }
 
-  @computed("posters.firstObject")
+  @computed("posters.[]")
   get creator(): TopicBasicUser | undefined {
-    return this.posters?.firstObject && this.posters?.firstObject?.user;
+    return this.posters?.[0]?.user;
   }
 
   @computed("posters.[]")
@@ -865,7 +862,7 @@ export default class Topic extends RestModel {
       const latest = this.posters?.filter((p) =>
         p.extras?.includes("latest")
       )[0];
-      return latest || this.posters?.firstObject;
+      return latest || this.posters[0];
     }
   }
 
