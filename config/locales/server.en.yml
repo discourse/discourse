@@ -511,6 +511,7 @@ en:
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
         from_reply_by_address_error: "Happens when the From header matches the reply by email address."
         inactive_user_error: "Happens when the sender is not active."
+        suspended_user_error: "Happens when the sender has been suspended."
         silenced_user_error: "Happens when the sender has been silenced."
         bad_destination_address: "Happens when none of the email addresses in To/Cc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
@@ -4431,6 +4432,17 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account associated with this email address is not activated. Please activate your account before sending emails in.
+
+    email_reject_suspended_user:
+      title: "Email Reject Suspended User"
+      subject_template: "[%{email_prefix}] Email issue -- Suspended User"
+      subject_template_improved: "%{email_prefix}: Email issue -- suspended user"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The account associated with this email address is suspended. Suspended accounts can't create posts or send messages by email.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_reject_silenced_user:
       title: "Email Reject Silenced User"

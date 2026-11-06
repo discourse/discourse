@@ -260,6 +260,14 @@ RSpec.describe Email::Receiver do
       expect(Topic.last.title).to eq("This topic needs a title")
     end
 
+    it "rejects email from a suspended sender" do
+      Fabricate(:user, email: "one@foo.com", suspended_till: 1.year.from_now)
+
+      expect { process(:email_reply_1) }.to raise_error(
+        Email::Receiver::SuspendedUserError,
+      ).and not_change(Topic, :count)
+    end
+
     context "with reply_by_email configured" do
       before { configure_reply_by_email }
 
