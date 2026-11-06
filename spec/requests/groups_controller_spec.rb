@@ -3227,6 +3227,69 @@ RSpec.describe GroupsController do
       end
     end
 
+    it "honors explicit storage field permissions over readable aliases" do
+      subjects = %w[flair_upload_id smtp_updated_by_id]
+      subjects.each do |subject|
+        Fabricate(
+          :group_history,
+          group: group,
+          acting_user: admin,
+          target_user: nil,
+          action: GroupHistory.actions[:change_group_setting],
+          subject: subject,
+          prev_value: "123",
+          new_value: "456",
+        )
+      end
+      sign_in(admin)
+      readable = false
+
+      stub_const(Object, :GroupShowSerializer, Class.new(GroupShowSerializer)) do
+        subjects.each do |subject|
+          Plugin::Instance
+            .new
+            .add_to_serializer(
+              :group_show,
+              subject.to_sym,
+              respect_plugin_enabled: false,
+              include_condition: -> { readable },
+            ) { object.public_send(subject) }
+        end
+
+        get "/groups/#{group.name}.json"
+        expect(response.status).to eq(200)
+        live = response.parsed_body.fetch("group")
+        expect(live.slice(*subjects)).to eq({})
+        expect(live).to have_key("flair_url")
+        expect(live).to have_key("smtp_updated_by")
+
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(200)
+        logs = response.parsed_body.fetch("logs").index_by { |entry| entry.fetch("subject") }
+        expect(logs.keys).to contain_exactly(*subjects)
+        logs.each_value do |entry|
+          expect(entry.values_at("prev_value", "new_value")).to eq(
+            [I18n.t("staff_action_logs.redacted")] * 2,
+          )
+        end
+
+        readable = true
+
+        get "/groups/#{group.name}.json"
+        expect(response.status).to eq(200)
+        live = response.parsed_body.fetch("group")
+        expect(live.slice(*subjects)).to eq(subjects.to_h { |subject| [subject, nil] })
+
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(200)
+        logs = response.parsed_body.fetch("logs").index_by { |entry| entry.fetch("subject") }
+        expect(logs.keys).to contain_exactly(*subjects)
+        logs.each_value do |entry|
+          expect(entry.values_at("prev_value", "new_value")).to eq(%w[123 456])
+        end
+      end
+    end
+
     it "redacts historical fields without a current group serializer declaration" do
       group.add_owner(user)
       Fabricate(
