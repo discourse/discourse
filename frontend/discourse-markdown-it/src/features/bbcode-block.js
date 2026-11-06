@@ -171,59 +171,109 @@ export function parseBBCodeTag(src, start, max, multiline) {
   return null;
 }
 
-function findBlockCloseTag(state, openTag, startLine, endLine) {
-  let nesting = 0,
-    line = startLine - 1,
-    start,
-    closeTag,
-    max;
+// Matches every block bbcode open tag in [fromLine, endLine) to its closing
+// tag in a single forward pass (respecting nesting). This lets findBlockCloseTag
+// answer each open tag with an O(1) lookup instead of rescanning the remaining
+// document for every tag, which made cooking quadratic on unclosed tags.
+function buildBlockCloseTagMatches(state, fromLine, endLine) {
+  const matches = new Map(); // open line -> close tag info
+  const stacks = new Map(); // tag -> array of open line numbers
+  let reachableEnd = endLine;
 
-  for (;;) {
-    line++;
-    if (line >= endLine) {
-      // unclosed bbcode block should not be autoclosed by end of document.
-      return;
-    }
-
-    start = state.bMarks[line] + state.tShift[line];
-    max = state.eMarks[line];
+  for (let line = fromLine; line < endLine; line++) {
+    const start = state.bMarks[line] + state.tShift[line];
+    const max = state.eMarks[line];
 
     if (start < max && state.sCount[line] < state.blkIndent) {
-      // non-empty line with negative indent should stop the list:
-      // - ```
-      //  test
+      // A non-empty line with negative indent stops the search, so no tag
+      // opened before it can close at or past it. Stopping here rather than
+      // walking the rest of the enclosing range keeps the pass proportional to
+      // the region a single lookup can reach - nested tokenize calls (list
+      // items, block quotes) are handed the whole enclosing endLine.
+      reachableEnd = line;
       break;
     }
 
-    // bbcode close [ === 91
+    // bbcode tag [ === 91
     if (91 !== state.src.charCodeAt(start)) {
       continue;
     }
 
     if (state.sCount[line] - state.blkIndent >= 4) {
-      // closing bbcode less than 4 spaces
+      // bbcode indented 4 or more spaces is treated as code, not a tag
       continue;
     }
 
-    closeTag = parseBBCodeTag(state.src, start, max, true);
+    const tag = parseBBCodeTag(state.src, start, max, true);
 
-    if (closeTag && closeTag.closing && closeTag.tag === openTag.tag) {
-      if (nesting === 0) {
-        closeTag.line = line;
-        closeTag.block = true;
-        break;
+    if (!tag) {
+      continue;
+    }
+
+    if (tag.closing) {
+      const stack = stacks.get(tag.tag);
+      if (stack && stack.length > 0) {
+        tag.line = line;
+        tag.block = true;
+        matches.set(stack.pop(), tag);
       }
-      nesting--;
+    } else {
+      let stack = stacks.get(tag.tag);
+      if (!stack) {
+        stack = [];
+        stacks.set(tag.tag, stack);
+      }
+      stack.push(line);
     }
+  }
 
-    if (closeTag && !closeTag.closing && closeTag.tag === openTag.tag) {
-      nesting++;
-    }
+  return { matches, endLine: reachableEnd };
+}
 
-    closeTag = null;
+function findBlockCloseTag(state, openTag, startLine, endLine) {
+  const openLine = startLine - 1;
+
+  let cache = state.bbcodeBlockCloseTags;
+  if (!cache || openLine < cache.fromLine || openLine >= cache.endLine) {
+    const built = buildBlockCloseTagMatches(state, openLine, endLine);
+
+    cache = {
+      fromLine: openLine,
+      endLine: Math.max(built.endLine, openLine + 1),
+      matches: built.matches,
+    };
+    state.bbcodeBlockCloseTags = cache;
+  }
+
+  const closeTag = cache.matches.get(openLine);
+
+  // unclosed bbcode block should not be autoclosed by the end of document, and
+  // a close tag outside the current (possibly nested) range does not apply.
+  if (!closeTag || closeTag.tag !== openTag.tag || closeTag.line >= endLine) {
+    return;
   }
 
   return closeTag;
+}
+
+// markdown-it rewrites the per-line offsets (bMarks/tShift/sCount) in place for
+// the content of block quotes and lists and then re-parses those same lines, so
+// a close tag map built for one nesting level describes different lines in the
+// next. Scoping the map to a single `tokenize` call - during which the offsets
+// are stable - keeps the lookup linear without serving stale matches.
+function scopeBlockCloseTagCache(md) {
+  const tokenize = md.block.tokenize;
+
+  md.block.tokenize = function (state, startLine, endLine) {
+    const parentCache = state.bbcodeBlockCloseTags;
+    state.bbcodeBlockCloseTags = null;
+
+    try {
+      return tokenize.call(this, state, startLine, endLine);
+    } finally {
+      state.bbcodeBlockCloseTags = parentCache;
+    }
+  };
 }
 
 function findInlineCloseTag(state, openTag, start, max) {
@@ -411,6 +461,8 @@ export function setup(helper) {
   helper.registerPlugin((md) => {
     isWhiteSpace = md.utils.isWhiteSpace;
     escapeHtml = md.utils.escapeHtml;
+
+    scopeBlockCloseTagCache(md);
 
     md.block.bbcode.ruler.push("excerpt", {
       tag: "excerpt",

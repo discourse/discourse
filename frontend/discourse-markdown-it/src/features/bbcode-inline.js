@@ -32,18 +32,17 @@ function tokenizeBBCode(state, silent, ruler) {
     let closeTag = "[/" + tagInfo.tag + "]";
     let found = false;
 
-    for (
-      i = state.pos + tagInfo.length;
-      i <= state.posMax - closeTag.length;
-      i++
-    ) {
-      if (
-        state.src.charCodeAt(pos) === 91 &&
-        state.src.slice(i, i + closeTag.length).toLowerCase() === closeTag
-      ) {
+    // Jump straight to candidate closing tags ("[/...") instead of inspecting
+    // every character. The previous scan was re-run for every unclosed tag,
+    // making cooking quadratic in the content length.
+    i = state.src.indexOf("[/", state.pos + tagInfo.length);
+
+    while (i !== -1 && i <= state.posMax - closeTag.length) {
+      if (state.src.slice(i, i + closeTag.length).toLowerCase() === closeTag) {
         found = true;
         break;
       }
+      i = state.src.indexOf("[/", i + 1);
     }
 
     if (!found) {
