@@ -3988,6 +3988,41 @@ RSpec.describe GroupsController do
         expect(group_user.reload.notification_level).to eq(NotificationLevels.all[:muted])
       end
 
+      it "does not allow a moderator to change notification level for a staff account" do
+        staff_users = [admin, Fabricate(:moderator)]
+        staff_users.each { |staff_user| group.add(staff_user) }
+        sign_in(moderator)
+
+        staff_users.each do |staff_user|
+          group_user = GroupUser.find_by(group:, user: staff_user)
+          original_level = group_user.notification_level
+
+          post "/groups/#{group.name}/notifications.json",
+               params: {
+                 notification_level: NotificationLevels.all[:muted],
+                 user_id: staff_user.id,
+               }
+
+          expect(response.status).to eq(403)
+          expect(group_user.reload.notification_level).to eq(original_level)
+        end
+      end
+
+      it "allows an admin to change notification level for a staff account" do
+        group.add(admin)
+        sign_in(admin)
+        group_user = GroupUser.find_by(group:, user: moderator)
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: moderator.id,
+             }
+
+        expect(response.status).to eq(200)
+        expect(group_user.reload.notification_level).to eq(NotificationLevels.all[:muted])
+      end
+
       it "does not reveal or update members hidden from a moderator" do
         group.update!(members_visibility_level: Group.visibility_levels[:owners])
         sign_in(moderator)

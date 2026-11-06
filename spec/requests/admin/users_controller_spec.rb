@@ -1601,6 +1601,18 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       include_examples "primary group updates possible"
+
+      it "changes a staff account's primary group" do
+        group.add(another_admin)
+
+        put "/admin/users/#{another_admin.id}/primary_group.json",
+            params: {
+              primary_group_id: group.id,
+            }
+
+        expect(response.status).to eq(200)
+        expect(another_admin.reload.primary_group_id).to eq(group.id)
+      end
     end
 
     context "when logged in as a moderator" do
@@ -1610,6 +1622,41 @@ RSpec.describe Admin::UsersController do
         before { SiteSetting.moderators_manage_groups = true }
 
         include_examples "primary group updates possible"
+
+        it "prevents changing a staff account's primary group" do
+          group.add(admin)
+
+          put "/admin/users/#{admin.id}/primary_group.json", params: { primary_group_id: group.id }
+
+          expect(response.status).to eq(403)
+          expect(admin.reload.primary_group_id).to eq(nil)
+        end
+
+        it "prevents clearing a staff account's primary group" do
+          other_moderator = Fabricate(:moderator)
+          group.add(other_moderator)
+          other_moderator.update!(primary_group: group)
+
+          put "/admin/users/#{other_moderator.id}/primary_group.json",
+              params: {
+                primary_group_id: "",
+              }
+
+          expect(response.status).to eq(403)
+          expect(other_moderator.reload.primary_group_id).to eq(group.id)
+        end
+
+        it "lets a moderator change their own primary group" do
+          group.add(moderator)
+
+          put "/admin/users/#{moderator.id}/primary_group.json",
+              params: {
+                primary_group_id: group.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(moderator.reload.primary_group_id).to eq(group.id)
+        end
       end
 
       context "when moderators_manage_groups site setting is disabled" do
@@ -2122,12 +2169,33 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       include_examples "user activation possible"
+
+      it "activates a staff account" do
+        inactive_moderator = Fabricate(:moderator, active: false)
+
+        put "/admin/users/#{inactive_moderator.id}/activate.json"
+
+        expect(response.status).to eq(200)
+        expect(inactive_moderator.reload.active).to eq(true)
+      end
     end
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
       include_examples "user activation possible"
+
+      it "prevents activation of a staff account" do
+        inactive_admin = Fabricate(:admin, active: false)
+        inactive_moderator = Fabricate(:moderator, active: false)
+
+        [inactive_admin, inactive_moderator].each do |staff_user|
+          put "/admin/users/#{staff_user.id}/activate.json"
+
+          expect(response.status).to eq(403)
+          expect(staff_user.reload.active).to eq(false)
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do

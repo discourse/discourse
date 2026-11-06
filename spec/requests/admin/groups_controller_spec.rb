@@ -447,6 +447,22 @@ RSpec.describe Admin::GroupsController do
           expect(response.status).to eq(200)
           expect(User.where(primary_group_id: group.id).size).to eq(3)
         end
+
+        it "prevents setting the primary group of a staff account" do
+          group.add(admin)
+          group.add(user)
+
+          put "/admin/groups/#{group.id}/primary.json",
+              params: {
+                group: {
+                  usernames: "#{user.username},#{admin.username}",
+                },
+                primary: "true",
+              }
+
+          expect(response.status).to eq(403)
+          expect(User.where(primary_group_id: group.id)).to be_empty
+        end
       end
 
       context "with moderators_manage_groups disabled" do
