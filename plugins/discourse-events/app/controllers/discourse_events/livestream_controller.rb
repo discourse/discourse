@@ -61,6 +61,29 @@ module DiscourseEvents
       end
     end
 
+    def pause_notifications
+      DiscourseEvents::Livestream::PauseNotifications.call(service_params) do |result|
+        on_success { |guardian:| render json: { ends_at: guardian.user.do_not_disturb_until } }
+
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_see_topic) { raise Discourse::NotFound }
+        on_model_not_found(:event) { raise Discourse::NotFound }
+        on_failed_policy(:event_not_over) { raise Discourse::InvalidAccess }
+        on_failed_policy(:pause_not_cancelled) { head :conflict }
+        on_failure { render json: failed_json, status: :unprocessable_entity }
+      end
+    end
+
+    def resume_notifications
+      DiscourseEvents::Livestream::ResumeNotifications.call(service_params) do |result|
+        on_success { head :no_content }
+
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_failure { render json: failed_json, status: :unprocessable_entity }
+      end
+    end
+
     private
 
     def frame_base_path

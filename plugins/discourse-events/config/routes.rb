@@ -26,6 +26,11 @@ DiscourseEvents::Engine.routes.draw do
   get "/discourse-calendar/livestream/zoom/signature" => "livestream#prepare_zoom_signature",
       :format => :json
   get "/discourse-calendar/livestream/zoom/frame" => "livestream#zoom_frame"
+  post "/discourse-calendar/livestream/notification-pause" => "livestream#pause_notifications",
+       :format => :json
+  delete "/discourse-calendar/livestream/notification-pause/:pause_key" =>
+           "livestream#resume_notifications",
+         :format => :json
 end
 
 Discourse::Application.routes.draw do
