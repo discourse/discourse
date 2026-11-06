@@ -169,7 +169,7 @@ module MarkdownEndpoint
     def replace_details
       @fragment
         .css("details")
-        .each do |details|
+        .reverse_each do |details|
           summary = escape_text(details.at_css("summary")&.text&.strip.to_s)
           body_html = details.children.reject { |node| node.name == "summary" }.map(&:to_html).join
           body = convert_html(body_html)

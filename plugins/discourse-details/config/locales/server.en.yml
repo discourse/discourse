@@ -1,5 +1,7 @@
 en:
   site_settings:
     details_enabled: 'Include the ability to add expandable details to a post. This feature can be found in the toolbar popup menu of the composer. You must rebake all posts with "rake posts:rebake" if you change this setting.'
+    details_max_nesting_depth: "Maximum permitted nesting depth for collapsible details sections in posts. Set to 0 for no limit."
   details:
     excerpt_details: "(click for more details)"
+    max_nesting_depth_exceeded: "Collapsible details sections cannot be nested more than %{max_depth} levels deep."

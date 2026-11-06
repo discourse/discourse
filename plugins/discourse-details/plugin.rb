@@ -11,6 +11,20 @@ enabled_site_setting :details_enabled
 register_asset "stylesheets/details.scss"
 
 after_initialize do
+  validate(:post, :validate_details_nesting_depth) do
+    limit = SiteSetting.details_max_nesting_depth
+    return unless limit.positive? && raw_changed?
+    return unless raw.match?(/\[details(?==|\]|\s)|<details\b/i)
+
+    too_deep =
+      Nokogiri::HTML5
+        .fragment(PrettyText.cook(raw))
+        .css("details")
+        .any? { |details| details.ancestors("details").size >= limit }
+
+    errors.add(:base, I18n.t("details.max_nesting_depth_exceeded", max_depth: limit)) if too_deep
+  end
+
   Email::Styles.register_plugin_style do |fragment|
     # remove all elided content
     fragment.css("details.elided").each(&:remove)
