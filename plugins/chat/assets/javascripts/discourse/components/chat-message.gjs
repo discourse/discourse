@@ -34,6 +34,7 @@ import ChatMessageReaction from "discourse/plugins/chat/discourse/components/cha
 import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
@@ -48,7 +49,6 @@ export function resetChatMessageDecorators() {
 }
 
 export const MENTION_KEYWORDS = ["here", "all"];
-export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;

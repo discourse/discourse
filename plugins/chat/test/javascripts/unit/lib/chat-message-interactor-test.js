@@ -5,7 +5,7 @@ import {
   logIn,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";

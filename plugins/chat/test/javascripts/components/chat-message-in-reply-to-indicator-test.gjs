@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 

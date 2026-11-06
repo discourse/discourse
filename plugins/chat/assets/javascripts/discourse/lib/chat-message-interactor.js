@@ -16,7 +16,7 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
 import { DEFAULT_DIVERSITY } from "discourse/services/emoji-store";
 import { i18n } from "discourse-i18n";
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageReactionModel, {

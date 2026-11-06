@@ -4,7 +4,7 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatEmojiAvatar from "./chat-emoji-avatar.gjs";
 import ChatUserAvatar from "./chat-user-avatar.gjs";
 
