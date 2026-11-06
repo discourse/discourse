@@ -232,12 +232,9 @@ sw:
       back: "Iliyopita"
       next: "Ijayo"
       sections:
-        theme: "Mandhari"
         homepage: "Ukurasa mkuu"
-        search: "Tafuta"
-      colors:
-        light: "Hafifu"
-        dark: "Nyeusi"
+      fonts:
+        base_font: "Mwili"
       homepage:
         topics: "Mada"
         categories: "Kategoria"

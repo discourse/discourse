@@ -308,15 +308,10 @@ ko:
       back: "뒤로"
       next: "다음"
       sections:
-        theme: "테마"
         fonts: "글꼴"
         homepage: "홈페이지"
-        search: "검색"
-      colors:
-        light: "라이트"
-        dark: "다크"
       fonts:
-        heading_font: "제목 글꼴"
+        base_font: "바디"
       homepage:
         topics: "글"
         categories: "카테고리"

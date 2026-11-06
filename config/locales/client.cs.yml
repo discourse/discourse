@@ -527,19 +527,17 @@ cs:
       back: "Zpět"
       next: "Další"
       sections:
-        theme: "Téma"
         fonts: "Písma"
+        logo: "Logo"
         homepage: "Domovská stránka"
-        welcome_banner: "Uvítací banner"
-        search: "Vyhledat"
       theme:
         selected: "Zaškrtnuté"
-      colors:
-        light: "Světlá"
-        dark: "Tmavá"
       fonts:
-        base_font: "Základní písmo"
-        heading_font: "Písmo nadpisů"
+        base_font: "Tělo"
+        heading_font: "Nadpisy"
+      logo:
+        description: "Zobrazuje se v horní navigační liště webu a také v horní části e-mailových oznámení webu."
+        help_text: "Doporučená velikost je 600 x 80 pixelů."
       homepage:
         topics: "Témata"
         categories: "Kategorie"

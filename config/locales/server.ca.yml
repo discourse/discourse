@@ -2785,6 +2785,12 @@ ca:
   design_wizard:
     palette_pairs:
       default: "Per defecte"
+      neutral: "Neutre"
+      shades_of_blue: "Tons blavosos"
+      summer: "Estiu"
+      grey_amber: "Gris ambre"
+      latte: "Latte"
+      dark_rose: "Rosa fosc"
   wizard:
     title: "Instal·lació de Discourse"
     step:

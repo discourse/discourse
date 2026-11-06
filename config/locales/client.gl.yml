@@ -273,15 +273,10 @@ gl:
       back: "Volver"
       next: "Seguinte"
       sections:
-        theme: "Tema"
         fonts: "Tipos de letra"
         homepage: "Páxina de inicio"
-        search: "Buscar"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
       fonts:
-        heading_font: "Tipo de letra de título"
+        base_font: "Mensaxe"
       homepage:
         topics: "Temas"
         categories: "Categorías"

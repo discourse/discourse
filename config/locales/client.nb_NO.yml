@@ -329,12 +329,9 @@ nb_NO:
       back: "Forrige"
       next: "Neste"
       sections:
-        theme: "Drakt"
         homepage: "Hjemmeside"
-        search: "Søk"
-      colors:
-        light: "Lys"
-        dark: "Mørk"
+      fonts:
+        base_font: "Body"
       homepage:
         topics: "Emner"
         categories: "Kategorier"

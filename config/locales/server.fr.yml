@@ -5329,7 +5329,13 @@ fr:
   design_wizard:
     palette_pairs:
       default: "Par défaut"
+      neutral: "Neutre"
+      shades_of_blue: "Nuances de bleu"
+      summer: "Été"
       dracula: "Dracula"
+      grey_amber: "Gris ambre"
+      latte: "Café crème"
+      dark_rose: "Rose foncé"
   wizard:
     title: "Configuration de Discourse"
     step:
