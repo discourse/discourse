@@ -3168,4 +3168,76 @@ HTML
       expect(doc.to_html).to eq(html_with_thumbnail)
     end
   end
+
+  describe "bbcode blocks nested inside other container blocks" do
+    it "still finds the closing tag of a bbcode block inside a block quote" do
+      md = <<~MD
+        [b]hi[/b]
+        [quote]
+        x
+        [/quote]
+
+        > [quote]
+        > y
+        > [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <blockquote>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </blockquote>
+      HTML
+    end
+
+    it "still finds the closing tag of a bbcode block in a list item" do
+      md = <<~MD
+        - [quote]
+          y
+          [/quote]
+        - [quote]
+          z
+          [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </li>
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>z</p>
+        </blockquote>
+        </aside>
+        </li>
+      HTML
+    end
+  end
+
+  describe "cooking unclosed bbcode tags" do
+    def cook_duration(raw)
+      PrettyText.cook("warm up the v8 context") # exclude one-off engine init
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      PrettyText.cook(raw)
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+    end
+
+    it "cooks many unclosed block bbcode tags in roughly linear time" do
+      raw = (["[quote]"] * 3000).join("\n")
+      expect(cook_duration(raw)).to be < 2
+    end
+
+    it "cooks many unclosed replace-style inline bbcode tags in roughly linear time" do
+      raw = "[code]" * 6000
+      expect(cook_duration(raw)).to be < 2
+    end
+  end
 end
