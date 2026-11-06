@@ -16,11 +16,16 @@ sr:
   js:
     blog:
       panel:
-        options: Opcije
         change:
           title: naslov
       review:
-        active: Aktivni
+        create: Napravi link
+        copy: Kopija
+        open: Otvori
+        status:
+          active: Aktivni
+        closed_on: "Затвара %{date}"
+        revoke: Povuci
         message: Povratne informacije
       editor_table:
         edit: Izmeni

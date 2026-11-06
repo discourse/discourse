@@ -493,7 +493,6 @@ hu:
         title: "Kezdj el posztolni!"
         choose_option: "Hogyan szeretnél kezdeni?"
         predefined_topics: "Jégtörő sablonok"
-        predefined_topics_subtitle: "Adj témát az új tagoknak a beszélgetéshez: válassz egy sablont, szerkeszd meg, és alakítsd a sajátodra!"
         predefined_topics_description: "Válogass a beszélgetésindító ötletek közül, és indítsd be a társalgást!"
         use_predefined: "Sablonok böngészése"
         back: "Vissza"
@@ -504,20 +503,21 @@ hu:
     design_wizard:
       back: "Vissza"
       next: "Következő"
+      steps:
+        homepage:
+          title: "Megjelenés & élmény"
       sections:
-        theme: "Téma"
         fonts: "Betűkészletek"
+        logo: "Logó"
         homepage: "Főoldal"
-        welcome_banner: "Üdvözlő banner"
-        search: "Keresés"
       theme:
         selected: "Kiválasztott"
-      colors:
-        light: "Világos"
-        dark: "Sötét"
       fonts:
-        base_font: "Alap betűkészlet"
-        heading_font: "Fejléc betűkészlet"
+        base_font: "Törzs"
+        heading_font: "Címsorok"
+      logo:
+        description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail-értesítéseinek felső részén."
+        help_text: "Az ajánlott méret 600×80 képpont."
       homepage:
         topics: "Témák"
         categories: "Kategóriák"
@@ -760,7 +760,6 @@ hu:
     dsa_statements:
       category: "Kategória"
       category_prompt: "Válasszon kategóriát"
-      saving: "Mentés…"
     review:
       show_more: "Több megjelenítése"
       show_less: "Kevesebb megjelenítése"
@@ -6977,7 +6976,6 @@ hu:
           uploading: "Feltöltés…"
           uploading_progress: "Feltöltés...: %{progress}"
           success: "'%{filename}' sikeresen feltöltésre került. A fájl feldolgozása folyamatban van, és egy percig eltarthat, amíg megjelenik a listán."
-          error: "Egy hiba lépett fel feltöltés közben '%{filename}': %{message}"
         settings: "Beállítások"
         operations:
           is_running: "Egy folyamat jelenleg fut már."

@@ -2817,6 +2817,22 @@ HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
+
+    it "inserts the upload src literally and does not treat it as a replacement pattern" do
+      filler = "Z" * 100
+      payload = "$'" * 100
+      raw = <<~HTML
+      <div>
+      <img src="upload://#{payload}.png">
+      #{filler}
+      </div>
+      HTML
+
+      cooked = PrettyText.cook(raw)
+
+      expect(cooked.scan("Z").length).to eq(filler.length)
+      expect(cooked).to include(%{data-orig-src="upload://#{payload}.png"})
+    end
   end
 
   it "can properly allowlist iframes" do
@@ -3150,6 +3166,78 @@ HTML
       HTML
 
       expect(doc.to_html).to eq(html_with_thumbnail)
+    end
+  end
+
+  describe "bbcode blocks nested inside other container blocks" do
+    it "still finds the closing tag of a bbcode block inside a block quote" do
+      md = <<~MD
+        [b]hi[/b]
+        [quote]
+        x
+        [/quote]
+
+        > [quote]
+        > y
+        > [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <blockquote>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </blockquote>
+      HTML
+    end
+
+    it "still finds the closing tag of a bbcode block in a list item" do
+      md = <<~MD
+        - [quote]
+          y
+          [/quote]
+        - [quote]
+          z
+          [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </li>
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>z</p>
+        </blockquote>
+        </aside>
+        </li>
+      HTML
+    end
+  end
+
+  describe "cooking unclosed bbcode tags" do
+    def cook_duration(raw)
+      PrettyText.cook("warm up the v8 context") # exclude one-off engine init
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      PrettyText.cook(raw)
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+    end
+
+    it "cooks many unclosed block bbcode tags in roughly linear time" do
+      raw = (["[quote]"] * 3000).join("\n")
+      expect(cook_duration(raw)).to be < 2
+    end
+
+    it "cooks many unclosed replace-style inline bbcode tags in roughly linear time" do
+      raw = "[code]" * 6000
+      expect(cook_duration(raw)).to be < 2
     end
   end
 end

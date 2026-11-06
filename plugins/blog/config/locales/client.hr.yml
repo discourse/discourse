@@ -29,21 +29,26 @@ hr:
         badge:
           draft: Skica
         preview: Pregled
-        publish: Objavi
-        options: Mogućnosti
         change:
           title: titula
           body: tijelo
       review:
-        copy: Kopirajte poveznicu
-        active: Aktivno
+        create: Kreirajte poveznicu
+        copy: Kopija
+        open: Otvori
+        status:
+          active: Aktivno
+          expired: Isteklo
+          revoked: Opoziv
+          inactive: Neaktivan
+        closed_on: "Zatvoreno %{date}"
+        revoke: Povuci
         message: Povratne informacije
       editor_table:
         edit: Uredi
         status: Statust
         replies: Odgovori
       drafts: Skice
-      private_draft: Skica
       preview: Pregled
       unpublish: Poništi objavljivanje
       appearance_link: Izgled

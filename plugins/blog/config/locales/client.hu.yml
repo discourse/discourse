@@ -32,21 +32,26 @@ hu:
         badge:
           draft: Vázlat
         preview: Előnézet
-        publish: Közzététel
-        options: Beállítások
         change:
           title: cím
           body: törzs
       review:
-        copy: Hivatkozás másolása
-        active: Aktív
+        create: Hivatkozás létrehozása
+        copy: Másolás
+        open: Nyitott
+        status:
+          active: Aktív
+          expired: Lejárt
+          revoked: Visszavonva
+          inactive: Inaktív
+        closed_on: "Lezárva: %{date}"
+        revoke: Visszavonás
         message: Visszajelzés
       editor_table:
         edit: Szerkesztés
         status: Állapot
         replies: Válaszok
       drafts: Vázlatok
-      private_draft: Vázlat
       preview: Előnézet
       unpublish: Közzététel visszavonása
       appearance_link: Megjelenés

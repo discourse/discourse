@@ -569,6 +569,8 @@ de:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
+        no_llm_selected: "Keine Erfassung"
+        no_decision_model_selected: "Keine Erfassung"
         select_agent: "Agent auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
@@ -1315,6 +1317,7 @@ de:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Benutzerdefiniert"
         provider_fields:

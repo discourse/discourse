@@ -690,6 +690,14 @@ ru:
           no_reason: "Чтобы пометить или снять отметку с сообщения как решенную, требуется указать причину."
           action_failed: "Не удалось обновить статус \"решено\"."
         success: "Статус \"Решено\" успешно обновлен."
+    appearance_authoring:
+      default_theme: "Тема по умолчанию"
+      colors:
+        light:
+          header_background: "В заголовке"
+      fonts:
+        base_font: "Шрифт текста"
+        heading_font: "Шрифт заголовка"
     reviewables:
       ai_tool_action:
         title: "Действие инструмента ИИ"
@@ -755,6 +763,7 @@ ru:
       cannot_edit_builtin: "Встроенную модель редактировать нельзя."
       secret_required: "Необходимо выбрать учетные данные."
       secret_not_found: "Выбранные учетные данные не существуют."
+      missing_provider_param: "Параметр %{param} не может быть пустым"
       configuration:
         disable_embeddings: "Сначала вам необходимо отключить настройку 'ai embeddings enabled'."
         choose_model: "Сначала задайте 'ai embeddings selected model'."

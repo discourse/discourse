@@ -445,18 +445,17 @@ fi:
       back: "Takaisin"
       next: "Seuraava"
       sections:
-        theme: "Värimaailma"
         fonts: "Fontit"
+        logo: "Logo"
         homepage: "Aloitussivu"
-        search: "Haku"
       theme:
         selected: "Valittu"
-      colors:
-        light: "Vaalea"
-        dark: "Tumma"
       fonts:
-        base_font: "Perusfontti"
-        heading_font: "Otsikon fontti"
+        base_font: "Leipäteksti"
+        heading_font: "Otsikot"
+      logo:
+        description: "Näkyy sivuston ylänavigoinnissa sekä sivuston sähköposti-ilmoitusten yläosassa."
+        help_text: "Suositeltava koko on 600 x 80 pikseliä."
       homepage:
         topics: "Aiheet"
         categories: "Kategoriat"
@@ -690,7 +689,6 @@ fi:
     dsa_statements:
       category: "Luokka"
       category_prompt: "Valitse alue"
-      saving: "Tallennetaan…"
     review:
       show_more: "Näytä lisää"
       show_less: "Näytä vähemmän"
@@ -6477,7 +6475,6 @@ fi:
           uploading: "Ladataan…"
           uploading_progress: "Ladataan… %{progress}"
           success: "''%{filename}' ladattiin palvelimeen. Tiedostoa käsitellään, ja voi kestää enintään minuutti ennen kuin se näkyy luettelossa."
-          error: "Tiedoston '%{filename}' lataamisessa tapahtui virhe: %{message}"
         settings: "Asetukset"
         operations:
           is_running: "Toimintoa suoritetaan parhaillaan…"

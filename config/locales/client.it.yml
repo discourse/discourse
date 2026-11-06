@@ -445,18 +445,17 @@ it:
       back: "Indietro"
       next: "Avanti"
       sections:
-        theme: "Tema"
         fonts: "Caratteri"
+        logo: "Logo"
         homepage: "Homepage"
-        search: "Cerca"
       theme:
         selected: "Selezionato"
-      colors:
-        light: "Chiaro"
-        dark: "Scuro"
       fonts:
-        base_font: "Font di base"
-        heading_font: "Carattere dell'intestazione"
+        base_font: "Corpo"
+        heading_font: "Titoli"
+      logo:
+        description: "Appare nella barra di navigazione superiore del sito e nella parte superiore delle notifiche e-mail del sito."
+        help_text: "La dimensione consigliata è 600 x 80 pixel."
       homepage:
         topics: "Argomenti"
         categories: "Categorie"
@@ -690,7 +689,6 @@ it:
     dsa_statements:
       category: "Categoria"
       category_prompt: "Scegli una categoria"
-      saving: "Salvataggio…"
     review:
       show_more: "Mostra altro"
       show_less: "Mostra meno"
@@ -6475,7 +6473,6 @@ it:
           uploading: "Caricamento…"
           uploading_progress: "Caricamento… %{progress}%"
           success: "'%{filename}' è stato caricato con successo. Il file è in via di elaborazione e potrebbe servire fino ad un minuto perché appaia nella lista."
-          error: "Si è verificato un errore durante il caricamento %{filename}': %{message}"
         settings: "Impostazioni"
         operations:
           is_running: "Un'operazione è attualmente in esecuzione…"

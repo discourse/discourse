@@ -30,21 +30,26 @@ fa_IR:
         badge:
           draft: درفت
         preview: پیش‌نمایش
-        publish: انتشار
-        options: تنظیمات
         change:
           title: عنوان
           body: body
       review:
-        copy: رونوشت پیوند
-        active: فعال
+        create: ایجاد پیوند
+        copy: کپی
+        open: باز
+        status:
+          active: فعال
+          expired: منقضی شده
+          revoked: ابطال شد
+          inactive: غیر‌فعال
+        closed_on: "در %{date} بسته شد"
+        revoke: ابطال
         message: بازخورد
       editor_table:
         edit: ویرایش
         status: وضعیت
         replies: پاسخ‌ها
       drafts: پیش‌نویس‌ها
-      private_draft: درفت
       preview: پیش‌نمایش
       unpublish: لغو انتشار
       appearance_link: ظاهر

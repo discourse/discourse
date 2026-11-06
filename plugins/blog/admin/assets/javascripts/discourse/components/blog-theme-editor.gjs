@@ -16,6 +16,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import BlogThemeFields from "./blog-theme-fields.gjs";
@@ -50,6 +51,8 @@ export default class BlogThemeEditor extends Component {
   // FormKit hands its API over after the first render, so this has to be tracked:
   // template state read before then would never re-evaluate.
   @tracked formApi;
+  // Set while a change of starting point awaits confirmation or a reload.
+  @tracked pendingStartFrom = null;
   #catalogSequence = 0;
   #previewSequence = 0;
 
@@ -60,6 +63,18 @@ export default class BlogThemeEditor extends Component {
       activeTheme: active,
       draft: theme,
     });
+  }
+
+  get startFrom() {
+    return this.pendingStartFrom ?? this.args.model.from;
+  }
+
+  get includedSources() {
+    return (this.args.model.sources ?? []).filter((theme) => theme.preset);
+  }
+
+  get draftSources() {
+    return (this.args.model.sources ?? []).filter((theme) => !theme.preset);
   }
 
   get exportUrl() {
@@ -189,6 +204,26 @@ export default class BlogThemeEditor extends Component {
     if (event.key === "Enter") {
       event.preventDefault();
     }
+  }
+
+  @action
+  changeStartFrom(id) {
+    this.pendingStartFrom = id;
+    const startOver = () =>
+      this.router.transitionTo({ queryParams: { from: id } });
+
+    if (!this.hasUnsavedChanges) {
+      startOver();
+      return;
+    }
+
+    // FormKit only guards route changes, not query-param reloads.
+    const source = this.args.model.sources.find((theme) => theme.id === id);
+    this.dialog.confirm({
+      message: i18n("blog.admin.start_from_confirm", { name: source.name }),
+      didConfirm: startOver,
+      didCancel: () => (this.pendingStartFrom = null),
+    });
   }
 
   @action
@@ -451,6 +486,38 @@ export default class BlogThemeEditor extends Component {
           {{/if}}
         </:actions>
       </DPageSubheader>
+
+      {{#if @model.sources}}
+        <div class="blog-theme-editor__start-from">
+          <label for="blog-theme-start-from">{{i18n
+              "blog.admin.start_from"
+            }}</label>
+          <DNativeSelect
+            id="blog-theme-start-from"
+            @includeNone={{false}}
+            @onChange={{this.changeStartFrom}}
+            @value={{this.startFrom}}
+            as |select|
+          >
+            <optgroup label={{i18n "blog.admin.start_from_included"}}>
+              {{#each this.includedSources as |theme|}}
+                <select.Option
+                  @value={{theme.id}}
+                >{{theme.name}}</select.Option>
+              {{/each}}
+            </optgroup>
+            {{#if this.draftSources.length}}
+              <optgroup label={{i18n "blog.admin.start_from_drafts"}}>
+                {{#each this.draftSources as |theme|}}
+                  <select.Option
+                    @value={{theme.id}}
+                  >{{theme.name}}</select.Option>
+                {{/each}}
+              </optgroup>
+            {{/if}}
+          </DNativeSelect>
+        </div>
+      {{/if}}
 
       <div class="admin-controls blog-theme-editor__tabs">
         <DHorizontalOverflowNav

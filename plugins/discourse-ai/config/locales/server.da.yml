@@ -90,6 +90,14 @@ da:
       assign:
         errors:
           not_found: "Emne ikke fundet."
+    appearance_authoring:
+      default_theme: "Standard tema"
+      colors:
+        light:
+          header_background: "Sidehoved"
+      fonts:
+        base_font: "Indholds skrifttype"
+        heading_font: "Overskrifts skrifttype"
     reviewables:
       ai_tool_action:
         approve:

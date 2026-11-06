@@ -5,10 +5,11 @@ class EmbeddingDefinition < ActiveRecord::Base
   HUGGING_FACE = "hugging_face"
   OPEN_AI = "open_ai"
   GOOGLE = "google"
+  AWS_BEDROCK = "aws_bedrock"
 
   class << self
     def provider_names
-      [CLOUDFLARE, HUGGING_FACE, OPEN_AI, GOOGLE]
+      [CLOUDFLARE, HUGGING_FACE, OPEN_AI, GOOGLE, AWS_BEDROCK]
     end
 
     def distance_functions
@@ -30,11 +31,48 @@ class EmbeddingDefinition < ActiveRecord::Base
     end
 
     def provider_params
-      { open_ai: { model_name: :text } }
+      {
+        open_ai: {
+          model_name: :text,
+        },
+        aws_bedrock: {
+          model_id: :text,
+          region: :text,
+          access_key_id: {
+            type: :secret,
+            optional: true,
+          },
+          role_arn: {
+            type: :text,
+            optional: true,
+          },
+        },
+      }
+    end
+
+    def secret_param?(provider, key)
+      definition = provider_params.dig(provider&.to_sym, key.to_sym)
+      definition == :secret || (definition.is_a?(Hash) && definition[:type] == :secret)
     end
 
     def presets
       @presets ||= [
+        {
+          preset_id: "cohere-embed-v4",
+          display_name: "Cohere Embed v4 (AWS Bedrock)",
+          dimensions: 1536,
+          max_sequence_length: 8192,
+          pg_function: "<=>",
+          tokenizer_class: "DiscourseAi::Tokenizer::OpenAiCl100kTokenizer",
+          provider: AWS_BEDROCK,
+          matryoshka_dimensions: true,
+          provider_params: {
+            model_id: "cohere.embed-v4:0",
+            region: "us-east-1",
+            access_key_id: nil,
+            role_arn: nil,
+          },
+        },
         {
           preset_id: "bge-large-en",
           display_name: "bge-large-en",
@@ -126,9 +164,13 @@ class EmbeddingDefinition < ActiveRecord::Base
   validates :provider, presence: true, inclusion: provider_names
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer_class, presence: true, inclusion: tokenizer_names
-  validates :url, :dimensions, :max_sequence_length, presence: true
+  validates :dimensions, :max_sequence_length, presence: true
+  validates :url, presence: true, unless: :aws_bedrock?
   validates :pg_function, presence: true, inclusion: distance_functions
   validate :api_key_or_secret_present
+  validate :bedrock_params_present, if: :aws_bedrock?
+
+  before_validation :assign_bedrock_url, if: :aws_bedrock?
 
   after_create :create_indexes
   after_update_commit :clear_provider_pause
@@ -156,13 +198,26 @@ class EmbeddingDefinition < ActiveRecord::Base
       open_ai_client
     when GOOGLE
       gemini_client
+    when AWS_BEDROCK
+      bedrock_client
     else
       raise "Uknown embeddings provider"
     end
   end
 
   def lookup_custom_param(key)
-    provider_params&.dig(key)
+    value = provider_params&.dig(key)
+    return value if value.nil?
+
+    if self.class.secret_param?(provider, key) && value.to_s.match?(/\A\d+\z/)
+      return AiSecret.find_by(id: value.to_i)&.secret
+    end
+
+    value
+  end
+
+  def aws_bedrock?
+    provider == AWS_BEDROCK
   end
 
   def endpoint_url
@@ -203,6 +258,8 @@ class EmbeddingDefinition < ActiveRecord::Base
 
   def api_key_or_secret_present
     return if seeded?
+    # The AWS SDK can resolve credentials from the environment or instance role.
+    return if aws_bedrock?
     if ai_secret_id.present?
       unless AiSecret.exists?(ai_secret_id)
         errors.add(:ai_secret_id, I18n.t("discourse_ai.embeddings.secret_not_found"))
@@ -211,6 +268,20 @@ class EmbeddingDefinition < ActiveRecord::Base
     end
     return if self[:api_key].present?
     errors.add(:base, I18n.t("discourse_ai.embeddings.secret_required"))
+  end
+
+  def bedrock_params_present
+    %w[model_id region].each do |param|
+      next if lookup_custom_param(param).present?
+      errors.add(:base, I18n.t("discourse_ai.embeddings.missing_provider_param", param: param))
+    end
+  end
+
+  # Bedrock requests are addressed by region and model ID, so the URL is only
+  # informational, but the column is required.
+  def assign_bedrock_url
+    region = lookup_custom_param("region")
+    self.url = "https://bedrock-runtime.#{region}.amazonaws.com" if region.present?
   end
 
   def strategy
@@ -240,6 +311,17 @@ class EmbeddingDefinition < ActiveRecord::Base
     client_dimensions = matryoshka_dimensions ? dimensions : nil
 
     DiscourseAi::Inference::GeminiEmbeddings.new(endpoint_url, api_key, client_dimensions)
+  end
+
+  def bedrock_client
+    DiscourseAi::Inference::BedrockEmbeddings.new(
+      region: lookup_custom_param("region"),
+      model_id: lookup_custom_param("model_id"),
+      dimensions: matryoshka_dimensions ? dimensions : nil,
+      api_key: api_key,
+      access_key_id: lookup_custom_param("access_key_id"),
+      role_arn: lookup_custom_param("role_arn"),
+    )
   end
 end
 

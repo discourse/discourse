@@ -20,6 +20,7 @@ pl_PL:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Zmieniono możliwość wykrywania botów czatu"
             chat_channel_status_change: "Zmieniono status kanału czatu"
             chat_channel_delete: "Kanał czatu usunięty"
             chat_auto_remove_membership: "Członkostwa automatycznie usuwane z kanałów"
@@ -660,6 +661,9 @@ pl_PL:
         history_label: "Historia"
         members_label: "Członkowie"
       admin:
+        bot_discoverability:
+          label: "Pokaż na czacie"
+          description: "Umożliw użytkownikom znalezienie tego bota podczas rozpoczynania bezpośredniej wiadomości na czacie"
         title: "Czat"
         export_messages:
           title: "Eksportuj wiadomości czatu"

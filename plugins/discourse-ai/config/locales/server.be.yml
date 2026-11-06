@@ -77,6 +77,10 @@ be:
       assign:
         errors:
           not_found: "Тэма не знойдзена."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Загаловак"
     reviewables:
       ai_tool_action:
         approve:

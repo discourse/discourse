@@ -32,21 +32,26 @@ nl:
         badge:
           draft: Concept
         preview: Voorbeeld
-        publish: Publiceren
-        options: Opties
         change:
           title: titel
           body: inhoud
       review:
-        copy: Link kopiëren
-        active: Actief
+        create: Link maken
+        copy: Kopiëren
+        open: Open
+        status:
+          active: Actief
+          expired: Verlopen
+          revoked: Ingetrokken
+          inactive: Inactief
+        closed_on: "%{date} gesloten"
+        revoke: Intrekken
         message: Feedback
       editor_table:
         edit: Bewerken
         status: Status
         replies: Antwoorden
       drafts: Concepten
-      private_draft: Concept
       preview: Voorbeeld
       unpublish: Depubliceren
       appearance_link: Vormgeving

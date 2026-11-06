@@ -32,21 +32,26 @@ he:
         badge:
           draft: טיוטה
         preview: תצוגה מקדימה
-        publish: פרסום
-        options: אפשרויות
         change:
           title: כותרת
           body: body
       review:
-        copy: העתקת קישור
-        active: פעיל
+        create: יצירת קישור
+        copy: העתקה
+        open: פתוח
+        status:
+          active: פעיל
+          expired: לא בתוקף
+          revoked: נשל
+          inactive: לא פעיל
+        closed_on: "נסגר ב־%{date}"
+        revoke: שלילה
         message: משוב
       editor_table:
         edit: עריכה
         status: מצב
         replies: תשובות
       drafts: טיוטות
-      private_draft: טיוטה
       preview: תצוגה מקדימה
       unpublish: משיכת הפרסום
       appearance_link: מראה

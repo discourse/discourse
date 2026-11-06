@@ -25,17 +25,21 @@ bs_BA:
         badge:
           draft: Nacrt
         preview: Pregled
-        options: Opcije
         change:
           title: naslov
           body: tijelo
       review:
-        active: Active
+        copy: Copy
+        open: Otvori
+        status:
+          active: Active
+          inactive: Neaktivan
+        closed_on: "Zatvoren %{date}"
+        revoke: Revoke
       editor_table:
         edit: Izmijeni
         status: Status
         replies: Odgovori
       drafts: Skice
-      private_draft: Nacrt
       preview: Pregled
       appearance_link: Izgled

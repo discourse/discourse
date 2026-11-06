@@ -84,6 +84,24 @@ RSpec.describe Chat::IncomingWebhooksController do
       end
     end
 
+    it "rejects unauthenticated and over-length payloads before Slack preprocessing" do
+      text = (1..5_000).map { |number| "<https://example.com/#{number}|#{number}>" }.join
+      allow(Chat::SlackCompatibility).to receive(:process_text).and_call_original
+
+      post "/chat/hooks/not-a-webhook/slack.json", params: { text: text }
+
+      expect(response.status).to eq(404)
+      expect(response.body).to be_present
+
+      post "/chat/hooks/#{webhook.key}/slack.json", params: { text: text }
+
+      expect(response.status).to eq(400)
+      expect(response.body).to include(
+        "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+      )
+      expect(Chat::SlackCompatibility).not_to have_received(:process_text)
+    end
+
     it "processes the text param with SlackCompatibility" do
       expect {
         post "/chat/hooks/#{webhook.key}/slack.json", params: { text: "A new signup woo <!here>!" }

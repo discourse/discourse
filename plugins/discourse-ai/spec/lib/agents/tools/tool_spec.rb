@@ -43,4 +43,40 @@ RSpec.describe DiscourseAi::Agents::Tools::Tool do
       expect(result).to eq("abcabcabca")
     end
   end
+
+  describe "#compact_approval_details" do
+    fab!(:admin)
+
+    let(:notice) { I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened") }
+    let(:tool) do
+      Class
+        .new(described_class) do
+          def self.name
+            "long_details"
+          end
+
+          def approval_details
+            "#{"a" * 200}\n\n#{"b" * 200}"
+          end
+        end
+        .new(
+          {},
+          bot_user: admin,
+          llm: nil,
+          context: DiscourseAi::Agents::BotContext.new(user: admin, messages: []),
+        )
+    end
+
+    it "keeps the start of the details after a notice and fits the limit" do
+      details = tool.compact_approval_details(max_length: 120)
+
+      expect(details.length).to be <= 120
+      expect(details).to start_with("#{notice}\n\naaa")
+      expect(details).not_to include("b")
+    end
+
+    it "returns only the notice when there is no room for the details" do
+      expect(tool.compact_approval_details(max_length: 20)).to eq(notice.truncate(20))
+    end
+  end
 end

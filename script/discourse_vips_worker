@@ -87,6 +87,7 @@ class DiscourseVipsWorker
           gravity: arguments[11],
           input_format: arguments[12],
           output_format: arguments[13],
+          animated: arguments[14],
         )
       else
         raise ArgumentError, "unsupported libvips operation"
@@ -311,14 +312,21 @@ class DiscourseVipsWorker
       strip_metadata:,
       gravity:,
       input_format:,
-      output_format:
+      output_format:,
+      animated:
     )
       new do
         raise ArgumentError, "invalid sharpening flag" if !%w[true false].include?(sharpen)
         if !%w[true false].include?(strip_metadata)
           raise ArgumentError, "invalid metadata stripping flag"
         end
+        raise ArgumentError, "invalid animated flag" if !%w[true false].include?(animated)
+
         quality = quality.empty? ? nil : Integer(quality)
+        animated = animated == "true"
+        if animated && !gravity.empty?
+          raise ArgumentError, "gravity is not supported for animated thumbnails"
+        end
 
         loaders = {
           "jpg" => "VipsForeignLoadJpeg",
@@ -338,10 +346,15 @@ class DiscourseVipsWorker
 
         source =
           begin
-            Vips::Image.new_from_file(input_path)
+            Vips::Image.new_from_file(input_path, **(animated ? { n: -1 } : {}))
           rescue Vips::Error => error
             raise InvalidImage, error.message
           end
+
+        source = source.autorot unless animated
+
+        source_height =
+          animated && source.get_typeof("n-pages") != 0 ? source.get("page-height") : source.height
 
         if !width.empty? && !height.empty?
           width = Integer(width)
@@ -352,8 +365,7 @@ class DiscourseVipsWorker
             if max_pixels
               raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
 
-              source = source.autorot
-              Math.sqrt(max_pixels.fdiv(source.width * source.height))
+              Math.sqrt(max_pixels.fdiv(source.width * source_height))
             else
               Float(scale)
             end
@@ -361,22 +373,26 @@ class DiscourseVipsWorker
 
           if max_pixels
             width = (source.width * scale).floor.clamp(1, max_pixels)
-            height = (source.height * scale).floor.clamp(1, max_pixels)
+            height = (source_height * scale).floor.clamp(1, max_pixels)
           else
-            width = [([source.width, source.height].max * scale).round, 1].max
-            height = width
+            width = height = [([source.width, source_height].max * scale).round, 1].max
           end
         end
 
         image =
-          Vips::Image.thumbnail(
-            input_path,
-            width,
-            height: height,
-            size: size.to_sym,
-            crop: crop.to_sym,
-            output_profile: "srgb",
-          )
+          begin
+            Vips::Image.thumbnail(
+              animated ? "#{input_path}[n=-1]" : input_path,
+              width,
+              height: height,
+              size: size.to_sym,
+              crop: crop.to_sym,
+              output_profile: "srgb",
+            )
+          rescue Vips::Error => error
+            raise InvalidImage, error.message
+          end
+
         image = image.gravity(gravity.to_sym, width, height) if !gravity.empty?
         image = image.sharpen if sharpen == "true"
         options = { strip: strip_metadata == "true" }

@@ -475,6 +475,8 @@ tr_TR:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
         select_llm: "LLM seç"
+        no_llm_selected: "Hiçbiri"
+        no_decision_model_selected: "Hiçbiri"
         select_agent: "Ajanı seç"
         custom_instructions: "Özel talimatlar"
         custom_instructions_help: "YZ'nin istenmeyen içerikleri tespit etmesine yardımcı olmak için sitenize özel talimatlar, ör. \"İngilizce olmayan gönderileri tarama konusunda daha agresif ol\"."
@@ -1181,6 +1183,7 @@ tr_TR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Özel"
         provider_fields:

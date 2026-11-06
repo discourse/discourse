@@ -9,7 +9,6 @@ module ::Blog
     requires_login except: [:index]
     before_action :ensure_blog_editor, except: :index
     before_action :ensure_discussion_host
-    before_action :find_topic, except: :index
     skip_before_action :check_xhr, only: %i[index preview]
 
     def index
@@ -45,18 +44,17 @@ module ::Blog
           live_topic_ids =
             Publication.publicly_visible.where(topic_id: selected.map(&:id)).pluck(:topic_id).to_set
           render json: {
-                   error: Configuration.error,
+                   error: Readiness.new.error,
                    blog_url: Configuration.base_url,
                    more: selected.size > PAGE_SIZE,
                    topics:
                      selected
                        .first(PAGE_SIZE)
                        .map { |topic|
-                         entry(
-                           topic,
-                           publications[topic.id],
-                           live: live_topic_ids.include?(topic.id),
-                         )
+                         publication =
+                           publications[topic.id] ||
+                             Publication.new(topic:, path: "/#{topic.slug.presence || topic.id}")
+                         serialize_publication(publication, live: live_topic_ids.include?(topic.id))
                        },
                  }
         end
@@ -64,27 +62,67 @@ module ::Blog
     end
 
     def show
-      render json: entry(@topic, @publication)
+      render json: serialize_publication(find_editable_publication)
     end
 
     def update
-      @publication.save_metadata!(
-        current_user,
-        params.require(:publication).permit(:path, :excerpt, :featured, :published_at),
-      )
-      render json: entry(@topic, @publication)
+      Publication::UpdateMetadata.call(
+        service_params.deep_merge(params: { metadata: metadata_params }),
+      ) do
+        on_success { |publication:| render json: serialize_publication(publication) }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_model_errors(:publication) do |publication|
+          raise ActiveRecord::RecordInvalid.new(publication)
+        end
+        on_failed_policy(:can_edit_article) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def publish
-      # Without a revision, publishers release their current draft in one step.
-      revision_id = params[:revision_id].presence&.to_i
-      @publication.publish!(current_user, revision_id: revision_id)
-      render json: entry(@topic.reload, @publication)
+      Publication::Publish.call(service_params) do
+        on_success { |publication:| render json: serialize_publication(publication) }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_errors(:publication) do |publication|
+          raise ActiveRecord::RecordInvalid.new(publication)
+        end
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_step(:submit_current_draft) { raise Discourse::InvalidAccess }
+        on_failed_step(:approve_current_draft) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
+        on_model_not_found(:revision) { raise Discourse::NotFound }
+        on_failed_policy(:revision_awaits_release) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.stale"))
+        end
+        on_model_not_found(:working_copy) { raise Discourse::InvalidAccess }
+        on_failed_policy(:releasable) { raise Discourse::InvalidAccess }
+        on_failed_policy(:not_published_as_page) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.errors.published_page"))
+        end
+        on_exceptions(ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved) do |exception|
+          raise exception
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def changes
-      source = @publication.editorial_topic
-      live = @publication.published_revision
+      publication = find_editable_publication
+      source = publication.editorial_topic
+      live = publication.published_revision
       raise Discourse::NotFound unless live && source&.first_post
 
       title_diff =
@@ -103,56 +141,147 @@ module ::Blog
     end
 
     def prepare
-      @publication.prepare_draft!(current_user)
-      render json: entry(@publication.topic, @publication)
+      Publication::PrepareDraft.call(service_params) do
+        on_success { |publication:| render json: serialize_publication(publication) }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_errors(:publication) do |publication|
+          raise ActiveRecord::RecordInvalid.new(publication)
+        end
+        on_failed_policy(:can_edit_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_policy(:draftable) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def submit
-      @publication.submit!(current_user)
-      render json: entry(@publication.topic, @publication)
+      Publication::Submit.call(service_params) do
+        on_success { |publication:| render json: serialize_publication(publication) }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_errors(:publication) do |publication|
+          raise ActiveRecord::RecordInvalid.new(publication)
+        end
+        on_failed_policy(:can_edit_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_policy(:draftable) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_edit_working_copy) { raise Discourse::InvalidAccess }
+        on_failed_policy(:working_copy_publishable) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def approve
-      @publication.approve!(current_user, params.require(:revision_id).to_i)
-      render json: entry(@publication.topic, @publication)
+      Publication::Approve.call(service_params) do
+        on_success { |publication:| render json: serialize_publication(publication) }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_errors(:publication) do |publication|
+          raise ActiveRecord::RecordInvalid.new(publication)
+        end
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_model_not_found(:revision) { raise Discourse::NotFound }
+        on_failed_policy(:revision_is_latest_submission) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.stale"))
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def schedule
-      @publication.schedule!(
-        current_user,
-        revision_id: params.require(:revision_id).to_i,
-        at: params.require(:scheduled_at),
-      )
-      render json: entry(@publication.topic, @publication)
+      Publication::Schedule.call(service_params) do
+        on_success { |publication:| render json: serialize_publication(publication) }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_not_found(:publication) { raise Discourse::NotFound }
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_model_not_found(:revision) { raise Discourse::NotFound }
+        on_failed_policy(:revision_is_approved) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.approval_required"))
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def cancel_schedule
-      @publication.cancel_schedule!(current_user)
-      head :no_content
+      Publication::CancelSchedule.call(service_params) do
+        on_success { head :no_content }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_not_found(:publication) { raise Discourse::NotFound }
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def destroy
-      @publication.unpublish!(current_user)
-      head :no_content
+      Publication::Unpublish.call(service_params) do
+        on_success { head :no_content }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_not_found(:publication) { raise Discourse::NotFound }
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def return_to_drafts
-      @publication.return_to_drafts!(current_user)
-      head :no_content
+      Publication::ReturnToDrafts.call(service_params) do
+        on_success { head :no_content }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_model_not_found(:publication) { raise Discourse::NotFound }
+        on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_policy(:draftable) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def preview
+      @publication = find_editable_publication
+      @topic = @publication.topic
       @preview = true
       @canonical_url = @publication.url
-      source = @publication.editorial_topic || @topic
-      @article =
+      source = @publication.editable_topic
+      revision =
         if params[:revision_id].present?
           @publication.revisions.find(params[:revision_id])
         else
           Revision.new(data: Revision.capture(@publication, source))
         end
-      @page_title = @article.title
-      @description = @article.data["excerpt"]
+      @page_title = revision.title
+      @description = revision.data["excerpt"]
+      @article_metadata = ArticleMetadata.new(@publication, revision:, description: @description)
+      @template_variables =
+        TemplateVariables.new(
+          title: @page_title,
+          article: ArticleVariables.new(@publication, revision:, topic: @topic),
+        )
       response.headers["X-Robots-Tag"] = "noindex, nofollow"
       response.headers["Cache-Control"] = "private, no-store"
       render "blog/articles/show", layout: "blog"
@@ -161,23 +290,25 @@ module ::Blog
     private
 
     def ensure_blog_editor
-      raise Discourse::InvalidAccess unless Configuration.contributor?(current_user)
+      raise Discourse::InvalidAccess unless guardian.is_blog_contributor?
     end
 
     def ensure_discussion_host
       raise Discourse::NotFound if Configuration.blog_host?(request)
     end
 
-    def find_topic
-      requested = Topic.find(params[:topic_id])
-      @publication = Publication.for_topic(requested)
-      @topic = @publication.topic
-      Configuration.ensure_editor!(current_user, @publication.editorial_topic || @topic)
+    def find_editable_publication
+      publication = Publication.for_topic(Topic.find(params[:topic_id]))
+      guardian.ensure_can_edit_blog_topic!(publication.editable_topic)
+      publication
     end
 
-    def entry(topic, publication, live: nil)
-      publication ||= Publication.new(topic: topic, path: "/#{topic.slug.presence || topic.id}")
-      PublicationEntry.new(publication, user: current_user, topic: topic, live: live).to_h
+    def serialize_publication(publication, **options)
+      PublicationSerializer.new(publication, scope: guardian, root: false, **options).as_json
+    end
+
+    def metadata_params
+      params.require(:publication).permit(:path, :excerpt, :featured, :published_at).to_h
     end
   end
 end

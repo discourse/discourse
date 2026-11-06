@@ -320,9 +320,6 @@ th:
     design_wizard:
       back: "กลับ"
       next: "ต่อไป"
-      sections:
-        theme: "ธีม"
-        search: "ค้นหา"
       theme:
         selected: "เลือก"
       homepage:

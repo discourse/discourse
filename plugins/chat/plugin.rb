@@ -47,6 +47,16 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
+  register_bot_creation_param(:chat_discoverable) do |bot, value|
+    Chat::DiscoverableBot.create!(user: bot) if ActiveModel::Type::Boolean.new.cast(value)
+  end
+
+  add_to_serializer(
+    :admin_detailed_user,
+    :chat_discoverable,
+    include_condition: -> { scope.is_admin? && object.bot? && !object.is_system_user? },
+  ) { object.chat_discoverable_bot.present? }
+
   original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
   MessageBus.group_ids_lookup do |env|
     host = RailsMultisite::ConnectionManagement.host(env)

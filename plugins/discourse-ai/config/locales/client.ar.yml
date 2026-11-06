@@ -665,6 +665,8 @@ ar:
         short_title: "عشوائي"
         title: "إعدادات التعامل مع المحتوى العشوائي"
         select_llm: "تحديد نموذج اللغة الكبير"
+        no_llm_selected: "لا يوجد"
+        no_decision_model_selected: "لا يوجد"
         select_agent: "اختر الوكيل"
         custom_instructions: "التعليمات المُخصَّصة"
         custom_instructions_help: "تعليمات مُخصَّصة خاصة بموقعك للمساعدة على توجيه الذكاء الاصطناعي في تحديد المحتوى العشوائي؛ على سبيل المثال، \"كُن أكثر شراسة في مسح المنشورات غير المكتوبة باللغة العربية\"."
@@ -1458,6 +1460,7 @@ ar:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "مخصَّصة"
         provider_fields:

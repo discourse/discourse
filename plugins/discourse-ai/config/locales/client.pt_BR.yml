@@ -433,6 +433,8 @@ pt_BR:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
         select_llm: "Selecionar LLM"
+        no_llm_selected: "Nenhum"
+        no_decision_model_selected: "Nenhum"
         custom_instructions: "Instruções personalizadas"
         custom_instructions_help: "Instruções específicas para seu site para ajudar a orientar a IA na identificação de spam, por exemplo: \"Verificar com mais intensidade postagens que não estão em inglês\"."
         last_seven_days: "Últimos sete dias"
@@ -991,6 +993,7 @@ pt_BR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizados(as)"
         provider_fields:

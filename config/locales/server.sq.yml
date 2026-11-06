@@ -886,7 +886,6 @@ sq:
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
-    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_post_limit: "Maximum number of posts to embed."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"

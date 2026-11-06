@@ -28,10 +28,16 @@ RSpec.describe Boards::CreateBoard do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when user cannot manage boards" do
+    context "when user cannot create boards" do
       let(:dependencies) { { guardian: outsider.guardian } }
 
-      it { is_expected.to fail_a_policy(:can_manage) }
+      it "fails the creation policy without creating a board" do
+        expect { result }.not_to change { Boards::Board.count }
+        expect(result).to fail_a_policy(:can_create_board)
+        expect(result["result.policy.can_create_board"].reason).to eq(
+          I18n.t("boards.errors.board_create_forbidden"),
+        )
+      end
     end
 
     context "when everything is valid" do

@@ -9,14 +9,14 @@ describe "Classifying reviewable moderation" do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rule) { { ground: "Be respectful", explanation: "Personal attacks are not allowed." } }
   let(:category) { "Other violation of terms and conditions" }
+  let(:changed_category) { "Scams and fraud" }
 
   let(:note) do
     "Classified this moderation decision for DSA reporting. Community rule: #{rule[:ground]} Category: #{category}"
   end
 
   before do
-    SiteSetting.dsa_reporting_enabled = true
-    SiteSetting.dsa_community_rules = [rule].to_json
+    enable_dsa_reporting(community_rules: [rule])
     sign_in(admin)
   end
 
@@ -25,11 +25,13 @@ describe "Classifying reviewable moderation" do
     post = Fabricate(:post, topic: topic)
     flagger = Fabricate(:user, trust_level: TrustLevel[3])
     reviewable = PostActionCreator.create(flagger, post, :inappropriate).reviewable
+    Fabricate(:dsa_statement_of_record, reviewable_id: reviewable.id)
     penalty_modal = PageObjects::Modals::PenalizeUser.new("suspend")
 
     review_page.visit_reviewable(reviewable)
 
     expect(review_page).to have_context_question(reviewable, "Is this post inappropriate?")
+    expect(review_page).to have_no_standalone_classification
 
     review_page.select_bundled_action(reviewable, "post-agree_and_suspend", bundle_index: 1)
 
@@ -50,11 +52,18 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_focused_step("DSA classification")
     expect(modal).to have_no_cancel_button
 
-    modal.confirm("Suspend")
+    modal.open_dsa_help
 
-    expect(modal).to have_required_errors
+    expect(modal).to have_classification_help(
+      "The EU Digital Services Act asks platforms to record why content was moderated.",
+    )
+    expect(modal).to have_dsa_learn_more_link(
+      "https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms",
+    )
 
-    modal.select_category(category)
+    expect(modal).to have_selected_category(category)
+
+    modal.select_category(changed_category)
     modal.close
     dialog = PageObjects::Components::Dialog.new
 
@@ -62,7 +71,7 @@ describe "Classifying reviewable moderation" do
 
     dialog.click_no
 
-    expect(modal).to have_selected_category(category)
+    expect(modal).to have_selected_category(changed_category)
 
     modal.back
 
@@ -72,7 +81,7 @@ describe "Classifying reviewable moderation" do
 
     modal.continue
 
-    expect(modal).to have_selected_category(category)
+    expect(modal).to have_selected_category(changed_category)
 
     modal.click_previous_step
 
@@ -81,7 +90,7 @@ describe "Classifying reviewable moderation" do
 
     modal.continue
 
-    expect(modal).to have_selected_category(category)
+    expect(modal).to have_selected_category(changed_category)
 
     modal.close
 
@@ -97,7 +106,9 @@ describe "Classifying reviewable moderation" do
     penalty_modal.set_future_date("two_weeks")
     penalty_modal.fill_in_suspend_reason("Repeated personal attacks.")
     modal.continue
-    modal.select_category(category)
+
+    expect(modal).to have_selected_category(category)
+
     modal.confirm("Suspend")
 
     expect(modal).to be_closed
@@ -129,8 +140,35 @@ describe "Classifying reviewable moderation" do
     expect(modal).to have_steps("DSA classification", "Edit post")
     expect(modal).to have_selected_rule("Choose a community rule")
 
+    modal.open_dsa_help
+
+    expect(modal).to have_classification_help(
+      "The EU Digital Services Act asks platforms to record why content was moderated.",
+    )
+
+    modal.open_rule_menu
+
+    expect(modal).to have_rule_option(rule[:ground], explanation: rule[:explanation])
+    expect(modal).to have_rule_option(
+      "No advertising",
+      explanation: "Unsolicited advertising is not allowed.",
+    )
+
+    modal.close_rule_menu
+
+    expect(modal).to have_no_rule_menu
+
+    modal.confirm("Continue to editor")
+
+    expect(modal).to have_required_errors
+
     modal.select_rule(rule[:ground])
-    modal.select_category(category)
+
+    expect(modal).to have_selected_rule(rule[:ground])
+    expect(modal).to have_accessible_rule_description(rule[:ground])
+    expect(page).to have_no_text(rule[:explanation])
+    expect(modal).to have_selected_category(category)
+
     modal.confirm("Continue to editor")
 
     expect(modal).to be_closed
@@ -150,7 +188,6 @@ describe "Classifying reviewable moderation" do
 
     review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
     modal.select_rule(rule[:ground])
-    modal.select_category(category)
     modal.confirm("Continue to editor")
 
     expect(composer).to be_opened

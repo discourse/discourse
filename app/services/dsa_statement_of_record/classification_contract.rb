@@ -8,6 +8,8 @@ class DsaStatementOfRecord::ClassificationContract < Service::ContractBase
   validates :category, inclusion: { in: DsaStatementOfRecord::CATEGORIES }
 
   def rule
-    DsaStatementOfRecord.community_rules.find { |entry| entry["id"] == community_rule }
+    DsaStatementOfRecord.community_rules.find do |entry|
+      entry[DsaStatementOfRecord::COMMUNITY_RULE_ID_KEY] == community_rule
+    end
   end
 end

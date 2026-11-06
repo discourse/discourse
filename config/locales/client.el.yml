@@ -513,7 +513,6 @@ el:
         action: "Δείτε ιδέες"
         choose_option: "Πώς θα θέλατε να ξεκινήσετε;"
         predefined_topics: "Πρότυπα για το σπάσιμο του πάγου"
-        predefined_topics_subtitle: "Δώστε στα νέα μέλη κάτι για να συζητήσουν, επιλέξτε ένα πρότυπο για επεξεργασία και δημιουργήστε το δικό σας."
         predefined_topics_description: "Διαλέξτε από μια συλλογή από αφορμές για συζήτηση για να ξεκινήσουν οι συζητήσεις"
         use_predefined: "Περιήγηση προτύπων"
         back: "Πίσω"
@@ -525,20 +524,20 @@ el:
       title: "Προσαρμόστε τον ιστότοπό σας"
       back: "Πίσω"
       next: "Επόμενο"
+      steps:
+        theme:
+          title: "Επιλέξτε ένα θέμα"
       sections:
-        theme: "Θέμα"
         fonts: "Γραμματοσειρές"
+        logo: "Λογότυπο"
         homepage: "Αρχική Σελίδα"
-        welcome_banner: "Banner καλωσορίσματος"
-        search: "Αναζήτηση"
       theme:
         selected: "Επιλεγμένο"
-      colors:
-        light: "Φωτεινή"
-        dark: "Σκοτεινή"
       fonts:
-        base_font: "Βασική γραμματοσειρά"
-        heading_font: "Γραμματοσειρά επικεφαλίδας"
+        base_font: "Κύριο μέρος"
+        heading_font: "Επικεφαλίδες"
+      logo:
+        help_text: "Το συνιστώμενο μέγεθος είναι 600 x 80 pixel."
       homepage:
         topics: "Θέματα"
         categories: "Κατηγορίες"
@@ -799,7 +798,6 @@ el:
     dsa_statements:
       category: "Κατηγορία"
       category_prompt: "Επιλέξτε κατηγορία"
-      saving: "Αποθηκεύεται"
     review:
       show_more: "Δείτε περισσότερα"
       show_less: "Δείξε λιγότερα"
@@ -7133,7 +7131,6 @@ el:
           uploading: "Μεταφορτώνεται…"
           uploading_progress: "Μεταφορτώνεται… %{progress}%"
           success: "Το «%{filename}» επιφορτώθηκε με επιτυχία. Το αρχείο βρίσκεται υπό επεξεργασία και θα χρειαστεί έως και ένα λεπτό για να εμφανιστεί στη λίστα."
-          error: "Παρουσιάστηκε ένα σφάλμα κατά το ανέβασμα του '%{filename}': %{message}"
         settings: "Ρυθμίσεις"
         operations:
           is_running: "Αυτή τη στιγμή εκτελείται μια λειτουργία…"

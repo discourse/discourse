@@ -28,21 +28,26 @@ pt:
         badge:
           draft: Rascunho
         preview: Pré-visualização
-        publish: Publicar
-        options: Opções
         change:
           title: título
           body: corpo
       review:
-        copy: Copiar hiperligação
-        active: Ativo
+        create: Criar ligação
+        copy: Copiar
+        open: Abrir
+        status:
+          active: Ativo
+          expired: Expirado
+          revoked: Revogado
+          inactive: Inativo
+        closed_on: "Fechado %{date}"
+        revoke: Revogar
         message: Opinião
       editor_table:
         edit: Editar
         status: Estado
         replies: Respostas
       drafts: Rascunhos
-      private_draft: Rascunho
       preview: Pré-visualização
       unpublish: Anular a publicação
       appearance_link: Aparência

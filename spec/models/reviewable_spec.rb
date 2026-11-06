@@ -681,7 +681,7 @@ RSpec.describe Reviewable, type: :model do
         }
       end
 
-      before { SiteSetting.dsa_reporting_enabled = true }
+      before { enable_dsa_reporting }
 
       it "classifies the moderation decision and records the acting staff member in its note" do
         result = reviewable.perform(admin, :delete_and_agree, dsa_classification: classification)

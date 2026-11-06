@@ -5,8 +5,12 @@ module ::Jobs
     def execute(args)
       return unless UpcomingChanges.enabled?(:blog_enabled)
 
-      publication = Blog::Publication.find_by(id: args[:publication_id])
-      publication&.run_schedule!(args[:token])
+      Blog::Publication::RunSchedule.call(
+        params: {
+          publication_id: args[:publication_id],
+          token: args[:token],
+        },
+      )
     end
   end
 end

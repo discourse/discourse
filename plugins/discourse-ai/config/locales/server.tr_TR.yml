@@ -827,6 +827,14 @@ tr_TR:
         errors:
           not_allowed: "İnceleme kuyruğuna erişiminiz yok"
           not_found: "İnceleme kuyruğundaki öğe bulunamadı"
+    appearance_authoring:
+      default_theme: "Varsayılan tema"
+      colors:
+        light:
+          header_background: "Üst bilgi"
+      fonts:
+        base_font: "Gövde yazı tipi"
+        heading_font: "Başlık yazı tipi"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"
@@ -886,6 +894,7 @@ tr_TR:
       cannot_edit_builtin: "Yerleşik bir modeli düzenleyemezsiniz."
       secret_required: "Bir kimlik bilgisi seçilmelidir."
       secret_not_found: "Seçilen kimlik bilgisi mevcut değil"
+      missing_provider_param: "%{param} boş olamaz"
       configuration:
         disable_embeddings: "Önce \"yz yerleştirmeleri etkin\" seçeneğini devre dışı bırakmanız gerekiyor."
         choose_model: "Önce 'ai embeddings selected model'ı ayarlayın."

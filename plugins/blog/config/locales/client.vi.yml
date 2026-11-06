@@ -32,21 +32,26 @@ vi:
         badge:
           draft: Bản nháp
         preview: Xem trước
-        publish: Xuất bản
-        options: Tùy chọn
         change:
           title: tiêu đề
           body: thân
       review:
-        copy: Sao chép link
-        active: Hoạt động
+        create: Tạo link
+        copy: Sao chép
+        open: Mở
+        status:
+          active: Hoạt động
+          expired: Hết hạn
+          revoked: Đã thu hồi
+          inactive: Không hoạt động
+        closed_on: "Đã đóng %{date}"
+        revoke: Hủy chấp thuận
         message: Phản hồi
       editor_table:
         edit: Sửa
         status: Trạng thái
         replies: Lượt trả lời
       drafts: Nháp
-      private_draft: Bản nháp
       preview: Xem trước
       unpublish: Hủy xuất bản
       appearance_link: Ngoại hình

@@ -3838,16 +3838,24 @@ RSpec.describe Topic do
   describe "#featured_link_root_domain" do
     let(:topic) { Fabricate.build(:topic) }
 
-    %w[
-      https://meta.discourse.org
-      https://meta.discourse.org/
-      https://meta.discourse.org/?filter=test
-      https://meta.discourse.org/t/中國/1
-    ].each do |featured_link|
-      it "extracts the root domain from #{featured_link}" do
-        topic.featured_link = featured_link
-        expect(topic.featured_link_root_domain).to eq("discourse.org")
-      end
+    it "extracts the root domain from https://meta.discourse.org" do
+      topic.featured_link = "https://meta.discourse.org"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/" do
+      topic.featured_link = "https://meta.discourse.org/"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/?filter=test" do
+      topic.featured_link = "https://meta.discourse.org/?filter=test"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/t/中國/1" do
+      topic.featured_link = "https://meta.discourse.org/t/中國/1"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
     end
   end
 

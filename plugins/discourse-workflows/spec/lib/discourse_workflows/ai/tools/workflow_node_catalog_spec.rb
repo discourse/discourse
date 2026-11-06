@@ -93,6 +93,26 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
   end
 
+  describe "load options" do
+    fab!(:decision_model) { Fabricate(:decision_model, display_name: "Hosted decisions") }
+
+    it "lists the decision models the classify node can use", :aggregate_failures do
+      classify_node = invoke_tool(["action:classify"])[:nodes].first
+
+      expect(classify_node[:available]).to eq(true)
+      expect(classify_node[:load_options]).to eq(
+        "decision_models" => [{ "id" => decision_model.id, "name" => "Hosted decisions" }],
+      )
+      expect(classify_node[:notes]).to include(a_string_including("Prefer this node"))
+    end
+
+    it "omits option lists too long to list in full" do
+      site_setting_node = invoke_tool(["action:site_setting"])[:nodes].first
+
+      expect(site_setting_node).not_to have_key(:load_options)
+    end
+  end
+
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
     expect(output_fields_by_type.fetch("trigger:topic_created")).to include(
       "post.user_id" => "integer",

@@ -173,6 +173,21 @@ zh_CN:
       date_with_timezone: "%{date} (%{timezone})"
       date_format: "%Y 年 %B %-d 日"
       datetime_format: "%Y 年 %B %-d 日，-I:%M %p"
+    filter:
+      description:
+        event: "显示包含该活动的主题"
+        event_any_of: "显示处于指定状态（以逗号分隔）且包含事件的主题"
+        exclude_event: "排除具有指定状态下事件的主题"
+        event_any: "显示包含该活动的主题"
+        event_upcoming: "显示尚未开始的事件主题"
+        event_ongoing: "显示当前正在发生的事件相关话题"
+        event_past: "显示已结束事件的相关话题"
+        event_after: "显示事件开始日期在指定日期（YYYY-MM-DD）或之后的主题"
+        event_before: "显示事件开始日期早于指定日期（YYYY-MM-DD）的主题"
+        event_attending: "显示用户即将参加的活动的相关主题。"
+        event_attending_me: "你将参加的活动"
+        order_event_start: "按事件开始日期排序（最新在前）"
+        order_event_start_asc: "按事件开始日期排序（最早在前）"
     notifications:
       before_event_reminder: "%{title} 即将开始。"
       after_event_reminder: "%{title} 已结束。"

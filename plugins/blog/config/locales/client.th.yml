@@ -23,17 +23,20 @@ th:
         badge:
           draft: แบบร่าง
         preview: แสดงตัวอย่าง
-        publish: เผยแพร่
-        options: ตัวเลือก
         change:
           title: ชื่อเรื่อง
       review:
-        active: ใช้งานอยู่
+        copy: คัดลอก
+        open: เปิด
+        status:
+          active: ใช้งานอยู่
+          inactive: ไม่ใช้งาน
+        closed_on: "ปิดเมื่อ %{date}"
+        revoke: เอาออก
       editor_table:
         edit: แก้ไข
         status: สถานะ
         replies: ตอบ
       drafts: แบบร่าง
-      private_draft: แบบร่าง
       preview: แสดงตัวอย่าง
       unpublish: ไม่เผยแพร่
