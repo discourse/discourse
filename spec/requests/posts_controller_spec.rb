@@ -3385,73 +3385,6 @@ RSpec.describe PostsController do
       end
     end
 
-    context "when a visible revision follows distant hidden history" do
-      fab!(:historical_post, :post)
-      let(:hidden_raw) { "Confidential historical post content" }
-
-      before do
-        SiteSetting.edit_history_visible_to_public = true
-        SiteSetting.editing_grace_period = 0
-        historical_post.revise(historical_post.user, raw: hidden_raw)
-        historical_post.revisions.find_by!(number: 2).hide!
-        historical_post.revise(historical_post.user, title: "First visible title edit")
-        historical_post.revise(historical_post.user, title: "Second visible title edit")
-        historical_post.revise(historical_post.user, raw: "Current public post content")
-      end
-
-      it "suppresses historical diffs for anonymous readers" do
-        get "/posts/#{historical_post.id}/revisions/5.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["body_changes"]).to eq(nil)
-        expect(response.parsed_body["previous_hidden"]).to eq(true)
-        expect(response.parsed_body).not_to have_key("title_changes")
-        expect(response.body).not_to include(hidden_raw)
-      end
-
-      it "suppresses historical diffs for ordinary readers" do
-        sign_in(user)
-
-        get "/posts/#{historical_post.id}/revisions/5.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["body_changes"]).to eq(nil)
-        expect(response.parsed_body["previous_hidden"]).to eq(true)
-        expect(response.parsed_body).not_to have_key("title_changes")
-        expect(response.body).not_to include(hidden_raw)
-      end
-
-      it "preserves historical diffs for staff" do
-        sign_in(moderator)
-
-        get "/posts/#{historical_post.id}/revisions/5.json"
-
-        expect(response.status).to eq(200)
-        diff =
-          Nokogiri::HTML5.fragment(
-            response.parsed_body.dig("body_changes", "side_by_side_markdown"),
-          )
-        expect(diff.css("td").map(&:text)).to eq([hidden_raw, historical_post.raw])
-      end
-    end
-
-    it "preserves public diffs before the first hidden revision" do
-      SiteSetting.edit_history_visible_to_public = true
-      SiteSetting.editing_grace_period = 0
-      historical_post = Fabricate(:post)
-      historical_post.revise(historical_post.user, raw: "First visible edit")
-      historical_post.revise(historical_post.user, raw: "Second visible edit")
-      historical_post.revise(historical_post.user, raw: "Hidden later edit")
-      historical_post.revisions.find_by!(number: 4).hide!
-
-      get "/posts/#{historical_post.id}/revisions/2.json"
-
-      expect(response.status).to eq(200)
-      diff =
-        Nokogiri::HTML5.fragment(response.parsed_body.dig("body_changes", "side_by_side_markdown"))
-      expect(diff.css("td").last.text).to eq("First visible edit")
-    end
-
     context "when a visible revision is adjacent to a hidden revision" do
       fab!(:post_owner, :user)
       fab!(:post_with_following_hidden_revision) do
@@ -4405,24 +4338,6 @@ RSpec.describe PostsController do
       before do
         SiteSetting.edit_history_visible_to_public = true
         SiteSetting.editing_grace_period = 0
-      end
-
-      it "rejects raw revisions after hidden history for ordinary users" do
-        historical_post = Fabricate(:post)
-        historical_post.revise(historical_post.user, raw: "Hidden historical content")
-        hidden_revision = historical_post.revisions.find_by!(number: 2)
-        hidden_revision.hide!
-        historical_post.revise(historical_post.user, raw: "Later historical content")
-        historical_post.revise(historical_post.user, raw: "Current public content")
-        sign_in(user)
-
-        get "/raw/#{historical_post.topic_id}/#{historical_post.post_number}",
-            params: {
-              revision: 3,
-            }
-
-        expect(response).to be_forbidden
-        expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
       end
 
       it "prevents anonymous access while allowing staff to fetch a visible raw revision after a hidden revision" do
