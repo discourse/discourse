@@ -100,4 +100,14 @@ RSpec.describe "Path-restricted API key scopes" do
     expect(response.status).to eq(200)
     expect(response.body).to include(restricted_topic.title)
   end
+
+  it "does not authorize another category's list route" do
+    api_key = read_lists_key("category_id" => [restricted_category.id.to_s])
+
+    get "/c/#{secret_category.slug}/#{secret_category.id}/l/latest.json",
+        headers: headers_for(api_key)
+
+    expect(response.status).to eq(403)
+    expect(response.body).not_to include(secret_topic.title)
+  end
 end
