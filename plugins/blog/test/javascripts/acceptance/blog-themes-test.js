@@ -127,6 +127,18 @@ acceptance("Blog themes and identity", function (needs) {
     }
   });
 
+  test("links to the editor and the live blog from the header", async function (assert) {
+    await visit("/admin/plugins/blog/themes");
+    assert
+      .dom(".d-page-header__actions .btn-primary")
+      .hasText("Go to editor", "the editor is the primary action");
+    assert
+      .dom(".d-page-header__actions a.btn-default")
+      .hasText("View blog")
+      .hasAttribute("href", "https://blog.example.com", "the blog is linked")
+      .hasAttribute("target", "_blank", "the blog opens in a new tab");
+  });
+
   test("saves a draft without activation and blocks activating unsaved edits", async function (assert) {
     pretender.put("/admin/plugins/blog/themes/candidate.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
