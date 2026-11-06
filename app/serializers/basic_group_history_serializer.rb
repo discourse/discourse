@@ -2,6 +2,8 @@
 
 class BasicGroupHistorySerializer < ApplicationSerializer
   STAFF_ONLY_SUBJECTS = %w[incoming_email].freeze
+  private_constant :STAFF_ONLY_SUBJECTS
+
   ADMIN_ONLY_SUBJECTS = %w[
     email_password
     email_username
@@ -14,8 +16,10 @@ class BasicGroupHistorySerializer < ApplicationSerializer
     smtp_updated_by_id
     allow_unknown_sender_topic_replies
   ].freeze
+  private_constant :ADMIN_ONLY_SUBJECTS
+
   GROUP_ADMIN_ONLY_SUBJECTS = %w[automatic_membership_email_domains].freeze
-  private_constant :STAFF_ONLY_SUBJECTS, :ADMIN_ONLY_SUBJECTS, :GROUP_ADMIN_ONLY_SUBJECTS
+  private_constant :GROUP_ADMIN_ONLY_SUBJECTS
 
   attributes :action, :subject, :prev_value, :new_value, :created_at
 
