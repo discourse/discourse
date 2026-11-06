@@ -279,6 +279,18 @@ RSpec.describe HtmlToMarkdown do
     expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
   end
 
+  it "hoists many <br> out of deeply nested inline elements in bounded time" do
+    html = "<div>#{"<span>" * 300}#{"<br>" * 20_000}x#{"</span>" * 300}</div>"
+
+    expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
+  end
+
+  it "keeps formatting around every line of a long message in nested inline elements" do
+    html = "<div><b>#{"<span>" * 8}<i>#{"line<br>" * 200}</i>#{"</span>" * 8}</b></div>"
+
+    expect(html_to_markdown(html)).to eq((["__*line*__"] * 200).join("\n"))
+  end
+
   it "converts <hr>" do
     expect(html_to_markdown("Before<hr>Inside<hr>After")).to eq(
       "Before\n\n---\n\nInside\n\n---\n\nAfter",

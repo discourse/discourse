@@ -52,16 +52,16 @@ class HtmlToMarkdown
       end
   end
 
-  # Splitting an inline element around its <br>s clones it once per segment, so
-  # nested inline elements around line breaks can multiply the size of the tree.
-  # Allow a few clones per element (far more than real mail needs) so the cost
-  # of converting a message tracks its size: once the budget is spent, the
-  # remaining line breaks stay inside their inline element.
-  MAX_LINE_BREAK_CLONES_PER_ELEMENT = 4
+  # Hoisting a <br> moves it and its siblings out of every inline ancestor, so
+  # the work grows with nesting depth. Allow each node of the message to be moved
+  # this many times on average (far more than real mail needs) so the cost of
+  # converting a message tracks its size: once the budget is spent, the remaining
+  # line breaks stay inside their inline element.
+  MAX_LINE_BREAK_MOVES_PER_NODE = 16
 
   # When there's a <br> inside an inline element, split the inline element around the <br>
   def hoist_line_breaks!(doc)
-    @line_break_clone_budget = MAX_LINE_BREAK_CLONES_PER_ELEMENT * doc.css("*").size
+    @line_break_move_budget = MAX_LINE_BREAK_MOVES_PER_NODE * doc.xpath(".//node()").size
     hoist_line_breaks_within!(doc)
   end
 
@@ -69,10 +69,12 @@ class HtmlToMarkdown
   def hoist_line_breaks_within!(node)
     node.element_children.to_a.each { |child| hoist_line_breaks_within!(child) }
 
-    return if block?(node) || node.children.none? { |child| child.name == "br" }
+    children = node.children
+    return if block?(node) || children.none? { |child| child.name == "br" }
+    return if children.size > @line_break_move_budget
+    @line_break_move_budget -= children.size
 
-    segments = node.children.slice_when { |a, b| a.name == "br" || b.name == "br" }.to_a
-    return if segments.size > @line_break_clone_budget
+    segments = children.slice_when { |a, b| a.name == "br" || b.name == "br" }.to_a
 
     segments.each do |segment|
       if segment.first.name == "br"
@@ -81,10 +83,7 @@ class HtmlToMarkdown
         clone = node.document.create_element(node.name)
         segment.each { |child| clone.add_child(child) }
 
-        if has_content?(clone)
-          node.add_previous_sibling(clone)
-          @line_break_clone_budget -= 1
-        end
+        node.add_previous_sibling(clone) if has_content?(clone)
       end
     end
 
