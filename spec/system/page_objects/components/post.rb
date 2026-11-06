@@ -46,6 +46,13 @@ module PageObjects
         cooked_content.has_content?(value)
       end
 
+      def has_no_onebox_image?(url:, image_url:)
+        page.has_no_css?(
+          "#{post_id} .cooked .onebox[data-onebox-src='#{url}'] img[src='#{image_url}']",
+          visible: :all,
+        )
+      end
+
       def has_replies?(count: nil)
         find("#embedded-posts__bottom--#{@post_number}").has_css?(".reply", count:)
       end

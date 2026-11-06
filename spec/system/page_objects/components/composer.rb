@@ -26,6 +26,20 @@ module PageObjects
         page.has_no_css?(RICH_EDITOR)
       end
 
+      def has_onebox?(url:, title:, description:)
+        selector = "#{RICH_EDITOR} .onebox[data-onebox-src='#{url}']"
+        page.has_css?("#{selector} h3 a[href='#{url}']", text: title) &&
+          page.has_css?("#{selector} p", text: description)
+      end
+
+      def has_no_onebox_images?(url:)
+        page.has_no_css?("#{RICH_EDITOR} .onebox[data-onebox-src='#{url}'] img[src]", visible: :all)
+      end
+
+      def has_onebox_image?(url:, image_url:)
+        page.has_css?("#{RICH_EDITOR} .onebox[data-onebox-src='#{url}'] img[src='#{image_url}']")
+      end
+
       def has_no_animated_images?
         page.has_no_css?("#{RICH_EDITOR} .composer-image-node img") do |image|
           image.evaluate_script("getComputedStyle(this).animationName") != "none"
