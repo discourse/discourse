@@ -95,6 +95,24 @@ RSpec.describe DiscourseWorkflows::Executor::Step do
       expect(step.finished_at).to be_present
     end
 
+    it "preserves rich errors through storage and clears them on a plain failure" do
+      step.fail!("Failure", error_html: "<strong>Failure</strong>")
+
+      restored = described_class.from_h(step.to_h)
+      expect(restored.error).to eq("Failure")
+      expect(restored.error_html).to eq("<strong>Failure</strong>")
+
+      restored.fail!("Another failure")
+      expect(restored.to_h).not_to have_key("error_html")
+    end
+
+    it "clears rich errors when an error is cleared" do
+      step.fail!("Failure", error_html: "<strong>Failure</strong>")
+      step.apply_updates!("error" => nil)
+
+      expect(step.error_html).to be_nil
+    end
+
     it "#mark_waiting! transitions to waiting without finishing" do
       step.mark_waiting!
 

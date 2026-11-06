@@ -113,6 +113,10 @@
       padding-right: 0.5em;
     }
 
+    &.btn-small {
+      font-size: var(--font-down-1);
+    }
+
     /* hide native indicator */
     &::-webkit-details-marker {
       display: none;
@@ -185,6 +189,14 @@
       padding-left: 5px;
       pointer-events: none;
       color: var(--primary-medium);
+    }
+
+    &.btn-primary .angle-icon {
+      color: var(--d-button-primary-icon-color);
+    }
+
+    &.btn-danger .angle-icon {
+      color: var(--d-button-danger-icon-color);
     }
 
     .d-button-label {

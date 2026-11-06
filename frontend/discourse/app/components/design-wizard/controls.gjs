@@ -14,7 +14,7 @@ import WelcomeBannerSection from "discourse/components/design-wizard/welcome-ban
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-const STEPS = ["theme", "colors", "homepage"];
+export const STEPS = ["theme", "colors", "homepage"];
 
 export default class DesignWizardControls extends Component {
   @service designWizard;
@@ -41,6 +41,13 @@ export default class DesignWizardControls extends Component {
   // would either be lost or save selections the reload is about to discard
   get busy() {
     return this.designWizard.applyingTheme;
+  }
+
+  get stepProgress() {
+    return i18n("design_wizard.step_progress", {
+      current: this.designWizard.stepIndex + 1,
+      total: STEPS.length,
+    });
   }
 
   goToStepLabel(index) {
@@ -157,12 +164,16 @@ export default class DesignWizardControls extends Component {
   <template>
     <div class="design-wizard__content">
       <header class="design-wizard__header">
+        {{#if this.designWizard.docked}}
+          {{#unless this.designWizard.showIntro}}
+            <span class="design-wizard__step-progress">
+              {{this.stepProgress}}
+            </span>
+          {{/unless}}
+        {{/if}}
         <h2 id="design-wizard-title">
           {{i18n "design_wizard.title"}}
         </h2>
-        <span class="design-wizard__subtitle">
-          {{i18n "design_wizard.subtitle"}}
-        </span>
       </header>
 
       {{#if this.designWizard.showIntro}}

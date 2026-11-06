@@ -142,7 +142,7 @@ class TopicTrackingState
         post.topic.category && post.topic.category.secure_group_ids
       end
 
-    if group_ids.present?
+    if group_ids.present? && !group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
       scope =
         scope.joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id").where(
           "gu.group_id IN (?)",
@@ -315,6 +315,7 @@ class TopicTrackingState
           min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
           max_topics: TopicTrackingState::MAX_TOPICS,
           user_first_unread_at: user.user_stat.first_unread_at,
+          logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
         }.merge(treat_as_new_topic_params),
       )
 
@@ -445,8 +446,10 @@ class TopicTrackingState
            NOT c.read_restricted #{append} OR c.id IN (
               SELECT c2.id FROM categories c2
               JOIN category_groups cg ON cg.category_id = c2.id
-              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
-              WHERE c2.read_restricted )
+              WHERE c2.read_restricted AND (
+                cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)
+                OR cg.group_id = :logged_in_users
+              ))
           ) AND
         SQL
       end
@@ -628,6 +631,7 @@ class TopicTrackingState
         min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
         max_topics: TopicTrackingState::MAX_TOPICS,
         user_first_unread_at: user.user_stat.first_unread_at,
+        logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
       }.merge(treat_as_new_topic_params),
     ).count
   end

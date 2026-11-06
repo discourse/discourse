@@ -39,6 +39,7 @@ class SessionController < ApplicationController
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
   LOGIN_CODE_SIGNUP_KEY_PREFIX = "login-code-signup-"
+  LOGIN_CODE_USERNAME_STEP_KEY = "login-code-username-step"
   GENERATED_USERNAME_SIGNUP_KEY_PREFIX = "login-code-generated-username-"
   GENERATED_USERNAME_SIGNUP_INDEX_KEY = "login-code-generated-username-ids"
   GENERATED_USERNAME_ATTEMPTS = 5
@@ -1313,6 +1314,7 @@ class SessionController < ApplicationController
     if generated_username
       store_generated_username_signup(login_code, email, username, signup_context)
     end
+    store_login_code_username_step(login_code) if login_code
 
     trust_level = invite ? SiteSetting.default_invitee_trust_level : SiteSetting.default_trust_level
     group_ids =
@@ -1394,6 +1396,15 @@ class SessionController < ApplicationController
     )
     ids = Array(server_session[GENERATED_USERNAME_SIGNUP_INDEX_KEY]) | [login_code.id]
     server_session.set(GENERATED_USERNAME_SIGNUP_INDEX_KEY, ids, expires: ServerSession.expiry)
+  end
+
+  # Lets the username step roll random usernames on login-required sites. Only
+  # reached once the code has matched, so the visitor owns the email.
+  def store_login_code_username_step(login_code)
+    expires_in = (login_code.expires_at - Time.zone.now).ceil
+    return if expires_in <= 0
+
+    server_session.set(LOGIN_CODE_USERNAME_STEP_KEY, true, expires: expires_in)
   end
 
   def generated_username_signup_key(login_code_id)

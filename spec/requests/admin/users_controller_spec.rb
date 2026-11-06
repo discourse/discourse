@@ -3223,6 +3223,14 @@ RSpec.describe Admin::UsersController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "rejects self-merges without enqueueing a job" do
+        expect do
+          post "/admin/users/#{user.id}/merge.json", params: { target_username: user.username }
+        end.not_to change { Jobs::MergeUser.jobs.size }
+
+        expect(response.status).to eq(403)
+      end
+
       it "merges the source user into the target user" do
         Jobs.run_immediately!
         post "/admin/users/#{user.id}/merge.json", params: { target_username: target_user.username }

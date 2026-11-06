@@ -1333,7 +1333,6 @@ lt:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
   site_settings:
-    dsa_community_rules: "Bendruomenės taisyklės, kurias galima naudoti DSA klasifikavimui, kai įjungta funkcija „ {{setting:dsa_reporting_enabled}} “. Kiekvienai taisyklei reikia nurodyti tikslią nuorodą į sutartį (iki 500 simbolių) ir paaiškinimą (iki 2000 simbolių). Norėdami išjungti klasifikavimą, palikite lauką tuščią."
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
     censored_words: "Žodžiai, kurie bus automatiškai pakeisti &#9632;&#9632;&#9632;&#9632;"
@@ -1495,7 +1494,6 @@ lt:
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
     enable_names: "Rodyti visą vartotojo vardą jo profilyje, vartotojo kortelėje ir el. laiškuose. Išjungti, kad visur paslėptumėte visą vardą."
     display_name_on_posts: "Rodyti visą vartotojo vardą jo įrašuose, be @naudotojo vardo."
-    short_progress_text_threshold: "Kai pranešimų skaičius temoje viršys šį skaičių, eigos juostoje bus rodomas tik dabartinis įrašo numeris. Jei pakeisite eigos juostos plotį, gali tekti pakeisti šią reikšmę."
     show_copy_button_on_codeblocks: "Pridėkite mygtuką prie kodų blokų, kad nukopijuotumėte bloko turinį į vartotojo iškarpinę."
     embed_post_limit: "Maskimalus įterpiamų įrašų skaičius."
     embed_username_required: "Kuriant temą reikalingas vartotojo vardas."
@@ -2703,6 +2701,17 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Kiekvieną dieną"
+        weekdays:
+          sunday: "Sekmadienis"
+          monday: "Pirmadienis"
+          tuesday: "Antradienis"
+          wednesday: "Trečiadienis"
+          thursday: "Ketvirtadienis"
+          friday: "Penktadienis"
+          saturday: "Šeštadienis"
     google_meet:
       meeting_code: "Kodas:"
     github:

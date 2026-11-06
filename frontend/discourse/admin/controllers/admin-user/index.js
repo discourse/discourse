@@ -42,6 +42,11 @@ export default class AdminUserIndexController extends Controller {
   ssoLastPayload = null;
   isLoading = false;
 
+  @computed("model.id")
+  get isBot() {
+    return Number.isInteger(this.model?.id) && this.model.id <= 0;
+  }
+
   @computed("siteSettings.enable_badges")
   get showBadges() {
     return this.siteSettings.enable_badges;

@@ -2204,7 +2204,6 @@ ja:
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームはすべての場所で非表示になります。"
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
-    short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
     highlighted_languages: "構文ハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> をご覧ください。"
     show_copy_button_on_codeblocks: "コードブロックに、ブロックのコンテンツをユーザーのクリップボードにコピーするボタンを追加します。"
     embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"
@@ -2321,7 +2320,7 @@ ja:
     create_post_for_category_and_tag_changes: "トピックのカテゴリまたはタグが変更されたときにささやき投稿を作成する。ささやき投稿を有効にする必要があります。"
     automatically_clean_unused_tags: "どのトピックや個人メッセージにも使用されていないタグを毎日自動的に削除します。"
     default_watched_precedence_over_muted: "ミュートしているものも含み、ユーザーがウォッチ中のカテゴリまたはタグ内のトピックについてユーザーに通知する"
-    company_name: "会社または組織の名前。空白のままにすると、定型の利用規約またはプライバシーに関する通知は提供されません。"
+    company_name: "会社または組織の名前。"
     governing_law: "利用規約やプライバシーポリシーなど、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。"
     city_for_disputes: "このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。"
     shared_drafts_category: "トピック下書き用のカテゴリを指定して、共有下書き機能を有効にする。このカテゴリのトピックは、スタッフユーザーのトピックリストから除外されます。"
@@ -2337,9 +2336,6 @@ ja:
     enable_user_status: "ユーザーがカスタムステータスメッセージ (絵文字 + 説明) を設定できるようにする。"
     enable_user_tips: "重要な機能をユーザーに説明する新しいユーザーヒントを有効にする"
     short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所で使用されます。12 文字以内です。このタイトルを変更すると、PWA のユーザーに、アプリの更新またはアンインストールを求めるプロンプトが送信される場合があります。"
-    dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
-    dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
-    dashboard_general_tab_activity_metrics: "アクティビティメトリクスとして一般タブに表示されるレポートを選択します。"
     gravatar_name: "Gravatar サービスプロバイダーの名前を指定します。この名前は通常、Gravatar アバターをサイトに提供するソースを特定するために使用されます。"
     gravatar_base_url: "Gravatar プロバイダーの API にアクセスするための URL を指定します。この設定は、メールアドレスをアバター画像が保存されている Gravatar URL に変換するために重要です。"
     share_quote_buttons: "引用の共有ウィジェットに表示される項目と表示順を決定する。"
@@ -4605,6 +4601,19 @@ ja:
     graph_title: "検索数"
   onebox:
     discourse:
+      recurrence:
+        every_day: "毎日"
+        every_weekday: "すべての平日"
+        ordinals:
+          last: "最終"
+        weekdays:
+          sunday: "日曜日"
+          monday: "月曜日"
+          tuesday: "火曜日"
+          wednesday: "水曜日"
+          thursday: "木曜日"
+          friday: "金曜日"
+          saturday: "土曜日"
       user_joined_community: "%{date} に参加"
     google_meet:
       meeting_code: "コード:"

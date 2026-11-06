@@ -5,7 +5,6 @@ RSpec.describe Jobs::WarmDashboardReports do
 
   before do
     Discourse.cache.clear
-    SiteSetting.dashboard_improvements = true
     admin.update!(last_seen_at: 1.hour.ago)
   end
 

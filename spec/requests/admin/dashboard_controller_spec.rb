@@ -5,10 +5,7 @@ RSpec.describe Admin::DashboardController do
   fab!(:moderator)
   fab!(:user)
 
-  before do
-    AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
-    Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
-  end
+  before { Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true) }
 
   def configure_dashboard_sections(visible_ids)
     hidden = AdminDashboardSectionConfiguration::KNOWN_SECTIONS - visible_ids
@@ -62,7 +59,6 @@ RSpec.describe Admin::DashboardController do
 
     describe "sections payload" do
       before do
-        SiteSetting.dashboard_improvements = true
         Discourse.cache.clear
         sign_in(admin)
       end
@@ -232,11 +228,6 @@ RSpec.describe Admin::DashboardController do
           normalized_referrer = "sensitive-referrer.example"
           entry_url = "/sensitive-entry"
           event_date = Time.zone.local(2026, 5, 2, 12)
-          UpcomingChangeEvent.create!(
-            upcoming_change_name: "dashboard_improvements",
-            event_type: :manual_opt_in,
-            created_at: Time.zone.local(2026, 5, 1, 9),
-          )
 
           2.times do
             Fabricate(
@@ -471,10 +462,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     describe "problems payload" do
-      before do
-        SiteSetting.dashboard_improvements = true
-        Discourse.cache.clear
-      end
+      before { Discourse.cache.clear }
 
       fab!(:starttls_problem) do
         Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
@@ -534,10 +522,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     describe "configuration payload" do
-      before do
-        SiteSetting.dashboard_improvements = true
-        Discourse.cache.clear
-      end
+      before { Discourse.cache.clear }
 
       it "is included for admins and lists every known section with a visibility flag" do
         configure_dashboard_sections(%w[highlights reports])
@@ -593,8 +578,6 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#update_configuration" do
-    before { SiteSetting.dashboard_improvements = true }
-
     it "persists the configuration and returns 204 for admins" do
       sign_in(admin)
 
@@ -714,8 +697,6 @@ RSpec.describe Admin::DashboardController do
     fab!(:category)
     fab!(:category_2, :category)
     fab!(:category_3, :category)
-
-    before { SiteSetting.dashboard_improvements = true }
 
     after do
       DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
@@ -1322,7 +1303,6 @@ RSpec.describe Admin::DashboardController do
 
     before do
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
-      SiteSetting.dashboard_improvements = true
       SiteSetting.improved_crawler_detection = true
       SiteSetting.use_legacy_pageviews = false
       Discourse.stubs(:current_hostname).returns("test.localhost")

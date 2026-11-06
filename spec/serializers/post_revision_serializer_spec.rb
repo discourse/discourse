@@ -162,6 +162,98 @@ RSpec.describe PostRevisionSerializer do
     end
   end
 
+  describe "unlisted revisions" do
+    fab!(:admin)
+    fab!(:post_owner, :user)
+    fab!(:revised_post) { Fabricate(:post, user: post_owner, raw: "First version") }
+
+    before do
+      SiteSetting.editing_grace_period = 0
+
+      revised_post.revise(post_owner, raw: "Second version")
+      revised_post.revise(post_owner, raw: "Unlisted version")
+      revised_post.revise(post_owner, raw: "Fourth version")
+      revised_post.revisions.find_by(number: 3).unlist!
+    end
+
+    def serialize(number, guardian: Guardian.new, **options)
+      described_class.new(
+        revised_post.revisions.find_by(number:),
+        scope: guardian,
+        root: false,
+        **options,
+      ).as_json
+    end
+
+    it "skips unlisted revisions when non-staff navigate" do
+      expect(serialize(2)).to include(
+        first_revision: 2,
+        next_revision: 4,
+        last_revision: 4,
+        current_version: 2,
+        version_count: 4,
+        unlisted_revision_count: 1,
+      )
+      expect(serialize(4)).to include(previous_revision: 2, current_version: 4, version_count: 4)
+    end
+
+    it "diffs each revision against its direct predecessor for every viewer" do
+      expected_diffs = {
+        2 => ["First version", "Second version"],
+        3 => ["Second version", "Unlisted version"],
+        4 => ["Unlisted version", "Fourth version"],
+      }
+      viewers = [
+        { guardian: admin.guardian },
+        { guardian: Guardian.new },
+        { guardian: Guardian.new, include_unlisted: true },
+      ]
+
+      viewers.each do |viewer|
+        expected_diffs.each do |number, (previous_raw, current_raw)|
+          expect(serialize(number, **viewer)[:body_changes][:side_by_side_markdown]).to eq(
+            DiscourseDiff.new(previous_raw, current_raw).side_by_side_markdown,
+          )
+        end
+      end
+    end
+
+    it "lets staff navigate every revision" do
+      expect(serialize(2, guardian: admin.guardian)).to include(next_revision: 3, version_count: 4)
+    end
+
+    it "lets non-staff include unlisted revisions" do
+      expect(serialize(2, include_unlisted: true)).to include(next_revision: 3, version_count: 4)
+    end
+
+    it "keeps suppressing diffs next to a hidden revision while skipping unlisted ones" do
+      revised_post.revise(post_owner, raw: "Fifth version")
+      revised_post.revisions.find_by(number: 4).hide!
+
+      expect(serialize(2)).to include(next_revision: 5)
+      expect(serialize(2)[:body_changes][:side_by_side_markdown]).to eq(
+        DiscourseDiff.new("First version", "Second version").side_by_side_markdown,
+      )
+      expect(serialize(3)).to include(current_hidden: true, body_changes: nil)
+      expect(serialize(5)).to include(
+        previous_revision: 2,
+        previous_hidden: true,
+        body_changes: nil,
+      )
+    end
+
+    it "renders an unlisted revision opened directly" do
+      json = serialize(3)
+
+      expect(json).to include(
+        unlisted: true,
+        current_revision: 3,
+        previous_revision: 2,
+        next_revision: 4,
+      )
+    end
+  end
+
   describe "post locale edits" do
     it "returns the locale changes when set to nothing" do
       post_revision =

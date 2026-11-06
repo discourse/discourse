@@ -98,7 +98,9 @@ module JsonApiKit
           },
           %i[filter bad_value] => {
             title: "Invalid filter value",
-            detail: ->(error) { "#{error.member_parameter} must be a value or a list of values." },
+            detail: ->(error) do
+              "#{error.member_parameter} must be a value or a non-empty list of values."
+            end,
             source: ->(error) { error.member_parameter },
           },
           [:"page.anchor", :bad_value] => {

@@ -8,6 +8,7 @@
 # - Events without a location or URL use the topic URL as their virtual location
 # - Descriptions are reduced to plain text suitable for structured data
 # - The event's own image is included so link previews don't fall back to the topic's
+# - Recurring events describe their pattern with a Schedule, anchored on the current occurrence
 #
 # Spec: https://schema.org/Event
 # Validator: https://validator.schema.org/
@@ -37,7 +38,50 @@ class DiscourseEvents::Events::Action::GenerateSchemaJson < Service::ActionBase
       "location" => event_locations.one? ? event_locations.first : event_locations,
       "url" => topic.url,
       "image" => image,
+      "eventSchedule" => schedule,
     }.compact
+  end
+
+  def schedule
+    return if !event.recurring?
+
+    # The recurrence rule is anchored on the original start, which sets the week of the month
+    original_starts_at =
+      if event.all_day
+        event.original_starts_at.utc
+      else
+        event.original_starts_at.in_time_zone(event.rrule_timezone)
+      end
+    weekday = "https://schema.org/#{original_starts_at.strftime("%A")}"
+
+    {
+      "@type" => "Schedule",
+      **schedule_pattern(original_starts_at, weekday),
+      "endDate" => event.recurrence_until&.in_time_zone(event.rrule_timezone)&.strftime("%Y-%m-%d"),
+      "scheduleTimezone" => (event.rrule_timezone if !event.all_day),
+    }.compact
+  end
+
+  def schedule_pattern(starts_at, weekday)
+    case event.recurrence
+    when "every_day"
+      { "repeatFrequency" => "P1D" }
+    when "every_weekday"
+      {
+        "repeatFrequency" => "P1D",
+        "byDay" => %w[Monday Tuesday Wednesday Thursday Friday].map { "https://schema.org/#{it}" },
+      }
+    when "every_two_weeks"
+      { "repeatFrequency" => "P2W", "byDay" => weekday }
+    when "every_four_weeks"
+      { "repeatFrequency" => "P4W", "byDay" => weekday }
+    when "every_month"
+      # Mirrors the recurrence rule, where a fifth weekday is expressed as the last
+      nth = ((starts_at.day - 1) / 7) + 1
+      { "repeatFrequency" => "P1M", "byDay" => weekday, "byMonthWeek" => nth == 5 ? -1 : nth }
+    else
+      { "repeatFrequency" => "P1W", "byDay" => weekday }
+    end
   end
 
   def locations

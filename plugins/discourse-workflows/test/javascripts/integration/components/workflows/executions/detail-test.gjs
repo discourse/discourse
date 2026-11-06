@@ -151,6 +151,47 @@ module(
         .hasText("{}", "the empty item remains distinguishable from no items");
     });
 
+    test("escapes ordinary step errors", async function (assert) {
+      this.execution = executionWithOutput([]);
+      const error =
+        '<img src="x" onerror="alert(1)"><strong>HTTP failure</strong>';
+      Object.assign(this.execution.steps[0], { status: "error", error });
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      assert
+        .dom(".workflows-execution-detail__step-summary")
+        .hasText(error, "the response body remains literal text");
+      assert
+        .dom(
+          ".workflows-execution-detail__step-summary img, .workflows-execution-detail__step-summary strong"
+        )
+        .doesNotExist("ordinary errors cannot inject markup");
+    });
+
+    test("renders explicitly rich step errors", async function (assert) {
+      this.execution = executionWithOutput([]);
+      Object.assign(this.execution.steps[0], {
+        status: "error",
+        error: "Failure: See settings",
+        error_html:
+          '<strong>Failure</strong>: <a href="/admin">See settings</a>',
+      });
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      assert
+        .dom(".workflows-execution-detail__step-summary strong")
+        .hasText("Failure", "rich errors preserve emphasis");
+      assert
+        .dom(".workflows-execution-detail__step-summary a")
+        .hasAttribute("href", "/admin", "rich errors preserve links");
+    });
+
     test("renders execution hints and handled errors for any node", async function (assert) {
       this.execution = executionWithOutput([{ json: { value: 1 } }]);
       this.execution.steps[0].metadata = {
@@ -624,6 +665,27 @@ module(
       assert
         .dom(".workflows-execution-detail__step-section")
         .doesNotExist("input and output are not part of progress messages");
+
+      this.owner.lookup("service:message-bus").publish(
+        "/discourse-workflows/execution/11473",
+        {
+          type: "execution_progress",
+          execution: { id: 11473, status: "running" },
+          refresh: false,
+          step: {
+            position: 0,
+            status: "error",
+            error: "Failure",
+            error_html: "<strong>Failure</strong>",
+          },
+        },
+        42
+      );
+      await settled();
+
+      assert
+        .dom(".workflows-execution-detail__step-summary strong")
+        .hasText("Failure", "live updates preserve rich errors");
     });
   }
 );

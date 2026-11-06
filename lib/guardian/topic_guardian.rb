@@ -305,6 +305,7 @@ module TopicGuardian
 
   def can_change_archetype?(topic, new_archetype)
     return true if new_archetype == topic.archetype
+    return false if !Archetype.exists?(new_archetype)
     if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
       return can_banner_topic?(topic)
     end

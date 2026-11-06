@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class DsaStatementOfRecord < ActiveRecord::Base
+  COMMUNITY_RULE_ID_KEY = "id"
+  COMMUNITY_RULE_GROUND_KEY = "ground"
+  COMMUNITY_RULE_EXPLANATION_KEY = "explanation"
+
   TERRITORIAL_SCOPE = %w[
     AT
     BE
@@ -62,7 +66,10 @@ class DsaStatementOfRecord < ActiveRecord::Base
         .parse(SiteSetting.dsa_community_rules)
         .map do |rule|
           rule.merge(
-            "id" => Digest::SHA256.hexdigest([rule["ground"], rule["explanation"]].to_json),
+            COMMUNITY_RULE_ID_KEY =>
+              Digest::SHA256.hexdigest(
+                [rule[COMMUNITY_RULE_GROUND_KEY], rule[COMMUNITY_RULE_EXPLANATION_KEY]].to_json,
+              ),
           )
         end
     end
@@ -70,14 +77,55 @@ class DsaStatementOfRecord < ActiveRecord::Base
     def classification_enabled?
       SiteSetting.dsa_reporting_enabled && JSON.parse(SiteSetting.dsa_community_rules).present?
     end
+
+    def record!(reviewable:, attributes:, performed_by:, classification: nil)
+      statement =
+        create!(
+          reviewable_id: reviewable.id,
+          payload:
+            attributes.merge(
+              application_date: Date.current.iso8601,
+              territorial_scope: TERRITORIAL_SCOPE,
+              source_type: "SOURCE_VOLUNTARY",
+              decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+            ),
+        )
+
+      if classification
+        statement.classify!(**classification, classified_by: performed_by)
+
+        if Reviewable.exists?(reviewable.id)
+          reviewable.reviewable_notes.create!(
+            user: performed_by,
+            content: statement.classification_note,
+          )
+        end
+      end
+
+      statement
+    end
+  end
+
+  def classification_note
+    I18n.t(
+      "dsa_statements.classification_note",
+      locale: SiteSetting.default_locale,
+      ground: payload.fetch("incompatible_content_ground"),
+      category:
+        I18n.t(
+          "dsa_statements.categories.#{payload.fetch("category")}",
+          locale: SiteSetting.default_locale,
+        ),
+    )
   end
 
   def classify!(community_rule:, category:, classified_by:)
     update!(
       payload:
         payload.merge(
-          "incompatible_content_ground" => community_rule.fetch("ground"),
-          "incompatible_content_explanation" => community_rule.fetch("explanation"),
+          "incompatible_content_ground" => community_rule.fetch(COMMUNITY_RULE_GROUND_KEY),
+          "incompatible_content_explanation" =>
+            community_rule.fetch(COMMUNITY_RULE_EXPLANATION_KEY),
           "category" => category,
         ),
       status: :ready,

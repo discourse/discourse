@@ -509,7 +509,6 @@ tr_TR:
         action: "Fikirleri gör"
         choose_option: "Nasıl başlamak istersiniz?"
         predefined_topics: "Buz kırıcı şablonlar"
-        predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."
         predefined_topics_description: "Sohbet başlatıcılar koleksiyonundan seçim yapın ve tartışmaları başlatın"
         use_predefined: "Şablonlara göz atın"
         back: "Geri"
@@ -789,7 +788,6 @@ tr_TR:
     dsa_statements:
       category: "Kategori"
       category_prompt: "Kategori seçin"
-      saving: "Kaydediliyor…"
     review:
       show_more: "Daha fazla göster"
       show_less: "Daha az göster"
@@ -2975,6 +2973,7 @@ tr_TR:
     filter_controls:
       reset: "Sıfırla"
       toggle: "Açılır filtreleri değiştir"
+      sort_label: "Sıralama ölçütü"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
       search_label: "Arama simgeleri"
@@ -4514,6 +4513,9 @@ tr_TR:
           one: "Bu gönderileri birleştirmek istediğinizden emin misiniz?"
           other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
+        visibility:
+          hidden:
+            title: "Gizli"
         locale:
           no_locale_set: "Dil ayarlanmadı"
           locale_removed: "Dil kaldırıldı"
@@ -4522,9 +4524,6 @@ tr_TR:
           previous: "Önceki revizyon"
           next: "Sonraki revizyon"
           last: "Son revizyon"
-          hide: "Revizyonu gizle"
-          show: "Revizyonu göster"
-          destroy: "Revizyonları sil"
           destroy_confirm: "Bu gönderideki tüm revizyonları silmek istediğinizden emin misiniz? Bu işlem kalıcıdır."
           revert: "Revizyona geri dönün %{revision}"
           edit_wiki: "Wiki'yi düzenle"
@@ -4592,7 +4591,6 @@ tr_TR:
     category:
       none: "(kategori yok)"
       all: "Tüm kategoriler"
-      choose: "Kategori&hellip;"
       edit: "Düzenle"
       edit_title: "Bu kategoriyi düzenle"
       edit_dialog_title: "Düzenle: %{categoryName}"
@@ -5864,6 +5862,9 @@ tr_TR:
           impact_role_staff: "Personel"
           impact_role_all_members: "Tüm üyeler"
           impact_role_developers: "Geliştiriciler"
+        sort:
+          status: "Durum"
+          name: "Ad"
       config:
         about:
           title: "Siteniz hakkında"
@@ -6401,18 +6402,10 @@ tr_TR:
           anonymous_human: "Anonim"
       dashboard:
         title: "Pano"
-        last_updated: "Pano güncellendi:"
-        discourse_last_updated: "Discourse güncellendi:"
         version: "Sürüm"
         up_to_date: "Güncelsiniz!"
         updates_available: "Güncellemeler mevcut."
-        please_update: "Lütfen güncelleyin!"
-        no_check_performed: "Güncellemeler için bir kontrol yapılmadı. Sidekiq'in çalıştığından emin olun."
-        stale_data: "Son zamanlarda güncelleme kontrolü yapılmadı. Sidekiq'in çalıştığından emin olun."
         version_check_pending: "Yakın zamanda güncellemişsiniz gibi görünüyor. Harika!"
-        installed_version: "Yüklendi"
-        github: "Github"
-        problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         dismiss_notice: "Yok say"
         new_features:
           title: "Yenilikler"
@@ -6420,16 +6413,7 @@ tr_TR:
           no_new_features_found: "Akışta hiçbir öğe bulunmuyor veya seçtiğiniz filtreye göre sonuç bulunamadı. Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Sürümleri sitesinde</a> görebilirsiniz."
           no_new_features_error: "Besleme yüklenirken bir hata oluştu. Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Sürümleri sitesinde</a> görebilirsiniz."
           learn_more: "Daha fazla bilgi edinin..."
-        last_checked: "Son kontrol"
         refresh_problems: "Yenile"
-        no_problems: "Hiçbir sorun bulunamadı."
-        moderators: "Moderatörler:"
-        admins: "Yöneticiler:"
-        silenced: "Sessize alındı:"
-        suspended: "Askıya Alındı:"
-        private_messages_short: "Msjlar"
-        private_messages_title: "Mesajlar"
-        mobile_title: "Mobil"
         space_used: "%{usedSize} kullanıldı"
         space_used_and_free: "%{usedSize} (%{freeSize} kullanılabilir)"
         uploads: "Yüklemeler"
@@ -6438,20 +6422,7 @@ tr_TR:
           one: "%{location} üzerinde %{count} yedekleme"
           other: "%{location} üzerinde %{count} yedekleme"
         lastest_backup: "En Son: %{date}"
-        traffic_short: "Trafik"
-        traffic: "Uygulama web istekleri"
-        page_views: "Sayfa Görüntülemeleri"
-        page_views_short: "Sayfa Görüntülemeleri"
-        show_traffic_report: "Ayrıntılı Trafik Raporunu Göster"
-        community_health: Topluluk sağlığı
-        moderators_activity: Moderatörlerin aktivitesi
         whats_new_in_discourse: Discourse'taki yenilikler neler?
-        activity_metrics: Aktivite Metrikleri
-        all_reports: "Tüm raporlar"
-        general_tab: "Genel"
-        moderation_tab: "Moderasyon"
-        security_tab: "Güvenlik"
-        reports_tab: "Raporlar"
         report_filter_any: "herhangi"
         disabled: Devre Dışı
         timeout_error: Maalesef sorgu çok uzun sürüyor, lütfen daha kısa bir aralık seçin
@@ -6492,7 +6463,6 @@ tr_TR:
             title: "Sistem"
             status: "Durum"
             discourse_updated: "Discourse güncellendi"
-            dashboard_updated: "Pano güncellendi"
         reports_section:
           header_action: "Yönet"
           no_data: "Gösterilecek veri yok"
@@ -6507,11 +6477,6 @@ tr_TR:
             anonymous: "Anonim"
             crawlers: "Gezginler"
           crawler_learn_more: "Daha fazla bilgi edin"
-        period:
-          last_7_days: "Son 7 gün"
-          last_30_days: "Son 30 gün"
-          last_3_months: "Son 3 ay"
-          custom: "Özel"
         reports:
           trend_title: "%{percent} değişiklik. Şu anda %{current}, önceki periyotta %{prev} idi."
           percent_change_tooltip: "%{percent} değişiklik."
@@ -6556,9 +6521,6 @@ tr_TR:
               one: "%{count} gönderi"
               other: "%{count} gönderi"
             deselect: "%{name} seçimini kaldır"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Arama günlükleri</a>'
-            disabled: 'Trend olan arama raporu devre dışı bırakıldı. Veri toplamak için <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">günlük arama sorgularını</a> etkinleştirin.'
           average_chart_label: Toplamları değil, ortalamaları göster
           sort_button: "%{column} kriterine göre sırala"
           sort_button_current: "%{column}, %{direction} ile sıralanmış"
@@ -6742,7 +6704,6 @@ tr_TR:
               list: Son gönderileri ve özel gönderileri listeleyin. RSS de desteklenir.
             revisions:
               read: "En son veya belirli bir revizyonu edinin."
-              modify: "Revizyonları gizleyin, gösterin veya geri alın."
               permanently_delete: "Bir revizyonu kalıcı olarak silin."
             tags:
               list: Etiketleri listeleyin.
@@ -7026,10 +6987,7 @@ tr_TR:
           site_contact_group_help: |
             Otomatik olarak gönderilen tüm kişisel mesajlara davet edilen grup.
           your_organization: "Organizasyonunuz"
-          your_organization_description: "Bu bilgileri, siteyi kimin işlettiğini ve hangi yargı yetkisi kapsamında işlettiğini göstermek için Hizmet Koşulları ve Gizlilik Bildiriminde kullanırız."
           company_name: "Ad"
-          company_name_warning: |
-            Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
           company_url: "Web sitesi"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Geçerli kanun"
@@ -7246,7 +7204,6 @@ tr_TR:
           uploading: "Yükleniyor…"
           uploading_progress: "Yükleniyor… %%{progress}"
           success: "\"%{filename}\" başarıyla yüklendi. Dosya şu anda işleniyor ve listede görünmesi bir dakika kadar sürecek."
-          error: "\"%{filename}\" yüklenirken bir hata oluştu: %{message}"
         settings: "Ayarlar"
         operations:
           is_running: "Şu anda bir işlem yürütülüyor…"
@@ -8191,6 +8148,11 @@ tr_TR:
           all: "Tüm kullanıcılar"
           activated: "Etkinleştirildi"
         approved: "Onaylanmış mı?"
+        source: "Kaynak"
+        bots:
+          name: "Ad"
+          username: "Kullanıcı Adı"
+          trust_level: "Güven seviyesi"
         titles:
           active: "Aktif kullanıcılar"
           new: "Yeni kullanıcılar"
@@ -8217,6 +8179,7 @@ tr_TR:
           title: "Bu kullanıcıyla ilişkili tüm hesapları silin"
           text: "Ilişkili hesapları sil"
       user:
+        bot: "Bot"
         suspend_failed: "Bu kullanıcı askıya alınırken bir sorun oluştu %{error}"
         unsuspend_failed: "Bu kullanıcının askıya alınması kaldırılırken bir sorun oluştu %{error}"
         suspend_duration: "Kullanıcıyı şu tarihe kadar askıya al:"
@@ -8232,7 +8195,6 @@ tr_TR:
           no_constructive_purpose: "Eylemlerinde topluluk içinde muhalefet yaratmaktan başka yapıcı bir amacı yok"
           custom: "Özel…"
         suspend_message: "E-posta Mesajı"
-        suspend_message_placeholder: "İsteğe bağlı olarak, askıya alma hakkında daha fazla bilgi sağlayın. Kullanıcıya e-posta ile gönderilir."
         suspended_by: "Askıya alan:"
         silence_reason: "Neden"
         silenced_by: "Susturan:"
@@ -8241,7 +8203,6 @@ tr_TR:
         silence_reason_title: "Susturulma sebebi"
         silence_reason_placeholder: "Susturulma Nedeni"
         silence_message: "E-posta Mesajı"
-        silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"
         suspended_until: "(şu zamana kadar: %{until})"
         suspend_forever: "Sonsuza kadar askıya al"
         cant_suspend: "Bu kullanıcı askıya alınamaz."

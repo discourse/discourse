@@ -17,6 +17,23 @@ describe "Reviewables" do
   describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post, topic: post.topic) }
 
+    it "lets moderators release an automatic claim and handle the review when manual claiming is disabled" do
+      SiteSetting.reviewable_claiming = "disabled"
+      Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator, automatic: true)
+
+      review_page.visit_reviewable(short_reviewable)
+
+      expect(review_page).to have_no_reviewable_action_dropdown
+
+      review_page.click_unclaim_reviewable
+
+      expect(review_page).to have_reviewable_action_dropdown
+
+      review_page.select_bundled_action(short_reviewable, "post-agree_and_hide", bundle_index: 1)
+
+      expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
+    end
+
     describe "reviewable actions" do
       let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
 

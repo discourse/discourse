@@ -7,8 +7,8 @@ module DesignWizard
       remote_url: "https://github.com/discourse/discourse-concord-theme",
       supports_welcome_banner: false,
       supports_search: false,
-      screenshot_light_url: "/images/design-wizard/concord-light.jpg",
-      screenshot_dark_url: "/images/design-wizard/concord-dark.jpg",
+      screenshot_light_url: "/images/design-wizard/concord-light.webp",
+      screenshot_dark_url: "/images/design-wizard/concord-dark.webp",
     }.freeze
 
     def self.selectable

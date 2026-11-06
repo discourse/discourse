@@ -8,7 +8,11 @@ import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import { isTopLevel } from "discourse-markdown-it/features/onebox";
-import { oneboxPluginKey, oneboxTypeAtPos } from "./onebox.js";
+import {
+  isPastOneboxLimit,
+  oneboxPluginKey,
+  oneboxTypeAtPos,
+} from "./onebox.js";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;
@@ -308,6 +312,21 @@ class LinkToolbarPluginView {
   #showPreview() {
     const { range } = this.#linkState;
     if (!range) {
+      return;
+    }
+
+    const { siteSettings, toasts } = this.#getContext();
+    if (
+      isPastOneboxLimit(
+        this.#view.state.doc,
+        range.from,
+        siteSettings.max_oneboxes_per_post
+      )
+    ) {
+      toasts.default({
+        duration: "short",
+        data: { message: i18n("composer.link_toolbar.preview_limit_reached") },
+      });
       return;
     }
 

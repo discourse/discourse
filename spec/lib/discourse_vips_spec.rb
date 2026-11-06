@@ -898,5 +898,192 @@ RSpec.describe DiscourseVips do
         )
       }.to raise_error(DiscourseVips::Error, "invalid resize scale")
     end
+
+    it "creates a static thumbnail from an animated GIF by default" do
+      output_path = File.join(directory, "output.webp")
+
+      described_class.thumbnail(
+        input_path: file_from_fixtures("animated.gif").path,
+        output_path:,
+        width: 100,
+        height: 100,
+        output_format: "webp",
+        timeout: 20,
+        operation: :upload_thumbnail,
+      )
+
+      expect(FastImage.type(output_path)).to eq(:webp)
+      expect(FastImage.size(output_path)).to eq([100, 100])
+      expect(FastImage.animated?(output_path)).to eq(false)
+    end
+
+    context "when animated: true" do
+      let(:animated_gif_path) { file_from_fixtures("animated.gif").path }
+      let(:timed_gif_path) { file_from_fixtures("animated-timing.gif").path }
+
+      def animation_metadata(path)
+        script = <<~RUBY
+          require "json"
+          require "vips"
+
+          image = Vips::Image.new_from_file(ARGV.fetch(0), n: -1)
+          puts JSON.generate(
+            frame_count: image.get("n-pages"),
+            frame_delays_ms: image.get("delay"),
+            loop_count: image.get("loop"),
+          )
+        RUBY
+
+        JSON.parse(
+          Discourse::Utils.execute_command(RbConfig.ruby, "-e", script, path, timeout: 10),
+          symbolize_names: true,
+        )
+      end
+
+      it "resizes an animated GIF while preserving its frames and timing" do
+        output_path = File.join(directory, "output.gif")
+
+        described_class.thumbnail(
+          input_path: timed_gif_path,
+          output_path:,
+          width: 100,
+          height: 50,
+          size: :force,
+          animated: true,
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.size(output_path)).to eq([100, 50])
+        expect(animation_metadata(output_path)).to eq(
+          frame_count: 4,
+          frame_delays_ms: [100, 250, 150, 500],
+          loop_count: 3,
+        )
+      end
+
+      it "converts an animated GIF to WebP while preserving its frames and timing" do
+        output_path = File.join(directory, "output.webp")
+
+        described_class.thumbnail(
+          input_path: timed_gif_path,
+          output_path:,
+          width: 100,
+          height: 50,
+          size: :force,
+          animated: true,
+          output_format: "webp",
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.type(output_path)).to eq(:webp)
+        expect(FastImage.size(output_path)).to eq([100, 50])
+        expect(animation_metadata(output_path)).to eq(
+          frame_count: 4,
+          frame_delays_ms: [100, 250, 150, 500],
+          loop_count: 3,
+        )
+      end
+
+      it "resizes an animated WebP while preserving its animation" do
+        output_path = File.join(directory, "output.webp")
+
+        described_class.thumbnail(
+          input_path: file_from_fixtures("animated-timing.webp").path,
+          output_path:,
+          width: 100,
+          height: 50,
+          animated: true,
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.size(output_path)).to eq([100, 50])
+        expect(animation_metadata(output_path)).to eq(
+          frame_count: 4,
+          frame_delays_ms: [100, 250, 150, 500],
+          loop_count: 3,
+        )
+      end
+
+      it "rejects gravity for animated thumbnails without changing the destination" do
+        output_path = File.join(directory, "output.webp")
+        FileUtils.cp(file_from_fixtures("static.webp").path, output_path)
+        original_content = File.binread(output_path)
+
+        expect {
+          described_class.thumbnail(
+            input_path: timed_gif_path,
+            output_path:,
+            width: 100,
+            height: 50,
+            animated: true,
+            gravity: :north,
+            timeout: 20,
+            operation: :upload_animated_avatar,
+          )
+        }.to raise_error(DiscourseVips::Error, "gravity is not supported for animated thumbnails")
+
+        expect(File.binread(output_path)).to eq(original_content)
+      end
+
+      it "resizes each animated frame to fit the requested pixel limit" do
+        output_path = File.join(directory, "output.webp")
+
+        described_class.thumbnail(
+          input_path: animated_gif_path,
+          output_path:,
+          max_pixels: 4000,
+          animated: true,
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.size(output_path)).to eq([63, 63])
+        expect(FastImage.animated?(output_path)).to eq(true)
+      end
+
+      it "produces a smaller animated WebP at lower quality" do
+        lower_quality_path = File.join(directory, "lower-quality.webp")
+        higher_quality_path = File.join(directory, "higher-quality.webp")
+
+        [10, 95].zip([lower_quality_path, higher_quality_path])
+          .each do |quality, output_path|
+            described_class.thumbnail(
+              input_path: animated_gif_path,
+              output_path:,
+              width: 100,
+              height: 100,
+              animated: true,
+              output_format: "webp",
+              quality:,
+              timeout: 20,
+              operation: :upload_animated_avatar,
+            )
+          end
+
+        expect(FastImage.animated?(lower_quality_path)).to eq(true)
+        expect(FastImage.animated?(higher_quality_path)).to eq(true)
+        expect(File.size(lower_quality_path)).to be < File.size(higher_quality_path)
+      end
+
+      it "scales each animated frame by the requested factor" do
+        output_path = File.join(directory, "output.webp")
+
+        described_class.thumbnail(
+          input_path: animated_gif_path,
+          output_path:,
+          scale: 0.5,
+          animated: true,
+          output_format: "webp",
+          timeout: 20,
+          operation: :upload_animated_avatar,
+        )
+
+        expect(FastImage.size(output_path)).to eq([160, 160])
+        expect(FastImage.animated?(output_path)).to eq(true)
+      end
+    end
   end
 end

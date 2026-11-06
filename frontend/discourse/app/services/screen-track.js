@@ -57,6 +57,14 @@ export default class ScreenTrack extends Service {
   }
 
   start(topicId, topicController) {
+    if (
+      topicController?.get("model.deleted") ||
+      topicController?.get("topic.deleted")
+    ) {
+      this.stop();
+      return;
+    }
+
     if (this._topicId && this._topicId !== topicId) {
       this.tick();
       this.flush();

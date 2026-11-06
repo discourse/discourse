@@ -717,6 +717,33 @@ RSpec.describe ApplicationController do
         expect(response.body).to include(topic2.title)
       end
     end
+
+    describe "with invalid API credentials" do
+      fab!(:topic)
+      fab!(:category)
+
+      let(:headers) { { "Api-Key" => "invalid-api-key", "Api-Username" => "system" } }
+
+      it "returns 403 for topics#show" do
+        get "/t/#{topic.id}.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for categories#find_by_slug" do
+        get "/c/#{category.slug}/find_by_slug.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for a user API key without the required scope" do
+        user_api_key = Fabricate(:bookmarks_calendar_user_api_key)
+
+        get "/t/#{topic.id}.json", headers: { "User-Api-Key" => user_api_key.key }
+
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
   describe "#handle_theme" do

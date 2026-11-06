@@ -130,12 +130,15 @@ pl_PL:
       node_unavailable:
         requires_ai: "Wymaga włączenia wtyczki AI"
         requires_decision_model: "Wymaga modelu decyzyjnego"
+        requires_ai_translation: "Wymaga skonfigurowania tłumaczenia AI"
       nodes:
         "action:ai_agent": "Agent AI"
         "action:classify": "Klasyfikuj"
+        "trigger:post_locale_detected": "Wykryto język wpisu"
       node_descriptions:
         "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
         "action:classify": "Zadaj modelowi decyzyjnemu pytania dotyczące każdego elementu"
+        "trigger:post_locale_detected": "Uruchamia się, gdy zostanie wykryty język nowego lub edytowanego wpisu"
     discourse_automation:
       scriptables:
         llm_report:
@@ -745,6 +748,10 @@ pl_PL:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"
         select_llm: "Wybierz LLM"
+        no_llm_selected: "Brak"
+        select_decision_model: "Wybierz model decyzyjny"
+        no_decision_model_selected: "Brak"
+        decision_model_help: "Model decyzyjny samodzielnie ocenia każdy wpis, gdy jest pewien, a te, co do których nie ma pewności, przekazuje do LLM. Bez LLM model decyzyjny sam rozstrzyga o każdym poście."
         select_agent: "Wybierz agenta"
         custom_instructions: "Instrukcje niestandardowe"
         custom_instructions_help: "Niestandardowe instrukcje specyficzne dla Twojej witryny, aby pomóc sztucznej inteligencji w identyfikacji spamu, np. \"Bądź bardziej agresywny w skanowaniu postów nie w języku angielskim\"."
@@ -769,6 +776,8 @@ pl_PL:
           result: "Wynik"
           reason: "Rozumowanie"
           llm: "LLM"
+          decision_model: "Model decyzyjny"
+          spam_probability: "Prawdopodobieństwo spamu"
           scan_history: "Historia skanowania"
           sent_message: "Wysłana wiadomość"
           system_prompt: "Monit systemowy"
@@ -936,6 +945,9 @@ pl_PL:
             summary_forever: "Ładunki przechowywane %{detailed} dni, podsumowania przechowywane na zawsze"
             finite: "Ładunki były przechowywane przez %{detailed} dni, podsumowania trwały %{summary} dni, a następnie usuwane"
       ai_agent:
+        new_bot_option:
+          label: "Agent AI"
+          description: "Tworzy bota wraz z jego modelem językowym, podpowiedziami, narzędziami i uprawnieniami."
         ai_tools: "Narzędzia"
         native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"
@@ -1675,6 +1687,7 @@ pl_PL:
           bge-large-en: "Model open-source wyłącznie w języku angielskim, samodzielnie hostowany"
           bge-m3: "Model wielojęzyczny z otwartym kodem źródłowym dla dłuższych treści, hostowany samodzielnie"
           multilingual-e5-large: "Model wielojęzyczny o otwartym kodzie źródłowym, samodzielnie hostowany"
+          cohere-embed-v4: "Wielojęzyczny model Cohere, hostowany na platformie AWS Bedrock"
           gemini-embedding-001: "Hostowany wielojęzyczny model Google"
           text-embedding-3-large: "Najdokładniejszy model osadzania OpenAI"
           text-embedding-3-small: "Szybszy i tańszy model osadzania OpenAI"
@@ -1688,6 +1701,7 @@ pl_PL:
           failure: "Próba wygenerowania osadzenia spowodowała: %{error}"
         hints:
           dimensions_warning: "Po zapisaniu wartość ta nie może zostać zmieniona."
+          bedrock_api_key: "Klucz API Bedrock lub tajny klucz dostępu, gdy ustawiony jest identyfikator klucza dostępu. Pozostaw puste, aby użyć roli IAM lub danych uwierzytelniających AWS serwera."
           matryoshka_dimensions: "Definiuje rozmiar zagnieżdżonych osadzeń używanych do hierarchicznej lub wielowarstwowej reprezentacji danych, podobnie jak zagnieżdżone lalki dopasowują się do siebie."
           embed_prompt: "Prefiks instrukcji zadania podczas generowania osadzeń treści forum. TYLKO dla modeli osadzeń wymagających prefiksów, takich jak nomic-embed lub stella. Nie jest wymagany w przypadku większości modeli."
           search_prompt: "Prefiks instrukcji zadania podczas generowania osadzeń zapytań wyszukiwania. TYLKO dla modeli osadzeń wymagających prefiksów, takich jak nomic-embed lub stella. Nie jest wymagany w przypadku większości modeli."
@@ -1712,10 +1726,15 @@ pl_PL:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Niestandardowe"
         provider_fields:
           model_name: "Nazwa modelu"
+          model_id: "Identyfikator modelu lub profil wnioskowania"
+          region: "Region AWS"
+          access_key_id: "Identyfikator klucza dostępu AWS"
+          role_arn: "Rola IAM ARN"
         semantic_search: "Tematy (semantyczne)"
         semantic_search_results:
           toggle: "Powiązane wyniki"
@@ -1906,10 +1925,7 @@ pl_PL:
           streaming_below: "Nowa treść poniżej"
           editing_post: "Edycja wpisu"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Przegląd nastrojów"
           analysis: "Analiza sentymentu"
         sentiment_analysis:
           share_chart: "Skopiuj link do wykresu"

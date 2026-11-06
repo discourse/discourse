@@ -25,6 +25,7 @@ Rails.application.config.assets.excluded_paths.push(
   "#{Rails.root.join("app/assets/generated")}",
   "#{Rails.root.join("app/assets/javascripts")}",
   "#{Rails.root.join("app/assets/stylesheets")}",
+  "#{Rails.root.join("vendor/assets/svg-icons")}",
 )
 
 # We don't need/want most of Propshaft's preprocessing. Only keep the JS sourcemap handler

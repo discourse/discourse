@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  blog:
+    home: 홈
+    posted_by: '글쓴이:'
+    permalink: Permalink
+    time_ago: "%{time}전"
+    archive: 보관
+    about: 소개
+    community: 커뮤니티
+    preview: 미리 보기
+    search: 검색
+    replies:
+      other: "%{count} 댓글"

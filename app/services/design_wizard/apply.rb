@@ -116,7 +116,9 @@ class DesignWizard::Apply
 
   policy :current_user_is_admin
   model :theme
+  policy :can_edit_theme
   policy :palettes_available_to_theme
+  policy :can_create_needed_palettes
 
   transaction do
     model :light_palette, :resolve_light_palette, optional: true
@@ -140,6 +142,26 @@ class DesignWizard::Apply
 
   def fetch_theme(params:)
     Theme.find_by(id: params.theme_id)
+  end
+
+  def can_edit_theme(guardian:, theme:)
+    guardian.can_edit_theme?(theme)
+  end
+
+  # Built-in palettes are saved the first time they're chosen or offered.
+  def can_create_needed_palettes(params:, theme:, guardian:)
+    return true if guardian.can_create_color_scheme?
+
+    palette_ids = [params.light_palette_id, params.dark_palette_id]
+    if enabling_built_in_palettes(params:, theme:)
+      palette_ids +=
+        DesignWizard::PalettePairs::BUILT_IN_PAIRS.flat_map do |pair|
+          pair.values_at(:light, :dark).compact.map { |name| ColorScheme::NAMES_TO_ID_MAP[name] }
+        end
+    end
+    palette_ids.none? do |palette_id|
+      DesignWizard::Action::ResolvePalette.creates_palette?(palette_id)
+    end
   end
 
   def palettes_available_to_theme(params:, theme:)

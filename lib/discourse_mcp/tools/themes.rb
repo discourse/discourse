@@ -154,6 +154,15 @@ module DiscourseMcp
         theme = ::Theme.include_relations.find_by(id: arguments.fetch("theme_id"))
         raise ToolError, I18n.t("mcp.errors.theme_not_found") if theme.blank?
 
+        guardian.ensure_can_edit_theme!(theme)
+        if !guardian.can_edit_theme_relations?(
+             theme,
+             child_theme_ids: arguments["child_theme_ids"],
+             parent_theme_ids: arguments["parent_theme_ids"],
+           )
+          raise Discourse::InvalidAccess
+        end
+
         ensure_system_theme_editable!(theme, arguments)
         if arguments.keys == ["theme_id"]
           raise ToolError, I18n.t("mcp.errors.theme_update_required")

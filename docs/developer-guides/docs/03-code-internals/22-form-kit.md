@@ -738,7 +738,7 @@ Passes the picker context through to `<EmojiPicker />`.
 
 ## Icon
 
-Renders an `<IconPicker />` component.
+Renders a `<DIconGridPicker />` component.
 
 **Example**
 

@@ -8,6 +8,7 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { forceMobile } from "discourse/lib/mobile";
 import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import DiscourseURL from "discourse/lib/url";
 import { Placeholder } from "discourse/models/post-stream";
 import pretender, {
   response,
@@ -25,6 +26,19 @@ module("Unit | Controller | topic", function (hooks) {
 
   hooks.beforeEach(function () {
     this.store = getOwner(this).lookup("service:store");
+  });
+
+  test("jumpToIndex on mega topics routes to the post number and keeps filters", function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = topicWithStream.call(this, { isMegaTopic: true });
+    controller.setProperties({ model });
+    const routeTo = sinon.stub(DiscourseURL, "routeTo");
+
+    controller.jumpToIndex(9999);
+
+    assert.true(
+      routeTo.calledOnceWith(model.urlForPostNumber(9999), { keepFilter: true })
+    );
   });
 
   test("revised messages skip only the originating optimistic refresh", function (assert) {

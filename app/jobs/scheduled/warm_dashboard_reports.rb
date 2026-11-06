@@ -7,7 +7,6 @@ module Jobs
     STAFF_ACTIVITY_WINDOW = 7.days
 
     def execute(_args)
-      return if !UpcomingChanges.enabled?(:dashboard_improvements)
       return if !recently_active_staff?
 
       AdminDashboardCacheWarmer.call

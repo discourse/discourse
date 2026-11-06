@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  blog:
+    home: 首页
+    posted_by: 发帖人
+    permalink: 永久链接
+    time_ago: "%{time} 前"
+    archive: 归档
+    about: 关于
+    community: 社区
+    preview: 预览
+    search: 搜索
+    replies:
+      other: "%{count} 条回复"

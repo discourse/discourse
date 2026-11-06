@@ -199,8 +199,7 @@ import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 - **DOM lookup helpers**: `query()`, `exists()`, `count()`, `visible()`, `invisible()`,
   `fixture()`. **Prefer `assert.dom(...)` for assertions and `find()` / `findAll()` for
   elements in new tests** — reach for these only when matching existing style.
-- **Deprecated, do not use**: `queryAll()` — use `findAll()` or `assert.dom(...)` instead;
-  `discourseModule` — use QUnit's `module` instead.
+- **Deprecated, do not use**: `queryAll()` — use `findAll()` or `assert.dom(...)` instead.
 
 ## Custom assertions
 

@@ -1129,6 +1129,13 @@ et:
               private:
                 label: "Privaatne"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Iga päev"
+        ordinals:
+          last: "viimane"
+        weekdays:
+          monday: "Esmaspäev"
     google_meet:
       meeting_code: "Kood:"
     github:

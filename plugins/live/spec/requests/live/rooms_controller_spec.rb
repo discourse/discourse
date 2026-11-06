@@ -1058,6 +1058,58 @@ RSpec.describe Live::RoomsController do
       expect(metadata[:is_transcribing]).to eq(false)
     end
 
+    context "when recording locally" do
+      it "sets and clears the recording flag for allowed users" do
+        SiteSetting.live_local_recording_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: true,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(204)
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to eq(true)
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: false,
+               participant_session_id: @participant_session_id,
+             }
+
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to eq(false)
+      end
+
+      it "rejects starting when the user's groups can't record" do
+        SiteSetting.live_local_recording_allowed_groups = ""
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: true,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(403)
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to be_nil
+      end
+
+      # Losing the permission mid-recording must not strand the indicator.
+      it "always allows clearing the flag" do
+        SiteSetting.live_local_recording_allowed_groups = ""
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: false,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(204)
+      end
+    end
+
     it "rejects video when no group is allowed to share a camera" do
       SiteSetting.live_video_allowed_groups = ""
 

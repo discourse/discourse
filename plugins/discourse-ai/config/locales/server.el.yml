@@ -40,6 +40,9 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Ανίχνευση spam"
       navigation:
         settings:
           title: "Ρυθμίσεις ιστότοπου"
@@ -144,6 +147,13 @@ el:
         errors:
           action_failed: "Αποτυχία ενημέρωσης της κατάστασης επίλυσης."
         success: "Η κατάσταση επίλυσης ενημερώθηκε με επιτυχία."
+    appearance_authoring:
+      default_theme: "Προεπιλεγμένο θέμα"
+      colors:
+        light:
+          header_background: "Header"
+      fonts:
+        heading_font: "Γραμματοσειρά επικεφαλίδας"
     reviewables:
       ai_tool_action:
         approve:

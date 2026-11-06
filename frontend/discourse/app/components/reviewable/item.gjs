@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { array, fn, get } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -8,8 +8,6 @@ import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
-import DsaStatementClassification from "discourse/components/dsa-statement-classification";
-import DsaClassificationModal from "discourse/components/modal/dsa-classification";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -102,7 +100,6 @@ export function registerReviewableTypeLabel(reviewableType, labelKey) {
 
 export default class ReviewableItem extends Component {
   @service dialog;
-  @service capabilities;
   @service modal;
   @service siteSettings;
   @service currentUser;
@@ -110,6 +107,7 @@ export default class ReviewableItem extends Component {
   @service store;
   @service toasts;
   @service messageBus;
+  @service reviewableDsa;
   @optionalService adminTools;
 
   @tracked disabled = false;
@@ -172,8 +170,7 @@ export default class ReviewableItem extends Component {
     return (
       (reviewable?.created_from_flag &&
         reviewable?.status === PENDING &&
-        (this.claimOptional ||
-          (this.claimRequired && reviewable?.claimed_by !== null))) ||
+        (!this.claimRequired || reviewable?.claimed_by !== null)) ||
       this.isAiReviewable
     );
   }
@@ -202,13 +199,6 @@ export default class ReviewableItem extends Component {
         reviewable?.claimed_by?.automatic) &&
       !!this.topicId &&
       reviewable?.status === PENDING
-    );
-  }
-
-  get claimOptional() {
-    return (
-      !this.claimEnabled ||
-      this.siteSettings?.reviewable_claiming === "optional"
     );
   }
 
@@ -308,16 +298,6 @@ export default class ReviewableItem extends Component {
   }
 
   @action
-  openClassification() {
-    this.modal.show(DsaClassificationModal, {
-      model: {
-        classificationOptions: this.args.classificationOptions,
-        reviewable: this.args.reviewable,
-      },
-    });
-  }
-
-  @action
   clientScrub() {
     this.modal.show(ScrubRejectedUserModal, {
       model: {
@@ -338,12 +318,22 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  clientSuspend(reviewable, performAction) {
-    return this._penalize("showSuspendModal", reviewable, performAction);
+  clientSuspend(reviewable, performAction, dsaClassification) {
+    return this._penalize(
+      "showSuspendModal",
+      reviewable,
+      performAction,
+      dsaClassification
+    );
   }
 
-  clientSilence(reviewable, performAction) {
-    return this._penalize("showSilenceModal", reviewable, performAction);
+  clientSilence(reviewable, performAction, dsaClassification) {
+    return this._penalize(
+      "showSilenceModal",
+      reviewable,
+      performAction,
+      dsaClassification
+    );
   }
 
   async clientEdit(reviewable, performAction) {
@@ -426,6 +416,22 @@ export default class ReviewableItem extends Component {
     const actionModalClass = requireRejectReason
       ? RejectReasonReviewableModal
       : actionModalClassMap[performableAction.server_action];
+
+    if (
+      this.reviewableDsa.handlesConfirmation({
+        action: performableAction,
+        options: this.args.classificationOptions,
+        modalClass: actionModalClass,
+      })
+    ) {
+      return this._performConfirmed(
+        performableAction,
+        {},
+        {
+          modalClass: actionModalClass,
+        }
+      );
+    }
 
     if (message) {
       if (await this.#claimReviewable()) {
@@ -629,7 +635,11 @@ export default class ReviewableItem extends Component {
   }
 
   @bind
-  async _performConfirmed(performableAction, additionalData = {}) {
+  async _performConfirmed(
+    performableAction,
+    additionalData = {},
+    { modalClass } = {}
+  ) {
     let reviewable = this.args.reviewable;
 
     let performAction = async (actionData = {}) => {
@@ -672,22 +682,48 @@ export default class ReviewableItem extends Component {
         });
     };
 
-    try {
-      if (performableAction.client_action) {
-        let actionMethod =
-          this[`client${classify(performableAction.client_action)}`];
-        if (actionMethod) {
-          if (await this.#claimReviewable()) {
-            await actionMethod.call(this, reviewable, performAction);
-          }
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(
-            `No handler for ${performableAction.client_action} found`
+    const classificationOptions = this.reviewableDsa.optionsFor({
+      action: performableAction,
+      options: this.args.classificationOptions,
+    });
+
+    const dispatch = async (perform) => {
+      if (!performableAction.client_action) {
+        return perform();
+      }
+
+      const actionMethod =
+        this[`client${classify(performableAction.client_action)}`];
+      if (actionMethod) {
+        if (await this.#claimReviewable()) {
+          return actionMethod.call(
+            this,
+            reviewable,
+            perform,
+            classificationOptions
           );
         }
       } else {
-        await performAction();
+        // eslint-disable-next-line no-console
+        console.error(
+          `No handler for ${performableAction.client_action} found`
+        );
+      }
+    };
+
+    try {
+      if (classificationOptions) {
+        await this.reviewableDsa.perform({
+          action: performableAction,
+          reviewable,
+          options: classificationOptions,
+          modalClass,
+          claim: () => this.#claimReviewable(),
+          dispatch,
+          performAction,
+        });
+      } else {
+        await dispatch(performAction);
       }
     } catch (error) {
       popupAjaxError(error);
@@ -724,17 +760,21 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  _penalize(adminToolMethod, reviewable, performAction) {
+  _penalize(adminToolMethod, reviewable, performAction, dsaClassification) {
     if (!this.adminTools) {
       return;
     }
 
-    return this.adminTools[adminToolMethod](reviewable.target_created_by, {
-      postId: reviewable.post_id,
-      postEdit: reviewable.raw ?? reviewable.payload?.raw,
-      reviewableId: reviewable.id,
-      perform: performAction,
-    });
+    return this.adminTools[adminToolMethod](
+      reviewable.target_created_by ?? reviewable.target_user,
+      {
+        postId: reviewable.post_id,
+        postEdit: reviewable.raw ?? reviewable.payload?.raw,
+        reviewableId: reviewable.id,
+        dsaClassification,
+        perform: performAction,
+      }
+    );
   }
 
   <template>
@@ -811,21 +851,6 @@ export default class ReviewableItem extends Component {
             {{/if}}
           </div>
 
-          {{#if
-            (and
-              (not this.capabilities.viewport.sm)
-              @reviewable.dsa_classification.statement_ids.length
-            )
-          }}
-            <DButton
-              class="review-item__classify --pending-notice"
-              @action={{this.openClassification}}
-              @icon="clock"
-              @label="dsa_statements.pending"
-              @suffixIcon="chevron-right"
-            />
-          {{/if}}
-
           <div class="review-item__insights">
             <div class="d-nav-submenu">
               <DHorizontalOverflowNav
@@ -877,13 +902,7 @@ export default class ReviewableItem extends Component {
           </div>
         </div>
 
-        <div
-          class={{dConcatClass
-            "review-item__aside"
-            (if @reviewable.dsa_classification "--dsa-classification")
-          }}
-        >
-
+        <div class="review-item__aside">
           {{#unless @reviewable.last_performing_username}}
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
@@ -969,19 +988,7 @@ export default class ReviewableItem extends Component {
             </div>
           {{/if}}
 
-          {{#if
-            (and
-              this.capabilities.viewport.sm
-              @reviewable.dsa_classification.statement_ids.length
-            )
-          }}
-            {{#each (array @reviewable) as |reviewable|}}
-              <DsaStatementClassification
-                @classificationOptions={{@classificationOptions}}
-                @reviewable={{reviewable}}
-              />
-            {{/each}}
-          {{else if (and @showHelp (not @reviewable.dsa_classification))}}
+          {{#if @showHelp}}
             <ReviewableHelpResources />
           {{/if}}
         </div>

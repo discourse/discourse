@@ -71,6 +71,10 @@ sr:
       assign:
         errors:
           not_found: "Tema nije pronađena."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Zaglavlje"
     reviewables:
       ai_tool_action:
         approve:

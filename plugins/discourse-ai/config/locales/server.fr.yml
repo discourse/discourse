@@ -367,6 +367,9 @@ fr:
       configuration_missing: "La configuration de détection de contenu indésirable par IA est manquante. Ajoutez une configuration dans « Administration > Extensions > Discourse AI > Contenu indésirable » avant d'activer la fonctionnalité."
       logging_subject: "Détection des contenus indésirables"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Détection des contenus indésirables"
       navigation:
         settings:
           title: "Paramètres du site"
@@ -948,6 +951,14 @@ fr:
           hidden: "Le paramètre du site « %{setting_name} » est masqué et ne peut pas être lu ici."
           secret: "Le paramètre du site « %{setting_name} » contient un secret et ne peut pas être lu ici."
           themeable: "Le paramètre du site « %{setting_name} » nécessite un thème et ne peut pas être lu ici."
+    appearance_authoring:
+      default_theme: "Thème par défaut"
+      colors:
+        light:
+          header_background: "En-tête"
+      fonts:
+        base_font: "Police de contenu"
+        heading_font: "Police de titre"
     reviewables:
       ai_tool_action:
         title: "Action d'un outil d'IA"
@@ -1013,6 +1024,7 @@ fr:
       cannot_edit_builtin: "Vous ne pouvez pas modifier un modèle intégré."
       secret_required: "Un identifiant doit être sélectionné."
       secret_not_found: "L'identifiant sélectionné n'existe pas."
+      missing_provider_param: "%{param} ne peut pas être vide"
       configuration:
         disable_embeddings: "Vous devez d'abord désactiver « l'intégration de l'IA activée »."
         choose_model: "Définissez d'abord 'ai embeddings selected model'."

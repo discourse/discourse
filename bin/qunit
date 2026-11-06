@@ -122,6 +122,8 @@ class QunitRunner
           @report_requests = true
         end
 
+        opts.on("--report-memory", "Report JS heap usage after the tests") { @report_memory = true }
+
         opts.on("--[no-]headless", "Run tests in headless mode (env: QUNIT_HEADLESS)") do |h|
           @headless = h
         end
@@ -282,7 +284,6 @@ class QunitRunner
 
     env = {}
     env["LOAD_PLUGINS"] = should_load_plugins? ? "1" : "0"
-    env["REPORT_REQUESTS"] = "1" if @report_requests
     env["UNICORN_PORT"] = @rails_port.to_s
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
@@ -588,6 +589,7 @@ class QunitRunner
     params["theme_id"] = @theme_id if @theme_id
     params["target"] = resolved_target if resolved_target && !@plugin_targets.any?
     params["report_requests"] = "1" if @report_requests
+    params["report_memory"] = "1" if @report_memory
     params["testem"] = "1"
 
     encode_query_string(params)

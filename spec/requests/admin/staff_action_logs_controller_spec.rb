@@ -94,6 +94,26 @@ RSpec.describe Admin::StaffActionLogsController do
 
       include_examples "staff action logs accessible"
 
+      it "filters bot creation as a native staff action" do
+        bot = Fabricate(:user, id: -1234)
+        creation = StaffActionLogger.new(admin).log_bot_creation(bot)
+        StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:create_bot],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"]).to contain_exactly(
+          include("id" => creation.id, "action_name" => "create_bot"),
+        )
+        expect(response.parsed_body["extras"]["user_history_actions"]).to include(
+          "id" => "create_bot",
+          "action_id" => UserHistory.actions[:create_bot],
+        )
+      end
+
       it "generates logs with pages" do
         4.times do |idx|
           StaffActionLogger.new(Discourse.system_user).log_site_setting_change(

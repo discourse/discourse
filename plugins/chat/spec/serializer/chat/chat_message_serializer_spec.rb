@@ -192,7 +192,7 @@ describe Chat::MessageSerializer do
       let(:options) { { scope: guardian, root: nil, chat_channel: message_1.chat_channel } }
 
       it "omits the illegal flag when DSA reporting is enabled" do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
 
         expect(serializer.as_json[:available_flags]).to contain_exactly(
           *PostActionType.flag_types.keys.reject { |name| name == :illegal },

@@ -471,6 +471,8 @@ ru:
         short_title: "Спам"
         title: "Настройте обработку спама"
         select_llm: "Выберите LLM"
+        no_llm_selected: "Нет"
+        no_decision_model_selected: "Нет"
         select_agent: "Выберите агента"
         custom_instructions: "Пользовательские инструкции"
         custom_instructions_help: "Пользовательские инструкции для вашего сайта помогут AI выявить спам, например, «Более придирчиво проверяй публикации не на английском языке»."
@@ -1034,6 +1036,7 @@ ru:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Другое"
         provider_fields:
@@ -1141,10 +1144,7 @@ ru:
           scroll_to_bottom: "Прокрутка вниз"
           editing_post: "Редактирование поста"
       sentiments:
-        dashboard:
-          title: "Настроение"
         sidebar:
-          overview: "Обзор настроений"
           analysis: "Анализ настроений"
         sentiment_analysis:
           share_chart: "Копировать ссылку на диаграмму"

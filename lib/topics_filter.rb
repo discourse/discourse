@@ -522,6 +522,7 @@ class TopicsFilter
         WHERE p.topic_id = topics.id
           AND #{column} IN (#{ids.join(",")})
           AND p.deleted_at IS NULL
+          AND p.post_type <> #{Post.types[:small_action]}
           #{whisper_condition("p")}
       )
     SQL

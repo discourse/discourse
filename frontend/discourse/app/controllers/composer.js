@@ -2,7 +2,6 @@ import {
   addPopupMenuOption,
   clearPopupMenuOptions,
 } from "discourse/lib/composer/custom-popup-menu-options";
-import deprecated from "discourse/lib/deprecated";
 import Composer, {
   addComposerSaveErrorCallback,
   clearComposerSaveErrorCallback,
@@ -12,22 +11,9 @@ import Composer, {
 
 export default Composer;
 
-function clearPopupMenuOptionsCallback() {
-  deprecated(
-    "`clearPopupMenuOptionsCallback` is deprecated without replacement as the cleanup is handled automatically.",
-    {
-      id: "discourse.composer-controller.clear-popup-menu-options-callback",
-      since: "3.2",
-    }
-  );
-
-  clearPopupMenuOptions();
-}
-
 export {
   addComposerSaveErrorCallback,
   addPopupMenuOption,
   clearComposerSaveErrorCallback,
   clearPopupMenuOptions,
-  clearPopupMenuOptionsCallback,
 };

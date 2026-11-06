@@ -1785,6 +1785,106 @@ RSpec.describe Search do
         expect(search.posts.map(&:id)).to eq([post.id, post2.id])
       end
     end
+
+    context "with content localization enabled" do
+      fab!(:baking) { Fabricate(:category, name: "Baking", locale: "en") }
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SearchIndexer.index(baking, force: true)
+      end
+
+      it "finds categories by their source name and by their name localized to the current locale" do
+        Fabricate(:category_localization, category: baking, locale: "fr", name: "Pâtisserie")
+
+        I18n.with_locale(:fr) do
+          expect(Search.execute("Pâtisserie", type_filter: "exclude_topics").categories).to eq(
+            [baking],
+          )
+          expect(Search.execute("Baking", type_filter: "exclude_topics").categories).to eq([baking])
+        end
+        expect(
+          I18n.with_locale(:de) do
+            Search.execute("Pâtisserie", type_filter: "exclude_topics").categories
+          end,
+        ).to be_empty
+      end
+
+      it "finds categories by their localized name typed without accents when search_ignore_accents is enabled" do
+        SiteSetting.search_ignore_accents = true
+        Fabricate(:category_localization, category: baking, locale: "fr", name: "Pâtisserie")
+
+        expect(
+          I18n.with_locale(:fr) do
+            Search.execute("patisserie", type_filter: "exclude_topics").categories
+          end,
+        ).to eq([baking])
+      end
+
+      it "finds categories by a regional localization in the same language as the current locale" do
+        Fabricate(:category_localization, category: baking, locale: "pt_BR", name: "Confeitaria")
+
+        expect(
+          I18n.with_locale(:pt) do
+            Search.execute("Confeitaria", type_filter: "exclude_topics").categories
+          end,
+        ).to eq([baking])
+      end
+
+      it "finds categories by their default locale name only when falling back to the default locale is enabled" do
+        cuisine = Fabricate(:category, name: "Cuisine", locale: "fr")
+        Fabricate(:category_localization, category: cuisine, locale: "en", name: "Cooking")
+
+        SiteSetting.content_localization_use_default_locale_when_unsupported = true
+        expect(
+          I18n.with_locale(:de) do
+            Search.execute("Cooking", type_filter: "exclude_topics").categories
+          end,
+        ).to eq([cuisine])
+
+        SiteSetting.content_localization_use_default_locale_when_unsupported = false
+        expect(
+          I18n.with_locale(:de) do
+            Search.execute("Cooking", type_filter: "exclude_topics").categories
+          end,
+        ).to be_empty
+      end
+
+      it "finds read-restricted categories by their localized name only for users who can see them" do
+        bread = Fabricate(:private_category, group: Fabricate(:group), name: "Bread", locale: "en")
+        Fabricate(:category_localization, category: bread, locale: "fr", name: "Boulangerie")
+
+        I18n.with_locale(:fr) do
+          expect(
+            Search.execute(
+              "Boulangerie",
+              type_filter: "exclude_topics",
+              guardian: Guardian.new,
+            ).categories,
+          ).to be_empty
+          expect(
+            Search.execute(
+              "Boulangerie",
+              type_filter: "exclude_topics",
+              guardian: admin.guardian,
+            ).categories,
+          ).to eq([bread])
+        end
+      end
+
+      it "finds categories by their localized name only while content localization is enabled" do
+        Fabricate(:category_localization, category: baking, locale: "fr", name: "Pâtisserie")
+
+        I18n.with_locale(:fr) do
+          expect(Search.execute("Pâtisserie", type_filter: "exclude_topics").categories).to eq(
+            [baking],
+          )
+
+          SiteSetting.content_localization_enabled = false
+          expect(Search.execute("Pâtisserie", type_filter: "exclude_topics").categories).to be_empty
+        end
+      end
+    end
   end
 
   describe "groups" do
@@ -1927,6 +2027,67 @@ RSpec.describe Search do
           [tag, category_tag],
         )
         expect(search.tags).to eq([tag])
+      end
+
+      context "with content localization enabled" do
+        fab!(:pastry) { Fabricate(:tag, name: "pastry", locale: "en") }
+
+        before do
+          SiteSetting.content_localization_enabled = true
+          SearchIndexer.index(pastry, force: true)
+        end
+
+        it "finds tags by their source name and by their name localized to the current locale" do
+          Fabricate(:tag_localization, tag: pastry, locale: "fr", name: "pâtisserie")
+
+          I18n.with_locale(:fr) do
+            expect(Search.execute("pâtisserie").tags).to eq([pastry])
+            expect(Search.execute("pastry").tags).to eq([pastry])
+          end
+          expect(I18n.with_locale(:de) { Search.execute("pâtisserie").tags }).to be_empty
+        end
+
+        it "finds tags by their localized name typed without accents when search_ignore_accents is enabled" do
+          SiteSetting.search_ignore_accents = true
+          Fabricate(:tag_localization, tag: pastry, locale: "fr", name: "pâtisserie")
+
+          expect(I18n.with_locale(:fr) { Search.execute("patisserie").tags }).to eq([pastry])
+        end
+
+        it "finds tags by a regional localization in the same language as the current locale" do
+          Fabricate(:tag_localization, tag: pastry, locale: "pt_BR", name: "confeitaria")
+
+          expect(I18n.with_locale(:pt) { Search.execute("confeitaria").tags }).to eq([pastry])
+        end
+
+        it "finds tags by their default locale name only when falling back to the default locale is enabled" do
+          ampoule = Fabricate(:tag, name: "ampoule", locale: "fr")
+          Fabricate(:tag_localization, tag: ampoule, locale: "en", name: "lightbulb")
+
+          SiteSetting.content_localization_use_default_locale_when_unsupported = true
+          expect(I18n.with_locale(:de) { Search.execute("lightbulb").tags }).to eq([ampoule])
+
+          SiteSetting.content_localization_use_default_locale_when_unsupported = false
+          expect(I18n.with_locale(:de) { Search.execute("lightbulb").tags }).to be_empty
+        end
+
+        it "finds hidden tags by their localized name only for users who can see them" do
+          create_hidden_tags([pastry.name])
+          Fabricate(:tag_localization, tag: pastry, locale: "fr", name: "pâtisserie")
+
+          I18n.with_locale(:fr) do
+            expect(Search.execute("pâtisserie", guardian: Guardian.new).tags).to be_empty
+            expect(Search.execute("pâtisserie", guardian: admin.guardian).tags).to eq([pastry])
+          end
+        end
+      end
+
+      it "ignores localized tag names when content localization is disabled" do
+        SiteSetting.content_localization_enabled = false
+        pastry = Fabricate(:tag, name: "pastry")
+        Fabricate(:tag_localization, tag: pastry, locale: "fr", name: "pâtisserie")
+
+        expect(I18n.with_locale(:fr) { Search.execute("pâtisserie").tags }).to be_empty
       end
     end
   end

@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  blog:
+    home: Галоўная старонка
+    posted_by: Апублікаваў(-ла)
+    permalink: пастаянная спасылка
+    time_ago: "%{time} таму"
+    archive: У Архіў
+    about: Пра тэму
+    community: Супольнасць
+    preview: Перадпрагляд
+    search: Пошук
