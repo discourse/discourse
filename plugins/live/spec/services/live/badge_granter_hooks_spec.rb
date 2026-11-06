@@ -211,6 +211,24 @@ RSpec.describe Live::BadgeGranterHooks do
       expect(user.badges.pluck(:name)).to include("Host")
     end
 
+    it "still grants Host after an admin moves it to another grouping" do
+      grouping = BadgeGrouping.create!(name: "Hosting", position: 20)
+      Badge.find_by(name: "Host").update!(badge_grouping: grouping)
+
+      described_class.on_room_create(user)
+
+      expect(user.badges.pluck(:name)).to include("Host")
+    end
+
+    it "leaves a Host badge the site owns alone" do
+      DB.exec("DELETE FROM badges WHERE name = 'Host'")
+      site_badge = Fabricate(:badge, name: "Host", system: false, enabled: true)
+
+      described_class.on_room_create(user)
+
+      expect(UserBadge.where(badge: site_badge, user: user)).to be_empty
+    end
+
     it "does nothing when badges are disabled" do
       SiteSetting.live_badges_enabled = false
 
@@ -326,6 +344,21 @@ RSpec.describe Live::BadgeGranterHooks do
 
       live_badges = Badge.joins(:badge_grouping).where(badge_groupings: { name: "Live" })
       expect(live_badges.where(enabled: true).count).to eq(0)
+    end
+
+    it "leaves a badge the site keeps in the Live grouping alone" do
+      site_badge =
+        Fabricate(
+          :badge,
+          name: "Regular",
+          system: false,
+          enabled: true,
+          badge_grouping: BadgeGrouping.find_by(name: "Live"),
+        )
+
+      described_class.disable_all!
+
+      expect(site_badge.reload.enabled).to eq(true)
     end
   end
 end

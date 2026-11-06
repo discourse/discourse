@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 live_badge_group = "Live"
-live_badges_enabled = SiteSetting.live_enabled && SiteSetting.live_badges_enabled
+live_badges_enabled =
+  SiteSetting.live_enabled && SiteSetting.live_badges_enabled
 
 BadgeGrouping.seed(:name) do |g|
   g.name = live_badge_group
@@ -10,7 +11,8 @@ end
 
 live_grouping = BadgeGrouping.find_by(name: live_badge_group)
 
-duration_sql = "EXTRACT(EPOCH FROM (COALESCE(left_at, CURRENT_TIMESTAMP) - joined_at))"
+duration_sql =
+  "EXTRACT(EPOCH FROM (COALESCE(left_at, CURRENT_TIMESTAMP) - joined_at))"
 
 co_presence_distinct_partners = lambda { |min_count| <<~SQL }
     SELECT uid user_id, current_timestamp granted_at FROM (
@@ -53,8 +55,7 @@ loyalty_query = lambda { |min_days| <<~SQL }
 
 # -- Welcome (instant) --
 
-Badge.seed(:name) do |b|
-  b.name = "Mic Check"
+Badge.seed_unless_site_has("Mic Check") do |b|
   b.default_icon = "microphone"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -64,7 +65,6 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
 # -- Airtime (scheduled) --
@@ -72,10 +72,9 @@ end
 {
   "Rookie" => [BadgeType::Bronze, 1.hour.to_i],
   "Chatterbox" => [BadgeType::Silver, 10.hours.to_i],
-  "Silver Tongue" => [BadgeType::Gold, 100.hours.to_i],
+  "Silver Tongue" => [BadgeType::Gold, 100.hours.to_i]
 }.each do |name, (type, threshold)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "clock"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -92,14 +91,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = live_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Networker (instant: Icebreaker, scheduled: Social Butterfly, Life of the Party) --
 
-Badge.seed(:name) do |b|
-  b.name = "Icebreaker"
+Badge.seed_unless_site_has("Icebreaker") do |b|
   b.default_icon = "handshake"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -109,15 +106,13 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
 {
   "Social Butterfly" => [BadgeType::Silver, 10],
-  "Life of the Party" => [BadgeType::Gold, 50],
+  "Life of the Party" => [BadgeType::Gold, 50]
 }.each do |name, (type, count)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "users"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -129,7 +124,6 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = live_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
@@ -138,10 +132,9 @@ end
 {
   "Familiar Face" => [BadgeType::Bronze, 2.hours.to_i],
   "Inner Circle" => [BadgeType::Silver, 10.hours.to_i],
-  "Partners in Crime" => [BadgeType::Gold, 50.hours.to_i],
+  "Partners in Crime" => [BadgeType::Gold, 50.hours.to_i]
 }.each do |name, (type, threshold)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "user-group"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -153,7 +146,6 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = live_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
@@ -162,10 +154,9 @@ end
 {
   "Explorer" => [BadgeType::Bronze, 5],
   "Nomad" => [BadgeType::Silver, 20],
-  "Omnipresent" => [BadgeType::Gold, 50],
+  "Omnipresent" => [BadgeType::Gold, 50]
 }.each do |name, (type, count)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "compass"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -183,19 +174,17 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = live_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Loyalty (scheduled) --
 
 {
-  "Patron" => [BadgeType::Bronze, 10],
+  "Frequenter" => [BadgeType::Bronze, 10],
   "Barfly" => [BadgeType::Silver, 30],
-  "The Mayor" => [BadgeType::Gold, 100],
+  "The Mayor" => [BadgeType::Gold, 100]
 }.each do |name, (type, days)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "calendar"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -207,14 +196,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = live_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Hosting (instant: Host, scheduled: Crowd Puller, Master of Ceremonies) --
 
-Badge.seed(:name) do |b|
-  b.name = "Host"
+Badge.seed_unless_site_has("Host") do |b|
   b.default_icon = "house"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -224,15 +211,13 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
 {
   "Crowd Puller" => [BadgeType::Silver, 50, "bullhorn"],
-  "Master of Ceremonies" => [BadgeType::Gold, 500, "star"],
+  "Master of Ceremonies" => [BadgeType::Gold, 500, "star"]
 }.each do |name, (type, count, icon)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = icon
     b.badge_type_id = type
     b.multiple_grant = false
@@ -251,14 +236,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = live_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Inviting (instant: Plus One, scheduled: Connector, People Magnet) --
 
-Badge.seed(:name) do |b|
-  b.name = "Plus One"
+Badge.seed_unless_site_has("Plus One") do |b|
   b.default_icon = "user-plus"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -268,15 +251,13 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
 {
   "Connector" => [BadgeType::Silver, 10, "circle-nodes"],
-  "People Magnet" => [BadgeType::Gold, 50, "magnet"],
+  "People Magnet" => [BadgeType::Gold, 50, "magnet"]
 }.each do |name, (type, count, icon)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = icon
     b.badge_type_id = type
     b.multiple_grant = false
@@ -294,14 +275,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = live_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Standalone --
 
-Badge.seed(:name) do |b|
-  b.name = "Night Owl"
+Badge.seed_unless_site_has("Night Owl") do |b|
   b.default_icon = "moon"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -311,11 +290,9 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Early Bird"
+Badge.seed_unless_site_has("Early Bird") do |b|
   b.default_icon = "sun"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -325,11 +302,9 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Packed House"
+Badge.seed_unless_site_has("Packed House") do |b|
   b.default_icon = "people-group"
   b.badge_type_id = BadgeType::Silver
   b.multiple_grant = false
@@ -339,11 +314,9 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Weekend Warrior"
+Badge.seed_unless_site_has("Weekend Warrior") do |b|
   b.default_icon = "calendar-week"
   b.badge_type_id = BadgeType::Silver
   b.multiple_grant = false
@@ -360,11 +333,9 @@ Badge.seed(:name) do |b|
   b.default_badge_grouping_id = live_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
-  b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Marathoner"
+Badge.seed_unless_site_has("Marathoner") do |b|
   b.default_icon = "trophy"
   b.badge_type_id = BadgeType::Gold
   b.multiple_grant = false
@@ -375,7 +346,6 @@ Badge.seed(:name) do |b|
   b.trigger = Badge::Trigger::None
   b.default_enabled = live_badges_enabled
   b.default_allow_title = true
-  b.system = true
 end
 
 Live::BadgeGranterHooks.disable_all! unless live_badges_enabled
