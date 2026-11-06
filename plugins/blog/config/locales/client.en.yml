@@ -19,6 +19,7 @@ en:
       admin:
         title: Blog
         go_to_editor: Go to editor
+        view_blog: View blog
         open_blog: Open blog
         safe_mode: Open without custom code
         identity: Blog identity
