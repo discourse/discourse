@@ -695,7 +695,12 @@ class GroupsController < ApplicationController
         .offset(offset * page_size)
 
     render_json_dump(
-      logs: serialize_data(group_histories, BasicGroupHistorySerializer),
+      logs:
+        serialize_data(
+          group_histories,
+          BasicGroupHistorySerializer,
+          is_group_owner: group.group_users.exists?(user: current_user, owner: true),
+        ),
       all_loaded: group_histories.count < page_size,
     )
   end

@@ -3109,6 +3109,7 @@ RSpec.describe GroupsController do
       fab!(:restricted_histories) do
         %w[
           incoming_email
+          has_messages
           imap_server
           imap_port
           imap_ssl
@@ -3176,6 +3177,7 @@ RSpec.describe GroupsController do
         expect(values).to eq(
           redacted_values.merge(
             "incoming_email" => ["previous incoming_email", "current incoming_email"],
+            "has_messages" => ["previous has_messages", "current has_messages"],
           ),
         )
       end
@@ -3195,6 +3197,7 @@ RSpec.describe GroupsController do
         expect(values).to eq(
           redacted_values.merge(
             "incoming_email" => ["previous incoming_email", "current incoming_email"],
+            "has_messages" => ["previous has_messages", "current has_messages"],
             "automatic_membership_email_domains" => [
               "previous automatic_membership_email_domains",
               "current automatic_membership_email_domains",
@@ -3217,6 +3220,30 @@ RSpec.describe GroupsController do
             .fetch("logs")
             .to_h { |log| [log.fetch("subject"), log.values_at("prev_value", "new_value")] }
         expect(values).to eq(redacted_values)
+      end
+
+      it "keeps query counts constant as an owner's history page fills" do
+        group.add_owner(user)
+        sign_in(user)
+        get "/groups/#{group.name}/logs.json"
+        initial_queries = track_sql_queries { get "/groups/#{group.name}/logs.json" }
+        Fabricate.times(
+          6,
+          :group_history,
+          group: group,
+          acting_user: admin,
+          target_user: nil,
+          action: GroupHistory.actions[:change_group_setting],
+          subject: "public_exit",
+          prev_value: "f",
+          new_value: "t",
+        )
+
+        full_page_queries = track_sql_queries { get "/groups/#{group.name}/logs.json" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("logs").size).to eq(25)
+        expect(full_page_queries.size).to eq(initial_queries.size)
       end
 
       it "shows restricted values to administrators" do
