@@ -870,6 +870,28 @@ RSpec.describe User do
       expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
     end
 
+    it "keeps reviewables for posts the user flagged first" do
+      other_flagger = Fabricate(:user)
+      reviewable =
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        user.id,
+        other_flagger.id,
+      )
+    end
+
     it "does not allow non moderators to delete all posts" do
       invalid_guardian = Guardian.new(Fabricate(:user))
 

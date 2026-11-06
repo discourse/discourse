@@ -315,6 +315,20 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
           expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
         end
+
+        it "keeps flags the user shares with other flaggers" do
+          shared =
+            Fabricate(
+              :reviewable_flagged_post,
+              created_by: reviewable.target_created_by,
+              reviewable_scores: [Fabricate.build(:reviewable_score, status: :pending)],
+            )
+
+          result = reviewable.perform(moderator, :delete_user)
+
+          expect(result.remove_reviewable_ids).not_to include(shared.id)
+          expect(shared.reload).to be_pending
+        end
       end
     end
   end

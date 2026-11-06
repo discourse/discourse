@@ -4803,6 +4803,22 @@ RSpec.describe UsersController do
         delete "/u/#{user1.username}.json"
         expect(response.status).to eq(200)
       end
+
+      it "keeps other users' flags on a post you flagged first" do
+        flagged_post = Fabricate(:post)
+        PostActionCreator.inappropriate(user1, flagged_post)
+        PostActionCreator.inappropriate(another_user, flagged_post)
+        reviewable = flagged_post.reviewable_flag
+        expect(reviewable.created_by_id).to eq(user1.id)
+
+        delete "/u/#{user1.username}.json"
+        expect(response.status).to eq(200)
+
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+          another_user.id,
+        )
+      end
     end
   end
 

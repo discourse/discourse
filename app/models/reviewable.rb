@@ -623,6 +623,12 @@ class Reviewable < ActiveRecord::Base
   end
   private_class_method :exclude_private_messages_hidden_from
 
+  def self.created_solely_by(user)
+    where(created_by_id: user.id).where.not(
+      id: ReviewableScore.pending.where.not(user_id: user.id).select(:reviewable_id),
+    )
+  end
+
   def self.pending_count(user)
     list_for(user).count
   end
