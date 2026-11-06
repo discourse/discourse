@@ -100,11 +100,11 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def include_flair_icon?
-    (@options[:for_group_history] || flair_icon.present?) && (is_group_owner || scope.is_admin?)
+    flair_icon.present? && (is_group_owner || scope.is_admin?)
   end
 
   def include_flair_type?
-    (@options[:for_group_history] || flair_type.present?) && (is_group_owner || scope.is_admin?)
+    flair_type.present? && (is_group_owner || scope.is_admin?)
   end
 
   %i[watching regular tracking watching_first_post muted].each do |level|
