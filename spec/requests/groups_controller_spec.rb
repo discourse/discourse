@@ -3109,6 +3109,12 @@ RSpec.describe GroupsController do
       fab!(:restricted_histories) do
         %w[
           incoming_email
+          imap_server
+          imap_port
+          imap_ssl
+          imap_mailbox_name
+          smtp_ssl
+          plugin_private_setting
           automatic_membership_email_domains
           email_password
           email_username

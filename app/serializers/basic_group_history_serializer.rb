@@ -1,25 +1,37 @@
 # frozen_string_literal: true
 
 class BasicGroupHistorySerializer < ApplicationSerializer
-  STAFF_ONLY_SUBJECTS = %w[incoming_email].freeze
-  private_constant :STAFF_ONLY_SUBJECTS
-
-  ADMIN_ONLY_SUBJECTS = %w[
-    email_password
-    email_username
-    email_from_alias
-    smtp_server
-    smtp_port
-    smtp_ssl_mode
-    smtp_enabled
-    smtp_updated_at
-    smtp_updated_by_id
-    allow_unknown_sender_topic_replies
+  GROUP_OWNER_ALLOWED_SUBJECTS = %w[
+    automatic
+    name
+    mentionable_level
+    messageable_level
+    visibility_level
+    primary_group
+    title
+    grant_trust_level
+    flair_upload_id
+    flair_icon
+    flair_bg_color
+    flair_color
+    bio_raw
+    public_admission
+    public_exit
+    allow_membership_requests
+    full_name
+    default_notification_level
+    membership_request_template
+    members_visibility_level
+    publish_read_state
   ].freeze
-  private_constant :ADMIN_ONLY_SUBJECTS
+  private_constant :GROUP_OWNER_ALLOWED_SUBJECTS
 
-  GROUP_ADMIN_ONLY_SUBJECTS = %w[automatic_membership_email_domains].freeze
-  private_constant :GROUP_ADMIN_ONLY_SUBJECTS
+  STAFF_ALLOWED_SUBJECTS = (GROUP_OWNER_ALLOWED_SUBJECTS + %w[incoming_email has_messages]).freeze
+  private_constant :STAFF_ALLOWED_SUBJECTS
+
+  GROUP_MANAGING_MODERATOR_ALLOWED_SUBJECTS =
+    (STAFF_ALLOWED_SUBJECTS + %w[automatic_membership_email_domains]).freeze
+  private_constant :GROUP_MANAGING_MODERATOR_ALLOWED_SUBJECTS
 
   attributes :action, :subject, :prev_value, :new_value, :created_at
 
@@ -41,17 +53,20 @@ class BasicGroupHistorySerializer < ApplicationSerializer
   private
 
   def redact_setting_value(value)
-    return value if value.blank?
+    return value if value.blank? || scope&.is_admin?
 
-    if STAFF_ONLY_SUBJECTS.include?(object.subject)
-      return value if scope&.is_staff?
-    elsif ADMIN_ONLY_SUBJECTS.include?(object.subject)
-      return value if scope&.is_admin?
-    elsif GROUP_ADMIN_ONLY_SUBJECTS.include?(object.subject)
-      return value if scope&.can_admin_group?(object.group)
-    else
-      return value
-    end
+    allowed_subjects =
+      if scope&.can_admin_group?(object.group)
+        GROUP_MANAGING_MODERATOR_ALLOWED_SUBJECTS
+      elsif scope&.is_staff?
+        STAFF_ALLOWED_SUBJECTS
+      elsif scope&.can_edit_group?(object.group)
+        GROUP_OWNER_ALLOWED_SUBJECTS
+      else
+        []
+      end
+
+    return value if allowed_subjects.include?(object.subject)
 
     I18n.t("staff_action_logs.redacted")
   end

@@ -6,7 +6,13 @@ RSpec.describe BasicGroupHistorySerializer do
     fab!(:regular_user, :user)
 
     it "redacts restricted values without a requesting scope" do
-      %w[incoming_email automatic_membership_email_domains email_password].each do |subject|
+      %w[
+        incoming_email
+        automatic_membership_email_domains
+        email_password
+        public_exit
+        plugin_private_setting
+      ].each do |subject|
         history =
           Fabricate.build(
             :group_history,
@@ -22,6 +28,52 @@ RSpec.describe BasicGroupHistorySerializer do
           [I18n.t("staff_action_logs.redacted")] * 2,
         )
       end
+    end
+
+    it "preserves allowed settings for a group owner" do
+      group.add_owner(regular_user)
+      histories =
+        %w[
+          automatic
+          name
+          mentionable_level
+          messageable_level
+          visibility_level
+          primary_group
+          title
+          grant_trust_level
+          flair_upload_id
+          flair_icon
+          flair_bg_color
+          flair_color
+          bio_raw
+          public_admission
+          public_exit
+          allow_membership_requests
+          full_name
+          default_notification_level
+          membership_request_template
+          members_visibility_level
+          publish_read_state
+        ].map do |attribute|
+          Fabricate.build(
+            :group_history,
+            group: group,
+            subject: attribute,
+            prev_value: "previous #{attribute}",
+            new_value: "current #{attribute}",
+          )
+        end
+
+      values =
+        histories.to_h do |history|
+          json = described_class.new(history, scope: regular_user.guardian, root: false).as_json
+          [json.fetch(:subject), json.values_at(:prev_value, :new_value)]
+        end
+
+      expect(values).to eq(
+        histories.to_h { |history| [history.subject, [history.prev_value, history.new_value]] },
+      )
     end
 
     it "redacts the previous value when a restricted setting is cleared" do
