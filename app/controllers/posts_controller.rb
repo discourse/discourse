@@ -822,6 +822,7 @@ class PostsController < ApplicationController
 
   def markdown(post)
     if post && guardian.can_see?(post)
+      add_topic_noindex_header(post.topic)
       render plain: post.raw
     else
       raise Discourse::NotFound
@@ -902,7 +903,9 @@ class PostsController < ApplicationController
   end
 
   def markdown_for_revision
-    find_post_revision_from_topic_id.modifications[:raw].last
+    post_revision = find_post_revision_from_topic_id
+    add_topic_noindex_header(post_revision.post.topic)
+    post_revision.modifications[:raw].last
   end
 
   def markdown_for_post
@@ -918,6 +921,7 @@ class PostsController < ApplicationController
         page: params[:page],
         limit: MARKDOWN_TOPIC_PAGE_SIZE,
       )
+    add_topic_noindex_header(topic_view.topic)
     topic_view.posts.select { |post| guardian.can_see?(post) }.map { |post| <<~MD }.join
         #{post.user.username} | #{post.updated_at} | ##{post.post_number}
 
