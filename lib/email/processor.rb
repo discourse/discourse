@@ -146,11 +146,14 @@ module Email
         template_args[:destination] = message.to
         template_args[:site_name] = SiteSetting.title
 
-        client_message =
-          RejectionMailer.send_rejection(message_template, message.from, template_args)
+        # The rejection is about the sender identity that was validated, which isn't
+        # always the address in the From header (e.g. mailing list forwards).
+        recipient = @receiver&.from_email.presence || message.from
+
+        client_message = RejectionMailer.send_rejection(message_template, recipient, template_args)
 
         # only send one rejection email per day to the same email address
-        if can_send_rejection_email?(message.from, message_template)
+        if can_send_rejection_email?(recipient, message_template)
           Email::Sender.new(client_message, message_template).send
         end
       end
