@@ -87,8 +87,10 @@ class GroupMemberAdder
   def users_for_emails
     return {} if emails.blank?
 
+    # An unactivated account hasn't proven it owns the address yet.
     User
       .with_email(emails.map { Email.downcase(it) })
+      .where("users.staged OR users.active")
       .includes(:user_emails)
       .each_with_object({}) do |user, by_email|
         user.user_emails.each { |user_email| by_email[user_email.email.downcase] ||= user }

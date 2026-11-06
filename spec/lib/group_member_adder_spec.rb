@@ -85,6 +85,17 @@ describe GroupMemberAdder do
       expect(invite.groups).to eq([group])
     end
 
+    it "does not treat an unactivated account as the owner of the given email" do
+      unactivated_user = Fabricate(:user, email: "claimed@example.com", active: false)
+
+      result = described_class.add(admin.guardian, group, emails: unactivated_user.email)
+
+      expect(result[:usernames]).to be_empty
+      expect(result[:emails]).to eq([unactivated_user.email])
+      expect(group.reload.users).not_to include(unactivated_user)
+      expect(Invite.last.groups).to eq([group])
+    end
+
     it "refuses email invitations before adding users when the owner cannot invite" do
       SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
 
