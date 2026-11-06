@@ -208,7 +208,7 @@ RSpec.describe EmailController do
 
   describe "#unsubscribed" do
     describe "when email is invalid" do
-      it "should return the right response" do
+      it "returns the right response" do
         get "/email/unsubscribed", params: { email: "somerandomstring" }
         expect(response.status).to eq(404)
       end
@@ -253,7 +253,7 @@ RSpec.describe EmailController do
     describe "when topic is public" do
       fab!(:topic)
 
-      it "should return the right response" do
+      it "returns the right response" do
         key = SecureRandom.hex
         Discourse.cache.write(key, { email: user.email, topic_id: topic.id })
         get "/email/unsubscribed", params: { key: key }
@@ -265,7 +265,7 @@ RSpec.describe EmailController do
     describe "when topic is private" do
       fab!(:private_topic, :private_message_topic)
 
-      it "should return the right response" do
+      it "returns the right response" do
         key = SecureRandom.hex
         Discourse.cache.write(key, { email: user.email, topic_id: private_topic.id })
         get "/email/unsubscribed", params: { key: key }
