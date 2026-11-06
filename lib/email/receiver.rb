@@ -100,6 +100,7 @@ module Email
     attr_reader :raw_email
     attr_reader :mail
     attr_reader :message_id
+    attr_reader :from_email
 
     COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
 
