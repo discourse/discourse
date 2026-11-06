@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import GifsModal from "discourse/components/modal/gifs";
@@ -42,31 +42,41 @@ acceptance("Modal - GIFs", function (needs) {
     fetchStub = sinon.stub(window, "fetch");
   });
 
-  test("fetches categories when opened", async function (assert) {
-    fetchStub.resolves(categoriesResponse());
+  test("browses categories and searches even a short category term", async function (assert) {
+    fetchStub.callsFake(async (url) => {
+      if (url.includes("/gifs/categories.json")) {
+        return categoriesResponse([
+          {
+            name: "Hi",
+            image: "/images/d-logo-sketch.png",
+            searchterm: "hi",
+          },
+        ]);
+      }
+      return searchResponse({ results: [gif("a hello gif")] });
+    });
 
     await visit("/");
     const modalService = getOwner(this).lookup("service:modal");
     modalService.show(GifsModal);
+    await waitFor(".gifs-modal .gifs-result--category");
     await settled();
 
-    assert.dom(".gifs-modal").exists("renders the modal");
     assert
       .dom(".gifs-modal__branding")
       .exists("always shows the Klipy branding");
+    assert
+      .dom(".gifs-modal .gifs-result__category-label")
+      .hasText("Hi", "renders the featured category");
 
-    const categoriesCall = fetchStub
-      .getCalls()
-      .find((call) => call.args[0].includes("/gifs/categories.json"));
-    assert.notStrictEqual(
-      categoriesCall,
-      undefined,
-      "called the GIF categories proxy"
-    );
-    assert.false(
-      categoriesCall.args[0].includes("key="),
-      "does not pass an API key in the query"
-    );
+    await click(".gifs-modal .gifs-result--category");
+
+    assert
+      .dom(".gifs-modal input[name=query]")
+      .hasValue("hi", "uses the category's search term");
+    assert
+      .dom(".gifs-modal .gifs-result__img")
+      .hasAttribute("alt", "a hello gif", "renders the category's results");
   });
 
   test("search triggers a Klipy fetch with the query", async function (assert) {

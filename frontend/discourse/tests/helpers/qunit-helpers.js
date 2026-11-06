@@ -47,6 +47,7 @@ import { resetCategoryTagSearchCache } from "discourse/lib/category-tag-search";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import { resetComposerPickerTabs } from "discourse/lib/composer-picker";
 import { resetDeferredClassModifications } from "discourse/lib/deferred-class-modifications";
 import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
@@ -279,6 +280,7 @@ export function testCleanup(app) {
   cleanupCssGeneratorTags();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
+  resetComposerPickerTabs();
   clearAdditionalAdminSidebarSectionLinks();
   clearAdditionalUserNavSidebarLinks();
   resetAdminPluginConfigNav();
