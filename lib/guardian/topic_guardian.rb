@@ -348,7 +348,9 @@ module TopicGuardian
     return false if is_silenced?
     return false unless can_perform_action_available_to_group_moderators?(topic)
     return false if topic.archetype == "private_message" && !is_staff?
-    true
+    return true if is_staff? || is_category_group_moderator?(topic.category)
+
+    can_create_post?(topic)
   end
 
   def affected_by_slow_mode?(topic)
