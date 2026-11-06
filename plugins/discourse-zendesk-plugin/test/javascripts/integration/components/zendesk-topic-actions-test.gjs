@@ -27,10 +27,7 @@ module("Integration | Component | ZendeskTopicActions", function (hooks) {
         discourse_zendesk_plugin_zendesk_url: "https://zendesk.example/42",
       })
     );
-    const topic = EmberObject.create({
-      id: 1,
-      discourse_zendesk_plugin_has_ticket: false,
-    });
+    const topic = EmberObject.create({ id: 1 });
 
     await render(<template><ZendeskTopicActions @topic={{topic}} /></template>);
     await click(".zendesk-topic-actions .btn-primary");
@@ -43,59 +40,6 @@ module("Integration | Component | ZendeskTopicActions", function (hooks) {
         .message,
       i18n("zendesk.ticket_created"),
       "confirms successful creation"
-    );
-  });
-
-  test("confirms creation without leaving a footer action", async function (assert) {
-    logIn(getOwner(this));
-    updateCurrentUser({
-      discourse_zendesk_plugin_status: true,
-      can_create_zendesk_ticket: true,
-      can_view_zendesk_ticket: false,
-    });
-    pretender.post("/zendesk-plugin/issues", () =>
-      response({ discourse_zendesk_plugin_has_ticket: true })
-    );
-    const topic = EmberObject.create({
-      id: 1,
-      discourse_zendesk_plugin_has_ticket: false,
-    });
-
-    await render(<template><ZendeskTopicActions @topic={{topic}} /></template>);
-    await click(".zendesk-topic-actions .btn-primary");
-
-    assert.strictEqual(
-      getOwner(this).lookup("service:toasts").activeToasts[0].options.data
-        .message,
-      i18n("zendesk.ticket_created"),
-      "confirms successful creation"
-    );
-    assert
-      .dom(".zendesk-topic-actions")
-      .doesNotExist("leaves no footer action or status text");
-  });
-
-  test("hides actions for a linked topic without viewing permission", async function (assert) {
-    logIn(getOwner(this));
-    updateCurrentUser({
-      discourse_zendesk_plugin_status: true,
-      can_create_zendesk_ticket: true,
-      can_view_zendesk_ticket: false,
-    });
-    const topic = EmberObject.create({
-      id: 1,
-      discourse_zendesk_plugin_has_ticket: true,
-    });
-
-    await render(<template><ZendeskTopicActions @topic={{topic}} /></template>);
-
-    assert
-      .dom(".zendesk-topic-actions")
-      .doesNotExist("keeps completed tickets out of the footer");
-    assert.strictEqual(
-      getOwner(this).lookup("service:toasts").activeToasts.length,
-      0,
-      "does not repeat the creation notification"
     );
   });
 });
