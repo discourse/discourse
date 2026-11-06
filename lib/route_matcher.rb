@@ -103,6 +103,7 @@ class RouteMatcher
       param_alias = param_alias_for(param)
       value_present, value = path_parameter(requested_params, param)
       alias_present, alias_value = path_parameter(requested_params, param_alias)
+      alias_value = extract_category_id(alias_value) if param_alias == :category_slug_path_with_id
 
       next false if value_present && alias_present
       next false unless value_present || alias_present
