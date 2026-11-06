@@ -111,11 +111,6 @@ RSpec.describe Email::Receiver do
     expect { process(:inactive_sender) }.to raise_error(Email::Receiver::InactiveUserError)
   end
 
-  it "raises a SuspendedUserError when the sender is suspended" do
-    Fabricate(:user, email: "silenced@bar.com", suspended_till: 1.year.from_now)
-    expect { process(:silenced_sender) }.to raise_error(Email::Receiver::SuspendedUserError)
-  end
-
   it "raises a SilencedUserError when the sender has been silenced" do
     Fabricate(:user, email: "silenced@bar.com", silenced_till: 1.year.from_now)
     expect { process(:silenced_sender) }.to raise_error(Email::Receiver::SilencedUserError)
@@ -263,6 +258,14 @@ RSpec.describe Email::Receiver do
     it "handles email with no subject" do
       expect { process(:no_subject) }.to change(Topic, :count)
       expect(Topic.last.title).to eq("This topic needs a title")
+    end
+
+    it "rejects email from a suspended sender" do
+      Fabricate(:user, email: "one@foo.com", suspended_till: 1.year.from_now)
+
+      expect { process(:email_reply_1) }.to raise_error(
+        Email::Receiver::SuspendedUserError,
+      ).and not_change(Topic, :count)
     end
 
     context "with reply_by_email configured" do

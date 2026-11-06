@@ -4440,7 +4440,9 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account associated with this email address has been suspended.
+        The account associated with this email address is suspended. Suspended accounts can't create posts or send messages by email.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_reject_silenced_user:
       title: "Email Reject Silenced User"
