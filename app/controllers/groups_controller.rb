@@ -461,7 +461,11 @@ class GroupsController < ApplicationController
     offset = (params[:offset] && params[:offset].to_i) || 0
 
     group_histories =
-      GroupHistory.with_filters(group, params[:filters]).limit(page_size).offset(offset * page_size)
+      GroupHistory
+        .with_filters(group, params[:filters])
+        .preload(:group)
+        .limit(page_size)
+        .offset(offset * page_size)
 
     render_json_dump(
       logs: serialize_data(group_histories, BasicGroupHistorySerializer),
