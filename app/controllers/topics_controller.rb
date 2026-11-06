@@ -1487,17 +1487,14 @@ class TopicsController < ApplicationController
         Discourse::LOCALE_PARAM,
         *additional_allowed_query_parameters,
       )
-    opts.delete(:page) if params[:page] == 0
+    opts.delete(:page) if opts[:page].to_s.to_i.zero?
 
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
     url << ".md" if request.format.md?
 
-    opts.each do |k, v|
-      s = url.include?("?") ? "&" : "?"
-      url << "#{s}#{k}=#{v}"
-    end
+    url << "?#{Rack::Utils.build_nested_query(opts.to_unsafe_h)}" if opts.present?
 
     redirect_to url, status: :moved_permanently
   end
