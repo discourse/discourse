@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class AdminFormTemplateSerializer < ApplicationSerializer
-  attributes :id, :name, :template
+  attributes :id, :name, :template, :output_template
 end

@@ -7,11 +7,14 @@ import FormTemplateValidationOptionsModal from "discourse/admin/components/modal
 import { templateFormFields } from "discourse/admin/lib/template-form-fields";
 import FormTemplate from "discourse/admin/models/form-template";
 import AceEditor from "discourse/components/ace-editor";
+import Form from "discourse/components/form";
 import FormTemplateFormPreview from "discourse/components/modal/form-template-form-preview";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+
+const OUTPUT_ANSWER_EXAMPLE = "{{ answers.name }}";
 
 export default class FormTemplateForm extends Component {
   @service router;
@@ -22,9 +25,12 @@ export default class FormTemplateForm extends Component {
   @tracked templateContent = this.args.model?.template || "";
   @tracked processedTemplateContent = "";
   @tracked templateName = this.args.model?.name || "";
+
   @tracked showFormTemplateFormPreview;
 
+  outputData = { outputTemplate: this.args.model?.output_template || "" };
   isEditing = this.args.model?.id ? true : false;
+
   quickInsertFields = [
     {
       type: "checkbox",
@@ -59,6 +65,15 @@ export default class FormTemplateForm extends Component {
       icon: "fab-markdown",
     },
   ];
+  #outputForm = null;
+
+  get outputAnswerExample() {
+    return OUTPUT_ANSWER_EXAMPLE;
+  }
+
+  get outputPlaceholder() {
+    return `## ${OUTPUT_ANSWER_EXAMPLE}`;
+  }
 
   get disablePreviewButton() {
     return Boolean(!this.templateName.length || !this.templateContent.length);
@@ -72,6 +87,11 @@ export default class FormTemplateForm extends Component {
   }
 
   @action
+  registerOutputForm(api) {
+    this.#outputForm = api;
+  }
+
+  @action
   onSubmit() {
     if (!this.formSubmitted) {
       this.formSubmitted = true;
@@ -80,6 +100,7 @@ export default class FormTemplateForm extends Component {
     const postData = {
       name: this.templateName,
       template: this.templateContent,
+      output_template: this.#outputForm?.get("outputTemplate") || "",
     };
 
     if (this.isEditing) {
@@ -89,6 +110,7 @@ export default class FormTemplateForm extends Component {
     FormTemplate.createOrUpdateTemplate(postData)
       .then(() => {
         this.formSubmitted = false;
+        this.#outputForm?.reset();
         this.router.transitionTo("adminCustomizeFormTemplates.index");
       })
       .catch((e) => {
@@ -137,6 +159,7 @@ export default class FormTemplateForm extends Component {
     const data = {
       name: this.templateName,
       template: this.templateContent,
+      output_template: this.#outputForm?.get("outputTemplate") || "",
     };
 
     if (this.isEditing) {
@@ -200,6 +223,25 @@ export default class FormTemplateForm extends Component {
           @onChange={{fn (mut this.templateContent)}}
         />
       </div>
+
+      <Form
+        @data={{this.outputData}}
+        @onRegisterApi={{this.registerOutputForm}}
+        as |form|
+      >
+        <form.Field
+          @description={{i18n
+            "admin.form_templates.new_template_form.output.description"
+            example=this.outputAnswerExample
+          }}
+          @name="outputTemplate"
+          @title={{i18n "admin.form_templates.new_template_form.output.label"}}
+          @type="textarea"
+          as |field|
+        >
+          <field.Control placeholder={{this.outputPlaceholder}} />
+        </form.Field>
+      </Form>
 
       <div class="footer-buttons">
         <DButton
