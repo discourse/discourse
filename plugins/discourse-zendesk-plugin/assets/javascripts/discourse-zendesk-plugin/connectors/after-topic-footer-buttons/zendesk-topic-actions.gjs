@@ -12,7 +12,7 @@ export default class ZendeskTopicActions extends Component {
 
   @tracked creating = false;
 
-  @service("a11y") _a11y;
+  @service("toasts") _toasts;
 
   get showActions() {
     if (
@@ -22,11 +22,9 @@ export default class ZendeskTopicActions extends Component {
       return false;
     }
 
-    return (
-      this.currentUser?.can_create_zendesk_ticket ||
-      (this.args.topic.discourse_zendesk_plugin_has_ticket &&
-        this.currentUser?.can_view_zendesk_ticket)
-    );
+    return this.args.topic.get("discourse_zendesk_plugin_has_ticket")
+      ? this.currentUser?.can_view_zendesk_ticket
+      : this.currentUser?.can_create_zendesk_ticket;
   }
 
   @action
@@ -48,7 +46,9 @@ export default class ZendeskTopicActions extends Component {
         discourse_zendesk_plugin_zendesk_url:
           updatedTopic.discourse_zendesk_plugin_zendesk_url,
       });
-      this._a11y.announce(i18n("zendesk.ticket_created"));
+      this._toasts.success({
+        data: { message: i18n("zendesk.ticket_created") },
+      });
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -64,20 +64,14 @@ export default class ZendeskTopicActions extends Component {
       >
         {{#if this.currentUser.discourse_zendesk_plugin_status}}
           {{#if @topic.discourse_zendesk_plugin_has_ticket}}
-            {{#if this.currentUser.can_view_zendesk_ticket}}
-              <a
-                class="btn-primary btn"
-                href={{@topic.discourse_zendesk_plugin_zendesk_url}}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {{i18n "topic.view_zendesk_issue"}}
-              </a>
-            {{else}}
-              <span class="zendesk-topic-actions__confirmation">{{i18n
-                  "zendesk.ticket_created"
-                }}</span>
-            {{/if}}
+            <a
+              class="btn-primary btn"
+              href={{@topic.discourse_zendesk_plugin_zendesk_url}}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {{i18n "topic.view_zendesk_issue"}}
+            </a>
           {{else}}
             <DButton
               class="btn-primary"

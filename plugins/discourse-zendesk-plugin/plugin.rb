@@ -14,8 +14,6 @@ require "zendesk_api"
 
 enabled_site_setting :zendesk_enabled
 
-register_asset "stylesheets/zendesk.scss"
-
 register_svg_icon "headset"
 
 module ::DiscourseZendeskPlugin

@@ -8,6 +8,7 @@ import {
   logIn,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 import ZendeskTopicActions from "discourse/plugins/discourse-zendesk-plugin/discourse-zendesk-plugin/connectors/after-topic-footer-buttons/zendesk-topic-actions";
 
 module("Integration | Component | ZendeskTopicActions", function (hooks) {
@@ -34,5 +35,11 @@ module("Integration | Component | ZendeskTopicActions", function (hooks) {
     assert
       .dom(".zendesk-topic-actions a.btn-primary")
       .hasAttribute("href", "https://zendesk.example/42", "links the issue");
+    assert.strictEqual(
+      getOwner(this).lookup("service:toasts").activeToasts[0].options.data
+        .message,
+      i18n("zendesk.ticket_created"),
+      "confirms successful creation"
+    );
   });
 });
