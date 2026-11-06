@@ -103,6 +103,7 @@ class GroupUpdater
     @attributes = ActionController::Parameters.new(attributes).permit(*permitted_params).to_h
     group_attributes = attributes_without_disabled_email_settings
     return false if !valid_flair_upload?(group_attributes)
+    ensure_can_change_members_primary_group!(group_attributes)
     notification_level, categories, tags = nil
 
     if !group.automatic || guardian.is_admin?
@@ -134,6 +135,30 @@ class GroupUpdater
   def can_admin_group?
     return @can_admin_group if defined?(@can_admin_group)
     @can_admin_group = guardian.can_admin_group?(group)
+  end
+
+  # Toggling the flag rewrites every member's primary group, so the editor must be
+  # allowed to change it for each staff member.
+  def ensure_can_change_members_primary_group!(group_attributes)
+    return if !group_attributes.key?(:primary_group)
+
+    new_value = ActiveModel::Type::Boolean.new.cast(group_attributes[:primary_group])
+    return if new_value == group.primary_group
+
+    group
+      .users
+      .where(admin: true)
+      .or(group.users.where(moderator: true))
+      .find_each { |member| guardian.ensure_can_change_primary_group!(member, group) }
+  end
+
+  # Only admins can change the notification preferences of other staff accounts.
+  def affected_group_users
+    return group.group_users if guardian.is_admin?
+
+    other_staff_ids =
+      User.where(admin: true).or(User.where(moderator: true)).where.not(id: guardian.user.id)
+    group.group_users.where.not(user_id: other_staff_ids.select(:id))
   end
 
   def valid_flair_upload?(group_attributes)
@@ -243,7 +268,7 @@ class GroupUpdater
   def apply_to_existing_users(notification_level, categories, tags, mutate:)
     return 0 if notification_level.blank? && categories.blank? && tags.blank?
 
-    group_users = group.group_users
+    group_users = affected_group_users
     user_ids = []
 
     if notification_level.present?
