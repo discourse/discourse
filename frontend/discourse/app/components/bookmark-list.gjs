@@ -341,7 +341,7 @@ export default class BookmarkList extends Component {
                           aria-level="2"
                           class="title"
                         >
-                          {{bookmark.fancy_title}}
+                          {{bookmark.title}}
                         </a>
                       {{/if}}
                     </div>
