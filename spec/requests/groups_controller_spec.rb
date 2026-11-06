@@ -3428,6 +3428,167 @@ RSpec.describe GroupsController do
         expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
       end
     end
+
+    context "with restricted settings" do
+      fab!(:group) { Fabricate(:group, users: [user]) }
+      fab!(:restricted_histories) do
+        %w[
+          incoming_email
+          has_messages
+          imap_server
+          imap_port
+          imap_ssl
+          imap_mailbox_name
+          smtp_ssl
+          plugin_private_setting
+          automatic_membership_email_domains
+          email_password
+          email_username
+          email_from_alias
+          smtp_server
+          smtp_port
+          smtp_ssl_mode
+          smtp_enabled
+          smtp_updated_at
+          smtp_updated_by_id
+          allow_unknown_sender_topic_replies
+        ].map do |subject|
+          Fabricate(
+            :group_history,
+            group: group,
+            acting_user: admin,
+            target_user: nil,
+            action: GroupHistory.actions[:change_group_setting],
+            subject: subject,
+            prev_value: "previous #{subject}",
+            new_value: "current #{subject}",
+          )
+        end
+      end
+
+      let(:redacted_values) do
+        restricted_histories.to_h do |history|
+          [history.subject, [I18n.t("staff_action_logs.redacted")] * 2]
+        end
+      end
+
+      it "redacts restricted values for an ordinary owner" do
+        group.add_owner(user)
+        sign_in(user)
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+        values =
+          response
+            .parsed_body
+            .fetch("logs")
+            .to_h { |log| [log.fetch("subject"), log.values_at("prev_value", "new_value")] }
+        expect(values).to eq(redacted_values)
+      end
+
+      it "shows incoming email to a moderator owner without group administration" do
+        group.add_owner(moderator)
+        sign_in(moderator)
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+        values =
+          response
+            .parsed_body
+            .fetch("logs")
+            .to_h { |log| [log.fetch("subject"), log.values_at("prev_value", "new_value")] }
+        expect(values).to eq(
+          redacted_values.merge(
+            "incoming_email" => ["previous incoming_email", "current incoming_email"],
+            "has_messages" => ["previous has_messages", "current has_messages"],
+          ),
+        )
+      end
+
+      it "shows membership domains to a delegated moderator without administrator settings" do
+        SiteSetting.moderators_manage_groups = true
+        sign_in(moderator)
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+        values =
+          response
+            .parsed_body
+            .fetch("logs")
+            .to_h { |log| [log.fetch("subject"), log.values_at("prev_value", "new_value")] }
+        expect(values).to eq(
+          redacted_values.merge(
+            "incoming_email" => ["previous incoming_email", "current incoming_email"],
+            "has_messages" => ["previous has_messages", "current has_messages"],
+            "automatic_membership_email_domains" => [
+              "previous automatic_membership_email_domains",
+              "current automatic_membership_email_domains",
+            ],
+          ),
+        )
+      end
+
+      it "keeps restricted values redacted for ordinary owners when moderators manage groups" do
+        SiteSetting.moderators_manage_groups = true
+        group.add_owner(user)
+        sign_in(user)
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+        values =
+          response
+            .parsed_body
+            .fetch("logs")
+            .to_h { |log| [log.fetch("subject"), log.values_at("prev_value", "new_value")] }
+        expect(values).to eq(redacted_values)
+      end
+
+      it "keeps query counts constant as an owner's history page fills" do
+        group.add_owner(user)
+        sign_in(user)
+        get "/groups/#{group.name}/logs.json"
+        initial_queries = track_sql_queries { get "/groups/#{group.name}/logs.json" }
+        Fabricate.times(
+          6,
+          :group_history,
+          group: group,
+          acting_user: admin,
+          target_user: nil,
+          action: GroupHistory.actions[:change_group_setting],
+          subject: "public_exit",
+          prev_value: "f",
+          new_value: "t",
+        )
+
+        full_page_queries = track_sql_queries { get "/groups/#{group.name}/logs.json" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("logs").size).to eq(25)
+        expect(full_page_queries.size).to eq(initial_queries.size)
+      end
+
+      it "shows restricted values to administrators" do
+        sign_in(admin)
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+        values =
+          response
+            .parsed_body
+            .fetch("logs")
+            .to_h { |log| [log.fetch("subject"), log.values_at("prev_value", "new_value")] }
+        expect(values).to eq(
+          restricted_histories.to_h do |history|
+            [history.subject, [history.prev_value, history.new_value]]
+          end,
+        )
+      end
+    end
   end
 
   describe "#request_membership" do
