@@ -144,7 +144,10 @@ class DesignWizard::Apply
   def palettes_available_to_theme(params:, theme:)
     [params.light_palette_id, params.dark_palette_id].all? do |palette_id|
       palette_id.nil? || palette_id.negative? ||
-        ColorScheme.where(id: palette_id, theme_id: [nil, theme.id]).exists?
+        ColorScheme.where(
+          id: palette_id,
+          theme_id: [nil, theme.id, DesignWizard::Themes.palette_owner_id(theme)],
+        ).exists?
     end
   end
 
@@ -161,7 +164,8 @@ class DesignWizard::Apply
   end
 
   def enabling_built_in_palettes(params:, theme:)
-    params.palettes_user_selectable && ColorScheme.where(theme_id: theme.id).none?
+    params.palettes_user_selectable &&
+      ColorScheme.where(theme_id: DesignWizard::Themes.palette_owner_id(theme)).none?
   end
 
   def offer_built_in_palettes

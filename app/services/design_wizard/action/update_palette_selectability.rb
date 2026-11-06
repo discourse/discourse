@@ -19,7 +19,7 @@ class DesignWizard::Action::UpdatePaletteSelectability < Service::ActionBase
   def offered
     @offered ||=
       begin
-        theme_palettes = ColorScheme.where(theme_id: theme.id)
+        theme_palettes = ColorScheme.where(theme_id: DesignWizard::Themes.palette_owner_id(theme))
         theme_palettes.none? ? ColorScheme.where(via_wizard: true) : theme_palettes
       end
   end

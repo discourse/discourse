@@ -187,6 +187,60 @@ RSpec.describe DesignWizard::Apply do
       end
     end
 
+    context "when applying an installed theme that borrows Horizon's palettes" do
+      fab!(:places_theme) do
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/nolosb/discourse-places-theme",
+            ),
+        )
+      end
+
+      let(:light) { ColorScheme.find_by(theme_id: horizon_theme.id, name: "Royal") }
+      let(:dark) { ColorScheme.find_by(theme_id: horizon_theme.id, name: "Royal Dark") }
+      let(:theme_id) { places_theme.id }
+      let(:params) do
+        {
+          theme_id:,
+          light_palette_id: light.id,
+          dark_palette_id: dark.id,
+          palettes_user_selectable: true,
+        }
+      end
+
+      before { SiteSetting.places_in_wizard = true }
+
+      it "assigns Horizon's palettes without creating built-in ones" do
+        expect { result }.not_to change { ColorScheme.where(via_wizard: true).count }
+
+        expect(result).to run_successfully
+        expect(places_theme.reload.color_scheme_id).to eq(light.id)
+        expect(places_theme.dark_color_scheme_id).to eq(dark.id)
+        expect(ColorScheme.where(theme_id: horizon_theme.id).pluck(:user_selectable).uniq).to eq(
+          [true],
+        )
+      end
+
+      it "keeps themes that don't borrow from using Horizon's palettes" do
+        SiteSetting.concord_in_wizard = true
+        concord_theme =
+          Fabricate(
+            :theme,
+            remote_theme:
+              Fabricate(
+                :remote_theme,
+                remote_url: "https://github.com/discourse/discourse-concord-theme",
+              ),
+          )
+        params[:theme_id] = concord_theme.id
+
+        expect(result).to fail_a_policy(:palettes_available_to_theme)
+      end
+    end
+
     context "when applying an unsupported theme" do
       fab!(:custom_theme, :theme)
       let(:theme_id) { custom_theme.id }

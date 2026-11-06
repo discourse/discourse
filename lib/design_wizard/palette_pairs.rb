@@ -25,7 +25,12 @@ module DesignWizard
     ].freeze
 
     def self.for_theme(theme)
-      owned = ColorScheme.includes(:color_scheme_colors).where(theme_id: theme.id).order(:id).to_a
+      owned =
+        ColorScheme
+          .includes(:color_scheme_colors)
+          .where(theme_id: DesignWizard::Themes.palette_owner_id(theme))
+          .order(:id)
+          .to_a
       pairs = new(theme)
       (owned.present? ? pairs.theme_pairs(owned) : pairs.built_in_pairs) + pairs.custom_pairs
     end

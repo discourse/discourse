@@ -43,7 +43,7 @@ class DesignWizardSerializer < ApplicationSerializer
   end
 
   def palettes_user_selectable
-    offered = ColorScheme.where(theme_id: preselected_theme&.id)
+    offered = ColorScheme.where(theme_id: DesignWizard::Themes.palette_owner_id(preselected_theme))
     offered = ColorScheme.where(via_wizard: true) if offered.none?
     offered.exists? && offered.where(user_selectable: false).none?
   end

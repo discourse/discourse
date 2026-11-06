@@ -21,6 +21,7 @@ module DesignWizard
         name: "Go Places",
         remote_url: "https://github.com/nolosb/discourse-places-theme",
         default_homepage: "latest",
+        palettes_from: "horizon",
         description_key: "design_wizard.themes.places.description",
         screenshot_light_url: "/images/design-wizard/places-light.webp",
         screenshot_dark_url: "/images/design-wizard/places-dark.webp",
@@ -42,7 +43,7 @@ module DesignWizard
         next if !guardian.allowed_theme_repo_import?(definition[:remote_url])
         next if themes.any? { |theme| definition_for(theme) == definition }
 
-        definition.except(:setting).merge(
+        definition.except(:setting, :palettes_from).merge(
           screenshot_light_url: Discourse.base_path + definition[:screenshot_light_url],
           screenshot_dark_url: Discourse.base_path + definition[:screenshot_dark_url],
           description: I18n.t(definition[:description_key]),
@@ -56,6 +57,14 @@ module DesignWizard
       return if remote_url.blank?
 
       enabled.find { |definition| definition[:remote_url] == remote_url }
+    end
+
+    # A theme without palettes of its own can offer a core theme's palettes; it
+    # points at them instead of copying them
+    def self.palette_owner_id(theme)
+      return if theme.nil?
+
+      Theme::CORE_THEMES.fetch(definition_for(theme)&.dig(:palettes_from), theme.id)
     end
 
     def self.enabled

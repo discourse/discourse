@@ -198,7 +198,12 @@ RSpec.describe Admin::Config::DesignWizardController do
           places_theme.id,
           "concord",
         )
-        expect(themes.find { |theme| theme["id"] == places_theme.id }).to include(
+        places = themes.find { |theme| theme["id"] == places_theme.id }
+        horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
+        expect(places["palette_pairs"].map { |pair| pair["key"] }).to eq(
+          horizon["palette_pairs"].map { |pair| pair["key"] },
+        )
+        expect(places).to include(
           "description" => I18n.t("design_wizard.themes.places.description"),
           "default_homepage" => "latest",
           "screenshot_light_url" => "/images/design-wizard/places-light.webp",
