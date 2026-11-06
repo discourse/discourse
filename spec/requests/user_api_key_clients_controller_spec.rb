@@ -90,6 +90,17 @@ RSpec.describe UserApiKeyClientsController do
           expect(client.scopes.map(&:name)).to match_array(["user_status"])
         end
 
+        it "stores a repeated scope only once" do
+          SiteSetting.allow_user_api_key_client_scopes = "user_status|notifications"
+
+          post "/user-api-key-client.json",
+               params: args.merge(scopes: "user_status,notifications,user_status")
+          expect(response.status).to eq(200)
+
+          client = UserApiKeyClient.find_by(client_id: args[:client_id])
+          expect(client.scopes.map(&:name)).to contain_exactly("user_status", "notifications")
+        end
+
         context "if the client is already registered" do
           before { Fabricate(:user_api_key_client, **args) }
 
