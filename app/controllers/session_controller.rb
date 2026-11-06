@@ -368,7 +368,7 @@ class SessionController < ApplicationController
 
     raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
-    rate_limit_second_factor!(user)
+    rate_limit_second_factor_by_ip!
 
     if user.present?
       # If their password is incorrect
@@ -400,6 +400,8 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       return render json: payload
     end
+
+    rate_limit_second_factor_by_account!(user)
 
     second_factor_auth_result = authenticate_second_factor(user)
     return render(json: @second_factor_failure_payload) if !second_factor_auth_result.ok
