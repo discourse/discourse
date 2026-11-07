@@ -283,6 +283,8 @@ module TestSelectionLab
             "The producer writes a cache field and a later reader consumes it inside uncertain application control flow. Detailed nested tracing is suppressed there, so receiver state must remain protected even when collection places writer and reader in separate processes. Every file stays eligible."
           elsif @name == "source_line_scalar"
             "A blank line in an earlier method shifts the producer's __LINE__ value. The writer passes while caching that changed integer. Its unchanged reader fails, so both files must run. The third spec remains independent."
+          elsif @name == "source_line_initialization"
+            "A blank line in an unused method shifts a later __LINE__ constant while its earlier reader method stays in place. The cached reader then fails. This changes protected initialization, so the complete affected environment must run."
           elsif @uncertain
             "The producer runs inside deferred fixture initialization with storage managed by the framework. This mapping cannot attribute the stored scalar to its later reader. Protecting that initialization requires every file in this environment."
           else
@@ -469,15 +471,19 @@ module TestSelectionLab
         "spec/3_unrelated_spec.rb",
         "RSpec.describe('Unrelated') { it('passes') { expect(true).to eq(true) } }",
       )
-      if @name == "source_line_scalar"
-        File.write(
-          "lib/producer.rb",
-          "module SharedStateProducer\n def self.unrelated\n  :original\n  :unused\n end\n def self.value\n  __LINE__\n end\nend\n",
-        )
+      if %w[source_line_scalar source_line_initialization].include?(@name)
+        producer =
+          if @name == "source_line_scalar"
+            "module SharedStateProducer\n def self.unrelated\n  :original\n  :unused\n end\n def self.value\n  __LINE__\n end\nend\n"
+          else
+            "module SharedStateProducer\n def self.value\n  VALUE\n end\n def self.unrelated\n  :original\n  :unused\n end\n VALUE = __LINE__\nend\n"
+          end
+        File.write("lib/producer.rb", producer)
         path = "spec/1_writer_spec.rb"
         File.write(path, File.read(path).sub("be_a(Symbol)", "be_a(Integer)"))
         path = "spec/2_reader_spec.rb"
-        File.write(path, File.read(path).sub("[nil, :original]", "[nil, 7]"))
+        original_line = @name == "source_line_scalar" ? 7 : 9
+        File.write(path, File.read(path).sub("[nil, :original]", "[nil, #{original_line}]"))
       end
       write_asynchronous_fixture if @name == "asynchronous_origin"
       if %w[unobserved_branch dynamic_receiver dynamic_reflection].include?(@name) ||
@@ -662,7 +668,7 @@ module TestSelectionLab
     end
 
     def apply_change
-      if @name == "source_line_scalar"
+      if %w[source_line_scalar source_line_initialization].include?(@name)
         path = "lib/producer.rb"
         File.write(path, File.read(path).sub(":original\n  :unused", ":original\n\n  :unused"))
       elsif @name.end_with?("_setup_spec")

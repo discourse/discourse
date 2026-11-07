@@ -117,6 +117,12 @@ module TestSelectionLab
       "@fixture_value",
       false,
     ],
+    [
+      "source_line_initialization",
+      "before(:context) { @fixture_value = SharedStateProducer.value }",
+      "@fixture_value",
+      true,
+    ],
     ["let_scalar", "let(:fixture_value) { SharedStateProducer.value }", "fixture_value", false],
     [
       "compact_let_scalar",

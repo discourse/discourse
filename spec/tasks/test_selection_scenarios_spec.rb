@@ -131,6 +131,7 @@ RSpec.describe "Dependency selection scenarios" do
   it_behaves_like "a dependency selection replay", name: "external_instance"
   it_behaves_like "a dependency selection replay", name: "context_scalar"
   it_behaves_like "a dependency selection replay", name: "source_line_scalar"
+  it_behaves_like "a dependency selection replay", name: "source_line_initialization"
   it_behaves_like "a dependency selection replay", name: "let_scalar"
   it_behaves_like "a dependency selection replay", name: "compact_let_scalar"
   it_behaves_like "a dependency selection replay", name: "asynchronous_origin"
