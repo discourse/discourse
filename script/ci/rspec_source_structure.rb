@@ -93,34 +93,10 @@ module RspecSourceStructure
         dependency_effects(body),
       ).b
     end
-    protected_lines = protected_source_lines(source:, bodies:, immutable_methods:)
-    Digest::SHA256.hexdigest(JSON.generate(protected_lines).b + edited)
+    body_lines = bodies.map { |body| [body.location.start_line, body.location.end_line] }
+    Digest::SHA256.hexdigest(JSON.generate(body_lines).b + edited)
   end
   private_class_method :digest
-
-  def self.protected_source_lines(source:, bodies:, immutable_methods:)
-    return [] unless source.include?("__LINE__")
-
-    mutable_locations =
-      bodies.each_with_index.filter_map do |body, index|
-        body.location unless immutable_methods.include?(index)
-      end
-    Prism
-      .lex(source)
-      .value
-      .filter_map do |token, _state|
-        next unless token.type == :KEYWORD___LINE__
-        if mutable_locations.any? { |location|
-             location.start_offset <= token.location.start_offset &&
-               token.location.end_offset <= location.end_offset
-           }
-          next
-        end
-
-        token.location.start_line
-      end
-  end
-  private_class_method :protected_source_lines
 
   def self.dependency_effects(body)
     effects = []

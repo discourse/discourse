@@ -156,6 +156,20 @@ RSpec.describe Crystalball do
     end
   end
 
+  it "protects source positions observed during initialization" do
+    Dir.mktmpdir do |directory|
+      path = "#{directory}/source.rb"
+      original =
+        "module Example\n def self.unused\n  :original\n  :unused\n end\n VALUE = binding.source_location.last\nend\n"
+      File.write(path, original)
+      description = RspecSourceStructure.describe(path)
+
+      File.write(path, original.sub(":original\n  :unused", ":original\n\n  :unused"))
+
+      expect(RspecSourceStructure.matches?(path:, description:)).to eq(false)
+    end
+  end
+
   it "invalidates changed control flow and dispatch inputs" do
     Dir.mktmpdir do |directory|
       path = "#{directory}/source.rb"

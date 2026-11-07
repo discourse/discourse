@@ -3,12 +3,13 @@ require "open3"
 require "tmpdir"
 require "rbconfig"
 require_relative "../support/rspec_subprocess_environment"
+require_relative "../../script/ci/test_selection_lab/shared_state_scenarios"
 
 RSpec.describe "Dependency selection scenarios" do
   include RSpecSubprocessEnvironment
 
   shared_examples "a dependency selection replay" do |name:|
-    it "selects affected files for #{name}" do
+    it "selects affected files for #{name}", dependency_scenario: name do
       Dir.mktmpdir("dependency-scenario-") do |workspace|
         output, error, status =
           Open3.capture3(
@@ -22,6 +23,17 @@ RSpec.describe "Dependency selection scenarios" do
         expect(status.success?).to eq(true), "#{output}\n#{error}"
       end
     end
+  end
+
+  it "registers every dependency replay in the scenario inventory" do
+    registered =
+      self
+        .class
+        .children
+        .flat_map(&:examples)
+        .filter_map { |example| example.metadata[:dependency_scenario] }
+
+    expect(registered).to eq(TestSelectionLab::SHARED_STATE_SCENARIOS.map(&:first))
   end
 
   it_behaves_like "a dependency selection replay", name: "native_value_loop_native_accessor"
@@ -132,6 +144,11 @@ RSpec.describe "Dependency selection scenarios" do
   it_behaves_like "a dependency selection replay", name: "context_scalar"
   it_behaves_like "a dependency selection replay", name: "source_line_scalar"
   it_behaves_like "a dependency selection replay", name: "source_line_initialization"
+  it_behaves_like "a dependency selection replay", name: "source_line_method_metadata"
+  it_behaves_like "a dependency selection replay", name: "source_line_proc_metadata"
+  it_behaves_like "a dependency selection replay", name: "source_line_binding_initialization"
+  it_behaves_like "a dependency selection replay", name: "source_line_caller_initialization"
+  it_behaves_like "a dependency selection replay", name: "source_line_boot_caller"
   it_behaves_like "a dependency selection replay", name: "let_scalar"
   it_behaves_like "a dependency selection replay", name: "compact_let_scalar"
   it_behaves_like "a dependency selection replay", name: "asynchronous_origin"
