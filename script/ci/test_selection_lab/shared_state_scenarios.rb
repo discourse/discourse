@@ -166,6 +166,33 @@ module TestSelectionLab
       true,
     ],
     [
+      "file_test_included_size_initialization",
+      "before(:context) { @fixture_value = SharedStateProducer.value }",
+      "@fixture_value",
+      true,
+    ],
+    [
+      "file_test_extended_size_initialization",
+      "before(:context) { @fixture_value = SharedStateProducer.value }",
+      "@fixture_value",
+      true,
+    ],
+    [
+      "file_custom_path_size_initialization",
+      "before(:context) { @fixture_value = SharedStateProducer.value }",
+      "@fixture_value",
+      true,
+    ],
+    ["file_metadata_subprocess", "", ":original", true],
+    ["file_metadata_subprocess_control", "", ":original", true],
+    ["file_metadata_document_subprocess", "", ":original", true],
+    [
+      "file_size_documentation_history",
+      "before(:context) { @fixture_value = SharedStateProducer.value }",
+      "@fixture_value",
+      true,
+    ],
+    [
       "file_stat_initialization",
       "before(:context) { @fixture_value = SharedStateProducer.value }",
       "@fixture_value",

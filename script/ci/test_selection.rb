@@ -43,7 +43,10 @@ module TestSelection
                 .each { |file| reasons[file] << "Shared test setup changed: #{path}" }
             end
         elsif application_changes.any? ||
-              (shared_inputs.is_a?(Array) && (@changes & shared_inputs).any?)
+              (
+                shared_inputs.is_a?(Array) &&
+                  ((@changes + job.fetch("mapping_changes")) & shared_inputs).any?
+              )
           select_dependencies(name: name, job: job, reasons: reasons)
         end
       end

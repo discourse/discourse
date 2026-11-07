@@ -66,10 +66,7 @@ module TestMapping
     unless records.flat_map { |record| record.fetch("files") }.uniq.sort == inventory.sort
       raise "Mapping execution does not cover the job inventory"
     end
-    sources =
-      (graph.paths + observed_sources.to_a + file_metadata.keys).uniq.select do |path|
-        File.file?(path)
-      end
+    sources = (graph.paths + observed_sources.to_a).uniq.select { |path| File.file?(path) }
     checks =
       sources
         .grep(/\.rb\z/)

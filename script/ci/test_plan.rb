@@ -96,10 +96,14 @@ module TestPlan
               relevant = (changes + drift).to_set
               metadata = mapping.fetch("file_metadata", {})
               raise "Invalid file metadata" unless metadata.is_a?(Hash)
+              known_sources = mapping.fetch("sources").to_set
               changed_metadata =
                 metadata.filter_map do |path, descriptions|
                   if relevant.include?(path) &&
-                       !RspecFileMetadata.matches?(path: path, descriptions: descriptions)
+                       (
+                         !known_sources.include?(path) ||
+                           !RspecFileMetadata.matches?(path: path, descriptions: descriptions)
+                       )
                     path
                   end
                 end

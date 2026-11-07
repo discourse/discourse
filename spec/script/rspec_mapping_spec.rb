@@ -115,6 +115,45 @@ RSpec.describe Crystalball do
     end
   end
 
+  it "preserves a single path conversion when observing file metadata" do
+    program = <<~RUBY
+      require "json"
+      require "tmpdir"
+      require "pathname"
+      require "set"
+      require #{Rails.root.join("script/ci/rspec_file_access").to_s.inspect}
+      Dir.mktmpdir do |directory|
+        path = File.join(directory, "input.txt")
+        File.write(path, "metadata")
+        argument = Class.new do
+          attr_reader :conversions
+          def initialize(path)
+            @path = path
+            @conversions = 0
+          end
+          def to_path
+            @conversions += 1
+            raise "Repeated path conversion" if @conversions > 1
+            @path
+          end
+        end.new(path)
+        RspecFileAccess.enable(root: directory)
+        value = File.size(argument)
+        puts JSON.generate(value: value, conversions: argument.conversions, metadata: RspecFileAccess.metadata.fetch("input.txt"))
+      end
+    RUBY
+
+    output, status =
+      Open3.capture2e(isolated_rspec_environment, "bundle", "exec", "ruby", "-e", program)
+
+    expect(status.success?).to eq(true), output
+    expect(JSON.parse(output)).to eq(
+      "value" => 8,
+      "conversions" => 1,
+      "metadata" => [{ "method" => "size", "value" => 8 }],
+    )
+  end
+
   it "retains declarations and code executed during boot when validating source changes" do
     Dir.mktmpdir do |directory|
       path = "#{directory}/source.rb"

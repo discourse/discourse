@@ -25,9 +25,9 @@ module TestSelectionLab
       Dir.chdir(root) do
         write_fixture
         fixture =
-          (Dir["{lib,vendor,spec,plugins}/**/*.rb"] + Dir["README.md"]).sort.to_h do |path|
-            [path, File.read(path)]
-          end
+          (Dir["{lib,vendor,spec,plugins,docs}/**/*.rb"] + Dir["README.md", "docs/**/*.md"])
+            .sort
+            .to_h { |path| [path, File.read(path)] }
         File.write("tmp/fixture.json", JSON.pretty_generate(fixture))
         base = commit("Original shared fixture")
         mapping_revision = base
@@ -58,8 +58,11 @@ module TestSelectionLab
              mapping_lag_setup_spec
              mapping_lag_isolated_setup_spec
              mapping_lag_context_setup_spec
+             file_size_documentation_history
            ].include?(@name)
-          if @name == "mapping_lag_context_setup_spec"
+          if @name == "file_size_documentation_history"
+            File.write("README.md", "hello world\n")
+          elsif @name == "mapping_lag_context_setup_spec"
             path = "spec/1_writer_spec.rb"
             File.write(
               path,
@@ -76,6 +79,9 @@ module TestSelectionLab
           base = commit("Main adds shared setup after mapping collection")
           File.write("tmp/mapping-history.diff", git("diff", "#{mapping_revision}...#{base}"))
           fixture["spec/1_writer_spec.rb"] = File.read("spec/1_writer_spec.rb")
+          if @name == "file_size_documentation_history"
+            fixture["README.md"] = File.read("README.md")
+          end
           File.write("tmp/fixture.json", JSON.pretty_generate(fixture))
           control_catalog = catalog(base)
           control_input =
@@ -114,9 +120,9 @@ module TestSelectionLab
             spec/4_unrelated_spec.rb
           ]
         end
-        expected = current.fetch("jobs").fetch("plain").fetch("inventory") if @name.end_with?(
-          "_setup_spec",
-        )
+        if @name.end_with?("_setup_spec") || metadata_subprocess_case?
+          expected = current.fetch("jobs").fetch("plain").fetch("inventory")
+        end
         fixture =
           {
             "context_scalar" => "a context fixture copied into a nested group",
@@ -290,8 +296,12 @@ module TestSelectionLab
             "A blank line in an unused method shifts a later __LINE__ constant while its earlier reader method stays in place. The cached reader then fails. This changes protected initialization, so the complete affected environment must run."
           elsif source_line_layout_case?
             "A blank line in an unused method shifts source positions observed by initialization through a Ruby location API. The earlier value method stays unchanged, but the cached integer changes and its reader fails. Source layout changes invalidate compatibility and protect the complete affected environment. The unrelated third spec is a conservative extra execution."
+          elsif metadata_subprocess_case?
+            "The changed script runs in an untraced subprocess. An existence predicate does not establish a dependency on its content. Its effects remain unknown, so all four files must run, including the failing script reader. The three original files pass."
           elsif @name == "file_metadata_predicate"
             "Only an unused method comment changes. File.file? still reports true, so the initialized integer and cache stay unchanged. The existing loader dependency selects the writer. The reader and independent third file pass in the reference, and unchanged metadata does not require their execution."
+          elsif @name == "file_size_documentation_history"
+            "Main changes a mapped document so initialization reads a different document. Its full control still passes. The PR edits only that newly consumed document and now the cached reader fails. Changed shared inputs in mapping history must protect the owner even for a documentation only PR."
           elsif @name == "file_size_documentation"
             "The producer initializes its value from the size of README.md. Editing that document changes a scalar consumed by the unchanged reader. Observed metadata takes precedence over the usual documentation exclusion, so the complete affected environment runs."
           elsif file_metadata_case?
@@ -381,12 +391,24 @@ module TestSelectionLab
       %w[
         file_size_initialization
         file_test_size_initialization
+        file_test_included_size_initialization
+        file_test_extended_size_initialization
+        file_custom_path_size_initialization
         file_stat_initialization
         file_stat_constructor_initialization
         kernel_file_size_initialization
         kernel_module_file_size_initialization
         file_metadata_predicate
         file_size_documentation
+        file_size_documentation_history
+      ].include?(@name)
+    end
+
+    def metadata_subprocess_case?
+      %w[
+        file_metadata_subprocess
+        file_metadata_subprocess_control
+        file_metadata_document_subprocess
       ].include?(@name)
     end
 
@@ -543,18 +565,40 @@ module TestSelectionLab
         expression = {
           "file_size_initialization" => "File.size(__FILE__)",
           "file_test_size_initialization" => "FileTest.size(__FILE__)",
+          "file_test_included_size_initialization" => "MetadataInput.size_for(__FILE__)",
+          "file_test_extended_size_initialization" => "MetadataInput.send(:size, __FILE__)",
+          "file_custom_path_size_initialization" => "File.size(MetadataInput.new(__FILE__))",
           "file_stat_initialization" => "File.stat(__FILE__).size",
           "file_stat_constructor_initialization" => "File::Stat.new(__FILE__).size",
           "kernel_file_size_initialization" => "test(?s, __FILE__)",
           "kernel_module_file_size_initialization" => "Kernel.test(?s, __FILE__)",
           "file_metadata_predicate" => "File.file?(__FILE__) ? 9 : 0",
           "file_size_documentation" => "File.size(File.expand_path(\"../README.md\", __dir__))",
+          "file_size_documentation_history" =>
+            'File.size(File.expand_path("../README.md", __dir__)) == 6 ? File.size(File.expand_path("../docs/a.md", __dir__)) : File.size(File.expand_path("../docs/b.md", __dir__))',
         }.fetch(@name)
         producer =
           "module SharedStateProducer\n def self.value\n  VALUE\n end\n def self.unrelated\n  :original # short\n  :unused\n end\n VALUE = #{expression}\nend\n"
+        prefix =
+          case @name
+          when "file_test_included_size_initialization"
+            "class MetadataInput\n include FileTest\n def self.size_for(path)\n  new.send(:size, path)\n end\nend\n"
+          when "file_test_extended_size_initialization"
+            "module MetadataInput\n extend FileTest\nend\n"
+          when "file_custom_path_size_initialization"
+            "class MetadataInput\n def initialize(path)\n  @path = path\n end\n def to_path\n  @path\n end\nend\n"
+          else
+            ""
+          end
+        producer = prefix + producer
         File.write("lib/producer.rb", producer)
         if @name == "file_size_documentation"
           File.write("README.md", "Metadata fixture document.\n")
+        elsif @name == "file_size_documentation_history"
+          File.write("README.md", "hello\n")
+          FileUtils.mkdir_p("docs")
+          File.write("docs/a.md", "original")
+          File.write("docs/b.md", "original")
         end
         original_value =
           case @name
@@ -562,6 +606,8 @@ module TestSelectionLab
             9
           when "file_size_documentation"
             File.size("README.md")
+          when "file_size_documentation_history"
+            8
           else
             producer.bytesize
           end
@@ -569,6 +615,28 @@ module TestSelectionLab
         File.write(path, File.read(path).sub("be_a(Symbol)", "be_a(Integer)"))
         path = "spec/2_reader_spec.rb"
         File.write(path, File.read(path).sub("[nil, :original]", "[nil, #{original_value}]"))
+      end
+      if metadata_subprocess_case?
+        script_path =
+          @name == "file_metadata_document_subprocess" ? "docs/answer.rb" : "lib/answer.rb"
+        FileUtils.mkdir_p(File.dirname(script_path))
+        File.write(script_path, "def answer\n  41\nend\nputs answer\n")
+        predicate =
+          if @name == "file_metadata_subprocess_control"
+            ""
+          else
+            "expect(File.file?(script)).to eq(true)\n    "
+          end
+        File.write("spec/4_script_spec.rb", <<~RUBY)
+          require "rbconfig"
+          RSpec.describe("Answer script") do
+            it("prints 41") do
+              script = File.expand_path("../#{script_path}", __dir__)
+              #{predicate}output = IO.popen([{ "RUBYOPT" => nil, "BUNDLER_SETUP" => nil }, RbConfig.ruby, "--disable-gems", script], &:read)
+              expect(output.strip).to eq("41")
+            end
+          end
+        RUBY
       end
       write_asynchronous_fixture if @name == "asynchronous_origin"
       if %w[unobserved_branch dynamic_receiver dynamic_reflection].include?(@name) ||
@@ -758,9 +826,14 @@ module TestSelectionLab
         File.write(path, File.read(path).sub(":original\n  :unused", ":original\n\n  :unused"))
       elsif @name == "file_size_documentation"
         File.open("README.md", "a") { |file| file.puts "Extra documentation." }
+      elsif @name == "file_size_documentation_history"
+        File.write("docs/b.md", "changed size")
       elsif file_metadata_case?
         path = "lib/producer.rb"
         File.write(path, File.read(path).sub("# short", "# a longer comment"))
+      elsif metadata_subprocess_case?
+        path = @name == "file_metadata_document_subprocess" ? "docs/answer.rb" : "lib/answer.rb"
+        File.write(path, File.read(path).sub("  41\n", "  42\n"))
       elsif @name.end_with?("_setup_spec")
         apply_test_setup_change
       elsif @name.end_with?("random_state")
