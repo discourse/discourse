@@ -11,7 +11,8 @@ module RspecFileAccess
   private_constant :FILE_PATH, :EXPAND_PATH, :REALPATH, :COERCE_PATH, :COERCE_IO, :MATCH_GLOB
 
   class PathArgument
-    def initialize(original)
+    def initialize(original, shared: false)
+      @shared = shared
       @original = original
       @inputs = []
     end
@@ -25,6 +26,7 @@ module RspecFileAccess
     def to_path
       path = COERCE_PATH.call(@original)
       @inputs << String.new(path)
+      RspecFileAccess.record(path) if @shared
       path
     end
 
@@ -82,7 +84,13 @@ module RspecFileAccess
     %i[read binread readlines foreach open new sysopen].each do |name|
       define_method(name) do |*arguments, **options, &block|
         if !%i[open new].include?(name) || self == IO || self <= File
-          RspecFileAccess.record(arguments.first)
+          path = arguments.first
+          if !%i[open new].include?(name) && !path.is_a?(String) && !path.instance_of?(Pathname) &&
+               (path.respond_to?(:to_path, true) || path.respond_to?(:to_str, true))
+            arguments[0] = PathArgument.new(path, shared: true)
+          else
+            RspecFileAccess.record(path)
+          end
         end
         super(*arguments, **options, &block)
       end

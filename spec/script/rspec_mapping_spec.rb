@@ -115,6 +115,68 @@ RSpec.describe Crystalball do
     end
   end
 
+  it "observes content paths at native conversion time" do
+    program = <<~RUBY
+      require "json"
+      require "tmpdir"
+      require "pathname"
+      require "set"
+      require #{Rails.root.join("script/ci/rspec_file_access").to_s.inspect}
+      Dir.mktmpdir do |directory|
+        cases = [File, IO].flat_map do |receiver|
+          %i[read binread readlines foreach].product(%i[to_path to_str]).map do |operation, protocol|
+            [receiver, operation, protocol]
+          end
+        end
+        cases += %i[to_path to_str].map { |protocol| [File, :sysopen, protocol] }
+        paths = cases.map do |receiver, operation, protocol|
+          name = [receiver.name, operation, protocol].join("_") + ".txt"
+          path = File.join(directory, name)
+          File.write(path, "content")
+          path
+        end
+        RspecFileAccess.enable(root: directory)
+        results = cases.zip(paths).map do |(receiver, operation, protocol), path|
+          conversions = 0
+          argument = Object.new
+          argument.define_singleton_method(protocol) do
+            conversions += 1
+            raise "Repeated path conversion" if conversions > 1
+            path
+          end
+          value =
+            case operation
+            when :foreach
+              receiver.foreach(argument).to_a.join
+            when :readlines
+              receiver.readlines(argument).join
+            when :sysopen
+              stream = IO.new(receiver.sysopen(argument))
+              begin
+                stream.read
+              ensure
+                stream.close
+              end
+            else
+              receiver.public_send(operation, argument)
+            end
+          { value: value, conversions: conversions }
+        end
+        puts JSON.generate({ results: results, shared: RspecFileAccess.shared_files.sort, expected_paths: paths.map { |path| File.basename(path) }.sort })
+      end
+    RUBY
+
+    output, status =
+      Open3.capture2e(isolated_rspec_environment, "bundle", "exec", "ruby", "-e", program)
+
+    expect(status.success?).to eq(true), output
+    result = JSON.parse(output)
+    expect(result.fetch("results")).to eq(
+      Array.new(18) { { "value" => "content", "conversions" => 1 } },
+    )
+    expect(result.fetch("shared")).to eq(result.fetch("expected_paths"))
+  end
+
   it "preserves a single path conversion when observing file metadata" do
     program = <<~RUBY
       require "json"
