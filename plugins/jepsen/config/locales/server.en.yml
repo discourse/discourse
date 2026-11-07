@@ -1,0 +1,3 @@
+en:
+  site_settings:
+    jepsen_enabled: "Enable Jepsen."
