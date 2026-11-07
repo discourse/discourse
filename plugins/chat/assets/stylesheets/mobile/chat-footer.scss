@@ -72,13 +72,13 @@ html.mobile-tab-bar-visible {
       gap: var(--space-2);
       margin-left: auto;
 
-      // Sits inside the tab bar's bubble, round like the lists beside it
+      // Sits inside the tab bar's bubble, shaped like the lists beside it
       .btn {
         width: 1.875rem;
         height: 1.875rem;
         padding: 0;
         border: 0;
-        border-radius: 999px;
+        border-radius: var(--mobile-tab-bar-inner-radius);
         background: transparent;
 
         .d-icon {

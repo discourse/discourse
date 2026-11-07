@@ -18,6 +18,14 @@ html.mobile-tab-bar-visible {
 .mobile-tab-bar {
   --mobile-tab-bar-control-size: 3.25rem;
 
+  // The theme's button radius, so containers match the buttons beside them;
+  // items inside keep their corners parallel, never quite square
+  --mobile-tab-bar-radius: var(--d-button-border-radius);
+  --mobile-tab-bar-inner-radius: max(
+    calc(var(--d-border-radius) / 2),
+    calc(var(--mobile-tab-bar-radius) - var(--space-1))
+  );
+
   // Kept close, as the controls have no border to set them off
   --mobile-tab-bar-shadow:
     0 1px 2px rgb(0, 0, 0, 0.12), 0 2px 6px rgb(0, 0, 0, 0.08);
@@ -33,11 +41,15 @@ html.mobile-tab-bar-visible {
   padding: 0 var(--space-3) env(safe-area-inset-bottom);
   box-sizing: border-box;
 
-  // Content scrolls underneath, so dim it behind the controls without hiding it
+  // Content scrolls underneath, so dim it behind the controls without hiding
+  // it; eased over the whole bar so there's no visible edge
   background: linear-gradient(
     to bottom,
-    transparent,
-    rgb(var(--secondary-rgb), 0.7) 1.85rem
+    rgb(var(--secondary-rgb), 0),
+    rgb(var(--secondary-rgb), 0.2) 25%,
+    rgb(var(--secondary-rgb), 0.5) 50%,
+    rgb(var(--secondary-rgb), 0.75) 75%,
+    rgb(var(--secondary-rgb), 0.9)
   );
   pointer-events: none;
 
@@ -72,7 +84,7 @@ html.mobile-tab-bar-visible {
     margin-bottom: var(--space-1);
     padding: var(--space-1);
     box-sizing: border-box;
-    border-radius: 999px;
+    border-radius: var(--mobile-tab-bar-radius);
     background: var(--header_background);
     box-shadow: var(--mobile-tab-bar-shadow);
     pointer-events: auto;
@@ -132,7 +144,7 @@ html.mobile-tab-bar-visible {
 
     > li > a {
       padding: var(--space-1) var(--space-3);
-      border-radius: 999px;
+      border-radius: var(--mobile-tab-bar-inner-radius);
       color: var(--header_primary-high);
       font-size: var(--font-down-1);
 
@@ -198,7 +210,7 @@ html.mobile-tab-bar-visible {
     height: 1.875rem;
     margin-left: var(--space-2);
     padding: 0;
-    border-radius: 999px;
+    border-radius: var(--mobile-tab-bar-inner-radius);
 
     .d-icon {
       margin: 0;
@@ -239,7 +251,7 @@ html.mobile-tab-bar-visible {
     &::after {
       content: "";
       width: var(--cap);
-      border-radius: 999px;
+      border-radius: var(--mobile-tab-bar-inner-radius);
     }
 
     &::after {
@@ -274,7 +286,10 @@ html.mobile-tab-bar-visible {
     }
   }
 
+  // Over the views, which slide away behind it
   &__controls {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex: none;
     align-items: center;
@@ -287,7 +302,7 @@ html.mobile-tab-bar-visible {
   &__create {
     flex: none;
     height: var(--mobile-tab-bar-control-size);
-    border-radius: 999px;
+    border-radius: var(--d-button-border-radius);
     box-shadow: var(--mobile-tab-bar-shadow);
     pointer-events: auto;
   }
@@ -341,6 +356,7 @@ html.mobile-tab-bar-visible {
 
   &__tabs {
     display: flex;
+    border-radius: var(--mobile-tab-bar-radius);
     flex: 1 1 auto;
     min-width: 0;
     padding: var(--space-1);
@@ -393,7 +409,7 @@ html.mobile-tab-bar-visible {
     bottom: 0;
     left: 0;
     width: var(--mobile-tab-bar-highlight-width, 0);
-    border-radius: 999px;
+    border-radius: var(--mobile-tab-bar-inner-radius);
     background: var(--d-selected);
     transform: translateX(var(--mobile-tab-bar-highlight-x, 0));
     pointer-events: none;
@@ -417,13 +433,17 @@ html.mobile-tab-bar-visible {
     gap: var(--space-half);
     min-width: 0;
     padding: var(--space-1) var(--space-2);
-    border-radius: 999px;
+    border-radius: var(--mobile-tab-bar-inner-radius);
     color: var(--header_primary-medium);
 
     // The highlight behind it is its pill; outweighs the transparent button
     // style it's built on
     &.--active.btn-transparent {
       color: var(--d-nav-color--active);
+
+      .d-icon {
+        color: inherit;
+      }
     }
   }
 
