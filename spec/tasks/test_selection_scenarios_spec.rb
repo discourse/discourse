@@ -160,6 +160,8 @@ RSpec.describe "Dependency selection scenarios" do
   it_behaves_like "a dependency selection replay", name: "custom_content_string_path"
   it_behaves_like "a dependency selection replay", name: "custom_content_lazy_path"
   it_behaves_like "a dependency selection replay", name: "custom_content_descriptor_path"
+  it_behaves_like "a dependency selection replay", name: "custom_content_method_missing"
+  it_behaves_like "a dependency selection replay", name: "custom_metadata_method_missing"
   it_behaves_like "a dependency selection replay", name: "file_size_failed_path"
   it_behaves_like "a dependency selection replay", name: "file_size_failed_path_outside"
   it_behaves_like "a dependency selection replay", name: "kernel_mtime_failed_path"

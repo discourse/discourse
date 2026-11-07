@@ -44,8 +44,7 @@ module RspecFileAccess
           completed = false
           inputs = skip_arguments.zero? ? arguments : arguments.drop(skip_arguments)
           inputs.each_with_index do |path, index|
-            if !path.is_a?(String) && !path.instance_of?(Pathname) && !path.is_a?(IO) &&
-                 (path.respond_to?(:to_path, true) || path.respond_to?(:to_str, true))
+            if !(String === path) && !(IO === path)
               inputs[index] = PathArgument.new(path)
               arguments[skip_arguments + index] = inputs[index]
             end
@@ -85,8 +84,7 @@ module RspecFileAccess
       define_method(name) do |*arguments, **options, &block|
         if !%i[open new].include?(name) || self == IO || self <= File
           path = arguments.first
-          if !%i[open new].include?(name) && !path.is_a?(String) && !path.instance_of?(Pathname) &&
-               (path.respond_to?(:to_path, true) || path.respond_to?(:to_str, true))
+          if !%i[open new].include?(name) && !(String === path)
             arguments[0] = PathArgument.new(path, shared: true)
           else
             RspecFileAccess.record(path)

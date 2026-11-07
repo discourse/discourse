@@ -189,6 +189,8 @@ module TestSelectionLab
     ["custom_content_string_path", "", "SharedStateProducer.value", true],
     ["custom_content_lazy_path", "", "SharedStateProducer.value", true],
     ["custom_content_descriptor_path", "", "SharedStateProducer.value", true],
+    ["custom_content_method_missing", "", "SharedStateProducer.value", true],
+    ["custom_metadata_method_missing", "", "SharedStateProducer.value", true],
     ["file_size_failed_path", "", "SharedStateProducer.value", true],
     ["file_size_failed_path_outside", "", "SharedStateProducer.value", true],
     ["kernel_mtime_failed_path", "", "SharedStateProducer.value", true],

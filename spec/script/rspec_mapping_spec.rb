@@ -177,6 +177,76 @@ RSpec.describe Crystalball do
     expect(result.fetch("shared")).to eq(result.fetch("expected_paths"))
   end
 
+  it "observes native pathname coercion without predicate queries" do
+    program = <<~RUBY
+      require "json"
+      require "tmpdir"
+      require "pathname"
+      require "set"
+      require #{Rails.root.join("script/ci/rspec_file_access").to_s.inspect}
+      Dir.mktmpdir do |directory|
+        cases = %i[basic hidden].product(%i[read size])
+        paths = cases.map do |kind, operation|
+          path = File.join(directory, [kind, operation].join("_") + ".txt")
+          File.write(path, "metadata")
+          path
+        end
+        RspecFileAccess.enable(root: directory)
+        results = cases.zip(paths).map do |(kind, operation), path|
+          argument_type = Class.new(kind == :basic ? BasicObject : Object) do
+            attr_reader :conversions
+            def initialize(path)
+              @path = path
+              @conversions = 0
+            end
+            def to_io
+              nil
+            end
+          end
+          if kind == :hidden
+            argument_type.define_method(:method_missing) do |name, *arguments|
+              if name == :to_path
+                @conversions += 1
+                @path
+              else
+                super(name, *arguments)
+              end
+            end
+          else
+            argument_type.define_method(:to_path) do
+              @conversions += 1
+              @path
+            end
+          end
+          argument = argument_type.new(path)
+          value = File.public_send(operation, argument)
+          { value: value, conversions: argument.conversions }
+        end
+        puts JSON.generate({ results: results, shared: RspecFileAccess.shared_files.sort, metadata: RspecFileAccess.metadata, failure: RspecFileAccess.failure })
+      end
+    RUBY
+
+    output, status =
+      Open3.capture2e(isolated_rspec_environment, "bundle", "exec", "ruby", "-e", program)
+
+    expect(status.success?).to eq(true), output
+    result = JSON.parse(output)
+    expect(result.fetch("results")).to eq(
+      [
+        { "value" => "metadata", "conversions" => 1 },
+        { "value" => 8, "conversions" => 1 },
+        { "value" => "metadata", "conversions" => 1 },
+        { "value" => 8, "conversions" => 1 },
+      ],
+    )
+    expect(result.fetch("shared")).to eq(%w[basic_read.txt hidden_read.txt])
+    expect(result.fetch("metadata")).to eq(
+      "basic_size.txt" => [{ "method" => "size", "value" => 8 }],
+      "hidden_size.txt" => [{ "method" => "size", "value" => 8 }],
+    )
+    expect(result.fetch("failure")).to eq(nil)
+  end
+
   it "preserves a single path conversion when observing file metadata" do
     program = <<~RUBY
       require "json"

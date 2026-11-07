@@ -28,7 +28,7 @@ module TestSelectionLab
           (Dir["{lib,vendor,spec,plugins,docs}/**/*.rb"] + Dir["README.md", "docs/**/*.md"])
             .sort
             .to_h { |path| [path, File.read(path)] }
-        if failed_metadata_path_case? || content_path_case?
+        if failed_metadata_path_case? || custom_path_case?
           Dir["docs/*.txt"].each { |path| fixture[path] = File.read(path) }
         end
         File.write("tmp/fixture.json", JSON.pretty_generate(fixture))
@@ -320,7 +320,11 @@ module TestSelectionLab
             "A blank line in an unused method shifts a later __LINE__ constant while its earlier reader method stays in place. The cached reader then fails. This changes protected initialization, so the complete affected environment must run."
           elsif source_line_layout_case?
             "A blank line in an unused method shifts source positions observed by initialization through a Ruby location API. The earlier value method stays unchanged, but the cached integer changes and its reader fails. Source layout changes invalidate compatibility and protect the complete affected environment. The unrelated third spec is a conservative extra execution."
-          elsif content_path_case?
+          elsif @name == "custom_content_method_missing"
+            "Ruby resolves the pathname through method_missing even though respond_to? reports no pathname protocol. The producer reads the changed document and stores its content. Observing native conversion protects the complete affected environment, including the failing cached reader."
+          elsif @name == "custom_metadata_method_missing"
+            "Ruby resolves the pathname through method_missing and queries the document size. The size changes from eight to six, changing the cached value and failing its reader. The observed metadata protects the complete affected environment."
+          elsif custom_path_case?
             "The producer reads a document through a custom pathname object, immediately, through a lazy enumerator or through a descriptor. Changing only that observed input changes the cached value and fails the unchanged reader. The shared input protects the complete affected environment."
           elsif failed_metadata_path_case?
             "The baseline stat fails on a missing document, then Ruby requests a different pathname for its error message. Adding only the missing document changes the producer and fails the cached reader. Every converted input remains protected, so the complete affected environment runs even when the display pathname is outside the repository or formatting raises another exception."
@@ -415,8 +419,8 @@ module TestSelectionLab
 
     private
 
-    def content_path_case?
-      @name.start_with?("custom_content_")
+    def custom_path_case?
+      @name.start_with?("custom_content_", "custom_metadata_")
     end
 
     def failed_metadata_path_case?
@@ -916,12 +920,20 @@ module TestSelectionLab
           end
         RUBY
       end
-      if content_path_case?
+      if custom_path_case?
         FileUtils.mkdir_p("docs")
         File.write("docs/stat-target.txt", "original")
         protocol = @name == "custom_content_string_path" ? "to_str" : "to_path"
+        declaration =
+          if @name.end_with?("_method_missing")
+            "def to_io\n      nil\n    end\n    def method_missing(_name, *)"
+          else
+            "def #{protocol}"
+          end
         operation =
           case @name
+          when "custom_metadata_method_missing"
+            "File.size(Input.new) == 8 ? :original : :broken"
           when "custom_content_lazy_path"
             "File.foreach(Input.new).to_a.join.to_sym"
           when "custom_content_descriptor_path"
@@ -932,7 +944,7 @@ module TestSelectionLab
         File.write("lib/producer.rb", <<~RUBY)
           module SharedStateProducer
             class Input
-              def #{protocol}
+              #{declaration}
                 File.expand_path("../docs/stat-target.txt", __dir__)
               end
             end
@@ -946,7 +958,7 @@ module TestSelectionLab
     end
 
     def apply_change
-      if content_path_case?
+      if custom_path_case?
         File.write("docs/stat-target.txt", "broken")
       elsif failed_metadata_path_case?
         File.write("docs/stat-target.txt", "new stat input")
