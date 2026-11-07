@@ -126,4 +126,43 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(post.reload.raw).not_to include('recurrence="every_week"')
     expect(post.last_editor_id).to eq(author.id)
   end
+
+  it "preserves the original last-Monday rule when listing successor occurrences" do
+    freeze_time Time.utc(2026, 8, 1, 12)
+
+    starts_at = Time.utc(2026, 8, 31, 12)
+    ends_at = starts_at + 1.hour
+    title = "Monthly last-Monday rollover"
+
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+          [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_month"]
+          Monthly meeting notes.
+          [/event]
+        RAW
+
+    event_date = post.reload.event.event_dates.pending.first
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    successor = Topic.where(title:).where.not(id: post.topic_id).sole
+    successor_event = successor.first_post.reload.event
+
+    # September's last Monday is its fourth Monday, but the original
+    # August anchor was the fifth Monday (meaning the last Monday).
+    expect(successor_event.original_starts_at).to eq_time(Time.utc(2026, 9, 28, 12))
+    expect(successor_event.recurrence_anchor_starts_at).to eq_time(starts_at)
+
+    occurrences =
+      successor_event.recurring_occurrences(
+        after: successor_event.original_starts_at + 1.second,
+        limit: 3,
+      )
+
+    expect(occurrences.map { |occurrence| occurrence[:starts_at] }).to eq(
+      [Time.utc(2026, 10, 26, 12), Time.utc(2026, 11, 30, 12), Time.utc(2026, 12, 28, 12)],
+    )
+  end
 end
