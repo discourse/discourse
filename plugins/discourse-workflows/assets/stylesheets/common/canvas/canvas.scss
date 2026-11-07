@@ -383,6 +383,28 @@
     }
   }
 
+  &__deprecated-badge {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--tertiary);
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    padding: 0;
+    border: 2px solid var(--secondary);
+
+    .d-icon {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
   &__issues-title {
     padding: var(--space-1) var(--space-2) var(--space-half);
     font-size: var(--font-down-2);

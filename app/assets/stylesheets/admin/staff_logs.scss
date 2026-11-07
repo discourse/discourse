@@ -136,6 +136,17 @@
   }
 }
 
+.staff-user__filter {
+  min-width: 0;
+  max-width: 20ch;
+  text-align: start;
+
+  .d-button-label {
+    @include ellipsis;
+    display: block;
+  }
+}
+
 .staff-action-logs-controls {
   display: flex;
   align-items: baseline;
@@ -184,10 +195,20 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+  max-width: 100%;
 
   .btn {
     gap: var(--space-2);
-    text-align: left;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: start;
+    white-space: normal;
+  }
+
+  .staff-action-logs-filters__staff-user .d-button-label {
+    @include ellipsis;
+    max-width: 24ch;
+    min-width: 0;
   }
 }
 

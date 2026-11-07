@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  admin_js:
+    blog:
+      admin:
+        insert: แทรก
+        preview_archive: คลัง
+        mobile: โทรศัพท์
+        themes: ธีม
+        theme_name: ชื่อธีม
+        edit: แก้ไข
+        preview: แสดงตัวอย่าง
+        export: ส่งออก
+        active: ใช้งานอยู่
+  js:
+    blog:
+      panel:
+        badge:
+          draft: แบบร่าง
+        preview: แสดงตัวอย่าง
+        change:
+          title: ชื่อเรื่อง
+      review:
+        copy: คัดลอก
+        open: เปิด
+        status:
+          active: ใช้งานอยู่
+          inactive: ไม่ใช้งาน
+        closed_on: "ปิดเมื่อ %{date}"
+        revoke: เอาออก
+      editor_table:
+        edit: แก้ไข
+        status: สถานะ
+        replies: ตอบ
+      drafts: แบบร่าง
+      preview: แสดงตัวอย่าง
+      unpublish: ไม่เผยแพร่

@@ -1,0 +1,66 @@
+@use "lib/viewport";
+
+.blog-dashboard {
+  max-width: 1000px;
+  width: 100%;
+  margin-inline: auto;
+  padding-block: 2em;
+
+  // An icon-only trigger is shorter than a labelled button, so size the
+  // header actions to their tallest button and stretch the rest to match.
+  .d-page-header__actions {
+    align-self: center;
+    align-items: stretch;
+  }
+
+  .d-page-action-wrapped-button {
+    display: flex;
+  }
+
+  .d-filter-controls {
+    margin-block: var(--space-4);
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+    margin-bottom: var(--space-1);
+
+    // The pill sits beside the title, so the table's own width cap and spacing would leave a gap.
+    .d-table__overview-link .d-table__overview-name {
+      max-width: none;
+      margin-bottom: 0;
+    }
+  }
+
+  &__status-column {
+    min-width: 6em;
+
+    @include viewport.from(md) {
+      text-align: center;
+
+      .blog-dashboard__status {
+        margin-inline: auto;
+      }
+    }
+  }
+
+  &__status,
+  &__pending {
+    white-space: nowrap;
+  }
+
+  &__excerpt,
+  &__published,
+  &__replies {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__excerpt {
+    @include line-clamp(2);
+    margin-block: 0.25em 0;
+  }
+}

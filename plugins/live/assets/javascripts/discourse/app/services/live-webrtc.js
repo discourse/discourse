@@ -11,11 +11,17 @@ import { confirmMeshPrivacy } from "../../components/modal/live-mesh-privacy-war
 import { reportMicAcquisitionFailure } from "../../components/modal/live-mic-permission.gjs";
 import AudioMonitor from "../../lib/live/audio-monitor.js";
 import { RING_SECONDS } from "../../lib/live/call-constants.js";
+import {
+  collectLocalInfo,
+  collectPeers,
+  probeIceServers,
+} from "../../lib/live/connection-diagnostics.js";
 import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
 import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
 import { consumePendingInviteRef } from "../../lib/live/invite-ref.js";
 import LivekitCoordinator from "../../lib/live/livekit-coordinator.js";
 import LocalAudioPipeline from "../../lib/live/local-audio-pipeline.js";
+import LocalRecordingCoordinator from "../../lib/live/local-recording-coordinator.js";
 import LocalVideoManager from "../../lib/live/local-video-manager.js";
 import {
   applyOutputDevice,
@@ -72,6 +78,7 @@ export default class LiveWebrtcService extends Service {
   @service messageBus;
   @service modal;
   @service siteSettings;
+  @service("live-reactions") liveReactions;
   @service("live-rooms") liveRooms;
   @service toasts;
 
@@ -136,6 +143,7 @@ export default class LiveWebrtcService extends Service {
   #livekit;
   #roster;
   #transcription;
+  #localRecording;
 
   constructor() {
     super(...arguments);
@@ -219,7 +227,10 @@ export default class LiveWebrtcService extends Service {
     this.#roomMessageQueue = new RoomMessageQueue();
 
     this.#remoteStreamRegistry = new RemoteStreamRegistry({
-      onChange: () => this.remoteStreamsRevision++,
+      onChange: () => {
+        this.remoteStreamsRevision++;
+        this.#localRecording.sync();
+      },
       onMicTrack: (roomId, userId, stream) => {
         this.#audioMonitor.ensure(roomId, userId, stream, false);
         this.#transcription.attachRemote(roomId, userId, stream);
@@ -249,6 +260,28 @@ export default class LiveWebrtcService extends Service {
       showError: (messageKey) =>
         this.toasts.error({
           duration: 5000,
+          data: { message: i18n(messageKey) },
+        }),
+    });
+
+    this.#localRecording = new LocalRecordingCoordinator({
+      getCurrentUserId: () => this.currentUser?.id,
+      getParticipantSessionId: (roomId) => this.#roomSessions.get(roomId),
+      getRoom: (roomId) => this.liveRooms?.roomById(roomId),
+      isActiveRoom: (roomId) => this.isActiveRoom(roomId),
+      getAudioTracks: (roomId) => this.#localRecordingAudioTracks(roomId),
+      setParticipantRecording: (roomId, recording) =>
+        this.liveRooms?.setParticipantVideoState(roomId, this.currentUser?.id, {
+          is_recording_locally: recording,
+        }),
+      showNotice: (messageKey) =>
+        this.toasts.success({
+          duration: 5000,
+          data: { message: i18n(messageKey) },
+        }),
+      showError: (messageKey) =>
+        this.toasts.error({
+          duration: 8000,
           data: { message: i18n(messageKey) },
         }),
     });
@@ -443,6 +476,7 @@ export default class LiveWebrtcService extends Service {
     this.#localVideo.destroy();
     this.#localAudio.stop();
     this.#transcription.destroy();
+    this.#localRecording.destroy();
 
     this.#roomHandlerCallbacks.forEach((callback, roomId) => {
       this.liveRooms?.unregisterRoomHandler(roomId, callback);
@@ -612,6 +646,12 @@ export default class LiveWebrtcService extends Service {
     return this.#localVideo.screenAudioTrack;
   }
 
+  // --- Local recording ---
+
+  get localRecordingBusy() {
+    return this.#localRecording.busy;
+  }
+
   setNoiseSuppressionMode(mode) {
     return this.#localAudio.setNoiseSuppressionMode(mode);
   }
@@ -653,6 +693,18 @@ export default class LiveWebrtcService extends Service {
     return this.#transcription.openDraft();
   }
 
+  isRecordingLocally(roomId) {
+    return this.#localRecording.isRecording(roomId);
+  }
+
+  startLocalRecording(roomId, displayStream = null) {
+    return this.#localRecording.start(roomId, displayStream);
+  }
+
+  stopLocalRecording() {
+    return this.#localRecording.stop();
+  }
+
   captionsFor(roomId) {
     return this.#transcription.captionsFor(roomId);
   }
@@ -690,6 +742,37 @@ export default class LiveWebrtcService extends Service {
 
   isLivekitRoom(roomId) {
     return this.#roomTransports.get(roomId) === "livekit";
+  }
+
+  // Peer-level diagnostics only exist for mesh rooms; in SFU rooms the single
+  // server connection is owned by the SFU client library.
+  canDiagnoseConnection(roomId) {
+    return (
+      this.connectionStateFor(roomId) === "connected" &&
+      this.#isMeshRoom(roomId)
+    );
+  }
+
+  async connectionDiagnostics(roomId) {
+    const room = this.liveRooms.roomById(roomId);
+    return {
+      room,
+      transport: this.#roomTransports.get(roomId) ?? "mesh",
+      iceTransportPolicy: this.iceTransportPolicy,
+      local: collectLocalInfo(this.localStream),
+      peers: await collectPeers({
+        room,
+        currentUserId: this.currentUser?.id,
+        peerManager: this.#peerManager,
+        shouldMaintainPeer: (userId) =>
+          this.#meshSignals.shouldMaintainPeerConnection(roomId, userId),
+      }),
+      collectedAt: Date.now(),
+    };
+  }
+
+  probeIceServers() {
+    return probeIceServers(this.iceServers);
   }
 
   async join(room) {
@@ -747,6 +830,12 @@ export default class LiveWebrtcService extends Service {
     liveLog.info(`[live] joining room ${room.id}`);
 
     this.#registerRoomHandler(room.id);
+    // Recordings already running when we join are shown by the indicator;
+    // only ones started afterwards are announced.
+    this.#localRecording.trackRecorders(
+      room.id,
+      this.liveRooms.roomById(room.id)?.active_participants
+    );
 
     let response;
 
@@ -926,6 +1015,7 @@ export default class LiveWebrtcService extends Service {
     if (this.localVideoKind && (wasConnected || wasConnecting)) {
       this.#localVideo.stop({ broadcast: false }).catch(() => {});
     }
+    this.#localRecording.stopIfRecording(room.id);
 
     if (wasConnecting) {
       this.#joinRevision++;
@@ -1241,6 +1331,7 @@ export default class LiveWebrtcService extends Service {
   async toggleScreenShare() {
     const screenWasActive = this.localVideoKind === "screen";
     const result = await this.#localVideo.toggleScreenShare();
+    this.#localRecording.sync();
 
     if (screenWasActive && !this.localVideoKind && this.watchingRoomId) {
       this.#restorePreferredCamera(this.watchingRoomId);
@@ -1674,6 +1765,9 @@ export default class LiveWebrtcService extends Service {
     this.#signaling.clearHttpQueue(roomId);
     this.#roomMessageQueue.clear(roomId);
     this.#transcription.stopIfTranscribing(roomId);
+    this.#localRecording.stopIfRecording(roomId);
+    this.#localRecording.forgetRoom(roomId);
+    this.liveReactions.clearRoom(roomId);
   }
 
   #handleRoomMessage(roomId, payload) {
@@ -1732,17 +1826,61 @@ export default class LiveWebrtcService extends Service {
         await this.#meshSignals.handle(roomId, payload);
       }
     } else if (payload.type === "participants") {
+      this.#announceLocalRecorders(roomId, payload.participants);
       await this.#roster.handleParticipants(roomId, payload);
     } else if (payload.type === "role_change") {
       await this.#roster.handleRoleChange(roomId, payload);
     } else if (payload.type === "hand_raise") {
       this.#roster.handleHandRaise(roomId, payload);
+    } else if (payload.type === "reaction") {
+      this.liveReactions.receive(roomId, payload);
+      // Recorded from the broadcast, our own included, so the transcript holds
+      // exactly what everyone in the call saw.
+      this.#transcription.recordReaction(
+        roomId,
+        payload.user_id,
+        payload.username,
+        payload.emoji
+      );
     } else if (payload.type === "kicked") {
       this.#handleKicked(roomId);
     } else if (payload.type === "room_updated") {
       this.#handleRoomUpdated(roomId);
     } else if (payload.type === "recording") {
       this.#handleRecordingChanged(payload);
+    }
+  }
+
+  // Everything the call's participants hear: the local mic as sent (after
+  // noise suppression, mute and push-to-talk), every remote mic, and any
+  // shared screen audio, ours included.
+  #localRecordingAudioTracks(roomId) {
+    return [
+      ...(this.localStream?.getAudioTracks() || []),
+      this.localScreenAudioTrack,
+      ...this.#remoteStreamRegistry
+        .streamsFor(roomId)
+        .flatMap((stream) => stream.getAudioTracks()),
+      ...this.#remoteStreamRegistry
+        .screenAudioStreamsFor(roomId)
+        .flatMap((stream) => stream.getAudioTracks()),
+    ].filter(Boolean);
+  }
+
+  // Server recordings announce themselves with a toast; local ones get the
+  // same treatment so nobody is recorded without being told.
+  #announceLocalRecorders(roomId, participants) {
+    for (const username of this.#localRecording.trackRecorders(
+      roomId,
+      participants
+    )) {
+      this.toasts.default({
+        duration: 8000,
+        data: {
+          icon: "record-vinyl",
+          message: i18n("live.local_recording.started_toast", { username }),
+        },
+      });
     }
   }
 
@@ -1893,6 +2031,7 @@ export default class LiveWebrtcService extends Service {
     }
 
     this.#transcription.syncLocalTap();
+    this.#localRecording.sync();
   }
 
   #applyLocalTrackState(stream) {

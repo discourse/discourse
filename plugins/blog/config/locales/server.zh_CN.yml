@@ -1,0 +1,117 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    blog_contributor_groups: 允许群组撰写并提交自己的博客草稿。同时，授予这些群组访问私有草稿分类的权限。此操作不会授予论坛工作人员任何权限。
+    blog_editor_groups: 允许群组编辑和提交他们能看到的任何博客草稿。同时授予对私有草稿类别的访问权限。发布内容需要发布者角色。
+    blog_publisher_groups: 拥有审批、发布、撤回和安排博客修订权限的群组可以查看这些内容。发布者可以审批自己的作品。此外，还需授予对私有草稿类别的访问权限，以及在公共博客类别中创建主题的权限。管理员始终保留访问权限。
+    blog_enabled: "一个建立在社区基础上的博客。与您的编辑团队一起撰写和审核文章，以自定义设计发布在 /blog 目录下，并允许读者在链接主题中讨论每篇文章。启用后，即可配置博客和草稿分类。"
+    blog_url: 使用独立的 HTTPS 源提供博客服务，源地址不带尾部斜杠或路径，而不是使用本站的 /blog 路径。博客主机名必须与讨论区主机名不同。在代理和数据库连接中，将此主机名配置为本站的别名。
+    blog_category: 博客上仅显示一个公开的分类，该分类下的主题均已明确列出。子分类不包含在内。主题不会仅仅因为属于此分类就被发布。
+    blog_drafts_category: 为编辑草稿设立单独的私有类别。仅限编辑人员访问。发布时，仅将已批准的文章复制到 {{setting:blog_category}}中的单独讨论区。编辑主题和回复保持私密。禁用安全上传后，上传链接将不再私密。
+    blog_title: 博客名称显示在导航栏、页面标题和订阅源中。
+    blog_description: 首页、信息流和搜索引擎的简短描述。
+    blog_about: 博客“关于”页面的 Markdown 内容。
+    blog_posts_per_page: 每个首页或存档页面上显示的文章数量。
+  blog:
+    home: 首页
+    continue_reading: 继续阅读
+    posted_by: 发帖人
+    permalink: 永久链接
+    comments: 评论
+    twitter_updates: Twitter 更新
+    on_social: 在社交媒体上
+    community_activity: 社区活动
+    online_content: 在线内容
+    recent_questions: 近期问题
+    recent_answers: 最新回答
+    syndication: 同步
+    time_ago: "%{time} 前"
+    discussion_load_error: "页面内嵌讨论无法加载。请刷新页面重试，或使用上方社区中的“打开”按钮。"
+    lightbox:
+      close: 关闭图像
+      dialog: 放大后的文章图片
+      open: 查看图片
+      open_with_description: "查看图片： %{description}"
+      original: 打开原文
+    skip_content: 跳至内容
+    navigation: 博客导航
+    archive: 归档
+    about: 关于
+    community: 社区
+    rss: RSS
+    preview: 预览
+    preview_notice: 只有授权编辑才能看到此预览。预览更改前请保存发布设置。
+    back_to_editor: 回到正题
+    editor: 在社区中写作
+    footer: 用 Discourse 撰写。欢迎讨论。
+    from_the_blog: 来自社区的笔记
+    tagged: 归档于 %{tag}
+    search: 搜索
+    search_placeholder: 搜索文章标题和摘要
+    featured: 功能
+    reading_time:
+      other: "%{count} 预计阅读时间"
+    replies:
+      other: "%{count} 条回复"
+    empty_title: 暂无内容
+    empty_body: 新文章发布后将在此处显示。
+    pagination: 文章页面
+    newer: 最新文章
+    older: 旧文章
+    all_articles: 所有文章
+    updated: 已更新 %{date}
+    view_topic: 在社区中查看
+    discussion: 对话
+    open_discussion: 在社区中打开
+    discussion_closed: 此对话已关闭，不再接受新的回复。您仍然可以阅读下面的讨论内容。
+    discussion_description: 有任何想法或疑问？请使用您的社区账号参与下方讨论。
+    join_community: 加入社区
+    not_found_title: 此页面不可用
+    not_found_body: 它可能已被移动位置、退回到草稿状态，或者尚未发布。
+    errors:
+      private_site: 博客需要一个已禁用安全上传功能的公共网站。草稿文本保持私密，但如果不启用安全上传功能，上传的文件将无法进行访问控制。
+      anonymous_uploads: "该博客要求匿名上传下载。发布或分享评论前，请禁用 prevent_anons_from_downloading_files 选项。"
+      category: 在博客网站设置中选择一个公开的博客类别。
+      drafts_category: 选择一个单独的私有草稿类别，该类别仅对已配置的编辑组或工作人员开放，与核心共享草稿类别不同。
+      published_page: 请先取消页面发布此主题，然后再将其发布到博客上。
+      path_taken: 已被预留或已属于其他文章
+      future_date: 必须在今天或之前发布。使用日程安排控件可以设置文章的发布时间。
+      color: "使用六个十六进制数字，不带 # 前缀。"
+    latest_stories: 最新话题
+    explore_archive: 浏览归档
+    customizations_disabled: 此页面已禁用自定义 CSS 和 JavaScript。
+    themes:
+      sample_article: 示例文章（未选择公开文章）
+      sample_body: 发布一篇文章，即可在此参考资料中查看其真实内容。
+      preview_diagnostic: "%{template}，第 %{line}行： %{message}"
+      template_invalid: "请提供一个有效大小不超过 65,536 字节的 Liquid 模板。"
+      template_parse_error: "无效的 Liquid 模板： %{error}"
+      current: 当前外观
+      invalid: "提供一个名称(最多100个字符)，六位数六位颜色，以及最多65 536个字节的 CSS/JavaScript。"
+      limit: 您最多可以保存 30 个博客主题。请先删除一个不使用的主题。
+      stale: 主题已更改。请重新加载并查看最新版本后再继续。
+      active_delete: 请先启用另一个主题，然后再删除此主题。
+      repository_invalid: 使用不带凭据、查询参数或片段的公共 HTTPS Git 存储库 URL。
+      archive_invalid: "ZIP 文件无效，包含的文件过多，或者包含过大的主题文件。"
+      manifest_invalid: 主题必须包含有效的 blog-theme.json 清单（版本 1 或 2）。
+      file_too_large: "%{file} 超出了允许的文件大小。"
+      preview: "主题预览： %{name}"
+      preview_notice: 此预览仅可通过此临时预览链接查看。实时博客内容未发生任何变化。
+      exit_preview: 退出预览
+    review:
+      page_title: 审阅草稿
+      javascript_required: 请启用 JavaScript 以阅读此共享草稿并留下反馈。
+      unavailable: 此审核链接已过期、已被撤销或不再可用。
+      limit: 此草稿已有 20 个有效的审核链接。请先撤销一个，再创建新的。
+      feedback_limit: 该评审已达到反馈上限。请联系编辑获取新的评审链接。
+    editorial:
+      access_lost: 由于发布者权限或文章资格变更，预定发布已停止。请检查权限和私有来源，然后重新安排发布。
+      private_source: 编辑稿件必须保留在私有草稿栏中。请发布已获批准的修订版本。
+      stale: 此版本已不再是当前提交或已批准的版本。请重新加载并再次查看。
+      approval_required: 在发布或安排发布之前，请先批准提交的修改版本。
+      schedule_time: 选择至少提前一分钟且在未来一年内的发布时间。

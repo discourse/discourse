@@ -23,7 +23,6 @@ el:
       ai:
         regenerate_placeholder: "π.χ. Ενημέρωσε το ερώτημα ώστε να περιορίζεται στα 50 αποτελέσματα"
         generate: "Δημιουργία"
-        optional: "προαιρετικό"
       help:
         label: "Βοήθεια"
       schema:
@@ -57,6 +56,7 @@ el:
       result_count:
         one: "%{count} αποτέλεσμα."
         other: "%{count} αποτελέσματα."
+      name: "Όνομα"
       query_groups: "Ομάδες"
       query_tags: "Ετικέτες"
       query_description: "Περιγραφή"

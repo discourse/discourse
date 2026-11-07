@@ -1,0 +1,305 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            blog_submit: Prześlij wersję bloga
+            blog_approve: Zatwierdź wersję bloga
+            blog_schedule: Zaplanuj publikację bloga
+            blog_review_create: Utwórz link do szkicu recenzji
+            blog_review_revoke: Odwołaj link do szkicu recenzji
+            blog_theme_save: Zapisz szkic motywu bloga
+            blog_theme_activate: Aktywuj motyw bloga
+            blog_theme_delete: Usuń motyw bloga
+      site_settings:
+        categories:
+          blog: Blog
+    blog:
+      admin:
+        title: Blog
+        go_to_editor: Przejdź do edytora
+        open_blog: Otwórz blog
+        safe_mode: Otwórz bez kodu niestandardowego
+        identity: Tożsamość bloga
+        blog_title: Nazwa bloga
+        tagline: Slogan
+        accent: Kolor akcentowy
+        paper: Kolor papieru
+        ink: Kolor tuszu
+        about: O stronie
+        authoring_design: Projekt
+        authoring_sections: Sekcje edytora motywów
+        template_builtin_state: Wbudowany szablon. Dostosuj go, aby wprowadzić zmiany.
+        template_custom_state: Szablon niestandardowy. Przywróć ustawienia domyślne, aby odrzucić zmiany.
+        overridden: Niestandardowy
+        customize_template: Dostosuj ten szablon
+        restore_default: Przywróć domyślne
+        restore_confirm: Odrzucić to nadpisanie szablonu i użyć wbudowanego szablonu? Zapisz motyw, aby zachować tę zmianę.
+        variable_reference: Zmienne i przykłady
+        find_variable: Znajdź zmienną
+        no_variables: Żadna zmienna nie spełnia kryteriów wyszukiwania.
+        insert: Wstaw
+        sample_article: Przykładowy opublikowany artykuł
+        no_published_articles: Brak opublikowanych artykułów
+        array_value: Lista
+        trusted_html: Zaufany HTML
+        escaped_text: Wartość uwolniona
+        layout_content: Renderowana strona i dyskusja. Użyj raz w głównym elemencie układu.
+        insert_hint: W przykładach wykorzystano wyłącznie treści publiczne. Polecenie „Insert” dodaje fragment kodu Liquid do tego szablonu. Zwykłe wartości są poddawane eskapowaniu; zaufane fragmenty kodu HTML są renderowane jako znaczniki.
+        retry_reference: Załaduj ponownie odniesienie do tworzenia
+        working_preview_hint: Podgląd niezapisanych zmian bez ich zapisywania i aktywowania. Zmiana strony lub przykładowego artykułu aktualizuje podgląd.
+        preview_article_unavailable: Podgląd artykułu wymaga opublikowanego artykułu.
+        preview_page: Strona do podglądu
+        preview_home: Strona główna
+        preview_archive: Archiwum
+        preview_article: Artykuł
+        preview_size: Rozmiar podglądu
+        desktop: Komputer
+        mobile: Mobilnie
+        open_working_preview: Otwórz podgląd w nowej karcie
+        template_layout: Układ witryny
+        template_index: Strona główna i archiwum
+        template_article: Artykuł
+        template_about: O stronie
+        template_not_found: Nie znaleziono strony
+        code_warning: "Dodawaj tylko kod, któremu ufasz: działa on z uprawnieniami autora bloga i jest publicznie dostępny do pobrania. Nigdy nie działa w uwierzytelnionych podglądach w społeczności."
+        css: Niestandardowy CSS
+        css_description: Zwykły CSS, do 65 536 bajtów. Ładuje się po arkuszu stylów bazowych.
+        js: Niestandardowy JavaScript
+        js_description: Zwykły JavaScript, do 65 536 bajtów. Tagi skryptów nie są parsowane — załaduj inny skrypt, dodając element skryptu (document.createElement("script")).
+        save: Zapisz tożsamość
+        saved: Tożsamość bloga została zapisana. Odśwież bloga, aby zobaczyć zmiany.
+        identity_tab: Tożsamość
+        identity_description: Nazwa, wstęp i treść „O mnie” wspólne dla wszystkich motywów blogów.
+        themes_index_description: Wybierz motyw do edycji. Szkice zmian pozostaną prywatne, dopóki ich nie aktywujesz.
+        thumbnail:
+          journal: Dziennik
+          headline: Bądź ciekawy.
+          excerpt: Notatki na temat tworzenia rzeczy, podtrzymywania ciekawości i odnajdywania sensu w codzienności.
+          palette: Paleta motywów
+        back_to_themes: Powrót do motywów
+        editor_description: Edytuj ten motyw, zapisz szkic, a następnie wyświetl jego podgląd lub aktywuj.
+        preview_short: Podgląd szkicu
+        new_theme_short: Nowy motyw
+        git_source: Źródło Git
+        no_themes: Brak zapisanych motywów
+        no_themes_description: Utwórz motyw na podstawie swojego obecnego projektu lub zaimportuj go z Git.
+        themes: Motywy
+        themes_description: Zachowaj wiele projektów i iteruj bez wprowadzania zmian w aktywnym blogu. Czytelnicy widzą ostatnią aktywowaną migawkę, a nie Twoje zmiany robocze ani aktualizacje Git.
+        theme_name: Nazwa motywu
+        edit: Edytuj
+        activate: Aktywuj
+        preview: Podgląd
+        theme_actions: Działania związane z motywem
+        local_edits_badge: Lokalne edycje
+        new_theme_name: Nowy motyw bloga
+        new_theme: Nowy motyw z aktywnego projektu
+        import: Import
+        import_description: "Importuj motyw z repozytorium Git lub pliku ZIP. Importy tworzą nowe wersje robocze bez zmiany aktywnego motywu."
+        import_source: Importuj z
+        import_file: Plik ZIP
+        theme_file: Plik motywu
+        choose_theme_file: Wybierz plik ZIP
+        import_file_description: "Wybierz wyeksportowany motyw bloga w formacie ZIP (do 2 MB). Eksport motywu forum dyskusyjnego nie jest obsługiwany."
+        export: Eksport
+        export_description: "Pobierz ostatnio zapisaną wersję w pliku ZIP. Zapisz zmiany przed eksportem."
+        import_git: Repozytorium Git
+        git_description: "Zaimportuj publiczne repozytorium HTTPS zawierające blog-theme.json (wersja, nazwa, kolor akcentu, kolor papieru, kolor tuszu), opcjonalne blog.css i blog.js, a w przypadku wersji 2, opcjonalne nadpisania templates/*.liquid w katalogu głównym. Pliki są proste, bez etapu kompilacji. Importy tworzą tylko wersje robocze."
+        repository: Publiczny adres URL repozytorium Git
+        branch: Gałąź (domyślnie pozostaw puste)
+        active_theme: "Aktywny projekt: %{name} · rewizja %{revision}"
+        active: Aktywni
+        revision: Szkic wersji
+        save_draft: Zapisz szkic
+        draft_saved: Szkic motywu został zapisany. Blog na żywo pozostaje niezmieniony.
+        save_before_activate: Zapisz zmiany przed aktywacją szkicu.
+        activate_theme: Aktywuj zapisany szkic
+        activate_confirm: "Aktywuj %{name}? To zastąpi projekt, który widzą czytelnicy. Twoje pozostałe zapisane motywy pozostaną dostępne."
+        activated: Motyw aktywowany. Blog na żywo korzysta teraz z tej zapisanej wersji.
+        pull_git: Pobierz najnowszą wersję z Git
+        pull_confirm: Wyciągnąć ostatnią zatwierdzenie? To zastąpi zapisany szkic, łącznie z lokalnymi edycjami. Aktywny projekt nie ulegnie zmianie.
+        local_edits: W tym szkicu wprowadzono lokalne zmiany od czasu ostatniego importu do Gita.
+        delete_theme: Usuń motyw
+        delete_confirm: "Usunąć %{name} i zapisany w nim szkic? Tego nie da się cofnąć."
+  js:
+    blog:
+      homepage_option: Blog
+      panel:
+        aria_label: Publikacja bloga
+        badge:
+          draft: Szkic
+          live: Na żywo
+          changes_pending: Zmiany oczekujące
+          scheduled: Zaplanowany
+          unpublished: Niepublikowane
+        headline:
+          draft: Jeszcze nie na blogu
+          live: Na żywo na blogu
+          changes_pending: Artykuł na żywo jest nieaktualny
+          scheduled: "Publikuje %{date}"
+          unpublished: Usunięto z bloga
+        will_publish_to: "Zostanie opublikowane w %{url}"
+        last_updated: "Ostatnia aktualizacja %{age}"
+        published_as: "Opublikowano dnia %{date}"
+        view_live: Zobacz na żywo ↗
+        edits_since:
+          one: "%{count} edycja od tego czasu"
+          few: "%{count} edycje od tego czasu"
+          many: "%{count} edycji od tego czasu"
+          other: "%{count} edycji od tego czasu"
+        scheduled_revision: "Zatwierdzono przez %{user}"
+        scheduled_notice: Zmiany, które teraz wprowadzisz, nie zostaną uwzględnione, chyba że zmienisz harmonogram
+        last_published: "Ostatnio opublikowano %{date}"
+        unpublished_notice: Dyskusja publiczna pozostaje otwarta
+        preview: Podgląd
+        preview_scheduled: Podgląd zaplanowanej wersji
+        share_for_review: Utwórz link do podglądu
+        share_for_review_hint: Zbierz prywatne opinie na temat projektu
+        publish_changes: Opublikuj zmiany
+        publish_now: Opublikuj teraz
+        more_options: Więcej opcji publikacji
+        schedule: Harmonogram…
+        schedule_hint: Wybierz datę i godzinę
+        schedule_title: Harmonogram publikacji
+        schedule_notice: Zaplanuj artykuł w jego obecnej formie. Późniejsze zmiany nie zostaną uwzględnione, chyba że zmienisz harmonogram.
+        schedule_time: Opublikuj dnia
+        schedule_time_hint: Używa lokalnej strefy czasowej. Wybierz godzinę co najmniej o minutę późniejszą.
+        schedule_submit: Harmonogram
+        submit: Prześlij do zatwierdzenia
+        submit_hint: Poproś najpierw innego wydawcę o podpisanie umowy
+        needs_approval: Wymaga zatwierdzenia
+        unpublish_hint: Usuń z bloga; dyskusja pozostaje publiczna
+        cancel_schedule: Anuluj harmonogram
+        published: Opublikowano — artykuł jest już dostępny na blogu.
+        published_closed_links:
+          one: Opublikowano — artykuł jest już dostępny na blogu. Link do podglądu został zamknięty.
+          few: Opublikowano — artykuł jest już dostępny na blogu. %{count} linki do podglądu zostały zamknięte.
+          many: Opublikowano — artykuł jest już dostępny na blogu. %{count} linków do podglądu zostało zamkniętych.
+          other: Opublikowano — artykuł jest już dostępny na blogu. %{count} linków do podglądu zostało zamkniętych.
+        publish_confirm: "Opublikować „%{title}” na blogu teraz? Skopiowany zostanie tylko artykuł; ten temat i odpowiedzi na niego pozostaną prywatne."
+        publish_correction_confirm: "Zastąpić artykuł w szkicu? Artykuł zachowa swój adres URL i publiczną dyskusję."
+        changes_title: Co zmieniło się na blogu
+        changed: "Zmieniono: %{fields}"
+        change:
+          title: tytuł
+          body: treść
+          path: ścieżka
+          excerpt: fragment
+          featured: wyróżniona flaga
+          published_at: data publikacji
+        show_diff: Pokaż różnicę
+        hide_diff: Ukryj różnice
+        diff_error: Zmiana jest zbyt duża, aby wyświetlić ją jako różnicę. Zamiast tego użyj podglądu.
+        settings: Ustawienia artykułu
+        settings_hint: Ścieżka, fragment, data, wyróżnione
+        feedback:
+          none: Brak jeszcze prywatnych opinii
+          show: Pokaż opinie
+          hide: Ukryj opinię
+          show_older:
+            one: Pokaż %{count} wcześniejszą odpowiedź
+            few: Pokaż %{count} wcześniejsze odpowiedzi
+            many: Pokaż %{count} wcześniejszych odpowiedzi
+            other: Pokaż %{count} wcześniejszych odpowiedzi
+          hide_older: Ukryj wcześniejsze odpowiedzi
+          no_new: Brak nowych opinii od czasu ostatniej publikacji.
+          manage_links: Linki do recenzji
+        discussion:
+          live: Na żywo na blogu
+          not_live: Nie na blogu
+          intro: To jest dyskusja publiczna, odpowiedzi pojawią się na blogu.
+          intro_not_live: Ten temat nie jest poruszany na blogu.
+          no_working_copy: Edytuj prywatnie, aby przygotować zmiany w prywatnej kopii roboczej, nie poruszając tego tematu.
+          edit_privately: Edytuj prywatnie
+      review:
+        anonymous: Anonimowy recenzent
+        page_title: Szkic recenzji
+        expires: "Wygasa %{date}"
+        manage: Udostępnij w celu sprawdzenia i uzyskania opinii
+        discard_metadata: Czy odrzucić niezapisane ustawienia publikacji i udostępnić zapisany artykuł?
+        intro: Każda osoba mająca link może przeczytać szkic i zostawić prywatną opinię.
+        label: Etykieta
+        label_placeholder: 'Na przykład: spotkanie redakcyjne'
+        create: Utwórz link
+        untitled: Link do recenzji bez tytułu
+        copy: Kopiuj
+        copied: Link do recenzji został skopiowany
+        copy_failed: "Kopiowanie zostało zablokowane przez Twoją przeglądarkę. Zamiast tego skopiuj ten link: %{url}"
+        open: Otwórz
+        links: Linki do recenzji
+        status:
+          active: Aktywny
+          expired: Wygasły
+          revoked: Unieważniono
+          published: Zamknięte po opublikowaniu
+          inactive: Nieaktywny
+        expired_on: "Wygasło %{date}"
+        revoked_on: "Unieważniono %{date}"
+        closed_on: "Zamknięcie %{date}"
+        revoke: Odbierz
+        revoke_confirm: Czy chcesz usunąć ten link do recenzji? Nowe opinie i komentarze zostaną natychmiast usunięte. Istniejące opinie pozostaną prywatne i dostępne tutaj.
+        feedback_count: "Przeczytaj opinię (%{count})"
+        no_links: Brak linków do recenzji.
+        unverified: Prywatne dla redaktorów. Imiona i nazwiska oraz adresy e-mail nie są weryfikowane.
+        no_feedback: Brak jeszcze opinii
+        unavailable: Ten link do recenzji wygasł, został anulowany lub nie jest już dostępny.
+        published_title: Ten szkic został opublikowany
+        published_body: Link do podglądu został zamknięty po opublikowaniu artykułu.
+        read_article: Przeczytaj artykuł
+        reader_badge: "Szkic %{version} do przejrzenia"
+        leave_feedback: Zostaw opinię
+        feedback_privacy: Twoja opinia jest dostępna wyłącznie dla redaktorów artykułu. Nie jest wymagane żadne konto. Imię i nazwisko oraz adres e-mail są opcjonalne. Dodaj adres e-mail, jeśli chcesz, aby redaktor się z Tobą skontaktował.
+        message: Informacje zwrotne
+        name: Twoje imię i nazwisko
+        email: Twój adres e-mail
+        send_feedback: Wyślij prywatną opinię
+        thanks: Dziękujemy. Twoja opinia została zapisana w trybie prywatnym i udostępniona redaktorom.
+      article_summary:
+        from_blog: "Z bloga %{blog}"
+        read: Przeczytaj artykuł
+        expand: Rozwiń artykuł tutaj
+        collapse: Zwiń artykuł
+      editor_search_hint: Szukaj według tytułu lub ścieżki artykułu
+      editor_no_results: Brak pasujących artykułów
+      editor_no_results_hint: Spróbuj innego wyszukiwania lub filtra statusu, albo rozpocznij nowy szkic.
+      editor_title: Edytor bloga
+      editor_description: Szkice pozostają prywatne do momentu ich opublikowania. Edytuj artykuł, aby go opublikować, zaplanować lub poprawić.
+      editor_table:
+        article: Artykuł
+        edit: Edytuj
+        status: Status
+        published: Opublikowany
+        replies: Odpowiedzi
+        edits_pending: Oczekujące edycje
+        edits_need_approval: Edycje wymagają zatwierdzenia
+        more_actions: Więcej działań
+        preview_changes: Podgląd zmian
+        view_on_blog: Zobacz na blogu
+      new_draft: Nowy szkic
+      settings: Konfiguruj ustawienia bloga
+      all: Wszystkie artykuły
+      drafts: Szkice
+      published: Opublikowany
+      visit_blog: Odwiedź blog
+      public_discussion: Dyskusja publiczna
+      not_published: Nie na blogu
+      preview: Podgląd
+      load_more: Załaduj więcej
+      unpublish_confirm: Usunąć ten artykuł z bloga? Temat i odpowiedzi na niego pozostaną publiczne w społeczności. Istniejących kopii w kanałach i wyszukiwarkach nie da się przywrócić.
+      path: Ścieżka artykułu
+      path_hint: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Stare ścieżki automatycznie przekierowują po zmianie.
+      excerpt: Fragment
+      excerpt_hint: Krótkie wprowadzenie do kart artykułów i podglądów wyszukiwania. Pozostaw puste, aby wygenerować fragment artykułu.
+      date: Data publikacji
+      date_hint: Pozostaw puste pole, aby użyć daty pierwszej publikacji. W przypadku importowanych artykułów wybierz datę z przeszłości. Daty są podawane w formacie UTC.
+      featured: Funkcja na stronie głównej
+      save: Zapisz ustawienia
+      unpublish: Cofnij publikację
+      appearance_link: Wygląd

@@ -115,7 +115,7 @@ RSpec.describe ReviewableLiveUser do
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when agree_and_keep handles the live user reviewable" do

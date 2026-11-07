@@ -19,7 +19,7 @@ module DiscourseWorkflows
     def process_stale_trigger_nodes(stale_trigger_nodes:)
       stale_trigger_nodes.each do |published_trigger|
         items =
-          DiscourseWorkflows::Nodes::StaleTopic::V1.trigger_data_for(
+          NodeData.node_type(published_trigger.trigger_node).trigger_data_for(
             DiscourseWorkflows::TriggerNodeContext.from_published_trigger(published_trigger),
           )
         next if items.empty?

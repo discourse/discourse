@@ -499,14 +499,16 @@ module DiscourseAi
               break
             end
 
+            transport_timeout = cancel_manager ? cancel_manager.bound_timeout(TIMEOUT) : TIMEOUT
+
             begin
               FinalDestination::HTTP.start(
                 model_uri.host,
                 model_uri.port,
                 use_ssl: use_ssl?,
-                read_timeout: TIMEOUT,
-                open_timeout: TIMEOUT,
-                write_timeout: TIMEOUT,
+                read_timeout: transport_timeout,
+                open_timeout: transport_timeout,
+                write_timeout: transport_timeout,
               ) do |http|
                 if cancel_manager
                   cancel_manager_callback =

@@ -27,7 +27,6 @@ ja:
       description_placeholder: "説明をここに入力"
       ai:
         generate: "生成"
-        optional: "オプション"
       import:
         unparseable_json: "解析不能な JSON ファイルです。"
         wrong_json: "不正な JSON ファイル。JSON ファイルには 'query' オブジェクトと、その中に少なくとも 'sql' プロパティが含まれている必要があります。"
@@ -57,7 +56,7 @@ ja:
         other: "%{count} 件の結果。"
       max_result_count:
         other: "上位 %{count} 件を表示中。"
-      query_name: "クエリ"
+      name: "名前"
       query_groups: "グループ"
       query_tags: "タグ"
       link: "リンク"

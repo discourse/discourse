@@ -140,7 +140,8 @@ async function performRollup(modules, opts) {
     sourcemap: "hidden",
     importAttributesKey: "with",
     entryFileNames: `${opts.filenamePrefix ?? ""}[name].[hash:6]${opts.filenameSuffix ?? ""}.js`,
-    chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:6]${opts.filenameSuffix ?? ""}.js`,
+    // One chunk per test file exceeds what a 6-character hash allows in larger plugins.
+    chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:8]${opts.filenameSuffix ?? ""}.js`,
   });
 
   if (opts.pluginName) {
@@ -219,6 +220,12 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            modules: Object.entries(chunk.modules)
+              .map(([id, m]) => ({
+                id: id.startsWith(basePath) ? id.slice(basePath.length) : id,
+                renderedLength: m.renderedLength,
+              }))
+              .sort((a, b) => b.renderedLength - a.renderedLength),
             routeBundles: chunk.isEntry
               ? routeBundlesForEntry(chunk.name)
               : undefined,

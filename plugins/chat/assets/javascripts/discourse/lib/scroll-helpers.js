@@ -13,6 +13,8 @@ const pendingAdjustments = new WeakMap();
  *
  * Our chat scroller uses flex-direction: column-reverse for bottom-origin scroll.
  * Appending content can shift the viewport unless we compensate for height changes.
+ * The correction runs before paint, unlike scrolling to a message afterwards,
+ * which shows the end of the appended content for a frame.
  *
  * @param {HTMLElement | null} scroller - The scrollable container
  * @param {Function} callback - Function that modifies the list content
@@ -46,13 +48,26 @@ export function maintainScrollPosition(scroller, callback) {
       return;
     }
 
-    const heightDiff = scroller.scrollHeight - captured.scrollHeight;
-    if (!heightDiff || heightDiff < 1) {
-      return;
+    // Outside a run loop the list can render after this queue; the frame
+    // callback still runs before paint.
+    if (!compensateHeightChange(scroller, captured)) {
+      requestAnimationFrame(() => {
+        if (scroller.isConnected) {
+          compensateHeightChange(scroller, captured);
+        }
+      });
     }
-
-    scroller.scrollTop = captured.scrollTop - heightDiff;
   });
+}
+
+function compensateHeightChange(scroller, captured) {
+  const heightDiff = scroller.scrollHeight - captured.scrollHeight;
+  if (!heightDiff || heightDiff < 1) {
+    return false;
+  }
+
+  scroller.scrollTop = captured.scrollTop - heightDiff;
+  return true;
 }
 
 export async function scrollListToBottom(list) {

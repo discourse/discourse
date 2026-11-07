@@ -62,4 +62,46 @@ module("Integration | ui-kit | DAvatarFlair", function (hooks) {
       );
     assert.dom("svg").doesNotExist("does not have an svg icon");
   });
+
+  test("forwards attributes while allowing the default tooltip to be overridden", async function (assert) {
+    await render(
+      <template>
+        <DAvatarFlair
+          aria-label="Custom description"
+          class="custom-flair"
+          role="img"
+          title="Custom tooltip"
+          @flairName="stable-name"
+          @flairUrl="robot"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".avatar-flair")
+      .hasClass(
+        "avatar-flair-stable-name",
+        "the flair name remains the CSS hook"
+      );
+    assert
+      .dom(".avatar-flair")
+      .hasClass("custom-flair", "caller classes are merged");
+    assert
+      .dom(".avatar-flair")
+      .hasAttribute(
+        "title",
+        "Custom tooltip",
+        "the caller can override the default tooltip"
+      );
+    assert
+      .dom(".avatar-flair")
+      .hasAttribute("role", "img", "semantic attributes are forwarded");
+    assert
+      .dom(".avatar-flair")
+      .hasAttribute(
+        "aria-label",
+        "Custom description",
+        "accessible labels are forwarded"
+      );
+  });
 });

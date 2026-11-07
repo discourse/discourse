@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  blog:
+    home: Trang chủ
+    posted_by: Được đăng bởi
+    permalink: Liên kết cố định
+    time_ago: "%{time} trước"
+    archive: Đã lưu trữ
+    about: Giới thiệu
+    community: Cộng đồng
+    preview: Xem trước
+    search: Tìm
+    replies:
+      other: "%{count} trả lời"

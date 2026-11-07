@@ -351,6 +351,8 @@ ar:
         topic_id: "معرِّف الموضوع"
     discourse_post_event:
       new_event: "حدث جديد"
+      onebox:
+        all_day: "طوال اليوم"
       notifications:
         before_event_reminder: "هناك حدث على وشك البدء"
         after_event_reminder: "هناك حدث انتهى"
@@ -471,7 +473,6 @@ ar:
               many: "%{count} مستخدمًا تمت دعوتهم"
               other: "%{count} مستخدم تمت دعوتهم"
         event:
-          expired: "انتهى"
           closed: "مغلق"
           full: "كامل"
           status:
@@ -484,6 +485,8 @@ ar:
             private:
               title: "خاص"
               description: "لا يمكن إلا للمستخدمين المدعوين الانضمام إلى حدثٍ خاص."
+      recording_modal:
+        save: "حفظ"
       composer:
         name_placeholder: "اسم الحدث"
         end_date_placeholder: "تاريخ الانتهاء"

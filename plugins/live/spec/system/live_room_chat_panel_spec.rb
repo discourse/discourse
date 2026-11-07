@@ -33,7 +33,7 @@ describe "Live room chat panel" do
     visit("/live/r/#{room.slug}?chat=true")
     click_button(I18n.t("js.live.room.join"))
     # The panel slides in; typing into it mid-animation can miss the composer.
-    wait_for_animation(find(".live-room-page__sidebar"))
+    wait_for_animation(find(".chat-side-panel"))
 
     # The real chat thread component, not a re-implementation.
     expect(page).to have_css(".live-chat .chat-thread")
@@ -68,7 +68,7 @@ describe "Live room chat panel" do
     visit("/live/r/#{stage_room.slug}")
     click_button(I18n.t("js.live.room.join"))
 
-    expect(page).to have_css(".live-room-page__sidebar .live-chat")
+    expect(page).to have_css(".chat-side-panel .live-chat")
     expect(page).to have_current_path("/live/r/#{stage_room.slug}")
   end
 
@@ -77,23 +77,25 @@ describe "Live room chat panel" do
     click_button(I18n.t("js.live.room.join"))
 
     expect(page).to have_css(".live-room-page__leave")
-    expect(page).to have_no_css(".live-room-page__sidebar")
+    expect(page).to have_no_css(".chat-side-panel")
   end
 
   it "opens the session thread from the first message sent through the starter composer" do
     visit("/live/r/#{room.slug}?chat=true")
     click_button(I18n.t("js.live.room.join"))
     # The panel slides in; typing into it mid-animation can miss the composer.
-    wait_for_animation(find(".live-room-page__sidebar"))
+    wait_for_animation(find(".chat-side-panel"))
 
     # No thread yet: the panel offers the starter composer, not the thread UI.
-    expect(page).to have_css(".live-chat__input")
+    expect(page).to have_css(".chat-composer__wrapper.--live .chat-composer__input")
     expect(page).to have_no_css(".live-chat .chat-thread")
 
-    find(".live-chat__input").fill_in(with: "kicking things off")
+    find(".chat-composer__wrapper.--live .chat-composer__input").fill_in(with: "kicking things off")
     # See the note above: the first send races thread creation, its message
     # fetch, and the native composer's mount/focus against the settle check.
-    using_wait_time(20) { find(".live-chat__input").send_keys(:enter) }
+    using_wait_time(20) do
+      find(".chat-composer__wrapper.--live .chat-composer__input").send_keys(:enter)
+    end
 
     # The first message creates the thread and the panel swaps to the native UI.
     expect(page).to have_css(".live-chat .chat-thread")

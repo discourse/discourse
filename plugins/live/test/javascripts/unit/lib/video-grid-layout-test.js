@@ -1,86 +1,102 @@
 import { module, test } from "qunit";
 import {
-  bestRowHeight,
+  computeRoomGrid,
   computeWidgetGrid,
   DEFAULT_TILE_ASPECT,
 } from "discourse/plugins/live/discourse/lib/live/video-grid-layout";
 
-const LANDSCAPE = DEFAULT_TILE_ASPECT; // 16 / 9
-const PORTRAIT = 9 / 16;
-
-module("Live | Unit | Lib | video-grid-layout", function () {
-  test("a single tile fills the constraining dimension", function (assert) {
-    // Wide container: a landscape tile is limited by height.
-    assert.strictEqual(
-      bestRowHeight(4000, 900, [LANDSCAPE], 0),
-      900,
-      "height-limited single landscape tile spans the full height"
-    );
-
-    // Narrow container: limited by width.
-    assert.strictEqual(
-      bestRowHeight(1000, 4000, [LANDSCAPE], 0),
-      562,
-      "width-limited single landscape tile spans the full width"
-    );
-  });
-
-  test("a portrait tile fills the height of a landscape container", function (assert) {
-    const height = bestRowHeight(1920, 1080, [PORTRAIT], 0);
-    assert.strictEqual(
-      height,
-      1080,
-      "portrait tile uses the full height instead of being letterboxed"
-    );
-    assert.true(
-      height * PORTRAIT <= 1920,
-      "and stays within the container width"
-    );
-  });
-
-  test("more tiles shrink the row height without overflowing", function (assert) {
-    const width = 1920;
-    const height = 1080;
-    const counts = [1, 2, 4, 9];
-
-    const heights = counts.map((count) =>
-      bestRowHeight(width, height, Array(count).fill(LANDSCAPE), 8)
-    );
-
-    assert.deepEqual(
-      [...heights].sort((a, b) => b - a),
-      heights,
-      "row height is monotonically non-increasing as tiles are added"
-    );
-
-    heights.forEach((rowHeight, index) => {
-      assert.true(rowHeight > 0, `${counts[index]} tiles get a usable height`);
-      assert.true(
-        rowHeight <= height,
-        `${counts[index]} tiles fit within the container height`
-      );
+module("Live | Unit | Lib | video-grid-layout | room grid", function () {
+  test("a lone tile fills the box up to a landscape aspect", function (assert) {
+    const grid = computeRoomGrid({
+      width: 1423,
+      height: 719,
+      count: 1,
+      gap: 8,
     });
-  });
-
-  test("mixed portrait and landscape tiles share a row at a common height", function (assert) {
-    const rowHeight = bestRowHeight(1920, 1080, [LANDSCAPE, PORTRAIT], 8);
-
-    // One row beats stacking (which would cap height near 536), so the shared
-    // height lands well above that.
-    assert.true(rowHeight > 600, "lays the two tiles out side by side");
-
-    const totalWidth = rowHeight * LANDSCAPE + 8 + rowHeight * PORTRAIT;
-    assert.true(
-      totalWidth <= 1920,
-      "the mixed-aspect row fits the container width"
+    assert.strictEqual(grid.tileHeight, 719, "spans the full height");
+    assert.strictEqual(
+      grid.tileWidth,
+      Math.floor(719 * DEFAULT_TILE_ASPECT),
+      "and stops widening at 16:9"
     );
   });
 
-  test("returns zero when nothing can fit", function (assert) {
+  test("two tiles crop toward square instead of leaving empty bands", function (assert) {
+    const grid = computeRoomGrid({
+      width: 1423,
+      height: 719,
+      count: 2,
+      gap: 8,
+    });
+    assert.strictEqual(grid.cols, 2, "sit side by side");
+    assert.strictEqual(grid.tileWidth, 707, "fill their half of the width");
+    assert.strictEqual(grid.tileHeight, 707, "at a square aspect");
+  });
+
+  test("prefers a full row over a slightly larger ragged layout", function (assert) {
+    // 2+1 gives a marginally larger tile here; three across is within
+    // tolerance and leaves no orphan.
+    const grid = computeRoomGrid({
+      width: 1423,
+      height: 719,
+      count: 3,
+      gap: 8,
+    });
+    assert.strictEqual(grid.cols, 3, "three across");
+    assert.strictEqual(grid.rows, 1, "in one row");
+  });
+
+  test("tiles always fit the box and lines break at the solved column count", function (assert) {
+    const gap = 8;
+    const boxes = [
+      { width: 1423, height: 719 },
+      { width: 1151, height: 719 },
+      { width: 799, height: 719 },
+      { width: 360, height: 640 },
+      { width: 1903, height: 899 },
+    ];
+
+    for (const { width, height } of boxes) {
+      for (let count = 1; count <= 16; count++) {
+        const grid = computeRoomGrid({ width, height, count, gap });
+        const label = `${count} in ${width}×${height}`;
+        const { cols, rows, tileWidth, tileHeight, lineWidth } = grid;
+
+        assert.true(
+          cols * tileWidth + (cols - 1) * gap <= width,
+          `${label}: fits the width`
+        );
+        assert.true(
+          rows * tileHeight + (rows - 1) * gap <= height,
+          `${label}: fits the height`
+        );
+        assert.true(
+          cols * tileWidth + (cols - 1) * gap <= lineWidth,
+          `${label}: a full line fits the line width`
+        );
+        assert.true(
+          (cols + 1) * tileWidth + cols * gap > lineWidth,
+          `${label}: an extra tile never fits the line width`
+        );
+      }
+    }
+  });
+
+  test("returns null for degenerate input", function (assert) {
     assert.strictEqual(
-      bestRowHeight(10, 10, Array(50).fill(LANDSCAPE), 8),
-      0,
-      "degenerate space yields no usable height"
+      computeRoomGrid({ width: 1000, height: 600, count: 0, gap: 8 }),
+      null,
+      "no tiles"
+    );
+    assert.strictEqual(
+      computeRoomGrid({ width: 0, height: 600, count: 3, gap: 8 }),
+      null,
+      "no measured space"
+    );
+    assert.strictEqual(
+      computeRoomGrid({ width: 10, height: 10, count: 50, gap: 8 }),
+      null,
+      "no room for any cell"
     );
   });
 });

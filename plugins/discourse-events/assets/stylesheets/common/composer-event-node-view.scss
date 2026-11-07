@@ -128,6 +128,7 @@
   .composer-event__dates,
   .composer-event__location,
   .composer-event__url,
+  .composer-event__recording,
   .composer-event__attendees,
   .composer-event__reminder,
   .composer-event__livestream {
@@ -377,7 +378,8 @@ input.composer-event__time-input[type="time"] {
 }
 
 .composer-event__location-input,
-.composer-event__url-input {
+.composer-event__url-input,
+.composer-event__recording-input {
   width: 100%;
   cursor: text;
 }

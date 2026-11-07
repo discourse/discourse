@@ -72,6 +72,10 @@ export default class AgentEditor extends Component {
     return data;
   }
 
+  get cameFromBots() {
+    return this.router.currentRoute?.queryParams?.source === "bots";
+  }
+
   get chatPluginEnabled() {
     return this.siteSettings.chat_enabled;
   }
@@ -239,7 +243,8 @@ export default class AgentEditor extends Component {
         addUniqueValueToArray(this.args.agents.content, agentToSave);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-agents.edit",
-          agentToSave
+          agentToSave,
+          { queryParams: { source: this.cameFromBots ? "bots" : null } }
         );
       }
       this.toasts.success({
@@ -700,10 +705,18 @@ export default class AgentEditor extends Component {
   }
 
   <template>
-    <BackButton
-      @label="discourse_ai.ai_agent.back"
-      @route="adminPlugins.show.discourse-ai-agents"
-    />
+    {{#if this.cameFromBots}}
+      <BackButton
+        @label="admin.users.bots.back"
+        @model="bots"
+        @route="adminUsersList.show"
+      />
+    {{else}}
+      <BackButton
+        @label="discourse_ai.ai_agent.back"
+        @route="adminPlugins.show.discourse-ai-agents"
+      />
+    {{/if}}
     <div
       class="ai-agent-editor"
       {{didInsert this.updateAllGroups @model.id}}

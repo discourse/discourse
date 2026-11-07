@@ -73,6 +73,8 @@ et:
         filters:
           all: "Kõik"
           reset: "Nulli"
+        sentiment:
+          enabled: "Sisse lülitatud"
         search:
           name: "Otsi"
         image_caption:
@@ -114,6 +116,8 @@ et:
             other: "%{count} postitust"
       spam:
         short_title: "Spämm"
+        no_llm_selected: "Pole"
+        no_decision_model_selected: "Pole"
         enable: "Luba"
         test_modal:
           spam: "Spämm"

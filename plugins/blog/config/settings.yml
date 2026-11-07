@@ -1,0 +1,50 @@
+blog:
+  blog_enabled:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,all_members"
+      allow_enabled_for:
+        - "everyone"
+      requires_plugin_enabled: false
+      permanent_warning: false
+  blog_url:
+    default: ""
+    regex: "^$|^https://[a-z0-9.-]+(:[0-9]+)?$"
+  blog_category:
+    type: category
+    default: ""
+    client: true
+  blog_drafts_category:
+    type: category
+    default: ""
+    client: true
+  blog_title:
+    default: "The blog"
+  blog_description:
+    default: "Ideas, stories, and conversations."
+    textarea: true
+  blog_about:
+    default: ""
+    textarea: true
+  blog_posts_per_page:
+    default: 10
+    min: 1
+    max: 30
+  blog_contributor_groups:
+    type: group_list
+    default: "3"
+    disallowed_groups: "0"
+    refresh: true
+  blog_editor_groups:
+    type: group_list
+    default: "3"
+    disallowed_groups: "0"
+    refresh: true
+  blog_publisher_groups:
+    type: group_list
+    default: "3"
+    disallowed_groups: "0"
+    refresh: true

@@ -39,6 +39,7 @@ describe "Admin Color Palette Config Area Page" do
     config_area.edit_name_button.click
     config_area.name_field.fill_in("Quick saved name")
     config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
+    config_area.user_selectable_field.toggle
 
     expect(config_area).to have_unsaved_changes_indicator
 
@@ -51,11 +52,13 @@ describe "Admin Color Palette Config Area Page" do
 
     expect(config_area).to have_unsaved_changes_indicator
     expect(color_scheme.colors.find_by(name: "primary")).to eq(nil)
+    expect(color_scheme.user_selectable).to eq(false)
 
     config_area.form.submit
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(color_scheme.colors.reload.find_by(name: "primary").hex).to eq("abcdef")
+    expect(color_scheme.reload.user_selectable).to eq(true)
   end
 
   it "allows changing the user selectable field" do

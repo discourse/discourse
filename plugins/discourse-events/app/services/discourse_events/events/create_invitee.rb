@@ -51,8 +51,14 @@ module DiscourseEvents
         params.status != :going || !event.at_capacity?
       end
 
-      def create_invitee(user:, event:, params:)
-        Invitee.create_attendance!(user.id, event.id, params.status, recurring: params.recurring)
+      def create_invitee(user:, event:, params:, guardian:)
+        Invitee.create_attendance!(
+          user.id,
+          event.id,
+          params.status,
+          recurring: params.recurring,
+          acting_user: guardian.user,
+        )
       end
     end
   end

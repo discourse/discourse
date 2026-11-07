@@ -492,7 +492,7 @@ export default class DataTableViewer extends Component {
                 </tr>
               </thead>
               <tbody>
-                {{#each this.rows as |row|}}
+                {{#each this.rows key="id" as |row|}}
                   <tr class="workflows-data-table-viewer__row">
                     <td class="workflows-data-table-viewer__cell --id">
                       <input

@@ -35,7 +35,7 @@ module DiscourseWorkflows
     def enqueue_workflow(published_trigger:, topic:, guardian:)
       DiscourseWorkflows::TriggerDispatcher.enqueue(
         published_trigger,
-        trigger_data: DiscourseWorkflows::Nodes::TopicAdminButton::V1.new(topic).output,
+        trigger_data: NodeData.node_type(published_trigger.trigger_node).new(topic).output,
         user_id: guardian.user.id,
       )
     end

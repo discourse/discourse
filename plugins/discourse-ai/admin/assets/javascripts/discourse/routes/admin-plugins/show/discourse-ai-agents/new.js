@@ -5,6 +5,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminPluginsShowDiscourseAiAgentsNew extends DiscourseRoute {
   queryParams = {
     copyFrom: { refreshModel: true },
+    source: {},
   };
 
   async model({ copyFrom }) {

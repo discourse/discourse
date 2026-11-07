@@ -16,6 +16,7 @@ module DiscourseAi
       AUTOMATION_REPORTS = "automation_reports"
       AUTOMATION_TRIAGE = "automation_triage"
       ADMIN_DASHBOARD = "admin_dashboard"
+      SENTIMENT = "sentiment"
 
       NAMES = [
         SUMMARIZATION,
@@ -31,6 +32,7 @@ module DiscourseAi
         AUTOMATION_REPORTS,
         AUTOMATION_TRIAGE,
         ADMIN_DASHBOARD,
+        SENTIMENT,
       ].freeze
 
       SUMMARIZATION_ID = 1
@@ -46,6 +48,7 @@ module DiscourseAi
       AUTOMATION_TRIAGE_ID = 11
       ADMIN_DASHBOARD_ID = 12
       IMAGE_CAPTION_ID = 13
+      SENTIMENT_ID = 14
 
       class << self
         def external_module_id(module_name)
@@ -124,6 +127,12 @@ module DiscourseAi
                 DiscourseAi::Configuration::Feature.admin_dashboard_features.any?(&:enabled?)
               end,
               visible: false,
+            ),
+            new(
+              SENTIMENT_ID,
+              SENTIMENT,
+              features: DiscourseAi::Configuration::Feature.sentiment_features,
+              extra_check: -> { DiscourseAi::Sentiment::PostClassification.any_enabled? },
             ),
           ]
 

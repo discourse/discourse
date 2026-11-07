@@ -27,4 +27,16 @@ RSpec.describe QunitController do
     get "/theme-qunit"
     expect(response.status).to eq(200)
   end
+
+  describe "#core" do
+    it "redirects the theme-qunit target to the theme tests page" do
+      get "/tests", params: { target: "theme-qunit" }
+      expect(response).to redirect_to("/theme-qunit")
+    end
+
+    it "returns 404 for an unknown target" do
+      get "/tests", params: { target: "missing-plugin" }
+      expect(response.status).to eq(404)
+    end
+  end
 end

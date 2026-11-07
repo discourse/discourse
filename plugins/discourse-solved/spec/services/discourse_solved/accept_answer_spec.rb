@@ -435,7 +435,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       it "triggers the :accepted_solution event" do
-        expect(events).to include(a_hash_including(params: [post]))
+        expect(events).to include(a_hash_including(params: [post, { acting_user: }]))
       end
 
       it "broadcasts the accepted solution" do

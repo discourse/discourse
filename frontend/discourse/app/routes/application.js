@@ -3,7 +3,6 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
-import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
@@ -217,39 +216,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   checkEmail(user) {
     user.checkEmail();
-  }
-
-  @action
-  createNewTopicViaParams(title, body, categoryId, tags) {
-    deprecated(
-      "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewTopicViaParams" }
-    );
-    this.composer.openNewTopic({
-      title,
-      body,
-      categoryId,
-      tags,
-    });
-  }
-
-  @action
-  createNewMessageViaParams({
-    recipients = "",
-    topicTitle = "",
-    topicBody = "",
-    hasGroups = false,
-  } = {}) {
-    deprecated(
-      "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewMessageViaParams" }
-    );
-    this.composer.openNewMessage({
-      recipients,
-      title: topicTitle,
-      body: topicBody,
-      hasGroups,
-    });
   }
 
   @action

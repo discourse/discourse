@@ -251,6 +251,33 @@ RSpec.describe Topic do
     end
   end
 
+  describe "archetype validation" do
+    fab!(:topic)
+
+    it "is invalid with an unregistered archetype" do
+      topic.archetype = "unknown"
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:archetype]).to be_present
+    end
+
+    it "is valid with an archetype registered by a plugin" do
+      Archetype.register("plugin_archetype")
+      topic.archetype = "plugin_archetype"
+
+      expect(topic).to be_valid
+    ensure
+      Archetype.deregister("plugin_archetype")
+    end
+
+    it "does not block saving a topic that already has an unregistered archetype" do
+      topic.update_column(:archetype, "unknown")
+      topic.title = "this is a brand new topic title"
+
+      expect(topic).to be_valid
+    end
+  end
+
   describe "slug" do
     context "with encoded generator" do
       before { SiteSetting.slug_generation_method = "encoded" }
@@ -1610,7 +1637,9 @@ RSpec.describe Topic do
           2.times { topic.update_status("closed", true, user) }
         end
 
-      expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, "closed", true, { acting_user: user }]],
+      )
     end
 
     it "emits pin status events only when pin attributes change" do
@@ -1624,7 +1653,10 @@ RSpec.describe Topic do
         end
 
       expect(events.map { |event| event[:params] }).to eq(
-        [[topic, "pinned", true], [topic, "pinned", false]],
+        [
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned", false, { acting_user: user }],
+        ],
       )
     end
 
@@ -1642,9 +1674,9 @@ RSpec.describe Topic do
 
       expect(events.map { |event| event[:params] }).to eq(
         [
-          [topic, "pinned", true],
-          [topic, "pinned_globally", true],
-          [topic, "pinned_globally", true],
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
         ],
       )
     end
@@ -3806,16 +3838,24 @@ RSpec.describe Topic do
   describe "#featured_link_root_domain" do
     let(:topic) { Fabricate.build(:topic) }
 
-    %w[
-      https://meta.discourse.org
-      https://meta.discourse.org/
-      https://meta.discourse.org/?filter=test
-      https://meta.discourse.org/t/中國/1
-    ].each do |featured_link|
-      it "extracts the root domain from #{featured_link}" do
-        topic.featured_link = featured_link
-        expect(topic.featured_link_root_domain).to eq("discourse.org")
-      end
+    it "extracts the root domain from https://meta.discourse.org" do
+      topic.featured_link = "https://meta.discourse.org"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/" do
+      topic.featured_link = "https://meta.discourse.org/"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/?filter=test" do
+      topic.featured_link = "https://meta.discourse.org/?filter=test"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/t/中國/1" do
+      topic.featured_link = "https://meta.discourse.org/t/中國/1"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
     end
   end
 

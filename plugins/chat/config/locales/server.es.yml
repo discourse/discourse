@@ -59,6 +59,7 @@ es:
 
         Visita el canal en %{channel_url} para volver a intentarlo.
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: eliminado
     crawler:
       directory_title: "Canales de chat"

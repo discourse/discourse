@@ -307,5 +307,16 @@ RSpec.describe "tasks/themes" do
       expect(theme.remote_theme.remote_version).to eq(original_remote_version)
       expect(theme.remote_theme.local_version).to eq(original_local_version)
     end
+
+    it "skips placeholders whose installation hasn't been finished" do
+      placeholder = Fabricate(:theme_with_remote_url, name: "private-theme")
+
+      stdout = nil
+      stderr = capture_stderr { stdout = capture_stdout { invoke_rake_task("themes:update") } }
+
+      expect(stderr).to be_blank
+      expect(stdout).to include("skipping, installation not finished")
+      expect(placeholder.remote_theme.reload.local_version).to be_nil
+    end
   end
 end

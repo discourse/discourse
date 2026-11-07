@@ -154,6 +154,13 @@ class EmberAssets < ActiveSupport::CurrentAttributes
     { "message" => text, "messageHtml" => ERB::Util.html_escape(text) }
   end
 
+  def self.bundle_analysis_asset
+    cache[:bundle_analysis] ||= Dir.glob(
+      "js/bundle-analysis-*.digested.json",
+      base: "#{dist_dir}/assets",
+    ).first
+  end
+
   def self.is_ember_asset?(name)
     assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end

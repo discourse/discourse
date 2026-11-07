@@ -471,7 +471,12 @@ class PostsController < ApplicationController
     raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
 
     render_json_dump(
-      PostRevisionSerializer.new(find_post_revision_from_params, scope: guardian, root: false),
+      PostRevisionSerializer.new(
+        find_post_revision_from_params,
+        scope: guardian,
+        root: false,
+        include_unlisted: include_unlisted_revisions?,
+      ),
     )
   end
 
@@ -484,6 +489,7 @@ class PostsController < ApplicationController
         find_latest_post_revision_from_params,
         scope: guardian,
         root: false,
+        include_unlisted: include_unlisted_revisions?,
       ),
     )
   rescue ONPDiff::DiffLimitExceeded
@@ -557,6 +563,35 @@ class PostsController < ApplicationController
     post.publish_change_to_clients!(:revised)
 
     render body: nil
+  end
+
+  def unlist_revision
+    PostRevision::Unlist.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 400)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::NotFound }
+      on_model_not_found(:post_revision) { raise Discourse::NotFound }
+      on_failed_policy(:can_unlist_post_revision) { raise Discourse::InvalidAccess }
+      on_failed_policy(:post_revision_not_hidden) do
+        render_json_error(I18n.t("cannot_unlist_hidden_revision"), status: 422)
+      end
+    end
+  end
+
+  def relist_revision
+    PostRevision::Relist.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 400)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::NotFound }
+      on_model_not_found(:post_revision) { raise Discourse::NotFound }
+      on_failed_policy(:can_relist_post_revision) { raise Discourse::InvalidAccess }
+    end
   end
 
   def revert
@@ -768,8 +803,16 @@ class PostsController < ApplicationController
     user = fetch_user_from_params
     raise Discourse::NotFound unless guardian.can_edit_user?(user)
 
+    pending_posts = user.pending_posts
+    if user != current_user
+      # viewable_by joins category moderation groups, which repeats rows for categories
+      # moderated by several of the viewer's groups, so filter by id instead of merging
+      pending_posts =
+        pending_posts.where(id: Reviewable.viewable_by(current_user, preload: false).select(:id))
+    end
+
     render_serialized(
-      user.pending_posts.order(created_at: :desc),
+      pending_posts.reorder(created_at: :desc),
       PendingPostSerializer,
       root: :pending_posts,
     )
@@ -779,6 +822,7 @@ class PostsController < ApplicationController
 
   def markdown(post)
     if post && guardian.can_see?(post)
+      add_topic_noindex_header(post.topic)
       render plain: post.raw
     else
       raise Discourse::NotFound
@@ -823,9 +867,8 @@ class PostsController < ApplicationController
   def find_latest_post_revision_from_params
     post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post.id).order(:number)
-    finder = finder.where(hidden: false) unless guardian.is_staff?
-    post_revision = finder.last
+    post_revision =
+      PostRevision.latest_for(post, guardian, include_unlisted: include_unlisted_revisions?)
 
     raise Discourse::NotFound unless post_revision
 
@@ -855,8 +898,14 @@ class PostsController < ApplicationController
 
   private
 
+  def include_unlisted_revisions?
+    params[:include_unlisted] == "true"
+  end
+
   def markdown_for_revision
-    find_post_revision_from_topic_id.modifications[:raw].last
+    post_revision = find_post_revision_from_topic_id
+    add_topic_noindex_header(post_revision.post.topic)
+    post_revision.modifications[:raw].last
   end
 
   def markdown_for_post
@@ -872,6 +921,7 @@ class PostsController < ApplicationController
         page: params[:page],
         limit: MARKDOWN_TOPIC_PAGE_SIZE,
       )
+    add_topic_noindex_header(topic_view.topic)
     topic_view.posts.select { |post| guardian.can_see?(post) }.map { |post| <<~MD }.join
         #{post.user.username} | #{post.updated_at} | ##{post.post_number}
 

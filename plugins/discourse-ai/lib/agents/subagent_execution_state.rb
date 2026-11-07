@@ -3,33 +3,19 @@
 module DiscourseAi
   module Agents
     class SubagentExecutionState
-      MAX_SPAWN_CALLS = 5
-      MAX_COMPLETIONS = 100
+      # Bound failed or no-progress loops, reserving the last completion for the root answer.
+      MAX_COMPLETIONS = 300
 
       attr_reader :execution_context, :root_token_budget
 
       def initialize(execution_context:, root_token_budget:, completion_count: 0)
         @execution_context = execution_context
         @root_token_budget = root_token_budget
-        @spawn_count = 0
         @completion_count = completion_count
         execution_context.work_budget ||=
           DiscourseAi::Completions::TurnWorkBudget.new(limit: root_token_budget)
         execution_context.work_execution_state = self
         @mutex = Mutex.new
-      end
-
-      def spawn_available?
-        @mutex.synchronize { @spawn_count < MAX_SPAWN_CALLS }
-      end
-
-      def reserve_spawn
-        @mutex.synchronize do
-          return false if @spawn_count >= MAX_SPAWN_CALLS
-
-          @spawn_count += 1
-          true
-        end
       end
 
       def completion_count

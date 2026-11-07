@@ -85,6 +85,32 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
     end
   end
 
+  it "filters topics using decision results instead of inactive dedicated results" do
+    SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
+    decision_post = Fabricate(:post)
+    dedicated_post = Fabricate(:post)
+    Fabricate(
+      :sentiment_classification,
+      target: decision_post,
+      model_used: "discourse-ai/emotion-decision",
+      classification: {
+        joy: 0.7,
+      },
+    )
+    Fabricate(
+      :sentiment_classification,
+      target: dedicated_post,
+      model_used: DiscourseAi::Sentiment::Constants::EMOTION_MODEL,
+      classification: {
+        joy: 0.9,
+      },
+    )
+
+    expect(
+      TopicsFilter.new(guardian:).filter_from_query_string("order:emotion_joy").pluck(:id),
+    ).to eq([decision_post.topic_id])
+  end
+
   context "with classified topics" do
     fab!(:post_1, :post)
     fab!(:post_2, :post)

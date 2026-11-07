@@ -78,4 +78,63 @@ module("Live | Unit | Lib | fullscreen", function () {
       "fullscreening the gallery container does not hijack a single video"
     );
   });
+
+  module("while an element is fullscreen", function (hooks) {
+    let exitCalls;
+
+    function setFullscreenElement(element) {
+      Object.defineProperty(document, "fullscreenElement", {
+        configurable: true,
+        get: () => element,
+      });
+    }
+
+    hooks.beforeEach(function () {
+      exitCalls = 0;
+      Object.defineProperty(document, "exitFullscreen", {
+        configurable: true,
+        value: () => {
+          exitCalls++;
+          return Promise.resolve();
+        },
+      });
+    });
+
+    hooks.afterEach(function () {
+      delete document.fullscreenElement;
+      delete document.exitFullscreen;
+    });
+
+    test("fullscreens another element on top instead of exiting", function (assert) {
+      let requested = false;
+      const tile = {
+        requestFullscreen() {
+          requested = true;
+          return Promise.resolve();
+        },
+      };
+      setFullscreenElement({});
+
+      toggleTileFullscreen(tile);
+
+      assert.true(requested, "requests fullscreen for the tile");
+      assert.strictEqual(exitCalls, 0, "does not exit the current fullscreen");
+    });
+
+    test("exits when the element itself is fullscreen", function (assert) {
+      let requested = false;
+      const tile = {
+        requestFullscreen() {
+          requested = true;
+          return Promise.resolve();
+        },
+      };
+      setFullscreenElement(tile);
+
+      toggleTileFullscreen(tile);
+
+      assert.strictEqual(exitCalls, 1, "exits fullscreen");
+      assert.false(requested, "does not request fullscreen again");
+    });
+  });
 });

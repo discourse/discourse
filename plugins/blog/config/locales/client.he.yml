@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: עיצוב
+        overridden: מותאם
+        insert: הוספה
+        array_value: רשימה
+        preview_home: דף הבית
+        preview_archive: ארכב
+        desktop: מחשב-שולחני
+        mobile: נייד
+        back_to_themes: חזרה לערכות עיצוב
+        new_theme_short: ערכת עיצוב חדשה
+        themes: תמות
+        theme_name: שם ערכת העיצוב
+        edit: עריכה
+        activate: הפעלה
+        preview: תצוגה מקדימה
+        import: ייבוא
+        export: ייצוא
+        active: פעיל
+  js:
+    blog:
+      panel:
+        badge:
+          draft: טיוטה
+        preview: תצוגה מקדימה
+        change:
+          title: כותרת
+          body: body
+      review:
+        create: יצירת קישור
+        copy: העתקה
+        open: פתוח
+        status:
+          active: פעיל
+          expired: לא בתוקף
+          revoked: נשל
+          inactive: לא פעיל
+        closed_on: "נסגר ב־%{date}"
+        revoke: שלילה
+        message: משוב
+      editor_table:
+        edit: עריכה
+        status: מצב
+        replies: תשובות
+      drafts: טיוטות
+      preview: תצוגה מקדימה
+      unpublish: משיכת הפרסום
+      appearance_link: מראה

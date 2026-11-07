@@ -197,6 +197,10 @@ export default class TranscriptionCoordinator {
     this.#broadcastTranscribingState(roomId, true);
   }
 
+  recordReaction(roomId, userId, username, emoji) {
+    this.#transcript.recordReaction(roomId, userId, username, emoji);
+  }
+
   // Leaving the recorded room ends the recording; the transcript gathered so
   // far is kept for consumption.
   stopIfTranscribing(roomId) {

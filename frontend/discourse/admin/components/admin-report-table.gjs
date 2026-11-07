@@ -274,7 +274,7 @@ export default class AdminReportTable extends Component {
       </table>
 
       <div class="pagination">
-        {{#each this.pages as |pageState|}}
+        {{#each this.pages key="index" as |pageState|}}
           <DButton
             class={{pageState.class}}
             @action={{fn this.changePage pageState.index}}

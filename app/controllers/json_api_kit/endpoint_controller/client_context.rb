@@ -11,7 +11,7 @@ module JsonApiKit
 
       def urls
         Urls.new(
-          base: "#{request.base_url}#{ROOT}",
+          base: "#{request.base_url}#{Discourse.base_path}#{ROOT}",
           current: "#{request.base_url}#{request.path}",
           parameters: request.query_parameters,
         )

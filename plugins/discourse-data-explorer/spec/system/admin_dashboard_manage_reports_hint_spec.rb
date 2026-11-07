@@ -8,7 +8,6 @@ describe "Data Explorer | Manage Reports footer hint" do
   let(:hint) { PageObjects::Components::AdminDashboardManageReportsHint.new }
 
   before do
-    SiteSetting.dashboard_improvements = true
     SiteSetting.data_explorer_enabled = true
     AdminDashboardSectionConfiguration.update(
       [

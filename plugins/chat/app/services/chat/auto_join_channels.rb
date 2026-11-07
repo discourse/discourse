@@ -73,11 +73,13 @@ module Chat
             CROSS JOIN chat_users cu
             JOIN categories c ON c.id = cc.chatable_id AND c.read_restricted = FALSE #{category_sql}
         ), private AS ( -- private chat channels
-          SELECT DISTINCT gu.user_id, cc.id AS chat_channel_id
+          SELECT DISTINCT cu.id AS user_id, cc.id AS chat_channel_id
             FROM valid_chat_channels cc
             JOIN categories c ON c.id = cc.chatable_id AND c.read_restricted = TRUE #{category_sql}
             JOIN category_groups cg ON cg.category_id = c.id AND cg.permission_type IN (:group_permissions)
-            JOIN group_users gu ON gu.group_id = cg.group_id AND gu.user_id IN (SELECT id FROM chat_users)
+            JOIN chat_users cu ON cg.group_id = :logged_in_users OR EXISTS (
+              SELECT 1 FROM group_users gu WHERE gu.group_id = cg.group_id AND gu.user_id = cu.id
+            )
         )
         INSERT INTO user_chat_channel_memberships (user_id, chat_channel_id, following, join_mode, created_at, updated_at)
         SELECT p.user_id, p.chat_channel_id, TRUE, :automatic, :now, :now
@@ -92,7 +94,15 @@ module Chat
       SQL
 
       channel_to_users = Hash.new { |h, k| h[k] = [] }
-      args = { now:, last_seen_at:, group_ids:, max_users:, group_permissions:, automatic: }
+      args = {
+        now:,
+        last_seen_at:,
+        group_ids:,
+        max_users:,
+        group_permissions:,
+        automatic:,
+        logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
+      }
 
       DB
         .query_array(sql, args)

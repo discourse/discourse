@@ -717,6 +717,33 @@ RSpec.describe ApplicationController do
         expect(response.body).to include(topic2.title)
       end
     end
+
+    describe "with invalid API credentials" do
+      fab!(:topic)
+      fab!(:category)
+
+      let(:headers) { { "Api-Key" => "invalid-api-key", "Api-Username" => "system" } }
+
+      it "returns 403 for topics#show" do
+        get "/t/#{topic.id}.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for categories#find_by_slug" do
+        get "/c/#{category.slug}/find_by_slug.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for a user API key without the required scope" do
+        user_api_key = Fabricate(:bookmarks_calendar_user_api_key)
+
+        get "/t/#{topic.id}.json", headers: { "User-Api-Key" => user_api_key.key }
+
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
   describe "#handle_theme" do
@@ -1759,16 +1786,14 @@ RSpec.describe ApplicationController do
 
   describe "vary header" do
     it "includes Vary:Accept on all requests where format is not explicit" do
-      # Rails default behaviour - include Vary:Accept when Accept is supplied
+      # Rails varies on both headers used for format negotiation
       get "/latest", headers: { "Accept" => "application/json" }
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
-      # Discourse additional behaviour (see lib/vary_header.rb)
-      # Include Vary:Accept even when Accept is not supplied
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
       # Not needed, because the path 'format' parameter overrides the Accept header
       get "/latest.json"
