@@ -18,7 +18,11 @@ export function scanBBCodeTags(raw, tag) {
   let position = raw.indexOf("[");
 
   while (position !== -1) {
-    const parsed = parseBBCodeTag(raw, position, raw.length);
+    // Skip impossible tag starts without copying the remaining post.
+    // A valid opening begins with a BBCode name character.
+    const parsed = /[-\w]/.test(raw[position + 1] || "")
+      ? parseBBCodeTag(raw, position, raw.length)
+      : null;
 
     if (parsed && !parsed.closing && parsed.tag === tag) {
       candidates.push({
@@ -44,18 +48,24 @@ export function markBBCodeTags(raw, tag, attribute, prefix, onlyIndex = null) {
 
   const candidates = scanBBCodeTags(raw, tag);
 
-  for (const candidate of candidates.reverse()) {
+  const parts = [];
+  let cursor = 0;
+
+  for (const candidate of candidates) {
     if (onlyIndex !== null && candidate.index !== onlyIndex) {
       continue;
     }
 
-    const opening =
-      candidate.opening.slice(0, -1) +
-      ` ${attribute}=${prefix}-${candidate.index}]`;
-    raw = spliceOpening(raw, candidate, opening);
+    parts.push(
+      raw.slice(cursor, candidate.start),
+      candidate.opening.slice(0, -1),
+      ` ${attribute}=${prefix}-${candidate.index}]`
+    );
+    cursor = candidate.start + candidate.length;
   }
 
-  return raw;
+  parts.push(raw.slice(cursor));
+  return parts.join("");
 }
 
 /** Rewrite one previously selected opening tag; null removes an attribute. */

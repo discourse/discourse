@@ -64,12 +64,12 @@ const QUOTATION_MARKS_WITH_MATCH = QUOTATION_MARKS.map(
 ).join("|");
 
 // Easiest case is the closing tag which never has any attributes
-const BBCODE_CLOSING_TAG_REGEXP = /^\[\/([-\w]+)\]/i;
+const BBCODE_CLOSING_TAG_REGEXP = /\[\/([-\w]+)\]/iy;
 
 // Old case where we supported attributes without quotation marks
 const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
-  `^\\[(quote|details)=(\\s*[^${QUOTATION_MARKS.join("")}].+?)\\]`,
-  "i"
+  `\\[(quote|details)=(\\s*[^${QUOTATION_MARKS.join("")}].+?)\\]`,
+  "iy"
 );
 
 // This is used to match a **valid** opening tag
@@ -77,7 +77,7 @@ const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
 // due to the backtracking. So we check for the "]" manually.
 const BBCODE_TAG_REGEXP = new RegExp(
   `\\[(?:(?:[-\\w]+(?:=(?:${QUOTATION_MARKS_NO_MATCH}|[^\\s\\]]+))?)+\\s*)+`,
-  "i"
+  "iy"
 );
 
 // This is used to parse attributes of the form key=value
@@ -134,9 +134,12 @@ export function bbCodeAttributeTokens(opening) {
 
 export function parseBBCodeTag(src, start, max, multiline) {
   let m;
-  const text = src.slice(start, max);
+  const copyRange = max !== src.length;
+  const text = copyRange ? src.slice(start, max) : src;
+  const offset = copyRange ? 0 : start;
 
   // CASE 1 - closing tag
+  BBCODE_CLOSING_TAG_REGEXP.lastIndex = offset;
   m = BBCODE_CLOSING_TAG_REGEXP.exec(text);
 
   if (m && m[0] && m[1]) {
@@ -152,6 +155,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
   }
 
   // CASE 2 - [quote=...] or [details=...] tag (without quotes)
+  BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP.lastIndex = offset;
   m = BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP.exec(text);
 
   if (m && m[0] && m[1] && m[2]) {
@@ -167,6 +171,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
   }
 
   // CASE 3 - regular opening tag
+  BBCODE_TAG_REGEXP.lastIndex = offset;
   m = BBCODE_TAG_REGEXP.exec(text);
   const bbcode = m ? m[0] : null;
 
@@ -174,7 +179,10 @@ export function parseBBCodeTag(src, start, max, multiline) {
     return null;
   }
 
-  if (text.length <= bbcode.length || text[bbcode.length] !== "]") {
+  if (
+    text.length <= offset + bbcode.length ||
+    text[offset + bbcode.length] !== "]"
+  ) {
     return null;
   }
 
