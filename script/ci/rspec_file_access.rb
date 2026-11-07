@@ -25,7 +25,6 @@ module RspecFileAccess
     end
 
     def to_path
-      return @path if defined?(@path)
       @path = COERCE_PATH.call(@original)
     end
   end
@@ -142,7 +141,9 @@ module RspecFileAccess
 
   def self.record_metadata(method:, arguments:, value:)
     if %i[realpath realdirpath].include?(method) && arguments.length == 2
-      arguments = [EXPAND_PATH.call(*arguments)]
+      resolved_arguments =
+        arguments.map { |argument| argument.is_a?(PathArgument) ? argument.path : argument }
+      arguments = [EXPAND_PATH.call(*resolved_arguments)]
     end
     description = RspecFileMetadata.describe(method: method, value: value, root: @root.chomp("/"))
     if arguments.length == 1 && description

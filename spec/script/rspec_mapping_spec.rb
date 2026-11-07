@@ -167,6 +167,55 @@ RSpec.describe Crystalball do
     )
   end
 
+  it "observes resolved two argument paths without adding conversions" do
+    program = <<~RUBY
+      require "json"
+      require "tmpdir"
+      require "pathname"
+      require "set"
+      require #{Rails.root.join("script/ci/rspec_file_access").to_s.inspect}
+      Dir.mktmpdir do |directory|
+        File.write(File.join(directory, "entry.txt"), "x")
+        RspecFileAccess.enable(root: directory)
+        results = []
+        %i[realpath realdirpath].each do |operation|
+          %i[to_path to_str].each do |conversion|
+            [false, true].each do |absolute|
+              counts = { "path" => 0, "base" => 0 }
+              arguments = %w[path base].map do |role|
+                raw = role == "base" ? directory : absolute ? File.join(directory, "entry.txt") : "entry.txt"
+                argument = Object.new
+                argument.define_singleton_method(conversion) do
+                  counts[role] += 1
+                  raise "Observation repeated conversion" if counts[role] > 1
+                  raw
+                end
+                argument
+              end
+              results << File.public_send(operation, *arguments).delete_prefix(directory + "/")
+            end
+          end
+        end
+        puts JSON.generate(results: results, metadata: RspecFileAccess.metadata, failure: RspecFileAccess.failure)
+      end
+    RUBY
+
+    output, status =
+      Open3.capture2e(isolated_rspec_environment, "bundle", "exec", "ruby", "-e", program)
+
+    expect(status.success?).to eq(true), output
+    expect(JSON.parse(output)).to eq(
+      "results" => ["entry.txt"] * 8,
+      "metadata" => {
+        "entry.txt" => [
+          { "method" => "realpath", "value" => "entry.txt" },
+          { "method" => "realdirpath", "value" => "entry.txt" },
+        ],
+      },
+      "failure" => nil,
+    )
+  end
+
   it "preserves native descriptor and path dispatch during mapping collection" do
     Dir.mktmpdir do |directory|
       FileUtils.mkdir_p("#{directory}/spec")
@@ -200,6 +249,25 @@ RSpec.describe Crystalball do
           end
         end
       RUBY
+      File.write("#{directory}/spec/path_spec.rb", <<~'RUBY')
+        require "json"
+        require "tmpdir"
+        RSpec.describe "Native repeated path conversion" do
+          it "returns the modification time chosen by the native operation" do
+            Dir.mktmpdir do |directory|
+              paths = %w[first second].map { |name| File.join(directory, name) }
+              paths.each_with_index { |path, index| File.write(path,"x"); File.utime(100 + index * 100, 100 + index * 100, path) }
+              conversions = []
+              argument = Object.new
+              argument.define_singleton_method(:to_path) { conversions << "to_path"; paths[[conversions.count("to_path") - 1,1].min] }
+              argument.define_singleton_method(:to_io) { conversions << "to_io"; nil }
+              result = Kernel.test("M", argument)
+              File.write("conversion.json", JSON.generate({"mtime" => result.to_i, "conversions" => conversions}))
+              expect(result.to_i).to eq(200)
+            end
+          end
+        end
+      RUBY
       [false, true].each do |collect|
         arguments = collect ? ["--require", Rails.root.join("script/ci/rspec_mapping.rb").to_s] : []
         output, status =
@@ -216,6 +284,7 @@ RSpec.describe Crystalball do
             "/dev/null",
             *arguments,
             "spec/descriptor_spec.rb",
+            "spec/path_spec.rb",
             "--format",
             "json",
             "--out",
@@ -226,7 +295,7 @@ RSpec.describe Crystalball do
         report = JSON.parse(File.read("#{directory}/result.json"))
         expect(status.success?).to eq(true), "#{output}\n#{report}"
         expect(report.fetch("summary").slice("example_count", "failure_count")).to eq(
-          "example_count" => 1,
+          "example_count" => 2,
           "failure_count" => 0,
         )
       end
