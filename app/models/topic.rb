@@ -1881,6 +1881,28 @@ class Topic < ActiveRecord::Base
     candidates
   end
 
+  # Format an alternative title while keeping the supplied suffix, the topic ID,
+  # and (when needed) a further collision number within the configured limit.
+  # The caller decides whether another attempt is justified by validation errors.
+  def title_with_disambiguating_suffix(base_title, base_suffix, attempt: 0)
+    raise ArgumentError, "attempt must be non-negative" if attempt.negative?
+
+    suffix =
+      if attempt.zero?
+        base_suffix
+      elsif attempt == 1
+        "#{base_suffix} ##{id}"
+      else
+        "#{base_suffix} ##{id}-#{attempt}"
+      end
+
+    max_length = SiteSetting.max_topic_title_length
+    return suffix[-max_length, max_length] if suffix.length >= max_length
+
+    base_length = max_length - suffix.length
+    "#{base_title.truncate(base_length, omission: "").rstrip}#{suffix}"
+  end
+
   def secure_group_ids
     @secure_group_ids ||= (category.secure_group_ids if category && category.read_restricted?)
   end

@@ -64,12 +64,12 @@ const QUOTATION_MARKS_WITH_MATCH = QUOTATION_MARKS.map(
 ).join("|");
 
 // Easiest case is the closing tag which never has any attributes
-const BBCODE_CLOSING_TAG_REGEXP = /^\[\/([-\w]+)\]/i;
+const BBCODE_CLOSING_TAG_REGEXP = /\[\/([-\w]+)\]/iy;
 
 // Old case where we supported attributes without quotation marks
 const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
-  `^\\[(quote|details)=(\\s*[^${QUOTATION_MARKS.join("")}].+?)\\]`,
-  "i"
+  `\\[(quote|details)=(\\s*[^${QUOTATION_MARKS.join("")}].+?)\\]`,
+  "iy"
 );
 
 // This is used to match a **valid** opening tag
@@ -77,7 +77,7 @@ const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
 // due to the backtracking. So we check for the "]" manually.
 const BBCODE_TAG_REGEXP = new RegExp(
   `\\[(?:(?:[-\\w]+(?:=(?:${QUOTATION_MARKS_NO_MATCH}|[^\\s\\]]+))?)+\\s*)+`,
-  "i"
+  "iy"
 );
 
 // This is used to parse attributes of the form key=value
@@ -87,11 +87,59 @@ const BBCODE_ATTR_REGEXP = new RegExp(
   "gi"
 );
 
+const BBCODE_REQUIRES_QUOTES_PATTERN = /[\s\]]/;
+
+export function serializeBBCodeAttr(value, name) {
+  if (!value) {
+    return "";
+  }
+
+  const stringValue = String(value);
+  const needsQuotes = BBCODE_REQUIRES_QUOTES_PATTERN.test(stringValue);
+
+  if (!needsQuotes) {
+    return ` ${name}=${stringValue}`;
+  }
+
+  for (const pair of QUOTATION_MARKS) {
+    const [open, close] = pair;
+    if (!stringValue.includes(open) && !stringValue.includes(close)) {
+      return ` ${name}=${open}${stringValue}${close}`;
+    }
+  }
+
+  return ` ${name}="${stringValue.replaceAll('"', "")}"`;
+}
+
+/** Return the source spans of attributes using the Markdown parser's grammar. */
+export function bbCodeAttributeTokens(opening) {
+  const matches = [
+    ...opening.slice(0, -1).matchAll(new RegExp(BBCODE_ATTR_REGEXP)),
+  ];
+  const [head, ...attributes] = matches;
+
+  if (!head || head.index !== 1) {
+    throw new Error("Invalid BBCode opening tag");
+  }
+
+  return {
+    headEnd: head.index + head[0].length,
+    attributes: attributes.map((match) => ({
+      name: match[1],
+      start: match.index,
+      end: match.index + match[0].length,
+    })),
+  };
+}
+
 export function parseBBCodeTag(src, start, max, multiline) {
   let m;
-  const text = src.slice(start, max);
+  const copyRange = max !== src.length;
+  const text = copyRange ? src.slice(start, max) : src;
+  const offset = copyRange ? 0 : start;
 
   // CASE 1 - closing tag
+  BBCODE_CLOSING_TAG_REGEXP.lastIndex = offset;
   m = BBCODE_CLOSING_TAG_REGEXP.exec(text);
 
   if (m && m[0] && m[1]) {
@@ -107,6 +155,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
   }
 
   // CASE 2 - [quote=...] or [details=...] tag (without quotes)
+  BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP.lastIndex = offset;
   m = BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP.exec(text);
 
   if (m && m[0] && m[1] && m[2]) {
@@ -122,6 +171,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
   }
 
   // CASE 3 - regular opening tag
+  BBCODE_TAG_REGEXP.lastIndex = offset;
   m = BBCODE_TAG_REGEXP.exec(text);
   const bbcode = m ? m[0] : null;
 
@@ -129,7 +179,10 @@ export function parseBBCodeTag(src, start, max, multiline) {
     return null;
   }
 
-  if (text.length <= bbcode.length || text[bbcode.length] !== "]") {
+  if (
+    text.length <= offset + bbcode.length ||
+    text[offset + bbcode.length] !== "]"
+  ) {
     return null;
   }
 
@@ -421,6 +474,8 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 
     let lastToken = state.tokens[state.tokens.length - 1];
     lastToken.map = [startLine, nextLine];
+    lastToken.markup = state.src.slice(start, start + info.length);
+    lastToken.meta = { ...lastToken.meta, bbcode: info.tag };
 
     if (closeTag.block) {
       state.md.block.tokenize(state, startLine + 1, nextLine);

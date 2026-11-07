@@ -8,6 +8,11 @@ import { sanitize as sanitizeHtml } from "pretty-text/sanitizer";
 import * as avatarUtils from "discourse/lib/avatar-utils";
 import loadPluginFeatures from "discourse/static/markdown-it/features";
 import DiscourseMarkdownIt from "discourse-markdown-it";
+import {
+  markBBCodeTags,
+  rewriteBBCodeTag,
+  scanBBCodeTags,
+} from "discourse-markdown-it/bbcode-rewriter";
 import { resetTranslationTree } from "discourse-markdown-it/features/emoji";
 import {
   scanHashtags,
@@ -91,29 +96,19 @@ function buildEmojiUnicodeReplacer(replacements) {
 
 export class PrettyTextRubyInterface {
   static cook(text, optInput) {
-    runtime.paths = optInput.paths || {};
-    runtime.avatarSizes = optInput.avatar_sizes;
+    return this.#processor(optInput).cook(text);
+  }
 
-    optInput.getURL = getURL;
-    optInput.getCurrentUser = getCurrentUser;
-    optInput.lookupAvatar = lookupAvatar;
-    optInput.lookupPrimaryUserGroup = lookupPrimaryUserGroup;
-    optInput.formatUsername = formatUsername;
-    optInput.getTopicInfo = getTopicInfo;
-    optInput.hashtagLookup = hashtagLookup;
-    optInput.lookupUploadUrls = lookupUploadUrls;
-    optInput.emojiUnicodeReplacer = emojiUnicodeReplacer;
+  static scanBBCodeTags(raw, tag) {
+    return scanBBCodeTags(raw, tag);
+  }
 
-    const pt =
-      DiscourseMarkdownIt.withCustomFeatures(loadPluginFeatures()).withOptions(
-        optInput
-      );
+  static markBBCodeTags(raw, tag, attribute, prefix, candidate) {
+    return markBBCodeTags(raw, tag, attribute, prefix, candidate);
+  }
 
-    if (optInput.disableSanitizer) {
-      pt.disableSanitizer();
-    }
-
-    return pt.cook(text);
+  static rewriteBBCodeTag(raw, tag, candidate, expectedOpening, changes) {
+    return rewriteBBCodeTag(raw, tag, candidate, expectedOpening, changes);
   }
 
   static sanitize(html, allowListOptions) {
@@ -150,5 +145,31 @@ export class PrettyTextRubyInterface {
 
   static spliceHashtags(raw, replacements) {
     return spliceHashtags(raw, replacements);
+  }
+
+  static #processor(optInput) {
+    runtime.paths = optInput.paths || {};
+    runtime.avatarSizes = optInput.avatar_sizes;
+
+    optInput.getURL = getURL;
+    optInput.getCurrentUser = getCurrentUser;
+    optInput.lookupAvatar = lookupAvatar;
+    optInput.lookupPrimaryUserGroup = lookupPrimaryUserGroup;
+    optInput.formatUsername = formatUsername;
+    optInput.getTopicInfo = getTopicInfo;
+    optInput.hashtagLookup = hashtagLookup;
+    optInput.lookupUploadUrls = lookupUploadUrls;
+    optInput.emojiUnicodeReplacer = emojiUnicodeReplacer;
+
+    const pt =
+      DiscourseMarkdownIt.withCustomFeatures(loadPluginFeatures()).withOptions(
+        optInput
+      );
+
+    if (optInput.disableSanitizer) {
+      pt.disableSanitizer();
+    }
+
+    return pt;
   }
 }
