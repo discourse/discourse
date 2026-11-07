@@ -156,6 +156,31 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css("#reply-control.open .composer-action-title", text: topic.title)
   end
 
+  it "tucks the list's views away while scrolling down, and brings them back on the way up" do
+    Fabricate.times(30, :post)
+
+    visit("/latest")
+
+    expect(page).to have_css(".mobile-tab-bar__views #navigation-bar")
+    expect(page).to have_no_css(".mobile-tab-bar.--views-tucked")
+
+    # Scrolling counts only once a page settles, so keep scrolling down
+    # between the same points, clear of the page's ends, until it does
+    8.times do
+      page.execute_script("window.scrollTo(0, 300)")
+      sleep 0.2
+      page.execute_script("window.scrollTo(0, 700)")
+      sleep 0.5
+      break if page.evaluate_script("!!document.querySelector('.mobile-tab-bar.--views-tucked')")
+    end
+
+    expect(page).to have_css(".mobile-tab-bar.--views-tucked")
+
+    page.execute_script("window.scrollTo(0, 400)")
+
+    expect(page).to have_no_css(".mobile-tab-bar.--views-tucked")
+  end
+
   it "offers a new topic only where the topic list would" do
     SiteSetting.hide_disabled_create_topic_button = true
     SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone]

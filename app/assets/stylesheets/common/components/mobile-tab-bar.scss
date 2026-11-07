@@ -46,9 +46,24 @@ html.mobile-tab-bar-visible {
   // A centred bubble pointing at the current section's tab, so its views
   // read as the tab's own; sized to its content, leaving room above for the
   // fade over the page
+  // Slides behind the tabs while the page scrolls down; the space kept for
+  // it stays, so the page doesn't shift as it goes
+  &.--views-tucked &__views {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
+  }
+
   &__views {
     position: relative;
     display: flex;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
     flex: none;
     align-self: center;
     align-items: center;
@@ -76,11 +91,11 @@ html.mobile-tab-bar-visible {
     }
 
     // Stops short of the tab it points at, clear of its fill; behind the
-    // views, so only the part below the bubble shows
+    // views and their highlight, so only the part below the bubble shows
     &::after {
       content: "";
       position: absolute;
-      z-index: -1;
+      z-index: -2;
       bottom: -4px;
 
       // Offset from the bar's centre, which is the bubble's too, so the

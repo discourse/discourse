@@ -12,6 +12,7 @@ import MenuButton from "discourse/components/mobile-tab-bar/menu-button";
 import Tab from "discourse/components/mobile-tab-bar/tab";
 import htmlClass from "discourse/helpers/html-class";
 import discourseLater from "discourse/lib/later";
+import { SCROLLED_DOWN } from "discourse/services/scroll-direction";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -22,6 +23,7 @@ const PENDING_VIEW_TIMEOUT = 3000;
 export default class MobileTabBar extends Component {
   @service composer;
   @service mobileTabBar;
+  @service scrollDirection;
 
   @tracked moreBefore = false;
   @tracked moreAfter = false;
@@ -62,6 +64,12 @@ export default class MobileTabBar extends Component {
 
   get isVisible() {
     return this.mobileTabBar.enabled && !this.composer.isOpen;
+  }
+
+  // Out of the way while reading down a page, back on the way up. A page
+  // too short to scroll never counts as scrolled down, so it keeps them.
+  get viewsTucked() {
+    return this.scrollDirection.lastScrollDirection === SCROLLED_DOWN;
   }
 
   @action
@@ -271,7 +279,13 @@ export default class MobileTabBar extends Component {
         {{htmlClass "mobile-tab-bar-titled"}}
       {{/if}}
 
-      <nav aria-label={{i18n "mobile_tab_bar.label"}} class="mobile-tab-bar">
+      <nav
+        aria-label={{i18n "mobile_tab_bar.label"}}
+        class={{dConcatClass
+          "mobile-tab-bar"
+          (if this.viewsTucked "--views-tucked")
+        }}
+      >
         <div
           class="mobile-tab-bar__views"
           {{didInsert this.registerViewsSlot}}
