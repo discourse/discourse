@@ -31,6 +31,7 @@ module TestSelection
           path.start_with?("docs/") || (!path.include?("/") && path.end_with?(".md"))
         end
       @jobs.each do |name, job|
+        shared_inputs = job["mapping"].is_a?(Hash) ? job["mapping"]["shared_files"] : nil
         if full
           job.fetch("inventory").each { |file| reasons[file] << "Full execution requested" }
         elsif job.fetch("shared_test_changes", []).any?
@@ -41,7 +42,8 @@ module TestSelection
                 .fetch("inventory")
                 .each { |file| reasons[file] << "Shared test setup changed: #{path}" }
             end
-        elsif application_changes.any?
+        elsif application_changes.any? ||
+              (shared_inputs.is_a?(Array) && (@changes & shared_inputs).any?)
           select_dependencies(name: name, job: job, reasons: reasons)
         end
       end
@@ -168,12 +170,14 @@ module TestSelection
           end
       if !reason
         changes.each do |path|
+          if mapping.fetch("shared_files").include?(path)
+            reason = "Shared input: #{path}"
+            break
+          end
           next if path.start_with?("docs/") || (!path.include?("/") && path.end_with?(".md"))
           if mapping.fetch("initialization_sources").include?(path) &&
                !protected_initialization.include?(path)
             reason = "Initialization input: #{path}"
-          elsif mapping.fetch("shared_files").include?(path)
-            reason = "Shared input: #{path}"
           elsif !mapping.fetch("sources").include?(path)
             reason = "Unknown input: #{path}"
           elsif !job.fetch("verified_sources").include?(path)

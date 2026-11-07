@@ -25,7 +25,9 @@ module TestSelectionLab
       Dir.chdir(root) do
         write_fixture
         fixture =
-          Dir["{lib,vendor,spec,plugins}/**/*.rb"].sort.to_h { |path| [path, File.read(path)] }
+          (Dir["{lib,vendor,spec,plugins}/**/*.rb"] + Dir["README.md"]).sort.to_h do |path|
+            [path, File.read(path)]
+          end
         File.write("tmp/fixture.json", JSON.pretty_generate(fixture))
         base = commit("Original shared fixture")
         mapping_revision = base
@@ -103,6 +105,7 @@ module TestSelectionLab
         FileUtils.mkdir_p(directory)
         expected = %w[spec/1_writer_spec.rb spec/2_reader_spec.rb]
         expected << "spec/3_unrelated_spec.rb" if @uncertain
+        expected = ["spec/1_writer_spec.rb"] if @name == "file_metadata_predicate"
         if @name.start_with?("native_value_loop_native_")
           expected = %w[
             spec/1_writer_spec.rb
@@ -285,8 +288,14 @@ module TestSelectionLab
             "A blank line in an earlier method shifts the producer's __LINE__ value. The writer passes while caching that changed integer. Source layout changes invalidate compatibility and protect the complete affected environment, retaining the unchanged failing reader. The unrelated third spec is a conservative extra execution."
           elsif @name == "source_line_initialization"
             "A blank line in an unused method shifts a later __LINE__ constant while its earlier reader method stays in place. The cached reader then fails. This changes protected initialization, so the complete affected environment must run."
-          elsif @name.start_with?("source_line_") && !@name.end_with?("_setup_spec")
+          elsif source_line_layout_case?
             "A blank line in an unused method shifts source positions observed by initialization through a Ruby location API. The earlier value method stays unchanged, but the cached integer changes and its reader fails. Source layout changes invalidate compatibility and protect the complete affected environment. The unrelated third spec is a conservative extra execution."
+          elsif @name == "file_metadata_predicate"
+            "Only an unused method comment changes. File.file? still reports true, so the initialized integer and cache stay unchanged. The existing loader dependency selects the writer. The reader and independent third file pass in the reference, and unchanged metadata does not require their execution."
+          elsif @name == "file_size_documentation"
+            "The producer initializes its value from the size of README.md. Editing that document changes a scalar consumed by the unchanged reader. Observed metadata takes precedence over the usual documentation exclusion, so the complete affected environment runs."
+          elsif file_metadata_case?
+            "Lengthening an unused method comment changes the source file size read during initialization. The writer passes with the new integer while the unchanged cached reader fails. The observed filesystem input protects the complete affected environment."
           elsif @uncertain
             "The producer runs inside deferred fixture initialization with storage managed by the framework. This mapping cannot attribute the stored scalar to its later reader. Protecting that initialization requires every file in this environment."
           else
@@ -333,7 +342,13 @@ module TestSelectionLab
           end
         correct =
           complete && plan.fetch("files") == expected && selected.fetch("loaded") == expected &&
-            full.fetch("failures").any? && missed.empty?
+            (
+              if @name == "file_metadata_predicate"
+                selected.fetch("success") && full.fetch("success")
+              else
+                full.fetch("failures").any?
+              end
+            ) && missed.empty?
         result = {
           "case" => @name,
           "base" => base,
@@ -357,6 +372,23 @@ module TestSelectionLab
     end
 
     private
+
+    def source_line_layout_case?
+      @name.start_with?("source_line_") && !@name.end_with?("_setup_spec")
+    end
+
+    def file_metadata_case?
+      %w[
+        file_size_initialization
+        file_test_size_initialization
+        file_stat_initialization
+        file_stat_constructor_initialization
+        kernel_file_size_initialization
+        kernel_module_file_size_initialization
+        file_metadata_predicate
+        file_size_documentation
+      ].include?(@name)
+    end
 
     def git(*arguments)
       output, status = Open3.capture2e("git", *arguments)
@@ -473,7 +505,7 @@ module TestSelectionLab
         "spec/3_unrelated_spec.rb",
         "RSpec.describe('Unrelated') { it('passes') { expect(true).to eq(true) } }",
       )
-      if @name.start_with?("source_line_") && !@name.end_with?("_setup_spec")
+      if source_line_layout_case?
         producer =
           case @name
           when "source_line_scalar"
@@ -506,6 +538,37 @@ module TestSelectionLab
             9
           end
         File.write(path, File.read(path).sub("[nil, :original]", "[nil, #{original_line}]"))
+      end
+      if file_metadata_case?
+        expression = {
+          "file_size_initialization" => "File.size(__FILE__)",
+          "file_test_size_initialization" => "FileTest.size(__FILE__)",
+          "file_stat_initialization" => "File.stat(__FILE__).size",
+          "file_stat_constructor_initialization" => "File::Stat.new(__FILE__).size",
+          "kernel_file_size_initialization" => "test(?s, __FILE__)",
+          "kernel_module_file_size_initialization" => "Kernel.test(?s, __FILE__)",
+          "file_metadata_predicate" => "File.file?(__FILE__) ? 9 : 0",
+          "file_size_documentation" => "File.size(File.expand_path(\"../README.md\", __dir__))",
+        }.fetch(@name)
+        producer =
+          "module SharedStateProducer\n def self.value\n  VALUE\n end\n def self.unrelated\n  :original # short\n  :unused\n end\n VALUE = #{expression}\nend\n"
+        File.write("lib/producer.rb", producer)
+        if @name == "file_size_documentation"
+          File.write("README.md", "Metadata fixture document.\n")
+        end
+        original_value =
+          case @name
+          when "file_metadata_predicate"
+            9
+          when "file_size_documentation"
+            File.size("README.md")
+          else
+            producer.bytesize
+          end
+        path = "spec/1_writer_spec.rb"
+        File.write(path, File.read(path).sub("be_a(Symbol)", "be_a(Integer)"))
+        path = "spec/2_reader_spec.rb"
+        File.write(path, File.read(path).sub("[nil, :original]", "[nil, #{original_value}]"))
       end
       write_asynchronous_fixture if @name == "asynchronous_origin"
       if %w[unobserved_branch dynamic_receiver dynamic_reflection].include?(@name) ||
@@ -690,9 +753,14 @@ module TestSelectionLab
     end
 
     def apply_change
-      if @name.start_with?("source_line_") && !@name.end_with?("_setup_spec")
+      if source_line_layout_case?
         path = "lib/producer.rb"
         File.write(path, File.read(path).sub(":original\n  :unused", ":original\n\n  :unused"))
+      elsif @name == "file_size_documentation"
+        File.open("README.md", "a") { |file| file.puts "Extra documentation." }
+      elsif file_metadata_case?
+        path = "lib/producer.rb"
+        File.write(path, File.read(path).sub("# short", "# a longer comment"))
       elsif @name.end_with?("_setup_spec")
         apply_test_setup_change
       elsif @name.end_with?("random_state")

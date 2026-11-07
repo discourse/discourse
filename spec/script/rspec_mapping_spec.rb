@@ -6,6 +6,7 @@ require "open3"
 require "tmpdir"
 require_relative "../support/rspec_subprocess_environment"
 require_relative "../../script/ci/rspec_source_structure"
+require_relative "../../script/ci/rspec_file_metadata"
 require_relative "../../script/ci/dependency_graph"
 
 RSpec.describe Crystalball do
@@ -16,10 +17,11 @@ RSpec.describe Crystalball do
       FileUtils.mkdir_p("#{directory}/lib")
       File.write("#{directory}/lib/boot.txt", "42")
       File.write("#{directory}/lib/data.txt", "42")
+      File.write("#{directory}/lib/metadata.txt", "metadata")
       File.symlink("data.txt", "#{directory}/lib/data-link.txt")
       File.write(
         "#{directory}/lib/definition.rb",
-        "class Definition\n  VALUE = 42\n  BOOT = File.read(File.expand_path(\"boot.txt\", __dir__))\nend\n",
+        "class Definition\n  VALUE = 42\n  BOOT = File.read(File.expand_path(\"boot.txt\", __dir__))\n  SIZE = File.size(File.expand_path(\"metadata.txt\", __dir__))\n  EXISTS = FileTest.file?(File.expand_path(\"metadata.txt\", __dir__))\nend\n",
       )
       File.write("#{directory}/lib/setup.rb", <<~RUBY)
         module Setup
@@ -37,7 +39,11 @@ RSpec.describe Crystalball do
       RUBY
       File.write("#{directory}/spec/support/shared.rb", <<~RUBY)
         RSpec.shared_examples "a value" do
-          it("computes a value") { expect(Body.value).to eq("42") }
+          it "computes a value" do
+            expect(Body.value).to eq("42")
+            expect(Object.new.respond_to?(:test)).to eq(false)
+            expect(Kernel.respond_to?(:test)).to eq(true)
+          end
         end
       RUBY
       File.write("#{directory}/spec/example_spec.rb", <<~RUBY)
@@ -94,6 +100,11 @@ RSpec.describe Crystalball do
         "lib/setup.rb",
         "lib/body.rb",
         "lib/definition.rb",
+        "lib/metadata.txt",
+      )
+      expect(worker.fetch("file_metadata").fetch("lib/metadata.txt")).to include(
+        { "method" => "size", "value" => 8 },
+        { "method" => "file?", "value" => true },
       )
       expect(worker["dependencies"]["spec/example_spec.rb"]).to include(
         "lib/setup.rb",
@@ -141,6 +152,37 @@ RSpec.describe Crystalball do
       expect(RspecSourceStructure.matches?(path:, description:)).to eq(true)
       File.write(path, 'def value; "changed"; end')
       expect(RspecSourceStructure.matches?(path:, description:)).to eq(false)
+    end
+  end
+
+  it "compares only the observed file metadata" do
+    Dir.mktmpdir do |directory|
+      path = "#{directory}/source.rb"
+      File.write(path, "one")
+      kind = RspecFileMetadata.describe(method: :file?, value: File.file?(path))
+      size = RspecFileMetadata.describe(method: :size, value: File.size(path))
+
+      File.write(path, "a longer value")
+
+      expect(RspecFileMetadata.matches?(path: path, descriptions: [kind])).to eq(true)
+      expect(RspecFileMetadata.matches?(path: path, descriptions: [size])).to eq(false)
+    end
+  end
+
+  it "rejects an unsupported metadata reader without changing the file" do
+    Dir.mktmpdir do |directory|
+      path = "#{directory}/source.rb"
+      original = "original"
+      File.write(path, original)
+
+      result =
+        RspecFileMetadata.matches?(
+          path: path,
+          descriptions: [{ "method" => "unlink", "value" => true }],
+        )
+
+      expect(result).to eq(false)
+      expect(File.read(path)).to eq(original)
     end
   end
 

@@ -3,6 +3,7 @@ require "json"
 require "open3"
 require_relative "test_selection"
 require_relative "rspec_source_structure"
+require_relative "rspec_file_metadata"
 require_relative "test_inventory"
 
 module TestPlan
@@ -92,7 +93,20 @@ module TestPlan
                   "#{ancestor}..#{producer}",
                   "#{ancestor}..#{base}",
                 ).split("\0").map(&:strip).reject(&:empty?).uniq
-              relevant = (changes + drift).uniq
+              relevant = (changes + drift).to_set
+              metadata = mapping.fetch("file_metadata", {})
+              raise "Invalid file metadata" unless metadata.is_a?(Hash)
+              changed_metadata =
+                metadata.filter_map do |path, descriptions|
+                  if relevant.include?(path) &&
+                       !RspecFileMetadata.matches?(path: path, descriptions: descriptions)
+                    path
+                  end
+                end
+              mapping =
+                mapping.merge(
+                  "shared_files" => (mapping.fetch("shared_files") + changed_metadata).uniq,
+                )
               verified =
                 mapping
                   .fetch("source_checks", {})

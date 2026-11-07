@@ -128,6 +128,7 @@ RSpec.configure do |config|
         files: RSpec.configuration.files_to_run.map { |path| normalize.call(path) },
         shared_globs: shared_globs,
         shared_files: RspecFileAccess.shared_files,
+        file_metadata: RspecFileAccess.metadata,
         input_failure: RspecFileAccess.failure,
         completed_groups: completed_groups,
         expected_groups: expected_groups,

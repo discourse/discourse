@@ -15,6 +15,7 @@ module TestMapping
     initialization_sources = Set.new
     uncertain_sources = Set.new
     shared_files = Set.new
+    file_metadata = Hash.new { |hash, path| hash[path] = [] }
     records =
       Dir["#{execution_directory}/rspec-*.json"].map do |path|
         record = JSON.parse(File.read(path))
@@ -42,6 +43,9 @@ module TestMapping
         initialization_sources.merge(part.fetch("initialization_sources"))
         uncertain_sources.merge(part.fetch("uncertain_sources", []))
         shared_files.merge(part.fetch("shared_files"))
+        part
+          .fetch("file_metadata", {})
+          .each { |source, descriptions| file_metadata[source] |= descriptions }
         record
       end
     if job.fetch("command").first == "bin/turbo_rspec" && inventory.any?
@@ -62,7 +66,10 @@ module TestMapping
     unless records.flat_map { |record| record.fetch("files") }.uniq.sort == inventory.sort
       raise "Mapping execution does not cover the job inventory"
     end
-    sources = (graph.paths + observed_sources.to_a).uniq.select { |path| File.file?(path) }
+    sources =
+      (graph.paths + observed_sources.to_a + file_metadata.keys).uniq.select do |path|
+        File.file?(path)
+      end
     checks =
       sources
         .grep(/\.rb\z/)
@@ -79,6 +86,7 @@ module TestMapping
       "source_checks" => checks,
       "initialization_sources" => initialization_sources.to_a.sort,
       "shared_files" => shared_files.to_a.sort,
+      "file_metadata" => file_metadata.to_h,
     }
     File.write(output, JSON.generate(mapping))
   end
