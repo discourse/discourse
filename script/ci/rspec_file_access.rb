@@ -6,14 +6,22 @@ module RspecFileAccess
   EXPAND_PATH = File.method(:expand_path)
   REALPATH = File.method(:realpath)
   COERCE_PATH = File.method(:path)
+  COERCE_IO = IO.method(:try_convert)
   MATCH_GLOB = File.method(:fnmatch?)
-  private_constant :FILE_PATH, :EXPAND_PATH, :REALPATH, :COERCE_PATH, :MATCH_GLOB
+  private_constant :FILE_PATH, :EXPAND_PATH, :REALPATH, :COERCE_PATH, :COERCE_IO, :MATCH_GLOB
 
   class PathArgument
-    attr_reader :path
-
     def initialize(original)
       @original = original
+    end
+
+    def to_io
+      @io = COERCE_IO.call(@original)
+    end
+
+    def path
+      return @path if defined?(@path)
+      FILE_PATH.bind_call(@io) if @io.is_a?(File)
     end
 
     def to_path

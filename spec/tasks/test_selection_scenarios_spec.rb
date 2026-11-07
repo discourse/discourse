@@ -154,6 +154,8 @@ RSpec.describe "Dependency selection scenarios" do
   it_behaves_like "a dependency selection replay", name: "file_test_included_size_initialization"
   it_behaves_like "a dependency selection replay", name: "file_test_extended_size_initialization"
   it_behaves_like "a dependency selection replay", name: "file_custom_path_size_initialization"
+  it_behaves_like "a dependency selection replay", name: "documentation_new_spec_history"
+  it_behaves_like "a dependency selection replay", name: "documentation_source_history"
   it_behaves_like "a dependency selection replay", name: "file_metadata_subprocess"
   it_behaves_like "a dependency selection replay", name: "file_metadata_subprocess_control"
   it_behaves_like "a dependency selection replay", name: "file_metadata_document_subprocess"

@@ -167,6 +167,78 @@ RSpec.describe Crystalball do
     )
   end
 
+  it "preserves native descriptor and path dispatch during mapping collection" do
+    Dir.mktmpdir do |directory|
+      FileUtils.mkdir_p("#{directory}/spec")
+      File.write("#{directory}/spec/descriptor_spec.rb", <<~'RUBY')
+        require "tempfile"
+        RSpec.describe "Native file arguments" do
+          it "uses the descriptor or pathname chosen by each native operation" do
+            temporary = Tempfile.new("metadata-descriptor")
+            begin
+              temporary.write("one")
+              temporary.flush
+              temporary.unlink
+              expect(File.size(temporary)).to eq(3)
+              expect(File.exist?(temporary)).to eq(true)
+              temporary.close
+              expect { File.size(temporary) }.to raise_error(IOError)
+            ensure
+              temporary.close
+            end
+            File.write("descriptor.txt", "one")
+            File.write("pathname.txt", "different")
+            File.open("descriptor.txt") do |descriptor|
+              argument = Object.new
+              argument.define_singleton_method(:to_io) { descriptor }
+              argument.define_singleton_method(:to_path) { "pathname.txt" }
+              expect(File.size(argument)).to eq(3)
+              expect(FileTest.size(argument)).to eq(3)
+              expect(test(?s, argument)).to eq(9)
+              expect(File.stat(argument).size).to eq(9)
+            end
+          end
+        end
+      RUBY
+      [false, true].each do |collect|
+        arguments = collect ? ["--require", Rails.root.join("script/ci/rspec_mapping.rb").to_s] : []
+        output, status =
+          Open3.capture2e(
+            isolated_rspec_environment.merge(
+              "BUNDLE_GEMFILE" => Rails.root.join("Gemfile").to_s,
+              "GITHUB_SHA" => "a" * 40,
+              "RSPEC_MAPPING_DIRECTORY" => "#{directory}/mapping",
+            ),
+            "bundle",
+            "exec",
+            "rspec",
+            "--options",
+            "/dev/null",
+            *arguments,
+            "spec/descriptor_spec.rb",
+            "--format",
+            "json",
+            "--out",
+            "result.json",
+            chdir: directory,
+          )
+
+        report = JSON.parse(File.read("#{directory}/result.json"))
+        expect(status.success?).to eq(true), "#{output}\n#{report}"
+        expect(report.fetch("summary").slice("example_count", "failure_count")).to eq(
+          "example_count" => 1,
+          "failure_count" => 0,
+        )
+      end
+      worker = JSON.parse(File.read(Dir["#{directory}/mapping/worker-*.json"].sole))
+      expect(worker.fetch("complete")).to eq(true)
+      expect(worker.fetch("file_metadata").fetch("descriptor.txt")).to include(
+        "method" => "size",
+        "value" => 3,
+      )
+    end
+  end
+
   it "retains declarations and code executed during boot when validating source changes" do
     Dir.mktmpdir do |directory|
       path = "#{directory}/source.rb"

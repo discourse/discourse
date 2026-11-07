@@ -183,6 +183,8 @@ module TestSelectionLab
       "@fixture_value",
       true,
     ],
+    ["documentation_new_spec_history", "", "SharedStateProducer.value", true],
+    ["documentation_source_history", "", "SharedStateProducer.value", true],
     ["file_metadata_subprocess", "", ":original", true],
     ["file_metadata_subprocess_control", "", ":original", true],
     ["file_metadata_document_subprocess", "", ":original", true],

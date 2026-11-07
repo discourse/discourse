@@ -59,8 +59,22 @@ module TestSelectionLab
              mapping_lag_isolated_setup_spec
              mapping_lag_context_setup_spec
              file_size_documentation_history
-           ].include?(@name)
-          if @name == "file_size_documentation_history"
+           ].include?(@name) || documentation_history_case?
+          if @name == "documentation_new_spec_history"
+            File.write("spec/5_guide_spec.rb", <<~RUBY)
+              RSpec.describe("Guide") do
+                it("keeps its title") { expect(File.read("docs/guide.md")).to eq("Guide\\n") }
+              end
+            RUBY
+          elsif @name == "documentation_source_history"
+            File.write("lib/producer.rb", <<~RUBY)
+              module SharedStateProducer
+                def self.value
+                  File.read("docs/guide.md") == "Guide\\n" ? :original : :changed
+                end
+              end
+            RUBY
+          elsif @name == "file_size_documentation_history"
             File.write("README.md", "hello world\n")
           elsif @name == "mapping_lag_context_setup_spec"
             path = "spec/1_writer_spec.rb"
@@ -81,6 +95,12 @@ module TestSelectionLab
           fixture["spec/1_writer_spec.rb"] = File.read("spec/1_writer_spec.rb")
           if @name == "file_size_documentation_history"
             fixture["README.md"] = File.read("README.md")
+          end
+          if documentation_history_case?
+            fixture["lib/producer.rb"] = File.read("lib/producer.rb")
+            if @name == "documentation_new_spec_history"
+              fixture["spec/5_guide_spec.rb"] = File.read("spec/5_guide_spec.rb")
+            end
           end
           File.write("tmp/fixture.json", JSON.pretty_generate(fixture))
           control_catalog = catalog(base)
@@ -120,7 +140,8 @@ module TestSelectionLab
             spec/4_unrelated_spec.rb
           ]
         end
-        if @name.end_with?("_setup_spec") || metadata_subprocess_case?
+        if @name.end_with?("_setup_spec") || metadata_subprocess_case? ||
+             documentation_history_case?
           expected = current.fetch("jobs").fetch("plain").fetch("inventory")
         end
         fixture =
@@ -300,6 +321,10 @@ module TestSelectionLab
             "The changed script runs in an untraced subprocess. An existence predicate does not establish a dependency on its content. Its effects remain unknown, so all four files must run, including the failing script reader. The three original files pass."
           elsif @name == "file_metadata_predicate"
             "Only an unused method comment changes. File.file? still reports true, so the initialized integer and cache stay unchanged. The existing loader dependency selects the writer. The reader and independent third file pass in the reference, and unchanged metadata does not require their execution."
+          elsif @name == "documentation_new_spec_history"
+            "Main adds a document reader after mapping collection. Its full control passes. The PR edits only that document. Mapping history must enter dependency selection. The old mapping cannot establish the new spec definitions' shared effects, so the complete owning environment must run, including the failing new reader."
+          elsif @name == "documentation_source_history"
+            "Main changes the producer to consume a document after mapping collection. Its full control passes. The PR edits only that document. Mapping history must enter dependency selection. The unverified source change protects the complete affected environment, including its failing cached reader."
           elsif @name == "file_size_documentation_history"
             "Main changes a mapped document so initialization reads a different document. Its full control still passes. The PR edits only that newly consumed document and now the cached reader fails. Changed shared inputs in mapping history must protect the owner even for a documentation only PR."
           elsif @name == "file_size_documentation"
@@ -382,6 +407,10 @@ module TestSelectionLab
     end
 
     private
+
+    def documentation_history_case?
+      %w[documentation_new_spec_history documentation_source_history].include?(@name)
+    end
 
     def source_line_layout_case?
       @name.start_with?("source_line_") && !@name.end_with?("_setup_spec")
@@ -528,6 +557,10 @@ module TestSelectionLab
         "spec/3_unrelated_spec.rb",
         "RSpec.describe('Unrelated') { it('passes') { expect(true).to eq(true) } }",
       )
+      if documentation_history_case?
+        FileUtils.mkdir_p("docs")
+        File.write("docs/guide.md", "Guide\n")
+      end
       if source_line_layout_case?
         producer =
           case @name
@@ -825,7 +858,9 @@ module TestSelectionLab
     end
 
     def apply_change
-      if source_line_layout_case?
+      if documentation_history_case?
+        File.write("docs/guide.md", "Changed guide\n")
+      elsif source_line_layout_case?
         path = "lib/producer.rb"
         File.write(path, File.read(path).sub(":original\n  :unused", ":original\n\n  :unused"))
       elsif @name == "file_size_documentation"

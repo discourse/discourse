@@ -26,10 +26,8 @@ module TestSelection
         reasons[file] << "Changed test: #{file}" if inventory.include?(file)
       end
       full = @input.fetch("main") || @input.fetch("mode") == "full"
-      application_changes =
-        (@changes - @test_changes).reject do |path|
-          path.start_with?("docs/") || (!path.include?("/") && path.end_with?(".md"))
-        end
+      input_changes = @changes - @test_changes
+      application_changes = input_changes.reject { |path| documentation?(path) }
       @jobs.each do |name, job|
         shared_inputs = job["mapping"].is_a?(Hash) ? job["mapping"]["shared_files"] : nil
         if full
@@ -43,6 +41,10 @@ module TestSelection
                 .each { |file| reasons[file] << "Shared test setup changed: #{path}" }
             end
         elsif application_changes.any? ||
+              (
+                input_changes.any? &&
+                  job.fetch("mapping_changes").any? { |path| !documentation?(path) }
+              ) ||
               (
                 shared_inputs.is_a?(Array) &&
                   ((@changes + job.fetch("mapping_changes")) & shared_inputs).any?
@@ -66,6 +68,10 @@ module TestSelection
     end
 
     private
+
+    def documentation?(path)
+      path.start_with?("docs/") || (!path.include?("/") && path.end_with?(".md"))
+    end
 
     def validate!
       unless @input.fetch("revision").match?(/\A[0-9a-f]{40}\z/) &&
@@ -177,7 +183,7 @@ module TestSelection
             reason = "Shared input: #{path}"
             break
           end
-          next if path.start_with?("docs/") || (!path.include?("/") && path.end_with?(".md"))
+          next if documentation?(path)
           if mapping.fetch("initialization_sources").include?(path) &&
                !protected_initialization.include?(path)
             reason = "Initialization input: #{path}"
