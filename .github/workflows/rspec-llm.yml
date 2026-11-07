@@ -1,0 +1,55 @@
+name: RSpec LLM proposal
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: rspec-llm-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Read PR changes as data
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('node:fs');
+            const {execFileSync} = require('node:child_process');
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(github.rest.pulls.listFiles, {...context.repo, pull_number: pr.number, per_page: 100});
+            const inventory = new Set(execFileSync('git', ['ls-files', 'spec/**/*_spec.rb'], {encoding: 'utf8'}).trim().split('\n').filter(path => !path.startsWith('spec/system/')));
+            for (const file of files) {
+              if (file.filename.startsWith('spec/') && !file.filename.startsWith('spec/system/') && file.filename.endsWith('_spec.rb')) {
+                if (file.status === 'removed') inventory.delete(file.filename);
+                else inventory.add(file.filename);
+              }
+            }
+            fs.writeFileSync('llm-context.json', JSON.stringify({head_sha: pr.head.sha, base_sha: pr.base.sha, inventory: [...inventory].sort(), files: files.map(file => ({path: file.filename, patch: file.patch})), incomplete: files.some(file => !file.patch) || files.length >= 3000}));
+
+      - name: Ask configured model
+        env:
+          RSPEC_LLM_URL: ${{ vars.RSPEC_LLM_URL }}
+          RSPEC_LLM_MODEL: ${{ vars.RSPEC_LLM_MODEL }}
+          RSPEC_LLM_TOKEN: ${{ secrets.RSPEC_LLM_TOKEN }}
+        run: |
+          python3 script/ci/rspec_llm_test.py
+          python3 script/ci/rspec_llm.py llm-context.json llm.json
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rspec-llm-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}-${{ github.event.pull_request.base.sha }}
+          path: llm.json
+          retention-days: 7

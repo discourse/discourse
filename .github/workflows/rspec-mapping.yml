@@ -1,0 +1,20 @@
+name: RSpec mapping baseline
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: rspec-mapping-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  record:
+    uses: ./.github/workflows/tests.yml
+    with:
+      collect_rspec_mapping: true
