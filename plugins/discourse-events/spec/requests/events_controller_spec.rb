@@ -30,7 +30,7 @@ module DiscourseEvents::Events
         expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
       end
 
-      %w[reuse_topic create_next_topic].each do |topic_mode|
+      shared_examples "recurring event index query count" do |topic_mode|
         it "avoids N+1 queries for recurring events in #{topic_mode} mode" do
           SiteSetting.discourse_post_event_recurring_topic_mode = topic_mode
 
@@ -74,6 +74,9 @@ module DiscourseEvents::Events
           expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
         end
       end
+
+      include_examples "recurring event index query count", "reuse_topic"
+      include_examples "recurring event index query count", "create_next_topic"
 
       it "excludes deleted events" do
         active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)

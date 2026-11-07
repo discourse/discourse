@@ -1777,7 +1777,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
       end
 
-      { "deactivated" => { active: false }, "staged" => { staged: true } }.each do |status, changes|
+      shared_examples "ineligible recurring author" do |status, changes|
         it "does not publish a successor for a #{status} event author" do
           author = Fabricate(:user, refresh_auto_groups: true)
           SiteSetting.discourse_post_event_allowed_on_groups =
@@ -1815,6 +1815,9 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
           ).to fail_a_policy(:rollover_allowed)
         end
       end
+
+      include_examples "ineligible recurring author", "deactivated", { active: false }
+      include_examples "ineligible recurring author", "staged", { staged: true }
 
       it "keeps a renamed host linked to the archived and successor Events" do
         host = Fabricate(:user, refresh_auto_groups: true)
@@ -2021,10 +2024,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect { job.execute({}) }.not_to change(Topic, :count)
       end
 
-      {
-        "post is hidden" => :post,
-        "topic is non-visible" => :topic,
-      }.each do |description, restriction|
+      shared_examples "moderated recurring source" do |description, restriction|
         it "defers successor creation while the source #{description}" do
           starts_at = 7.days.after.change(sec: 0)
           ends_at = starts_at + 1.hour
@@ -2072,6 +2072,9 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
           expect { job.execute({}) }.not_to change(Topic, :count)
         end
       end
+
+      include_examples "moderated recurring source", "post is hidden", :post
+      include_examples "moderated recurring source", "topic is non-visible", :topic
 
       it "creates a successor when the original author loses event creation permission" do
         restricted_author = Fabricate(:user, refresh_auto_groups: true)
