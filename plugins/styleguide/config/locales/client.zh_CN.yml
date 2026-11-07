@@ -64,6 +64,14 @@ zh_CN:
             declined: "最后一次右键点击：已拒绝，浏览器接受了"
         multi_select:
           title: "多选"
+          choose_item: "选择一项"
+          create_item: "创建一项"
+          footer_empty_title: "页脚无结果"
+          footer_empty_description: "即使没有匹配结果，页脚操作仍然可用。"
+          footer_empty_try_this: "打开菜单并搜索菜品。页脚始终可见。"
+          footer_scroll_title: "页脚包含长长的结果列表"
+          footer_scroll_description: "结果列表的滚动与页脚操作无关。"
+          footer_scroll_try_this: "打开菜单并滚动浏览结果。页脚保持不变。"
         reorderable_list:
           title: "可重新排序列表"
           groups:

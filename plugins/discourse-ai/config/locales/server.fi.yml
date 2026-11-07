@@ -526,6 +526,14 @@ fi:
       assign:
         errors:
           not_found: "Ketjua ei löytynyt."
+    appearance_authoring:
+      default_theme: "Oletusteema"
+      colors:
+        light:
+          header_background: "Yläpalkki"
+      fonts:
+        base_font: "Leipätekstin fontti"
+        heading_font: "Otsikon fontti"
     reviewables:
       ai_tool_action:
         approve:
@@ -575,6 +583,7 @@ fi:
     embeddings:
       delete_failed: "Tämä malli on tällä hetkellä käytössä. Päivitä \"ai embeddings selected model\" ensin."
       cannot_edit_builtin: "Et voi muokata sisäänrakennettua mallia."
+      missing_provider_param: "%{param} ei voi olla tyhjä"
       configuration:
         disable_embeddings: "Sinun täytyy ensin poistaa \"ai embeddings enabled\" käytöstä."
         choose_model: "Aseta \"ai embeddings selected model\" ensin."

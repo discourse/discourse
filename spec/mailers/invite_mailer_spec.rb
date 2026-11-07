@@ -2,6 +2,28 @@
 
 RSpec.describe InviteMailer do
   describe "send_invite" do
+    it "omits inaccessible personal message content from default and custom invitations" do
+      [nil, "Please join our forum"].each do |custom_message|
+        inviter = Fabricate(:user)
+        topic =
+          Fabricate(:private_message_topic, user: inviter, excerpt: "Personal message excerpt")
+        invite = Fabricate(:invite, invited_by: inviter, custom_message: custom_message)
+        invite.topics << topic
+
+        message = InviteMailer.send_invite(invite, invite_to_topic: true)
+        expect(message.subject).to include(topic.title)
+        expect(message.body.decoded).to include(topic.excerpt)
+
+        topic.topic_allowed_users.where(user: inviter).destroy_all
+
+        message = InviteMailer.send_invite(invite.reload, invite_to_topic: true)
+        expect(message.subject).not_to include(topic.title)
+        expect(message.body.decoded).not_to include(topic.title, topic.excerpt)
+        expect(message.body.decoded).to include(invite.invite_key)
+        expect(message.body.decoded).to include(custom_message) if custom_message
+      end
+    end
+
     context "when inviting to site" do
       context "with default invite message" do
         fab!(:invite)
@@ -42,13 +64,18 @@ RSpec.describe InviteMailer do
           expect(invite_mail.body.encoded).not_to include(invite.email_token)
         end
 
-        %i[enable_local_logins enable_local_logins_via_email].each do |setting|
-          it "includes the email token when #{setting} is disabled after enabling codes" do
-            SiteSetting.enable_local_logins_via_code = true
-            SiteSetting.public_send("#{setting}=", false)
+        it "includes the email token when enable_local_logins is disabled after enabling codes" do
+          SiteSetting.enable_local_logins_via_code = true
+          SiteSetting.public_send("enable_local_logins=", false)
 
-            expect(invite_mail.body.encoded).to include(invite.email_token)
-          end
+          expect(invite_mail.body.encoded).to include(invite.email_token)
+        end
+
+        it "includes the email token when enable_local_logins_via_email is disabled after enabling codes" do
+          SiteSetting.enable_local_logins_via_code = true
+          SiteSetting.public_send("enable_local_logins_via_email=", false)
+
+          expect(invite_mail.body.encoded).to include(invite.email_token)
         end
 
         it "includes the email token when DiscourseConnect is enabled" do

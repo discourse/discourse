@@ -11,20 +11,27 @@ module TestInventory
       )
   end
 
-  def self.catalog(revision:)
-    paths, status = Open3.capture2("git", "ls-tree", "--name-only", "-d", "HEAD", "plugins/")
-    raise "Cannot discover bundled plugins" unless status.success?
-    bundled = paths.lines.map(&:strip)
-    plugin_specs = Dir["plugins/*/spec/**/*_spec.rb"].sort
+  def self.jobs(bundled:, files: nil)
+    paths =
+      lambda do |pattern|
+        if files
+          files.select do |path|
+            File.fnmatch?(pattern, path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
+          end
+        else
+          Dir[pattern]
+        end
+      end
+    plugin_specs = paths.call("plugins/*/spec/**/*_spec.rb").sort
     systems = plugin_specs.select { |path| path.include?("/spec/system/") }
     jobs = {
       "core-backend" =>
         rspec(
-          files: Dir["spec/**/*_spec.rb"].reject { |path| path.start_with?("spec/system/") },
+          files: paths.call("spec/**/*_spec.rb").reject { |path| path.start_with?("spec/system/") },
           plugins: false,
         ),
       "plugins-backend" => rspec(files: plugin_specs - systems, plugins: true),
-      "core-system" => rspec(files: Dir["spec/system/**/*_spec.rb"], plugins: false),
+      "core-system" => rspec(files: paths.call("spec/system/**/*_spec.rb"), plugins: false),
       "core-plugins-system" =>
         rspec(
           files:
@@ -42,19 +49,22 @@ module TestInventory
           plugins: true,
         ),
       "themes-system" =>
-        rspec(files: Dir["{tmp/themes,themes}/*/spec/system/**/*_spec.rb"], plugins: false),
+        rspec(files: paths.call("{tmp/themes,themes}/*/spec/system/**/*_spec.rb"), plugins: false),
       "core-frontend" =>
         qunit(
           files:
-            Dir["frontend/discourse/tests/**/*-test.{js,gjs,ts,gts}"].select do |path|
-              test_file?(path)
-            end,
+            paths
+              .call("frontend/discourse/tests/**/*-test.{js,gjs,ts,gts}")
+              .select { |path| test_file?(path) },
           plugins: false,
         ),
       "plugins-frontend" =>
-        qunit(files: Dir["plugins/*/test/javascripts/**/*-test.{js,gjs,ts,gts}"], plugins: true),
+        qunit(
+          files: paths.call("plugins/*/test/javascripts/**/*-test.{js,gjs,ts,gts}"),
+          plugins: true,
+        ),
       "themes-frontend" => {
-        "inventory" => Dir["{tmp/themes,themes}/*/test/**/*-test.{js,gjs,ts,gts}"].sort,
+        "inventory" => paths.call("{tmp/themes,themes}/*/test/**/*-test.{js,gjs,ts,gts}").sort,
         "runner" => "qunit",
         "command" => %w[ruby script/ci/theme_test_selection.rb],
         "env" => {
@@ -64,7 +74,8 @@ module TestInventory
       },
       "asset-processor" => {
         "inventory" =>
-          Dir["frontend/asset-processor/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"]
+          paths
+            .call("frontend/asset-processor/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}")
             .reject { |path| path.include?("/node_modules/") }
             .sort,
         "runner" => "vitest",
@@ -75,7 +86,7 @@ module TestInventory
     %w[core tooling converters importer].each do |gem|
       [false, true].each do |rails|
         jobs["migrations-#{gem}-#{rails ? "rails" : "plain"}"] = {
-          "inventory" => Dir["migrations/#{gem}/spec/**/*_spec.rb"].sort,
+          "inventory" => paths.call("migrations/#{gem}/spec/**/*_spec.rb").sort,
           "runner" => "rspec",
           "cwd" => "migrations/#{gem}",
           "order" => rails ? "random" : "defined",
@@ -87,6 +98,14 @@ module TestInventory
         }
       end
     end
+    jobs
+  end
+
+  def self.catalog(revision:)
+    paths, status = Open3.capture2("git", "ls-tree", "--name-only", "-d", "HEAD", "plugins/")
+    raise "Cannot discover bundled plugins" unless status.success?
+    bundled = paths.lines.map(&:strip)
+    jobs = jobs(bundled:)
     required_inputs = %w[
       Gemfile
       Gemfile.lock

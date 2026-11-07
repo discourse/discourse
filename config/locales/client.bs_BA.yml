@@ -287,9 +287,8 @@ bs_BA:
     design_wizard:
       back: "Prethodno"
       next: "Iduće"
-      sections:
-        theme: "Izgled"
-        search: "Pretraži"
+      fonts:
+        base_font: "Tijelo"
       homepage:
         topics: "Topics"
         categories: "Kategorije"
@@ -3805,7 +3804,6 @@ bs_BA:
           label: "Učitavanje"
           title: "Prenesite rezervnu kopiju na ovu instancu"
           success: "'%{filename}' je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "The %{operation} failed. Please check the logs."

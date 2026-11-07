@@ -27,19 +27,24 @@ gl:
         badge:
           draft: Borrador
         preview: Visualizar
-        publish: Publicar
-        options: Opcións
         change:
           title: título
           body: mensaxe
       review:
-        active: Activo
+        copy: Copiar
+        open: Abrir
+        status:
+          active: Activo
+          expired: Caducou
+          revoked: Revogada
+          inactive: Inactivo
+        closed_on: "Pechado o %{date}"
+        revoke: Revogar
       editor_table:
         edit: Editar
         status: Estado
         replies: Réplicas
       drafts: Borradores
-      private_draft: Borrador
       preview: Visualizar
       unpublish: Despublicar
       appearance_link: Aparencia

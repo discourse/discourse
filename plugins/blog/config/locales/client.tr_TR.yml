@@ -32,21 +32,26 @@ tr_TR:
         badge:
           draft: Taslak
         preview: Ön izle
-        publish: Yayınla
-        options: Seçenekler
         change:
           title: başlık
           body: gövde
       review:
-        copy: Bağlantıyı kopyala
-        active: Aktif
+        create: Bağlantı oluştur
+        copy: Kopyala
+        open: Aç
+        status:
+          active: Aktif
+          expired: Süresi doldu
+          revoked: İptal edildi
+          inactive: Aktif Değil
+        closed_on: "Kapatıldı, %{date}"
+        revoke: İptal Et
         message: Geri bildirim
       editor_table:
         edit: Düzenle
         status: Durum
         replies: Yanıtlar
       drafts: Taslaklar
-      private_draft: Taslak
       preview: Ön izle
       unpublish: Yayından kaldır
       appearance_link: Görünüm

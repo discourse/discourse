@@ -14,12 +14,12 @@ System fonts avoid additional font downloads and font-related layout shifts.
 
 ## Install and edit
 
-A saved draft named **Discourse Blog** is installed on the development site under
-**Admin → Plugins → Blog → Themes**. It is not activated automatically. Open its
-editor to preview, customize, or activate it independently of existing themes.
+This folder ships as an included theme, listed under **Admin → Plugins → Blog →
+Themes**. It is not activated automatically. Preview or activate it from its card,
+or use **Customize** to create an editable draft from it.
 
-For another site, copy `blog-theme.json`, `blog.css`, and `templates/` to the root
-of a public Git repository and use **Import from Git**. No build step or JavaScript
+To start your own Git theme from it, copy `blog-theme.json`, `blog.css`, and
+`templates/` to the root of a public Git repository and use **Import from Git**. No build step or JavaScript
 is required. Palette fields remain configurable, and the stylesheet uses the
 reader's light/dark palette. Layout, homepage/archive, article, About, and
 not-found templates are included.

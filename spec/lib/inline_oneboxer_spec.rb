@@ -421,6 +421,22 @@ RSpec.describe InlineOneboxer do
     end
   end
 
+  describe "title truncation" do
+    it "truncates overly long remote titles" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      url = "https://eviltrout.com/long-title"
+
+      stub_request(:get, url).to_return(
+        status: 200,
+        body: "<html><head><title>#{"A" * 600}</title></head></html>",
+      )
+
+      onebox = InlineOneboxer.lookup(url, skip_cache: true)
+
+      expect(onebox[:title].length).to eq(InlineOneboxer::MAX_TITLE_LENGTH)
+    end
+  end
+
   describe ".register_local_handler" do
     it "calls registered local handler" do
       InlineOneboxer.register_local_handler("wizard") do |url, route|

@@ -273,7 +273,7 @@ RSpec.describe ReviewableUser, type: :model do
     fab!(:reviewable)
 
     it "rejects a registration without creating a statement when classification is supplied" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       reviewable = Fabricate(:reviewable_user, target: Fabricate(:user, approved: false))
 
       result =
@@ -296,7 +296,7 @@ RSpec.describe ReviewableUser, type: :model do
     end
 
     it "classifies avatar removal while leaving the account review pending" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
       reviewable = Fabricate(:suspect_user_reviewable, target: user)
 
@@ -564,7 +564,7 @@ RSpec.describe ReviewableUser, type: :model do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve_user handles the user reviewable" do

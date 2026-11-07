@@ -76,7 +76,7 @@ RSpec.describe TestSelection::DependencyGraph do
     expect("graph" => graph.to_h, "tests" => graph.encoded_tests).to eq(original)
   end
 
-  %i[serialized tests].each do |missing|
+  shared_examples "an incoming graph fragment" do |missing:|
     it "rejects missing #{missing} before modifying existing dependencies" do
       graph = described_class.new
       graph.record(source: "lib/consumer.rb", dependencies: ["lib/producer.rb"])
@@ -90,6 +90,9 @@ RSpec.describe TestSelection::DependencyGraph do
       expect("graph" => graph.to_h, "tests" => graph.encoded_tests).to eq(original)
     end
   end
+
+  it_behaves_like "an incoming graph fragment", missing: :serialized
+  it_behaves_like "an incoming graph fragment", missing: :tests
 
   it "keeps dense dependencies compact without losing high numbered sources" do
     inputs = Array.new(128) { |index| "lib/input_#{index}.rb" }

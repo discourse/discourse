@@ -15,6 +15,27 @@ module Blog
       UpcomingChanges.enabled?(:blog_enabled) && Configuration.custom_domain?
     end
 
+    # Article paths share their first segment with the routes below in both hosting modes
+    # (sites can switch modes), so articles may never claim them. A spec checks this covers every route.
+    RESERVED_SEGMENTS = %w[
+      about
+      blog
+      blog-custom.js
+      blog-highlight
+      blog-theme.css
+      feed.xml
+      posts
+      posts.atom
+      posts.rss
+      review
+      robots.txt
+      session
+      sitemap
+      tag
+    ].freeze
+    # Only the bare listing is routed, leaving dated "/archive/..." article paths available.
+    RESERVED_EXACT_SEGMENTS = %w[archive].freeze
+
     ARTICLES =
       proc do
         get "/" => "articles#index"

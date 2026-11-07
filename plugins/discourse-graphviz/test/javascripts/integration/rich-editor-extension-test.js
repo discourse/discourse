@@ -1,4 +1,4 @@
-import { find } from "@ember/test-helpers";
+import { find, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import {
   registerRichEditorExtension,
@@ -45,6 +45,7 @@ module(
       view.pasteHTML(
         '<div class="graphviz is-loading" data-engine="neato">\ndigraph G {\n  a -&gt; b;\n  b -&gt; c;\n}\n</div>'
       );
+      await settled();
 
       assert.strictEqual(
         editorClass.value.trim(),

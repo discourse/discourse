@@ -80,6 +80,7 @@ class DiscoursePluginRegistry
   define_register :admin_config_login_routes, Set
   define_register :discourse_dev_populate_reviewable_types, Set
   define_register :category_update_param_with_callback, Hash
+  define_register :bot_creation_params, Hash
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -156,6 +157,8 @@ class DiscoursePluginRegistry
   define_filtered_register :acl_target_classes
 
   define_filtered_register :svg_icon_sources
+
+  define_filtered_register :svg_symbol_sources
 
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do

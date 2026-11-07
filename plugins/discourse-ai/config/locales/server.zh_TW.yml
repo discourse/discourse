@@ -1047,6 +1047,13 @@ zh_TW:
           hidden: "網站設定「%{setting_name}」已隱藏，無法在此讀取。"
           secret: "網站設定「%{setting_name}」包含密鑰，無法在此讀取。"
           themeable: "網站設定「%{setting_name}」需要佈景主題，無法在此讀取。"
+    appearance_authoring:
+      default_theme: "預設佈景主題"
+      colors:
+        light:
+          header_background: "頁首"
+      fonts:
+        heading_font: "標題字型"
     reviewables:
       ai_tool_action:
         title: "AI 工具動作"
@@ -1109,6 +1116,7 @@ zh_TW:
       cannot_edit_builtin: "無法編輯內建模型。"
       secret_required: "必須選擇憑證"
       secret_not_found: "所選的憑證不存在"
+      missing_provider_param: "%{param} 不得空白"
       configuration:
         disable_embeddings: "你必須先停用「ai embeddings enabled」。"
         choose_model: "請先設定「ai embeddings selected model」。"

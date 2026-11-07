@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "pathname"
-
 module RspecFileAccess
   FILE_PATH = File.instance_method(:path)
   EXPAND_PATH = File.method(:expand_path)

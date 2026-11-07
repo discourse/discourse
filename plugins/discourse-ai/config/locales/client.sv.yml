@@ -123,6 +123,8 @@ sv:
             other: "%{count} inlägg"
       spam:
         short_title: "Skräppost"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Senaste 7 dagarna"
         enable: "Aktivera"
         save_button: "Spara ändringar"

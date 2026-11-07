@@ -11,8 +11,8 @@ added = "spec/lib/file_plan_new_spec.rb"
 cases = [
   [
     "new_spec",
-    [added],
-    "Only the added spec contains new test behavior. Rails and Bundler must use this disposable checkout.",
+    (inventory + [added]).sort,
+    "The added group registers definitions that another file can inspect. Unknown reader ownership protects the complete environment. Existing passing files are a conservative efficiency cost. Rails and Bundler must use this disposable checkout.",
     -> do
       File.write(
         added,
@@ -22,8 +22,8 @@ cases = [
   ],
   [
     "flaky_retry",
-    [added],
-    "The new spec fails once and passes through the existing Turbo retry. The assignment and seed must remain valid across both attempts.",
+    (inventory + [added]).sort,
+    "The new group protects the complete owning environment. Its example fails once and passes through the existing Turbo retry. The assignment and seed must remain valid across both attempts.",
     -> do
       File.write(
         added,
@@ -33,8 +33,8 @@ cases = [
   ],
   [
     "changed_spec",
-    ["spec/lib/pbkdf2_spec.rb"],
-    "Only this spec changed. Existing application behavior is unchanged.",
+    inventory,
+    "The added example registers a definition visible through the RSpec registry. Unknown reader ownership protects this environment, including existing passing files.",
     -> do
       File.open("spec/lib/pbkdf2_spec.rb", "a") do |file|
         file.puts '\nRSpec.describe("Added assertion") { it("passes") { expect(1 + 1).to eq(2) } }'.gsub(
@@ -83,14 +83,50 @@ cases = [
   ],
   [
     "deleted_spec",
-    [],
-    "The deleted spec cannot execute and no application file changed.",
-    -> { File.unlink("spec/lib/pbkdf2_spec.rb") },
+    inventory - ["spec/lib/freedom_patches/translate_accelerator_spec.rb"],
+    "Deleting a registered group can affect registry readers. The removed file is omitted and unknown reader ownership protects every remaining file in this environment.",
+    -> { File.unlink("spec/lib/freedom_patches/translate_accelerator_spec.rb") },
   ],
   [
     "renamed_spec",
-    ["spec/lib/file_plan_renamed_spec.rb"],
-    "The destination is a new test file. The removed source file cannot execute.",
+    (
+      inventory - ["spec/lib/freedom_patches/translate_accelerator_spec.rb"] +
+        ["spec/lib/freedom_patches/file_plan_renamed_spec.rb"]
+    ).sort,
+    "Moving a registered definition can affect load order and registry readers. The destination and every remaining file stay eligible. The removed source never runs.",
+    -> do
+      File.rename(
+        "spec/lib/freedom_patches/translate_accelerator_spec.rb",
+        "spec/lib/freedom_patches/file_plan_renamed_spec.rb",
+      )
+    end,
+  ],
+  [
+    "deleted_autoload_spec",
+    inventory - ["spec/models/badge_grouping_spec.rb"],
+    "The deleted group resolves a class constant. Removing that lookup can remove an autoload side effect, so all remaining files stay eligible.",
+    -> { File.unlink("spec/models/badge_grouping_spec.rb") },
+  ],
+  [
+    "renamed_autoload_spec",
+    (
+      inventory - ["spec/models/badge_grouping_spec.rb"] + ["spec/models/file_plan_renamed_spec.rb"]
+    ).sort,
+    "Moving a class declaration can move its autoload in file load order. The destination and every remaining file stay eligible.",
+    -> do
+      File.rename("spec/models/badge_grouping_spec.rb", "spec/models/file_plan_renamed_spec.rb")
+    end,
+  ],
+  [
+    "deleted_library_spec",
+    inventory - ["spec/lib/pbkdf2_spec.rb"],
+    "This spec also loads a library outside its example group. Removing that load can affect shared initialization, so the remaining environment stays eligible. The removed file never runs.",
+    -> { File.unlink("spec/lib/pbkdf2_spec.rb") },
+  ],
+  [
+    "renamed_library_spec",
+    (inventory - ["spec/lib/pbkdf2_spec.rb"] + ["spec/lib/file_plan_renamed_spec.rb"]).sort,
+    "This renamed spec loads a library outside its example group. Moving the load can change initialization order, so the whole environment remains eligible. The destination runs and the removed source is omitted.",
     -> { File.rename("spec/lib/pbkdf2_spec.rb", "spec/lib/file_plan_renamed_spec.rb") },
   ],
   [
@@ -135,17 +171,11 @@ cases.each do |name, expected, why, change|
   File.write("#{directory}/changes.diff", `git diff #{base}...#{revision}`)
   catalog = Marshal.load(Marshal.dump(baseline))
   catalog["revision"] = revision
+  added_tests =
+    `git diff --no-renames --diff-filter=A --name-only -z #{base}...#{revision}`.split("\0")
+  current_core = TestInventory.jobs(bundled: []).fetch("core-backend").fetch("inventory")
   catalog["jobs"]["core-backend"]["inventory"] = (
-    inventory.select { |file| File.file?(file) } +
-      (
-        %w[new_spec flaky_retry].include?(name) ?
-          [added] :
-          if %w[renamed_spec renamed_spec_with_helper].include?(name)
-            ["spec/lib/file_plan_renamed_spec.rb"]
-          else
-            []
-          end
-      )
+    (inventory & current_core) + (added_tests & current_core)
   ).uniq.sort
   File.write("#{directory}/catalog.json", JSON.pretty_generate(catalog))
   TestPlan.prepare(
@@ -200,12 +230,17 @@ cases.each do |name, expected, why, change|
   )
   full = JSON.parse(File.read("#{directory}/full.json"))
   abort "#{name}: full execution mismatch" unless full.fetch("exact")
+  unless [selected, full].all? { |report|
+           !report.fetch("non_example_failure") && !report.fetch("unreported_failure")
+         }
+    abort "#{name}: incomplete execution comparison"
+  end
   unless (full.fetch("failures") - selected.fetch("failures")).empty?
     abort "#{name}: missed failure"
   end
   unless (
            if %w[mapped_helper renamed_spec_with_helper].include?(name)
-             !selected_ok && selected.fetch("failures").any?
+             !selected_ok && selected.fetch("failures").any? && full.fetch("failures").any?
            else
              selected_ok && full.fetch("success")
            end

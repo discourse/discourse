@@ -167,6 +167,8 @@ overrides:
   '@glint/tsserver-plugin>typescript': ^6.0.3
   babel-plugin-ember-template-compilation@~2.3.0: 2.4.1
   broccoli-babel-transpiler@8.0.0: ^8.0.2
+  prosemirror-markdown>markdown-it: ^15.0.3
+  '@messageformat/runtime>make-plural': ^8.1.0
 
 patchedDependencies:
   '@warp-drive/json-api@5.9.0-alpha.15': 8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee
@@ -6070,9 +6072,6 @@ packages:
     resolution: {integrity: sha512-Je0fLJ0F5atA7F+eIlLzk+Wkcl57JDf4kf+EW8xiP5E31xOQxkIxTbgf1Oi1Lw9tRI9UEMRdI5Vz2xTzoNU1Jw==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  make-plural@7.5.0:
-    resolution: {integrity: sha512-0booA+aVYyVFoR67JBHdfVk0U08HmrBH2FrtmBqBa+NldlqXv/G2Z9VQuQq6Wgp2jDWdybEWGfBkk1cq5264WA==}
-
   make-plural@8.1.0:
     resolution: {integrity: sha512-p8EfQ2LFxnU4KGc82hOYdUplQw0eoWJLzJVKyv2GR9sd4zkjA8bLSXLEmp/qE08c/cFTZOK8j6Ex80+Wey+4PA==}
 
@@ -10151,7 +10150,7 @@ snapshots:
 
   '@messageformat/runtime@3.0.2':
     dependencies:
-      make-plural: 7.5.0
+      make-plural: 8.1.0
 
   '@microsoft/tsdoc-config@0.18.1':
     dependencies:
@@ -14392,8 +14391,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  make-plural@7.5.0: {}
-
   make-plural@8.1.0: {}
 
   makeerror@1.0.12:
@@ -15183,7 +15180,7 @@ snapshots:
   prosemirror-markdown@1.13.7:
     dependencies:
       '@types/markdown-it': 14.2.0
-      markdown-it: 14.3.3
+      markdown-it: 15.0.3
       prosemirror-model: 1.25.11
 
   prosemirror-model@1.25.11:

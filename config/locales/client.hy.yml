@@ -322,12 +322,9 @@ hy:
       back: "Ետ"
       next: "Հաջորդը"
       sections:
-        theme: "Թեմա"
         homepage: "Գլխավոր էջ"
-        search: "Որոնում"
-      colors:
-        light: "Բաց"
-        dark: "Մութ"
+      fonts:
+        base_font: "Բովանդակություն"
       homepage:
         topics: "Թեմաներ"
         categories: "Կատեգորիաներ"
@@ -550,7 +547,6 @@ hy:
         placeholder: "Մուտքագրեք հաղորդագրությունների վերնագրերը url կամ id"
     dsa_statements:
       category: "Կատեգորիա"
-      saving: "Պահպանվում է…"
     review:
       show_more: "Ցույց տալ ավելին"
       show_less: "Ցույց տալ ավելի քիչ"
@@ -4490,7 +4486,6 @@ hy:
           title: "Վերբեռնել պահուստ այս օրինակում"
           uploading: "Վերբեռնվում է…"
           success: "'%{filename}' -ը հաջողությամբ վերբեռնվել է: Այս ֆայլը այժմ մշակվում է, և մինչև մեկ րոպե կպահանջվի այն ցանկում ցուցադրելու համար:"
-          error: " '%{filename}' -ը վերբեռնելիս տեղի է ունեցել սխալ՝ %{message}"
         settings: "Կարգավորումներ"
         operations:
           failed: "%{operation}-ը ձախողվեց: Խնդրում ենք ստուգել գրառումները:"

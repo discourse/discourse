@@ -60,32 +60,40 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
       )
     end
 
-    %w[read_score_events update_score_events].each do |action|
-      it "rejects a key with only the #{action} scope" do
-        api_key_scope.update!(action: action)
-
+    shared_examples "rejecting score creation without permission" do |expected_status:|
+      it "rejects the request without creating a score event" do
         expect {
           post "/admin/plugins/gamification/score_events.json",
                params: create_params,
                headers: headers
         }.not_to change { DiscourseGamification::GamificationScoreEvent.count }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(expected_status)
       end
     end
 
-    %i[user moderator].each do |role|
-      it "rejects a #{role}'s key even with the create scope" do
-        api_key.update!(user: Fabricate(role))
+    context "with a key restricted to reading score events" do
+      before { api_key_scope.update!(action: "read_score_events") }
 
-        expect {
-          post "/admin/plugins/gamification/score_events.json",
-               params: create_params,
-               headers: headers
-        }.not_to change { DiscourseGamification::GamificationScoreEvent.count }
+      include_examples "rejecting score creation without permission", expected_status: 404
+    end
 
-        expect(response.status).to eq(role == :moderator ? 403 : 404)
-      end
+    context "with a key restricted to updating score events" do
+      before { api_key_scope.update!(action: "update_score_events") }
+
+      include_examples "rejecting score creation without permission", expected_status: 404
+    end
+
+    context "with a regular user's key" do
+      before { api_key.update!(user: Fabricate(:user)) }
+
+      include_examples "rejecting score creation without permission", expected_status: 404
+    end
+
+    context "with a moderator's key" do
+      before { api_key.update!(user: Fabricate(:moderator)) }
+
+      include_examples "rejecting score creation without permission", expected_status: 403
     end
 
     it "rejects a key with an unrelated scope" do

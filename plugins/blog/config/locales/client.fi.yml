@@ -31,21 +31,26 @@ fi:
         badge:
           draft: Luonnos
         preview: Esikatselu
-        publish: Julkaise
-        options: Asetukset
         change:
           title: otsikko
           body: leipäteksti
       review:
-        copy: Kopioi linkki
-        active: Aktiivinen
+        create: Luo linkki
+        copy: Kopioi
+        open: Avoinna
+        status:
+          active: Aktiivinen
+          expired: Vanhentunut
+          revoked: Peruttu
+          inactive: Ei aktiivinen
+        closed_on: "Suljettu %{date}"
+        revoke: Peru
         message: Palaute
       editor_table:
         edit: Muokkaa
         status: Tila
         replies: Vastaukset
       drafts: Luonnokset
-      private_draft: Luonnos
       preview: Esikatselu
       unpublish: Peru julkaisu
       appearance_link: Ulkoasu

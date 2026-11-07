@@ -166,6 +166,42 @@ RSpec.describe SvgSpriteController do
       expect(ids).to eq(ids.sort_by { |id| [available.include?(id) ? 0 : 1, id] })
     end
 
+    it "answers a full search afresh after a plugin's symbol source changes" do
+      symbols = { "fal-blender" => '<symbol id="fal-blender"><path d="M1"/></symbol>' }
+      source =
+        Struct
+          .new(:all) do
+            def symbols(icon_ids) = all.slice(*icon_ids)
+
+            def search_icon_ids(keyword, limit:)
+              all.keys.select { |id| id.include?(keyword) }.sort.first(limit)
+            end
+          end
+          .new(symbols)
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      DiscoursePluginRegistry.register_svg_symbol_source(source, plugin)
+      sign_in(user)
+
+      get "/svg-sprite/picker-search", params: { filter: "fal-", only_available: "false" }
+      etag = response.headers["ETag"]
+
+      symbols["fal-guitar"] = '<symbol id="fal-guitar"><path d="M2"/></symbol>'
+      SvgSprite.expire_cache
+
+      get "/svg-sprite/picker-search",
+          params: {
+            filter: "fal-",
+            only_available: "false",
+          },
+          headers: etag ? { "If-None-Match" => etag } : {}
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["icons"].map { |i| i["id"] }).to include("fal-guitar")
+    ensure
+      DiscoursePluginRegistry._raw_svg_symbol_sources.clear
+    end
+
     it "keeps the restricted set when only_available is blank" do
       sign_in(user)
 

@@ -30,6 +30,7 @@ class Theme < ActiveRecord::Base
 
   attr_accessor :child_components
   attr_accessor :skip_child_components_update
+  attr_accessor :skipped_child_components
 
   def self.cache
     @cache ||= DistributedCache.new("theme:compiler:#{AssetProcessor::BASE_COMPILER_VERSION}")
@@ -89,6 +90,7 @@ class Theme < ActiveRecord::Base
            -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
   has_many :theme_site_settings, dependent: :destroy
+  has_many :appearance_changes, dependent: :destroy
 
   validate :component_validations
   validate :validate_theme_fields

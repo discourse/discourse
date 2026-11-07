@@ -6,9 +6,11 @@ module ::Blog
   class ThemeExporter
     def self.export(theme)
       files = {
-        "blog-theme.json" =>
+        ThemeImporter::MANIFEST =>
           JSON.pretty_generate(
-            theme.slice("name", "accent_color", "paper_color", "ink_color").merge("version" => 2),
+            theme.slice("name", *BlogTheme::COLOR_FIELDS).merge(
+              "version" => ThemeImporter::MANIFEST_VERSIONS.last,
+            ),
           ),
         "blog.css" => theme["css"],
         "blog.js" => theme["javascript"],

@@ -30,21 +30,26 @@ ug:
         badge:
           draft: دەسلەپكى نۇسخا
         preview: ئالدىن كۆزەت
-        publish: تارقات
-        options: تاللانما
         change:
           title: ئاتاق
           body: مەزمۇن
       review:
-        copy: ئۇلانما كۆچۈر
-        active: ئاكتىپ
+        create: ئۇلانما قۇر
+        copy: كۆچۈر
+        open: ئاچ
+        status:
+          active: ئاكتىپ
+          expired: ۋاقتى توشتى
+          revoked: بىكار قىلىندى
+          inactive: ئاكتىپ ئەمەس
+        closed_on: "%{date} تاقىلىدۇ"
+        revoke: بىكار قىل
         message: قايتۇرما ئىنكاس
       editor_table:
         edit: تەھرىر
         status: ھالەت
         replies: جاۋاب
       drafts: دەسلەپكى نۇسخا
-      private_draft: دەسلەپكى نۇسخا
       preview: ئالدىن كۆزەت
       unpublish: تارقاتما
       appearance_link: كۆرۈنۈش

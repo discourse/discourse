@@ -2,7 +2,6 @@
 require "json"
 require "fileutils"
 require "digest"
-require "pathname"
 
 module TestExecution
   def self.validate_assignment(plan:, catalog:, job_name:)

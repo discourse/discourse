@@ -31,21 +31,26 @@ it:
         badge:
           draft: Bozza
         preview: Anteprima
-        publish: Pubblica
-        options: Opzioni
         change:
           title: titolo
           body: corpo
       review:
-        copy: Copia link
-        active: Attivi
+        create: Crea link
+        copy: Copia
+        open: Aperta
+        status:
+          active: Attivi
+          expired: Scaduto
+          revoked: Revocata
+          inactive: Non attivi
+        closed_on: "Chiuso %{date}"
+        revoke: Revoca
         message: Feedback
       editor_table:
         edit: Modifica
         status: Stato
         replies: Risposte
       drafts: Bozze
-      private_draft: Bozza
       preview: Anteprima
       unpublish: Annulla pubblicazione
       appearance_link: Aspetto

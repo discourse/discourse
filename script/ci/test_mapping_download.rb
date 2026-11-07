@@ -41,10 +41,11 @@ module TestMappingDownload
               limit_bytes: 1_000_000,
             ),
           )
-        unless [".github/workflows/#{workflow}.yml", ".github/workflows/test-mapping.yml"].include?(
-                 run.fetch("path"),
-               ) && run.fetch("event") == "push" && run.fetch("head_branch") == "main" &&
-                 run.fetch("status") == "completed" && run.fetch("conclusion") == "success" &&
+        allowed_workflows = [".github/workflows/#{workflow}.yml"]
+        allowed_workflows << ".github/workflows/test-mapping.yml"
+        unless allowed_workflows.include?(run.fetch("path")) && run.fetch("event") == "push" &&
+                 run.fetch("head_branch") == "main" && run.fetch("status") == "completed" &&
+                 run.fetch("conclusion") == "success" &&
                  run.fetch("repository").fetch("full_name") == repository &&
                  run.fetch("head_repository").fetch("full_name") == repository
           next

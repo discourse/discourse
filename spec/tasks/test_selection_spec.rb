@@ -294,48 +294,7 @@ RSpec.describe TestSelection::RubyDependencies do
     TestSelection::Planner.new(input).plan.fetch("files")
   end
 
-  {
-    "a context fixture copied into a nested RSpec group" => [
-      "before(:context) { @fixture_value = ContextFixtureProducer.value }",
-      "@fixture_value",
-    ],
-    "a memoized scalar fixture" => [
-      "let(:fixture_value) { ContextFixtureProducer.value }",
-      "fixture_value",
-    ],
-    "a context fixture assigned by a helper method" => [
-      "def prepare_fixture; @fixture_value = ContextFixtureProducer.value; end; before(:context) { prepare_fixture }",
-      "@fixture_value",
-    ],
-    "a compact memoized fixture declaration" => [
-      "let(:fixture_value) { ContextFixtureProducer.value }",
-      "fixture_value",
-      nil,
-      true,
-    ],
-    "an example body outside the mapped spec sources" => [
-      "",
-      "unused",
-      %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb],
-      false,
-      true,
-    ],
-    "an eager fixture with framework storage" => [
-      "let!(:fixture_value) { ContextFixtureProducer.value }",
-      "fixture_value",
-      %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb],
-    ],
-    "an aliased shared fixture" => [
-      "shared_fixture(:fixture_value) { ContextFixtureProducer.value }",
-      "fixture_value",
-      %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb],
-    ],
-    "a shared fixture populated through reflection" => [
-      "fab!(:fixture_value) { ContextFixtureProducer.value }",
-      "fixture_value",
-      %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb],
-    ],
-  }.each do |description, (setup, value, expected, compact, external)|
+  shared_examples "a cached fixture dependency" do |description:, setup:, value:, expected: nil, compact: nil, external: nil|
     it "connects #{description} to later cache readers" do
       Dir.mktmpdir("context-fixture-") do |root|
         FileUtils.mkdir_p(["#{root}/lib", "#{root}/vendor", "#{root}/spec/support"])
@@ -436,6 +395,48 @@ RSpec.describe TestSelection::RubyDependencies do
       end
     end
   end
+
+  it_behaves_like "a cached fixture dependency",
+                  description: "a context fixture copied into a nested RSpec group",
+                  setup: "before(:context) { @fixture_value = ContextFixtureProducer.value }",
+                  value: "@fixture_value"
+  it_behaves_like "a cached fixture dependency",
+                  description: "a memoized scalar fixture",
+                  setup: "let(:fixture_value) { ContextFixtureProducer.value }",
+                  value: "fixture_value"
+  it_behaves_like "a cached fixture dependency",
+                  description: "a context fixture assigned by a helper method",
+                  setup:
+                    "def prepare_fixture; @fixture_value = ContextFixtureProducer.value; end; before(:context) { prepare_fixture }",
+                  value: "@fixture_value"
+  it_behaves_like "a cached fixture dependency",
+                  description: "a compact memoized fixture declaration",
+                  setup: "let(:fixture_value) { ContextFixtureProducer.value }",
+                  value: "fixture_value",
+                  expected: nil,
+                  compact: true
+  it_behaves_like "a cached fixture dependency",
+                  description: "an example body outside the mapped spec sources",
+                  setup: "",
+                  value: "unused",
+                  expected: %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb],
+                  compact: false,
+                  external: true
+  it_behaves_like "a cached fixture dependency",
+                  description: "an eager fixture with framework storage",
+                  setup: "let!(:fixture_value) { ContextFixtureProducer.value }",
+                  value: "fixture_value",
+                  expected: %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb]
+  it_behaves_like "a cached fixture dependency",
+                  description: "an aliased shared fixture",
+                  setup: "shared_fixture(:fixture_value) { ContextFixtureProducer.value }",
+                  value: "fixture_value",
+                  expected: %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb]
+  it_behaves_like "a cached fixture dependency",
+                  description: "a shared fixture populated through reflection",
+                  setup: "fab!(:fixture_value) { ContextFixtureProducer.value }",
+                  value: "fixture_value",
+                  expected: %w[spec/reader_spec.rb spec/unrelated_spec.rb spec/writer_spec.rb]
 
   it "protects background calls that execute while another spec file is active" do
     Dir.mktmpdir("background-dependency-") do |root|
@@ -955,11 +956,7 @@ RSpec.describe TestSelection::RubyDependencies do
     end
   end
 
-  [
-    "InitializationDynamicProbeReader = Class.new { const_set(:VALUE, InitializationDynamicProbeProducer.value) }",
-    "InitializationDynamicProbeReader = InitializationDynamicProbeProducer.value",
-    "def initialization_probe_factory; Class.new { const_set(:VALUE, InitializationDynamicProbeProducer.value) }; end; InitializationDynamicProbeReader = initialization_probe_factory",
-  ].each do |reader_source|
+  shared_examples "a dynamically initialized producer" do |reader_source:|
     it "marks producers used by dynamic and top level initialization: #{reader_source}" do
       Dir.mktmpdir("dynamic-initialization-") do |root|
         FileUtils.mkdir_p("#{root}/lib")
@@ -996,6 +993,16 @@ RSpec.describe TestSelection::RubyDependencies do
       end
     end
   end
+
+  it_behaves_like "a dynamically initialized producer",
+                  reader_source:
+                    "InitializationDynamicProbeReader = Class.new { const_set(:VALUE, InitializationDynamicProbeProducer.value) }"
+  it_behaves_like "a dynamically initialized producer",
+                  reader_source:
+                    "InitializationDynamicProbeReader = InitializationDynamicProbeProducer.value"
+  it_behaves_like "a dynamically initialized producer",
+                  reader_source:
+                    "def initialization_probe_factory; Class.new { const_set(:VALUE, InitializationDynamicProbeProducer.value) }; end; InitializationDynamicProbeReader = initialization_probe_factory"
 
   it "marks a native cached accessor used by top level constant initialization" do
     Dir.mktmpdir("native-initialization-") do |root|
@@ -1038,10 +1045,7 @@ RSpec.describe TestSelection::RubyDependencies do
     end
   end
 
-  [
-    "attr_reader :value",
-    "attr_reader :original_value; alias_method :value, :original_value; remove_method :original_value",
-  ].each do |accessor|
+  shared_examples "a cached native accessor" do |accessor:|
     it "records cached native accessor readers and their delegated producer dependency: #{accessor}" do
       Dir.mktmpdir("ruby-dependencies-") do |root|
         FileUtils.mkdir_p("#{root}/lib")
@@ -1075,39 +1079,12 @@ RSpec.describe TestSelection::RubyDependencies do
     end
   end
 
-  [
-    [
-      "attr_accessor :value",
-      "SeparateCache.value = SeparateCacheProducer.value",
-      -> { SeparateCache.value },
-      "plugins/cache_probe/plugin.rb",
-    ],
-    [
-      "attr_reader :value",
-      "SeparateCache.instance_variable_set(:@value, SeparateCacheProducer.value)",
-      -> { SeparateCache.value },
-    ],
-    [
-      "attr_accessor :value",
-      "SeparateCache.value = SeparateCacheProducer.value",
-      -> { SeparateCache.value },
-    ],
-    [
-      "attr_accessor :value; alias_method :store, :value=; remove_method :value=",
-      "SeparateCache.store(SeparateCacheProducer.value)",
-      -> { SeparateCache.value },
-    ],
-    [
-      "attr_reader :value; def store(value); @value = value; end",
-      "SeparateCache.store(SeparateCacheProducer.value)",
-      -> { SeparateCache.value },
-    ],
-    [
-      "attr_reader :values; def setup; @values = {}; end",
-      "SeparateCache.values[:key] = SeparateCacheProducer.value",
-      -> { SeparateCache.values[:key] },
-    ],
-  ].each do |cache_definition, write, read, cache_path|
+  it_behaves_like "a cached native accessor", accessor: "attr_reader :value"
+  it_behaves_like "a cached native accessor",
+                  accessor:
+                    "attr_reader :original_value; alias_method :value, :original_value; remove_method :original_value"
+
+  shared_examples "a separate cache writer" do |cache_definition:, write:, read:, cache_path: nil|
     cache_path ||= "lib/cache.rb"
     it "connects a separate cache writer to later readers: #{write} (#{cache_path})" do
       Dir.mktmpdir("separate-cache-writer-") do |root|
@@ -1183,6 +1160,34 @@ RSpec.describe TestSelection::RubyDependencies do
     end
   end
 
+  it_behaves_like "a separate cache writer",
+                  cache_definition: "attr_accessor :value",
+                  write: "SeparateCache.value = SeparateCacheProducer.value",
+                  read: -> { SeparateCache.value },
+                  cache_path: "plugins/cache_probe/plugin.rb"
+  it_behaves_like "a separate cache writer",
+                  cache_definition: "attr_reader :value",
+                  write:
+                    "SeparateCache.instance_variable_set(:@value, SeparateCacheProducer.value)",
+                  read: -> { SeparateCache.value }
+  it_behaves_like "a separate cache writer",
+                  cache_definition: "attr_accessor :value",
+                  write: "SeparateCache.value = SeparateCacheProducer.value",
+                  read: -> { SeparateCache.value }
+  it_behaves_like "a separate cache writer",
+                  cache_definition:
+                    "attr_accessor :value; alias_method :store, :value=; remove_method :value=",
+                  write: "SeparateCache.store(SeparateCacheProducer.value)",
+                  read: -> { SeparateCache.value }
+  it_behaves_like "a separate cache writer",
+                  cache_definition: "attr_reader :value; def store(value); @value = value; end",
+                  write: "SeparateCache.store(SeparateCacheProducer.value)",
+                  read: -> { SeparateCache.value }
+  it_behaves_like "a separate cache writer",
+                  cache_definition: "attr_reader :values; def setup; @values = {}; end",
+                  write: "SeparateCache.values[:key] = SeparateCacheProducer.value",
+                  read: -> { SeparateCache.values[:key] }
+
   it "keeps unrelated fields separate when both contain the same frozen empty array" do
     Dir.mktmpdir("shared-empty-container-") do |root|
       FileUtils.mkdir_p("#{root}/lib")
@@ -1225,39 +1230,7 @@ RSpec.describe TestSelection::RubyDependencies do
     end
   end
 
-  [
-    [
-      "attr_accessor :value; def setup; @value = +\"\"; end",
-      "MutationCache.value.insert(0, MutationProducer.value.to_s)",
-      -> { MutationCache.value },
-    ],
-    [
-      "attr_accessor :café; def setup; end",
-      "MutationCache.café = MutationProducer.value",
-      -> { MutationCache.café },
-    ],
-    [
-      "attr_accessor :value; def setup; @value = {keep: :original, drop: :other}; end",
-      "MutationCache.value.keep_if { |_, value| value == MutationProducer.value }",
-      -> { MutationCache.value.values.first },
-    ],
-    [
-      "attr_accessor :value; def setup; @value = Set.new; end",
-      "MutationCache.value.merge([MutationProducer.value])",
-      -> { MutationCache.value.first },
-    ],
-    [
-      "def setup; end",
-      "Thread.current[:selection_mutation_probe] = MutationProducer.value",
-      -> { Thread.current[:selection_mutation_probe] },
-    ],
-    [
-      "attr_accessor :value; def setup; @value = URI.parse(\"https://initial.invalid\"); end",
-      "MutationWriter.apply(MutationProducer.value.to_s)",
-      -> { MutationCache.value.host },
-      "def self.apply(value); MutationCache.value.host = value; end",
-    ],
-  ].each do |definition, write, read, extra|
+  shared_examples "a native cache mutation" do |definition:, write:, read:, extra: nil|
     it "retains a cached consumer after #{write}" do
       Dir.mktmpdir("native-mutation-") do |root|
         FileUtils.mkdir_p("#{root}/lib")
@@ -1297,6 +1270,35 @@ RSpec.describe TestSelection::RubyDependencies do
       end
     end
   end
+
+  it_behaves_like "a native cache mutation",
+                  definition: "attr_accessor :value; def setup; @value = +\"\"; end",
+                  write: "MutationCache.value.insert(0, MutationProducer.value.to_s)",
+                  read: -> { MutationCache.value }
+  it_behaves_like "a native cache mutation",
+                  definition: "attr_accessor :café; def setup; end",
+                  write: "MutationCache.café = MutationProducer.value",
+                  read: -> { MutationCache.café }
+  it_behaves_like "a native cache mutation",
+                  definition:
+                    "attr_accessor :value; def setup; @value = {keep: :original, drop: :other}; end",
+                  write:
+                    "MutationCache.value.keep_if { |_, value| value == MutationProducer.value }",
+                  read: -> { MutationCache.value.values.first }
+  it_behaves_like "a native cache mutation",
+                  definition: "attr_accessor :value; def setup; @value = Set.new; end",
+                  write: "MutationCache.value.merge([MutationProducer.value])",
+                  read: -> { MutationCache.value.first }
+  it_behaves_like "a native cache mutation",
+                  definition: "def setup; end",
+                  write: "Thread.current[:selection_mutation_probe] = MutationProducer.value",
+                  read: -> { Thread.current[:selection_mutation_probe] }
+  it_behaves_like "a native cache mutation",
+                  definition:
+                    "attr_accessor :value; def setup; @value = URI.parse(\"https://initial.invalid\"); end",
+                  write: "MutationWriter.apply(MutationProducer.value.to_s)",
+                  read: -> { MutationCache.value.host },
+                  extra: "def self.apply(value); MutationCache.value.host = value; end"
 
   it "keeps direct spec write dependencies after an intervening cache read" do
     Dir.mktmpdir("direct-cache-write-") do |root|
@@ -1831,18 +1833,7 @@ RSpec.describe TestExecution do
     end
   end
 
-  %w[
-    skipped
-    body_only
-    compiled_only
-    compiled_empty
-    empty_require
-    empty_load
-    temporary_fixture
-    temporary_spec
-    symlinked
-    cached_require
-  ].each do |variant|
+  shared_examples "a spec loading boundary" do |variant:|
     it "distinguishes loading from compilation for #{variant} specs" do
       external = nil
       Dir.mktmpdir("execution-", "tmp") do |directory|
@@ -1957,6 +1948,17 @@ RSpec.describe TestExecution do
       FileUtils.remove_entry(external) if external
     end
   end
+
+  it_behaves_like "a spec loading boundary", variant: "skipped"
+  it_behaves_like "a spec loading boundary", variant: "body_only"
+  it_behaves_like "a spec loading boundary", variant: "compiled_only"
+  it_behaves_like "a spec loading boundary", variant: "compiled_empty"
+  it_behaves_like "a spec loading boundary", variant: "empty_require"
+  it_behaves_like "a spec loading boundary", variant: "empty_load"
+  it_behaves_like "a spec loading boundary", variant: "temporary_fixture"
+  it_behaves_like "a spec loading boundary", variant: "temporary_spec"
+  it_behaves_like "a spec loading boundary", variant: "symlinked"
+  it_behaves_like "a spec loading boundary", variant: "cached_require"
 end
 
 RSpec.describe TestMapping do
@@ -2265,7 +2267,7 @@ end
 
 RSpec.describe "Test workflow preparation" do
   include RSpecSubprocessEnvironment
-  it "selects only added tests for main and stable PRs through both preparation entry points" do
+  it "protects new declarations without mappings through both preparation entry points" do
     prepare = File.expand_path("../../script/ci/test_prepare.rb", __dir__)
     Dir.mktmpdir("mixed-workflow-") do |directory|
       %w[.github/workflows spec/lib migrations/core/spec].each do |path|
@@ -2341,8 +2343,9 @@ RSpec.describe "Test workflow preparation" do
 
             expect(status.success?).to eq(true), output
             plan = JSON.parse(File.read("#{destination}/plan.json"))
-            expect(plan.fetch("files")).to eq([expected])
-            expect(plan.fetch("jobs").values.flatten.uniq).to eq([expected])
+            expected_files = [expected, expected.sub("changed_spec.rb", "existing_spec.rb")]
+            expect(plan.fetch("files")).to eq(expected_files)
+            expect(plan.fetch("jobs").values.flatten.uniq).to eq(expected_files)
           end
       end
     end
@@ -2572,7 +2575,6 @@ RSpec.describe TestJob do
       expect(normal.fetch("loaded")).to eq(inventory)
       expect(Dir["#{directory}/normal/raw/*.json"]).to eq([])
       expect(File.exist?(mapping_path)).to eq(false)
-
       output, error, status =
         Open3.capture3(
           environment.merge("TEST_MAPPING_COLLECT" => "1"),
@@ -2758,7 +2760,247 @@ RSpec.describe TestJob do
 end
 
 RSpec.describe TestPlan do
-  it "combines a renamed spec with mapped application changes without expanding the inventory" do
+  it "routes new test definitions only to environments that load them" do
+    Dir.mktmpdir("preloaded-spec-helpers-") do |directory|
+      FileUtils.mkdir_p(
+        [
+          "#{directory}/spec",
+          "#{directory}/migrations/core/spec",
+          "#{directory}/frontend/discourse/tests/unit",
+          "#{directory}/frontend/asset-processor",
+          "#{directory}/tmp",
+        ],
+      )
+      File.write("#{directory}/.gitignore", "tmp/\n")
+      File.write(
+        "#{directory}/spec/existing_spec.rb",
+        'RSpec.describe("Existing") { it("passes") {} }',
+      )
+      File.write(
+        "#{directory}/migrations/core/spec/existing_spec.rb",
+        'RSpec.describe("Existing migration") { it("passes") {} }',
+      )
+      File.write(
+        "#{directory}/frontend/discourse/tests/unit/existing-test.js",
+        "globalThis.sharedTestValue = 'original';",
+      )
+      File.write(
+        "#{directory}/frontend/asset-processor/existing.test.mjs",
+        "globalThis.sharedTestValue = 'original';",
+      )
+      git =
+        lambda do |*arguments|
+          output, status =
+            Open3.capture2e(
+              "git",
+              "-C",
+              directory,
+              "-c",
+              "user.name=Plan test",
+              "-c",
+              "user.email=test@example.invalid",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              *arguments,
+            )
+          raise output unless status.success?
+          output.strip
+        end
+      git.call("init", "--quiet")
+      git.call("add", ".")
+      git.call("commit", "--quiet", "-m", "Existing framework setup")
+      base = git.call("rev-parse", "HEAD")
+      core_spec = "spec/added_spec.rb"
+      migration_spec = "migrations/core/spec/added_spec.rb"
+      frontend_test = "frontend/discourse/tests/unit/added-test.js"
+      asset_test = "frontend/asset-processor/added.test.mjs"
+      File.write(
+        "#{directory}/#{core_spec}",
+        "require 'rails_helper'\nRSpec.describe('Added') { it('passes') {} }\n",
+      )
+      File.write(
+        "#{directory}/#{migration_spec}",
+        "require 'spec_helper'\nRSpec.describe('Added migration') { it('passes') {} }\n",
+      )
+      File.write("#{directory}/#{frontend_test}", "globalThis.sharedTestValue = 'changed';")
+      File.write("#{directory}/#{asset_test}", "globalThis.sharedTestValue = 'changed';")
+      git.call("add", ".")
+      git.call("commit", "--quiet", "-m", "Add isolated specs")
+      revision = git.call("rev-parse", "HEAD")
+
+      Dir.chdir(directory) do
+        jobs =
+          TestInventory
+            .jobs(bundled: [])
+            .to_h { |name, job| [name, job.merge("environment" => name)] }
+        File.write(
+          "tmp/catalog.json",
+          JSON.generate("revision" => revision, "repository_catalog" => true, "jobs" => jobs),
+        )
+        FileUtils.mkdir_p("tmp/mappings")
+        jobs.each do |name, job|
+          mapping = {
+            "version" => 2,
+            "revision" => base,
+            "environment" => name,
+            "complete" => true,
+            "tests" =>
+              (
+                job.fetch("inventory") - [core_spec, migration_spec, frontend_test, asset_test]
+              ).to_h { |path| [path, []] },
+            "source_checks" => {
+            },
+            "sources" => [],
+            "initialization_sources" => [],
+            "shared_files" => [],
+            "source_dependencies" => {
+            },
+          }
+          File.write("tmp/mappings/#{name}.json", JSON.generate(mapping))
+        end
+        described_class.prepare(
+          catalog_path: "tmp/catalog.json",
+          mapping_directory: "tmp/mappings",
+          base: base,
+          revision: revision,
+          output: "tmp/plan.json",
+          mode: "select",
+          main: false,
+        )
+      end
+      plan = JSON.parse(File.read("#{directory}/tmp/plan.json"))
+
+      expect(plan.fetch("jobs").reject { |_, files| files.empty? }).to eq(
+        "core-backend" => [core_spec, "spec/existing_spec.rb"],
+        "migrations-core-plain" => [migration_spec, "migrations/core/spec/existing_spec.rb"],
+        "migrations-core-rails" => [migration_spec, "migrations/core/spec/existing_spec.rb"],
+        "core-frontend" => [frontend_test, "frontend/discourse/tests/unit/existing-test.js"],
+        "asset-processor" => [asset_test, "frontend/asset-processor/existing.test.mjs"],
+      )
+      expect(plan.fetch("files")).to eq(
+        [
+          asset_test,
+          "frontend/asset-processor/existing.test.mjs",
+          frontend_test,
+          "frontend/discourse/tests/unit/existing-test.js",
+          migration_spec,
+          "migrations/core/spec/existing_spec.rb",
+          core_spec,
+          "spec/existing_spec.rb",
+        ],
+      )
+    end
+  end
+
+  it "routes removed shared setup only to its previous environment without a mapping" do
+    Dir.mktmpdir("removed-shared-setup-") do |directory|
+      FileUtils.mkdir_p(
+        [
+          "#{directory}/spec/system",
+          "#{directory}/frontend/discourse/tests/unit",
+          "#{directory}/tmp",
+        ],
+      )
+      File.write("#{directory}/.gitignore", "tmp/\n")
+      File.write(
+        "#{directory}/spec/setup_spec.rb",
+        'RSpec.configure { |config| config.before(:suite) { ENV["SHARED_SETUP"] = "configured" } }; RSpec.describe("Setup") { it("passes") {} }',
+      )
+      File.write(
+        "#{directory}/spec/reader_spec.rb",
+        'RSpec.describe("Reader") { it("uses setup") { expect(ENV["SHARED_SETUP"]).to eq("configured") } }',
+      )
+      File.write(
+        "#{directory}/spec/system/browser_spec.rb",
+        'RSpec.describe("Browser") { it("has separate setup") { expect(ENV["SHARED_SETUP"]).to eq(nil) } }',
+      )
+      frontend_setup = "frontend/discourse/tests/unit/setup-test.js"
+      frontend_reader = "frontend/discourse/tests/unit/reader-test.js"
+      File.write("#{directory}/#{frontend_setup}", "globalThis.sharedTestValue = 'original';")
+      File.write("#{directory}/#{frontend_reader}", "globalThis.sharedTestValue;")
+      git =
+        lambda do |*arguments|
+          output, status =
+            Open3.capture2e(
+              "git",
+              "-C",
+              directory,
+              "-c",
+              "user.name=Plan test",
+              "-c",
+              "user.email=test@example.invalid",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              *arguments,
+            )
+          raise output unless status.success?
+          output.strip
+        end
+      git.call("init", "--quiet")
+      git.call("add", ".")
+      git.call("commit", "--quiet", "-m", "Original suite setup")
+      base = git.call("rev-parse", "HEAD")
+      File.unlink("#{directory}/spec/setup_spec.rb")
+      File.unlink("#{directory}/#{frontend_setup}")
+      git.call("add", "-A")
+      git.call("commit", "--quiet", "-m", "Remove shared setup spec")
+      revision = git.call("rev-parse", "HEAD")
+      catalog = {
+        "revision" => revision,
+        "repository_catalog" => true,
+        "jobs" => {
+          "core-backend" => {
+            "inventory" => ["spec/reader_spec.rb"],
+            "environment" => "backend",
+            "runner" => "rspec",
+          },
+          "core-system" => {
+            "inventory" => ["spec/system/browser_spec.rb"],
+            "environment" => "system",
+            "runner" => "rspec",
+          },
+          "core-frontend" => {
+            "inventory" => [frontend_reader],
+            "environment" => "frontend",
+            "runner" => "qunit",
+          },
+        },
+      }
+      File.write("#{directory}/tmp/catalog.json", JSON.generate(catalog))
+
+      Dir.chdir(directory) do
+        described_class.prepare(
+          catalog_path: "tmp/catalog.json",
+          mapping_directory: "tmp/mappings",
+          base: base,
+          revision: revision,
+          output: "tmp/plan.json",
+          mode: "select",
+          main: false,
+        )
+      end
+      result = JSON.parse(File.read("#{directory}/tmp/plan.json"))
+
+      expect(result.fetch("files")).to eq([frontend_reader, "spec/reader_spec.rb"])
+      expect(result.fetch("jobs")).to eq(
+        "core-backend" => ["spec/reader_spec.rb"],
+        "core-system" => [],
+        "core-frontend" => [frontend_reader],
+      )
+      expect(result.fetch("reasons").fetch("spec/reader_spec.rb")).to eq(
+        ["Shared test setup changed: spec/setup_spec.rb"],
+      )
+      expect(result.fetch("reasons").fetch(frontend_reader)).to eq(
+        ["Shared test setup changed: #{frontend_setup}"],
+      )
+    end
+  end
+
+  it "protects renamed RSpec definitions alongside mapped application changes" do
     Dir.mktmpdir("rename-plan-") do |directory|
       FileUtils.mkdir_p(["#{directory}/lib", "#{directory}/spec", "#{directory}/tmp/mappings"])
       File.write("#{directory}/.gitignore", "tmp/\n")
@@ -2832,6 +3074,7 @@ RSpec.describe TestPlan do
           "backend" => {
             "inventory" => inventory,
             "environment" => "core",
+            "runner" => "rspec",
           },
         },
       }
@@ -2851,7 +3094,7 @@ RSpec.describe TestPlan do
         end
 
         expect(JSON.parse(File.read("#{directory}/tmp/plan.json")).fetch("files")).to eq(
-          %w[spec/affected_spec.rb spec/renamed_spec.rb],
+          %w[spec/affected_spec.rb spec/renamed_spec.rb spec/unrelated_spec.rb],
         )
       end
     end

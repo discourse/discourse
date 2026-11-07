@@ -1,34 +1,27 @@
-@mixin chat-unread-indicator {
-  @include unselectable;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 1em;
+// Every chat unread indicator carries this class; plain dots also take their
+// shape from core's .d-new-indicator. Context classes only handle placement.
+.c-unread-indicator {
   box-sizing: content-box;
-  -webkit-touch-callout: none;
-  background: var(--tertiary-med-or-tertiary);
+  border-radius: 100vmax;
+  background: var(--d-new-indicator-color);
   color: var(--secondary);
   font-size: var(--font-down-2);
   text-align: center;
+  cursor: default;
+  user-select: none;
+  -webkit-touch-callout: none;
   transition: border-color linear 0.15s;
-
-  @content;
 
   &.-urgent {
     background: var(--success);
-    color: var(--secondary);
     height: 1em;
     width: min-content;
     min-width: 0.6em;
     padding: 0.21em 0.42em;
   }
-
-  &__number {
-    color: var(--secondary);
-    line-height: var(--line-height-small);
-  }
 }
 
-.c-unread-indicator,
-.chat-channel-unread-indicator {
-  @include chat-unread-indicator;
+.c-unread-indicator__number {
+  color: var(--secondary);
+  line-height: var(--line-height-small);
 }

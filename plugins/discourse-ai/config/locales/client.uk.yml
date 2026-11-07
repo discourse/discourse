@@ -640,6 +640,8 @@ uk:
         short_title: "Спам"
         title: "Налаштування обробки спаму"
         select_llm: "Виберіть LLM"
+        no_llm_selected: "Немає"
+        no_decision_model_selected: "Немає"
         select_agent: "Виберіть агента"
         custom_instructions: "Користувацькі інструкції"
         custom_instructions_help: "Спеціальні інструкції, адаптовані до вашого сайту, які допоможуть штучному інтелекту виявляти спам, наприклад, «Будьте більш агресивними у скануванні публікацій не англійською мовою»."
@@ -1539,6 +1541,7 @@ uk:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Користувацька"
         provider_fields:

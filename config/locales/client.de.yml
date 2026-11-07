@@ -545,7 +545,6 @@ de:
         action: "Ideen ansehen"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
-        predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
         predefined_topics_description: "Wähle aus einer Sammlung von Gesprächsanregungen, um Diskussionen in Gang zu bringen"
         use_predefined: "Vorlagen ansehen"
         back: "Zurück"
@@ -558,28 +557,28 @@ de:
       save: "Speichern und fertigstellen"
       back: "Zurück"
       next: "Weiter"
-      intro:
-        start: "Los geht’s"
       close:
         keep: "Änderungen beibehalten"
         revert: "Änderungen rückgängig machen"
         continue_editing: "Weiter bearbeiten"
+      steps:
+        theme:
+          title: "Wähle ein Theme aus"
+        homepage:
+          title: "Look & Feel"
       sections:
-        theme: "Theme"
-        colors: "Standardfarbe"
         fonts: "Schriftarten"
+        logo: "Logo"
         homepage: "Homepage"
-        welcome_banner: "Willkommensbanner"
-        search: "Suche"
       theme:
         selected: "Ausgewählt"
         applying: "Wird angewendet…"
-      colors:
-        light: "Hell"
-        dark: "Dunkel"
       fonts:
-        base_font: "Basisschriftart"
-        heading_font: "Überschrift-Schriftart"
+        base_font: "Body"
+        heading_font: "Überschriften"
+      logo:
+        description: "Erscheint in der oberen Navigation der Website sowie oben in den E-Mail-Benachrichtigungen der Website."
+        help_text: "Die empfohlene Größe ist 600 x 80 Pixel."
       homepage:
         topics: "Themen"
         categories: "Kategorien"
@@ -587,19 +586,6 @@ de:
           boxes: "Boxen"
           with_topics: "Kategorien mit Themen"
           only: "Nur Kategorien"
-      welcome_banner:
-        enable: "Einen Willkommensbanner anzeigen"
-        enable_description: "Besuchende mit dem Namen der Website und einem Suchfeld begrüßen"
-        location: "Bannerplatzierung"
-        locations:
-          below_site_header: "Unterhalb der Kopfzeile der Seite"
-          above_topic_content: "Oberhalb der Themenliste"
-      search:
-        experiences:
-          search_icon:
-            title: "Suchsymbol"
-          search_field:
-            title: "Suchfeld"
     about:
       edit: "Diese Seite bearbeiten"
       simple_title: "Über uns"
@@ -858,7 +844,6 @@ de:
     dsa_statements:
       category: "Kategorie"
       category_prompt: "Kategorie auswählen"
-      saving: "Wird gespeichert …"
     review:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"
@@ -7851,7 +7836,6 @@ de:
           uploading: "Wird hochgeladen …"
           uploading_progress: "Wird hochgeladen … %{progress} %"
           success: "„%{filename}“ wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu eine Minute dauern, bis sie in der Liste erscheint."
-          error: "Beim Hochladen der Datei „%{filename}“ ist ein Fehler aufgetreten: %{message}"
         settings: "Einstellungen"
         operations:
           is_running: "Ein Vorgang läuft gerade …"

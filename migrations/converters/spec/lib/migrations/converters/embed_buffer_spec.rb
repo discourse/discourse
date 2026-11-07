@@ -231,23 +231,70 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
   describe "linkage column coverage" do
     idb = Migrations::Database::IntermediateDB
 
-    {
-      quote: [:quotes, idb::EmbedQuote],
-      link: [:links, idb::EmbedLink],
-      mention: [:mentions, idb::EmbedMention],
-      hashtag: [:hashtags, idb::EmbedHashtag],
-      emoji: [:emojis, idb::EmbedEmoji],
-      poll: [:polls, idb::EmbedPoll],
-      event: [:events, idb::EmbedEvent],
-      upload: [:uploads, idb::EmbedUpload],
-    }.each do |recorder, (collection, model)|
-      it "records every #{model.name.split("::").last} column" do
+    shared_examples "recording the complete embed model contract" do |recorder:, collection:, model:|
+      it "records every model creation column" do
         buffer.public_send(recorder)
         descriptor = buffer.public_send(collection).last
         columns = model.method(:create).parameters.map { |_type, name| name }
 
         expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
       end
+    end
+
+    context "when recording a quote" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :quote,
+                       collection: :quotes,
+                       model: idb::EmbedQuote
+    end
+
+    context "when recording a link" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :link,
+                       collection: :links,
+                       model: idb::EmbedLink
+    end
+
+    context "when recording a mention" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :mention,
+                       collection: :mentions,
+                       model: idb::EmbedMention
+    end
+
+    context "when recording a hashtag" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :hashtag,
+                       collection: :hashtags,
+                       model: idb::EmbedHashtag
+    end
+
+    context "when recording an emoji" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :emoji,
+                       collection: :emojis,
+                       model: idb::EmbedEmoji
+    end
+
+    context "when recording a poll" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :poll,
+                       collection: :polls,
+                       model: idb::EmbedPoll
+    end
+
+    context "when recording an event" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :event,
+                       collection: :events,
+                       model: idb::EmbedEvent
+    end
+
+    context "when recording an upload" do
+      include_examples "recording the complete embed model contract",
+                       recorder: :upload,
+                       collection: :uploads,
+                       model: idb::EmbedUpload
     end
   end
 

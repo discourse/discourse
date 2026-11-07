@@ -26,14 +26,18 @@ sw:
         badge:
           draft: Rasimu
         preview: Kihakiki
-        options: Machaguo
         change:
           title: kichwa cha Habari
           body: mwili
       review:
-        active: Amilifu
+        copy: Nakili
+        open: Fungua
+        status:
+          active: Amilifu
+          inactive: Isiyo Amilifu
+        closed_on: "Imefungwa %{date}"
+        revoke: Futa
       editor_table:
         edit: Hariri
         replies: Majibu
-      private_draft: Rasimu
       preview: Kihakiki

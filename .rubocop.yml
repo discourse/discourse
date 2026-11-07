@@ -15,6 +15,9 @@ Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
 Discourse/NoResetColumnInformationInMigrations:
   Enabled: true
 
+Discourse/NoIterationOverRSpecDefinitions:
+  Enabled: true
+
 Discourse/Plugins/CallRequiresPlugin:
   Include:
     - "plugins/*/app/controllers/**/*"

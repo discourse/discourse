@@ -5,6 +5,10 @@ module PageObjects
     class Review < PageObjects::Pages::Base
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
 
+      def has_no_standalone_classification?
+        has_no_css?(".review-item__classify, .dsa-classification")
+      end
+
       def visit_reviewable(reviewable)
         page.visit("/review/#{reviewable.id}")
         self

@@ -14,6 +14,7 @@ files = %w[
   spec/lib/archetype_spec.rb
   spec/lib/plaintext_mentions_spec.rb
   spec/models/badge_grouping_spec.rb
+  spec/lib/freedom_patches/translate_accelerator_spec.rb
 ].sort
 catalog = TestInventory.catalog(revision: revision)
 catalog.delete("repository_catalog")

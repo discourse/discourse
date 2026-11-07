@@ -18,10 +18,7 @@ module RspecSourceStructure
     {
       "digest" => digest(source:, bodies:, immutable_methods:),
       "immutable_methods" => immutable_methods,
-      "method_digests" =>
-        method_nodes(source).map do |node|
-          Digest::SHA256.hexdigest(node.body&.location&.slice.to_s)
-        end,
+      "method_digests" => method_nodes(source).map { |node| method_digest(node) },
     }
   end
 
@@ -51,6 +48,13 @@ module RspecSourceStructure
   end
   private_class_method :method_nodes
 
+  def self.method_digest(node)
+    Digest::SHA256.hexdigest(
+      JSON.generate([node.location.start_line, node.body&.location&.slice.to_s]),
+    )
+  end
+  private_class_method :method_digest
+
   def self.definitions(root)
     bodies = []
     pending = [root]
@@ -77,9 +81,7 @@ module RspecSourceStructure
       raise "Method correspondence changed"
     end
     current.each_index.filter_map do |index|
-      if previous[index] != Digest::SHA256.hexdigest(current[index].body&.location&.slice.to_s)
-        "__method__/#{path}/#{index}"
-      end
+      "__method__/#{path}/#{index}" if previous[index] != method_digest(current[index])
     end
   end
 

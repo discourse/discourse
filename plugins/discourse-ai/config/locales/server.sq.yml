@@ -77,6 +77,10 @@ sq:
       assign:
         errors:
           not_found: "Tema nuk u gjet."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Ballina"
     reviewables:
       ai_tool_action:
         approve:

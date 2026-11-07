@@ -32,21 +32,26 @@ ar:
         badge:
           draft: مسودة
         preview: معاينة
-        publish: نشر
-        options: الخيارات
         change:
           title: العنوان
           body: النص الأساسي
       review:
-        copy: نسخ الرابط
-        active: نشطة
+        create: إنشاء رابط
+        copy: نسخ
+        open: فتح
+        status:
+          active: نشطة
+          expired: انتهى
+          revoked: سُحب
+          inactive: غير نشطة
+        closed_on: "تم إغلاقه في %{date}"
+        revoke: إلغاء
         message: الملاحظات
       editor_table:
         edit: تعديل
         status: الحالة
         replies: الردود
       drafts: المسودات
-      private_draft: مسودة
       preview: معاينة
       unpublish: إلغاء النشر
       appearance_link: المظهر

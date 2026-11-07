@@ -18,65 +18,99 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     DiscourseAi::Utils::DnsSrv.stubs(:lookup).raises(RuntimeError, "Unexpected SRV lookup")
   end
 
-  %w[classification_model agent decision_model].each do |backend|
-    describe "independent enable flags with #{backend}" do
-      before do
-        SiteSetting.ai_sentiment_sentiment_classification_strategy = backend
-        SiteSetting.ai_sentiment_emotion_classification_strategy = backend
-        SiteSetting.ai_sentiment_sentiment_agent = agent.id
-        SiteSetting.ai_sentiment_emotion_agent = agent.id
-        SiteSetting.ai_sentiment_sentiment_decision_model = decision_model.id
-        SiteSetting.ai_sentiment_emotion_decision_model = decision_model.id
-        SiteSetting.ai_sentiment_model_configs =
-          %w[sentiment emotion]
-            .map do |type|
-              {
-                classification_type: type,
-                model_name: "custom/#{type}",
-                endpoint: "https://#{type}.example.com",
-                api_key: "secret",
-              }
-            end
-            .to_json
-      end
-
-      [[false, false], [true, false], [false, true], [true, true]].each do |sentiment, emotion|
-        it "runs only enabled capabilities with sentiment=#{sentiment} and emotion=#{emotion}" do
-          SiteSetting.ai_sentiment_enabled = sentiment
-          SiteSetting.ai_sentiment_emotion_enabled = emotion
-          enabled_types = []
-          enabled_types << "sentiment" if sentiment
-          enabled_types << "emotion" if emotion
-          model_names = enabled_types.map { |type| described_class.active_model_name_for(type) }
-          classifier = described_class.new
-
-          expect(described_class.enabled_for?(:sentiment)).to eq(sentiment)
-          expect(described_class.enabled_for?("emotion")).to eq(emotion)
-          expect(described_class.any_enabled?).to eq(sentiment || emotion)
-          expect(described_class.active_classifier_names).to match_array(model_names)
-          expect(classifier.has_classifiers?).to eq(sentiment || emotion)
-          expect(described_class.backfill_query).to match_array(enabled_types.empty? ? [] : [post])
-          %w[sentiment emotion].each do |type|
-            expect(described_class.classifier_summary_for(type)[:ready]).to eq(true)
+  shared_examples "independent sentiment capability settings" do |backend:|
+    before do
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = backend
+      SiteSetting.ai_sentiment_emotion_classification_strategy = backend
+      SiteSetting.ai_sentiment_sentiment_agent = agent.id
+      SiteSetting.ai_sentiment_emotion_agent = agent.id
+      SiteSetting.ai_sentiment_sentiment_decision_model = decision_model.id
+      SiteSetting.ai_sentiment_emotion_decision_model = decision_model.id
+      SiteSetting.ai_sentiment_model_configs =
+        %w[sentiment emotion]
+          .map do |type|
+            {
+              classification_type: type,
+              model_name: "custom/#{type}",
+              endpoint: "https://#{type}.example.com",
+              api_key: "secret",
+            }
           end
+          .to_json
+    end
 
-          SentimentInferenceStubs.stub_classification(post)
-          DiscourseAi::Completions::Llm.with_prepared_responses(
-            [{ negative: 0.1, neutral: 0.2, positive: 0.7, joy: 0.7 }] * 2,
-          ) do
-            DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do
-              classifier.classify!(post)
-              classifier.bulk_classify!(Post.where(id: post.id))
-            end
-          end
+    shared_examples "running enabled sentiment capabilities" do |sentiment_enabled:, emotion_enabled:|
+      it "runs only enabled capabilities with sentiment=#{sentiment_enabled} and emotion=#{emotion_enabled}" do
+        SiteSetting.ai_sentiment_enabled = sentiment_enabled
+        SiteSetting.ai_sentiment_emotion_enabled = emotion_enabled
+        enabled_types = []
+        enabled_types << "sentiment" if sentiment_enabled
+        enabled_types << "emotion" if emotion_enabled
+        model_names = enabled_types.map { |type| described_class.active_model_name_for(type) }
+        classifier = described_class.new
 
-          expect(ClassificationResult.where(target: post).pluck(:model_used)).to match_array(
-            model_names,
-          )
-          expect(described_class.backfill_query).to be_empty
+        expect(described_class.enabled_for?(:sentiment)).to eq(sentiment_enabled)
+        expect(described_class.enabled_for?("emotion")).to eq(emotion_enabled)
+        expect(described_class.any_enabled?).to eq(sentiment_enabled || emotion_enabled)
+        expect(described_class.active_classifier_names).to match_array(model_names)
+        expect(classifier.has_classifiers?).to eq(sentiment_enabled || emotion_enabled)
+        expect(described_class.backfill_query).to match_array(enabled_types.empty? ? [] : [post])
+        %w[sentiment emotion].each do |type|
+          expect(described_class.classifier_summary_for(type)[:ready]).to eq(true)
         end
+
+        SentimentInferenceStubs.stub_classification(post)
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ negative: 0.1, neutral: 0.2, positive: 0.7, joy: 0.7 }] * 2,
+        ) do
+          DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do
+            classifier.classify!(post)
+            classifier.bulk_classify!(Post.where(id: post.id))
+          end
+        end
+
+        expect(ClassificationResult.where(target: post).pluck(:model_used)).to match_array(
+          model_names,
+        )
+        expect(described_class.backfill_query).to be_empty
       end
     end
+
+    context "with both capabilities disabled" do
+      include_examples "running enabled sentiment capabilities",
+                       sentiment_enabled: false,
+                       emotion_enabled: false
+    end
+
+    context "with only sentiment enabled" do
+      include_examples "running enabled sentiment capabilities",
+                       sentiment_enabled: true,
+                       emotion_enabled: false
+    end
+
+    context "with only emotion enabled" do
+      include_examples "running enabled sentiment capabilities",
+                       sentiment_enabled: false,
+                       emotion_enabled: true
+    end
+
+    context "with both capabilities enabled" do
+      include_examples "running enabled sentiment capabilities",
+                       sentiment_enabled: true,
+                       emotion_enabled: true
+    end
+  end
+
+  context "with a classification model backend" do
+    include_examples "independent sentiment capability settings", backend: "classification_model"
+  end
+
+  context "with an agent backend" do
+    include_examples "independent sentiment capability settings", backend: "agent"
+  end
+
+  context "with a decision model backend" do
+    include_examples "independent sentiment capability settings", backend: "decision_model"
   end
 
   describe "dedicated capability attribution" do

@@ -27,21 +27,26 @@ ko:
         badge:
           draft: 임시저장
         preview: 미리 보기
-        publish: 게시
-        options: 옵션
         change:
           title: 제목
           body: 바디
       review:
-        copy: 링크 복사
-        active: 활성화 사용자
+        create: 링크 만들기
+        copy: 복사
+        open: 열기
+        status:
+          active: 활성화 사용자
+          expired: 만료됨
+          revoked: 해지
+          inactive: 비활성화
+        closed_on: "%{date}에 닫힘"
+        revoke: 취소
         message: 피드백
       editor_table:
         edit: 편집
         status: 상태
         replies: 댓글
       drafts: 임시저장
-      private_draft: 임시저장
       preview: 미리 보기
       unpublish: 게시 취소
       appearance_link: 외관

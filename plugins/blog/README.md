@@ -176,12 +176,25 @@ during plugin installation or migration.
 
 ## Appearance and custom code
 
-Open **Admin → Plugins → Blog**. **Themes** lists the saved designs and the one
-currently shown to readers; **Identity** holds the blog name, tagline, and About
+Open **Admin → Plugins → Blog**. **Themes** lists the included designs, then the
+saved drafts, and badges the one currently shown to readers; **Identity** holds the blog name, tagline, and About
 content. A design owns its whole look: palette, CSS, JavaScript, and Liquid
 templates. Design and color changes are blog-only; they do not restyle the community.
 
-Theme cards use a shared typographic specimen and the saved draft's paper, ink,
+Included designs are the built-in **Default** and each folder under `branding/`
+with a `blog-theme.json`. They are read-only: activating one stores only its id,
+so readers pick up changes shipped with the plugin. **Customize** opens a new
+draft prefilled from that design. A folder must pass the same checks as a saved draft
+and must not be named `default`; otherwise it is skipped with a warning in the
+log, and a spec fails, rather than breaking reader pages.
+
+Included designs show light and dark screenshots from
+`public/images/themes/<id>/`. After changing an included design, or adding one,
+retake them with `node plugins/blog/script/capture-theme-screenshots.mjs` from
+the repository root while the development server runs; the images show that
+site's articles. Saved drafts have no screenshot.
+
+Draft cards use a shared typographic specimen and the saved draft's paper, ink,
 and accent colors. These covers are palette samples, not screenshots: they do not
 load a draft's CSS, fonts, JavaScript, or templates into the admin page. Use the
 card's **Preview** action to see the complete rendered design.

@@ -27,17 +27,22 @@ ca:
         badge:
           draft: Esborrany
         preview: Previsualitza
-        options: Opcions
         change:
           title: títol
           body: cos
       review:
-        active: Actiu
+        copy: Còpia
+        open: Obre
+        status:
+          active: Actiu
+          revoked: Revocat
+          inactive: Inactiu
+        closed_on: "Tancat %{date}"
+        revoke: Revoca
       editor_table:
         edit: Edita
         status: Estat
         replies: Respostes
       drafts: Esborranys
-      private_draft: Esborrany
       preview: Previsualitza
       appearance_link: Aparença

@@ -5,8 +5,8 @@ module DesignWizard
     CONCORD = {
       name: "Concord",
       remote_url: "https://github.com/discourse/discourse-concord-theme",
-      supports_welcome_banner: false,
-      supports_search: false,
+      default_homepage: "chat",
+      description_key: "design_wizard.themes.concord.description",
       screenshot_light_url: "/images/design-wizard/concord-light.webp",
       screenshot_dark_url: "/images/design-wizard/concord-dark.webp",
     }.freeze
@@ -29,7 +29,7 @@ module DesignWizard
           screenshot_light_url: Discourse.base_path + CONCORD[:screenshot_light_url],
           screenshot_dark_url: Discourse.base_path + CONCORD[:screenshot_dark_url],
           id: "concord",
-          description: I18n.t("design_wizard.themes.concord.description"),
+          description: I18n.t(CONCORD[:description_key]),
           palette_pairs: [],
         ),
       ]

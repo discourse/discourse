@@ -239,7 +239,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_delete_user(performed_by, args)
     user = target_created_by
-    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
 
     result =
       super do |result|
@@ -253,7 +253,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_delete_and_block_user(performed_by, args)
     user = target_created_by
-    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
 
     result =
       super do |result|

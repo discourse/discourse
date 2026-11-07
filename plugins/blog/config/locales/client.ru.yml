@@ -32,21 +32,26 @@ ru:
         badge:
           draft: Черновик
         preview: Предпросмотр
-        publish: Опубликовать
-        options: Варианты
         change:
           title: название
           body: body
       review:
-        copy: Копировать ссылку
-        active: Активна
+        create: Создать ссылку
+        copy: Копировать
+        open: Открытые
+        status:
+          active: Активна
+          expired: Истекший срок
+          revoked: Отозван
+          inactive: Неактивна
+        closed_on: "Закрыл(а) тему %{date}"
+        revoke: Отмена
         message: Отзыв
       editor_table:
         edit: Изменить
         status: Статус
         replies: Ответы
       drafts: Черновики
-      private_draft: Черновик
       preview: Предпросмотр
       unpublish: Отменить публикацию
       appearance_link: Внешний вид

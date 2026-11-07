@@ -127,6 +127,14 @@ cs:
       assign:
         errors:
           not_found: "Téma nenalezeno."
+    appearance_authoring:
+      default_theme: "Výchozí motiv"
+      colors:
+        light:
+          header_background: "Hlavička"
+      fonts:
+        base_font: "Písmo obsahu"
+        heading_font: "Písmo nadpisů"
     reviewables:
       ai_tool_action:
         approve:

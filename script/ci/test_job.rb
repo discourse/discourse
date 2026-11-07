@@ -12,8 +12,7 @@ module TestJob
     job = catalog.fetch("jobs").fetch(job_name)
     main = ENV["GITHUB_REF"] == "refs/heads/main" && ENV["GITHUB_EVENT_NAME"] == "push"
     raise "Main requires a full plan" if main && plan.fetch("mode") != "full"
-    recording = main && ENV["TEST_MAPPING_COLLECT"] == "1"
-    collect = recording && job.fetch("runner") == "rspec"
+    collect = main && ENV["TEST_MAPPING_COLLECT"] == "1" && job.fetch("runner") == "rspec"
     ENV["COLLECT_TEST_MAPPING"] = collect ? "1" : "0"
     ENV["COLLECT_RSPEC_MAPPING"] = collect ? "1" : "0"
     ENV["TEST_MAPPING_DIRECTORY"] = File.expand_path("#{directory}/raw")
@@ -88,35 +87,15 @@ module TestJob
     unless reports.all? { |report| report.fetch("success") }
       raise "Test execution failed: #{job_name}"
     end
-    if recording
+    if collect
       FileUtils.mkdir_p("tmp/test-mappings")
-      output = "tmp/test-mappings/#{job_name}.json"
-      if collect
-        TestMapping.merge(
-          catalog: catalog,
-          job_name: job_name,
-          directory: ENV.fetch("TEST_MAPPING_DIRECTORY"),
-          execution_directory: "#{directory}/execution.json.workers",
-          output: output,
-        )
-      else
-        mapping = {
-          "version" => 2,
-          "revision" => plan.fetch("revision"),
-          "complete" => true,
-          "environment" => job.fetch("environment"),
-          "strategy" => "conservative",
-          "tests" => job.fetch("inventory").to_h { |file| [file, []] },
-          "sources" => [],
-          "source_dependencies" => {
-          },
-          "source_checks" => {
-          },
-          "initialization_sources" => [],
-          "shared_files" => [],
-        }
-        File.write(output, JSON.pretty_generate(mapping))
-      end
+      TestMapping.merge(
+        catalog: catalog,
+        job_name: job_name,
+        directory: ENV.fetch("TEST_MAPPING_DIRECTORY"),
+        execution_directory: "#{directory}/execution.json.workers",
+        output: "tmp/test-mappings/#{job_name}.json",
+      )
     end
   end
 

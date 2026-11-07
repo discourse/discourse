@@ -115,6 +115,7 @@ class CookedPostProcessor
     quoteless_raw = @post.raw.sub(quote_regexp, "").strip
 
     return if @post.raw.strip == quoteless_raw
+    return if !only_the_quote_is_removed?(quoteless_raw)
 
     PostRevisor.new(@post).revise!(
       Discourse.system_user,
@@ -222,6 +223,22 @@ class CookedPostProcessor
   end
 
   private
+
+  # quote_regexp cuts raw without parsing it, so it can swallow markup that only
+  # balanced a later "[/quote]" (an opening code fence for example) and revive
+  # content that was inert when the post was validated. Accept the cut only when
+  # the rest of the post cooks exactly as it did with the quote in place.
+  def only_the_quote_is_removed?(quoteless_raw)
+    without_quote = Loofah.html5_fragment(@post.cook(@post.raw, @cooking_options))
+    without_quote.xpath("aside[contains(@class, 'quote')]").each(&:remove)
+    quoteless = Loofah.html5_fragment(@post.cook(quoteless_raw, @cooking_options))
+
+    canonical_cooked(quoteless) == canonical_cooked(without_quote)
+  end
+
+  def canonical_cooked(fragment)
+    fragment.to_html.gsub(/>\s+</, "><").strip
+  end
 
   def post_process_videos
     changes_made = false

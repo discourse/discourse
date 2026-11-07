@@ -33,6 +33,14 @@ module TestSelection
       @jobs.each do |name, job|
         if full
           job.fetch("inventory").each { |file| reasons[file] << "Full execution requested" }
+        elsif job.fetch("shared_test_changes", []).any?
+          job
+            .fetch("shared_test_changes")
+            .each do |path|
+              job
+                .fetch("inventory")
+                .each { |file| reasons[file] << "Shared test setup changed: #{path}" }
+            end
         elsif application_changes.any?
           select_dependencies(name: name, job: job, reasons: reasons)
         end
@@ -70,6 +78,14 @@ module TestSelection
         validate_paths!(job.fetch("inventory"))
         validate_paths!(job.fetch("mapping_changes"))
         validate_paths!(job.fetch("verified_sources"))
+        validate_paths!(job.fetch("shared_test_changes", []))
+        validate_paths!(job.fetch("mapping_shared_test_changes", []))
+        unless (job.fetch("shared_test_changes", []) - @test_changes).empty?
+          raise ArgumentError, "Shared test setup must belong to the test changeset"
+        end
+        unless (job.fetch("mapping_shared_test_changes", []) - job.fetch("mapping_changes")).empty?
+          raise ArgumentError, "Mapping setup changes must belong to the mapping history"
+        end
         unless job.fetch("inventory").uniq == job.fetch("inventory")
           raise ArgumentError, "Duplicate test inventory"
         end
@@ -134,6 +150,10 @@ module TestSelection
 
     def select_dependencies(name:, job:, reasons:)
       reason = mapping_reason(job)
+      if !reason && job.fetch("mapping_shared_test_changes", []).any?
+        reason =
+          "Shared test setup changed since mapping: #{job.fetch("mapping_shared_test_changes").join(", ")}"
+      end
       mapping = job["mapping"]
       mapped_tests =
         mapping.is_a?(Hash) && mapping["tests"].is_a?(Hash) ? mapping.fetch("tests").keys : []

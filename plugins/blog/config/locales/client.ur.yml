@@ -30,21 +30,27 @@ ur:
         badge:
           draft: مسودہ
         preview: جھلک دیکھیں
-        publish: شائع کریں
-        options: اختیارات
         change:
           title: عنوان
           body: متن
       review:
-        copy: رابطہ کاپی کریں
-        active: فعال
+        label: عنوان
+        create: رابطہ بنائیں
+        copy: کاپی
+        open: کھولیں
+        status:
+          active: فعال
+          expired: میعاد ختم ہوگئی
+          revoked: منسوخ
+          inactive: غیر فعال
+        closed_on: "%{date} پربند کیا گیا"
+        revoke: منسوخ کریں
         message: آراء
       editor_table:
         edit: ترمیم کریں
         status: حیثیت
         replies: جوابات
       drafts: مسودات
-      private_draft: مسودہ
       preview: جھلک دیکھیں
       unpublish: اشاعت نہ کریں
       appearance_link: ظاہری شکل

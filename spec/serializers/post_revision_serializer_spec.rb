@@ -3,6 +3,26 @@
 RSpec.describe PostRevisionSerializer do
   fab!(:post) { Fabricate(:post, version: 2) }
 
+  it "does not include body or title diffs when an earlier revision is hidden" do
+    SiteSetting.editing_grace_period = 0
+    revised_post = Fabricate(:post)
+    revised_post.revise(revised_post.user, raw: "Hidden historical content")
+    revised_post.revisions.find_by!(number: 2).hide!
+    revised_post.revise(revised_post.user, title: "First visible title edit")
+    revised_post.revise(revised_post.user, title: "Second visible title edit")
+    revised_post.revise(revised_post.user, raw: "Current public content")
+
+    json =
+      described_class.new(
+        revised_post.revisions.find_by!(number: 5),
+        scope: Guardian.new,
+        root: false,
+      ).as_json
+
+    expect(json).to include(previous_hidden: true, body_changes: nil)
+    expect(json).not_to have_key(:title_changes)
+  end
+
   context "with secured categories" do
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }

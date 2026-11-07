@@ -15,6 +15,7 @@ import { homepagePath } from "discourse/lib/homepage-router-overrides";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
@@ -179,13 +180,22 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
+  get #currentHomepage() {
+    const routeName = this.router.currentRouteName;
+    return (Site.current()?.homepage_choices ?? []).find(
+      (choice) =>
+        routeName === `discovery.${choice}` ||
+        routeName?.startsWith(`${choice}.`)
+    );
+  }
+
   // Where the banner renders. A customization can return a location of its
   // own and render the banner there, as long as it passes a matching @location
   get location() {
     return applyValueTransformer(
       "admin-onboarding-banner-location",
       DEFAULT_LOCATION,
-      { homepage: defaultHomepage() }
+      { homepage: this.#currentHomepage ?? defaultHomepage() }
     );
   }
 
@@ -211,7 +221,9 @@ export default class AdminOnboardingBanner extends Component {
 
     const { currentRouteName, currentURL } = this.router;
     const path = currentURL?.split(/[?#]/)[0];
+
     return (
+      this.#currentHomepage !== undefined ||
       currentRouteName === `discovery.${defaultHomepage()}` ||
       path === "/" ||
       path === homepagePath()
@@ -224,7 +236,7 @@ export default class AdminOnboardingBanner extends Component {
   @cached
   get steps() {
     return applyValueTransformer("admin-onboarding-steps", [...STEPS], {
-      homepage: defaultHomepage(),
+      homepage: this.#currentHomepage ?? defaultHomepage(),
     });
   }
 

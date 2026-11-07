@@ -109,7 +109,7 @@ export async function startTests() {
       { eager: true }
     );
     for (const [key, value] of Object.entries(rawModules)) {
-      availableModules[key] = value.default;
+      availableModules[key] = () => value;
     }
   } else {
     for (const name of Object.keys(requirejs.entries)) {
@@ -127,13 +127,11 @@ export async function startTests() {
             `Test module registered tests outside a file loader: ${name}`
           );
         }
-        if (!testModule.__discourseTestModule) {
-          continue;
+        if (typeof testModule === "function") {
+          availableModules[name] = testModule;
+        } else if (testModule.__discourseTestModule) {
+          availableModules[name] = () => testModule;
         }
-        if (typeof testModule.default !== "function") {
-          throw new Error(`Test module cannot be selected by file: ${name}`);
-        }
-        availableModules[name] = testModule.default;
       }
     }
   }
@@ -146,12 +144,26 @@ export async function startTests() {
   });
   let attributedTests = 0;
   Object.entries(availableModules).forEach(([name, load]) => {
-    availableModules[name] = () => {
-      const beforeTests = registeredTestCount();
-      const result = load();
-      if (result?.then) {
-        throw new Error(
-          `Test file definitions must load synchronously: ${name}`
+    availableModules[name] = async () => {
+      let beforeTests;
+      try {
+        const testModule = await load();
+        beforeTests = registeredTestCount();
+        if (typeof testModule.default !== "function") {
+          throw new Error(`Test module cannot be selected by file: ${name}`);
+        }
+        const result = testModule.default();
+        if (result?.then) {
+          throw new Error(
+            `Test file definitions must load synchronously: ${name}`
+          );
+        }
+      } catch (error) {
+        beforeTests ??= registeredTestCount();
+        QUnit.module(name, () =>
+          QUnit.test("loads", () => {
+            throw error;
+          })
         );
       }
       const count = registeredTestCount() - beforeTests;
@@ -172,7 +184,6 @@ export async function startTests() {
 
   startEmberExam({
     setupTestContainer: false,
-    setupEmberOnerrorValidation: testingCore,
     setupTestIsolationValidation: true,
     availableModules,
   });

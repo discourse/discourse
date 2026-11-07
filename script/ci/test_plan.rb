@@ -13,6 +13,19 @@ module TestPlan
   end
   private_class_method :git
 
+  def self.mapping_for(directory:, name:, environment:)
+    path = File.join(directory, "#{name}.json")
+    return unless File.file?(path)
+    mapping = JSON.parse(File.read(path))
+    if mapping.is_a?(Hash) && mapping["complete"] == true && [2, 3].include?(mapping["version"]) &&
+         mapping["environment"] == environment && mapping["tests"].is_a?(Hash)
+      mapping
+    end
+  rescue JSON::ParserError
+    nil
+  end
+  private_class_method :mapping_for
+
   def self.prepare(catalog_path:, mapping_directory:, base:, revision:, output:, mode:, main:)
     destinations = [output, "#{output}.input.json", "#{output}.reference.json"]
     if destinations.any? { |path| File.expand_path(path) == File.expand_path(catalog_path) }
@@ -37,22 +50,29 @@ module TestPlan
     inventories = catalog.fetch("jobs").values.flat_map { |job| job.fetch("inventory") }.uniq
     test_changes =
       changes.select { |path| inventories.include?(path) || TestInventory.test_file?(path) }
+    shared_test_changes = !main && mode != "full" ? test_changes : []
+    previous_jobs =
+      if (shared_test_changes & deleted).any? && catalog["repository_catalog"]
+        base_files = git("ls-tree", "-r", "--name-only", "-z", base).split("\0")
+        bundled = git("ls-tree", "--name-only", "-d", base, "plugins/").lines.map(&:strip)
+        TestInventory.jobs(bundled:, files: base_files)
+      end
     jobs =
       catalog
         .fetch("jobs")
         .to_h do |name, job|
-          mapping_path = File.join(mapping_directory, "#{name}.json")
-          mapping = nil
-          if !main && mode != "full" && File.file?(mapping_path)
-            begin
-              mapping = JSON.parse(File.read(mapping_path))
-            rescue JSON::ParserError
-              mapping = nil
+          mapping =
+            if !main && mode != "full"
+              mapping_for(
+                directory: mapping_directory,
+                name: name,
+                environment: job.fetch("environment"),
+              )
             end
-          end
           drift = []
           verified = []
           changed_methods = []
+          mapping_shared_test_changes = []
           if mapping && !main && mode != "full"
             begin
               raise "Invalid mapping" unless mapping.is_a?(Hash)
@@ -89,6 +109,16 @@ module TestPlan
                     description: mapping.fetch("source_checks").fetch(path),
                   )
                 end
+              history_tests =
+                drift.select do |path|
+                  job.fetch("inventory").include?(path) ||
+                    (mapping["tests"].is_a?(Hash) && mapping.fetch("tests").key?(path))
+                end
+              if history_tests.any?
+                current_changes =
+                  git("diff", "--no-renames", "--name-only", "-z", producer, base).split("\0")
+                mapping_shared_test_changes = history_tests & current_changes
+              end
             rescue RuntimeError
               mapping = nil
             end
@@ -96,8 +126,25 @@ module TestPlan
           [
             name,
             job.merge(
+              "shared_test_changes" =>
+                shared_test_changes.select do |path|
+                  owned =
+                    job.fetch("inventory").include?(path) ||
+                      (
+                        deleted.include?(path) &&
+                          (
+                            if previous_jobs&.key?(name)
+                              previous_jobs.fetch(name).fetch("inventory").include?(path)
+                            else
+                              true
+                            end
+                          )
+                      )
+                  owned
+                end,
               "mapping" => mapping,
               "mapping_changes" => drift,
+              "mapping_shared_test_changes" => mapping_shared_test_changes,
               "verified_sources" => verified,
               "changed_methods" => changed_methods,
             ),

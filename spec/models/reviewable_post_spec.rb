@@ -200,7 +200,7 @@ RSpec.describe ReviewablePost do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve handles the post reviewable" do

@@ -232,12 +232,9 @@ sw:
       back: "Iliyopita"
       next: "Ijayo"
       sections:
-        theme: "Mandhari"
         homepage: "Ukurasa mkuu"
-        search: "Tafuta"
-      colors:
-        light: "Hafifu"
-        dark: "Nyeusi"
+      fonts:
+        base_font: "Mwili"
       homepage:
         topics: "Mada"
         categories: "Kategoria"
@@ -2977,7 +2974,6 @@ sw:
           label: "Pakia"
           title: "Pakia chelezo kwenye mfano huu."
           success: "'%{jina la faili}' imepakiwa kwa mafanikio. Faili lipokwenye harakati na litachukua mpaka dakika kuonekana kwenye orodha."
-          error: "Hitilafu imetokea wakati wa kupakia '%{jina la faili}': %{ujumbe}"
         settings: "Mipangilio"
         operations:
           failed: "%{Operesheni} imeshindwa. Tafadhali angalia batli."

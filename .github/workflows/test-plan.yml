@@ -80,5 +80,6 @@ jobs:
             tmp/test-plan/catalog.json
             tmp/test-plan/plan.json
             tmp/test-plan/plan.json.reference.json
+            tmp/test-plan/mappings/producer.json
           retention-days: 14
           if-no-files-found: error

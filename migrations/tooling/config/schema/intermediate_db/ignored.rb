@@ -118,7 +118,8 @@ Migrations::Tooling::Schema.ignored do
          :group_requests,
          :group_tag_notification_defaults
 
-  tables :child_themes,
+  tables :appearance_changes,
+         :child_themes,
          :color_scheme_colors,
          :color_schemes,
          :remote_themes,

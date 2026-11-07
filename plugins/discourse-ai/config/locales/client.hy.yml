@@ -114,6 +114,8 @@ hy:
             other: "%{count} գրառում"
       spam:
         short_title: "Սպամ"
+        no_llm_selected: "Ոչ մի"
+        no_decision_model_selected: "Ոչ մի"
         enable: "Միացնել"
         test_modal:
           spam: "Սպամ"

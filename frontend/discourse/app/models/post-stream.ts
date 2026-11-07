@@ -881,19 +881,6 @@ export default class PostStream extends RestModel {
     });
   }
 
-  /* mainly for backwards compatibility with plugins, used in quick messages plugin
-   * TODO: remove July 2022
-   * */
-  triggerNewPostInStream(postId: number, opts?: LoadOptions) {
-    deprecated(
-      "Please use triggerNewPostsInStream, this method will be removed July 2021",
-      {
-        id: "discourse.post-stream.trigger-new-post",
-      }
-    );
-    return this.triggerNewPostsInStream([postId], opts);
-  }
-
   /**
     Finds and adds posts to the stream by id. Typically this would happen if we receive a message
     from the message bus indicating there's a new post. We'll only insert it if we currently

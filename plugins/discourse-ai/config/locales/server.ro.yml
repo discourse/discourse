@@ -116,6 +116,13 @@ ro:
       assign:
         errors:
           not_found: "Subiectul nu a fost găsit."
+    appearance_authoring:
+      default_theme: "Temă implicită"
+      colors:
+        light:
+          header_background: "Antet"
+      fonts:
+        heading_font: "Font titlu"
     reviewables:
       ai_tool_action:
         approve:

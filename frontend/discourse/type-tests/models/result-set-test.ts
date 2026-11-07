@@ -43,7 +43,7 @@ Gadgets.create({ content: ["x"] });
 expectTypeOf(Gadgets).toExtend<typeof LegacyArrayLikeObject<Gadget>>();
 expectTypeOf(Gadgets.create()).toExtend<EmberObject>();
 
-/* Content: the proxied array is reached through `content`. */
+/* Content: the items are reached through `content`. */
 
 expectTypeOf(Gadgets.create().content).toEqualTypeOf<Gadget[]>();
 expectTypeOf(results.content).toEqualTypeOf<Gadget[]>();
@@ -52,15 +52,14 @@ results.content.splice(0, Infinity, gadget);
 expectTypeOf(results.content.find((g) => g.label === "x")).toEqualTypeOf<
   Gadget | undefined
 >();
-// Assigning content through the proxy throws.
+// Assigning content throws.
 // @ts-expect-error content is read-only
 results.content = [];
-// Direct array access is deprecated, so typed code goes through content.
+// The instance is not an array, so typed code goes through content.
 // @ts-expect-error no direct array surface
 expectTypeOf(results.length).toBeNumber();
 // @ts-expect-error no direct array surface
 results.filter(Boolean);
-expectTypeOf(Gadgets.create().warnContext).toEqualTypeOf<string | undefined>();
 
 /* ResultSet state. */
 
@@ -79,7 +78,6 @@ expectTypeOf(results.resultSetMeta).not.toBeAny();
 results.extras = { type_filters: ["my"] };
 expectTypeOf(results.store).toEqualTypeOf<StoreService | null>();
 expectTypeOf(results.__type).toEqualTypeOf<string | undefined>();
-expectTypeOf(results.warnContext).toEqualTypeOf<string>();
 expectTypeOf(results.canLoadMore).toEqualTypeOf<boolean>();
 expectTypeOf(results.loadMore()).resolves.toEqualTypeOf<void>();
 expectTypeOf(results.refresh()).resolves.toEqualTypeOf<void>();
@@ -104,7 +102,7 @@ class Numbers extends LegacyArrayLikeObject<number> {
 }
 
 class NestedNumbers extends Numbers {
-  get warnContext() {
+  get label() {
     return "numbers";
   }
 }

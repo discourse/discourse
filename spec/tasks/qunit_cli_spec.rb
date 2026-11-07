@@ -149,6 +149,30 @@ describe "bin/qunit" do
     )
   end
 
+  it "runs a complete plugin assignment in one invocation" do
+    local_dates_test_file =
+      Dir.glob(Rails.root.join("plugins/discourse-local-dates/test/**/*-test.js")).first
+
+    result =
+      run(
+        "--exact-files",
+        chat_test_file,
+        local_dates_test_file,
+        env: {
+          "TEST_SELECTION_ALL" => "1",
+          "TEST_EXECUTION_DIRECTORY" => nil,
+        },
+      )
+
+    expect(result.status).to eq(0)
+    expect(result.out.scan("Executing:").length).to eq(1)
+    expect(result.env).to include(
+      "LOAD_PLUGINS" => "1",
+      "PLUGIN_TARGETS" => "chat,discourse-local-dates",
+    )
+    expect(result.args).to include("--query", "testem=1")
+  end
+
   it "allows running specific plugin test file" do
     result = run(chat_test_file)
     expect(result.status).to eq(0)

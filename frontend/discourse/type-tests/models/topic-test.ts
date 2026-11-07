@@ -222,7 +222,7 @@ interface ExpectedTopicFields {
   pm_with_non_human_user?: boolean;
   post_stream?: object;
   posted?: boolean;
-  posters?: ExpectedPoster[] & { firstObject?: ExpectedPoster };
+  posters?: ExpectedPoster[];
   posts_count?: number;
   published_page?: ExpectedPublishedPage;
   queued_posts_count?: number;
@@ -356,8 +356,6 @@ expectTypeOf(topic.searchContext).toEqualTypeOf<{
   type: "topic";
   id: number;
 }>();
-expectTypeOf(topic.totalUnread).toEqualTypeOf<number | undefined>();
-expectTypeOf(topic.displayNewPosts).toEqualTypeOf<number | undefined>();
 expectTypeOf(topic.viewsHeat).toEqualTypeOf<
   "heatmap-high" | "heatmap-med" | "heatmap-low" | null
 >();
