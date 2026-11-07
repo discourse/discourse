@@ -263,6 +263,8 @@ export default async function setupTests(config) {
 
   let app;
   QUnit.testStart(async function (ctx) {
+    removeCookie("destination_url");
+    removeCookie("destination_url", { path: "/" });
     resetSettings();
     resetThemeSettings();
 

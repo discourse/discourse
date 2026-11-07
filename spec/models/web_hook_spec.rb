@@ -650,9 +650,6 @@ RSpec.describe WebHook do
       Fabricate(:group_user_web_hook)
       group = Fabricate(:group)
 
-      now = Time.now
-      freeze_time now
-
       group.add(user)
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
@@ -664,7 +661,8 @@ RSpec.describe WebHook do
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
       expect(payload["notification_level"]).to eq(group.default_notification_level)
-      expect(Time.zone.parse(payload["created_at"])).to be_within_one_second_of(now)
+      membership = GroupUser.find_by!(group: group, user: user)
+      expect(payload["created_at"]).to eq(membership.created_at.as_json)
     end
 
     it "enqueues matching hooks when a user leaves a group" do

@@ -2,9 +2,22 @@
 
 # Time / clock control for specs.
 
+require "active_support/testing/time_helpers"
+
 class TrackTimeStub
   def self.stubbed
-    false
+    @stubs&.stubbed? || false
+  end
+
+  def self.freeze_clocks(time:, datetime:)
+    @stubs ||= ActiveSupport::Testing::SimpleStubs.new
+    @stubs.stub_object(DateTime, :now) { datetime }
+    @stubs.stub_object(Time, :now) { time }
+    @stubs.stub_object(Date, :today) { datetime.to_date }
+  end
+
+  def self.unfreeze_clocks
+    @stubs&.unstub_all!
   end
 end
 
@@ -34,10 +47,10 @@ module TimeHelpers
       raise "nested freeze time not supported" if TrackTimeStub.stubbed
     end
 
-    DateTime.stubs(:now).returns(datetime)
-    Time.stubs(:now).returns(time)
-    Date.stubs(:today).returns(datetime.to_date)
-    TrackTimeStub.stubs(:stubbed).returns(true)
+    DateTime.unstub(:now)
+    Time.unstub(:now)
+    Date.unstub(:today)
+    TrackTimeStub.freeze_clocks(time: time, datetime: datetime)
 
     if block_given?
       begin
@@ -54,7 +67,7 @@ module TimeHelpers
     DateTime.unstub(:now)
     Time.unstub(:now)
     Date.unstub(:today)
-    TrackTimeStub.unstub(:stubbed)
+    TrackTimeStub.unfreeze_clocks
   end
 end
 

@@ -4,7 +4,7 @@
 # thread backtraces, a Capybara localhost-resolution retry, and optional
 # per-example profiling / ActiveRecord query logging.
 
-PER_SPEC_TIMEOUT_SECONDS = 45
+PER_SPEC_TIMEOUT_SECONDS = ENV["COLLECT_TEST_MAPPING"] == "1" ? 180 : 45
 
 RSpec.configure do |config|
   if ENV["GITHUB_ACTIONS"]

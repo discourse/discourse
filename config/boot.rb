@@ -46,6 +46,6 @@ if ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
 
   at_exit do
     Process.kill("SIGTERM", pid)
-    Process.wait
+    Process.wait(pid)
   end
 end

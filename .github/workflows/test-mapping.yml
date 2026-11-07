@@ -1,0 +1,45 @@
+name: Collect test mapping
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: test-mapping-main
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  gate:
+    if: github.repository != 'discourse/discourse-private-mirror'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      due: ${{ steps.freshness.outputs.due }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check latest completed producer
+        id: freshness
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TEST_MAPPING_INTERVAL_SECONDS: ${{ vars.TEST_MAPPING_INTERVAL_SECONDS || '86400' }}
+        run: ruby script/ci/test_mapping_due.rb
+
+  backend:
+    needs: gate
+    if: needs.gate.outputs.due == 'true'
+    uses: ./.github/workflows/tests.yml
+    with:
+      collect_mapping: true
+      backend_only: true
+
+  migrations:
+    needs: gate
+    if: needs.gate.outputs.due == 'true'
+    uses: ./.github/workflows/migration-tests.yml
+    with:
+      collect_mapping: true

@@ -42,6 +42,11 @@ Discourse/Plugins/NoMonkeyPatching:
   Include:
     - "plugins/**/*"
 
+Discourse/NoChdir:
+  Exclude:
+    - script/ci/test_selection_lab/run.rb
+    - script/ci/test_selection_lab/shared_state.rb
+
 Lint/Debugger:
   Exclude:
     - script/**/*
@@ -81,6 +86,14 @@ Style/RedundantBegin:
 
 Rails/FilePath:
   Enabled: true
+
+Rails/IndexBy:
+  Exclude:
+    - script/ci/**/*.rb
+
+Style/InvertibleUnlessCondition:
+  Exclude:
+    - script/ci/**/*.rb
 
 Style/RedundantSelf:
   Enabled: true
