@@ -394,6 +394,7 @@ module TestSelectionLab
         file_test_included_size_initialization
         file_test_extended_size_initialization
         file_custom_path_size_initialization
+        file_string_path_size_initialization
         file_stat_initialization
         file_stat_constructor_initialization
         kernel_file_size_initialization
@@ -568,6 +569,7 @@ module TestSelectionLab
           "file_test_included_size_initialization" => "MetadataInput.size_for(__FILE__)",
           "file_test_extended_size_initialization" => "MetadataInput.send(:size, __FILE__)",
           "file_custom_path_size_initialization" => "File.size(MetadataInput.new(__FILE__))",
+          "file_string_path_size_initialization" => "File.size(MetadataInput.new(__FILE__))",
           "file_stat_initialization" => "File.stat(__FILE__).size",
           "file_stat_constructor_initialization" => "File::Stat.new(__FILE__).size",
           "kernel_file_size_initialization" => "test(?s, __FILE__)",
@@ -587,6 +589,8 @@ module TestSelectionLab
             "module MetadataInput\n extend FileTest\nend\n"
           when "file_custom_path_size_initialization"
             "class MetadataInput\n def initialize(path)\n  @path = path\n end\n def to_path\n  @path\n end\nend\n"
+          when "file_string_path_size_initialization"
+            "class MetadataInput\n def initialize(path)\n  @path = path\n end\n def to_str\n  @path\n end\nend\n"
           else
             ""
           end

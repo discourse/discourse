@@ -187,6 +187,12 @@ module TestSelectionLab
     ["file_metadata_subprocess_control", "", ":original", true],
     ["file_metadata_document_subprocess", "", ":original", true],
     [
+      "file_string_path_size_initialization",
+      "before(:context) { @fixture_value = SharedStateProducer.value }",
+      "@fixture_value",
+      true,
+    ],
+    [
       "file_size_documentation_history",
       "before(:context) { @fixture_value = SharedStateProducer.value }",
       "@fixture_value",

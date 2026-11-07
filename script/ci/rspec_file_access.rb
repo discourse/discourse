@@ -5,8 +5,9 @@ module RspecFileAccess
   FILE_PATH = File.instance_method(:path)
   EXPAND_PATH = File.method(:expand_path)
   REALPATH = File.method(:realpath)
+  COERCE_PATH = File.method(:path)
   MATCH_GLOB = File.method(:fnmatch?)
-  private_constant :FILE_PATH, :EXPAND_PATH, :REALPATH, :MATCH_GLOB
+  private_constant :FILE_PATH, :EXPAND_PATH, :REALPATH, :COERCE_PATH, :MATCH_GLOB
 
   class PathArgument
     attr_reader :path
@@ -17,7 +18,7 @@ module RspecFileAccess
 
     def to_path
       return @path if defined?(@path)
-      @path = @original.__send__(:to_path)
+      @path = COERCE_PATH.call(@original)
     end
   end
   private_constant :PathArgument
@@ -30,7 +31,7 @@ module RspecFileAccess
           inputs = skip_arguments.zero? ? arguments : arguments.drop(skip_arguments)
           inputs.each_with_index do |path, index|
             if !path.is_a?(String) && !path.instance_of?(Pathname) && !path.is_a?(IO) &&
-                 path.respond_to?(:to_path, true)
+                 (path.respond_to?(:to_path, true) || path.respond_to?(:to_str, true))
               inputs[index] = PathArgument.new(path)
               arguments[skip_arguments + index] = inputs[index]
             end

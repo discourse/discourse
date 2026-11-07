@@ -123,23 +123,29 @@ RSpec.describe Crystalball do
       require "set"
       require #{Rails.root.join("script/ci/rspec_file_access").to_s.inspect}
       Dir.mktmpdir do |directory|
-        path = File.join(directory, "input.txt")
-        File.write(path, "metadata")
-        argument = Class.new do
-          attr_reader :conversions
-          def initialize(path)
-            @path = path
-            @conversions = 0
-          end
-          def to_path
-            @conversions += 1
-            raise "Repeated path conversion" if @conversions > 1
-            @path
-          end
-        end.new(path)
+        paths = %i[to_path to_str].to_h do |conversion|
+          path = File.join(directory, conversion.to_s + ".txt")
+          File.write(path, "metadata")
+          [conversion, path]
+        end
         RspecFileAccess.enable(root: directory)
-        value = File.size(argument)
-        puts JSON.generate(value: value, conversions: argument.conversions, metadata: RspecFileAccess.metadata.fetch("input.txt"))
+        results = paths.to_h do |conversion, path|
+          argument = Class.new do
+            attr_reader :conversions
+            def initialize(path)
+              @path = path
+              @conversions = 0
+            end
+            define_method(conversion) do
+              @conversions += 1
+              raise "Repeated path conversion" if @conversions > 1
+              @path
+            end
+          end.new(path)
+          value = File.size(argument)
+          [conversion, { value: value, conversions: argument.conversions, metadata: RspecFileAccess.metadata.fetch(File.basename(path)) }]
+        end
+        puts JSON.generate(results)
       end
     RUBY
 
@@ -148,9 +154,16 @@ RSpec.describe Crystalball do
 
     expect(status.success?).to eq(true), output
     expect(JSON.parse(output)).to eq(
-      "value" => 8,
-      "conversions" => 1,
-      "metadata" => [{ "method" => "size", "value" => 8 }],
+      "to_path" => {
+        "value" => 8,
+        "conversions" => 1,
+        "metadata" => [{ "method" => "size", "value" => 8 }],
+      },
+      "to_str" => {
+        "value" => 8,
+        "conversions" => 1,
+        "metadata" => [{ "method" => "size", "value" => 8 }],
+      },
     )
   end
 
