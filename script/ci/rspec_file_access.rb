@@ -13,19 +13,23 @@ module RspecFileAccess
   class PathArgument
     def initialize(original)
       @original = original
+      @inputs = []
     end
 
     def to_io
-      @io = COERCE_IO.call(@original)
-    end
-
-    def path
-      return @path if defined?(@path)
-      FILE_PATH.bind_call(@io) if @io.is_a?(File)
+      io = COERCE_IO.call(@original)
+      @inputs << io if io.is_a?(File)
+      io
     end
 
     def to_path
-      @path = COERCE_PATH.call(@original)
+      path = COERCE_PATH.call(@original)
+      @inputs << String.new(path)
+      path
+    end
+
+    def paths
+      @inputs.filter_map { |input| input.is_a?(File) ? FILE_PATH.bind_call(input) : input }
     end
   end
   private_constant :PathArgument
@@ -35,6 +39,7 @@ module RspecFileAccess
       private if private_methods
       methods.each do |name|
         define_method(name) do |*arguments, **options, &block|
+          completed = false
           inputs = skip_arguments.zero? ? arguments : arguments.drop(skip_arguments)
           inputs.each_with_index do |path, index|
             if !path.is_a?(String) && !path.instance_of?(Pathname) && !path.is_a?(IO) &&
@@ -44,12 +49,14 @@ module RspecFileAccess
             end
           end
           value = super(*arguments, **options, &block)
-        rescue SystemCallError, NotImplementedError => error
-          RspecFileAccess.record_metadata(method: name, arguments: inputs, value: error)
-          raise
-        else
-          RspecFileAccess.record_metadata(method: name, arguments: inputs, value: value)
+          completed = true
           value
+        ensure
+          RspecFileAccess.record_metadata(
+            method: name,
+            arguments: inputs,
+            value: completed ? value : :failed,
+          )
         end
       end
     end
@@ -141,9 +148,13 @@ module RspecFileAccess
 
   def self.record_metadata(method:, arguments:, value:)
     if %i[realpath realdirpath].include?(method) && arguments.length == 2
-      resolved_arguments =
-        arguments.map { |argument| argument.is_a?(PathArgument) ? argument.path : argument }
-      arguments = [EXPAND_PATH.call(*resolved_arguments)]
+      path_candidates, base_candidates =
+        arguments.map do |argument|
+          candidates = argument.is_a?(PathArgument) ? argument.paths : [argument]
+          candidates.empty? ? [nil] : candidates
+        end
+      arguments =
+        path_candidates.product(base_candidates).map { |path, base| EXPAND_PATH.call(path, base) }
     end
     description = RspecFileMetadata.describe(method: method, value: value, root: @root.chomp("/"))
     if arguments.length == 1 && description
@@ -176,7 +187,7 @@ module RspecFileAccess
   end
 
   def self.paths(path)
-    path = path.path if path.is_a?(PathArgument)
+    return path.paths.flat_map { |input| paths(input) }.uniq if path.is_a?(PathArgument)
     path = path.to_path if path.instance_of?(Pathname)
     return [] unless path.is_a?(String)
     absolute = EXPAND_PATH.call(path)

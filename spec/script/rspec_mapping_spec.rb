@@ -298,6 +298,10 @@ RSpec.describe Crystalball do
           "example_count" => 2,
           "failure_count" => 0,
         )
+        expect(JSON.parse(File.read("#{directory}/conversion.json"))).to eq(
+          "mtime" => 200,
+          "conversions" => %w[to_path to_io to_path],
+        )
       end
       worker = JSON.parse(File.read(Dir["#{directory}/mapping/worker-*.json"].sole))
       expect(worker.fetch("complete")).to eq(true)

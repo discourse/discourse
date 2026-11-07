@@ -28,6 +28,9 @@ module TestSelectionLab
           (Dir["{lib,vendor,spec,plugins,docs}/**/*.rb"] + Dir["README.md", "docs/**/*.md"])
             .sort
             .to_h { |path| [path, File.read(path)] }
+        if failed_metadata_path_case?
+          Dir["docs/*.txt"].each { |path| fixture[path] = File.read(path) }
+        end
         File.write("tmp/fixture.json", JSON.pretty_generate(fixture))
         base = commit("Original shared fixture")
         mapping_revision = base
@@ -317,6 +320,8 @@ module TestSelectionLab
             "A blank line in an unused method shifts a later __LINE__ constant while its earlier reader method stays in place. The cached reader then fails. This changes protected initialization, so the complete affected environment must run."
           elsif source_line_layout_case?
             "A blank line in an unused method shifts source positions observed by initialization through a Ruby location API. The earlier value method stays unchanged, but the cached integer changes and its reader fails. Source layout changes invalidate compatibility and protect the complete affected environment. The unrelated third spec is a conservative extra execution."
+          elsif failed_metadata_path_case?
+            "The baseline stat fails on a missing document, then Ruby requests a different pathname for its error message. Adding only the missing document changes the producer and fails the cached reader. Every converted input remains protected, so the complete affected environment runs even when the display pathname is outside the repository or formatting raises another exception."
           elsif metadata_subprocess_case?
             "The changed script runs in an untraced subprocess. An existence predicate does not establish a dependency on its content. Its effects remain unknown, so all four files must run, including the failing script reader. The three original files pass."
           elsif @name == "file_metadata_predicate"
@@ -407,6 +412,16 @@ module TestSelectionLab
     end
 
     private
+
+    def failed_metadata_path_case?
+      %w[
+        file_size_failed_path
+        file_size_failed_path_outside
+        kernel_mtime_failed_path
+        file_size_failed_path_conversion_error
+        kernel_mtime_failed_path_conversion_error
+      ].include?(@name)
+    end
 
     def documentation_history_case?
       %w[documentation_new_spec_history documentation_source_history].include?(@name)
@@ -854,11 +869,54 @@ module TestSelectionLab
           "require_relative 'helper'\nRSpec.describe 'Writer' do\n it 'writes a scalar' do\n  SharedStateCache.write(SharedStateProducer.value)\n  expect(SharedStateCache.value.equal?(:original)).to eq(true)\n end\nend\n",
         )
       end
+      if failed_metadata_path_case?
+        FileUtils.mkdir_p("docs")
+        File.write("docs/error-path.txt", "abcdef")
+        File.write("docs/validation.txt", "validation")
+        inputs = %w[../docs/stat-target.txt ../docs/error-path.txt]
+        inputs[1] = "/tmp/test-selection-error-path.txt" if @name.end_with?("_outside")
+        inputs.unshift("../docs/validation.txt") if @name.start_with?("kernel_mtime_")
+        expressions =
+          inputs.map { |input| "File.expand_path(#{input.inspect}, __dir__)" }.join(", ")
+        operation =
+          (
+            if @name.start_with?("kernel_mtime_")
+              'Kernel.test("M", Input.new)'
+            else
+              "File.size(Input.new)"
+            end
+          )
+        File.write("lib/producer.rb", <<~RUBY)
+          module SharedStateProducer
+            class Input
+              def initialize
+                @paths = [#{expressions}]
+                @conversion_error = #{@name.end_with?("_conversion_error")}
+              end
+              def to_io
+                nil
+              end
+              def to_path
+                raise "path formatting failed" if @conversion_error && @paths.length == 1
+                @paths.shift
+              end
+            end
+            def self.value
+              #{operation}
+              :changed
+            rescue Errno::ENOENT, RuntimeError
+              :original
+            end
+          end
+        RUBY
+      end
       write_test_setup_fixture if @name.end_with?("_setup_spec")
     end
 
     def apply_change
-      if documentation_history_case?
+      if failed_metadata_path_case?
+        File.write("docs/stat-target.txt", "new stat input")
+      elsif documentation_history_case?
         File.write("docs/guide.md", "Changed guide\n")
       elsif source_line_layout_case?
         path = "lib/producer.rb"
