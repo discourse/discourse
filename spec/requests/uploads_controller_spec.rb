@@ -2153,6 +2153,54 @@ RSpec.describe UploadsController do
         expect(response.parsed_body).to eq(UploadsController.serialize_upload(upload))
       end
 
+      context "when the validated file is not modified during promotion" do
+        let(:logo_file) { file_from_fixtures("logo.png") }
+        let(:object_size) { 1.megabyte }
+
+        before do
+          SiteSetting.content_security_policy = false
+          get "/session/#{user.encoded_username}/become", params: { redirect: "false" }
+
+          external_upload_stub.update!(filesize: object_size)
+
+          @fake_s3 = FakeS3.create
+          @fake_s3.bucket(SiteSetting.s3_upload_bucket).put_object(
+            key: external_upload_stub.key,
+            size: object_size,
+            last_modified: Time.zone.now,
+            metadata: {
+            },
+          )
+
+          signed_url =
+            Discourse.store.signed_url_for_path(
+              external_upload_stub.key,
+              include_content_disposition: false,
+            )
+          uri = URI.parse(signed_url)
+          signed_url = uri.to_s.gsub(uri.query, "")
+          stub_request(:get, signed_url).with(query: hash_including({})).to_return(
+            status: 200,
+            body: logo_file.read,
+          )
+        end
+
+        it "stores the validated local bytes instead of moving the mutable external object" do
+          post "/uploads/complete-external-upload.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+               }
+
+          expect(response.status).to eq(200)
+
+          upload = Upload.find(response.parsed_body["id"])
+          expect(upload.sha1).to eq(Upload.generate_digest(file_from_fixtures("logo.png")))
+
+          expect(@fake_s3.operation_called?(:copy_object)).to eq(false)
+          expect(@fake_s3.operation_called?(:put_object)).to eq(true)
+        end
+      end
+
       context "with site setting uploads" do
         fab!(:admin)
         fab!(:text_upload_stub) do
