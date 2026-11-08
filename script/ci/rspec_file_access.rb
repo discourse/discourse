@@ -44,6 +44,7 @@ module RspecFileAccess
           completed = false
           inputs = skip_arguments.zero? ? arguments : arguments.drop(skip_arguments)
           inputs.each_with_index do |path, index|
+            next if index == 1 && %i[realpath realdirpath].include?(name) && nil.equal?(path)
             if !(String === path) && !(IO === path)
               inputs[index] = PathArgument.new(path)
               arguments[skip_arguments + index] = inputs[index]
@@ -84,7 +85,7 @@ module RspecFileAccess
       define_method(name) do |*arguments, **options, &block|
         if !%i[open new].include?(name) || self == IO || self <= File
           path = arguments.first
-          if !%i[open new].include?(name) && !(String === path)
+          if !%i[open new].include?(name) && !arguments.empty? && !(String === path)
             arguments[0] = PathArgument.new(path, shared: true)
           else
             RspecFileAccess.record(path)

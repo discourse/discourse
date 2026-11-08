@@ -247,6 +247,76 @@ RSpec.describe Crystalball do
     expect(result.fetch("failure")).to eq(nil)
   end
 
+  it "preserves native argument validation under actual collection" do
+    Dir.mktmpdir do |directory|
+      FileUtils.mkdir_p("#{directory}/spec")
+      File.write("#{directory}/spec/native_arguments_spec.rb", <<~RUBY)
+        require "rspec"
+
+        RSpec.describe "Native argument validation" do
+          [File, IO].each do |receiver|
+            %i[read binread readlines foreach sysopen].each do |operation|
+              it "preserves missing arguments for " + receiver.name + "." + operation.to_s do
+                expect { receiver.public_send(operation) }.to raise_error(ArgumentError)
+              end
+            end
+            it "preserves keyword-only input for " + receiver.name + ".read" do
+              expect { receiver.read(mode: "r") }.to raise_error(ArgumentError)
+            end
+          end
+
+          %i[realpath realdirpath].each do |operation|
+            it "preserves a nil base for " + operation.to_s do
+              relative = "spec/native_arguments_spec.rb"
+              expect(File.public_send(operation, relative, nil)).to eq(File.expand_path(relative))
+            end
+          end
+        end
+      RUBY
+
+      [[], ["--require", Rails.root.join("script/ci/rspec_mapping.rb").to_s]].each do |arguments|
+        output, status =
+          Open3.capture2e(
+            isolated_rspec_environment.merge(
+              "BUNDLE_GEMFILE" => Rails.root.join("Gemfile").to_s,
+              "GITHUB_SHA" => "a" * 40,
+              "RSPEC_MAPPING_DIRECTORY" => "#{directory}/mapping",
+            ),
+            "bundle",
+            "exec",
+            "rspec",
+            "--options",
+            "/dev/null",
+            *arguments,
+            "spec/native_arguments_spec.rb",
+            "--format",
+            "json",
+            "--out",
+            "result.json",
+            chdir: directory,
+          )
+
+        report = JSON.parse(File.read("#{directory}/result.json"))
+        expect(status.success?).to eq(true), "#{output}\n#{report}"
+        expect(
+          report.fetch("summary").slice(
+            "example_count",
+            "failure_count",
+            "pending_count",
+            "errors_outside_of_examples_count",
+          ),
+        ).to eq(
+          "example_count" => 14,
+          "failure_count" => 0,
+          "pending_count" => 0,
+          "errors_outside_of_examples_count" => 0,
+        )
+      end
+      worker = JSON.parse(File.read(Dir["#{directory}/mapping/worker-*.json"].sole))
+      expect(worker.fetch("complete")).to eq(true)
+    end
+  end
+
   it "preserves a single path conversion when observing file metadata" do
     program = <<~RUBY
       require "json"
