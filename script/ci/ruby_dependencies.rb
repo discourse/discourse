@@ -423,22 +423,23 @@ module TestSelection
     end
 
     def record_expectation_target(value)
-      return unless Module === value || cache_value?(value)
-      return if @expectation_targets[value]
+      pending = [value]
+      visited = ObjectSpace::WeakMap.new
+      until pending.empty?
+        target = pending.pop
+        next unless Module === target || cache_value?(target)
+        next if visited[target]
 
-      @expectation_targets[value] = true
-      case value
-      when Array
-        Array.instance_method(:each).bind_call(value) { |item| record_expectation_target(item) }
-      when Hash
-        Hash
-          .instance_method(:each_pair)
-          .bind_call(value) do |key, item|
-            record_expectation_target(key)
-            record_expectation_target(item)
-          end
-      when Set
-        Set.instance_method(:each).bind_call(value) { |item| record_expectation_target(item) }
+        visited[target] = true
+        @expectation_targets[target] = true
+        case target
+        when Array
+          Array.instance_method(:each).bind_call(target) { |item| pending << item }
+        when Hash
+          Hash.instance_method(:each_pair).bind_call(target) { |key, item| pending << key << item }
+        when Set
+          Set.instance_method(:each).bind_call(target) { |item| pending << item }
+        end
       end
     end
 
@@ -971,8 +972,6 @@ module TestSelection
         source = source_path(method.source_location.first)
         next unless source && @native_registered_sources.add?(source)
         @observed_sources.add(source)
-        @initialization_sources.add(source)
-        @uncertain_sources.add(source)
       rescue NameError
         nil
       end
@@ -1009,7 +1008,7 @@ module TestSelection
       native_definition(event).fetch(:location)
     end
 
-    def record_coarse_call(event:, native: false, source: nil)
+    def record_coarse_call(event:, native: false)
       owner = event.defined_class || INTERNAL_CLASS.call(event.self)
       unless @coarse_namespaces[owner]
         @coarse_namespaces[owner] = true
@@ -1017,7 +1016,7 @@ module TestSelection
         @initialization_sources.add(namespace)
         @tests[@active_test].add(namespace) if @active_test
       end
-      source ||= native ? native_definition(event).fetch(:source) : source_path(event.path)
+      source = native ? native_definition(event).fetch(:source) : source_path(event.path)
       return unless source && @coarse_sources.add?(source)
       @observed_sources.add(source)
       @initialization_sources.add(source)

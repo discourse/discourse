@@ -36,6 +36,11 @@ RSpec.describe "Dependency selection scenarios" do
     expect(registered).to eq(TestSelectionLab::SHARED_STATE_SCENARIOS.map(&:first))
   end
 
+  it_behaves_like "a dependency selection replay", name: "owned_accessor_scalar"
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_reused_matcher_conditional"
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_cyclic_matcher_conditional"
   it_behaves_like "a dependency selection replay",
                   name: "coarse_split_native_precise_nested_matcher_conditional"
   it_behaves_like "a dependency selection replay",

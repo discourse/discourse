@@ -159,7 +159,9 @@ module TestSelectionLab
             @name
           ]
         why =
-          if @name.start_with?("coarse_split_native_precise_")
+          if @name == "owned_accessor_scalar"
+            "The changed producer file also declares an unused native accessor. The declaration is unchanged and no spec reads it. The writer calls the changed method and the reader consumes its stored value, so both must run. The unrelated spec has no affected dependency and stays omitted."
+          elsif @name.start_with?("coarse_split_native_precise_")
             "The producer writes a native accessor field and the reader accesses it, directly or through a matcher. Collection puts the files in separate processes, so the read slot must be recorded even when the reader sees an empty cache. The writer and reader depend on the producer. The unrelated spec stays omitted."
           elsif @name == "new_setup_spec"
             "The added file also registers global before suite setup. The existing reader consumes that changed setup, so the complete affected environment must run. A pure new spec remains a separate case."
@@ -555,6 +557,12 @@ module TestSelectionLab
         "lib/producer.rb",
         "module SharedStateProducer; def self.value; :original; end; end",
       )
+      if @name == "owned_accessor_scalar"
+        File.write(
+          "lib/producer.rb",
+          "module SharedStateProducer; class << self; attr_reader :unused; end; def self.value; :original; end; end",
+        )
+      end
       bootstrap =
         if @setup.start_with?("fab!", "shared_fixture")
           "require 'test_prof/recipes/rspec/let_it_be'; TestProf::BeforeAll.adapter = TestProf::BeforeAll::NoopAdapter; TestProf::LetItBe.configure { |config| config.alias_to :fab!; config.alias_to :shared_fixture }"
@@ -737,7 +745,9 @@ module TestSelectionLab
           when "coarse_split_native_accessor_conditional",
                "coarse_split_native_precise_conditional",
                "coarse_split_native_precise_matcher_conditional",
-               "coarse_split_native_precise_nested_matcher_conditional"
+               "coarse_split_native_precise_nested_matcher_conditional",
+               "coarse_split_native_precise_reused_matcher_conditional",
+               "coarse_split_native_precise_cyclic_matcher_conditional"
             "module SharedStateCache; class << self; attr_reader :value; def write(value); @value = value; end; end; end"
           when "coarse_split_native_alias_conditional",
                "coarse_split_native_precise_alias_conditional"
@@ -826,6 +836,40 @@ module TestSelectionLab
             require_relative "helper"
             RSpec.describe("Reader") do
               it("reads the native field through an attributes matcher") do
+                expect(#{matcher_target}).to #{matcher}
+              end
+            end
+          RUBY
+        end
+        if %w[
+             coarse_split_native_precise_reused_matcher_conditional
+             coarse_split_native_precise_cyclic_matcher_conditional
+           ].include?(@name)
+          cyclic = @name == "coarse_split_native_precise_cyclic_matcher_conditional"
+          first_expectation =
+            (
+              if cyclic
+                "targets << targets; expect(targets).to be_a(Array)"
+              else
+                "expect(targets).to be_empty"
+              end
+            )
+          matcher_target = cyclic ? "targets.last" : "targets"
+          matcher =
+            (
+              if cyclic
+                "have_attributes(value: be_nil.or(eq(:original)))"
+              else
+                "all(have_attributes(value: be_nil.or(eq(:original))))"
+              end
+            )
+          File.write("spec/2_reader_spec.rb", <<~RUBY)
+            require_relative "helper"
+            RSpec.describe("Reader") do
+              it("reads through a reused expectation container") do
+                targets = []
+                #{first_expectation}
+                targets << SharedStateCache
                 expect(#{matcher_target}).to #{matcher}
               end
             end

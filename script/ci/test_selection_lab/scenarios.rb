@@ -10,6 +10,19 @@ inventory = baseline.fetch("jobs").fetch("core-backend").fetch("inventory")
 added = "spec/lib/file_plan_new_spec.rb"
 cases = [
   [
+    "accessor_method_body_shared_uncertainty",
+    inventory,
+    "The banner value flows through exists? into a shared initialization dependency. The published collector also broadens this exact method change. Unknown effects protect the full owning inventory, although only the archetype example fails. This case does not establish that every extra passing spec is necessary.",
+    -> do
+      path = "lib/archetype.rb"
+      original = File.read(path)
+      before = '    "banner"'
+      after = '    "file_plan_missing"'
+      raise "Archetype banner definition changed" unless original.include?(before)
+      File.write(path, original.sub(before, after))
+    end,
+  ],
+  [
     "new_spec",
     (inventory + [added]).sort,
     "The added group registers definitions that another file can inspect. Unknown reader ownership protects the complete environment. Existing passing files are a conservative efficiency cost. Rails and Bundler must use this disposable checkout.",
@@ -239,7 +252,11 @@ cases.each do |name, expected, why, change|
     abort "#{name}: missed failure"
   end
   unless (
-           if %w[mapped_helper renamed_spec_with_helper].include?(name)
+           if %w[
+                mapped_helper
+                renamed_spec_with_helper
+                accessor_method_body_shared_uncertainty
+              ].include?(name)
              !selected_ok && selected.fetch("failures").any? && full.fetch("failures").any?
            else
              selected_ok && full.fetch("success")

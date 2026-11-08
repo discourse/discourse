@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 module TestSelectionLab
   SHARED_STATE_SCENARIOS = [
+    ["owned_accessor_scalar", "", "SharedStateProducer.value", false],
+    [
+      "coarse_split_native_precise_reused_matcher_conditional",
+      "",
+      "SharedStateProducer.value",
+      false,
+    ],
+    [
+      "coarse_split_native_precise_cyclic_matcher_conditional",
+      "",
+      "SharedStateProducer.value",
+      false,
+    ],
     [
       "coarse_split_native_precise_nested_matcher_conditional",
       "",
