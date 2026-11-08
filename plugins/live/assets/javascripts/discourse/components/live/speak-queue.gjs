@@ -42,7 +42,11 @@ export default class LiveSpeakQueue extends Component {
     try {
       await ajax(`/live/rooms/${this.room.id}/memberships`, {
         type: "POST",
-        data: { user_id: participant.id, role: "speaker" },
+        data: {
+          user_id: participant.id,
+          role: "speaker",
+          session_only: true,
+        },
       });
     } catch (error) {
       popupAjaxError(error);

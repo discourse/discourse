@@ -44,6 +44,9 @@ module Live
                     stop_recording
                     request_to_speak
                     withdraw_request_to_speak
+                    invite_to_speak
+                    decline_speak_invitation
+                    accept_speak_invitation
                     reaction
                   ]
 
@@ -380,7 +383,10 @@ module Live
       session = close_session_for(@room.id, current_user.id)
       Live::ParticipantTracker.mark_left(@room.id, current_user.id)
       Live::ParticipantTracker.remove(@room.id, current_user.id)
-      Live::AgentManager.evict_agents_in_room!(@room) if Live::ParticipantTracker.vacant?(@room.id)
+      if Live::ParticipantTracker.vacant?(@room.id)
+        Live::AgentManager.evict_agents_in_room!(@room)
+        Live::StageRoles.clear_session_speakers!(@room.id)
+      end
       Live::UserStatusManager.clear_live_status(current_user)
       Live::RoomBroadcaster.publish_participants(@room)
       Live::BadgeGranterHooks.on_leave(current_user, session)
@@ -546,6 +552,7 @@ module Live
       session = close_session_for(@room.id, user_id)
       Live::ParticipantTracker.mark_left(@room.id, user_id)
       Live::ParticipantTracker.remove(@room.id, user_id)
+      Live::StageRoles.clear_session_speakers!(@room.id, user_id: user_id)
 
       kicked_user = User.find_by(id: user_id)
       Live::UserStatusManager.clear_live_status(kicked_user) if kicked_user
@@ -606,6 +613,13 @@ module Live
       # user is actually in the call.
       ensure_participant_session!
 
+      cooldown = Live::ParticipantTracker.hand_cooldown_remaining(@room.id, current_user.id)
+      if cooldown.positive?
+        return(
+          render_json_error(I18n.t("live.errors.request_cooldown", seconds: cooldown), status: 429)
+        )
+      end
+
       if Live::ParticipantTracker.raise_hand(@room.id, current_user.id)
         raised_at =
           Live::ParticipantTracker.get_metadata(@room.id, current_user.id)[:hand_raised_at]
@@ -636,9 +650,86 @@ module Live
 
       if Live::ParticipantTracker.lower_hand(@room.id, target_id)
         reason = target_id == current_user.id ? "withdrawn" : "dismissed"
+        Live::ParticipantTracker.start_hand_cooldown(@room.id, target_id) if reason == "dismissed"
         Live::RoomBroadcaster.publish_hand_raise(@room, target_id, raised: false, reason: reason)
         Live::RoomBroadcaster.publish_participants(@room)
       end
+
+      head :no_content
+    end
+
+    # A moderator asks a present listener to take the stage. The listener
+    # accepts or declines; nothing changes about their role until they accept.
+    def invite_to_speak
+      guardian.ensure_can_manage_live_room!(@room)
+
+      user_id = params.require(:user_id).to_i
+      unless @room.stage? && Live::ParticipantTracker.user_ids(@room.id).include?(user_id) &&
+               listener?(user_id)
+        raise Discourse::InvalidParameters.new(I18n.t("live.errors.not_a_listener"))
+      end
+
+      if Live::ParticipantTracker.invite_to_speak(@room.id, user_id)
+        Live::RoomBroadcaster.publish_speak_invitation(
+          @room,
+          user_id,
+          invited: true,
+          reason: "invited",
+        )
+        Live::RoomBroadcaster.publish_participants(@room)
+      end
+
+      head :no_content
+    end
+
+    # The invitee declining, or a moderator withdrawing it.
+    def decline_speak_invitation
+      target_id = params[:user_id].present? ? params[:user_id].to_i : current_user.id
+
+      if target_id == current_user.id
+        guardian.ensure_can_join_live_room!(@room)
+        ensure_participant_session!
+      else
+        guardian.ensure_can_manage_live_room!(@room)
+      end
+
+      if Live::ParticipantTracker.clear_speak_invitation(@room.id, target_id)
+        reason = target_id == current_user.id ? "declined" : "withdrawn"
+        Live::RoomBroadcaster.publish_speak_invitation(
+          @room,
+          target_id,
+          invited: false,
+          reason: reason,
+        )
+        Live::RoomBroadcaster.publish_participants(@room)
+      end
+
+      head :no_content
+    end
+
+    # Accepting grants speaker for this session only, and only against a
+    # pending invitation — the endpoint cannot be used to self-promote.
+    def accept_speak_invitation
+      guardian.ensure_can_join_live_room!(@room)
+      ensure_participant_session!
+
+      unless @room.stage? && Live::ParticipantTracker.speak_invited?(@room.id, current_user.id)
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.no_speak_invitation"))
+      end
+
+      Live::ParticipantTracker.clear_speak_invitation(@room.id, current_user.id)
+      Live::StageRoles.assign!(
+        @room,
+        current_user,
+        role: Live::RoomMembership::ROLE_SPEAKER,
+        session_only: true,
+      )
+      Live::RoomBroadcaster.publish_speak_invitation(
+        @room,
+        current_user.id,
+        invited: false,
+        reason: "accepted",
+      )
 
       head :no_content
     end
@@ -848,6 +939,11 @@ module Live
       end
     end
 
+    def listener?(user_id)
+      user = User.find_by(id: user_id)
+      user.present? && !user.bot? && !Guardian.new(user).can_speak_in_live_room?(@room)
+    end
+
     def room_params
       permitted =
         params.require(:room).permit(
@@ -858,6 +954,7 @@ module Live
           :max_participants,
           :room_type,
           :video_enabled,
+          :speak_requests_enabled,
           :livekit_enabled,
           :chat_channel_id,
           :chat_idle_minutes,

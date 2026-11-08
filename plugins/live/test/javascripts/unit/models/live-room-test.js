@@ -8,6 +8,7 @@ module("Unit | model | live-room", function () {
     public: true,
     max_participants: 20,
     video_enabled: true,
+    speak_requests_enabled: true,
     livekit_enabled: false,
     chat_channel_id: 6,
     chat_idle_minutes: 2,

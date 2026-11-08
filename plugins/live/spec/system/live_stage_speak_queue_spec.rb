@@ -82,7 +82,7 @@ describe "Live stage speak queue" do
     end
   end
 
-  it "lets the listener raise their hand again after a moderator dismisses the request" do
+  it "makes the listener wait before raising their hand again after a moderator dismisses the request" do
     using_session(:alice) { join_room(moderator) }
 
     using_session(:bob) do
@@ -107,6 +107,12 @@ describe "Live stage speak queue" do
       expect(toasts).to have_default(I18n.t("js.live.stage.request_dismissed"))
       expect(page).to have_css(".live-call-controls__raise-hand:not(.--active)")
 
+      find(".live-call-controls__raise-hand").click
+      expect(page).to have_css(".dialog-body", text: /ask again in \d+ seconds/)
+      find(".dialog-footer .btn-primary").click
+      expect(page).to have_css(".live-call-controls__raise-hand:not(.--active)")
+
+      Discourse.redis.del(*Discourse.redis.keys("*hand_cooldown*"))
       find(".live-call-controls__raise-hand").click
       expect(page).to have_css(".live-call-controls__raise-hand.--active")
     end
@@ -140,6 +146,126 @@ describe "Live stage speak queue" do
 
       open_speak_queue
       within(speak_queue_menu) { expect(page).to have_css(".live-speak-queue__empty") }
+    end
+  end
+
+  def invite_to_speak(user)
+    Live::ParticipantTracker.invite_to_speak(room.id, user.id)
+    Live::RoomBroadcaster.publish_speak_invitation(room, user.id, invited: true, reason: "invited")
+    Live::RoomBroadcaster.publish_participants(room)
+  end
+
+  it "lets an invited listener accept and take the stage" do
+    using_session(:alice) { join_room(moderator) }
+
+    using_session(:bob) do
+      join_room(listener)
+      expect(page).to have_css(".live-call-controls__raise-hand")
+
+      invite_to_speak(listener)
+
+      expect(page).to have_css(".live-call-controls__accept-invitation", wait: 10)
+      expect(page).to have_no_css(".live-call-controls__raise-hand")
+
+      find(".live-call-controls__accept-invitation").click
+
+      expect(toasts).to have_success(I18n.t("js.live.stage.promoted_to_speaker"))
+      expect(page).to have_no_css(".live-call-controls__accept-invitation")
+      expect(page).to have_button(I18n.t("js.live.video.camera_on"))
+    end
+
+    expect(room.room_memberships.find_by(user: listener)).to have_attributes(
+      speaker?: true,
+      session_only: true,
+    )
+  end
+
+  it "returns the listener to raising their hand when they decline an invitation" do
+    using_session(:alice) { join_room(moderator) }
+
+    using_session(:bob) do
+      join_room(listener)
+      invite_to_speak(listener)
+
+      expect(page).to have_css(".live-call-controls__decline-invitation", wait: 10)
+      find(".live-call-controls__decline-invitation").click
+
+      expect(page).to have_no_css(".live-call-controls__accept-invitation")
+      expect(page).to have_css(".live-call-controls__raise-hand")
+    end
+
+    expect(room.room_memberships.find_by(user: listener)).to be_nil
+  end
+
+  it "takes the stage controls away from a speaker who is moved back to listeners" do
+    using_session(:alice) { join_room(moderator) }
+
+    using_session(:bob) do
+      join_room(listener)
+      find(".live-call-controls__raise-hand").click
+      expect(page).to have_css(".live-call-controls__raise-hand.--active")
+    end
+
+    using_session(:alice) do
+      expect(page).to have_css(".live-speak-queue-trigger__count", text: "1", wait: 10)
+      open_speak_queue
+      within(speak_queue_menu) { find(".live-speak-queue__approve").click }
+    end
+
+    using_session(:bob) { expect(page).to have_button(I18n.t("js.live.video.camera_on"), wait: 10) }
+
+    Live::StageRoles.remove!(room, room.room_memberships.find_by(user: listener))
+
+    using_session(:bob) do
+      expect(toasts).to have_default(I18n.t("js.live.stage.demoted_to_listener"))
+      expect(page).to have_css(".live-call-controls__raise-hand", wait: 10)
+      expect(page).to have_no_button(I18n.t("js.live.video.camera_on"))
+    end
+  end
+
+  it "does not keep a raised hand across leaving and rejoining the call" do
+    using_session(:alice) { join_room(moderator) }
+
+    using_session(:bob) do
+      join_room(listener)
+      find(".live-call-controls__raise-hand").click
+      expect(page).to have_css(".live-call-controls__raise-hand.--active")
+    end
+
+    using_session(:alice) do
+      expect(page).to have_css(".live-speak-queue-trigger__count", text: "1", wait: 10)
+    end
+
+    using_session(:bob) do
+      find(".live-room-page__leave").click
+      expect(page).to have_button(I18n.t("js.live.room.join"))
+      click_button(I18n.t("js.live.room.join"))
+      expect(page).to have_css(".live-room-page__leave")
+      expect(page).to have_css(".live-call-controls__raise-hand:not(.--active)")
+    end
+
+    using_session(:alice) do
+      expect(page).to have_no_css(".live-speak-queue-trigger__count", wait: 10)
+    end
+  end
+
+  it "hides the raise hand button when the room does not take requests to speak" do
+    room.update!(speak_requests_enabled: false)
+
+    using_session(:alice) { join_room(moderator) }
+
+    using_session(:bob) do
+      join_room(listener)
+
+      # The decline button only renders once the roster has made this user a
+      # listener, so the absence check below cannot pass before the controls
+      # have rendered.
+      invite_to_speak(listener)
+      expect(page).to have_css(".live-call-controls__decline-invitation", wait: 10)
+      find(".live-call-controls__decline-invitation").click
+
+      expect(page).to have_no_css(".live-call-controls__decline-invitation")
+      expect(page).to have_no_css(".live-call-controls__raise-hand")
     end
   end
 end

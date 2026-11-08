@@ -30,6 +30,7 @@ export default class LiveRoomForm extends Component {
       room_type: this.args.room?.room_type || "open",
       max_participants: this.args.room?.max_participants || null,
       video_enabled: this.args.room?.video_enabled ?? true,
+      speak_requests_enabled: this.args.room?.speak_requests_enabled ?? true,
       livekit_enabled: this.args.room?.livekit_enabled ?? false,
       chat_channel_id: this.args.room?.chat_channel_id || null,
       chat_idle_minutes: this.args.room?.chat_idle_minutes ?? 15,
@@ -221,6 +222,19 @@ export default class LiveRoomForm extends Component {
             />
           {{/if}}
         </form.Field>
+
+        {{#if (this.isStageType data.room_type)}}
+          <form.Field
+            @description={{i18n "live.admin.room.speak_requests_enabled_help"}}
+            @format="full"
+            @name="speak_requests_enabled"
+            @title={{i18n "live.admin.room.speak_requests_enabled"}}
+            @type="toggle"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        {{/if}}
 
         {{#if this.showVideoToggle}}
           <form.Field

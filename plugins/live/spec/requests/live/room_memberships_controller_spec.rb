@@ -355,4 +355,54 @@ RSpec.describe Live::RoomMembershipsController do
       expect(stub).not_to have_been_requested
     end
   end
+
+  describe "session-only speakers" do
+    before { room.update!(room_type: Live::Room::ROOM_TYPE_STAGE) }
+
+    it "creates a session-only speaker when asked to" do
+      sign_in(room_owner)
+
+      post "/live/rooms/#{room.id}/memberships.json",
+           params: {
+             user_id: invitee.id,
+             role: "speaker",
+             session_only: true,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["membership"]["session_only"]).to eq(true)
+      expect(room.room_memberships.find_by(user: invitee)).to have_attributes(
+        speaker?: true,
+        session_only: true,
+      )
+    end
+
+    it "creates a permanent speaker unless asked otherwise" do
+      sign_in(room_owner)
+
+      post "/live/rooms/#{room.id}/memberships.json",
+           params: {
+             user_id: invitee.id,
+             role: "speaker",
+           }
+
+      expect(response.parsed_body["membership"]["session_only"]).to eq(false)
+    end
+
+    it "makes a later update to the role permanent" do
+      Live::StageRoles.assign!(
+        room,
+        invitee,
+        role: Live::RoomMembership::ROLE_SPEAKER,
+        session_only: true,
+      )
+      membership = room.room_memberships.find_by(user: invitee)
+      sign_in(room_owner)
+
+      put "/live/rooms/#{room.id}/memberships/#{membership.id}.json", params: { role: "speaker" }
+
+      expect(response.status).to eq(200)
+      expect(membership.reload).to have_attributes(session_only: false, fallback_role: nil)
+    end
+  end
 end

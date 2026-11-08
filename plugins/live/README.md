@@ -51,7 +51,7 @@ When a user's groups allow camera or screen sharing (and the room's own video to
 - Still pure mesh: a video m-line is pre-negotiated on every peer connection, so toggling the camera or a screen share is a `replaceTrack` with no renegotiation.
 - Senders attach video only toward participants currently on the room page (`watching_video` presence flag) — every skipped peer saves a full encoder session.
 - Encoding quality scales down with watcher count (720p ≤3 watchers, 480p ≤6, 360p beyond) and is capped by `live_video_max_publishers`.
-- Camera and screen share are mutually exclusive per user. Stage rooms do not support video yet.
+- Camera and screen share are mutually exclusive per user. In Stage rooms only speakers and moderators can publish video; see `docs/stage-rooms.md`.
 - On LiveKit-routed rooms the mesh details above are handled by the SFU instead: each track is published once with simulcast, and per-watcher gating happens on the subscriber side. The UI, the `watching_video` flag, and the publisher cap behave identically.
 
 See `docs/roadmap/video-screenshare.md` for the full design.

@@ -194,7 +194,7 @@ module Live
     # already speak (including admins and everyone in open rooms) cannot.
     def can_request_to_speak_in_live_room?(room)
       return false unless can_join_live_room?(room)
-      room.stage? && !can_speak_in_live_room?(room)
+      room.stage? && room.speak_requests_enabled? && !can_speak_in_live_room?(room)
     end
 
     def ensure_can_request_to_speak_in_live_room!(room)

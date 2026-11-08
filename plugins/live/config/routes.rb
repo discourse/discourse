@@ -22,6 +22,9 @@ Live::Engine.routes.draw do
       post :reaction
       post :request_to_speak
       delete :request_to_speak, action: :withdraw_request_to_speak, as: :withdraw_request_to_speak
+      post :speak_invitation, action: :invite_to_speak, as: :invite_to_speak
+      delete :speak_invitation, action: :decline_speak_invitation, as: :decline_speak_invitation
+      post "speak_invitation/accept", action: :accept_speak_invitation, as: :accept_speak_invitation
     end
 
     resources :memberships, controller: "room_memberships", only: %i[index create update destroy]

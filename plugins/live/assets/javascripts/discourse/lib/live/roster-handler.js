@@ -241,10 +241,44 @@ export default class RosterHandler {
         (p) => Number(p?.id) === targetUserId
       );
       if (participant) {
+        // Moderators are often looking at something else; a sound is the cue
+        // the toast alone does not give.
+        playUserJoinedSound(this.#getChatSound());
         this.#toasts.default({
           duration: 5000,
           data: {
             message: i18n("live.stage.hand_raised_toast", {
+              username: participant.username,
+            }),
+          },
+        });
+      }
+    }
+  }
+
+  handleSpeakInvitation(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const isSelf = targetUserId === this.#getCurrentUserId();
+    const room = this.#getRoom(roomId);
+
+    if (isSelf && payload.invited) {
+      playUserJoinedSound(this.#getChatSound());
+      this.#toasts.default({
+        duration: 8000,
+        data: { message: i18n("live.stage.invited_toast") },
+      });
+      return;
+    }
+
+    if (!isSelf && payload.reason === "declined" && room?.can_manage) {
+      const participant = (room.active_participants || []).find(
+        (p) => Number(p?.id) === targetUserId
+      );
+      if (participant) {
+        this.#toasts.default({
+          duration: 5000,
+          data: {
+            message: i18n("live.stage.invitation_declined_toast", {
               username: participant.username,
             }),
           },

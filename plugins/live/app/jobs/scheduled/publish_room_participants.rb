@@ -38,6 +38,7 @@ module Jobs
           if ::Live::ParticipantTracker.vacant?(room.id)
             # Agent cleanup survives expired pins and retries provider failures.
             ::Live::AgentManager.evict_agents_in_room!(room)
+            ::Live::StageRoles.clear_session_speakers!(room.id)
           else
             ::Live::AgentManager.reconcile(room)
           end

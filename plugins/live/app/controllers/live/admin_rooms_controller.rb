@@ -70,6 +70,7 @@ module Live
           :max_participants,
           :room_type,
           :video_enabled,
+          :speak_requests_enabled,
           :livekit_enabled,
           :chat_channel_id,
           :chat_idle_minutes,

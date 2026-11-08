@@ -2,7 +2,7 @@
 
 module Live
   class RoomMembershipSerializer < ApplicationSerializer
-    attributes :id, :room_id, :user_id, :role, :role_name, :created_at, :updated_at
+    attributes :id, :room_id, :user_id, :role, :role_name, :session_only, :created_at, :updated_at
 
     has_one :user, serializer: BasicUserSerializer, embed: :objects
 

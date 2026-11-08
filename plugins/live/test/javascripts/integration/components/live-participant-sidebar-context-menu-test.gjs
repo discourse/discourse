@@ -74,6 +74,107 @@ module(
       assert.dom(".d-modal").doesNotExist();
     });
 
+    test("promotes a listener to a session-only speaker", async function (assert) {
+      this.menuData.room = { id: 1, room_type: "stage" };
+      this.menuData.canManageRoom = true;
+      let body;
+      pretender.post("/live/rooms/1/memberships", (request) => {
+        body = request.requestBody;
+        return response({ membership: {} });
+      });
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+
+      await click(".live-participant-sidebar-context-menu__promote-btn");
+
+      assert.true(body.includes("role=speaker"), "asks for the speaker role");
+      assert.true(
+        body.includes("session_only=true"),
+        "limits the grant to the session"
+      );
+    });
+
+    test("invites a listener to speak and can withdraw the invitation", async function (assert) {
+      this.menuData.room = { id: 1, room_type: "stage" };
+      this.menuData.canManageRoom = true;
+      const calls = [];
+      pretender.post("/live/rooms/1/speak_invitation", (request) => {
+        calls.push(["POST", request.requestBody]);
+        return response(204);
+      });
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".live-participant-sidebar-context-menu__withdraw-invitation-btn")
+        .doesNotExist();
+      await click(
+        ".live-participant-sidebar-context-menu__invite-to-speak-btn"
+      );
+
+      assert.deepEqual(calls, [["POST", "user_id=2"]]);
+    });
+
+    test("offers to withdraw a pending invitation instead of inviting again", async function (assert) {
+      this.menuData.room = { id: 1, room_type: "stage" };
+      this.menuData.canManageRoom = true;
+      this.menuData.participant = {
+        id: 2,
+        username: "bob",
+        speak_invited_at: 123,
+      };
+      let withdrawn = false;
+      pretender.delete("/live/rooms/1/speak_invitation", () => {
+        withdrawn = true;
+        return response(204);
+      });
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".live-participant-sidebar-context-menu__invite-to-speak-btn")
+        .doesNotExist();
+      await click(
+        ".live-participant-sidebar-context-menu__withdraw-invitation-btn"
+      );
+
+      assert.true(withdrawn);
+    });
+
+    test("does not offer invitations to speakers or in open rooms", async function (assert) {
+      this.menuData.canManageRoom = true;
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".live-participant-sidebar-context-menu__invite-to-speak-btn")
+        .doesNotExist();
+    });
+
     test("spotlights the participant for the viewer", async function (assert) {
       await render(
         <template>

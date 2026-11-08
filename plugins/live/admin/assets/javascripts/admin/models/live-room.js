@@ -6,6 +6,7 @@ const SAVED_PROPERTIES = [
   "public",
   "max_participants",
   "video_enabled",
+  "speak_requests_enabled",
   "livekit_enabled",
   "chat_channel_id",
   "chat_idle_minutes",

@@ -41,6 +41,7 @@ module Jobs
           room = ::Live::Room.find_by(id: session.room_id)
           if room && ::Live::ParticipantTracker.vacant?(room.id)
             ::Live::AgentManager.evict_agents_in_room!(room)
+            ::Live::StageRoles.clear_session_speakers!(room.id)
           end
 
           user = User.find_by(id: session.user_id)

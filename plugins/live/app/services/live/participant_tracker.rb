@@ -67,6 +67,10 @@ module Live
       return 1
     LUA
 
+    # Seconds a listener has to wait before raising a hand again after a
+    # moderator dismissed it, so a dismissed request cannot be spammed.
+    HAND_DISMISS_COOLDOWN = 30
+
     class << self
       # Admission and invalidation share an atomic boundary so a stale provider
       # snapshot cannot restore presence after a moderator has revoked it.
@@ -365,6 +369,40 @@ module Live
         true
       end
 
+      def start_hand_cooldown(room_id, user_id)
+        redis.setex(hand_cooldown_key(room_id, user_id), HAND_DISMISS_COOLDOWN, "1")
+      end
+
+      # Remaining cooldown in seconds, 0 when the listener may raise a hand.
+      def hand_cooldown_remaining(room_id, user_id)
+        ttl = redis.ttl(hand_cooldown_key(room_id, user_id))
+        ttl.to_i.positive? ? ttl.to_i : 0
+      end
+
+      # A moderator's invitation to speak. Like a raised hand it lives in the
+      # participant metadata so it rides the roster to every client.
+      # Returns false when an invitation is already pending.
+      def invite_to_speak(room_id, user_id)
+        metadata = get_metadata(room_id, user_id)
+        return false if metadata[:speak_invited_at]
+
+        metadata[:speak_invited_at] = Time.now.to_f
+        update_metadata(room_id, user_id, metadata)
+        true
+      end
+
+      def clear_speak_invitation(room_id, user_id)
+        metadata = get_metadata(room_id, user_id)
+        return false unless metadata.delete(:speak_invited_at)
+
+        update_metadata(room_id, user_id, metadata)
+        true
+      end
+
+      def speak_invited?(room_id, user_id)
+        get_metadata(room_id, user_id)[:speak_invited_at].present?
+      end
+
       def update_metadata(room_id, user_id, metadata)
         redis.hset(metadata_key(room_id), user_id, metadata.to_json)
         redis.expire(metadata_key(room_id), SAFETY_TTL)
@@ -501,6 +539,10 @@ module Live
 
       def metadata_key(room_id)
         "#{KEY_NAMESPACE}:#{room_id}:metadata"
+      end
+
+      def hand_cooldown_key(room_id, user_id)
+        "#{KEY_NAMESPACE}:#{room_id}:hand_cooldown:#{user_id}"
       end
 
       def fingerprint_key(room_id)

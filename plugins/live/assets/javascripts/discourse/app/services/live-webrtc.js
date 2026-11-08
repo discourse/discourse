@@ -1832,6 +1832,8 @@ export default class LiveWebrtcService extends Service {
       await this.#roster.handleRoleChange(roomId, payload);
     } else if (payload.type === "hand_raise") {
       this.#roster.handleHandRaise(roomId, payload);
+    } else if (payload.type === "speak_invitation") {
+      this.#roster.handleSpeakInvitation(roomId, payload);
     } else if (payload.type === "reaction") {
       this.liveReactions.receive(roomId, payload);
       // Recorded from the broadcast, our own included, so the transcript holds

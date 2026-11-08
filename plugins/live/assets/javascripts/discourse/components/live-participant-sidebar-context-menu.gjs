@@ -108,6 +108,28 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     );
   }
 
+  get canInviteToSpeak() {
+    return (
+      this.canManageRoom &&
+      this.isStageRoom &&
+      !this.participant.external_agent &&
+      !this.isCurrentUser &&
+      !this.participantIsSpeakerOrMod &&
+      this.participant.id > 0 &&
+      !this.participant.hand_raised_at &&
+      !this.participant.speak_invited_at
+    );
+  }
+
+  get canWithdrawInvitation() {
+    return (
+      this.canManageRoom &&
+      this.isStageRoom &&
+      !this.isCurrentUser &&
+      !!this.participant.speak_invited_at
+    );
+  }
+
   get canDismissRequest() {
     return (
       this.canManageRoom &&
@@ -318,7 +340,35 @@ export default class LiveParticipantSidebarContextMenu extends Component {
 
   @action
   async promoteToSpeaker() {
-    await this.#changeParticipantRole("speaker");
+    // Speaker for this session only; a permanent role is set from the
+    // room's member list.
+    await this.#changeParticipantRole("speaker", { sessionOnly: true });
+  }
+
+  @action
+  async inviteToSpeak() {
+    try {
+      await ajax(`/live/rooms/${this.room.id}/speak_invitation`, {
+        type: "POST",
+        data: { user_id: this.participant.id },
+      });
+      this.args.close();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async withdrawInvitation() {
+    try {
+      await ajax(`/live/rooms/${this.room.id}/speak_invitation`, {
+        type: "DELETE",
+        data: { user_id: this.participant.id },
+      });
+      this.args.close();
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
@@ -326,11 +376,15 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     await this.#changeParticipantRole("participant");
   }
 
-  async #changeParticipantRole(newRole) {
+  async #changeParticipantRole(newRole, { sessionOnly = false } = {}) {
     try {
       await ajax(`/live/rooms/${this.room.id}/memberships`, {
         type: "POST",
-        data: { user_id: this.participant.id, role: newRole },
+        data: {
+          user_id: this.participant.id,
+          role: newRole,
+          session_only: sessionOnly,
+        },
       });
       this.args.close();
     } catch (error) {
@@ -511,6 +565,28 @@ export default class LiveParticipantSidebarContextMenu extends Component {
               @icon="microphone"
               @label="live.stage.make_speaker"
               @title="live.stage.make_speaker"
+            />
+          </dropdown.item>
+        {{/if}}
+        {{#if this.canInviteToSpeak}}
+          <dropdown.item>
+            <DButton
+              class="live-participant-sidebar-context-menu__invite-to-speak-btn"
+              @action={{this.inviteToSpeak}}
+              @icon="bullhorn"
+              @label="live.stage.invite_to_speak"
+              @title="live.stage.invite_to_speak"
+            />
+          </dropdown.item>
+        {{/if}}
+        {{#if this.canWithdrawInvitation}}
+          <dropdown.item>
+            <DButton
+              class="live-participant-sidebar-context-menu__withdraw-invitation-btn"
+              @action={{this.withdrawInvitation}}
+              @icon="xmark"
+              @label="live.stage.withdraw_invitation"
+              @title="live.stage.withdraw_invitation"
             />
           </dropdown.item>
         {{/if}}

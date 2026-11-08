@@ -22,6 +22,10 @@ module Live
       new(room).publish_hand_raise(user_id, raised: raised, raised_at: raised_at, reason: reason)
     end
 
+    def self.publish_speak_invitation(room, user_id, invited:, reason: nil)
+      new(room).publish_speak_invitation(user_id, invited: invited, reason: reason)
+    end
+
     def self.publish_reaction(room, user, emoji)
       new(room).publish_reaction(user, emoji)
     end
@@ -130,6 +134,25 @@ module Live
           user_id: user_id,
           raised: raised,
           raised_at: raised_at,
+          reason: reason,
+        },
+        user_ids: participant_ids,
+      )
+    end
+
+    # Like publish_hand_raise: the roster is authoritative, this lets clients
+    # toast on invitations and replies without diffing it.
+    def publish_speak_invitation(user_id, invited:, reason: nil)
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return if participant_ids.empty?
+
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        {
+          type: "speak_invitation",
+          room_id: room.id,
+          user_id: user_id,
+          invited: invited,
           reason: reason,
         },
         user_ids: participant_ids,

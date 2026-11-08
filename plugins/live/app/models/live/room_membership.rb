@@ -56,6 +56,8 @@ end
 #
 #  id         :bigint           not null, primary key
 #  role       :integer          default(0), not null
+#  session_only :boolean        default(FALSE), not null
+#  fallback_role :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  room_id    :bigint           not null

@@ -23,6 +23,7 @@ module Live
                :description_excerpt,
                :visit_count,
                :video_enabled,
+               :speak_requests_enabled,
                :video_allowed,
                :screen_share_allowed,
                :chat_channel_id,

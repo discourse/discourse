@@ -110,6 +110,20 @@ export default class LiveCallControls extends Component {
     return this.#ownParticipant?.hand_raised_at;
   }
 
+  get speakInvitedAt() {
+    return this.#ownParticipant?.speak_invited_at;
+  }
+
+  // Listeners can still lower a hand raised before requests were switched
+  // off, but cannot start a new one.
+  get showRaiseHand() {
+    return (
+      this.isStageListener &&
+      !this.speakInvitedAt &&
+      (this.room?.speak_requests_enabled !== false || !!this.handRaisedAt)
+    );
+  }
+
   get raiseHandTitle() {
     if (!this.handRaisedAt) {
       return i18n("live.stage.raise_hand");
@@ -233,6 +247,38 @@ export default class LiveCallControls extends Component {
   @action
   toggleScreenShare() {
     this.liveWebrtc.toggleScreenShare();
+  }
+
+  @action
+  async acceptSpeakInvitation() {
+    try {
+      await ajax(`/live/rooms/${this.room.id}/speak_invitation/accept`, {
+        type: "POST",
+        data: {
+          participant_session_id: this.liveWebrtc.participantSessionIdFor(
+            this.room.id
+          ),
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async declineSpeakInvitation() {
+    try {
+      await ajax(`/live/rooms/${this.room.id}/speak_invitation`, {
+        type: "DELETE",
+        data: {
+          participant_session_id: this.liveWebrtc.participantSessionIdFor(
+            this.room.id
+          ),
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
@@ -503,7 +549,23 @@ export default class LiveCallControls extends Component {
         </:content>
       </DMenu>
     </div>
-    {{#if this.isStageListener}}
+    {{#if this.speakInvitedAt}}
+      {{#if this.isStageListener}}
+        <DButton
+          class="btn-primary live-call-controls__accept-invitation"
+          @action={{this.acceptSpeakInvitation}}
+          @icon="microphone"
+          @label="live.stage.accept_invitation"
+        />
+        <DButton
+          class="btn-default live-call-controls__decline-invitation"
+          @action={{this.declineSpeakInvitation}}
+          @icon="xmark"
+          @title="live.stage.decline_invitation"
+        />
+      {{/if}}
+    {{/if}}
+    {{#if this.showRaiseHand}}
       <DButton
         class={{dConcatClass
           "btn-default live-call-controls__raise-hand"

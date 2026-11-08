@@ -229,6 +229,7 @@ end
 #  room_type           :integer          default(0), not null
 #  slug                :string           not null
 #  video_enabled       :boolean          default(TRUE), not null
+#  speak_requests_enabled :boolean       default(TRUE), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  chat_channel_id     :bigint
