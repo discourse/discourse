@@ -63,7 +63,6 @@ module TestSelection
         :initializing,
         :loading,
         :scoped_coarse_root,
-        :scoped_mode,
         keyword_init: true,
       ) do
         def initialize
@@ -74,13 +73,26 @@ module TestSelection
             initializing: 0,
             loading: 0,
             scoped_coarse_root: nil,
-            scoped_mode: false,
           )
         end
       end
     private_constant :ThreadState
     class NativeTrace
-      def initialize(calls:, returns:, block_returns:, ruby_events:, ruby_returns:, state:, thread:)
+      def initialize(
+        calls:,
+        returns:,
+        block_returns:,
+        ruby_events:,
+        ruby_returns:,
+        coarse_calls:,
+        coarse_blocks:,
+        classes:,
+        state:,
+        thread:
+      )
+        @coarse_calls = coarse_calls
+        @coarse_blocks = coarse_blocks
+        @classes = classes
         @calls = calls
         @returns = returns
         @block_returns = block_returns
@@ -91,12 +103,15 @@ module TestSelection
       end
 
       def enable(target_thread:)
+        classes.enable(target_thread: target_thread)
         block_returns.enable(target_thread: target_thread)
         sync_events
-        ruby_events.enable(target_thread: target_thread)
       end
 
       def disable
+        coarse_calls.disable
+        coarse_blocks.disable
+        classes.disable
         ruby_events.disable
         ruby_returns.disable
         root = state.scoped_coarse_root
@@ -114,7 +129,15 @@ module TestSelection
         scoped =
           coarse && state.scoped_coarse_root &&
             state.scopes.last.equal?(state.scoped_coarse_root.fetch(:frame))
-        state.scoped_mode = !!scoped
+        if scoped
+          ruby_events.disable if ruby_events.enabled?
+          coarse_calls.enable(target_thread: thread) unless coarse_calls.enabled?
+          coarse_blocks.enable(target_thread: thread) unless coarse_blocks.enabled?
+        else
+          coarse_calls.disable if coarse_calls.enabled?
+          coarse_blocks.disable if coarse_blocks.enabled?
+          ruby_events.enable(target_thread: thread) unless ruby_events.enabled?
+        end
         if scoped
           ruby_returns.disable if ruby_returns.enabled?
           block_returns.disable if block_returns.enabled?
@@ -133,7 +156,16 @@ module TestSelection
 
       private
 
-      attr_reader :calls, :returns, :block_returns, :ruby_events, :ruby_returns, :state, :thread
+      attr_reader :calls,
+                  :returns,
+                  :block_returns,
+                  :ruby_events,
+                  :ruby_returns,
+                  :coarse_calls,
+                  :coarse_blocks,
+                  :classes,
+                  :state,
+                  :thread
     end
     private_constant :NativeTrace
 
@@ -150,6 +182,7 @@ module TestSelection
       @field_aliases = ObjectSpace::WeakMap.new
       @coarse_namespaces = ObjectSpace::WeakMap.new
       @coarse_sources = Set.new
+      @coarse_paths = {}
       @definitions = {}.compare_by_identity
       @native_registered_sources = Set.new
       @mutations = {}
@@ -246,6 +279,7 @@ module TestSelection
       @test_thread = Thread.current
       @coarse_namespaces = ObjectSpace::WeakMap.new
       @coarse_sources = Set.new
+      @coarse_paths = {}
       @tests[path]
     end
 
@@ -289,29 +323,6 @@ module TestSelection
           kind = event.event
           depth = state.coarse_depth
           name = event.method_id
-          if state.scoped_mode && (kind == :call || kind == :b_call)
-            scoped = state.scoped_coarse_root
-            if kind == :b_call && test_path(event.path) &&
-                 example_boundary?(event: event, example: active_example)
-              @trace_event.call(event, 3, thread, state)
-            else
-              if COARSE_CONTEXT_METHODS.key?(name)
-                if METHOD_DEFINITION_EVENTS.include?(name)
-                  @definitions.clear
-                  register_native_definition(event)
-                end
-                if kind == :call && REQUIRE_METHODS.include?(name)
-                  state.loading += 1
-                  scoped[:loading] += 1
-                elsif kind == :call && DYNAMIC_METHODS.include?(name)
-                  state.initializing += 1
-                  scoped[:initializing] += 1
-                end
-              end
-              record_coarse_call(event: event)
-            end
-            next
-          end
           if depth > 0 && !COARSE_CONTEXT_METHODS.key?(name)
             if kind == :call || (kind == :b_call && !test_path(event.path))
               state.coarse_depth = depth + 1
@@ -326,7 +337,45 @@ module TestSelection
           end
           @trace_event.call(event, 3, thread, state)
         end
-      ruby_events = TracePoint.new(:call, :b_call, :class, :end, &ruby_callback)
+      classes = TracePoint.new(:class, :end) { |event| @trace_event.call(event, 3, thread, state) }
+      coarse_calls =
+        TracePoint.new(:call) do |event|
+          name = event.method_id
+          if COARSE_CONTEXT_METHODS.key?(name)
+            scoped = state.scoped_coarse_root
+            if METHOD_DEFINITION_EVENTS.include?(name)
+              @definitions.clear
+              register_native_definition(event)
+            end
+            if REQUIRE_METHODS.include?(name)
+              state.loading += 1
+              scoped[:loading] += 1
+            elsif DYNAMIC_METHODS.include?(name)
+              state.initializing += 1
+              scoped[:initializing] += 1
+            end
+          end
+          owner = event.defined_class || INTERNAL_CLASS.call(event.self)
+          record_coarse_owner(owner) unless @coarse_namespaces[owner]
+          path = event.path
+          record_coarse_path(path) unless @coarse_paths[path]
+        end
+      coarse_blocks =
+        TracePoint.new(:b_call) do |event|
+          if test_path(event.path) && example_boundary?(event: event, example: active_example)
+            @trace_event.call(event, 3, thread, state)
+          else
+            if METHOD_DEFINITION_EVENTS.include?(event.method_id)
+              @definitions.clear
+              register_native_definition(event)
+            end
+            owner = event.defined_class || INTERNAL_CLASS.call(event.self)
+            record_coarse_owner(owner) unless @coarse_namespaces[owner]
+            path = event.path
+            record_coarse_path(path) unless @coarse_paths[path]
+          end
+        end
+      ruby_events = TracePoint.new(:call, :b_call, &ruby_callback)
       ruby_returns = TracePoint.new(:return, &ruby_callback)
       calls = TracePoint.new(:c_call) { |event| @trace_event.call(event, 3, thread, state) }
       returns = TracePoint.new(:c_return) { |event| @trace_event.call(event, 3, thread, state) }
@@ -345,6 +394,9 @@ module TestSelection
           calls: calls,
           returns: returns,
           block_returns: block_returns,
+          coarse_calls: coarse_calls,
+          coarse_blocks: coarse_blocks,
+          classes: classes,
           ruby_events: ruby_events,
           ruby_returns: ruby_returns,
           state: state,
@@ -1009,14 +1061,29 @@ module TestSelection
     end
 
     def record_coarse_call(event:, native: false)
-      owner = event.defined_class || INTERNAL_CLASS.call(event.self)
-      unless @coarse_namespaces[owner]
-        @coarse_namespaces[owner] = true
-        namespace = native_owner_namespace(owner)
-        @initialization_sources.add(namespace)
-        @tests[@active_test].add(namespace) if @active_test
+      record_coarse_owner(event.defined_class || INTERNAL_CLASS.call(event.self))
+      if native
+        record_coarse_source(native_definition(event).fetch(:source))
+      else
+        path = event.path
+        record_coarse_path(path) unless @coarse_paths[path]
       end
-      source = native ? native_definition(event).fetch(:source) : source_path(event.path)
+    end
+
+    def record_coarse_owner(owner)
+      return if @coarse_namespaces[owner]
+      @coarse_namespaces[owner] = true
+      namespace = native_owner_namespace(owner)
+      @initialization_sources.add(namespace)
+      @tests[@active_test].add(namespace) if @active_test
+    end
+
+    def record_coarse_path(path)
+      @coarse_paths[path] = true
+      record_coarse_source(source_path(path))
+    end
+
+    def record_coarse_source(source)
       return unless source && @coarse_sources.add?(source)
       @observed_sources.add(source)
       @initialization_sources.add(source)
