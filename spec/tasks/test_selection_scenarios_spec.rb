@@ -36,6 +36,25 @@ RSpec.describe "Dependency selection scenarios" do
     expect(registered).to eq(TestSelectionLab::SHARED_STATE_SCENARIOS.map(&:first))
   end
 
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_nested_matcher_conditional"
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_matcher_conditional"
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_inherited_conditional"
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_mixin_conditional"
+  it_behaves_like "a dependency selection replay", name: "coarse_split_native_precise_conditional"
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_alias_conditional"
+  it_behaves_like "a dependency selection replay",
+                  name: "coarse_split_native_precise_setter_conditional"
+  it_behaves_like "a dependency selection replay", name: "coarse_split_owned_recursion"
+  it_behaves_like "a dependency selection replay", name: "coarse_split_owned_unwind"
+  it_behaves_like "a dependency selection replay", name: "coarse_split_native_accessor_conditional"
+  it_behaves_like "a dependency selection replay", name: "coarse_split_native_alias_conditional"
+  it_behaves_like "a dependency selection replay", name: "coarse_split_native_inherited_conditional"
+  it_behaves_like "a dependency selection replay", name: "coarse_split_native_mixin_conditional"
   it_behaves_like "a dependency selection replay", name: "native_value_loop_native_accessor"
   it_behaves_like "a dependency selection replay", name: "native_value_loop_native_method"
   it_behaves_like "a dependency selection replay", name: "native_value_loop_native_vendor_method"

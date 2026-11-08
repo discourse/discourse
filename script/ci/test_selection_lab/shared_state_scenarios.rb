@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 module TestSelectionLab
   SHARED_STATE_SCENARIOS = [
+    [
+      "coarse_split_native_precise_nested_matcher_conditional",
+      "",
+      "SharedStateProducer.value",
+      false,
+    ],
+    ["coarse_split_native_precise_matcher_conditional", "", "SharedStateProducer.value", false],
+    ["coarse_split_native_precise_inherited_conditional", "", "SharedStateProducer.value", false],
+    ["coarse_split_native_precise_mixin_conditional", "", "SharedStateProducer.value", false],
+    ["coarse_split_native_precise_conditional", "", "SharedStateProducer.value", false],
+    ["coarse_split_native_precise_alias_conditional", "", "SharedStateProducer.value", false],
+    ["coarse_split_native_precise_setter_conditional", "", "SharedStateProducer.value", false],
+    ["coarse_split_owned_recursion", "", "SharedStateProducer.value", true],
+    ["coarse_split_owned_unwind", "", "SharedStateProducer.value", true],
+    ["coarse_split_native_accessor_conditional", "", "SharedStateProducer.value", true],
+    ["coarse_split_native_alias_conditional", "", "SharedStateProducer.value", true],
+    ["coarse_split_native_inherited_conditional", "", "SharedStateProducer.value", true],
+    ["coarse_split_native_mixin_conditional", "", "SharedStateProducer.value", true],
     ["native_value_loop_native_accessor", "", "SharedStateProducer.value", true],
     ["native_value_loop_native_method", "", "SharedStateProducer.value", true],
     ["native_value_loop_native_vendor_method", "", "SharedStateProducer.value", true],

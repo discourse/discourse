@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 require "prism"
+require "objspace"
 require_relative "rspec_source_structure"
 require_relative "dependency_set"
 require_relative "dependency_graph"
 
 module TestSelection
   class RubyDependencies
+    INTERNAL_CLASS = ObjectSpace.method(:internal_class_of)
+    MODULE_ANCESTORS = Module.instance_method(:ancestors)
+    private_constant :MODULE_ANCESTORS
+    private_constant :INTERNAL_CLASS
     OBJECT_IDENTITY = BasicObject.instance_method(:equal?)
     private_constant :OBJECT_IDENTITY
     OBJECT_CLASS = Object.instance_method(:class)
@@ -45,9 +50,6 @@ module TestSelection
                      :REQUIRE_METHODS,
                      :DYNAMIC_METHODS,
                      :METHOD_DEFINITION_EVENTS
-    NATIVE_CONTEXT_METHODS =
-      (REQUIRE_METHODS + DYNAMIC_METHODS + [:load_iseq]).to_h { |name| [name, true] }.freeze
-    private_constant :NATIVE_CONTEXT_METHODS
     COARSE_CONTEXT_METHODS =
       (REQUIRE_METHODS + DYNAMIC_METHODS + METHOD_DEFINITION_EVENTS + [:load_iseq])
         .to_h { |name| [name, true] }
@@ -60,7 +62,8 @@ module TestSelection
         :coarse_depth,
         :initializing,
         :loading,
-        :native_contexts,
+        :scoped_coarse_root,
+        :scoped_mode,
         keyword_init: true,
       ) do
         def initialize
@@ -70,17 +73,19 @@ module TestSelection
             coarse_depth: 0,
             initializing: 0,
             loading: 0,
-            native_contexts: [],
+            scoped_coarse_root: nil,
+            scoped_mode: false,
           )
         end
       end
     private_constant :ThreadState
     class NativeTrace
-      def initialize(calls:, coarse_calls:, returns:, block_returns:, state:, thread:)
+      def initialize(calls:, returns:, block_returns:, ruby_events:, ruby_returns:, state:, thread:)
         @calls = calls
-        @coarse_calls = coarse_calls
         @returns = returns
         @block_returns = block_returns
+        @ruby_events = ruby_events
+        @ruby_returns = ruby_returns
         @state = state
         @thread = thread
       end
@@ -88,31 +93,47 @@ module TestSelection
       def enable(target_thread:)
         block_returns.enable(target_thread: target_thread)
         sync_events
+        ruby_events.enable(target_thread: target_thread)
       end
 
       def disable
+        ruby_events.disable
+        ruby_returns.disable
+        root = state.scoped_coarse_root
+        while root
+          root.fetch(:trace).disable
+          root = root[:parent]
+        end
         calls.disable
-        coarse_calls.disable
         returns.disable
         block_returns.disable
       end
 
       def sync_events
         coarse = state.coarse_depth.positive?
-        active = coarse ? coarse_calls : calls
-        inactive = coarse ? calls : coarse_calls
-        inactive.disable if inactive.enabled?
-        active.enable(target_thread: thread) unless active.enabled?
-        if !coarse || !state.native_contexts.empty?
-          returns.enable(target_thread: thread) unless returns.enabled?
+        scoped =
+          coarse && state.scoped_coarse_root &&
+            state.scopes.last.equal?(state.scoped_coarse_root.fetch(:frame))
+        state.scoped_mode = !!scoped
+        if scoped
+          ruby_returns.disable if ruby_returns.enabled?
+          block_returns.disable if block_returns.enabled?
         else
+          ruby_returns.enable(target_thread: thread) unless ruby_returns.enabled?
+          block_returns.enable(target_thread: thread) unless block_returns.enabled?
+        end
+        if coarse
+          calls.disable if calls.enabled?
           returns.disable if returns.enabled?
+        else
+          calls.enable(target_thread: thread) unless calls.enabled?
+          returns.enable(target_thread: thread) unless returns.enabled?
         end
       end
 
       private
 
-      attr_reader :calls, :coarse_calls, :returns, :block_returns, :state, :thread
+      attr_reader :calls, :returns, :block_returns, :ruby_events, :ruby_returns, :state, :thread
     end
     private_constant :NativeTrace
 
@@ -123,8 +144,14 @@ module TestSelection
       @sources = Hash.new { |hash, source| hash[source] = @dependency_sets.build }
       @tests = Hash.new { |hash, test| hash[test] = @dependency_sets.build }
       @thread_states = Hash.new { |hash, thread| hash[thread] = ThreadState.new }
-      @coarse_receivers = ObjectSpace::WeakMap.new
+      @opaque_inputs = @dependency_sets.build
+      @opaque_seen = false
+      @native_fields = @dependency_sets.build
+      @field_aliases = ObjectSpace::WeakMap.new
+      @coarse_namespaces = ObjectSpace::WeakMap.new
+      @coarse_sources = Set.new
       @definitions = {}.compare_by_identity
+      @native_registered_sources = Set.new
       @mutations = {}
       @loading_calls = {}
       @initialization_sources = @dependency_sets.build
@@ -132,12 +159,15 @@ module TestSelection
       @observed_sources = Set.new
       @initialization_lines = Hash.new { |hash, path| hash[path] = Set.new }
       @objects = ObjectSpace::WeakMap.new
+      @expectation_targets = ObjectSpace::WeakMap.new
       @receiver_namespaces = ObjectSpace::WeakMap.new
+      @namespace_strings = { true => {}, false => {} }
       @constants = ObjectSpace::WeakMap.new
       @external_owners = ObjectSpace::WeakMap.new
       @external_write_depth = 0
       @external_entry_lines = {}
       @framework_paths = {}
+      @precise_wrappers = {}
       @external_line_trace = TracePoint.new(:line) { |event| record_external_write(event) }
       @source_sets = {}
       @effects = {}
@@ -147,28 +177,15 @@ module TestSelection
       @active_test = nil
       @test_thread = nil
       @native_traces = {}
-      @trace_event = ->(event, caller_depth = 2) do
+      @trace_event = ->(event, caller_depth, thread, state) do
         kind = event.event
-        thread = Thread.current
-        state = @thread_states[thread]
         method_name = event.method_id
-        if state.coarse_depth.positive? && !COARSE_CONTEXT_METHODS.key?(method_name)
-          if kind == :call || (kind == :b_call && !test_path(event.path))
-            state.coarse_depth += 1
-            state.frames << nil
-            record_coarse_call(event: event)
-            next
-          elsif RUBY_RETURN_EVENTS.include?(kind) && state.coarse_depth > 1
-            state.coarse_depth -= 1
-            state.frames.pop
-            next
-          end
-        end
         if kind == :class
           state.initializing += 1 if source_path(event.path)
         elsif kind == :end
           if source_path(event.path)
             record_constants(event.self)
+            register_native_sources(event.self)
             state.initializing -= 1
           end
         else
@@ -181,13 +198,20 @@ module TestSelection
           state.loading += 1 if loading && CALL_EVENTS.include?(kind)
           dynamic = DYNAMIC_METHODS.include?(method_name)
           state.initializing += 1 if dynamic && kind == :c_call
-          record(event: event, dynamic: dynamic, caller_depth: caller_depth)
+          record(
+            event: event,
+            dynamic: dynamic,
+            caller_depth: caller_depth,
+            thread: thread,
+            state: state,
+            kind: kind,
+            method_name: method_name,
+          )
           state.initializing -= 1 if dynamic && kind == :c_return
           state.loading -= 1 if loading && METHOD_RETURN_EVENTS.include?(kind) &&
             state.loading.positive?
         end
       end
-      @trace = TracePoint.new(:call, :b_call, :return, :class, :end, &@trace_event)
       @thread_trace =
         TracePoint.new(:thread_begin, :thread_end) do |event|
           if event.event == :thread_begin
@@ -200,24 +224,28 @@ module TestSelection
     end
 
     def start
+      ObjectSpace.each_object(Module) { |owner| register_native_sources(owner) }
       @thread_trace.enable
       Thread.list.each { |thread| attach_native_trace(thread) }
-      @trace.enable
     end
 
     def stop
-      @trace.disable
       @thread_trace.disable
       @native_traces.each_value(&:disable)
       @native_traces.clear
       @external_line_trace.disable
+      if @opaque_seen
+        @initialization_sources.merge(@opaque_inputs)
+        @initialization_sources.merge(@native_fields)
+      end
     end
 
     def begin_test(path)
       raise "Overlapping test collection" if @active_test
       @active_test = path
       @test_thread = Thread.current
-      @coarse_receivers = ObjectSpace::WeakMap.new
+      @coarse_namespaces = ObjectSpace::WeakMap.new
+      @coarse_sources = Set.new
       @tests[path]
     end
 
@@ -256,51 +284,69 @@ module TestSelection
     def attach_native_trace(thread)
       return if @native_traces.key?(thread)
       state = @thread_states[thread]
-      calls = TracePoint.new(:c_call) { |event| @trace_event.call(event, 3) }
-      coarse_calls =
-        TracePoint.new(:c_call) do |event|
+      ruby_callback =
+        lambda do |event|
+          kind = event.event
+          depth = state.coarse_depth
           name = event.method_id
-          if COARSE_CONTEXT_METHODS.key?(name)
-            @definitions.clear if METHOD_DEFINITION_EVENTS.include?(name)
-            if NATIVE_CONTEXT_METHODS.key?(name)
-              loading =
-                REQUIRE_METHODS.include?(name) ||
-                  (
-                    name == :load_iseq &&
-                      OBJECT_IDENTITY.bind_call(event.self, RubyVM::InstructionSequence)
-                  )
-              dynamic = DYNAMIC_METHODS.include?(name)
-              state.native_contexts << { method: name, loading: loading, dynamic: dynamic }
-              state.loading += 1 if loading
-              state.initializing += 1 if dynamic
-              @native_traces.fetch(thread).sync_events
-            end
-          end
-          record_coarse_call(event: event, native: true)
-        end
-      returns =
-        TracePoint.new(:c_return) do |event|
-          if state.coarse_depth.positive?
-            if NATIVE_CONTEXT_METHODS.key?(event.method_id)
-              context = state.native_contexts.pop
-              unless context && context.fetch(:method) == event.method_id
-                raise "Native context return differs from call"
+          if state.scoped_mode && (kind == :call || kind == :b_call)
+            scoped = state.scoped_coarse_root
+            if kind == :b_call && test_path(event.path) &&
+                 example_boundary?(event: event, example: active_example)
+              @trace_event.call(event, 3, thread, state)
+            else
+              if COARSE_CONTEXT_METHODS.key?(name)
+                if METHOD_DEFINITION_EVENTS.include?(name)
+                  @definitions.clear
+                  register_native_definition(event)
+                end
+                if kind == :call && REQUIRE_METHODS.include?(name)
+                  state.loading += 1
+                  scoped[:loading] += 1
+                elsif kind == :call && DYNAMIC_METHODS.include?(name)
+                  state.initializing += 1
+                  scoped[:initializing] += 1
+                end
               end
-              state.loading -= 1 if context.fetch(:loading)
-              state.initializing -= 1 if context.fetch(:dynamic)
-              @native_traces.fetch(thread).sync_events
+              record_coarse_call(event: event)
             end
+            next
+          end
+          if depth > 0 && !COARSE_CONTEXT_METHODS.key?(name)
+            if kind == :call || (kind == :b_call && !test_path(event.path))
+              state.coarse_depth = depth + 1
+              state.frames << nil
+              record_coarse_call(event: event)
+              next
+            elsif kind == :return && depth > 1
+              state.coarse_depth = depth - 1
+              state.frames.pop
+              next
+            end
+          end
+          @trace_event.call(event, 3, thread, state)
+        end
+      ruby_events = TracePoint.new(:call, :b_call, :class, :end, &ruby_callback)
+      ruby_returns = TracePoint.new(:return, &ruby_callback)
+      calls = TracePoint.new(:c_call) { |event| @trace_event.call(event, 3, thread, state) }
+      returns = TracePoint.new(:c_return) { |event| @trace_event.call(event, 3, thread, state) }
+      block_returns =
+        TracePoint.new(:b_return) do |event|
+          depth = state.coarse_depth
+          if depth > 1 && !COARSE_CONTEXT_METHODS.key?(event.method_id)
+            state.coarse_depth = depth - 1
+            state.frames.pop
           else
-            @trace_event.call(event, 3)
+            @trace_event.call(event, 3, thread, state)
           end
         end
-      block_returns = TracePoint.new(:b_return) { |event| @trace_event.call(event, 3) }
       point =
         NativeTrace.new(
           calls: calls,
-          coarse_calls: coarse_calls,
           returns: returns,
           block_returns: block_returns,
+          ruby_events: ruby_events,
+          ruby_returns: ruby_returns,
           state: state,
           thread: thread,
         )
@@ -376,11 +422,32 @@ module TestSelection
       true
     end
 
+    def record_expectation_target(value)
+      return unless Module === value || cache_value?(value)
+      return if @expectation_targets[value]
+
+      @expectation_targets[value] = true
+      case value
+      when Array
+        Array.instance_method(:each).bind_call(value) { |item| record_expectation_target(item) }
+      when Hash
+        Hash
+          .instance_method(:each_pair)
+          .bind_call(value) do |key, item|
+            record_expectation_target(key)
+            record_expectation_target(item)
+          end
+      when Set
+        Set.instance_method(:each).bind_call(value) { |item| record_expectation_target(item) }
+      end
+    end
+
     def record_object(value:, sources:, field: false)
       return unless field ? cache_value?(value) : weak_object?(value)
       combined = @dependency_sets.build(object_sources(value)).merge(sources).freeze
-      @coarse_receivers[value] = nil
       @objects[value] = @source_sets[combined.bits] ||= combined
+      @opaque_inputs.merge(combined)
+      @objects[value]
     end
 
     def record_constants(owner)
@@ -586,6 +653,13 @@ module TestSelection
       data[:range]&.cover?(location.last)
     end
 
+    def precise_wrapper?(path)
+      @precise_wrappers.fetch(path) do
+        package = Gem.loaded_specs["timeout"]
+        @precise_wrappers[path] = package && path.start_with?("#{package.full_gem_path}/")
+      end
+    end
+
     def framework_path?(path)
       @framework_paths.fetch(path) do
         @framework_paths[path] = %w[
@@ -639,9 +713,11 @@ module TestSelection
         singleton = Module === receiver
         owner = singleton ? receiver : OBJECT_CLASS.bind_call(receiver)
         name = MODULE_NAME.bind_call(owner) || "anonymous"
-        namespace = "__state__/#{singleton ? "class" : "instance"}/#{name}".freeze
-        @sources[namespace]
-        namespace
+        @namespace_strings.fetch(singleton)[name] ||= begin
+          namespace = "__state__/#{singleton ? "class" : "instance"}/#{name}".freeze
+          @sources[namespace]
+          namespace
+        end
       end
     end
 
@@ -649,6 +725,18 @@ module TestSelection
       namespace = state_namespace(receiver)
       slot = "#{namespace}/#{variable}"
       @sources[namespace].add(slot)
+      owner = INTERNAL_CLASS.call(receiver)
+      aliases = @field_aliases[owner] ||= Set.new
+      if aliases.add?(slot)
+        MODULE_ANCESTORS
+          .bind_call(owner)
+          .each do |ancestor|
+            inherited_namespace = native_owner_namespace(ancestor)
+            inherited_slot = "#{inherited_namespace}/#{variable}"
+            @sources[inherited_namespace].add(inherited_slot)
+            @sources[inherited_slot].add(slot) unless inherited_slot == slot
+          end
+      end
       slot
     end
 
@@ -817,6 +905,87 @@ module TestSelection
       @constants[value] = recorded if recorded && cache_value?(event.self) && @constants[event.self]
     end
 
+    def start_scoped_coarse(event:, state:, thread:, frame:)
+      method =
+        Module.instance_method(:instance_method).bind_call(event.defined_class, event.callee_id)
+      while method && !OBJECT_IDENTITY.bind_call(method.owner, event.defined_class)
+        method = method.super_method
+      end
+      return unless method && method.source_location == [event.path, event.lineno]
+      return unless RubyVM::InstructionSequence.of(method)
+      root = {
+        frame: frame,
+        parent: state.scoped_coarse_root,
+        remaining: 1,
+        loading: 0,
+        initializing: 0,
+      }
+      point =
+        TracePoint.new(:call, :return) do |ending|
+          if ending.event == :call
+            root[:remaining] += 1
+            next
+          end
+          root[:remaining] -= 1
+          next unless root.fetch(:remaining).zero?
+          unless state.scoped_coarse_root.equal?(root)
+            raise "Scoped return reached an inactive root"
+          end
+          unless state.frames.last.equal?(root.fetch(:frame))
+            raise "Scoped return did not reach its root frame"
+          end
+          point.disable
+          state.loading -= root.fetch(:loading)
+          state.initializing -= root.fetch(:initializing)
+          state.scoped_coarse_root = root[:parent]
+          @trace_event.call(ending, 3, thread, state)
+        end
+      root[:trace] = point
+      state.scoped_coarse_root = root
+      point.enable(target: method, target_thread: thread)
+    rescue NameError, ArgumentError, TypeError
+      point&.disable
+      state.scoped_coarse_root = root[:parent] if root
+    end
+
+    def register_native_definition(event)
+      if event.method_id == :method_added
+        register_native_sources(event.self)
+      elsif event.method_id == :singleton_method_added
+        register_native_sources(INTERNAL_CLASS.call(event.self))
+      end
+    end
+
+    def register_native_sources(owner)
+      return unless Module === owner
+      names =
+        Module.instance_method(:instance_methods).bind_call(owner, false) |
+          Module.instance_method(:private_instance_methods).bind_call(owner, false)
+      names.each do |name|
+        method = Module.instance_method(:instance_method).bind_call(owner, name)
+        method = method.super_method while method && !OBJECT_IDENTITY.bind_call(method.owner, owner)
+        next unless method && method.source_location
+        next if RubyVM::InstructionSequence.of(method)
+        variable = "@#{method.original_name.to_s.delete_suffix("=")}"
+        @native_fields.add("#{native_owner_namespace(owner)}/#{variable}")
+        source = source_path(method.source_location.first)
+        next unless source && @native_registered_sources.add?(source)
+        @observed_sources.add(source)
+        @initialization_sources.add(source)
+        @uncertain_sources.add(source)
+      rescue NameError
+        nil
+      end
+    end
+
+    def native_owner_namespace(owner)
+      if Class === owner && Class.instance_method(:singleton_class?).bind_call(owner)
+        state_namespace(Class.instance_method(:attached_object).bind_call(owner))
+      else
+        "__state__/instance/#{MODULE_NAME.bind_call(owner) || "anonymous"}"
+      end
+    end
+
     def native_definition(event)
       methods = @definitions[event.defined_class] ||= {}
       name = event.callee_id
@@ -824,7 +993,11 @@ module TestSelection
       return cached if cached
       location =
         begin
-          event.defined_class.instance_method(name).source_location
+          method = Module.instance_method(:instance_method).bind_call(event.defined_class, name)
+          while method && !OBJECT_IDENTITY.bind_call(method.owner, event.defined_class)
+            method = method.super_method
+          end
+          method&.source_location
         rescue NameError
           nil
         end
@@ -836,47 +1009,34 @@ module TestSelection
       native_definition(event).fetch(:location)
     end
 
-    def record_coarse_call(event:, native: false)
-      receiver = event.self
-      unless @coarse_receivers[receiver]
-        @coarse_receivers[receiver] = true
-        sources = object_sources(receiver)
-        namespace = state_namespace(receiver)
-        if sources.empty?
-          @initialization_sources.add(namespace)
-          @tests[@active_test].add(namespace) if @active_test
-        else
-          dependencies = sources | [namespace]
-          @initialization_sources.merge(dependencies)
-          @tests[@active_test].merge(dependencies) if @active_test
-        end
+    def record_coarse_call(event:, native: false, source: nil)
+      owner = event.defined_class || INTERNAL_CLASS.call(event.self)
+      unless @coarse_namespaces[owner]
+        @coarse_namespaces[owner] = true
+        namespace = native_owner_namespace(owner)
+        @initialization_sources.add(namespace)
+        @tests[@active_test].add(namespace) if @active_test
       end
-      source =
-        if native
-          native_definition(event).fetch(:source)
-        else
-          source_path(event.path)
-        end
-      if source
-        @observed_sources.add(source)
-        @initialization_sources.add(source)
-        @uncertain_sources.add(source)
-        @tests[@active_test].add(source) if @active_test
-      end
+      source ||= native ? native_definition(event).fetch(:source) : source_path(event.path)
+      return unless source && @coarse_sources.add?(source)
+      @observed_sources.add(source)
+      @initialization_sources.add(source)
+      @uncertain_sources.add(source)
+      @tests[@active_test].add(source) if @active_test
     end
 
-    def record(event:, dynamic:, caller_depth:)
-      kind = event.event
-      method_name = event.method_id
-      thread = Thread.current
-      state = @thread_states[thread]
+    def record(event:, dynamic:, caller_depth:, thread:, state:, kind:, method_name:)
       frames = state.frames
       returning = kind == :return || kind == :c_return || kind == :b_return
-      @definitions.clear if !returning && METHOD_DEFINITION_EVENTS.include?(method_name)
+      if !returning && METHOD_DEFINITION_EVENTS.include?(method_name)
+        @definitions.clear
+        register_native_definition(event)
+      end
       depth = state.coarse_depth
       if depth.positive? && kind == :b_call && test_path(event.path) &&
            example_boundary?(event: event, example: active_example)
         resume_coarse_depth = depth
+        @definitions.clear
         state.coarse_depth = 0
         @native_traces.fetch(thread).sync_events
         depth = 0
@@ -905,6 +1065,7 @@ module TestSelection
         end
         state.coarse_depth = frame[:resume_coarse_depth] if frame && frame[:resume_coarse_depth]
         if depth == 1 || (frame && frame[:resume_coarse_depth])
+          @definitions.clear
           @native_traces.fetch(thread).sync_events
         end
         return
@@ -931,6 +1092,10 @@ module TestSelection
                   state.scopes.any? { |scope| scope[:source] || scope.fetch(:test) }
               )
           )
+      if @active_test && kind == :call && method_name == :expect && framework_path?(event.path)
+        parameter = event.parameters.find { |type, name| name && %i[req opt].include?(type) }
+        record_expectation_target(event.binding.local_variable_get(parameter.last)) if parameter
+      end
       state_operation = %i[
         const_added
         const_set
@@ -952,7 +1117,10 @@ module TestSelection
           (source_path(event.path) || test_path(event.path) || inherited_native_context)
       if native && !source && !native_boundary && cached_receiver.empty? && !dynamic &&
            !state_operation &&
-           !(@active_test && @external_owners[event.self] && definition&.first) &&
+           !(
+             @active_test && definition&.first &&
+               (@external_owners[event.self] || @expectation_targets[event.self])
+           ) &&
            !(
              mutation?(event) &&
                (
@@ -1038,11 +1206,15 @@ module TestSelection
       @external_owners[event.self] = true if external_effects &&
         external_effects.fetch(:writes).any?
       external_accessor =
-        @active_test && !source && native && @external_owners[event.self] && definition&.first
+        @active_test && !source && native && definition&.first &&
+          (
+            @external_owners[event.self] || @expectation_targets[event.self] ||
+              (native_boundary && !framework_path?(event.path))
+          )
       container = [Hash, Array, Set, String].any? { |type| type === event.self }
       opaque_cache = !container && state_sources?(inputs)
       opaque_mutation =
-        !source && known_context &&
+        !source && !external_accessor && known_context &&
           (
             opaque_cache ||
               (
@@ -1241,8 +1413,14 @@ module TestSelection
       frames << frame
       scopes << frame if frame
       if @active_test && frame && !native && frame.fetch(:unknown) &&
-           (source&.start_with?("app/", "lib/", "plugins/", "migrations/") || external_entry)
+           (source&.start_with?("app/", "lib/", "plugins/", "migrations/") || external_entry) &&
+           !precise_wrapper?(event.path) && !event.path.start_with?("<internal:")
+        @opaque_seen = true
+        @definitions.clear
         state.coarse_depth = 1
+        if kind == :call
+          start_scoped_coarse(event: event, state: state, thread: thread, frame: frame)
+        end
         @native_traces.fetch(thread).sync_events
       end
       if frame && external_writes

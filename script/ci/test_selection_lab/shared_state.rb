@@ -159,7 +159,9 @@ module TestSelectionLab
             @name
           ]
         why =
-          if @name == "new_setup_spec"
+          if @name.start_with?("coarse_split_native_precise_")
+            "The producer writes a native accessor field and the reader accesses it, directly or through a matcher. Collection puts the files in separate processes, so the read slot must be recorded even when the reader sees an empty cache. The writer and reader depend on the producer. The unrelated spec stays omitted."
+          elsif @name == "new_setup_spec"
             "The added file also registers global before suite setup. The existing reader consumes that changed setup, so the complete affected environment must run. A pure new spec remains a separate case."
           elsif @name == "changed_setup_spec"
             "The existing spec gains global before suite setup. Its reader can fail without running that spec's own examples, so this affects the complete environment."
@@ -729,6 +731,29 @@ module TestSelectionLab
         )
         File.open("spec/helper.rb", "a") { |file| file.puts "require_relative '../lib/cache'" }
       end
+      if @name.start_with?("coarse_split_native_")
+        cache =
+          case @name
+          when "coarse_split_native_accessor_conditional",
+               "coarse_split_native_precise_conditional",
+               "coarse_split_native_precise_matcher_conditional",
+               "coarse_split_native_precise_nested_matcher_conditional"
+            "module SharedStateCache; class << self; attr_reader :value; def write(value); @value = value; end; end; end"
+          when "coarse_split_native_alias_conditional",
+               "coarse_split_native_precise_alias_conditional"
+            "module SharedStateCache; class << self; attr_reader :stored; alias value stored; def write(value); @stored = value; end; end; end"
+          when "coarse_split_native_precise_setter_conditional"
+            "module SharedStateCache; class << self; attr_accessor :value; end; end"
+          when "coarse_split_native_precise_inherited_conditional"
+            "class CacheBase; attr_reader :stored; end; class CacheChild < CacheBase; alias value stored; def write(value); @stored = value; end; end; SharedStateCache = CacheChild.new"
+          when "coarse_split_native_inherited_conditional"
+            "class CacheBase; attr_reader :value; end; class CacheChild < CacheBase; def write(value); @value = value; end; end; SharedStateCache = CacheChild.new"
+          when "coarse_split_native_mixin_conditional",
+               "coarse_split_native_precise_mixin_conditional"
+            "module CacheFields; attr_reader :value; end; class CacheClient; include CacheFields; def write(value); @value = value; end; end; SharedStateCache = CacheClient.new"
+          end
+        File.write("vendor/cache.rb", cache)
+      end
       if @name.start_with?("coarse_")
         if @name.include?("owned")
           File.write("lib/cache.rb", File.read("vendor/cache.rb"))
@@ -751,6 +776,72 @@ module TestSelectionLab
           "spec/2_reader_spec.rb",
           "require_relative 'helper'\nRSpec.describe('Reader') { it('reads the cached value') { expect([nil, :original]).to include(SharedStateReader.value) } }",
         )
+      end
+      if %w[coarse_split_owned_recursion coarse_split_owned_unwind].include?(@name)
+        inner = @name.end_with?("unwind") ? "raise 'finished traversal'" : "SharedStateCache.value"
+        outer =
+          (
+            if @name.end_with?("unwind")
+              "begin; read_depth(3); rescue RuntimeError; SharedStateCache.value; end"
+            else
+              "read_depth(3)"
+            end
+          )
+        File.write("lib/reader.rb", <<~RUBY)
+          module SharedStateReader
+            def self.value
+              #{outer}
+            end
+
+            def self.read_depth(depth)
+              if depth.positive?
+                read_depth(depth - 1)
+              else
+                #{inner}
+              end
+            end
+          end
+        RUBY
+      end
+      if @name.start_with?("coarse_split_native_precise_")
+        File.write("spec/2_reader_spec.rb", <<~RUBY)
+          require_relative "helper"
+          RSpec.describe("Reader") do
+            it("reads an empty or original native field") do
+              expect([nil, :original]).to include(SharedStateCache.value)
+            end
+          end
+        RUBY
+        if %w[
+             coarse_split_native_precise_matcher_conditional
+             coarse_split_native_precise_nested_matcher_conditional
+           ].include?(@name)
+          matcher_target = "SharedStateCache"
+          matcher = "have_attributes(value: be_nil.or(eq(:original)))"
+          if @name == "coarse_split_native_precise_nested_matcher_conditional"
+            matcher_target = "[#{matcher_target}]"
+            matcher = "all(#{matcher})"
+          end
+          File.write("spec/2_reader_spec.rb", <<~RUBY)
+            require_relative "helper"
+            RSpec.describe("Reader") do
+              it("reads the native field through an attributes matcher") do
+                expect(#{matcher_target}).to #{matcher}
+              end
+            end
+          RUBY
+        end
+        if @name == "coarse_split_native_precise_setter_conditional"
+          File.write("spec/1_writer_spec.rb", <<~RUBY)
+            require_relative "helper"
+            RSpec.describe("Writer") do
+              it("stores the producer through a native setter") do
+                SharedStateCache.value = SharedStateProducer.value
+                expect(SharedStateCache.value).to be_a(Symbol)
+              end
+            end
+          RUBY
+        end
       end
       if @name.start_with?("native_value_loop_")
         callback = @name.end_with?("callback", "_method")
