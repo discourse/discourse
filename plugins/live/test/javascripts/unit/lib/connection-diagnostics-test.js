@@ -1,12 +1,16 @@
 import { module, test } from "qunit";
 import {
+  averageAudioLevel,
   collectPeers,
+  formatDbfs,
   formatIceError,
   formatReport,
   iceErrorIsHarmless,
   parseIceUrl,
   partitionIceErrors,
+  playbackProblems,
   publicIpv4Addresses,
+  receivingSilence,
   recordIceError,
   routeFor,
   summarizeStats,
@@ -558,5 +562,154 @@ module("Live | Unit | Lib | connection-diagnostics", function () {
         "  error (harmless): stun:turn.example.com:3478 701 STUN binding request timed out."
       )
     );
+  });
+
+  test("receivingSilence flags audio that arrives but decodes to silence", function (assert) {
+    const silent = {
+      kind: "audio",
+      totalAudioEnergy: 0,
+      totalSamplesDuration: 200,
+    };
+    const speaking = {
+      kind: "audio",
+      totalAudioEnergy: 0.5,
+      totalSamplesDuration: 200,
+    };
+
+    assert.strictEqual(averageAudioLevel(silent), 0);
+    assert.strictEqual(averageAudioLevel(speaking), Math.sqrt(0.5 / 200));
+    assert.strictEqual(averageAudioLevel({ kind: "audio" }), null);
+    assert.true(receivingSilence(silent));
+    assert.false(receivingSilence(speaking));
+    assert.false(
+      receivingSilence({ ...silent, totalSamplesDuration: 2 }),
+      "too little decoded to judge"
+    );
+    assert.false(receivingSilence({ kind: "audio" }), "no energy stats");
+  });
+
+  test("formatReport shows audio levels and playback state", async function (assert) {
+    const report = statsReport([
+      ...RELAYED_REPORT.values(),
+      {
+        id: "IN1",
+        type: "inbound-rtp",
+        kind: "audio",
+        codecId: "C1",
+        packetsReceived: 10000,
+        packetsLost: 0,
+        audioLevel: 0,
+        totalAudioEnergy: 0,
+        totalSamplesDuration: 200,
+        totalSamplesReceived: 9_600_000,
+        concealedSamples: 96_000,
+      },
+    ]);
+    const pc = {
+      connectionState: "connected",
+      iceConnectionState: "connected",
+      iceGatheringState: "complete",
+      signalingState: "stable",
+      getStats: async () => report,
+    };
+
+    const peers = await collectPeers({
+      room: { id: 1, active_participants: [{ id: 2, username: "alice" }] },
+      currentUserId: 1,
+      peerManager: {
+        get: () => pc,
+        getRoomPeers: () => new Map([[2, pc]]),
+        diagnosticsFor: () => ({ iceCandidateErrors: [] }),
+      },
+      shouldMaintainPeer: () => true,
+      playbackFor: () => ({
+        volume: 0,
+        mutedByUser: false,
+        deafened: false,
+        elements: [
+          {
+            role: "live",
+            paused: true,
+            muted: false,
+            volume: 0,
+            readyState: 4,
+            sinkId: "",
+            tracks: [{ enabled: true, muted: false, readyState: "live" }],
+          },
+        ],
+      }),
+    });
+
+    const text = formatReport({
+      room: { id: 1 },
+      transport: "mesh",
+      iceTransportPolicy: "all",
+      local: { localTracks: [] },
+      probes: [],
+      peers,
+      collectedAt: 0,
+    });
+
+    assert.true(
+      text.includes(
+        "in audio opus: packets=10000 lost=0 jitter=? level=0.0000 avg=0.0000 decoded=200s concealed=1.0%"
+      )
+    );
+    assert.true(
+      text.includes("note: audio packets arrive but decode to silence")
+    );
+    assert.true(
+      text.includes("playback: volume=0 muted by me=false deafened=false")
+    );
+    assert.true(text.includes("note: playback problems: volume_zero, paused"));
+    assert.true(
+      text.includes(
+        "live element: paused=true muted=false volume=0 readyState=4 sink=default audio tracks=enabled/unmuted/live"
+      )
+    );
+  });
+
+  test("playbackProblems explains why arriving audio isn't heard", function (assert) {
+    const element = {
+      role: "live",
+      paused: false,
+      muted: false,
+      volume: 1,
+      tracks: [{ enabled: true, muted: false, readyState: "live" }],
+    };
+    const playback = (overrides = {}, elementOverrides = {}) => ({
+      volume: 1,
+      mutedByUser: false,
+      deafened: false,
+      elements: [{ ...element, ...elementOverrides }],
+      ...overrides,
+    });
+
+    assert.deepEqual(playbackProblems(null), []);
+    assert.deepEqual(playbackProblems(playback()), []);
+    assert.deepEqual(
+      playbackProblems(playback({ deafened: true }, { muted: true })),
+      ["deafened"],
+      "a muted element is explained by deafen"
+    );
+    assert.deepEqual(playbackProblems(playback({}, { muted: true })), [
+      "element_muted",
+    ]);
+    assert.deepEqual(playbackProblems(playback({ elements: [] })), [
+      "no_element",
+    ]);
+    assert.deepEqual(
+      playbackProblems(
+        playback({}, { tracks: [{ readyState: "ended" }], paused: true })
+      ),
+      ["paused", "track_ended"]
+    );
+  });
+
+  test("formatDbfs renders linear levels on the decibel scale", function (assert) {
+    assert.strictEqual(formatDbfs(1), "0 dBFS");
+    assert.strictEqual(formatDbfs(0.01), "-40 dBFS");
+    assert.strictEqual(formatDbfs(0), "-∞ dBFS");
+    assert.strictEqual(formatDbfs(null), null);
   });
 });

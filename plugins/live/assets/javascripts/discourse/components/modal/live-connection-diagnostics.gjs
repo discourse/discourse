@@ -11,13 +11,18 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
+  averageAudioLevel,
   formatBitrate,
   formatCandidateCounts,
+  formatDbfs,
   formatIceError,
   formatReport,
   formatRtt,
   partitionIceErrors,
+  playbackProblems,
+  primaryInboundAudio,
   publicIpv4Addresses,
+  receivingSilence,
   unexpectedLocalAddress,
 } from "../../lib/live/connection-diagnostics.js";
 
@@ -58,6 +63,17 @@ function errorGroups(errors, evidence, formatOptions) {
         count: harmless.reduce((sum, error) => sum + error.count, 0),
       }),
   };
+}
+
+function incomingAudioLabel(entry) {
+  if (!entry) {
+    return null;
+  }
+  return i18n("live.connection_diagnostics.incoming_audio_value", {
+    packets: entry.packetsReceived,
+    lost: entry.packetsLost ?? "?",
+    level: formatDbfs(averageAudioLevel(entry)) ?? "?",
+  });
 }
 
 function candidateLabel(candidate) {
@@ -117,6 +133,8 @@ export default class LiveConnectionDiagnosticsModal extends Component {
         const pair = stats?.selectedPair;
         const route = stats?.route ?? "unknown";
         const recovery = peer.recovery;
+        const inboundAudio = primaryInboundAudio(stats);
+        const problems = playbackProblems(peer.playback);
 
         return {
           key: peer.userId,
@@ -180,6 +198,17 @@ export default class LiveConnectionDiagnosticsModal extends Component {
               })
           ),
           unexpectedLocalAddress: unexpectedLocalAddress(stats),
+          incomingAudio: incomingAudioLabel(inboundAudio),
+          receivingSilence: receivingSilence(inboundAudio),
+          playbackProblems: problems.map((problem) =>
+            i18n(`live.connection_diagnostics.playback_problems.${problem}`)
+          ),
+          playbackOk:
+            peer.playback &&
+            !problems.length &&
+            i18n("live.connection_diagnostics.playback_ok", {
+              volume: Math.round(peer.playback.volume * 100),
+            }),
           restartsExhausted:
             recovery.restartAttempts >= recovery.maxRestartAttempts &&
             status !== "connected",
@@ -417,8 +446,28 @@ export default class LiveConnectionDiagnosticsModal extends Component {
                       }}
                     </p>
                   {{/if}}
+                  {{#if peer.receivingSilence}}
+                    <p class="live-connection-diagnostics__alert">
+                      {{i18n "live.connection_diagnostics.receiving_silence"}}
+                    </p>
+                  {{/if}}
+                  {{#each peer.playbackProblems as |problem|}}
+                    <p class="live-connection-diagnostics__alert">
+                      {{problem}}
+                    </p>
+                  {{/each}}
 
                   <dl class="live-connection-diagnostics__details">
+                    {{#if peer.incomingAudio}}
+                      <dt>{{i18n
+                          "live.connection_diagnostics.incoming_audio"
+                        }}</dt>
+                      <dd>{{peer.incomingAudio}}</dd>
+                    {{/if}}
+                    {{#if peer.playbackOk}}
+                      <dt>{{i18n "live.connection_diagnostics.playback"}}</dt>
+                      <dd>{{peer.playbackOk}}</dd>
+                    {{/if}}
                     {{#each peer.states as |state|}}
                       <dt>{{state.label}}</dt>
                       <dd>{{state.value}}</dd>
