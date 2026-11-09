@@ -10,8 +10,6 @@ module ::Blog
       TemplateRenderer::PAGES.to_h { |page| ["template_#{page}", TemplateRenderer.builtin(page)] }
     end
 
-    # Not a has_many: associations are skipped when the object is empty, which
-    # would drop the key instead of returning [].
     def articles
       ActiveModel::ArraySerializer.new(
         object,
