@@ -51,10 +51,6 @@ module Chat
       object.pinned_messages.size
     end
 
-    def include_pinned_messages_count?
-      SiteSetting.chat_pinned_messages
-    end
-
     def chatable_url
       object.chatable_url
     end
