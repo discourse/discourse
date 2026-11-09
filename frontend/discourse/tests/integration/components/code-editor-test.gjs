@@ -19,7 +19,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import CodeEditor from "discourse/components/code-editor";
 import {
-  clearRegisteredCodeEditorLanguages,
+  loadCodeEditorLanguage,
   registerCodeEditorLanguage,
 } from "discourse/lib/code-editor-languages";
 import loadCodemirror, {
@@ -382,19 +382,27 @@ module("Integration | Component | code-editor", function (hooks) {
     registerCodeEditorLanguage("broken", () =>
       Promise.reject(new Error("chunk failed"))
     );
+    const state = new (class {
+      @tracked language = "sql";
+    })();
     const consoleError = sinon.stub(console, "error");
 
     try {
       await render(
-        <template><CodeEditor @language="broken" @value="select 1" /></template>
+        <template>
+          <CodeEditor @language={{state.language}} @value="select 1" />
+        </template>
       );
+      await waitFor(".cm-content span[class]");
+
+      state.language = "broken";
       await waitUntil(() => consoleError.called);
+      await settled();
 
       assert.dom(".cm-content").hasText("select 1");
-      assert.deepEqual(highlightedTokens(), []);
+      assert.deepEqual(highlightedTokens(), [], "the old language is dropped");
     } finally {
       consoleError.restore();
-      clearRegisteredCodeEditorLanguages();
     }
   });
 
@@ -404,19 +412,66 @@ module("Integration | Component | code-editor", function (hooks) {
         throw new Error("bad options");
       },
     }));
+    const state = new (class {
+      @tracked language = "sql";
+    })();
     const consoleError = sinon.stub(console, "error");
 
     try {
       await render(
-        <template><CodeEditor @language="throws" @value="select 1" /></template>
+        <template>
+          <CodeEditor @language={{state.language}} @value="select 1" />
+        </template>
       );
+      await waitFor(".cm-content span[class]");
+
+      state.language = "throws";
       await waitUntil(() => consoleError.called);
+      await settled();
 
       assert.dom(".cm-content").hasText("select 1");
-      assert.deepEqual(highlightedTokens(), []);
+      assert.deepEqual(highlightedTokens(), [], "the old language is dropped");
     } finally {
       consoleError.restore();
-      clearRegisteredCodeEditorLanguages();
+    }
+  });
+
+  test("ignores a superseded language load that fails", async function (assert) {
+    let calls = 0;
+    registerCodeEditorLanguage("flaky", () => {
+      calls++;
+      if (calls === 1) {
+        return new Promise((resolve, reject) =>
+          setTimeout(() => reject(new Error("stale")), 100)
+        );
+      }
+      return loadCodeEditorLanguage("sql").then((builder) => ({
+        default: builder,
+      }));
+    });
+    const state = new (class {
+      @tracked options = {};
+    })();
+    const consoleError = sinon.stub(console, "error");
+
+    try {
+      const rendered = render(
+        <template>
+          <CodeEditor
+            @language="flaky"
+            @languageOptions={{state.options}}
+            @value="select 1"
+          />
+        </template>
+      );
+      await waitFor(".cm-content");
+      state.options = { schema: {} };
+      await rendered;
+
+      assert.true(consoleError.called, "the stale load failed");
+      assert.true(highlightedTokens().includes("select"));
+    } finally {
+      consoleError.restore();
     }
   });
 

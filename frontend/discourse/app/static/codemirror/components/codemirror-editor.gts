@@ -137,6 +137,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
   view: EditorView | null = null;
   #lastValue = "";
   #suppressChange = false;
+  #languageLoads = 0;
   #language = new Compartment();
   #readOnly = new Compartment();
   #placeholder = new Compartment();
@@ -382,15 +383,16 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
   @action
   async updateLanguage() {
+    const load = ++this.#languageLoads;
     const name = this.args.language;
     let extension: Extension = [];
 
     try {
       const support = name ? await loadCodeEditorLanguage(name) : null;
 
-      // The editor can be torn down, or the language changed again, while
-      // the module is loading.
-      if (support && this.view && this.args.language === name) {
+      // The editor can be torn down, or a newer load started, while the
+      // module is loading.
+      if (support && this.view && load === this.#languageLoads) {
         // Shortcuts bring the palette and completion UI; raw `@extensions`
         // bring their own.
         extension = [
@@ -405,7 +407,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       console.error(error);
     }
 
-    if (!this.view || this.args.language !== name) {
+    if (!this.view || load !== this.#languageLoads) {
       return;
     }
 
