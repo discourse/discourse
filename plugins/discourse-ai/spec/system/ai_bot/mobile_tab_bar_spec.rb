@@ -63,7 +63,7 @@ RSpec.describe "AI Bot - Mobile tab bar", mobile: true do
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
     pm.save_custom_fields
     toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.enable_mobile_tab_bar = true
+    SiteSetting.mobile_footer_navigation = true
     SiteSetting.sidebar_user_navigation = true
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
     sign_in(user)

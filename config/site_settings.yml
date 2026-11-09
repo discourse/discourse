@@ -5060,7 +5060,7 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413150"
-  enable_mobile_tab_bar:
+  mobile_footer_navigation:
     default: false
     hidden: true
     client: true

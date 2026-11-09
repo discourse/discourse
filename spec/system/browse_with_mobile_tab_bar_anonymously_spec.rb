@@ -6,7 +6,7 @@ RSpec.describe "Browse with mobile tab bar anonymously", mobile: true do
   let(:tab_bar) { PageObjects::Components::MobileTabBar.new }
 
   before do
-    SiteSetting.enable_mobile_tab_bar = true
+    SiteSetting.mobile_footer_navigation = true
     SiteSetting.chat_enabled = false if SiteSetting.respond_to?(:chat_enabled)
   end
 

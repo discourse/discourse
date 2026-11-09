@@ -13,7 +13,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
   end
 
   before do
-    SiteSetting.enable_mobile_tab_bar = true
+    SiteSetting.mobile_footer_navigation = true
     SiteSetting.chat_enabled = false if SiteSetting.respond_to?(:chat_enabled)
     SiteSetting.sidebar_user_navigation = true
     SiteSetting.hide_new_user_profiles = false

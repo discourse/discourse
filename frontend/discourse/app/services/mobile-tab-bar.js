@@ -72,7 +72,7 @@ export default class MobileTabBar extends Service {
   /** Whether the tab bar stands in for the header's menu on this page view. */
   get enabled() {
     return (
-      this.siteSettings.enable_mobile_tab_bar &&
+      this.siteSettings.mobile_footer_navigation &&
       this.site.mobileView &&
       // Visitors to a private site have only the login page to see
       (!!this.currentUser || !this.siteSettings.login_required)

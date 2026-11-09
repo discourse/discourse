@@ -8,7 +8,7 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
   let(:tab_bar) { PageObjects::Components::MobileTabBar.new }
 
   before do
-    SiteSetting.enable_mobile_tab_bar = true
+    SiteSetting.mobile_footer_navigation = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)

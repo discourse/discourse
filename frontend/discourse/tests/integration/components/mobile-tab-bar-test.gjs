@@ -38,7 +38,7 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
 
   hooks.beforeEach(function () {
     forceMobile();
-    this.siteSettings.enable_mobile_tab_bar = true;
+    this.siteSettings.mobile_footer_navigation = true;
     this.siteSettings.sidebar_user_navigation = true;
     this.currentUser.set("admin", false);
   });
