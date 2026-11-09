@@ -6619,6 +6619,12 @@ en:
         watched_word: "This post included a Watched Word. Check the %{link} for more."
 
     actions:
+      answer_yes:
+        title: "Yes"
+        delete_post_title: "Yes, delete post"
+        keep_post_deleted_title: "Yes, keep post deleted"
+      answer_no:
+        title: "No"
       agree:
         title: "Yes"
       agree_and_keep:
@@ -6714,14 +6720,11 @@ en:
         title: "Yes"
         complete: "Post approved."
       approve_post:
-        title: "Yes"
+        action_title: "Approve post"
         complete: "Post approved."
       approve_post_closed:
-        title: "Yes"
         confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
-      reject_post_bundle:
-        title: "No"
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
@@ -6730,10 +6733,8 @@ en:
         description: "Reset this user's profile picture to the system default"
         complete: "Avatar removed."
       approve_user:
-        title: "Yes"
         complete: "User approved."
       reject_user:
-        title: "No"
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
@@ -6763,20 +6764,14 @@ en:
       reject_and_delete:
         title: "Reject and Delete the post"
         complete: "Post rejected and deleted."
-      reject_and_delete_standalone:
-        title: "No, delete post"
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
-      reject_and_keep_deleted_standalone:
-        title: "No, keep post deleted"
       scrub:
         title: Scrub record
       approve_and_restore:
-        title: "Yes"
         complete: "Post approved and restored."
       approve_and_unhide:
-        title: "Yes"
         complete: "Post approved and unhidden"
       silence_user:
         title: "Silence user"

@@ -43,6 +43,15 @@ RSpec.describe ReviewablePost do
       expect(reviewable_actions(Guardian.new(admin)).has?(:reject_and_delete)).to eq(true)
     end
 
+    it "offers the rejection as \"Yes\" before the approval as \"No\"" do
+      actions = reviewable_actions(Guardian.new(admin))
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(
+        actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
+      ).to eq([%w[approve reviewables.actions.answer_no.title]])
+    end
+
     it "includes the approve post and unhide action if the post is hidden" do
       post.hidden = true
 

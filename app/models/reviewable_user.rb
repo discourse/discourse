@@ -3,6 +3,10 @@
 class ReviewableUser < Reviewable
   include ReviewableActionBuilder
 
+  def self.approval_style?
+    true
+  end
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
@@ -41,8 +45,8 @@ class ReviewableUser < Reviewable
 
     suspect_pending = status == "pending" && is_a_suspect_user?
 
-    # For suspect users the destructive "confirm spam" bundle must be added
-    # before the approve action so it renders first in the queue UI.
+    # "Yes, there's a problem" bundles are added before approve ("No") so the
+    # answers render in the same order across every reviewable type.
     if suspect_pending
       bundle =
         actions.add_bundle(
@@ -65,6 +69,8 @@ class ReviewableUser < Reviewable
         require_reject_reason: false,
         dsa_classification_required: true,
       )
+    elsif status == "pending"
+      delete_user_actions(actions, nil, require_reject_reason: true)
     end
 
     if status == "pending" && target&.uploaded_avatar_id.present?
@@ -88,13 +94,9 @@ class ReviewableUser < Reviewable
           a.label = "reviewables.actions.not_spam.title"
           a.description = "reviewables.actions.not_spam.description"
         else
-          a.label = "reviewables.actions.approve_user.title"
+          a.label = "reviewables.actions.answer_no.title"
         end
       end
-    end
-
-    if status == "pending" && !suspect_pending
-      delete_user_actions(actions, nil, require_reject_reason: true)
     end
   end
 

@@ -3,6 +3,10 @@
 require_dependency "reviewable"
 
 class ReviewableAiToolAction < Reviewable
+  def self.approval_style?
+    true
+  end
+
   def created_new!
     super
 

@@ -356,7 +356,7 @@ describe "Sign up via email code" do
     expect(page).to have_content("Engineer")
     review_page.click_approve_user_button
 
-    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
     expect(user.reload).to be_approved
     approval_email = ActionMailer::Base.deliveries.last
     expect(approval_email.to).to contain_exactly(email)
@@ -418,7 +418,7 @@ describe "Sign up via email code" do
     review_page.visit_reviewable(reviewable)
     review_page.click_approve_user_button
 
-    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
     approval_email = ActionMailer::Base.deliveries.last
     expect(approval_email.body.to_s).to include("logging in at:")
     expect(approval_email.body.to_s).not_to include("request a fresh login code")

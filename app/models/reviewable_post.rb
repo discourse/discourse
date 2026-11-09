@@ -3,6 +3,10 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
+  def self.approval_style?
+    true
+  end
+
   def self.additional_args(params)
     ReviewableActionBuilder.penalty_args(params)
   end
@@ -38,19 +42,11 @@ class ReviewablePost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    if post.trashed? && guardian.can_recover_post?(post)
-      build_action(actions, :approve_and_restore, icon: "check")
-    elsif post.hidden?
-      build_action(actions, :approve_and_unhide, icon: "check")
-    else
-      build_action(actions, :approve, icon: "check")
-    end
-
     reject =
       actions.add_bundle(
         "#{id}-reject-post",
         icon: "xmark",
-        label: "reviewables.actions.reject_post_bundle.title",
+        label: "reviewables.actions.answer_yes.title",
       )
 
     can_penalize = guardian.can_suspend?(target_created_by)
@@ -71,7 +67,7 @@ class ReviewablePost < Reviewable
           dsa_classification_required: true,
         ) do |a|
           a.icon = "trash-can"
-          a.label = "reviewables.actions.reject_and_keep_deleted_standalone.title"
+          a.label = "reviewables.actions.answer_yes.keep_post_deleted_title"
         end
       end
     elsif guardian.can_delete_post_or_topic?(post)
@@ -86,7 +82,7 @@ class ReviewablePost < Reviewable
       else
         actions.add(:reject_and_delete, bundle: reject, dsa_classification_required: true) do |a|
           a.icon = "trash-can"
-          a.label = "reviewables.actions.reject_and_delete_standalone.title"
+          a.label = "reviewables.actions.answer_yes.delete_post_title"
         end
       end
     end
@@ -98,6 +94,15 @@ class ReviewablePost < Reviewable
       suspend: :reject_and_suspend,
       dsa_classification_required: true,
     )
+
+    no_label = "reviewables.actions.answer_no.title"
+    if post.trashed? && guardian.can_recover_post?(post)
+      build_action(actions, :approve_and_restore, icon: "check", label: no_label)
+    elsif post.hidden?
+      build_action(actions, :approve_and_unhide, icon: "check", label: no_label)
+    else
+      build_action(actions, :approve, icon: "check", label: no_label)
+    end
   end
 
   def perform_approve(performed_by, _args)

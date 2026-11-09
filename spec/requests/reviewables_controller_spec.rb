@@ -343,6 +343,20 @@ RSpec.describe ReviewablesController do
         expect(response.code).to eq("400")
       end
 
+      it "supports filtering by outcome and says which reviewables are approval-style" do
+        rejected_post =
+          Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected], score: 10)
+        agreed_flag =
+          Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:approved], score: 10)
+
+        get "/review.json?status=problem_confirmed"
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["reviewables"].map { |json| [json["id"], json["approval_style"]] },
+        ).to contain_exactly([rejected_post.id, true], [agreed_flag.id, false])
+      end
+
       it "supports filtering by category_id" do
         other_category = Fabricate(:category)
         r = Fabricate(:reviewable)
