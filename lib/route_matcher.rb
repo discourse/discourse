@@ -75,7 +75,7 @@ class RouteMatcher
       allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
 
       value = requested_params[param.to_s]
-      alias_value = requested_params[param_alias.to_s]
+      alias_value = requested_params[param_alias.to_s] if param_alias
 
       return false if value.present? && alias_value.present?
 
