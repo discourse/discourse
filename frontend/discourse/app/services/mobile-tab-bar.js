@@ -183,7 +183,7 @@ export default class MobileTabBar extends Service {
       return;
     }
 
-    const owner = this.#allTabs.find((tab) => tab.ownsRoute?.(route));
+    const owner = this.#ownerOf(route);
 
     // Pages of their own, like search or profiles, sit outside every section,
     // so each tab still returns to where its section was left
@@ -263,6 +263,18 @@ export default class MobileTabBar extends Service {
 
   #updateDraftCount() {
     this.draftCount = this.currentUser?.draft_count ?? 0;
+  }
+
+  // Other sections claim pages within the forum's, like topics that are
+  // their own conversations, so they're asked before the forum
+  #ownerOf(route) {
+    const owns = (tab) => tab.ownsRoute?.(route);
+    const tabs = this.#allTabs;
+
+    return (
+      tabs.find((tab) => tab.key !== MAIN_PANEL && owns(tab)) ??
+      tabs.find((tab) => tab.key === MAIN_PANEL && owns(tab))
+    );
   }
 
   #tab(key) {

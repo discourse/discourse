@@ -86,4 +86,23 @@ RSpec.describe "AI Bot - Mobile tab bar", mobile: true do
       ".sidebar-hamburger-dropdown .sidebar-section-wrapper[data-section-name='community']",
     )
   end
+
+  it "leaves the history out until there are past conversations" do
+    pm.destroy!
+
+    visit("/discourse-ai/ai-bot/conversations")
+
+    expect(page).to have_css("#ai-bot-conversations-input")
+    expect(page).to have_no_css(".ai-bot-mobile-conversation-list")
+  end
+
+  it "keeps a conversation in the AI section, leading back to its list" do
+    visit(pm.url)
+
+    expect(tab_bar).to have_active_tab("ai-conversations")
+
+    find(".mobile-tab-bar-back").click
+
+    expect(page).to have_current_path("/discourse-ai/ai-bot/conversations", ignore_query: true)
+  end
 end
