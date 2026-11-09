@@ -379,6 +379,32 @@ RSpec.describe ReviewablesController do
         expect(json_review["user_id"]).to eq(user.id)
       end
 
+      it "hides full names from moderators when names are disabled" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        SiteSetting.enable_names = false
+        user = Fabricate(:user, name: "Private Review Name")
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+        moderator = Fabricate(:moderator)
+        sign_in(moderator)
+
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        json_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(json_review.dig("payload", "name")).to be_nil
+
+        sign_in(admin)
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        admin_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(admin_review.dig("payload", "name")).to eq(user.name)
+      end
+
       it "returns correct error message if ReviewableUser not found" do
         sign_in(admin)
         Jobs.run_immediately!
