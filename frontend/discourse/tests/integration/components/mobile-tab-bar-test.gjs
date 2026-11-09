@@ -1,5 +1,6 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import MobileTabBar from "discourse/components/mobile-tab-bar";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -214,5 +215,20 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
     assert
       .dom(".mobile-tab-bar__tab[data-key='admin'] .mobile-tab-bar__count")
       .doesNotExist();
+  });
+
+  test("leaves menu links outside the app to the menu", function (assert) {
+    this.currentUser.set("admin", true);
+    const mobileTabBar = this.owner.lookup("service:mobile-tab-bar");
+    // Production builds return nothing for a URL outside the app, where
+    // development ones assert
+    sinon.stub(this.owner.lookup("service:router"), "recognize").returns(null);
+
+    assert.false(
+      mobileTabBar.leadsToSectionTab({
+        href: "https://cdn.example.com/uploads/handbook.pdf",
+      }),
+      "a file isn't a section's page"
+    );
   });
 });

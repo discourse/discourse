@@ -192,6 +192,11 @@ export default class MobileTabBar extends Service {
       return false;
     }
 
+    // Links outside the app, like an uploaded file, lead to no section
+    if (!routeInfo) {
+      return false;
+    }
+
     return this.#allTabs.some(
       (tab) => tab.key !== MAIN_PANEL && tab.ownsRoute?.(routeInfo)
     );
