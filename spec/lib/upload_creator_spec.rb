@@ -401,7 +401,8 @@ RSpec.describe UploadCreator do
       # ruby -rzlib -e 'ihdr = [1, 1, 8, 6, 0, 0, 0].pack("NNCCCCC"); chunk = [ihdr.bytesize].pack("N") + "IHDR" + ihdr + [Zlib.crc32("IHDR" + ihdr)].pack("N"); File.binwrite("spec/fixtures/images/broken.png", "\x89PNG\r\n\x1A\n".b + chunk + ("\0".b * 80_000))'
       let(:broken_png_file) { file_from_fixtures("broken.png") }
 
-      it "does not persist the upload" do
+      it "does not persist the upload when ImageMagick cannot decode it" do
+        global_setting :enable_vips_image_processing, false
         SiteSetting.png_to_jpg_quality = 1
 
         expect do

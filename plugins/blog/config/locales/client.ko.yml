@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  admin_js:
+    blog:
+      admin:
+        overridden: 사용자 정의
+        insert: 삽입
+        preview_home: 홈페이지
+        preview_archive: 보관
+        desktop: 데스크톱
+        mobile: 모바일
+        themes: 테마
+        theme_name: 테마명
+        edit: 편집
+        preview: 미리 보기
+        import: 가져오기
+        export: 내보내기
+        active: 활성화 사용자
+  js:
+    blog:
+      panel:
+        badge:
+          draft: 임시저장
+        preview: 미리 보기
+        change:
+          title: 제목
+          body: 바디
+      review:
+        create: 링크 만들기
+        copy: 복사
+        open: 열기
+        status:
+          active: 활성화 사용자
+          expired: 만료됨
+          revoked: 해지
+          inactive: 비활성화
+        closed_on: "%{date}에 닫힘"
+        revoke: 취소
+        message: 피드백
+      editor_table:
+        edit: 편집
+        status: 상태
+        replies: 댓글
+      drafts: 임시저장
+      preview: 미리 보기
+      unpublish: 게시 취소
+      appearance_link: 외관

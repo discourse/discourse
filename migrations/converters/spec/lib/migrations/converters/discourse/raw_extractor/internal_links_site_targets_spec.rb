@@ -13,23 +13,43 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # site's ids — `/t//209` is an empty-slug spelling of topic 209 — so an
     # origin-only rewrite would point the new host at stale coordinates. Worse
     # than verbatim: the construct stays untouched and the body is reported.
-    {
-      "an empty topic slug" => "https://forum.example.com/t//209",
-      "a junk topic id" => "https://forum.example.com/t/slug/5a",
-      "an invalid user segment" => "https://forum.example.com/u/bob!!!",
+    context "when a path resembles a legacy coordinate" do
+      shared_examples "refusing malformed internal coordinates" do |url:|
+        it "preserves the source instead of recording a site link" do
+          raw = "This topic you've named [>>>>>](#{url}) doesn't load"
+
+          expect(extract(raw)).to eq(raw)
+          expect(buffer.links).to be_empty
+          expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+        end
+      end
+
+      context "with an empty topic slug" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/t//209"
+      end
+
+      context "with a junk topic ID" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/t/slug/5a"
+      end
+
+      context "with an invalid user segment" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/u/bob!!!"
+      end
+
       # Core's canonical route order would read the trailing number as a tag id,
       # the legacy order as more slug path — the parser refuses the ambiguity
       # instead of guessing a reading.
-      "a multi-tag form with a trailing numeric segment" =>
-        "https://forum.example.com/tags/c/support/feature/12",
-      "a slug followed by a non-id segment" => "https://forum.example.com/t/a-topic-slug/extra!",
-    }.each do |label, url|
-      it "refuses #{label} instead of recording a SITE link" do
-        raw = "This topic you've named [>>>>>](#{url}) doesn't load"
+      context "with a tag route ending in a numeric segment" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/tags/c/support/feature/12"
+      end
 
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+      context "with a slug followed by an invalid ID" do
+        include_examples "refusing malformed internal coordinates",
+                         url: "https://forum.example.com/t/a-topic-slug/extra!"
       end
     end
 
@@ -76,42 +96,106 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # path, so it gets the same origin rewrite the bracketed form does. Before,
     # only a path carrying a route segment was recognized bare, and a plain
     # `/faq` in prose survived the migration pointing at the dead origin.
-    {
-      "a route-less page" => %w[https://forum.example.com/faq /faq],
-      "a page mid-sentence" => ["see https://forum.example.com/faq here", "/faq"],
-      "a query string" => %w[https://forum.example.com/search?q=cats /search?q=cats],
-      "a fragment" => %w[https://forum.example.com/about#team /about#team],
-      "a protocol-relative URL" => %w[//forum.example.com/faq /faq],
-      "the site root" => %w[https://forum.example.com/ /],
+    context "when a bare URL points to a page without a route" do
+      it "records a bare URL with a route-less page as a SITE link" do
+        link, = link_for("https://forum.example.com/faq")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/faq")
+      end
+
+      it "records a bare URL with a page mid-sentence as a SITE link" do
+        link, = link_for("see https://forum.example.com/faq here")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/faq")
+      end
+
+      it "records a bare URL with a query string as a SITE link" do
+        link, = link_for("https://forum.example.com/search?q=cats")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::SITE,
+          target_suffix: "/search?q=cats",
+        )
+      end
+
+      it "records a bare URL with a fragment as a SITE link" do
+        link, = link_for("https://forum.example.com/about#team")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/about#team")
+      end
+
+      it "records a bare URL with a protocol-relative URL as a SITE link" do
+        link, = link_for("//forum.example.com/faq")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/faq")
+      end
+
+      it "records a bare URL with the site root as a SITE link" do
+        link, = link_for("https://forum.example.com/")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/")
+      end
+
       # Route-less on purpose: with no route segment the host is the only thing
       # that gets this body past the presence gate, so an upper-cased one only
       # works if that alternative is genuinely case-insensitive.
-      "an upper-cased host and no route" => %w[HTTPS://FORUM.EXAMPLE.COM/faq /faq],
-      "a mixed-case host and no route" => %w[https://FORUM.example.com/faq /faq],
-    }.each do |label, (raw, suffix)|
-      it "records a bare URL with #{label} as a SITE link" do
-        link, = link_for(raw)
+      it "records a bare URL with an upper-cased host and no route as a SITE link" do
+        link, = link_for("HTTPS://FORUM.EXAMPLE.COM/faq")
 
-        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: suffix)
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/faq")
+      end
+
+      it "records a bare URL with a mixed-case host and no route as a SITE link" do
+        link, = link_for("https://FORUM.example.com/faq")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/faq")
       end
     end
 
     # A URL with no path is the forum's own front page, and its origin needs
     # rewriting like any other — otherwise it survives pointing at the site being
     # retired. A query or fragment with no path is the same page.
-    {
-      "the front page" => ["https://forum.example.com", nil],
-      "the front page in link syntax" => ["[home](https://forum.example.com)", nil],
-      "the front page mid-sentence" => ["see https://forum.example.com here", nil],
-      "a query with no path" => %w[https://forum.example.com?ref=x&a=1 ?ref=x&a=1],
-      "a fragment with no path" => %w[https://forum.example.com#top #top],
-      "a protocol-relative front page" => ["//forum.example.com", nil],
-      "a front page with a default port" => ["https://forum.example.com:443", nil],
-    }.each do |label, (raw, suffix)|
-      it "records #{label} as a SITE link" do
-        link, = link_for(raw)
+    context "when the URL points to the forum front page" do
+      it "records the front page as a SITE link" do
+        link, = link_for("https://forum.example.com")
 
-        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: suffix)
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: nil)
+      end
+
+      it "records the front page in link syntax as a SITE link" do
+        link, = link_for("[home](https://forum.example.com)")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: nil)
+      end
+
+      it "records the front page mid-sentence as a SITE link" do
+        link, = link_for("see https://forum.example.com here")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: nil)
+      end
+
+      it "records a query with no path as a SITE link" do
+        link, = link_for("https://forum.example.com?ref=x&a=1")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "?ref=x&a=1")
+      end
+
+      it "records a fragment with no path as a SITE link" do
+        link, = link_for("https://forum.example.com#top")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "#top")
+      end
+
+      it "records a protocol-relative front page as a SITE link" do
+        link, = link_for("//forum.example.com")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: nil)
+      end
+
+      it "records a front page with a default port as a SITE link" do
+        link, = link_for("https://forum.example.com:443")
+
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: nil)
       end
     end
 

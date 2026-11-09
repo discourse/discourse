@@ -722,7 +722,11 @@ module DiscourseTagging
 
     if opts[:with_context]
       context = {}
-      if required_category_tag_group
+      if required_category_tag_group &&
+           (
+             !filter_for_non_admin ||
+               TagGroup.visible(guardian).exists?(id: required_category_tag_group.tag_group_id)
+           )
         context[:required_tag_group] = {
           name: required_category_tag_group.tag_group.name,
           min_count: required_category_tag_group.min_count,

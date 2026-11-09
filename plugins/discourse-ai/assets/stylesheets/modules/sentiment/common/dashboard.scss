@@ -1,18 +1,5 @@
 @use "lib/viewport";
 
-.dashboard.dashboard-sentiment {
-  .charts {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    column-gap: 1em;
-    row-gap: 1em;
-
-    .admin-report {
-      grid-column: span 12;
-    }
-  }
-}
-
 .admin-report.sentiment-analysis {
   --d-sentiment-report-positive-rgb: 46, 204, 112;
   --d-sentiment-report-neutral-rgb: 149, 166, 167;

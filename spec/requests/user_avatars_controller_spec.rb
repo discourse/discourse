@@ -14,15 +14,25 @@ RSpec.describe UserAvatarsController do
       )
     end
 
-    %i[auth_overrides_avatar discourse_connect_overrides_avatar].each do |setting|
-      it "rejects refreshing the selected Gravatar when #{setting} is enabled" do
-        SiteSetting.public_send("#{setting}=", true)
-
+    shared_examples "protecting the selected avatar from a Gravatar refresh" do
+      it "rejects the refresh and preserves the selected avatar" do
         post "/user_avatar/#{user.username}/refresh_gravatar.json"
 
         expect(response).to be_forbidden
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
       end
+    end
+
+    context "with auth_overrides_avatar enabled" do
+      before { SiteSetting.auth_overrides_avatar = true }
+
+      include_examples "protecting the selected avatar from a Gravatar refresh"
+    end
+
+    context "with discourse_connect_overrides_avatar enabled" do
+      before { SiteSetting.discourse_connect_overrides_avatar = true }
+
+      include_examples "protecting the selected avatar from a Gravatar refresh"
     end
   end
 

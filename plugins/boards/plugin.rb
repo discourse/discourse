@@ -30,10 +30,12 @@ after_initialize do
       require_relative "lib/discourse_workflows/nodes/create_board/v1"
       require_relative "lib/discourse_workflows/nodes/create_board_column/v1"
       require_relative "lib/discourse_workflows/nodes/card_moved/v1"
+      require_relative "lib/discourse_workflows/nodes/card_moved/v2"
       [
         DiscourseWorkflows::Nodes::CreateBoard::V1,
         DiscourseWorkflows::Nodes::CreateBoardColumn::V1,
         DiscourseWorkflows::Nodes::CardMoved::V1,
+        DiscourseWorkflows::Nodes::CardMoved::V2,
       ]
     end
   end

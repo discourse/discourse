@@ -428,7 +428,6 @@ pt_BR:
               one: "%{count} usuário(a) convidado(a)"
               other: "%{count} usuários(as) convidados(as)"
         event:
-          expired: "Expirou"
           closed: "Fechados"
           full: "Lotado"
           status:
@@ -441,6 +440,8 @@ pt_BR:
             private:
               title: "Privado(a)"
               description: "Um evento privado só pode ter a participação de usuários(as) convidados(as)."
+      recording_modal:
+        save: "Salvar"
       composer:
         name_placeholder: "Nome do evento"
         location_or_url_placeholder: "Adicionar local ou URL"

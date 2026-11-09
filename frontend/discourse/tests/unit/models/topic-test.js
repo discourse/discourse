@@ -3,9 +3,11 @@ import { setupTest } from "ember-qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import TopicDetails from "discourse/models/topic-details";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | topic", function (hooks) {
   setupTest(hooks);
@@ -307,5 +309,46 @@ module("Unit | Model | topic", function (hooks) {
       "other updated value",
       "other plugin tracked property is updated via updateFromJson"
     );
+  });
+
+  test("destroy keeps the server's shape for deleted_at", async function (assert) {
+    pretender.delete("/t/1234", () => response(200, {}));
+    const topic = this.store.createRecord("topic", { id: 1234 });
+
+    await topic.destroy({ admin: true, staff: true, visibleGroups: [] });
+
+    assert.strictEqual(
+      typeof topic.deleted_at,
+      "string",
+      "deleted_at is a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(topic.deleted_at).toISOString(),
+      topic.deleted_at,
+      "deleted_at is an ISO 8601 timestamp"
+    );
+    assert.true(topic.deleted);
+  });
+
+  test("removeBookmark keeps the server's shape for bookmarked", function (assert) {
+    const topic = this.store.createRecord("topic", { id: 1234 });
+    topic.set("bookmarks", [
+      Bookmark.create({
+        id: 1,
+        bookmarkable_type: "Post",
+        bookmarkable_id: 10,
+      }),
+      Bookmark.create({
+        id: 2,
+        bookmarkable_type: "Post",
+        bookmarkable_id: 11,
+      }),
+    ]);
+
+    topic.removeBookmark(1);
+    assert.true(topic.bookmarked, "a bookmark remains");
+
+    topic.removeBookmark(2);
+    assert.false(topic.bookmarked, "no bookmarks remain");
   });
 });

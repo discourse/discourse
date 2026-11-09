@@ -24,9 +24,7 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
   end
 
   def text
-    first_post = object.first_post
-    first_post.excerpt(nil, keep_onebox_body: true).presence ||
-      first_post.excerpt(nil, keep_onebox_body: true, keep_quotes: true)
+    DiscourseSolved::SchemaUtils.post_text(object.first_post)
   end
 
   def include_text?

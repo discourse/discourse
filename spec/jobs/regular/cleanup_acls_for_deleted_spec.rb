@@ -1,6 +1,38 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CleanupAclsForDeleted do
+  describe "#execute" do
+    fab!(:user)
+
+    it "preserves ACL grants for an existing or restored user" do
+      acl = Fabricate(:access_control_list_with_users, users: [user])
+
+      described_class.new.execute(user_id: user.id)
+
+      expect(acl.reload.allowed_user_ids).to eq([user.id])
+    end
+
+    it "still cleans deleted groups when the supplied user exists" do
+      group = Fabricate(:group)
+      acl = Fabricate(:access_control_list_with_users_and_groups, users: [user], groups: [group])
+      group.destroy!
+
+      described_class.new.execute(user_id: user.id, group_id: group.id)
+
+      expect(acl.reload).to have_attributes(allowed_user_ids: [user.id], allowed_group_ids: [])
+    end
+
+    it "preserves transferred ownership when cleanup runs repeatedly" do
+      admin = Fabricate(:admin)
+      acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+      user.destroy!
+
+      2.times { described_class.new.execute(user_id: user.id) }
+
+      expect(acl.reload.allowed_user_ids).to eq([admin.id])
+    end
+  end
+
   context "when a group is deleted" do
     fab!(:group)
     fab!(:other_group, :group)

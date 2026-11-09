@@ -176,6 +176,7 @@ export default class Field extends Component {
         @nodes={{@nodes}}
         @nodeTypes={{@nodeTypes}}
         @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+        @onChange={{@onChange}}
         @onSet={{@onSet}}
         @schema={{@schema}}
         @session={{@session}}

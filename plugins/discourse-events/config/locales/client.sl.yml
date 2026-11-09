@@ -358,7 +358,6 @@ sl:
             going: "Pridem"
             interested: "Mogoče pridem"
         event:
-          expired: "Poteklo"
           closed: "Zaprta"
           status:
             standalone:
@@ -370,6 +369,8 @@ sl:
             private:
               title: "Zasebni"
               description: "Na zasebni dogodek se lahko prijavijo samo povabljenci."
+      recording_modal:
+        save: "Shrani"
       composer:
         name_placeholder: "Ime dogodka"
         event_title_placeholder: "Ime dogodka"

@@ -13,7 +13,6 @@ hr:
       or: "ili"
       ai:
         generate: "Generiraj"
-        optional: "neobvezno"
       help:
         label: "Pomoć"
       schema:
@@ -32,6 +31,7 @@ hr:
         one: "%{count} rezultat."
         few: "%{count} rezultata."
         other: "%{count} rezultata."
+      name: "Ime"
       query_groups: "Grupe"
       query_tags: "Oznake"
       query_description: "Opis"

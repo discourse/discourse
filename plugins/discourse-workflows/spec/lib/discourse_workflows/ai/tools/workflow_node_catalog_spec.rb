@@ -72,12 +72,45 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(invoke_tool([hidden_node_type])).to include(nodes: [], unknown_types: [hidden_node_type])
   end
 
+  it "returns the latest version for types with deprecated versions" do
+    register_versioned_workflow_nodes(
+      "action:catalog_deprecation_test",
+      v1_deprecation: {
+        superseded_by: "2.0",
+      },
+    )
+
+    result = invoke_tool(["action:catalog_deprecation_test"])
+
+    expect(result[:nodes].pluck(:version)).to eq(["2.0"])
+  end
+
   it "includes Code node runtime notes" do
     code_node = invoke_tool(["action:code"])[:nodes].first
 
     expect(code_node[:notes]).to include(
       a_string_including("runOnceForEachItem must return one object"),
     )
+  end
+
+  describe "load options" do
+    fab!(:decision_model) { Fabricate(:decision_model, display_name: "Hosted decisions") }
+
+    it "lists the decision models the classify node can use", :aggregate_failures do
+      classify_node = invoke_tool(["action:classify"])[:nodes].first
+
+      expect(classify_node[:available]).to eq(true)
+      expect(classify_node[:load_options]).to eq(
+        "decision_models" => [{ "id" => decision_model.id, "name" => "Hosted decisions" }],
+      )
+      expect(classify_node[:notes]).to include(a_string_including("Prefer this node"))
+    end
+
+    it "omits option lists too long to list in full" do
+      site_setting_node = invoke_tool(["action:site_setting"])[:nodes].first
+
+      expect(site_setting_node).not_to have_key(:load_options)
+    end
   end
 
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
@@ -89,9 +122,9 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.post_url" => "string",
       "post.upload_ids" => "array<integer>",
     )
-    expect(output_fields_by_type.fetch("trigger:topic_created")).not_to include(
-      "post.trust_level",
-      "user.trust_level",
+    expect(output_fields_by_type.fetch("trigger:topic_created")).not_to include("post.trust_level")
+    expect(output_fields_by_type.fetch("trigger:topic_created")).to include(
+      "user.trust_level" => "integer",
     )
     expect(output_fields_by_type.fetch("trigger:post_created")).to include(
       "post.user_id" => "integer",
@@ -156,11 +189,10 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic.slug" => "string",
       "topic.archived" => "boolean",
       "post.post_url" => "string",
+      "post.upload_ids" => "array<integer>",
+      "topic.custom_fields" => "object",
     )
-    expect(output_fields_by_type.fetch("action:topic")).not_to include(
-      "post.trust_level",
-      "post.upload_ids",
-    )
+    expect(output_fields_by_type.fetch("action:topic")).not_to include("post.trust_level")
     expect(output_fields_by_type.fetch("action:topic_tags")).to include(
       "topic_id" => "integer",
       "tag_names" => "array<string>",
@@ -243,12 +275,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "user.id" => "integer",
       "user.username" => "string",
       "user.avatar_template" => "string",
-    )
-    expect(output_fields_by_type.fetch("trigger:chat_message_created")).not_to include(
-      "user.trust_level",
-      "user.admin",
-      "user.moderator",
-      "user.staff",
+      "user.trust_level" => "integer",
+      "user.staff" => "boolean",
     )
     expect(output_fields_by_type.fetch("action:ai_agent")).to include("result" => "string")
   end

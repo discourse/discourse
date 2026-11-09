@@ -44,9 +44,9 @@ module DiscourseEvents
         event.can_user_update_attendance?(guardian.user)
       end
 
-      def destroy(invitee:)
+      def destroy(invitee:, guardian:)
         invitee.destroy!
-        invitee.publish_attendance_removed!
+        invitee.publish_status_changed!(acting_user: guardian.user)
       end
 
       def publish(event:)

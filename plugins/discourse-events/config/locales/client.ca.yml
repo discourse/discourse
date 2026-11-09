@@ -53,6 +53,8 @@ ca:
               title: "Públic"
             private:
               title: "Privat"
+      recording_modal:
+        save: "Desa"
       composer:
         url_placeholder: "Afegeix URL"
         reminder:

@@ -87,6 +87,10 @@ nb_NO:
       assign:
         errors:
           not_found: "Fant ikke emnet."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Hode"
     reviewables:
       ai_tool_action:
         approve:

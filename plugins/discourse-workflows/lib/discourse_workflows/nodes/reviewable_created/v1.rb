@@ -45,7 +45,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { reviewable: reviewable_data(@reviewable) }
+          { reviewable: serialize_reviewable(@reviewable) }
         end
 
         def matches?(trigger_ctx)

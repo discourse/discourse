@@ -31,6 +31,44 @@ RSpec.describe ApiKeyScope do
     end
   end
 
+  describe ".build_from_params" do
+    it "builds scopes with their restrictable parameters split into lists" do
+      scopes =
+        described_class.build_from_params(
+          [{ "scope_id" => "topics:write", "topic_id" => "1,2", "unrelated" => "3" }],
+        )
+
+      expect(scopes.map(&:attributes)).to contain_exactly(
+        include(
+          "resource" => "topics",
+          "action" => "write",
+          "allowed_parameters" => {
+            "topic_id" => %w[1 2],
+          },
+        ),
+      )
+    end
+
+    it "drops blank parameters" do
+      scopes = described_class.build_from_params([{ scope_id: "topics:write", topic_id: "" }])
+
+      expect(scopes.first.allowed_parameters).to be_empty
+    end
+
+    it "rejects unknown and missing scopes" do
+      [
+        { scope_id: "topics:explode" },
+        { scope_id: "nope" },
+        {},
+        "topics:write",
+      ].each do |scope_params|
+        expect { described_class.build_from_params([scope_params]) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+    end
+  end
+
   describe ".scope_mappings" do
     it "does not define a granular scope for about requests" do
       expect(described_class.scope_mappings).not_to have_key(:about)

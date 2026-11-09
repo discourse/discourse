@@ -429,7 +429,6 @@ he:
               two: "%{count} משתמשים/ות הוזמנו"
               other: "%{count} משתמשים/ות הוזמנו"
         event:
-          expired: "לא בתוקף"
           closed: "סגור"
           full: "מלא"
           status:
@@ -442,6 +441,8 @@ he:
             private:
               title: "פרטי"
               description: "לאירוע פרטי יכולים להצטרף רק משתמשים שהוזמנו."
+      recording_modal:
+        save: "שמירה"
       composer:
         name_placeholder: "שם האירוע"
         url_placeholder: "הוספת כתובת URL"

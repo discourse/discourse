@@ -29,7 +29,11 @@ lt:
           few: "%{count} atsakymai"
           many: "%{count} atsakymai"
           other: "%{count} atsakymai"
-        created_by: "Sukurta"
+        owners:
+          one: "Savininkas"
+          few: "Valdytojai"
+          many: "Valdytojai"
+          other: "Valdytojai"
       manage:
         name: "Vardas"
         constraint_categories: "Kategorijos"

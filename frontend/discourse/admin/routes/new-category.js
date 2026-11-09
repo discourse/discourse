@@ -45,6 +45,12 @@ export default class NewCategory extends DiscourseRoute {
       style_type: "icon",
       icon: "square-full",
       group_permissions,
+      permission_groups: [
+        this.site.groupsById[AUTO_GROUPS.everyone.id],
+        ...this.site.groups.filter(
+          (group) => group.id !== AUTO_GROUPS.everyone.id
+        ),
+      ],
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,
       topic_featured_link_allowed: true,

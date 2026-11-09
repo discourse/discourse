@@ -197,7 +197,11 @@ class TopicsController < ApplicationController
         url = @topic_view.topic.relative_url
         url += ".json" if request.format.json?
         url += ".md" if request.format.md?
-        url += "?page=#{last_page}" if last_page > 1
+        locale = params[Discourse::LOCALE_PARAM]
+        query = {}
+        query[:page] = last_page if last_page > 1
+        query[Discourse::LOCALE_PARAM] = locale if locale.present?
+        url += "?#{query.to_query}" if query.present?
         return redirect_to url, status: :moved_permanently
       end
     end
@@ -220,9 +224,11 @@ class TopicsController < ApplicationController
       @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
 
-    response.headers["X-Robots-Tag"] = "noindex" unless @topic_view.topic.visible
+    add_topic_noindex_header(@topic_view.topic)
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
+    # The canonical can be an embedding page, which has no translated versions.
+    @hreflang_url = UrlHelper.absolute_without_cdn(@topic_view.current_page_path)
 
     # provide hint to crawlers only for now
     # we would like to give them a bit more signal about age of data
@@ -1477,21 +1483,18 @@ class TopicsController < ApplicationController
 
     opts =
       params.slice(
-        *%i[page print filter_top_level_replies preview_theme_id include_raw].concat(
-          additional_allowed_query_parameters,
-        ),
+        *%i[page print filter_top_level_replies preview_theme_id include_raw],
+        Discourse::LOCALE_PARAM,
+        *additional_allowed_query_parameters,
       )
-    opts.delete(:page) if params[:page] == 0
+    opts.delete(:page) if opts[:page].to_s.to_i.zero?
 
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
     url << ".md" if request.format.md?
 
-    opts.each do |k, v|
-      s = url.include?("?") ? "&" : "?"
-      url << "#{s}#{k}=#{v}"
-    end
+    url << "?#{Rack::Utils.build_nested_query(opts.to_unsafe_h)}" if opts.present?
 
     redirect_to url, status: :moved_permanently
   end

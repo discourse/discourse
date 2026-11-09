@@ -46,14 +46,19 @@ if defined?(DiscourseWorkflows)
                     "message" => {
                       "type" => "string",
                     },
+                    "thread_id" => {
+                      "type" => %w[integer null],
+                    },
                     "username" => {
                       "type" => "string",
+                      "x-optional" => true,
                     },
                     "usernames" => {
                       "type" => "array",
                       "items" => {
                         "type" => "string",
                       },
+                      "x-optional" => true,
                     },
                   },
                 },
@@ -94,6 +99,15 @@ if defined?(DiscourseWorkflows)
                 type: :string,
                 ui: {
                   hidden: true,
+                },
+              },
+              thread_id: {
+                type: :integer,
+                required: false,
+                display_options: {
+                  show: {
+                    target: ["channel"],
+                  },
                 },
               },
               target_usernames: {
@@ -172,6 +186,7 @@ if defined?(DiscourseWorkflows)
                 sender.guardian,
                 channel,
                 sender: sender.username,
+                thread_id: run.parameter("thread_id").presence,
                 channel_id: channel.id,
               ),
             )
@@ -335,11 +350,12 @@ if defined?(DiscourseWorkflows)
             end
           end
 
-          def create_message(run, target, guardian, channel, **labels)
+          def create_message(run, target, guardian, channel, thread_id: nil, **labels)
             Chat::CreateMessage.call(
               guardian:,
               params: {
                 chat_channel_id: channel.id,
+                thread_id:,
                 message: run.message,
               },
             ) do |result|
@@ -356,6 +372,7 @@ if defined?(DiscourseWorkflows)
                   "channel_id" => channel.id,
                   "message_id" => message_instance.id,
                   "message" => run.message,
+                  "thread_id" => message_instance.thread_id,
                 }
               end
               on_failed_contract { |contract| invalid_params!(run, contract) }

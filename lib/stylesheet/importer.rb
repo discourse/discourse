@@ -40,30 +40,14 @@ module Stylesheet
 
     register_imports!
 
+    # The font definitions for the given font keys, as plain CSS. Staff
+    # previews use it to try fonts before the site does.
+    def self.font_definitions(base_font:, heading_font:)
+      new({}).font_definitions(base_font, heading_font)
+    end
+
     def font
-      body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
-      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
-      contents = +""
-
-      contents << <<~CSS if body_font.present?
-          // Body font definition
-          #{font_css(body_font)}
-          #{render_font_special_properties(body_font, "body")}
-          :root {
-            --font-family: #{body_font[:stack]};
-          }
-
-        CSS
-
-      contents << <<~CSS if heading_font.present?
-          // Heading font definition
-          #{font_css(heading_font)}
-          #{render_font_special_properties(heading_font, "heading")}
-          :root {
-            --heading-font-family: #{heading_font[:stack]};
-          }
-
-        CSS
+      contents = font_definitions(SiteSetting.base_font, SiteSetting.heading_font)
 
       contents << <<~CSS
         #{font_css(jetbrains_mono)}
@@ -73,6 +57,32 @@ module Stylesheet
         }
 
       CSS
+
+      contents
+    end
+
+    def font_definitions(base_font_key, heading_font_key)
+      body_font = DiscourseFonts.fonts.find { |f| f[:key] == base_font_key }
+      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == heading_font_key }
+      contents = +""
+
+      contents << <<~CSS if body_font.present?
+          #{font_css(body_font)}
+          #{render_font_special_properties(body_font, "body")}
+          :root {
+            --font-family: #{body_font[:stack]};
+          }
+
+        CSS
+
+      contents << <<~CSS if heading_font.present?
+          #{font_css(heading_font)}
+          #{render_font_special_properties(heading_font, "heading")}
+          :root {
+            --heading-font-family: #{heading_font[:stack]};
+          }
+
+        CSS
 
       contents
     end

@@ -626,7 +626,7 @@ export default class UpsertCategoryGeneral extends Component {
     {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
       <@form.Field
         @format="max"
-        @name="category_types"
+        @name="category_type_ids"
         @showOptional={{false}}
         @title={{i18n "category.category_types"}}
         @type="custom"

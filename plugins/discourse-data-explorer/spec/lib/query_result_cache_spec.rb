@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::QueryResultCache do
+RSpec.describe DiscourseDataExplorer::QueryResultCache do
   fab!(:user)
   fab!(:admin)
   fab!(:query) { Fabricate(:query, sql: "SELECT 1") }
@@ -85,6 +85,20 @@ describe DiscourseDataExplorer::QueryResultCache do
 
         expect(described_class.write(query.id, user, params_hash, result_json)).to eq(true)
         expect(described_class.read(query.id, user, params_hash)).to be_present
+      end
+    end
+  end
+
+  describe ".read" do
+    subject(:cached_result) { described_class.read(query.id, user, params_hash) }
+
+    context "when the cached result contains malformed JSON" do
+      before do
+        Discourse.redis.set(described_class.cache_key(query.id, user, params_hash), "not-json")
+      end
+
+      it "returns a cache miss" do
+        expect(cached_result).to be_nil
       end
     end
   end

@@ -14,17 +14,20 @@ module DiscourseWorkflows
         OUTPUT_SCHEMA =
           Schema.merge(
             Schema::USER_SCHEMA,
+            Schema::ACTOR_SCHEMA,
             Schema.document(
               "change" => {
                 "type" => "string",
                 "enum" => CHANGES.values,
               },
-              "actor" => {
-                "type" => %w[object null],
-                "properties" => Schema::BASIC_USER_PROPERTIES,
-              },
               "reason" => {
                 "type" => %w[string null],
+              },
+              "message" => {
+                "type" => %w[string null],
+              },
+              "post_id" => {
+                "type" => %w[integer null],
               },
               "expires_at" => {
                 "type" => %w[string null],
@@ -66,6 +69,8 @@ module DiscourseWorkflows
           @user = payload[:user]
           @actor = payload[:by_user] || payload[:silenced_by]
           @reason = payload[:reason]
+          @message = payload[:message]
+          @post_id = payload[:post_id].presence&.to_i
         end
 
         def valid?
@@ -88,8 +93,10 @@ module DiscourseWorkflows
           {
             user: serialize_user(@user),
             change: @change,
-            actor: @actor && serialize_record(@actor, BasicUserSerializer),
+            actor: serialize_user(@actor),
             reason: @reason,
+            message: @message,
+            post_id: @post_id,
             expires_at: expiry&.iso8601,
           }
         end

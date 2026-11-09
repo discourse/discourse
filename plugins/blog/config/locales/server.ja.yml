@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  blog:
+    home: ホーム
+    posted_by: 投稿者
+    permalink: パーマリンク
+    time_ago: "%{time}前"
+    archive: アーカイブ
+    about: 情報
+    community: コミュニティー
+    preview: プレビュー
+    search: 検索
+    replies:
+      other: "返信: %{count} 件"

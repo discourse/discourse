@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
+require "monitor"
+
 module Migrations
   # The fork hooks for a run. `before_fork` and `after_fork_parent` run around a
   # fork, so a connection can close before it and reopen after. `after_fork_child`
   # runs in the new child, e.g. to drop a connection it inherited.
   #
-  # Steps add and remove hooks from several threads at once, so a mutex guards the
-  # hook lists. A fork copies the child hooks under that mutex, so the child always
+  # Steps add and remove hooks from several threads at once, so a monitor guards the
+  # hook lists. A fork copies the child hooks under that monitor, so the child always
   # runs a consistent list.
   module ForkManager
     # The batching flag is per-thread: a batch belongs to the thread that opened
@@ -18,91 +20,103 @@ module Migrations
     @before_fork_hooks = []
     @after_fork_parent_hooks = []
     @after_fork_child_hooks = []
-    @mutex = Mutex.new
+    @monitor = Monitor.new
 
     class << self
+      # Excludes concurrent forks while the block runs. A connection must register its
+      # after-fork hook and finish connecting as one unit: a fork in between
+      # inherits the half-open socket without a usable hook, and the child
+      # terminates the parent's session on exit. Reentrant, so nested use and
+      # forking from inside a hook can't deadlock.
+      def synchronize(&block)
+        @monitor.synchronize(&block)
+      end
+
       def with_batched_forks
-        previous = Thread.current[BATCHED_FORKS_KEY]
+        @monitor.synchronize do
+          previous = Thread.current[BATCHED_FORKS_KEY]
 
-        # Restore the flag no matter what. If a before-fork hook raises, the flag
-        # would otherwise stick as true on this thread, and every later plain
-        # `fork` on it would silently skip its parent-side hooks.
-        begin
-          Thread.current[BATCHED_FORKS_KEY] = true
-          @mutex.synchronize { run_before_fork_hooks }
-
-          # Always run the after-fork hooks even if forking raises (e.g.
-          # `Errno::EAGAIN`/`ENOMEM` under fork pressure). Otherwise the
-          # before-fork hooks' effects — a locked writer mutex, a closed run
-          # connection — would never be undone and the run would hang instead of
-          # failing the step. If a before-fork hook raises, these after-fork
-          # hooks don't run — the batch never started.
+          # Restore the flag no matter what. If a before-fork hook raises, the flag
+          # would otherwise stick as true on this thread, and every later plain
+          # `fork` on it would silently skip its parent-side hooks.
           begin
-            yield
+            Thread.current[BATCHED_FORKS_KEY] = true
+            run_before_fork_hooks
+
+            # Always run the after-fork hooks even if forking raises (e.g.
+            # `Errno::EAGAIN`/`ENOMEM` under fork pressure). Otherwise the
+            # before-fork hooks' effects — a locked writer mutex, a closed run
+            # connection — would never be undone and the run would hang instead of
+            # failing the step. If a before-fork hook raises, these after-fork
+            # hooks don't run — the batch never started.
+            begin
+              yield
+            ensure
+              run_after_fork_parent_hooks
+            end
           ensure
-            @mutex.synchronize { run_after_fork_parent_hooks }
+            Thread.current[BATCHED_FORKS_KEY] = previous
           end
-        ensure
-          Thread.current[BATCHED_FORKS_KEY] = previous
         end
       end
 
       def before_fork(&block)
         return unless block
-        @mutex.synchronize { @before_fork_hooks << block }
+        @monitor.synchronize { @before_fork_hooks << block }
         block
       end
 
       def remove_before_fork(block)
-        @mutex.synchronize { @before_fork_hooks.delete(block) }
+        @monitor.synchronize { @before_fork_hooks.delete(block) }
       end
 
       def after_fork_parent(&block)
         return unless block
-        @mutex.synchronize { @after_fork_parent_hooks << block }
+        @monitor.synchronize { @after_fork_parent_hooks << block }
         block
       end
 
       def remove_after_fork_parent(block)
-        @mutex.synchronize { @after_fork_parent_hooks.delete(block) }
+        @monitor.synchronize { @after_fork_parent_hooks.delete(block) }
       end
 
       def after_fork_child(&block)
         return unless block
-        @mutex.synchronize { @after_fork_child_hooks << block }
+        @monitor.synchronize { @after_fork_child_hooks << block }
         block
       end
 
       def remove_after_fork_child(block)
-        @mutex.synchronize { @after_fork_child_hooks.delete(block) }
+        @monitor.synchronize { @after_fork_child_hooks.delete(block) }
       end
 
       def fork
-        # In a batch the parent-side hooks already ran around the whole batch.
-        execute_parent = !Thread.current[BATCHED_FORKS_KEY]
+        @monitor.synchronize do
+          # In a batch the parent-side hooks already ran around the whole batch.
+          execute_parent = !Thread.current[BATCHED_FORKS_KEY]
 
-        @mutex.synchronize { run_before_fork_hooks } if execute_parent
+          run_before_fork_hooks if execute_parent
 
-        pid =
-          Process.fork do
-            child_hooks = @mutex.synchronize { @after_fork_child_hooks.dup }
-            child_hooks.each(&:call)
-            yield
-          end
+          pid =
+            Process.fork do
+              @after_fork_child_hooks.dup.each(&:call)
+              yield
+            end
 
-        @mutex.synchronize { run_after_fork_parent_hooks } if execute_parent
+          run_after_fork_parent_hooks if execute_parent
 
-        pid
+          pid
+        end
       end
 
       def hook_count
-        @mutex.synchronize do
+        @monitor.synchronize do
           @before_fork_hooks.size + @after_fork_parent_hooks.size + @after_fork_child_hooks.size
         end
       end
 
       def clear!
-        @mutex.synchronize do
+        @monitor.synchronize do
           @before_fork_hooks.clear
           @after_fork_parent_hooks.clear
           @after_fork_child_hooks.clear

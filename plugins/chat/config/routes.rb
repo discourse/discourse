@@ -69,6 +69,8 @@ Chat::Engine.routes.draw do
 
   namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
     post "export/messages" => "export#export_messages"
+    put "bots/:user_id/discoverability" => "bot_discoverability#update",
+        :constraints => AdminConstraint.new
   end
 
   # direct_messages_controller routes

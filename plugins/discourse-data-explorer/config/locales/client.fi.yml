@@ -26,7 +26,6 @@ fi:
       description_placeholder: "Kirjoita kuvaus tähän"
       ai:
         generate: "Luo"
-        optional: "valinnainen"
       import:
         unparseable_json: "JSON-tiedosto ei ole jäsennettävissä."
         wrong_json: "Väärä JSON-tiedosto. JSON-tiedoston tulisi sisältää query-objekti, jolla tulisi olla ainakin sql-ominaisuus."
@@ -58,7 +57,7 @@ fi:
       max_result_count:
         one: "Näytetään osuvin %{count} tulos."
         other: "Näytetään osuvimmat %{count} tulosta."
-      query_name: "Kysely"
+      name: "Nimi"
       query_groups: "Ryhmät"
       query_tags: "Tunnisteet"
       link: "Linkki:"

@@ -38,7 +38,9 @@ tr_TR:
         unassign_from_topic: "@%{username} adlı kullanıcının konudan atamasını kaldır"
         unassign_from_post: "#%{post_number} numaralı gönderiden @%{username} atamasını kaldır"
         edit_assignments: "Atamaları düzenle..."
-        created_by: "Oluşturan:"
+        owners:
+          one: "Sahip"
+          other: "Sahipler"
       manage:
         name: "Ad"
         slug: "Kısa ad"

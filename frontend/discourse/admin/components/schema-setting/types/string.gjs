@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -45,14 +46,25 @@ export default class SchemaSettingTypeString extends Component {
   }
 
   <template>
-    <Input
-      class="--string"
-      maxLength={{this.maxLength}}
-      minLength={{this.minLength}}
-      required={{this.required}}
-      @value={{this.value}}
-      {{on "input" this.onInput}}
-    />
+    {{#if @spec.textarea}}
+      <DExpandingTextArea
+        class="--string"
+        maxlength={{this.maxLength}}
+        minlength={{this.minLength}}
+        required={{this.required}}
+        @value={{this.value}}
+        {{on "input" this.onInput}}
+      />
+    {{else}}
+      <Input
+        class="--string"
+        maxLength={{this.maxLength}}
+        minLength={{this.minLength}}
+        required={{this.required}}
+        @value={{this.value}}
+        {{on "input" this.onInput}}
+      />
+    {{/if}}
 
     <div class="schema-field__input-supporting-text">
       {{#if (and @description (not this.validationErrorMessage))}}

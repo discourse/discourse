@@ -22,7 +22,17 @@ class DsaNoticesController < ApplicationController
   end
 
   def create
-    Dsa::SubmitNotice.call(service_params) do
+    submission = service_params
+    if account_email = Dsa::Notice.verified_account_email(current_user)
+      Dsa::NoticeRateLimiter.perform(
+        email: account_email,
+        ip_address: request.remote_ip,
+        user_id: current_user.id,
+      )
+      submission = submission.deep_merge(params: { notice: { email: account_email } })
+    end
+
+    Dsa::SubmitNotice.call(submission) do
       on_success { |notice:| render json: { reference: notice.reference }, status: :created }
       on_failed_contract do |contract|
         render_json_error(contract.errors.full_messages, status: 422)

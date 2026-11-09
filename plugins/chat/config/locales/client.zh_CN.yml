@@ -20,6 +20,7 @@ zh_CN:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "聊天机器人的可发现性发生了变化"
             chat_channel_status_change: "聊天频道状态已更改"
             chat_channel_delete: "聊天频道已删除"
             chat_auto_remove_membership: "成员资格已从频道自动移除"
@@ -44,6 +45,12 @@ zh_CN:
           other: "%{formatted_number} 条聊天消息"
     chat:
       homepage_option: "聊天频道"
+      admin_onboarding:
+        start_posting:
+          title: "开始聊天"
+          description: "请将您的第一条消息发送至 #%{channel}。"
+          action: "写一条消息"
+          completed: "继续聊天"
       edit_category:
         tab_title: "聊天"
         channel: "频道"
@@ -292,6 +299,7 @@ zh_CN:
         read_only: "频道为只读，您现在无法发送新消息。"
       placeholder_silenced: "您目前无法发送消息。"
       remove_upload: "移除文件"
+      preview_upload: "预览 %{filename}"
       react: "使用表情符号回复"
       reply: "回复"
       message_actions: "消息操作"
@@ -558,6 +566,9 @@ zh_CN:
         history_label: "历史记录"
         members_label: "成员"
       admin:
+        bot_discoverability:
+          label: "在聊天中显示"
+          description: "让用户在发起聊天私信时找到这个机器人。"
         title: "聊天"
         export_messages:
           title: "导出聊天消息"
@@ -859,6 +870,8 @@ zh_CN:
           user: "用户（每人一条私信）"
           group: "群组（一条私信发送给所有人）"
         channel_id: "频道"
+        thread_id: "线程 ID"
+        thread_id_description: "请在本帖回复，不要在主频道回复。留空则表示要在频道回复。"
         target_usernames: "收件人"
         target_usernames_description: "要向用户发送消息。使用类似 $trigger.user.username 的表达式从每个项目中选择用户。"
         message: "消息"

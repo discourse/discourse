@@ -739,12 +739,47 @@ RSpec.describe Boards::Api::BoardsController do
       post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
 
       expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("boards.errors.board_create_forbidden")])
+    end
+
+    it "returns the creation policy's custom failure reason" do
+      sign_in(manager)
+      reason = "The account has reached its board limit."
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:call).returns(false)
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:reason).returns(reason)
+
+      expect do
+        post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
+      end.not_to change { Boards::Board.count }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([reason])
+      expect(response.parsed_body["skip_error_prefix"]).to eq(true)
     end
   end
 
   describe "#update" do
     fab!(:acl_board) do
       Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+    end
+
+    it "saves settings with the replacement owner after the previous owner is deleted" do
+      departing_owner = Fabricate(:user)
+      board = Fabricate(:boards_board, created_by: departing_owner)
+      UserDestroyer.new(admin).destroy(departing_owner)
+      sign_in(admin)
+
+      put "/boards/api/boards/#{board.id}.json",
+          params: {
+            board: {
+              name: "Reassigned board",
+              owner_user_ids: [admin.id],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(board.reload.name).to eq("Reassigned board")
+      expect(response.parsed_body["board"]["owners"].pluck("id")).to eq([admin.id])
     end
 
     it "accepts all supported ACL permissions and retains mandatory admin access" do

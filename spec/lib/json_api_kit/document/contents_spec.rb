@@ -16,13 +16,12 @@ RSpec.describe JsonApiKit::Document::Contents do
 
   def record_of(model, type, relationships = {})
     JsonApiKit::Record.new(
-      JsonApiKit::Pagination::Row.new(record: model, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: model, segment: nil),
       JsonApiKit::Declarations::Fields.for(
         nil,
         guardian:,
         attributes: [],
         relationships: [],
-        schema: JsonApiKit::Schema.new(model.class),
         type:,
       ),
       type:,

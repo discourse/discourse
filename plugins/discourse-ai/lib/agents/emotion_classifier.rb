@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT
           You classify Discourse forum posts by emotion.

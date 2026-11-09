@@ -4,7 +4,7 @@ Use this reference when writing ACL rows, creating an ACL-backed target model, r
 
 ## AccessControlList::Apply
 
-`AccessControlList::Apply` is the standard write path for applying a target's complete ACL configuration. It resolves the registered target internally and serializes concurrent changes for the same target.
+`AccessControlList::Apply` is the standard write path for applying a target's complete ACL configuration. It resolves the registered target internally and replaces ACL rows and writes audit records in a transaction.
 
 ```ruby
 AccessControlList::Apply.call(
@@ -32,7 +32,6 @@ Behavior:
 
 - validates the target identity, nested ordinary ACL entries, grantee identities, and `source`
 - resolves the target only from registered ACL target classes
-- locks the target identity around the read, validation, and replacement sequence
 - reads previous target permissions directly from stored ACL rows
 - resolves `initial_owner_user_id` only when the target has no valid stored owner and creates the initial owner grant from that user
 - preserves existing owners when `owner_user_ids` is omitted; when supplied, treats it as the complete desired owner set
@@ -181,7 +180,13 @@ serialize_data(targets, TargetSerializer, owners_by_target_id:)
 
 ## Deleted Grantee Cleanup
 
-`Group#clear_acls` and `User#clear_acls` enqueue `Jobs::CleanupAclsForDeleted` after a grantee is destroyed. The job removes the deleted group id from `allowed_group_ids` and/or the deleted user id from `allowed_user_ids`, updates `updated_at`, and deletes ACL rows only when both arrays are empty.
+After the user row is destroyed, `User#reassign_acl_ownership` calls `AccessControlList::ReassignDeletedUserOwnership` synchronously in the destruction transaction, before `clear_acls`. The callback passes `user_id`, `username`, and `deleted_at` (`Time.current`) as a snapshot; the service does not look up the deleted user. The service is restricted to the system actor. It finds every stored owner ACL containing the departing user's ID and chooses one random active, unsuspended real admin other than that user for all targets. If none exists, ownership falls back to the system user.
+
+The handoff replaces only the departing owner, preserves co-owners and `source`, deduplicates the new owner, and removes their redundant lower direct grants. This specialized write path operates on stored target identities without loading target classes, so disabled plugins do not prevent deletion. Ownership changes and audit records remain in the deletion transaction. Any failure rolls back deletion. Each transferred target gets an `assume_access_control_ownership` staff action with the recipient admin as actor and target user, the ACL target as subject, and snapshot values `deleted_user_id`, `deleted_username`, and ISO 8601 `deleted_at` in context. Quiet deletions still log the ownership handoff.
+
+`Group#clear_acls` and `User#clear_acls` enqueue `Jobs::CleanupAclsForDeleted` after a grantee is destroyed. The job removes the deleted group id from `allowed_group_ids` and/or the deleted user id from `allowed_user_ids`, updates `updated_at`, and deletes ACL rows only when both arrays are empty. It skips user cleanup when that user ID currently exists, protecting restored records from stale jobs; group cleanup still runs if supplied in the same job.
+
+Users are hard-deleted and have no normal per-account restoration flow. The staged-user CSV import creates accounts with newly assigned database IDs, so it does not reclaim transferred ownership. Anonymization retains the user ID and ownership. User merging deletes the source through `UserDestroyer`, so the same admin handoff applies. This lifecycle prevents new orphaned ownership; it does not backfill targets whose former owner rows were already removed.
 
 ## Current Limitations
 
