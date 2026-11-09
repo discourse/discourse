@@ -9,6 +9,7 @@ import AvatarUploader from "discourse/components/avatar-uploader";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { allowsImages, validateUploadedFile } from "discourse/lib/uploads";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 import DButton from "discourse/ui-kit/d-button";
@@ -21,6 +22,11 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const ASSOCIATED_ACCOUNT_AVATAR = "associated_account";
+
+function avatarPreviewTemplate(template) {
+  // Retained avatars require the session cookie, which is unavailable on the CDN.
+  return /^\/[^/]/.test(template) ? getAbsoluteURL(template) : template;
+}
 
 const AvatarChoice = <template>
   <div class="avatar-choice" ...attributes>
@@ -386,7 +392,7 @@ export default class AvatarSelectorModal extends Component {
             >
               <:default>
                 {{dBoundAvatarTemplate
-                  this.user.gravatar_avatar_template
+                  (avatarPreviewTemplate this.user.gravatar_avatar_template)
                   "large"
                 }}
                 <span>
@@ -445,7 +451,10 @@ export default class AvatarSelectorModal extends Component {
                 @selection={{this.selected}}
                 @value={{account.selection}}
               >
-                {{dBoundAvatarTemplate account.avatar_template "large"}}
+                {{dBoundAvatarTemplate
+                  (avatarPreviewTemplate account.avatar_template)
+                  "large"
+                }}
                 {{i18n
                   "user.change_avatar.associated_account"
                   provider=account.name
@@ -460,7 +469,10 @@ export default class AvatarSelectorModal extends Component {
               @value="custom"
             >
               <:default>
-                {{dBoundAvatarTemplate this.customAvatarTemplate "large"}}
+                {{dBoundAvatarTemplate
+                  (avatarPreviewTemplate this.customAvatarTemplate)
+                  "large"
+                }}
                 {{#if this.customAvatarTemplate}}
                   {{i18n "user.change_avatar.uploaded_avatar"}}
                 {{else}}

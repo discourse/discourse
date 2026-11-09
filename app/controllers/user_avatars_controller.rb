@@ -102,6 +102,13 @@ class UserAvatarsController < ApplicationController
     size = params[:size].to_i
     return render_blank if size < 8 || size > 1000
 
+    upload = user.find_avatar_upload(upload_id)
+    @retained_avatar = upload && upload_id != user.uploaded_avatar_id
+    if @retained_avatar
+      response.cache_control.replace(private: true, no_store: true)
+      return head :forbidden unless guardian.can_edit?(user)
+    end
+
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a, b| (size - a).abs <=> (size - b).abs }
       avatar_url =
@@ -111,10 +118,10 @@ class UserAvatarsController < ApplicationController
           upload_id,
           closest,
         )
-      return redirect_to cdn_path(avatar_url), allow_other_host: true
+      return(
+        redirect_to(@retained_avatar ? avatar_url : cdn_path(avatar_url), allow_other_host: true)
+      )
     end
-
-    upload = user.find_avatar_upload(upload_id)
 
     if user.uploaded_avatar && !upload
       avatar_url =
@@ -129,7 +136,7 @@ class UserAvatarsController < ApplicationController
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)
         image = optimized_path if File.exist?(optimized_path)
-      elsif GlobalSetting.redirect_avatar_requests
+      elsif GlobalSetting.redirect_avatar_requests && !@retained_avatar
         return redirect_s3_avatar(Discourse.store.cdn_url(optimized.url))
       else
         return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
@@ -139,7 +146,7 @@ class UserAvatarsController < ApplicationController
     if image
       response.headers["Last-Modified"] = File.ctime(image).httpdate
       response.headers["Content-Length"] = File.size(image).to_s
-      immutable_for 1.year
+      immutable_for 1.year unless @retained_avatar
 
       if optimized.is_a?(Upload) && !FileHelper.is_inline_safe?(optimized.original_filename)
         response.headers["Content-Security-Policy"] = "sandbox;"
@@ -193,7 +200,7 @@ class UserAvatarsController < ApplicationController
 
     response.headers["Last-Modified"] = last_modified.httpdate
     response.headers["Content-Length"] = File.size(path).to_s
-    immutable_for(1.year)
+    immutable_for(1.year) unless @retained_avatar
 
     if !FileHelper.is_inline_safe?(filename)
       response.headers["Content-Security-Policy"] = "sandbox;"
@@ -215,7 +222,7 @@ class UserAvatarsController < ApplicationController
   # this protects us from a DoS
   def render_blank
     path = Rails.root + "public/images/avatar.png"
-    expires_in 10.minutes, public: true
+    expires_in 10.minutes, public: true unless @retained_avatar
     response.headers["Last-Modified"] = Time.new(1990, 01, 01).httpdate
     response.headers["Content-Length"] = File.size(path).to_s
     send_file path, disposition: nil
