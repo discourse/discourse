@@ -6489,6 +6489,7 @@ en:
       create: "Create"
       menu: "Menu"
       more: "More"
+      edit_topic: "Edit title, category and tags"
       menu_with_reviewables:
         one: "Menu, %{count} item to review"
         other: "Menu, %{count} items to review"

@@ -190,6 +190,20 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(SiteSetting.fixed_category_positions).to eq(true)
   end
 
+  it "lets members who can edit a topic's title, category and tags do so from the header" do
+    SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_0]
+    topic = Fabricate(:post, user: Fabricate(:user)).topic
+    sign_in(other_user)
+
+    visit(topic.url)
+
+    expect(page).to have_no_css("#topic-title")
+
+    find(".d-header .header-title__edit").click
+
+    expect(page).to have_css("#topic-title .edit-topic-title #edit-title")
+  end
+
   it "lets the user reply to the topic they're reading from the create button" do
     topic = Fabricate(:post).topic
 

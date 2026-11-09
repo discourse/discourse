@@ -114,11 +114,31 @@ export function addSidebarSection(func, panelKey) {
       `Error adding section to ${panelKey} because panel doesn't exist. Check addSidebarPanel API.`
     );
   }
-  // Reassigned so pages showing the panel pick up sections added later
-  panel.sections = [
-    ...panel.sections,
-    func.call(this, BaseCustomSidebarSection, BaseCustomSidebarSectionLink),
-  ];
+  const section = func.call(
+    this,
+    BaseCustomSidebarSection,
+    BaseCustomSidebarSectionLink
+  );
+
+  // Reassigned so pages showing the panel pick up sections added later; a
+  // panel that builds its own sections in a getter takes it in place
+  if (canAssign(panel, "sections")) {
+    panel.sections = [...panel.sections, section];
+  } else {
+    panel.sections.push(section);
+  }
+}
+
+function canAssign(object, key) {
+  for (let proto = object; proto; proto = Object.getPrototypeOf(proto)) {
+    const descriptor = Object.getOwnPropertyDescriptor(proto, key);
+
+    if (descriptor) {
+      return !!descriptor.set || !!descriptor.writable;
+    }
+  }
+
+  return true;
 }
 
 export function resetPanelSections(

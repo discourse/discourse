@@ -121,9 +121,9 @@ html.mobile-tab-bar-titled .d-header .title--minimized {
   display: none;
 }
 
-// The header already holds the title, category and tags; the title is still
-// edited with the first post
-html.mobile-tab-bar-titled #topic-title {
+// The header already holds the title, category and tags, and a button to
+// edit them, whose editor shows here
+html.mobile-tab-bar-titled #topic-title:not(:has(.edit-topic-title)) {
   display: none;
 }
 
@@ -147,5 +147,22 @@ html.mobile-tab-bar-titled .d-page-header {
   // The page's actions keep their place at the end of the row
   .d-page-header__title-row {
     justify-content: flex-end;
+  }
+}
+
+// The topic's title shares its row with the button to edit it, trimming
+// itself rather than pushing the button off
+html.mobile-tab-bar-titled .extra-info-wrapper .title-wrapper .header-title {
+  display: flex;
+  align-items: center;
+
+  .topic-link {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .header-title__edit {
+    flex: none;
+    padding: 0 1em;
   }
 }
