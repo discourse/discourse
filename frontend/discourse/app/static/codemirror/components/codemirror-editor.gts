@@ -99,6 +99,31 @@ type HandleElement = HTMLDivElement & { codemirrorView?: EditorView };
 const TAB_FOCUS_WINDOW = 2000;
 const MODIFIER_KEYS = ["Alt", "CapsLock", "Control", "Meta", "Shift"];
 
+// A contenteditable isn't labelable, so `<label for>` clicks don't reach it.
+// Like native activation, clicks on controls inside the label are left alone.
+function focusFromLabel(event: MouseEvent) {
+  const target = event.target as Element | null;
+  const label = target?.closest?.("label");
+  if (!label?.htmlFor) {
+    return;
+  }
+
+  const control = target?.closest(
+    "a[href], button, input, select, textarea, [tabindex]"
+  );
+
+  if (control && label.contains(control)) {
+    return;
+  }
+
+  const content = document.getElementById(label.htmlFor);
+  if (content?.classList.contains("cm-content")) {
+    EditorView.findFromDOM(content)?.focus();
+  }
+}
+
+let labelFocusInstalled = false;
+
 function editorPhrases() {
   return {
     Find: i18n("code_editor.search.find"),
@@ -209,6 +234,11 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
   @action
   setup(container: HandleElement) {
+    if (!labelFocusInstalled) {
+      document.addEventListener("click", focusFromLabel);
+      labelFocusInstalled = true;
+    }
+
     const codeMode = this.args.codeMode;
     const extensions: Extension[] = [
       // Ahead of the defaults so a caller's shortcut wins.
@@ -318,20 +348,11 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       }
     };
 
-    // A contenteditable isn't labelable, so `<label for>` clicks don't reach it.
-    const focusFromLabel = (view: EditorView, event: MouseEvent) => {
-      const label = (event.target as Element | null)?.closest?.("label");
-      if (label && this.args.inputId && label.htmlFor === this.args.inputId) {
-        view.focus();
-      }
-    };
-
     extensions.push(
       ViewPlugin.fromClass(
         class {
           handler: (event: KeyboardEvent) => void;
           pointerHandler: () => void;
-          clickHandler: (event: MouseEvent) => void;
           view: EditorView;
 
           constructor(view: EditorView) {
@@ -342,10 +363,8 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
               }
             };
             this.pointerHandler = () => disarmTabFocus(view);
-            this.clickHandler = (event) => focusFromLabel(view, event);
             window.addEventListener("keydown", this.handler, { capture: true });
             view.dom.addEventListener("pointerdown", this.pointerHandler);
-            document.addEventListener("click", this.clickHandler);
           }
 
           destroy() {
@@ -356,7 +375,6 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
               "pointerdown",
               this.pointerHandler
             );
-            document.removeEventListener("click", this.clickHandler);
           }
         }
       )

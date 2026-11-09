@@ -50,9 +50,16 @@
         inset: 0;
         z-index: 400;
         border: 2px solid var(--tertiary);
+        border-radius: calc(var(--d-input-border-radius) - 1px);
         pointer-events: none;
       }
     }
+  }
+
+  // The grippie closes off the bottom of the host instead.
+  &:has(> .grippie) .cm-editor.cm-focused::after {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .cm-scroller {

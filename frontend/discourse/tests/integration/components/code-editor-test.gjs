@@ -408,6 +408,19 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.true(codeEditorView().hasFocus);
   });
 
+  test("leaves clicks on controls inside its label alone", async function (assert) {
+    await render(
+      <template>
+        <label for="field">Name <button type="button">Help</button></label>
+        <CodeEditor @inputId="field" @value="" />
+      </template>
+    );
+    await waitFor(".cm-editor");
+
+    await click("label button");
+    assert.false(codeEditorView().hasFocus);
+  });
+
   test("disabled rejects edits but keeps the document focusable", async function (assert) {
     const state = new (class {
       @tracked disabled = true;
