@@ -111,4 +111,18 @@ RSpec.describe Live::DirectoryBroadcaster do
 
     expect(messages).to be_empty
   end
+
+  it "publishes destroyed events for ephemeral rooms to their members" do
+    room = Fabricate(:live_ephemeral_room)
+    member = Fabricate(:user)
+    room.room_memberships.create!(user: member)
+
+    broadcaster = described_class.new(room, :destroyed)
+    messages = MessageBus.track_publish(Live.room_index_channel) { broadcaster.broadcast }
+
+    expect(messages.size).to eq(1)
+    expect(messages.first.data[:type]).to eq(:destroyed)
+    expect(messages.first.data[:room][:id]).to eq(room.id)
+    expect(messages.first.user_ids).to include(member.id, room.creator_id)
+  end
 end
