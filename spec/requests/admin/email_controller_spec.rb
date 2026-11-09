@@ -279,7 +279,7 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to include("param is missing")
       end
 
-      it "should enqueue the right job, and show a deprecation warning (email_encoded param should be used)" do
+      it "enqueues the right job, and show a deprecation warning (email_encoded param should be used)" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -294,7 +294,7 @@ RSpec.describe Admin::EmailController do
         )
       end
 
-      it "should enqueue the right job, decoding the raw email param" do
+      it "enqueues the right job, decoding the raw email param" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -392,7 +392,7 @@ RSpec.describe Admin::EmailController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should ..." do
+      it "...S" do
         post "/admin/email/advanced-test.json", params: { email: email }
 
         expect(response.status).to eq(200)
