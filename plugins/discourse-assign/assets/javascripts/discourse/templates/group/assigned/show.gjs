@@ -10,6 +10,11 @@ import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default <template>
+  <PluginOutlet
+    @name="before-assigned-topic-list"
+    @outletArgs={{lazyHash controller=@controller queue="group"}}
+  />
+
   {{#if @controller.hasAssignments}}
     <div class="topic-search-div">
       <div class="inline-form full-width">
@@ -23,11 +28,6 @@ export default <template>
         />
       </div>
     </div>
-
-    <PluginOutlet
-      @name="before-assigned-topic-list"
-      @outletArgs={{lazyHash controller=@controller queue="group"}}
-    />
 
     <DLoadMore
       class="paginated-topics-list"

@@ -6,6 +6,15 @@ import {
   assignedListRequestParams,
 } from "../../../lib/assigned-list-query-params.js";
 
+// the session cache is keyed by filter alone, so a narrowed list must not
+// cross it: guard both the incoming request and cached lists that
+// TopicList.loadMore stored while a registered param was active
+function narrowedByListParams(listParams) {
+  return Object.keys(assignedListQueryParams()).some(
+    (name) => !isEmpty(listParams?.[name])
+  );
+}
+
 export default class GroupAssignedShow extends DiscourseRoute {
   // evaluated at route construction, after plugins have registered transformers
   queryParams = { ...assignedListQueryParams() };
@@ -18,14 +27,11 @@ export default class GroupAssignedShow extends DiscourseRoute {
       filter = `topics/messages-assigned/${params.filter}`;
     }
 
-    // the session cache is keyed by filter alone and cannot represent a
-    // registered param narrowing the list, so fetch fresh when one is set
-    const narrowed = Object.keys(assignedListQueryParams()).some(
-      (name) => !isEmpty(params[name])
-    );
-    const cached = narrowed
-      ? null
-      : findOrResetCachedTopicList(this.session, filter);
+    const cachedList = findOrResetCachedTopicList(this.session, filter);
+    const cached =
+      !narrowedByListParams(params) && !narrowedByListParams(cachedList?.params)
+        ? cachedList
+        : null;
 
     return (
       cached ||
