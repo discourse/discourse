@@ -50,10 +50,17 @@
         inset: 0;
         z-index: 400;
         border: 2px solid var(--tertiary);
-        border-radius: calc(var(--d-input-border-radius) - 1px);
+        border-radius: inherit;
         pointer-events: none;
       }
     }
+  }
+
+  // Hosts reshape their corners, so the ring takes them from the host.
+  > .loading-container,
+  .codemirror-editor,
+  .cm-editor {
+    border-radius: inherit;
   }
 
   // The grippie closes off the bottom of the host instead.

@@ -79,6 +79,27 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     assert.true(codeEditorView().hasFocus);
   });
 
+  test("isn't named by a hidden title", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @showTitle={{false}}
+            @title="Foo"
+            @type="code"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+    await waitFor(".cm-content");
+
+    assert.dom(".cm-content").doesNotHaveAttribute("aria-labelledby");
+  });
+
   test("@height", async function (assert) {
     await render(
       <template>

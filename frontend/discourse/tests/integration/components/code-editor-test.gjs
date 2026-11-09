@@ -212,6 +212,20 @@ module("Integration | Component | code-editor", function (hooks) {
     }
   });
 
+  test("pointer interaction keeps a Tab focus mode the user turned on", async function (assert) {
+    await render(<template><CodeEditor @value="one" /></template>);
+    const view = codeEditorView();
+    view.focus();
+    view.setTabFocusMode(true);
+
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    await triggerEvent(".cm-content", "pointerdown");
+    view.dispatch({ selection: { anchor: 0 } });
+    await triggerKeyEvent(".cm-content", "keydown", "Tab");
+
+    assert.strictEqual(view.state.doc.toString(), "one", "Tab doesn't indent");
+  });
+
   test("Escape leaves the bare editor even with a selection", async function (assert) {
     const Editor = await loadCodemirror();
     await render(<template><Editor @value="one two" /></template>);
@@ -221,7 +235,7 @@ module("Integration | Component | code-editor", function (hooks) {
     view.dispatch({ selection: { anchor: 0, head: 3 } });
     await triggerKeyEvent(".cm-content", "keydown", "Escape");
 
-    assert.false(view.hasFocus);
+    assert.dom(".cm-content").isNotFocused();
   });
 
   test("turns on code-editing behaviour", async function (assert) {
@@ -411,14 +425,24 @@ module("Integration | Component | code-editor", function (hooks) {
   test("leaves clicks on controls inside its label alone", async function (assert) {
     await render(
       <template>
-        <label for="field">Name <button type="button">Help</button></label>
+        <label for="field">
+          Name
+          <button type="button">Help</button>
+        </label>
         <CodeEditor @inputId="field" @value="" />
       </template>
     );
     await waitFor(".cm-editor");
+    // Tooltip triggers are spans with a button role.
+    const trigger = document.createElement("span");
+    trigger.setAttribute("role", "button");
+    document.querySelector("label").append(trigger);
 
     await click("label button");
-    assert.false(codeEditorView().hasFocus);
+    assert.dom(".cm-content").isNotFocused();
+
+    await click("label [role='button']");
+    assert.dom(".cm-content").isNotFocused();
   });
 
   test("disabled rejects edits but keeps the document focusable", async function (assert) {

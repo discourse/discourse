@@ -109,7 +109,7 @@ function focusFromLabel(event: MouseEvent) {
   }
 
   const control = target?.closest(
-    "a[href], button, input, select, textarea, [tabindex]"
+    'a[href], button, input, select, textarea, [tabindex], [role="button"]'
   );
 
   if (control && label.contains(control)) {
@@ -344,7 +344,9 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
     const disarmTabFocus = (view: EditorView) => {
       if (tabFocusArmedAt) {
         tabFocusArmedAt = 0;
-        view.setTabFocusMode(false);
+        // Ends our window without switching off a Tab focus mode the user
+        // turned on themselves.
+        view.setTabFocusMode(0);
       }
     };
 
