@@ -76,6 +76,34 @@ RSpec.describe SecondFactorManager do
       end
     end
 
+    describe "when the token matches a drift-ahead step" do
+      it "authenticates the token once and records the matched step" do
+        freeze_time(Time.zone.parse("2026-11-06 12:00:00")) do
+          token = user.user_second_factors.totps.first.totp_object.at(Time.zone.now + 30)
+
+          expect(user.authenticate_totp(token)).to eq(true)
+          expect(user.user_second_factors.totps.first.last_used).to eq_time(
+            Time.zone.parse("2026-11-06 12:00:30"),
+          )
+          expect(user.authenticate_totp(token)).to eq(false)
+        end
+      end
+
+      it "still rejects the token once the matched step becomes the current step" do
+        token = nil
+
+        freeze_time(Time.zone.parse("2026-11-06 12:00:00")) do
+          token = user.user_second_factors.totps.first.totp_object.at(Time.zone.now + 30)
+
+          expect(user.authenticate_totp(token)).to eq(true)
+        end
+
+        freeze_time(Time.zone.parse("2026-11-06 12:00:40")) do
+          expect(user.authenticate_totp(token)).to eq(false)
+        end
+      end
+    end
+
     describe "when token is blank" do
       it "rejects the token" do
         expect(user.authenticate_totp(nil)).to eq(false)
