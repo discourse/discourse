@@ -86,10 +86,16 @@ export default class MobileTabBar extends Component {
     this.#viewsObserver.observe(element.nextElementSibling);
     this.#viewsObserver.observe(element);
 
-    // Sections render their views here, so watch for the current one changing
+    // Sections render their views here, so watch for the current one changing,
+    // and for a list of them scrolling to or from its edges
     this.#viewsMutations = new MutationObserver(this.#queueViewsHighlight);
     this.#viewsMutations.observe(element, {
-      attributeFilter: ["class"],
+      attributeFilter: [
+        "class",
+        "data-d-scroll-at-start",
+        "data-d-scroll-at-end",
+        "data-d-scroll-overflow",
+      ],
       childList: true,
       subtree: true,
     });
@@ -171,14 +177,31 @@ export default class MobileTabBar extends Component {
     const active =
       this.#pendingViewLink() ?? views?.querySelector(".nav-pills a.active");
 
-    // Keeps its size while no view is current, as when a list re-renders, so
-    // it doesn't collapse and regrow
+    // Keeps its size while no view is current, as when a list re-renders, or
+    // the current one is scrolled out of plain sight, so it doesn't collapse
+    // and regrow
     if (!active) {
       views?.style.setProperty("--mobile-tab-bar-views-highlight-opacity", "0");
       return;
     }
 
-    views.style.setProperty("--mobile-tab-bar-views-highlight-opacity", "1");
+    // Kept to the part of the views in plain sight: inside the bubble, and
+    // clear of the faded edges with more views past them
+    const box = views.getBoundingClientRect();
+    const rect = active.getBoundingClientRect();
+    const [start, end] = this.#viewsInSight(active.closest(".nav-pills"), box);
+    const left = Math.max(rect.left, start) - box.left;
+    const right = Math.min(rect.right, end) - box.left;
+    const inSight = right - left >= rect.height;
+
+    views.style.setProperty(
+      "--mobile-tab-bar-views-highlight-opacity",
+      inSight ? "1" : "0"
+    );
+
+    if (!inSight) {
+      return;
+    }
 
     const key = [...views.querySelectorAll(".nav-pills a")]
       .map((link) => link.getAttribute("href"))
@@ -189,12 +212,6 @@ export default class MobileTabBar extends Component {
     if (jump) {
       delete views.dataset.sliding;
     }
-
-    // Kept within the bubble when the view is partly scrolled out of sight
-    const box = views.getBoundingClientRect();
-    const rect = active.getBoundingClientRect();
-    const left = Math.max(rect.left, box.left) - box.left;
-    const right = Math.min(rect.right, box.right) - box.left;
 
     views.style.setProperty("--mobile-tab-bar-views-highlight-x", `${left}px`);
     views.style.setProperty(
@@ -219,6 +236,31 @@ export default class MobileTabBar extends Component {
     if (jump) {
       requestAnimationFrame(() => (views.dataset.sliding = ""));
     }
+  }
+
+  // Where a list of views shows them unfaded, within the bubble. The fade
+  // is as wide as the list's scroll padding, which keeps scrolled-to views
+  // clear of it too.
+  #viewsInSight(list, box) {
+    let start = box.left;
+    let end = box.right;
+
+    if (list?.hasAttribute("data-d-scroll-overflow")) {
+      const rect = list.getBoundingClientRect();
+      const fade = parseFloat(getComputedStyle(list).scrollPaddingLeft) || 0;
+      start = Math.max(start, rect.left);
+      end = Math.min(end, rect.right);
+
+      if (!list.hasAttribute("data-d-scroll-at-start")) {
+        start += fade;
+      }
+
+      if (!list.hasAttribute("data-d-scroll-at-end")) {
+        end -= fade;
+      }
+    }
+
+    return [start, end];
   }
 
   // The tapped view until its list shows it as current, or the navigation

@@ -207,17 +207,14 @@ html.mobile-tab-bar-visible {
 
   // Lists of views take the tab bar's own look: the current one filled
   // rather than underlined, and bold so colour alone doesn't mark it
+  // Scrolls when the views don't fit, fading the edge with more past it
   &__views .nav-pills {
+    --fade-width: 1.5rem;
     flex-wrap: nowrap;
     gap: 0;
-    min-width: 0;
     margin: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    @include horizontal-scroll-strip;
 
     > li {
       flex: none;

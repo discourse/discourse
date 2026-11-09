@@ -50,7 +50,7 @@ export default class NavigationBarComponent extends Component {
   }
 
   <template>
-    <ul class="nav nav-pills" id="navigation-bar">
+    <ul class="nav nav-pills" id="navigation-bar" ...attributes>
       {{#if this.showDropdown}}
         <li>
           <DMenu

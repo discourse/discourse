@@ -27,6 +27,7 @@ import NavItem from "discourse/models/nav-item";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
 import TagCategoryAdminDropdown from "discourse/select-kit/components/tag-category-admin-dropdown";
 import DButton from "discourse/ui-kit/d-button";
+import dScrollEdges from "discourse/ui-kit/modifiers/d-scroll-edges";
 
 @tagName("")
 export default class DNavigation extends Component {
@@ -357,12 +358,14 @@ export default class DNavigation extends Component {
         {{! Within the thumb's reach, in the strip the tab bar keeps for a
           section's views; it's gone while the bar is hidden }}
         <MobileTabBarViews>
+          {{! Fades the edge with views past it, as the tabs do }}
           <NavigationBar
             @category={{this.category}}
             @countAsBadge={{true}}
             @filterMode={{this.filterMode}}
             @navItems={{this.navItems}}
             @tag={{this.tag}}
+            {{dScrollEdges}}
           />
           {{! Admins can fix category positions to reorder; others reorder
             only once they're fixed }}
