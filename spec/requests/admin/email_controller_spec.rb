@@ -355,6 +355,33 @@ RSpec.describe Admin::EmailController do
         end
         expect(response.status).to eq(200)
       end
+
+      it "bounds the body of a message sent to a group inbox" do
+        Jobs.run_immediately!
+        SiteSetting.email_in = true
+        SiteSetting.max_post_length = 100
+        Fabricate(:group, incoming_email: "team@bar.com")
+
+        mail = <<~EMAIL
+          From: Someone <someone@example.com>
+          To: team@bar.com
+          Subject: A very long email
+          Date: #{Time.now.rfc2822}
+          Content-Type: text/plain; charset=UTF-8
+
+          #{"This body is long enough to exceed the maximum post length. " * 20}
+        EMAIL
+
+        expect {
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(mail),
+               }
+        }.to change(Post, :count).by(1)
+
+        expect(response.status).to eq(200)
+        expect(Post.last.raw.length).to be <= SiteSetting.max_post_length
+      end
     end
 
     shared_examples "email handling not allowed" do

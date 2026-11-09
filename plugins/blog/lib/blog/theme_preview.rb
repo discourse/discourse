@@ -2,7 +2,7 @@
 
 module ::Blog
   # Signed, expiring capabilities that render a theme on the public blog without
-  # activating it: either a saved draft at a given revision, or an unsaved
+  # activating it: a preset, a saved draft at a given revision, or an unsaved
   # working copy held briefly in Redis.
   class ThemePreview
     DRAFT_EXPIRY = 1.hour
@@ -46,7 +46,7 @@ module ::Blog
         raise Discourse::NotFound unless stored
         return JSON.parse(stored)
       end
-      theme = BlogTheme.find(data["id"])
+      theme = ThemePresets.find(data["id"]) || BlogTheme.find(data["id"])
       raise Discourse::NotFound unless theme["revision"] == data["revision"]
       theme
     end

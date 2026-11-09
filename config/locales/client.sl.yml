@@ -326,9 +326,6 @@ sl:
     design_wizard:
       back: "Nazaj"
       next: "Naprej"
-      sections:
-        theme: "Videz"
-        search: "Išči"
       homepage:
         topics: "Tem"
         categories: "Kategorije"

@@ -118,7 +118,11 @@ en:
       preview_diagnostic: "%{template}, line %{line}: %{message}"
       template_invalid: "Provide a valid Liquid template of at most 65,536 bytes."
       template_parse_error: "Invalid Liquid template: %{error}"
-      current: Current appearance
+      default: Default
+      descriptions:
+        default: The clean, quiet reading layout built into the blog.
+        broadsheet: An editorial newspaper layout with serif headlines and a numbered story grid.
+        discourse-blog: Rounded cards on a soft lavender canvas with a featured lead story.
       invalid: "Provide a name (up to 100 characters), six-digit hexadecimal colors, and CSS/JavaScript of at most 65,536 bytes each."
       limit: You can save up to 30 blog themes. Delete an unused theme first.
       stale: This theme has changed. Reload it and review the latest draft before continuing.

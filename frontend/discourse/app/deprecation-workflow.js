@@ -317,6 +317,12 @@ const workflows = [
     handler: "silence",
     matchId: "deprecate-import-meta-from-ember",
   },
+  // The component is deprecated but still under test until it is removed.
+  {
+    handler: "silence",
+    matchId: "discourse.ace-editor",
+    env: "qunit-test",
+  },
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
@@ -327,7 +333,6 @@ const workflows = [
     "discourse.ember-computed-decorators",
     "discourse.form-kit.legacy-field-yield",
     "discourse.format-age",
-    "discourse.get-owner-with-fallback",
     "discourse.hbs-extension",
     "discourse.es6-extension",
     "discourse.html-safe-helper",

@@ -537,10 +537,36 @@ html.design-wizard-docked {
     }
   }
 
-  &__color-description {
+  &__color-description,
+  &__logo-description,
+  &__logo-help {
     margin: 0;
     font-size: var(--font-down-1);
     color: var(--primary-high);
+  }
+
+  &__logo-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__logo-uploader {
+    width: 100%;
+    height: auto;
+
+    // the uploader stretches its buttons to fill a fixed height, which
+    // leaves them floating away from the preview
+    > .file-uploader__controls {
+      height: auto;
+    }
+
+    .file-uploader__preview {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      border-radius: var(--d-border-radius);
+    }
   }
 
   &__palette-modes {
@@ -638,27 +664,6 @@ html.design-wizard-docked {
     overflow-wrap: anywhere;
   }
 
-  &__switch-row {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-    padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-  }
-
-  &__switch-row-title {
-    display: block;
-    font-size: var(--font-down-1);
-    font-weight: 600;
-  }
-
-  &__switch-row-description {
-    display: block;
-    font-size: var(--font-down-2);
-    color: var(--primary-high);
-  }
-
   &__font-group {
     display: flex;
     flex-direction: column;
@@ -746,8 +751,7 @@ html.design-wizard-docked {
     gap: var(--space-2);
   }
 
-  &__style-blocks,
-  &__option-rows {
+  &__style-blocks {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -955,56 +959,6 @@ html.design-wizard-docked {
     &.--c4 {
       border-inline-start-color: var(--design-wizard-category-4);
     }
-  }
-
-  // Rendered inline like the notification tracking menu's selectable rows.
-  &__option-row {
-    display: flex;
-    box-sizing: border-box;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2);
-    background: none;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    cursor: pointer;
-
-    &.--selected {
-      border-color: var(--tertiary);
-      box-shadow: 0 0 0 1px var(--tertiary);
-    }
-
-    html.discourse-no-touch &:hover {
-      border-color: var(--tertiary);
-      box-shadow: 0 0 0 1px var(--tertiary);
-    }
-  }
-
-  &__option-row-texts {
-    display: flex;
-    flex: 1 1 0%;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    line-height: var(--line-height-medium);
-  }
-
-  &__option-row-label {
-    flex: 1 1 auto;
-    max-width: 100%;
-    font-size: var(--font-0);
-    font-weight: bold;
-    color: var(--primary);
-
-    @include ellipsis;
-  }
-
-  &__option-row-description {
-    flex: 1 1 auto;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    text-align: start;
-    white-space: normal;
   }
 
   &__actions {

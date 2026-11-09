@@ -1005,6 +1005,47 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#set_notifications" do
+    subject(:set_notifications) do
+      post "/category/#{category_id}/notifications.json", params: { notification_level: }
+    end
+
+    let(:category_id) { category.id }
+    let(:notification_level) { CategoryUser.notification_levels[:tracking] }
+
+    before { sign_in(user) }
+
+    context "when the user can see the category" do
+      it "sets the notification level" do
+        expect { set_notifications }.to change {
+          CategoryUser.find_by(user:, category:)&.notification_level
+        }.to(notification_level)
+      end
+    end
+
+    context "when the user cannot see the category" do
+      let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      it "refuses the request" do
+        set_notifications
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "stores no notification level" do
+        expect { set_notifications }.not_to change(CategoryUser, :count)
+      end
+    end
+
+    context "when the category does not exist" do
+      let(:category_id) { -1 }
+
+      it "returns not found" do
+        set_notifications
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "#reorder" do
     it "reorders the categories" do
       sign_in(admin)

@@ -5170,7 +5170,13 @@ zh_TW:
       default: "默認"
       wcag: "WCAG"
       solarized: "Solarized"
+      neutral: "中性色"
+      shades_of_blue: "藍色色階"
+      summer: "夏日"
       dracula: "德古拉"
+      grey_amber: "灰琥珀色"
+      latte: "拿鐵"
+      dark_rose: "深玫瑰"
   wizard:
     title: "Discourse 設置"
     step:

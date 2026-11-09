@@ -75,7 +75,7 @@ class RouteMatcher
       allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
 
       value = requested_params[param.to_s]
-      alias_value = requested_params[param_alias.to_s]
+      alias_value = requested_params[param_alias.to_s] if param_alias
 
       return false if value.present? && alias_value.present?
 
@@ -103,6 +103,7 @@ class RouteMatcher
       param_alias = param_alias_for(param)
       value_present, value = path_parameter(requested_params, param)
       alias_present, alias_value = path_parameter(requested_params, param_alias)
+      alias_value = extract_category_id(alias_value) if param_alias == :category_slug_path_with_id
 
       next false if value_present && alias_present
       next false unless value_present || alias_present

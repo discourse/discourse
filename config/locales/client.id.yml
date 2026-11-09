@@ -279,11 +279,10 @@ id:
         back: "Kembali"
     design_wizard:
       back: "Kembali"
-      sections:
-        theme: "Tema"
-        search: "Cari"
       theme:
         selected: "Dipilih"
+      fonts:
+        base_font: "Konten"
       homepage:
         topics: "Topik"
         categories: "Kategori"

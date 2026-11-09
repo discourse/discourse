@@ -55,7 +55,7 @@ module ::Blog
       render json: {
                themes:
                  ActiveModel::ArraySerializer.new(
-                   BlogTheme.all,
+                   ThemePresets.all + BlogTheme.all,
                    each_serializer: BlogThemeSerializer,
                  ).as_json,
                active: BlogTheme.active,

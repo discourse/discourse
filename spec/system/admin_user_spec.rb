@@ -70,6 +70,24 @@ describe "Admin User Page" do
       expect(admin_user_page).to have_silence_button
     end
 
+    it "asks for confirmation before granting moderation" do
+      dialog = PageObjects::Components::Dialog.new
+
+      admin_user_page.click_grant_moderation_button
+      expect(dialog).to have_content(
+        I18n.t("admin_js.admin.user.grant_moderation_confirm", username: user.username),
+      )
+
+      dialog.click_no
+      expect(dialog).to be_closed
+      expect(user.reload.moderator).to eq(false)
+
+      admin_user_page.click_grant_moderation_button
+      dialog.click_yes
+      expect(page).to have_no_css(".btn.grant-moderation")
+      expect(user.reload.moderator).to eq(true)
+    end
+
     it "displays username in the title" do
       expect(page).to have_css(".display-row.username")
       expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")

@@ -114,7 +114,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  before_action :add_noindex_header, only: %i[show summary my_redirect]
+  before_action :add_noindex_header, only: %i[show summary my_redirect badges]
 
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
@@ -1933,7 +1933,10 @@ class UsersController < ApplicationController
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      UserAuthToken.where(user_id: user.id).each(&:destroy!)
+      UserAuthToken.transaction do
+        UserAuthToken.where(user_id: user.id).each(&:destroy!)
+        PushNotificationPusher.clear_subscriptions(user)
+      end
     end
 
     render json: success_json

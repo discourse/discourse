@@ -1116,6 +1116,8 @@ et:
   design_wizard:
     palette_pairs:
       default: "Vaikimisi"
+      neutral: "Neutraalne"
+      summer: "Suvi"
   wizard:
     title: "Discourse sätted"
     step:

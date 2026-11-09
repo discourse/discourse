@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed, get } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
@@ -64,7 +64,7 @@ export default class AdminApiKeysNewController extends Controller {
 
   @action
   updateUsername(selected) {
-    this.set("model.username", get(selected, "firstObject"));
+    this.set("model.username", selected[0]);
   }
 
   @action

@@ -4671,7 +4671,13 @@ hu:
   design_wizard:
     palette_pairs:
       default: "Alapértelmezett"
+      neutral: "Semleges"
+      shades_of_blue: "Kék árnyalatok"
+      summer: "Nyár"
       dracula: "Drakula"
+      grey_amber: "Szürke borostyán"
+      latte: "Tejeskávé"
+      dark_rose: "Sötét rózsa"
   wizard:
     title: "Discourse telepítő"
     step:

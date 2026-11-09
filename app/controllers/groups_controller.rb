@@ -21,7 +21,8 @@ class GroupsController < ApplicationController
 
   skip_before_action :preload_json, :check_xhr, only: %i[posts_feed mentions_feed]
   skip_before_action :check_xhr, only: [:show]
-  after_action :add_noindex_header
+  # Run before check_xhr can return the HTML shell.
+  prepend_before_action :add_noindex_header
 
   TYPE_FILTERS = GroupDirectoryQuery::TYPE_FILTERS
 

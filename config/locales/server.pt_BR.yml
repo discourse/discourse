@@ -4739,7 +4739,13 @@ pt_BR:
   design_wizard:
     palette_pairs:
       default: "Padrão"
+      neutral: "Neutro"
+      shades_of_blue: "Tons de azul"
+      summer: "Verão"
       dracula: "Drácula"
+      grey_amber: "Âmbar cinzento"
+      latte: "Latte"
+      dark_rose: "Rosa-escuro"
   wizard:
     title: "Configuração do Discourse"
     step:

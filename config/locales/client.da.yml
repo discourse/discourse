@@ -438,17 +438,16 @@ da:
       back: "Tilbage"
       next: "Næste"
       sections:
-        theme: "Tema"
         fonts: "Skrifttyper"
+        logo: "Logo"
         homepage: "Hjemmeside"
-        search: "Søg"
       theme:
         selected: "Valgt"
-      colors:
-        light: "Lys"
-        dark: "Mørk"
       fonts:
-        heading_font: "Overskrifts skrifttype"
+        base_font: "Brødtekst"
+        heading_font: "Overskrifter"
+      logo:
+        help_text: "Anbefalet størrelse er 600 x 80 pixels."
       homepage:
         topics: "Emner"
         categories: "Kategorier"

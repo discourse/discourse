@@ -92,7 +92,7 @@ zh_CN:
       template_invalid: "请提供一个有效大小不超过 65,536 字节的 Liquid 模板。"
       template_parse_error: "无效的 Liquid 模板： %{error}"
       current: 当前外观
-      invalid: "请提供名称（最多 100 个字符）、编辑或极简布局、六位十六进制颜色以及每个最多 65,536 字节的 CSS/JavaScript。"
+      invalid: "提供一个名称(最多100个字符)，六位数六位颜色，以及最多65 536个字节的 CSS/JavaScript。"
       limit: 您最多可以保存 30 个博客主题。请先删除一个不使用的主题。
       stale: 主题已更改。请重新加载并查看最新版本后再继续。
       active_delete: 请先启用另一个主题，然后再删除此主题。

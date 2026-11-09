@@ -445,18 +445,17 @@ fi:
       back: "Takaisin"
       next: "Seuraava"
       sections:
-        theme: "Värimaailma"
         fonts: "Fontit"
+        logo: "Logo"
         homepage: "Aloitussivu"
-        search: "Haku"
       theme:
         selected: "Valittu"
-      colors:
-        light: "Vaalea"
-        dark: "Tumma"
       fonts:
-        base_font: "Perusfontti"
-        heading_font: "Otsikon fontti"
+        base_font: "Leipäteksti"
+        heading_font: "Otsikot"
+      logo:
+        description: "Näkyy sivuston ylänavigoinnissa sekä sivuston sähköposti-ilmoitusten yläosassa."
+        help_text: "Suositeltava koko on 600 x 80 pikseliä."
       homepage:
         topics: "Aiheet"
         categories: "Kategoriat"

@@ -2205,6 +2205,36 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe "watched word HTML replacements in invitation emails" do
+    fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:invitee, :user)
+
+    it "renders the HTML replacement as text" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "invited",
+        replacement: "<b>replaced</b>",
+        html: true,
+      )
+      post = Fabricate(:private_message_post, recipient: inviter)
+      post.topic.invite(inviter, invitee.username)
+      notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+
+      mail =
+        UserNotifications.user_invited_to_private_message(
+          invitee,
+          notification_type: "invited_to_private_message",
+          notification_data_hash: notification.data_hash,
+          post: notification.post,
+        )
+      renderer = Email::Renderer.new(mail)
+
+      expect(renderer.html).not_to include("<b>replaced</b>")
+      expect(renderer.html).to include("&lt;b&gt;replaced&lt;/b&gt;")
+    end
+  end
+
   describe "user invited to a private message" do
     include_examples "notification email building", invitation: true do
       let(:notification_type) { :invited_to_private_message }

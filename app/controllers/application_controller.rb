@@ -624,9 +624,8 @@ class ApplicationController < ActionController::Base
   end
 
   def rate_limit_second_factor!(user)
-    return if params[:second_factor_token].blank?
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
-    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
+    rate_limit_second_factor_by_ip!
+    rate_limit_second_factor_by_account!(user)
   end
 
   def login_method
@@ -635,6 +634,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def rate_limit_second_factor_by_ip!
+    return if params[:second_factor_token].blank?
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
+  end
+
+  def rate_limit_second_factor_by_account!(user)
+    return if params[:second_factor_token].blank? || user.blank?
+    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
+  end
 
   # This method is intended to be a no-op.
   # The only reason this `before_action` callback continues to exist is for backwards compatibility purposes which we cannot easily
@@ -1031,6 +1040,12 @@ class ApplicationController < ActionController::Base
     DiscoursePluginRegistry.apply_modifier(:topic_noindex, !topic.visible, topic)
   end
 
+  # Sends that decision on a response that reproduces the topic: its page in
+  # any format, or the raw text of its posts.
+  def add_topic_noindex_header(topic)
+    response.headers["X-Robots-Tag"] = noindex_header_value if topic && topic_noindex?(topic)
+  end
+
   # Whether search engines are told not to index a topic list that loads a
   # category: its own pages, `?category=` lists and tag pages within it.
   # Core indexes them all; the `category_noindex` modifier receives `false`
@@ -1119,7 +1134,11 @@ class ApplicationController < ActionController::Base
       links.push(*@asset_preload_links)
     end
 
-    response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
+    return if links.blank?
+
+    # The header may already carry other links, such as a Markdown alternate.
+    name = GlobalSetting.early_hint_header_name
+    response.headers[name] = [response.headers[name], *links].compact.join(", ")
   end
 
   def spa_boot_request?

@@ -98,6 +98,14 @@ module PageObjects
         page.has_css?("#{@composer_id} .composer-footer__toolbar .d-editor-button-bar")
       end
 
+      def has_uncollapsed_footer_toolbar?
+        page.has_css?("#{@composer_id} .composer-footer__toolbar", wait: 2) do |toolbar|
+          panel = page.find("#{@composer_id} .composer-footer .submit-panel", wait: false)
+          toolbar.evaluate_script("this.getBoundingClientRect().width") >=
+            panel.evaluate_script("this.getBoundingClientRect().width")
+        end
+      end
+
       def has_title_below_category_row?
         page.has_css?("#{@composer_id} .title-and-category ~ .title-input")
       end
