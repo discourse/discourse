@@ -82,7 +82,7 @@
   }
 
   &:hover {
-    .sidebar-section-header-wrapper {
+    > .sidebar-section-header-wrapper {
       .btn.sidebar-section-header-dropdown,
       .sidebar-section-header-button {
         opacity: 1;
@@ -93,7 +93,7 @@
   // opt out of the hover reveal above, for actions that have to be found rather
   // than reached for
   &.sidebar-section--persistent-actions {
-    .sidebar-section-header-wrapper {
+    > .sidebar-section-header-wrapper {
       .btn.sidebar-section-header-dropdown,
       .sidebar-section-header-button {
         opacity: 1;
@@ -175,6 +175,17 @@
     display: flex;
     flex-direction: column;
     gap: var(--d-sidebar-vertical-gap);
+  }
+}
+
+.sidebar-section-nested {
+  list-style: none;
+  padding-inline-start: var(--space-4);
+
+  > .sidebar-section-wrapper {
+    border-block-end: 0;
+    margin-block: 0;
+    padding-block: 0;
   }
 }
 
