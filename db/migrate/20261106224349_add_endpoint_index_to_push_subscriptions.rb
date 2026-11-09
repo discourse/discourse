@@ -3,7 +3,7 @@
 class AddEndpointIndexToPushSubscriptions < ActiveRecord::Migration[8.1]
   disable_ddl_transaction!
 
-  def change
+  def up
     remove_index :push_subscriptions,
                  name: "index_push_subscriptions_on_endpoint",
                  algorithm: :concurrently,
@@ -15,5 +15,12 @@ class AddEndpointIndexToPushSubscriptions < ActiveRecord::Migration[8.1]
               name: "index_push_subscriptions_on_endpoint",
               where: "octet_length(data::jsonb ->> 'endpoint') <= 2048",
               algorithm: :concurrently
+  end
+
+  def down
+    remove_index :push_subscriptions,
+                 name: "index_push_subscriptions_on_endpoint",
+                 algorithm: :concurrently,
+                 if_exists: true
   end
 end

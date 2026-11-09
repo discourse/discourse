@@ -125,7 +125,7 @@ class PushNotificationPusher
     return if revoked_endpoint?(endpoint)
 
     data = push_params.to_json
-    by_endpoint = PushSubscription.where("data::jsonb ->> 'endpoint' = ?", endpoint)
+    by_endpoint = PushSubscription.with_endpoint(endpoint)
 
     # overlapping registrations from an account switch must not both keep a row
     subscription =
@@ -196,7 +196,7 @@ class PushNotificationPusher
     endpoint = subscription[:endpoint]
     return if !endpoint.is_a?(String) || endpoint.blank?
 
-    PushSubscription.where(user: user).where("data::jsonb ->> 'endpoint' = ?", endpoint).delete_all
+    PushSubscription.where(user: user).with_endpoint(endpoint).delete_all
   end
 
   def self.get_badge

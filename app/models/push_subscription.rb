@@ -5,6 +5,16 @@ class PushSubscription < ActiveRecord::Base
 
   belongs_to :user
 
+  # repeats the partial index predicate, otherwise the planner can't use the index
+  scope :with_endpoint,
+        ->(endpoint) do
+          where(
+            "data::jsonb ->> 'endpoint' = ? AND octet_length(data::jsonb ->> 'endpoint') <= ?",
+            endpoint,
+            MAX_ENDPOINT_BYTES,
+          )
+        end
+
   def self.validate_endpoint!(endpoint)
     if !endpoint.is_a?(String) || endpoint.blank? || endpoint.bytesize > MAX_ENDPOINT_BYTES
       raise Discourse::InvalidParameters.new(:endpoint)
