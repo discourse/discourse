@@ -145,11 +145,6 @@ export interface ComposerOpenOptions {
 type ComposerArchetype = NonNullable<Site["archetypes"]>[number] & {
   id: string;
 };
-/** TODO(typescript-pending): TopicDetails field forwarders omit edit permissions; remove when TopicDetails declares them. */
-type ComposerTopicDetails = Topic["details"] & {
-  can_edit?: boolean;
-  can_edit_tags?: boolean;
-};
 
 type TextOptions = { block?: boolean; space?: boolean; new_line?: boolean };
 
@@ -604,10 +599,7 @@ export default class Composer extends RestModel {
 
   @computed("editingPost", "topic.details.can_edit")
   get disableTitleInput() {
-    return (
-      this.editingPost &&
-      !(this.topic?.details as ComposerTopicDetails | undefined)?.can_edit
-    );
+    return this.editingPost && !this.topic?.details?.can_edit;
   }
 
   @computed("privateMessage", "archetype.hasOptions")
@@ -1266,7 +1258,7 @@ export default class Composer extends RestModel {
     if (this.title && post.post_number === 1) {
       const topic = this.topic!;
 
-      if ((topic.details as ComposerTopicDetails).can_edit) {
+      if (topic.details.can_edit) {
         const topicProps = this.getProperties(
           Object.keys(_edit_topic_serializer)
         );
@@ -1293,7 +1285,7 @@ export default class Composer extends RestModel {
           topicProps.categoryId = topic.get("category.id");
         }
         promise = promise.then(() => Topic.update(topic, topicProps));
-      } else if ((topic.details as ComposerTopicDetails).can_edit_tags) {
+      } else if (topic.details.can_edit_tags) {
         promise = promise.then(() => topic.updateTags(this.tags));
       }
     }

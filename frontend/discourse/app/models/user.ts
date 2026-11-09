@@ -159,14 +159,6 @@ export interface UserGroup
   owner?: true;
 }
 
-/** TODO(typescript-pending): Badge's field forwarders and factories lack declared fields; remove when Badge is typed. */
-type UserBadgeModel = Badge & {
-  id: number;
-  name: string;
-  allow_title?: boolean;
-  count?: number;
-};
-
 /** A user-authorized API key, before or after it is wrapped in an EmberObject. */
 export interface UserApiKey {
   id: number;
@@ -205,7 +197,7 @@ export interface UserFields {
   associated_account_ids?: Record<string, string>;
   available_notification_types?: number[];
   badge_count?: number | null;
-  badges?: UserBadgeModel[];
+  badges?: Badge[];
   bio_cooked?: string;
   bio_excerpt?: string;
   bio_raw?: string;
@@ -249,7 +241,7 @@ export interface UserFields {
   can_upload_user_card_background?: boolean;
   can_view_raw_email?: boolean;
   card_background_upload_url?: string;
-  card_badge?: UserBadgeModel | null;
+  card_badge?: Badge | null;
   created_at?: string;
   custom_avatar_template?: string;
   custom_avatar_upload_id?: number | null;
@@ -434,6 +426,8 @@ export interface UserFindDetailsOptions {
 
 /** Raw profile/card data before findDetails replaces its relationships. */
 export interface UserDetailsResponse {
+  /** The profile response carries grant lists, never a single grant. */
+  user_badge?: never;
   user: Omit<Partial<UserFields>, "stats" | "invited_by" | "card_badge"> & {
     stats?:
       | (Omit<Partial<UserActionStat>, "count"> & { count?: number | string })[]
@@ -441,7 +435,7 @@ export interface UserDetailsResponse {
     groups?: (RestModelAttrs<Group> & Pick<UserGroup, "id" | "name">)[];
     group_users?: UserGroup["group_user"][];
     invited_by?: UserCreateAttrs | User | null;
-    card_badge?: RestPayload | UserBadgeModel | null;
+    card_badge?: RestPayload | Badge | null;
     timezone?: string | null;
   };
   [key: string]: unknown;
@@ -484,7 +478,7 @@ export interface UserSummary {
   most_liked_by_users: (TopicBasicUser & { count: number })[];
   most_liked_users: (TopicBasicUser & { count: number })[];
   most_replied_to_users: (TopicBasicUser & { count: number })[];
-  badges?: UserBadgeModel[];
+  badges?: Badge[];
   top_categories?: (Partial<Category> & {
     parent_category_id?: number | null;
     parentCategory?: Category;
@@ -1051,8 +1045,7 @@ export default class User extends RestModel.extend(Evented) {
 
   @computed()
   get bookmarks(): Bookmark {
-    // TODO(typescript-pending): Bookmark.create returns its base wrapper; remove when Bookmark is typed.
-    return Bookmark.create({ user: this }) as Bookmark;
+    return Bookmark.create({ user: this });
   }
 
   @computed()
@@ -1428,14 +1421,7 @@ export default class User extends RestModel.extend(Evented) {
 
   pmPath(topic: Topic): string | undefined {
     const username = this.username_lower;
-    // TODO(typescript-pending): TopicDetails omits allowed-user/group fields; remove when TopicDetails is typed.
-    const details = topic.details as Omit<
-      Topic["details"],
-      "allowed_users" | "allowed_groups"
-    > & {
-      allowed_users?: TopicBasicUser[];
-      allowed_groups?: { id: number; name: string }[];
-    };
+    const details = topic.details;
     const allowedUsers = details?.allowed_users;
     const groups = details?.allowed_groups;
 
@@ -1823,12 +1809,9 @@ export default class User extends RestModel.extend(Evented) {
       }
 
       if (!isEmpty(json.user.featured_user_badge_ids)) {
-        // TODO(typescript-pending): UserBadge omits id and createFromJson's element type; remove when UserBadge is typed.
         const userBadgesMap: Record<number, UserBadge> = {};
-        (
-          UserBadge.createFromJson(json) as (UserBadge & { id: number })[]
-        ).forEach((userBadge) => {
-          userBadgesMap[userBadge.get("id") as number] = userBadge;
+        UserBadge.createFromJson(json).forEach((userBadge) => {
+          userBadgesMap[userBadge.get("id")] = userBadge;
         });
         json.user.featured_user_badges = json.user.featured_user_badge_ids!.map(
           (id) => userBadgesMap[id]
@@ -1836,10 +1819,7 @@ export default class User extends RestModel.extend(Evented) {
       }
 
       if (json.user.card_badge) {
-        // TODO(typescript-pending): Badge.create returns its base wrapper; remove when Badge is typed.
-        json.user.card_badge = Badge.create(
-          json.user.card_badge
-        ) as UserBadgeModel;
+        json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
       const timezone = json.user.timezone;
@@ -1998,14 +1978,12 @@ export default class User extends RestModel.extend(Evented) {
     }>(userPath(`${this.username_lower}/summary.json`)).then((json) => {
       const summary = json.user_summary;
       const topicMap: Record<number, Topic> = {};
-      const badgeMap: Record<number, UserBadgeModel> = {};
+      const badgeMap: Record<number, Badge> = {};
 
       json.topics.forEach(
         (t) => (topicMap[t.id!] = store.createRecord("topic", t))
       );
-      (Badge.createFromJson(json) as UserBadgeModel[]).forEach(
-        (b) => (badgeMap[b.id] = b)
-      );
+      Badge.createFromJson(json).forEach((b) => (badgeMap[b.id] = b));
 
       summary.topics = summary.topic_ids.map((id) => topicMap[id]);
 
