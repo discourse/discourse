@@ -31,8 +31,8 @@ type IsPromise<T> = 0 extends 1 & T
 
 type PromiseResult<T> = IsPromise<T> extends true ? Awaited<T> : never;
 
-class Widget extends RestCompatModel {
-  static override type = "widget";
+class Gadget extends RestCompatModel {
+  static override type = "gadget";
 
   static override munge(json: Record<string, unknown>) {
     return json;
@@ -49,91 +49,91 @@ class Widget extends RestCompatModel {
     super.beforeUpdate(props);
   }
 
-  override afterCreate(result: ExpectedSaveResult<Widget>) {
+  override afterCreate(result: ExpectedSaveResult<Gadget>) {
     super.afterCreate(result);
   }
 
-  override afterUpdate(result: ExpectedSaveResult<Widget>) {
+  override afterUpdate(result: ExpectedSaveResult<Gadget>) {
     super.afterUpdate(result);
   }
 }
 
 /* `create` returns the subclass and checks declared fields */
 
-expectTypeOf(Widget.create()).toEqualTypeOf<Widget>();
-expectTypeOf(Widget.create({ name: "x" })).toEqualTypeOf<Widget>();
+expectTypeOf(Gadget.create()).toEqualTypeOf<Gadget>();
+expectTypeOf(Gadget.create({ name: "x" })).toEqualTypeOf<Gadget>();
 /** Legacy callers pass payload keys the schema does not declare. */
-expectTypeOf(Widget.create({ name: "x", extra: 1 })).toEqualTypeOf<Widget>();
+expectTypeOf(Gadget.create({ name: "x", extra: 1 })).toEqualTypeOf<Gadget>();
 // @ts-expect-error a declared field keeps its type
-Widget.create({ name: 1 });
+Gadget.create({ name: 1 });
 
 declare const store: StoreService;
-Widget.create({ store, __type: "widget", __state: "new" });
+Gadget.create({ store, __type: "gadget", __state: "new" });
 // @ts-expect-error the store only assigns these states
-Widget.create({ __state: "saved" });
+Gadget.create({ __state: "saved" });
 
-declare const existing: Widget;
-expectTypeOf(Widget.create(existing)).toEqualTypeOf<Widget>();
+declare const existing: Gadget;
+expectTypeOf(Gadget.create(existing)).toEqualTypeOf<Gadget>();
 
 /* Store bookkeeping */
 
-declare const widget: Widget;
-expectTypeOf(widget.store).toEqualTypeOf<StoreService | undefined>();
-expectTypeOf(widget.__type).toEqualTypeOf<string | undefined>();
-expectTypeOf(widget.__state).toEqualTypeOf<"new" | "created" | undefined>();
-expectTypeOf(widget.isSaving).toEqualTypeOf<boolean>();
-expectTypeOf(widget.primaryKey).toEqualTypeOf<string>();
-expectTypeOf(widget.isNew).toEqualTypeOf<boolean>();
-expectTypeOf(widget.isCreated).toEqualTypeOf<boolean>();
-expectTypeOf(widget.__isLocalDraft).toEqualTypeOf<boolean>();
+declare const gadget: Gadget;
+expectTypeOf(gadget.store).toEqualTypeOf<StoreService | undefined>();
+expectTypeOf(gadget.__type).toEqualTypeOf<string | undefined>();
+expectTypeOf(gadget.__state).toEqualTypeOf<"new" | "created" | undefined>();
+expectTypeOf(gadget.isSaving).toEqualTypeOf<boolean>();
+expectTypeOf(gadget.primaryKey).toEqualTypeOf<string>();
+expectTypeOf(gadget.isNew).toEqualTypeOf<boolean>();
+expectTypeOf(gadget.isCreated).toEqualTypeOf<boolean>();
+expectTypeOf(gadget.__isLocalDraft).toEqualTypeOf<boolean>();
 
 /* Legacy `RestModel` surface */
 
-expectTypeOf(widget.get("name")).toEqualTypeOf<string>();
-expectTypeOf(widget.get("badge.name")).toEqualTypeOf<unknown>();
+expectTypeOf(gadget.get("name")).toEqualTypeOf<string>();
+expectTypeOf(gadget.get("badge.name")).toEqualTypeOf<unknown>();
 
-expectTypeOf(widget.set("name", "y")).toEqualTypeOf<string>();
+expectTypeOf(gadget.set("name", "y")).toEqualTypeOf<string>();
 // @ts-expect-error a declared field keeps its type
-widget.set("name", 1);
+gadget.set("name", 1);
 /** Drafts and wrappers accept keys the schema does not declare. */
-expectTypeOf(widget.set("undeclared", 5)).toEqualTypeOf<number>();
+expectTypeOf(gadget.set("undeclared", 5)).toEqualTypeOf<number>();
 
-expectTypeOf(widget.getProperties("id", "name")).toEqualTypeOf<
-  Pick<Widget, "id" | "name">
+expectTypeOf(gadget.getProperties("id", "name")).toEqualTypeOf<
+  Pick<Gadget, "id" | "name">
 >();
 
-expectTypeOf(widget.setProperties({ name: "y" })).toEqualTypeOf<{
+expectTypeOf(gadget.setProperties({ name: "y" })).toEqualTypeOf<{
   name: string;
 }>();
 // @ts-expect-error a declared field keeps its type
-widget.setProperties({ name: 1 });
+gadget.setProperties({ name: 1 });
 
-declare const saved: PromiseResult<ReturnType<Widget["save"]>>;
+declare const saved: PromiseResult<ReturnType<Gadget["save"]>>;
 expectTypeOf(saved).not.toBeAny();
 /** The legacy adapter path resolves to its result; the builder path to the record. */
-expectTypeOf(saved).toExtend<Widget | ExpectedSaveResult<Widget>>();
-expectTypeOf<Widget>().toExtend<typeof saved>();
-widget.save();
-widget.save({ name: "y" });
+expectTypeOf(saved).toExtend<Gadget | ExpectedSaveResult<Gadget>>();
+expectTypeOf<Gadget>().toExtend<typeof saved>();
+gadget.save();
+gadget.save({ name: "y" });
 
-declare const updated: PromiseResult<ReturnType<Widget["update"]>>;
+declare const updated: PromiseResult<ReturnType<Gadget["update"]>>;
 expectTypeOf(updated).not.toBeAny();
-expectTypeOf(updated).toExtend<ExpectedSaveResult<Widget>>();
-widget.update({ name: "y" });
+expectTypeOf(updated).toExtend<ExpectedSaveResult<Gadget>>();
+gadget.update({ name: "y" });
 
-expectTypeOf(widget.destroyRecord()).not.toBeAny();
-expectTypeOf(widget.destroy()).resolves.toEqualTypeOf<void>();
+expectTypeOf(gadget.destroyRecord()).not.toBeAny();
+expectTypeOf(gadget.destroy()).resolves.toEqualTypeOf<void>();
 
 /* Inherited factories return the subclass */
 
 /** Calls, not `ReturnType`: that resolves a `this`-generic static against the base. */
-const listing = Widget.findAll();
-expectTypeOf(listing).resolves.toExtend<Widget[]>();
+const listing = Gadget.findAll();
+expectTypeOf(listing).resolves.toExtend<Gadget[]>();
 declare const listed: PromiseResult<typeof listing>;
-expectTypeOf(listed[0]).toEqualTypeOf<Widget>();
-const finding = Widget.findById(1);
-expectTypeOf(finding).resolves.toEqualTypeOf<Widget>();
-expectTypeOf(Widget.createFromJson({})).toExtend<Widget | Widget[]>();
+expectTypeOf(listed[0]).toEqualTypeOf<Gadget>();
+const finding = Gadget.findById(1);
+expectTypeOf(finding).resolves.toEqualTypeOf<Gadget>();
+expectTypeOf(Gadget.createFromJson({})).toExtend<Gadget | Gadget[]>();
 
 /* A TopicDetails-shaped subclass: built from an id, resolving its own resource */
 
