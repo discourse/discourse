@@ -6,8 +6,8 @@ import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
+import CodeEditor from "discourse/components/code-editor";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -596,7 +596,6 @@ export default class BlogThemeEditor extends Component {
               {{! Keep the field name stable during teardown when switching tabs. }}
               {{#each (array this.currentTemplate) as |template|}}
                 <form.Field
-                  class="blog-theme-editor__template-field"
                   @format="full"
                   @name={{template.name}}
                   @showTitle={{false}}
@@ -605,18 +604,17 @@ export default class BlogThemeEditor extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <AceEditor
-                      aria-describedby={{field.describedBy}}
-                      aria-invalid={{if field.error "true"}}
+                    <CodeEditor
                       class="blog-theme-editor__template-control"
-                      id={{field.id}}
                       name={{field.name}}
-                      @content={{field.value}}
+                      @describedBy={{field.describedBy}}
                       @disabled={{field.disabled}}
-                      @editorId={{field.id}}
-                      @mode="html"
+                      @inputId={{field.id}}
+                      @invalid={{if field.error true}}
+                      @language="html"
                       @onChange={{field.set}}
                       @resizable={{true}}
+                      @value={{field.value}}
                     />
                   </field.Control>
                 </form.Field>
