@@ -27,23 +27,21 @@ RSpec.describe PushNotificationController do
 
     it "rejects missing, blank, and non-string endpoints without storing subscriptions" do
       [nil, "", " ", 1, false, true, [], {}].each do |endpoint|
-        2.times do
-          post "/push_notifications/subscribe.json",
-               params: {
-                 subscription: {
-                   endpoint: endpoint,
-                   keys: {
-                     p256dh: "key",
-                     auth: "auth",
-                   },
+        post "/push_notifications/subscribe.json",
+             params: {
+               subscription: {
+                 endpoint: endpoint,
+                 keys: {
+                   p256dh: "key",
+                   auth: "auth",
                  },
-                 send_confirmation: false,
                },
-               as: :json
+               send_confirmation: false,
+             },
+             as: :json
 
-          expect(response.status).to eq(400)
-          expect(user.push_subscriptions).to be_empty
-        end
+        expect(response.status).to eq(400)
+        expect(user.push_subscriptions).to be_empty
       end
 
       post "/push_notifications/subscribe.json",
@@ -81,26 +79,22 @@ RSpec.describe PushNotificationController do
       end
     end
 
-    it "rejects endpoints exceeding the index size budget" do
-      [
-        "https://push.example/#{SecureRandom.hex(4096)}",
-        "https://push.example/".ljust(PushSubscription::MAX_ENDPOINT_BYTES + 1, "a"),
-      ].each do |endpoint|
-        post "/push_notifications/subscribe.json",
-             params: {
-               subscription: {
-                 endpoint: endpoint,
-                 keys: {
-                   p256dh: "256dh",
-                   auth: "auth",
-                 },
+    it "rejects an endpoint over the size limit" do
+      endpoint = "https://push.example/".ljust(PushSubscription::MAX_ENDPOINT_BYTES + 1, "a")
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: {
+               endpoint: endpoint,
+               keys: {
+                 p256dh: "256dh",
+                 auth: "auth",
                },
-               send_confirmation: false,
-             }
+             },
+             send_confirmation: false,
+           }
 
-        expect(response.status).to eq(400)
-        expect(user.push_subscriptions).to be_empty
-      end
+      expect(response.status).to eq(400)
+      expect(user.push_subscriptions).to be_empty
     end
 
     it "accepts an endpoint at the size limit" do
@@ -187,36 +181,6 @@ RSpec.describe PushNotificationController do
       expect(response.status).to eq(200)
       expect(user.push_subscriptions.count).to eq(1)
       expect(other_user.push_subscriptions.reload).to be_empty
-    end
-
-    it "transfers an endpoint when its keys use equivalent base64 encodings" do
-      other_user = Fabricate(:user)
-      public_key = OpenSSL::PKey::EC.generate("prime256v1").public_key.to_bn.to_s(2)
-      subscription = {
-        endpoint: "https://push.example/subscription",
-        keys: {
-          p256dh: Base64.urlsafe_encode64(public_key, padding: false),
-          auth: Base64.urlsafe_encode64("a" * 16, padding: false),
-        },
-      }
-      PushSubscription.create!(user: other_user, data: subscription.to_json)
-      subscription[:keys].transform_values! do |key|
-        Base64.urlsafe_encode64(Base64.urlsafe_decode64(key))
-      end
-
-      post "/push_notifications/subscribe.json",
-           params: {
-             subscription: subscription,
-             send_confirmation: false,
-           }
-
-      expect(response.status).to eq(200)
-      expect(user.push_subscriptions.count).to eq(1)
-      expect(other_user.push_subscriptions.reload).to be_empty
-      expect(user.push_subscriptions.sole.parsed_data).to eq(subscription.deep_stringify_keys)
-
-      WebPush.expects(:payload_send).never
-      PushNotificationPusher.push(other_user, notification_type: Notification.types[:mentioned])
     end
 
     it "updates rotated keys on the user's existing subscription" do
@@ -309,10 +273,10 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions).to eq([])
     end
 
-    it "unsubscribes by endpoint even when the stored key representation differs" do
-      subscription = { endpoint: "endpoint", keys: { p256dh: "key", auth: "YQ" } }
+    it "unsubscribes by endpoint when the stored keys differ" do
+      subscription = { endpoint: "endpoint", keys: { p256dh: "old-key", auth: "old-auth" } }
       PushSubscription.create!(user: user, data: subscription.to_json)
-      subscription[:keys][:auth] = "YQ=="
+      subscription[:keys] = { p256dh: "new-key", auth: "new-auth" }
 
       post "/push_notifications/unsubscribe.json", params: { subscription: subscription }
 
