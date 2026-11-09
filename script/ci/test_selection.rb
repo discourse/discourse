@@ -43,7 +43,10 @@ module TestSelection
         elsif application_changes.any? ||
               (
                 input_changes.any? &&
-                  job.fetch("mapping_changes").any? { |path| !documentation?(path) }
+                  (
+                    mapping_reason(job) ||
+                      job.fetch("mapping_changes").any? { |path| !documentation?(path) }
+                  )
               ) ||
               (
                 shared_inputs.is_a?(Array) &&

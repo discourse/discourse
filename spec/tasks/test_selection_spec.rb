@@ -183,6 +183,36 @@ RSpec.describe TestSelection do
     )
   end
 
+  it "protects documentation readers without a compatible mapping" do
+    input["changes"] = ["README.md"]
+    mappings = [nil, input["jobs"]["backend"]["mapping"].merge("environment" => "previous")]
+
+    mappings.each do |mapping|
+      input["jobs"]["backend"]["mapping"] = mapping
+
+      result = described_class::Planner.new(input).plan
+
+      expect(result.fetch("jobs")).to eq(
+        "backend" => input["jobs"]["backend"]["inventory"],
+        "browser" => input["jobs"]["browser"]["inventory"],
+      )
+      expect(result.fetch("reasons")["spec/a_spec.rb"]).to eq(
+        ["backend: Missing or incompatible mapping"],
+      )
+    end
+  end
+
+  it "omits unrelated documentation only for environments with compatible evidence" do
+    input["changes"] = ["README.md"]
+
+    result = described_class::Planner.new(input).plan
+
+    expect(result.fetch("jobs")).to eq(
+      "backend" => [],
+      "browser" => input["jobs"]["browser"]["inventory"],
+    )
+  end
+
   it "runs the full inventory for main" do
     input["main"] = true
 
