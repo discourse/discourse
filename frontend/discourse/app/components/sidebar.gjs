@@ -82,10 +82,11 @@ export default class Sidebar extends Component {
     let shouldCollapseSidebar = false;
 
     const isClickWithinSidebar = event.composedPath().some((element) => {
-      if (
-        element?.className !== "sidebar-section-header-caret" &&
-        ["A", "BUTTON"].includes(element.nodeName)
-      ) {
+      if (element.hasAttribute?.("data-sidebar-keep-open")) {
+        return true;
+      }
+
+      if (["A", "BUTTON"].includes(element.nodeName)) {
         shouldCollapseSidebar = true;
         return true;
       }
