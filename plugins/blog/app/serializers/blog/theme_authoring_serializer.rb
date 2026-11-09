@@ -4,15 +4,21 @@ module ::Blog
   # Reference material for the theme editor: the built-in templates, the public
   # articles a preview can use, and the variables templates receive.
   class ThemeAuthoringSerializer < ApplicationSerializer
-    attributes :templates, :variables
-    has_many :articles, serializer: SampleArticleSerializer, embed: :objects
+    attributes :templates, :articles, :variables
 
     def templates
       TemplateRenderer::PAGES.to_h { |page| ["template_#{page}", TemplateRenderer.builtin(page)] }
     end
 
+    # Not a has_many: associations are skipped when the object is empty, which
+    # would drop the key instead of returning [].
     def articles
-      object
+      ActiveModel::ArraySerializer.new(
+        object,
+        each_serializer: SampleArticleSerializer,
+        scope:,
+        root: false,
+      ).as_json
     end
 
     def variables
