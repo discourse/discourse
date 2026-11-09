@@ -29,7 +29,6 @@ en:
       resize: "Resize code editor"
     code_editor:
       resize: "Resize code editor"
-      load_failed: "The code editor couldn't load. Reload the page to try again."
       tab_hint: "Press Escape, then Tab to move focus out of the editor."
       completions: "Completions"
       search:

@@ -48,16 +48,12 @@ import {
 } from "@codemirror/view";
 import {
   type CodeEditorExtensionBuilder,
-  type CodeEditorLanguageBuilder,
   loadCodeEditorLanguage,
 } from "discourse/lib/code-editor-languages";
-import domFromString from "discourse/lib/dom-from-string";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 import { buildCodeEditorParams } from "../editor-params.ts";
 import { defaultHighlighting } from "../highlight-style.js";
-
-export { loadExpressionUtils } from "../editor-params.ts";
 
 export type LineWarning = {
   /** The 1-based line to mark. */
@@ -186,8 +182,9 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       return placeholder(content as string);
     }
 
-    const [element] = domFromString(`<div>${content.toString()}</div>`);
-    return placeholder(element as HTMLElement);
+    const element = document.createElement("div");
+    element.innerHTML = content.toString();
+    return placeholder(element);
   }
 
   // Beside the language's own completions, not instead of them.
@@ -417,16 +414,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
   @action
   async updateLanguage() {
     const name = this.args.language;
-    let support: CodeEditorLanguageBuilder | null = null;
-    if (name) {
-      try {
-        support = await loadCodeEditorLanguage(name);
-      } catch (error) {
-        // The editor keeps working as plain text.
-        // eslint-disable-next-line no-console
-        console.error(error);
-      }
-    }
+    const support = name ? await loadCodeEditorLanguage(name) : null;
 
     // The editor can be torn down, or the language changed again, while the
     // module is loading.

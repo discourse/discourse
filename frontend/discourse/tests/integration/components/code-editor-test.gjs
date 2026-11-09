@@ -17,20 +17,13 @@ import { undo } from "@codemirror/commands";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import CodeEditor from "discourse/components/code-editor";
-import {
-  clearRegisteredCodeEditorLanguages,
-  registerCodeEditorLanguage,
-} from "discourse/lib/code-editor-languages";
-import loadCodemirror, {
-  overrideCodemirrorImportForTesting,
-} from "discourse/lib/load-codemirror";
+import loadCodemirror from "discourse/lib/load-codemirror";
 import { capabilities } from "discourse/services/capabilities";
 import { codeEditorView } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { dragPointer } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
-import I18n, { i18n } from "discourse-i18n";
+import I18n from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
 function pressWithModifier(element, key) {
@@ -415,63 +408,6 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.true(codeEditorView().hasFocus);
   });
 
-  test("shows an error when the editor fails to load", async function (assert) {
-    overrideCodemirrorImportForTesting(() =>
-      Promise.reject(new Error("chunk failed"))
-    );
-
-    try {
-      await render(<template><CodeEditor @value="" /></template>);
-
-      assert
-        .dom(".code-editor__error")
-        .hasText(i18n("code_editor.load_failed"));
-      assert.dom(".code-editor .spinner").doesNotExist();
-    } finally {
-      overrideCodemirrorImportForTesting(null);
-    }
-  });
-
-  test("stays a plain text editor when its language fails to load", async function (assert) {
-    registerCodeEditorLanguage("broken", () =>
-      Promise.reject(new Error("chunk failed"))
-    );
-    const consoleError = sinon.stub(console, "error");
-
-    try {
-      await render(
-        <template><CodeEditor @language="broken" @value="select 1" /></template>
-      );
-      await waitUntil(() => consoleError.called);
-
-      assert.dom(".cm-content").hasText("select 1");
-      assert.deepEqual(highlightedTokens(), []);
-    } finally {
-      consoleError.restore();
-      clearRegisteredCodeEditorLanguages();
-    }
-  });
-
-  test("hands expression helpers only to editors that ask for them", async function (assert) {
-    let params;
-    const capture = (cmParams) => {
-      params = cmParams;
-      return [];
-    };
-
-    await render(
-      <template><CodeEditor @extensions={{capture}} @value="" /></template>
-    );
-    await waitFor(".cm-editor");
-    assert.strictEqual(params.utils, undefined);
-
-    const Editor = await loadCodemirror({ expressionUtils: true });
-    await render(
-      <template><Editor @extensions={{capture}} @value="" /></template>
-    );
-    assert.strictEqual(typeof params.utils.expressionLanguage, "function");
-  });
-
   test("disabled rejects edits but keeps the document focusable", async function (assert) {
     const state = new (class {
       @tracked disabled = true;
@@ -593,21 +529,6 @@ module("Integration | Component | code-editor", function (hooks) {
     await openCompletions(codeEditorView());
 
     assert.true(completionLabels().includes("allow_title"));
-  });
-
-  test("accepts null language options", async function (assert) {
-    await render(
-      <template>
-        <CodeEditor
-          @language="sql"
-          @languageOptions={{null}}
-          @value="select 1"
-        />
-      </template>
-    );
-    await waitFor(".cm-content span[class]");
-
-    assert.true(highlightedTokens().includes("select"));
   });
 
   test("offers the completions a caller lists, beside the language's own", async function (assert) {

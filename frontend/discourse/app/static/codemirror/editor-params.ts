@@ -4,12 +4,7 @@ import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
 import * as lezerHighlight from "@lezer/highlight";
 import type { CodeEditorParams } from "discourse/lib/code-editor-languages";
-
-let expressionUtils: CodeEditorParams["utils"];
-
-export async function loadExpressionUtils() {
-  expressionUtils ??= (await import("./expression-utils.js")).expressionUtils;
-}
+import { expressionUtils } from "./expression-utils.js";
 
 export function buildCodeEditorParams(): CodeEditorParams {
   return {
