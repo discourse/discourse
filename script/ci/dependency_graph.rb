@@ -43,18 +43,17 @@ module TestSelection
       incoming = self.class.new(serialized: serialized, tests: tests)
       data = incoming.to_h
       indexes = data.fetch("paths").map { |path| intern(path) }
-      bits = indexes.map { |index| 1 << index }
       data
         .fetch("callers")
         .each_with_index do |encoded, index|
           target = indexes.fetch(index)
           combined = row_bits(@callers.fetch(target))
-          each_index(decode_row(encoded)) { |caller| combined |= bits.fetch(caller) }
+          each_index(decode_row(encoded)) { |caller| combined |= 1 << indexes.fetch(caller) }
           @callers[target] = combined
         end
       incoming.encoded_tests.each do |file, encoded|
         combined = row_bits(@tests.fetch(file, 0))
-        each_index(decode_row(encoded)) { |index| combined |= bits.fetch(index) }
+        each_index(decode_row(encoded)) { |index| combined |= 1 << indexes.fetch(index) }
         @tests[file] = combined
       end
       nil
@@ -140,15 +139,17 @@ module TestSelection
         return
       end
 
-      mask
-        .digits(1 << WORD_BITS)
-        .each_with_index do |word, position|
-          until word.zero?
-            first = word & -word
-            yield position * WORD_BITS + first.bit_length - 1
-            word ^= first
-          end
+      offset = 0
+      limit = mask.bit_length
+      while offset < limit
+        word = mask[offset, WORD_BITS]
+        until word.zero?
+          first = word & -word
+          yield offset + first.bit_length - 1
+          word ^= first
         end
+        offset += WORD_BITS
+      end
     end
 
     def encode_row(mask)

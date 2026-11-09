@@ -164,7 +164,11 @@ module TestExecution
     if job.fetch("runner") == "qunit"
       exact &&= records.all? { |record| record.fetch("registrations_complete") }
     end
-    non_example_failure = records.any? { |record| record.fetch("non_example_failure", false) }
+    description_errors =
+      records.flat_map { |record| record.fetch("description_errors", []) }.uniq.sort
+    non_example_failure =
+      description_errors.any? ||
+        records.any? { |record| record.fetch("non_example_failure", false) }
     report = {
       revision: plan.fetch("revision"),
       plan_sha256: Digest::SHA256.file(plan_path).hexdigest,
@@ -177,6 +181,7 @@ module TestExecution
       missing_roles: missing_roles,
       examples: records.sum { |record| record.fetch("examples", 0) },
       failures: records.flat_map { |record| record.fetch("failures", []) }.uniq.sort,
+      description_errors: description_errors,
       command: command,
       process_success: !!success,
       unreported_failure:

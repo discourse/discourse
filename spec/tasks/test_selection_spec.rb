@@ -1769,6 +1769,69 @@ RSpec.describe TestExecution do
     end
   end
 
+  it "rejects errors in generated descriptions even when RSpec reports a passing example" do
+    Dir.mktmpdir("execution-", "tmp") do |directory|
+      file = "#{directory}/description_error_spec.rb"
+      File.write(file, <<~RUBY)
+        RSpec::Matchers.define :complete_successfully do
+          match { true }
+          description { raise "Description failed" }
+        end
+        RSpec.describe "Selected" do
+          it { expect(true).to complete_successfully }
+        end
+      RUBY
+      revision = "b" * 40
+      plan = {
+        "version" => 2,
+        "mode" => "select",
+        "revision" => revision,
+        "files" => [file],
+        "jobs" => {
+          "backend" => [file],
+        },
+        "environments" => {
+          "backend" => "core",
+        },
+      }
+      catalog = {
+        "revision" => revision,
+        "jobs" => {
+          "backend" => {
+            "inventory" => [file],
+            "environment" => "core",
+            "runner" => "rspec",
+            "command" => %w[bundle exec rspec --options /dev/null],
+          },
+        },
+      }
+      File.write("#{directory}/plan.json", JSON.generate(plan))
+      File.write("#{directory}/catalog.json", JSON.generate(catalog))
+
+      _, _, status =
+        Open3.capture3(
+          isolated_rspec_environment.merge("GITHUB_SHA" => revision),
+          RbConfig.ruby,
+          "script/ci/test_execution.rb",
+          "#{directory}/plan.json",
+          "#{directory}/catalog.json",
+          "backend",
+          "#{directory}/report.json",
+        )
+      report = JSON.parse(File.read("#{directory}/report.json"))
+
+      expect(status.success?).to eq(false)
+      expect(report.slice("process_success", "examples", "failures", "exact", "success")).to eq(
+        "process_success" => true,
+        "examples" => 1,
+        "failures" => [],
+        "exact" => true,
+        "success" => false,
+      )
+      expect(report.fetch("description_errors")).to eq(["./#{file}[1:1]"])
+    end
+  end
+
   it "rejects omitted assignments and detects files added by a runner" do
     Dir.mktmpdir("execution-", "tmp") do |directory|
       files = %w[affected unrelated].map { |name| "#{directory}/#{name}_spec.rb" }

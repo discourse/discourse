@@ -59,6 +59,14 @@ RSpec.configure do |config|
   config.after(:suite) do
     observed =
       config.reporter.examples.reject { |example| example.execution_result.example_skipped? }
+    description_errors =
+      observed.filter_map do |example|
+        description = example.metadata.fetch(:description)
+        if description.start_with?("example at ") &&
+             description.include?("(Got an error when generating description from matcher:")
+          example.id
+        end
+      end
     compilation_trace.disable
     loading_traces.each(&:disable)
     $LOADED_FEATURES.each(&record_loaded)
@@ -93,6 +101,7 @@ RSpec.configure do |config|
             .sort,
         examples: observed.length,
         failures: config.reporter.failed_examples.map(&:id),
+        description_errors: description_errors,
         non_example_failure: RSpec.world.non_example_failure,
       ),
     )

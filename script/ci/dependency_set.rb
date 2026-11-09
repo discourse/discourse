@@ -47,15 +47,17 @@ module TestSelection
       end
 
       def each(bits)
-        bits
-          .digits(1 << WORD_BITS)
-          .each_with_index do |word, index|
-            until word.zero?
-              first = word & -word
-              yield @paths[index * WORD_BITS + first.bit_length - 1]
-              word ^= first
-            end
+        offset = 0
+        limit = bits.bit_length
+        while offset < limit
+          word = bits[offset, WORD_BITS]
+          until word.zero?
+            first = word & -word
+            yield @paths[offset + first.bit_length - 1]
+            word ^= first
           end
+          offset += WORD_BITS
+        end
       end
     end
 
