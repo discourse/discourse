@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class QuoteRewriter
+  # Keep in sync with QUOTATION_MARKS in bbcode-block.js
+  QUOTATION_MARKS = /["'«»“”‘’„‚‹›]/
+
   def initialize(user_id)
     @user_id = user_id
   end
@@ -71,12 +74,27 @@ class QuoteRewriter
   end
 
   def rewrite_raw_display_name(raw, old_display_name, new_display_name, username_to_remove: nil)
-    escaped_old_display_name = Regexp.escape(old_display_name)
+    old_display_names = quoted_display_names(old_display_name)
+    return raw if old_display_names.empty?
+
+    new_display_name = quotable_display_name(new_display_name)
     pattern =
-      /(?<pre>\[quote\s*=\s*["'']?)#{escaped_old_display_name}(?<post>\,[^\]]*username[^\]]*\])/i
+      /
+      (?<pre>
+        ^(?:[\t\x20>]|[*+\-][\t\x20]|\d+[.)][\t\x20])*
+        \[quote=(?<mark>["']?)
+      )
+      (?<name>#{Regexp.union(old_display_names).source})
+      (?<post>,[^\]\r\n]*username[^\]\r\n]*\])
+    /ix
 
     raw.gsub(pattern) do |quote|
-      match = pattern.match(quote)
+      match = Regexp.last_match
+      mark = match[:mark]
+      next quote if match[:name].include?(mark.presence || "]")
+      next quote if mark.empty? && match[:name].start_with?(QUOTATION_MARKS)
+      next quote if !match[:post].end_with?("#{mark}]")
+
       pre = match[:pre]
       post = match[:post]
 
@@ -88,7 +106,9 @@ class QuoteRewriter
         post = rewritten_post
       end
 
-      "#{pre}#{new_display_name}#{post}"
+      display_name = mark.empty? ? new_display_name.delete("]") : new_display_name
+
+      "#{pre}#{display_name}#{post}"
     end
   end
 
@@ -126,6 +146,16 @@ class QuoteRewriter
   private
 
   attr_reader :user_id
+
+  def quotable_display_name(display_name)
+    display_name.gsub(QUOTATION_MARKS, "").squish
+  end
+
+  def quoted_display_names(display_name)
+    [display_name, quotable_display_name(display_name)].uniq.reject do
+      it.blank? || it.match?(/[\r\n]/)
+    end
+  end
 
   def quotes_correct_user?(aside)
     Post.exists?(topic_id: aside["data-topic"], post_number: aside["data-post"], user_id: user_id)

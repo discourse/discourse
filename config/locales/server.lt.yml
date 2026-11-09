@@ -2683,6 +2683,12 @@ lt:
   design_wizard:
     palette_pairs:
       default: "Numatytasis"
+      neutral: "Neutrali"
+      shades_of_blue: "Mėlynos spalvos atspalviai"
+      summer: "Vasara"
+      grey_amber: "Pilkas Gintaras"
+      latte: "Latte"
+      dark_rose: "Tamsi rožė"
   wizard:
     title: "Discourse sąranka"
     step:

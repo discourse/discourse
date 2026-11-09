@@ -372,17 +372,12 @@ sv:
       back: "Tillbaka"
       next: "Nästa"
       sections:
-        theme: "Tema"
         fonts: "Typsnitt"
         homepage: "Hemsida"
-        search: "Sök"
       theme:
         selected: "Markerat"
-      colors:
-        light: "Ljust"
-        dark: "Mörkt"
       fonts:
-        heading_font: "Typsnitt för rubrik"
+        base_font: "Huvuddel"
       homepage:
         topics: "Ämnen"
         categories: "Kategorier"

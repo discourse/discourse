@@ -501,17 +501,19 @@ ro:
     design_wizard:
       back: "Înapoi"
       next: "Următorul"
+      steps:
+        homepage:
+          title: "Aspect și senzație"
       sections:
-        theme: "Temă"
         fonts: "Fonturi"
+        logo: "Logo"
         homepage: "Pagina principală"
-        search: "Caută"
-      colors:
-        light: "Luminos"
-        dark: "Întunecat"
       fonts:
-        base_font: "Font de bază"
-        heading_font: "Font titlu"
+        base_font: "Corp"
+        heading_font: "Titluri"
+      logo:
+        description: "Apare în partea de navigare de sus a site-ului, precum și în partea de sus a notificărilor prin email ale site-ului."
+        help_text: "Dimensiunea recomandată este de 600 x 80 pixeli."
       homepage:
         topics: "Discuții"
         categories: "Categorii"

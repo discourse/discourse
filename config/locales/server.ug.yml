@@ -4496,7 +4496,13 @@ ug:
   design_wizard:
     palette_pairs:
       default: "كۆڭۈلدىكى"
+      neutral: "بىتەرەپ"
+      shades_of_blue: "قېنىق كۆك"
+      summer: "ياز"
       dracula: "دراكۇلا"
+      grey_amber: "ساغۇچ كۈلرەڭ"
+      latte: "سۇس قوڭۇر"
+      dark_rose: "توق قىزىل"
   wizard:
     title: "Discourse تەڭشەك"
     step:

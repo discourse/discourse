@@ -149,6 +149,19 @@ pl_PL:
       theme_not_found: "Nie znaleziono motywu"
       theme_update_failed: "Nie udało się zaktualizować motywu"
       theme_update_required: "Podaj co najmniej jedno pole motywu do aktualizacji"
+      theme_confirmation_required: "Przed kontynuacją potwierdź tę operację motywu"
+      theme_name_mismatch: "Nazwa motywu uległa zmianie. Przeczytaj ponownie motyw przed kontynuacją."
+      theme_delete_failed: "Nie można usunąć motywu. Motywów domyślnych i systemowych nie można usunąć."
+      theme_install_source_required: "Podaj dokładnie jeden adres URL repozytorium lub archiwum motywów Base64"
+      theme_install_options_invalid: "Podaj tylko opcje, które mają zastosowanie do wybranego źródła motywu"
+      theme_repository_migrations_required: "Instalacje repozytorium uruchamiają migracje motywów. Nie wyłączaj migracji i sprawdź, czy można je uruchomić."
+      theme_component_migrations_required: "Importowanie komponentów motywu wymaga migracji. Włącz i potwierdź migracje lub wybierz opcję braku importu komponentów."
+      theme_not_remote: "Motyw nie ma repozytorium Git"
+      theme_remote_mismatch: "Zmieniono adres URL repozytorium. Przeczytaj ponownie motyw przed kontynuowaniem."
+      theme_setting_value_invalid: "Podaj wartość podczas ustawiania motywu i pomiń ją podczas przywracania"
+      theme_setting_type_invalid: "Ustawienie motywu %{name} wymaga wartości typu %{type}"
+      theme_setting_not_found: "Motyw nie deklaruje tego ustawienia"
+      theme_translation_not_found: "Motyw nie deklaruje jednego lub więcej kluczy tłumaczeniowych"
       topic_not_found: "Temat nie został znaleziony"
       topic_update_required: "Podaj co najmniej jedno pole tematu do aktualizacji"
       top_period_only_for_top_view: "Okres górny obsługiwany jest tylko przez widok górny"
@@ -378,6 +391,7 @@ pl_PL:
       resolve_group_membership_requires_group_list: "resolve_group_membership wymaga typu listy: grupa"
       resolve_group_membership_requires_groups_property: "Argumentu resolve_group_membership można używać tylko z typem: grupy w schematach obiektów. Nieprawidłowa właściwość: %{property}"
       objects:
+        invalid_objects: "Wartość musi być tablicą obiektów."
         humanize_required: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być obecny."
         required: "musi zostać podana"
         humanize_invalid_type: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być typu %{type}."
@@ -3068,6 +3082,7 @@ pl_PL:
     push_notifications_icon: "Ikona odznaki pojawiająca się w rogu powiadomień. Zalecany jest monochromyczny PNG 96×96 z przezroczystym tłem."
     enable_desktop_push_notifications: "Aktywuj powiadomienia push dla interfejsu pulpitu. Ta funkcja umożliwia wysyłanie alertów w czasie rzeczywistym z witryny bezpośrednio na pulpit, zwiększając zaangażowanie i zapewniając użytkownikom zawsze aktualne informacje. Jednak skuteczność tej funkcji zależy od obsługi powiadomień push przez przeglądarkę."
     push_notification_time_window_mins: "Poczekaj (n) minut przed wysłaniem powiadomienia push. Pomaga zapobiegać wysyłaniu powiadomień push do aktywnego użytkownika online."
+    push_notification_trusted_hosts: "Usługi push, których subskrypcje są dostarczane natychmiast i tolerują tymczasowe przerwy w działaniu. Subdomeny są wliczone w cenę. Subskrypcje na innych hostach są ograniczone do dwóch na użytkownika, dostarczane pojedynczo w całej witrynie i usuwane po dwóch nieudanych lub powolnych dostawach."
     push_notification_localization_max_wait_mins: "Najdłuższy czas (w minutach) oczekiwania na powiadomienie push o nowym wpisie podczas tłumaczenia na język odbiorcy. Ustaw na 0, aby wysłać bez oczekiwania."
     base_font: "Podstawowa czcionka używana dla większości tekstu w witrynie. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--font-family`."
     heading_font: "Czcionka używana w nagłówkach witryny. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--heading-font-family`."
@@ -6141,7 +6156,7 @@ pl_PL:
   design_wizard:
     themes:
       concord:
-        description: "Zastępuje pasek boczny pojedynczą listą kanałów składającą się z kategorii, kanałów czatu oraz pokoi audio/wideo na żywo."
+        description: "Układ skoncentrowany na czacie, z jedną listą kategorii, kanałów czatu i pokoi rozmów."
     errors:
       palette_unavailable: "Jedna z wybranych palet kolorów nie jest dostępna dla wybranego motywu."
       site_settings_update_failed: "Nie udało się zaktualizować ustawień witryny."
@@ -6149,7 +6164,13 @@ pl_PL:
       default: "Domyślna"
       wcag: "WCAG"
       solarized: "Solaryzowana"
+      neutral: "Neutralne"
+      shades_of_blue: "Odcienie niebieskiego"
+      summer: "Lato"
       dracula: "Dracula"
+      grey_amber: "Szary bursztyn"
+      latte: "Latte"
+      dark_rose: "Ciemna róża"
   wizard:
     title: "Instalacja Discourse"
     step:

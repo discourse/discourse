@@ -429,19 +429,17 @@ vi:
       back: "Quay lại"
       next: "Kế tiếp"
       sections:
-        theme: "Giao diện"
         fonts: "Phông chữ"
+        logo: "Logo"
         homepage: "Trang chủ"
-        welcome_banner: "Banner chào mừng"
-        search: "Tìm"
       theme:
         selected: "Đã chọn"
-      colors:
-        light: "Sáng"
-        dark: "Tối"
       fonts:
-        base_font: "Phông chữ cơ bản"
-        heading_font: "Phông chữ tiêu đề"
+        base_font: "Thân"
+        heading_font: "Tiêu đề"
+      logo:
+        description: "Xuất hiện trên thanh điều hướng chính của trang web, cũng như ở phần đầu của thông báo email."
+        help_text: "Kích thước đề xuất là 600x80 pixel."
       homepage:
         topics: "Các chủ đề"
         categories: "Danh mục"

@@ -509,6 +509,37 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_move_topic_to_category?" do
+    it "allows a moderator to move a topic to a category they can see" do
+      expect(Guardian.new(moderator).can_move_topic_to_category?(category)).to eq(true)
+    end
+
+    it "allows a moderator to move a topic to a category they can see that requires topic review" do
+      category.require_topic_approval = true
+      category.save!
+
+      expect(Guardian.new(moderator).can_move_topic_to_category?(category)).to eq(true)
+    end
+
+    it "does not allow a moderator to move a topic to a category they cannot see" do
+      expect(Guardian.new(moderator).can_move_topic_to_category?(private_category)).to eq(false)
+    end
+
+    it "allows a moderator to move a topic to a category they have been given access to" do
+      group.add(moderator)
+
+      expect(Guardian.new(moderator).can_move_topic_to_category?(private_category)).to eq(true)
+    end
+
+    it "allows an admin to move a topic to a category they cannot see" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+      private_category.require_topic_approval = true
+      private_category.save!
+
+      expect(Guardian.new(admin).can_move_topic_to_category?(private_category)).to eq(true)
+    end
+  end
+
   describe "#filter_allowed_categories" do
     it "allows admin access to categories without explicit access" do
       guardian = Guardian.new(admin)

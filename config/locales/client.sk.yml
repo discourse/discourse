@@ -405,18 +405,20 @@ sk:
     design_wizard:
       back: "Späť"
       next: "Ďalej"
+      steps:
+        homepage:
+          title: "Vzhľad & pocit"
       sections:
-        theme: "Téma"
         fonts: "Fonty"
-        search: "Hľadať"
+        logo: "Logo"
       theme:
         selected: "Vybrané"
-      colors:
-        light: "Svetlá"
-        dark: "Tmavá"
       fonts:
-        base_font: "Základné písmo"
-        heading_font: "Písmo nadpisu"
+        base_font: "Telo"
+        heading_font: "Nadpisy"
+      logo:
+        description: "Zobrazuje sa v hornej časti navigácie stránky, ako aj v hornej časti e-mailových oznámení stránky."
+        help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
       homepage:
         topics: "Témy"
         categories: "Kategórie"

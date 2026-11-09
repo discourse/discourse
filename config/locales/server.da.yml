@@ -3147,6 +3147,10 @@ da:
   design_wizard:
     palette_pairs:
       default: "Standard"
+      neutral: "Neutral"
+      shades_of_blue: "Blå nuancer"
+      summer: "Sommer"
+      latte: "Latte"
   wizard:
     title: "Discourse Opsætning"
     step:

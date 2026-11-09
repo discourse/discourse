@@ -6,54 +6,291 @@
 
 zh_CN:
   admin_js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            blog_submit: 提交博客修订
+            blog_approve: 批准博客修订
+            blog_schedule: 安排博客发布
+            blog_review_create: 创建草稿审阅链接
+            blog_review_revoke: 撤销草稿审阅链接
+            blog_theme_save: 保存博客主题草稿
+            blog_theme_activate: 激活博客主题
+            blog_theme_delete: 删除博客主题
+      site_settings:
+        categories:
+          blog: 博客
     blog:
       admin:
+        title: 博客
+        go_to_editor: 前往编辑器
+        open_blog: 打开博客
+        safe_mode: 无需自定义代码即可打开
+        identity: 博客标识
+        blog_title: 博客名称
+        tagline: 标语
+        accent: 强调色
+        paper: 纸张颜色
+        ink: 墨水颜色
+        about: 关于页面
         authoring_design: 设计
+        authoring_sections: 主题编辑器部分
+        template_builtin_state: 内置模板。可自定义修改。
+        template_custom_state: 自定义模板。恢复默认设置将放弃您的更改。
         overridden: 自定义
+        customize_template: 自定义此模板
+        restore_default: 恢复默认设置
+        restore_confirm: 放弃此模板覆盖并使用内置模板？保存主题以保留此更改。
+        variable_reference: 变量和示例
+        find_variable: 找到一个变量
+        no_variables: 没有变量符合该搜索条件。
         insert: 插入
+        sample_article: 已发表文章示例
+        no_published_articles: 没有已发表的文章
         array_value: 列表
+        trusted_html: 可信的 HTML
+        escaped_text: 转义值
+        layout_content: 渲染后的页面和讨论内容。仅在布局的主元素内使用一次。
+        insert_hint: 示例仅使用公开内容。插入操作会将 Liquid 代码片段添加到此模板。普通值会被转义；受信任的 HTML 片段会以标记的形式呈现。
+        retry_reference: 重新加载创作参考
+        working_preview_hint: 无需保存或激活即可预览未保存的更改。更改页面或示例文章会更新预览。
+        preview_article_unavailable: 文章预览需要先发布文章。
+        preview_page: 预览页面
         preview_home: 首页
         preview_archive: 归档
+        preview_article: 文章
+        preview_size: 预览尺寸
         desktop: 桌面设备
         mobile: 移动设备
+        open_working_preview: 在新标签页中打开预览
+        template_layout: 网站布局
+        template_index: 首页和存档
+        template_article: 文章
+        template_about: 关于页面
+        template_not_found: 未找到页面
+        code_warning: "只添加您信任的代码：它以博客源的权限运行，并且可以公开下载。它绝不会在社区的认证预览版中运行。"
+        css: 自定义 CSS
+        css_description: 纯 CSS 文件，最大 65,536 字节。在基础样式表之后加载。
+        js: 自定义 JavaScript
+        js_description: 纯 JavaScript，最多 65,536 字节。脚本标签不会被解析——要加载另一个脚本，请添加一个脚本元素（document.createElement("script")）。
+        save: 保存身份
+        saved: 博客身份已保存。重新加载博客即可查看更改。
+        identity_tab: 身份
+        identity_description: 所有博客主题共享的名称、简介和“关于”内容。
+        themes_index_description: 选择要编辑的主题。草稿更改在您激活之前将保持私密状态。
+        thumbnail:
+          journal: 日记
+          headline: 保持好奇心。
+          excerpt: 关于创作、保持好奇心和在日常生活中寻找意义的笔记。
+          palette: 主题调色板
         back_to_themes: 返回主题
+        editor_description: 编辑此主题，保存草稿，然后预览或激活它。
+        preview_short: 预览草稿
         new_theme_short: 新主题
+        git_source: Git 源
+        no_themes: 尚未保存任何主题
+        no_themes_description: 您可以根据现有设计创建主题，也可以从 Git 导入主题。
         themes: 主题
+        themes_description: 保留多个设计稿并进行迭代，而无需更改实时博客的显示内容。读者看到的是最后激活的快照，而不是您的草稿编辑或 Git 更新。
         theme_name: 主题名称
         edit: 编辑
         activate: 激活
         preview: 预览
+        theme_actions: 主题操作
+        local_edits_badge: 本地编辑
+        new_theme_name: 新博客主题
+        new_theme: 来自 active design 的新主题
         import: 导入
+        import_description: "从 Git 仓库或 ZIP 文件导入主题。导入操作会创建新的草稿，而不会更改当前主题。"
+        import_source: 从
+        import_file: ZIP文件
+        theme_file: 主题文件
+        choose_theme_file: 选择 ZIP 文件
+        import_file_description: "请选择导出的博客主题 ZIP 文件（最大 2 MB）。不支持导出 Discourse 论坛主题。"
         export: 导出
+        export_description: "将上次保存的版本下载为 ZIP 文件。导出前请保存所有更改。"
+        import_git: Git 仓库
+        git_description: "导入一个包含 blog-theme.json（版本、名称、强调色、纸张颜色、墨水颜色）、可选的 blog.css 和 blog.js 的公共 HTTPS 仓库，以及（对于版本 2）位于根目录的可选 templates/*.liquid 覆盖文件。文件为纯文本文件，无需构建步骤。导入操作仅创建草稿。"
+        repository: 公共 Git 仓库 URL
+        branch: 分支（留空则使用默认值）
+        active_theme: "当前设计： %{name} · 修订版 %{revision}"
         active: 有效
+        revision: 修订草案
+        save_draft: 保存草稿
+        draft_saved: 主题草稿已保存。实时博客内容保持不变。
+        save_before_activate: 请在激活此草稿之前保存更改。
+        activate_theme: 激活已保存的草稿
+        activate_confirm: "启用 %{name}？这将替换读者看到的界面设计。您保存的其他主题仍然可用。"
+        activated: 主题已激活。实时博客现在使用此已保存的版本。
+        pull_git: 从 Git 拉取最新版本
+        pull_confirm: 拉取最新提交？这将替换已保存的草稿，包括本地编辑。当前设计不会改变。
+        local_edits: 此草稿自上次从 Git 导入以来已进行本地修改。
+        delete_theme: 删除主题
+        delete_confirm: "删除 %{name} 及其已保存的草稿？此操作无法撤销。"
   js:
     blog:
+      homepage_option: 博客
       panel:
+        aria_label: 博客发布
         badge:
           draft: 草稿
+          live: 发布
+          changes_pending: 待定变更
+          scheduled: 已计划的
+          unpublished: 未发表
+        headline:
+          draft: 博客上还没写呢
+          live: 在线博客
+          changes_pending: 在线文章已过期
+          scheduled: "发布 %{date}"
+          unpublished: 已从博客中删除
+        will_publish_to: "将发布到 %{url}"
+        last_updated: "最后更新于 %{age}"
+        published_as: "发布于 %{date}"
+        view_live: 查看在线
+        edits_since:
+          other: "此后有 %{count} 次编辑"
+        scheduled_revision: "经 %{user} 批准"
+        scheduled_notice: 除非您重新安排日程，否则您现在所做的修改将不被包含在内。
+        last_published: "最后发布于 %{date}"
+        unpublished_notice: 公众讨论仍将继续进行。
         preview: 预览
+        preview_scheduled: 预览计划版本
+        share_for_review: 创建预览链接
+        share_for_review_hint: 收集对草案的私人反馈意见
+        publish_changes: 发布更改
+        publish_now: 立即发布
+        more_options: 更多发布选项
+        schedule: 计划…
+        schedule_hint: 选择日期和时间
+        schedule_title: 计划发布
+        schedule_notice: 文章将按当前版本发布。除非您重新安排发布时间，否则后续的修改将不包含在内。
+        schedule_time: 发布于
+        schedule_time_hint: 使用您所在的时区。请选择至少提前一分钟的时间。
+        schedule_submit: 计划
         submit: 提交审批
+        submit_hint: 先请另一位作者签字确认。
+        needs_approval: 需要批准
+        unpublish_hint: 从博客中删除；讨论内容仍将公开。
+        cancel_schedule: 取消计划
+        published: 已发布——文章已在博客上发布。
+        published_closed_links:
+          other: 已发布——该文章已在博客上发布。其预览链接 %{count} 已关闭。
+        publish_confirm: "现在发布“%{title}”到博客吗？只会复制文章内容；此主题及其回复将保持私密状态。"
+        publish_correction_confirm: "将现有文章替换为当前草稿？文章将保留其 URL 和公开讨论。"
+        changes_title: 博客发生了哪些变化？
+        changed: "已更改： %{fields}"
         change:
           title: 标题
           body: 正文
+          path: 路径
+          excerpt: 摘录
+          featured: 精选标签
+          published_at: 发布日期
+        show_diff: 显示差异
+        hide_diff: 隐藏差异
+        diff_error: 更改幅度过大，无法以差异比较的形式显示。请改用预览功能。
+        settings: 文章设置
+        settings_hint: 路径、摘录、日期、特色
+        feedback:
+          none: 目前还没有私人反馈
+          show: 显示反馈
+          hide: 隐藏反馈
+          show_older:
+            other: 显示 %{count} 之前的回复
+          hide_older: 隐藏之前的回复
+          no_new: 自上次发布以来，没有收到任何新的反馈。
+          manage_links: 查看链接
+        discussion:
+          live: 在线博客
+          not_live: 不在博客上
+          intro: 这是公开讨论区，在此回复的内容将出现在博客上。
+          intro_not_live: 博客上没有这个话题。
+          no_working_copy: 私下编辑，在不触及本主题的情况下，在私人工作副本中准备更改。
+          edit_privately: 私下编辑
       review:
+        anonymous: 匿名审阅者
+        page_title: 审阅草稿
+        expires: "过期时间 %{date}"
+        manage: 分享以供审阅和反馈
+        discard_metadata: 放弃未保存的发布设置并分享已保存的文章？
+        intro: 任何拥有链接的人都可以阅读草稿并留下私人反馈。
         label: 标签
+        label_placeholder: 例如，编辑会议
         create: 创建链接
+        untitled: 无标题审核链接
         copy: 复制
+        copied: 审核链接已复制
+        copy_failed: "您的浏览器阻止了复制操作。请复制此链接： %{url}"
         open: 已打开
+        links: 审核链接
         status:
           active: 有效
           expired: 已过期
           revoked: 已撤销
+          published: 发布后关闭
           inactive: 停用
+        expired_on: "已过期 %{date}"
+        revoked_on: "已撤销 %{date}"
         closed_on: "%{date}关闭"
         revoke: 撤销
+        revoke_confirm: 撤销此评价链接？撤销后，它将立即停止接受新的评价和反馈。现有反馈将保持私密状态，并在此处查看。
+        feedback_count: "阅读反馈（%{count}）"
+        no_links: 尚无审核链接。
+        unverified: 仅限编辑查看。姓名和邮箱地址未经核实。
+        no_feedback: 暂无反馈
+        unavailable: 此审核链接已过期、已被撤销或不再可用。
+        published_title: 该草稿已发布
+        published_body: 文章发布后，审核链接就关闭了。
+        read_article: 阅读文章
+        reader_badge: "草稿版本 %{version} 供审核"
+        leave_feedback: 留下反馈
+        feedback_privacy: 您的反馈仅供文章编辑查看。无需注册账号。您的姓名和邮箱地址为选填项；如果您希望编辑与您联系，请添加邮箱地址。
         message: 反馈
+        name: 您的名字
+        email: 您的邮箱
+        send_feedback: 发送私人反馈
+        thanks: 谢谢。您的反馈已私下保存，仅供编辑查看。
+      article_summary:
+        from_blog: "来自 %{blog} 博客"
+        read: 阅读文章
+        expand: 在此处展开文章
+        collapse: 收起文章
+      editor_search_hint: 按标题或文章路径搜索
+      editor_no_results: 没有匹配的文章
+      editor_no_results_hint: 尝试其他搜索或状态筛选条件，或者新建一个草稿。
+      editor_title: 博客编辑器
+      editor_description: 草稿在您发布之前始终保持私密状态。您可以编辑文章以发布、安排发布时间或进行更正。
       editor_table:
+        article: 文章
         edit: 编辑
         status: 状态
+        published: 已发布
         replies: 回复
+        edits_pending: 待编辑
+        edits_need_approval: 修改需要审批
+        more_actions: 更多操作
+        preview_changes: 预览更改
+        view_on_blog: 在博客上查看
+      new_draft: 新草稿
+      settings: 配置博客设置
+      all: 所有文章
       drafts: 草稿
+      published: 已发布
+      visit_blog: 访问博客
+      public_discussion: 公开讨论
+      not_published: 博客上没有
       preview: 预览
+      load_more: 加载更多
+      unpublish_confirm: 删除此博客文章？该主题及其回复仍将在社区内公开。已存在于信息流和搜索引擎中的副本无法撤回。
+      path: 文章路径
+      path_hint: 路径以斜杠 (/) 开头，并使用小写字母、数字、连字符和可选的路径段。更改后，旧路径会自动重定向。
+      excerpt: 摘录
+      excerpt_hint: 文章卡片和搜索预览的简短介绍。留空则生成文章摘录。
+      date: 发布日期
+      date_hint: 留空则使用首次发布时间。对于导入的文章，请选择过去的日期。日期采用 UTC 时间。
+      featured: 首页专题
+      save: 保存设置
       unpublish: 取消发布
       appearance_link: 外观

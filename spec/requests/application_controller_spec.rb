@@ -1786,16 +1786,14 @@ RSpec.describe ApplicationController do
 
   describe "vary header" do
     it "includes Vary:Accept on all requests where format is not explicit" do
-      # Rails default behaviour - include Vary:Accept when Accept is supplied
+      # Rails varies on both headers used for format negotiation
       get "/latest", headers: { "Accept" => "application/json" }
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
-      # Discourse additional behaviour (see lib/vary_header.rb)
-      # Include Vary:Accept even when Accept is not supplied
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
       # Not needed, because the path 'format' parameter overrides the Accept header
       get "/latest.json"

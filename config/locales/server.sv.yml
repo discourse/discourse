@@ -3763,7 +3763,13 @@ sv:
   design_wizard:
     palette_pairs:
       default: "Standard"
+      neutral: "Neutralt"
+      shades_of_blue: "Nyanser av blått"
+      summer: "Sommar"
       dracula: "Dracula"
+      grey_amber: "Grå bärnsten"
+      latte: "Latte"
+      dark_rose: "Mörk ros"
   wizard:
     title: "Discourse-inställningar"
     step:

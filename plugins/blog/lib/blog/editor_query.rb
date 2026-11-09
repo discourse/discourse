@@ -45,7 +45,7 @@ module ::Blog
               .where.not(draft_topic_id: visible_sources)
               .select(:topic_id),
         )
-      topics = topics.where(user_id: guardian.user.id) unless Configuration.editor?(guardian.user)
+      topics = topics.where(user_id: guardian.user.id) unless guardian.is_blog_editor?
 
       live_ids = Publication.publicly_visible.select("blog_publications.topic_id")
       topics =

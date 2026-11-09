@@ -279,9 +279,8 @@ lv:
     design_wizard:
       back: "Atpakaļ"
       next: "Nākamais"
-      sections:
-        theme: "Tēma"
-        search: "Meklēt"
+      fonts:
+        base_font: "Saturs"
       homepage:
         topics: "Tēmas"
         categories: "Sadaļas"

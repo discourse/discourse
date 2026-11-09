@@ -345,10 +345,11 @@ class CategoriesController < ApplicationController
   end
 
   def set_notifications
-    category_id = params[:category_id].to_i
+    category = Category.find(params[:category_id].to_i)
+    guardian.ensure_can_see!(category)
     notification_level = params[:notification_level].to_i
 
-    CategoryUser.set_notification_level_for_category(current_user, notification_level, category_id)
+    CategoryUser.set_notification_level_for_category(current_user, notification_level, category.id)
     render json:
              success_json.merge(
                {

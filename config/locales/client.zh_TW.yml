@@ -510,7 +510,6 @@ zh_TW:
       dismiss: "略過設定"
       select_theme:
         title: "自訂你的網站"
-        description: "選擇顏色、字型以及網站的版面配置。"
         action: "查看選項"
         completed: "變更選項"
         show_light_screenshot: "顯示淺色模式截圖"
@@ -542,10 +541,6 @@ zh_TW:
       next: "下一步"
       launch: "設計精靈"
       launch_description: "請再次仔細檢視您網站的主題、配色、字型和版面配置。"
-      intro:
-        description: "此精靈將引導您設定網站的主題、顏色、字型、首頁版面配置、歡迎橫幅以及搜尋樣式。"
-        autosave: "每個步驟都會隨操作即時儲存，因此成員可以立即看到變更。關閉時，您可以還原所有變更。"
-        start: "開始使用"
       close:
         message: "您已儲存網站設計的一些變更。要保留這些變更嗎？"
         message_without_revert: "您已儲存網站設計的一些變更，無法在此處還原。"
@@ -553,54 +548,26 @@ zh_TW:
         revert: "還原變更"
         continue_editing: "繼續編輯"
       sections:
-        theme: "佈景主題"
-        colors: "預設色彩"
         fonts: "字型"
+        logo: "標誌"
         homepage: "首頁"
-        welcome_banner: "歡迎橫幅"
-        search: "搜索"
       theme:
         selected: "已選"
         applying: "套用中…"
         custom_theme_notice: "你的網站目前使用 %{name} 作為預設佈景主題。請選擇下方的佈景主題進行預覽。儲存後將取代目前的佈景主題。"
-      colors:
-        light: "淺色"
-        dark: "深色"
-        dark_only: "%{name} 僅有深色模式"
-        both_modes: "每個調色盤皆包含相對應的淺色與深色模式"
-        user_selectable: "讓會員切換調色盤"
-        user_selectable_description: "在選單中顯示這些可供會員選擇的調色盤"
       fonts:
-        base_font: "基礎字型"
-        heading_font: "標題字型"
+        base_font: "內文"
+      logo:
+        description: "出現在網站的頂部導覽，以及網站的電子郵件通知頂部。"
+        help_text: "建議尺寸為 600 x 80 像素。"
       homepage:
         topics: "主題"
         categories: "分類"
-        topic_page_type: "主題頁面類型"
-        topic_pages:
-          latest: "依最近活動時間排序主題，最新在前。"
-          new: "最近幾天建立的主題，最新在前。"
-          hot: "目前熱門的主題，綜合整體人氣與近期互動情況。"
         category_page_style: "分類頁面樣式"
         styles:
           boxes: "方塊"
           with_topics: "含主題的分類"
           only: "僅分類"
-      welcome_banner:
-        enable: "套用中…"
-        enable_description: "向訪客顯示您的網站名稱和搜尋框"
-        location: "橫幅位置"
-        locations:
-          below_site_header: "網站頁首下方"
-          above_topic_content: "主題列表上方"
-      search:
-        experiences:
-          search_icon:
-            title: "搜尋圖示"
-            description: "標題列中的放大鏡圖示可開啟搜尋功能。"
-          search_field:
-            title: "搜尋欄位"
-            description: "頁首處設有完整的搜尋欄，且始終顯示。"
     about:
       edit: "編輯此頁"
       simple_title: "關於"

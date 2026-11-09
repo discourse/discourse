@@ -870,6 +870,28 @@ RSpec.describe User do
       expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
     end
 
+    it "keeps reviewables for posts the user flagged first" do
+      other_flagger = Fabricate(:user)
+      reviewable =
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        user.id,
+        other_flagger.id,
+      )
+    end
+
     it "does not allow non moderators to delete all posts" do
       invalid_guardian = Guardian.new(Fabricate(:user))
 
@@ -3994,6 +4016,44 @@ RSpec.describe User do
       result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
+    end
+  end
+
+  describe ".whisperers" do
+    subject(:whisperers) { User.whisperers.where(id: candidates) }
+
+    fab!(:group)
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:member, :user)
+    fab!(:regular_user, :user)
+
+    let(:candidates) { [admin, moderator, member, regular_user] }
+
+    before { group.add(member) }
+
+    context "when a group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = group.id.to_s }
+
+      it "returns administrators and members of the whisper groups" do
+        expect(whisperers).to contain_exactly(admin, member)
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
+    end
+
+    context "when no group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = "" }
+
+      it "returns no user" do
+        expect(whisperers).to be_empty
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
     end
   end
 

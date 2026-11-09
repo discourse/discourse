@@ -60,6 +60,8 @@ class DsaStatementOfRecord < ActiveRecord::Base
       VIOLENCE
     ].map { |category| "STATEMENT_CATEGORY_#{category}" }.freeze
 
+  TERMS_VIOLATION_CATEGORY = "STATEMENT_CATEGORY_OTHER_VIOLATION_TC"
+
   class << self
     def community_rules
       JSON

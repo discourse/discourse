@@ -581,19 +581,17 @@ ru:
       back: "Назад"
       next: "Далее"
       sections:
-        theme: "тема"
         fonts: "Шрифты"
+        logo: "Логотип"
         homepage: "Главная страница"
-        welcome_banner: "Приветственный баннер"
-        search: "Искать"
       theme:
         selected: "Выбрано"
-      colors:
-        light: "Светлый"
-        dark: "Темная"
       fonts:
-        base_font: "Базовый шрифт"
-        heading_font: "Шрифт заголовка"
+        base_font: "Body"
+        heading_font: "Заголовки"
+      logo:
+        description: "Отображается в верхней части навигации сайта, а также в верхней части уведомлений по электронной почте сайта."
+        help_text: "Рекомендуемый размер — 600 x 80 пикселей."
       homepage:
         topics: "Новые темы"
         categories: "Категории"

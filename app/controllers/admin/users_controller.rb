@@ -317,6 +317,7 @@ class Admin::UsersController < Admin::StaffController
         @user.primary_group_id = primary_group_id if group.user_ids.include?(@user.id)
       end
     else
+      guardian.ensure_can_change_primary_group!(@user, @user.primary_group) if @user.primary_group
       @user.primary_group_id = nil
     end
 

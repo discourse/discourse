@@ -66,7 +66,11 @@ class Admin::GroupsController < Admin::StaffController
 
     users = User.where(username: group_params[:usernames].split(","))
     users.each { |user| guardian.ensure_can_change_primary_group!(user, group) }
-    users.update_all(primary_group_id: params[:primary] == "true" ? group.id : nil)
+    if params[:primary] == "true"
+      users.update_all(primary_group_id: group.id)
+    else
+      users.where(primary_group_id: group.id).update_all(primary_group_id: nil)
+    end
 
     render json: success_json
   end

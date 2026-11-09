@@ -552,20 +552,21 @@ fr:
       title: "Personnalisez votre site"
       back: "Retour"
       next: "Suivant"
+      steps:
+        theme:
+          title: "Choisissez un thème"
       sections:
-        theme: "Thème"
         fonts: "Polices"
+        logo: "Logo"
         homepage: "Page d'accueil"
-        welcome_banner: "Bannière de bienvenue"
-        search: "Recherche"
       theme:
         selected: "Sélectionné"
-      colors:
-        light: "Clair"
-        dark: "Sombre"
       fonts:
-        base_font: "Police de base"
-        heading_font: "Police de titre"
+        base_font: "Corps"
+        heading_font: "Titres"
+      logo:
+        description: "Apparaît dans la barre de navigation supérieure du site, ainsi qu'en haut des notifications par e-mail du site."
+        help_text: "La taille recommandée est de 600 x 80 pixels."
       homepage:
         topics: "Sujets"
         categories: "Catégories"

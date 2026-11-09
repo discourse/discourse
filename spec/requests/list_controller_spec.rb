@@ -1192,6 +1192,58 @@ RSpec.describe ListController do
     end
   end
 
+  describe "category deleted topics" do
+    fab!(:category)
+    fab!(:child_category) { Fabricate(:category, parent_category: category) }
+    fab!(:moderated_child) { Fabricate(:category, parent_category: category) }
+    fab!(:deleted_parent_topic) { Fabricate(:topic, category:, deleted_at: 1.day.ago) }
+    fab!(:deleted_child_topic) do
+      Fabricate(:topic, category: child_category, deleted_at: 1.day.ago)
+    end
+    fab!(:deleted_moderated_child_topic) do
+      Fabricate(:topic, category: moderated_child, deleted_at: 1.day.ago)
+    end
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+      group.add(user)
+      Fabricate(:category_moderation_group, category:, group:)
+      Fabricate(:category_moderation_group, category: moderated_child, group:)
+    end
+
+    it "limits deleted results to explicitly moderated categories" do
+      sign_in(user)
+
+      get "/c/#{category.slug}/#{category.id}/l/latest.json", params: { status: "deleted" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(deleted_child_topic.title)
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] },
+      ).to contain_exactly(deleted_parent_topic.id, deleted_moderated_child_topic.id)
+    end
+
+    it "preserves global deleted-topic access" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups =
+        "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
+
+      [admin, user].each do |viewer|
+        sign_in(viewer)
+
+        get "/c/#{category.slug}/#{category.id}/l/latest.json", params: { status: "deleted" }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] },
+        ).to contain_exactly(
+          deleted_parent_topic.id,
+          deleted_child_topic.id,
+          deleted_moderated_child_topic.id,
+        )
+      end
+    end
+  end
+
   describe "category" do
     context "when in a category" do
       let(:category) { Fabricate(:category_with_definition) }
@@ -2127,6 +2179,18 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
+    end
+
+    it "keeps anonymous repeated negated filters from amplifying SQL" do
+      query = Array.new(8, "-status:closed").join(" ")
+
+      sql_queries = track_sql_queries { get "/filter.json", params: { q: query } }
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id)
+      expect(sql_queries.sum(&:bytesize)).to be < 50_000
     end
 
     it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do

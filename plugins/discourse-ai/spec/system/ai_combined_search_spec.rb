@@ -458,22 +458,24 @@ describe "AI combined search" do
       end
 
       it "leaves a reader on the answer they chose, even when it finds nothing" do
-        visit "/"
-        wait_for_discoveries_channel
-        ask(query)
-        expect_tab("topics")
-        select_tab("ask")
+        DiscourseAi::Decisions.with_canned_answers(intent: "lookup") do
+          visit "/"
+          wait_for_discoveries_channel
+          ask(query)
+          expect_tab("topics")
+          select_tab("ask")
 
-        publish(
-          done: true,
-          phase: "complete",
-          answerable: false,
-          ai_discover_reply: "",
-          sources: [],
-        )
+          publish(
+            done: true,
+            phase: "complete",
+            answerable: false,
+            ai_discover_reply: "",
+            sources: [],
+          )
 
-        expect(page).to have_css(".ai-search-answer__empty")
-        expect_tab("ask")
+          expect(page).to have_css(".ai-search-answer__empty")
+          expect_tab("ask")
+        end
       end
 
       it "keeps rewritten keyword results that arrive while the menu waits for the model" do
@@ -757,6 +759,7 @@ describe "AI combined search" do
       wait_for_discoveries_channel
       open_header_search
       ask(query, input: "#icon-search-input")
+      expect_tab("context")
       expect(page).to have_css(".search-menu .search-result-topic", text: inside.title)
 
       find(".search-menu .search-result-topic a", text: inside.title).click

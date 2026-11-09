@@ -4804,7 +4804,13 @@ he:
   design_wizard:
     palette_pairs:
       default: "ברירת מחדל"
+      neutral: "נייטרלי"
+      shades_of_blue: "גווני כחול"
+      summer: "קיץ"
       dracula: "דרקולה"
+      grey_amber: "ענבר אפור"
+      latte: "לאטה"
+      dark_rose: "ורד כהה"
   wizard:
     title: "הקמת Discourse"
     step:
