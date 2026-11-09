@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
@@ -415,7 +416,7 @@ export default class EditCategoryTabsController extends Controller {
       // A reload is needed when site texts change
       if (typeWasAdded || siteTextsChanged) {
         if (this.model.id) {
-          window.location.reload();
+          reload();
         } else {
           DiscourseURL.redirectAbsolute(getEditCategoryUrl(updatedModel));
         }

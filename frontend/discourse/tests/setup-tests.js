@@ -179,6 +179,26 @@ function reportMemoryUsageAfterTests() {
   });
 }
 
+function failOnPageNavigation() {
+  let running = true;
+  QUnit.done(() => (running = false));
+
+  window.navigation?.addEventListener("navigate", (event) => {
+    if (!running || event.destination.sameDocument) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const message = `The test page tried to navigate to ${event.destination.url}`;
+    if (QUnit.config.current) {
+      QUnit.config.current.assert.pushResult({ result: false, message });
+    } else {
+      throw new Error(message);
+    }
+  });
+}
+
 function writeSummaryLine(message) {
   // eslint-disable-next-line no-console
   console.log(`\n${message}\n`);
@@ -220,6 +240,10 @@ export default async function setupTests(config) {
 
   const headlessTestem =
     window.Testem && navigator.userAgent.includes("HeadlessChrome");
+
+  // A navigation restarts the run, and under ember-exam the rest of its module goes unreported
+  failOnPageNavigation();
+
   const preexistingObserved = new Set([
     ...ASYNC_OBSERVERS.keys(),
     ...SYNC_OBSERVERS.keys(),
@@ -374,6 +398,8 @@ export default async function setupTests(config) {
     removeCookie("forced_color_mode", { path: "/" });
     removeCookie("color_scheme_id", { path: "/" });
     removeCookie("dark_scheme_id", { path: "/" });
+    // A later save would navigate the test page to this destination
+    removeCookie("destination_url");
     enableLoadMoreObserver();
     enableVirtualization();
 
