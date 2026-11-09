@@ -51,7 +51,23 @@ module Onebox
           event_image_width: image[:width],
           event_image_height: image[:height],
         }.compact,
+        **event_schedule(json["eventSchedule"]),
       }
+    end
+
+    def event_schedule(value)
+      value = value.first if value.is_a?(Array)
+      return {} if !value.is_a?(Hash) || !value["repeatFrequency"].is_a?(String)
+
+      {
+        event_repeat_frequency: value["repeatFrequency"],
+        # Days are DayOfWeek URLs like https://schema.org/Monday, though bare names are common
+        event_repeat_by_day:
+          Array.wrap(value["byDay"]).map { it.to_s.split("/").last }.join(",").presence,
+        event_repeat_by_month_week: value["byMonthWeek"]&.to_s,
+        event_repeat_until: value["endDate"]&.to_s,
+        event_schedule_timezone: value["scheduleTimezone"]&.to_s,
+      }.compact
     end
 
     # Schema.org allows a URL, an ImageObject, or a list of either

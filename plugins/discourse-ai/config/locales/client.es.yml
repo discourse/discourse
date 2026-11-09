@@ -471,6 +471,8 @@ es:
         short_title: "Spam"
         title: "Configurar el manejo de spam"
         select_llm: "Seleccionar LLM"
+        no_llm_selected: "Ninguna"
+        no_decision_model_selected: "Ninguna"
         select_agent: "Seleccionar agente"
         custom_instructions: "Instrucciones personalizadas"
         custom_instructions_help: "Instrucciones personalizadas específicas de tu sitio para ayudar a guiar a la IA en la identificación de spam, por ejemplo: «Sé más agresivo a la hora de escanear las publicaciones que no estén en inglés»."
@@ -1177,6 +1179,7 @@ es:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizado"
         provider_fields:
@@ -1289,10 +1292,7 @@ es:
           scroll_to_bottom: "Desplazar hacia abajo"
           editing_post: "Editando publicación"
       sentiments:
-        dashboard:
-          title: "Sentimiento"
         sidebar:
-          overview: "Visión general de sentimiento"
           analysis: "Análisis de sentimiento"
         sentiment_analysis:
           share_chart: "Copiar enlace al gráfico"

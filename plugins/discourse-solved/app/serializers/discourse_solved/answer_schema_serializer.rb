@@ -9,8 +9,7 @@ class DiscourseSolved::AnswerSchemaSerializer < ApplicationSerializer
   end
 
   def text
-    object.excerpt(nil, keep_onebox_body: true).presence ||
-      object.excerpt(nil, keep_onebox_body: true, keep_quotes: true)
+    DiscourseSolved::SchemaUtils.post_text(object)
   end
 
   def upvoteCount

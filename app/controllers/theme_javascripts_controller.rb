@@ -106,7 +106,7 @@ class ThemeJavascriptsController < ApplicationController
       raise Discourse::NotFound if content.nil?
 
       FileUtils.mkdir_p(File.dirname(cache_file))
-      File.write(cache_file, content)
+      Discourse::Utils.atomic_write_file(cache_file, content)
     end
   end
 

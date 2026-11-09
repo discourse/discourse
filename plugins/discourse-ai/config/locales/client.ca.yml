@@ -117,6 +117,8 @@ ca:
             other: "%{count} publicacions"
       spam:
         short_title: "Brossa"
+        no_llm_selected: "Cap"
+        no_decision_model_selected: "Cap"
         last_seven_days: "Els darrers 7 dies"
         enable: "Activa"
         test_modal:

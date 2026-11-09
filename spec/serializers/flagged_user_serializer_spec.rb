@@ -52,4 +52,51 @@ RSpec.describe FlaggedUserSerializer do
       expect(json[:ip_address]).to be_nil
     end
   end
+
+  describe "penalty reasons" do
+    fab!(:user)
+
+    before do
+      UserSilencer.silence(flagged_user, moderator, reason: "Silenced for posting links")
+      UserSuspender.new(
+        flagged_user,
+        suspended_till: 5.days.from_now,
+        reason: "Suspended for harassment",
+        by_user: moderator,
+      ).suspend
+    end
+
+    def serialize_for(viewer)
+      FlaggedUserSerializer.new(flagged_user, scope: Guardian.new(viewer), root: false).as_json
+    end
+
+    it "includes reasons for regular users when they are not hidden" do
+      expect(serialize_for(user)).to include(
+        silence_reason: flagged_user.silence_reason,
+        suspend_reason: flagged_user.suspend_reason,
+      )
+    end
+
+    it "includes hidden reasons only for staff and the penalised user" do
+      SiteSetting.hide_silencing_reasons = true
+      SiteSetting.hide_suspension_reasons = true
+      reasons = {
+        silence_reason: flagged_user.silence_reason,
+        suspend_reason: flagged_user.suspend_reason,
+      }
+
+      expect(serialize_for(user)).not_to include(:silence_reason, :suspend_reason)
+      expect(serialize_for(moderator)).to include(reasons)
+      expect(serialize_for(flagged_user)).to include(reasons)
+    end
+
+    it "hides the suspension reason without hiding the silence reason" do
+      SiteSetting.hide_suspension_reasons = true
+
+      json = serialize_for(user)
+
+      expect(json).to include(silence_reason: flagged_user.silence_reason)
+      expect(json).not_to include(:suspend_reason)
+    end
+  end
 end

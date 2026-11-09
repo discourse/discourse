@@ -159,6 +159,8 @@ module PostGuardian
 
     return true if is_admin?
 
+    post.topic ||= Topic.with_deleted.find_by(id: post.topic_id) if post.topic_id
+
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
@@ -465,7 +467,7 @@ module PostGuardian
     end
 
     is_pm = !!topic&.private_message?
-    return false if is_pm && topic.subtype != "system_message" && !can_see_topic?(topic)
+    return false if is_pm && !can_see_topic?(topic)
     return false if !is_pm && SpamRule::AutoSilence.prevent_posting?(@user)
 
     !topic || !topic.category ||

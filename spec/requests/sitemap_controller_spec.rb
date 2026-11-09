@@ -84,6 +84,22 @@ RSpec.describe SitemapController do
         "#{Discourse.base_url}/t/#{new_topic.slug}/#{new_topic.id}",
       )
     end
+
+    it "omits topics a sitemap_topics_query modifier drops" do
+      topic = Fabricate(:topic)
+      excluded_topic = Fabricate(:topic)
+      plugin = Plugin::Instance.new
+      modifier = Proc.new { |query| query.where.not(id: excluded_topic.id) }
+      DiscoursePluginRegistry.register_modifier(plugin, :sitemap_topics_query, &modifier)
+      Sitemap.regenerate_sitemaps
+
+      get "/sitemap_1.xml"
+
+      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
+      expect(locs).to eq(["#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}"])
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :sitemap_topics_query, &modifier)
+    end
   end
 
   describe "#recent" do

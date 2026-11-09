@@ -30,28 +30,6 @@ You would then refer to the definition of the callback function `this._findMessa
 
 ## List of AppEvent Triggers
 
-### ace
-
-#### ace:resize [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/admin/components/admin-theme-editor.gjs#L118)
-
-No arguments passed to this event.
-
-<details><summary>Detailed List</summary>
-
-##### /frontend/discourse/admin/components/admin-theme-editor.gjs#118 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/admin/components/admin-theme-editor.gjs#L118)
-
-No arguments passed to this event.
-
-##### /plugins/discourse-data-explorer/assets/javascripts/discourse/controllers/admin-plugins/explorer/index.js#119 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-data-explorer/assets/javascripts/discourse/controllers/admin-plugins/explorer/index.js#L119)
-
-No arguments passed to this event.
-
-##### /plugins/discourse-data-explorer/assets/javascripts/discourse/controllers/admin-plugins/explorer/queries/details.js#137 [:link:](https://github.com/discourse/discourse/blob/main/plugins/discourse-data-explorer/assets/javascripts/discourse/controllers/admin-plugins/explorer/queries/details.js#L137)
-
-No arguments passed to this event.
-
-</details>
-
 ### bookmarks
 
 #### bookmarks:changed [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/bookmark-list.gjs#L54)
@@ -392,7 +370,7 @@ No arguments passed to this event.
 | 1        | match       | variable | True           | -           |
 | 2        | replacement | variable | True           | -           |
 
-#### composer:reply-reloaded [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1011)
+#### composer:reply-reloaded [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1822)
 
 | Position | Argument | Type | Always Present | Description |
 | -------- | -------- | ---- | -------------- | ----------- |
@@ -400,13 +378,13 @@ No arguments passed to this event.
 
 <details><summary>Detailed List</summary>
 
-##### /frontend/discourse/app/models/composer.js#1011 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1011)
+##### /frontend/discourse/app/models/composer.ts#1822 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1822)
 
 | Position | Argument | Type | Description |
 | -------- | -------- | ---- | ----------- |
 | 1        | this     | this | -           |
 
-##### /frontend/discourse/app/models/composer.js#1030 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1030)
+##### /frontend/discourse/app/models/composer.ts#1841 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1841)
 
 | Position | Argument | Type | Description |
 | -------- | -------- | ---- | ----------- |
@@ -1183,7 +1161,7 @@ No arguments passed to this event.
 
 ### post
 
-#### post:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1276)
+#### post:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1499)
 
 | Position | Argument    | Type     | Always Present | Description |
 | -------- | ----------- | -------- | -------------- | ----------- |
@@ -1331,7 +1309,7 @@ No arguments passed to this event.
 
 ### topic
 
-#### topic:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1278)
+#### topic:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1501)
 
 | Position | Argument    | Type     | Always Present | Description |
 | -------- | ----------- | -------- | -------------- | ----------- |

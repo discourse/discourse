@@ -309,6 +309,8 @@ lt:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"
         select_llm: "Pasirinkite teisės magistro laipsnį (LLM)"
+        no_llm_selected: "Nėra"
+        no_decision_model_selected: "Nėra"
         custom_instructions: "Individualūs nurodymai"
         custom_instructions_help: "Jūsų svetainei pritaikytos instrukcijos, padedančios dirbtiniam intelektui atpažinti šlamštą, pvz., „Aktyviau nuskaitykite įrašus ne anglų kalba“."
         last_seven_days: "Paskutinės 7 dienos"

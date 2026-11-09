@@ -133,8 +133,6 @@ module ::DiscourseEvents
         reference_message_id: message.id,
       )
 
-      return if !SiteSetting.chat_pinned_messages
-
       Chat::PinMessage.call(
         guardian:,
         params: {
@@ -320,6 +318,7 @@ after_initialize do
   require_relative "lib/discourse_events/events/excerpt"
   require_relative "lib/discourse_events/events/finder"
   require_relative "lib/discourse_events/events/onebox_data"
+  require_relative "lib/discourse_events/events/onebox_occurrence"
   require_relative "lib/discourse_events/events/parser"
   require_relative "lib/discourse_events/events/validator"
   require_relative "lib/discourse_events/events/export_csv_controller_extension"
@@ -457,6 +456,17 @@ after_initialize do
           {}
         end
       end
+  end
+
+  add_to_serializer(
+    :post,
+    :event_onebox_occurrences,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled && event_onebox_occurrences.present?
+    end,
+  ) do
+    @event_onebox_occurrences ||=
+      DiscourseEvents::Events::OneboxOccurrence.for_cooked(object.cooked)
   end
 
   sync_event_from_post = ->(post) do
@@ -833,6 +843,10 @@ after_initialize do
 
   on(:reduce_cooked) do |fragment, post|
     if SiteSetting.discourse_post_event_enabled
+      fragment
+        .css(".discourse-event-onebox")
+        .each { |node| DiscourseEvents::Events::OneboxOccurrence.new(node).apply! }
+
       fragment
         .css(".discourse-post-event")
         .each do |event_node|

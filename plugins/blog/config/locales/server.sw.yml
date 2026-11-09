@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  blog:
+    home: Nyumbani
+    posted_by: Imechapishwa na
+    permalink: Kiungo cha mtandao cha Mda Mrefu
+    time_ago: "%{time} iliyopita"
+    archive: Nyaraka
+    about: Kuhusu
+    community: Jumuiya
+    preview: Kihakiki
+    search: Tafuta
+    replies:
+      one: "%{count} jibu"
+      other: "%{count} majibu"

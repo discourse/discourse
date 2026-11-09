@@ -294,7 +294,6 @@ expectTypeOf(site.topicCountDesc).toEqualTypeOf<string[]>();
 expectTypeOf(site.isReadOnly).toEqualTypeOf<boolean | undefined>();
 expectTypeOf(site.desktopView).toEqualTypeOf<boolean>();
 expectTypeOf(site.mobileView).toEqualTypeOf<boolean>();
-expectTypeOf(site.isMobileDevice).toEqualTypeOf<boolean>();
 expectTypeOf(site.categoriesByCount).toEqualTypeOf<Category[]>();
 expectTypeOf(site.categoriesById).toEqualTypeOf<Map<number, Category>>();
 expectTypeOf(site.categoriesByParentId).toEqualTypeOf<

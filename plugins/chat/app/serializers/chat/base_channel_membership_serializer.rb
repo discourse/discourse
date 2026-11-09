@@ -25,11 +25,11 @@ module Chat
     end
 
     def include_has_unseen_pins?
-      SiteSetting.chat_pinned_messages && scope&.authenticated?
+      scope&.authenticated?
     end
 
     def include_last_viewed_pins_at?
-      SiteSetting.chat_pinned_messages && scope&.authenticated?
+      scope&.authenticated?
     end
   end
 end

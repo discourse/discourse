@@ -17,7 +17,7 @@ RSpec.describe "Illegal content notices" do
   before do
     SiteSetting.post_menu_hidden_items = ""
     SiteSetting.contact_email = "legal@example.invalid"
-    SiteSetting.dsa_reporting_enabled = true
+    enable_dsa_reporting
     SiteSetting.disable_emails = "no"
     SiteSetting.allow_all_users_to_flag_illegal_content = false
     Jobs.run_immediately!

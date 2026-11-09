@@ -47,7 +47,13 @@ class UserSearch
 
     if @can_review
       if SiteSetting.enable_category_group_moderation?
-        category_moderator_group_ids = CategoryModerationGroup.distinct.pluck(:group_id)
+        category_moderator_group_ids =
+          Group
+            .where(id: CategoryModerationGroup.select(:group_id))
+            .visible_groups(@searching_user)
+            .members_visible_groups(@searching_user)
+            .unscope(:order)
+            .select(:id)
         users =
           users.left_joins(:group_users).where(
             "users.admin OR users.moderator OR group_users.group_id IN (?)",

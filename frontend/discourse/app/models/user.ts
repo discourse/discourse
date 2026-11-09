@@ -45,7 +45,7 @@ import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
-import Group from "discourse/models/group";
+import Group, { type GroupFields } from "discourse/models/group";
 import RestModel, {
   type RestModelAttrs,
   type RestModelClass,
@@ -140,27 +140,23 @@ export interface UserOption {
   watched_precedence_over_muted?: boolean;
 }
 
-/** Visible memberships can be plain current-user entries or hydrated profile groups.
- * TODO(typescript-pending): Group omits its serializer fields; use its canonical fields when Group is typed.
- */
-export interface UserGroup {
-  id: number;
-  name: string;
-  automatic?: boolean;
-  has_messages?: boolean;
+/** Visible memberships can be plain current-user entries or hydrated profile groups. */
+export interface UserGroup
+  extends
+    Required<Pick<GroupFields, "id" | "name">>,
+    Pick<
+      GroupFields,
+      | "automatic"
+      | "has_messages"
+      | "title"
+      | "flair_url"
+      | "flair_bg_color"
+      | "flair_color"
+      | "can_admin_group"
+      | "is_group_owner"
+      | "group_user"
+    > {
   owner?: true;
-  title?: string | null;
-  flair_url?: string | null;
-  flair_bg_color?: string | null;
-  flair_color?: string | null;
-  can_admin_group?: boolean;
-  is_group_owner?: boolean;
-  group_user?: {
-    user_id: number;
-    group_id: number;
-    notification_level: number;
-    owner?: boolean;
-  };
 }
 
 /** TODO(typescript-pending): Badge's field forwarders and factories lack declared fields; remove when Badge is typed. */
@@ -442,7 +438,7 @@ export interface UserDetailsResponse {
     stats?:
       | (Omit<Partial<UserActionStat>, "count"> & { count?: number | string })[]
       | UserActionStat[];
-    groups?: RestModelAttrs<Group>[];
+    groups?: (RestModelAttrs<Group> & Pick<UserGroup, "id" | "name">)[];
     group_users?: UserGroup["group_user"][];
     invited_by?: UserCreateAttrs | User | null;
     card_badge?: RestPayload | UserBadgeModel | null;
@@ -1744,10 +1740,9 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   async loadUserAction(id: number) {
-    // TODO(typescript-pending): ajax has no endpoint response contracts; remove when user-action responses are typed.
-    const result = (await ajax(`/user_actions/${id}.json`)) as {
+    const result = await ajax<{
       user_action?: UserActionFields & RestPayload;
-    };
+    }>(`/user_actions/${id}.json`);
 
     if (!result?.user_action) {
       return;
@@ -1811,8 +1806,10 @@ export default class User extends RestModel.extend(Evented) {
 
       if (Object.hasOwn(json.user, "groups")) {
         json.user.visibleGroups = json.user.groups!.map((groupJson, index) => {
-          // TODO(typescript-pending): Group omits group_user and serializer fields; remove when Group is typed.
-          const group = Group.create(groupJson) as Group & UserGroup;
+          // TODO(typescript-pending): RestModel.create drops required input fields;
+          // remove when its factory retains profile group identity.
+          const group = Group.create(groupJson) as Group &
+            Pick<UserGroup, "id" | "name">;
           group.group_user = json.user.group_users?.[index];
           return group;
         });
@@ -1993,60 +1990,57 @@ export default class User extends RestModel.extend(Evented) {
       "service:store"
     ) as StoreService;
 
-    return ajax(userPath(`${this.username_lower}/summary.json`)).then(
-      // TODO(typescript-pending): ajax has no endpoint response contracts; remove when summary responses are typed.
-      (json: {
-        topics: RestModelAttrs<Topic>[];
-        user_summary: Omit<UserSummary, "badges"> & {
-          badges?: { badge_id: number; count: number }[];
-        };
-      }) => {
-        const summary = json.user_summary;
-        const topicMap: Record<number, Topic> = {};
-        const badgeMap: Record<number, UserBadgeModel> = {};
+    return ajax<{
+      topics: RestModelAttrs<Topic>[];
+      user_summary: Omit<UserSummary, "badges"> & {
+        badges?: { badge_id: number; count: number }[];
+      };
+    }>(userPath(`${this.username_lower}/summary.json`)).then((json) => {
+      const summary = json.user_summary;
+      const topicMap: Record<number, Topic> = {};
+      const badgeMap: Record<number, UserBadgeModel> = {};
 
-        json.topics.forEach(
-          (t) => (topicMap[t.id!] = store.createRecord("topic", t))
-        );
-        (Badge.createFromJson(json) as UserBadgeModel[]).forEach(
-          (b) => (badgeMap[b.id] = b)
-        );
+      json.topics.forEach(
+        (t) => (topicMap[t.id!] = store.createRecord("topic", t))
+      );
+      (Badge.createFromJson(json) as UserBadgeModel[]).forEach(
+        (b) => (badgeMap[b.id] = b)
+      );
 
-        summary.topics = summary.topic_ids.map((id) => topicMap[id]);
+      summary.topics = summary.topic_ids.map((id) => topicMap[id]);
 
-        summary.replies.forEach((r) => {
-          r.topic = topicMap[r.topic_id];
-          r.url = r.topic.urlForPostNumber(r.post_number);
-          r.createdAt = new Date(r.created_at);
+      summary.replies.forEach((r) => {
+        r.topic = topicMap[r.topic_id];
+        r.url = r.topic.urlForPostNumber(r.post_number);
+        r.createdAt = new Date(r.created_at);
+      });
+
+      summary.links.forEach((l) => {
+        l.topic = topicMap[l.topic_id];
+        l.post_url = l.topic.urlForPostNumber(l.post_number);
+      });
+
+      if (summary.badges) {
+        (summary as UserSummary).badges = summary.badges.map((ub) => {
+          const badge = badgeMap[ub.badge_id];
+          badge.count = ub.count;
+          return badge;
         });
-
-        summary.links.forEach((l) => {
-          l.topic = topicMap[l.topic_id];
-          l.post_url = l.topic.urlForPostNumber(l.post_number);
-        });
-
-        if (summary.badges) {
-          (summary as UserSummary).badges = summary.badges.map((ub) => {
-            const badge = badgeMap[ub.badge_id];
-            badge.count = ub.count;
-            return badge;
-          });
-        }
-
-        if (summary.top_categories) {
-          summary.top_categories.forEach((c) => {
-            if (c.parent_category_id) {
-              c.parentCategory = Category.findById(c.parent_category_id);
-            }
-          });
-        }
-
-        return summary as UserSummary;
       }
-    );
+
+      if (summary.top_categories) {
+        summary.top_categories.forEach((c) => {
+          if (c.parent_category_id) {
+            c.parentCategory = Category.findById(c.parent_category_id);
+          }
+        });
+      }
+
+      return summary as UserSummary;
+    });
   }
 
-  canManageGroup(group: Group & UserGroup) {
+  canManageGroup(group: Group) {
     return group.get("can_admin_group") || group.get("is_group_owner");
   }
 
@@ -2060,18 +2054,6 @@ export default class User extends RestModel.extend(Evented) {
     } else {
       removeCookie(TEXT_SIZE_COOKIE_NAME, { path: "/" });
     }
-  }
-
-  resolvedTimezone() {
-    deprecated(
-      "user.resolvedTimezone() has been deprecated. Use user.user_option.timezone instead",
-      {
-        id: "discourse.user.resolved-timezone",
-        since: "2.9.0.beta12",
-      }
-    );
-
-    return this.user_option!.timezone;
   }
 
   calculateMutedIds(
@@ -2376,23 +2358,5 @@ class UserStatusManager {
   }
 }
 
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-
-  Object.defineProperty(Discourse, "User", {
-    get() {
-      if (!warned) {
-        deprecated("Import the User class instead of using Discourse.User", {
-          since: "2.4.0",
-          id: "discourse.global.user",
-        });
-        warned = true;
-      }
-      return User;
-    },
-  });
-}
-
-/** Legacy globals supplied by the application, without introducing module imports. */
+/** Legacy global supplied by the application, without introducing a module import. */
 declare const moment: typeof import("moment");
-declare const Discourse: object | undefined;

@@ -279,18 +279,40 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # cooks `\\@bob` as a mention. A counter that read the escape as a
     # rejection counted one occurrence too few here and handed the token to the
     # code-span look-alike — the post came back with its code span rewritten.
-    [
-      ["mention", "\\@bob", "`@bob`", :mentions, "bob"],
-      ["hashtag", "\\#support", "`#support`", :hashtags, "support"],
-      ["custom emoji", "\\:parrot:", "`:parrot:`", :emojis, "parrot"],
-    ].each do |kind, escaped, shielded, rows, name|
-      it "rewrites an escaped #{kind} and leaves the code-span copy alone" do
-        output = extract("#{escaped} and #{shielded}")
+    context "with escaped tokens beside code spans" do
+      shared_examples "rewriting escaped tokens beside code spans" do |raw:, code:, collection:, expected_name:|
+        it "rewrites the prose token and preserves its code span" do
+          output = extract(raw)
 
-        expect(buffer.public_send(rows).map { |row| row[:name] }).to eq([name])
-        placeholder = buffer.public_send(rows).first[:placeholder]
-        expect(output).to eq("\\#{placeholder} and #{shielded}")
-        expect(refusals).to be_empty
+          expect(buffer.public_send(collection).map { |row| row[:name] }).to eq([expected_name])
+          placeholder = buffer.public_send(collection).first[:placeholder]
+          expect(output).to eq("\\#{placeholder} and #{code}")
+          expect(refusals).to be_empty
+        end
+      end
+
+      context "with an escaped mention" do
+        include_examples "rewriting escaped tokens beside code spans",
+                         raw: "\\@bob and `@bob`",
+                         code: "`@bob`",
+                         collection: :mentions,
+                         expected_name: "bob"
+      end
+
+      context "with an escaped hashtag" do
+        include_examples "rewriting escaped tokens beside code spans",
+                         raw: "\\#support and `#support`",
+                         code: "`#support`",
+                         collection: :hashtags,
+                         expected_name: "support"
+      end
+
+      context "with an escaped emoji" do
+        include_examples "rewriting escaped tokens beside code spans",
+                         raw: "\\:parrot: and `:parrot:`",
+                         code: "`:parrot:`",
+                         collection: :emojis,
+                         expected_name: "parrot"
       end
     end
 

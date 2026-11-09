@@ -21,7 +21,9 @@ RSpec.describe "Admin onboarding banner locale keys" do
   it "defines every topic option recorded by the staff action log" do
     options = banner.fetch("start_posting").fetch("icebreakers")
     expect(options.keys).to contain_exactly(*UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS)
-    expect(options.values).to all(include("title", "body"))
+    expect(options.values).to all(include("title", "description"))
+    # "write_your_own" opens an empty composer, so it has no body to prefill.
+    expect(options.except("write_your_own").values).to all(include("body"))
   end
 
   it "defines title, description, action and completed for every step" do

@@ -6,8 +6,6 @@ export default {
   "controller:review-index": "controller:review.index",
   "route:admin-dashboard": "route:admin.dashboard",
   "controller:admin-dashboard": "controller:admin.dashboard",
-  "route:admin-dashboard-general": "route:admin.dashboard.general",
-  "controller:admin-dashboard-general": "controller:admin.dashboard.general",
   "route:user-private-messages-user": "route:user-private-messages.user",
   "controller:user-private-messages-user":
     "controller:user-private-messages.user",
@@ -91,8 +89,6 @@ export default {
     "route:gamification-leaderboard.by-name",
   "route:gamification-leaderboard-index":
     "route:gamification-leaderboard.index",
-  "controller:admin-dashboard-sentiment":
-    "controller:admin.dashboard-sentiment",
   "controller:admin-groups-settings": "controller:admin-groups.settings",
   "route:admin-groups-settings": "route:admin-groups.settings",
   "controller:admin-groups-index": "controller:admin-groups.index",
@@ -146,9 +142,6 @@ export default {
   "route:subscribe-show": "route:subscribe.show",
   "controller:subscribe-index": "controller:subscribe.index",
   "route:subscribe-index": "route:subscribe.index",
-  "controller:admin-dashboard-moderation":
-    "controller:admin.dashboard-moderation",
-  "route:admin-dashboard-reports": "route:admin.dashboard-reports",
   "controller:admin-email-logs-sent": "controller:admin-email-logs.sent",
   "route:admin-email-logs-sent": "route:admin-email-logs.sent",
   "controller:admin-email-logs-skipped": "controller:admin-email-logs.skipped",

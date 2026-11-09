@@ -27,6 +27,35 @@ en:
       any_domain: "CIMD from any domain"
     ace_editor:
       resize: "Resize code editor"
+    code_editor:
+      resize: "Resize code editor"
+      tab_hint: "Press Escape, then Tab to move focus out of the editor."
+      completions: "Completions"
+      search:
+        find: "Find"
+        replace: "Replace"
+        next: "Next"
+        previous: "Previous"
+        all: "Select all matches"
+        match_case: "Match case"
+        regexp: "Regular expression"
+        by_word: "Whole words"
+        replace_all: "Replace all"
+        close: "Close"
+        go_to_line: "Go to line"
+        go: "Go"
+        current_match: "Current match"
+        on_line: "on line"
+        replaced_match: "Replaced match on line %{line}"
+        replaced_all: "Replaced matches: %{matches}"
+      fold:
+        fold_line: "Fold line"
+        unfold_line: "Unfold line"
+        folded_code: "Folded code"
+        unfold: "Unfold"
+        folded_lines: "Folded lines"
+        unfolded_lines: "Unfolded lines"
+        to: "to"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"
@@ -620,7 +649,7 @@ en:
       dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose colors, fonts, and how your site is laid out."
+        description: "Make your site your own with logo, colors, and layout."
         action: "See options"
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
@@ -637,7 +666,7 @@ en:
         completed: "See more ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
-        predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
+        predefined_topics_subtitle: "Give members something to discuss"
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
         back: "Back"
@@ -645,85 +674,81 @@ en:
         icebreakers:
           plan_categories:
             title: "What categories should we start with?"
+            description: "Ask your team which categories to launch with."
             body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
           plan_invites:
-            title: "Which members should we invite before we launch?"
+            title: "Who should we invite before we launch?"
+            description: "Agree with your team on who to invite first."
             body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
           introduce_yourself:
             title: "Introduce yourself"
+            description: "Get members sharing a little about themselves."
             body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
           write_your_own:
             title: "Write your own"
-            body: "Start a conversation with a topic tailored to your community."
+            description: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
-      subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
+      step_progress: "Step %{current}/%{total}"
+      minimize: "Minimize design wizard"
+      restore: "Restore design wizard"
+      collapse: "Collapse design wizard"
+      expand: "Expand design wizard"
       save: "Save and finish"
       back: "Back"
       next: "Next"
       launch: "Design wizard"
       launch_description: "Walk through your site's theme, colors, fonts, and layout again."
-      intro:
-        description: "This wizard walks you through your site's theme, colors, fonts, homepage layout, welcome banner, and search style."
-        autosave: "Each step is saved as you go, so members see the changes right away. You can put everything back when you close."
-        start: "Get started"
       close:
         message: "You have already saved some changes to your site's design. Do you want to keep them?"
         message_without_revert: "You have already saved some changes to your site's design. They cannot be undone from here."
         keep: "Keep changes"
         revert: "Revert changes"
         continue_editing: "Continue editing"
+      steps:
+        theme:
+          title: "Choose a theme"
+          description: "Pick the overall look for your site. You can fine-tune it in the next steps."
+        colors:
+          title: "Make it yours"
+          description: "Add your logo and choose your site's colors."
+        homepage:
+          title: "Look & feel"
+          description: "Choose your fonts and what members see first."
       sections:
-        theme: "Theme"
-        colors: "Default color"
+        colors: "Site color modes"
         fonts: "Fonts"
+        logo: "Logo"
         homepage: "Homepage"
-        welcome_banner: "Welcome banner"
-        search: "Search"
       theme:
         selected: "Selected"
         applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
-        light: "Light"
-        dark: "Dark"
-        dark_only: "%{name} only has a dark mode"
-        both_modes: "Each palette includes a matching light and dark mode"
-        user_selectable: "Let members switch palettes"
-        user_selectable_description: "Show these palettes in a menu members can pick from"
+        description: "Set a default palette for each mode. Members' appearance preferences determine which one they see."
+        light_palette: "Light palette"
+        dark_palette: "Dark palette"
+        modes:
+          label: "Color modes"
+          both: "Light & dark"
+          light: "Light only"
+          dark: "Dark only"
       fonts:
-        base_font: "Base font"
-        heading_font: "Heading font"
+        base_font: "Body"
+        heading_font: "Headings"
+      logo:
+        description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
+        help_text: "Recommended size is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categories"
-        topic_page_type: "Topic page type"
-        topic_pages:
-          latest: "Topics sorted by their most recent activity, newest first."
-          new: "Topics created in the last few days, newest first."
-          hot: "Topics trending right now, blending overall popularity with recent engagement."
         category_page_style: "Category page style"
         styles:
           boxes: "Boxes"
           with_topics: "Categories with topics"
           only: "Categories only"
-      welcome_banner:
-        enable: "Show a welcome banner"
-        enable_description: "Greet visitors with your site name and a search box"
-        location: "Banner location"
-        locations:
-          below_site_header: "Below the site header"
-          above_topic_content: "Above the topic list"
-      search:
-        experiences:
-          search_icon:
-            title: "Search icon"
-            description: "A magnifying glass in the header that opens search."
-          search_field:
-            title: "Search field"
-            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"
@@ -1007,19 +1032,21 @@ en:
 
     dsa_statements:
       title: "DSA classification"
-      help_title: "About DSA classification"
-      help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."
+      help_title: "About EU Digital Services Act classification"
+      help: "The EU Digital Services Act asks platforms to record why content was moderated.<br><a href='https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms' rel='noopener noreferrer' target='_blank'>Learn more…</a>"
       rule: "Community rule"
+      rule_help: "Select the community rule this moderation decision is based on."
       rule_prompt: "Choose a community rule"
       category: "Category"
+      category_help: "Select the EU Digital Services Act category that best describes the violation. <a href='https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification' rel='noopener noreferrer' target='_blank'>View category definitions…</a>"
       category_prompt: "Choose a category"
-      pending: "DSA classification pending"
-      confirm_title: "Save DSA classification?"
-      confirm_message: "Check the community rule and category. This classification cannot be changed after saving."
       save: "Save classification"
-      saving: "Saving…"
-      saved: "Classification saved"
     review:
+      continue_to_editor: "Continue to editor"
+      moderation_steps:
+        label: "Moderation steps"
+        action: "Action details"
+        confirm: "Confirm action"
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
@@ -1277,6 +1304,7 @@ en:
         target_created_by: "Post created by %{username} · %{relativeDate}"
         target_deleted: "Post deleted"
         target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
+        queued_post_deleted_by: "Queued post deleted by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
@@ -3524,6 +3552,8 @@ en:
     filter_controls:
       reset: "Reset"
       toggle: "Toggle dropdown filters"
+      sort_label: "Sort by"
+      sort_trigger_label: "Sort by: %{sort}"
 
     d_icon_grid_picker:
       select_icon: "Select icon"
@@ -3919,6 +3949,7 @@ en:
         link_copied: "Link copied!"
         load_preview: "Load preview"
         preview_failed: "Could not load preview"
+        preview_limit_reached: "This post has reached the maximum number of previews"
 
       onebox_toolbar:
         copy: "Copy link"
@@ -5424,6 +5455,20 @@ en:
       revisions:
         diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
         diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
+        unlisted:
+          label: "Unlisted"
+          description: "This edit is skipped when browsing the edit history, but its content is still public."
+        show_all_edits: "Show all edits"
+        visibility:
+          listed:
+            title: "Listed"
+            description: "Shown when browsing the edit history."
+          unlisted:
+            title: "Unlisted"
+            description: "Skipped when browsing the edit history."
+          hidden:
+            title: "Hidden"
+            description: "Removed from the public edit history, along with the diffs next to it."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -5434,9 +5479,7 @@ en:
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
-          hide: "Hide revision"
-          show: "Show revision"
-          destroy: "Delete revisions"
+          destroy: "Delete all revisions"
           destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
@@ -6998,6 +7041,10 @@ en:
           impact_role_staff: "Staff"
           impact_role_all_members: "All members"
           impact_role_developers: "Developers"
+        sort:
+          recently_updated: "Recently updated"
+          status: "Status"
+          name: "Name"
 
       config:
         about:
@@ -7813,27 +7860,17 @@ en:
           combined: "Results include the most recent %{limit} pageviews, beginning %{pageviewLimitDate} at %{pageviewLimitTime}. Earlier pageviews in the selected date range are not included; pageview data before %{date} is no longer available."
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard updated:"
-        discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
         up_to_date_newer_commits:
           one: "You're on the most recent release, but %{count} new change is available."
           other: "You're on the most recent release, but %{count} new changes are available."
         updates_available: "Updates are available."
-        please_update: "Please update!"
-        no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you updated recently. Fantastic!"
-        installed_version: "Installed"
-        latest_version: "Available"
-        github: "GitHub"
         commit_on_github: "View commit %{sha} on GitHub"
-        changelog: "Changelog"
         commits_ahead:
           one: "Running %{count} additional change since the start of this release series"
           other: "Running %{count} additional changes since the start of this release series"
-        problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
         site_advice:
           title:
@@ -7846,16 +7883,7 @@ en:
           no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
           learn_more: "Learn more..."
 
-        last_checked: "Last checked"
         refresh_problems: "Refresh"
-        no_problems: "No problems were found."
-        moderators: "Moderators:"
-        admins: "Admins:"
-        silenced: "Silenced:"
-        suspended: "Suspended:"
-        private_messages_short: "Msgs"
-        private_messages_title: "Messages"
-        mobile_title: "Mobile"
         space_used: "%{usedSize} used"
         space_used_and_free: "%{usedSize} (%{freeSize} free)"
         uploads: "Uploads"
@@ -7864,20 +7892,7 @@ en:
           one: "%{count} backup on %{location}"
           other: "%{count} backups on %{location}"
         lastest_backup: "Latest: %{date}"
-        traffic_short: "Traffic"
-        traffic: "Application web requests"
-        page_views: "Pageviews"
-        page_views_short: "Pageviews"
-        show_traffic_report: "Show Detailed Traffic Report"
-        community_health: Community health
-        moderators_activity: Moderators activity
         whats_new_in_discourse: What’s new in Discourse?
-        activity_metrics: Activity Metrics
-        all_reports: "All reports"
-        general_tab: "General"
-        moderation_tab: "Moderation"
-        security_tab: "Security"
-        reports_tab: "Reports"
         report_filter_any: "any"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
@@ -8116,7 +8131,6 @@ en:
             latest_backup: "Latest backup %{date}"
             manage_backups: "Manage backups"
             discourse_updated: "Discourse updated"
-            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
@@ -8228,12 +8242,6 @@ en:
             crawlers: "Crawlers"
           see_details: "See details"
           crawler_learn_more: "Learn more"
-        period:
-          last_7_days: "Last 7 days"
-          last_30_days: "Last 30 days"
-          last_3_months: "Last 3 months"
-          custom: "Custom"
-          custom_range: "%{start} – %{end}"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -8281,9 +8289,6 @@ en:
               other: "%{count} posts"
             deselect: "Deselect %{name}"
             fetch_error: "Couldn't load users for this group."
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
-            disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
           average_chart_label: Showing averages, not totals
           sort_button: "Sort by %{column}"
           sort_button_current: "Sorted by %{column}, %{direction}"
@@ -8471,7 +8476,7 @@ en:
               list: List latest posts and private posts. RSS is also supported.
             revisions:
               read: "Get the latest or a specific revision."
-              modify: "Hide, show, or revert revisions."
+              modify: "Hide, show, unlist, relist, or revert revisions."
               permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.
@@ -8763,11 +8768,9 @@ en:
           site_contact_group_help: |
             The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
-          your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
+          your_organization_description: "Details about who operates this site and under which jurisdiction."
           company_name: "Name"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
@@ -9002,7 +9005,6 @@ en:
           uploading: "Uploading…"
           uploading_progress: "Uploading… %{progress}%"
           success: "'%{filename}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Settings"
         operations:
           is_running: "An operation is currently running…"
@@ -9243,6 +9245,8 @@ en:
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create placeholder"
+          placeholder_type_tip: "Once the installation is finished, the type from the repository's about.json is used."
+          skipped_components: "%{name} is installed, but these components couldn't be installed. Install them from the Components tab, then add them to this theme:"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -10081,7 +10085,7 @@ en:
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
           custom: "Custom…"
         suspend_message: "Email Message"
-        suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
+        suspend_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the suspended user."
         suspended_by: "Suspended by"
         silence_reason: "Reason"
         silenced_by: "Silenced By"
@@ -10092,7 +10096,7 @@ en:
         silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
         silence_message: "Email Message"
-        silence_message_placeholder: "(leave blank to send default message)"
+        silence_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the silenced user."
         suspended_until: "(until %{until})"
         suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
@@ -10165,6 +10169,7 @@ en:
         grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: "Revoke Moderation"
         grant_moderation: "Grant Moderation"
+        grant_moderation_confirm: "Are you sure you want to make %{username} a moderator?"
         unsuspend: "Unsuspend"
         suspend: "Suspend"
         show_flags_received: "Show Flags Received"

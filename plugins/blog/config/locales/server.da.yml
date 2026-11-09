@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  blog:
+    home: Hjem
+    posted_by: Skrevet af
+    permalink: Permalink
+    time_ago: "%{time} siden"
+    archive: Arkiv
+    about: Om
+    community: Fællesskab
+    preview: Forhåndsvisning
+    search: Søg
+    replies:
+      one: "%{count} svar"
+      other: "%{count} svar"

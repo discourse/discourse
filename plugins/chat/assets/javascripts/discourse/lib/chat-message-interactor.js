@@ -161,9 +161,6 @@ export default class ChatMessageInteractor {
   }
 
   get canPinMessage() {
-    if (!this.siteSettings.chat_pinned_messages) {
-      return false;
-    }
     return this.message.channel?.canManagePins;
   }
 

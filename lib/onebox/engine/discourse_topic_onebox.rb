@@ -9,6 +9,33 @@ module Onebox
 
       matches_regexp(%r{/t/.*(/\d+)?})
 
+      WEEKDAYS = %w[sunday monday tuesday wednesday thursday friday saturday]
+      WORKWEEK = %w[Monday Tuesday Wednesday Thursday Friday]
+      WEEKLY_SCHEDULES = {
+        "P1W" => ["every_week", 1],
+        "P2W" => ["every_two_weeks", 2],
+        "P4W" => ["every_four_weeks", 4],
+      }
+      MONTH_WEEK_ORDINALS = {
+        "1" => "first",
+        "2" => "second",
+        "3" => "third",
+        "4" => "fourth",
+        "-1" => "last",
+      }
+      # Pages give the upcoming occurrence, so an older start isn't a live schedule
+      MAX_SCHEDULE_AGE = 1.year
+
+      def self.format_event_time(starts_at, ends_at = nil)
+        time = starts_at.strftime("%-I:%M %p")
+        time = "#{time} → #{ends_at.strftime("%-I:%M %p")}" if ends_at
+        "#{time} (#{format_utc_offset(starts_at)})"
+      end
+
+      def self.format_utc_offset(time)
+        time.utc_offset.zero? ? "UTC" : "UTC#{time.formatted_offset}"
+      end
+
       def layout
         @layout ||= Layout.new(event? ? "discoursetopic_with_event" : self.class.onebox_name, data)
       end
@@ -29,6 +56,8 @@ module Onebox
           event_date_month: event_date&.strftime("%b"),
           event_description: event_description,
           event_ends_at: raw[:event_ends_at],
+          event_recurrence: event_recurrence,
+          event_rrule: event_rrule,
           event_onebox_classes: event_onebox_classes,
           event_starts_at: raw[:event_starts_at],
           event_time: event_time,
@@ -113,13 +142,75 @@ module Onebox
         return unless event?
         return I18n.t("onebox.discourse.event_all_day") if event_all_day?
 
-        starts_at = event_time_value(raw[:event_starts_at])
-        ends_at = event_time_value(raw[:event_ends_at])
-
-        time = starts_at.strftime("%-I:%M %p")
-        time = "#{time} → #{ends_at.strftime("%-I:%M %p")}" if ends_at
-        "#{time} (#{event_timezone})"
+        self.class.format_event_time(
+          event_time_value(raw[:event_starts_at]),
+          event_time_value(raw[:event_ends_at]),
+        )
       rescue ArgumentError
+        nil
+      end
+
+      def event_recurrence
+        return if (schedule = event_schedule).nil?
+
+        label = I18n.t("onebox.discourse.recurrence.#{schedule[:key]}", **schedule[:options])
+        return label if (until_date = event_repeat_until).blank?
+
+        I18n.t(
+          "onebox.discourse.recurrence.until",
+          recurrence: label,
+          date: until_date.strftime(I18n.t("datetime_formats.formats.date_only")),
+        )
+      end
+
+      # Expressed as a recurrence rule so later occurrences can be found from the cooked onebox
+      def event_rrule
+        return if (schedule = event_schedule).nil?
+        return schedule[:rule] if (until_date = event_repeat_until).blank?
+
+        "#{schedule[:rule]};UNTIL=#{until_date.strftime("%Y%m%d")}T235959"
+      end
+
+      # Only the schedules that have a label are recognised, so the rule and label always agree
+      def event_schedule
+        return @event_schedule if defined?(@event_schedule)
+        return @event_schedule = nil if !event? || (date = event_date).nil?
+        return @event_schedule = nil if date < MAX_SCHEDULE_AGE.ago.to_date
+
+        weekday = I18n.t("onebox.discourse.recurrence.weekdays.#{WEEKDAYS[date.wday]}")
+        day = WEEKDAYS[date.wday][0, 2].upcase
+        by_day = raw[:event_repeat_by_day].to_s.split(",")
+        frequency = raw[:event_repeat_frequency]
+
+        @event_schedule =
+          case frequency
+          when "P1D"
+            if by_day.empty?
+              { key: "every_day", options: {}, rule: "FREQ=DAILY" }
+            elsif by_day.sort == WORKWEEK.sort
+              { key: "every_weekday", options: {}, rule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+            end
+          when *WEEKLY_SCHEDULES.keys
+            key, interval = WEEKLY_SCHEDULES[frequency]
+            { key:, options: { weekday: }, rule: "FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{day}" }
+          when "P1M"
+            month_week = raw[:event_repeat_by_month_week]
+            if (ordinal = MONTH_WEEK_ORDINALS[month_week])
+              {
+                key: "every_month",
+                options: {
+                  weekday:,
+                  ordinal: I18n.t("onebox.discourse.recurrence.ordinals.#{ordinal}"),
+                },
+                rule: "FREQ=MONTHLY;BYDAY=#{month_week}#{day}",
+              }
+            end
+          end
+      end
+
+      def event_repeat_until
+        Date.iso8601(raw[:event_repeat_until].to_s) if raw[:event_repeat_until].present?
+      rescue Date::Error
         nil
       end
 
@@ -131,9 +222,9 @@ module Onebox
 
       def event_timezone
         starts_at = event_time_value(raw[:event_starts_at])
-        return "UTC" if starts_at.blank? || starts_at.utc_offset.zero?
+        return "UTC" if starts_at.blank?
 
-        "UTC#{starts_at.formatted_offset}"
+        self.class.format_utc_offset(starts_at)
       rescue ArgumentError
         "UTC"
       end

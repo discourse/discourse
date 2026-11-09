@@ -1,0 +1,19 @@
+<article class="broadsheet__article">
+  <header class="broadsheet__article-header">
+    <nav class="broadsheet__breadcrumbs" aria-label="{{ labels.navigation }}"><a href="{{ site.url }}">{{ labels.all_articles }}</a>{% for tag in article.tags %}<span aria-hidden="true">·</span><a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</nav>
+    <h1>{{ article.title }}</h1>
+    {% if article.standfirst %}<p class="broadsheet__standfirst">{{ article.standfirst }}</p>{% endif %}
+    <div class="broadsheet__byline --article">
+      <span><strong>{{ article.author }}</strong></span>
+      <time datetime="{{ article.published_at }}">{{ article.date }}</time>
+      <span>{{ article.reading_time }}</span>
+    </div>
+    {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
+  </header>
+  <div class="blog-article__body cooked">{{ article.body_html }}</div>
+  {% if article.tags.size > 0 %}
+  <footer class="blog-article__footer broadsheet__article-footer">
+    <div class="blog__tags">{% for tag in article.tags %}<a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</div>
+  </footer>
+  {% endif %}
+</article>

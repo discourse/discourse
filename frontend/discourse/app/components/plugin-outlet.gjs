@@ -4,7 +4,6 @@ import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { concat } from "@ember/helper";
-import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
@@ -18,8 +17,6 @@ import {
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
 
-const GET_DEPRECATION_MSG =
-  "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
 const ARGS_DEPRECATION_MSG =
   "PluginOutlet arguments should now be passed using `@outletArgs=` instead of `@args=`";
 
@@ -347,12 +344,6 @@ export default class PluginOutlet extends Component {
 
   context = {
     ...helperContext(),
-    get() {
-      deprecated(GET_DEPRECATION_MSG, {
-        id: "discourse.plugin-outlet-context-get",
-      });
-      return get(this, ...arguments);
-    },
   };
 
   constructor() {

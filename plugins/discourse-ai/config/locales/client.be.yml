@@ -110,6 +110,8 @@ be:
             other: "%{count}запісаў"
       spam:
         short_title: "Спам"
+        no_llm_selected: "Няма"
+        no_decision_model_selected: "Няма"
         enable: "Уключыць"
         test_modal:
           spam: "Спам"

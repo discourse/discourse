@@ -127,7 +127,7 @@ RSpec.describe UserSuspender do
       end
 
       it "delivers a suspension email with the reason when DSA reporting is enabled" do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         user.user_option.update!(timezone: "Asia/Singapore")
 
         expect { suspend_user }.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)

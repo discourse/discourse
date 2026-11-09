@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  admin_js:
+    blog:
+      admin:
+        overridden: Մասնավոր
+        insert: Մուտքագրել
+        preview_home: Գլխավոր էջ
+        preview_archive: Արխիվ
+        desktop: Համակարգչային
+        mobile: Հեռախոսային
+        themes: Թեմաներ
+        theme_name: Թեմայի անվանում
+        edit: Խմբագրել
+        activate: Ակտիվացնել
+        preview: Նախադիտում
+        import: Ներմուծել
+        export: Արտահանել
+        active: Ակտիվ
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Սևագրել
+        preview: Նախադիտում
+        change:
+          title: վերնագիր
+          body: բովանդակություն
+      review:
+        copy: Կրկնօրինակել
+        open: Բացել
+        status:
+          active: Ակտիվ
+          expired: Ժամկետանց
+          revoked: Հետկանչված
+          inactive: Ոչ ակտիվ
+        closed_on: "Փակվել է %{date}"
+        revoke: Հետ կանչել
+        message: Կարծիք
+      editor_table:
+        edit: Խմբագրել
+        status: Ստատուս
+        replies: Պատասխաններ
+      drafts: Սևագրեր
+      preview: Նախադիտում
+      unpublish: Հրապարակումը չեղարկել
+      appearance_link: Արտաքին տեսք

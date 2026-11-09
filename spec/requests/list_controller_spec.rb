@@ -321,6 +321,7 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "with #{filter}" do
         it "returns the requested list" do
@@ -329,6 +330,7 @@ RSpec.describe ListController do
         end
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     it "allows users to filter on a set of topic ids" do
       p = create_post
@@ -1070,6 +1072,7 @@ RSpec.describe ListController do
       expect(response.status).to eq(400)
     end
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
         get "/top.rss?period=#{period}"
@@ -1077,6 +1080,7 @@ RSpec.describe ListController do
         expect(response.media_type).to eq("application/rss+xml")
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     describe "RSS feeds ignore current user" do
       fab!(:muted_topic, :topic)
@@ -1184,6 +1188,58 @@ RSpec.describe ListController do
         get "/top.json"
 
         expect(response.parsed_body["topic_list"]["per_page"]).to eq(32)
+      end
+    end
+  end
+
+  describe "category deleted topics" do
+    fab!(:category)
+    fab!(:child_category) { Fabricate(:category, parent_category: category) }
+    fab!(:moderated_child) { Fabricate(:category, parent_category: category) }
+    fab!(:deleted_parent_topic) { Fabricate(:topic, category:, deleted_at: 1.day.ago) }
+    fab!(:deleted_child_topic) do
+      Fabricate(:topic, category: child_category, deleted_at: 1.day.ago)
+    end
+    fab!(:deleted_moderated_child_topic) do
+      Fabricate(:topic, category: moderated_child, deleted_at: 1.day.ago)
+    end
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+      group.add(user)
+      Fabricate(:category_moderation_group, category:, group:)
+      Fabricate(:category_moderation_group, category: moderated_child, group:)
+    end
+
+    it "limits deleted results to explicitly moderated categories" do
+      sign_in(user)
+
+      get "/c/#{category.slug}/#{category.id}/l/latest.json", params: { status: "deleted" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(deleted_child_topic.title)
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] },
+      ).to contain_exactly(deleted_parent_topic.id, deleted_moderated_child_topic.id)
+    end
+
+    it "preserves global deleted-topic access" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups =
+        "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
+
+      [admin, user].each do |viewer|
+        sign_in(viewer)
+
+        get "/c/#{category.slug}/#{category.id}/l/latest.json", params: { status: "deleted" }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] },
+        ).to contain_exactly(
+          deleted_parent_topic.id,
+          deleted_child_topic.id,
+          deleted_moderated_child_topic.id,
+        )
       end
     end
   end
@@ -1833,6 +1889,86 @@ RSpec.describe ListController do
       end
     end
 
+    context "with encoded non-ASCII slugs" do
+      before { SiteSetting.slug_generation_method = "encoded" }
+
+      shared_examples "an encoded category slug" do |old_name:, new_name:|
+        let(:category) { Fabricate(:category, name: old_name) }
+        let!(:old_slug) { category.slug }
+
+        before { category.update!(slug: new_name) }
+
+        it "redirects an outdated slug to the current encoded slug" do
+          get "/c/#{old_slug}/#{category.id}"
+
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{CGI.escape(new_name)}/#{category.id}")
+
+          get response.location
+          expect(response.status).to eq(200)
+        end
+
+        it "redirects the slug without an id to the URL with the id" do
+          get "/c/#{category.slug}"
+
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
+        end
+
+        it "keeps the filter and the query string" do
+          get "/c/#{old_slug}/#{category.id}/l/latest?page=2"
+
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}/l/latest?page=2")
+        end
+
+        it "keeps the format" do
+          get "/c/#{old_slug}/#{category.id}.json"
+
+          expect(response.status).to eq(301)
+          expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json")
+        end
+      end
+
+      context "with Simplified Chinese category names" do
+        include_examples "an encoded category slug", old_name: "产品", new_name: "问题"
+      end
+
+      context "with Traditional Chinese category names" do
+        include_examples "an encoded category slug", old_name: "產品", new_name: "問題"
+      end
+
+      context "with Japanese category names" do
+        include_examples "an encoded category slug", old_name: "製品", new_name: "質問"
+      end
+
+      it "redirects an outdated parent slug for a subcategory" do
+        parent = Fabricate(:category, name: "製品")
+        old_parent_slug = parent.slug
+        subcategory = Fabricate(:category, name: "質問", parent_category: parent)
+        parent.update!(slug: "新製品")
+
+        get "/c/#{old_parent_slug}/#{subcategory.slug}/#{subcategory.id}/none"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to(
+          "/c/#{parent.slug}/#{subcategory.slug}/#{subcategory.id}/none",
+        )
+      end
+
+      it "keeps the subfolder" do
+        set_subfolder "/forum"
+        category = Fabricate(:category, name: "製品")
+        old_slug = category.slug
+        category.update!(slug: "質問")
+
+        get "/c/#{old_slug}/#{category.id}/l/latest"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}/l/latest")
+      end
+    end
+
     context "with subfolder" do
       it "main category redirects to URL containing the updated slug" do
         set_subfolder "/forum"
@@ -1883,6 +2019,80 @@ RSpec.describe ListController do
         expect(response).to have_http_status :moved_permanently
         expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
       end
+    end
+  end
+
+  describe "category_noindex modifier" do
+    fab!(:category, :category_with_definition)
+    fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    fab!(:topic_in_category) { Fabricate(:topic, category: category) }
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_args) { [] }
+    let(:noindex_category_ids) { [] }
+    let(:modifier) do
+      Proc.new do |noindex, modifier_category|
+        modifier_args << [noindex, modifier_category]
+        noindex || noindex_category_ids.include?(modifier_category.id)
+      end
+    end
+
+    before { DiscoursePluginRegistry.register_modifier(plugin, :category_noindex, &modifier) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, :category_noindex, &modifier) }
+
+    it "receives false and the category, and sends no noindex by default" do
+      get "/c/#{category.slug}/#{category.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, category]])
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+
+    it "receives the subcategory for its own lists" do
+      get "/c/#{category.slug}/#{subcategory.slug}/#{subcategory.id}"
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, subcategory]])
+    end
+
+    it "lets a plugin send noindex on every topic list of the category" do
+      SiteSetting.enable_markdown_endpoints = true
+      noindex_category_ids << category.id
+
+      [
+        "/c/#{category.slug}/#{category.id}",
+        "/c/#{category.slug}/#{category.id}?page=1",
+        "/c/#{category.slug}/#{category.id}/none",
+        "/c/#{category.slug}/#{category.id}/l/top",
+        "/c/#{category.slug}/#{category.id}/l/latest.json",
+        "/c/#{category.slug}/#{category.id}.md",
+        "/latest?category=#{category.id}",
+        "/top?category=#{category.slug}",
+      ].each do |path|
+        get path, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200), path
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+      end
+    end
+
+    it "keeps the site-wide nofollow when the site is not indexable" do
+      SiteSetting.allow_index_in_robots_txt = false
+      noindex_category_ids << category.id
+
+      get "/c/#{category.slug}/#{category.id}.json"
+
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
+    it "is not consulted for topic lists outside a category" do
+      noindex_category_ids << category.id
+
+      get "/latest", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to be_empty
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
     end
   end
 
@@ -1969,6 +2179,18 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
+    end
+
+    it "keeps anonymous repeated negated filters from amplifying SQL" do
+      query = Array.new(8, "-status:closed").join(" ")
+
+      sql_queries = track_sql_queries { get "/filter.json", params: { q: query } }
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id)
+      expect(sql_queries.sum(&:bytesize)).to be < 50_000
     end
 
     it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do

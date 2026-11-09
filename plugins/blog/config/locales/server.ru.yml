@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  blog:
+    home: Главная
+    posted_by: Автор
+    permalink: Постоянная ссылка
+    time_ago: "%{time} назад"
+    archive: Архивировать
+    about: Информация
+    community: Сообщество
+    preview: Предпросмотр
+    search: Искать
+    replies:
+      one: "%{count} ответ"
+      few: "%{count} ответа"
+      many: "%{count} ответов"
+      other: "%{count} ответ"

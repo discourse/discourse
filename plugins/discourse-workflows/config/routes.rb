@@ -109,6 +109,7 @@ DiscourseWorkflows::Engine.routes.draw do
   scope "/discourse-workflows", defaults: { format: :json } do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
     post "/trigger-post-button" => "post_button#create"
+    post "/trigger-composer-paused" => "composer_paused#create"
     post "/modal-responses" => "modal_responses#create"
     post "/modal-dismissals" => "modal_dismissals#create"
   end

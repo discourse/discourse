@@ -503,7 +503,6 @@ ug:
       collapse: "تەڭشەش قەدىمىنى يىغ"
       dismiss: "تەڭشەشكە پەرۋا قىلما"
       select_theme:
-        description: "رەڭ، خەت نۇسخا ۋە تور بېكىتىڭىزنىڭ جايلاشتۇرۇلۇشى تاللىنىدۇ."
         action: "تاللانما كۆرسەت"
         completed: "تاللانما ئۆزگەرت"
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
@@ -520,72 +519,43 @@ ug:
         back: "كەينى"
     design_wizard:
       title: "تور بېكىتىڭىزنى خاسلاشتۇرىدۇ"
-      subtitle: "رەڭ، خەت نۇسخا ۋە تور بېكىتىڭىزنىڭ جايلاشتۇرۇلۇشى تاللىنىدۇ."
       step_label: "%{index}-قەدەمگە يۆتكەل"
       save: "ساقلا ۋە تاماملا"
       back: "كەينى"
       next: "كېيىنكى"
       launch: "لايىھە يېتەكچىسى"
       launch_description: "تور بېكىتىڭىزنىڭ ئۆرنەك، رەڭ، خەت نۇسخا ۋە جايلاشتۇرۇلۇشىنى قايتا كۆرۈڭ."
-      intro:
-        description: "بۇ يېتەكچى تور بېكىتىڭىزنىڭ ئۆرنەك، رەڭ، خەت نۇسخا، باش بەت جايلاشتۇرۇلۇشى، قارشى ئېلىش لەۋھەسى ۋە ئىزدەش ئۇسلۇبىنى قايتا كۆرسىتىدۇ."
-        autosave: "ھەر بىر قەدەم شۇ پەيتتە ساقلىنىدۇ، شۇڭا ئەزالار ئۆزگىرىشنى دەرھال كۆرەلەيدۇ. ياپقاندا ھەممە تەڭشەكنى ئەسلىگە كەلتۈرەلەيسىز."
-        start: "باشلاش"
       close:
         message: "تور بېكەت لايىھەسىنىڭ بەزى ئۆزگىرىشى ساقلاندى. ئۇلارنى ساقلاپ قالامسىز؟"
         message_without_revert: "تور بېكەت لايىھەسىنىڭ بەزى ئۆزگىرىشى ساقلاندى. ئۇ مەشغۇلاتتىن بۇ جايدا يېنىۋالغىلى بولمايدۇ."
         keep: "ئۆزگىرىشنى ساقلاپ قال"
         revert: "ئۆزگىرىشنى ئەسلىگە ياندۇر"
         continue_editing: "تەھرىرلەشنى داۋاملاشتۇر"
+      steps:
+        homepage:
+          title: "كۆرۈنۈش ۋە تۇيغۇ"
       sections:
-        theme: "ئۆرنەك"
-        colors: "كۆڭۈلدىكى رەڭ"
         fonts: "خەت نۇسخا"
+        logo: "تۇغ"
         homepage: "باش بەت"
-        welcome_banner: "قارشى ئېلىش لەۋھەسى"
-        search: "ئىزدە"
       theme:
         selected: "تاللاندى"
         applying: "قوللىنىۋاتىدۇ…"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
-      colors:
-        light: "يورۇق"
-        dark: "قاراڭغۇ"
-        dark_only: "%{name} نىڭ قاراڭغۇ ھالىتىلا بار"
-        both_modes: "ھەر بىر رەڭ تاختىسىنىڭ يورۇق ۋە قاراڭغۇ ھالىتى بار"
-        user_selectable: "ئەزانىڭ رەڭ تاختىسىنى ئالماشتۇرۇشىغا يول قويىدۇ"
-        user_selectable_description: "بۇ رەڭ تاختىسى تىزىملىكتە كۆرۈنۈپ، ئەزالىرى ئۇنىڭدىن تاللىيالايدۇ"
       fonts:
-        base_font: "ئاساسى خەت نۇسخىسى"
-        heading_font: "ماۋزۇ خەت نۇسخىسى"
+        base_font: "مەزمۇن"
+        heading_font: "ماۋزۇ"
+      logo:
+        description: "تور بېكەتنىڭ چوققىسىدىكى يولباشچىدا ۋە تور بېكەتنىڭ ئېلخەت ئۇقتۇرۇشىنىڭ چوققىسىدا كۆرۈنىدۇ."
+        help_text: "تەۋسىيە قىلىنغان چوڭلۇقى 600x80 پىكسېل."
       homepage:
         topics: "تېما"
         categories: "سەھىپە"
-        topic_page_type: "تېما بەت تۈرى"
-        topic_pages:
-          latest: "تېما ئەڭ يېڭى پائالىيەت بويىچە، ئەڭ يېڭىسى ئالدىغا تىزىلغان."
-          new: "ئۆتكەن بىر قانچە كۈندە قۇرۇلغان تېما، يېڭىسى ئالدىغا تىزىلدى."
-          hot: "يېقىندىكى قىزىق تېما، ئالقىشلىنىش ئەھۋالى ۋە يېقىنقى تەسىرلىشىش ئەھۋالى ئومۇملاشتۇرۇلغان."
         category_page_style: "سەھىپە بەت ئۇسلۇبى"
         styles:
           boxes: "قۇتا"
           with_topics: "تېمىلىق سەھىپە"
           only: "سەھىپىلا"
-      welcome_banner:
-        enable: "قارشى ئېلىش لەۋھەسىنى كۆرسەت"
-        enable_description: "مېھمانغا تور بېكىتىڭىزنىڭ ئىسمى ۋە ئىزدەش رامكىسىنى نامايان قىلىدۇ"
-        location: "لەۋھە ئورنى"
-        locations:
-          below_site_header: "بېكەت بەت قاشنىڭ ئاستىدا"
-          above_topic_content: "تېما تىزىمىنىڭ ئۈستىدە"
-      search:
-        experiences:
-          search_icon:
-            title: "ئىزدەش سىنبەلگىسى"
-            description: "ئىزدەشنى ئاچىدىغان بەت قاشتىكى چوڭايتقۇچ ئەينەك."
-          search_field:
-            title: "ئىزدەش بۆلىكى"
-            description: "بەت قاشتىكى تولۇق ئىزدەش بۆلىكى، ھەمىشە كۆرۈنىدۇ."
     about:
       edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
@@ -824,7 +794,6 @@ ug:
     dsa_statements:
       category: "سەھىپە"
       category_prompt: "سەھىپە تاللىنىدۇ"
-      saving: "ساقلاۋاتىدۇ…"
     review:
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"
@@ -2990,6 +2959,7 @@ ug:
     filter_controls:
       reset: "ئەسلىگە قايتۇر"
       toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
+      sort_label: "تەرتىپى"
     d_icon_grid_picker:
       search_label: "ئىزدەش سىنبەلگىسى"
       results_loaded:
@@ -4367,6 +4337,9 @@ ug:
           one: "يازمىنى راستتىنلا بىرلەشتۈرەمسىز؟"
           other: "%{count} يازمىنى راستتىنلا بىرلەشتۈرەمسىز؟"
       revisions:
+        visibility:
+          hidden:
+            title: "يوشۇرۇن"
         locale:
           no_locale_set: "تىل تەڭشىكى يوق"
           locale_removed: "تىل چىقىرىۋېتىلدى"
@@ -4375,9 +4348,6 @@ ug:
           previous: "ئالدىنقى تۈزىتىش"
           next: "كېيىنكى تۈزىتىش"
           last: "ئاخىرقى تۈزىتىش"
-          hide: "تۈزىتىشنى يوشۇر"
-          show: "تۈزىتىشنى كۆرسەت"
-          destroy: "تۈزىتىشنى ئۆچۈر"
           destroy_confirm: "بۇ يازمىدىكى بارلىق تۈزىتىشنى راستتىنلا ئۆچۈرەمسىز؟ بۇ مەشغۇلات مەڭگۈلۈك."
           revert: "%{revision} تۈزىتىشكە ئەسلىگە قايتۇر"
           edit_wiki: "ۋىكى تەھرىر"
@@ -5634,6 +5604,9 @@ ug:
           impact_role_staff: "باشقۇرغۇچى خادىم"
           impact_role_all_members: "بارلىق ئەزا"
           impact_role_developers: "ئىجادكار"
+        sort:
+          status: "ھالەت"
+          name: "ئىسمى"
       config:
         about:
           title: "تور بېكىتىڭىز ھەققىدە"
@@ -6111,33 +6084,16 @@ ug:
           anonymous_human: "نامسىز"
       dashboard:
         title: "باشقۇرۇش تاختا"
-        last_updated: "باشقۇرۇش تاختا يېڭىلاندى:"
-        discourse_last_updated: "Discourse يېڭىلاندى:"
         version: "نەشرى"
         up_to_date: "سىزنىڭ ئەڭ يېڭى نەشرى!"
         updates_available: "يېڭىلانما بار."
-        please_update: "يېڭىلاڭ!"
-        no_check_performed: "يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."
-        stale_data: "يېقىندا يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."
         version_check_pending: "يېقىندا يېڭىلىغان ئوخشايسىز. قالتىس!"
-        installed_version: "ئورنىتىلدى"
-        github: "GitHub"
-        problems_found: "نۆۋەتتىكى تور بېكىتىڭىزنىڭ تەڭشىكى ئاساسىدىكى بەزى مەسلىھەتلەر"
         dismiss_notice: "پەرۋا قىلما"
         new_features:
           title: "يېڭىلىق?"
           subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «مول بىلىم» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
           learn_more: "مول بىلىم…"
-        last_checked: "ئاخىرقى تەكشۈرۈلگەن ۋاقىت"
         refresh_problems: "يېڭىلا"
-        no_problems: "ھېچقانداق مەسىلە بايقالمىدى."
-        moderators: "رىياسەتچى:"
-        admins: "باشقۇرغۇچى:"
-        silenced: "سۈكۈتتە:"
-        suspended: "توختىتىلغان:"
-        private_messages_short: "ئۇچۇر"
-        private_messages_title: "ئۇچۇر"
-        mobile_title: "كۆچمە"
         space_used: "%{usedSize} ئىشلىتىلدى"
         space_used_and_free: "%{usedSize} (%{freeSize} بوش)"
         uploads: "يۈكلەنمە"
@@ -6146,20 +6102,7 @@ ug:
           one: "%{location} دىكى %{count} زاپاس"
           other: "%{location} دىكى %{count} زاپاس"
         lastest_backup: "ئاخىرقى: %{date}"
-        traffic_short: "ئېقىم"
-        traffic: "پىروگرامما تور تەلىپى"
-        page_views: "بەت كۆرۈلۈشى"
-        page_views_short: "بەت كۆرۈلۈشى"
-        show_traffic_report: "تەپسىلىي ئېقىم دوكلاتىنى كۆرسىتىدۇ"
-        community_health: جامائەت ساغلاملىقى
-        moderators_activity: رىياسەتچى پائالىيىتى
         whats_new_in_discourse: Discourse تا قانداق يېڭىلىقلار بار؟
-        activity_metrics: پائالىيەت كۆرسەتكۈچى
-        all_reports: "بارلىق دوكلات"
-        general_tab: "ئادەتتىكى"
-        moderation_tab: "رىياسەتچىلىك"
-        security_tab: "بىخەتەرلىك"
-        reports_tab: "دوكلات"
         report_filter_any: "خالىغان"
         disabled: چەكلەندى
         timeout_error: كەچۈرۈڭ ، سۈرۈشتۈرۈش بەك ئۇزۇن بولۇپ كەتتى، قىسقىراق ئارىلىقنى تاللاڭ
@@ -6199,7 +6142,6 @@ ug:
             title: "سىستېما"
             status: "ھالەت"
             discourse_updated: "Discourse يېڭىلاندى"
-            dashboard_updated: "باشقۇرۇش تاختا يېڭىلاندى"
         reports_section:
           header_action: "باشقۇرۇش"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
@@ -6214,9 +6156,6 @@ ug:
             anonymous: "نامسىز"
             crawlers: "ئۆمىلىگۈچ"
           crawler_learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
-        period:
-          last_3_months: "ئۆتكەن 3 ئاي"
-          custom: "ئىختىيارى"
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
           percent_change_tooltip: "%{percent} ئۆزگەردى."
@@ -6259,9 +6198,6 @@ ug:
               one: "%{count} يازما"
               other: "%{count} يازما"
             deselect: "%{name} نى تاللىما"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">ئىزدەش خاتىرىسى</a>'
-            disabled: 'ۋەزىيەت ئىزدەش دوكلاتى چەكلەنگەن. سانلىق مەلۇمات توپلاشتا <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">خاتىرە ئىزدەش سۈرۈشتۈرۈشى</a> قوزغىتىلىدۇ.'
           sort_button: "%{column} بويىچە تەرتىپلە"
           sort_ascending: "ئۆسكۈچى"
           sort_descending: "كېمەيگۈچى"
@@ -6441,7 +6377,6 @@ ug:
               list: ئاخىرقى يازما ۋە شەخسىي يازما تىزىمىنى كۆرسىتىدۇ. RSS نىمۇ قوللايدۇ.
             revisions:
               read: "ئاخىرقى ياكى بەلگىلەنگەن تۈزىتىلمىگە ئېرىشىدۇ."
-              modify: "تۈزىتىلمىنى يوشۇرۇپ، كۆرسىتىپ ياكى ئەسلىگە قايتۇرىدۇ."
               permanently_delete: "تۈزىتىلمىنى مەڭگۈلۈك ئۆچۈرىدۇ."
             tags:
               list: بەلگە تىزىمىنى كۆرسىتىدۇ.
@@ -6724,10 +6659,7 @@ ug:
           site_contact_group_help: |
             ئۆزلۈكىدىن يوللانغان شەخسىي ئۇچۇرنىڭ ھەممىسىگە تەكلىپ قىلىنغان گۇرۇپپا.
           your_organization: "تەشكىلاتىڭىز"
-          your_organization_description: "بىز بۇ ئۇچۇرنى مۇلازىمەت ماددىلىرى ۋە شەخسىيەت باياناتىدا كۆرسىتىپ مەزكۇر تور بېكەتنى يۈرۈشتۈرگۈچىسى ۋە ئەدلىيە تەۋەلىكىنى كۆرسىتىمىز"
           company_name: "ئىسمى"
-          company_name_warning: |
-            ئەگەر بوش قالدۇرۇلسا، قېلىپسىمان مۇلازىمەت ماددىلىرى ياكى شەخسىيەت باياناتىنى تەمىنلىمەيدۇ
           company_url: "تور بېكەت"
           company_url_placeholder: "https://example-co.com"
           governing_law: "باشقۇرۇش قانۇنى"
@@ -6940,7 +6872,6 @@ ug:
           uploading: "يۈكلەۋاتىدۇ…"
           uploading_progress: "يۈكلەۋاتىدۇ… %%{progress}"
           success: "«%{filename}» مۇۋەپپەقىيەتلىك يۈكلەندى. ھۆججەت بىر تەرەپ قىلىنىۋاتىدۇ، ئۇنىڭ تىزىمدا كۆرۈنۈشىگە بىر قانچە مىنۇت كېتىدۇ."
-          error: "«%{filename}» نى يۈكلەۋاتقاندا خاتالىق كۆرۈلگەن: %{message}"
         settings: "تەڭشەكلەر"
         operations:
           is_running: "بىر مەشغۇلات ئىجرا قىلىنىۋاتىدۇ…"
@@ -7902,7 +7833,6 @@ ug:
           no_constructive_purpose: "جامائەت ئارىسىدا پەرقلىق قاراش پەيدا قىلغاندىن باشقا، بۇ ئىشلەتكۈچىنىڭ قىلمىشىنىڭ ھېچقانداق ئىجابىي مەقسىتى يوق"
           custom: "ئىختىيارى…"
         suspend_message: "ئېلخەت ئۇچۇرى"
-        suspend_message_placeholder: "تاللاشچان، توختىتىش ھەققىدە تېخىمۇ كۆپ ئۇچۇر تەمىنلەيدۇ ھەمدە ئۇنى ئىشلەتكۈچىگە ئېلخەتتە يوللايدۇ."
         suspended_by: "توختاتقۇچى"
         silence_reason: "سەۋەبى"
         silenced_by: "ئۈنسىزلىگۈچى"
@@ -7911,7 +7841,6 @@ ug:
         silence_reason_title: "ئۈنسىز قىلىش سەۋەبى"
         silence_reason_placeholder: "سۈكۈت قىلىش سەۋەبى"
         silence_message: "ئېلخەت ئۇچۇرى"
-        silence_message_placeholder: "(كۆڭۈلدىكى ئۇچۇرنى ئەۋەتىشتە بوش قالدۇرۇلىدۇ)"
         suspended_until: "(%{until} غىچە)"
         suspend_forever: "مەڭگۈلۈك توختات"
         cant_suspend: "بۇ ئىشلەتكۈچىنى توختاتقىلى بولمايدۇ."

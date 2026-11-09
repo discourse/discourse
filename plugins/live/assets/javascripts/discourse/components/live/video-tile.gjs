@@ -46,7 +46,16 @@ export default class LiveVideoTile extends Component {
   }
 
   get tileStyle() {
-    return trustHTML(`aspect-ratio: ${this.aspect ?? DEFAULT_TILE_ASPECT};`);
+    let style = `aspect-ratio: ${this.aspect ?? DEFAULT_TILE_ASPECT};`;
+
+    // View transition names must be unique on the page, so only the room
+    // page's tiles opt in.
+    if (this.args.animatesLayout) {
+      const name = CSS.escape(`live-tile-${this.participant.id}`);
+      style += ` view-transition-name: ${name};`;
+    }
+
+    return trustHTML(style);
   }
 
   get isPortrait() {

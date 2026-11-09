@@ -17,6 +17,11 @@
             <meta itemprop="position" content="<%= i + 1 %>" />
           </span>
         <% end %>
+        <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <meta itemprop="name" content="<%= gsub_emoji_to_unicode(@topic_view.title) %>" />
+          <link itemprop="item" href="<%= @topic_view.topic.url %>" />
+          <meta itemprop="position" content="<%= @breadcrumbs.size + 1 %>" />
+        </span>
       </div>
     <% end %>
 

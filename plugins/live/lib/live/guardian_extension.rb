@@ -183,6 +183,13 @@ module Live
       live_media_entitlements(room)[:can_screen_share]
     end
 
+    # Local recordings never touch the server; this only gates the control
+    # and the roster flag that tells everyone else a recording is running.
+    def can_record_live_locally?
+      return false unless can_access_live?
+      user.in_any_groups?(SiteSetting.live_local_recording_allowed_groups_map)
+    end
+
     # Only stage-room listeners have anything to request — anyone who can
     # already speak (including admins and everyone in open rooms) cannot.
     def can_request_to_speak_in_live_room?(room)

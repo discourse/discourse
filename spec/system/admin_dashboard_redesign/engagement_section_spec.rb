@@ -16,7 +16,6 @@ describe "Admin Dashboard Redesign | Engagement section" do
   let(:engagement) { dashboard.engagement }
 
   before do
-    SiteSetting.dashboard_improvements = true
     AdminDashboardSectionConfiguration.update(
       [
         { id: "engagement", visible: true },

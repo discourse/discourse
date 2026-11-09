@@ -90,4 +90,20 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(suggested["upvoteCount"]).to eq(0)
     end
   end
+
+  context "with a first post longer than the excerpt limit" do
+    fab!(:long_topic, :topic)
+    fab!(:long_post) do
+      Fabricate(:post, topic: long_topic, raw: Array.new(120) { |i| "word#{i}" }.join(" "))
+    end
+
+    subject(:json) do
+      described_class.new(long_topic, root: false).serializable_hash.deep_stringify_keys
+    end
+
+    it "uses the full text of the first post" do
+      expect(long_post.raw.length).to be > SiteSetting.post_excerpt_maxlength
+      expect(json["text"]).to eq(long_post.raw)
+    end
+  end
 end

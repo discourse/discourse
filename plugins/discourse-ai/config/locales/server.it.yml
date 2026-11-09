@@ -526,6 +526,14 @@ it:
       assign:
         errors:
           not_found: "Argomento non trovato."
+    appearance_authoring:
+      default_theme: "Tema predefinito"
+      colors:
+        light:
+          header_background: "Intestazione"
+      fonts:
+        base_font: "Carattere del corpo"
+        heading_font: "Carattere dell'intestazione"
     reviewables:
       ai_tool_action:
         approve:
@@ -575,6 +583,7 @@ it:
     embeddings:
       delete_failed: "Questo modello è attualmente in uso. Aggiorna prima `ai embeddings selected model`."
       cannot_edit_builtin: "Non è possibile modificare un modello incorporato."
+      missing_provider_param: "%{param} non può essere vuoto"
       configuration:
         disable_embeddings: "Devi prima disabilitare \"integrazioni ia abilitate\"."
         choose_model: "Imposta prima \"ai embeddings selected model\"."
