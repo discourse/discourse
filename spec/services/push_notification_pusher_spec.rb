@@ -456,6 +456,50 @@ RSpec.describe PushNotificationPusher do
           PushSubscription.where("data::jsonb ->> 'endpoint' = ?", endpoint).sole,
         ).to have_attributes(user_id: user.id, error_count: 0, first_error_at: nil)
       end
+
+      it "leaves the endpoint with a single account when two register it concurrently" do
+        endpoint = "https://fcm.googleapis.com/fcm/send/switched"
+        first_user_id = user.id
+        other_user = Fabricate(:user)
+        first_inserting = Queue.new
+        release_first = Queue.new
+        second_done = Queue.new
+        # pauses before the insert opens a transaction, which would hold the shared test connection
+        pause_first =
+          lambda do |subscription|
+            if subscription.new_record? && subscription.user_id == first_user_id
+              first_inserting << true
+              release_first.pop(timeout: 5)
+            end
+          end
+        PushSubscription.set_callback(:initialize, :after, pause_first)
+        threads = []
+
+        begin
+          threads << Thread.new { subscribe(endpoint) }
+          expect(first_inserting.pop(timeout: 5)).to eq(true)
+          threads << Thread.new do
+            PushNotificationPusher.subscribe(
+              other_user,
+              { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
+              "false",
+            )
+            second_done << true
+          end
+          second_done.pop(timeout: 1)
+        ensure
+          release_first << true
+          threads.each do |thread|
+            thread.kill unless thread.join(5)
+            thread.join
+          end
+          PushSubscription.skip_callback(:initialize, :after, pause_first)
+        end
+
+        expect(
+          PushSubscription.where("data::jsonb ->> 'endpoint' = ?", endpoint).pluck(:user_id),
+        ).to eq([other_user.id])
+      end
     end
 
     describe "`watching_category_or_tag` notifications" do

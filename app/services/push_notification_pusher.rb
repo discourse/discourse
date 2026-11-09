@@ -126,18 +126,25 @@ class PushNotificationPusher
 
     data = push_params.to_json
     by_endpoint = PushSubscription.where("data::jsonb ->> 'endpoint' = ?", endpoint)
-    # a browser endpoint delivers to whoever is signed in there now
-    by_endpoint.where.not(user_id: user.id).delete_all
 
-    subscription = by_endpoint.where(user_id: user.id).order(id: :desc).first
-    if subscription
-      by_endpoint.where(user_id: user.id).where.not(id: subscription.id).delete_all
-      subscription.update!(data: data) if subscription.data != data
-    else
-      RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
-      subscription = PushSubscription.create!(user: user, data: data)
-      prune_subscriptions(user)
-    end
+    # overlapping registrations from an account switch must not both keep a row
+    subscription =
+      DistributedMutex.synchronize("push_subscription_#{Digest::SHA1.hexdigest(endpoint)}") do
+        # a browser endpoint delivers to whoever is signed in there now
+        by_endpoint.where.not(user_id: user.id).delete_all
+
+        existing = by_endpoint.where(user_id: user.id).order(id: :desc).first
+        if existing
+          by_endpoint.where(user_id: user.id).where.not(id: existing.id).delete_all
+          existing.update!(data: data) if existing.data != data
+          existing
+        else
+          RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
+          created = PushSubscription.create!(user: user, data: data)
+          prune_subscriptions(user)
+          created
+        end
+      end
 
     if send_confirmation == "true"
       message = {
