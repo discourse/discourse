@@ -18,11 +18,12 @@ export interface CodeEditorParams {
   /** The `@lezer/highlight` module, for styling a grammar's tokens. */
   lezerHighlight: typeof import("@lezer/highlight");
   /**
-   * Helpers for expression editors whose grammar is compiled in core.
+   * Helpers for expression editors whose grammar is compiled in core. Present
+   * only once an editor was loaded asking for them.
    *
    * @internal Moves behind a registered language; do not build on it.
    */
-  utils: (typeof import("discourse/static/codemirror/expression-utils"))["expressionUtils"];
+  utils?: (typeof import("discourse/static/codemirror/expression-utils"))["expressionUtils"];
 }
 
 /** Builds the extensions an editor's `extensions` argument adds on top of the language. */

@@ -48,12 +48,16 @@ import {
 } from "@codemirror/view";
 import {
   type CodeEditorExtensionBuilder,
+  type CodeEditorLanguageBuilder,
   loadCodeEditorLanguage,
 } from "discourse/lib/code-editor-languages";
+import domFromString from "discourse/lib/dom-from-string";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 import { buildCodeEditorParams } from "../editor-params.ts";
 import { defaultHighlighting } from "../highlight-style.js";
+
+export { loadExpressionUtils } from "../editor-params.ts";
 
 export type LineWarning = {
   /** The 1-based line to mark. */
@@ -82,6 +86,7 @@ export interface CodemirrorEditorSignature {
     placeholder?: string | TrustedHTML;
     lineWarnings?: readonly LineWarning[];
     inputId?: string;
+    labelledBy?: string;
     describedBy?: string;
     invalid?: boolean;
     /** Everyday code-editing behaviour: brackets, folding, search, Tab. */
@@ -181,9 +186,8 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       return placeholder(content as string);
     }
 
-    const element = document.createElement("div");
-    element.innerHTML = content.toString();
-    return placeholder(element);
+    const [element] = domFromString(`<div>${content.toString()}</div>`);
+    return placeholder(element as HTMLElement);
   }
 
   // Beside the language's own completions, not instead of them.
@@ -244,6 +248,9 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
           ? { "aria-description": i18n("code_editor.tab_hint") }
           : {}),
         ...(this.args.inputId ? { id: this.args.inputId } : {}),
+        ...(this.args.labelledBy
+          ? { "aria-labelledby": this.args.labelledBy }
+          : {}),
         ...(this.args.describedBy
           ? { "aria-describedby": this.args.describedBy }
           : {}),
@@ -292,12 +299,11 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
       if (completionStatus(view.state)) {
         closeCompletion(view);
+      } else if (!codeMode) {
+        view.contentDOM.blur();
+        event.preventDefault();
+        return;
       } else if (!closeSearchPanel(view) && !simplifySelection(view)) {
-        if (!codeMode) {
-          view.contentDOM.blur();
-          event.preventDefault();
-          return;
-        }
         if (Date.now() - tabFocusArmedAt < TAB_FOCUS_WINDOW) {
           return;
         }
@@ -308,24 +314,52 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       event.stopPropagation();
     };
 
+    const disarmTabFocus = (view: EditorView) => {
+      if (tabFocusArmedAt) {
+        tabFocusArmedAt = 0;
+        view.setTabFocusMode(false);
+      }
+    };
+
+    // A contenteditable isn't labelable, so `<label for>` clicks don't reach it.
+    const focusFromLabel = (view: EditorView, event: MouseEvent) => {
+      const label = (event.target as Element | null)?.closest?.("label");
+      if (label && this.args.inputId && label.htmlFor === this.args.inputId) {
+        view.focus();
+      }
+    };
+
     extensions.push(
       ViewPlugin.fromClass(
         class {
           handler: (event: KeyboardEvent) => void;
+          pointerHandler: () => void;
+          clickHandler: (event: MouseEvent) => void;
+          view: EditorView;
 
           constructor(view: EditorView) {
+            this.view = view;
             this.handler = (event) => {
               if (view.dom.contains(document.activeElement)) {
                 handleKeydown(view, event);
               }
             };
+            this.pointerHandler = () => disarmTabFocus(view);
+            this.clickHandler = (event) => focusFromLabel(view, event);
             window.addEventListener("keydown", this.handler, { capture: true });
+            view.dom.addEventListener("pointerdown", this.pointerHandler);
+            document.addEventListener("click", this.clickHandler);
           }
 
           destroy() {
             window.removeEventListener("keydown", this.handler, {
               capture: true,
             });
+            this.view.dom.removeEventListener(
+              "pointerdown",
+              this.pointerHandler
+            );
+            document.removeEventListener("click", this.clickHandler);
           }
         }
       )
@@ -383,7 +417,16 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
   @action
   async updateLanguage() {
     const name = this.args.language;
-    const support = name ? await loadCodeEditorLanguage(name) : null;
+    let support: CodeEditorLanguageBuilder | null = null;
+    if (name) {
+      try {
+        support = await loadCodeEditorLanguage(name);
+      } catch (error) {
+        // The editor keeps working as plain text.
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    }
 
     // The editor can be torn down, or the language changed again, while the
     // module is loading.
@@ -481,7 +524,13 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       ...attributes
       {{didInsert this.setup}}
       {{didUpdate this.updateValue @value}}
-      {{didUpdate this.updateContentAttributes @inputId @describedBy @invalid}}
+      {{didUpdate
+        this.updateContentAttributes
+        @inputId
+        @labelledBy
+        @describedBy
+        @invalid
+      }}
       {{didUpdate this.updateLanguage @language}}
       {{didUpdate this.updateLanguage @languageOptions}}
       {{didUpdate this.updateReadOnly @readOnly}}

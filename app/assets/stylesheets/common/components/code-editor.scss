@@ -39,9 +39,19 @@
     /*! rtl:ignore */
     direction: ltr;
 
+    // An outline would sit beneath the gutters and scrollbars and outside a
+    // clipping host, so the ring is an inset layer above them.
     &.cm-focused {
-      outline: 2px solid var(--tertiary);
-      outline-offset: -1px;
+      outline: none;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 400;
+        border: 2px solid var(--tertiary);
+        pointer-events: none;
+      }
     }
   }
 

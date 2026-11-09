@@ -13,7 +13,7 @@ export default class VariableInput extends Component {
   @action
   async loadEditor() {
     const [Editor] = await Promise.all([
-      loadCodemirrorEditor(),
+      loadCodemirrorEditor({ expressionUtils: true }),
       this.workflowsNodeTypes.loadWorkflowVars(),
     ]);
 

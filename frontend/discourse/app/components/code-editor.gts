@@ -1,18 +1,19 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import type { TrustedHTML } from "@ember/template";
 import type { CodeEditorExtensionBuilder } from "discourse/lib/code-editor-languages";
 import loadCodemirrorEditor from "discourse/lib/load-codemirror";
-import CodemirrorEditor, {
-  LineWarning,
-} from "discourse/static/codemirror/components/codemirror-editor";
+import type { LineWarning } from "discourse/static/codemirror/components/codemirror-editor";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import { i18n } from "discourse-i18n";
 
 export type { LineWarning };
+
+const loadEditor = () => loadCodemirrorEditor();
 
 export interface CodeEditorSignature {
   Args: {
@@ -63,6 +64,8 @@ export interface CodeEditorSignature {
     lineWarnings?: readonly LineWarning[];
     /** Id for the editable area, so a field's errors can refer to it. */
     inputId?: string;
+    /** Ids of the elements that name the field, such as its label. */
+    labelledBy?: string;
     /** Ids of the elements that describe the field, such as help and errors. */
     describedBy?: string;
     /** Marks the editable area invalid. */
@@ -79,29 +82,15 @@ export interface CodeEditorSignature {
  * on top. With none of them, this is a plain text editor.
  */
 export default class CodeEditor extends Component<CodeEditorSignature> {
-  @tracked Editor: typeof CodemirrorEditor | null = null;
-
   #element: HTMLDivElement | null = null;
-
-  get isLoading() {
-    return !this.Editor;
-  }
 
   get lineNumbers() {
     return this.args.lineNumbers ?? true;
   }
 
   @action
-  async setup(element: HTMLDivElement) {
+  setup(element: HTMLDivElement) {
     this.#element = element;
-
-    const Editor = await loadCodemirrorEditor();
-
-    if (this.isDestroying) {
-      return;
-    }
-
-    this.Editor = Editor;
   }
 
   @action
@@ -123,9 +112,12 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
       ...attributes
       {{didInsert this.setup}}
     >
-      <DConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
-        {{#if this.Editor}}
-          <this.Editor
+      <DAsyncContent @asyncData={{loadEditor}}>
+        <:loading>
+          <DConditionalLoadingSpinner @condition={{true}} @size="small" />
+        </:loading>
+        <:content as |Editor|>
+          <Editor
             @autofocus={{@autofocus}}
             @codeMode={{true}}
             @completions={{@completions}}
@@ -133,6 +125,7 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
             @extensions={{@extensions}}
             @inputId={{@inputId}}
             @invalid={{@invalid}}
+            @labelledBy={{@labelledBy}}
             @language={{@language}}
             @languageOptions={{@languageOptions}}
             @lineNumbers={{this.lineNumbers}}
@@ -147,8 +140,16 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
             @readOnly={{@disabled}}
             @value={{@value}}
           />
-        {{/if}}
-      </DConditionalLoadingSpinner>
+        </:content>
+        <:error>
+          <DFlashMessage
+            class="code-editor__error"
+            role="alert"
+            @flash={{i18n "code_editor.load_failed"}}
+            @type="error"
+          />
+        </:error>
+      </DAsyncContent>
 
       {{#if @resizable}}
         <DResizeSeparator
