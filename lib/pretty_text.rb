@@ -198,6 +198,13 @@ module PrettyText
     baked = nil
     text = text || ""
 
+    watched_words_replace = WordWatcher.regexps_for_action(:replace)
+    if opts[:sanitize] == false && watched_words_replace.present?
+      # HTML replacements are raw HTML, so they can only be used when the
+      # cooked output is sanitized
+      watched_words_replace = watched_words_replace.transform_values { |attrs| attrs.except(:html) }
+    end
+
     protect do
       context = v8
 
@@ -235,7 +242,7 @@ module PrettyText
         __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.serialized_regexps_for_action(:censor).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.regexps_for_action(:replace).to_json};
+        __optInput.watchedWordsReplace = #{watched_words_replace.to_json};
         __optInput.watchedWordsLink = #{WordWatcher.regexps_for_action(:link).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
         __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
