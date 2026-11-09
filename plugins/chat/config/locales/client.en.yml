@@ -609,7 +609,6 @@ en:
         followed: "Joined"
         mute: "Mute channel"
         unmute: "Unmute channel"
-        muted_until: "Muted until %{until}"
         muted_until_hint: "until %{until}"
         mute_options:
           "off": "Off"

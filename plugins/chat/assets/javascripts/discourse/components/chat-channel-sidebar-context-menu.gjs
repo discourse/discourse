@@ -50,14 +50,6 @@ export default class ChatChannelSidebarContextMenu extends Component {
     );
   }
 
-  get unmuteTitle() {
-    if (!this.mutedUntil) {
-      return i18n("chat.settings.unmute");
-    }
-
-    return i18n("chat.settings.muted_until", { until: this.mutedUntil });
-  }
-
   get leaveLabel() {
     return this.channel.isDirectMessageChannel
       ? "chat.channel_settings.close_channel"
@@ -183,7 +175,6 @@ export default class ChatChannelSidebarContextMenu extends Component {
             @action={{this.unmuteChannel}}
             @icon="bell"
             @label="chat.settings.unmute"
-            @translatedTitle={{this.unmuteTitle}}
           >
             {{#if this.mutedUntil}}
               <span class="chat-channel-sidebar-link-menu__muted-until">
