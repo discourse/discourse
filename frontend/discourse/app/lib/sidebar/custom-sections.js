@@ -1,9 +1,11 @@
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
 import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminSidebarPanel from "./admin-sidebar.js";
 import UserNavSidebarPanel from "./user-nav-sidebar.js";
@@ -39,10 +41,18 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
       ? topicController.model
       : null;
 
+    // A homepage another section registers, like chat's, leads straight back
+    // there from "/", so the forum's tab goes to a topic list instead
+    const listRoute = discoveryHomepageRoute();
+    const url =
+      listRoute === `discovery.${defaultHomepage()}`
+        ? "/"
+        : router.urlFor(listRoute);
+
     return {
       label: i18n("mobile_tab_bar.topics"),
       icon: "layer-group",
-      url: "/",
+      url,
       // The topic lists, by category or tag, and their topics; pages of their
       // own, like search or profiles, belong to no section
       ownsRoute: (routeInfo) =>

@@ -110,4 +110,19 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
     expect(page).to have_no_css("[data-menu-option-id='startDm']")
     expect(page).to have_no_css("[data-menu-option-id='startGroupChat']")
   end
+
+  it "takes the user from chat as the homepage to the forum's topic list" do
+    SiteSetting.top_menu = "latest|new|top|categories"
+    SiteSetting.default_homepage = "chat"
+    SiteSetting.chat_homepage_channel = channel_1.id
+
+    visit("/")
+
+    expect(tab_bar).to have_active_tab("chat")
+
+    tab_bar.click_tab("main")
+
+    expect(page).to have_current_path("/latest")
+    expect(tab_bar).to have_active_tab("main")
+  end
 end

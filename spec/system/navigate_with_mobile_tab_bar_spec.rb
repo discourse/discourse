@@ -149,6 +149,18 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(topic_list).to have_no_topics
   end
 
+  it "keeps the list's own controls on a tag intersection, which has no views beside the tabs" do
+    SiteSetting.tagging_enabled = true
+    sour = Fabricate(:tag, name: "sour")
+    tangy = Fabricate(:tag, name: "tangy")
+    Fabricate(:topic, tags: [sour, tangy])
+
+    visit("/tags/intersection/sour/tangy")
+
+    expect(page).to have_no_css(".mobile-tab-bar__views #navigation-bar")
+    expect(page).to have_css(".navigation-controls .bulk-select")
+  end
+
   it "fixes category positions while admins reorder from the category list, keeping them only once an order is saved" do
     SiteSetting.fixed_category_positions = false
 

@@ -229,9 +229,9 @@ export default class DNavigation extends Component {
     });
   }
 
-  // With the tab bar, dismissing sits in the options beside the list's views,
-  // which tag intersections go without
-  get dismissInOptions() {
+  // With the tab bar, the list's options sit in the menu beside its views,
+  // which tag intersections go without, so they keep the controls here
+  get optionsInTabBar() {
     return this.mobileTabBar.enabled && !this.additionalTags;
   }
 
@@ -400,14 +400,11 @@ export default class DNavigation extends Component {
     {{/unless}}
 
     <div class="navigation-controls">
-      {{! With the tab bar, these sit in the options menu beside the list's views }}
-      {{#if
-        (and this.showBulkSelectInNavControls (not this.mobileTabBar.enabled))
-      }}
+      {{#if (and this.showBulkSelectInNavControls (not this.optionsInTabBar))}}
         <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
       {{/if}}
 
-      {{#unless this.dismissInOptions}}
+      {{#unless this.optionsInTabBar}}
         <TopicDismissButtons
           @dismissRead={{@dismissRead}}
           @model={{@model}}
