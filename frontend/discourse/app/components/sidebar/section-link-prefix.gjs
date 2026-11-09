@@ -39,7 +39,7 @@ export default class SidebarSectionLinkPrefix extends Component {
   }
 
   <template>
-    {{#if @prefixType}}
+    {{#if (and @prefixType this.prefixValue)}}
       <span
         class={{dConcatClass
           "sidebar-section-link-prefix"
