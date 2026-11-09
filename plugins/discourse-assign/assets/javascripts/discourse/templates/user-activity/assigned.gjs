@@ -31,7 +31,7 @@ export default <template>
 
     <PluginOutlet
       @name="before-assigned-topic-list"
-      @outletArgs={{lazyHash controller=@controller}}
+      @outletArgs={{lazyHash controller=@controller queue="user"}}
     />
 
     <DLoadMore
