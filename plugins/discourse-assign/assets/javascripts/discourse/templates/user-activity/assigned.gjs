@@ -1,6 +1,8 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import BasicTopicList from "discourse/components/basic-topic-list";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
@@ -26,6 +28,11 @@ export default <template>
         />
       </div>
     </div>
+
+    <PluginOutlet
+      @name="before-assigned-topic-list"
+      @outletArgs={{lazyHash controller=@controller}}
+    />
 
     <DLoadMore
       class="paginated-topics-list"
