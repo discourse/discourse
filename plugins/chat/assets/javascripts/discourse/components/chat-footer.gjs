@@ -76,11 +76,14 @@ export default class ChatFooter extends Component {
     ].filter(Boolean).length;
   }
 
+  // With the site's tab bar, the list's navbar gives its options to the
+  // footer, which then shows for them even with a single view
   get shouldRenderFooter() {
     return (
       (this.site.mobileView || this.chatStateManager.isDrawerExpanded) &&
       this.chatStateManager.hasPreloadedChannels &&
-      this.enabledRouteCount > 1
+      (this.enabledRouteCount > 1 ||
+        (this.mobileTabBar.enabled && !!this.listOptionsSection))
     );
   }
 

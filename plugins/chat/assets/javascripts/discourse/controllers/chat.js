@@ -8,6 +8,7 @@ export default class ChatController extends Controller {
   @service chatChannelsManager;
   @service siteSettings;
   @service router;
+  @service mobileTabBar;
 
   get shouldUseChatSidebar() {
     if (this.chat.chatDisabledInPreferences) {
@@ -44,10 +45,12 @@ export default class ChatController extends Controller {
     ].filter(Boolean).length;
   }
 
+  // With the site's tab bar, the footer also holds the list's options, which
+  // the list's own navbar gives up to it, so it's needed for a single view too
   get shouldUseChatFooter() {
     return (
       FOOTER_NAV_ROUTES.includes(this.router.currentRouteName) &&
-      this.enabledRouteCount > 1
+      (this.enabledRouteCount > 1 || this.mobileTabBar.enabled)
     );
   }
 

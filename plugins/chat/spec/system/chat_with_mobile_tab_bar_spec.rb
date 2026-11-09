@@ -100,6 +100,20 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
     expect(page).to have_no_css(".c-routes.--channels > .c-navbar-container")
   end
 
+  it "keeps the list's options for a member with only the channels to view" do
+    SiteSetting.chat_threads_enabled = false
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+
+    visit("/chat")
+
+    expect(page).to have_css(".mobile-tab-bar__views .c-footer.--pills #c-footer-channels")
+    expect(page).to have_no_css(".c-footer.--pills #c-footer-direct-messages")
+
+    find(".c-footer__options .chat-channel-list-options-button").click
+
+    expect(page).to have_css("[data-menu-option-id='filterChannels']")
+  end
+
   it "leaves starting chats to the create button rather than the list options" do
     Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
 
