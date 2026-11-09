@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:admin)
 
@@ -154,7 +154,7 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
   context "with a queued AI tool action" do
     fab!(:ai_agent)
     fab!(:target_user, :user)
-    let(:tool_action_reviewable) do
+    fab!(:tool_action_reviewable) do
       tool_action =
         AiToolAction.create!(
           tool_name: "suspend_user",
