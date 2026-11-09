@@ -50,6 +50,7 @@ import {
   type CodeEditorExtensionBuilder,
   loadCodeEditorLanguage,
 } from "discourse/lib/code-editor-languages";
+import domFromString from "discourse/lib/dom-from-string";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 import { buildCodeEditorParams } from "../editor-params.ts";
@@ -181,9 +182,8 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       return placeholder(content as string);
     }
 
-    const element = document.createElement("div");
-    element.innerHTML = content.toString();
-    return placeholder(element);
+    const [element] = domFromString(`<div>${content.toString()}</div>`);
+    return placeholder(element as HTMLElement);
   }
 
   // Beside the language's own completions, not instead of them.
@@ -383,27 +383,33 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
   @action
   async updateLanguage() {
     const name = this.args.language;
-    const support = name ? await loadCodeEditorLanguage(name) : null;
+    let extension: Extension = [];
 
-    // The editor can be torn down, or the language changed again, while the
-    // module is loading.
+    try {
+      const support = name ? await loadCodeEditorLanguage(name) : null;
+
+      // The editor can be torn down, or the language changed again, while
+      // the module is loading.
+      if (support && this.view && this.args.language === name) {
+        // Shortcuts bring the palette and completion UI; raw `@extensions`
+        // bring their own.
+        extension = [
+          support(buildCodeEditorParams(), this.args.languageOptions),
+          defaultHighlighting(),
+          autocompletion(),
+        ];
+      }
+    } catch (error) {
+      // The editor keeps working as plain text.
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+
     if (!this.view || this.args.language !== name) {
       return;
     }
 
-    // Shortcuts bring the palette and completion UI; raw `@extensions` bring
-    // their own.
-    this.view.dispatch({
-      effects: this.#language.reconfigure(
-        support
-          ? [
-              support(buildCodeEditorParams(), this.args.languageOptions),
-              defaultHighlighting(),
-              autocompletion(),
-            ]
-          : []
-      ),
-    });
+    this.view.dispatch({ effects: this.#language.reconfigure(extension) });
   }
 
   @action
