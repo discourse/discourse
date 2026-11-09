@@ -20,6 +20,15 @@ module PageObjects
         self
       end
 
+      def click_log_in
+        find("#{SELECTOR} .mobile-tab-bar__login").click
+        self
+      end
+
+      def has_named_log_in?
+        has_css?("#{SELECTOR} .mobile-tab-bar__login .d-button-label", text: I18n.t("js.log_in"))
+      end
+
       def click_create_action(label)
         find(".mobile-tab-bar__create-action", text: label).click
         self
@@ -36,6 +45,10 @@ module PageObjects
 
       def has_active_tab?(key)
         has_css?("#{SELECTOR} .mobile-tab-bar__tab.--active[data-key='#{key}']")
+      end
+
+      def has_no_active_tab?
+        has_css?(SELECTOR) && has_no_css?("#{SELECTOR} .mobile-tab-bar__tab.--active")
       end
 
       def visible?

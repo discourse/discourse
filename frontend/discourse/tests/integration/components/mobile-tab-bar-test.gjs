@@ -4,6 +4,7 @@ import MobileTabBar from "discourse/components/mobile-tab-bar";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 
 function addTabPanel(panelKey, { primary = false, createActions } = {}) {
   withPluginApi((api) => {
@@ -147,7 +148,25 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
     );
   });
 
-  test("shows the tab's badge over its icon", async function (assert) {
+  test("shows the review count on the menu button for any reviewer", async function (assert) {
+    this.currentUser.set("reviewable_count", 3);
+    this.currentUser.set("admin", false);
+    this.currentUser.set("moderator", false);
+    addTabPanel("one");
+
+    await render(<template><MobileTabBar /></template>);
+
+    assert.dom(".mobile-tab-bar__menu .mobile-tab-bar__count").hasText("3");
+    assert
+      .dom(".mobile-tab-bar__menu")
+      .hasAria(
+        "label",
+        i18n("mobile_tab_bar.menu_with_reviewables", { count: 3 }),
+        "names the count, which the label would otherwise hide"
+      );
+  });
+
+  test("leaves the review count off the admin tab", async function (assert) {
     this.currentUser.set("reviewable_count", 3);
     this.currentUser.set("admin", true);
     addTabPanel("one");
@@ -156,6 +175,6 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
 
     assert
       .dom(".mobile-tab-bar__tab[data-key='admin'] .mobile-tab-bar__count")
-      .hasText("3");
+      .doesNotExist();
   });
 });

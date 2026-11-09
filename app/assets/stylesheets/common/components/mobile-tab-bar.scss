@@ -1,23 +1,68 @@
 html.mobile-tab-bar-visible {
-  --mobile-tab-bar-controls-height: 4.125rem;
-  --mobile-tab-bar-views-height: 2.75rem;
-
-  // Layouts across the app already clear the footer nav by this height
-  --footer-nav-height: var(--mobile-tab-bar-controls-height);
-
-  &:has(.mobile-tab-bar__views > :not(.mobile-tab-bar__views-highlight)) {
-    --footer-nav-height: calc(
-      var(--mobile-tab-bar-controls-height) + var(--mobile-tab-bar-views-height)
-    );
-  }
-}
-
-// Floating controls over the page: the menu and create buttons on their own,
-// the section tabs grouped in a pill between them. A section's views, when it
-// has any, sit in a strip above them.
-.mobile-tab-bar {
   --mobile-tab-bar-control-size: 3.25rem;
+  --mobile-tab-bar-controls-height: 4.125rem;
 
+  // The controls over the tabs, kept clear of the smallest comfortable tap
+  --mobile-tab-bar-item-size: 2.25rem;
+
+  // The views' bubble, around its items, and the gap below it
+  --mobile-tab-bar-views-height: calc(
+    var(--mobile-tab-bar-item-size) + var(--space-1) * 3
+  );
+
+  // Room kept below the controls, and to their sides
+  --mobile-tab-bar-bottom-inset: env(safe-area-inset-bottom);
+  --mobile-tab-bar-side-inset: var(--space-3);
+
+  // The bottom corners of the controls at either end, nearest the screen's,
+  // and how far their icons move from them to look centred once rounded
+  --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
+  --mobile-tab-bar-corner-nudge: 0px;
+
+  // Installed on an iPhone, the app reaches the screen's rounded corners, so
+  // the controls sit partly in the home indicator's area, with room enough
+  // from the sides and bottom to clear the corners' curve and stay easy to
+  // tap. Elsewhere the safe area can hold the system's own buttons, as with
+  // Android's three-button navigation, so the controls stay clear of it.
+  @media (display-mode: standalone) {
+    &.ios-device {
+      --mobile-tab-bar-side-inset: max(
+        var(--space-3),
+        min(env(safe-area-inset-bottom) * 100, var(--space-5))
+      );
+
+      // Leaves the controls this far from the bottom, less the room the row
+      // already keeps around them
+      --mobile-tab-bar-bottom-inset: min(
+        env(safe-area-inset-bottom),
+        calc(
+          var(--space-6) -
+            (
+              var(--mobile-tab-bar-controls-height) - var(
+                  --mobile-tab-bar-control-size
+                )
+            ) /
+            2
+        )
+      );
+
+      // Follow the screen's rounded corners, where it has a home indicator
+      // and so has them: concentric with recent iPhones', inside the inset
+      --mobile-tab-bar-corner-radius: max(
+        var(--d-button-border-radius),
+        min(
+          env(safe-area-inset-bottom) * 100,
+          calc(3.5rem - var(--mobile-tab-bar-side-inset))
+        )
+      );
+      --mobile-tab-bar-corner-nudge: min(
+        env(safe-area-inset-bottom) * 100,
+        var(--space-half)
+      );
+    }
+  }
+
+  // Set here rather than on the bar, so the page's own bubbles over it match.
   // The theme's button radius, so containers match the buttons beside them;
   // items inside keep their corners parallel, never quite square
   --mobile-tab-bar-radius: var(--d-button-border-radius);
@@ -29,6 +74,27 @@ html.mobile-tab-bar-visible {
   // Kept close, as the controls have no border to set them off
   --mobile-tab-bar-shadow:
     0 1px 2px rgb(0, 0, 0, 0.12), 0 2px 6px rgb(0, 0, 0, 0.08);
+
+  // Layouts across the app already clear the footer nav by this height plus
+  // the safe area, so it gives back whatever of the safe area the bar sits in
+  --footer-nav-height: calc(
+    var(--mobile-tab-bar-controls-height) +
+      var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
+  );
+
+  &:has(.mobile-tab-bar__views > :not(.mobile-tab-bar__views-highlight)) {
+    --footer-nav-height: calc(
+      var(--mobile-tab-bar-controls-height) +
+        var(--mobile-tab-bar-views-height) +
+        var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
+    );
+  }
+}
+
+// Floating controls over the page: the menu and create buttons on their own,
+// the section tabs grouped in a pill between them. A section's views, when it
+// has any, sit in a strip above them.
+.mobile-tab-bar {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -38,7 +104,7 @@ html.mobile-tab-bar-visible {
   justify-content: flex-end;
   width: 100%;
   height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
-  padding: 0 var(--space-3) env(safe-area-inset-bottom);
+  padding: 0 var(--mobile-tab-bar-side-inset) var(--mobile-tab-bar-bottom-inset);
   box-sizing: border-box;
 
   // Content scrolls underneath, so dim it behind the controls without hiding
@@ -49,7 +115,7 @@ html.mobile-tab-bar-visible {
     rgb(var(--secondary-rgb), 0.2) 25%,
     rgb(var(--secondary-rgb), 0.5) 50%,
     rgb(var(--secondary-rgb), 0.75) 75%,
-    rgb(var(--secondary-rgb), 0.9)
+    rgb(var(--secondary-rgb), 1)
   );
   pointer-events: none;
 
@@ -102,6 +168,11 @@ html.mobile-tab-bar-visible {
       min-width: 0;
     }
 
+    // Points at no tab on pages outside every section
+    .--no-section &::after {
+      display: none;
+    }
+
     // Stops short of the tab it points at, clear of its fill; behind the
     // views and their highlight, so only the part below the bubble shows
     &::after {
@@ -143,6 +214,7 @@ html.mobile-tab-bar-visible {
     }
 
     > li > a {
+      min-height: var(--mobile-tab-bar-item-size);
       padding: var(--space-1) var(--space-3);
       border-radius: var(--mobile-tab-bar-inner-radius);
       color: var(--header_primary-high);
@@ -206,8 +278,8 @@ html.mobile-tab-bar-visible {
   // Round like the views beside it, inside the bubble
   &__views .navigation-options__trigger {
     flex: none;
-    width: 1.875rem;
-    height: 1.875rem;
+    width: var(--mobile-tab-bar-item-size);
+    height: var(--mobile-tab-bar-item-size);
     margin-left: var(--space-2);
     padding: 0;
     border-radius: var(--mobile-tab-bar-inner-radius);
@@ -299,6 +371,7 @@ html.mobile-tab-bar-visible {
 
   &__menu,
   &__tabs,
+  &__signup,
   &__create {
     flex: none;
     height: var(--mobile-tab-bar-control-size);
@@ -323,8 +396,21 @@ html.mobile-tab-bar-visible {
   }
 
   &__menu {
+    position: relative;
+    border-bottom-left-radius: var(--mobile-tab-bar-corner-radius);
+
+    // Over the icon's corner, as on the tabs
+    .mobile-tab-bar__badge {
+      top: var(--space-2);
+      left: 55%;
+    }
+
     .d-icon {
       color: var(--header_primary-medium);
+      transform: translate(
+        var(--mobile-tab-bar-corner-nudge),
+        calc(var(--mobile-tab-bar-corner-nudge) * -1)
+      );
     }
 
     // Outweighs the transparent button style it's built on, which clears the
@@ -351,6 +437,65 @@ html.mobile-tab-bar-visible {
       .d-icon {
         color: var(--d-nav-color--active);
       }
+    }
+  }
+
+  // Visitors log in where members create; named like the tabs beside them,
+  // with the label under the icon
+  &__login,
+  &__signup {
+    flex-direction: column;
+    gap: var(--space-half);
+    width: auto;
+    min-width: var(--mobile-tab-bar-control-size);
+    padding-inline: var(--space-3);
+
+    .d-icon {
+      margin: 0;
+      font-size: var(--font-0);
+      color: inherit;
+    }
+
+    .d-button-label {
+      font-size: var(--font-down-3);
+      white-space: nowrap;
+    }
+  }
+
+  // Signing up needs the room a lone tab leaves; logging in leads, so it
+  // takes the controls' own look
+  &__signup {
+    display: none;
+
+    &.btn-default {
+      border: 0;
+      background: var(--header_background);
+      color: var(--d-nav-color--active);
+    }
+  }
+
+  // A visitor with only the topics has room to sign up as well as log in,
+  // beside the tab, which keeps the rest
+  &__controls:not(:has(.mobile-tab-bar__tab ~ .mobile-tab-bar__tab)) {
+    .mobile-tab-bar__signup {
+      display: inline-flex;
+    }
+
+    // Widening with the screen, so the tab doesn't take it all on big phones
+    .mobile-tab-bar__signup,
+    .mobile-tab-bar__login {
+      min-width: clamp(var(--mobile-tab-bar-control-size), 20vw, 6rem);
+    }
+  }
+
+  &__create {
+    border-bottom-right-radius: var(--mobile-tab-bar-corner-radius);
+
+    .d-icon {
+      transform: translate(
+        calc(var(--mobile-tab-bar-corner-nudge) * -1),
+        calc(var(--mobile-tab-bar-corner-nudge) * -1)
+      );
     }
   }
 
@@ -414,10 +559,16 @@ html.mobile-tab-bar-visible {
     transform: translateX(var(--mobile-tab-bar-highlight-x, 0));
     pointer-events: none;
 
+    // Gone on pages outside every section, until one is current again
+    .--no-section & {
+      opacity: 0;
+    }
+
     [data-sliding] > & {
       transition:
         transform 250ms ease,
-        width 250ms ease;
+        width 250ms ease,
+        opacity 250ms ease;
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -724,5 +875,129 @@ html.mobile-tab-bar-titled .d-page-header {
   // The page's actions keep their place at the end of the row
   .d-page-header__title-row {
     justify-content: flex-end;
+  }
+}
+
+// A topic's progress takes the views' place over the tabs, as a bubble whose
+// fill marks how far along it is, like the views' highlight, after the
+// topic's tools. Held in place over the tabs like the views, rather than
+// stopping at the end of the topic, and kept while scrolling down, as that's
+// when it's read. Only while it shows the progress: expanded, its timeline
+// takes the whole screen, which holding it in place would keep under the posts.
+html.mobile-tab-bar-visible
+  .container.posts
+  .topic-navigation.with-topic-progress {
+  position: fixed;
+  right: 0;
+  left: 0;
+  justify-content: center;
+  margin: 0;
+  bottom: calc(
+    var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-1) +
+      var(--composer-height, 0px)
+  );
+
+  #topic-progress-wrapper {
+    position: relative;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    overflow: visible;
+    border-radius: var(--mobile-tab-bar-radius);
+    background: var(--header_background);
+    box-shadow: var(--mobile-tab-bar-shadow);
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease,
+      visibility 200ms;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    // Hidden until the stream loads, leaving only the admin buttons
+    &:not(:has(#topic-progress:not(.hidden))) {
+      display: none;
+    }
+
+    // Slides away behind the tabs past the end of the topic, as the views do
+    // while scrolling down
+    &.docked {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(100%);
+    }
+  }
+
+  .topic-admin-menu-trigger,
+  .topic-content-language-preferences {
+    width: var(--mobile-tab-bar-item-size);
+    height: var(--mobile-tab-bar-item-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: transparent;
+
+    .d-icon {
+      color: var(--header_primary-medium);
+    }
+  }
+
+  // Outweighs the progress's own look, set by both ids
+  #topic-progress-wrapper #topic-progress {
+    min-width: 7rem;
+    height: var(--mobile-tab-bar-item-size);
+    padding: 0 var(--space-3);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: transparent;
+    color: var(--d-nav-color--active);
+
+    .nums {
+      font-size: var(--font-down-1);
+    }
+
+    .bg {
+      background: var(--d-selected);
+    }
+  }
+
+  // Apart after the bubble, and out of its flow, so the bubble neither moves
+  // nor resizes as it comes and goes
+  .progress-back-container {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: calc(100% + var(--space-2));
+    margin: 0;
+  }
+
+  // Just the arrow, shaped like the bubble beside it; outweighs its own look,
+  // set by id
+  #topic-progress-wrapper .btn.progress-back {
+    aspect-ratio: 1;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--mobile-tab-bar-radius);
+    background: var(--header_background);
+    box-shadow: var(--mobile-tab-bar-shadow);
+
+    .d-icon {
+      margin: 0;
+      color: var(--d-nav-color--active);
+    }
+
+    .d-button-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: rect(0 0 0 0);
+    }
   }
 }

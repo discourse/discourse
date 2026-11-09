@@ -6488,6 +6488,9 @@ en:
       new_personal_message: "New personal message"
       create: "Create"
       menu: "Menu"
+      menu_with_reviewables:
+        one: "Menu, %{count} item to review"
+        other: "Menu, %{count} items to review"
       back: "Back"
       topics: "Topics"
       drafts:

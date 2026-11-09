@@ -1,6 +1,5 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import MobileTabBarReviewBadge from "discourse/components/mobile-tab-bar/review-badge";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -393,7 +392,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     return {
       label: i18n("admin_title"),
       icon: "wrench",
-      badgeComponent: MobileTabBarReviewBadge,
       url: "/admin/menu",
       ownsRoute: (routeInfo) => routeInfo.name.startsWith("admin"),
       isNestedRoute: (routeInfo) => routeInfo.name !== "adminMenu",

@@ -227,6 +227,12 @@ export default class DNavigation extends Component {
     });
   }
 
+  // With the tab bar, dismissing sits in the options beside the list's views,
+  // which tag intersections go without
+  get dismissInOptions() {
+    return this.mobileTabBar.enabled && !this.additionalTags;
+  }
+
   @computed("showResetNew", "filterType", "currentUser.unified_new_enabled")
   get showNewDismissCombo() {
     return (
@@ -370,8 +376,14 @@ export default class DNavigation extends Component {
                 this.showCategoryAdmin
                 (or this.currentUser.admin this.fixedCategoryPositions)
               }}
+              @dismissRead={{@dismissRead}}
+              @model={{@model}}
               @reorderCategories={{this.reorderCategories}}
+              @resetNew={{@resetNew}}
               @showBulkSelect={{this.showBulkSelectInNavControls}}
+              @showDismissRead={{@showDismissRead}}
+              @showNewDismissCombo={{this.showNewDismissCombo}}
+              @showResetNew={{@showResetNew}}
             />
           {{/in-element}}
         {{/if}}
@@ -393,16 +405,18 @@ export default class DNavigation extends Component {
         <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
       {{/if}}
 
-      <TopicDismissButtons
-        @dismissRead={{@dismissRead}}
-        @model={{@model}}
-        @position="top"
-        @resetNew={{@resetNew}}
-        @selectedTopics={{@bulkSelectHelper.selected}}
-        @showDismissRead={{@showDismissRead}}
-        @showNewDismissCombo={{this.showNewDismissCombo}}
-        @showResetNew={{@showResetNew}}
-      />
+      {{#unless this.dismissInOptions}}
+        <TopicDismissButtons
+          @dismissRead={{@dismissRead}}
+          @model={{@model}}
+          @position="top"
+          @resetNew={{@resetNew}}
+          @selectedTopics={{@bulkSelectHelper.selected}}
+          @showDismissRead={{@showDismissRead}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{@showResetNew}}
+        />
+      {{/unless}}
 
       {{#if this.showCategoryAdmin}}
         {{#if this.mobileTabBar.enabled}}

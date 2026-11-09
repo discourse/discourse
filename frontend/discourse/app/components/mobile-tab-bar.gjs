@@ -284,6 +284,7 @@ export default class MobileTabBar extends Component {
         class={{dConcatClass
           "mobile-tab-bar"
           (if this.viewsTucked "--views-tucked")
+          (unless this.mobileTabBar.sectionTabKey "--no-section")
         }}
       >
         <div
@@ -312,7 +313,7 @@ export default class MobileTabBar extends Component {
               {{/each}}
             </div>
           </div>
-          <CreateButton />
+          <CreateButton @canSignUp={{@canSignUp}} />
         </div>
       </nav>
     {{/if}}

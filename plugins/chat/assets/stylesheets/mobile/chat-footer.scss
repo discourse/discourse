@@ -74,8 +74,8 @@ html.mobile-tab-bar-visible {
 
       // Sits inside the tab bar's bubble, shaped like the lists beside it
       .btn {
-        width: 1.875rem;
-        height: 1.875rem;
+        width: var(--mobile-tab-bar-item-size);
+        height: var(--mobile-tab-bar-item-size);
         padding: 0;
         border: 0;
         border-radius: var(--mobile-tab-bar-inner-radius);

@@ -114,6 +114,41 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_no_css(".navigation-options__bulk-select")
   end
 
+  it "dismisses new and unread topics from the options beside the list's views" do
+    current_user.user_option.update!(new_topic_duration_minutes: User::NewTopicDuration::ALWAYS)
+    Fabricate.times(2, :post)
+    unread = Fabricate(:post).topic
+    Fabricate(:post, topic: unread)
+    TopicUser.update_last_read(current_user, unread.id, 1, 1, 0)
+    TopicUser.change(
+      current_user.id,
+      unread.id,
+      notification_level: TopicUser.notification_levels[:tracking],
+    )
+    topic_list = PageObjects::Components::TopicList.new
+
+    visit("/unread")
+
+    expect(topic_list).to have_topic(unread)
+    expect(page).to have_no_css(".dismiss-container-top")
+
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
+    find(".navigation-options__dismiss-read").click
+    find("#dismiss-read-confirm").click
+
+    expect(topic_list).to have_no_topics
+
+    visit("/new")
+
+    expect(topic_list).to have_topics
+    expect(page).to have_no_css(".dismiss-container-top")
+
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
+    find(".navigation-options__dismiss-new").click
+
+    expect(topic_list).to have_no_topics
+  end
+
   it "fixes category positions while admins reorder from the category list, keeping them only once an order is saved" do
     SiteSetting.fixed_category_positions = false
 
@@ -179,6 +214,23 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     page.execute_script("window.scrollTo(0, 400)")
 
     expect(page).to have_no_css(".mobile-tab-bar.--views-tucked")
+  end
+
+  it "hides the topic's progress at the end of the topic rather than leaving it to scroll away" do
+    topic = Fabricate(:topic)
+    Fabricate.times(8, :post, topic: topic)
+
+    visit(topic.url)
+
+    expect(page).to have_css("#topic-progress-wrapper:not(.docked) #topic-progress .nums")
+
+    page.execute_script("window.scrollTo(0, document.documentElement.scrollHeight)")
+
+    expect(page).to have_css("#topic-progress-wrapper.docked", visible: :hidden)
+
+    page.execute_script("window.scrollTo(0, 0)")
+
+    expect(page).to have_css("#topic-progress-wrapper:not(.docked) #topic-progress .nums")
   end
 
   it "offers a new topic only where the topic list would" do
@@ -271,19 +323,35 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css(".d-header .title:not(.title--minimized)")
   end
 
-  it "takes the user to search from the header" do
+  it "takes the user to search from the header, a page of its own outside the sections" do
     visit("/latest")
 
     find(".d-header-icons .search-dropdown").click
 
     expect(page).to have_current_path("/search")
+    expect(tab_bar).to have_no_active_tab
+  end
+
+  it "leaves pages of their own outside the topics section" do
+    visit("/filter")
+
+    expect(tab_bar).to have_no_active_tab
+
+    visit("/g")
+
+    expect(tab_bar).to have_no_active_tab
+
+    visit(
+      "/c/#{Category.find(SiteSetting.uncategorized_category_id).slug}/#{SiteSetting.uncategorized_category_id}",
+    )
+
     expect(tab_bar).to have_active_tab("main")
   end
 
-  it "keeps profile navigation on the page so the menu stays with the active tab" do
+  it "keeps profile navigation on the page, outside every section" do
     visit("/u/bob/summary")
 
-    expect(tab_bar).to have_active_tab("main")
+    expect(tab_bar).to have_no_active_tab
     expect(page).to have_css(".user-navigation-primary")
 
     visit("/u/alice/summary")
@@ -301,7 +369,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     find("#quick-access-profile .summary a").click
 
     expect(page).to have_current_path("/u/#{current_user.username}/summary")
-    expect(tab_bar).to have_active_tab("admin")
+    expect(tab_bar).to have_no_active_tab
     expect(page).to have_no_css(".mobile-tab-bar-back")
     expect(page).to have_no_css(".mobile-tab-bar-title")
 

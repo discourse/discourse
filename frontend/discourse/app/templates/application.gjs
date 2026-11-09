@@ -185,7 +185,7 @@ export default <template>
         <FooterNav />
       </PluginOutlet>
     {{else}}
-      <MobileTabBar />
+      <MobileTabBar @canSignUp={{@controller.canSignUp}} />
     {{/if}}
   </DiscourseRoot>
 

@@ -42,6 +42,11 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
       label: i18n("mobile_tab_bar.topics"),
       icon: "layer-group",
       url: "/",
+      // The topic lists, by category or tag, and their topics; pages of their
+      // own, like search or profiles, belong to no section
+      ownsRoute: (routeInfo) =>
+        /^(discovery|topic|tag|tags)(\.|$)/.test(routeInfo.name) &&
+        routeInfo.name !== "discovery.filter",
       isNestedRoute: (routeInfo) => routeInfo.name.startsWith("topic."),
       showsTitleInHeader: () => true,
       createActions: [

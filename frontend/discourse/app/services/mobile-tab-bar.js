@@ -5,7 +5,6 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
-import { profileUsernameForRoute } from "discourse/lib/sidebar/user-nav-sidebar";
 import DiscourseURL from "discourse/lib/url";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -32,7 +31,7 @@ export default class MobileTabBar extends Service {
   @service site;
   @service siteSettings;
 
-  /** The section the current page belongs to. */
+  /** The section the current page belongs to, if any. */
   @tracked sectionTabKey = MAIN_PANEL;
 
   /** Whether the current page sits below its section's top level. */
@@ -73,9 +72,10 @@ export default class MobileTabBar extends Service {
   /** Whether the tab bar stands in for the header's menu on this page view. */
   get enabled() {
     return (
-      !!this.currentUser &&
       this.siteSettings.enable_mobile_tab_bar &&
-      this.site.mobileView
+      this.site.mobileView &&
+      // Visitors to a private site have only the login page to see
+      (!!this.currentUser || !this.siteSettings.login_required)
     );
   }
 
@@ -184,21 +184,17 @@ export default class MobileTabBar extends Service {
     }
 
     const owner = this.#allTabs.find((tab) => tab.ownsRoute?.(route));
-    // A profile stays in the section that led there, but only borrows it: it
-    // keeps its own heading, and the tab still returns to the section's pages
-    const borrowed = !owner && !!profileUsernameForRoute(route);
 
-    if (owner) {
-      this.sectionTabKey = owner.key;
-    } else if (!borrowed) {
-      this.sectionTabKey = MAIN_PANEL;
-    }
-
-    if (borrowed) {
+    // Pages of their own, like search or profiles, sit outside every section,
+    // so each tab still returns to where its section was left
+    if (!owner) {
+      this.sectionTabKey = null;
       this.isNestedPage = false;
       this.isTitledPage = false;
       return;
     }
+
+    this.sectionTabKey = owner.key;
 
     const url = this.router.currentURL;
     const tab = this.#tab(this.sectionTabKey);
