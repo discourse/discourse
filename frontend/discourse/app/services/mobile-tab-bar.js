@@ -10,6 +10,10 @@ import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 const LOADING_ROUTE = /(^|[._-])loading$/;
+
+// Past this many, the bar keeps one fewer and gathers the rest under More,
+// so the tabs stay wide enough to tap and never scroll
+const MAX_TABS = 4;
 const HUB_TAB = "hub";
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
@@ -84,6 +88,23 @@ export default class MobileTabBar extends Service {
     return this.#allTabs;
   }
 
+  /** @returns {Array<Object>} The tabs shown on the bar itself. */
+  get barTabs() {
+    const tabs = this.#allTabs;
+    return tabs.length > MAX_TABS ? tabs.slice(0, MAX_TABS - 1) : tabs;
+  }
+
+  /** @returns {Array<Object>} The tabs gathered under the bar's More tab. */
+  get moreTabs() {
+    const tabs = this.#allTabs;
+    return tabs.length > MAX_TABS ? tabs.slice(MAX_TABS - 1) : [];
+  }
+
+  /** Whether the current section is one gathered under More. */
+  get isMoreActive() {
+    return this.moreTabs.some((tab) => this.isActive(tab));
+  }
+
   /**
    * @returns {Array<{label: string, icon: string, action: Function}>} Every
    * way to start something new, the current section's first, then drafts.
@@ -112,8 +133,9 @@ export default class MobileTabBar extends Service {
     return this.header.hamburgerVisible;
   }
 
-  // Forum, then primary sections so they show without scrolling, then the
-  // rest and admin. Inside the app, a tab back to its list of sites leads.
+  // Forum, then primary sections so they stay on the bar rather than under
+  // More, then the rest and admin. Inside the app, a tab back to its list of
+  // sites leads.
   get #allTabs() {
     const panelTabs = this.sidebarState.panels
       .map((panel) => panel.mobileTab && { key: panel.key, ...panel.mobileTab })

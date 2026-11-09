@@ -1,6 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -9,6 +7,7 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import CreateButton from "discourse/components/mobile-tab-bar/create-button";
 import MenuButton from "discourse/components/mobile-tab-bar/menu-button";
+import MoreTab from "discourse/components/mobile-tab-bar/more-tab";
 import Tab from "discourse/components/mobile-tab-bar/tab";
 import htmlClass from "discourse/helpers/html-class";
 import discourseLater from "discourse/lib/later";
@@ -24,9 +23,6 @@ export default class MobileTabBar extends Component {
   @service composer;
   @service mobileTabBar;
   @service scrollDirection;
-
-  @tracked moreBefore = false;
-  @tracked moreAfter = false;
 
   #track = null;
   #pendingView = null;
@@ -129,18 +125,8 @@ export default class MobileTabBar extends Component {
   }
 
   @action
-  onTrackScroll(event) {
-    this.#updateEdges(event.target);
-    this.#pointAtActiveTab();
-  }
-
-  @action
-  revealActiveTab(track) {
+  followActiveTab(track) {
     this.#track = track;
-    track
-      .querySelector(".mobile-tab-bar__tab.--active")
-      ?.scrollIntoView({ block: "nearest", inline: "nearest" });
-    this.#updateEdges(track);
     this.#placeTabHighlight();
     this.#pointAtActiveTab();
   }
@@ -304,13 +290,6 @@ export default class MobileTabBar extends Component {
     );
   }
 
-  // Fades the edges that have tabs scrolled past them
-  #updateEdges(track) {
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    this.moreBefore = track.scrollLeft > 1;
-    this.moreAfter = track.scrollLeft < maxScroll - 1;
-  }
-
   <template>
     {{#if this.isVisible}}
       {{htmlClass "footer-nav-visible" "mobile-tab-bar-visible"}}
@@ -340,19 +319,21 @@ export default class MobileTabBar extends Component {
           <MenuButton />
           <div class="mobile-tab-bar__tabs">
             <div
-              class={{dConcatClass
-                "mobile-tab-bar__track"
-                (if this.moreBefore "--more-before")
-                (if this.moreAfter "--more-after")
+              class="mobile-tab-bar__track"
+              {{didInsert this.followActiveTab}}
+              {{didUpdate
+                this.followActiveTab
+                this.mobileTabBar.sectionTabKey
+                this.mobileTabBar.barTabs
               }}
-              {{didInsert this.revealActiveTab}}
-              {{didUpdate this.revealActiveTab this.mobileTabBar.sectionTabKey}}
-              {{on "scroll" this.onTrackScroll passive=true}}
             >
               <span aria-hidden="true" class="mobile-tab-bar__highlight"></span>
-              {{#each this.mobileTabBar.tabs key="key" as |tab|}}
+              {{#each this.mobileTabBar.barTabs key="key" as |tab|}}
                 <Tab @tab={{tab}} />
               {{/each}}
+              {{#if this.mobileTabBar.moreTabs.length}}
+                <MoreTab />
+              {{/if}}
             </div>
           </div>
           <CreateButton @canSignUp={{@canSignUp}} />

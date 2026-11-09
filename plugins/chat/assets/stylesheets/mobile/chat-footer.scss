@@ -93,7 +93,8 @@ html.mobile-tab-bar-visible {
   }
 }
 
-.mobile-tab-bar__badge .chat-channel-unread-indicator {
+.mobile-tab-bar__badge .chat-channel-unread-indicator,
+.mobile-tab-bar__more-badge .chat-channel-unread-indicator {
   position: static;
   margin: 0;
 }

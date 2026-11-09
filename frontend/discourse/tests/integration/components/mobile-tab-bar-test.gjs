@@ -43,23 +43,61 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
     this.currentUser.set("admin", false);
   });
 
-  test("keeps every section in the bar, which scrolls when they don't fit", async function (assert) {
+  test("keeps up to four sections in the bar", async function (assert) {
+    ["one", "two", "three"].forEach((key) => addTabPanel(key));
+
+    await render(<template><MobileTabBar /></template>);
+
+    assert.deepEqual(tabKeys(), ["main", "one", "two", "three"]);
+    assert.dom(".mobile-tab-bar__more").doesNotExist();
+  });
+
+  test("gathers the sections past three under More when they don't fit", async function (assert) {
     ["one", "two", "three", "four"].forEach((key) => addTabPanel(key));
 
     await render(<template><MobileTabBar /></template>);
 
-    assert.deepEqual(tabKeys(), ["main", "one", "two", "three", "four"]);
-    assert.dom(".mobile-tab-bar__tab[data-key='more']").doesNotExist();
+    assert.deepEqual(tabKeys(), ["main", "one", "two", "more"]);
+
+    await click(".mobile-tab-bar__more");
+
+    assert.deepEqual(
+      [...document.querySelectorAll(".mobile-tab-bar__more-item")].map(
+        (item) => item.dataset.key
+      ),
+      ["three", "four"]
+    );
+  });
+
+  test("highlights More while one of its sections is current", async function (assert) {
+    ["one", "two", "three", "four"].forEach((key) => addTabPanel(key));
+    const mobileTabBar = this.owner.lookup("service:mobile-tab-bar");
+
+    await render(<template><MobileTabBar /></template>);
+
+    assert.dom(".mobile-tab-bar__more").doesNotHaveClass("--active");
+
+    mobileTabBar.sectionTabKey = "four";
+    await click(".mobile-tab-bar__more");
+
+    assert.dom(".mobile-tab-bar__more").hasClass("--active");
+    assert.dom(".mobile-tab-bar__more").hasAttribute("aria-current", "page");
+    assert
+      .dom(".mobile-tab-bar__more-item[data-key='four']")
+      .hasClass("--active");
+    assert
+      .dom(".mobile-tab-bar__more-item[data-key='three']")
+      .doesNotHaveClass("--active");
   });
 
   test("leads with primary tabs, between the menu and create buttons", async function (assert) {
     this.currentUser.set("can_create_topic", true);
-    ["one", "two", "three"].forEach((key) => addTabPanel(key));
+    ["one", "two"].forEach((key) => addTabPanel(key));
     addTabPanel("primary", { primary: true });
 
     await render(<template><MobileTabBar /></template>);
 
-    assert.deepEqual(tabKeys(), ["main", "primary", "one", "two", "three"]);
+    assert.deepEqual(tabKeys(), ["main", "primary", "one", "two"]);
     assert
       .dom(".mobile-tab-bar__controls > :first-child")
       .hasClass("mobile-tab-bar__menu", "the menu button leads the bar");

@@ -515,42 +515,13 @@ html.mobile-tab-bar-visible {
     overflow: hidden;
   }
 
-  // Scrolls when the tabs don't fit, fading whichever edge has more past it
+  // Never more tabs than fit, with the rest gathered under More
   &__track {
-    --fade-before: 0px;
-    --fade-after: 0px;
     position: relative;
     display: flex;
     flex: 1 1 auto;
     align-items: stretch;
     min-width: 0;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 var(--fade-before),
-      #000 calc(100% - var(--fade-after)),
-      transparent
-    );
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &.--more-before {
-      --fade-before: 1.5rem;
-    }
-
-    &.--more-after {
-      --fade-after: 1.5rem;
-    }
-
-    // Past four, the next tab peeks in to show the bar scrolls
-    &:has(> :nth-child(5 of .mobile-tab-bar__tab)) .mobile-tab-bar__tab {
-      flex-basis: 28.5%;
-    }
   }
 
   // Slides between tabs as the current section changes
@@ -584,8 +555,7 @@ html.mobile-tab-bar-visible {
 
   &__tab {
     position: relative;
-    flex: 1 0 25%;
-    scroll-snap-align: start;
+    flex: 1 1 0;
     flex-direction: column;
     gap: var(--space-half);
     min-width: 0;
@@ -653,4 +623,26 @@ html.mobile-tab-bar-visible {
 
 html.keyboard-visible .mobile-tab-bar {
   display: none;
+}
+
+// The sections gathered under More, in its sheet
+.mobile-tab-bar__more-item {
+  .d-button-label {
+    flex: 1 1 auto;
+    text-align: start;
+  }
+
+  &.--active {
+    background: var(--d-selected);
+    color: var(--d-nav-color--active);
+
+    .d-icon {
+      color: inherit;
+    }
+  }
+}
+
+.mobile-tab-bar__more-badge {
+  display: flex;
+  margin-left: auto;
 }

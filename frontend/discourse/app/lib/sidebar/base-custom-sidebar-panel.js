@@ -49,7 +49,8 @@ export default class BaseCustomSidebarPanel {
    * @property {string} icon
    * @property {string} url The section's top level.
    * @property {boolean} [primary] Places the tab right after the forum's,
-   * where it shows without scrolling the bar.
+   * ahead of the others, which keeps it on the bar rather than under More
+   * when the sections don't all fit.
    * @property {Object} [badgeComponent] Renders over the icon, for unread
    * counts and the like; it should render nothing when there is nothing new.
    * @property {(routeInfo: Object) => boolean} [ownsRoute] Whether a route
