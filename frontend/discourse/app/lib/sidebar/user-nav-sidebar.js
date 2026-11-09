@@ -27,21 +27,6 @@ export function clearAdditionalUserNavSidebarLinks() {
   additionalLinks = {};
 }
 
-/**
- * @param {Object} routeInfo
- * @returns {string|undefined} The username of the profile the route shows, or
- * undefined when the route is not part of a profile.
- */
-export function profileUsernameForRoute(routeInfo) {
-  for (let route = routeInfo; route; route = route.parent) {
-    if (route.name === "user") {
-      // Links that pass the user rather than a username can leave the
-      // param unset
-      return route.params.username ?? route.attributes?.username;
-    }
-  }
-}
-
 // Mirrors `components/user-nav.gjs`. The tabs that own a secondary nav become
 // sections of their own below, so they are not repeated here — their section
 // header stands in for the tab.

@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import HeaderDropdown from "discourse/components/header/dropdown";
+import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -152,40 +153,35 @@ export default class ChatFooter extends Component {
       {{! The site's tab bar holds the bottom edge, so these become pills in
         the strip it keeps for a section's views }}
       {{#if this.mobileTabBar.enabled}}
-        {{#if this.mobileTabBar.viewsSlot}}
-          {{#in-element this.mobileTabBar.viewsSlot insertBefore=null}}
-            <div class="c-footer --pills">
-              <DHorizontalOverflowNav>
-                {{#each this.items key="id" as |item|}}
-                  <li>
-                    <LinkTo
-                      class={{if
-                        (eq this.currentRouteName item.route)
-                        "active"
-                      }}
-                      id={{item.id}}
-                      @route={{item.route}}
-                    >
-                      <span data-label={{i18n item.label}}>{{i18n
-                          item.label
-                        }}</span>
-                      {{#if item.indicator}}
-                        <item.indicator />
-                      {{/if}}
-                    </LinkTo>
-                  </li>
-                {{/each}}
-              </DHorizontalOverflowNav>
-              {{#if this.listOptionsSection}}
-                <div class="c-footer__options">
-                  <ChannelListOptionsButton
-                    @section={{this.listOptionsSection}}
-                  />
-                </div>
-              {{/if}}
-            </div>
-          {{/in-element}}
-        {{/if}}
+        <MobileTabBarViews>
+          <div class="c-footer --pills">
+            <DHorizontalOverflowNav>
+              {{#each this.items key="id" as |item|}}
+                <li>
+                  <LinkTo
+                    class={{if (eq this.currentRouteName item.route) "active"}}
+                    id={{item.id}}
+                    @route={{item.route}}
+                  >
+                    <span data-label={{i18n item.label}}>{{i18n
+                        item.label
+                      }}</span>
+                    {{#if item.indicator}}
+                      <item.indicator />
+                    {{/if}}
+                  </LinkTo>
+                </li>
+              {{/each}}
+            </DHorizontalOverflowNav>
+            {{#if this.listOptionsSection}}
+              <div class="c-footer__options">
+                <ChannelListOptionsButton
+                  @section={{this.listOptionsSection}}
+                />
+              </div>
+            {{/if}}
+          </div>
+        </MobileTabBarViews>
       {{else}}
         <nav class="c-footer">
           {{#each this.items key="id" as |item|}}

@@ -1,4 +1,5 @@
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
@@ -45,10 +46,9 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
       // The topic lists, by category or tag, and their topics; pages of their
       // own, like search or profiles, belong to no section
       ownsRoute: (routeInfo) =>
-        /^(discovery|topic|tag|tags)(\.|$)/.test(routeInfo.name) &&
-        routeInfo.name !== "discovery.filter",
-      isNestedRoute: (routeInfo) => routeInfo.name.startsWith("topic."),
-      showsTitleInHeader: () => true,
+        routeWithin(routeInfo, "discovery", "topic", "tag", "tags") &&
+        !routeWithin(routeInfo, "discovery.filter"),
+      isNestedRoute: (routeInfo) => routeWithin(routeInfo, "topic"),
       createActions: [
         // Runs the topic page's own reply, so drafts and quotes carry over
         topic?.details?.can_create_post && {

@@ -91,6 +91,17 @@ html.mobile-tab-bar-visible {
   }
 }
 
+// A control floating over the page, set off by its shadow as it has no
+// border; filled unless the button it's built on brings its own colour
+@mixin mobile-tab-bar-floating($fill: true) {
+  border-radius: var(--mobile-tab-bar-radius);
+  box-shadow: var(--mobile-tab-bar-shadow);
+
+  @if $fill {
+    background: var(--header_background);
+  }
+}
+
 // Floating controls over the page: the menu and create buttons on their own,
 // the section tabs grouped in a pill between them. A section's views, when it
 // has any, sit in a strip above them.
@@ -121,27 +132,20 @@ html.mobile-tab-bar-visible {
 
   @include unselectable;
 
-  // A centred bubble pointing at the current section's tab, so its views
-  // read as the tab's own; sized to its content, leaving room above for the
-  // fade over the page
   // Slides behind the tabs while the page scrolls down; the space kept for
-  // it stays, so the page doesn't shift as it goes
+  // the views stays, so the page doesn't shift as they go
   &.--views-tucked &__views {
     opacity: 0;
     transform: translateY(100%);
     pointer-events: none;
   }
 
+  // A centred bubble pointing at the current section's tab, so its views
+  // read as the tab's own; sized to its content, leaving room above for the
+  // fade over the page
   &__views {
     position: relative;
     display: flex;
-    transition:
-      transform 200ms ease,
-      opacity 200ms ease;
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
     flex: none;
     align-self: center;
     align-items: center;
@@ -150,13 +154,19 @@ html.mobile-tab-bar-visible {
     margin-bottom: var(--space-1);
     padding: var(--space-1);
     box-sizing: border-box;
-    border-radius: var(--mobile-tab-bar-radius);
-    background: var(--header_background);
-    box-shadow: var(--mobile-tab-bar-shadow);
     pointer-events: auto;
+
+    @include mobile-tab-bar-floating;
 
     // Lets the arrow sit behind the views but over the bubble's own fill
     isolation: isolate;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
 
     // Shown once a section renders its views into it
     &:not(:has(> :not(.mobile-tab-bar__views-highlight))) {
@@ -375,9 +385,9 @@ html.mobile-tab-bar-visible {
   &__create {
     flex: none;
     height: var(--mobile-tab-bar-control-size);
-    border-radius: var(--d-button-border-radius);
-    box-shadow: var(--mobile-tab-bar-shadow);
     pointer-events: auto;
+
+    @include mobile-tab-bar-floating($fill: false);
   }
 
   &__menu,
@@ -501,7 +511,6 @@ html.mobile-tab-bar-visible {
 
   &__tabs {
     display: flex;
-    border-radius: var(--mobile-tab-bar-radius);
     flex: 1 1 auto;
     min-width: 0;
     padding: var(--space-1);
@@ -647,357 +656,4 @@ html.mobile-tab-bar-visible {
 
 html.keyboard-visible .mobile-tab-bar {
   display: none;
-}
-
-html.mobile-tab-bar-visible {
-  // Keep the tab bar reachable while a menu is open, so tabs can switch menus
-  .menu-panel.slide-in,
-  .header-cloak {
-    height: calc(
-      100dvh - var(--footer-nav-height) - env(safe-area-inset-bottom)
-    );
-  }
-
-  .menu-panel.slide-in {
-    box-shadow: none;
-  }
-
-  // The header's menus become sheets, like mobile modals: the forum's menu
-  // rises over the tab bar and the user menu drops over the header
-  .hamburger-panel .menu-panel.slide-in,
-  .user-menu.menu-panel.slide-in {
-    right: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: none;
-    overflow: hidden;
-    border: 0;
-    background: var(--secondary);
-    box-shadow: var(--shadow-modal);
-
-    // Mirrors the grip on mobile menu modals, as they're dragged the same way
-    &::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      width: 15vw;
-      max-width: 100px;
-      height: 5px;
-      border-radius: 10px;
-      background: var(--primary-medium);
-      transform: translateX(-50%);
-    }
-
-    .panel-body {
-      flex: 1 1 auto;
-      min-height: 0;
-      height: auto;
-    }
-
-    .panel-body-contents {
-      min-height: 0;
-    }
-  }
-
-  .hamburger-panel .menu-panel.slide-in {
-    top: auto;
-    bottom: 0;
-    height: auto;
-    max-height: min(
-      calc(var(--composer-vh, 1dvh) * 85),
-      calc(100dvh - var(--header-offset))
-    );
-    padding-top: var(--space-3);
-    padding-bottom: env(safe-area-inset-bottom);
-    border-radius: var(--d-border-radius-large) var(--d-border-radius-large) 0 0;
-
-    &::before {
-      top: 2.5px;
-    }
-  }
-
-  // Its tabs run down one side, so it keeps a set height for them
-  .user-menu.menu-panel.slide-in {
-    top: 0;
-    bottom: auto;
-    height: calc(var(--composer-vh, 1dvh) * 75);
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: var(--space-3);
-    border-radius: 0 0 var(--d-border-radius-large) var(--d-border-radius-large);
-
-    &::before {
-      bottom: 2.5px;
-    }
-
-    .menu-tabs-container {
-      flex: none;
-    }
-
-    .quick-access-panel {
-      flex: 1 1 0;
-      width: auto;
-    }
-  }
-
-  // Matches the modal backdrop, which covers the tab bar too
-  &:has(.hamburger-panel .menu-panel.slide-in, .user-menu.menu-panel.slide-in)
-    .header-cloak {
-    height: 100%;
-    background-color: rgb(0, 0, 0, 0.6);
-  }
-
-  // The tabs already lead back to the other sections, which leaves the
-  // back link's row with only the toggle-all button, not worth a row here
-  .sidebar-panel-header__row:has(.sidebar-sections__back-to-forum) {
-    display: none;
-  }
-}
-
-// Sits before the logo, so it needs the header icons' spacing mirrored
-.mobile-tab-bar-back {
-  margin-right: var(--space-1);
-
-  .d-icon {
-    font-size: var(--font-up-1);
-  }
-}
-
-// Next to a page's title the small logo only crowds it; the tabs already lead
-// home
-html.mobile-tab-bar-titled .d-header .title--minimized {
-  display: none;
-}
-
-// The header already holds the title, category and tags; the title is still
-// edited with the first post
-html.mobile-tab-bar-titled #topic-title {
-  display: none;
-}
-
-// The lists' views sit in the tab bar, so the controls share the top row with
-// the category and tag dropdowns, kept to its end
-html.mobile-tab-bar-visible {
-  .navigation-controls {
-    margin-left: auto;
-
-    // Gives the dropdowns the row's gap too when there's nothing to show
-    &:not(:has(> :not(:empty))) {
-      display: none;
-    }
-
-    // On the category list, creating a category takes the row
-    &:has(> #create-category) {
-      flex: 1 1 auto;
-      margin-left: 0;
-
-      #create-category {
-        flex: 1 1 auto;
-      }
-    }
-  }
-
-  // The dropdowns share whatever the controls leave of the row
-  .navigation-container .category-breadcrumb {
-    flex: 1 1 auto;
-    gap: var(--nav-space) 0.5em;
-    min-width: 0;
-
-    > li {
-      flex: 1 1 0;
-      min-width: 0;
-      margin-right: 0;
-
-      > .select-kit {
-        width: 100%;
-        min-width: 0;
-      }
-
-      // Categories take the room first; tags keep their own width until
-      // there's none left
-      &:has(> .tag-drop, > .tags-intersection-chooser) {
-        flex: 0 1 auto;
-      }
-    }
-  }
-
-  // With a subcategory, the categories take the top row to themselves, and
-  // the tags move down to share the next with the controls
-  .navigation-container:has(.category-breadcrumb.--has-subcategory) {
-    // The break below would double the row gap, so the categories space the
-    // rows instead
-    row-gap: 0;
-
-    // Lays the dropdowns out alongside the controls
-    .category-breadcrumb {
-      display: contents;
-
-      > li:has(> .category-drop) {
-        margin-bottom: var(--nav-space);
-      }
-
-      > li:has(> .tag-drop, > .tags-intersection-chooser) {
-        flex: 1 1 auto;
-        order: 2;
-      }
-    }
-
-    &::after {
-      content: "";
-      flex-basis: 100%;
-      order: 1;
-    }
-
-    .navigation-controls {
-      order: 2;
-    }
-  }
-}
-
-.mobile-tab-bar-title {
-  min-width: 0;
-  margin: 0;
-  overflow: hidden;
-  font-size: var(--font-up-1);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-// The header names the page and the back button leads up a level, so the
-// page's own title and trail only repeat them
-html.mobile-tab-bar-titled .d-page-header {
-  .d-page-header__breadcrumbs,
-  .d-page-header__title {
-    display: none;
-  }
-
-  // The page's actions keep their place at the end of the row
-  .d-page-header__title-row {
-    justify-content: flex-end;
-  }
-}
-
-// A topic's progress takes the views' place over the tabs, as a bubble whose
-// fill marks how far along it is, like the views' highlight, after the
-// topic's tools. Held in place over the tabs like the views, rather than
-// stopping at the end of the topic, and kept while scrolling down, as that's
-// when it's read. Only while it shows the progress: expanded, its timeline
-// takes the whole screen, which holding it in place would keep under the posts.
-html.mobile-tab-bar-visible
-  .container.posts
-  .topic-navigation.with-topic-progress {
-  position: fixed;
-  right: 0;
-  left: 0;
-  justify-content: center;
-  margin: 0;
-  bottom: calc(
-    var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-1) +
-      var(--composer-height, 0px)
-  );
-
-  #topic-progress-wrapper {
-    position: relative;
-    align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-1);
-    overflow: visible;
-    border-radius: var(--mobile-tab-bar-radius);
-    background: var(--header_background);
-    box-shadow: var(--mobile-tab-bar-shadow);
-    transition:
-      transform 200ms ease,
-      opacity 200ms ease,
-      visibility 200ms;
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
-
-    // Hidden until the stream loads, leaving only the admin buttons
-    &:not(:has(#topic-progress:not(.hidden))) {
-      display: none;
-    }
-
-    // Slides away behind the tabs past the end of the topic, as the views do
-    // while scrolling down
-    &.docked {
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(100%);
-    }
-  }
-
-  .topic-admin-menu-trigger,
-  .topic-content-language-preferences {
-    width: var(--mobile-tab-bar-item-size);
-    height: var(--mobile-tab-bar-item-size);
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-radius: var(--mobile-tab-bar-inner-radius);
-    background: transparent;
-
-    .d-icon {
-      color: var(--header_primary-medium);
-    }
-  }
-
-  // Outweighs the progress's own look, set by both ids
-  #topic-progress-wrapper #topic-progress {
-    min-width: 7rem;
-    height: var(--mobile-tab-bar-item-size);
-    padding: 0 var(--space-3);
-    box-sizing: border-box;
-    overflow: hidden;
-    border: 0;
-    border-radius: var(--mobile-tab-bar-inner-radius);
-    background: transparent;
-    color: var(--d-nav-color--active);
-
-    .nums {
-      font-size: var(--font-down-1);
-    }
-
-    .bg {
-      background: var(--d-selected);
-    }
-  }
-
-  // Apart after the bubble, and out of its flow, so the bubble neither moves
-  // nor resizes as it comes and goes
-  .progress-back-container {
-    top: 0;
-    right: auto;
-    bottom: 0;
-    left: calc(100% + var(--space-2));
-    margin: 0;
-  }
-
-  // Just the arrow, shaped like the bubble beside it; outweighs its own look,
-  // set by id
-  #topic-progress-wrapper .btn.progress-back {
-    aspect-ratio: 1;
-    height: 100%;
-    min-height: 0;
-    padding: 0;
-    border: 0;
-    border-radius: var(--mobile-tab-bar-radius);
-    background: var(--header_background);
-    box-shadow: var(--mobile-tab-bar-shadow);
-
-    .d-icon {
-      margin: 0;
-      color: var(--d-nav-color--active);
-    }
-
-    .d-button-label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: rect(0 0 0 0);
-    }
-  }
 }

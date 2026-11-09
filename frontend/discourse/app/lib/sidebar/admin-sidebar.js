@@ -395,7 +395,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       url: "/admin/menu",
       ownsRoute: (routeInfo) => routeInfo.name.startsWith("admin"),
       isNestedRoute: (routeInfo) => routeInfo.name !== "adminMenu",
-      showsTitleInHeader: () => true,
     };
   }
 

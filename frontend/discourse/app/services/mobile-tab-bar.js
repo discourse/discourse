@@ -199,7 +199,8 @@ export default class MobileTabBar extends Service {
     const url = this.router.currentURL;
     const tab = this.#tab(this.sectionTabKey);
     this.isNestedPage = !!tab?.isNestedRoute?.(route);
-    this.isTitledPage = this.isNestedPage && !!tab?.showsTitleInHeader?.(route);
+    this.isTitledPage =
+      this.isNestedPage && (tab?.showsTitleInHeader?.(route) ?? true);
     this.#lastURLs.set(this.sectionTabKey, url);
 
     if (!this.isNestedPage) {

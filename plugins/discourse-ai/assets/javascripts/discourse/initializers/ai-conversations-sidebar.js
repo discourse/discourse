@@ -1,3 +1,4 @@
+import { findRoute, routeWithin } from "discourse/lib/mobile-tab-bar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation.gjs";
@@ -7,18 +8,13 @@ const NEW_CONVERSATION_ROUTE = "discourse-ai-bot-conversations";
 
 // Matches the rule the sidebar uses to treat a topic as an AI conversation
 function isOwnBotConversation(routeInfo, currentUser) {
-  for (let route = routeInfo; route; route = route.parent) {
-    if (route.name === "topic") {
-      const topic = route.attributes;
-      return (
-        topic?.archetype === "private_message" &&
-        topic.user_id === currentUser?.id &&
-        !!topic.is_bot_pm
-      );
-    }
-  }
+  const topic = findRoute(routeInfo, "topic")?.attributes;
 
-  return false;
+  return (
+    topic?.archetype === "private_message" &&
+    topic.user_id === currentUser?.id &&
+    !!topic.is_bot_pm
+  );
 }
 
 export default {
@@ -74,9 +70,7 @@ export default {
                 ownsRoute: (routeInfo) =>
                   routeInfo.name === "discourse-ai-bot-conversations" ||
                   isOwnBotConversation(routeInfo, currentUser),
-                isNestedRoute: (routeInfo) =>
-                  routeInfo.name.startsWith("topic."),
-                showsTitleInHeader: () => true,
+                isNestedRoute: (routeInfo) => routeWithin(routeInfo, "topic"),
                 createActions: [
                   {
                     label: i18n(

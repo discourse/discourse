@@ -9,6 +9,7 @@ import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
 import CreateTopicButton from "discourse/components/create-topic-button";
+import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import NavigationBar from "discourse/components/navigation-bar";
 import NavigationOptionsMenu from "discourse/components/navigation-options-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -355,38 +356,36 @@ export default class DNavigation extends Component {
       {{#if this.mobileTabBar.enabled}}
         {{! Within the thumb's reach, in the strip the tab bar keeps for a
           section's views; it's gone while the bar is hidden }}
-        {{#if this.mobileTabBar.viewsSlot}}
-          {{#in-element this.mobileTabBar.viewsSlot insertBefore=null}}
-            <NavigationBar
-              @category={{this.category}}
-              @countAsBadge={{true}}
-              @filterMode={{this.filterMode}}
-              @navItems={{this.navItems}}
-              @tag={{this.tag}}
-            />
-            {{! Admins can fix category positions to reorder; others reorder
-              only once they're fixed }}
-            <NavigationOptionsMenu
-              @bulkSelectHelper={{@bulkSelectHelper}}
-              @canChangeCategorySettings={{and
-                this.showCategoryAdmin
-                this.currentUser.admin
-              }}
-              @canReorderCategories={{and
-                this.showCategoryAdmin
-                (or this.currentUser.admin this.fixedCategoryPositions)
-              }}
-              @dismissRead={{@dismissRead}}
-              @model={{@model}}
-              @reorderCategories={{this.reorderCategories}}
-              @resetNew={{@resetNew}}
-              @showBulkSelect={{this.showBulkSelectInNavControls}}
-              @showDismissRead={{@showDismissRead}}
-              @showNewDismissCombo={{this.showNewDismissCombo}}
-              @showResetNew={{@showResetNew}}
-            />
-          {{/in-element}}
-        {{/if}}
+        <MobileTabBarViews>
+          <NavigationBar
+            @category={{this.category}}
+            @countAsBadge={{true}}
+            @filterMode={{this.filterMode}}
+            @navItems={{this.navItems}}
+            @tag={{this.tag}}
+          />
+          {{! Admins can fix category positions to reorder; others reorder
+            only once they're fixed }}
+          <NavigationOptionsMenu
+            @bulkSelectHelper={{@bulkSelectHelper}}
+            @canChangeCategorySettings={{and
+              this.showCategoryAdmin
+              this.currentUser.admin
+            }}
+            @canReorderCategories={{and
+              this.showCategoryAdmin
+              (or this.currentUser.admin this.fixedCategoryPositions)
+            }}
+            @dismissRead={{@dismissRead}}
+            @model={{@model}}
+            @reorderCategories={{this.reorderCategories}}
+            @resetNew={{@resetNew}}
+            @showBulkSelect={{this.showBulkSelectInNavControls}}
+            @showDismissRead={{@showDismissRead}}
+            @showNewDismissCombo={{this.showNewDismissCombo}}
+            @showResetNew={{@showResetNew}}
+          />
+        </MobileTabBarViews>
       {{else}}
         <NavigationBar
           @category={{this.category}}

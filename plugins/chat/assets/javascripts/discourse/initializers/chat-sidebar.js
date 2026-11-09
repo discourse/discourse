@@ -8,6 +8,7 @@ import noop from "discourse/helpers/noop";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { bind } from "discourse/lib/decorators";
 import { helperContext } from "discourse/lib/helpers";
+import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -324,10 +325,9 @@ export default {
                 badgeComponent: ChatHeaderIconUnreadIndicator,
                 url: "/chat",
                 primary: true,
-                ownsRoute: (routeInfo) => /^chat(\.|$)/.test(routeInfo.name),
+                ownsRoute: (routeInfo) => routeWithin(routeInfo, "chat"),
                 isNestedRoute: (routeInfo) =>
-                  /^chat\.channel(\.|$)/.test(routeInfo.name),
-                showsTitleInHeader: () => true,
+                  routeWithin(routeInfo, "chat.channel"),
                 createActions: chatService.userCanChat
                   ? [
                       {
