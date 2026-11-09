@@ -6,9 +6,12 @@ module DiscourseCaptcha
     included { before_action :check_captcha, only: [:create] }
 
     def check_captcha
-      return unless (error = captcha_verification_error)
+      error = captcha_verification_error
+      return fail_with(error) if error
 
-      fail_with(error)
+      if SiteSetting.discourse_captcha_provider == CaptchaProvider::RECAPTCHA_V3
+        SignupScore.recaptcha_v3_score = @captcha_verification_response&.dig("score")
+      end
     end
 
     include CaptchaVerification

@@ -187,11 +187,25 @@ RSpec.describe "Users", type: :request do
           )
         end
 
-        it "succeeds in registration" do
+        it "succeeds in registration and stores the signup score" do
           post "/captcha/recaptcha_v3/create.json", params: { token: "token-from-reCaptchaV3" }
           post "/u.json", params: user_params
 
-          expect(JSON.parse(response.body)["success"]).to be(true)
+          expect(response.parsed_body["success"]).to be(true)
+          user = User.find_by(username: user_params[:username])
+          expect(user.custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD]).to eq("0.9")
+        end
+
+        it "stores the signup score when the email belongs to a staged user" do
+          staged_user = Fabricate(:staged, email: user_params[:email])
+
+          post "/captcha/recaptcha_v3/create.json", params: { token: "token-from-reCaptchaV3" }
+          post "/u.json", params: user_params
+
+          expect(response.parsed_body["success"]).to be(true)
+          expect(
+            staged_user.reload.custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+          ).to eq("0.9")
         end
       end
 
