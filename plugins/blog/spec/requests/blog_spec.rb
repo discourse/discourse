@@ -44,7 +44,7 @@ RSpec.describe "Blog publication", type: :request do
 
     it "reports anonymous upload restrictions without exposing the public blog" do
       publication = Blog::Publication.for_topic(topic)
-      publication.publish!(admin)
+      publish_blog_draft(publication, admin)
       SiteSetting.prevent_anons_from_downloading_files = true
 
       get "https://blog.example.com#{publication.path}"
@@ -117,7 +117,7 @@ RSpec.describe "Blog publication", type: :request do
   describe "GET /blog-editor/preview/:topic_id" do
     it "allows a staff-only uncached preview without publishing" do
       design =
-        Blog::BlogTheme.save(
+        create_blog_theme(
           {
             "name" => "Spec design",
             "accent_color" => "d64b2a",
@@ -128,7 +128,7 @@ RSpec.describe "Blog publication", type: :request do
           },
           user: admin,
         )
-      Blog::BlogTheme.activate(design["id"], revision: 1, user: admin)
+      activate_blog_theme(design, user: admin)
 
       get "/blog-editor/preview/#{topic.id}"
       expect(response.status).to eq(404)
@@ -208,7 +208,7 @@ RSpec.describe "Blog publication", type: :request do
     let!(:publication) do
       publication = Blog::Publication.for_topic(topic)
       publication.path = "/private-to-public"
-      publication.publish!(admin)
+      publish_blog_draft(publication, admin)
       publication
     end
 
@@ -223,8 +223,8 @@ RSpec.describe "Blog publication", type: :request do
       previous_url = publication.url
 
       paths.each do |path|
-        publication.save_metadata!(admin, path: path)
-        publication.publish!(admin)
+        update_blog_metadata(publication, admin, path: path)
+        publish_blog_draft(publication, admin)
 
         get "https://blog.example.com#{path}"
         expect(response.status).to eq(200)
@@ -241,7 +241,7 @@ RSpec.describe "Blog publication", type: :request do
         previous_url = publication.url
       end
 
-      publication.unpublish!(admin)
+      unpublish_blog_article(publication, admin)
       paths.each do |path|
         get "https://blog.example.com#{path}"
         expect(response.status).to eq(404)
@@ -344,8 +344,8 @@ RSpec.describe "Blog publication", type: :request do
       )
       featured = Blog::Publication.for_topic(featured_topic)
       featured.path = "/featured-story"
-      featured.save_metadata!(admin, featured: true)
-      featured.publish!(admin)
+      update_blog_metadata(featured, admin, featured: true)
+      publish_blog_draft(featured, admin)
 
       get "https://blog.example.com/"
 
@@ -384,8 +384,8 @@ RSpec.describe "Blog publication", type: :request do
     end
 
     it "retains old article paths as redirects and prevents taking another article path" do
-      publication.save_metadata!(admin, path: "/renamed-story")
-      publication.publish!(admin)
+      update_blog_metadata(publication, admin, path: "/renamed-story")
+      publish_blog_draft(publication, admin)
       get "https://blog.example.com/private-to-public"
       expect(response.status).to eq(301)
       expect(response.location).to eq(publication.url)
@@ -409,7 +409,7 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.status).to eq(200)
       html = Nokogiri.HTML5(response.body)
       expect(html.at_css(".blog-article__body").text).not_to include(first_post.reload.raw)
-      publication.publish!(admin)
+      publish_blog_draft(publication, admin)
       get "https://blog.example.com#{publication.path}"
       html = Nokogiri.HTML5(response.body)
       expect(html.at_css(".blog-article__body").text).to include(first_post.raw)
@@ -417,14 +417,14 @@ RSpec.describe "Blog publication", type: :request do
     end
 
     it "supports stable dated paths, title search, and empty feeds" do
-      publication.save_metadata!(admin, path: "/archive/2026/09/08/a-story")
+      update_blog_metadata(publication, admin, path: "/archive/2026/09/08/a-story")
       get "https://blog.example.com#{publication.path}"
       expect(response.status).to eq(200)
       get "https://blog.example.com/archive", params: { q: topic.title }
       expect(response.status).to eq(200)
       expect(response.body).to include(publication.url)
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
-      publication.unpublish!(admin)
+      unpublish_blog_article(publication, admin)
       get "https://blog.example.com/feed.xml"
       expect(response.status).to eq(200)
       expect(Nokogiri.XML(response.body).xpath("//item")).to be_empty
@@ -488,7 +488,7 @@ RSpec.describe "Blog publication", type: :request do
   describe "DELETE /blog-editor/publications/:topic_id" do
     it "withdraws the blog without privatizing the discussion" do
       publication = Blog::Publication.for_topic(topic)
-      publication.publish!(admin)
+      publish_blog_draft(publication, admin)
       sign_in(admin)
       delete "/blog-editor/publications/#{topic.id}.json"
       expect(response.status).to eq(204)
@@ -505,7 +505,7 @@ RSpec.describe "Blog publication", type: :request do
   describe "POST /blog-editor/publications/:topic_id/return-to-drafts" do
     it "returns an article without replies to private drafts" do
       publication = Blog::Publication.for_topic(topic)
-      publication.publish!(admin)
+      publish_blog_draft(publication, admin)
       sign_in(admin)
       post "/blog-editor/publications/#{topic.id}/return-to-drafts.json"
       expect(response.status).to eq(204)
@@ -515,7 +515,7 @@ RSpec.describe "Blog publication", type: :request do
 
     it "preserves public access to other people's replies" do
       publication = Blog::Publication.for_topic(topic)
-      publication.publish!(admin)
+      publish_blog_draft(publication, admin)
       reply = Fabricate(:post, topic: publication.discussion_topic, user: user)
       sign_in(admin)
       post "/blog-editor/publications/#{topic.id}/return-to-drafts.json"

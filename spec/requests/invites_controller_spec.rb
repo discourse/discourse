@@ -2045,6 +2045,40 @@ RSpec.describe InvitesController do
         fab!(:user) { Fabricate(:user, email: "test@example.com") }
         fab!(:group)
 
+        it "does not grant access to a private topic from an expired email invite" do
+          expired_invite = Fabricate(:invite, email: "expired@example.com", expires_at: 1.day.ago)
+          valid_invite = Fabricate(:invite, email: nil, max_redemptions_allowed: 10)
+          redeeming_user = Fabricate(:user, email: expired_invite.email)
+          expired_invite.invited_by.change_trust_level!(TrustLevel[2])
+          Group.refresh_automatic_groups_for_user!(expired_invite.invited_by)
+          private_topic = Fabricate(:private_message_topic, user: expired_invite.invited_by)
+          private_post =
+            Fabricate(
+              :post,
+              topic: private_topic,
+              user: expired_invite.invited_by,
+              raw: "private message content",
+            )
+          TopicInvite.create!(invite: expired_invite, topic: private_topic)
+          expect(expired_invite).not_to be_redeemable
+          expect(TopicAllowedUser.exists?(user: redeeming_user, topic: private_topic)).to eq(false)
+          sign_in(redeeming_user)
+
+          put "/invites/show/#{valid_invite.invite_key}.json",
+              params: {
+                id: valid_invite.invite_key,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+
+          get "/t/#{private_topic.slug}/#{private_topic.id}.json"
+
+          expect(response.status).to be_in([403, 404])
+          expect(response.body).not_to include(private_post.raw)
+          expect(TopicAllowedUser.exists?(user: redeeming_user, topic: private_topic)).to eq(false)
+        end
+
         it "redeems the invitation and creates the invite accepted notification" do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
           expect(response.status).to eq(200)

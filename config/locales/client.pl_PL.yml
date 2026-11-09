@@ -643,7 +643,7 @@ pl_PL:
       dismiss: "Odrzuć konfigurację"
       select_theme:
         title: "Dostosuj swoją witrynę"
-        description: "Wybierz kolory, czcionki i układ swojej witryny."
+        description: "Spersonalizuj swoją witrynę za pomocą logo, kolorów i układu."
         action: "Zobacz opcje"
         completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
@@ -694,65 +694,54 @@ pl_PL:
       next: "Dalej"
       launch: "Kreator projektowania"
       launch_description: "Przejrzyj jeszcze raz motyw, kolory, czcionki i układ swojej witryny."
-      intro:
-        description: "Ten kreator przeprowadzi Cię przez motyw, kolory, czcionki, układ strony głównej, baner powitalny i styl wyszukiwania Twojej witryny."
-        autosave: "Każdy krok jest zapisywany na bieżąco, więc członkowie od razu widzą zmiany. Możesz przywrócić wszystko, gdy zamkniesz konto."
-        start: "Rozpocznij"
       close:
         message: "Zapisano już pewne zmiany w projekcie witryny. Czy chcesz je utrzymać?"
         message_without_revert: "Zapisano już pewne zmiany w projekcie swojej witryny. Nie można ich stąd cofnąć."
         keep: "Zachowaj zmiany"
         revert: "Cofnij zmiany"
         continue_editing: "Kontynuuj edycję"
+      steps:
+        theme:
+          title: "Wybierz motyw"
+          description: "Wybierz ogólny wygląd swojej witryny. Możesz go dopracować w kolejnych krokach."
+        colors:
+          title: "Uczyń to swoim"
+          description: "Dodaj swoje logo i wybierz kolory swojej witryny."
+        homepage:
+          title: "Wygląd i odczucia"
+          description: "Wybierz czcionki i to, co członkowie zobaczą w pierwszej kolejności."
       sections:
-        theme: "Motyw"
-        colors: "Domyślny kolor"
+        colors: "Tryby kolorów witryny"
         fonts: "Czcionki"
+        logo: "Logo"
         homepage: "Strona główna"
-        welcome_banner: "Baner powitalny"
-        search: "Szukaj"
       theme:
         selected: "Wybrany"
         applying: "Zastosowanie…"
         custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
       colors:
-        light: "Jasny"
-        dark: "Ciemny"
-        dark_only: "%{name} ma tylko tryb ciemny"
-        both_modes: "Każda paleta zawiera pasujący tryb jasny i ciemny"
-        user_selectable: "Umożliw członkom zmianę palet"
-        user_selectable_description: "Pokaż te palety w menu, z którego członkowie mogą wybierać"
+        description: "Ustaw domyślną paletę dla każdego trybu. Preferencje dotyczące wyglądu członków decydują o tym, którą paletę zobaczą."
+        light_palette: "Jasna paleta"
+        dark_palette: "Ciemna paleta"
+        modes:
+          label: "Tryby kolorów"
+          both: "Jasny i ciemny"
+          light: "Tylko jasny"
+          dark: "Tylko ciemny"
       fonts:
-        base_font: "Czcionka podstawowa"
-        heading_font: "Czcionka nagłówków"
+        base_font: "Treść"
+        heading_font: "Nagłówki"
+      logo:
+        description: "Pojawia się w górnej nawigacji witryny, a także w górnej części powiadomień e-mail witryny."
+        help_text: "Zalecany rozmiar to 600 x 80 pikseli."
       homepage:
         topics: "Tematy"
         categories: "Kategorie"
-        topic_page_type: "Typ strony tematu"
-        topic_pages:
-          latest: "Tematy posortowane według ostatniej aktywności, najnowsze na początku."
-          new: "Tematy utworzone w ciągu ostatnich kilku dni, najnowsze na początku."
-          hot: "Tematy, które są obecnie popularne, łącząc ogólną popularność z niedawnym zaangażowaniem."
         category_page_style: "Styl strony kategorii"
         styles:
           boxes: "Pola"
           with_topics: "Kategorie z tematami"
           only: "Tylko kategorie"
-      welcome_banner:
-        enable: "Pokaż baner powitalny"
-        enable_description: "Przywitaj odwiedzających, podając nazwę swojej witryny i pole wyszukiwania"
-        location: "Lokalizacja banera"
-        locations:
-          below_site_header: "Poniżej nagłówka witryny"
-          above_topic_content: "Nad listą tematów"
-      search:
-        experiences:
-          search_icon:
-            title: "Ikona wyszukiwania"
-            description: "Lupa w nagłówku otwierająca wyszukiwanie."
-          search_field:
-            title: "Pole wyszukiwania"
-            description: "Pełne pole wyszukiwania w nagłówku, zawsze widoczne."
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"

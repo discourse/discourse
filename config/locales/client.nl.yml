@@ -507,19 +507,17 @@ nl:
       back: "Terug"
       next: "Volgende"
       sections:
-        theme: "Thema"
         fonts: "Lettertypen"
+        logo: "Logo"
         homepage: "Startpagina"
-        welcome_banner: "Welkomstbanner"
-        search: "Zoeken"
       theme:
         selected: "Geselecteerd"
-      colors:
-        light: "Licht"
-        dark: "Donker"
       fonts:
-        base_font: "Basislettertype"
-        heading_font: "Lettertype kop"
+        base_font: "Inhoud"
+        heading_font: "Koppen"
+      logo:
+        description: "Wordt weergegeven in de bovenste navigatiebalk van de site en bovenaan de e-mailmeldingen van de site."
+        help_text: "De aanbevolen grootte is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categorieën"

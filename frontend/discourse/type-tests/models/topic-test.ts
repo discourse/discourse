@@ -222,7 +222,7 @@ interface ExpectedTopicFields {
   pm_with_non_human_user?: boolean;
   post_stream?: object;
   posted?: boolean;
-  posters?: ExpectedPoster[] & { firstObject?: ExpectedPoster };
+  posters?: ExpectedPoster[];
   posts_count?: number;
   published_page?: ExpectedPublishedPage;
   queued_posts_count?: number;

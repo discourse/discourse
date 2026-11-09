@@ -2273,9 +2273,8 @@ class Topic < ActiveRecord::Base
     target_audience = {}
 
     if private_message?
-      target_audience[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
-      target_audience[:user_ids] |= allowed_users.pluck(:id)
-      target_audience[:user_ids] |= allowed_group_users.pluck(:id)
+      target_audience[:user_ids] = User.human_users.where(admin: true).pluck(:id)
+      target_audience[:user_ids] |= all_allowed_users.pluck(:id)
     else
       target_audience[:group_ids] = secure_group_ids
     end

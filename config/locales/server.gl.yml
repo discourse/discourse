@@ -3424,6 +3424,12 @@ gl:
   design_wizard:
     palette_pairs:
       default: "Predeterminado"
+      neutral: "Neutro"
+      shades_of_blue: "Azulado"
+      summer: "Verán"
+      grey_amber: "Gris ámbar"
+      latte: "Latte"
+      dark_rose: "Rosa escuro"
   wizard:
     title: "Configuración de Discourse"
     step:

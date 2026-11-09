@@ -3408,17 +3408,9 @@ RSpec.describe SessionController do
   end
 
   describe "#create" do
-    it "rejects non-string JSON passwords without logging in" do
-      EmailToken.confirm(email_token.token)
-
-      [
-        { value: "myawesomepassword" },
-        ["myawesomepassword"],
-        719_384_625_018,
-        719_384_625.5,
-        true,
-        false,
-      ].each do |password|
+    shared_examples "a rejected non-string JSON password" do |password|
+      it "rejects a non-string JSON password #{password.inspect} without logging in" do
+        EmailToken.confirm(email_token.token)
         user.update!(password: password.to_s) if password.is_a?(Numeric)
 
         post "/session.json", params: { login: user.username, password: }, as: :json
@@ -3433,8 +3425,8 @@ RSpec.describe SessionController do
       end
     end
 
-    it "rejects missing or empty JSON passwords with a bad request" do
-      [nil, {}, []].each do |password|
+    shared_examples "a rejected missing or empty JSON password" do |password|
+      it "rejects a missing or empty JSON password #{password.inspect} with a bad request" do
         post "/session.json", params: { login: user.username, password: }, as: :json
 
         aggregate_failures(password.inspect) do
@@ -3444,6 +3436,17 @@ RSpec.describe SessionController do
         end
       end
     end
+
+    include_examples "a rejected non-string JSON password", { value: "myawesomepassword" }
+    include_examples "a rejected non-string JSON password", ["myawesomepassword"]
+    include_examples "a rejected non-string JSON password", 719_384_625_018
+    include_examples "a rejected non-string JSON password", 719_384_625.5
+    include_examples "a rejected non-string JSON password", true
+    include_examples "a rejected non-string JSON password", false
+
+    include_examples "a rejected missing or empty JSON password", nil
+    include_examples "a rejected missing or empty JSON password", {}
+    include_examples "a rejected missing or empty JSON password", []
 
     context "when read only mode" do
       before do
@@ -4141,6 +4144,47 @@ RSpec.describe SessionController do
           json = response.parsed_body
           expect(json["error_type"]).to eq("rate_limit")
         end
+      end
+
+      it "does not count wrong-password attempts toward the per-account second factor rate limit" do
+        EmailToken.confirm(email_token.token)
+        user_second_factor = Fabricate(:user_second_factor_totp, user: user)
+
+        wrong_password_params = {
+          login: user.username,
+          password: "wrongpassword",
+          second_factor_token: "000000",
+          second_factor_method: UserSecondFactor.methods[:totp],
+        }
+
+        6.times do
+          post "/session.json", params: wrong_password_params, env: { REMOTE_ADDR: "1.2.3.4" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t("login.incorrect_username_email_or_password"),
+          )
+        end
+
+        post "/session.json", params: wrong_password_params, env: { REMOTE_ADDR: "1.2.3.4" }
+
+        expect(response.status).to eq(429)
+        expect(response.parsed_body["error_type"]).to eq("rate_limit")
+
+        post "/session.json",
+             params: {
+               login: user.username,
+               password: "myawesomepassword",
+               second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+               second_factor_method: UserSecondFactor.methods[:totp],
+             },
+             env: {
+               REMOTE_ADDR: "5.6.7.8",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).not_to be_present
+        expect(session[:current_user_id]).to eq(user.id)
       end
     end
   end

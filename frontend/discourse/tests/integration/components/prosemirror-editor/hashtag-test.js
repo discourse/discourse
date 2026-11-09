@@ -40,6 +40,13 @@ module(
               style_type: "square",
               id: 5,
             },
+            {
+              type: "category",
+              ref: "meeting-room",
+              text: '<b id="hashtag-injected">Meeting</b>',
+              style_type: "square",
+              id: 6,
+            },
           ],
           tags: [
             {
@@ -93,6 +100,11 @@ module(
         "#welcome",
         `<p><a class="hashtag-cooked" data-name="welcome" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-5\"></span>hello <img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/wave.png?v=${v}\" title=\"wave\" alt=\"wave\" class=\"emoji\"></a></p>`,
         "#welcome",
+      ],
+      "hashtag with HTML in text": [
+        "#meeting-room",
+        '<p><a class="hashtag-cooked" data-name="meeting-room" data-processed="true" contenteditable="false" draggable="true"><span class="hashtag-category-square hashtag-color--category-6"></span>&lt;b id="hashtag-injected"&gt;Meeting&lt;/b&gt;</a></p>',
+        "#meeting-room",
       ],
       "anchor in link matching hashtag is not converted": [
         "[Docs](https://example.com/docs/#product)",

@@ -2234,6 +2234,29 @@ RSpec.describe CookedPostProcessor do
       and this is the third reply
       RAW
 
+    let(:link) { "https://example.com/a-link" }
+
+    let(:raw4) { <<~RAW.strip }
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+      this is the “first” post
+      [/quote]
+
+      and **this** is the third reply #{link}
+      RAW
+
+    # The second "[/quote]" is inert text inside the code block once cooked, but a
+    # greedy cut up to it would leave the links below it live markup.
+    let(:raw5) { <<~RAW.strip }
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+      this is the “first” post
+      [/quote]
+
+      ```
+      [/quote]
+      https://spam.example.com/offer
+      ```
+      RAW
+
     before { SiteSetting.remove_full_quote = true }
 
     it "removes the full quote while preserving intervening hidden and action posts" do
@@ -2345,6 +2368,60 @@ RSpec.describe CookedPostProcessor do
 
       CookedPostProcessor.new(reply2).remove_full_quote_on_direct_reply
       expect(reply2.raw).to eq("quoting a post with a quote")
+    end
+
+    it "removes the quote when the reply links or formats text below it" do
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw4)
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq("and **this** is the third reply #{link}")
+    end
+
+    it "removes the quote when a code block follows it" do
+      code = "```ruby\nputs \"hi\"\n```"
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: <<~RAW.strip)
+            [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+            this is the “first” post
+            [/quote]
+
+            #{code}
+          RAW
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq(code)
+    end
+
+    it "does nothing when removing the quote would change the rest of the post" do
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw5)
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq(raw5)
+      expect(reply.revisions.count).to eq(0)
+    end
+
+    it "does nothing when the quoted post has no text" do
+      textless =
+        Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: "![](/images/wizard.png)")
+      # A quote of a post whose cooked text is empty matches on empty text, so the
+      # guards pass with nothing in the quote to compare against.
+      raw = <<~RAW.strip
+        [quote="#{textless.user.username}, post:#{textless.post_number}, topic:#{topic.id}"]
+        [/quote]
+
+        ```
+        [/quote]
+        https://spam.example.com/offer
+        ```
+      RAW
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw)
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq(raw)
+      expect(reply.revisions.count).to eq(0)
     end
   end
 

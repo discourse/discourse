@@ -168,6 +168,24 @@ RSpec.describe DiscourseDiff do
         "<div class=\"revision-content --previous\"><p data-attr=\"Some &quot;quoted&quot; string\"><del>x</del></p></div><div class=\"revision-content --current\"><p data-attr=\"Some &quot;quoted&quot; string\"><ins>y</ins></p></div>",
       )
     end
+
+    it "keeps the diff class out of an attribute value of an added block" do
+      before = "<p>keep</p>"
+      after =
+        "<p>keep</p><div data-x=\"z><div style='position:fixed;inset:0'>pwn</div>\">hello</div>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><p>keep</p></div><div class=\"revision-content --current\"><p>keep</p><div data-x=\"z&gt;&lt;div style='position:fixed;inset:0'&gt;pwn&lt;/div&gt;\" class=\"diff-ins\">hello</div></div>",
+      )
+    end
+
+    it "merges the diff class into an existing class when an attribute value holds a chevron" do
+      before = "<p>keep</p>"
+      after =
+        "<p>keep</p><div data-x=\"z><div style='position:fixed'>pwn</div>\" class=\"real\">hi</div>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><p>keep</p></div><div class=\"revision-content --current\"><p>keep</p><div data-x=\"z&gt;&lt;div style='position:fixed'&gt;pwn&lt;/div&gt;\" class=\"diff-ins real\">hi</div></div>",
+      )
+    end
   end
 
   describe "side_by_side_markdown" do

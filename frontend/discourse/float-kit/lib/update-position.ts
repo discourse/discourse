@@ -38,6 +38,8 @@ import { headerOffset } from "discourse/lib/offset-calculator";
  */
 export interface PositioningOptions {
   placement?: FloatUiPlacement | "center";
+  /** Keep the first resolved placement for this rendered float, disabling subsequent flips. */
+  preservePlacement?: boolean;
   strategy?: Strategy;
   autoUpdate?: boolean | AutoUpdateOptions;
   offset?: number;
@@ -79,6 +81,8 @@ type SizeApplyState = MiddlewareState & {
   availableHeight: number;
 };
 
+const preservedPlacements = new WeakMap<HTMLElement, Placement>();
+
 const centerOffset = offset(({ rects }) => {
   return -rects.reference.height / 2 - rects.floating.height / 2;
 });
@@ -88,6 +92,18 @@ export async function updatePosition(
   content: HTMLElement,
   options: PositioningOptions
 ): Promise<void> {
+  const preservedPlacement = options.preservePlacement
+    ? preservedPlacements.get(content)
+    : undefined;
+  if (preservedPlacement) {
+    options = {
+      ...options,
+      placement: preservedPlacement,
+      visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
+    };
+  } else if (!options.preservePlacement) {
+    preservedPlacements.delete(content);
+  }
   const padding = getPadding(options);
   const detectOverflowOptions = buildDetectOverflowOptions(options, padding);
   const centered = isCenteredPlacement(options);
@@ -107,6 +123,14 @@ export async function updatePosition(
     strategy: options.strategy || "absolute",
     middleware,
   });
+
+  if (
+    options.preservePlacement &&
+    !centered &&
+    !preservedPlacements.has(content)
+  ) {
+    preservedPlacements.set(content, result.placement);
+  }
 
   if (options.computePosition) {
     options.computePosition(content, {

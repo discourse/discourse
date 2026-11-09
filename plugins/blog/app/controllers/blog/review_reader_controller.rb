@@ -25,10 +25,6 @@ module ::Blog
       end
     end
 
-    rescue_from ActiveRecord::RecordInvalid do |error|
-      render_json_error error.record, status: :unprocessable_entity
-    end
-
     def csrf
       render json: { csrf: form_authenticity_token }
     end
@@ -37,9 +33,7 @@ module ::Blog
       respond_to do |format|
         # The app boots either way, so an expired or revoked link explains itself.
         format.html { render "default/empty", status: review_available? ? :ok : :not_found }
-        format.json do
-          render json: @review.as_json(only: %i[title cooked post_version created_at expires_at])
-        end
+        format.json { render json: ReviewSnapshotSerializer.new(@review, root: false).as_json }
       end
     end
 
@@ -47,8 +41,22 @@ module ::Blog
       raise Discourse::InvalidAccess unless request.headers["Origin"] == Configuration.origin
       RateLimiter.new(nil, "blog-review-feedback-ip-#{request.remote_ip}", 30, 1.hour).performed!
       RateLimiter.new(nil, "blog-review-feedback-#{@review.id}", 60, 1.hour).performed!
-      @review.submit_feedback!(params.require(:feedback).permit(:name, :email, :message).to_h)
-      head :no_content
+      Review::SubmitFeedback.call(service_params.deep_merge(params: { review_id: @review.id })) do
+        on_success { head :no_content }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
+        end
+        on_model_not_found(:review) { raise Discourse::NotFound }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:review_is_accessible) { raise Discourse::NotFound }
+        on_failed_policy(:within_feedback_limit) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.review.feedback_limit"))
+        end
+        on_model_errors(:review_feedback) do |review_feedback|
+          render_json_error review_feedback, status: :unprocessable_entity
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     private

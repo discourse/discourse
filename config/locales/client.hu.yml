@@ -503,20 +503,21 @@ hu:
     design_wizard:
       back: "Vissza"
       next: "Következő"
+      steps:
+        homepage:
+          title: "Megjelenés & élmény"
       sections:
-        theme: "Téma"
         fonts: "Betűkészletek"
+        logo: "Logó"
         homepage: "Főoldal"
-        welcome_banner: "Üdvözlő banner"
-        search: "Keresés"
       theme:
         selected: "Kiválasztott"
-      colors:
-        light: "Világos"
-        dark: "Sötét"
       fonts:
-        base_font: "Alap betűkészlet"
-        heading_font: "Fejléc betűkészlet"
+        base_font: "Törzs"
+        heading_font: "Címsorok"
+      logo:
+        description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail-értesítéseinek felső részén."
+        help_text: "Az ajánlott méret 600×80 képpont."
       homepage:
         topics: "Témák"
         categories: "Kategóriák"

@@ -125,6 +125,16 @@ async function skimPastBottom() {
   await settled();
 }
 
+// Not awaited through settled(), which would wait on a held request. A single
+// event can land in the scroll throttle or be the one swallowed after a fetch,
+// so keep scrolling until it registers.
+async function scrollUntil(scroller, done) {
+  await waitUntil(() => {
+    scroller.dispatchEvent(new Event("scroll"));
+    return done();
+  });
+}
+
 function renderedMessageIds() {
   return [
     ...new Set(
@@ -304,15 +314,23 @@ module("Integration | Component | ChatChannel", function (hooks) {
 
     await waitUntil(() => renderedMessageIds().length === 3);
 
+    // three messages don't overflow, so a real scrollTop would clamp to the bottom
     const scroller = find(".chat-messages-scroller");
     setScrollerHeight(scroller, { clientHeight: 300, scrollHeight: 3000 });
-    scroller.scrollTop = -2700;
-    triggerEvent(scroller, "scroll");
-    triggerEvent(scroller, "scroll");
-    await waitUntil(() => releasePast);
+    let scrollTop = 0;
+    Object.defineProperty(scroller, "scrollTop", {
+      configurable: true,
+      get: () => scrollTop,
+      set: (value) => {
+        scrollTop = value;
+      },
+    });
 
+    scroller.scrollTop = -2700;
+    await scrollUntil(scroller, () => releasePast);
+
+    // the scroll end handler's request for newer messages is dropped meanwhile
     scroller.scrollTop = 0;
-    triggerEvent(scroller, "scroll");
     triggerEvent(scroller, "scroll");
     await new Promise((resolve) => setTimeout(resolve, 100));
 

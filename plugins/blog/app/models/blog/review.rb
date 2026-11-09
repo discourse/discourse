@@ -6,6 +6,10 @@ module ::Blog
 
     self.table_name = "blog_reviews"
     TOKEN_FORMAT = /\A[A-Za-z0-9_-]{43}\z/
+    LIFETIME = 7.days
+    MAX_ACTIVE_PER_TOPIC = 20
+    MAX_FEEDBACK = 200
+    MAX_SNAPSHOT_BYTES = 1.megabyte
 
     belongs_to :topic
     belongs_to :creator, class_name: "User"
@@ -19,38 +23,6 @@ module ::Blog
     validates :title, :cooked, :post_version, :expires_at, presence: true
     validates :token, format: { with: TOKEN_FORMAT }
     scope :unexpired, -> { where(revoked_at: nil).where("expires_at > ?", Time.current) }
-
-    def self.issue!(topic:, user:, label: "")
-      topic.with_lock do
-        Configuration.ensure_ready!
-        Configuration.ensure_editor!(user, topic)
-        raise Discourse::InvalidAccess unless eligible_topic?(topic)
-        if where(topic_id: topic.id).unexpired.count >= 20
-          raise Discourse::InvalidParameters.new(I18n.t("blog.review.limit"))
-        end
-        post = topic.first_post
-        post.with_lock do
-          raise Discourse::InvalidAccess unless eligible_topic?(topic)
-          review =
-            create!(
-              topic: topic,
-              creator: user,
-              label: label,
-              title: topic.title,
-              cooked: snapshot_html(post),
-              post_version: post.version,
-              token: SecureRandom.urlsafe_base64(32),
-              expires_at: 7.days.from_now,
-            )
-          StaffActionLogger.new(user).log_custom(
-            "blog_review_create",
-            topic_id: topic.id,
-            review_id: review.id,
-          )
-          review
-        end
-      end
-    end
 
     def self.find_by_token!(token)
       raise Discourse::NotFound unless token.is_a?(String) && token.match?(TOKEN_FORMAT)
@@ -120,35 +92,15 @@ module ::Blog
 
     def self.creator_allowed?(creator, topic)
       return false unless creator&.active? && !creator.suspended?
-      Configuration.ensure_editor!(creator, topic)
-      true
-    rescue Discourse::InvalidAccess
-      false
+      creator.guardian.can_edit_blog_topic?(topic)
     end
 
-    def submit_feedback!(attributes)
-      topic.with_lock do
-        # Post/topic callbacks revoke reviews without taking the topic lock, so
-        # this row must be locked and reloaded too before trusting revoked_at.
-        with_lock do
-          raise Discourse::NotFound unless accessible?
-          if feedback.count >= 200
-            raise Discourse::InvalidParameters.new(I18n.t("blog.review.feedback_limit"))
-          end
-          feedback.create!(attributes)
-        end
-      end
-    end
-
-    def revoke!(user)
-      topic.with_lock do
-        Configuration.ensure_editor!(user, topic)
-        update!(revoked_at: Time.current) unless revoked_at
-        StaffActionLogger.new(user).log_custom(
-          "blog_review_revoke",
-          topic_id: topic_id,
-          review_id: id,
-        )
+    def self.accessible_ids(reviews, topic)
+      return [] if !eligible_topic?(topic)
+      allowed_creator_ids =
+        reviews.map(&:creator).uniq.select { |creator| creator_allowed?(creator, topic) }.map(&:id)
+      reviews.filter_map do |review|
+        review.id if review.current? && allowed_creator_ids.include?(review.creator_id)
       end
     end
 
@@ -168,15 +120,11 @@ module ::Blog
     end
 
     def self.snapshot_html(post)
-      helper = Object.new.extend(BlogHelper)
-      doc = Nokogiri::HTML5.fragment(PrettyText.sanitize(helper.blog_article_html(post)))
+      doc = Nokogiri::HTML5.fragment(PrettyText.sanitize(ArticleHtml.render(post.cooked)))
       doc.css("script, iframe, object, embed, form, input, button, style, link, meta").remove
       doc.css("a").each { |link| link["rel"] = "noopener noreferrer" }
-      html = doc.to_html
-      raise Discourse::InvalidParameters.new(:cooked) if html.bytesize > 1_048_576
-      html
+      doc.to_html
     end
-    private_class_method :snapshot_html
 
     private
 

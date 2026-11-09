@@ -5131,7 +5131,13 @@ ru:
   design_wizard:
     palette_pairs:
       default: "Домашнюю страницу"
+      neutral: "Нейтральность"
+      shades_of_blue: "Оттенки синего"
+      summer: "Летняя"
       dracula: "Дракула"
+      grey_amber: "Серо-янтарная"
+      latte: "Латте"
+      dark_rose: "Тёмная роза"
   wizard:
     title: "Настройка Discourse"
     step:

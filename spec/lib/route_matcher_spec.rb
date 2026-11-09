@@ -71,6 +71,39 @@ RSpec.describe RouteMatcher do
       ).to eq(false)
     end
 
+    it "requires record selectors to occur only in the path when restricted" do
+      matcher =
+        described_class.new(
+          path_params: %i[record_id name],
+          aliases: {
+            record_id: :id,
+          },
+          allowed_param_values: {
+            "record_id" => ["3"],
+          },
+        )
+
+      %i[record_id id name].each do |selector|
+        env =
+          request_env(path_parameters: { record_id: "3" }, query_parameters: { selector => "3" })
+        expect(matcher.match?(env: env)).to eq(false)
+
+        env = request_env(path_parameters: { record_id: "3" }, request_method: "PUT")
+        env["action_dispatch.request.request_parameters"] = { selector.to_s => "3" }
+        expect(matcher.match?(env: env)).to eq(false)
+      end
+
+      env = request_env(path_parameters: { record_id: "3" }, query_parameters: { page: "2" })
+      expect(matcher.match?(env: env)).to eq(true)
+    end
+
+    it "allows non-path selectors when path allowlists are blank" do
+      matcher = described_class.new(path_params: %i[id], allowed_param_values: { "id" => [] })
+      env = request_env(path_parameters: { id: "3" }, query_parameters: { id: "3" })
+
+      expect(matcher.match?(env: env)).to eq(true)
+    end
+
     it "treats nil canonical values as absent when an alias is recognized" do
       matcher =
         described_class.new(

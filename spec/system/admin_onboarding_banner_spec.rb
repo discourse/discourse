@@ -288,7 +288,7 @@ describe "Admin Onboarding Banner" do
 
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
 
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(page).to have_current_path("/latest?preview_theme_id=#{Theme.horizon_theme.id}")
       expect(design_wizard_panel).to be_visible
       expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
@@ -310,7 +310,99 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
 
-    it "reflects and turns off palettes members can switch between" do
+    it "saves a light only site" do
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      expect(design_wizard_panel).to have_palette_mode("both")
+      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
+      expect(design_wizard_panel).to have_selected_palette("default", mode: "dark")
+      expect(design_wizard_panel).to have_selected_palette_name("Default", mode: "light")
+
+      design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.select_palette_mode("light")
+
+      expect(design_wizard_panel).to have_no_palette_row(mode: "dark")
+
+      design_wizard_panel.select_palette("solarized", mode: "light")
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      theme = Theme.find_default
+      expect(theme.color_scheme.base_scheme_id).to eq(
+        ColorScheme::NAMES_TO_ID_MAP["Solarized Light"],
+      )
+      expect(theme.dark_color_scheme_id).to be_nil
+    end
+
+    it "saves the dark palette for both modes on a dark only site" do
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      design_wizard_panel.select_palette_mode("dark")
+
+      expect(design_wizard_panel).to have_no_palette_row(mode: "light")
+
+      design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      theme = Theme.find_default
+      dracula_id = ColorScheme::NAMES_TO_ID_MAP["Dracula"]
+      expect(theme.color_scheme.base_scheme_id).to eq(dracula_id)
+      expect(theme.dark_color_scheme.base_scheme_id).to eq(dracula_id)
+    end
+
+    it "saves the light and dark palettes picked separately" do
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      design_wizard_panel.select_palette("solarized", mode: "light")
+      design_wizard_panel.select_palette("wcag", mode: "dark")
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      theme = Theme.find_default
+      expect(theme.color_scheme.base_scheme_id).to eq(
+        ColorScheme::NAMES_TO_ID_MAP["Solarized Light"],
+      )
+      expect(theme.dark_color_scheme.base_scheme_id).to eq(
+        ColorScheme::NAMES_TO_ID_MAP["WCAG Dark"],
+      )
+    end
+
+    it "offers palettes admins created in the mode their colors suit" do
+      night =
+        ColorScheme.create_from_base(
+          name: "Night",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+        )
+
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}", mode: "light")
+
+      design_wizard_panel.select_palette("custom_#{night.id}", mode: "dark")
+
+      expect(design_wizard_panel).to have_selected_palette("custom_#{night.id}", mode: "dark")
+      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
+
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      expect(Theme.find_default.dark_color_scheme_id).to eq(night.id)
+    end
+
+    it "keeps palettes members can switch between" do
       horizon = Theme.horizon_theme
       horizon.set_default!
       ColorScheme.where(theme_id: horizon.id).update_all(user_selectable: true)
@@ -318,42 +410,11 @@ describe "Admin Onboarding Banner" do
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
-
-      expect(design_wizard_panel).to have_user_selectable_palettes
-
-      design_wizard_panel.toggle_user_selectable_palettes
-
-      expect(design_wizard_panel).to have_no_user_selectable_palettes
-
       design_wizard_panel.next_step
       design_wizard_panel.save
 
       expect(banner).to be_visible
-      expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(false))
-    end
-
-    it "reverts a previewed welcome banner when closed without saving" do
-      visit("/")
-      banner.click_step_action("select_theme")
-
-      expect(design_wizard_panel).to be_visible
-
-      design_wizard_panel.next_step
-      design_wizard_panel.next_step
-
-      expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
-
-      design_wizard_panel.toggle_welcome_banner
-
-      expect(design_wizard_panel).to have_no_welcome_banner_enabled
-      expect(page).to have_no_css(".welcome-banner")
-
-      design_wizard_panel.close
-
-      expect(design_wizard_panel).to be_hidden
-      expect(page).to have_css(".welcome-banner")
-      expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
+      expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(true))
     end
 
     it "previews and applies the design choices and marks step complete" do
@@ -365,25 +426,16 @@ describe "Admin Onboarding Banner" do
       # picking another theme reloads the page with a theme preview and the
       # wizard resumes in the sheet
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(page).to have_current_path("/latest?preview_theme_id=#{Theme.horizon_theme.id}")
       expect(design_wizard_panel).to be_visible
 
       design_wizard_panel.next_step
-      design_wizard_panel.select_palette("royal")
+      design_wizard_panel.select_palette("royal", mode: "light")
       expect(design_wizard_panel).to have_palette_preview
-      design_wizard_panel.toggle_user_selectable_palettes
-      design_wizard_panel.select_body_font("lato")
 
       design_wizard_panel.next_step
+      design_wizard_panel.select_body_font("lato")
       design_wizard_panel.select_homepage("categories")
-      design_wizard_panel.select_search_experience("search_icon")
-
-      expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
-      design_wizard_panel.select_welcome_banner_location("below_site_header")
-      design_wizard_panel.toggle_welcome_banner
-      expect(page).to have_no_css(".welcome-banner")
-
       design_wizard_panel.save
 
       # Page reloads after saving; wait for it to complete
@@ -394,13 +446,9 @@ describe "Admin Onboarding Banner" do
       expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
       horizon = Theme.horizon_theme
       expect(horizon.color_scheme.name).to eq("Royal")
-      expect(horizon.color_scheme.user_selectable).to eq(true)
       expect(SiteSetting.base_font).to eq("lato")
       expect(SiteSetting.default_homepage).to eq("categories")
       expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
-      expect(SiteSetting.enable_welcome_banner(theme_id: horizon.id)).to eq(false)
-      expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
-      expect(SiteSetting.search_experience(theme_id: horizon.id)).to eq("search_icon")
 
       # the reload must not cancel the in-flight audit write
       expect(

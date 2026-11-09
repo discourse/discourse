@@ -227,9 +227,18 @@ RSpec.describe Admin::StaffActionLogsController do
 
       it "hides stored full names when names are disabled" do
         SiteSetting.enable_names = false
-        user.update!(name: "Current Private Name")
+        user.update!(name: "Current Private\nFull Name")
         StaffActionLogger.new(admin).log_user_deletion(user)
-        StaffActionLogger.new(admin).log_post_deletion(Fabricate(:post, user: user))
+        topic = Fabricate(:topic, user: user, title: "Welcome to the community (2026 edition)")
+        post =
+          Fabricate(
+            :post,
+            user: user,
+            topic: topic,
+            raw: "Quoting the old log (below)\ntopic: Forged title",
+          )
+        StaffActionLogger.new(admin).log_post_deletion(post)
+        StaffActionLogger.new(admin).log_topic_delete_recover(topic)
         StaffActionLogger.new(admin).log_name_change(
           user.id,
           "Previous Private Name",
@@ -239,15 +248,42 @@ RSpec.describe Admin::StaffActionLogsController do
         get "/admin/logs/staff_action_logs.json"
 
         expect(response.status).to eq(200)
-        expect(response.body).not_to include(user.name, "Previous Private Name", "New Private Name")
+        expect(response.body).not_to include("Previous Private Name", "New Private Name")
 
         logs_by_action =
           response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        name_details =
+          logs_by_action
+            .values_at("delete_user", "delete_post", "delete_topic")
+            .pluck("details")
+            .join
+        expect(name_details).not_to include(*user.name.lines(chomp: true))
+        expect(logs_by_action["delete_topic"]["details"]).to include("title: #{topic.title}\n")
         expect(logs_by_action["delete_user"]["details"]).to include("username: #{user.username}")
-        expect(logs_by_action["delete_post"]["details"]).to include("user: #{user.username}\n")
+        expect(logs_by_action["delete_post"]["details"]).to include(
+          "user: #{user.username}\ntopic: #{topic.title}\npost_number: #{post.post_number}\n",
+        )
         expect(logs_by_action["change_name"]).to include(
           "previous_value" => nil,
           "new_value" => nil,
+        )
+      end
+
+      it "keeps post content that quotes an author line when the author was deleted" do
+        SiteSetting.enable_names = false
+        post =
+          Fabricate(
+            :post,
+            raw: "Copied from the log:\nuser: someone (quoted in the post)\nraw: more text",
+          )
+        post.update_columns(user_id: nil)
+        StaffActionLogger.new(admin).log_post_recover(post.reload)
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].sole["details"]).to include(
+          "user: (deleted user)\nraw: #{post.raw}",
         )
       end
 

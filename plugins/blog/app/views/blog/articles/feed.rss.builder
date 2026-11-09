@@ -13,7 +13,7 @@ xml.rss(version: "2.0", "xmlns:atom" => "http://www.w3.org/2005/Atom") do
         xml.link publication.url
         xml.guid "#{Discourse.base_url}/blog/publications/#{publication.topic_id}", isPermaLink: "false"
         xml.pubDate publication.published_at.rfc2822
-        xml.description blog_article_html(publication.article)
+        xml.description Blog::ArticleHtml.render(publication.article.cooked)
         xml.comments publication.discussion_topic.url
       end
     end

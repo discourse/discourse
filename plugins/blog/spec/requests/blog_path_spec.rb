@@ -14,7 +14,7 @@ RSpec.describe "Blog under /blog", type: :request do
   let!(:publication) do
     publication = Blog::Publication.for_topic(topic)
     publication.path = "/first-story"
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
     publication
   end
 
@@ -45,8 +45,8 @@ RSpec.describe "Blog under /blog", type: :request do
 
   it "redirects an old article path to its current one" do
     old_url = publication.url
-    publication.save_metadata!(admin, path: "/renamed-story")
-    publication.publish!(admin)
+    update_blog_metadata(publication, admin, path: "/renamed-story")
+    publish_blog_draft(publication, admin)
 
     get old_url
     expect(response.status).to eq(301)

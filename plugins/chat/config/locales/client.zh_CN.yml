@@ -20,6 +20,7 @@ zh_CN:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "聊天机器人的可发现性发生了变化"
             chat_channel_status_change: "聊天频道状态已更改"
             chat_channel_delete: "聊天频道已删除"
             chat_auto_remove_membership: "成员资格已从频道自动移除"
@@ -44,6 +45,12 @@ zh_CN:
           other: "%{formatted_number} 条聊天消息"
     chat:
       homepage_option: "聊天频道"
+      admin_onboarding:
+        start_posting:
+          title: "开始聊天"
+          description: "请将您的第一条消息发送至 #%{channel}。"
+          action: "写一条消息"
+          completed: "继续聊天"
       edit_category:
         tab_title: "聊天"
         channel: "频道"
@@ -559,6 +566,9 @@ zh_CN:
         history_label: "历史记录"
         members_label: "成员"
       admin:
+        bot_discoverability:
+          label: "在聊天中显示"
+          description: "让用户在发起聊天私信时找到这个机器人。"
         title: "聊天"
         export_messages:
           title: "导出聊天消息"

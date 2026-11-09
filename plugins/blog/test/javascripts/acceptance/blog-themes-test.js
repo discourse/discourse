@@ -813,6 +813,187 @@ acceptance("Blog themes and identity", function (needs) {
       .exists("the menu belongs to the card it was opened from");
   });
 
+  test("shows presets as read-only cards that can be customized", async function (assert) {
+    const builtIn = {
+      ...active,
+      id: "default",
+      name: "Default",
+      revision: 1,
+      preset: true,
+    };
+    const bundled = {
+      ...active,
+      id: "discourse-blog",
+      name: "Discourse Blog",
+      revision: 1,
+      preset: true,
+      description: "Rounded cards on a soft lavender canvas.",
+      accent_color: "795ee8",
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({ themes: [builtIn, bundled, draft], active: builtIn })
+    );
+
+    await visit("/admin/plugins/blog/themes");
+    assert
+      .dom(".theme-card")
+      .exists({ count: 3 }, "presets are listed with saved drafts");
+    assert
+      .dom(`.theme-card[data-theme-id="default"]`)
+      .hasClass("--active", "the built-in design is marked active");
+    assert
+      .dom(`.theme-card[data-theme-id="default"] .theme-card__badge`)
+      .includesText("Active");
+    assert
+      .dom(`.theme-card[data-theme-id="discourse-blog"]`)
+      .includesText(
+        "Rounded cards on a soft lavender canvas.",
+        "a preset shows its own description"
+      );
+    assert
+      .dom(
+        `.theme-card[data-theme-id="discourse-blog"] .theme-card__description`
+      )
+      .doesNotExist("a described preset needs no generic line");
+    assert
+      .dom(`.theme-card[data-theme-id="default"] .theme-card__description`)
+      .includesText(
+        "Included with the blog",
+        "an undescribed preset falls back to a generic line"
+      );
+    assert
+      .dom(`.theme-card[data-theme-id="discourse-blog"] .edit`)
+      .doesNotExist("presets cannot be edited in place");
+
+    await click(
+      `.theme-card[data-theme-id="discourse-blog"] .theme-card__footer-menu`
+    );
+    assert
+      .dom(
+        '[data-identifier="blog-theme-actions-discourse-blog"] .theme-card__button'
+      )
+      .exists({ count: 2 }, "a preset offers only activate and preview");
+    assert
+      .dom('[data-identifier="blog-theme-actions-discourse-blog"] .--danger')
+      .doesNotExist("presets cannot be deleted");
+
+    await click(`.theme-card[data-theme-id="discourse-blog"] .customize`);
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=discourse-blog"
+    );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("name")
+      .hasValue(
+        "Discourse Blog (custom)",
+        "the copy is named after the preset"
+      );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("accent_color")
+      .hasValue("795ee8", "the copy starts from the preset's design");
+  });
+
+  test("New theme starts from Default after customizing another theme", async function (assert) {
+    const builtIn = {
+      ...active,
+      id: "default",
+      name: "Default",
+      revision: 1,
+      preset: true,
+    };
+    const bundled = {
+      ...builtIn,
+      id: "discourse-blog",
+      name: "Discourse Blog",
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({ themes: [builtIn, bundled], active: builtIn })
+    );
+
+    await visit("/admin/plugins/blog/themes");
+    await click(`.theme-card[data-theme-id="discourse-blog"] .customize`);
+    await click('a[href="/admin/plugins/blog/themes"]');
+    await click(".d-page-subheader .btn-primary");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new",
+      "the previous starting point does not stick"
+    );
+    assert.dom("#blog-theme-start-from").hasValue("default");
+  });
+
+  test("new themes start from a chosen theme, Default unless picked", async function (assert) {
+    const builtIn = {
+      ...active,
+      id: "default",
+      name: "Default",
+      revision: 1,
+      preset: true,
+    };
+    const bundled = {
+      ...builtIn,
+      id: "discourse-blog",
+      name: "Discourse Blog",
+      accent_color: "795ee8",
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({
+        themes: [builtIn, bundled, { ...draft, accent_color: "112233" }],
+        active: draft,
+      })
+    );
+
+    await visit("/admin/plugins/blog/themes/new");
+    assert
+      .dom("#blog-theme-start-from")
+      .hasValue("default", "the built-in design is the default start");
+    assert
+      .dom("#blog-theme-start-from optgroup")
+      .exists({ count: 2 }, "included themes and saved drafts are grouped");
+    assert
+      .form(".blog-theme-editor__form")
+      .field("name")
+      .hasValue("New blog theme");
+
+    await fillControl("#blog-theme-start-from", "discourse-blog");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=discourse-blog"
+    );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("accent_color")
+      .hasValue("795ee8", "the form starts over from the picked theme");
+
+    await formKit(".blog-theme-editor__form").field("name").fillIn("Mine");
+    await fillControl("#blog-theme-start-from", "candidate");
+    assert.dom(".dialog-body").exists("unsaved edits are confirmed first");
+    await click(".dialog-footer .btn-default");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=discourse-blog",
+      "cancelling keeps the current start"
+    );
+    assert
+      .dom("#blog-theme-start-from")
+      .hasValue("discourse-blog", "the picker reverts");
+    assert.form(".blog-theme-editor__form").field("name").hasValue("Mine");
+
+    await fillControl("#blog-theme-start-from", "candidate");
+    await click(".dialog-footer .btn-primary");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=candidate"
+    );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("accent_color")
+      .hasValue("112233", "a saved draft can be the starting point");
+  });
+
   test("activating from a card confirms first and reloads the list", async function (assert) {
     let listLoads = 0;
     pretender.get("/admin/plugins/blog/themes.json", () => {

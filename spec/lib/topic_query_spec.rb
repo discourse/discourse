@@ -375,17 +375,22 @@ RSpec.describe TopicQuery do
       group.add(group_moderator)
       category = Fabricate(:category)
       Fabricate(:category_moderation_group, category:, group:)
-      _topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
+      deleted_topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
+      child_category = Fabricate(:category, parent_category: category)
+      deleted_child_topic = Fabricate(:topic, category: child_category, deleted_at: 1.year.ago)
 
-      expect(TopicQuery.new(admin, status: "deleted").list_latest.topics.size).to eq(1)
-      expect(TopicQuery.new(moderator, status: "deleted").list_latest.topics.size).to eq(1)
+      [admin, moderator].each do |staff|
+        expect(
+          TopicQuery.new(staff, status: "deleted").list_latest.topics.map(&:id),
+        ).to contain_exactly(deleted_topic.id, deleted_child_topic.id)
+      end
       expect(
         TopicQuery
           .new(group_moderator, status: "deleted", category: category.id)
           .list_latest
           .topics
-          .size,
-      ).to eq(1)
+          .map(&:id),
+      ).to contain_exactly(deleted_topic.id)
       expect(TopicQuery.new(user, status: "deleted").list_latest.topics.size).to eq(0)
       expect(TopicQuery.new(nil, status: "deleted").list_latest.topics.size).to eq(0)
     end

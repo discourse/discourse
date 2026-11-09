@@ -337,17 +337,11 @@ class Admin::ThemesController < Admin::AdminController
     setting_name = params[:name].to_sym
     new_value = params[:value] || nil
 
-    previous_value = @theme.cached_settings[setting_name]
-
     begin
-      @theme.update_setting(setting_name, new_value)
+      ThemeSettingUpdater.update(guardian, @theme, setting_name, new_value)
     rescue Discourse::InvalidParameters => e
       return render_json_error e.message
     end
-
-    @theme.save
-
-    log_theme_setting_change(setting_name, previous_value, new_value)
 
     updated_setting = @theme.cached_settings.select { |key, val| key == setting_name }
     render json: updated_setting, status: :ok
@@ -560,9 +554,7 @@ class Admin::ThemesController < Admin::AdminController
       I18n.locale = locale
     end
 
-    target_translations.each_pair do |translation_key, new_value|
-      @theme.update_translation(translation_key, new_value)
-    end
+    ThemeTranslationUpdater.assign(guardian, @theme, target_translations)
   end
 
   def log_theme_change(old_record, new_record)

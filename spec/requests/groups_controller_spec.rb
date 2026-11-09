@@ -15,6 +15,22 @@ RSpec.describe GroupsController do
       Fabricate(:group, name: "staff_group", visibility_level: Group.visibility_levels[:staff])
     end
 
+    it "prevents crawlers from indexing the group directory" do
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
     it "ensures that groups can be paginated" do
       50.times { Fabricate(:group) }
 
@@ -2110,6 +2126,22 @@ RSpec.describe GroupsController do
     fab!(:bot)
     let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
 
+    it "prevents crawlers from indexing group member lists" do
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
     it "lists bot members of automatic groups not created by core" do
       group.update_columns(automatic: true)
       group.add(bot)
@@ -3425,6 +3457,21 @@ RSpec.describe GroupsController do
 
       expect(response.status).to eq(403)
       expect(GroupRequest.where(group: group, user: user).exists?).to eq(false)
+    end
+
+    it "rejects membership requests from silenced users" do
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      new_user.update!(silenced_till: 1.year.from_now)
+      reason = "Attacker-controlled message to a non-staff owner"
+      sign_in(new_user)
+
+      post "/groups/#{group.name}/request_membership.json", params: { reason: }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      expect(GroupRequest.where(group:, user: new_user)).not_to exist
+      expect(Post.where(user: new_user, raw: reason)).not_to exist
     end
 
     it "requires a reason" do

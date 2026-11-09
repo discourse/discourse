@@ -1545,6 +1545,23 @@ RSpec.describe Guardian do
   end
 
   describe "#can_see_flags?" do
+    it "does not allow TL4 members to see private flags on topics they can moderate" do
+      guardian = Guardian.new(trust_level_4)
+
+      expect(guardian.can_moderate?(topic)).to be_truthy
+      expect(guardian.can_see_flags?(topic)).to be_falsey
+    end
+
+    it "does not grant private flag access through category moderation" do
+      SiteSetting.enable_category_group_moderation = true
+      group.add(trust_level_4)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
+      guardian = Guardian.new(trust_level_4)
+
+      expect(guardian.can_review_topic?(topic)).to eq(true)
+      expect(guardian.can_see_flags?(topic)).to be_falsey
+    end
+
     it "returns false when there is no post" do
       expect(Guardian.new(moderator).can_see_flags?(nil)).to be_falsey
     end
@@ -1817,6 +1834,55 @@ RSpec.describe Guardian do
 
       it "returns true when an admin" do
         expect(Guardian.new(admin).can_move_posts?(pm)).to be_truthy
+      end
+    end
+
+    context "with a read restricted category" do
+      fab!(:read_only_group, :group)
+      fab!(:private_category) do
+        Fabricate(
+          :private_category,
+          group: read_only_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+      before { GroupUser.create!(group: read_only_group, user: trust_level_4) }
+
+      it "returns false for a TL4 user who can only read the category" do
+        guardian = Guardian.new(trust_level_4)
+
+        expect(guardian.can_see_topic?(private_topic)).to be_truthy
+        expect(guardian.can_create_post?(private_topic)).to be_falsey
+        expect(guardian.can_move_posts?(private_topic)).to be_falsey
+      end
+
+      it "returns true for a TL4 user who can post in the category" do
+        private_category
+          .category_groups
+          .find_by(group: read_only_group)
+          .update!(permission_type: CategoryGroup.permission_types[:create_post])
+
+        expect(Guardian.new(trust_level_4).can_move_posts?(private_topic)).to be_truthy
+      end
+
+      it "returns true for a moderator who cannot post in the category" do
+        expect(Guardian.new(moderator).can_create_post?(private_topic)).to be_falsey
+        expect(Guardian.new(moderator).can_move_posts?(private_topic)).to be_truthy
+      end
+
+      it "returns true for a category group moderator with read-only posting permission" do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.category_groups.create!(
+          group: another_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+        GroupUser.create!(group: another_group, user:)
+        Fabricate(:category_moderation_group, category: private_category, group: another_group)
+
+        expect(Guardian.new(user).can_create_post?(private_topic)).to be_falsey
+        expect(Guardian.new(user).can_move_posts?(private_topic)).to be_truthy
       end
     end
   end

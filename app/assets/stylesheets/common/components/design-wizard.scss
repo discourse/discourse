@@ -20,7 +20,7 @@ $dw-primary-very-high: #434343;
 $dw-button-default-border: #d3d3d3;
 
 // px, so the reserved space matches the panel, whose font size is pinned
-$dw-docked-width: 360px;
+$dw-docked-width: 375px;
 $dw-rail-width: 56px;
 
 // fixed-position UI pinned to the inline end reads this to stay uncovered
@@ -119,6 +119,7 @@ html.design-wizard-docked {
   h4,
   h5,
   h6 {
+    margin: 0;
     font-family: inherit;
   }
 }
@@ -313,43 +314,19 @@ html.design-wizard-docked {
     padding-block: var(--design-wizard-gutter) var(--space-4);
     padding-inline: var(--design-wizard-gutter) 4em;
     border-block-end: 1px solid var(--content-border-color);
-
-    h2 {
-      margin: 0;
-    }
   }
 
-  &__intro {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    gap: var(--space-4);
-    align-items: flex-start;
-    min-height: 0;
-    padding: var(--design-wizard-gutter);
-    overflow-y: auto;
-  }
-
-  &__intro-description,
-  &__intro-note {
+  &__description {
     margin: 0;
-  }
-
-  &__intro-note {
-    display: flex;
-    gap: var(--space-1);
-    padding: var(--space-2);
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    background: var(--primary-100);
-    border-radius: var(--d-border-radius);
+    color: var(--primary-high);
   }
 
   &__sections {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-4);
     min-height: 0;
     padding: var(--design-wizard-gutter);
     overflow-y: auto;
@@ -362,9 +339,26 @@ html.design-wizard-docked {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    padding-block-end: var(--space-4);
+    border-block-end: 1px solid var(--content-border-color);
+
+    &:last-child {
+      padding-block-end: 0;
+      border-block-end: none;
+    }
+
+    &.--section-fonts .design-wizard__section-body {
+      flex-direction: row;
+
+      > * {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+    }
   }
 
   &__section-title {
+    font-size: var(--font-0);
     font-weight: 600;
     color: var(--primary);
   }
@@ -520,53 +514,11 @@ html.design-wizard-docked {
   &__color {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  &__color-modes {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  &__color-mode {
-    padding: var(--space-2);
-    font-size: var(--font-down-2);
-    font-weight: 600;
-    background: none;
-    border: 1px solid var(--content-border-color);
-    cursor: pointer;
-
-    &:first-child {
-      border-start-start-radius: var(--d-border-radius);
-      border-end-start-radius: var(--d-border-radius);
-    }
-
-    &:last-child {
-      border-start-end-radius: var(--d-border-radius);
-      border-end-end-radius: var(--d-border-radius);
-      border-inline-start: none;
-    }
-
-    &.--active {
-      color: var(--tertiary);
-      background: var(--tertiary-low);
-    }
-
-    &:disabled {
-      cursor: default;
-      opacity: 0.4;
-    }
-  }
-
-  &__swatches {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-2);
+    gap: var(--space-4);
   }
 
   &__homepage-card,
-  &__style-block,
-  &__swatch {
+  &__style-block {
     background: none;
     border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
@@ -585,55 +537,131 @@ html.design-wizard-docked {
     }
   }
 
-  &__swatch {
-    padding: var(--space-2);
-    text-align: center;
-  }
-
-  &__swatch-preview {
-    display: block;
-    height: 2.5em;
-    border-radius: var(--token-radius-small);
-  }
-
-  &__swatch-name {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    margin-block-start: var(--space-2);
+  &__color-description,
+  &__logo-description,
+  &__logo-help {
+    margin: 0;
     font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
 
-    .d-icon {
-      font-size: var(--font-down-3);
-      color: var(--primary-medium);
+  &__logo-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__logo-uploader {
+    width: 100%;
+    height: auto;
+
+    // the uploader stretches its buttons to fill a fixed height, which
+    // leaves them floating away from the preview
+    > .file-uploader__controls {
+      height: auto;
+    }
+
+    .file-uploader__preview {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      border-radius: var(--d-border-radius);
     }
   }
 
-  &__color-note {
-    margin: 0;
-    font-size: var(--font-down-2);
-    color: var(--primary-medium);
+  &__palette-modes {
+    // a fieldset is as wide as its content by default, which would push the
+    // panel into scrolling sideways
+    min-inline-size: 0;
+
+    .d-segmented-control__label {
+      min-width: 0;
+      padding-inline: var(--space-2);
+      font-size: var(--font-down-1);
+    }
   }
 
-  &__switch-row {
+  &__palette-row {
     display: flex;
-    gap: var(--space-3);
-    align-items: center;
-    padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
-  &__switch-row-title {
-    display: block;
+  &__palette-row-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__palette-row-title {
     font-size: var(--font-down-1);
     font-weight: 600;
+    color: var(--primary);
   }
 
-  &__switch-row-description {
-    display: block;
-    font-size: var(--font-down-2);
+  &__palette-row-selected {
+    min-width: 0;
+    overflow: hidden;
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__palette-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  &__palette-card {
+    min-width: 0;
+    padding: var(--space-2);
+    color: var(--primary);
+    text-align: center;
+    background: none;
+    border: 1px solid var(--content-border-color);
+
+    // fixed rather than theme tokens: themes with very round corners turn
+    // these small cards into pills
+    border-radius: 8px;
+    cursor: pointer;
+
+    // an outline-style ring rather than a thicker border, so selecting a card
+    // doesn't shift the grid
+    &.--selected {
+      font-weight: 600;
+      color: var(--tertiary);
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 1px var(--tertiary);
+    }
+
+    html.discourse-no-touch &:hover {
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 1px var(--tertiary);
+    }
+  }
+
+  &__palette-preview {
+    display: block;
+    height: 2.5em;
+    border-radius: 4px;
+  }
+
+  &__palette-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    min-width: 0;
+    margin-block-start: var(--space-2);
+    font-size: var(--font-down-1);
+  }
+
+  &__palette-name-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   &__font-group {
@@ -645,7 +673,7 @@ html.design-wizard-docked {
   &__label {
     display: block;
     font-size: var(--font-down-1);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--primary);
   }
 
@@ -723,8 +751,7 @@ html.design-wizard-docked {
     gap: var(--space-2);
   }
 
-  &__style-blocks,
-  &__option-rows {
+  &__style-blocks {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -932,56 +959,6 @@ html.design-wizard-docked {
     &.--c4 {
       border-inline-start-color: var(--design-wizard-category-4);
     }
-  }
-
-  // Rendered inline like the notification tracking menu's selectable rows.
-  &__option-row {
-    display: flex;
-    box-sizing: border-box;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2);
-    background: none;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    cursor: pointer;
-
-    &.--selected {
-      border-color: var(--tertiary);
-      box-shadow: 0 0 0 1px var(--tertiary);
-    }
-
-    html.discourse-no-touch &:hover {
-      border-color: var(--tertiary);
-      box-shadow: 0 0 0 1px var(--tertiary);
-    }
-  }
-
-  &__option-row-texts {
-    display: flex;
-    flex: 1 1 0%;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    line-height: var(--line-height-medium);
-  }
-
-  &__option-row-label {
-    flex: 1 1 auto;
-    max-width: 100%;
-    font-size: var(--font-0);
-    font-weight: bold;
-    color: var(--primary);
-
-    @include ellipsis;
-  }
-
-  &__option-row-description {
-    flex: 1 1 auto;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    text-align: start;
-    white-space: normal;
   }
 
   &__actions {

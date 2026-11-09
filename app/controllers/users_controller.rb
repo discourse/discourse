@@ -114,7 +114,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  before_action :add_noindex_header, only: %i[show summary my_redirect]
+  before_action :add_noindex_header, only: %i[show summary my_redirect badges]
 
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
@@ -556,6 +556,8 @@ class UsersController < ApplicationController
         fetch_user_from_params(
           include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts,
         )
+      raise Discourse::NotFound unless guardian.can_see_profile?(inviter)
+
       can_see_invite_details = guardian.can_see_invite_details?(inviter)
 
       invites =
@@ -655,7 +657,10 @@ class UsersController < ApplicationController
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = target_user&.email
-    email = params[:email] if !email && !SiteSetting.hide_email_address_taken?
+    if !email && !SiteSetting.hide_email_address_taken?
+      email = params.permit(:email)[:email]
+      raise ActionController::ParameterMissing, :email if params.key?(:email) && email.nil?
+    end
     result = checker.check_username(username, email)
     result[:avatar_template] = User.default_template(username) if result[:available]
     render json: result
@@ -1928,7 +1933,10 @@ class UsersController < ApplicationController
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      UserAuthToken.where(user_id: user.id).each(&:destroy!)
+      UserAuthToken.transaction do
+        UserAuthToken.where(user_id: user.id).each(&:destroy!)
+        PushNotificationPusher.clear_subscriptions(user)
+      end
     end
 
     render json: success_json

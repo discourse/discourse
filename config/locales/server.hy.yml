@@ -2793,6 +2793,12 @@ hy:
   design_wizard:
     palette_pairs:
       default: "Լռելյայն"
+      neutral: "Նեյտրալ"
+      shades_of_blue: "Կապույտի Երանգներ"
+      summer: "Ամառ"
+      grey_amber: "Մոխրագույն Սաթ"
+      latte: "Լատտե"
+      dark_rose: "Մուգ Վարդագույն"
   wizard:
     title: "Discourse Տեղադրում"
     step:
