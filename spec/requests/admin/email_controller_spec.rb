@@ -279,7 +279,7 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to include("param is missing")
       end
 
-      it "should enqueue the right job, and show a deprecation warning (email_encoded param should be used)" do
+      it "enqueues the right job, and show a deprecation warning (email_encoded param should be used)" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -294,7 +294,7 @@ RSpec.describe Admin::EmailController do
         )
       end
 
-      it "should enqueue the right job, decoding the raw email param" do
+      it "enqueues the right job, decoding the raw email param" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -319,6 +319,33 @@ RSpec.describe Admin::EmailController do
              }
         expect(response.status).to eq(200)
         expect(response.body).to eq("email has been received and is queued for processing")
+      end
+
+      it "bounds the body of a message sent to a group inbox" do
+        Jobs.run_immediately!
+        SiteSetting.email_in = true
+        SiteSetting.max_post_length = 100
+        Fabricate(:group, incoming_email: "team@bar.com")
+
+        mail = <<~EMAIL
+          From: Someone <someone@example.com>
+          To: team@bar.com
+          Subject: A very long email
+          Date: #{Time.now.rfc2822}
+          Content-Type: text/plain; charset=UTF-8
+
+          #{"This body is long enough to exceed the maximum post length. " * 20}
+        EMAIL
+
+        expect {
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(mail),
+               }
+        }.to change(Post, :count).by(1)
+
+        expect(response.status).to eq(200)
+        expect(Post.last.raw.length).to be <= SiteSetting.max_post_length
       end
     end
 
@@ -365,7 +392,7 @@ RSpec.describe Admin::EmailController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should ..." do
+      it "...S" do
         post "/admin/email/advanced-test.json", params: { email: email }
 
         expect(response.status).to eq(200)
