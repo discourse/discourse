@@ -46,6 +46,15 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:suspend_user)).to eq(false)
     end
 
+    it "offers the rejection as \"Yes\" before the approval as \"No\"" do
+      actions = reviewable.actions_for(Guardian.new(moderator))
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(
+        actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
+      ).to eq([%w[approve_user reviewables.actions.answer_no.title]])
+    end
+
     context "when the user was flagged as a possible spammer" do
       fab!(:reviewable, :suspect_user_reviewable)
 

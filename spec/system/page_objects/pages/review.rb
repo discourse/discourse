@@ -205,22 +205,20 @@ module PageObjects
         find(".action-list li.insights").click
       end
 
-      def has_reviewable_with_status?(reviewable, status)
+      def has_reviewable_with_no_problem_found_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) do
-          page.has_css?(".review-item__status.--#{status}")
+          page.has_css?(".review-item__status.--no-problem-found")
         end
       end
 
-      def has_reviewable_with_approved_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+      def has_reviewable_with_problem_confirmed_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__status.--problem-confirmed")
+        end
       end
 
-      def has_reviewable_with_rejected_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
-      end
-
-      def has_rejected_item_in_timeline?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_text?("Rejected by") }
+      def has_problem_confirmed_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Problem confirmed by") }
       end
 
       def has_reviewable_with_pending_status?(reviewable)
@@ -231,8 +229,8 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--ignored") }
       end
 
-      def has_approved_item_in_timeline?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
+      def has_no_problem_found_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("No problem found by") }
       end
 
       def has_reviewables?(reviewables)

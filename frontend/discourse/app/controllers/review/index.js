@@ -110,8 +110,8 @@ export default class ReviewIndexController extends Controller {
   get statuses() {
     return [
       "pending",
-      "approved",
-      "rejected",
+      "problem_confirmed",
+      "no_problem_found",
       "deleted",
       "ignored",
       "reviewed",
@@ -202,6 +202,8 @@ export default class ReviewIndexController extends Controller {
 
     const createdAtStatuses = ["reviewed", "all"];
     const priorityStatuses = [
+      "problem_confirmed",
+      "no_problem_found",
       "approved",
       "rejected",
       "deleted",

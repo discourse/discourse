@@ -59,7 +59,7 @@ export default <template>
                   <LinkTo
                     @query={{hash
                       flagged_by=@controller.model.username
-                      status="approved"
+                      status="problem_confirmed"
                     }}
                     @route="review"
                   >
@@ -97,7 +97,7 @@ export default <template>
                   <LinkTo
                     @query={{hash
                       username=@controller.model.username
-                      status="rejected"
+                      status="problem_confirmed"
                       type="ReviewableQueuedPost"
                     }}
                     @route="review"

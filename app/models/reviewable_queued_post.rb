@@ -7,6 +7,10 @@ class ReviewableQueuedPost < Reviewable
     { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
   end
 
+  def self.approval_style?
+    true
+  end
+
   after_create do
     # Backwards compatibility, new code should listen for `reviewable_created`
     DiscourseEvent.trigger(:queued_post_created, self)
@@ -33,20 +37,9 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    unless approved?
-      if topic&.closed?
-        build_action(actions, :approve_post_closed, icon: "check", confirm: true)
-      else
-        build_action(actions, :approve_post, icon: "check") if target_created_by.present?
-      end
-    end
-
     if pending?
       reject_bundle =
-        actions.add_bundle(
-          "#{id}-reject-post",
-          label: "reviewables.actions.reject_post_bundle.title",
-        )
+        actions.add_bundle("#{id}-reject-post", label: "reviewables.actions.answer_yes.title")
 
       build_action(
         actions,
@@ -75,6 +68,21 @@ class ReviewableQueuedPost < Reviewable
 
       if guardian.can_delete_user?(target_created_by)
         delete_user_actions(actions, reject_bundle, dsa_classification_required: true)
+      end
+    end
+
+    unless approved?
+      # Resolved items have no question to answer, so approval is named outright.
+      label =
+        if pending?
+          "reviewables.actions.answer_no.title"
+        else
+          "reviewables.actions.approve_post.action_title"
+        end
+      if topic&.closed?
+        build_action(actions, :approve_post_closed, icon: "check", label:, confirm: true)
+      elsif target_created_by.present?
+        build_action(actions, :approve_post, icon: "check", label:)
       end
     end
 

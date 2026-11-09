@@ -335,16 +335,17 @@ describe "Viewing reviewable item" do
       expect(page).not_to have_text("hello world post contents.")
     end
 
-    it "shows context question for rejected queued post" do
+    it "offers an explicit approve action instead of the question for a rejected queued post" do
       reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
 
       review_page.visit_reviewable(reviewable_queued_post)
 
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable_queued_post)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable_queued_post)
       expect(review_page).to have_context_question(
         reviewable_queued_post,
-        I18n.t("js.review.context_question.approve_post"),
+        I18n.t("js.review.moderator_actions"),
       )
+      expect(page).to have_button(I18n.t("reviewables.actions.approve_post.action_title"))
     end
   end
 
@@ -372,13 +373,13 @@ describe "Viewing reviewable item" do
       rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
       rejection_reason_modal.delete_user
 
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
 
       expect(page).to have_text(user.name)
 
       expect(review_page).to have_no_context_question(
         reviewable,
-        I18n.t("js.review.context_question.approve_user"),
+        I18n.t("js.review.context_question.something_wrong_with_account"),
       )
 
       review_page.click_scrub_user_button
@@ -406,8 +407,8 @@ describe "Viewing reviewable item" do
       review_page.select_bundled_action(reviewable, "user-delete_user_block")
       rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
       rejection_reason_modal.delete_user
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
-      expect(review_page).to have_rejected_item_in_timeline(reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+      expect(review_page).to have_problem_confirmed_item_in_timeline(reviewable)
     end
 
     it "Allows to approve user" do
@@ -416,8 +417,8 @@ describe "Viewing reviewable item" do
       review_page.visit_reviewable(reviewable)
       review_page.click_approve_user_button
 
-      expect(review_page).to have_reviewable_with_approved_status(reviewable)
-      expect(review_page).to have_approved_item_in_timeline(reviewable)
+      expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
+      expect(review_page).to have_no_problem_found_item_in_timeline(reviewable)
     end
   end
 
