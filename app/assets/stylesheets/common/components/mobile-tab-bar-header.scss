@@ -1,0 +1,151 @@
+// The header and its menus, with the tab bar: the menus become sheets, and
+// a section's nested pages take its title and a back button
+html.mobile-tab-bar-visible {
+  // Keep the tab bar reachable while a menu is open, so tabs can switch menus
+  .menu-panel.slide-in,
+  .header-cloak {
+    height: calc(
+      100dvh - var(--footer-nav-height) - env(safe-area-inset-bottom)
+    );
+  }
+
+  .menu-panel.slide-in {
+    box-shadow: none;
+  }
+
+  // The header's menus become sheets, like mobile modals: the forum's menu
+  // rises over the tab bar and the user menu drops over the header
+  .hamburger-panel .menu-panel.slide-in,
+  .user-menu.menu-panel.slide-in {
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    overflow: hidden;
+    border: 0;
+    background: var(--secondary);
+    box-shadow: var(--shadow-modal);
+
+    // Mirrors the grip on mobile menu modals, as they're dragged the same way
+    &::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      width: 15vw;
+      max-width: 100px;
+      height: 5px;
+      border-radius: 10px;
+      background: var(--primary-medium);
+      transform: translateX(-50%);
+    }
+
+    .panel-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: auto;
+    }
+
+    .panel-body-contents {
+      min-height: 0;
+    }
+  }
+
+  .hamburger-panel .menu-panel.slide-in {
+    top: auto;
+    bottom: 0;
+    height: auto;
+    max-height: min(
+      calc(var(--composer-vh, 1dvh) * 85),
+      calc(100dvh - var(--header-offset))
+    );
+    padding-top: var(--space-3);
+    padding-bottom: env(safe-area-inset-bottom);
+    border-radius: var(--d-border-radius-large) var(--d-border-radius-large) 0 0;
+
+    &::before {
+      top: 2.5px;
+    }
+  }
+
+  // Its tabs run down one side, so it keeps a set height for them
+  .user-menu.menu-panel.slide-in {
+    top: 0;
+    bottom: auto;
+    height: calc(var(--composer-vh, 1dvh) * 75);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: var(--space-3);
+    border-radius: 0 0 var(--d-border-radius-large) var(--d-border-radius-large);
+
+    &::before {
+      bottom: 2.5px;
+    }
+
+    .menu-tabs-container {
+      flex: none;
+    }
+
+    .quick-access-panel {
+      flex: 1 1 0;
+      width: auto;
+    }
+  }
+
+  // Matches the modal backdrop, which covers the tab bar too
+  &:has(.hamburger-panel .menu-panel.slide-in, .user-menu.menu-panel.slide-in)
+    .header-cloak {
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.6);
+  }
+
+  // The tabs already lead back to the other sections, which leaves the
+  // back link's row with only the toggle-all button, not worth a row here
+  .sidebar-panel-header__row:has(.sidebar-sections__back-to-forum) {
+    display: none;
+  }
+}
+
+// Sits before the logo, so it needs the header icons' spacing mirrored
+.mobile-tab-bar-back {
+  margin-right: var(--space-1);
+
+  .d-icon {
+    font-size: var(--font-up-1);
+  }
+}
+
+// Next to a page's title the small logo only crowds it; the tabs already lead
+// home
+html.mobile-tab-bar-titled .d-header .title--minimized {
+  display: none;
+}
+
+// The header already holds the title, category and tags; the title is still
+// edited with the first post
+html.mobile-tab-bar-titled #topic-title {
+  display: none;
+}
+
+.mobile-tab-bar-title {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-up-1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// The header names the page and the back button leads up a level, so the
+// page's own title and trail only repeat them
+html.mobile-tab-bar-titled .d-page-header {
+  .d-page-header__breadcrumbs,
+  .d-page-header__title {
+    display: none;
+  }
+
+  // The page's actions keep their place at the end of the row
+  .d-page-header__title-row {
+    justify-content: flex-end;
+  }
+}

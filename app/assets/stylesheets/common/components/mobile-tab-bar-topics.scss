@@ -1,0 +1,203 @@
+// Topic lists and topics, with the tab bar: the lists' views and the topic's
+// progress float over the tabs, so the pages rearrange what's left
+
+// The lists' views sit in the tab bar, so the controls share the top row with
+// the category and tag dropdowns, kept to its end
+html.mobile-tab-bar-visible {
+  .navigation-controls {
+    margin-left: auto;
+
+    // Gives the dropdowns the row's gap too when there's nothing to show
+    &:not(:has(> :not(:empty))) {
+      display: none;
+    }
+
+    // On the category list, creating a category takes the row
+    &:has(> #create-category) {
+      flex: 1 1 auto;
+      margin-left: 0;
+
+      #create-category {
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  // The dropdowns share whatever the controls leave of the row
+  .navigation-container .category-breadcrumb {
+    flex: 1 1 auto;
+    gap: var(--nav-space) 0.5em;
+    min-width: 0;
+
+    > li {
+      flex: 1 1 0;
+      min-width: 0;
+      margin-right: 0;
+
+      > .select-kit {
+        width: 100%;
+        min-width: 0;
+      }
+
+      // Categories take the room first; tags keep their own width until
+      // there's none left
+      &:has(> .tag-drop, > .tags-intersection-chooser) {
+        flex: 0 1 auto;
+      }
+    }
+  }
+
+  // With a subcategory, the categories take the top row to themselves, and
+  // the tags move down to share the next with the controls
+  .navigation-container:has(.category-breadcrumb.--has-subcategory) {
+    // The break below would double the row gap, so the categories space the
+    // rows instead
+    row-gap: 0;
+
+    // Lays the dropdowns out alongside the controls
+    .category-breadcrumb {
+      display: contents;
+
+      > li:has(> .category-drop) {
+        margin-bottom: var(--nav-space);
+      }
+
+      > li:has(> .tag-drop, > .tags-intersection-chooser) {
+        flex: 1 1 auto;
+        order: 2;
+      }
+    }
+
+    &::after {
+      content: "";
+      flex-basis: 100%;
+      order: 1;
+    }
+
+    .navigation-controls {
+      order: 2;
+    }
+  }
+}
+
+// A topic's progress takes the views' place over the tabs, as a bubble whose
+// fill marks how far along it is, like the views' highlight, after the
+// topic's tools. Held in place over the tabs like the views, rather than
+// stopping at the end of the topic, and kept while scrolling down, as that's
+// when it's read. Only while it shows the progress: expanded, its timeline
+// takes the whole screen, which holding it in place would keep under the posts.
+html.mobile-tab-bar-visible
+  .container.posts
+  .topic-navigation.with-topic-progress {
+  position: fixed;
+  right: 0;
+  left: 0;
+  justify-content: center;
+  margin: 0;
+  bottom: calc(
+    var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-1) +
+      var(--composer-height, 0px)
+  );
+
+  #topic-progress-wrapper {
+    position: relative;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    overflow: visible;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease,
+      visibility 200ms;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @include mobile-tab-bar-floating;
+
+    // Hidden until the stream loads, leaving only the admin buttons
+    &:not(:has(#topic-progress:not(.hidden))) {
+      display: none;
+    }
+
+    // Slides away behind the tabs past the end of the topic, as the views do
+    // while scrolling down
+    &.docked {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(100%);
+    }
+  }
+
+  .topic-admin-menu-trigger,
+  .topic-content-language-preferences {
+    width: var(--mobile-tab-bar-item-size);
+    height: var(--mobile-tab-bar-item-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: transparent;
+
+    .d-icon {
+      color: var(--header_primary-medium);
+    }
+  }
+
+  // Outweighs the progress's own look, set by both ids
+  #topic-progress-wrapper #topic-progress {
+    min-width: 7rem;
+    height: var(--mobile-tab-bar-item-size);
+    padding: 0 var(--space-3);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: transparent;
+    color: var(--d-nav-color--active);
+
+    .nums {
+      font-size: var(--font-down-1);
+    }
+
+    .bg {
+      background: var(--d-selected);
+    }
+  }
+
+  // Apart after the bubble, and out of its flow, so the bubble neither moves
+  // nor resizes as it comes and goes
+  .progress-back-container {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: calc(100% + var(--space-2));
+    margin: 0;
+  }
+
+  // Just the arrow, shaped like the bubble beside it; outweighs its own look,
+  // set by id
+  #topic-progress-wrapper .btn.progress-back {
+    aspect-ratio: 1;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+
+    @include mobile-tab-bar-floating;
+
+    .d-icon {
+      margin: 0;
+      color: var(--d-nav-color--active);
+    }
+
+    .d-button-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: rect(0 0 0 0);
+    }
+  }
+}
