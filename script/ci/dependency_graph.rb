@@ -49,12 +49,12 @@ module TestSelection
           target = indexes.fetch(index)
           combined = row_bits(@callers.fetch(target))
           each_index(decode_row(encoded)) { |caller| combined |= 1 << indexes.fetch(caller) }
-          @callers[target] = combined
+          @callers[target] = decode_row(encode_row(combined))
         end
       incoming.encoded_tests.each do |file, encoded|
         combined = row_bits(@tests.fetch(file, 0))
         each_index(decode_row(encoded)) { |index| combined |= 1 << indexes.fetch(index) }
-        @tests[file] = combined
+        @tests[file] = decode_row(encode_row(combined))
       end
       nil
     end
@@ -142,13 +142,19 @@ module TestSelection
       offset = 0
       limit = mask.bit_length
       while offset < limit
-        word = mask[offset, WORD_BITS]
-        until word.zero?
-          first = word & -word
-          yield offset + first.bit_length - 1
-          word ^= first
+        block = mask[offset, 1024]
+        word_offset = 0
+        block_limit = block.bit_length
+        while word_offset < block_limit
+          word = block[word_offset, WORD_BITS]
+          until word.zero?
+            first = word & -word
+            yield offset + word_offset + first.bit_length - 1
+            word ^= first
+          end
+          word_offset += WORD_BITS
         end
-        offset += WORD_BITS
+        offset += 1024
       end
     end
 

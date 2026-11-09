@@ -18,6 +18,7 @@ enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
 exclude_patterns = []
 execution_plan_path = nil
+grouping_options = {}
 
 OptionParser
   .new do |opts|
@@ -63,6 +64,11 @@ OptionParser
     opts.on("--execution-plan PATH", "Record assigned test files for every worker") do |path|
       execution_plan_path = path
     end
+
+    opts.on(
+      "--grouping-inventory PATH",
+      "Preserve process groups from a full test inventory",
+    ) { |path| grouping_options[:grouping_files] = JSON.parse(File.read(path)) }
 
     opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
       use_runtime_info = true
@@ -135,6 +141,7 @@ success =
     profile_print_slowest_examples_count:,
     retry_and_log_flaky_tests:,
     execution_plan_path:,
+    **grouping_options,
   )
 
 if success

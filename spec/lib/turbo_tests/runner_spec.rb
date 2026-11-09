@@ -142,6 +142,84 @@ RSpec.describe TurboTests::Runner do
     RSpec.configuration.color = original_color
   end
 
+  it "rejects a grouping inventory that omits selected files" do
+    expect do
+      described_class.run(
+        files: ["spec/selected_spec.rb"],
+        grouping_files: ["spec/other_spec.rb"],
+        formatters: [],
+        seed: 1234,
+      )
+    end.to raise_error(ArgumentError, "Grouping inventory must contain every selected test file")
+  end
+
+  it "keeps selected files in their full inventory process group" do
+    original_environment = ENV.to_h
+    original_migration_paths = ActiveRecord::Tasks::DatabaseTasks.migrations_paths.dup
+    original_tty = RSpec.configuration.tty
+    original_color = RSpec.configuration.color
+    source = Dir.pwd
+    Dir.mktmpdir("turbo-selection-") do |directory|
+      FileUtils.mkdir_p("#{directory}/spec")
+      File.write("#{directory}/bootstrap.rb", <<~RUBY)
+        require "json"
+        require #{"#{source}/lib/turbo_tests/json_example".inspect}
+        require #{"#{source}/lib/turbo_tests/json_rows_formatter".inspect}
+      RUBY
+      File.write("#{directory}/.rspec", "--require #{directory}/bootstrap.rb\n")
+      selected = %w[spec/first_spec.rb spec/second_spec.rb]
+      selected.each { |path| File.write("#{directory}/#{path}", <<~RUBY) }
+          RSpec.describe(#{path.inspect}) do
+            it("records its process") do
+              File.write(#{"#{path}.json".inspect}, JSON.generate(pid: Process.pid, slot: ENV.fetch("TEST_ENV_NUMBER")))
+            end
+          end
+        RUBY
+      unrelated = "spec/unrelated_spec.rb"
+      File.write("#{directory}/#{unrelated}", <<~RUBY)
+        RSpec.describe("Unrelated") do
+          it("runs independently") { expect(#{"independent".ljust(2_000).inspect}).to start_with("independent") }
+        end
+      RUBY
+      inventory = selected + [unrelated]
+      isolated_rspec_environment.each { |key, value| value ? ENV[key] = value : ENV.delete(key) }
+      ENV["PARALLEL_TEST_PROCESSORS"] = "2"
+
+      Dir.chdir(directory) do
+        full = described_class.run(files: inventory, formatters: [], seed: 1234)
+        full_processes = selected.map { |path| JSON.parse(File.read("#{path}.json")) }
+        selected.each { |path| File.delete("#{path}.json") }
+
+        subset =
+          described_class.run(
+            files: selected,
+            grouping_files: inventory,
+            formatters: [],
+            seed: 1234,
+            execution_plan_path: "selected-manifest.json",
+          )
+        selected_processes = selected.map { |path| JSON.parse(File.read("#{path}.json")) }
+        manifest = JSON.parse(File.read("selected-manifest.json"))
+
+        expect(full).to eq(true)
+        expect(subset).to eq(true)
+        expect(full_processes.map { |process| process.fetch("pid") }.uniq.length).to eq(1)
+        expect(selected_processes.map { |process| process.fetch("pid") }.uniq.length).to eq(1)
+        expect(selected_processes.map { |process| process.fetch("slot") }).to eq(
+          full_processes.map { |process| process.fetch("slot") },
+        )
+        expect(
+          manifest.fetch("workers").values.flat_map { |worker| worker.fetch("files") }.uniq,
+        ).to match_array(selected)
+      end
+    end
+  ensure
+    ENV.replace(original_environment)
+    ActiveRecord::Tasks::DatabaseTasks.migrations_paths = original_migration_paths
+    RSpec.configuration.tty = original_tty
+    RSpec.configuration.color = original_color
+  end
+
   it "rejects failed startup and malformed output without waiting for an unopened pipe" do
     source = Dir.pwd
     {

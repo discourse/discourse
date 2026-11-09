@@ -2,6 +2,8 @@
 
 CI prepares a file plan before starting test jobs. The plan identifies the application revision, selected test files, reasons for selecting each file, and the environments that own those files. Jobs receive explicit file lists. Turbo distributes those files without expanding the selection.
 
+Turbo computes process groups from the complete current inventory, then removes unselected files from each group. Selected files retain their full run process group and seed. For example, a writer and reader can share one process in the full run. Regrouping just those two files could separate them and hide the reader's failure. Partial Turbo assignments therefore receive the complete grouping inventory without executing omitted files.
+
 The tests workflow covers core and plugin RSpec, five system test environments, core and plugin QUnit, theme QUnit and Vitest. The migration workflow uses the same planner for each migration gem, both without Rails and with Rails integration. Database setup, schema checks, annotations and other mandatory checks keep their existing responsibilities.
 
 ## Selection rules

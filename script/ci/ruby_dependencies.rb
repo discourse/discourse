@@ -78,50 +78,23 @@ module TestSelection
       end
     private_constant :ThreadState
     class NativeTrace
-      def initialize(
-        calls:,
-        returns:,
-        block_returns:,
-        ruby_events:,
-        ruby_returns:,
-        coarse_calls:,
-        coarse_blocks:,
-        classes:,
-        state:,
-        thread:
-      )
-        @coarse_calls = coarse_calls
-        @coarse_blocks = coarse_blocks
-        @classes = classes
-        @calls = calls
-        @returns = returns
-        @block_returns = block_returns
+      def initialize(native_events:, ruby_events:, coarse_events:, state:, thread:)
+        @coarse_events = coarse_events
+        @native_events = native_events
         @ruby_events = ruby_events
-        @ruby_returns = ruby_returns
         @state = state
         @thread = thread
       end
 
-      def enable(target_thread:)
-        classes.enable(target_thread: target_thread)
-        block_returns.enable(target_thread: target_thread)
-        sync_events
-      end
-
       def disable
-        coarse_calls.disable
-        coarse_blocks.disable
-        classes.disable
+        coarse_events.disable
         ruby_events.disable
-        ruby_returns.disable
         root = state.scoped_coarse_root
         while root
           root.fetch(:trace).disable
           root = root[:parent]
         end
-        calls.disable
-        returns.disable
-        block_returns.disable
+        native_events.disable
       end
 
       def sync_events
@@ -131,41 +104,21 @@ module TestSelection
             state.scopes.last.equal?(state.scoped_coarse_root.fetch(:frame))
         if scoped
           ruby_events.disable if ruby_events.enabled?
-          coarse_calls.enable(target_thread: thread) unless coarse_calls.enabled?
-          coarse_blocks.enable(target_thread: thread) unless coarse_blocks.enabled?
+          coarse_events.enable(target_thread: thread) unless coarse_events.enabled?
         else
-          coarse_calls.disable if coarse_calls.enabled?
-          coarse_blocks.disable if coarse_blocks.enabled?
+          coarse_events.disable if coarse_events.enabled?
           ruby_events.enable(target_thread: thread) unless ruby_events.enabled?
         end
-        if scoped
-          ruby_returns.disable if ruby_returns.enabled?
-          block_returns.disable if block_returns.enabled?
-        else
-          ruby_returns.enable(target_thread: thread) unless ruby_returns.enabled?
-          block_returns.enable(target_thread: thread) unless block_returns.enabled?
-        end
         if coarse
-          calls.disable if calls.enabled?
-          returns.disable if returns.enabled?
+          native_events.disable if native_events.enabled?
         else
-          calls.enable(target_thread: thread) unless calls.enabled?
-          returns.enable(target_thread: thread) unless returns.enabled?
+          native_events.enable(target_thread: thread) unless native_events.enabled?
         end
       end
 
       private
 
-      attr_reader :calls,
-                  :returns,
-                  :block_returns,
-                  :ruby_events,
-                  :ruby_returns,
-                  :coarse_calls,
-                  :coarse_blocks,
-                  :classes,
-                  :state,
-                  :thread
+      attr_reader :native_events, :ruby_events, :coarse_events, :state, :thread
     end
     private_constant :NativeTrace
 
@@ -246,12 +199,15 @@ module TestSelection
         end
       end
       @thread_trace =
-        TracePoint.new(:thread_begin, :thread_end) do |event|
+        TracePoint.new(:thread_begin, :thread_end, :class, :end) do |event|
           if event.event == :thread_begin
             attach_native_trace(Thread.current)
-          else
+          elsif event.event == :thread_end
             @native_traces.delete(Thread.current)&.disable
             @thread_states.delete(Thread.current)
+          else
+            thread = Thread.current
+            @trace_event.call(event, 3, thread, @thread_states[thread])
           end
         end
     end
@@ -329,7 +285,7 @@ module TestSelection
               state.frames << nil
               record_coarse_call(event: event)
               next
-            elsif kind == :return && depth > 1
+            elsif (kind == :return || kind == :b_return) && depth > 1
               state.coarse_depth = depth - 1
               state.frames.pop
               next
@@ -337,73 +293,50 @@ module TestSelection
           end
           @trace_event.call(event, 3, thread, state)
         end
-      classes = TracePoint.new(:class, :end) { |event| @trace_event.call(event, 3, thread, state) }
-      coarse_calls =
-        TracePoint.new(:call) do |event|
-          name = event.method_id
-          if COARSE_CONTEXT_METHODS.key?(name)
-            scoped = state.scoped_coarse_root
-            if METHOD_DEFINITION_EVENTS.include?(name)
-              @definitions.clear
-              register_native_definition(event)
-            end
-            if REQUIRE_METHODS.include?(name)
-              state.loading += 1
-              scoped[:loading] += 1
-            elsif DYNAMIC_METHODS.include?(name)
-              state.initializing += 1
-              scoped[:initializing] += 1
-            end
-          end
-          owner = event.defined_class || INTERNAL_CLASS.call(event.self)
-          record_coarse_owner(owner) unless @coarse_namespaces[owner]
+      coarse_events =
+        TracePoint.new(:call, :b_call) do |event|
+          kind = event.event
           path = event.path
-          record_coarse_path(path) unless @coarse_paths[path]
-        end
-      coarse_blocks =
-        TracePoint.new(:b_call) do |event|
-          if test_path(event.path) && example_boundary?(event: event, example: active_example)
+          if kind == :b_call && test_path(path) &&
+               example_boundary?(event: event, example: active_example)
             @trace_event.call(event, 3, thread, state)
           else
-            if METHOD_DEFINITION_EVENTS.include?(event.method_id)
+            name = event.method_id
+            if kind == :call && COARSE_CONTEXT_METHODS.key?(name)
+              scoped = state.scoped_coarse_root
+              if METHOD_DEFINITION_EVENTS.include?(name)
+                @definitions.clear
+                register_native_definition(event)
+              end
+              if REQUIRE_METHODS.include?(name)
+                state.loading += 1
+                scoped[:loading] += 1
+              elsif DYNAMIC_METHODS.include?(name)
+                state.initializing += 1
+                scoped[:initializing] += 1
+              end
+            elsif kind == :b_call && METHOD_DEFINITION_EVENTS.include?(name)
               @definitions.clear
               register_native_definition(event)
             end
             owner = event.defined_class || INTERNAL_CLASS.call(event.self)
             record_coarse_owner(owner) unless @coarse_namespaces[owner]
-            path = event.path
             record_coarse_path(path) unless @coarse_paths[path]
           end
         end
-      ruby_events = TracePoint.new(:call, :b_call, &ruby_callback)
-      ruby_returns = TracePoint.new(:return, &ruby_callback)
-      calls = TracePoint.new(:c_call) { |event| @trace_event.call(event, 3, thread, state) }
-      returns = TracePoint.new(:c_return) { |event| @trace_event.call(event, 3, thread, state) }
-      block_returns =
-        TracePoint.new(:b_return) do |event|
-          depth = state.coarse_depth
-          if depth > 1 && !COARSE_CONTEXT_METHODS.key?(event.method_id)
-            state.coarse_depth = depth - 1
-            state.frames.pop
-          else
-            @trace_event.call(event, 3, thread, state)
-          end
-        end
+      ruby_events = TracePoint.new(:call, :b_call, :return, :b_return, &ruby_callback)
+      native_events =
+        TracePoint.new(:c_call, :c_return) { |event| @trace_event.call(event, 3, thread, state) }
       point =
         NativeTrace.new(
-          calls: calls,
-          returns: returns,
-          block_returns: block_returns,
-          coarse_calls: coarse_calls,
-          coarse_blocks: coarse_blocks,
-          classes: classes,
+          native_events: native_events,
+          coarse_events: coarse_events,
           ruby_events: ruby_events,
-          ruby_returns: ruby_returns,
           state: state,
           thread: thread,
         )
       @native_traces[thread] = point
-      point.enable(target_thread: thread)
+      point.sync_events
     end
 
     def relative_path(path)
@@ -1378,8 +1311,7 @@ module TestSelection
         value = OBJECT_IVAR_GET.bind_call(event.self, variable)
         record_object(value: value, sources: [method_node, read_slots[index]].compact, field: true)
       end
-      inherited_slots = inputs.grep(%r{\A__state__/})
-      read_slots |= inherited_slots
+      inherited_slots = mutating ? inputs.grep(%r{\A__state__/}) : []
       write_slots |= inherited_slots if mutating
       @observed_sources.add(source) if source
       inputs = inputs.map { |path| path == source ? method_node : path } if source

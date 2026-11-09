@@ -93,6 +93,23 @@ module TestExecution
     end
     turbo = job.fetch("command").first == "bin/turbo_rspec"
     command += ["--execution-plan", "#{directory}/execution-manifest.json"] if turbo
+    if turbo && files.any? && files != job.fetch("inventory")
+      grouping_inventory = "#{directory}/grouping-inventory.json"
+      File.write(
+        grouping_inventory,
+        JSON.generate(
+          job
+            .fetch("inventory")
+            .map do |path|
+              Pathname
+                .new(File.expand_path(path))
+                .relative_path_from(Pathname.new(working_directory))
+                .to_s
+            end,
+        ),
+      )
+      command += ["--grouping-inventory", grouping_inventory]
+    end
     success = files.empty? || system(environment, *command, chdir: job.fetch("cwd", "."))
     pattern = job.fetch("runner") == "qunit" ? "qunit" : "rspec"
     records = Dir["#{directory}/#{pattern}-*.json"].map { |path| JSON.parse(File.read(path)) }

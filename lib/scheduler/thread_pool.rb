@@ -52,8 +52,10 @@ module Scheduler
       wrapped_block = wrap_block(block, db, locale)
 
       @mutex.synchronize do
+        raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if @shutdown
+
         @queue << wrapped_block
-        spawn_thread if @threads.length == 0
+        spawn_thread if @threads.length < @max_threads && @busy_threads.length == @threads.length
 
         @new_work.signal
       end

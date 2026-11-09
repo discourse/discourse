@@ -1637,6 +1637,103 @@ RSpec.describe TestExecution do
     end
   end
 
+  it "retains the full run's failure when passing selected files through TurboRSpec" do
+    source = Dir.pwd
+    Dir.mktmpdir("execution-grouping-", "tmp") do |directory|
+      absolute = File.expand_path(directory)
+      FileUtils.mkdir_p("#{directory}/spec")
+      FileUtils.mkdir_p("#{directory}/bin")
+      FileUtils.mkdir_p("#{directory}/lib")
+      File.symlink("#{source}/script", "#{directory}/script")
+      File.symlink("#{source}/lib/turbo_tests.rb", "#{directory}/lib/turbo_tests.rb")
+      File.symlink("#{source}/lib/turbo_tests", "#{directory}/lib/turbo_tests")
+      File.write("#{directory}/bin/turbo_rspec", <<~RUBY)
+        #!/usr/bin/env ruby
+        fixture = Dir.pwd
+        Dir.chdir(#{source.inspect}) { require "./lib/turbo_tests" }
+        Dir.chdir(fixture)
+        load #{"#{source}/bin/turbo_rspec".inspect}
+      RUBY
+      File.chmod(0o755, "#{directory}/bin/turbo_rspec")
+      File.write("#{directory}/bootstrap.rb", <<~RUBY)
+        require #{"#{source}/lib/turbo_tests/json_example".inspect}
+        require #{"#{source}/lib/turbo_tests/json_rows_formatter".inspect}
+      RUBY
+      File.write("#{directory}/.rspec", "--require #{absolute}/bootstrap.rb\n")
+      File.write("#{directory}/spec/writer_spec.rb", <<~RUBY)
+        ENV["EXECUTION_GROUPING_VALUE"] = "broken"
+        RSpec.describe("Writer") { it("loads") {} }
+      RUBY
+      File.write("#{directory}/spec/reader_spec.rb", <<~RUBY)
+        RSpec.describe("Reader") do
+          it("rejects the writer's broken value") { expect(ENV["EXECUTION_GROUPING_VALUE"]).to be_nil }
+        end
+      RUBY
+      File.write("#{directory}/spec/unrelated_spec.rb", <<~RUBY)
+        RSpec.describe("Unrelated") do
+          it("runs independently") { expect(#{"independent".ljust(4_000).inspect}).to start_with("independent") }
+        end
+      RUBY
+      selected = %w[spec/reader_spec.rb spec/writer_spec.rb]
+      inventory = (selected + ["spec/unrelated_spec.rb"]).sort
+      revision = "b" * 40
+      catalog = {
+        "revision" => revision,
+        "seed" => 1234,
+        "jobs" => {
+          "backend" => {
+            "inventory" => inventory,
+            "environment" => "core",
+            "runner" => "rspec",
+            "command" => ["bin/turbo_rspec"],
+            "env" => {
+              "PARALLEL_TEST_PROCESSORS" => "2",
+              "DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS" => "0",
+              "EXECUTION_GROUPING_VALUE" => nil,
+            },
+          },
+        },
+      }
+      File.write("#{directory}/catalog.json", JSON.generate(catalog))
+
+      { "full" => inventory, "select" => selected }.each do |mode, files|
+        plan = {
+          "version" => 2,
+          "mode" => mode,
+          "revision" => revision,
+          "files" => files,
+          "jobs" => {
+            "backend" => files,
+          },
+          "environments" => {
+            "backend" => "core",
+          },
+        }
+        File.write("#{directory}/plan.json", JSON.generate(plan))
+        _, _, status =
+          Open3.capture3(
+            isolated_rspec_environment.merge("GITHUB_SHA" => revision),
+            RbConfig.ruby,
+            "#{source}/script/ci/test_execution.rb",
+            "#{absolute}/plan.json",
+            "#{absolute}/catalog.json",
+            "backend",
+            "#{absolute}/#{mode}.json",
+            chdir: absolute,
+          )
+        report = JSON.parse(File.read("#{directory}/#{mode}.json"))
+
+        expect(status.success?).to eq(false)
+        expect(report.slice("loaded", "failures", "exact", "unreported_failure")).to eq(
+          "loaded" => files,
+          "failures" => ["./spec/reader_spec.rb[1:1]"],
+          "exact" => true,
+          "unreported_failure" => false,
+        )
+      end
+    end
+  end
+
   it "rejects a retry record standing in for the assigned multisite process" do
     Dir.mktmpdir("execution-roles-", "tmp") do |directory|
       file = "#{directory}/selected_spec.rb"

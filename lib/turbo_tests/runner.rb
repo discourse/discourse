@@ -40,12 +40,21 @@ module TurboTests
         profile: opts[:profile],
         retry_and_log_flaky_tests: retry_and_log_flaky_tests,
         execution_plan_path: opts[:execution_plan_path],
+        **opts.slice(:grouping_files),
       ).run
     end
 
     def initialize(opts)
       @reporter = opts[:reporter]
       @files = opts[:files]
+      @grouping_files = opts.fetch(:grouping_files, @files)
+      if opts.key?(:grouping_files) &&
+           !(
+             @grouping_files.is_a?(Array) && @grouping_files.all? { |file| file.is_a?(String) } &&
+               @grouping_files.uniq == @grouping_files && (@files - @grouping_files).empty?
+           )
+        raise ArgumentError, "Grouping inventory must contain every selected test file"
+      end
       @verbose = opts[:verbose]
       @fail_fast = opts[:fail_fast]
       @use_runtime_info = opts[:use_runtime_info]
@@ -69,7 +78,11 @@ module TurboTests
       group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
       tests_in_groups =
-        ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
+        ParallelTests::RSpec::Runner.tests_in_groups(@grouping_files, @num_processes, **group_opts)
+      if @grouping_files != @files
+        selected = @files.to_h { |file| [file, true] }
+        tests_in_groups.map! { |group| group.select { |file| selected.key?(file) } }
+      end
 
       setup_tmp_dir
 
