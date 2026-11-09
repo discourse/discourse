@@ -128,8 +128,8 @@ describe SiteSettingLocalization do
   end
 
   it "removes metadata when a setting is reloaded without localizable options" do
-    SiteSetting.send(
-      :setting,
+    settings = new_settings(SiteSettings::LocalProcessProvider.new)
+    settings.setting(
       :temporary_localizable_setting,
       "default",
       type: :string,
@@ -138,15 +138,15 @@ describe SiteSettingLocalization do
       },
     )
 
-    expect(SiteSetting.localizable_settings).to include(
+    expect(settings.localizable_settings).to include(
       "temporary_localizable_setting" => {
         max_length: 20,
       },
     )
 
-    SiteSetting.send(:setting, :temporary_localizable_setting, "default", type: :string)
+    settings.setting(:temporary_localizable_setting, "default", type: :string)
 
-    expect(SiteSetting.localizable_settings).not_to have_key("temporary_localizable_setting")
+    expect(settings.localizable_settings).not_to have_key("temporary_localizable_setting")
   end
 
   it "rejects cooked content for plain text settings" do
