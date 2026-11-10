@@ -123,8 +123,8 @@ class EmailLoginCode::Redeem
     !user.active?
   end
 
-  def activate_user(user:)
-    user.activate
+  def activate_user(user:, params:)
+    user.activate(params.email)
   end
 
   def send_welcome_message(user:)
