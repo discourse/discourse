@@ -74,13 +74,13 @@ module ::Blog
     end
 
     def self.default_path(topic, date: nil, slug: topic.slug)
-      path =
-        PathFormat.current.render(
-          slug: slug.presence || topic.id,
-          id: topic.id,
-          date: date || Time.current,
-        )
-      reserved_path?(path) ? "#{path}-#{topic.id}" : path
+      format = PathFormat.current
+      slug = slug.presence || topic.id.to_s
+      date ||= Time.current
+      path = format.render(slug:, id: topic.id, date:)
+      return path if !reserved_path?(path)
+
+      format.render(slug: "#{slug}-#{topic.id}", id: topic.id, date:)
     end
 
     def self.reserved_path?(path)

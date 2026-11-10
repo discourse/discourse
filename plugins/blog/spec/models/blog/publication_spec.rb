@@ -134,6 +134,16 @@ RSpec.describe Blog::Publication do
       ).to eq("/2026/11/06/#{topic.slug}")
     end
 
+    it "suffixes a reserved slug wherever the format places it" do
+      SiteSetting.blog_path_format = "/{slug}/{id}"
+      topic.update_columns(slug: "about")
+
+      path = described_class.default_path(topic)
+
+      expect(path).to eq("/about-#{topic.id}/#{topic.id}")
+      expect(described_class.new(topic:, path:)).to be_valid
+    end
+
     it "renders a custom format with a fixed prefix and the topic id" do
       SiteSetting.blog_path_format = "/news/{id}-{slug}"
 
