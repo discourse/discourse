@@ -12,6 +12,31 @@ RSpec.describe Jobs::ExportCsvFile do
       )
     end
 
+    it "refuses a report name that would write outside the export directory" do
+      moderator = Fabricate(:moderator)
+      probe = "export-probe-#{SecureRandom.hex(4)}"
+      escaped_dir = File.expand_path("../../#{probe}", UserExport.base_directory)
+
+      aggregate_failures do
+        # test env raises on the missing report title before any file is written, which would hide the bug
+        allow_missing_translations do
+          expect do
+            Jobs::ExportCsvFile.new.execute(
+              user_id: moderator.id,
+              entity: "report",
+              args: {
+                name: "../../#{probe}/x_reqs",
+              },
+            )
+          end.to raise_error(Discourse::InvalidParameters)
+        end
+
+        expect(Dir.exist?(escaped_dir)).to eq(false)
+      end
+    ensure
+      FileUtils.rm_rf(escaped_dir)
+    end
+
     context "when re-validating permissions at execution time" do
       it "exports the user list for an admin" do
         expect do
