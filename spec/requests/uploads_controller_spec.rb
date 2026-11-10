@@ -2055,6 +2055,17 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(404)
       end
 
+      it "returns 404 when the upload stub is not in the temporary upload folder" do
+        external_upload_stub.update!(key: "original/1X/logo.png")
+
+        post "/uploads/complete-external-upload.json",
+             params: {
+               unique_identifier: external_upload_stub.unique_identifier,
+             }
+
+        expect(response.status).to eq(404)
+      end
+
       it "handles ChecksumMismatchError" do
         ExternalUploadManager
           .any_instance
