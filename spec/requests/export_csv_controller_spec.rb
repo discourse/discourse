@@ -336,6 +336,18 @@ RSpec.describe ExportCsvController do
         expect(response.status).to eq(200)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
       end
+
+      it "rejects a report name that is not a report identifier" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "../../../../plugins/zz/plugin.rb/x_reqs",
+               },
+             }
+        expect(response.status).to eq(400)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+      end
     end
 
     describe "#latest_user_archive" do
