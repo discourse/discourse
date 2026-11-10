@@ -41,7 +41,7 @@ RSpec.describe DiscourseEvents::Livestream::ResumeNotifications do
 
       it "stops the pause from starting afterwards" do
         result
-        expect(start_pause(pause_key)).to fail_a_policy(:pause_not_cancelled)
+        expect(start_pause(pause_key)).to fail_to_find_a_model(:do_not_disturb_timing)
       end
     end
 

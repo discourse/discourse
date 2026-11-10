@@ -7,6 +7,8 @@ module DiscourseEvents
     #
     # Leaving can reach the server before the pause it ends has been saved, so
     # ending a pause leaves a mark that stops a late start from taking effect.
+    # Starting and ending share one lock so neither can slip between the
+    # other's check and write.
     class NotificationPause
       CANCELLED = "cancelled"
 
@@ -20,25 +22,40 @@ module DiscourseEvents
         @key = key
       end
 
+      # Returns the new timing, or nil when the pause was already ended.
+      def start(ends_at:)
+        synchronize do
+          next if cancelled?
+
+          timing = user.do_not_disturb_timings.create!(starts_at: Time.zone.now, ends_at:)
+          Discourse.redis.setex(redis_key, (timing.ends_at - Time.zone.now).ceil, timing.id)
+          timing
+        end
+      end
+
+      def end
+        synchronize do
+          timing = find_timing
+          Discourse.redis.setex(redis_key, CANCELLATION_TTL.to_i, CANCELLED)
+          timing&.destroy!
+        end
+      end
+
+      private
+
+      def synchronize(&)
+        DistributedMutex.synchronize("#{redis_key}:lock", &)
+      end
+
       def cancelled?
         stored_value == CANCELLED
       end
 
-      def timing
+      def find_timing
         return if stored_value.blank? || cancelled?
 
         user.do_not_disturb_timings.find_by(id: stored_value)
       end
-
-      def remember(timing)
-        Discourse.redis.setex(redis_key, (timing.ends_at - Time.zone.now).ceil, timing.id)
-      end
-
-      def cancel
-        Discourse.redis.setex(redis_key, CANCELLATION_TTL.to_i, CANCELLED)
-      end
-
-      private
 
       def stored_value
         Discourse.redis.get(redis_key)

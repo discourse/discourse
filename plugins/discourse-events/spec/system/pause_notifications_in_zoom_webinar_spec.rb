@@ -2,7 +2,7 @@
 
 describe "Pause notifications in a Zoom webinar" do
   fab!(:current_user) { Fabricate(:user, trust_level: 1) }
-  let(:prompt) { ".discourse-calendar-livestream-pause-notifications" }
+  let(:toasts) { PageObjects::Components::Toasts.new }
   let(:paused_indicator) { ".header-dropdown-toggle .do-not-disturb-background" }
 
   before do
@@ -25,40 +25,39 @@ describe "Pause notifications in a Zoom webinar" do
     visit("/t/#{topic.slug}/#{topic.id}/zoom")
   end
 
-  it "pauses notifications on request and resumes them when the meeting is left" do
+  it "pauses notifications on joining and resumes them when the meeting is left" do
     visit_meeting
 
-    within(prompt) do
-      click_button(I18n.t("js.discourse_events.livestream.zoom.pause_notifications.yes"))
-    end
-
-    expect(page).to have_no_css(prompt)
+    expect(toasts).to have_default(
+      I18n.t("js.discourse_events.livestream.zoom.pause_notifications.paused"),
+    )
     expect(page).to have_css(paused_indicator)
 
     find("#site-logo").click
 
     expect(page).to have_current_path("/")
     expect(page).to have_no_css(paused_indicator)
+    expect(toasts).to have_no_message
   end
 
-  it "leaves notifications alone when the prompt is declined" do
+  it "resumes notifications from the toast" do
     visit_meeting
 
-    within(prompt) do
-      click_button(I18n.t("js.discourse_events.livestream.zoom.pause_notifications.no"))
-    end
+    expect(page).to have_css(paused_indicator)
 
-    expect(page).to have_no_css(prompt)
+    click_button(I18n.t("js.discourse_events.livestream.zoom.pause_notifications.resume"))
+
     expect(page).to have_no_css(paused_indicator)
+    expect(toasts).to have_no_message
   end
 
-  it "does not ask a user who has already paused notifications, and keeps their pause on leaving" do
+  it "leaves a user who has already paused notifications alone" do
     current_user.do_not_disturb_timings.create!(starts_at: Time.zone.now, ends_at: 1.day.from_now)
 
     visit_meeting
 
     expect(page).to have_css(paused_indicator)
-    expect(page).to have_no_css(prompt)
+    expect(toasts).to have_no_message
 
     find("#site-logo").click
 

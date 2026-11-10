@@ -10,13 +10,7 @@ class DiscourseEvents::Livestream::ResumeNotifications
   end
 
   model :notification_pause, :build_notification_pause
-
-  lock(:pause_key) do
-    model :do_not_disturb_timing, optional: true
-    step :cancel_pause
-    only_if(:pause_started) { step :end_pause }
-  end
-
+  step :end_pause
   step :announce_remaining_pause
   only_if(:no_longer_paused) { step :deliver_shelved_notifications }
 
@@ -26,20 +20,8 @@ class DiscourseEvents::Livestream::ResumeNotifications
     DiscourseEvents::Livestream::NotificationPause.new(user: guardian.user, key: params.pause_key)
   end
 
-  def fetch_do_not_disturb_timing(notification_pause:)
-    notification_pause.timing
-  end
-
-  def cancel_pause(notification_pause:)
-    notification_pause.cancel
-  end
-
-  def pause_started(do_not_disturb_timing:)
-    do_not_disturb_timing.present?
-  end
-
-  def end_pause(do_not_disturb_timing:)
-    do_not_disturb_timing.destroy!
+  def end_pause(notification_pause:)
+    notification_pause.end
   end
 
   def announce_remaining_pause(guardian:)

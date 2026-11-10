@@ -64,7 +64,7 @@ RSpec.describe DiscourseEvents::Livestream::PauseNotifications do
         )
       end
 
-      it { is_expected.to fail_a_policy(:pause_not_cancelled) }
+      it { is_expected.to fail_to_find_a_model(:do_not_disturb_timing) }
 
       it "does not pause notifications" do
         expect { result }.not_to change { current_user.do_not_disturb? }.from(false)

@@ -19,7 +19,7 @@ import { isWithinEventTimeframe } from "../../models/discourse-post-event-event.
 import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send.js";
 import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit.js";
 import EmbeddableChatChannel from "./embeddable-chat-channel.gjs";
-import LivestreamPauseNotificationsPrompt from "./pause-notifications-prompt.gjs";
+import LivestreamNotificationPause from "./notification-pause.gjs";
 
 const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
 
@@ -234,10 +234,7 @@ export default class LivestreamZoomPage extends Component {
         ></iframe>
 
         {{#if this.currentUser}}
-          <LivestreamPauseNotificationsPrompt
-            @hidden={{this.errorMessage}}
-            @topicId={{@topic.id}}
-          />
+          <LivestreamNotificationPause @topicId={{@topic.id}} />
         {{/if}}
       {{else}}
         <div class="discourse-calendar-livestream-zoom-page__waiting-wrapper">

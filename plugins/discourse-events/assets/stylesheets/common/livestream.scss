@@ -94,7 +94,6 @@ body.discourse-calendar-livestream-zoom-full {
   // again in a PWA. Neither is taken out of the height the viewport reports, so
   // the page gives it up itself rather than leaving the composer underneath.
   --livestream-zoom-bottom-inset: env(safe-area-inset-bottom, 0px);
-  --livestream-zoom-chat-width: clamp(20rem, 30%, 28rem);
 
   html.footer-nav-visible & {
     --livestream-zoom-bottom-inset: calc(
@@ -223,7 +222,7 @@ body.discourse-calendar-livestream-zoom-full {
         }
 
         .discourse-calendar-livestream-zoom-page__chat {
-          flex: 0 0 var(--livestream-zoom-chat-width);
+          flex: 0 0 clamp(20rem, 30%, 28rem);
           border-top: 0;
           border-left: 1px solid var(--primary-low);
         }
@@ -279,44 +278,5 @@ body.discourse-calendar-livestream-zoom-full {
 
   > .chat-transcript:last-child {
     margin-bottom: 0;
-  }
-}
-
-.discourse-calendar-livestream-pause-notifications {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.5rem;
-  width: min(22rem, calc(100% - 2rem));
-  padding: 0.75rem;
-  background: var(--secondary);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
-  box-shadow: var(--shadow-dropdown);
-
-  &__title {
-    margin: 0;
-  }
-
-  &__close {
-    align-self: start;
-    margin: -0.25rem -0.25rem 0 0;
-  }
-
-  &__actions {
-    grid-column: 1 / -1;
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  // Chat sits beside the meeting here rather than below it, and the card
-  // belongs over the meeting.
-  @include viewport.from(lg) {
-    .discourse-calendar-livestream-zoom-page.--with-chat & {
-      right: calc(var(--livestream-zoom-chat-width) + 1rem);
-    }
   }
 }

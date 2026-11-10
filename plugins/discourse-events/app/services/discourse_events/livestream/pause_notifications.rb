@@ -16,13 +16,7 @@ class DiscourseEvents::Livestream::PauseNotifications
   model :event
   policy :event_not_over
   model :notification_pause, :build_notification_pause
-
-  lock(:pause_key) do
-    policy :pause_not_cancelled
-    model :do_not_disturb_timing, :start_pause
-    step :remember_pause
-  end
-
+  model :do_not_disturb_timing, :start_pause
   step :announce_pause
 
   private
@@ -47,19 +41,9 @@ class DiscourseEvents::Livestream::PauseNotifications
     DiscourseEvents::Livestream::NotificationPause.new(user: guardian.user, key: params.pause_key)
   end
 
-  def pause_not_cancelled(notification_pause:)
-    !notification_pause.cancelled?
-  end
-
-  def start_pause(event:, guardian:)
-    guardian.user.do_not_disturb_timings.create(
-      starts_at: Time.zone.now,
-      ends_at: event.notification_pause_ends_at,
-    )
-  end
-
-  def remember_pause(notification_pause:, do_not_disturb_timing:)
-    notification_pause.remember(do_not_disturb_timing)
+  # Finds nothing when leaving the meeting already ended this pause.
+  def start_pause(notification_pause:, event:)
+    notification_pause.start(ends_at: event.notification_pause_ends_at)
   end
 
   def announce_pause(guardian:)

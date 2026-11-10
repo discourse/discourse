@@ -70,7 +70,7 @@ module DiscourseEvents
         on_failed_policy(:can_see_topic) { raise Discourse::NotFound }
         on_model_not_found(:event) { raise Discourse::NotFound }
         on_failed_policy(:event_not_over) { raise Discourse::InvalidAccess }
-        on_failed_policy(:pause_not_cancelled) { head :conflict }
+        on_model_not_found(:do_not_disturb_timing) { head :conflict }
         on_failure { render json: failed_json, status: :unprocessable_entity }
       end
     end
