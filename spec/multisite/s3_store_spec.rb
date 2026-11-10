@@ -286,6 +286,37 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
           expect(signed_url).to match("#{upload_path}")
         end
       end
+
+      it "signs temporary and bucket folder paths of the current site" do
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket/folder"
+
+        test_multisite_connection("default") do
+          %W[
+            folder/#{upload_path}/original/1X/a.png
+            temp/folder/#{upload_path}/b/a.png
+          ].each do |path|
+            expect(
+              Discourse.store.signed_url_for_path(path, include_content_disposition: false),
+            ).to match(/Amz-Expires/)
+          end
+        end
+      end
+
+      it "only signs paths of the current site" do
+        test_multisite_connection("default") do
+          path = "uploads/second/original/1X/#{upload_sha1}.png"
+
+          expect {
+            Discourse.store.signed_url_for_path(path, include_content_disposition: true)
+          }.to raise_error(Discourse::NotFound)
+          expect(
+            CookedPostProcessor.new(Fabricate(:post)).get_size("/secure-uploads/#{path}"),
+          ).to eq(nil)
+          expect {
+            HotlinkedMediaDownloader.download("/secure-uploads/#{path}", -1, tmp_file_name: "x")
+          }.to raise_error(HotlinkedMediaDownloader::ImageBrokenError)
+        end
+      end
     end
 
     describe "#update_upload_access_control" do

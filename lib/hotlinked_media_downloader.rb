@@ -42,6 +42,7 @@ class HotlinkedMediaDownloader
     # need the presigned S3 URL here
     if Upload.secure_uploads_url?(src)
       src = Upload.signed_url_from_secure_uploads_url(src, include_content_disposition: false)
+      raise ImageBrokenError if !src
     end
 
     file = download_file(src)
