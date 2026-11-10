@@ -125,6 +125,43 @@ RSpec.describe UsersController do
         end
       end
 
+      context "when the user has a second factor enabled" do
+        before { user_deferred.update!(active: false) }
+
+        it "activates the account without logging in a user with TOTP" do
+          Fabricate(:user_second_factor_totp, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+
+        it "activates the account without logging in a user with only backup codes" do
+          Fabricate(:user_second_factor_backup, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+
+        it "activates the account without logging in a user with a security key" do
+          Fabricate(:user_security_key_with_random_credential, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+      end
+
       context "when user is not approved" do
         before { SiteSetting.must_approve_users = true }
 
@@ -5575,6 +5612,19 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
+      it "raises an error for an account that has been active before" do
+        user = post_user
+        user.update!(last_seen_at: 1.year.ago)
+
+        put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(user.reload.email).to eq("osama@example.com")
+      end
+
       it "raises an error when logged in" do
         post_user
         sign_in(moderator)
@@ -5669,6 +5719,49 @@ RSpec.describe UsersController do
             }
 
         expect(response.status).to eq(403)
+      end
+
+      it "raises an error for an admin deactivated for inactivity" do
+        admin = Fabricate(:admin, password: "dormantadminpassword", last_seen_at: 2.years.ago)
+        Jobs::InvalidateInactiveAdmins.new.execute({})
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: admin.username,
+              password: "dormantadminpassword",
+              email: "updatedemail@example.com",
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(admin.reload.active).to eq(false)
+        expect(admin.email).not_to eq("updatedemail@example.com")
+      end
+
+      it "raises an error for an account deactivated by staff before it was ever seen" do
+        unseen_user = Fabricate(:user, active: false, password: "qwerqwer123")
+        Fabricate(
+          :user_history,
+          acting_user: admin,
+          target_user_id: unseen_user.id,
+          action: UserHistory.actions[:deactivate_user],
+        )
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: unseen_user.username,
+              password: "qwerqwer123",
+              email: "updatedemail@example.com",
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(unseen_user.reload.active).to eq(false)
+        expect(unseen_user.email).not_to eq("updatedemail@example.com")
       end
 
       it "raises an error when logged in" do
