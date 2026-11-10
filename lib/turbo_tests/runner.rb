@@ -91,8 +91,6 @@ module TurboTests
       workers = {}
       subprocess_opts = { record_runtime: @use_runtime_info, workers: workers }
 
-      start_multisite_subprocess(@files, **subprocess_opts)
-
       collection_batches =
         if ENV["COLLECT_TEST_MAPPING"] == "1"
           batch_size = @files.length.fdiv(@num_processes).ceil.clamp(1, 40)
@@ -104,8 +102,15 @@ module TurboTests
         end
       expected_exits = collection_batches ? collection_batches.length + 1 : @num_processes + 1
 
+      collection_slots = [@num_processes - 1, 1].max
+      start_multisite_subprocess(
+        @files,
+        **subprocess_opts,
+        database_slot: collection_batches ? collection_slots : nil,
+      )
+
       if collection_batches
-        @num_processes.times do |index|
+        (collection_slots - 1).times do |index|
           start_collection_batch(
             process_id: index + 1,
             pending_batches: collection_batches,

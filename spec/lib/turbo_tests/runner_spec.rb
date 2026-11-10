@@ -99,7 +99,7 @@ RSpec.describe TurboTests::Runner do
         end
       isolated_rspec_environment.each { |key, value| value ? ENV[key] = value : ENV.delete(key) }
       ENV.update(
-        "PARALLEL_TEST_PROCESSORS" => "1",
+        "PARALLEL_TEST_PROCESSORS" => "2",
         "COLLECT_TEST_MAPPING" => "1",
         "GITHUB_SHA" => "b" * 40,
       )
