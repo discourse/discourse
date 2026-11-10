@@ -21,6 +21,7 @@ da:
         edit: Rediger
         activate: Aktiver
         preview: Forhåndsvisning
+        customize: Tilpasning
         import: Importer
         export: Eksporter
         active: Aktiv
@@ -33,6 +34,7 @@ da:
         change:
           title: titel
           body: brødtekst
+          tags: mærker
       review:
         create: Opret link
         copy: Kopier

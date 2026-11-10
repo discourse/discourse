@@ -6,6 +6,14 @@
 
 bs_BA:
   js:
+    code_editor:
+      search:
+        replace: "Zamijeni"
+        next: "Iduće"
+        previous: "Previous"
+        close: "Zatvori"
+      fold:
+        to: "za"
     user_api_key:
       deny: "Odustani"
       copied: "Kopirano!"
@@ -3208,10 +3216,9 @@ bs_BA:
           title: "Pluginovi"
       upcoming_changes:
         name: "Ime"
-        enabled: "Omogućen"
+        enabled: "Omogućen?"
+        settings: "Postavke"
         preview: "Pregled"
-        enabled_for_options:
-          everyone: "Svatko"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"

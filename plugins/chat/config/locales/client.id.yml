@@ -52,8 +52,6 @@ id:
           other: "Apakah Anda yakin ingin menghapus pesan %{count} ini?"
       channel_settings:
         title: "Pengaturan kanal"
-        edit: "Ubah"
-        add: "Menambahkan"
         close_channel: "Tutup kanal"
         open_channel: "Buka kanal"
         notification_settings_context: "Pemberitahuan"
@@ -112,18 +110,17 @@ id:
         filter_archived: Diarsipkan
         filter_joined_all: "Semua"
         filter_joined_joined: "Joined"
-      members_view:
-        back_to_settings: "Kembali ke pengaturan"
       about_view:
-        title: Judul
         name: Nama
         description: Deskripsi
       channel_info:
         tabs:
           members: Anggota
+          preferences: Preferensi
           settings: Pengaturan
           search: Cari
         remove_member: "Hapus"
+        members_title: "%{channel} anggota"
       new_message_modal:
         title: Kirim pesan
         add_user_long: <kbd>shift + click</kbd> atau <kbd>shift + enter</kbd><span>Tambahkan @%{username}</span>
@@ -164,8 +161,6 @@ id:
         save: "Simpan"
         saved: "Tersimpan"
         unfollow: "Keluar"
-        admin_title: "Admin"
-        settings_title: "Pengaturan"
         category_label: "Kategori"
         members_label: "Anggota"
       admin:

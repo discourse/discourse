@@ -16,6 +16,15 @@ ur:
       disabled: "صرف انتظامی رجسٹریشن"
     ace_editor:
       resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
+    code_editor:
+      resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
+      search:
+        replace: "بدلیں"
+        next: "اگلا"
+        previous: "پچھلی"
+        close: "بند کریں"
+      fold:
+        to: "کیلئے"
     user_api_key:
       title: '"%{application_name} " کو مجاز بنائیں'
       authorize: "مجاز بنائیں"
@@ -2749,7 +2758,6 @@ ur:
         }.
     learn_more: "مزید جانیں۔۔۔"
     learn_more_with_link: "<a href='%{url}' target='_blank'>مزید جانیں۔۔۔</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>آراءٔ…</a>"
     mute: خاموش کریں
     unmute: آواز چالو کریں
     last_post: پوسٹ کیا
@@ -6067,23 +6075,22 @@ ur:
         name: "نام"
         plugin: "اضافی سہولتیں"
         metadata: "میٹا ڈیٹا"
-        enabled: "فعال شدہ"
-        enabled_for: "کے لئے فعال..."
+        enabled: "فعال؟"
         show_image: "تصویر دکھائیں"
-        edit_groups: "حصہ دار گروپس کو ترمیم کریں"
+        feedback: "آراء"
+        toggle: "%{name} فعال ہے"
         groups_updated: "گروپس اپ ڈیٹ ہو گئے!"
         save_groups: "گروپ محفوظ کریں"
         add_groups_to_enable: "اس فیچر کو فعال کرنے کے لیے گروپس شامل کریں"
         no_changes_to_save: "محفوظ کرنے کے لیے کوئی تبدیلیاں نہیں"
         select_groups: "گروپس کا انتخاب"
         opt_in_groups: "شامل ہونے والے گروپس"
-        show_related_settings: "متعلقہ ترتیبات دیکھیں..."
+        settings: "سیٹِنگ"
         opt_in_groups_instructions: "آپٹ ان گروپس مخصوص صارفین کے ایک گروپ کو تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دینے کے لیے استعمال کیے جا سکتے ہیں۔ نوٹ کریں کہ جب تبدیلی مستحکم حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
         depends_on_notice: "اس تبدیلی کے لیے %{dependencyLinks} کا فعال ہونا ضروری ہے۔"
         preview: "جھلک دیکھیں"
         enabled_for_options:
           no_one: "کوئی نہیں"
-          everyone: "ہر کوئی"
           specific_groups: "مخصوص گروپ(گروپس)"
         statuses:
           experimental: "تجرباتی"

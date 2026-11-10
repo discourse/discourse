@@ -17,6 +17,7 @@ sw:
         themes: Mandhari
         edit: Hariri
         preview: Kihakiki
+        customize: Geuza Kukufaa
         import: Imeingizwa kutoka sehemu nyingine
         export: Hamisha
         active: Amilifu
@@ -29,6 +30,7 @@ sw:
         change:
           title: kichwa cha Habari
           body: mwili
+          tags: lebo
       review:
         copy: Nakili
         open: Fungua

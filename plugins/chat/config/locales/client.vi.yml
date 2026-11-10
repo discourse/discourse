@@ -37,8 +37,6 @@ vi:
         confirm:
           other: "Bạn có chắc chắn muốn xoá %{count} tin nhắn không vậy?"
       channel_settings:
-        edit: "Sửa"
-        add: "Thêm"
         notification_settings_context: "Thông báo"
         join: "Tham gia"
         leave: "Rời nhóm"
@@ -135,16 +133,17 @@ vi:
       search_view:
         filter_placeholder: Tìm tin nhắn
       about_view:
-        title: Tiêu đề
         name: Tên
         description: Mô tả
       channel_info:
         back_to_channel: "Quay lại"
         tabs:
           members: Thành viên kênh
+          preferences: Thiết lập
           settings: Cài đặt
           search: Tìm kiếm
         remove_member: "Xóa"
+        members_title: "%{channel} thành viên"
       new_message_modal:
         title: Gửi tin nhắn
         user_search_placeholder: "...thêm thành viên"
@@ -199,8 +198,6 @@ vi:
         save: "Lưu lại"
         saved: "Lưu trữ"
         unfollow: "Rời nhóm"
-        admin_title: "Quản trị"
-        settings_title: "Cài đặt"
         category_label: "Chuyên mục"
         history_label: "Lịch sử"
         members_label: "Các thành viên"

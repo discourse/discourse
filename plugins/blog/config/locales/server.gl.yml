@@ -18,3 +18,5 @@ gl:
     replies:
       one: "%{count} resposta"
       other: "%{count} repostas"
+    themes:
+      default: Predeterminado

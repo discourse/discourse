@@ -18,3 +18,5 @@ hy:
     replies:
       one: "%{count} պատասխան"
       other: "%{count} պատասխան"
+    themes:
+      default: Լռելյայն

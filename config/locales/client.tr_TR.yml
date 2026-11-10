@@ -11,6 +11,15 @@ tr_TR:
       go_back: "Geri dön"
       title: "Yasa dışı içeriği bildirin"
       email: "E-posta adresi"
+    code_editor:
+      search:
+        replace: "Değiştir"
+        next: "Sonraki"
+        previous: "Önceki"
+        close: "Bitir"
+        go: "Git"
+      fold:
+        to: "kime"
     user_api_key:
       title: '"%{application_name}" için yetkilendirme'
       authorize: "Yetkilendir"
@@ -2617,7 +2626,6 @@ tr_TR:
         } site ayar limitini aştı.
     learn_more: "Daha fazla bilgi…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Daha fazla bilgi edinin…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Geri bildirim…</a>"
     mute: Sessize al
     unmute: Sesi aç
     last_post: Gönderildi
@@ -5783,23 +5791,21 @@ tr_TR:
         name: "Ad"
         plugin: "Eklenti"
         metadata: "Meta veri"
-        enabled: "Etkin mi"
-        enabled_for: "Şunlar için etkinleştirildi..."
+        enabled: "Etkin mi?"
         show_image: "Görüntüyü göster"
-        edit_groups: "Katılım gruplarını düzenle"
+        feedback: "Geri bildirim"
         groups_updated: "Gruplar güncellendi!"
         save_groups: "Grupları kaydet"
         add_groups_to_enable: "Bu özelliği etkinleştirmek için gruplar ekleyin"
         no_changes_to_save: "Kaydedilecek değişiklik yok"
         select_groups: "Grupları seç…"
         opt_in_groups: "Katılımcı gruplar"
-        show_related_settings: "İlgili ayarları göster..."
+        settings: "Ayarlar"
         opt_in_groups_instructions: "Opt-in grupları, belirli bir kullanıcı grubunun bir değişikliği herkese yayınlanmadan önce test etmesine izin vermek için kullanılabilir. Bir değişiklik Kararlı durumuna geçtiğinde bu grupların artık geçerli olmayacağını unutmayın."
         enabled_for_throttle: "Bu değişikliğin kimler için etkinleştirileceğini çok hızlı bir şekilde değiştirdiniz. Lütfen birkaç saniye bekleyin ve tekrar deneyin."
         change_enabled_for_success: "Bu değişikliği %{enabledFor} için etkinleştirdiniz."
         change_disabled: "Bu değişikliği reddetmiş bulunuyorsunuz."
         permanent_notice: "Bu değişiklik artık kalıcıdır ve yakında kaldırılacaktır. Artık bu seçeneği devre dışı bırakamazsınız."
-        permanent_soon_notice: "Bu değişiklik yakında kalıcı hale gelecektir. Artık bu seçeneği devre dışı bırakamayacaksınız."
         permanent_no_group_selection: "Yok, kalıcı değişiklikler tüm gruplar için geçerlidir."
         no_changes: "Şu anda yaklaşan bir değişiklik yoktur."
         preview: "Ön izle"
@@ -5807,7 +5813,6 @@ tr_TR:
         default_warning_short: "Bu ayarın varsayılan değeri değiştirildi; bu konuyla ilgili daha fazla bilgiyi <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>yakında gelecek değişiklikler</a> sayfasında bulabilirsiniz."
         enabled_for_options:
           no_one: "Hiç kimse"
-          everyone: "Herkes"
           staff: "yalnızca %{staffGroupName}"
           specific_groups: "Belirli grup(lar)"
           specific_groups_with_group_names:

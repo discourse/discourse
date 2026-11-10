@@ -21,6 +21,8 @@ sk:
         edit: Upraviť
         activate: Aktivovať
         preview: Náhľad
+        customize: Upraviť
+        customized_theme_name: "%{name} (vlastné)"
         import: Import
         export: Exportovať
         active: Aktívny
@@ -33,6 +35,7 @@ sk:
         change:
           title: názov
           body: telo
+          tags: značky
       review:
         create: Vytvorte odkaz
         copy: Kopírovať

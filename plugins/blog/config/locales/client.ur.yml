@@ -21,6 +21,7 @@ ur:
         edit: ترمیم کریں
         activate: متحرک
         preview: جھلک دیکھیں
+        customize: مرضی کے مطابق بنائیں
         import: درآمد
         export: برآمد
         active: فعال
@@ -33,6 +34,7 @@ ur:
         change:
           title: عنوان
           body: متن
+          tags: ٹیگز
       review:
         label: عنوان
         create: رابطہ بنائیں

@@ -19,6 +19,7 @@ ro:
         edit: Editează
         activate: Activează
         preview: Previzualizează
+        customize: Personalizare
         import: Importă
         export: Exportă
         active: Activă
@@ -29,6 +30,7 @@ ro:
         change:
           title: titlu
           body: corp
+          tags: etichete
       review:
         create: Creează legătură
         copy: Copiază

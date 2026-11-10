@@ -87,8 +87,6 @@ sk:
           other: "Naozaj chcete odstrániť tieto %{count} správy?"
       channel_settings:
         title: "Nastavenia kanála"
-        edit: "Upraviť"
-        add: "Pridať"
         close_channel: "Zatvoriť kanál"
         open_channel: "Otvoriť kanál"
         archive_channel: "Archivovať kanál"
@@ -346,21 +344,22 @@ sk:
       members_view:
         filter_placeholder: Nájdite členov
         add_member: Pridať člena
-        back_to_settings: "Späť na nastavenia"
       about_view:
         associated_topic: Prepojená téma
         associated_category: Prepojená kategória
-        title: Názov
         name: Meno
         description: Popis
       channel_info:
         back_to_all_channels: "Všetky kanály"
         back_to_channel: "Späť"
+        nav_label: "Informácie o kanáli"
         tabs:
           members: Členovia
+          preferences: Nastavenia
           settings: Nastavenia
           search: Hľadať
         remove_member: "Odstrániť"
+        members_title: "%{channel}/ členov"
       new_message_modal:
         title: Odoslať správu
         add_user_long: <kbd>shift + klik</kbd> alebo <kbd>shift + enter</kbd><span>Pridať @%{username}</span>
@@ -380,14 +379,11 @@ sk:
         create_new_group_chat: "Vytvorte skupinový chat"
         group_with_too_many_members: "má príliš veľa členov (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Upraviť kanál
         input_placeholder: Pridať meno
         slug_description: V adrese URL namiesto názvu kanála sa používa kanálový slug
         name: Názov kanála
       channel_edit_description_modal:
-        title: Upraviť popis
         input_placeholder: Pridanie popisu
-        description: Povedzte ľuďom, o čom je tento kanál
       direct_message_creator:
         add_to_channel: "Pridať do kanála"
         title: Nová správa
@@ -515,7 +511,6 @@ sk:
         always: "Pre všetky aktivity"
       settings:
         channel_wide_mentions_label: "Povoliť zmienky @all a @here"
-        channel_wide_mentions_description: "Umožnite používateľom upozorniť všetkých členov #%{channel} pomocou @all alebo len tých, ktorí sú práve aktívni, pomocou @here"
         channel_threading_label: "Vláknenie"
         channel_threading_description: "Keď je zapnuté vytváranie vlákien, odpovede na chatovú správu vytvoria samostatnú konverzáciu, ktorá bude existovať vedľa hlavného kanála."
         auto_join_users_label: "Automaticky pridávať používateľov"
@@ -535,9 +530,6 @@ sk:
         save: "Uložiť"
         saved: "Uložené"
         unfollow: "Opustiť"
-        admin_title: "Admin"
-        settings_title: "Nastavenia"
-        info_title: "Informácie o kanáli"
         category_label: "Kategória"
         history_label: "História"
         members_label: "Členovia"

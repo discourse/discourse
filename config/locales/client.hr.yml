@@ -10,6 +10,14 @@ hr:
       choice_title: "Nezakonito je."
       title: "Prijavite ilegalni sadržaj"
       email: "E-mail adresa"
+    code_editor:
+      search:
+        replace: "Zamijeni"
+        next: "Sljedeći"
+        previous: "Prethodni"
+        close: "Zatvori"
+      fold:
+        to: "za"
     user_api_key:
       authorize: "Odobriti"
       deny: "Odustani"
@@ -5446,13 +5454,12 @@ hr:
           title: "Napredno"
       upcoming_changes:
         name: "Ime"
-        enabled: "Omogućeno"
+        enabled: "Omogućeno?"
+        feedback: "Povratne informacije"
         select_groups: "Odaberite grupe"
+        settings: "Postavke"
         permanent_notice: "Ova promjena je sada trajna i uskoro će biti uklonjena. Više ne možete odustati."
-        permanent_soon_notice: "Ova će promjena uskoro postati trajna. Više nećete moći odustati."
         preview: "Pregled"
-        enabled_for_options:
-          everyone: "Svi"
         statuses:
           experimental: "Eksperimentalno"
         impact_roles:

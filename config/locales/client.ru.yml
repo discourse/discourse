@@ -11,6 +11,15 @@ ru:
       go_back: "Назад"
       title: "Сообщите о незаконном контенте"
       email: "Адрес электронной почты"
+    code_editor:
+      search:
+        replace: "Замены"
+        next: "Далее"
+        previous: "Назад"
+        close: "Закрыть"
+        go: "Создать"
+      fold:
+        to: "—"
     user_api_key:
       authorize: "Разрешить"
       deny: "Нет"
@@ -2845,7 +2854,6 @@ ru:
         }.
     learn_more: "Подробнее…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Подробнее…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Обратная связь…</a>"
     mute: Отключить
     unmute: Включить
     last_post: Последнее сообщение
@@ -6152,21 +6160,20 @@ ru:
         name: "Название"
         plugin: "Плагин"
         metadata: "Метаданные"
-        enabled: "Включено"
-        enabled_for: "Включено для..."
+        enabled: "Включено?"
         show_image: "Показать изображение"
+        feedback: "Отзыв"
         groups_updated: "Группы обновлены!"
         save_groups: "Сохранить группы"
         add_groups_to_enable: "Добавьте группы, чтобы включить эту функцию."
         no_changes_to_save: "Изменений для сохранения нет."
         select_groups: "Выберите группы…"
-        show_related_settings: "Показать соответствующие настройки..."
+        settings: "Настроек"
         opt_in_groups_instructions: "Группы с возможностью добровольного участия позволяют определенной группе пользователей протестировать изменение до его общего выпуска. Обратите внимание, что эти группы станут неактуальными после того, как изменение перейдет в стабильный статус."
         enabled_for_throttle: "Вы слишком быстро изменили настройки, для которых это изменение включено. Подождите несколько секунд, прежде чем повторить попытку."
         change_enabled_for_success: "Вы включили это изменение для %{enabledFor}"
         change_disabled: "Вы отказались от этого изменения."
         permanent_notice: "Это изменение теперь является постоянным и вскоре будет отменено. Отказаться от участия больше нельзя."
-        permanent_soon_notice: "Это изменение скоро станет постоянным. Вы больше не сможете отказаться от участия."
         permanent_no_group_selection: "Неприменимо, постоянные изменения касаются всех групп."
         no_changes: "В настоящее время никаких изменений в ближайшее время не планируется."
         preview: "Предпросмотр"
@@ -6174,7 +6181,6 @@ ru:
         default_warning_short: "Значение по умолчанию для этой настройки изменилось, подробнее об этом читайте на странице <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>предстоящих изменений</a>."
         enabled_for_options:
           no_one: "Никто"
-          everyone: "Все"
           staff: "%{staffGroupName} только"
           specific_groups: "Конкретная группа (группы)"
         statuses:

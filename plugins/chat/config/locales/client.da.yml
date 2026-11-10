@@ -55,8 +55,6 @@ da:
         confirm_move: "Flyt beskeder"
       channel_settings:
         title: "Kanal indstillinger"
-        edit: "Rediger"
-        add: "Tilføj"
         close_channel: "Luk kanal"
         open_channel: "Åbn kanal"
         archive_channel: "Arkivér kanal"
@@ -158,15 +156,14 @@ da:
         filter_placeholder: Søg i meddelelser
       members_view:
         add_member: Tilføj Medlem
-        back_to_settings: "Tilbage til indstillinger"
       about_view:
-        title: Titel
         name: Navn
         description: Beskrivelse
       channel_info:
         back_to_channel: "Tilbage"
         tabs:
           members: Brugere
+          preferences: Indstillinger
           settings: Indstillinger
           search: Søg
         remove_member: "Fjern"
@@ -174,7 +171,6 @@ da:
         no_items: "Ingen punkter"
         filter: "Filter"
       channel_edit_description_modal:
-        title: Rediger beskrivelse
         input_placeholder: Tilføj en beskrivelse
       direct_message_creator:
         add_to_channel: "Føj til kanal"
@@ -219,8 +215,6 @@ da:
         save: "Gem"
         saved: "Gemt"
         unfollow: "Forlad"
-        admin_title: "Admin"
-        settings_title: "Indstillinger"
         category_label: "Kategori"
         history_label: "Historik"
         members_label: "Brugere"
