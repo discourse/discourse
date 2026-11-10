@@ -820,6 +820,93 @@ RSpec.describe Email::Receiver do
         end
       end
     end
+
+    context "when the referenced message belongs to another group's private message" do
+      fab!(:other_group) { Fabricate(:group, allow_unknown_sender_topic_replies: false) }
+      fab!(:sender) { Fabricate(:user, email: "sender@foo.com") }
+      fab!(:other_group_post) do
+        Fabricate(
+          :group_private_message_post,
+          recipients: other_group,
+          raw: "Confidential conversation",
+        )
+      end
+
+      let(:message_id) { "discourse/post/#{other_group_post.id}@#{Discourse.current_hostname}" }
+
+      before { group.update!(allow_unknown_sender_topic_replies: true) }
+
+      def reply_to_referenced_message(message_id)
+        <<~MAIL
+          From: #{sender.email}
+          To: team@bar.com
+          Subject: Re: Support request
+          Date: #{Time.current.rfc2822}
+          Message-ID: <outside-reply@example.com>
+          In-Reply-To: <#{message_id}>
+          Content-Type: text/plain; charset=UTF-8
+
+          This reply references another group's conversation.
+        MAIL
+      end
+
+      it "starts a new topic in the receiving group for an IncomingEmail reference" do
+        Fabricate(
+          :incoming_email,
+          post: other_group_post,
+          topic: other_group_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        expect { Email::Receiver.new(reply_to_referenced_message(message_id)).process! }.to change {
+          Topic.count
+        }.by(1).and change { Post.count }.by(1)
+
+        expect(Topic.last.allowed_groups).to contain_exactly(group)
+        expect(Topic.last.posts.first.user).to eq(sender)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(false)
+        expect(other_group_post.topic.posts.count).to eq(1)
+      end
+
+      it "starts a new topic in the receiving group for an EmailLog reference" do
+        Fabricate(
+          :email_log,
+          user: sender,
+          post: other_group_post,
+          topic_id: other_group_post.topic_id,
+          message_id: message_id,
+          to_address: sender.email,
+          email_type: "user_private_message",
+        )
+
+        expect { Email::Receiver.new(reply_to_referenced_message(message_id)).process! }.to change {
+          Topic.count
+        }.by(1).and change { Post.count }.by(1)
+
+        expect(Topic.last.allowed_groups).to contain_exactly(group)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(false)
+        expect(other_group_post.topic.posts.count).to eq(1)
+      end
+
+      it "threads the reply when the topic is also allowed to the receiving group" do
+        other_group_post.topic.topic_allowed_groups.create!(group: group)
+        Fabricate(
+          :incoming_email,
+          post: other_group_post,
+          topic: other_group_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        expect {
+          Email::Receiver.new(reply_to_referenced_message(message_id)).process!
+        }.to not_change { Topic.count }.and change { Post.count }.by(1)
+
+        expect(other_group_post.topic.posts.count).to eq(2)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(true)
+      end
+    end
   end
 
   describe "new topic in a category" do
