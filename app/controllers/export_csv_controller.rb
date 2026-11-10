@@ -16,6 +16,11 @@ class ExportCsvController < ApplicationController
       end
     end
 
+    report_name = export_params.dig(:args, :name) if entity == "report"
+    if report_name.present? && !Report::VALID_TYPE_REGEX.match?(report_name)
+      raise Discourse::InvalidParameters.new("args.name")
+    end
+
     if entity == "user_archive"
       requesting_user_id = current_user.id if entity_id
 
