@@ -236,6 +236,8 @@ class UsersController < ApplicationController
     end
 
     if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      ensure_external_ids_allowed!
+
       attributes[:user_associated_accounts] = []
 
       params[:external_ids].each do |provider_name, provider_uid|
@@ -723,6 +725,10 @@ class UsersController < ApplicationController
       else
         user_params.except(:timezone, :title, :primary_group_id, :flair_group_id)
       end
+
+    if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      ensure_external_ids_allowed!
+    end
 
     user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
 
@@ -2162,6 +2168,20 @@ class UsersController < ApplicationController
     else
       field_values
     end
+  end
+
+  def ensure_external_ids_allowed!
+    raise Discourse::InvalidAccess if !full_access_api_key?
+  end
+
+  def full_access_api_key?
+    return false if !is_api?
+
+    key_value =
+      request.env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY] ||
+        request[Auth::DefaultCurrentUserProvider::API_KEY]
+
+    ApiKey.active.with_key(key_value).first&.api_key_scopes&.blank? == true
   end
 
   def password_reset_find_user(token, committing_change:)

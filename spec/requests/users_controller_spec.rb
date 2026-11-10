@@ -1089,6 +1089,34 @@ RSpec.describe UsersController do
           post "/u.json", params: params, headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(400)
         end
+
+        it "cannot set external_ids with a granular users:create API key" do
+          staged = Fabricate(:staged, email: "test@example.com", active: true)
+          granular_api_key =
+            Fabricate(
+              :api_key,
+              user: admin,
+              api_key_scopes: [
+                Fabricate.build(:api_key_scope, resource: "users", action: "create"),
+              ],
+            )
+
+          params = {
+            username: "foobar",
+            email: "test@example.com",
+            external_ids: {
+              "pluginauth" => "pluginauth_uid",
+            },
+          }
+
+          expect {
+            post "/u.json", params: params, headers: { HTTP_API_KEY: granular_api_key.key }
+          }.not_to change { UserAssociatedAccount.count }
+
+          expect(response.status).to eq(403)
+          expect(staged.reload).to have_attributes(staged: true, active: true)
+          expect(staged.custom_fields["from_staged"]).to be_nil
+        end
       end
     end
 
@@ -3603,6 +3631,48 @@ RSpec.describe UsersController do
 
         put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key }
         expect(response.status).to eq(400)
+      end
+
+      context "when authenticating with a granular users:update API key" do
+        fab!(:granular_api_key, refind: false) do
+          Fabricate(
+            :api_key,
+            user: admin,
+            api_key_scopes: [Fabricate.build(:api_key_scope, resource: "users", action: "update")],
+          )
+        end
+
+        fab!(:victim, :admin)
+
+        it "cannot bind a new SSO identity to another account" do
+          params = { external_ids: { discourse_connect: "attacker_controlled_uid" } }
+
+          expect {
+            put "/u/#{victim.username}.json",
+                params: params,
+                headers: {
+                  HTTP_API_KEY: granular_api_key.key,
+                }
+          }.not_to change { SingleSignOnRecord.count }
+
+          expect(response.status).to eq(403)
+          expect(victim.reload.single_sign_on_record).to be_blank
+        end
+
+        it "cannot bind a new associated account to another account" do
+          params = { external_ids: { "pluginauth" => "pluginauth_uid" } }
+
+          expect {
+            put "/u/#{victim.username}.json",
+                params: params,
+                headers: {
+                  HTTP_API_KEY: granular_api_key.key,
+                }
+          }.not_to change { UserAssociatedAccount.count }
+
+          expect(response.status).to eq(403)
+          expect(victim.reload.user_associated_account_ids).to be_blank
+        end
       end
     end
 
