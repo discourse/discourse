@@ -40,3 +40,6 @@ acl_* @martin-brennan
 /.skills/discourse-upcoming-changes/ @martin-brennan
 /.skills/discourse-upcoming-changes-authoring/ @martin-brennan
 /frontend/discourse/app/static/dev-tools/upcoming-changes-debug/ @discourse/dev-xp @martin-brennan
+
+# Boards
+/plugins/boards/ @martin-brennan
