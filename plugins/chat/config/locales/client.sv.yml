@@ -73,8 +73,6 @@ sv:
         confirm_move: "Flytta meddelanden"
       channel_settings:
         title: "Kanalinställningar"
-        edit: "Redigera"
-        add: "Lägg till"
         close_channel: "Stäng kanal"
         open_channel: "Öppna kanal"
         archive_channel: "Arkivera kanal"
@@ -309,18 +307,18 @@ sv:
       members_view:
         filter_placeholder: Hitta medlemmar
         add_member: Lägg till medlem
-        back_to_settings: "Tillbaka till inställningarna"
       about_view:
         associated_topic: Länkat ämne
         associated_category: Länkad kategori
-        title: Rubrik
         name: Namn
         description: Beskrivning
       channel_info:
         back_to_all_channels: "Alla kanaler"
         back_to_channel: "Tillbaka"
+        nav_label: "Kanalinfo"
         tabs:
           members: Medlemmar
+          preferences: Inställningar
           settings: Inställningar
           search: Sök
         remove_member: "Ta bort"
@@ -343,14 +341,11 @@ sv:
         create_new_group_chat: "Skapa gruppchatt"
         group_with_too_many_members: "har för många medlemmar (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Redigera kanal
         input_placeholder: Lägg till ett namn
         slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
         name: Kanalnamn
       channel_edit_description_modal:
-        title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning
-        description: Berätta för folk vad den här kanalen handlar om
       direct_message_creator:
         add_to_channel: "Lägg till i kanal"
         title: Nytt meddelande
@@ -443,7 +438,6 @@ sv:
         always: "För all aktivitet"
       settings:
         channel_wide_mentions_label: "Tillåt @all och @here omnämnanden"
-        channel_wide_mentions_description: "Tillåt användare att avisera alla #%{channel}-medlemmar med @all eller bara de som är aktiva för tillfället med @here"
         channel_threading_label: "Trådning"
         channel_threading_description: "När trådning är aktiverat kommer svar på ett chattmeddelande att skapa ett separat samtal som existerar parallellt med huvudkanalen."
         auto_join_users_label: "Lägg till användare automatiskt"
@@ -462,9 +456,6 @@ sv:
         save: "Spara"
         saved: "Sparad"
         unfollow: "Lämna"
-        admin_title: "Admin"
-        settings_title: "Inställningar"
-        info_title: "Kanalinfo"
         category_label: "Kategori"
         history_label: "Historik"
         members_label: "Medlemmar"

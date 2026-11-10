@@ -28,6 +28,8 @@ export default class ChatDrawer extends Component {
   loading = false;
   sizeTimer = null;
   rafTimer = null;
+  bodyResizeObserver = null;
+  bodyInlineSize = null;
   hasUnreadMessages = false;
   drawerStyle = null;
 
@@ -54,6 +56,7 @@ export default class ChatDrawer extends Component {
     this.appEvents.on("composer:resized", this, "_checkSize");
     this.appEvents.on("composer:div-resizing", this, "_dynamicCheckSize");
     window.addEventListener("resize", this._dynamicCheckSize);
+    this._observeBodyInlineSize();
     this.appEvents.on(
       "composer:resize-started",
       this,
@@ -72,6 +75,8 @@ export default class ChatDrawer extends Component {
     }
 
     window.removeEventListener("resize", this._dynamicCheckSize);
+    this.bodyResizeObserver?.disconnect();
+    this.bodyResizeObserver = null;
 
     if (this.appEvents) {
       this.appEvents.off("chat:open-url", this, "openURL");
@@ -192,6 +197,20 @@ export default class ChatDrawer extends Component {
     this._checkSize();
   }
 
+  // a page inset pads the body without resizing the window, and moves the
+  // composer with it
+  _observeBodyInlineSize() {
+    this.bodyResizeObserver = new ResizeObserver(([entry]) => {
+      const inlineSize = entry.contentBoxSize[0].inlineSize;
+
+      if (inlineSize !== this.bodyInlineSize) {
+        this.bodyInlineSize = inlineSize;
+        this._dynamicCheckSize();
+      }
+    });
+    this.bodyResizeObserver.observe(document.body);
+  }
+
   @bind
   _checkSize() {
     this.sizeTimer = throttle(this, this._performCheckSize, 150);
@@ -211,7 +230,15 @@ export default class ChatDrawer extends Component {
 
     const composer = document.getElementById("reply-control");
     const composerIsClosed = composer.classList.contains("closed");
-    const minRightMargin = 15;
+
+    // space reserved at the page's inline end by fixed UI the drawer must not cover
+    const pageInset =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--d-page-inset-inline-end"
+        )
+      ) || 0;
+    const minRightMargin = pageInset + 15;
 
     const isPeekMode = document.body.classList.contains("peek-mode-active");
 
@@ -231,7 +258,7 @@ export default class ChatDrawer extends Component {
         composer.offsetLeft -
         composer.offsetWidth;
     const drawerWidth = this.chatDrawerSize.size.width || 400;
-    const aboveComposer = spaceToEnd < drawerWidth;
+    const aboveComposer = spaceToEnd - pageInset < drawerWidth;
 
     drawerContainer.style.setProperty(
       "--composer-right",

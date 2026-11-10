@@ -117,6 +117,18 @@ module BackupRestore
         *path_transformation,
         failure_message: "Failed to decompress archive.",
       )
+
+      ensure_only_files_and_directories
+    end
+
+    def ensure_only_files_and_directories
+      special_files =
+        Discourse::Utils.execute_command(
+          "find",
+          @tmp_directory,
+          *%w[! -type f ! -type d -print -quit],
+        )
+      raise "The archive contains unsupported file types." if special_files.present?
     end
 
     def extract_db_dump

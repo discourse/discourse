@@ -11,6 +11,15 @@ es:
       go_back: "Volver"
       title: "Denunciar contenido ilegal"
       email: "Dirección de correo electrónico"
+    code_editor:
+      search:
+        replace: "Reemplazar"
+        next: "Siguiente"
+        previous: "Anterior"
+        close: "Cerrar"
+        go: "Ir"
+      fold:
+        to: "a"
     user_api_key:
       title: 'Autorizar a «%{application_name}»'
       authorize: "Autorizar"
@@ -496,7 +505,6 @@ es:
         action: "Ver ideas"
         choose_option: "¿Cómo te gustaría empezar?"
         predefined_topics: "Plantillas para romper el hielo"
-        predefined_topics_subtitle: "Da a los nuevos miembros algo de lo que hablar, elige una plantilla para editar y personalízala."
         predefined_topics_description: "Elige entre una colección de temas para iniciar conversaciones y dar pie a debates"
         use_predefined: "Explorar plantillas"
         back: "Atrás"
@@ -508,19 +516,17 @@ es:
       back: "Atrás"
       next: "Siguiente"
       sections:
-        theme: "Tema"
         fonts: "Tipos de letra"
+        logo: "Logo"
         homepage: "Página de inicio"
-        welcome_banner: "Banner de bienvenida"
-        search: "Buscar"
       theme:
         selected: "Seleccionado"
-      colors:
-        light: "Claro"
-        dark: "Oscuro"
       fonts:
-        base_font: "Fuente base"
-        heading_font: "Tipo de letra para encabezados"
+        base_font: "Cuerpo"
+        heading_font: "Encabezados"
+      logo:
+        description: "Aparece en la navegación superior del sitio, así como en la parte superior de las notificaciones por correo electrónico del sitio."
+        help_text: "El tamaño recomendado es 600 x 80 píxeles."
       homepage:
         topics: "Temas"
         categories: "Categorías"
@@ -774,7 +780,6 @@ es:
     dsa_statements:
       category: "Categoría"
       category_prompt: "Elige una categoría"
-      saving: "Guardando…"
     review:
       show_more: "Mostrar más"
       show_less: "Mostrar menos"
@@ -2605,7 +2610,6 @@ es:
         }.
     learn_more: "Más información…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Más información…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Danos tu opinión…</a>"
     mute: Silenciar
     unmute: No silenciar
     last_post: Fecha de publicación
@@ -2958,6 +2962,7 @@ es:
     filter_controls:
       reset: "Restablecer"
       toggle: "Activar/desactivar filtros desplegables"
+      sort_label: "Ordenar por"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
       search_label: "Buscar iconos"
@@ -5699,23 +5704,21 @@ es:
         name: "Nombre"
         plugin: "Plugin"
         metadata: "Metadatos"
-        enabled: "Activado"
-        enabled_for: "Activado para..."
+        enabled: "¿Activado?"
         show_image: "Ver imagen"
-        edit_groups: "Editar grupos de suscripción voluntaria"
+        feedback: "Comentarios"
         groups_updated: "Grupos actualizados"
         save_groups: "Guardar grupos"
         add_groups_to_enable: "Añadir grupos para activar esta característica"
         no_changes_to_save: "No hay cambios que guardar"
         select_groups: "Seleccionar grupos…"
         opt_in_groups: "Grupos de suscripción voluntaria"
-        show_related_settings: "Ver ajustes relacionados..."
+        settings: "Ajustes"
         opt_in_groups_instructions: "Los grupos de suscripción voluntaria permiten que un grupo específico de usuarios pruebe un cambio antes de que se implemente para todo el mundo. Ten en cuenta que estos grupos dejarán de ser relevantes una vez que el cambio alcance el estado Estable."
         enabled_for_throttle: "Has modificado demasiado rápido para quién está activado este cambio. Espera unos segundos antes de volver a intentarlo."
         change_enabled_for_success: "Has activado este cambio para %{enabledFor}"
         change_disabled: "Has descartado este cambio"
         permanent_notice: "Este cambio ahora es permanente y pronto se eliminará. Ya no puedes descartarlo."
-        permanent_soon_notice: "Este cambio será permanente pronto. Ya no podrás descartarlo."
         permanent_no_group_selection: "N/A, los cambios permanentes se aplican a todos los grupos."
         no_changes: "Por el momento no hay cambios previstos."
         preview: "Vista previa"
@@ -5723,7 +5726,6 @@ es:
         default_warning_short: "El valor por defecto de este ajuste ha cambiado, obtén más información sobre esto en la página de <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>próximos cambios</a>."
         enabled_for_options:
           no_one: "Nadie"
-          everyone: "Todos"
           staff: "Solo %{staffGroupName}"
           specific_groups: "Grupo(s) específico(s)"
           specific_groups_with_group_names:
@@ -5776,6 +5778,9 @@ es:
           impact_role_staff: "Personal"
           impact_role_all_members: "Todos los miembros"
           impact_role_developers: "Desarrolladores"
+        sort:
+          status: "Estado"
+          name: "Nombre"
       config:
         about:
           title: "Acerca de tu sitio"
@@ -6887,10 +6892,7 @@ es:
           site_contact_group_help: |
             El grupo al que se invita a todos los mensajes personales enviados automáticamente.
           your_organization: "Tu organización"
-          your_organization_description: "Utilizaremos esta información en los Términos del servicio y en el Aviso de privacidad para mostrar quién opera el sitio y bajo qué jurisdicción."
           company_name: "Nombre"
-          company_name_warning: |
-            Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
           company_url: "Página web"
           governing_law: "Ley que rige"
           governing_law_placeholder: "Provincia, Estado o País"
@@ -7106,7 +7108,6 @@ es:
           uploading: "Subiendo…"
           uploading_progress: "Subiendo… %{progress}%"
           success: "«%{filename}» se subió exitosamente. El archivo se procesará ahora y tardará hasta un minuto en mostrarse en la lista."
-          error: "Se produjo un error al subir el archivo «%{filename}»: %{message}"
         settings: "Ajustes"
         operations:
           is_running: "Hay una operación en proceso actualmente…"

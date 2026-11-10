@@ -102,6 +102,17 @@ RSpec.describe Live::EphemeralRoomManager do
       expect(Live::ParticipantTracker.pinned_transport(room.id)).to be_nil
     end
 
+    it "notifies the room members that the room is gone" do
+      room = Fabricate(:live_ephemeral_room, last_occupied_at: 31.minutes.ago)
+
+      messages = MessageBus.track_publish(Live.room_index_channel) { described_class.cleanup! }
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:type]).to eq(:destroyed)
+      expect(messages.first.data[:room][:id]).to eq(room.id)
+      expect(messages.first.user_ids).to include(room.creator_id)
+    end
+
     it "uses created_at when the room was never occupied" do
       room = Fabricate(:live_ephemeral_room, last_occupied_at: nil, created_at: 31.minutes.ago)
 

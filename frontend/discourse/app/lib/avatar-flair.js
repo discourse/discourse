@@ -1,6 +1,6 @@
 import { AUTO_GROUPS } from "discourse/lib/constants";
 
-let _autoGroupFlair, _noAutoFlair;
+let _autoGroupFlair, _userGroupFlair, _noAutoFlair;
 
 // All automatic groups except "everyone" (which doesn't have flair)
 const FLAIR_AUTO_GROUP_IDS = Object.values(AUTO_GROUPS)
@@ -8,6 +8,14 @@ const FLAIR_AUTO_GROUP_IDS = Object.values(AUTO_GROUPS)
   .map((g) => g.id);
 
 export default function autoGroupFlairForUser(site, user) {
+  if (!_userGroupFlair) {
+    initializeUserGroupFlair(site);
+  }
+
+  if (user.flair_group_id && _userGroupFlair[user.flair_group_id]) {
+    return _userGroupFlair[user.flair_group_id];
+  }
+
   if (!_autoGroupFlair) {
     initializeAutoGroupFlair(site);
   }
@@ -43,7 +51,26 @@ export default function autoGroupFlairForUser(site, user) {
 
 export function resetFlair() {
   _autoGroupFlair = null;
+  _userGroupFlair = null;
   _noAutoFlair = null;
+}
+
+function initializeUserGroupFlair(site) {
+  _userGroupFlair = {};
+
+  Object.values(site.groupsById || {}).forEach((group) => {
+    if (
+      !FLAIR_AUTO_GROUP_IDS.includes(group.id) &&
+      (group.flair_url || group.flair_bg_color)
+    ) {
+      _userGroupFlair[group.id] = {
+        flair_name: group.name.replace(/_/g, " "),
+        flair_url: group.flair_url,
+        flair_bg_color: group.flair_bg_color,
+        flair_color: group.flair_color,
+      };
+    }
+  });
 }
 
 function initializeAutoGroupFlair(site) {

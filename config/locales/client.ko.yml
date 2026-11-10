@@ -6,6 +6,15 @@
 
 ko:
   js:
+    code_editor:
+      search:
+        replace: "바꾸기"
+        next: "다음"
+        previous: "이전값"
+        close: "닫기"
+        go: "이동"
+      fold:
+        to: "받는사람"
     user_api_key:
       authorize: "인증하기"
       deny: "취소"
@@ -308,15 +317,10 @@ ko:
       back: "뒤로"
       next: "다음"
       sections:
-        theme: "테마"
         fonts: "글꼴"
         homepage: "홈페이지"
-        search: "검색"
-      colors:
-        light: "라이트"
-        dark: "다크"
       fonts:
-        heading_font: "제목 글꼴"
+        base_font: "바디"
       homepage:
         topics: "글"
         categories: "카테고리"
@@ -509,7 +513,6 @@ ko:
     dsa_statements:
       category: "카테고리"
       category_prompt: "카테고리 선택"
-      saving: "저장 중…"
     review:
       show_more: "더 보기"
       show_less: "간략히 보기"
@@ -2104,6 +2107,7 @@ ko:
       default: 사용자 지정 이모티콘
     filter_controls:
       reset: "리셋"
+      sort_label: "정렬 기준"
     shared_drafts:
       title: "공유 초안"
       notice: "이 글은 공유 초안을 게시할 수 있는 사용자만 볼 수 있습니다."
@@ -3869,10 +3873,10 @@ ko:
           title: "플러그인"
       upcoming_changes:
         name: "그룹명"
-        enabled: "활성화"
+        enabled: "활성화?"
+        feedback: "피드백"
+        settings: "설정"
         preview: "미리 보기"
-        enabled_for_options:
-          everyone: "모두"
         impact_roles:
           admins: "관리자"
           moderators: "관리자"
@@ -3887,6 +3891,9 @@ ko:
           impact_role_admins: "관리자"
           impact_role_moderators: "관리자"
           impact_role_staff: "스태프"
+        sort:
+          status: "상태"
+          name: "그룹명"
       config:
         developer:
           title: "개발자"
@@ -4564,7 +4571,6 @@ ko:
           label: "업로드"
           title: "이 인스턴스에 백업 업로드"
           success: "'%{filename}' 파일이 업로드되었습니다. 파일이 현재 처리 중이며 목록에 표시되는 데 최대 1분이 걸립니다."
-          error: "'%{filename}' 파일 업로드 중에 오류가 발생했습니다. %{message}"
         settings: "설정"
         operations:
           failed: "%{operation} 작업을 실행하지 못했습니다. 로그를 확인하세요."

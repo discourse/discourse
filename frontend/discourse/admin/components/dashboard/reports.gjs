@@ -459,118 +459,125 @@ export default class DashboardReports extends Component {
       @startDate={{@startDate}}
       @title={{i18n "admin.dashboard.sections.reports.title"}}
     >
-      {{#if @fetchError}}
-        <div class="db-section__error" role="alert">
-          {{i18n "admin.dashboard.sections.reports.fetch_error"}}
-        </div>
-      {{else}}
-        <div
-          class="db-reports"
-          {{didUpdate this.loadPayloads @data @startDate @endDate}}
-        >
-          {{#each this.effectiveCards key="key" as |card|}}
-            {{#if (eq card.key this.freeFollow.key)}}
+      <:default>
+        {{#if @fetchError}}
+          <div class="db-section__error" role="alert">
+            {{i18n "admin.dashboard.sections.reports.fetch_error"}}
+          </div>
+        {{else}}
+          <div
+            class="db-reports"
+            {{didUpdate this.loadPayloads @data @startDate @endDate}}
+          >
+            {{#each this.effectiveCards key="key" as |card|}}
+              {{#if (eq card.key this.freeFollow.key)}}
+                <div
+                  class={{dConcatClass
+                    "db-report__card"
+                    "--resize-placeholder"
+                    (if (gt card.cols 1) "--wide")
+                    (if (gt card.rows 1) (concat "--rows-" card.rows))
+                  }}
+                  data-column={{this.columnFor card.key}}
+                  {{AnimateReflow this.resizeSignature}}
+                ></div>
+              {{/if}}
               <div
                 class={{dConcatClass
                   "db-report__card"
-                  "--resize-placeholder"
                   (if (gt card.cols 1) "--wide")
                   (if (gt card.rows 1) (concat "--rows-" card.rows))
+                  (if (eq card.key this.freeFollow.key) "--floating")
                 }}
                 data-column={{this.columnFor card.key}}
-                {{AnimateReflow this.resizeSignature}}
-              ></div>
-            {{/if}}
-            <div
-              class={{dConcatClass
-                "db-report__card"
-                (if (gt card.cols 1) "--wide")
-                (if (gt card.rows 1) (concat "--rows-" card.rows))
-                (if (eq card.key this.freeFollow.key) "--floating")
-              }}
-              data-column={{this.columnFor card.key}}
-              data-identifier={{card.key}}
-              {{FollowPointer (this.followRectFor card.key)}}
-              {{AnimateReflow
-                this.resizeSignature
-                disabled=(eq card.key this.freeFollow.key)
-              }}
-            >
-              <div class="db-report__header">
-                <a class="db-report__name" href={{card.url}}>{{card.title}}</a>
-                {{#if card.label}}
-                  <div
-                    class={{dConcatClass
-                      "db-report__label"
-                      (concat "--" card.source)
-                    }}
-                    data-source={{card.source}}
-                  >{{card.label}}</div>
+                data-identifier={{card.key}}
+                {{FollowPointer (this.followRectFor card.key)}}
+                {{AnimateReflow
+                  this.resizeSignature
+                  disabled=(eq card.key this.freeFollow.key)
+                }}
+              >
+                <div class="db-report__header">
+                  <a
+                    class="db-report__name"
+                    href={{card.url}}
+                  >{{card.title}}</a>
+                  {{#if card.label}}
+                    <div
+                      class={{dConcatClass
+                        "db-report__label"
+                        (concat "--" card.source)
+                      }}
+                      data-source={{card.source}}
+                    >{{card.label}}</div>
+                  {{/if}}
+                </div>
+                <div class="db-report__chart">
+                  <DConditionalLoadingSpinner
+                    @condition={{card.isLoading}}
+                    @size="small"
+                  >
+                    {{#if card.error}}
+                      <DashboardReportErrorState />
+                    {{else if card.payload.empty}}
+                      <DashboardReportEmptyState />
+                    {{else if card.payload}}
+                      {{#let
+                        (lookupAdminDashboardReportRenderer card.source)
+                        as |Renderer|
+                      }}
+                        {{#if Renderer}}
+                          <Renderer
+                            @filters={{hash
+                              startDate=@startDate
+                              endDate=@endDate
+                            }}
+                            @item={{card}}
+                            @payload={{card.payload}}
+                          />
+                        {{/if}}
+                      {{/let}}
+                    {{/if}}
+                  </DConditionalLoadingSpinner>
+                </div>
+                {{#if (this.canResize card)}}
+                  <DResizeHandles
+                    @directions={{this.handleDirectionsFor card}}
+                    @draggingClass="--resizing"
+                    @handleClass="db-report__resize-handle"
+                    @measure={{this.measureCard}}
+                    @onResize={{fn this.onCardResize card}}
+                    @onResizeCancel={{fn this.onCardResizeCancel card}}
+                    @onResizeEnd={{fn this.onCardResizeEnd card}}
+                    @onResizeStart={{fn this.onCardResizeStart card}}
+                    @threshold={{8}}
+                  />
                 {{/if}}
               </div>
-              <div class="db-report__chart">
-                <DConditionalLoadingSpinner
-                  @condition={{card.isLoading}}
-                  @size="small"
-                >
-                  {{#if card.error}}
-                    <DashboardReportErrorState />
-                  {{else if card.payload.empty}}
-                    <DashboardReportEmptyState />
-                  {{else if card.payload}}
-                    {{#let
-                      (lookupAdminDashboardReportRenderer card.source)
-                      as |Renderer|
-                    }}
-                      {{#if Renderer}}
-                        <Renderer
-                          @filters={{hash
-                            startDate=@startDate
-                            endDate=@endDate
-                          }}
-                          @item={{card}}
-                          @payload={{card.payload}}
-                        />
-                      {{/if}}
-                    {{/let}}
-                  {{/if}}
-                </DConditionalLoadingSpinner>
-              </div>
-              {{#if (this.canResize card)}}
-                <DResizeHandles
-                  @directions={{this.handleDirectionsFor card}}
-                  @draggingClass="--resizing"
-                  @handleClass="db-report__resize-handle"
-                  @measure={{this.measureCard}}
-                  @onResize={{fn this.onCardResize card}}
-                  @onResizeCancel={{fn this.onCardResizeCancel card}}
-                  @onResizeEnd={{fn this.onCardResizeEnd card}}
-                  @onResizeStart={{fn this.onCardResizeStart card}}
-                  @threshold={{8}}
-                />
-              {{/if}}
-            </div>
-          {{/each}}
+            {{/each}}
 
-          {{#if this.addTileVisible}}
-            <button
-              aria-label={{i18n "admin.dashboard.reports_section.add"}}
-              class="db-report__add-report"
-              type="button"
-              {{AnimateReflow this.resizeSignature}}
-              {{on "click" this.openReportsConfig}}
-            >
-              <span>{{dIcon "plus"}}
-                {{i18n "admin.dashboard.reports_section.add"}}</span>
-            </button>
-          {{/if}}
-        </div>
-      {{/if}}
+            {{#if this.addTileVisible}}
+              <button
+                aria-label={{i18n "admin.dashboard.reports_section.add"}}
+                class="db-report__add-report"
+                type="button"
+                {{AnimateReflow this.resizeSignature}}
+                {{on "click" this.openReportsConfig}}
+              >
+                <span>{{dIcon "plus"}}
+                  {{i18n "admin.dashboard.reports_section.add"}}</span>
+              </button>
+            {{/if}}
+          </div>
+        {{/if}}
+      </:default>
 
-      <PluginOutlet
-        @name="admin-dashboard-reports-section-after"
-        @outletArgs={{lazyHash startDate=@startDate endDate=@endDate}}
-      />
+      <:footer>
+        <PluginOutlet
+          @name="admin-dashboard-reports-section-after"
+          @outletArgs={{lazyHash startDate=@startDate endDate=@endDate}}
+        />
+      </:footer>
     </DashboardSection>
   </template>
 }

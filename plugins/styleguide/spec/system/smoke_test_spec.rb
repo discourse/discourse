@@ -425,6 +425,7 @@ RSpec.describe "Styleguide Smoke Test" do
       sign_in(admin)
     end
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     sections.each do |section, items|
       items.each do |item|
         it "renders the #{section}: #{item[:title]} page correctly" do
@@ -434,6 +435,7 @@ RSpec.describe "Styleguide Smoke Test" do
         end
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   context "when the styleguide is enabled for everyone" do

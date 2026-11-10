@@ -11,6 +11,15 @@ fi:
       go_back: "Palaa takaisin"
       title: "Ilmoita laittomasta sisällöstä"
       email: "Sähköpostiosoite"
+    code_editor:
+      search:
+        replace: "Korvaa"
+        next: "Seuraava"
+        previous: "Edellinen"
+        close: "Sulje"
+        go: "Siirry"
+      fold:
+        to: "-"
     user_api_key:
       authorize: "Anna käyttöoikeus"
       deny: "Peruuta"
@@ -445,18 +454,17 @@ fi:
       back: "Takaisin"
       next: "Seuraava"
       sections:
-        theme: "Värimaailma"
         fonts: "Fontit"
+        logo: "Logo"
         homepage: "Aloitussivu"
-        search: "Haku"
       theme:
         selected: "Valittu"
-      colors:
-        light: "Vaalea"
-        dark: "Tumma"
       fonts:
-        base_font: "Perusfontti"
-        heading_font: "Otsikon fontti"
+        base_font: "Leipäteksti"
+        heading_font: "Otsikot"
+      logo:
+        description: "Näkyy sivuston ylänavigoinnissa sekä sivuston sähköposti-ilmoitusten yläosassa."
+        help_text: "Suositeltava koko on 600 x 80 pikseliä."
       homepage:
         topics: "Aiheet"
         categories: "Kategoriat"
@@ -690,7 +698,6 @@ fi:
     dsa_statements:
       category: "Luokka"
       category_prompt: "Valitse alue"
-      saving: "Tallennetaan…"
     review:
       show_more: "Näytä lisää"
       show_less: "Näytä vähemmän"
@@ -2760,6 +2767,7 @@ fi:
       clear: "Tyhjennä suodatin"
     filter_controls:
       reset: "Palauta"
+      sort_label: "Järjestys"
     shared_drafts:
       title: "Jaetut luonnokset"
       notice: "Tämä ketju näkyy vain niille, jotka voivat julkaista jaettuja luonnoksia."
@@ -5198,11 +5206,11 @@ fi:
           title: "Lisäasetukset"
       upcoming_changes:
         name: "Nimi"
-        enabled: "Käytössä"
+        enabled: "Otettu käyttöön?"
+        feedback: "Palaute"
         select_groups: "Valitse ryhmät…"
+        settings: "Asetukset"
         preview: "Esikatselu"
-        enabled_for_options:
-          everyone: "Kaikki"
         statuses:
           experimental: "Kokeellinen"
         impact_roles:
@@ -5222,6 +5230,9 @@ fi:
           impact_role_admins: "Ylläpitäjät"
           impact_role_moderators: "Valvojat"
           impact_role_staff: "Henkilökunta"
+        sort:
+          status: "Tila"
+          name: "Nimi"
       config:
         about:
           title: "Tietoa sivustostasi"
@@ -6259,10 +6270,7 @@ fi:
           site_contact_group_help: |
             Ryhmä, joka saa kutsun kaikkiin automaattisesti lähetettyihin henkilökohtaisiin viesteihin.
           your_organization: "Organisaatiosi"
-          your_organization_description: "Käytämme näitä tietoja käyttöehdoissa ja tietosuojailmoituksessa näyttääksemme, kuka ylläpitää sivustoa ja millä lainkäyttöalueella."
           company_name: "Nimi"
-          company_name_warning: |
-            Jos tämä jätetään tyhjäksi, käyttöehtojen tai tietosuojailmoituksen pohjaa ei tarjota.
           company_url: "Verkkosivusto"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Sovellettava lainsäädäntö"
@@ -6476,7 +6484,6 @@ fi:
           uploading: "Ladataan…"
           uploading_progress: "Ladataan… %{progress}"
           success: "''%{filename}' ladattiin palvelimeen. Tiedostoa käsitellään, ja voi kestää enintään minuutti ennen kuin se näkyy luettelossa."
-          error: "Tiedoston '%{filename}' lataamisessa tapahtui virhe: %{message}"
         settings: "Asetukset"
         operations:
           is_running: "Toimintoa suoritetaan parhaillaan…"

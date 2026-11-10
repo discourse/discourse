@@ -26,8 +26,6 @@ sw:
         title: "Imebandikwa"
       pinned: "Imebandikwa"
       channel_settings:
-        edit: "Hariri"
-        add: "ongeza"
         notification_settings_context: "Taarifa"
         join: "Jiunge"
         leave: "Ondoka"
@@ -66,13 +64,13 @@ sw:
       search_view:
         filter_placeholder: Tafuta ujumbe
       about_view:
-        title: Kichwa cha Habari
         name: Jina
         description: Elezo
       channel_info:
         back_to_channel: "Iliyopita"
         tabs:
           members: Wanachama
+          preferences: Mapendekezo
           settings: Mipangilio
           search: Tafuta
         remove_member: "Ondoa"
@@ -105,8 +103,6 @@ sw:
         save: "Hifadhi"
         saved: "Imehifadhiwa"
         unfollow: "Ondoka"
-        admin_title: "Kiongozi"
-        settings_title: "Mipangilio"
         category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Wanachama"

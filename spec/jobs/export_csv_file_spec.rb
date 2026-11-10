@@ -12,6 +12,31 @@ RSpec.describe Jobs::ExportCsvFile do
       )
     end
 
+    it "refuses a report name that would write outside the export directory" do
+      moderator = Fabricate(:moderator)
+      probe = "export-probe-#{SecureRandom.hex(4)}"
+      escaped_dir = File.expand_path("../../#{probe}", UserExport.base_directory)
+
+      aggregate_failures do
+        # test env raises on the missing report title before any file is written, which would hide the bug
+        allow_missing_translations do
+          expect do
+            Jobs::ExportCsvFile.new.execute(
+              user_id: moderator.id,
+              entity: "report",
+              args: {
+                name: "../../#{probe}/x_reqs",
+              },
+            )
+          end.to raise_error(Discourse::InvalidParameters)
+        end
+
+        expect(Dir.exist?(escaped_dir)).to eq(false)
+      end
+    ensure
+      FileUtils.rm_rf(escaped_dir)
+    end
+
     context "when re-validating permissions at execution time" do
       it "exports the user list for an admin" do
         expect do
@@ -207,6 +232,20 @@ RSpec.describe Jobs::ExportCsvFile do
         expect(row["context"]).to be_blank
 
         action_log.destroy!
+      end
+
+      it "hides full names from moderator exports when names are disabled" do
+        SiteSetting.enable_names = false
+        target_user = Fabricate(:user, name: "Private Export Name")
+        moderator = Fabricate(:moderator)
+        StaffActionLogger.new(admin).log_user_deletion(target_user)
+
+        Jobs::ExportCsvFile.new.execute(user_id: moderator.id, entity: "staff_action")
+
+        row =
+          parse_staff_action_rows(Upload.last).find { |record| record["action"] == "delete_user" }
+        expect(row["details"]).to include("username: #{target_user.username}")
+        expect(row["details"]).not_to include(target_user.name)
       end
 
       it "does not redact details and context for admins" do

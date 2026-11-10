@@ -8,6 +8,7 @@ module JsonError
     errors[:error_type] = opts[:type] if opts[:type]
     errors[:extras] = opts[:extras] if opts[:extras]
     errors[:html_message] = true if opts[:html_message]
+    errors[:skip_error_prefix] = true if opts[:skip_error_prefix]
     errors
   end
 

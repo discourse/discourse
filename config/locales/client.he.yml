@@ -22,6 +22,14 @@ he:
       verification_code: "קוד אימות"
     mcp_oauth_client_id_metadata_policy:
       disabled: "רישום מנהלים בלבד"
+    code_editor:
+      search:
+        replace: "החלפה"
+        next: "הבא"
+        previous: "הקודם"
+        close: "סגירה"
+      fold:
+        to: "עד"
     user_api_key:
       title: 'אישור של „%{application_name}”'
       authorize: "אישור"
@@ -447,8 +455,10 @@ he:
       plugin_outlet_debug:
         find_on_github: "איתור ב־GitHub"
         aliases: "כינויים"
+        since: "(מאז %{version})"
       toggle_safe_mode: "הפעלת/כיבוי מצב בטוח"
       toggle_verbose_localization: "הפעלת/כיבוי פירוט תרגום"
+      open_styleguide: "פתיחת מדריך הסגנון"
       disable_dev_tools: "כיבוי כלי פיתוח"
     s3:
       regions:
@@ -555,7 +565,6 @@ he:
         completed: "הצגת רעיונות נוספים"
         choose_option: "איך בא לך להתחיל?"
         predefined_topics: "תבניות שוברות קרח"
-        predefined_topics_subtitle: "לספק לחברים חדשים נושא לשיחה, נא לבחור תבנית לעריכה וליצור תבנית משלך."
         predefined_topics_description: "אפשר לבחור מתוך אוסף של פותחי שיחה כדי להניע את השיח"
         use_predefined: "עיון בתבניות"
         back: "חזרה"
@@ -566,41 +575,30 @@ he:
       back: "חזרה"
       next: "הבא"
       launch: "אשף עיצוב"
+      steps:
+        theme:
+          title: "בחירת ערכת עיצוב"
+        homepage:
+          title: "מראה ותחושה"
       sections:
-        theme: "ערכת עיצוב"
-        colors: "צבע ברירת מחדל"
         fonts: "גופנים"
+        logo: "לוגו"
         homepage: "דף הבית"
-        welcome_banner: "כרזת קבלת פנים"
-        search: "חיפוש"
       theme:
         selected: "נבחרים"
-      colors:
-        light: "בהיר"
-        dark: "כהה"
       fonts:
-        base_font: "גופן בסיס"
-        heading_font: "גופן כותרת"
+        base_font: "Body"
+        heading_font: "כותרות"
+      logo:
+        description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
+        help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
       homepage:
         topics: "נושאים"
         categories: "קטגוריות"
         styles:
           boxes: "תיבות"
+          with_topics: "קטגוריות עם נושאים"
           only: "קטגוריות בלבד"
-      welcome_banner:
-        enable: "הצגת כרזת קבלת פנים"
-        location: "מקום כרזה"
-        locations:
-          below_site_header: "מתחת לכותרת האתר"
-          above_topic_content: "מעל לרשימת הנושאים"
-      search:
-        experiences:
-          search_icon:
-            title: "סמל חיפוש"
-            description: "זכוכית מגדלת בכותרת שפותחת את החיפוש."
-          search_field:
-            title: "שדה חיפוש"
-            description: "שדה חיפוש מלא בכותרת, תמיד זמין."
     about:
       edit: "עריכת העמוד הזה"
       simple_title: "על אודות"
@@ -809,6 +807,8 @@ he:
     embed_mode:
       allow_access: "לאפשר גישה"
       continue_as_guest: "להמשיך כאורח/ת"
+      be_first_to_reply: "ממתינים לתגובה הראשונה!"
+      replying_to: "בתגובה ל־%{username}"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
@@ -881,7 +881,6 @@ he:
         placeholder: "נא להקליד כאן את כותרת ההודעה, הכתובת או את המזהה"
     dsa_statements:
       category: "קטגוריה"
-      saving: "מתבצעת שמירה…"
     review:
       show_more: "להציג יותר"
       show_less: "להציג פחות"
@@ -2775,7 +2774,6 @@ he:
         }.
     learn_more: "מידע נוסף…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>משוב…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -3136,6 +3134,7 @@ he:
       clear: "פינוי המסנן"
     filter_controls:
       reset: "איפוס"
+      sort_label: "מיון לפי"
     d_icon_grid_picker:
       select_icon: "נא לבחור סמל"
       search_placeholder: "חיפוש סמלים…"
@@ -5972,17 +5971,16 @@ he:
         name: "שם"
         plugin: "תוסף"
         metadata: "נתוני על"
-        enabled: "פעיל"
-        enabled_for: "פעיל עבור…"
+        enabled: "מאופשר?"
         show_image: "הצגת תמונה"
-        edit_groups: "עריכת קבוצות הסכמה"
+        feedback: "משוב"
         groups_updated: "הקבוצות עודכנו!"
         save_groups: "שמירת קבוצות"
         add_groups_to_enable: "יש להוסיף קבוצות כדי להפעיל את היכולת הזאת"
         no_changes_to_save: "אין שינויים לשמירה"
         select_groups: "בחירת קבוצות…"
         opt_in_groups: "קבוצות הסכמה"
-        show_related_settings: "הצגת הגדרות קשורות…"
+        settings: "הגדרות"
         change_enabled_for_success: "הפעלת את השינוי הזה עבור %{enabledFor}"
         change_disabled: "סירבת לשינוי הזה"
         permanent_notice: "השינוי הזה קבוע ויוסר בקרוב. אי אפשר לסרב לו."
@@ -5991,7 +5989,6 @@ he:
         preview: "תצוגה מקדימה"
         enabled_for_options:
           no_one: "אף אחד"
-          everyone: "כולם"
           staff: "%{staffGroupName} בלבד"
           specific_groups: "קבוצה או קבוצות מסוימות"
           specific_groups_with_group_names:
@@ -6034,6 +6031,9 @@ he:
           impact_role_staff: "סגל"
           impact_role_all_members: "כל החברים"
           impact_role_developers: "מפתחים"
+        sort:
+          status: "מצב"
+          name: "שם"
       config:
         about:
           title: "על האתר שלך"
@@ -7161,10 +7161,7 @@ he:
           site_contact_group_help: |
             הקבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות אוטומטית.
           your_organization: "הארגון שלך"
-          your_organization_description: "אנו נשתמש במידע זה בתנאי השירות ובהצהרת הפרטיות כדי להראות מי מפעיל את האתר ותחת איזו סמכות שיפוט."
           company_name: "שם"
-          company_name_warning: |
-            אם השדה יישאר ריק, לא יסופקו תנאי שירות או הצהרת פרטיות ראשוניים.
           company_url: "אתר"
           company_url_placeholder: "https://example-co.com"
           governing_law: "החוק המחייב"
@@ -7382,7 +7379,6 @@ he:
           uploading: "בהליכי העלאה…"
           uploading_progress: "מתבצעת העלאה… %{progress}%"
           success: "ההעלאה של ‚%{filename}’ הושלמה בהצלחה. הקובץ עובר עיבוד כרגע ותחלוף עד דקה עד שיופיע ברשימה."
-          error: "הייתה שגיאה במהלך העלאת '%{filename}': %{message}"
         settings: "הגדרות"
         operations:
           is_running: "פעולה רצה כעת…"

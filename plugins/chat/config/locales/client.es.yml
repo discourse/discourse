@@ -96,8 +96,6 @@ es:
           other: "¿Seguro que quieres eliminar estos %{count} mensajes?"
       channel_settings:
         title: "Ajustes del canal"
-        edit: "Editar"
-        add: "Añadir"
         star_channel: "Añadir canal a favoritos"
         unstar_channel: "Quitar canal de favoritos"
         close_channel: "Cerrar canal"
@@ -109,7 +107,6 @@ es:
         join_channel: "Unirse al canal"
         leave_channel: "Abandonar canal"
         leave_groupchat_info: "Al abandonar este chat de grupo, dejarás de tener acceso al mismo y no recibirás notificaciones relacionadas con él. Para volver a unirte, deberás ser invitado de nuevo por un miembro del chat de grupo."
-        notification_settings: "Ajustes de notificación"
         notification_settings_context: "Notificaciones"
         join: "Unirse"
         leave: "Abandonar"
@@ -360,21 +357,22 @@ es:
       members_view:
         filter_placeholder: Buscar miembros
         add_member: Añadir miembro
-        back_to_settings: "Volver a los ajustes"
       about_view:
         associated_topic: Tema vinculado
         associated_category: Categoría vinculada
-        title: Título
         name: Nombre
         description: Descripción
       channel_info:
         back_to_all_channels: "Todos los canales"
         back_to_channel: "Atrás"
+        nav_label: "Información del canal"
         tabs:
           members: Miembros
+          preferences: Preferencias
           settings: Ajustes
           search: Buscar
         remove_member: "Eliminar"
+        members_title: "%{channel} miembros"
       new_message_modal:
         title: Enviar mensaje
         add_user_long: <kbd>mayúsculas + clic</kbd> o <kbd>mayúsculas + intro</kbd><span>Añadir @%{username}</span>
@@ -394,15 +392,12 @@ es:
         create_new_group_chat: "Crear chat de grupo"
         group_with_too_many_members: "tiene demasiados miembros (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Editar canal
         input_placeholder: Añadir un nombre
         slug_description: Se utiliza un slug del canal en la URL en lugar del nombre del canal
         name: Nombre del canal
         reset_emoji: Quitar emoji
       channel_edit_description_modal:
-        title: Editar descripción
         input_placeholder: Añade una descripción
-        description: Cuéntale a la gente de qué se trata este canal
       direct_message_creator:
         add_to_channel: "Añadir al canal"
         title: Nuevo mensaje
@@ -502,7 +497,6 @@ es:
         always: "Para toda actividad"
       settings:
         channel_wide_mentions_label: "Permitir menciones @all y @here"
-        channel_wide_mentions_description: "Permite a los usuarios notificar a todos los miembros de #%{channel} con @all o solo a los que estén activos en ese momento con @here"
         channel_threading_label: "Hilado"
         channel_threading_description: "Cuando se activa el hilado, las respuestas a un mensaje de chat crearán una conversación separada, que existirá junto al canal principal."
         auto_join_users_label: "Añadir usuarios automáticamente"
@@ -523,9 +517,6 @@ es:
         save: "Guardar"
         saved: "Guardado"
         unfollow: "Abandonar"
-        admin_title: "Administrador"
-        settings_title: "Ajustes"
-        info_title: "Información del canal"
         category_label: "Categoría"
         history_label: "Historial"
         members_label: "Miembros"

@@ -10,6 +10,14 @@ vi:
       choice_title: "Vi phạm pháp luật"
       title: "Báo cáo nội dung bất hợp pháp"
       email: "Địa chỉ email"
+    code_editor:
+      search:
+        replace: "Thay thế"
+        next: "Kế tiếp"
+        previous: "Trước"
+        close: "Đóng lại"
+      fold:
+        to: "tới"
     user_api_key:
       deny: "Hủy"
       copied: "Đã sao chép!"
@@ -429,19 +437,17 @@ vi:
       back: "Quay lại"
       next: "Kế tiếp"
       sections:
-        theme: "Giao diện"
         fonts: "Phông chữ"
+        logo: "Logo"
         homepage: "Trang chủ"
-        welcome_banner: "Banner chào mừng"
-        search: "Tìm"
       theme:
         selected: "Đã chọn"
-      colors:
-        light: "Sáng"
-        dark: "Tối"
       fonts:
-        base_font: "Phông chữ cơ bản"
-        heading_font: "Phông chữ tiêu đề"
+        base_font: "Thân"
+        heading_font: "Tiêu đề"
+      logo:
+        description: "Xuất hiện trên thanh điều hướng chính của trang web, cũng như ở phần đầu của thông báo email."
+        help_text: "Kích thước đề xuất là 600x80 pixel."
       homepage:
         topics: "Các chủ đề"
         categories: "Danh mục"
@@ -655,7 +661,6 @@ vi:
         placeholder: "nhập tiêu đề tin nhắn, url hoặc id ở đây"
     dsa_statements:
       category: "Danh mục"
-      saving: "Đang lưu…"
     review:
       show_more: "Mở rộng"
       show_less: "Thu gọn"
@@ -2750,6 +2755,7 @@ vi:
     filter_controls:
       reset: "Cài lại"
       toggle: "Bật/tắt bộ lọc thả xuống"
+      sort_label: "Sắp xếp theo"
     shared_drafts:
       title: "Thư nháp được Chia sẻ"
       notice: "Chủ đề này chỉ hiển thị với những người có thể xuất bản các bản nháp được chia sẻ."
@@ -5235,29 +5241,27 @@ vi:
         name: "Tên"
         plugin: "Plugin"
         metadata: "Metadata"
-        enabled: "Đã bật"
-        enabled_for: "Đã bật cho..."
+        enabled: "Kích hoạt"
         show_image: "Hiện hình ảnh"
-        edit_groups: "Chỉnh sửa nhóm chọn tham gia"
+        feedback: "Phản hồi"
         groups_updated: "Các nhóm đã được cập nhật!"
         save_groups: "Lưu các nhóm"
         add_groups_to_enable: "Thêm các nhóm để kích hoạt tính năng này."
         no_changes_to_save: "Không có thay đổi để lưu"
         select_groups: "Chọn nhóm…"
         opt_in_groups: "Nhóm tham gia tự nguyện"
+        settings: "Cài đặt"
         opt_in_groups_instructions: "Nhóm tham gia có thể được sử dụng để cho phép một nhóm người dùng nhất định thử nghiệm một thay đổi trước khi nó được phát hành cho tất cả mọi người. Lưu ý rằng các nhóm này sẽ không còn liên quan sau khi thay đổi tiến tới trạng thái Ổn định."
         enabled_for_throttle: "Bạn đã thay đổi đối tượng áp dụng cho thay đổi này quá nhanh. Vui lòng đợi vài giây trước khi thử lại."
         change_enabled_for_success: "Bạn đã kích hoạt thay đổi này cho %{enabledFor}"
         change_disabled: "Bạn đã chọn không tham gia thay đổi này"
         depends_on_notice: "Thay đổi này yêu cầu phải bật %{dependencyLinks}."
         permanent_notice: "Thay đổi này hiện đã trở thành vĩnh viễn và sẽ sớm bị gỡ bỏ. Bạn không còn có thể từ chối tham gia."
-        permanent_soon_notice: "Thay đổi này sẽ sớm có hiệu lực vĩnh viễn. Bạn sẽ không còn có thể từ chối tham gia nữa."
         permanent_no_group_selection: "Không áp dụng, các thay đổi vĩnh viễn áp dụng cho tất cả các nhóm."
         no_changes: "Hiện tại không có thay đổi nào sắp diễn ra."
         preview: "Xem trước"
         enabled_for_options:
           no_one: "Không ai"
-          everyone: "Mọi người"
           specific_groups: "Các nhóm cụ thể"
           specific_groups_with_group_names:
             other: "Các nhóm %{groupNames}"
@@ -5300,6 +5304,9 @@ vi:
           impact_role_staff: "Nhân viên"
           impact_role_all_members: "Tất cả thành viên"
           impact_role_developers: "Nhà phát triển"
+        sort:
+          status: "Trạng thái"
+          name: "Tên"
       config:
         about:
           title: "Về trang web của bạn"
@@ -6409,10 +6416,7 @@ vi:
           site_contact_group_help: |
             Nhóm người được mời tham gia sẽ tự động nhận được tin nhắn cá nhân.
           your_organization: "Tổ chức của bạn"
-          your_organization_description: "Chúng tôi sẽ sử dụng thông tin này trong Điều khoản dịch vụ và Thông báo bảo mật để nêu rõ ai là người vận hành trang web và thuộc thẩm quyền nào."
           company_name: "Tên"
-          company_name_warning: |
-            Nếu để trống, sẽ không cung cấp các điều khoản dịch vụ hoặc thông báo về quyền riêng tư mẫu.
           company_url: "Trang web"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Luật áp dụng"
@@ -6632,7 +6636,6 @@ vi:
           uploading: "Đang tải lên…"
           uploading_progress: "Đang tải lên… %{progress}%"
           success: "'%{filename}' đã được tải lên thành công. Tệp hiện đang được xử lý và sẽ mất đến một phút để hiển thị trong danh sách."
-          error: "Có lõi trong quá trình tải lên '%{filename}': %{message}"
         settings: "Cài đặt"
         operations:
           is_running: "Một tác vụ đang chạy…"

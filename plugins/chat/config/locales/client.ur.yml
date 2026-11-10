@@ -100,8 +100,6 @@ ur:
           other: "کیا آپ واقعی ان %{count} پیغامات کو حذف کرنا چاہتے ہیں؟"
       channel_settings:
         title: "چینل کی ترتیبات"
-        edit: "ترمیم کریں"
-        add: "اضافہ کریں"
         star_channel: "مقبول چینل"
         unstar_channel: "چینل کو غیر مقبول کریں"
         close_channel: "چینل بند"
@@ -113,7 +111,6 @@ ur:
         join_channel: "چینل جوائن کریں"
         leave_channel: "چینل چھوڑیں"
         leave_groupchat_info: "اس گروپ چیٹ کو چھوڑنے سے، آپ کو اس تک مزید رسائی حاصل نہیں ہوگی اور آپ کو اس سے متعلق اطلاعات موصول نہیں ہوں گی۔ دوبارہ شامل ہونے کے لیے، آپ کو گروپ چیٹ کے کسی رکن کے ذریعے دوبارہ مدعو کرنے کی ضرورت ہوگی۔"
-        notification_settings: "اطلاع کی ترتیبات"
         notification_settings_context: "اطلاعات"
         join: "شمولیت اختیار کریں"
         leave: "چھوڑ دیں"
@@ -319,11 +316,9 @@ ur:
       members_view:
         filter_placeholder: اراکین تلاش کریں
         add_member: رکن شامل کریں
-        back_to_settings: "ترتیبات پر واپس"
       about_view:
         associated_topic: منسلک موضوع
         associated_category: منسلک زمرہ
-        title: عنوان
         name: نام
         description: تفصیل
       channel_info:
@@ -331,9 +326,11 @@ ur:
         back_to_channel: "واپس"
         tabs:
           members: ممبران
+          preferences: ترجیحات
           settings: ترتیبات
           search: تلاش کریں
         remove_member: "خارج کریں"
+        members_title: "%{channel} اراکین"
       new_message_modal:
         title: پیغام بھیجیں
         add_user_long: <kbd>shift +</kbd> پر کلک کریں یا <kbd>shift + enter</kbd><span>@%{username}</span>شامل کریں
@@ -411,7 +408,6 @@ ur:
         always: "ہر سرگرمی کے لئے"
       settings:
         channel_wide_mentions_label: "@all اور @here تذکرہ کی اجازت دیں"
-        channel_wide_mentions_description: "صارفین کو، #%{channel} کے تمام اراکین کو @all کے ساتھ یا صرف ان لوگوں کو جو اس لمحے میں سرگرم ہیں @here کے ساتھ مطلع کرنے کی اجازت دیں۔"
         channel_threading_label: "تھریڈنگ"
         channel_threading_description: "جب تھریڈنگ فعال ہوتی ہے، تو چیٹ میسج کے جوابات ایک الگ گفتگو تخلیق کریں گے، جو مرکزی چینل کے ساتھ موجود ہوگی۔"
         auto_join_users_label: "خودکار طور پر اراکین کو شامل کریں"
@@ -425,8 +421,6 @@ ur:
         save: "محفوظ کریں"
         saved: "محفوظ کر لیا گیا"
         unfollow: "چھوڑ دیں"
-        admin_title: "منتظم"
-        settings_title: "ترتیبات"
         category_label: "زمرہ"
         history_label: "تاریخی"
         members_label: "ممبران"

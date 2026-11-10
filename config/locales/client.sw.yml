@@ -6,6 +6,13 @@
 
 sw:
   js:
+    code_editor:
+      search:
+        next: "Ijayo"
+        previous: "Uliopita"
+        close: "Funga"
+      fold:
+        to: "kwenda"
     user_api_key:
       authorize: "Idhini"
       deny: "Batili"
@@ -232,12 +239,9 @@ sw:
       back: "Iliyopita"
       next: "Ijayo"
       sections:
-        theme: "Mandhari"
         homepage: "Ukurasa mkuu"
-        search: "Tafuta"
-      colors:
-        light: "Hafifu"
-        dark: "Nyeusi"
+      fonts:
+        base_font: "Mwili"
       homepage:
         topics: "Mada"
         categories: "Kategoria"
@@ -1315,6 +1319,7 @@ sw:
       default: Ishara binafsi
     filter_controls:
       reset: "Weka/Anzisha Upya"
+      sort_label: "Panga kwa"
     shared_drafts:
       title: "Maswadajaribio Gawiza"
       destination_category: "Kategoria Pokezi"
@@ -2484,10 +2489,9 @@ sw:
           title: "Programu Jalizi"
       upcoming_changes:
         name: "Jina"
-        enabled: "Imeruhusiwa"
+        enabled: "Imeruhusiwa?"
+        settings: "Mipangilio"
         preview: "Kihakiki"
-        enabled_for_options:
-          everyone: "Kila Mtu"
         impact_roles:
           admins: "Viongozi"
           moderators: "Wasimamizi"
@@ -2502,6 +2506,8 @@ sw:
           impact_role_admins: "Viongozi"
           impact_role_moderators: "Wasimamizi"
           impact_role_staff: "Wasaidizi"
+        sort:
+          name: "Jina"
       config:
         developer:
           title: "Mtengenezaji"
@@ -2974,7 +2980,6 @@ sw:
           label: "Pakia"
           title: "Pakia chelezo kwenye mfano huu."
           success: "'%{jina la faili}' imepakiwa kwa mafanikio. Faili lipokwenye harakati na litachukua mpaka dakika kuonekana kwenye orodha."
-          error: "Hitilafu imetokea wakati wa kupakia '%{jina la faili}': %{ujumbe}"
         settings: "Mipangilio"
         operations:
           failed: "%{Operesheni} imeshindwa. Tafadhali angalia batli."

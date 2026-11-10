@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="<%= html_lang %>" class="<%= html_classes %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <meta name="discourse_theme_id" content="">
+    <meta name="discourse_current_homepage" content="<%= current_homepage %>">
+    <title><%= t("blog.review.page_title") %></title>
+    <%= discourse_color_scheme_meta_tag %>
+    <%= discourse_csrf_tags %>
+    <%= render("layouts/plugin_js", opts: { include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request, include_admin_asset: false, only: [Blog::PLUGIN_NAME] }) %>
+    <script nonce="<%= csp_nonce_placeholder %>">window.EmberENV ??= {}; window.EmberENV._DEFAULT_ASYNC_OBSERVERS = true;</script>
+    <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
+    <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+    <% if ExtraLocalesController.client_overrides_exist? %><%= preload_script_url ExtraLocalesController.url("overrides"), type_module: true %><% end %>
+    <%= preload_script "js/browser-detect" %>
+    <%= preload_script "vendor", type_module: true %>
+    <%= module_preloads_for "discourse" %>
+    <%= tag.meta id: "data-discourse-setup", data: client_side_setup_data.merge(safe_mode: "no_themes", service_worker_url: nil) %>
+    <meta name="discourse/config/environment" content="<%= u discourse_config_environment %>">
+  </head>
+  <body class="<%= body_classes %> blog-review-page">
+    <discourse-assets>
+      <discourse-assets-stylesheets>
+        <%= discourse_color_scheme_stylesheets %>
+        <%= discourse_stylesheet_link_tag(:common, supports_rtl: true) %>
+        <% Discourse.find_plugin_css_assets(include_official: true, include_unofficial: true, only: [Blog::PLUGIN_NAME], request: request).each do |asset| %>
+          <%= discourse_stylesheet_link_tag(asset, supports_rtl: true) %>
+        <% end %>
+      </discourse-assets-stylesheets>
+      <discourse-assets-json><script type="application/json" id="data-preloaded"><%= raw(preloaded_json) %></script></discourse-assets-json>
+      <discourse-assets-icons></discourse-assets-icons>
+    </discourse-assets>
+    <noscript><p><%= t("blog.review.javascript_required") %></p></noscript>
+    <section id="main"></section>
+    <%= preload_script "discourse", type_module: true %>
+  </body>
+</html>

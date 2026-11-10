@@ -1009,6 +1009,14 @@ ar:
           hidden: "إعداد الموقع '%{setting_name}' مخفي ولا يمكن قراءته هنا."
           secret: "يحتوي إعداد الموقع '%{setting_name}' على قيمة سرية ولا يمكن قراءته هنا."
           themeable: "يتطلَّب إعداد الموقع '%{setting_name}' سمةً ولا يمكن قراءته هنا."
+    appearance_authoring:
+      default_theme: "السمة الافتراضية"
+      colors:
+        light:
+          header_background: "الرأس"
+      fonts:
+        base_font: "خط النص الأساسي"
+        heading_font: "خط العنوان"
     reviewables:
       ai_tool_action:
         title: "إجراء أداة الذكاء الاصطناعي"
@@ -1086,6 +1094,7 @@ ar:
       cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
       secret_required: "يجب تحديد بيانات الاعتماد"
       secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة"
+      missing_provider_param: "لا يمكن ترك %{param} فارغة"
       configuration:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."

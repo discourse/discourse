@@ -10,6 +10,15 @@ sk:
       choice_title: "Je to nezákonné"
       title: "Nahlásiť nezákonný obsah"
       email: "E-mailová adresa"
+    code_editor:
+      search:
+        replace: "Nahradiť"
+        next: "Ďalej"
+        previous: "Predchádzajúci"
+        close: "Zatvoriť"
+        go: "Choď"
+      fold:
+        to: "komu"
     user_api_key:
       authorize: "Autorizovať"
       deny: "Zrušiť"
@@ -405,18 +414,20 @@ sk:
     design_wizard:
       back: "Späť"
       next: "Ďalej"
+      steps:
+        homepage:
+          title: "Vzhľad & pocit"
       sections:
-        theme: "Téma"
         fonts: "Fonty"
-        search: "Hľadať"
+        logo: "Logo"
       theme:
         selected: "Vybrané"
-      colors:
-        light: "Svetlá"
-        dark: "Tmavá"
       fonts:
-        base_font: "Základné písmo"
-        heading_font: "Písmo nadpisu"
+        base_font: "Telo"
+        heading_font: "Nadpisy"
+      logo:
+        description: "Zobrazuje sa v hornej časti navigácie stránky, ako aj v hornej časti e-mailových oznámení stránky."
+        help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
       homepage:
         topics: "Témy"
         categories: "Kategórie"
@@ -698,7 +709,6 @@ sk:
     dsa_statements:
       category: "Kategória"
       category_prompt: "Vyberte kategóriu"
-      saving: "Ukladanie…"
     review:
       show_more: "Zobraziť viac"
       show_less: "Zobraziť menej"
@@ -2916,6 +2926,7 @@ sk:
       clear: "Vymazať filter"
     filter_controls:
       reset: "Resetovať"
+      sort_label: "Zoradiť podľa"
     shared_drafts:
       title: "Zdieľané návrhy"
       notice: "Táto téma je viditeľná len pre tých, ktorí môžu zverejňovať zdieľané návrhy."
@@ -5596,11 +5607,11 @@ sk:
           title: "Pokročilé"
       upcoming_changes:
         name: "Meno"
-        enabled: "Povolené"
+        enabled: "Povolené?"
+        feedback: "Spätná väzba"
         select_groups: "Vyberte skupiny…"
+        settings: "Nastavení"
         preview: "Náhľad"
-        enabled_for_options:
-          everyone: "Každý"
         statuses:
           experimental: "Experimentálne"
         impact_roles:
@@ -5620,6 +5631,9 @@ sk:
           impact_role_admins: "Administrátori"
           impact_role_moderators: "Moderátori"
           impact_role_staff: "Personál"
+        sort:
+          status: "Stav"
+          name: "Meno"
       config:
         about:
           title: "O vašej stránke"
@@ -6682,10 +6696,7 @@ sk:
           site_contact_group_help: |
             Skupina, ktorá dostane pozvánku na všetky automaticky odoslané osobné správy.
           your_organization: "Vaša organizácia"
-          your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_warning: |
-            Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"
@@ -6900,7 +6911,6 @@ sk:
           uploading: "Nahráva sa…"
           uploading_progress: "Nahráva sa… %{progress}%"
           success: "'%{filename}' bol úspešne nahraný. Súbor sa teraz spracováva a jeho zobrazenie v zozname potrvá až minútu."
-          error: "Počas nahrávania '%{filename}' nastala chyba: %{message}"
         settings: "Nastavenia"
         operations:
           is_running: "Momentálne prebieha operácia…"

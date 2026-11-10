@@ -10,6 +10,15 @@ cs:
       choice_title: "Je to nezákonné"
       title: "Nahlásit protizákonný obsah"
       email: "E-mailová adresa"
+    code_editor:
+      search:
+        replace: "Nahradit"
+        next: "Další"
+        previous: "Předchozí"
+        close: "Zavřít"
+        go: "Přejít"
+      fold:
+        to: "do"
     user_api_key:
       title: 'Autorizovat „%{application_name}“'
       authorize: "Autorizovat"
@@ -527,19 +536,17 @@ cs:
       back: "Zpět"
       next: "Další"
       sections:
-        theme: "Téma"
         fonts: "Písma"
+        logo: "Logo"
         homepage: "Domovská stránka"
-        welcome_banner: "Uvítací banner"
-        search: "Vyhledat"
       theme:
         selected: "Zaškrtnuté"
-      colors:
-        light: "Světlá"
-        dark: "Tmavá"
       fonts:
-        base_font: "Základní písmo"
-        heading_font: "Písmo nadpisů"
+        base_font: "Tělo"
+        heading_font: "Nadpisy"
+      logo:
+        description: "Zobrazuje se v horní navigační liště webu a také v horní části e-mailových oznámení webu."
+        help_text: "Doporučená velikost je 600 x 80 pixelů."
       homepage:
         topics: "Témata"
         categories: "Kategorie"
@@ -829,7 +836,6 @@ cs:
     dsa_statements:
       category: "Kategorie"
       category_prompt: "Vyberte kategorii"
-      saving: "Ukládání…"
     review:
       show_more: "Zobrazit více"
       show_less: "Zobrazit méně"
@@ -3135,6 +3141,7 @@ cs:
     filter_controls:
       reset: "obnovit výchozí"
       toggle: "Přepnout rozbalovací filtry"
+      sort_label: "Řadit podle"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -6013,16 +6020,16 @@ cs:
         name: "Název"
         plugin: "Plugin"
         metadata: "Metadata"
-        enabled: "Zapnuto"
-        enabled_for: "Povoleno pro..."
+        enabled: "Zapnuto?"
         show_image: "Zobrazit obrázek"
-        edit_groups: "Úprit opt-in skupiny"
+        feedback: "Zpětná vazba"
         groups_updated: "Skupiny aktualizovány!"
         save_groups: "Uložit skupiny"
         add_groups_to_enable: "Pro povolení této funkce přidejte skupiny"
         no_changes_to_save: "Žádné změny k uložení"
         select_groups: "Vyberte skupiny…"
         opt_in_groups: "Opt-in skupiny"
+        settings: "Nastavení"
         opt_in_groups_instructions: "Opt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude zveřejněna pro všechny. Vemte na vědomí, že tyto skupiny budou irelevantní, jakmile změna přejde do stavu Stabilní."
         enabled_for_throttle: "Upravili jste pro koho je tato změna povolena příliš rychle. Počkejte prosím pár vteřin před dalším pokusem."
         change_enabled_for_success: "Tuto změnu jste povolili pro %{enabledFor}"
@@ -6033,7 +6040,6 @@ cs:
         preview: "Náhled"
         enabled_for_options:
           no_one: "Nikdo"
-          everyone: "Všichni"
           specific_groups: "Specifické skupiny"
           specific_groups_with_group_names:
             one: "skupinu %{groupNames}"
@@ -6078,6 +6084,9 @@ cs:
           impact_role_staff: "Redakce"
           impact_role_all_members: "Všichni členové"
           impact_role_developers: "Vývojáři"
+        sort:
+          status: "Stav"
+          name: "Jméno"
       config:
         about:
           title: "O vašem webu"
@@ -7198,10 +7207,7 @@ cs:
           site_contact_group_help: |
             Skupina, která dostane pozvánku ke všem automaticky zasílaným soukromým zprávám.
           your_organization: "Vaše organizace"
-          your_organization_description: "Tyto informace použijeme ve Smluvních podmínkách a Oznámení o ochraně osobních údajů, abychom ukázali, kdo provozuje web a pod kterou jurisdikcí."
           company_name: "Jméno"
-          company_name_warning: |
-            Pokud ponecháte prázdné, nebudou poskytnuty žádné standardní Smluvní podmínky ani Oznámení o ochraně osobních údajů.
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Rozhodné právo"
@@ -7420,7 +7426,6 @@ cs:
           uploading: "Nahrávání…"
           uploading_progress: "Nahrávání: %{progress}…"
           success: "'%{filename}' byl úspěšně nahraný. Soubor je nyní zpracováván a do minuty bude ukázán v seznamu. "
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Nastavení"
         operations:
           is_running: "Probíhá úloha..."

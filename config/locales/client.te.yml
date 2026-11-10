@@ -8,6 +8,14 @@ te:
   js:
     dsa_notice:
       choice_title: "ఇది చట్టవిరుద్ధం"
+    code_editor:
+      search:
+        replace: "భర్తీ చేయండి"
+        next: "తదుపరి"
+        previous: "గత"
+        close: "మూసివేయండి"
+      fold:
+        to: "వరకు"
     user_api_key:
       authorize: "అధికారం ఇవ్వండి"
       deny: "రద్దుచేయండి"
@@ -317,16 +325,10 @@ te:
     design_wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      sections:
-        theme: "థీమ్"
-        search: "వెతుకు"
       theme:
         selected: "ఎంపిక చేయబడినవి"
-      colors:
-        light: "లేత"
-        dark: "డార్క్"
       fonts:
-        heading_font: "శీర్షిక ఫాంట్"
+        base_font: "బాడీ"
       homepage:
         topics: "విషయాలు"
         categories: "వర్గాలు"
@@ -486,7 +488,6 @@ te:
         placeholder: "సందేశ శీర్షిక, url లేదా id ను ఇక్కడ టైప్ చేయండి"
     dsa_statements:
       category: "వర్గం"
-      saving: "సేవ్ చేయబడుతోంది…"
     review:
       show_more: "మరిన్ని చూపించండి"
       show_less: "తక్కువ చూపించండి"
@@ -2229,6 +2230,7 @@ te:
       clear: "ఫిల్టర్‌ని క్లియర్ చేయండి"
     filter_controls:
       reset: "రీసెట్ చేయండి"
+      sort_label: "క్రమబద్ధీకరించండి"
     shared_drafts:
       title: "షేర్ చేసిన చిత్తుప్రతులు"
       notice: "షేర్ చేయబడిన చిత్తుప్రతులను ప్రచురించగల వారికి మాత్రమే ఈ విషయం కనిపిస్తుంది."
@@ -4341,11 +4343,11 @@ te:
           title: "అధునాతన"
       upcoming_changes:
         name: "పేరు"
-        enabled: "ప్రారంభించబడింది"
+        enabled: "ప్రారంభించబడిందా?"
+        feedback: "అభిప్రాయం"
         select_groups: "సమూహాలను ఎంచుకోండి…"
+        settings: "అమరికలు"
         preview: "ప్రివ్యూ"
-        enabled_for_options:
-          everyone: "అందరూ"
         impact_roles:
           moderators: "నిర్వాహకులు"
           staff: "సిబ్బంది"
@@ -4358,6 +4360,9 @@ te:
           impact_type_other: "ఇతర"
           impact_role_moderators: "నిర్వాహకులు"
           impact_role_staff: "సిబ్బంది"
+        sort:
+          status: "స్థితి"
+          name: "పేరు"
       config:
         about:
           title: "మీ సైట్ గురించి"
@@ -5135,7 +5140,6 @@ te:
           uploading: "అప్‌లోడ్ చేయబడుతోంది…"
           uploading_progress: "అప్‌లోడ్ చేస్తోంది… %{progress}%"
           success: "'%{filename}' విజయవంతంగా అప్‌లోడ్ చేయబడింది. ఫైల్ ఇప్పుడు ప్రాసెస్ చేయబడుతోంది మరియు జాబితాలో చూపబడటానికి గరిష్టంగా ఒక నిమిషం పడుతుంది."
-          error: "'%{filename}' ఎగుమతించుటలో దోషం: %{message}"
         settings: "అమరికలు"
         operations:
           is_running: "ఒక కార్యం ప్రస్తుతం నడుస్తోంది…"

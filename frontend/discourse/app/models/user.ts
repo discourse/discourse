@@ -2063,18 +2063,6 @@ export default class User extends RestModel.extend(Evented) {
     }
   }
 
-  resolvedTimezone() {
-    deprecated(
-      "user.resolvedTimezone() has been deprecated. Use user.user_option.timezone instead",
-      {
-        id: "discourse.user.resolved-timezone",
-        since: "2.9.0.beta12",
-      }
-    );
-
-    return this.user_option!.timezone;
-  }
-
   calculateMutedIds(
     notificationLevel: number,
     id: number,
@@ -2377,23 +2365,5 @@ class UserStatusManager {
   }
 }
 
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-
-  Object.defineProperty(Discourse, "User", {
-    get() {
-      if (!warned) {
-        deprecated("Import the User class instead of using Discourse.User", {
-          since: "2.4.0",
-          id: "discourse.global.user",
-        });
-        warned = true;
-      }
-      return User;
-    },
-  });
-}
-
-/** Legacy globals supplied by the application, without introducing module imports. */
+/** Legacy global supplied by the application, without introducing a module import. */
 declare const moment: typeof import("moment");
-declare const Discourse: object | undefined;

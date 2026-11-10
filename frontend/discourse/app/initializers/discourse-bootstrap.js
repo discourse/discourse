@@ -1,6 +1,5 @@
 import { DEBUG } from "@glimmer/env";
 import { importSync } from "@embroider/macros";
-import RSVP from "rsvp";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import * as environment from "discourse/lib/environment";
 import { setDefaultOwner } from "discourse/lib/get-owner";
@@ -13,8 +12,7 @@ import I18n from "discourse-i18n";
 export default {
   // The very first initializer to run
   initialize(app) {
-    const { isDevelopment, isProduction, isTesting, isRailsTesting } =
-      environment;
+    const { isDevelopment, isTesting, isRailsTesting } = environment;
 
     setURLContainer(app.__container__);
     setDefaultOwner(app.__container__);
@@ -55,9 +53,6 @@ export default {
 
     I18n.defaultLocale = setupData.defaultLocale;
 
-    window.Logster = window.Logster || {};
-    window.Logster.enabled = setupData.enableJsErrorReporting === "true";
-
     moment.suppressDeprecationWarnings = true;
 
     let session = Session.current();
@@ -93,29 +88,5 @@ export default {
     if (setupData.s3BaseUrl) {
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
     }
-
-    RSVP.configure("onerror", function (e) {
-      // Ignore TransitionAborted exceptions that bubble up
-      if (e && e.message === "TransitionAborted") {
-        return;
-      }
-
-      if (!isProduction()) {
-        /* eslint-disable no-console  */
-        if (e) {
-          if (e.message || e.stack) {
-            console.log(e.message);
-            console.log(e.stack);
-          } else {
-            console.log("Uncaught promise: ", e);
-          }
-        } else {
-          console.log("A promise failed but was not caught.");
-        }
-        /* eslint-enable no-console  */
-      }
-
-      window.onerror(e && e.message, null, null, null, e);
-    });
   },
 };

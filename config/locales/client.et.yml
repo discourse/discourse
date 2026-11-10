@@ -6,6 +6,13 @@
 
 et:
   js:
+    code_editor:
+      search:
+        next: "Järgmine"
+        previous: "Eelmine"
+        close: "Sulge"
+      fold:
+        to: "kellele"
     user_api_key:
       authorize: "Autoriseeri"
       deny: "Loobu"
@@ -267,12 +274,9 @@ et:
       back: "Tagasi"
       next: "Järgmine"
       sections:
-        theme: "Kujundusteema"
         homepage: "Avaleht"
-        search: "Otsi"
-      colors:
-        light: "Hele"
-        dark: "Tume"
+      fonts:
+        base_font: "Sisu"
       homepage:
         topics: "Teemasid"
         categories: "Liigid"
@@ -396,7 +400,6 @@ et:
         placeholder: "kirjuta siia teema pealkiri, URL või ID"
     dsa_statements:
       category: "Kategooriad"
-      saving: "Salvestan..."
     review:
       explain:
         total: "Kokku"
@@ -1516,6 +1519,7 @@ et:
       default: Kohandatud emodži
     filter_controls:
       reset: "Nulli"
+      sort_label: "Järjesta"
     shared_drafts:
       destination_category: "Sihtkategooria"
     composer:
@@ -2808,10 +2812,10 @@ et:
           title: "Pistikprogrammid"
       upcoming_changes:
         name: "Nimi"
-        enabled: "Sisse lülitatud"
+        enabled: "Sisse lülitatud?"
+        feedback: "Tagasiside"
+        settings: "Seaded"
         preview: "Eelvaade"
-        enabled_for_options:
-          everyone: "Kõik"
         impact_roles:
           admins: "Adminnid"
           moderators: "Moderaatorid"
@@ -2826,6 +2830,9 @@ et:
           impact_role_admins: "Adminnid"
           impact_role_moderators: "Moderaatorid"
           impact_role_staff: "Meeskond"
+        sort:
+          status: "Staatus"
+          name: "Nimi"
       config:
         developer:
           title: "Arendaja"
@@ -3338,7 +3345,6 @@ et:
           label: "Laadi üles"
           title: "Laadi varukoopia üles sellesse instantsi"
           uploading: "Laadin üles..."
-          error: "Faili '%{filename}' üleslaadimisel tekkis viga: %{message}"
         settings: "Sätted"
         operations:
           failed: "Toiming %{operation} ebaõnnestus. Kontrolli logisid."

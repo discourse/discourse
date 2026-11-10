@@ -6,6 +6,13 @@
 
 lv:
   js:
+    code_editor:
+      search:
+        next: "Nākamais"
+        previous: "Iepriekšējais"
+        close: "Aizvērt"
+      fold:
+        to: "kam"
     user_api_key:
       deny: "Atcelt"
       copied: "Nokopēts!"
@@ -279,9 +286,8 @@ lv:
     design_wizard:
       back: "Atpakaļ"
       next: "Nākamais"
-      sections:
-        theme: "Tēma"
-        search: "Meklēt"
+      fonts:
+        base_font: "Saturs"
       homepage:
         topics: "Tēmas"
         categories: "Sadaļas"
@@ -1726,6 +1732,7 @@ lv:
       default: Lietotāja emoji
     filter_controls:
       reset: "Atlikt"
+      sort_label: "Kārtot pēc"
     shared_drafts:
       title: "Kopīgotie melnraksti"
       notice: "Šī tēma ir redzama tikai tiem, kuri var publicēt koplietotos melnrakstus."
@@ -2940,10 +2947,9 @@ lv:
           title: "Spraudņi"
       upcoming_changes:
         name: "Vārds"
-        enabled: "Ieslēgts"
+        enabled: "Ieslēgts?"
+        settings: "Iestatījumi"
         preview: "Priekšskatījums"
-        enabled_for_options:
-          everyone: "Ikviens"
         impact_roles:
           admins: "Administratori"
           moderators: "Moderātori"
@@ -2958,6 +2964,9 @@ lv:
           impact_role_admins: "Administratori"
           impact_role_moderators: "Moderātori"
           impact_role_staff: "Personāls"
+        sort:
+          status: "Statuss"
+          name: "Vārds"
       config:
         developer:
           title: "Izstrādātājs"
@@ -3425,7 +3434,6 @@ lv:
         upload:
           label: "Augšupielādēt"
           title: "Augšupielādēt rezerves kopiju uz šo instanci"
-          error: "Augšupielādējot '%{filename}', notika kļūda: %{message}"
         settings: "Iestatījumi"
         operations:
           failed: "%{operation} neizdevās. Lūdzu pārbaudīt žurnāla ierakstus."

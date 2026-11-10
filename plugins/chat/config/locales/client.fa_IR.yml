@@ -81,8 +81,6 @@ fa_IR:
           other: "آیا مطمئنید که می خواهید این %{count} پیام را حذف کنید؟"
       channel_settings:
         title: "تنظیمات کانال"
-        edit: "ویرایش"
-        add: "اضافه کردن"
         close_channel: "بستن کانال"
         open_channel: "باز کردن کانال"
         archive_channel: "بایگانی کانال"
@@ -219,7 +217,6 @@ fa_IR:
       about_view:
         associated_topic: موضوع مرتبط
         associated_category: دسته‌بندی مرتبط
-        title: عنوان
         name: نام
         description: توضیح
       channel_info:
@@ -227,19 +224,18 @@ fa_IR:
         back_to_channel: "بازگشت"
         tabs:
           members: اعضاء
+          preferences: تنظیمات
           settings: تنظیمات
           search: جستجو
         remove_member: "پاک کردن"
+        members_title: "%{channel} عضو"
       new_message_modal:
         filter: "فیلتر"
       channel_edit_name_slug_modal:
-        title: ویرایش کانال
         input_placeholder: افزودن نام
         name: نام کانال
       channel_edit_description_modal:
-        title: ویرایش توضیحات
         input_placeholder: افزودن توضیحات
-        description: به بقیه افراد بگویید که این کانال در مورد چی هست
       direct_message_creator:
         add_to_channel: "افزودن به کانال"
         title: پیام جدید
@@ -280,7 +276,6 @@ fa_IR:
         always: "برای تمام فعالیت‌ها"
       settings:
         channel_wide_mentions_label: "اجازه داده به استفاده از اشاره @all و @here"
-        channel_wide_mentions_description: "به کاربران اجازه دهید به همه اعضای #%{channel} با @all یا فقط افرادی که در حال حاضر فعال هستند با @here، آگاه‌سازی کنند."
         auto_join_users_label: "افزودن خودکار کاربران"
         follow: "عضو شدن"
         followed: "عضو شده"
@@ -293,8 +288,6 @@ fa_IR:
         save: "ذخیره کردن"
         saved: "ذخیره شد"
         unfollow: "ترک کردن"
-        admin_title: "مدیر کل"
-        settings_title: "تنظیمات"
         category_label: "دسته‌بندی"
         history_label: "تاریخچه"
         members_label: "اعضاء"

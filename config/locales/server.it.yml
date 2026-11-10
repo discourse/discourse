@@ -2239,7 +2239,6 @@ it:
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."
     display_name_on_posts: "Mostra il nome completo dell'utente sui messaggi oltre allo @username."
     show_time_gap_days: "Se due messaggi vengono creati dopo tale numero di giorni, mostrare l'intervallo di tempo nell'argomento."
-    short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero di messaggi attuale. Se modifichi l'ampiezza della barra di avanzamento, potresti dover cambiare questo valore."
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> per una demo"
     show_copy_button_on_codeblocks: "Aggiungi un pulsante ai blocchi di codice per copiare il contenuto del blocco negli appunti dell'utente."
     embed_any_origin: "Consenti contenuti incorporabili indipendentemente dall'origine. Questa impostazione è richiesta dalle app mobili con HTML statico."
@@ -2354,7 +2353,7 @@ it:
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
     create_post_for_category_and_tag_changes: "Crea un sussurro quando la categoria o i tag di un argomento cambiano. Richiede che i sussurri siano abilitati."
     automatically_clean_unused_tags: "Elimina automaticamente quotidianamente le etichette che non vengono utilizzate su argomenti o messaggi personali."
-    company_name: "Nome della tua azienda o organizzazione. Se lasciato vuoto, non verranno forniti Termini di servizio o Informativa sulla privacy."
+    company_name: "Nome della tua azienda o organizzazione."
     governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
     city_for_disputes: "Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum."
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
@@ -4407,7 +4406,13 @@ it:
   design_wizard:
     palette_pairs:
       default: "Predefinito"
+      neutral: "Neutrale"
+      shades_of_blue: "Sfumature di blu"
+      summer: "Estate"
       dracula: "Dracula"
+      grey_amber: "Ambra grigia"
+      latte: "Color latte"
+      dark_rose: "Rosa scuro"
   wizard:
     title: "Configurazione Discourse"
     step:

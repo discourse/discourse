@@ -13,27 +13,39 @@ RSpec.describe Jobs::ReindexSearch do
   # This works since test db has a small record less than limit.
   # Didn't check `topic` because topic doesn't have posts in fabrication
   # thus no search data
-  %w[post category user].each do |m|
-    it "rebuilds `#{m}` when default_locale changes" do
+  shared_examples "rebuilding search data after a locale change" do |record_type:|
+    it "rebuilds `#{record_type}` when default_locale changes" do
       SiteSetting.default_locale = "en"
-      model = Fabricate(m.to_sym)
+      model = Fabricate(record_type.to_sym)
       SiteSetting.default_locale = locale
       job.execute({})
-      expect(model.public_send("#{m}_search_data").locale).to eq locale
+      expect(model.public_send("#{record_type}_search_data").locale).to eq locale
     end
 
-    it "rebuilds `#{m}` when INDEX_VERSION changes" do
-      model = Fabricate(m.to_sym)
+    it "rebuilds `#{record_type}` when INDEX_VERSION changes" do
+      model = Fabricate(record_type.to_sym)
       # so that search data can be reindexed
-      search_data = model.public_send("#{m}_search_data")
+      search_data = model.public_send("#{record_type}_search_data")
       search_data.update!(version: 0)
       model.reload
 
       job.execute({})
-      expect(model.public_send("#{m}_search_data").version).to eq(
-        "SearchIndexer::#{m.upcase}_INDEX_VERSION".constantize,
+      expect(model.public_send("#{record_type}_search_data").version).to eq(
+        "SearchIndexer::#{record_type.upcase}_INDEX_VERSION".constantize,
       )
     end
+  end
+
+  context "when reindexing posts" do
+    include_examples "rebuilding search data after a locale change", record_type: "post"
+  end
+
+  context "when reindexing categories" do
+    include_examples "rebuilding search data after a locale change", record_type: "category"
+  end
+
+  context "when reindexing users" do
+    include_examples "rebuilding search data after a locale change", record_type: "user"
   end
 
   describe "rebuild_posts" do

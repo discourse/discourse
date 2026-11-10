@@ -10,6 +10,14 @@ hr:
       choice_title: "Nezakonito je."
       title: "Prijavite ilegalni sadržaj"
       email: "E-mail adresa"
+    code_editor:
+      search:
+        replace: "Zamijeni"
+        next: "Sljedeći"
+        previous: "Prethodni"
+        close: "Zatvori"
+      fold:
+        to: "za"
     user_api_key:
       authorize: "Odobriti"
       deny: "Odustani"
@@ -482,19 +490,17 @@ hr:
       back: "Natrag"
       next: "Sljedeći"
       sections:
-        theme: "Tema"
         fonts: "Fontovi"
+        logo: "Logo"
         homepage: "Početna stranica"
-        welcome_banner: "Banner dobrodošlice"
-        search: "Pretraživanje"
       theme:
         selected: "Odabrano"
-      colors:
-        light: "Svjetlo"
-        dark: "Tamno"
       fonts:
-        base_font: "Osnovni font"
-        heading_font: "Font zaglavlja"
+        base_font: "Tijelo"
+        heading_font: "Naslovi"
+      logo:
+        description: "Pojavljuje se na gornjoj navigaciji web stranice, kao i na vrhu obavijesti putem e-pošte web stranice."
+        help_text: "Preporučena veličina je 600 x 80 piksela."
       homepage:
         topics: "Tema"
         categories: "Kategorije"
@@ -751,7 +757,6 @@ hr:
         placeholder: "ovdje upišite naslov poruke, URL ili id"
     dsa_statements:
       category: "Kategorija"
-      saving: "Spremanje…"
     review:
       show_more: "Prikaži više"
       show_less: "Prikaži manje"
@@ -2886,6 +2891,7 @@ hr:
       default: Prilagođeni emojiji
     filter_controls:
       reset: "Resetirati"
+      sort_label: "Sortiraj po"
     shared_drafts:
       title: "Dijeljene skice"
       notice: "Ova je tema vidljiva samo onima koji mogu objaviti zajedničke skice."
@@ -5448,13 +5454,12 @@ hr:
           title: "Napredno"
       upcoming_changes:
         name: "Ime"
-        enabled: "Omogućeno"
+        enabled: "Omogućeno?"
+        feedback: "Povratne informacije"
         select_groups: "Odaberite grupe"
+        settings: "Postavke"
         permanent_notice: "Ova promjena je sada trajna i uskoro će biti uklonjena. Više ne možete odustati."
-        permanent_soon_notice: "Ova će promjena uskoro postati trajna. Više nećete moći odustati."
         preview: "Pregled"
-        enabled_for_options:
-          everyone: "Svi"
         statuses:
           experimental: "Eksperimentalno"
         impact_roles:
@@ -5472,6 +5477,9 @@ hr:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Osoblje"
+        sort:
+          status: "Statust"
+          name: "Ime"
       config:
         about:
           title: "O vašoj web stranici"
@@ -6308,10 +6316,7 @@ hr:
             Korisničko ime osoblja za slanje svih automatiziranih poruka. Ako je ostavljeno prazno, koristit će se zadani račun sustava.
           site_contact_group_help: |
             Grupa koja je pozvana na sve automatski poslane osobne poruke.
-          your_organization_description: "Ove podatke ćemo koristiti u Uvjetima pružanja usluge i Obavijesti o privatnosti kako bismo pokazali tko upravlja stranicom i pod kojom jurisdikcijom."
           company_name: "Ime"
-          company_name_warning: |
-            Ako se ostavi prazno, neće se pružiti standardni Uvjeti pružanja usluge ili Obavijest o privatnosti.
           company_url: "Web stranica"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Mjerodavno pravo i nadležnost"
@@ -6463,7 +6468,6 @@ hr:
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
           uploading: "Prijenos…"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "%{operation} neuspješna. Molimo provjerite zapise."

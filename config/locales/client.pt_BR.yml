@@ -12,6 +12,15 @@ pt_BR:
       title: "Denunciar conteúdo ilegal"
       email: "Endereço de e-mail"
       resend_email_code: "Reenviar código"
+    code_editor:
+      search:
+        replace: "Substituir"
+        next: "Próximo"
+        previous: "Anterior"
+        close: "Fechar"
+        go: "Ir"
+      fold:
+        to: "para"
     user_api_key:
       title: 'Autorizar "%{application_name}"'
       authorize: "Autorizar"
@@ -509,7 +518,6 @@ pt_BR:
         action: "Ver ideias"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
-        predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."
         predefined_topics_description: "Escolha dentre uma seleção de temas para iniciar conversas e dar início a um diálogo."
         use_predefined: "Navegar pelos modelos"
         back: "Voltar"
@@ -520,20 +528,21 @@ pt_BR:
     design_wizard:
       back: "Voltar"
       next: "Próximo"
+      steps:
+        theme:
+          title: "Escolha um tema"
       sections:
-        theme: "Tema"
         fonts: "Fontes"
+        logo: "Logotipo"
         homepage: "Página Inicial"
-        welcome_banner: "Banner de boas-vindas"
-        search: "Pesquisar"
       theme:
         selected: "Selecionado(a)"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
       fonts:
-        base_font: "Fonte de base"
-        heading_font: "Fonte do cabeçalho"
+        base_font: "Corpo"
+        heading_font: "Cabeçalhos"
+      logo:
+        description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
+        help_text: "O tamanho recomendado é 600 x 80 pixels."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"
@@ -785,7 +794,6 @@ pt_BR:
     dsa_statements:
       category: "Categoria"
       category_prompt: "Escolha uma categoria"
-      saving: "Salvando…"
     review:
       show_more: "Exibir mais"
       show_less: "Exibir menos"
@@ -2620,7 +2628,6 @@ pt_BR:
         }.
     learn_more: "Saiba mais…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Saiba mais…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
     mute: Silenciar
     unmute: Remover silêncio
     last_post: Postado
@@ -2992,6 +2999,7 @@ pt_BR:
     filter_controls:
       reset: "Redefinir"
       toggle: "Alternar filtros suspensos"
+      sort_label: "Ordenar por"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
       search_label: "Buscar ícones"
@@ -5665,29 +5673,26 @@ pt_BR:
         name: "Nome"
         plugin: "Plugin"
         metadata: "Metadados"
-        enabled: "Ativado"
-        enabled_for: "Ativado para..."
+        enabled: "Ativado(a)?"
         show_image: "Mostrar imagem"
-        edit_groups: "Editar grupos de adesão"
+        feedback: "Comentário"
         groups_updated: "Grupos atualizados!"
         save_groups: "Salvar grupos"
         add_groups_to_enable: "Adicione grupos para ativar este recurso."
         no_changes_to_save: "Nenhuma alteração para salvar"
         select_groups: "Selecionar grupos…"
         opt_in_groups: "Grupos de adesão voluntária"
-        show_related_settings: "Mostrar configurações relacionadas..."
+        settings: "Definições"
         opt_in_groups_instructions: "Os grupos de adesão voluntária podem ser usados para permitir que um determinado grupo de usuários teste uma alteração antes que ela seja liberada para todos. Observe que esses grupos se tornarão irrelevantes assim que a alteração atingir o status Estável."
         enabled_for_throttle: "Você alterou a pessoa para quem essa alteração está ativada muito rapidamente. Aguarde alguns segundos antes de tentar novamente."
         change_enabled_for_success: "Você ativou essa alteração para %{enabledFor}"
         change_disabled: "Você optou por não participar desta alteração."
         permanent_notice: "Essa alteração agora é permanente e será removida em breve. Você não poderá mais optar por não participar."
-        permanent_soon_notice: "Esta mudança se tornará permanente em breve. Você não poderá mais optar por não participar."
         permanent_no_group_selection: "Não aplicável, alterações permanentes se aplicam a todos os grupos."
         no_changes: "Não há alterações previstas neste momento."
         preview: "Pré-visualizar"
         enabled_for_options:
           no_one: "Ninguém"
-          everyone: "Todos(as)"
           staff: "Apenas %{staffGroupName}"
           specific_groups: "Grupo(s) específico(s)"
           specific_groups_with_group_names:
@@ -5733,6 +5738,9 @@ pt_BR:
           impact_role_staff: "Equipe"
           impact_role_all_members: "Todos os membros"
           impact_role_developers: "Desenvolvedores"
+        sort:
+          status: "Status"
+          name: "Nome"
       config:
         about:
           title: "Sobre seu site"
@@ -6854,10 +6862,7 @@ pt_BR:
           site_contact_group_help: |
             O grupo convidado para todas as mensagens pessoais enviadas automaticamente.
           your_organization: "Sua organização"
-          your_organization_description: "Essas informações serão usadas nos Termos de Serviço e Contrato de Privacidade para mostrar que administra o site e a jurisdição em que isso acontece."
           company_name: "Nome"
-          company_name_warning: |
-            Se deixado em branco, os Termos de Serviço ou Aviso de Privacidade padrão não serão fornecidos.
           company_url: "Site"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Lei aplicável"
@@ -7074,7 +7079,6 @@ pt_BR:
           uploading: "Enviando…"
           uploading_progress: "Enviando… %{progress}%"
           success: "'%{filename} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Houve um erro ao carregar \"%{filename}\": %{message}"
         settings: "Configurações"
         operations:
           is_running: "Uma operação está sendo executada…"

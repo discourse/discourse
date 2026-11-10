@@ -358,6 +358,11 @@ class UserStat < ActiveRecord::Base
   protected
 
   def trigger_badges
+    # the user row can already be gone when a save happens mid-deletion
+    # (e.g. a stale user_stat created or touched while rendering review
+    # queues), and queueing a grant for a missing user raises through
+    # after_save and takes the request down
+    return if user.nil?
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: user)
   end
 end

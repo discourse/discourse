@@ -174,4 +174,61 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
       expect(queued_reviewable.reload.status).to eq("approved")
     end
   end
+
+  context "with a queued AI tool action" do
+    fab!(:ai_agent)
+    fab!(:target_user, :user)
+    fab!(:tool_action_reviewable) do
+      tool_action =
+        AiToolAction.create!(
+          tool_name: "suspend_user",
+          tool_parameters: {
+            username: target_user.username,
+            duration_days: 30,
+            reason: "spam",
+          },
+          ai_agent: ai_agent,
+          bot_user_id: bot_user.id,
+        )
+
+      ReviewableAiToolAction.needs_review!(
+        target: tool_action,
+        created_by: bot_user,
+        reviewable_by_moderator: true,
+        payload: {
+          agent_name: ai_agent.name,
+          reason: "spam",
+        },
+      )
+    end
+
+    it "does not approve an AI tool action on behalf of the staff invoker" do
+      result =
+        tool(
+          reviewable_id: tool_action_reviewable.id,
+          action_id: "approve",
+          reason: "confirmed",
+        ).invoke
+
+      expect(result[:status]).to eq("error")
+      expect(result[:error]).to include("not found")
+      expect(tool_action_reviewable.reload.status).to eq("pending")
+      expect(tool_action_reviewable.reviewable_notes).to be_empty
+      expect(target_user.reload.suspended_till).to be_nil
+    end
+
+    it "does not reject an AI tool action on behalf of the staff invoker" do
+      result =
+        tool(
+          reviewable_id: tool_action_reviewable.id,
+          action_id: "reject",
+          reason: "not needed",
+        ).invoke
+
+      expect(result[:status]).to eq("error")
+      expect(result[:error]).to include("not found")
+      expect(tool_action_reviewable.reload.status).to eq("pending")
+      expect(tool_action_reviewable.reviewable_notes).to be_empty
+    end
+  end
 end

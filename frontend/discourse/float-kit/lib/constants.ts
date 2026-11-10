@@ -183,6 +183,9 @@ export interface TooltipOptions {
   /** The preferred placement of the float relative to its trigger. */
   placement: FloatUiPlacement;
 
+  /** Keep the initially resolved placement until the float closes. Defaults to false. */
+  preservePlacement?: boolean;
+
   /** Whether to shift the float into view before running the visibility optimizer, rather than after. */
   shiftBeforeVisibilityOptimizer: boolean;
 
@@ -427,6 +430,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     triggers: { mobile: ["click"], desktop: ["hover", "click"] },
     untriggers: { mobile: ["click"], desktop: ["hover", "click"] },
     placement: "top",
+    preservePlacement: false,
     shiftBeforeVisibilityOptimizer: false,
     visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
@@ -465,6 +469,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     triggers: ["click"],
     untriggers: ["click"],
     placement: "bottom-start",
+    preservePlacement: false,
     shiftBeforeVisibilityOptimizer: false,
     visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,

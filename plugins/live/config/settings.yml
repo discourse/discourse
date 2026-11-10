@@ -6,8 +6,7 @@ plugins:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      allow_enabled_for:
-        - "everyone"
+      group_setting: live_allowed_groups
       learn_more_url: "https://meta.discourse.org/t/-/411337"
       requires_plugin_enabled: false
       permanent_warning: false

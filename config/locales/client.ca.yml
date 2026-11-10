@@ -6,6 +6,14 @@
 
 ca:
   js:
+    code_editor:
+      search:
+        replace: "Reemplaça"
+        next: "Següent"
+        previous: "Previ"
+        close: "Tanca"
+      fold:
+        to: "a"
     user_api_key:
       authorize: "Autoritza"
       deny: "Cancel·la"
@@ -325,12 +333,9 @@ ca:
       back: "Enrere"
       next: "Següent"
       sections:
-        theme: "Aparença"
         homepage: "Pàgina principal"
-        search: "Cerca"
-      colors:
-        light: "Clar"
-        dark: "Fosc"
+      fonts:
+        base_font: "Cos"
       homepage:
         topics: "Temes"
         categories: "Categories"
@@ -1742,6 +1747,7 @@ ca:
       default: Emojis personalitzats
     filter_controls:
       reset: "Restableix"
+      sort_label: "Ordena per"
     shared_drafts:
       title: "Esborranys compartits"
       destination_category: "Categoria de destinació"
@@ -3159,10 +3165,9 @@ ca:
           title: "Connectors"
       upcoming_changes:
         name: "Nom"
-        enabled: "Activat"
+        enabled: "Activat?"
+        settings: "Configuració"
         preview: "Previsualitza"
-        enabled_for_options:
-          everyone: "Tothom"
         impact_roles:
           admins: "Administradors"
           moderators: "Moderadors"
@@ -3177,6 +3182,9 @@ ca:
           impact_role_admins: "Administradors"
           impact_role_moderators: "Moderadors"
           impact_role_staff: "Equip responsable"
+        sort:
+          status: "Estat"
+          name: "Nom"
       config:
         developer:
           title: "Desenvolupador"
@@ -3752,7 +3760,6 @@ ca:
           label: "Carrega"
           title: "Carrega una còpia de seguretat a aquesta instància"
           success: "%{filename} s'ha carregat amb èxit. El fitxer ara és processat i trigarà fins a un minut a aparèixer en la llista."
-          error: "S'ha produït un error en carregar '%{filename}': %{message}"
         settings: "Configuració"
         operations:
           failed: "Ha fallat %{operation}. Consulteu els registres (logs)."

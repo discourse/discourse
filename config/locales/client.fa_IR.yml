@@ -10,6 +10,14 @@ fa_IR:
       choice_title: "غیرقانونی است"
       title: "گزارش محتوای ناقض قانون"
       email: "آدرس ایمیل"
+    code_editor:
+      search:
+        replace: "جایگزینی"
+        next: "بعدی"
+        previous: "پیشین"
+        close: "بستن"
+      fold:
+        to: "به"
     user_api_key:
       authorize: "اجازه دادن"
       deny: "لغو"
@@ -381,14 +389,11 @@ fa_IR:
       back: "بازگشت"
       next: "بعدی"
       sections:
-        theme: "قالب"
         homepage: "صفحه اصلی"
-        search: "جستجو"
       theme:
         selected: "انتخاب شده"
-      colors:
-        light: "روشن"
-        dark: "تیره"
+      fonts:
+        base_font: "Body"
       homepage:
         topics: "موضوعات"
         categories: "دسته‌بندی‌ها"
@@ -613,7 +618,6 @@ fa_IR:
         placeholder: "عنوان پیام، لینک و یا آیدی آن را اینجا وارد کنید"
     dsa_statements:
       category: "دسته‌بندی"
-      saving: "در‌حال ذخیره‌سازی..."
     review:
       show_more: "نمایش بیشتر"
       show_less: "نمایش کمتر"
@@ -2584,6 +2588,7 @@ fa_IR:
       clear: "حذف کردن فیلتر"
     filter_controls:
       reset: "بازنشانی"
+      sort_label: "مرتب‌سازی بر اساس"
     shared_drafts:
       title: "پیش‌نویس‌های اشتراک‌گذاشته شده"
       notice: "این موضوع تنها برای کسانی قابل مشاهده است، که می‌توانند پیش‌نویس‌های اشتراک‌گذاشته شده را منتشر کنند."
@@ -4861,11 +4866,11 @@ fa_IR:
           title: "پیشرفته"
       upcoming_changes:
         name: "نام"
-        enabled: "فعال شده"
+        enabled: "فعال شده؟"
+        feedback: "بازخورد"
         select_groups: "انتخاب گروه‌ها"
+        settings: "تنظیم"
         preview: "پیش‌نمایش"
-        enabled_for_options:
-          everyone: "همه"
         statuses:
           experimental: "آزمایشی"
         impact_roles:
@@ -4883,6 +4888,9 @@ fa_IR:
           impact_role_admins: "مدیران ارشد"
           impact_role_moderators: "ناظران"
           impact_role_staff: "همکاران"
+        sort:
+          status: "وضعیت"
+          name: "نام"
       config:
         about:
           title: "درباره سایت شما"
@@ -5732,10 +5740,7 @@ fa_IR:
             در صورت وجود، آدرس ایمیل تماس را در / about جایگزین می کند و برای کاربران ناشناس در سایت های عمومی قابل مشاهده است.
           site_contact_name_help: "یک نام کاربری مدیر برای ارسال خودکار پیام‌ها. اگر خالی گذاشته شود، از حساب‌کاربری پیش‌فرض سیستم استفاده می‌شود. \n"
           your_organization: "سازمان شما"
-          your_organization_description: "ما از این اطلاعات در شرایط خدمات و اعلامیه حفظ حریم خصوصی استفاده خواهیم کرد تا نشان دهیم چه کسی سایت را اداره می‌کند و تحت چه حوزه قضایی قرار دارد."
           company_name: "نام"
-          company_name_warning: |
-            اگر خالی باقی بماند، هیچ ضوابط خدمات یا اعلامیه حریم خصوصی ارائه نخواهد شد.
           company_url: "وب‌سایت"
           company_url_placeholder: "https://example-co.com"
           governing_law: "قانون حاکم"
@@ -5901,7 +5906,6 @@ fa_IR:
           uploading: "در حال بارگذاری…"
           uploading_progress: "در حال بارگذاری… %{progress}%"
           success: "'%{filename}' با موفقیت آپلود شد. فایل اکنون در حال پردازش است و تا یک دقیقه طول می کشد تا در لیست نمایش داده شود."
-          error: "هنگام آپلود خطایی رخ می دهد '%{filename}': %{message}"
         settings: "تنظیمات"
         operations:
           is_running: "عملیاتی در جریان است..."

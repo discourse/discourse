@@ -8,6 +8,8 @@ RSpec.describe SystemThemesManager do
 
   it "is idempotent" do
     Theme.delete_all
+    # seeding makes palettes selectable; syncing must leave that to the site
+    ColorScheme.update_all(user_selectable: false)
     expect { SystemThemesManager.sync! }.to change { Theme.system.count }.by(2)
     expect { SystemThemesManager.sync! }.not_to change { Theme.count }
     expect(Theme.horizon_theme.color_scheme.user_selectable).to be false

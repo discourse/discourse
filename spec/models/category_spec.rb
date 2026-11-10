@@ -287,9 +287,10 @@ RSpec.describe Category do
   end
 
   describe "resolve_permissions" do
-    [false, true].each do |enabled|
-      it "keeps logged-in-only access restricted with granular permissions #{enabled}" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+    shared_examples "resolving logged in category restrictions" do |granular_permissions_enabled:|
+      it "keeps logged in access restricted and resolves its grant" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
 
         read_restricted, resolved = Category.resolve_permissions(logged_in_users: :full)
 
@@ -298,6 +299,16 @@ RSpec.describe Category do
           [[Group::AUTO_GROUPS[:logged_in_users], CategoryGroup.permission_types[:full]]],
         )
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: true
     end
 
     it "can determine read_restricted" do
@@ -311,7 +322,7 @@ RSpec.describe Category do
   describe "pseudogroup permission validation" do
     fab!(:category)
 
-    [false, true].each do |enabled|
+    shared_examples "rejecting anonymous category grants" do |enabled:|
       it "rejects anonymous grants on creation and updates with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
         permissions = { anonymous_users: :readonly, logged_in_users: :full }
@@ -327,6 +338,14 @@ RSpec.describe Category do
         )
         expect(category.reload.category_groups).to be_empty
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "rejecting anonymous category grants", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "rejecting anonymous category grants", enabled: true
     end
   end
 
@@ -362,7 +381,7 @@ RSpec.describe Category do
     fab!(:user)
     fab!(:category)
 
-    [false, true].each do |enabled|
+    shared_examples "enforcing logged in posting permissions" do |enabled:|
       it "honors permission levels with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -378,6 +397,14 @@ RSpec.describe Category do
           expect(Category.post_create_allowed(Guardian.new).exists?(id: category.id)).to eq(false)
         end
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "enforcing logged in posting permissions", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "enforcing logged in posting permissions", enabled: true
     end
   end
 

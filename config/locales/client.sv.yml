@@ -9,6 +9,14 @@ sv:
     dsa_notice:
       choice_title: "Det är olagligt"
       go_back: "Gå tillbaka"
+    code_editor:
+      search:
+        replace: "Ersätt"
+        next: "Nästa"
+        previous: "Föregående"
+        close: "Stäng"
+      fold:
+        to: "till"
     user_api_key:
       authorize: "Godkänn"
       deny: "Avbryt"
@@ -372,17 +380,12 @@ sv:
       back: "Tillbaka"
       next: "Nästa"
       sections:
-        theme: "Tema"
         fonts: "Typsnitt"
         homepage: "Hemsida"
-        search: "Sök"
       theme:
         selected: "Markerat"
-      colors:
-        light: "Ljust"
-        dark: "Mörkt"
       fonts:
-        heading_font: "Typsnitt för rubrik"
+        base_font: "Huvuddel"
       homepage:
         topics: "Ämnen"
         categories: "Kategorier"
@@ -559,7 +562,6 @@ sv:
         placeholder: "skriv meddelandets titel, url eller id här"
     dsa_statements:
       category: "Kategori"
-      saving: "Sparar…"
     review:
       show_more: "Visa mer"
       show_less: "Visa mindre"
@@ -2321,6 +2323,7 @@ sv:
       default: Anpassa emojis
     filter_controls:
       reset: "Återställ"
+      sort_label: "Sortera efter"
     shared_drafts:
       title: "Delade utkast"
       notice: "Detta ämne är endast synligt för de som kan publicera delade utkast."
@@ -4447,11 +4450,11 @@ sv:
           title: "Avancerat"
       upcoming_changes:
         name: "Namn"
-        enabled: "Aktiverad"
+        enabled: "Aktiverad?"
+        feedback: "Feedback"
         select_groups: "Välj grupper…"
+        settings: "Inställningar"
         preview: "Förhandsgranska"
-        enabled_for_options:
-          everyone: "Alla"
         impact_roles:
           admins: "Administratörer"
           moderators: "Moderatorer"
@@ -4466,6 +4469,9 @@ sv:
           impact_role_admins: "Administratörer"
           impact_role_moderators: "Moderatorer"
           impact_role_staff: "Personal"
+        sort:
+          status: "Status"
+          name: "Namn"
       config:
         about:
           title: "Om din webbplats"
@@ -5260,7 +5266,6 @@ sv:
           uploading: "Laddar upp…"
           uploading_progress: "Laddar upp… %{progress}%"
           success: "'%{filename}' har laddats upp. Filen bearbetas nu och det kan dröja upp till en minut innan den syns i listan."
-          error: "Ett fel har uppstått vid uppladdning av '%{filename}': %{message}"
         settings: "Inställningar"
         operations:
           is_running: "En åtgärd är just nu igång…"

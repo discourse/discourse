@@ -554,9 +554,10 @@ RSpec.describe CategoriesController do
     context "when a moderator evaluates public permissions" do
       fab!(:moderator)
 
-      [false, true].each do |granular_permissions|
-        it "retains access with granular pseudogroup behavior #{granular_permissions}" do
-          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
+      shared_examples "evaluating moderator access to category grants" do |granular_permissions_enabled:|
+        it "retains moderator access when evaluating an everyone grant" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+            granular_permissions_enabled
           sign_in(moderator)
           category.set_permissions(everyone: :readonly)
           category.save!
@@ -575,6 +576,16 @@ RSpec.describe CategoriesController do
             "current_user_will_lose_access" => false,
           )
         end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: true
       end
     end
 
@@ -991,6 +1002,47 @@ RSpec.describe CategoriesController do
       sign_in(admin)
       post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#set_notifications" do
+    subject(:set_notifications) do
+      post "/category/#{category_id}/notifications.json", params: { notification_level: }
+    end
+
+    let(:category_id) { category.id }
+    let(:notification_level) { CategoryUser.notification_levels[:tracking] }
+
+    before { sign_in(user) }
+
+    context "when the user can see the category" do
+      it "sets the notification level" do
+        expect { set_notifications }.to change {
+          CategoryUser.find_by(user:, category:)&.notification_level
+        }.to(notification_level)
+      end
+    end
+
+    context "when the user cannot see the category" do
+      let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      it "refuses the request" do
+        set_notifications
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "stores no notification level" do
+        expect { set_notifications }.not_to change(CategoryUser, :count)
+      end
+    end
+
+    context "when the category does not exist" do
+      let(:category_id) { -1 }
+
+      it "returns not found" do
+        set_notifications
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 

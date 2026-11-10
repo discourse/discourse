@@ -26,8 +26,6 @@ nb_NO:
         title: "Fastsatt"
       pinned: "Fastsatt"
       channel_settings:
-        edit: "Endre"
-        add: "Legg til"
         notification_settings_context: "Varsler"
         join: "Bli medlem"
         leave: "Forlat"
@@ -69,16 +67,17 @@ nb_NO:
       search_view:
         filter_placeholder: Søk i meldinger
       about_view:
-        title: Tittel
         name: Navn
         description: Beskrivelse
       channel_info:
         back_to_channel: "Forrige"
         tabs:
           members: Medlemmer
+          preferences: Innstillinger
           settings: Instillinger
           search: Søk
         remove_member: "Fjern"
+        members_title: "%{channel} medlemmer"
       new_message_modal:
         filter: "Filtrer"
       direct_message_creator:
@@ -106,7 +105,6 @@ nb_NO:
         never: "Aldri"
       settings:
         channel_wide_mentions_label: "Tillat @alle og @her omtaler"
-        channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
         follow: "Bli medlem"
         followed: "Medlem fra"
         threading_enabled: "Aktivert"
@@ -116,8 +114,6 @@ nb_NO:
         save: "Lagre"
         saved: "Lagret"
         unfollow: "Forlat"
-        admin_title: "Admin"
-        settings_title: "Instillinger"
         category_label: "Kategori"
         history_label: "Historie"
         members_label: "Medlemmer"

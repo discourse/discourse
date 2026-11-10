@@ -12,6 +12,15 @@ fr:
       title: "Signaler un contenu illégal"
       email: "Adresse e-mail"
       resend_email_code: "Renvoyer le code"
+    code_editor:
+      search:
+        replace: "Remplacer"
+        next: "Suivant"
+        previous: "Précédent"
+        close: "Fermer"
+        go: "Valider"
+      fold:
+        to: "pour"
     user_api_key:
       title: 'Autoriser « %{application_name} »'
       authorize: "Autoriser"
@@ -541,7 +550,6 @@ fr:
         action: "Découvrir des idées"
         choose_option: "Comment souhaitez-vous commencer ?"
         predefined_topics: "Modèles d'activités pour briser la glace"
-        predefined_topics_subtitle: "Donnez aux nouveaux membres un sujet de conversation, choisissez un modèle à modifier et créez le vôtre."
         predefined_topics_description: "Choisissez parmi une sélection de sujets de conversation pour lancer les discussions."
         use_predefined: "Parcourir les modèles"
         back: "Retour"
@@ -553,20 +561,21 @@ fr:
       title: "Personnalisez votre site"
       back: "Retour"
       next: "Suivant"
+      steps:
+        theme:
+          title: "Choisissez un thème"
       sections:
-        theme: "Thème"
         fonts: "Polices"
+        logo: "Logo"
         homepage: "Page d'accueil"
-        welcome_banner: "Bannière de bienvenue"
-        search: "Recherche"
       theme:
         selected: "Sélectionné"
-      colors:
-        light: "Clair"
-        dark: "Sombre"
       fonts:
-        base_font: "Police de base"
-        heading_font: "Police de titre"
+        base_font: "Corps"
+        heading_font: "Titres"
+      logo:
+        description: "Apparaît dans la barre de navigation supérieure du site, ainsi qu'en haut des notifications par e-mail du site."
+        help_text: "La taille recommandée est de 600 x 80 pixels."
       homepage:
         topics: "Sujets"
         categories: "Catégories"
@@ -830,7 +839,6 @@ fr:
     dsa_statements:
       category: "Catégorie"
       category_prompt: "Choisir une catégorie"
-      saving: "Enregistrement…"
     review:
       show_more: "Afficher plus"
       show_less: "Afficher moins"
@@ -2697,7 +2705,6 @@ fr:
         }.
     learn_more: "En savoir plus…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>En savoir plus…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Commentaires…</a>"
     mute: Mettre en sourdine
     unmute: Rétablir
     last_post: Dernier message
@@ -3080,6 +3087,7 @@ fr:
     filter_controls:
       reset: "Réinitialiser"
       toggle: "Afficher/masquer les filtres déroulants"
+      sort_label: "Trier par"
     d_icon_grid_picker:
       select_icon: "Sélectionner l'icône"
       search_label: "Rechercher des icônes"
@@ -6172,24 +6180,23 @@ fr:
         name: "Nom"
         plugin: "Extension"
         metadata: "Métadonnées"
-        enabled: "Activé"
-        enabled_for: "Activé pour..."
+        enabled: "Activé ?"
         show_image: "Afficher l'image"
-        edit_groups: "Modifier les groupes participants"
+        feedback: "Commentaires"
+        toggle: "Activer %{name}"
         groups_updated: "Groupes mis à jour !"
         save_groups: "Enregistrer les groupes"
         add_groups_to_enable: "Ajouter des groupes pour activer cette fonctionnalité"
         no_changes_to_save: "Aucune modification à enregistrer"
         select_groups: "Sélectionnez des groupes…"
         opt_in_groups: "Groupes participants"
-        show_related_settings: "Afficher les paramètres associés..."
+        settings: "Paramètres"
         opt_in_groups_instructions: "Les groupes participants permettent à un ensemble d'utilisateurs de tester un changement avant son déploiement général. Notez que ces groupes ne seront plus pris en compte une fois que le changement aura atteint le statut « Stable »."
         enabled_for_throttle: "Vous avez modifié trop rapidement les personnes autorisées à bénéficier de cette modification. Veuillez patienter quelques secondes avant de réessayer."
         change_enabled_for_success: "Vous avez activé cette modification pour %{enabledFor}"
         change_disabled: "Vous ne participez plus à cette modification"
         depends_on_notice: "Cette modification nécessite l'activation de %{dependencyLinks}."
         permanent_notice: "Cette modification est désormais permanente et disparaîtra bientôt de cette liste. Vous ne pouvez plus vous en retirer."
-        permanent_soon_notice: "Cette modification deviendra bientôt permanente. Vous ne pourrez plus vous en retirer."
         permanent_no_group_selection: "Sans objet. Des modifications permanentes s'appliquent à tous les groupes."
         no_changes: "Aucun changement n'est prévu pour le moment."
         preview: "Aperçu"
@@ -6197,7 +6204,6 @@ fr:
         default_warning_short: "La valeur par défaut de ce paramètre a changé, lisez plus d'informations à ce sujet dans la page des <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>modifications à venir</a>."
         enabled_for_options:
           no_one: "Personne"
-          everyone: "Tout le monde"
           staff: "%{staffGroupName} uniquement"
           specific_groups: "Groupe(s) spécifique(s)"
           specific_groups_with_group_names:
@@ -6250,6 +6256,9 @@ fr:
           impact_role_staff: "Responsables"
           impact_role_all_members: "Tous les membres"
           impact_role_developers: "Développeurs"
+        sort:
+          status: "Statut"
+          name: "Nom"
       config:
         about:
           title: "À propos de votre site"
@@ -7589,11 +7598,8 @@ fr:
           site_contact_group_help: |
             Le groupe qui est invité reçoit automatiquement des messages directs.
           your_organization: "Votre organisation"
-          your_organization_description: "Nous utiliserons ces informations dans les Conditions d'utilisation et l'Avis de confidentialité pour indiquer qui exploite le site et sous quelle juridiction."
           company_name: "Nom"
           company_name_placeholder: "ExempleCo"
-          company_name_warning: |
-            Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
           company_url: "Site Web"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Droit applicable"
@@ -7815,7 +7821,6 @@ fr:
           uploading: "Téléversement…"
           uploading_progress: "Téléversement : %{progress} %"
           success: "Le fichier « %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
-          error: "Une erreur est survenue lors de l'envoi du fichier « %{filename} » : %{message}"
         settings: "Paramètres"
         operations:
           is_running: "Une opération est en cours d'exécution…"

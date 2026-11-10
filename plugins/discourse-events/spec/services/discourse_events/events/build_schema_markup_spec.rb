@@ -17,10 +17,7 @@ RSpec.describe DiscourseEvents::Events::BuildSchemaMarkup do
     let(:topic_id) { topic.id }
     let(:guardian) { user.guardian }
 
-    before do
-      SiteSetting.enable_event_schema_for_topics = true
-      SiteSetting.discourse_post_event_enabled = true
-    end
+    before { SiteSetting.discourse_post_event_enabled = true }
 
     context "without a topic ID" do
       let(:topic_id) { nil }
@@ -28,16 +25,10 @@ RSpec.describe DiscourseEvents::Events::BuildSchemaMarkup do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when event schema markup is disabled" do
-      before { SiteSetting.enable_event_schema_for_topics = false }
-
-      it { is_expected.to fail_a_policy(:schema_markup_enabled) }
-    end
-
     context "when post events are disabled" do
       before { SiteSetting.discourse_post_event_enabled = false }
 
-      it { is_expected.to fail_a_policy(:schema_markup_enabled) }
+      it { is_expected.to fail_a_policy(:post_events_enabled) }
     end
 
     context "when the topic does not exist" do

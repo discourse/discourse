@@ -370,7 +370,13 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def previous_side_hidden?
-    !!(previous["hidden"] || (adjacent_previous && adjacent_previous["hidden"]))
+    return @previous_side_hidden if defined?(@previous_side_hidden)
+
+    @previous_side_hidden =
+      !!(
+        previous["hidden"] || (adjacent_previous && adjacent_previous["hidden"]) ||
+          !scope.can_view_post_version?(post, current_revision)
+      )
   end
 
   def suppress_hidden_diffs?

@@ -26,8 +26,6 @@ hy:
         title: "Ամրակցված"
       pinned: "Ամրակցված"
       channel_settings:
-        edit: "Խմբագրել"
-        add: "Ավելացնել"
         notification_settings_context: "Ծանուցումներ"
         join: "Միանալ"
         leave: "Լքել"
@@ -68,16 +66,17 @@ hy:
       search_view:
         filter_placeholder: Որոնել հաղորդագրություններում
       about_view:
-        title: Վերնագիր
         name: Անուն
         description: Նկարագրությունը
       channel_info:
         back_to_channel: "Ետ"
         tabs:
           members: Անդամներ
+          preferences: Նախընտրություններ
           settings: Կարգավորումներ
           search: Որոնում
         remove_member: "Հեռացնել"
+        members_title: "%{channel} անդամներ"
       new_message_modal:
         no_items: "Տարրեր չկան"
         filter: "Ֆիլտր"
@@ -111,8 +110,6 @@ hy:
         save: "Պահպանել"
         saved: "Պահված է"
         unfollow: "Լքել"
-        admin_title: "Ադմին"
-        settings_title: "Կարգավորումներ"
         category_label: "Կատեգորիա"
         history_label: "Պատմություն"
         members_label: "Անդամներ"

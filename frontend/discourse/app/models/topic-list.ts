@@ -6,8 +6,6 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
-import deprecated from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import type {
@@ -246,26 +244,6 @@ export default class TopicList extends RestModel {
     }
 
     return json;
-  }
-
-  static find(
-    filter: string,
-    params: TopicListParams
-  ): globalThis.Promise<TopicList> {
-    deprecated(
-      `TopicList.find is deprecated. Use \`findFiltered("topicList")\` on the \`store\` service instead.`,
-      {
-        id: "discourse.topic-list-find",
-        since: "3.1.0.beta5",
-      }
-    );
-
-    // TODO(typescript-pending): remove this lookup assertion when getOwnerWithFallback publishes typed service lookups.
-    const store = getOwnerWithFallback(this).lookup("service:store");
-    return (store as StoreService).findFiltered("topicList", {
-      filter,
-      params,
-    });
   }
 
   /** Hide the category when it has no children. */

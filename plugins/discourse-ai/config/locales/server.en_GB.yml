@@ -16,3 +16,7 @@ en_GB:
         category_fields:
           description: "description"
           color: "colour"
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Header"

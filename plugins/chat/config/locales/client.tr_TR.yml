@@ -96,8 +96,6 @@ tr_TR:
           other: "Bu %{count} mesajı silmek istediğinizden emin misiniz?"
       channel_settings:
         title: "Kanal ayarları"
-        edit: "Düzenle"
-        add: "Ekle"
         star_channel: "Kanalı yıldızla"
         unstar_channel: "Kanal yıldızını kaldır"
         close_channel: "Kanalı kapat"
@@ -109,7 +107,6 @@ tr_TR:
         join_channel: "Kanala katıl"
         leave_channel: "Kanaldan ayrıl"
         leave_groupchat_info: "Bu grup sohbetinden ayrıldığınızda, artık bu sohbete erişiminiz olmayacak ve bununla ilgili bildirimler almayacaksınız. Yeniden katılmak için grup sohbetinin bir üyesi tarafından yeniden davet edilmeniz gerekecek."
-        notification_settings: "Bildirim ayarları"
         notification_settings_context: "Bildirimler"
         join: "Katıl"
         leave: "Ayrıl"
@@ -360,21 +357,22 @@ tr_TR:
       members_view:
         filter_placeholder: Üye bul
         add_member: Üye Ekle
-        back_to_settings: "Ayarlara geri dön"
       about_view:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori
-        title: Başlık
         name: Ad
         description: Açıklama
       channel_info:
         back_to_all_channels: "Tüm kanallar"
         back_to_channel: "Geri"
+        nav_label: "Kanal bilgisi"
         tabs:
           members: Üyeler
+          preferences: Tercihler
           settings: Ayarlar
           search: Ara
         remove_member: "Kaldır"
+        members_title: "%{channel} üye"
       new_message_modal:
         title: Mesaj gönder
         add_user_long: <kbd>shift + tıklama</kbd> veya <kbd>shift + enter</kbd><span>@%{username} ekleyin</span>
@@ -394,15 +392,12 @@ tr_TR:
         create_new_group_chat: "Grup sohbeti oluştur"
         group_with_too_many_members: "çok fazla üyesi var (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Kanalı düzenleyin
         input_placeholder: Ad ekleyin
         slug_description: URL'de kanal adı yerine kanal slug'ı kullanılmış
         name: Kanal adı
         reset_emoji: Emojiyi sıfırla
       channel_edit_description_modal:
-        title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle
-        description: İnsanlara bu kanalın neyle ilgili olduğunu söyleyin
       direct_message_creator:
         add_to_channel: "Kanala ekle"
         title: Yeni Mesaj
@@ -502,7 +497,6 @@ tr_TR:
         always: "Tüm aktiviteler için"
       settings:
         channel_wide_mentions_label: "@all ve @here bahsetmelerine izin ver"
-        channel_wide_mentions_description: "Kullanıcıların @all ile #%{channel} kanalının tüm üyelerine veya @here ile yalnızca o anda aktif olanlara bildirim göndermelerine izin verin"
         channel_threading_label: "İleti dizisi"
         channel_threading_description: "İleti dizisi etkinleştirildiğinde, bir sohbet mesajına verilen yanıtlar, ana kanalın yanında yer alacak ayrı bir konuşma oluşturur."
         auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
@@ -523,9 +517,6 @@ tr_TR:
         save: "Kaydet"
         saved: "Kaydedildi"
         unfollow: "Ayrıl"
-        admin_title: "Yönetici"
-        settings_title: "Ayarlar"
-        info_title: "Kanal bilgisi"
         category_label: "Kategori"
         history_label: "Geçmiş"
         members_label: "Üyeler"

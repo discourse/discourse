@@ -2244,7 +2244,6 @@ fi:
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
-    short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"
     show_copy_button_on_codeblocks: "Lisää koodilohkoihin painike lohkon sisällön kopioimiseksi käyttäjän leikepöydälle."
     embed_any_origin: "Salli upotettava sisältö alkuperästä riippumatta. Tämä vaaditaan mobiilisovelluksille, joissa on staattista HTML:ää."
@@ -2358,7 +2357,7 @@ fi:
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
     create_post_for_category_and_tag_changes: "Luo kuiskausviesti, kun ketjun alue tai tunnisteet muuttuvat. Edellyttää, että kuiskausviestit ovat käytössä."
     automatically_clean_unused_tags: "Poista automaattisesti tunnisteet, joita ei käytetä missään ketjuissa tai henkilökohtaisissa viesteissä päivittäin."
-    company_name: "Yrityksesi tai organisaatiosi nimi. Jos tyhjä, ei yleisiä palveluehtojen ja tietosuojailmoituksen pohjaa tarjota."
+    company_name: "Yrityksesi tai organisaatiosi nimi."
     governing_law: "Määritä lainkäyttöalue, joka sääntelee sivuston oikeudellisia aspekteja, kuten käyttöehtoja ja tietosuojaselostetta. Tämä on yleensä maa tai osavaltio, jossa sivustoa ylläpitävä yritys on rekisteröity tai jossa se harjoittaa liiketoimintaa."
     city_for_disputes: "Määritä kaupunki, jota käytetään lainkäyttöalueena tämän foorumin käyttöön liittyvien kiistojen ratkaisemiseen. Nämä tiedot sisältyvät yleensä oikeudellisiin asiakirjoihin, kuten foorumin käyttöehtoihin."
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjuluetteloissa henkilökunnan jäsenille."
@@ -4454,7 +4453,13 @@ fi:
   design_wizard:
     palette_pairs:
       default: "Oletus"
+      neutral: "Neutraali"
+      shades_of_blue: "Sinisen sävyt"
+      summer: "Kesäinen"
       dracula: "Dracula"
+      grey_amber: "Harmaa ambra"
+      latte: "Latte"
+      dark_rose: "Tumma ruusu"
   wizard:
     title: "Discoursen asennus"
     step:

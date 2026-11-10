@@ -9,6 +9,7 @@
     "./truth-helpers/**/*",
     "./type-tests/**/*",
     "./dialog-holder/**/*",
+    "./pretty-text/**/*",
     "./config/environment.js"
   ],
   "exclude": ["./tests/unit/utils/decorators-test.js"],
@@ -42,6 +43,7 @@
         "./dialog-holder/*.gjs",
         "./dialog-holder/*.gts"
       ],
+      "pretty-text/*": ["./pretty-text/*"],
       "discourse/*": ["./app/*", "./app/*.gjs", "./app/*.gts"]
     }
   },

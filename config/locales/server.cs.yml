@@ -2323,7 +2323,6 @@ cs:
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
     full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
     enable_names: "Zobrazení celého jména uživatele v jeho profilu, kartě uživatele a e-mailech. Zakázáním skryjete celé jméno všude."
-    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata budou skryta, dokud uživatel neodpoví."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
     slug_generation_method: "Vyberte metodu generování URL. 'encoded' vygeneruje řetězec se znaky procent. 'none' zakáže zkratky URL úplně."
@@ -2335,6 +2334,7 @@ cs:
     default_text_size: "Určuje výchozí velikost písma pro všechny textové prvky na webu. Tuto velikost si může každý uživatel následně upravit podle svých preferencí."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
+    company_name: "Název vaší společnosti nebo organizace."
     shared_drafts_allowed_groups: "Povolte uživatelům v těchto skupinách zobrazovat a upravovat sdílené návrhy."
     base_font: "Základní písmo použité pro většinu textu na webu. Motivy mohou toto přepsat pomocí vlastní vlastnosti CSS `--font-family`."
     heading_font: "Písmo, které se má použít pro nadpisy na webu. Motivy toto mohou přepsat pomocí vlastní vlastnosti CSS `--heading-font-family`."
@@ -4303,7 +4303,13 @@ cs:
   design_wizard:
     palette_pairs:
       default: "Výchozí"
+      neutral: "Neutrální"
+      shades_of_blue: "Odstíny modré"
+      summer: "Léto"
       dracula: "Drákula"
+      grey_amber: "Šedý jantar"
+      latte: "Latte"
+      dark_rose: "Temná růže"
   wizard:
     title: "Nastavení Discourse"
     step:

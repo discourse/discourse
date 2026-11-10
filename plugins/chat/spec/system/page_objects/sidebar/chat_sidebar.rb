@@ -206,10 +206,33 @@ module PageObjects
         self
       end
 
-      # Requires open_notification_settings to be called first
-      def toggle_mute_channel
-        find(".chat-channel-sidebar-link-menu__mute-channel").click
-        has_no_css?(".chat-channel-sidebar-link-menu__mute-channel")
+      def open_mute_settings(channel)
+        menu = open_channel_hover_menu(channel)
+        mute_button = menu.option(".chat-channel-sidebar-link-menu__open-mute-settings")
+        mute_button.click
+
+        PageObjects::Components::DMenu.new(mute_button, "chat-channel-menu-mute-submenu")
+      end
+
+      def mute_channel(channel, duration = nil)
+        open_mute_settings(channel)
+
+        selector =
+          if duration
+            ".chat-channel-sidebar-link-menu__mute-for[data-mute-duration='#{duration}']"
+          else
+            ".chat-channel-sidebar-link-menu__mute-channel"
+          end
+
+        find(selector).click
+        has_no_css?(selector)
+        self
+      end
+
+      def unmute_channel(channel)
+        menu = open_channel_hover_menu(channel)
+        menu.option(".chat-channel-sidebar-link-menu__unmute-channel").click
+        has_no_css?(".chat-channel-sidebar-link-menu__unmute-channel")
         self
       end
     end

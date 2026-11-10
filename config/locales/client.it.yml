@@ -11,6 +11,15 @@ it:
       go_back: "Torna Indietro"
       title: "Segnala contenuti illegali"
       email: "Indirizzo e-mail"
+    code_editor:
+      search:
+        replace: "Sostituisci"
+        next: "Avanti"
+        previous: "Precedente"
+        close: "Chiudi"
+        go: "Vai"
+      fold:
+        to: "a"
     user_api_key:
       authorize: "Autorizza"
       deny: "Annulla"
@@ -445,18 +454,17 @@ it:
       back: "Indietro"
       next: "Avanti"
       sections:
-        theme: "Tema"
         fonts: "Caratteri"
+        logo: "Logo"
         homepage: "Homepage"
-        search: "Cerca"
       theme:
         selected: "Selezionato"
-      colors:
-        light: "Chiaro"
-        dark: "Scuro"
       fonts:
-        base_font: "Font di base"
-        heading_font: "Carattere dell'intestazione"
+        base_font: "Corpo"
+        heading_font: "Titoli"
+      logo:
+        description: "Appare nella barra di navigazione superiore del sito e nella parte superiore delle notifiche e-mail del sito."
+        help_text: "La dimensione consigliata è 600 x 80 pixel."
       homepage:
         topics: "Argomenti"
         categories: "Categorie"
@@ -690,7 +698,6 @@ it:
     dsa_statements:
       category: "Categoria"
       category_prompt: "Scegli una categoria"
-      saving: "Salvataggio…"
     review:
       show_more: "Mostra altro"
       show_less: "Mostra meno"
@@ -2760,6 +2767,7 @@ it:
       clear: "Cancella il filtro"
     filter_controls:
       reset: "Reimposta"
+      sort_label: "Ordina per"
     shared_drafts:
       title: "Bozze condivise"
       notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
@@ -5195,11 +5203,11 @@ it:
           title: "Avanzato"
       upcoming_changes:
         name: "Nome"
-        enabled: "Abilitato"
+        enabled: "Abilitato?"
+        feedback: "Feedback"
         select_groups: "Seleziona gruppi…"
+        settings: "Impostazioni"
         preview: "Anteprima"
-        enabled_for_options:
-          everyone: "Chiunque"
         statuses:
           experimental: "Sperimentale"
         impact_roles:
@@ -5219,6 +5227,9 @@ it:
           impact_role_admins: "Amministratori"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Staff"
+        sort:
+          status: "Stato"
+          name: "Nome"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -6258,10 +6269,7 @@ it:
           site_contact_group_help: |
             Il gruppo che riceve inviti per tutti i messaggi personali inviati automaticamente.
           your_organization: "La tua organizzazione"
-          your_organization_description: "Utilizzeremo queste informazioni nei Termini di servizio e nell'Informativa sulla privacy per indicare chi gestisce il sito e sotto quale giurisdizione."
           company_name: "Nome"
-          company_name_warning: |
-            Se non compilato, non avrai a disposizione Termini di servizio o Informativa sulla privacy standard.
           company_url: "Sito web"
           company_url_placeholder: "https://example-co.com"
           governing_law: "Diritto applicabile"
@@ -6474,7 +6482,6 @@ it:
           uploading: "Caricamento…"
           uploading_progress: "Caricamento… %{progress}%"
           success: "'%{filename}' è stato caricato con successo. Il file è in via di elaborazione e potrebbe servire fino ad un minuto perché appaia nella lista."
-          error: "Si è verificato un errore durante il caricamento %{filename}': %{message}"
         settings: "Impostazioni"
         operations:
           is_running: "Un'operazione è attualmente in esecuzione…"

@@ -11,6 +11,15 @@ ja:
       go_back: "戻る"
       title: "違法コンテンツの報告"
       email: "メールアドレス"
+    code_editor:
+      search:
+        replace: "置換"
+        next: "次へ"
+        previous: "変更前"
+        close: "閉じる"
+        go: "開始"
+      fold:
+        to: "終了:"
     user_api_key:
       title: '「%{application_name}」の承認'
       authorize: "承認"
@@ -434,19 +443,17 @@ ja:
       back: "戻る"
       next: "次へ"
       sections:
-        theme: "テーマ"
         fonts: "フォント"
+        logo: "ロゴ"
         homepage: "ホームページ"
-        welcome_banner: "ウェルカムバナー"
-        search: "検索"
       theme:
         selected: "選択済み"
-      colors:
-        light: "ライト"
-        dark: "ダーク"
       fonts:
-        base_font: "ベースフォント"
-        heading_font: "見出しのフォント"
+        base_font: "本文"
+        heading_font: "見出し"
+      logo:
+        description: "サイトのトップナビゲーションと、サイトのメール通知の上部に表示されます。"
+        help_text: "推奨サイズは 600 x 80 ピクセルです。"
       homepage:
         topics: "トピック"
         categories: "カテゴリ"
@@ -661,7 +668,6 @@ ja:
     dsa_statements:
       category: "カテゴリ"
       category_prompt: "カテゴリを選択する"
-      saving: "保存中…"
     review:
       show_more: "もっと表示"
       show_less: "表示を減らす"
@@ -2725,6 +2731,7 @@ ja:
     filter_controls:
       reset: "リセット"
       toggle: "ドロップダウンのフィルタを切り替える"
+      sort_label: "並べ替え"
     shared_drafts:
       title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
@@ -5193,16 +5200,16 @@ ja:
         name: "名前"
         plugin: "プラグイン"
         metadata: "メタデータ"
-        enabled: "有効"
-        enabled_for: "次を対象に有効化..."
+        enabled: "有効ですか？"
         show_image: "画像を表示"
-        edit_groups: "オプトイングループを編集"
+        feedback: "フィードバック"
         groups_updated: "グループが更新されました！"
         save_groups: "グループを保存"
         add_groups_to_enable: "この機能を有効にするグループを追加する"
         no_changes_to_save: "保存する変更はありません"
         select_groups: "グループを選択…"
         opt_in_groups: "オプトイングループ"
+        settings: "設定"
         opt_in_groups_instructions: "オプトイングループを使用すると、全ユーザーを対象に変更がリリースされる前に特定のユーザーグループがその変更をテストできるようになります。ただし、変更が安定ステータスに進むとこのグループは無効になります。"
         enabled_for_throttle: "この変更を有効にする対象ユーザーの変更が早すぎます。数秒待ってからもう一度お試しください。"
         change_enabled_for_success: "この変更を %{enabledFor} に対して有効にしました"
@@ -5213,7 +5220,6 @@ ja:
         preview: "プレビュー"
         enabled_for_options:
           no_one: "対象者なし"
-          everyone: "全員"
           specific_groups: "特定のグループ"
           specific_groups_with_group_names:
             other: "グループ %{groupNames}"
@@ -5254,6 +5260,9 @@ ja:
           impact_role_staff: "スタッフ"
           impact_role_all_members: "すべてのメンバー"
           impact_role_developers: "開発者"
+        sort:
+          status: "ステータス"
+          name: "名前"
       config:
         about:
           title: "サイトについて"
@@ -6340,10 +6349,7 @@ ja:
           site_contact_group_help: |
             自動的に送信されるすべての個人メッセージに招待されるグループ。
           your_organization: "あなたの組織"
-          your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
-          company_name_warning: |
-            空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
           company_url: "ウェブサイト"
           company_url_placeholder: "https://example-co.com"
           governing_law: "準拠法"
@@ -6559,7 +6565,6 @@ ja:
           uploading: "アップロード中…"
           uploading_progress: "アップロード中… %{progress}%"
           success: "'%{filename}' のアップロードに成功しました。このファイルは現在処理中で、リストに表示されるまでに数分程度かかることがあります。"
-          error: "ファイル '%{filename}' のアップロード中にエラーが発生しました: %{message}"
         settings: "設定"
         operations:
           is_running: "バックアップ作業を実行中…"

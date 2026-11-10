@@ -6,6 +6,14 @@
 
 bs_BA:
   js:
+    code_editor:
+      search:
+        replace: "Zamijeni"
+        next: "Iduće"
+        previous: "Previous"
+        close: "Zatvori"
+      fold:
+        to: "za"
     user_api_key:
       deny: "Odustani"
       copied: "Kopirano!"
@@ -287,9 +295,8 @@ bs_BA:
     design_wizard:
       back: "Prethodno"
       next: "Iduće"
-      sections:
-        theme: "Izgled"
-        search: "Pretraži"
+      fonts:
+        base_font: "Tijelo"
       homepage:
         topics: "Topics"
         categories: "Kategorije"
@@ -1731,6 +1738,7 @@ bs_BA:
       default: Sopstveni emotikoni
     filter_controls:
       reset: "Resetovati"
+      sort_label: "Sortiraj po"
     shared_drafts:
       title: "Dijeljene skice"
       destination_category: "Kategorija destinacije"
@@ -3208,10 +3216,9 @@ bs_BA:
           title: "Pluginovi"
       upcoming_changes:
         name: "Ime"
-        enabled: "Omogućen"
+        enabled: "Omogućen?"
+        settings: "Postavke"
         preview: "Pregled"
-        enabled_for_options:
-          everyone: "Svatko"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -3226,6 +3233,9 @@ bs_BA:
           impact_role_admins: "Admins"
           impact_role_moderators: "Moderators"
           impact_role_staff: "Staff"
+        sort:
+          status: "Status"
+          name: "Ime"
       config:
         developer:
           title: "Developer"
@@ -3801,7 +3811,6 @@ bs_BA:
           label: "Učitavanje"
           title: "Prenesite rezervnu kopiju na ovu instancu"
           success: "'%{filename}' je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "The %{operation} failed. Please check the logs."

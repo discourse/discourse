@@ -1,4 +1,8 @@
 import { click, fillIn, triggerEvent, waitFor } from "@ember/test-helpers";
+import {
+  codeEditorValue,
+  fillInCodeEditor,
+} from "discourse/tests/helpers/code-editor-helper";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -112,6 +116,7 @@ class Field {
       case "checkbox":
         return this.element.querySelector("input");
       case "code":
+        return this.element.querySelector(".cm-content");
       case "textarea":
       case "composer":
         return this.element.querySelector("textarea");
@@ -140,12 +145,13 @@ class Field {
         return this.dSelectControl.element().dataset.value;
       case "input-number":
         return parseInt(this.inputElement.value, 10);
+      case "code":
+        return codeEditorValue(this.element.querySelector(".code-editor"));
       // String-based controls fall through to return raw value
       case "input":
       case "input-text":
       case "input-email":
       case "password":
-      case "code":
       case "textarea":
       case "composer":
       case "color":
@@ -182,6 +188,11 @@ class Field {
   }
 
   async fillIn(value) {
+    if (this.controlType === "code") {
+      await fillInCodeEditor(this.element.querySelector(".code-editor"), value);
+      return;
+    }
+
     await fillIn(this.inputElement, value);
   }
 

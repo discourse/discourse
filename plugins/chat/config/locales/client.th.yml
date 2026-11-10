@@ -25,8 +25,6 @@ th:
         title: "ปักหมุดแล้ว"
       pinned: "ปักหมุดแล้ว"
       channel_settings:
-        edit: "แก้ไข"
-        add: "เพิ่ม"
         notification_settings_context: "การแจ้งเตือน"
         join: "เข้าร่วม"
         leave: "ออก"
@@ -66,13 +64,13 @@ th:
       search_view:
         filter_placeholder: ค้นหาข้อความ
       about_view:
-        title: ชื่อเรื่อง
         name: ชื่อ
         description: รายละเอียด
       channel_info:
         back_to_channel: "กลับ"
         tabs:
           members: สมาชิก
+          preferences: การตั้งค่า
           settings: การตั้งค่า
           search: ค้นหา
         remove_member: "ลบ"
@@ -100,8 +98,6 @@ th:
         save: "บันทึก"
         saved: "บันทึกแล้ว"
         unfollow: "ออก"
-        admin_title: "ผู้ดูแลระบบ"
-        settings_title: "การตั้งค่า"
         category_label: "หมวดหมู่"
         history_label: "ประวัติ"
         members_label: "สมาชิก"

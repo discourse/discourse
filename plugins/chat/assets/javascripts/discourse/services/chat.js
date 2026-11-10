@@ -7,7 +7,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import {
@@ -406,13 +405,6 @@ export default class Chat extends Service {
     return ajax("/chat/direct_messages.json", {
       data: { usernames: uniqueItemsFromArray(usernames).join(",") },
     });
-  }
-
-  addToolbarButton() {
-    deprecated(
-      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`",
-      { id: "discourse.chat.addToolbarButton" }
-    );
   }
 
   @action

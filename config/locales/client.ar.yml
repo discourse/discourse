@@ -12,6 +12,14 @@ ar:
       title: "الإبلاغ عن المحتوى غير القانوني"
       email: "عنوان البريد الإلكتروني"
       resend_email_code: "إعادة إرسال الرمز"
+    code_editor:
+      search:
+        replace: "استبدال"
+        next: "التالي"
+        previous: "السابق"
+        close: "إغلاق"
+      fold:
+        to: "إلى"
     user_api_key:
       title: 'تفويض "%{application_name}"'
       authorize: "تفويض"
@@ -669,7 +677,6 @@ ar:
         action: "اطّلع على الأفكار"
         choose_option: "كيف تود أن تبدأ؟"
         predefined_topics: "قوالب لكسر حالة السكوت"
-        predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
         predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
         use_predefined: "تصفح القوالب"
         back: "رجوع"
@@ -681,20 +688,21 @@ ar:
       title: "تخصيص موقعك"
       back: "رجوع"
       next: "التالي"
+      steps:
+        theme:
+          title: "اختيار سمة"
       sections:
-        theme: "السمة"
         fonts: "الخطوط"
+        logo: "الشعار"
         homepage: "الصفحة الرئيسية"
-        welcome_banner: "بانر الترحيب"
-        search: "البحث"
       theme:
         selected: "محدَّدة"
-      colors:
-        light: "فاتح"
-        dark: "داكن"
       fonts:
-        base_font: "الخط الأساسي"
-        heading_font: "خط العنوان"
+        base_font: "النص الأساسي"
+        heading_font: "العناوين"
+      logo:
+        description: "يظهر في شريط التنقل العلوي للموقع، وكذلك في الجزء العلوي من إشعارات البريد الإلكتروني الخاصة بالموقع."
+        help_text: "الحجم الموصى به هو 600 × 80 بكسل."
       homepage:
         topics: "الموضوعات"
         categories: "الفئات"
@@ -1057,7 +1065,6 @@ ar:
         placeholder: "اكتب عنوان الرسالة أو عنوان URL أو المُعرِّف هنا"
     dsa_statements:
       category: "الفئة"
-      saving: "جارٍ الحفظ…"
     review:
       show_more: "عرض المزيد"
       show_less: "عرض أقل"
@@ -3204,7 +3211,6 @@ ar:
         }.
     learn_more: "معرفة المزيد…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>اعرف المزيد…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>الملاحظات…</a>"
     mute: كتم
     unmute: إلغاء الكتم
     last_post: آخر منشور
@@ -3617,6 +3623,7 @@ ar:
     filter_controls:
       reset: "إعادة التعيين"
       toggle: "تفعيل/إيقاف عوامل تصفية القائمة المنسدلة"
+      sort_label: "الترتيب حسب"
     d_icon_grid_picker:
       select_icon: "تحديد أيقونة"
       search_label: "بحث عن أيقونات"
@@ -7352,24 +7359,23 @@ ar:
         name: "الاسم"
         plugin: "الإضافات"
         metadata: "البيانات الوصفية"
-        enabled: "مفعَّلة"
-        enabled_for: "مُفعّل لـ..."
+        enabled: "مفعَّلة؟"
         show_image: "اعرض الصورة"
-        edit_groups: "تعديل مجموعات الانضمام الاختياري"
+        feedback: "الملاحظات"
+        toggle: "تفعيل %{name}"
         groups_updated: "حُدثت المجموعات!"
         save_groups: "احفظ المجموعات"
         add_groups_to_enable: "أضف مجموعات لتفعيل هذه الميزة"
         no_changes_to_save: "لا توجد تغييرات للحفظ"
         select_groups: "تحديد المجموعات…"
         opt_in_groups: "مجموعات الانضمام الاختياري"
-        show_related_settings: "إظهار الإعدادات ذات الصلة..."
+        settings: "الإعدادان"
         opt_in_groups_instructions: "يمكن استخدام مجموعات الانضمام الاختياري للسماح لمجموعة معينة من المستخدمين باختبار تغييرٍ ما قبل طرحه للجميع. يرجى ملاحظة أن هذه المجموعات لن تكون ذات صلة بمجرد انتقال التغيير إلى الحالة المستقرة."
         enabled_for_throttle: "لقد قمت بتغيير الأشخاص المفعَّلة لديهم هذه الميزة بسرعة كبيرة. يرجى الانتظار لبضع ثوانٍ قبل المحاولة مرة أخرى."
         change_enabled_for_success: "لقد فعلت هذا التغيير لـ %{enabledFor}"
         change_disabled: "تم إلغاء اشتراكك في هذا التغيير"
         depends_on_notice: "يتطلَّب هذا التغيير تفعيل %{dependencyLinks}."
         permanent_notice: "أصبح هذا التغيير دائمًا وسيتم إزالته قريبًا. لم يعد بإمكانك إلغاء الاشتراك."
-        permanent_soon_notice: "سيصبح هذا التغيير دائمًا في أقرب وقت. لن تتمكن بعد الآن من إلغاء الاشتراك."
         permanent_no_group_selection: "لا ينطبق؛ حيث تسري التغييرات الدائمة على كافة المجموعات"
         no_changes: "لا توجد تغييرات قادمة في الوقت الحالي."
         preview: "معاينة"
@@ -7377,7 +7383,6 @@ ar:
         default_warning_short: "لقد تغيرت القيمة الافتراضية لهذا الإعداد، يمكنك قراءة المزيد حول ذلك في صفحة <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>التغييرات القادمة</a>."
         enabled_for_options:
           no_one: "لا أحد"
-          everyone: "الجميع"
           staff: "%{staffGroupName} فقط"
           specific_groups: "مجموعة (مجموعات) محدَّدة"
           specific_groups_with_group_names:
@@ -7434,6 +7439,9 @@ ar:
           impact_role_staff: "فريق العمل"
           impact_role_all_members: "جميع الأعضاء"
           impact_role_developers: "المطوّرون"
+        sort:
+          status: "الحالة"
+          name: "الاسم"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -8881,11 +8889,8 @@ ar:
           site_contact_group_help: |
             المجموعة التي تتم دعوتها إلى جميع الرسائل الشخصية التي يتم إرسالها تلقائيًا.
           your_organization: "مؤسستك"
-          your_organization_description: "سنستخدم هذه المعلومات في شروط الخدمة وإشعار الخصوصية لتوضيح المسؤول عن تشغيل الموقع وتحت أي ولاية قضائية."
           company_name: "الاسم"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            إذا تُرك فارغًا، فلن يتم توفير شروط خدمة أو إشعار خصوصية نمطية.
           company_url: "الموقع الإلكتروني"
           company_url_placeholder: "https://example-co.com"
           governing_law: "القانون الحاكم"
@@ -9111,7 +9116,6 @@ ar:
           uploading: "جارٍ التحميل…"
           uploading_progress: "جارٍ التحميل: %{progress}%"
           success: "تم تحميل الملف \"%{filename}\" بنجاح. تجري الآن معالجة الملف وسيستغرق دقيقة قبل ظهوره في القائمة."
-          error: "حدثت مشكلة في أثناء تحميل '%{filename}': %{message}"
         settings: "الإعدادات"
         operations:
           is_running: "توجد عملية جارية حاليًا…"

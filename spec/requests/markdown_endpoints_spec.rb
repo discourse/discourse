@@ -92,6 +92,50 @@ RSpec.describe "Markdown endpoints" do
     expect(response).to have_http_status(:not_found)
   end
 
+  context "when login is required" do
+    fab!(:admin)
+
+    before do
+      SiteSetting.login_required = true
+      SiteSetting.auth_immediately = false
+      SiteSetting.enable_markdown_endpoints = true
+    end
+
+    it "redirects anonymous Markdown requests to login without exposing topic content" do
+      %w[/ /latest /latest.md].each do |path|
+        get path, headers: { "ACCEPT" => "text/markdown" }
+
+        expect(response).to redirect_to("/login")
+        expect(response.body).not_to include(topic.title, post.raw)
+        expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+      end
+
+      head "/", headers: { "ACCEPT" => "text/markdown" }
+      expect(response).to have_http_status(:forbidden)
+      expect(response.body).to be_empty
+    end
+
+    it "serves the Markdown homepage to signed-in readers" do
+      sign_in(user)
+
+      get "/", headers: { "ACCEPT" => "text/markdown" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq("text/markdown")
+      expect(response.body).to include(topic.title)
+    end
+
+    it "preserves the anonymous HTML login landing page" do
+      ["text/html", "*/*", "text/markdown, text/html"].each do |accept|
+        get "/", headers: { "ACCEPT" => accept }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).to eq("text/html")
+        expect(response.body).not_to include(topic.title, post.raw)
+      end
+    end
+  end
+
   it "preserves the configured HTML homepage and advertises latest Markdown" do
     Fabricate(:admin)
     SiteSetting.top_menu = "categories|latest|hot|top"
@@ -115,6 +159,7 @@ RSpec.describe "Markdown endpoints" do
     get "/", headers: { "ACCEPT" => "text/markdown" }
     expect(response.media_type).to eq("text/markdown")
     expect(response.body).to start_with("# Latest")
+    expect(response.headers["Link"]).to eq(%(<#{Discourse.base_url}/latest>; rel="canonical"))
   end
 
   it "adds Vary: Accept to negotiated responses and redirects" do
@@ -725,9 +770,13 @@ RSpec.describe "Markdown endpoints" do
   it "uses subfolder-safe topic links in lists and discovery" do
     set_subfolder "/forum"
 
-    get "/latest.md"
+    get "/latest.md", env: { "SCRIPT_NAME" => "/forum" }
     expect(response.body).to include("#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}")
     expect(response.body).not_to include("/forum/forum/")
+    expect(response.headers["Link"]).to eq(%(<#{Discourse.base_url}/latest>; rel="canonical"))
+
+    get "/t/#{topic.slug}/#{topic.id}.md", env: { "SCRIPT_NAME" => "/forum" }
+    expect(response.headers["Link"]).to eq(%(<#{topic.url}>; rel="canonical"))
 
     get "/latest", headers: { "ACCEPT" => "text/html" }
     expect(response.headers["Link"]).to include("#{Discourse.base_url}/latest.md")
@@ -1011,6 +1060,20 @@ RSpec.describe "Markdown endpoints" do
     expect(response.body).not_to eq(anonymous_body)
   end
 
+  it "caches recent post bodies for a day and older bodies for an hour" do
+    old_post = Fabricate(:post, topic: topic, user: user, raw: "Older body")
+    old_post.update_columns(created_at: 2.months.ago, updated_at: 2.months.ago)
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response.body).to include(post.raw, old_post.raw)
+
+    ttls = Discourse.cache.keys("markdown-endpoint:cooked:*").map { |key| Discourse.redis.ttl(key) }
+    expect(ttls.size).to eq(2)
+    expect(ttls.min).to be <= 1.hour.to_i
+    expect(ttls.max).to be > 1.hour.to_i
+    expect(ttls.max).to be <= 1.day.to_i
+  end
+
   it "uses visible tags and excludes deleted posts from anonymous output" do
     visible_tag = Fabricate(:tag, name: "visible-markdown-tag")
     restricted_tag = Fabricate(:tag, name: "restricted-markdown-tag")
@@ -1074,6 +1137,97 @@ RSpec.describe "Markdown endpoints" do
         expect(response.body).not_to include('type="text/markdown"'), path
       end
     end
+  end
+
+  it "names the HTML page as canonical on Markdown responses" do
+    tag = Fabricate(:tag, name: "canonical-tag")
+    topic.tags << tag
+    2.upto(TopicView::CHUNK_SIZE + 1) do |post_number|
+      Fabricate(:post, topic:, user:, post_number:)
+    end
+
+    [
+      "/t/#{topic.slug}/#{topic.id}",
+      "/t/#{topic.slug}/#{topic.id}?page=2",
+      "/t/#{topic.slug}/#{topic.id}/#{TopicView::CHUNK_SIZE + 1}",
+      "/latest",
+      "/latest?page=1&category=#{category.id}",
+      "/hot",
+      "/c/#{category.slug}/#{category.id}",
+      "/c/#{category.slug}/#{category.id}?page=1",
+      "/tag/#{tag.slug_for_url}/#{tag.id}",
+      "/categories",
+      "/tags",
+    ].each do |path|
+      get path, headers: { "ACCEPT" => "text/html" }
+      expect(response).to have_http_status(:ok), path
+      html_canonical = css_select("link[rel=canonical]").first["href"]
+      expect(html_canonical).to start_with(Discourse.base_url), path
+      canonical_link = %(<#{html_canonical}>; rel="canonical")
+
+      uri = URI.parse(path)
+      get "#{uri.path}.md#{"?#{uri.query}" if uri.query}"
+      expect(response.media_type).to eq("text/markdown"), path
+      expect(response.headers["Link"]).to eq(canonical_link), path
+
+      get path, headers: { "ACCEPT" => "text/markdown" }
+      expect(response.media_type).to eq("text/markdown"), path
+      expect(response.headers["Link"]).to eq(canonical_link), path
+    end
+
+    get "/", headers: { "ACCEPT" => "text/markdown" }
+    expect(response.media_type).to eq("text/markdown")
+    expect(response.headers["Link"]).to eq(%(<#{Discourse.base_url}/latest>; rel="canonical"))
+
+    head "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.headers["Link"]).to eq(%(<#{topic.url}>; rel="canonical"))
+  end
+
+  it "sends noindex on the Markdown twin of an unlisted topic" do
+    unlisted_topic = Fabricate(:topic, user:, category:, visible: false)
+    Fabricate(:post, topic: unlisted_topic, user:)
+
+    get "/t/#{unlisted_topic.slug}/#{unlisted_topic.id}.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    expect(response.headers["Link"]).to eq(%(<#{unlisted_topic.url}>; rel="canonical"))
+
+    get "/t/#{unlisted_topic.slug}/#{unlisted_topic.id}", headers: { "ACCEPT" => "text/markdown" }
+    expect(response.media_type).to eq("text/markdown")
+    expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.headers["X-Robots-Tag"]).to be_nil
+  end
+
+  it "percent-encodes query values in the canonical header and link tag" do
+    page = %q(1>; rel="alternate", <https://untrusted.example/>; rel="canonical")
+    canonical = "#{Discourse.base_url}/tags?page=#{CGI.escape(page)}"
+
+    get "/tags.md", params: { page: }
+    expect(response).to have_http_status(:ok)
+    expect(response.headers["Link"]).to eq(%(<#{canonical}>; rel="canonical"))
+
+    get "/tags", params: { page: }, headers: { "ACCEPT" => "text/html" }
+    expect(response).to have_http_status(:ok)
+    expect(css_select("link[rel=canonical]").first["href"]).to eq(canonical)
+  end
+
+  it "keeps early hint links next to the discovery and canonical links" do
+    set_cdn_url "https://cdn.example.com/assets"
+    global_setting :early_hint_header_mode, "preconnect"
+
+    get "/latest.md"
+    expect(response.headers["Link"]).to eq(
+      %(<#{Discourse.base_url}/latest>; rel="canonical", <https://cdn.example.com>; rel=preconnect),
+    )
+
+    get "/latest", headers: { "ACCEPT" => "text/html" }
+    expect(response.headers["Link"]).to eq(
+      %(<#{Discourse.base_url}/latest.md>; rel="alternate"; type="text/markdown", <https://cdn.example.com>; rel=preconnect),
+    )
   end
 
   it "preserves safe filters in discovery and Markdown tag redirects" do

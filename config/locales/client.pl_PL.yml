@@ -33,6 +33,35 @@ pl_PL:
       any_domain: "CIMD z dowolnej domeny"
     ace_editor:
       resize: "Zmień rozmiar edytora kodu"
+    code_editor:
+      resize: "Zmień rozmiar edytora kodu"
+      tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść fokus poza edytor."
+      completions: "Uzupełnienia"
+      search:
+        find: "Znajdź"
+        replace: "Zamień"
+        next: "Dalej"
+        previous: "Poprzedni"
+        all: "Zaznacz wszystkie dopasowania"
+        match_case: "Dopasuj wielkość liter"
+        regexp: "Wyrażenie regularne"
+        by_word: "Całe słowa"
+        replace_all: "Zamień wszystko"
+        close: "Zamknij"
+        go_to_line: "Przejdź do wiersza"
+        go: "Utwórz"
+        current_match: "Bieżące dopasowanie"
+        on_line: "w wierszu"
+        replaced_match: "Zastąpiono dopasowanie w wierszu %{line}"
+        replaced_all: "Zastąpione dopasowania: %{matches}"
+      fold:
+        fold_line: "Zwijaj wiersz"
+        unfold_line: "Rozwiń wiersz"
+        folded_code: "Zwinięty kod"
+        unfold: "Rozwiń"
+        folded_lines: "Zwinięte wiersze"
+        unfolded_lines: "Rozwinięte wiersze"
+        to: "do"
     user_api_key:
       title: 'Autoryzuj "%{application_name}"'
       authorize: "Autoryzuj"
@@ -643,7 +672,7 @@ pl_PL:
       dismiss: "Odrzuć konfigurację"
       select_theme:
         title: "Dostosuj swoją witrynę"
-        description: "Wybierz kolory, czcionki i układ swojej witryny."
+        description: "Spersonalizuj swoją witrynę za pomocą logo, kolorów i układu."
         action: "Zobacz opcje"
         completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
@@ -660,7 +689,7 @@ pl_PL:
         completed: "Zobacz więcej pomysłów"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
-        predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
+        predefined_topics_subtitle: "Daj członkom temat do dyskusji"
         predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
         use_predefined: "Przeglądaj szablony"
         back: "Wstecz"
@@ -668,84 +697,80 @@ pl_PL:
         icebreakers:
           plan_categories:
             title: "Od jakich kategorii powinniśmy zacząć?"
+            description: "Zapytaj swój zespół, od jakich kategorii zacząć."
             body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
           plan_invites:
-            title: "Których członków powinniśmy zaprosić przed startem?"
+            title: "Kogo powinniśmy zaprosić przed startem?"
+            description: "Uzgodnij ze swoim zespołem, kogo zaprosić jako pierwszego."
             body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
           introduce_yourself:
             title: "Przedstaw się"
+            description: "Poproś członków, aby podzielili się kilkoma informacjami o sobie."
             body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
           write_your_own:
             title: "Napisz swój własny"
-            body: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
+            description: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
-      subtitle: "Wybierz kolory, czcionki i układ swojej witryny."
       step_label: "Przejdź do kroku %{index}"
+      step_progress: "Krok %{current}/%{total}"
+      minimize: "Kreator minimalizacji projektu"
+      restore: "Kreator przywracania projektu"
+      collapse: "Zwiń kreator projektowania"
+      expand: "Rozszerz kreator projektowania"
       save: "Zapisz i zakończ"
       back: "Wstecz"
       next: "Dalej"
       launch: "Kreator projektowania"
       launch_description: "Przejrzyj jeszcze raz motyw, kolory, czcionki i układ swojej witryny."
-      intro:
-        description: "Ten kreator przeprowadzi Cię przez motyw, kolory, czcionki, układ strony głównej, baner powitalny i styl wyszukiwania Twojej witryny."
-        autosave: "Każdy krok jest zapisywany na bieżąco, więc członkowie od razu widzą zmiany. Możesz przywrócić wszystko, gdy zamkniesz konto."
-        start: "Rozpocznij"
       close:
         message: "Zapisano już pewne zmiany w projekcie witryny. Czy chcesz je utrzymać?"
         message_without_revert: "Zapisano już pewne zmiany w projekcie swojej witryny. Nie można ich stąd cofnąć."
         keep: "Zachowaj zmiany"
         revert: "Cofnij zmiany"
         continue_editing: "Kontynuuj edycję"
+      steps:
+        theme:
+          title: "Wybierz motyw"
+          description: "Wybierz ogólny wygląd swojej witryny. Możesz go dopracować w kolejnych krokach."
+        colors:
+          title: "Uczyń to swoim"
+          description: "Dodaj swoje logo i wybierz kolory swojej witryny."
+        homepage:
+          title: "Wygląd i odczucia"
+          description: "Wybierz czcionki i to, co członkowie zobaczą w pierwszej kolejności."
       sections:
-        theme: "Motyw"
-        colors: "Domyślny kolor"
+        colors: "Tryby kolorów witryny"
         fonts: "Czcionki"
+        logo: "Logo"
         homepage: "Strona główna"
-        welcome_banner: "Baner powitalny"
-        search: "Szukaj"
       theme:
         selected: "Wybrany"
         applying: "Zastosowanie…"
         custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
       colors:
-        light: "Jasny"
-        dark: "Ciemny"
-        dark_only: "%{name} ma tylko tryb ciemny"
-        both_modes: "Każda paleta zawiera pasujący tryb jasny i ciemny"
-        user_selectable: "Umożliw członkom zmianę palet"
-        user_selectable_description: "Pokaż te palety w menu, z którego członkowie mogą wybierać"
+        description: "Ustaw domyślną paletę dla każdego trybu. Preferencje dotyczące wyglądu członków decydują o tym, którą paletę zobaczą."
+        light_palette: "Jasna paleta"
+        dark_palette: "Ciemna paleta"
+        modes:
+          label: "Tryby kolorów"
+          both: "Jasny i ciemny"
+          light: "Tylko jasny"
+          dark: "Tylko ciemny"
       fonts:
-        base_font: "Czcionka podstawowa"
-        heading_font: "Czcionka nagłówków"
+        base_font: "Treść"
+        heading_font: "Nagłówki"
+      logo:
+        description: "Pojawia się w górnej nawigacji witryny, a także w górnej części powiadomień e-mail witryny."
+        help_text: "Zalecany rozmiar to 600 x 80 pikseli."
       homepage:
         topics: "Tematy"
         categories: "Kategorie"
-        topic_page_type: "Typ strony tematu"
-        topic_pages:
-          latest: "Tematy posortowane według ostatniej aktywności, najnowsze na początku."
-          new: "Tematy utworzone w ciągu ostatnich kilku dni, najnowsze na początku."
-          hot: "Tematy, które są obecnie popularne, łącząc ogólną popularność z niedawnym zaangażowaniem."
         category_page_style: "Styl strony kategorii"
         styles:
           boxes: "Pola"
           with_topics: "Kategorie z tematami"
           only: "Tylko kategorie"
-      welcome_banner:
-        enable: "Pokaż baner powitalny"
-        enable_description: "Przywitaj odwiedzających, podając nazwę swojej witryny i pole wyszukiwania"
-        location: "Lokalizacja banera"
-        locations:
-          below_site_header: "Poniżej nagłówka witryny"
-          above_topic_content: "Nad listą tematów"
-      search:
-        experiences:
-          search_icon:
-            title: "Ikona wyszukiwania"
-            description: "Lupa w nagłówku otwierająca wyszukiwanie."
-          search_field:
-            title: "Pole wyszukiwania"
-            description: "Pełne pole wyszukiwania w nagłówku, zawsze widoczne."
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"
@@ -1051,19 +1076,21 @@ pl_PL:
         placeholder: "tutaj wpisz tytuł wiadomości, adres URL lub id"
     dsa_statements:
       title: "Klasyfikacja DSA"
-      help_title: "O klasyfikacji DSA"
-      help: "Wybierz regułę społeczności i kategorię uzasadniającą tę decyzję o moderacji. Zostaną one zapisane wraz z uzasadnieniem zgodnie z Ustawą o usługach cyfrowych."
+      help_title: "O klasyfikacji w ramach ustawy o usługach cyfrowych UE"
+      help: "Ustawa UE o usługach cyfrowych nakłada na platformy obowiązek rejestrowania powodów moderowania treści.<br><a href='https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms' rel='noopener noreferrer' target='_blank'>Dowiedz się więcej…</a>"
       rule: "Zasady społeczności"
+      rule_help: "Wybierz regułę społeczności, na której opiera się ta decyzja o moderacji."
       rule_prompt: "Wybierz regułę społeczności"
       category: "Kategoria"
+      category_help: "Wybierz kategorię ustawy UE o usługach cyfrowych, która najlepiej opisuje naruszenie. <a href='https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification' rel='noopener noreferrer' target='_blank'>Wyświetl definicje kategorii…</a>"
       category_prompt: "Wybierz kategorię"
-      pending: "Oczekiwanie na klasyfikację DSA"
-      confirm_title: "Zapisać klasyfikację DSA?"
-      confirm_message: "Sprawdź regułę społeczności i kategorię. Klasyfikacji tej nie można zmienić po zapisaniu."
       save: "Zapisz klasyfikację"
-      saving: "Zapisywanie…"
-      saved: "Klasyfikacja zapisana"
     review:
+      continue_to_editor: "Przejdź do edytora"
+      moderation_steps:
+        label: "Kroki moderacji"
+        action: "Szczegóły działania"
+        confirm: "Potwierdź działanie"
       show_more: "Pokaż więcej"
       show_less: "Pokaż mniej"
       back_to_queue: "Powrót do kolejki"
@@ -1328,6 +1355,7 @@ pl_PL:
         target_created_by: "Wpis utworzony przez %{username} · %{relativeDate}"
         target_deleted: "Wpis usunięty"
         target_deleted_by: "Wpis usunięty przez %{username} · %{relativeDate}"
+        queued_post_deleted_by: "Wpis z kolejki usunięty przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Przejęto"
@@ -3150,7 +3178,6 @@ pl_PL:
         }.
     learn_more: "Dowiedz się więcej…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Dowiedz się więcej…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Informacja zwrotna…</a>"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -3589,6 +3616,8 @@ pl_PL:
     filter_controls:
       reset: "Przywróć"
       toggle: "Przełącz filtry rozwijane"
+      sort_label: "Sortuj po"
+      sort_trigger_label: "Sortuj według: %{sort}"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
       search_label: "Szukaj ikon"
@@ -3984,6 +4013,7 @@ pl_PL:
         link_copied: "Link skopiowany!"
         load_preview: "Załaduj podgląd"
         preview_failed: "Nie można załadować podglądu"
+        preview_limit_reached: "Ten wpis osiągnął maksymalną liczbę podglądów"
       onebox_toolbar:
         copy: "Skopiuj link"
         visit: "Otwórz link"
@@ -5326,10 +5356,10 @@ pl_PL:
       aria_post_number: "%{title} - wpis #%{postNumber}"
       bulk:
         selected:
-          one: "%{count} zaznaczony post"
-          few: "%{count} zaznaczone posty"
-          many: "%{count} zaznaczonych postów"
-          other: "%{count} zaznaczonych postów"
+          one: "%{count} zaznaczony wpis"
+          few: "%{count} zaznaczone wpisy"
+          many: "%{count} zaznaczonych wpisów"
+          other: "%{count} zaznaczonych wpisów"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystkie"
         actions: "Działania zbiorcze"
@@ -7159,24 +7189,29 @@ pl_PL:
         name: "Nazwa"
         plugin: "Wtyczka"
         metadata: "Metadane"
-        enabled: "Włączona"
-        enabled_for: "Włączone dla..."
+        enabled: "Włączone?"
+        availability: "Dostępność"
         show_image: "Pokaż obraz"
-        edit_groups: "Edytuj grupy opt-in"
+        feedback: "Opinie"
+        toggle: "Włącz %{name}"
+        staff_always_included: "Personel jest zawsze uwzględniony"
+        audience_locked: "Tej zmiany nie można zastosować do innych grup"
+        toggle_instead_of_empty_groups: "Aby wyłączyć tę nadchodzącą zmianę, użyj przełącznika zamiast zmieniać uprawnienia grupy."
         groups_updated: "Grupy zaktualizowane!"
         save_groups: "Zapisz grupy"
         add_groups_to_enable: "Dodaj grupy, aby włączyć tę funkcję"
         no_changes_to_save: "Brak zmian do zapisania"
         select_groups: "Wybierz grupy…"
         opt_in_groups: "Grupy opt-in"
-        show_related_settings: "Pokaż powiązane ustawienia..."
+        settings: "Ustawienia"
         opt_in_groups_instructions: "Grupy opt-in można wykorzystać, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim. Należy pamiętać, że grupy te staną się nieistotne, gdy zmiana osiągnie status stabilnej."
         enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
+        change_enabled: "Włączono tę zmianę"
         change_disabled: "Zrezygnowałeś z tej zmiany"
         depends_on_notice: "Aby wprowadzić tę zmianę, konieczne jest włączenie opcji %{dependencyLinks}."
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
-        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie już możliwości rezygnacji."
+        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie można z niej zrezygnować."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
@@ -7184,7 +7219,7 @@ pl_PL:
         default_warning_short: "Domyślna wartość tego ustawienia uległa zmianie. Więcej informacji na ten temat znajdziesz na stronie <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>nadchodzące zmiany</a>."
         enabled_for_options:
           no_one: "Nikt"
-          everyone: "Wszyscy"
+          eligible_users: "Uprawnieni użytkownicy"
           staff: "Tylko %{staffGroupName}"
           specific_groups: "Określone grupy"
           specific_groups_with_group_names:
@@ -7239,6 +7274,10 @@ pl_PL:
           impact_role_staff: "Zespół"
           impact_role_all_members: "Wszyscy członkowie"
           impact_role_developers: "Deweloperzy"
+        sort:
+          recently_updated: "Ostatnio aktualizowane"
+          status: "Status"
+          name: "Nazwa"
       config:
         about:
           title: "O Twojej witrynie"
@@ -9021,11 +9060,9 @@ pl_PL:
           site_contact_group_help: |
             Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
-          your_organization_description: "Informacje te zostaną wykorzystane w Warunkach korzystania z usługi i Polityce prywatności, aby wskazać, kto zarządza witryną i w ramach jakiej jurysdykcji."
+          your_organization_description: "Szczegóły dotyczące tego, kto zarządza tą witryną i pod jaką jurysdykcją."
           company_name: "Nazwa"
           company_name_placeholder: "PrzykładowaSA"
-          company_name_warning: |
-            Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
           company_url: "Strona internetowa"
           company_url_placeholder: "https://przykładowa-sa.pl"
           governing_law: "Obowiązujące prawo"
@@ -9257,7 +9294,6 @@ pl_PL:
           uploading: "Przesyłanie…"
           uploading_progress: "Przesyłanie… %{progress}%"
           success: "Plik „%{filename}” został pomyślnie przesłany. Plik jest teraz przetwarzany i pojawienie się na liście może potrwać do minuty."
-          error: "Podczas przesyłania pliku wystąpił błąd '%{filename}': %{message}"
         settings: "Ustawienia"
         operations:
           is_running: "Aktualnie trwa operacja…"
@@ -9499,6 +9535,8 @@ pl_PL:
           duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
           force_install: "Nie można zainstalować motywu, ponieważ repozytorium Git jest niedostępne. Czy na pewno chcesz kontynuować instalację?"
           create_placeholder: "Utwórz symbol zastępczy"
+          placeholder_type_tip: "Po zakończeniu instalacji używany jest typ z pliku about.json repozytorium."
+          skipped_components: "%{name} jest zainstalowany, ale nie udało się zainstalować tych komponentów. Zainstaluj je z zakładki „Komponenty”, a następnie dodaj do tego motywu:"
           about_theme: "O stronie"
           license: "Licencja"
           version: "Wersja:"
@@ -10421,6 +10459,7 @@ pl_PL:
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: "Odbierz status moderatora"
         grant_moderation: "Przyznaj status moderatora"
+        grant_moderation_confirm: "Czy na pewno chcesz mianować %{username} moderatorem?"
         unsuspend: "Odwieś"
         suspend: "Zawieś"
         show_flags_received: "Pokaż otrzymane flagi"

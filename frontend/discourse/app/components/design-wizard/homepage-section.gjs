@@ -1,23 +1,8 @@
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import OptionRow from "discourse/components/design-wizard/option-row";
 import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-
-const TOPIC_PAGES = ["latest", "new", "hot"];
-
-function isTopicPage(page) {
-  return TOPIC_PAGES.includes(page);
-}
-
-function topicPageLabel(page) {
-  return i18n(`filters.${page}.title`);
-}
-
-function topicPageDescription(page) {
-  return i18n(`design_wizard.homepage.topic_pages.${page}`);
-}
 
 function isHorizon(themeId) {
   return themeId === HORIZON_THEME_ID;
@@ -128,9 +113,9 @@ const ConversationMock = <template>
 const DesignWizardHomepageSection = <template>
   <div class="design-wizard__homepage-cards">
     <button
-      aria-pressed={{if (isTopicPage @homepage) "true" "false"}}
+      aria-pressed={{if (eq @homepage "latest") "true" "false"}}
       class="design-wizard__homepage-card
-        {{if (isTopicPage @homepage) '--selected'}}"
+        {{if (eq @homepage 'latest') '--selected'}}"
       data-homepage="topics"
       type="button"
       {{on "click" (fn @onSelectHomepage "latest")}}
@@ -208,23 +193,6 @@ const DesignWizardHomepageSection = <template>
             </button>
           {{/each}}
         {{/let}}
-      </div>
-    </div>
-  {{else if (isTopicPage @homepage)}}
-    <div class="design-wizard__detail-group">
-      <span class="design-wizard__label">
-        {{i18n "design_wizard.homepage.topic_page_type"}}
-      </span>
-      <div class="design-wizard__option-rows">
-        {{#each TOPIC_PAGES as |page|}}
-          <OptionRow
-            data-topic-page={{page}}
-            @description={{topicPageDescription page}}
-            @label={{topicPageLabel page}}
-            @onSelect={{fn @onSelectHomepage page}}
-            @selected={{eq page @homepage}}
-          />
-        {{/each}}
       </div>
     </div>
   {{else}}

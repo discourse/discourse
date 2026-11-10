@@ -265,6 +265,7 @@ class ReviewablesController < ApplicationController
 
   def perform
     args = { version: params[:version].to_i }
+    args[:dsa_classification] = dsa_classification_args if params.has_key?(:dsa_classification)
 
     result = nil
     begin
@@ -340,6 +341,24 @@ class ReviewablesController < ApplicationController
     elsif claimed_by_id.present? && claimed_by_id != current_user.id
       I18n.t("reviewables.user_claimed")
     end
+  end
+
+  def dsa_classification_args
+    raise Discourse::InvalidAccess unless DsaStatementOfRecord.classification_enabled?
+
+    unless params[:dsa_classification].is_a?(ActionController::Parameters)
+      raise Discourse::InvalidParameters.new(:dsa_classification)
+    end
+
+    classification =
+      DsaStatementOfRecord::ClassificationContract.new(
+        **params.require(:dsa_classification).permit(:community_rule, :category).to_h,
+      )
+    rule = classification.rule
+
+    raise Discourse::InvalidParameters.new(:dsa_classification) if !classification.valid? || !rule
+
+    { community_rule: rule, category: classification.category }
   end
 
   def find_reviewable

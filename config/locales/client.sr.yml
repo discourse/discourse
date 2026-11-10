@@ -6,6 +6,13 @@
 
 sr:
   js:
+    code_editor:
+      search:
+        next: "Dalje"
+        previous: "Prethodno"
+        close: "Zatvori"
+      fold:
+        to: "ka"
     user_api_key:
       deny: "Odustani"
       write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
@@ -371,8 +378,9 @@ sr:
       title: "Prilagodite svoj sajt"
       back: "Nazad"
       next: "Dalje"
-      sections:
-        search: "Pretraži"
+      steps:
+        theme:
+          title: "Izaberite temu"
       homepage:
         topics: "Teme"
         categories: "Kategorije"
@@ -631,7 +639,6 @@ sr:
         placeholder: "ovde unesite naslov poruke, link ili ID"
     dsa_statements:
       category: "Kategorija"
-      saving: "Snimanje…"
     review:
       show_more: "Pokaži više"
       show_less: "Pokaži manje"
@@ -1833,6 +1840,7 @@ sr:
       flags: Zastave
     filter_controls:
       reset: "Reset"
+      sort_label: "Sortiraj po"
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
@@ -2846,9 +2854,9 @@ sr:
           title: "Dodaci"
       upcoming_changes:
         name: "Ime foruma"
-        enabled: "Omogućeno"
-        enabled_for_options:
-          everyone: "Svi"
+        enabled: "Omgućeno"
+        feedback: "Povratne informacije"
+        settings: "Podešavanje"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -2863,6 +2871,9 @@ sr:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Osoblje"
+        sort:
+          status: "Status"
+          name: "Ime foruma"
       config:
         developer:
           title: "Programer"
@@ -3368,7 +3379,6 @@ sr:
           size: "Veličina"
         upload:
           label: "Učitaj"
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Podešavanja"
         operations:
           failed: "%{operation} neuspješna. Molimo proverite logove."

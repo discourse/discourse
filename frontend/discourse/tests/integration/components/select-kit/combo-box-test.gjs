@@ -196,6 +196,7 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
     const first = selectKit(".first");
     const second = selectKit(".second");
 
+    // This exercises the deprecated write-back on purpose
     await withSilencedDeprecationsAsync(
       "discourse.select-kit.implicit-mutation",
       async () => {

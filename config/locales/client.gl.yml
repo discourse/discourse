@@ -6,6 +6,14 @@
 
 gl:
   js:
+    code_editor:
+      search:
+        replace: "Substituír"
+        next: "Seguinte"
+        previous: "Anterior"
+        close: "Pechar"
+      fold:
+        to: "para o"
     user_api_key:
       authorize: "Autorizar"
       deny: "Cancelar"
@@ -273,15 +281,10 @@ gl:
       back: "Volver"
       next: "Seguinte"
       sections:
-        theme: "Tema"
         fonts: "Tipos de letra"
         homepage: "Páxina de inicio"
-        search: "Buscar"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
       fonts:
-        heading_font: "Tipo de letra de título"
+        base_font: "Mensaxe"
       homepage:
         topics: "Temas"
         categories: "Categorías"
@@ -1858,6 +1861,7 @@ gl:
       default: Emojis personalizados
     filter_controls:
       reset: "Restabelecer"
+      sort_label: "Ordenar por"
     shared_drafts:
       title: "Borradores compartidos"
       notice: "Este tema só é visíbel para aqueles que poden ver a categoría <b>%{category}</b>."
@@ -3479,10 +3483,9 @@ gl:
           title: "Complementos"
       upcoming_changes:
         name: "Nome"
-        enabled: "Activado"
+        enabled: "Activado?"
+        settings: "Configuración"
         preview: "Visualizar"
-        enabled_for_options:
-          everyone: "Todos"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -3497,6 +3500,9 @@ gl:
           impact_role_admins: "Administradores"
           impact_role_moderators: "Moderadores"
           impact_role_staff: "Equipo"
+        sort:
+          status: "Estado"
+          name: "Nome"
       config:
         developer:
           title: "Desenvolvedor"
@@ -4124,7 +4130,6 @@ gl:
           label: "Cargar"
           title: "Cargar unha copia de seguranza a esta instancia"
           success: "Cargouse correctamente «%{filename}». O ficheiro está agora sendo procesado e tardará ata un minuto en aparecer na lista."
-          error: "Produciuse un erro durante a carga de «%{filename}»: %{message}"
         settings: "Configuración"
         operations:
           failed: "Produciuse un fallo %{operation} . Revisa os rexistros."

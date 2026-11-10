@@ -8,6 +8,14 @@ hy:
   js:
     dsa_notice:
       choice_title: "Անօրինական է"
+    code_editor:
+      search:
+        replace: "Փոխարինել"
+        next: "Հաջորդը"
+        previous: "Նախորդը"
+        close: "Փակել"
+      fold:
+        to: "մինչև"
     user_api_key:
       authorize: "Նույնականացնել"
       deny: "Չեղարկել"
@@ -322,12 +330,9 @@ hy:
       back: "Ետ"
       next: "Հաջորդը"
       sections:
-        theme: "Թեմա"
         homepage: "Գլխավոր էջ"
-        search: "Որոնում"
-      colors:
-        light: "Բաց"
-        dark: "Մութ"
+      fonts:
+        base_font: "Բովանդակություն"
       homepage:
         topics: "Թեմաներ"
         categories: "Կատեգորիաներ"
@@ -550,7 +555,6 @@ hy:
         placeholder: "Մուտքագրեք հաղորդագրությունների վերնագրերը url կամ id"
     dsa_statements:
       category: "Կատեգորիա"
-      saving: "Պահպանվում է…"
     review:
       show_more: "Ցույց տալ ավելին"
       show_less: "Ցույց տալ ավելի քիչ"
@@ -2282,6 +2286,7 @@ hy:
       default: Մասնավոր էմոջիներ
     filter_controls:
       reset: "Վերահաստատե;"
+      sort_label: "Դասավորել ըստ"
     shared_drafts:
       title: "Կիսված Սևագրեր"
       destination_category: "Նպատակային Կատեգորիա"
@@ -3876,9 +3881,10 @@ hy:
           title: "Հավելումներ"
       upcoming_changes:
         name: "Անուն"
+        enabled: "Միացվա՞ծ է:"
+        feedback: "Կարծիք"
+        settings: "Կարգավորումներ"
         preview: "Նախադիտում"
-        enabled_for_options:
-          everyone: "Բոլորը"
         impact_roles:
           moderators: "Մոդերատորներ"
           staff: "Անձնակազմ"
@@ -3890,6 +3896,9 @@ hy:
           impact_type_other: "Այլ"
           impact_role_moderators: "Մոդերատորներ"
           impact_role_staff: "Անձնակազմ"
+        sort:
+          status: "Ստատուս"
+          name: "Անուն"
       config:
         developer:
           title: "Ծրագրավորող"
@@ -4486,7 +4495,6 @@ hy:
           title: "Վերբեռնել պահուստ այս օրինակում"
           uploading: "Վերբեռնվում է…"
           success: "'%{filename}' -ը հաջողությամբ վերբեռնվել է: Այս ֆայլը այժմ մշակվում է, և մինչև մեկ րոպե կպահանջվի այն ցանկում ցուցադրելու համար:"
-          error: " '%{filename}' -ը վերբեռնելիս տեղի է ունեցել սխալ՝ %{message}"
         settings: "Կարգավորումներ"
         operations:
           failed: "%{operation}-ը ձախողվեց: Խնդրում ենք ստուգել գրառումները:"
