@@ -12,7 +12,13 @@ RSpec.describe CrawlerScorer do
       created_at: 30.minutes.ago,
       referrer: "https://#{hostname}/",
     }
-    BrowserPageviewEvent.create!(defaults.merge(opts))
+    attributes = defaults.merge(opts)
+    BrowserPageviewEvent.create!(
+      {
+        normalized_referrer:
+          BrowserPageviewEventUrlNormalizer.normalize_referrer(attributes[:referrer]),
+      }.merge(attributes),
+    )
   end
 
   def score!
@@ -22,7 +28,7 @@ RSpec.describe CrawlerScorer do
   it "scores automation user agents at +100" do
     event = make_event(user_agent: "Mozilla/5.0 (X11; Linux x86_64) HeadlessChrome/120.0.0.0")
     score!
-    expect(event.reload.score).to eq(140)
+    expect(event.reload.score).to eq(150)
   end
 
   it "writes the score breakdown per heuristic to the side table" do
@@ -35,7 +41,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(170)
+    expect(event.reload.score).to eq(180)
     breakdown = event.browser_pageview_event_score
     expect(breakdown.automation_ua_score).to eq(100)
     expect(breakdown.known_asn_score).to eq(30)
@@ -47,7 +53,8 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.rapid_nav_score).to eq(0)
     expect(breakdown.ip_rotation_score).to eq(0)
     expect(breakdown.referrer_score).to eq(0)
-    expect(breakdown.engagement_score).to eq(40)
+    expect(breakdown.distributed_traffic_score).to eq(0)
+    expect(breakdown.engagement_score).to eq(50)
   end
 
   it "does not score an event whose only signal is missing engagement" do
@@ -63,7 +70,7 @@ RSpec.describe CrawlerScorer do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
     score!
-    expect(event.reload.score).to eq(70)
+    expect(event.reload.score).to eq(80)
   end
 
   it "scores datacenter ASNs at +10" do
@@ -73,7 +80,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(50)
+    expect(event.reload.score).to eq(60)
     expect(event.browser_pageview_event_score.datacenter_asn_score).to eq(10)
   end
 
@@ -82,7 +89,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(50)
+    expect(event.reload.score).to eq(60)
     expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
   end
 
@@ -91,7 +98,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(55)
+    expect(event.reload.score).to eq(65)
     expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(15)
   end
 
@@ -101,7 +108,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(45)
+    expect(event.reload.score).to eq(55)
     expect(event.browser_pageview_event_score.stale_browser_score).to eq(5)
   end
 
@@ -147,7 +154,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect([edge_event.reload.score, opera_event.reload.score]).to eq([45, 45])
+    expect([edge_event.reload.score, opera_event.reload.score]).to eq([55, 55])
     expect(
       [
         edge_event.browser_pageview_event_score.stale_browser_score,
@@ -166,7 +173,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
-      ).to contain_exactly(55)
+      ).to contain_exactly(65)
     end
   end
 
@@ -180,7 +187,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(ip_address: "9.9.9.9").pluck(:score).uniq,
-      ).to contain_exactly(60)
+      ).to contain_exactly(70)
     end
   end
 
@@ -194,7 +201,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
-      ).to contain_exactly(55)
+      ).to contain_exactly(65)
     end
   end
 
@@ -208,7 +215,7 @@ RSpec.describe CrawlerScorer do
 
     expect(
       BrowserPageviewEvent.where(session_id: "rotating-session").pluck(:score).uniq,
-    ).to contain_exactly(70)
+    ).to contain_exactly(80)
   end
 
   it "scores ip rotation the same whether or not the addresses cross ASNs" do
@@ -230,7 +237,7 @@ RSpec.describe CrawlerScorer do
 
     expect(
       BrowserPageviewEvent.where(session_id: "cross-asn-session").pluck(:score).uniq,
-    ).to contain_exactly(70)
+    ).to contain_exactly(80)
   end
 
   it "does not add an IP rotation score to a session that only uses two addresses" do
@@ -273,7 +280,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(ip_address: "5.5.5.5").pluck(:score).uniq,
-      ).to contain_exactly(50)
+      ).to contain_exactly(60)
     end
   end
 
@@ -340,8 +347,8 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(70)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
+    expect(event.reload.score).to eq(80)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(50)
   end
 
   it "lowers the score when an engagement beacon arrives after an earlier run" do
@@ -349,7 +356,7 @@ RSpec.describe CrawlerScorer do
     event = make_event(asn: 12_345)
 
     score!
-    expect(event.reload.score).to eq(70)
+    expect(event.reload.score).to eq(80)
 
     Fabricate(
       :browser_pageview_session_engagement,
@@ -414,8 +421,8 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(70)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
+    expect(event.reload.score).to eq(80)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(50)
   end
 
   it "ignores engaged traffic older than the lookback horizon" do
@@ -435,8 +442,8 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(70)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
+    expect(event.reload.score).to eq(80)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(50)
   end
 
   it "scores partially engaged ip+ua traffic at the lower band" do
@@ -465,5 +472,298 @@ RSpec.describe CrawlerScorer do
         .browser_pageview_event_score
         .engagement_score,
     ).to eq(20)
+  end
+
+  it "uses 50 missing-engagement points for anonymous visits and 40 for logged-in visits" do
+    anonymous = make_event(referrer: nil)
+    logged_in = make_event(user_id: Fabricate(:user).id, ip_address: "1.2.3.5", referrer: nil)
+
+    score!
+
+    expect(anonymous.reload.score).to eq(60)
+    expect(anonymous.browser_pageview_event_score.engagement_score).to eq(50)
+    expect(logged_in.reload.score).to eq(50)
+    expect(logged_in.browser_pageview_event_score.engagement_score).to eq(40)
+  end
+
+  describe ".score!" do
+    it "preserves burst-only scores when the burst leaves the scoring window" do
+      freeze_time
+      events = 12.times.map { |index| make_event(created_at: 45.minutes.ago + index.seconds) }
+
+      score!
+
+      event = events.last
+      original_score = event.reload.score
+      expect(original_score).to be > described_class::BOT_SCORE_THRESHOLD
+      expect(event.browser_pageview_event_score.distributed_traffic_score).to eq(0)
+
+      described_class.score!(window_start: event.created_at, window_end: event.created_at + 1.hour)
+
+      expect(event.reload.score).to eq(original_score)
+    end
+
+    context "with distributed traffic" do
+      before { freeze_time }
+
+      def make_cohort_events(count: 99, ip_count: count, **attributes)
+        count.times.map do |index|
+          make_event(
+            {
+              asn: 64_496,
+              ip_address: "198.51.100.#{index % ip_count + 1}",
+              created_at: 12.hours.ago,
+            }.merge(attributes),
+          )
+        end
+      end
+
+      it "scores ASN cohorts at the minimum volume, IP, and session-ratio thresholds" do
+        history = make_cohort_events(ip_count: 20)
+        history.last(2).each { |previous| previous.update!(session_id: history.first.session_id) }
+        event = make_event(asn: 64_496, ip_address: "198.51.100.20")
+
+        score!
+
+        expect(event.reload.score).to eq(110)
+        expect(event.browser_pageview_event_score.distributed_traffic_score).to eq(60)
+      end
+
+      it "rejects referral cohorts when session navigation lowers the distinct-session ratio" do
+        referrer = "https://www.google.com/"
+        history = make_cohort_events(asn: nil, referrer: referrer)
+        current = make_event(ip_address: "198.51.101.1", referrer: referrer)
+        (history + [current]).each do |landing|
+          2.times do |index|
+            make_event(
+              ip_address: landing.ip_address.to_s,
+              session_id: landing.session_id,
+              created_at: landing.created_at + (index + 1).seconds,
+            )
+          end
+        end
+
+        score!
+
+        expect(current.reload.score).to be_nil
+        expect(BrowserPageviewEvent.where(described_class.likely_crawler_condition)).to be_empty
+      end
+
+      it "counts each pageview once when a session repeats the same external referrer" do
+        referrer = "https://referrer.example.com/"
+        make_cohort_events(asn: nil, referrer: referrer)
+        current = make_event(ip_address: "198.51.101.1", referrer: referrer)
+        make_event(
+          ip_address: current.ip_address.to_s,
+          session_id: current.session_id,
+          referrer: referrer,
+          created_at: current.created_at + 1.second,
+        )
+
+        score!
+
+        expect(current.reload.score).to eq(110)
+        expect(current.browser_pageview_event_score.distributed_traffic_score).to eq(60)
+      end
+
+      it "keeps different external referrers separate" do
+        make_cohort_events(asn: nil, referrer: "https://referrer.example.com/campaign")
+        event =
+          make_event(ip_address: "198.51.101.1", referrer: "https://referrer.example.com/other")
+
+        score!
+
+        expect(event.reload.score).to be_nil
+      end
+
+      it "scores a session using its earliest eligible external referrer" do
+        landing_referrer = "https://referrer.example.com/landing"
+        later_referrer = "https://referrer.example.com/later"
+        make_cohort_events(asn: nil, referrer: landing_referrer)
+        make_cohort_events(count: 100, asn: nil, referrer: later_referrer)
+        later = make_event(referrer: later_referrer)
+        landing =
+          make_event(
+            session_id: later.session_id,
+            referrer: landing_referrer,
+            created_at: later.created_at - 1.second,
+          )
+
+        score!
+
+        expect(landing.reload.score).to eq(110)
+        expect(later.reload.score).to be_nil
+      end
+
+      it "groups referral traffic across ASNs and tracking URL variants" do
+        99.times do |index|
+          make_event(
+            ip_address: "198.51.100.#{index + 1}",
+            asn: [nil, 64_496, 64_497][index % 3],
+            referrer: "https://referrer.example.com/?utm_source=#{index}&fbclid=#{index}",
+            created_at: 12.hours.ago,
+          )
+        end
+        current = make_event(referrer: "https://referrer.example.com/?utm_source=current")
+
+        score!
+
+        expect(current.reload.score).to eq(110)
+      end
+
+      it "counts an event matching both cohort types only once" do
+        referrer = "https://referrer.example.com/"
+        make_cohort_events(referrer: referrer)
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1", referrer: referrer)
+
+        score!
+
+        expect(event.reload.score).to eq(110)
+        expect(event.browser_pageview_event_score.distributed_traffic_score).to eq(60)
+      end
+
+      it "requires at least 100 pageviews in the cohort" do
+        make_cohort_events(count: 98)
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1")
+
+        score!
+
+        expect(event.reload.score).to be_nil
+      end
+
+      it "requires at least 20 distinct IPs" do
+        make_cohort_events(ip_count: 18)
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1")
+
+        score!
+
+        expect(event.reload.score).to be_nil
+      end
+
+      it "requires a distinct session for almost every pageview" do
+        make_cohort_events(session_id: "shared-session")
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1")
+
+        score!
+
+        expect(event.reload.score).to be_nil
+      end
+
+      it "excludes engaged and logged-in events from distributed scoring" do
+        make_cohort_events(count: 198)
+        anonymous = make_event(asn: 64_496, ip_address: "198.51.101.1")
+        engaged = make_event(asn: 64_496, ip_address: "198.51.101.2")
+        logged_in =
+          make_event(asn: 64_496, ip_address: "198.51.101.3", user_id: Fabricate(:user).id)
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: engaged.session_id,
+          click_events: 1,
+          scroll_events: 2,
+        )
+
+        score!
+
+        expect(anonymous.reload.score).to eq(110)
+        expect(engaged.reload.score).to be_nil
+        expect(logged_in.reload.score).to be_nil
+      end
+
+      it "excludes logged-in pageviews from the cohort sample" do
+        make_cohort_events(user_id: Fabricate(:user).id)
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1")
+
+        score!
+
+        expect(event.reload.score).to be_nil
+      end
+
+      it "keeps different ASNs and user agents separate" do
+        make_cohort_events
+        different_asn = make_event(asn: 64_497, ip_address: "198.51.101.1")
+        different_agent =
+          make_event(asn: 64_496, ip_address: "198.51.101.2", user_agent: "AnotherBrowser/1.0")
+
+        score!
+
+        expect([different_asn.reload.score, different_agent.reload.score]).to eq([nil, nil])
+      end
+
+      it "excludes site aliases, internal URLs, and non-HTTP URLs from referral cohorts" do
+        primary_hostname = hostname
+        RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(
+          [primary_hostname, "alias.example.com"],
+        )
+        [
+          "https://alias.example.com/",
+          "ftp://external.example.com/",
+          "https://#{hostname.upcase}:443/topic",
+          "https://www.#{hostname}:443/",
+          "https://#{hostname}/",
+          "invalid-referrer",
+        ].each_with_index do |referrer, index|
+          user_agent = "Mozilla/5.0 variant-#{index}"
+          make_cohort_events(asn: nil, referrer: referrer, user_agent: user_agent)
+          make_event(ip_address: "198.51.101.1", referrer: referrer, user_agent: user_agent)
+        end
+
+        score!
+
+        expect(BrowserPageviewEvent.where.not(score: nil)).to be_empty
+      end
+
+      it "limits cohort history to the 24 hours before the scoring window ends" do
+        make_cohort_events(created_at: 24.hours.ago - 1.second)
+        make_cohort_events(created_at: 1.second.from_now)
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1")
+
+        score!
+
+        expect(event.reload.score).to be_nil
+      end
+
+      it "rejects cohorts above the engagement ceiling" do
+        history = make_cohort_events
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1")
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: history.first.session_id,
+          mouse_move_events: 2,
+          scroll_events: 2,
+        )
+
+        score!
+
+        expect(event.reload.score).to be_nil
+      end
+
+      it "clears obsolete distributed scores after late engagement while retaining other signals" do
+        history = make_cohort_events
+        event = make_event(asn: 64_496, ip_address: "198.51.101.1")
+        direct = make_event(asn: 64_496, ip_address: "198.51.101.2", referrer: nil)
+
+        score!
+
+        expect(event.reload.score).to eq(110)
+        expect(direct.reload.score).to eq(120)
+
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: history.first.session_id,
+          mouse_move_events: 2,
+          scroll_events: 2,
+        )
+
+        score!
+
+        expect(event.reload.score).to eq(0)
+        expect(event.browser_pageview_event_score.reload.distributed_traffic_score).to eq(0)
+        expect(event.browser_pageview_event_score.engagement_score).to eq(0)
+        expect(direct.reload.score).to eq(60)
+        expect(direct.browser_pageview_event_score.reload.distributed_traffic_score).to eq(0)
+        expect(direct.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
+        expect(direct.browser_pageview_event_score.engagement_score).to eq(50)
+      end
+    end
   end
 end
