@@ -1148,7 +1148,7 @@ export default class Topic extends RestModel {
   }
 
   @computed("excerpt")
-  get escapedExcerpt(): string {
+  get escapedExcerpt(): string | null | undefined {
     return applyValueTransformer(
       "topic-escaped-excerpt",
       emojiUnescape(this.excerpt),
