@@ -10,7 +10,6 @@ export default function zoomFrameUrl({
 }) {
   const params = new URLSearchParams({ topic_id: topicId, attempt });
 
-  // TODO (martin) showzoom is for testing only, remove before merge
   if (ignoreTimeframe) {
     params.set("showzoom", "1");
   }

@@ -274,7 +274,7 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
-    const isOwnMessage = message.user.id === this.currentUser.id;
+    const isOwnMessage = message.user.id === this.currentUser?.id;
     this.messagesLoader.trackLiveMessage(message);
 
     if (!isOwnMessage) {
@@ -414,7 +414,7 @@ export default class ChatChannel extends Component {
 
     const message = this.messagesManager.findFirstMessageOfDay(
       new Date(date),
-      this.currentUser.user_option.timezone
+      this.currentUser?.user_option?.timezone
     );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });

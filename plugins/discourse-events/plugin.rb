@@ -1014,8 +1014,15 @@ after_initialize do
     :chat_channel_id,
     include_condition: -> do
       event = object.topic.first_post&.event
-      event&.livestream? && object.topic.topic_chat_channel.present? &&
-        (scope.is_admin? || event.can_access_livestream_chat?(scope.user))
+      topic_chat_channel = object.topic.topic_chat_channel
+      next false if !event&.livestream? || !topic_chat_channel
+
+      if scope.anonymous?
+        event.can_access_livestream_chat?(nil) &&
+          scope.can_preview_anonymous_public_chat_channel?(topic_chat_channel.chat_channel)
+      else
+        scope.is_admin? || event.can_access_livestream_chat?(scope.user)
+      end
     end,
   ) { object.topic.topic_chat_channel.chat_channel_id }
 

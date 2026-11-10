@@ -151,6 +151,10 @@ body.discourse-calendar-livestream-zoom-full {
     overflow: hidden;
   }
 
+  &__chat-signup {
+    margin: auto;
+  }
+
   &.--with-chat {
     --livestream-zoom-view-height: calc(
       var(--livestream-zoom-resting-height) * 0.55

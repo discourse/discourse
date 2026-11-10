@@ -54,6 +54,7 @@ export default class CompactEventEditor extends Component {
   @tracked showLocalTime;
   @tracked chatEnabled;
   @tracked livestream;
+  @tracked allowAnonymousLivestream;
   @tracked minimal;
   @tracked url;
   @tracked recording;
@@ -93,6 +94,7 @@ export default class CompactEventEditor extends Component {
       showLocalTime: this.showLocalTime,
       chatEnabled: this.chatEnabled,
       livestream: this.livestream,
+      allowAnonymousLivestream: this.allowAnonymousLivestream,
       minimal: this.minimal,
       url: this.url,
       recording: this.recording,
@@ -300,6 +302,7 @@ export default class CompactEventEditor extends Component {
     this[field] = value === "" ? null : value;
     if (!this.isLivestreamUrl) {
       this.livestream = false;
+      this.allowAnonymousLivestream = false;
     }
     this.#emitChange();
   }
@@ -316,6 +319,9 @@ export default class CompactEventEditor extends Component {
       return;
     }
     this.livestream = !this.livestream;
+    if (!this.livestream) {
+      this.allowAnonymousLivestream = false;
+    }
     this.#emitChange();
   }
 
@@ -518,6 +524,7 @@ export default class CompactEventEditor extends Component {
       show_local_time: this.showLocalTime,
       chat_enabled: this.chatEnabled,
       livestream: this.livestream,
+      allow_anonymous_livestream: this.allowAnonymousLivestream,
       minimal: this.minimal,
       all_day: this.allDay,
       reminders: this.reminders,
@@ -553,6 +560,8 @@ export default class CompactEventEditor extends Component {
           this.showLocalTime = !!updatedEvent.showLocalTime;
           this.chatEnabled = !!updatedEvent.chatEnabled;
           this.livestream = !!updatedEvent.livestream;
+          this.allowAnonymousLivestream =
+            !!updatedEvent.allowAnonymousLivestream;
           this.minimal = !!updatedEvent.minimal;
           this.allDay = !!updatedEvent.allDay;
           this.reminders = updatedEvent.reminders || [];
@@ -602,6 +611,7 @@ export default class CompactEventEditor extends Component {
     this.showLocalTime = s.showLocalTime;
     this.chatEnabled = s.chatEnabled;
     this.livestream = s.livestream;
+    this.allowAnonymousLivestream = s.allowAnonymousLivestream;
     this.minimal = s.minimal;
     this.url = s.url;
     this.recording = s.recording;

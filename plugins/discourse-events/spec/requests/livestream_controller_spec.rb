@@ -32,6 +32,63 @@ module DiscourseEvents
         expect(response.status).to eq(403)
       end
 
+      context "when the event allows anonymous attendance" do
+        before { event.update!(allow_anonymous_livestream: true) }
+
+        it "allows a guest to skip the join window in development" do
+          Rails.env.stubs(:development?).returns(true)
+          event.update!(original_starts_at: 2.hours.from_now, original_ends_at: 3.hours.from_now)
+
+          get "/discourse-calendar/livestream/zoom/signature.json",
+              params: {
+                topic_id: topic.id,
+                ignore_timeframe: true,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["signature"]).to be_present
+        end
+
+        it "enforces the join window for guests outside development" do
+          event.update!(original_starts_at: 2.hours.from_now, original_ends_at: 3.hours.from_now)
+
+          get "/discourse-calendar/livestream/zoom/signature.json",
+              params: {
+                topic_id: topic.id,
+                ignore_timeframe: true,
+              }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "returns the Zoom join payload with a guest identity" do
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "meeting_number" => "123456789",
+            "user_name" => I18n.t("discourse_post_event.zoom_guest"),
+            "user_email" => a_string_matching(/\Aguest-[0-9a-f]+@example\.com\z/),
+          )
+        end
+
+        it "honors the site's login requirement" do
+          SiteSetting.login_required = true
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(403)
+        end
+
+        it "honors topic visibility" do
+          topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+      end
+
       context "when signed in" do
         before { sign_in(current_user) }
 
@@ -169,6 +226,15 @@ module DiscourseEvents
         get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
 
         expect(response.status).to eq(404)
+      end
+
+      it "serves the meeting frame when the event allows anonymous attendance" do
+        event.update!(allow_anonymous_livestream: true)
+
+        get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('"anonymous":true')
       end
 
       context "when signed in" do
