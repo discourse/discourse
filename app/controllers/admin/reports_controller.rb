@@ -12,7 +12,7 @@ class Admin::ReportsController < Admin::StaffController
 
     hijack do
       params[:reports].each do |report_type, report_params|
-        raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
+        raise Discourse::NotFound unless Report::VALID_TYPE_REGEX.match?(report_type)
 
         args = parse_params(report_params)
         args[:guardian] = guardian
@@ -48,7 +48,7 @@ class Admin::ReportsController < Admin::StaffController
   def show
     report_type = params[:type]
 
-    raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
+    raise Discourse::NotFound unless Report::VALID_TYPE_REGEX.match?(report_type)
     raise Discourse::NotFound if Report.hidden?(report_type, guardian: guardian)
 
     args = parse_params(params)
