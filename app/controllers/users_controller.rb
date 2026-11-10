@@ -1202,8 +1202,12 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
-      # Log in the user unless they need to be approved
-      if Guardian.new(@user).can_access_forum?
+      # Log in the user unless they need to be approved or have a second factor
+      if !Guardian.new(@user).can_access_forum?
+        @needs_approval = true
+      elsif @user.totp_or_backup_codes_enabled? || @user.security_keys_enabled?
+        @redirect_to = path("/login")
+      else
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
         log_on_user(@user, replay_anonymous_action: true)
 
@@ -1232,8 +1236,6 @@ class UsersController < ApplicationController
               payload = cookies.delete(:sso_payload)
           @redirect_to = session_sso_provider_url + "?" + payload
         end
-      else
-        @needs_approval = true
       end
     else
       return render_json_error(I18n.t("activation.already_done"))
@@ -1263,6 +1265,18 @@ class UsersController < ApplicationController
 
     if @user.blank? || @user.active? || current_user.present? || @user.from_staged?
       raise Discourse::InvalidAccess.new
+    end
+
+    if @user.seen_before? ||
+         UserHistory.exists?(
+           action: UserHistory.actions[:deactivate_user],
+           target_user_id: @user.id,
+         )
+      raise Discourse::InvalidAccess.new(
+              nil,
+              nil,
+              custom_message: "activation.email_change_not_allowed",
+            )
     end
 
     User.transaction do
