@@ -1142,9 +1142,8 @@ export default class Topic extends RestModel {
 
   @computed("archetype")
   get archetypeObject(): Archetype | undefined {
-    // TODO(typescript-pending): Archetype omits its id field; remove when Archetype is typed.
     return Site.currentProp("archetypes")!.find(
-      (item) => (item as Archetype & { id: string }).id === this.archetype
+      (item) => item.id === this.archetype
     );
   }
 
