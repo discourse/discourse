@@ -358,6 +358,23 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         )
       end
 
+      it "keeps quoted messages intact when a wildcard censored word matches their HTML" do
+        Fabricate(:watched_word, word: "darn*", action: WatchedWord.actions[:censor])
+
+        post "/chat/#{chat_channel.id}.json", params: { message: <<~MD }
+          [chat quote="alice;1;2026-01-01T00:00:00Z"]
+          ![a style=position:fixed;inset:0 b](http://example.com/darn)
+          [/chat]
+        MD
+
+        expect(response.status).to eq(200)
+        image = Nokogiri::HTML5.fragment(Chat::Message.last.cooked).at_css("img")
+        expect(image.to_h).to eq(
+          "src" => "http://example.com/darn",
+          "alt" => "a style=position:fixed;inset:0 b",
+        )
+      end
+
       context "when the user is staff" do
         fab!(:user, :admin)
 
