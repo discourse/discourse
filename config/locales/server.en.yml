@@ -3589,6 +3589,12 @@ en:
     existing_message_moderator_post:
       one: "A post was merged into an existing message: %{topic_link}"
       other: "%{count} posts were merged into an existing message: %{topic_link}"
+    new_topic_moderator_post_no_link:
+      one: "A post was split to a new topic."
+      other: "%{count} posts were split to a new topic."
+    existing_topic_moderator_post_no_link:
+      one: "A post was merged into an existing topic."
+      other: "%{count} posts were merged into an existing topic."
 
   change_owner:
     post_revision_text: "Ownership transferred"
