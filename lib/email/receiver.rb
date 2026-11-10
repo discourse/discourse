@@ -1579,6 +1579,7 @@ module Email
       options[:via_email] = true
       options[:raw_email] = @raw_email
 
+      options[:created_at] = Time.zone.now if options[:topic_id] && !options[:import_mode]
       options[:created_at] ||= @mail.date
       options[:created_at] = DateTime.now if options[:created_at] > DateTime.now
 
