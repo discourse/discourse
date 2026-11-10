@@ -109,4 +109,59 @@ RSpec.describe Blog::Publication do
       expect(described_class.for_topic(reserved_topic).path).to eq("/about-#{reserved_topic.id}")
     end
   end
+
+  describe "#article" do
+    include_context "with blog editorial setup"
+
+    fab!(:topic) { Fabricate(:topic, category: drafts, user: writer) }
+    fab!(:first_post) do
+      Fabricate(
+        :post,
+        topic:,
+        user: writer,
+        raw: "Read the guide at https://old.example.com/guide today.",
+      )
+    end
+
+    let(:discussion_post) { publication.discussion_topic.first_post }
+
+    before { publish_blog_draft(publication, acting_user) }
+
+    it "follows a remap and rebake of the discussion post" do
+      stub_request(:any, "https://new.example.com/guide").to_return(status: 404)
+      discussion_post.revise(
+        Discourse.system_user,
+        { raw: discussion_post.raw.sub("old.example.com", "new.example.com") },
+        skip_revision: true,
+        bypass_bump: true,
+      )
+      CookedPostProcessor.new(discussion_post.reload).post_process
+
+      expect(publication.reload.article.cooked).to include("https://new.example.com/guide")
+    end
+
+    it "follows a hostname remap of the database" do
+      DbHelper.remap("old.example.com", "new.example.com")
+
+      expect(publication.reload.article.cooked).to include("https://new.example.com/guide")
+    end
+
+    it "keeps the published HTML when the discussion post is edited outside a publish" do
+      published_cooked = publication.article.cooked
+      discussion_post.revise(
+        acting_user,
+        { raw: "An unapproved change to the live article." },
+        force_new_version: true,
+      )
+      CookedPostProcessor.new(discussion_post.reload).post_process
+
+      expect(publication.reload.article.cooked).to eq(published_cooked)
+    end
+
+    it "shows the revision snapshot until the live HTML is captured" do
+      publication.update_columns(cooked: nil)
+
+      expect(publication.article.cooked).to eq(publication.published_revision.cooked)
+    end
+  end
 end

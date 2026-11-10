@@ -134,7 +134,11 @@ module ::Blog
         end
       render json: {
                title_diff_html: title_diff,
-               diff_html: DiscourseDiff.new(live.cooked.to_s, source.first_post.cooked).inline_html,
+               diff_html:
+                 DiscourseDiff.new(
+                   publication.article.cooked.to_s,
+                   source.first_post.cooked,
+                 ).inline_html,
              }
     rescue ONPDiff::DiffLimitExceeded
       render json: { title_diff_html: nil, diff_html: nil, diff_error: true }

@@ -34,6 +34,7 @@ module ::Blog
     validate :available_path
     validate :valid_publication_date
     before_validation :initialize_topics, on: :create
+    before_save :capture_live_article, if: :will_save_change_to_published_revision_id?
     after_create :capture_initial_publication
 
     scope :newest, -> { order(published_at: :desc, id: :desc) }
@@ -54,6 +55,22 @@ module ::Blog
         .or(where(draft_topic_id: topic.id))
         .or(where(discussion_topic_id: topic.id))
         .first || new(topic: topic, path: default_path(topic))
+    end
+
+    # Rebakes and remaps of a live article's discussion post reach readers. An edit
+    # outside a publish bumps the post's version, so it never does.
+    def self.refresh_live_article(post, cooked)
+      return if post.post_number != 1 || cooked.blank?
+      return if post.topic&.category_id != SiteSetting.blog_category.to_i
+      publication =
+        where.not(published_revision_id: nil).find_by(
+          discussion_topic_id: post.topic_id,
+          discussion_post_version: post.version,
+        )
+      return if !publication
+
+      upload = Upload.find_by(id: post.image_upload_id) if post.image_upload_id
+      publication.update_columns(cooked:, image_url: Revision.image_url_for(upload))
     end
 
     # Editorial changes to an article serialize on its original topic's row.
@@ -136,8 +153,13 @@ module ::Blog
       PostRevision.where(post: source.first_post).where("created_at > ?", last_published_at).count
     end
 
+    # The published revision, with the live HTML that follows rebakes of its discussion post.
     def article
-      published_revision || Revision.new(data: Revision.capture(self, editable_topic))
+      return Revision.new(data: Revision.capture(self, editable_topic)) if !published_revision
+      return published_revision if cooked.nil?
+      Revision.new(
+        data: published_revision.data.merge("cooked" => cooked, "image_url" => image_url),
+      )
     end
 
     def url
@@ -245,6 +267,13 @@ module ::Blog
       end
     end
 
+    # Readers see the revision's own HTML until its discussion post is next post-processed.
+    def capture_live_article
+      self.cooked = published_revision&.cooked
+      self.image_url = published_revision&.data&.[]("image_url")
+      self.discussion_post_version = discussion_topic&.first_post&.version
+    end
+
     def capture_initial_publication
       return unless published? && discussion_topic && !published_revision_id
       revision =
@@ -288,28 +317,31 @@ end
 #
 # Table name: blog_publications
 #
-#  id                    :bigint           not null, primary key
-#  draft_metadata        :jsonb            not null
-#  excerpt               :string           default(""), not null
-#  featured              :boolean          default(FALSE), not null
-#  last_published_at     :datetime
-#  path                  :string           not null
-#  published             :boolean          default(FALSE), not null
-#  published_at          :datetime
-#  schedule_error        :text             default(""), not null
-#  schedule_token        :string
-#  scheduled_at          :datetime
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  approved_revision_id  :bigint
-#  discussion_topic_id   :bigint
-#  draft_topic_id        :bigint
-#  published_revision_id :bigint
-#  publisher_id          :bigint
-#  scheduled_revision_id :bigint
-#  scheduler_id          :bigint
-#  submitted_revision_id :bigint
-#  topic_id              :bigint           not null
+#  id                      :bigint           not null, primary key
+#  cooked                  :text
+#  discussion_post_version :integer
+#  draft_metadata          :jsonb            not null
+#  excerpt                 :string           default(""), not null
+#  featured                :boolean          default(FALSE), not null
+#  image_url               :text
+#  last_published_at       :datetime
+#  path                    :string           not null
+#  published               :boolean          default(FALSE), not null
+#  published_at            :datetime
+#  schedule_error          :text             default(""), not null
+#  schedule_token          :string
+#  scheduled_at            :datetime
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  approved_revision_id    :bigint
+#  discussion_topic_id     :bigint
+#  draft_topic_id          :bigint
+#  published_revision_id   :bigint
+#  publisher_id            :bigint
+#  scheduled_revision_id   :bigint
+#  scheduler_id            :bigint
+#  submitted_revision_id   :bigint
+#  topic_id                :bigint           not null
 #
 # Indexes
 #

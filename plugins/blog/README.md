@@ -145,9 +145,9 @@ embedding host then includes that port, for example `blog.dev.localhost:8443`.
 
 ### Backups and hostname changes
 
-Back up uploads as well as the database. Enable `include_thumbnails_in_backups`
-when preserving published revisions: their frozen HTML can reference optimized
-images that are not regenerated simply by rendering the article.
+Back up uploads as well as the database. Without `include_thumbnails_in_backups`,
+a restore rebakes posts with images in the background, and articles show missing
+images until their discussion posts have been rebaked.
 
 A backup carries blog settings, themes, publications, and revisions, but not plugin
 source, DNS, TLS, or reverse-proxy configuration. Restore onto a compatible
@@ -155,11 +155,12 @@ Discourse build with this plugin installed. Before exposing a restored site, set
 the correct blog origin and exact embedding host, and verify both reader and
 editorial permissions.
 
-For a hostname-changing restore, also remap absolute URLs inside
-`blog_revisions.data`. These snapshots use JSONB; core's text-column
-hostname remapping does not update them. Perform this as an explicit, backed-up
-restore operation, not by republishing or rebaking live articles. Verify canonicals,
-feeds, sitemap, article images, and embedded discussions before reopening traffic.
+Live articles follow their discussion posts, so hostname remaps (`discourse remap`,
+`rake posts:remap`, or a restore onto a new hostname), upload migrations to S3, and
+rebakes reach readers without extra steps. Revisions keep the HTML they were approved
+with. An edit to a discussion post outside a publish stops its article following it
+until the next publish. Verify canonicals, feeds, sitemap, article images, and
+embedded discussions before reopening traffic.
 
 ### Local demo provisioning
 

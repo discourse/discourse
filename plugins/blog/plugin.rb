@@ -55,6 +55,8 @@ after_initialize do
 
   Rails.application.config.filter_parameters += [:review_token]
 
+  on(:post_process_cooked) { |doc, post| Blog::Publication.refresh_live_article(post, doc.to_html) }
+
   add_to_serializer(
     :post,
     :blog_article,
