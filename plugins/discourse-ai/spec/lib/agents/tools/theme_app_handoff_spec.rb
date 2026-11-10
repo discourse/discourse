@@ -44,6 +44,36 @@ RSpec.describe DiscourseAi::Agents::Tools::ThemeAppHandoff do
     )
   end
 
+  it "reports a globally disabled server instead of offering setup" do
+    SiteSetting.mcp_server_enabled = false
+    SiteSetting.stubs(:shadowed_settings).returns(Set[:mcp_server_enabled])
+
+    result = invoke(app: "claude")
+
+    expect(result).to include(
+      status: "blocked",
+      setup_blocker: I18n.t("discourse_ai.mcp_theme_access.server_locked"),
+    )
+    expect(result).not_to have_key(:setup_needed)
+    expect(result[:app_steps]).to include("#{Discourse.base_url}/mcp")
+  end
+
+  it "offers remaining setup when the server is globally enabled" do
+    SiteSetting.mcp_server_enabled = true
+    SiteSetting.stubs(:shadowed_settings).returns(Set[:mcp_server_enabled])
+
+    result = invoke
+
+    expect(result[:status]).to eq("needs_setup")
+    expect(result).not_to have_key(:setup_blocker)
+    expect(result[:setup_needed]).to include(
+      I18n.t(
+        "discourse_ai.mcp_theme_access.setup.tools",
+        tools: "Get theme, Create theme, Update theme",
+      ),
+    )
+  end
+
   it "says when apps can only sign in from approved domains" do
     SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"
     SiteSetting.mcp_oauth_client_id_metadata_domains = "claude.ai"

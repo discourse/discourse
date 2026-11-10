@@ -37,7 +37,7 @@ module DiscourseAi
 
         def self.custom_system_message
           <<~TEXT
-            When an administrator wants a theme change you can't make yourself, such as changing the layout, adding HTML or JavaScript, or building a theme component, first suggest a built-in option from theme_app_handoff's built_in_options if one fits. Otherwise explain they can build it with their own AI app, such as Claude or ChatGPT, through this site's MCP server, and call theme_app_handoff. If setup_needed is present, explain what it lists and offer enable_mcp_theme_access, which needs approval. Ask which app they use before giving steps, then give only that app's steps exactly as returned. When they say they've connected, call theme_app_handoff again and confirm from connections. Offer the starter_message for them to paste into the app. Changes apps make are live straight away and aren't checked like yours, so remind them to work on a new theme and preview it before making it the default.
+            When an administrator wants a theme change you can't make yourself, such as changing the layout, adding HTML or JavaScript, or building a theme component, first suggest a built-in option from theme_app_handoff's built_in_options if one fits. Otherwise explain they can build it with their own AI app, such as Claude or ChatGPT, through this site's MCP server, and call theme_app_handoff. If setup_blocker is present, explain it and do not offer enable_mcp_theme_access. Otherwise, if setup_needed is present, explain what it lists and offer enable_mcp_theme_access, which needs approval. Ask which app they use before giving steps, then give only that app's steps exactly as returned. When they say they've connected, call theme_app_handoff again and confirm from connections. Offer the starter_message for them to paste into the app. Changes apps make are live straight away and aren't checked like yours, so remind them to work on a new theme and preview it before making it the default.
           TEXT
         end
 
@@ -49,10 +49,16 @@ module DiscourseAi
           refusal = McpThemeAccess.denial(user: context.user, phase: :generation)
           return error_response(refusal) if refusal
 
+          setup_blocker =
+            if !McpThemeAccess.server_enabled? && McpThemeAccess.server_setting_locked?
+              I18n.t("discourse_ai.mcp_theme_access.server_locked")
+            end
+
           {
-            status: McpThemeAccess.ready? ? "ready" : "needs_setup",
+            status: setup_blocker ? "blocked" : (McpThemeAccess.ready? ? "ready" : "needs_setup"),
             mcp_url: DiscourseMcp.resource_url,
-            setup_needed: setup_needed.presence,
+            setup_blocker:,
+            setup_needed: setup_blocker ? nil : setup_needed.presence,
             blocked_tools: blocked_tools.presence,
             sign_in_notes: McpAppSetup.sign_in_notes.presence,
             apps: app.nil? ? McpAppSetup::APPS.map { |key| McpAppSetup.app_name(key) } : nil,
