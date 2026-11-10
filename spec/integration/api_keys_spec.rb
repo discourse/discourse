@@ -44,6 +44,25 @@ RSpec.describe "api keys" do
     expect(topic.reload.title).not_to eq("This is an unauthorized title change")
   end
 
+  it "does not let an empty-named parameter satisfy a parameter restriction" do
+    scope =
+      ApiKeyScope.new(resource: "topics", action: "write", allowed_parameters: { topic_id: ["3"] })
+    scoped_api_key = Fabricate(:api_key, user: Fabricate(:admin), api_key_scopes: [scope])
+
+    post "/posts.json",
+         params: {
+           :title => "A topic this key may not start",
+           :raw => "This topic is outside the scope of the key.",
+           "" => "3",
+         },
+         headers: {
+           HTTP_API_KEY: scoped_api_key.key,
+         },
+         as: :json
+
+    expect(response.status).to eq(403)
+  end
+
   it "allows parameters on ics routes" do
     get "/u/#{user.username}/bookmarks.ics?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
     expect(response.status).to eq(200)
