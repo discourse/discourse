@@ -81,7 +81,6 @@ function applyOnebox(state, silent) {
               child.type = "html_raw";
               child.content = cached;
               child.inline = true;
-              child.onebox = true;
 
               text.type = "html_raw";
               text.content = "";
