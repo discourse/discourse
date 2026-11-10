@@ -157,9 +157,12 @@ editorial permissions.
 
 Published articles store their HTML in text columns, so hostname remaps (`discourse
 remap` or a restore onto a new hostname) and upload migrations to S3 update them like
-posts. Rebakes do not: a refetched onebox or other re-rendered content reaches readers
-only through a new publish. Verify canonicals, feeds, sitemap, article images, and
-embedded discussions before reopening traffic.
+posts. Rebakes do not: a refetched onebox or other re-rendered content stays out of an
+article until it is published again or an admin runs `bin/rake blog:refresh_articles`,
+which copies each discussion post's current HTML into its article. Run it after rebaking
+posts in bulk, such as after an import, once Sidekiq has finished post-processing them.
+Verify canonicals, feeds, sitemap, article images, and embedded discussions before
+reopening traffic.
 
 ### Local demo provisioning
 
