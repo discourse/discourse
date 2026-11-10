@@ -6795,6 +6795,7 @@ en:
 
   google_oauth2:
     not_in_allowed_group: "Authentication failed. You are not a member of a permitted Google group."
+    group_lookup_failed: "Authentication failed. Your Google group membership could not be verified."
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

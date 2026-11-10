@@ -68,18 +68,16 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   end
 
   def after_authenticate(auth_token, existing_account: nil)
-    groups = fetches_groups? ? raw_groups(auth_token.uid) : nil
+    groups, groups_complete = fetches_groups? ? raw_groups(auth_token.uid) : nil
     auth_token.extra[:raw_groups] = groups if groups
 
     allowed_groups =
       SiteSetting.google_oauth2_hd_groups_allowed.split("|").map(&:strip).reject(&:blank?)
-    if allowed_groups.present? && !member_of_allowed_group?(groups, allowed_groups)
-      return(
-        Auth::Result.new.tap do |auth_result|
-          auth_result.failed = true
-          auth_result.failed_reason = I18n.t("google_oauth2.not_in_allowed_group")
-        end
-      )
+    if allowed_groups.present?
+      return failed_result("google_oauth2.group_lookup_failed") if !groups_complete
+      if !member_of_allowed_group?(groups, allowed_groups)
+        return failed_result("google_oauth2.not_in_allowed_group")
+      end
     end
 
     result = super
@@ -111,6 +109,13 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
       SiteSetting.google_oauth2_hd_groups_service_account_json.present?
   end
 
+  def failed_result(reason_key)
+    Auth::Result.new.tap do |auth_result|
+      auth_result.failed = true
+      auth_result.failed_reason = I18n.t(reason_key)
+    end
+  end
+
   def member_of_allowed_group?(groups, allowed_groups)
     return false if groups.blank?
 
@@ -123,12 +128,15 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     end
   end
 
+  # Returns the groups retrieved and whether the listing is complete. Group
+  # sync consumes whatever was retrieved; the allowlist requires a complete list.
   def raw_groups(uid)
     groups = []
+    complete = true
     page_token = nil
     groups_url = "https://#{GROUPS_DOMAIN}#{GROUPS_PATH}"
     client = build_service_account_client
-    return if client.nil?
+    return nil, false if client.nil?
 
     loop do
       params = { userKey: uid }
@@ -145,16 +153,12 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
         Rails.logger.error(
           "[Discourse Google OAuth2] failed to retrieve groups for #{uid} - status #{response.status}",
         )
-        return
+        complete = false
+        break
       end
     end
 
-    groups
-  rescue StandardError => error
-    Rails.logger.error(
-      "[Discourse Google OAuth2] failed to retrieve groups for #{uid} - #{error.class}",
-    )
-    nil
+    [groups, complete]
   end
 
   def build_service_account_client

@@ -282,7 +282,18 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
           result = described_class.new.after_authenticate(@auth_hash)
 
           expect(result).to be_failed
-          expect(result.failed_reason).to eq(I18n.t("google_oauth2.not_in_allowed_group"))
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.group_lookup_failed"))
+        end
+
+        it "rejects authentication when the group lookup settings are no longer configured" do
+          SiteSetting.google_oauth2_hd_groups_allowed = "12345"
+          SiteSetting.google_oauth2_hd_groups = false
+          SiteSetting.google_oauth2_hd_groups_service_account_json = ""
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).to be_failed
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.group_lookup_failed"))
         end
 
         it "rejects authentication when a later page of group retrieval fails" do
@@ -304,7 +315,19 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
           result = described_class.new.after_authenticate(@auth_hash)
 
           expect(result).to be_failed
-          expect(result.failed_reason).to eq(I18n.t("google_oauth2.not_in_allowed_group"))
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.group_lookup_failed"))
+        end
+
+        it "clears associated groups when group retrieval fails without an allowlist" do
+          stub_request(
+            :get,
+            "https://admin.googleapis.com/admin/directory/v1/groups?userKey=#{@auth_hash.uid}",
+          ).to_return(status: 500)
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).not_to be_failed
+          expect(result.associated_groups).to eq([])
         end
 
         it "doesn't explode with invalid credentials" do
