@@ -385,33 +385,35 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
   async updateLanguage() {
     const load = ++this.#languageLoads;
     const name = this.args.language;
-    let extension: Extension = [];
 
     try {
       const support = name ? await loadCodeEditorLanguage(name) : null;
 
       // The editor can be torn down, or a newer load started, while the
       // module is loading.
-      if (support && this.view && load === this.#languageLoads) {
-        // Shortcuts bring the palette and completion UI; raw `@extensions`
-        // bring their own.
-        extension = [
-          support(buildCodeEditorParams(), this.args.languageOptions),
-          defaultHighlighting(),
-          autocompletion(),
-        ];
+      if (!this.view || load !== this.#languageLoads) {
+        return;
       }
+
+      // Shortcuts bring the palette and completion UI; raw `@extensions`
+      // bring their own.
+      const extension: Extension = support
+        ? [
+            support(buildCodeEditorParams(), this.args.languageOptions),
+            defaultHighlighting(),
+            autocompletion(),
+          ]
+        : [];
+      this.view.dispatch({ effects: this.#language.reconfigure(extension) });
     } catch (error) {
-      // The editor keeps working as plain text.
       // eslint-disable-next-line no-console
       console.error(error);
-    }
 
-    if (!this.view || load !== this.#languageLoads) {
-      return;
+      // The editor keeps working as plain text.
+      if (load === this.#languageLoads) {
+        this.view?.dispatch({ effects: this.#language.reconfigure([]) });
+      }
     }
-
-    this.view.dispatch({ effects: this.#language.reconfigure(extension) });
   }
 
   @action

@@ -406,34 +406,44 @@ module("Integration | Component | code-editor", function (hooks) {
     }
   });
 
-  test("stays a plain text editor when its language fails to build", async function (assert) {
-    registerCodeEditorLanguage("throws", async () => ({
-      default: () => {
+  [
+    [
+      "fails to build",
+      () => {
         throw new Error("bad options");
       },
-    }));
-    const state = new (class {
-      @tracked language = "sql";
-    })();
-    const consoleError = sinon.stub(console, "error");
+    ],
+    ["builds an invalid extension", () => "not an extension"],
+  ].forEach(([description, build]) => {
+    test(`stays a plain text editor when its language ${description}`, async function (assert) {
+      registerCodeEditorLanguage("broken", async () => ({ default: build }));
+      const state = new (class {
+        @tracked language = "sql";
+      })();
+      const consoleError = sinon.stub(console, "error");
 
-    try {
-      await render(
-        <template>
-          <CodeEditor @language={{state.language}} @value="select 1" />
-        </template>
-      );
-      await waitFor(".cm-content span[class]");
+      try {
+        await render(
+          <template>
+            <CodeEditor @language={{state.language}} @value="select 1" />
+          </template>
+        );
+        await waitFor(".cm-content span[class]");
 
-      state.language = "throws";
-      await waitUntil(() => consoleError.called);
-      await settled();
+        state.language = "broken";
+        await waitUntil(() => consoleError.called);
+        await settled();
 
-      assert.dom(".cm-content").hasText("select 1");
-      assert.deepEqual(highlightedTokens(), [], "the old language is dropped");
-    } finally {
-      consoleError.restore();
-    }
+        assert.dom(".cm-content").hasText("select 1");
+        assert.deepEqual(
+          highlightedTokens(),
+          [],
+          "the old language is dropped"
+        );
+      } finally {
+        consoleError.restore();
+      }
+    });
   });
 
   test("ignores a superseded language load that fails", async function (assert) {
