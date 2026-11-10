@@ -544,4 +544,42 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
       ),
     )
   end
+
+  it "reports the credit limit instead of asking how to proceed when AI credits run out",
+     :aggregate_failures do
+    session =
+      Fabricate(
+        :discourse_workflows_ai_authoring_session,
+        user: admin,
+        messages: [{ "type" => "user", "content" => "Create a manual log workflow" }],
+      )
+    generation_id = SecureRandom.hex
+    allocation = Fabricate(:llm_credit_allocation, daily_credits: 100, daily_used: 100)
+    credit_limit_error =
+      LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+    fake_bot = double
+    allow(fake_bot).to receive(:reply).and_raise(credit_limit_error)
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    job = described_class.new
+
+    messages =
+      MessageBus.track_publish("/discourse-workflows/ai-authoring/#{generation_id}") do
+        job.execute(session_id: session.id, user_id: admin.id, generation_id:)
+      end
+
+    expected_message =
+      I18n.t(
+        "discourse_workflows.ai.error_credit_limit_exceeded",
+        reset_time: allocation.formatted_reset_time,
+      )
+    expect(job.credit_limit_error).to eq(credit_limit_error)
+    expect(session.reload).to have_attributes(
+      status: "error",
+      latest_response: {
+        "status" => "error",
+        "message" => expected_message,
+      },
+    )
+    expect(messages.map(&:data).last).to include(status: "error", error: expected_message)
+  end
 end

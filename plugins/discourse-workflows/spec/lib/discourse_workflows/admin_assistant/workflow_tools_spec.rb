@@ -587,6 +587,25 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
     expect(tool.invoke[:status]).to eq("error")
   end
 
+  it "raises the credit limit so the conversation can report it instead of retrying" do
+    SiteSetting.discourse_workflows_ai_authoring_enabled = true
+    SiteSetting.discourse_workflows_workflow_authoring_agent = Fabricate(:ai_agent).id
+    allocation = Fabricate(:llm_credit_allocation, daily_credits: 100, daily_used: 100)
+    fake_bot = double
+    allow(fake_bot).to receive(:reply).and_raise(
+      LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:),
+    )
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    allow_any_instance_of(Jobs::DiscourseWorkflows::AuthorWithAi).to receive(
+      :execute,
+    ).and_call_original
+
+    expect { tool.invoke }.to raise_error(LlmCreditAllocation::CreditLimitExceeded) { |error|
+      expect(error.allocation).to eq(allocation)
+    }
+    expect(DiscourseWorkflows::AiAuthoringSession.count).to eq(0)
+  end
+
   it "does not forward secret-bearing requests to workflow authoring" do
     expect_any_instance_of(Jobs::DiscourseWorkflows::AuthorWithAi).not_to receive(:execute)
 
