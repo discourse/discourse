@@ -71,8 +71,9 @@ RSpec.describe "User preferences tracking page" do
 
       expect(tracked_tags).to have_selected_names("ruby")
 
-      muted_tags.search("a")
+      muted_tags.open
       expect(muted_tags).to have_option_name("python")
+      expect(muted_tags).to have_option_name("golang")
       expect(muted_tags).to have_no_option_name("javascript")
       expect(muted_tags).to have_no_option_name("ruby")
       muted_tags.close
