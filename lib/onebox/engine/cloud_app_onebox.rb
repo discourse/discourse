@@ -26,7 +26,7 @@ module Onebox
       def link_html(og)
         <<-HTML
           <a href='#{og.url}' target='_blank' rel='noopener'>
-            #{og.title}
+            #{ERB::Util.html_escape(og.title)}
           </a>
         HTML
       end
