@@ -296,6 +296,59 @@ RSpec.describe AppearanceChange do
       expect(third.theme.reload.name).to eq("Acme (draft)")
     end
 
+    it "keeps a theme a change would switch back to" do
+      first = activate(draft("8px"))
+      second = activate(draft("12px", replaces: first.theme))
+      third = draft("16px", replaces: second.theme)
+      expect(
+        AppearanceChange::Revert.call(params: { appearance_change_id: second.id }, guardian:),
+      ).to be_a_success
+      expect(Theme.find_default).to eq(first.theme)
+
+      activate(third)
+      expect(Theme.exists?(first.theme_id)).to eq(true)
+
+      result = AppearanceChange::Revert.call(params: { appearance_change_id: third.id }, guardian:)
+      expect(result).to be_a_success
+      expect(Theme.find_default).to eq(first.theme)
+    end
+
+    context "when a plugin stops the administrator editing an older version" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:protected_theme_ids) { [] }
+      let(:modifier) do
+        ids = protected_theme_ids
+        proc { |allowed, _guardian, theme| allowed && !ids.include?(theme.id) }
+      end
+
+      before { plugin.register_modifier(:user_guardian_can_edit_theme, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
+      it "doesn't rename or remove it" do
+        first = activate(draft("8px"))
+        second = activate(draft("12px", replaces: first.theme))
+        third = draft("16px", replaces: second.theme)
+        protected_theme_ids << first.theme_id
+
+        expect(
+          AppearanceChange::Activate.call(params: { appearance_change_id: third.id }, guardian:),
+        ).to fail_a_policy(:can_edit_versions)
+        expect(Theme.exists?(first.theme_id)).to eq(true)
+
+        expect(
+          AppearanceChange::Revert.call(params: { appearance_change_id: second.id }, guardian:),
+        ).to fail_a_policy(:can_edit_versions)
+        expect(first.theme.reload.name).to eq("Acme (previous)")
+      end
+    end
+
     it "keeps an old version someone changed or made selectable, as an ordinary theme" do
       first = activate(draft("8px"))
       second = activate(draft("12px", replaces: first.theme))

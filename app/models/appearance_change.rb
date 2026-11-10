@@ -208,12 +208,34 @@ class AppearanceChange < ActiveRecord::Base
 
       previous = AppearanceChange.kind_theme.find_by(theme_id: replaces_theme_id)
       older = previous&.replaces_theme
-      next if older.nil? || older.default?
+      # the previous version's own switch back to the older one is dropped
+      # below, but another change may still need it
+      if older.nil? || older.default? ||
+           self.class.switch_back_target?(older, except: [previous.id])
+        next
+      end
 
       # the previous version can't switch back to the older one any more
       previous.update!(replaces_theme_id: nil, previous_state: {})
       AppearanceChange.kind_theme.where(theme_id: older.id).find_each(&:discard_version!)
     end
+  end
+
+  # The themes making this change live renames or removes: the version it
+  # replaces, and the one before that.
+  def versions_changed_on_activation
+    return [] if !kind_theme? || replaces_theme.nil?
+
+    previous = AppearanceChange.kind_theme.find_by(theme_id: replaces_theme_id)
+    [replaces_theme, previous&.replaces_theme].compact
+  end
+
+  # Whether switching back from some change would make this theme live again.
+  def self.switch_back_target?(theme, except: [])
+    where
+      .not(id: except)
+      .where("previous_state -> 'site_settings' ->> 'default_theme_id' = ?", theme.id.to_s)
+      .exists?
   end
 
   # Removes an old version's change, theme and the palettes nothing else uses.
