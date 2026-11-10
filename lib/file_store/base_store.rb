@@ -118,7 +118,7 @@ module FileStore
     def get_path_for(type, id, sha, extension)
       depth = get_depth_for(id)
       tree = File.join(*sha[0, depth].chars, "")
-      "#{type}/#{depth + 1}X/#{tree}#{sha}#{extension}"
+      "#{type}/#{depth + 1}X/#{tree}#{File.basename("#{sha}#{extension}")}"
     end
 
     def get_path_for_upload(upload)
