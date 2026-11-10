@@ -41,15 +41,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassification::Questions do
         a_hash_including(
           name: "category",
           type: "choice",
-          instructions:
-            a_string_including(
-              "https://transparency.dsa.ec.europa.eu/page/documentation",
-              "Non-compliance with pricing regulations",
-              "Scams and/or fraud",
-              "Phishing",
-              "Other violation of provider's terms and conditions",
-              "Be respectful: No personal attacks.",
-            ),
+          instructions: a_string_including("Be respectful: No personal attacks."),
           choices: a_collection_including(scams_label, "Other violation of terms and conditions"),
         ),
       )

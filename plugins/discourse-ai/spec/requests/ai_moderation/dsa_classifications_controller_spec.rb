@@ -24,13 +24,9 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
     SiteSetting.ai_dsa_classification_decision_model = decision_model.id
   end
 
-  def suggest(reviewable_id = reviewable.id)
-    post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable_id}/suggest.json"
-  end
-
   describe "#suggest" do
     it "requires a login" do
-      suggest
+      post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
       expect(response.status).to eq(403)
     end
@@ -38,7 +34,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
     it "denies users who cannot see the review queue" do
       sign_in(Fabricate(:user))
 
-      suggest
+      post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
       expect(response.status).to eq(403)
     end
@@ -47,7 +43,9 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       before { sign_in(moderator) }
 
       it "returns the suggested classification" do
-        DiscourseAi::Decisions.with_canned_answers(**answers) { suggest }
+        DiscourseAi::Decisions.with_canned_answers(**answers) do
+          post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
+        end
 
         expect(response.status).to eq(200)
         expect(response.parsed_body).to eq(
@@ -61,7 +59,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
 
       it "returns blank fields the decision model refused" do
         DiscourseAi::Decisions.with_canned_answers(community_rule: :refusal, category: :refusal) do
-          suggest
+          post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
         end
 
         expect(response.status).to eq(200)
@@ -69,7 +67,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       end
 
       it "returns not found for an unknown reviewable" do
-        suggest(0)
+        post "/discourse-ai/ai-moderation/dsa-classifications/0/suggest.json"
 
         expect(response.status).to eq(404)
       end
@@ -77,7 +75,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       it "returns not found for a reviewable the moderator cannot see" do
         hidden = Fabricate(:reviewable_flagged_post, reviewable_by_moderator: false)
 
-        suggest(hidden.id)
+        post "/discourse-ai/ai-moderation/dsa-classifications/#{hidden.id}/suggest.json"
 
         expect(response.status).to eq(404)
       end
@@ -85,7 +83,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       it "denies access without a decision model" do
         SiteSetting.ai_dsa_classification_decision_model = ""
 
-        suggest
+        post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
         expect(response.status).to eq(403)
       end
@@ -93,7 +91,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       it "denies access when DSA reporting is disabled" do
         SiteSetting.dsa_reporting_enabled = false
 
-        suggest
+        post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
         expect(response.status).to eq(403)
       end
@@ -101,7 +99,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       it "returns an error when the decision request fails" do
         stub_request(:post, decision_model.url).to_return(status: 400, body: "{}")
 
-        suggest
+        post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to contain_exactly(
@@ -112,7 +110,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       it "returns too many requests when the decision model is out of credits" do
         Fabricate(:decision_model_credit_allocation, decision_model:, daily_used: 10_000)
 
-        suggest
+        post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
         expect(response.status).to eq(429)
         expect(response.parsed_body["errors"]).to contain_exactly(
@@ -123,7 +121,7 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
       it "does not hide unexpected errors as failed decisions" do
         allow_any_instance_of(DecisionModel).to receive(:decide).and_raise(ArgumentError, "bug")
 
-        suggest
+        post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
         expect(response.status).to eq(500)
       end
@@ -132,11 +130,11 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
         RateLimiter.enable
         stub_const(described_class, :SUGGESTIONS_PER_MINUTE, 1) do
           DiscourseAi::Decisions.with_canned_answers(**answers) do
-            suggest
+            post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
             expect(response.status).to eq(200)
 
-            suggest
+            post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
           end
         end
 

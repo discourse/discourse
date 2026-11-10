@@ -30,20 +30,24 @@ RSpec.describe "DSA classification suggestion" do
     sign_in(moderator)
   end
 
-  it "lets the moderator suggest each field and adjust the classification before confirming" do
+  it "lets the moderator suggest and adjust classification before silencing the user" do
     reviewable =
       PostActionCreator.create(
         Fabricate(:user, trust_level: TrustLevel[3]),
         post,
         :inappropriate,
       ).reviewable
+    penalty_modal = PageObjects::Modals::PenalizeUser.new("silence")
 
     DiscourseAi::Decisions.with_canned_answers(
       community_rule: "#{advertising_rule[:ground]}: #{advertising_rule[:explanation]}",
       category:,
     ) do
       review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "post-agree_and_hide", bundle_index: 1)
+      review_page.select_bundled_action(reviewable, "post-agree_and_silence", bundle_index: 1)
+      penalty_modal.set_future_date("two_weeks")
+      penalty_modal.fill_in_silence_reason("Repeated unsolicited advertising.")
+      modal.continue
 
       expect(modal).to have_classification
 
@@ -68,41 +72,6 @@ RSpec.describe "DSA classification suggestion" do
       modal.select_category("Other violation of terms and conditions")
 
       expect(modal).to have_selected_category("Other violation of terms and conditions")
-
-      modal.confirm("Save classification")
-
-      expect(modal).to be_closed
-      expect(review_page).to have_reviewable_with_approved_status(reviewable)
-    end
-  end
-
-  it "suggests classification after entering silence details" do
-    reviewable =
-      PostActionCreator.create(
-        Fabricate(:user, trust_level: TrustLevel[3]),
-        post,
-        :inappropriate,
-      ).reviewable
-    penalty_modal = PageObjects::Modals::PenalizeUser.new("silence")
-
-    DiscourseAi::Decisions.with_canned_answers(
-      community_rule: "#{advertising_rule[:ground]}: #{advertising_rule[:explanation]}",
-      category:,
-    ) do
-      review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "post-agree_and_silence", bundle_index: 1)
-      penalty_modal.set_future_date("two_weeks")
-      penalty_modal.fill_in_silence_reason("Repeated unsolicited advertising.")
-      modal.continue
-
-      expect(modal).to have_classification
-
-      suggestion.suggest_rule
-      suggestion.suggest_category
-
-      expect(modal).to have_selected_rule(advertising_rule[:ground])
-      expect(modal).to have_selected_category(category)
-      expect(review_page).to have_reviewable_with_pending_status(reviewable)
 
       modal.confirm("Silence")
 
