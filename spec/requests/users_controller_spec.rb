@@ -6096,6 +6096,45 @@ RSpec.describe UsersController do
       expect(response).to have_http_status(:forbidden)
     end
 
+    context "when a requested user is inactive" do
+      before do
+        inactive_user.user_stat.update!(post_count: 1)
+        inactive_user.user_profile.update!(bio_raw: "Inactive user bio")
+      end
+
+      it "does not include the inactive user for anonymous users" do
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+        )
+      end
+
+      it "does not include the inactive user for regular users" do
+        sign_in(another_user)
+
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+        )
+      end
+
+      it "includes the inactive user for staff" do
+        sign_in(moderator)
+
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+          inactive_user.username,
+        )
+      end
+    end
+
     context "when `hide_profile` user option is checked" do
       before { user2.user_option.update_columns(hide_profile: true) }
 
