@@ -282,7 +282,11 @@ export default class UserAction extends RestModel {
 
   @computed("title")
   get titleHtml(): string | null {
-    return this.title && emojiUnescape(escapeExpression(this.title));
+    // Only an empty string unescapes to `undefined`, and a non-empty title
+    // escapes to a non-empty string.
+    return (
+      this.title && (emojiUnescape(escapeExpression(this.title)) as string)
+    );
   }
 
   @computed(

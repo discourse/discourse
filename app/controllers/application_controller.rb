@@ -815,7 +815,7 @@ class ApplicationController < ActionController::Base
     raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
   end
 
-  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
+  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.ts`
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
   def is_valid_destination_url?(url)
