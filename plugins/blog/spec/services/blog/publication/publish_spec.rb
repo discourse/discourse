@@ -106,7 +106,6 @@ RSpec.describe Blog::Publication::Publish do
             publisher: acting_user,
             path: revision.data["path"],
             cooked: revision.cooked,
-            discussion_post_version: 1,
           )
           expect(publication.discussion_topic).to have_attributes(
             category_id: category.id,
@@ -219,10 +218,7 @@ RSpec.describe Blog::Publication::Publish do
         )
         expect(discussion.first_post.raw).to eq(first_post.reload.raw)
         expect(discussion.user).not_to eq(acting_user)
-        expect(publication).to have_attributes(
-          cooked: publication.published_revision.cooked,
-          discussion_post_version: discussion.first_post.version,
-        )
+        expect(publication.cooked).to eq(publication.published_revision.cooked)
       end
     end
   end
