@@ -49,6 +49,8 @@ export default class SelectOptionsView {
   #hasWarnedMaximum = false;
   #readMinimum?: SelectEngineOptions["getMinimum"];
   #minimum?: SelectEngineOptions["minimum"];
+  #readLockedValues?: SelectEngineOptions["getLockedValues"];
+  #lockedValues?: SelectEngineOptions["lockedValues"];
 
   /** Raw presentation inputs, kept separate from downstream lock and selection readers. */
   #readPresentationOptions?: SelectEngineOptions["getOptions"];
@@ -122,6 +124,8 @@ export default class SelectOptionsView {
     this.#maximum = opts.maximum;
     this.#readMinimum = opts.getMinimum;
     this.#minimum = opts.minimum;
+    this.#readLockedValues = opts.getLockedValues;
+    this.#lockedValues = opts.lockedValues;
     this.#readPresentationOptions = opts.getOptions;
     this.#readKindOptions = opts.getKindOptions;
     this.#kindOptions = opts.kindOptions;
@@ -270,6 +274,11 @@ export default class SelectOptionsView {
     }
     const raw = this.#readMinimum?.() ?? this.#minimum;
     return raw != null && raw >= 1 ? Math.floor(raw) : 0;
+  }
+
+  /** The held ids no change may drop, as given; validated where they meet the held value. */
+  get lockedValues(): unknown {
+    return this.#readLockedValues?.() ?? this.#lockedValues;
   }
 
   get valueItems(): SelectItem | SelectItem[] | undefined {

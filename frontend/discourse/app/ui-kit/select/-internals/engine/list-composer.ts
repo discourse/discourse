@@ -42,6 +42,7 @@ export default class ListComposer {
   #getValue: () => SelectValue;
   #getHasValue: () => boolean;
   #isSelected: (item: SelectItem) => boolean;
+  #isLockedValue: (value: SelectItemId) => boolean;
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
   #getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
@@ -71,6 +72,7 @@ export default class ListComposer {
     getValue: () => SelectValue;
     getHasValue: () => boolean;
     isSelected: (item: SelectItem) => boolean;
+    isLockedValue: (value: SelectItemId) => boolean;
     getAtMaximum: () => boolean;
     getTotal: () => number | undefined;
     getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
@@ -91,6 +93,7 @@ export default class ListComposer {
     this.#getHasValue = opts.getHasValue;
     this.#isSelected = opts.isSelected;
     this.#getAtMaximum = opts.getAtMaximum;
+    this.#isLockedValue = opts.isLockedValue;
     this.#getTotal = opts.getTotal;
     this.#getContentContext = opts.getContentContext;
     this.#applyContent = opts.applyContent;
@@ -345,6 +348,7 @@ export default class ListComposer {
     const selected =
       this.#isSelected(item) && typeof item.onSelect !== "function";
     const reasonDisabled = !!item.disabled;
+    const locked = selected && this.#isLockedValue(value);
     const groupAction = !!item.__groupHeader || !!item.__groupFooter;
     const capDisabled =
       atMaximum &&
@@ -362,9 +366,10 @@ export default class ListComposer {
         // selected row stays open (deselecting it is how the user gets back under the cap), and
         // so do action rows and structural rows, neither of which ever becomes a value. A
         // group's action header or footer is the exception: it acts by adding the group.
-        disabled: reasonDisabled || capDisabled,
+        disabled: reasonDisabled || capDisabled || locked,
         reasonDisabled,
         capDisabled,
+        locked,
         groupHeader: !!item.__header || !!item.__groupHeader,
         groupFooter: !!item.__footer || !!item.__groupFooter,
         textBoundary: !!item.__header || !!item.__footer,

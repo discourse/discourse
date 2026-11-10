@@ -51,6 +51,7 @@ const REQUIRED = new Set([
   "unresolvedValue",
   "createItem",
   "removeHint",
+  "lockedHint",
   "loadError",
   "noneLabel",
   "loadingLabel",
@@ -131,6 +132,7 @@ async function mount(configuration = {}) {
         @kindTextWrappers={{state.value.wrappers}}
         @load={{state.value.load}}
         @loadingStatus={{state.value.loadingStatus}}
+        @lockedValues={{state.value.lockedValues}}
         @maximum={{state.value.maximum}}
         @maxLoaded={{state.value.maxLoaded}}
         @maxVisibleChips={{state.value.maxVisibleChips}}
@@ -269,6 +271,19 @@ const SCENARIOS = {
   minimum: { multiple: true, value: [1], minimum: 3 },
   clear: { value: 1, clearable: true },
   clearAll: { multiple: true, value: [1, 2], clearable: true },
+  locked: { multiple: true, value: [1, 2], lockedValues: [1] },
+  lockedCompact: {
+    multiple: true,
+    value: [1, 2],
+    lockedValues: [1],
+    maxVisibleChips: 0,
+  },
+  partialClear: {
+    multiple: true,
+    value: [1, 2, 3],
+    lockedValues: [1],
+    clearable: true,
+  },
   unresolvedInput: { items: [], value: 404, resolveValue: () => undefined },
   unresolvedChip: {
     items: [],
@@ -761,6 +776,29 @@ const USES = [
   spoken("itemRemoved", "chip removal announcement", "held", {
     action: "remove",
   }),
+  spoken("itemsRemoved", "partial clear announcement", "partialClear", {
+    action: "clear",
+  }),
+  drawn(
+    "lockedHint",
+    "locked chip hint",
+    "locked",
+    ".d-select__chip.--locked .d-select__chip-remove .sr-only"
+  ),
+  drawn(
+    "lockedHint",
+    "locked strip hint",
+    "lockedCompact",
+    ".d-select__strip-item.--locked .d-select__strip-remove .sr-only",
+    { open: true }
+  ),
+  drawn(
+    "lockedHint",
+    "locked row description",
+    "locked",
+    ".d-select__option.--locked .d-select__option-locked-hint",
+    { open: true }
+  ),
   drawn("loadError", "error message", "error", ".d-select__error-message", {
     open: true,
   }),
@@ -1020,6 +1058,7 @@ function assertUse(assert, row, expected, announce) {
         }),
         allAlreadySelected: i18n("d_select.all_already_selected"),
         itemRemoved: i18n("d_select.item_removed", { item: "Apple" }),
+        itemsRemoved: i18n("d_select.items_removed", { count: 2 }),
         resultsCount: i18n("d_select.results_count", { count: 3 }),
         resultsLoaded: i18n("d_select.results_loaded", { count: 3 }),
         maxLoaded: i18n("d_select.filter_to_narrow"),
@@ -1219,6 +1258,8 @@ function assertValues(assert, row, calls) {
       itemsNotAddedHeld: { count: 1 },
       itemsNotAddedLimit: { count: 1 },
       itemRemoved: { item: "Apple" },
+      itemsRemoved: { count: 2 },
+      lockedHint: { item: "Apple" },
       unresolvedValue: { value: "404" },
       resultsCount: { count: 3 },
       resultsLoaded: { count: 3 },

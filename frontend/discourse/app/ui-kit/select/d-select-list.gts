@@ -100,6 +100,8 @@ interface DSelectListSignature {
     maximum?: number | false;
     /** Advisory selection minimum. */
     minimum?: number;
+    /** Held ids that can't be removed; see `DSelect`'s `@lockedValues`. */
+    lockedValues?: SelectHostArgs["lockedValues"];
     /** Skips a passed `:footer` block; see `DSelect`'s `@suppressFooter`. */
     suppressFooter?: boolean;
     /** Customization family, fixed at construction. */

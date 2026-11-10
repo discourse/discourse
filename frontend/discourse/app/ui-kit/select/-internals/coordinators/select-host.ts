@@ -48,6 +48,7 @@ export interface SelectHostArgs
       | "maxLoaded"
       | "maximum"
       | "minimum"
+      | "lockedValues"
       | "items"
       | "load"
       | "loadContext"
@@ -205,6 +206,7 @@ export default class SelectHost {
       getMinChars: () => this.#options.getArgs().minChars,
       getMaxLoaded: () => this.#options.getArgs().maxLoaded,
       getMaximum: () => this.#options.getArgs().maximum,
+      getLockedValues: () => this.#options.getArgs().lockedValues,
       getMinimum: () => this.#options.getArgs().minimum,
       getOptions: () => this.#options.getArgs(),
       items: (resolvedOptions) => {

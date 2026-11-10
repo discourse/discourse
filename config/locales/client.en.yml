@@ -3624,6 +3624,7 @@ en:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
       remove_hint: "Press Backspace or Delete to remove"
+      locked_hint: "Can't be removed"
       selected_items: "Selected items"
       selected_items_list: "Selected items"
       remove_item: "Remove %{item}"
@@ -3647,6 +3648,9 @@ en:
       bulk_add_summary: "%{added}, %{not_added}"
       all_already_selected: "All already selected"
       item_removed: "Removed %{item}"
+      items_removed:
+        one: "%{count} removed"
+        other: "%{count} removed"
       load_error: "Couldn't load results."
       retry: "Retry"
       unresolved_value: "Unknown item (%{value})"

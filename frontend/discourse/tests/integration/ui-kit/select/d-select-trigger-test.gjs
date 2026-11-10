@@ -3003,3 +3003,98 @@ module(
     });
   }
 );
+
+function stripButton(value) {
+  return find(
+    `.d-select__strip-item[data-value='${value}'] .d-select__strip-remove`
+  );
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (locked values in the strip and static root)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /** A controlled capped or static multi select with locked values. */
+    async function renderLocked({ value, locked = [1], variant } = {}) {
+      const held = tracked(value);
+      const onChange = (next) => (held.value = next);
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @lockedValues={{locked}}
+            @maxVisibleChips={{if variant undefined 0}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @texts={{hash ariaLabel="Fruit"}}
+            @value={{held.value}}
+            @variant={{variant}}
+          />
+        </template>
+      );
+      return held;
+    }
+
+    test("a locked strip item is focusable, shows a lock and ignores removal", async function (assert) {
+      const held = await renderLocked({ value: [1, 2] });
+      await focus("[role='combobox']");
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowLeft");
+
+      assert
+        .dom(".d-select__strip-item[data-value='1']")
+        .hasClass("--locked", "the locked item carries the modifier");
+      assert
+        .dom(stripButton(1))
+        .hasAttribute("aria-disabled", "true", "its button is disabled")
+        .isNotDisabled("but still focusable");
+      assert
+        .dom(".d-select__strip-item[data-value='1'] .d-icon-lock")
+        .exists("a lock replaces the remove icon");
+      assert.strictEqual(
+        nameOf(stripButton(1)),
+        "Apple Can't be removed",
+        "it is named by its label and the locked hint"
+      );
+
+      await triggerKeyEvent(stripButton(2), "keydown", "ArrowLeft");
+      assert.strictEqual(
+        document.activeElement,
+        stripButton(1),
+        "arrows reach the locked item"
+      );
+      for (const key of ["Enter", " ", "Backspace", "Delete"]) {
+        await triggerKeyEvent(stripButton(1), "keydown", key);
+        assert.deepEqual(held.value, [1, 2], `${key} removes nothing`);
+        assert.strictEqual(
+          document.activeElement,
+          stripButton(1),
+          `focus stays after ${key}`
+        );
+      }
+      await click(stripButton(1));
+      assert.deepEqual(held.value, [1, 2], "a click removes nothing");
+    });
+
+    test("Backspace on a capped field with a locked last value opens the strip at it", async function (assert) {
+      const held = await renderLocked({ value: [2, 1] });
+      await focus("[role='combobox']");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Backspace");
+
+      assert.deepEqual(held.value, [2, 1], "nothing was removed");
+      assert.strictEqual(
+        document.activeElement,
+        stripButton(1),
+        "focus lands on the locked item"
+      );
+    });
+
+    test("Backspace on a static root clears only the removable values", async function (assert) {
+      const held = await renderLocked({ value: [1, 2, 3], variant: "static" });
+      await focus(TRIGGER);
+      await triggerKeyEvent(TRIGGER, "keydown", "Backspace");
+
+      assert.deepEqual(held.value, [1], "the locked value stays");
+    });
+  }
+);

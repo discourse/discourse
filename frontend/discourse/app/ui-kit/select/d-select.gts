@@ -278,10 +278,18 @@ export interface DSelectSignature {
     maximum?: number | false;
     /**
      * Advisory minimum for a multi-select: it shows a "select at least N" message and exposes
-     * the state, but never blocks anything — deselecting and clearing always succeed, down to an
-     * empty selection. Submit-time enforcement belongs to the consuming form.
+     * the state, but never blocks anything. Submit-time enforcement belongs to the consuming
+     * form; `@lockedValues` is the way to keep particular values.
      */
     minimum?: number;
+    /**
+     * Held ids of a multi-select that can't be removed, matched like any held id. Their chips show
+     * a lock in place of the remove button, their rows stay selected, and "Clear all" keeps them.
+     * They must be part of `@value`: the select never adds them, so the caller keeps them in its
+     * value. They count toward `@maximum`. Multi-select only; a fixed single value is
+     * `@readonly`.
+     */
+    lockedValues?: SelectEngineOptions["lockedValues"];
     /**
      * Single-select only: adds a first-class "none" row to the top of the list, labeled with
      * `texts.noneLabel`. Selecting it clears the value to `null`, and the row reads as selected

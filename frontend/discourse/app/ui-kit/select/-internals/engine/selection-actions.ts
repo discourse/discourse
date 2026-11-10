@@ -1,4 +1,5 @@
 import { cached } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectItem,
@@ -8,6 +9,16 @@ import type {
 import type { SelectChangeContext } from "./customizations.ts";
 import type SelectOptionsView from "./select-options.ts";
 import type { SelectionOrigin } from "./selection-updates.ts";
+
+/** The held locked keys, and why the input breaks the contract when it does. */
+type LockedKeys = {
+  keys: ReadonlySet<string | null>;
+  problem?: string;
+};
+
+const NO_LOCKED_KEYS: LockedKeys = Object.freeze({
+  keys: Object.freeze(new Set<string | null>()),
+});
 
 export default class SelectionActions {
   #options: SelectOptionsView;
@@ -89,6 +100,14 @@ export default class SelectionActions {
     return this.#options.minimum;
   }
 
+  /** Whether anything held can be removed: a held value that isn't locked. */
+  get hasRemovableValue(): boolean {
+    if (!this.#options.multiple) {
+      return this.hasValue;
+    }
+    return this._valueArray.some((value) => !this.isLockedValue(value));
+  }
+
   /**
    * Whether the selection has reached {@link maximum}. At the cap no further item can be
    * added, and every unselected ordinary option reports itself disabled.
@@ -126,11 +145,64 @@ export default class SelectionActions {
     return maximum != null && this.selectedCount >= maximum;
   }
 
+  get #lockedKeys(): ReadonlySet<string | null> {
+    const { keys, problem } = this._lockedKeys;
+    assert(problem ?? "", !problem);
+    return keys;
+  }
+
   @cached
   get _selectedKeys(): ReadonlySet<string | null> {
     return new Set(
       this._valueArray.map((value) => this.#options.valueKey(value))
     );
+  }
+
+  /**
+   * The held ids no change may drop. Only held ids count, so a contract breach reported in
+   * development behaves in production as if the unheld ids were never given.
+   */
+  @cached
+  get _lockedKeys(): LockedKeys {
+    const locked = this.#options.lockedValues;
+    if (locked == null) {
+      return NO_LOCKED_KEYS;
+    }
+    if (!Array.isArray(locked)) {
+      return {
+        ...NO_LOCKED_KEYS,
+        problem: "DSelect: `@lockedValues` must be an array of held ids.",
+      };
+    }
+    if (locked.length === 0) {
+      return NO_LOCKED_KEYS;
+    }
+    if (!this.#options.multiple) {
+      return {
+        ...NO_LOCKED_KEYS,
+        problem:
+          "DSelect: `@lockedValues` needs `@multiple`. Use `@readonly` for a single value that can't change.",
+      };
+    }
+    const held = this._selectedKeys;
+    const keys = new Set<string | null>();
+    const unheld: SelectItemId[] = [];
+    for (const value of locked as SelectItemId[]) {
+      const key = this.#options.valueKey(value);
+      if (held.has(key)) {
+        keys.add(key);
+      } else {
+        unheld.push(value);
+      }
+    }
+    return {
+      keys,
+      problem:
+        unheld.length === 0
+          ? undefined
+          : `DSelect: the locked value "${String(unheld[0])}" is not in \`@value\`. ` +
+            "`@lockedValues` must be a subset of `@value`.",
+    };
   }
 
   @cached
@@ -144,6 +216,24 @@ export default class SelectionActions {
       this.#options.dedupeValues(
         makeArray(this.#options.value) as SelectItemId[]
       )
+    );
+  }
+
+  /** Whether a held value is locked, matching ids by their key. */
+  isLockedValue(value: SelectItemId): boolean {
+    return this.#lockedKeys.has(this.#options.valueKey(value));
+  }
+
+  /** Every value in `previous` whose key `next` no longer holds, in held order. */
+  removedValues(
+    previous: readonly SelectItemId[],
+    next: readonly SelectItemId[]
+  ): SelectItemId[] {
+    const nextKeys = new Set(
+      next.map((value) => this.#options.valueKey(value))
+    );
+    return previous.filter(
+      (value) => !nextKeys.has(this.#options.valueKey(value))
     );
   }
 
@@ -332,7 +422,11 @@ export default class SelectionActions {
       this.#emitChange(null, origin);
       return;
     }
-    const key = this.#options.valueKey(this.#options.itemValue(item));
+    const value = this.#options.itemValue(item);
+    if (this.isLockedValue(value)) {
+      return;
+    }
+    const key = this.#options.valueKey(value);
     this.#emitChange(
       this._valueArray.filter((v) => this.#options.valueKey(v) !== key),
       origin
@@ -346,14 +440,15 @@ export default class SelectionActions {
       return;
     }
     const values = this._valueArray;
-    if (values.length === 0) {
+    if (values.length === 0 || this.isLockedValue(values.at(-1))) {
       return;
     }
     this.#emitChange(values.slice(0, -1), origin);
   }
 
   /**
-   * Clears the entire selection (emits an empty value).
+   * Clears the selection down to its locked values, emitting them with `reason: "clear"`. Does
+   * nothing when every held value is locked.
    */
   clear(origin?: SelectionOrigin): void {
     this.#onIntent(origin);
@@ -363,7 +458,16 @@ export default class SelectionActions {
     if (origin && !this.hasValue) {
       return;
     }
-    this.#emitChange(this.#options.multiple ? [] : null, origin, "clear");
+    if (!this.#options.multiple) {
+      this.#emitChange(null, origin, "clear");
+      return;
+    }
+    const values = this._valueArray;
+    const kept = values.filter((value) => this.isLockedValue(value));
+    if (values.length > 0 && kept.length === values.length) {
+      return;
+    }
+    this.#emitChange(kept, origin, "clear");
   }
 
   /**
@@ -392,7 +496,13 @@ export default class SelectionActions {
     // controlled `onChange`; registered change middleware wraps it (and
     // may run `next()` to proceed or skip it).
     this.#runChange(() => {
-      if (this.#beforeEmit(origin, nextValue) && !this.#options.locked) {
+      // Checked here as well as by each action, against the live value and locks: middleware
+      // may run this step later, and programmatic writes reach it without a removal action.
+      if (
+        !this.#dropsLockedValue(nextValue) &&
+        this.#beforeEmit(origin, nextValue) &&
+        !this.#options.locked
+      ) {
         this.#options.onChange?.(nextValue, payload, {
           origin,
           reason,
@@ -403,6 +513,19 @@ export default class SelectionActions {
         this.#applyLegacyOnChange(nextValue, payload);
       }
     }, context);
+  }
+
+  #dropsLockedValue(nextValue: SelectValue): boolean {
+    const locked = this.#lockedKeys;
+    if (locked.size === 0) {
+      return false;
+    }
+    const nextKeys = new Set(
+      (makeArray(nextValue) as SelectItemId[]).map((value) =>
+        this.#options.valueKey(value)
+      )
+    );
+    return [...locked].some((key) => !nextKeys.has(key));
   }
 
   // Best-effort synchronous resolution of a value to its item(s), from the escape

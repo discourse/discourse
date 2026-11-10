@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -65,6 +66,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
 
   descriptionId = `d-select-option-description-${guidFor(this)}`;
   labelId = `d-select-option-label-${guidFor(this)}`;
+  lockedHintId = `d-select-option-locked-${guidFor(this)}`;
 
   /** Descriptor wrappers are rebuilt by the list even when row customization inputs are unchanged. */
   #presentation?: {
@@ -89,6 +91,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
         this.args.describedBy,
         this.args.descriptor.item.description ? this.descriptionId : undefined,
         this.args.descriptor.flags.capDisabled ? this.args.limitId : undefined,
+        this.args.descriptor.flags.locked ? this.lockedHintId : undefined,
       ]
         .filter(Boolean)
         .join(" ") || undefined
@@ -146,6 +149,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
           (if @descriptor.flags.sticky "--sticky")
           (if @stickyEnd "--sticky-end")
           (if @descriptor.flags.selected "--selected")
+          (if @descriptor.flags.locked "--locked")
           (if @descriptor.flags.__create "--create")
           (if @descriptor.flags.__none "--none")
           (if @descriptor.flags.groupHeader "--action-header")
@@ -192,6 +196,16 @@ export default class SelectItem extends Component<SelectItemSignature> {
           </span>
         {{else}}
           {{yield @descriptor.item}}
+        {{/if}}
+        {{#if @descriptor.flags.locked}}
+          {{! Hidden, so it stays out of the option's name and is read only as its description. }}
+          <span
+            class="d-select__option-locked-hint"
+            hidden
+            id={{this.lockedHintId}}
+          >
+            {{~@engine.text "lockedHint" (hash item=this.name)~}}
+          </span>
         {{/if}}
       </li>
     {{/let}}

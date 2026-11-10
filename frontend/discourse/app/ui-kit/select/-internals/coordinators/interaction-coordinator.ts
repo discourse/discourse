@@ -388,7 +388,7 @@ export default class InteractionCoordinator {
     // path is not: the family this replaces clears from an empty filter unconditionally, and
     // gating it here left a static select with no way out at all.
     if (
-      this.#engine.hasValue &&
+      this.#engine.hasRemovableValue &&
       (event.key === "Backspace" || event.key === "Delete")
     ) {
       event.preventDefault();

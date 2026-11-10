@@ -164,6 +164,8 @@ export interface SelectDescriptor {
     reasonDisabled: boolean;
     /** Whether the selection cap prevents adding this option. */
     capDisabled: boolean;
+    /** Whether this held row is locked, so it can't be deselected. */
+    locked: boolean;
     /** A group header, text or action. */
     groupHeader: boolean;
     /** A group footer, text or action. */
@@ -408,6 +410,9 @@ export interface SelectEngineOptions {
   /** Live reader for {@link minimum}. */
   getMinimum?: () => number | undefined;
 
+  /** Live reader for {@link lockedValues}. */
+  getLockedValues?: () => readonly SelectItemId[] | undefined;
+
   /** Live raw presentation args, read before any items, resolved selection, or lock state. */
   getOptions?: () => Readonly<SelectPresentationArgs>;
 
@@ -553,10 +558,20 @@ export interface SelectEngineOptions {
 
   /**
    * Advisory minimum for a multi-select: it drives {@link SelectEngine#belowMinimum} and the
-   * limit messaging only. It never blocks removal — deselecting and clearing always succeed,
-   * down to an empty selection — so enforcement stays with the consuming form.
+   * limit messaging only. It never blocks removal (only {@link lockedValues} does), so
+   * enforcement stays with the consuming form.
    */
   minimum?: number;
+
+  /**
+   * Held ids of a multi-select that no change may drop, matched by key (see
+   * {@link normalizeKey}). Removing one, clearing, and any change that would leave one out are
+   * refused; clearing keeps them. They must be a subset of the held value, and the engine never
+   * adds them: the caller keeps them in its value. They count toward {@link maximum}.
+   * Development builds assert when the list isn't an array, isn't held, or is given to a
+   * single select.
+   */
+  lockedValues?: readonly SelectItemId[];
 
   /** Field holding an item's value. Defaults to `"id"`. */
   valueField?: string;
@@ -695,7 +710,7 @@ export interface SelectEngineOptions {
     change: {
       /** The programmatic intent behind this change, absent for hand picks. */
       origin?: SelectionOrigin;
-      /** Distinguishes a whole-selection clear from removing an item. */
+      /** Marks a clear, which keeps any locked values, from removing an item. */
       reason?: "clear";
       /** The options snapshot shared with the change middleware. */
       options: SelectResolvedOptions;
@@ -882,6 +897,7 @@ export default class SelectEngine {
       getValue: () => this.value,
       getHasValue: () => this.hasValue,
       isSelected: (item) => this.isSelected(item),
+      isLockedValue: (value) => this.isLockedValue(value),
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
@@ -1074,6 +1090,11 @@ export default class SelectEngine {
     return this.#selectionActions.remaining;
   }
 
+  /** Whether a held value can be removed: one that isn't in {@link SelectEngineOptions#lockedValues}. */
+  get hasRemovableValue(): boolean {
+    return this.#selectionActions.hasRemovableValue;
+  }
+
   /** Whether this is a multi-select. */
   get multiple(): boolean {
     return this.#options.multiple;
@@ -1231,6 +1252,19 @@ export default class SelectEngine {
    */
   get serverQueryPending(): boolean {
     return this.#source.queryPending();
+  }
+
+  /** Whether a held id is locked, matching by key; an unheld id never is. */
+  isLockedValue(value: SelectItemId): boolean {
+    return this.#selectionActions.isLockedValue(value);
+  }
+
+  /** Every id in `previous` that `next` no longer holds, matching by key, in held order. */
+  removedValues(
+    previous: readonly SelectItemId[],
+    next: readonly SelectItemId[]
+  ): SelectItemId[] {
+    return this.#selectionActions.removedValues(previous, next);
   }
 
   /**
@@ -1487,9 +1521,7 @@ export default class SelectEngine {
     this.#selectionActions.deselectLast(origin);
   }
 
-  /**
-   * Clears the entire selection (emits an empty value).
-   */
+  /** Clears the selection down to its locked values; does nothing when only those are held. */
   @bind
   clear(origin?: SelectionOrigin): void {
     this.#selectionActions.clear(origin);

@@ -2304,3 +2304,243 @@ module(
     });
   }
 );
+
+/** The accessible name a button gets from its `aria-labelledby` targets. */
+function labelledName(element) {
+  return element
+    .getAttribute("aria-labelledby")
+    .split(/\s+/)
+    .map((id) => document.getElementById(id)?.textContent.trim())
+    .join(", ");
+}
+
+function chipButton(value) {
+  return find(`.d-select__chip[data-value='${value}'] .d-select__chip-remove`);
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (held values that can't be removed)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /** A controlled multi select whose value and locked values the test can change. */
+    async function renderLocked({
+      value = [1, 2],
+      locked = [1],
+      clearable = false,
+    } = {}) {
+      const held = tracked(value);
+      const locks = tracked(locked);
+      const onChange = (next) => (held.value = next);
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <DSelect
+            @clearable={{clearable}}
+            @items={{ITEMS}}
+            @lockedValues={{locks.value}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{held.value}}
+          />
+        </template>
+      );
+      return { held, locks };
+    }
+
+    test("a locked chip shows a lock, says it can't be removed and ignores clicks", async function (assert) {
+      const { held } = await renderLocked();
+
+      assert
+        .dom(".d-select__chip[data-value='1']")
+        .hasClass("--locked", "the locked chip carries the modifier");
+      assert
+        .dom(".d-select__chip[data-value='2']")
+        .doesNotHaveClass("--locked", "the other chip does not");
+      assert
+        .dom(chipButton(1))
+        .hasAttribute("aria-disabled", "true", "its button is disabled")
+        .doesNotHaveAttribute("title", "no tooltip repeats the name");
+      assert
+        .dom(".d-select__chip[data-value='1'] .d-icon-lock")
+        .exists("a lock replaces the remove icon");
+      assert
+        .dom(".d-select__chip[data-value='1'] .d-icon-xmark")
+        .doesNotExist("there is no remove icon");
+      assert.strictEqual(
+        labelledName(chipButton(1)),
+        "Apple, Can't be removed",
+        "it is named by its label and the locked hint"
+      );
+      assert.strictEqual(
+        labelledName(chipButton(2)),
+        "Banana, Press Backspace or Delete to remove",
+        "the other chip keeps the removal hint"
+      );
+
+      await click(chipButton(1));
+      assert.deepEqual(held.value, [1, 2], "nothing was removed");
+      assert.dom(".d-select__chip").exists({ count: 2 });
+    });
+
+    test("arrows reach a locked chip, and Backspace or Delete on it change nothing", async function (assert) {
+      const { held } = await renderLocked();
+
+      await focus(".d-select__input");
+      await triggerKeyEvent(".d-select__input", "keydown", "ArrowLeft");
+      assert.strictEqual(
+        document.activeElement,
+        chipButton(2),
+        "the last chip takes focus"
+      );
+      await triggerKeyEvent(chipButton(2), "keydown", "ArrowLeft");
+      assert.strictEqual(
+        document.activeElement,
+        chipButton(1),
+        "the locked chip is reachable"
+      );
+
+      for (const key of ["Backspace", "Delete"]) {
+        await triggerKeyEvent(chipButton(1), "keydown", key);
+        assert.deepEqual(held.value, [1, 2], `${key} removes nothing`);
+        assert.strictEqual(
+          document.activeElement,
+          chipButton(1),
+          `focus stays on the locked chip after ${key}`
+        );
+      }
+    });
+
+    test("Backspace on an empty query focuses a locked last chip instead of removing it", async function (assert) {
+      const { held } = await renderLocked({ value: [2, 1] });
+
+      await focus(".d-select__input");
+      await triggerKeyEvent(".d-select__input", "keydown", "Backspace");
+
+      assert.deepEqual(held.value, [2, 1], "nothing was removed");
+      assert.strictEqual(
+        document.activeElement,
+        chipButton(1),
+        "focus moves to the locked chip so its name is read"
+      );
+    });
+
+    test("Backspace on an empty query still removes an unlocked last chip", async function (assert) {
+      const { held } = await renderLocked();
+
+      await focus(".d-select__input");
+      await triggerKeyEvent(".d-select__input", "keydown", "Backspace");
+
+      assert.deepEqual(held.value, [1], "the unlocked last value is removed");
+    });
+
+    test("Clear all keeps the locked values, then hides with only those left", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const { held } = await renderLocked({
+        value: [1, 2, 3],
+        clearable: true,
+      });
+
+      await click(".d-select__clear");
+
+      assert.deepEqual(held.value, [1], "only the locked value remains");
+      assert
+        .dom(".d-select__clear")
+        .doesNotExist("nothing removable is left to clear");
+      assert
+        .dom("#a11y-announcements-polite")
+        .includesText("2 removed", "the partial clear counts what it removed");
+      assert
+        .dom("#a11y-announcements-polite")
+        .doesNotIncludeText(
+          "Selection cleared",
+          "it does not claim the selection is empty"
+        );
+    });
+
+    test("a partial clear that removes one value names it", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await renderLocked({ clearable: true });
+
+      await click(".d-select__clear");
+
+      assert
+        .dom("#a11y-announcements-polite")
+        .includesText("Removed Banana", "the single removal is named");
+    });
+
+    test("a held locked row is selected, disabled and described", async function (assert) {
+      const { held } = await renderLocked();
+      await click(".d-select__input");
+
+      const row = optionWithText("Apple");
+      assert
+        .dom(row)
+        .hasAttribute("aria-selected", "true", "the row stays selected")
+        .hasAttribute("aria-disabled", "true", "it can't be toggled off")
+        .hasClass("--locked", "it carries the modifier");
+      const described = row
+        .getAttribute("aria-describedby")
+        .split(/\s+/)
+        .map((id) => document.getElementById(id)?.textContent.trim());
+      assert.true(
+        described.includes("Can't be removed"),
+        "the row is described by the locked hint"
+      );
+      assert
+        .dom(optionWithText("Banana"))
+        .doesNotHaveAttribute("aria-disabled", "an unlocked held row is not");
+
+      await click(row);
+      assert.deepEqual(held.value, [1, 2], "clicking the row removes nothing");
+    });
+
+    test("chips and rows follow a change to @lockedValues alone", async function (assert) {
+      const { locks } = await renderLocked();
+
+      locks.value = [2];
+      await settled();
+
+      assert
+        .dom(".d-select__chip[data-value='1']")
+        .doesNotHaveClass("--locked", "the unlocked chip loses the lock");
+      assert
+        .dom(chipButton(1))
+        .doesNotHaveAttribute("aria-disabled", "and becomes removable");
+      assert
+        .dom(".d-select__chip[data-value='2']")
+        .hasClass("--locked", "the newly locked chip gains it");
+
+      await click(".d-select__input");
+      assert
+        .dom(optionWithText("Banana"))
+        .hasAttribute("aria-disabled", "true", "its row is locked too");
+      assert
+        .dom(optionWithText("Apple"))
+        .doesNotHaveAttribute("aria-disabled", "the other row is free");
+    });
+
+    test("on touch a locked chip is named by its label and hint, not as a remove action", async function (assert) {
+      sinon
+        .stub(this.owner.lookup("service:capabilities"), "touch")
+        .get(() => true);
+      await renderLocked();
+
+      assert
+        .dom(chipButton(1))
+        .doesNotHaveAttribute("aria-label", "it does not say Remove");
+      assert.strictEqual(
+        labelledName(chipButton(1)),
+        "Apple, Can't be removed",
+        "its label and the locked hint name it"
+      );
+      assert
+        .dom(chipButton(2))
+        .hasAttribute(
+          "aria-label",
+          "Remove Banana",
+          "the other chip still does"
+        );
+    });
+  }
+);

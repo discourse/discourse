@@ -132,7 +132,11 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
 
   /** Handles removal keys before the roving group's activation handler. */
   @action
-  handleKeydown(item: SelectItem, index: number, event: KeyboardEvent): void {
+  handleKeydown(
+    chip: SelectDescriptor,
+    index: number,
+    event: KeyboardEvent
+  ): void {
     if (event.isComposing) {
       return;
     }
@@ -150,15 +154,15 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
     if (["Enter", " ", "Backspace", "Delete"].includes(event.key)) {
       event.preventDefault();
       event.stopPropagation();
-      this.#remove(item, index, true);
+      this.#remove(chip, index, true);
     }
   }
 
   /** Pointer activation preserves focus; assistive activation restores a neighbor. */
   @action
-  removeItem(item: SelectItem, index: number, event: MouseEvent): void {
+  removeItem(chip: SelectDescriptor, index: number, event: MouseEvent): void {
     event.stopPropagation();
-    this.#remove(item, index, document.activeElement === event.currentTarget);
+    this.#remove(chip, index, document.activeElement === event.currentTarget);
   }
 
   /** Converts a held item's id to its attribute value. */
@@ -166,10 +170,17 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
     return String(chip.value ?? "");
   }
 
-  #remove(item: SelectItem, index: number, restoreFocus: boolean): void {
-    if (this.args.locked) {
+  /** Whether a held item is locked, read live because its descriptor is resolved once. */
+  @action
+  isLockedChip(chip: SelectDescriptor): boolean {
+    return this.args.engine.isLockedValue(chip.value);
+  }
+
+  #remove(chip: SelectDescriptor, index: number, restoreFocus: boolean): void {
+    if (this.args.locked || this.isLockedChip(chip)) {
       return;
     }
+    const item = chip.item;
     // Move before the final chip unmounts, so focus never falls through to body.
     const isLast = makeArray(this.args.value).length === 1;
     if (isLast && restoreFocus) {
@@ -217,6 +228,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
           {{willDestroy @onResize}}
           {{dRovingFocus
             itemSelector=".d-select__strip-remove"
+            disabledItems="focusable"
             itemsKey=chips
             orientation="horizontal"
             restoreLostFocus=false
@@ -226,66 +238,80 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
           {{on "focusin" this.keepQueryFocus}}
         >
           {{#each chips key="key" as |chip index|}}
-            <li
-              class="d-select__strip-item"
-              data-name={{@engine.getSelectionLabel chip.item}}
-              data-value={{this.chipValue chip}}
-            >
-              <button
-                aria-label={{if
-                  this.capabilities.touch
-                  (@engine.text
-                    "removeItem"
-                    (hash item=(@engine.getSelectionLabel chip.item))
-                  )
-                }}
-                aria-labelledby={{unless
-                  this.capabilities.touch
-                  (concat
-                    this.idPrefix
-                    "-"
-                    index
-                    "-label "
-                    this.idPrefix
-                    "-"
-                    index
-                    "-hint"
-                  )
-                }}
-                class="d-select__strip-remove"
-                disabled={{@locked}}
-                tabindex="-1"
-                type="button"
-                {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-                {{on "pointerdown" this.preventPointerBlur}}
-                {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-                {{on "mousedown" this.preventPointerBlur}}
-                {{on "click" (fn this.removeItem chip.item index)}}
-                {{on "keydown" (fn this.handleKeydown chip.item index)}}
+            {{#let (this.isLockedChip chip) as |locked|}}
+              <li
+                class="d-select__strip-item {{if locked '--locked'}}"
+                data-name={{@engine.getSelectionLabel chip.item}}
+                data-value={{this.chipValue chip}}
               >
-                <span
-                  aria-hidden="true"
-                  class="d-select__strip-label"
-                  id="{{this.idPrefix}}-{{index}}-label"
+                <button
+                  {{! A locked item stays focusable so its name says why it can't be removed. }}
+                  aria-disabled={{if locked "true"}}
+                  aria-label={{if
+                    (and this.capabilities.touch (not locked))
+                    (@engine.text
+                      "removeItem"
+                      (hash item=(@engine.getSelectionLabel chip.item))
+                    )
+                  }}
+                  aria-labelledby={{if
+                    (or locked (not this.capabilities.touch))
+                    (concat
+                      this.idPrefix
+                      "-"
+                      index
+                      "-label "
+                      this.idPrefix
+                      "-"
+                      index
+                      "-hint"
+                    )
+                  }}
+                  class="d-select__strip-remove"
+                  disabled={{@locked}}
+                  tabindex="-1"
+                  type="button"
+                  {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
+                  {{on "pointerdown" this.preventPointerBlur}}
+                  {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
+                  {{on "mousedown" this.preventPointerBlur}}
+                  {{on "click" (fn this.removeItem chip index)}}
+                  {{on "keydown" (fn this.handleKeydown chip index)}}
                 >
-                  {{#if chip.item.__unresolved}}
-                    {{#if @hasUnresolvedBlock}}
-                      {{yield chip.item to="unresolved"}}
+                  <span
+                    aria-hidden="true"
+                    class="d-select__strip-label"
+                    id="{{this.idPrefix}}-{{index}}-label"
+                  >
+                    {{#if chip.item.__unresolved}}
+                      {{#if @hasUnresolvedBlock}}
+                        {{yield chip.item to="unresolved"}}
+                      {{else}}
+                        <SelectionLabel
+                          @engine={{@engine}}
+                          @item={{chip.item}}
+                        />
+                      {{/if}}
+                    {{else if @hasSelectionBlock}}
+                      {{yield chip.item to="selection"}}
                     {{else}}
                       <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
                     {{/if}}
-                  {{else if @hasSelectionBlock}}
-                    {{yield chip.item to="selection"}}
-                  {{else}}
-                    <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
-                  {{/if}}
-                </span>
-                <span class="sr-only" id="{{this.idPrefix}}-{{index}}-hint">
-                  {{~@engine.text "removeHint"~}}
-                </span>
-                {{dIcon "xmark"}}
-              </button>
-            </li>
+                  </span>
+                  <span class="sr-only" id="{{this.idPrefix}}-{{index}}-hint">
+                    {{~#if locked~}}
+                      {{~@engine.text
+                        "lockedHint"
+                        (hash item=(@engine.getSelectionLabel chip.item))
+                      ~}}
+                    {{~else~}}
+                      {{~@engine.text "removeHint"~}}
+                    {{~/if~}}
+                  </span>
+                  {{dIcon (if locked "lock" "xmark")}}
+                </button>
+              </li>
+            {{/let}}
           {{/each}}
         </ul>
       </:content>

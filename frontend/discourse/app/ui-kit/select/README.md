@@ -81,6 +81,26 @@ locked. The list sits outside the named root so disabled fields still expose the
 The chips and that list share one resolution of the held values, and the resolver joins
 requests already in flight, so the same ids are never fetched twice.
 
+## Held values that can't be removed
+
+`@lockedValues` lists held ids of a multi-select that no change may drop, matched like any held
+id (so `3` locks `"3"`, and `@normalizeKey` applies). It is for values the caller always keeps,
+such as groups a setting requires.
+
+- Removing a locked value does nothing, from a chip, the strip, a row, the keyboard, an action
+  row, a customization or `control.update()`. Every change is checked again when it commits, so a
+  change deferred by `change` middleware can't drop a value locked meanwhile.
+- "Clear all", `clear()` and Backspace or Delete on a static root remove the other values and keep
+  the locked ones, with `reason: "clear"`. With only locked values held, the clear button hides and
+  clearing does nothing. A partial clear is announced by what it removed.
+- Locked chips and strip items show a lock in place of ×, keep their button and its class so
+  arrows still reach them, and carry `aria-disabled="true"` and a `--locked` modifier. Their held
+  rows stay selected but disabled, described by the locked hint.
+- The list must be part of `@value`. The select never adds a locked value: the caller keeps it in
+  its value, as the legacy `mandatoryValues` callers already do. Development builds assert when the
+  list isn't an array, isn't held, or is given to a single select; production behaves as if only
+  the held ids were given. A fixed single value is `@readonly` instead.
+
 ## The panel field
 
 Wherever the list stays visible (a button select's popup, the mobile modal, and
@@ -102,9 +122,10 @@ From the input:
 - Home/End and Left/Right move the caret and clear the active row, so screen readers read
   the text again. Up or Down brings the row back.
 - Left at the start of the input enters the chips (Right in right-to-left pages).
-- Backspace on an empty query removes the last held item, or clears a single value. A
-  multi-select field without chips leaves the selection alone on both keys, so nothing is
-  removed out of sight.
+- Backspace on an empty query removes the last held item, or clears a single value. When the
+  last item can't be removed (see "Held values that can't be removed"), it focuses that chip
+  instead, or opens the strip at it. A multi-select field without chips leaves the selection
+  alone on both keys, so nothing is removed out of sight.
 - Escape closes a popup or modal. In `DSelectList` it clears a non-empty query and
   otherwise leaves Escape to the containing panel.
 
@@ -120,7 +141,8 @@ From a chip:
 Adds and removals are announced (“Added X”, “Removed X”). While a chip has focus, no
 result row shows as active. Locked or read-only chips keep focus but carry
 `aria-disabled="true"` and cannot be removed. Keyboard chip names lead with the label and
-include the removal hint; touch names say “Remove X”.
+include the removal hint; touch names say “Remove X”. A chip that can't be removed is named
+by its label and the locked hint on every device.
 
 Touch screen readers ignore `aria-activedescendant`. When a session starts on iOS or Android
 and the latest interaction carried no key or pointer press (a screen reader's double-tap
@@ -385,12 +407,14 @@ unknown key silently.
 | `chipsLabel` / `stripLabel` | `d_select.selected_items` / `d_select.selected_items_list` | | Chip list / selection strip. Required |
 | `removeItem` | `d_select.remove_item` | `item` | Touch remove buttons. Required |
 | `removeHint` | `d_select.remove_hint` | | Chip and strip remove hint. Required |
+| `lockedHint` | `d_select.locked_hint` | `item` | Hint on a chip, strip item or row that can't be removed. Required |
 | `chipsHint` / `selectedItemsHint` | `d_select.chips_hint` / `d_select.selected_items_hint` | | Input description beside chips |
 | `selectedCount` | `d_select.selected_count` | `count` | Compact count description |
 | `compactCount` / `moreChips` | `d_select.compact_count` / `d_select.more_chips` | `count` | Count with `@maxVisibleChips=0` / overflow badge |
 | `footerLabel` | `d_select.footer_label` | | Panel footer group. Required |
 | `itemSelected`, `itemAdded`, `itemRemoved` | `d_select.item_selected`, `item_added`, `item_removed` | `item` | Announced |
 | `itemsAdded`, `itemsNotAddedHeld`, `itemsNotAddedLimit` | `d_select.items_added`, `items_not_added_held`, `items_not_added_limit` | `count` | Announced bulk parts |
+| `itemsRemoved` | `d_select.items_removed` | `count` | Announced when a clear that keeps locked values removes several |
 | `bulkAddSummary` | `d_select.bulk_add_summary` | `added`, `not_added` | Announced, joins the parts |
 | `allAlreadySelected` | `d_select.all_already_selected` | | Announced when a bulk add adds nothing |
 | `selectionCleared`, `updatingSelection` | `d_select.selection_cleared`, `updating_selection` | | Announced |
@@ -719,7 +743,8 @@ select's whole life. It exposes:
   included.
   On a single-select it selects the first new eligible item.
 - `deselect(item)` to remove a multi value, or clear a single value only if that item is held.
-- `clear()` to clear a nonempty selection.
+  A locked value stays.
+- `clear()` to clear a nonempty selection, keeping its locked values.
 - `reload()` to start a new query, even with the same filter. It does not supersede a pending
   `update()`. Its loading state waits out the usual delay, so a fast answer never flashes a
   skeleton. `reload({ immediate: true })` shows it at once, for a reload that switches what the
@@ -1234,7 +1259,8 @@ by mechanism.
   seeded over the cap is displayed and removable, never trimmed. Pass `@maximum={{false}}` for no
   cap. Numbers below 1 and NaN also mean no cap, with a once-per-select development warning.
   `@minimum` is advisory (message + state only, never blocks removal — the consuming form owns
-  submit-time enforcement). A built-in limit message renders in a dedicated top zone of the panel
+  submit-time enforcement). Values in `@lockedValues` count toward `@maximum`, so a cap they
+  fill leaves nothing to remove. A built-in limit message renders in a dedicated top zone of the panel
   (never stacking with the footer or an error body). Cap-disabled options also reference this message through `aria-describedby`,
   alongside any item description and group header. The limit state is exposed on the engine and
   yielded to `:footer`.

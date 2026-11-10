@@ -247,6 +247,12 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     return String(chip.value ?? "");
   }
 
+  /** Whether a held chip is locked, read live because chip descriptors are cached per value. */
+  @action
+  isLockedChip(chip: SelectDescriptor): boolean {
+    return this.args.engine.isLockedValue(chip.value);
+  }
+
   /**
    * Returns focus to the query input when the roving cursor steps off the input-side end of the
    * chip group. At the other end (`backward`) it stays on the first chip.
@@ -271,7 +277,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   /** Keeps removal focus inside the field; native button activation returns to the input. */
   @action
   handleChipKeydown(
-    item: SelectItem,
+    chip: SelectDescriptor,
     index: number,
     event: KeyboardEvent
   ): void {
@@ -300,6 +306,9 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     if (event.key === "Backspace" || event.key === "Delete") {
       event.preventDefault();
       event.stopPropagation();
+      if (this.isLockedChip(chip)) {
+        return;
+      }
       // Focus moves before the removal: the removed button unmounts, and focus it still holds
       // would fall to the page. The neighbour is keyed, so it survives the re-render. Focus the
       // chip does not hold is never claimed.
@@ -312,19 +321,19 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           this.args.focusInput();
         }
       }
-      this.args.engine.deselect(item);
+      this.args.engine.deselect(chip.item);
     }
   }
 
   /** Focuses the input before removal so an unmounted button cannot drop focus to the body. */
   @action
-  removeItem(item: SelectItem, event?: MouseEvent): void {
+  removeItem(chip: SelectDescriptor, event?: MouseEvent): void {
     event?.stopPropagation();
-    if (this.args.presenter.isLocked) {
+    if (this.args.presenter.isLocked || this.isLockedChip(chip)) {
       return;
     }
     this.args.focusInput();
-    this.args.engine.deselect(item);
+    this.args.engine.deselect(chip.item);
   }
 
   @action
@@ -390,6 +399,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             tabStop=false
             orientation="horizontal"
             itemSelector=".d-select__chip-remove"
+            disabledItems="focusable"
             restoreLostFocus=false
             onBoundary=this.exitChipsToInput
             onRegisterApi=@onRegisterChipRoving
@@ -410,72 +420,88 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           </:loading>
           <:content as |chips|>
             {{#each (this.visibleChips chips) key="key" as |chip index|}}
-              <li
-                class="d-select__chip"
-                data-name={{@engine.getSelectionLabel chip.item}}
-                data-value={{this.chipValue chip}}
-              >
-                {{! Interactive chips are named through the remove button; display-only
-                  chips expose their own label text. }}
-                <span
-                  aria-hidden={{if @triggerChipsInteractive "true"}}
-                  class="d-select__chip-label"
-                  id="{{this.chipIdPrefix}}-{{index}}-label"
+              {{#let (this.isLockedChip chip) as |locked|}}
+                <li
+                  class="d-select__chip {{if locked '--locked'}}"
+                  data-name={{@engine.getSelectionLabel chip.item}}
+                  data-value={{this.chipValue chip}}
                 >
-                  {{#if chip.item.__unresolved}}
-                    {{#if @hasUnresolvedBlock}}
-                      {{yield chip.item to="unresolved"}}
+                  {{! Interactive chips are named through the remove button; display-only
+                  chips expose their own label text. }}
+                  <span
+                    aria-hidden={{if @triggerChipsInteractive "true"}}
+                    class="d-select__chip-label"
+                    id="{{this.chipIdPrefix}}-{{index}}-label"
+                  >
+                    {{#if chip.item.__unresolved}}
+                      {{#if @hasUnresolvedBlock}}
+                        {{yield chip.item to="unresolved"}}
+                      {{else}}
+                        <SelectionLabel
+                          @engine={{@engine}}
+                          @item={{chip.item}}
+                        />
+                      {{/if}}
+                    {{else if @hasSelectionBlock}}
+                      {{yield chip.item to="selection"}}
                     {{else}}
                       <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
                     {{/if}}
-                  {{else if @hasSelectionBlock}}
-                    {{yield chip.item to="selection"}}
-                  {{else}}
-                    <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
-                  {{/if}}
-                </span>
-                {{#if @triggerChipsInteractive}}
-                  <button
-                    {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
+                  </span>
+                  {{#if @triggerChipsInteractive}}
+                    <button
+                      {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
                     Backspace or Delete to remove") so it reads as a selected item rather
-                    than a bare action. }}
-                    aria-disabled={{if @presenter.isLocked "true"}}
-                    aria-label={{if
-                      this.capabilities.touch
-                      (@engine.text
-                        "removeItem"
-                        (hash item=(@engine.getSelectionLabel chip.item))
-                      )
-                    }}
-                    aria-labelledby={{unless
-                      this.capabilities.touch
-                      (concat
-                        this.chipIdPrefix
-                        "-"
-                        index
-                        "-label "
-                        this.chipIdPrefix
-                        "-"
-                        index
-                        "-remove"
-                      )
-                    }}
-                    class="d-select__chip-remove"
-                    tabindex="-1"
-                    type="button"
-                    {{on "click" (fn this.removeItem chip.item)}}
-                    {{on "keydown" (fn this.handleChipKeydown chip.item index)}}
-                  >
-                    <span
-                      class="sr-only"
-                      id="{{this.chipIdPrefix}}-{{index}}-remove"
+                    than a bare action. A locked chip says it can't be removed instead, on
+                    touch too, where it is not a remove action. }}
+                      aria-disabled={{if
+                        (or @presenter.isLocked locked)
+                        "true"
+                      }}
+                      aria-label={{if
+                        (and this.capabilities.touch (not locked))
+                        (@engine.text
+                          "removeItem"
+                          (hash item=(@engine.getSelectionLabel chip.item))
+                        )
+                      }}
+                      aria-labelledby={{if
+                        (or locked (not this.capabilities.touch))
+                        (concat
+                          this.chipIdPrefix
+                          "-"
+                          index
+                          "-label "
+                          this.chipIdPrefix
+                          "-"
+                          index
+                          "-remove"
+                        )
+                      }}
+                      class="d-select__chip-remove"
+                      tabindex="-1"
+                      type="button"
+                      {{on "click" (fn this.removeItem chip)}}
+                      {{on "keydown" (fn this.handleChipKeydown chip index)}}
                     >
-                      {{@engine.text "removeHint"}}
-                    </span>
-                    {{dIcon "xmark"}}
-                  </button>
-                {{/if}}
-              </li>
+                      <span
+                        class="sr-only"
+                        id="{{this.chipIdPrefix}}-{{index}}-remove"
+                      >
+                        {{#if locked}}
+                          {{@engine.text
+                            "lockedHint"
+                            (hash item=(@engine.getSelectionLabel chip.item))
+                          }}
+                        {{else}}
+                          {{@engine.text "removeHint"}}
+                        {{/if}}
+                      </span>
+                      {{dIcon (if locked "lock" "xmark")}}
+                    </button>
+                  {{/if}}
+                </li>
+              {{/let}}
             {{/each}}
             {{#if (this.showsPasteChip chips)}}
               <li class="d-select__chip">

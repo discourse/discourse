@@ -420,6 +420,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
             <DSelectList
               @disabled={{extra.disabled}}
               @items={{FRUIT}}
+              @lockedValues={{extra.lockedValues}}
               @onChange={{setHeld}}
               @readonly={{extra.readonly}}
               @texts={{hash ariaLabel="Fruit"}}
@@ -559,6 +560,23 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         [1],
         "Backspace with a query edits the text"
       );
+    });
+
+    test("panel field: Backspace on an empty query focuses a locked last chip instead of removing it", async function (assert) {
+      const held = tracked([2, 1]);
+      await renderHeld(held, { lockedValues: [1] });
+
+      await focus(input());
+      await triggerKeyEvent(input(), "keydown", "Backspace");
+      assert.deepEqual(held.value, [2, 1], "nothing was removed");
+      assert.strictEqual(
+        document.activeElement,
+        chipButtons()[1],
+        "focus moves to the locked chip"
+      );
+      assert
+        .dom(chipButtons()[1])
+        .hasAttribute("aria-disabled", "true", "the chip is locked");
     });
 
     test("panel field: Delete on a chip removes it and focuses the previous chip", async function (assert) {

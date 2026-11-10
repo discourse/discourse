@@ -87,6 +87,7 @@ const LOCALE_KEYS = {
   maximum: "max_reached",
   minimum: "min_not_reached",
   removeHint: "remove_hint",
+  lockedHint: "locked_hint",
   chipsLabel: "selected_items",
   stripLabel: "selected_items_list",
   removeItem: "remove_item",
@@ -102,6 +103,7 @@ const LOCALE_KEYS = {
   bulkAddSummary: "bulk_add_summary",
   allAlreadySelected: "all_already_selected",
   itemRemoved: "item_removed",
+  itemsRemoved: "items_removed",
   loadError: "load_error",
   retry: "retry",
   unresolvedValue: "unresolved_value",
@@ -155,6 +157,7 @@ export const REQUIRED_SELECT_TEXTS: ReadonlySet<string> = new Set([
   "unresolvedValue",
   "createItem",
   "removeHint",
+  "lockedHint",
   "loadError",
 ]);
 

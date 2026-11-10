@@ -242,6 +242,18 @@
     min-width: 44px;
     min-height: 44px;
   }
+
+  &[aria-disabled="true"] {
+    cursor: default;
+
+    .discourse-no-touch &:hover {
+      background: var(--primary-low);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
 }
 
 .d-select__strip-label {
@@ -589,6 +601,18 @@
   &:focus-visible {
     outline: none;
   }
+
+  &[aria-disabled="true"] {
+    cursor: default;
+
+    &:hover {
+      color: var(--primary-medium);
+    }
+  }
+}
+
+.d-select__chip.--locked:hover {
+  background: var(--primary-low);
 }
 
 .d-select.--list {

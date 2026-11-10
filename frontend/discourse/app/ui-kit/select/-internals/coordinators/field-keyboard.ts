@@ -56,7 +56,12 @@ export function handleFieldKeydown(
   if (!event.isComposing && input.value === "" && engine.hasValue && !locked) {
     if (multiple && selectionInField && event.key === "Backspace") {
       event.preventDefault();
-      engine.deselectLast();
+      // A locked last value stays; focusing its chip lets its name say why.
+      if (engine.isLockedValue((engine.value as readonly unknown[]).at(-1))) {
+        navigateToSelection(event);
+      } else {
+        engine.deselectLast();
+      }
       return true;
     }
     if (!multiple && (event.key === "Backspace" || event.key === "Delete")) {

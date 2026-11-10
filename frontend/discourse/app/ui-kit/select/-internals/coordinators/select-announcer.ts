@@ -8,6 +8,7 @@ import { LOADING_FEEDBACK_DELAY } from "discourse/ui-kit/select/-internals/coord
 import type { SelectionOrigin } from "discourse/ui-kit/select/-internals/engine/selection-updates";
 import SelectEngine, {
   type SelectItem,
+  type SelectItemId,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -478,7 +479,15 @@ export default class SelectAnnouncer {
       return;
     }
     if (reason === "clear" && this.#engine.hasValue) {
-      this.#say(this.#engine.text("selectionCleared"));
+      const kept = makeArray(nextValues);
+      if (kept.length === 0) {
+        this.#say(this.#engine.text("selectionCleared"));
+      } else {
+        // Locked values survived the clear, so say what went rather than that it emptied.
+        this.#sayRemoved(
+          this.#engine.removedValues(makeArray(oldValues), kept)
+        );
+      }
       return;
     }
     if (this.#engine.multiple) {
@@ -500,12 +509,7 @@ export default class SelectAnnouncer {
           this.#resetSuppressionNextRunloop();
         }
       } else if (removed !== undefined) {
-        const item = this.#engine.resolveSingleSync(removed);
-        this.#say(
-          this.#engine.text("itemRemoved", {
-            item: item ? this.#engine.getSelectionLabel(item) : String(removed),
-          })
-        );
+        this.#sayRemoved([removed]);
       }
     } else if (nextValues == null && this.#engine.hasValue) {
       // Choosing a value is conveyed by the row's own selected state and by the trigger reading
@@ -582,6 +586,24 @@ export default class SelectAnnouncer {
     } else {
       this.#a11y.announce(message, "polite", duration);
     }
+  }
+
+  /** Names a single removed value; counts several. */
+  #sayRemoved(removed: readonly SelectItemId[]): void {
+    if (removed.length > 1) {
+      this.#say(this.#engine.text("itemsRemoved", { count: removed.length }));
+      return;
+    }
+    const [value] = removed;
+    if (value === undefined) {
+      return;
+    }
+    const item = this.#engine.resolveSingleSync(value);
+    this.#say(
+      this.#engine.text("itemRemoved", {
+        item: item ? this.#engine.getSelectionLabel(item) : String(value),
+      })
+    );
   }
 
   #cancelReveal(): void {

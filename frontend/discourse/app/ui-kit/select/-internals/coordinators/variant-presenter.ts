@@ -267,7 +267,7 @@ export default class VariantPresenter
   get showClear(): boolean {
     return (
       !!this.#engine.resolvedOptions.clearable &&
-      this.#engine.hasValue &&
+      this.#engine.hasRemovableValue &&
       !this.isLocked
     );
   }

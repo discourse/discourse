@@ -3453,3 +3453,694 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
     }
   });
 });
+
+/** A controlled engine that also records each change's metadata, such as its reason. */
+function controlledWithChanges(opts = {}) {
+  const state = trackedObject({ value: opts.value ?? [] });
+  const changes = [];
+  const engine = new SelectEngine({
+    ...opts,
+    getValue: () => state.value,
+    onChange: (value, items, change) => {
+      changes.push([value, items, change]);
+      state.value = value;
+    },
+  });
+  return { engine, changes, setValue: (value) => (state.value = value) };
+}
+
+/** Holds change continuations until the test commits them. */
+function holdChanges() {
+  const queued = [];
+  withPluginApi((api) => {
+    api.registerValueTransformer(
+      "select-customizations",
+      ({ value: selects }) =>
+        selects.forAll((spec) => spec.change((next) => queued.push(next)))
+    );
+  });
+  return queued;
+}
+
+module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
+  setupTest(hooks);
+
+  const A = { id: 1, name: "One" };
+  const B = { id: 2, name: "Two" };
+  const C = { id: 3, name: "Three" };
+  const D = { id: 4, name: "Four" };
+
+  test("refuses deselect of a held locked value", function (assert) {
+    const value = [A.id, B.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value,
+      lockedValues: [A.id],
+    });
+
+    engine.deselect(A);
+
+    assert.deepEqual(changes, [], "the refused removal emits nothing");
+    assert.deepEqual(engine.value, value, "every held value remains");
+  });
+
+  test("permits deselect of an unlocked value", function (assert) {
+    const lockedValues = [A.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [...lockedValues, B.id],
+      lockedValues,
+    });
+
+    engine.deselect(B);
+
+    assert.deepEqual(
+      changes.map(([value, items]) => [value, items]),
+      [[lockedValues, [A]]],
+      "one change removes only the unlocked item and resolves the retained item"
+    );
+  });
+
+  test("refuses toggling a selected locked row", function (assert) {
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [A.id, B.id],
+      lockedValues: [A.id],
+    });
+
+    engine.toggle(A);
+
+    assert.deepEqual(changes, [], "toggling the locked row emits nothing");
+  });
+
+  test("refuses activating a selected locked row", function (assert) {
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [A.id, B.id],
+      lockedValues: [A.id],
+    });
+
+    engine.activate(A);
+
+    assert.deepEqual(changes, [], "activating the locked row emits nothing");
+  });
+
+  test("makes deselectLast stop at a locked last value", function (assert) {
+    const value = [B.id, A.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value,
+      lockedValues: [A.id],
+    });
+
+    engine.deselectLast();
+
+    assert.deepEqual(changes, [], "it does not remove or skip the last value");
+    assert.deepEqual(engine.value, value, "the earlier unlocked value remains");
+  });
+
+  test("permits deselectLast of an unlocked last value", function (assert) {
+    const lockedValues = [A.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [...lockedValues, B.id],
+      lockedValues,
+    });
+
+    engine.deselectLast();
+
+    assert.deepEqual(
+      changes.map(([value, items]) => [value, items]),
+      [[lockedValues, [A]]],
+      "the unlocked last value is removed in one change"
+    );
+  });
+
+  test("clear retains every locked key in held order with reason clear", function (assert) {
+    const value = [C.id, B.id, A.id, D.id];
+    const lockedValues = [A.id, C.id];
+    const retained = value.filter((id) => lockedValues.includes(id));
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B, D],
+      value,
+      lockedValues,
+    });
+
+    engine.clear();
+
+    assert.deepEqual(
+      changes.map(([next, items, change]) => [next, items, change.reason]),
+      [[retained, [A], "clear"]],
+      "clear preserves even an unresolved locked id, held order, and clear metadata"
+    );
+  });
+
+  test("clear emits nothing when every held value is locked", function (assert) {
+    const value = [B.id, A.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value,
+      lockedValues: [...value].reverse(),
+    });
+
+    engine.clear();
+
+    assert.deepEqual(changes, [], "clearing only locked values emits nothing");
+  });
+
+  test("protects programmatic EngineControl deselect", function (assert) {
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [A.id, B.id],
+      lockedValues: [A.id],
+    });
+
+    engine.control.deselect(A);
+
+    assert.deepEqual(changes, [], "the programmatic removal emits nothing");
+  });
+
+  test("protects clear through an action row's EngineControl", function (assert) {
+    const lockedValues = [A.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [...lockedValues, B.id],
+      lockedValues,
+    });
+
+    engine.activate({
+      id: "clear-action",
+      onSelect: (control) => control.clear(),
+    });
+
+    assert.deepEqual(
+      changes.map(([value, items, change]) => [value, items, change.reason]),
+      [[lockedValues, [A], "clear"]],
+      "the action's programmatic clear retains the locked item"
+    );
+  });
+
+  test("protects deselect through a customization's EngineControl", function (assert) {
+    let attempted = false;
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.change((next, { control }) => {
+              if (!attempted) {
+                attempted = true;
+                control.deselect(A);
+              }
+              next();
+            })
+          )
+      );
+    });
+    const value = [A.id, B.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B, C],
+      value,
+      lockedValues: [A.id],
+    });
+
+    engine.select(C);
+
+    assert.true(attempted, "the customization attempted the locked removal");
+    assert.deepEqual(
+      changes.map(([next, items]) => [next, items]),
+      [
+        [
+          [...value, C.id],
+          [A, B, C],
+        ],
+      ],
+      "only the original addition commits"
+    );
+  });
+
+  test("refuses scope deselect without revoking the scope's later addition", async function (assert) {
+    const value = [A.id, B.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B, C],
+      value,
+      lockedValues: [A.id],
+    });
+
+    await engine.update(async (scope) => {
+      await Promise.resolve();
+      scope.deselect(A);
+      assert.true(scope.current, "a refused own write keeps update authority");
+      scope.select(C);
+    });
+
+    assert.deepEqual(
+      changes.map(([next, items]) => [next, items]),
+      [
+        [
+          [...value, C.id],
+          [A, B, C],
+        ],
+      ],
+      "the scope adds alongside the locked value without emitting a removal"
+    );
+  });
+
+  test("scope clear retains locked values", async function (assert) {
+    const lockedValues = [A.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [...lockedValues, B.id],
+      lockedValues,
+    });
+
+    await engine.control.update((scope) => scope.clear());
+
+    assert.deepEqual(
+      changes.map(([value, items, change]) => [value, items, change.reason]),
+      [[lockedValues, [A], "clear"]],
+      "the scope's clear cannot drop a locked key"
+    );
+  });
+
+  test("rechecks the live locked set when middleware resumes a removal", function (assert) {
+    const queued = holdChanges();
+    const locks = trackedObject({ value: [] });
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [A.id, B.id],
+      getLockedValues: () => locks.value,
+    });
+
+    engine.deselect(A);
+    assert.strictEqual(queued.length, 1, "the removal reached middleware");
+    assert.deepEqual(changes, [], "the removal is still deferred");
+
+    locks.value = [A.id];
+    queued.shift()();
+
+    assert.deepEqual(changes, [], "the now-locked removal cannot commit");
+  });
+
+  test("refuses a deferred clear that drops a newly locked held key", function (assert) {
+    const queued = holdChanges();
+    const value = [A.id, B.id, C.id];
+    const locks = trackedObject({ value: [A.id] });
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B, C],
+      value,
+      getLockedValues: () => locks.value,
+    });
+
+    engine.clear();
+    assert.strictEqual(
+      queued.length,
+      1,
+      "the partial clear reached middleware"
+    );
+    assert.deepEqual(changes, [], "the clear is still deferred");
+
+    locks.value = [A.id, B.id];
+    queued.shift()();
+
+    assert.deepEqual(changes, [], "the stale clear is refused as a whole");
+    assert.deepEqual(engine.value, value, "even the unlocked value stays held");
+  });
+
+  for (const [name, add] of Object.entries({
+    select: (engine) => engine.select(C),
+    selectMany: (engine) => engine.selectMany([C, D]),
+    "EngineControl select": (engine) => engine.control.select(C),
+    "scope selectMany": (engine) =>
+      engine.control.update((scope) => scope.selectMany([C, D])),
+  })) {
+    test(`refuses a deferred ${name} as a whole when it drops a newly held locked key`, async function (assert) {
+      const queued = holdChanges();
+      const locks = trackedObject({ value: [A.id] });
+      const { engine, changes, setValue } = controlledWithChanges({
+        multiple: true,
+        items: [A, B, C, D],
+        value: [A.id],
+        getLockedValues: () => locks.value,
+      });
+
+      await add(engine);
+      assert.strictEqual(queued.length, 1, "the addition reached middleware");
+      assert.deepEqual(changes, [], "the addition has not committed");
+
+      const held = [A.id, B.id];
+      setValue(held);
+      locks.value = [...held];
+      queued.shift()();
+
+      assert.deepEqual(
+        changes,
+        [],
+        "no part of the stale addition may commit while dropping the new locked key"
+      );
+      assert.deepEqual(engine.value, held, "the parent's held value survives");
+    });
+  }
+
+  test("protects string-held numeric keys", function (assert) {
+    const value = [String(C.id), B.id];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [B, C],
+      value,
+      lockedValues: [C.id],
+    });
+
+    engine.deselect(C);
+
+    assert.deepEqual(
+      changes,
+      [],
+      "a numeric lock protects the same string key"
+    );
+    assert.deepEqual(engine.value, value, "the string-held id remains held");
+  });
+
+  test("applies normalizeKey to held and locked ids", function (assert) {
+    const staff = { id: "staff", name: "Staff" };
+    const lockedValues = ["Staff"];
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [staff, B],
+      value: [staff.id, B.id],
+      lockedValues,
+      normalizeKey: (key) => key.toLowerCase(),
+    });
+
+    engine.deselect(staff);
+
+    assert.deepEqual(
+      changes,
+      [],
+      "the differently cased locked key is protected"
+    );
+  });
+
+  test("permits additions whose emitted ids retain normalized locked keys", function (assert) {
+    const staff = { id: "STAFF", name: "Staff" };
+    const held = "staff";
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [staff, B],
+      value: [held],
+      lockedValues: ["Staff"],
+      normalizeKey: (key) => key.toLowerCase(),
+    });
+
+    engine.select(B);
+
+    assert.deepEqual(
+      changes.map(([value, items]) => [value, items]),
+      [
+        [
+          [staff.id, B.id],
+          [staff, B],
+        ],
+      ],
+      "native item ids may be emitted when the normalized locked key survives"
+    );
+  });
+
+  for (const [name, act] of Object.entries({
+    deselect: (engine) => engine.deselect(A),
+    toggle: (engine) => engine.toggle(A),
+    activate: (engine) => engine.activate(A),
+    deselectLast: (engine) => engine.deselectLast(),
+    clear: (engine) => engine.clear(),
+    "EngineControl deselect": (engine) => engine.control.deselect(A),
+    "EngineControl clear": (engine) => engine.control.clear(),
+  })) {
+    test(`refused ${name} supersedes an in-flight update at once`, async function (assert) {
+      const { engine, changes } = controlledWithChanges({
+        multiple: true,
+        items: [A, B],
+        value: [A.id],
+        lockedValues: [A.id],
+      });
+      const gate = deferred();
+      let seen;
+      const done = engine.control.update(async (scope) => {
+        seen = scope;
+        await gate.promise;
+        scope.select(B);
+      });
+
+      try {
+        assert.true(engine.control.pending, "the update starts pending");
+        act(engine);
+
+        assert.false(
+          seen.current,
+          "the refused intent revokes update authority"
+        );
+        assert.false(
+          engine.control.pending,
+          "the refused intent ends pending state"
+        );
+        assert.true(
+          seen.signal.aborted,
+          "the refused intent aborts the update"
+        );
+        assert.deepEqual(changes, [], "the refused intent emits nothing");
+      } finally {
+        gate.resolve();
+        await done;
+      }
+
+      assert.deepEqual(changes, [], "the superseded update cannot add later");
+    });
+  }
+
+  test("counts held locked values toward maximum for select and selectMany", function (assert) {
+    const value = [A.id, B.id];
+    const maximum = value.length + 1;
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B, C, D],
+      value,
+      lockedValues: [...value],
+      maximum,
+    });
+
+    assert.strictEqual(
+      engine.selectedCount,
+      value.length,
+      "locked values count as held"
+    );
+    assert.strictEqual(
+      engine.remaining,
+      maximum - value.length,
+      "only one slot remains"
+    );
+    engine.selectMany([C, D]);
+    engine.select(D);
+
+    assert.deepEqual(
+      changes.map(([next, items]) => [next, items]),
+      [
+        [
+          [...value, C.id],
+          [A, B, C],
+        ],
+      ],
+      "the batch fills the remaining slot and the later select cannot exceed maximum"
+    );
+    assert.true(
+      engine.atMaximum,
+      "the locked and unlocked values together fill the cap"
+    );
+  });
+
+  test("reads a newly added live lock on the next action without a value change", function (assert) {
+    const value = [A.id, B.id];
+    const locks = trackedObject({ value: [B.id] });
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B, C],
+      value,
+      getLockedValues: () => locks.value,
+    });
+
+    engine.deselect(B);
+    assert.deepEqual(
+      changes,
+      [],
+      "reading the initial lock does not change the held value"
+    );
+    locks.value = [...value];
+    engine.deselect(A);
+
+    assert.deepEqual(changes, [], "the next action honors the new lock");
+    assert.deepEqual(engine.value, value, "the held value was never replaced");
+  });
+
+  test("reads a removed live lock on the next action without a value change", function (assert) {
+    const locks = trackedObject({ value: [A.id] });
+    const { engine, changes } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value: [A.id, B.id],
+      lockedValues: [A.id],
+      getLockedValues: () => locks.value,
+    });
+
+    engine.deselect(A);
+    assert.deepEqual(changes, [], "the initial live lock refuses removal");
+    locks.value = [];
+    engine.deselect(A);
+
+    assert.deepEqual(
+      changes.map(([value, items]) => [value, items]),
+      [[[B.id], [B]]],
+      "an empty live array overrides the static lock and permits removal"
+    );
+  });
+
+  test("asserts for a non-array input", function (assert) {
+    const value = [A.id, B.id];
+
+    assert.throws(
+      () => {
+        const { engine } = controlledWithChanges({
+          multiple: true,
+          items: [A, B],
+          value,
+          lockedValues: value.join("|"),
+        });
+        engine.isLockedValue(A.id);
+      },
+      /Assertion Failed:/,
+      "a pipe string asserts by the first public lock read"
+    );
+  });
+
+  test("asserts for a nonempty locked set on a single select", function (assert) {
+    assert.throws(
+      () => {
+        const { engine } = controlledWithChanges({
+          multiple: false,
+          items: [A],
+          value: A.id,
+          lockedValues: [A.id],
+        });
+        engine.isLockedValue(A.id);
+      },
+      /Assertion Failed:/,
+      "nonempty lockedValues asserts by the first public lock read in single mode"
+    );
+  });
+
+  test("asserts when an undefined locked value is not held", function (assert) {
+    assert.throws(
+      () => {
+        const { engine } = controlledWithChanges({
+          multiple: true,
+          items: [A],
+          value: [A.id],
+          lockedValues: [undefined],
+        });
+        engine.isLockedValue(A.id);
+      },
+      /Assertion Failed:/,
+      "an unheld undefined entry breaks the subset contract too"
+    );
+  });
+
+  test("asserts when a locked key is not held", function (assert) {
+    assert.throws(
+      () => {
+        const { engine } = controlledWithChanges({
+          multiple: true,
+          items: [A, B],
+          value: [A.id],
+          lockedValues: [B.id],
+        });
+        engine.isLockedValue(B.id);
+      },
+      /Assertion Failed:/,
+      "the subset contract asserts by the first public lock read"
+    );
+  });
+
+  test("revalidates the subset when the parent changes only the held value", function (assert) {
+    const value = [A.id];
+    const { engine, setValue } = controlledWithChanges({
+      multiple: true,
+      items: [A, B],
+      value,
+      lockedValues: value,
+    });
+
+    assert.true(engine.isLockedValue(A.id), "the initial subset is valid");
+    setValue([B.id]);
+
+    assert.throws(
+      () => engine.isLockedValue(A.id),
+      /Assertion Failed:/,
+      "the next lock read detects that the formerly locked key is no longer held"
+    );
+  });
+
+  test("isLockedValue distinguishes held locked, held unlocked, and unheld keys", function (assert) {
+    const unresolved = "unresolved";
+    const { engine } = controlledWithChanges({
+      multiple: true,
+      items: [A, B, C],
+      value: [A.id, B.id, unresolved],
+      lockedValues: [A.id, unresolved],
+    });
+
+    assert.true(engine.isLockedValue(A.id), "a held locked key is locked");
+    assert.false(
+      engine.isLockedValue(B.id),
+      "a held unlocked key is not locked"
+    );
+    assert.false(engine.isLockedValue(C.id), "an unheld key is not locked");
+    assert.true(
+      engine.isLockedValue(unresolved),
+      "resolution is not required for a lock"
+    );
+  });
+
+  test("isLockedValue uses string and normalized key matching", function (assert) {
+    const held = [String(C.id), "staff"];
+    const lockedValues = [C.id, "Staff"];
+    const { engine } = controlledWithChanges({
+      multiple: true,
+      value: held,
+      lockedValues,
+      normalizeKey: (key) => key.toLowerCase(),
+    });
+
+    for (const value of [...held, ...lockedValues, "STAFF"]) {
+      assert.true(
+        engine.isLockedValue(value),
+        `${value} denotes a held locked key`
+      );
+    }
+    assert.false(
+      engine.isLockedValue("staff-extra"),
+      "normalization does not match a different key"
+    );
+  });
+});
