@@ -58,10 +58,9 @@ export default class DsaModerationDetails extends Component {
       >
         <field.Control>
           <PluginOutlet
-            @name="dsa-classification-control"
+            @name="dsa-community-rule-control"
             @outletArgs={{lazyHash
               field=field
-              fieldName="community_rule"
               options=this.rules
               placeholder=(i18n "dsa_statements.rule_prompt")
               reviewableId=@reviewableId
@@ -86,10 +85,9 @@ export default class DsaModerationDetails extends Component {
       >
         <field.Control>
           <PluginOutlet
-            @name="dsa-classification-control"
+            @name="dsa-category-control"
             @outletArgs={{lazyHash
               field=field
-              fieldName="category"
               options=@options.categories
               placeholder=(i18n "dsa_statements.category_prompt")
               reviewableId=@reviewableId

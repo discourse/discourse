@@ -3,6 +3,8 @@
 module DiscourseAi
   module AiModeration
     class DsaClassificationsController < ::ApplicationController
+      SUGGESTIONS_PER_MINUTE = 20
+
       requires_plugin PLUGIN_NAME
       requires_login
 
@@ -30,7 +32,7 @@ module DiscourseAi
         RateLimiter.new(
           current_user,
           "ai_dsa_classification_suggestions",
-          DsaClassification::SUGGESTIONS_PER_MINUTE,
+          SUGGESTIONS_PER_MINUTE,
           1.minute,
           apply_limit_to_staff: true,
         ).performed!

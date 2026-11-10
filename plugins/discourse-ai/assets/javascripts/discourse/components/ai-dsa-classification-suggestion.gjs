@@ -37,7 +37,7 @@ export default class AiDsaClassificationSuggestion extends Component {
         return;
       }
 
-      const value = suggestion[this.args.outletArgs.fieldName];
+      const value = suggestion[this.args.outletArgs.field.name];
       if (!value) {
         this.toasts.error({
           duration: "short",

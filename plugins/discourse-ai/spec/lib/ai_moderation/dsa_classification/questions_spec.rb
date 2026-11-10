@@ -44,9 +44,10 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassification::Questions do
           instructions:
             a_string_including(
               "https://transparency.dsa.ec.europa.eu/page/documentation",
-              "Consumer information infringements: undisclosed ads",
-              "Scams and fraud: phishing",
-              "Other violation of terms and conditions",
+              "Non-compliance with pricing regulations",
+              "Scams and/or fraud",
+              "Phishing",
+              "Other violation of provider's terms and conditions",
               "Be respectful: No personal attacks.",
             ),
           choices: a_collection_including(scams_label, "Other violation of terms and conditions"),

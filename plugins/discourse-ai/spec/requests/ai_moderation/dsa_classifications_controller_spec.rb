@@ -130,14 +130,14 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
 
       it "rate limits suggestions" do
         RateLimiter.enable
-
-        DiscourseAi::Decisions.with_canned_answers(**answers) do
-          DiscourseAi::AiModeration::DsaClassification::SUGGESTIONS_PER_MINUTE.times do
+        stub_const(described_class, :SUGGESTIONS_PER_MINUTE, 1) do
+          DiscourseAi::Decisions.with_canned_answers(**answers) do
             suggest
-            expect(response.status).to eq(200)
-          end
 
-          suggest
+            expect(response.status).to eq(200)
+
+            suggest
+          end
         end
 
         expect(response.status).to eq(429)

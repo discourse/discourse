@@ -13,45 +13,93 @@ module DiscourseAi
         CATEGORY_INSTRUCTIONS = <<~TEXT
           A moderator is acting on this flagged content. Which EU Digital Services Act
           statement of reasons category best describes the grounds for moderation?
-          Use the community rule and its explanation to identify the grounds. Content
-          mentioning a subject is not evidence of a violation in that category.
-          Choose the most specific supported category. Do not infer fraud, illegality,
-          or protected characteristics from a general community rule violation.
+          Use the community rules and their explanations to select from the available choices.
 
-          EU category guidance, summarized from section 16 of
+          Category specifications from section 16 of
           https://transparency.dsa.ec.europa.eu/page/documentation:
-          - Animal welfare: animal harm or unlawful sales.
-          - Consumer information infringements: undisclosed ads, trader disclosures,
-            misleading product or consumer rights information, pricing compliance.
-          - Cyber violence: bullying, harassment, stalking, incitement, nonconsensual
-            intimate material or deepfakes concerning adults.
-          - Cyber violence against women: gender targeted harassment, stalking,
-            disinformation, incitement or nonconsensual intimate material.
-          - Data protection and privacy violations: biometric breaches, falsified data,
-            missing processing grounds or erasure rights.
-          - Illegal or harmful speech: defamation, discrimination or hate speech
-            based on protected characteristics.
-          - Intellectual property infringements: copyright, design, geographical
-            indications, patents, trade secrets or trademarks.
-          - Negative effects on civic discourse or elections: misinformation,
-            disinformation, interference or relevant election law violations.
-          - Type of alleged illegal content not specified by the notifier: an illegal
-            content allegation without its type, not a fallback for uncertainty.
-          - Other violation of terms and conditions: platform restrictions including
-            adult material, age, geography, language or permitted goods and services.
-          - Protection of minors: child abuse material, grooming, unsafe challenges
-            or age restrictions concerning minors.
-          - Risk for public security: illegal organizations, terrorism, environmental
-            or public health risks.
-          - Scams and fraud: phishing, pyramid schemes, impersonation, hijacked or
-            inauthentic accounts, listings or reviews.
-          - Self harm: promoting eating disorders, self mutilation or suicide.
-          - Unsafe or prohibited products: product safety, compliance or sales restrictions.
-          - Violence: coordinated harm, violent incitement, exploitation or trafficking.
-
-          When a community rule violation falls outside the other categories, choose
-          Other violation of terms and conditions. For example, unsolicited advertising
-          without evidence of fraud should not be classified as Scams and fraud.
+          - Animal welfare
+            - Animal harm
+            - Unlawful sale of animals
+          - Consumer information infringements
+            - Hidden advertisement or commercial communication, including by influencers
+            - Insufficient information on traders
+            - Misleading information about the characteristics of the goods and services
+            - Misleading information about the consumer’s rights
+            - Non-compliance with pricing regulations
+          - Cyber violence
+            - Cyber bullying and intimidation
+            - Cyber harassment
+            - Cyber incitement to hatred or violence
+            - Cyber stalking
+            - Non-consensual (intimate) material sharing, including (image-based) sexual abuse (excluding content depicting minors)
+            - Non-consensual sharing of material containing deepfake or similar technology using a third party's features (excluding content depicting minors)
+          - Cyber violence against women
+            - Cyber bullying and intimidation against girls
+            - Cyber harassment against women
+            - Cyber stalking against women
+            - Gendered disinformation
+            - Illegal incitement to violence and hatred against women
+            - Non-consensual (intimate) material sharing against women, including (image-based) sexual abuse against women (excluding content depicting minors)
+            - Non-consensual sharing of material containing deepfake or similar technology using a third party's features against women (excluding content depicting minors)
+          - Data protection and privacy violations
+            - Biometric data breach
+            - Data falsification
+            - Missing processing ground for data
+            - Right to be forgotten
+          - Illegal or harmful speech
+            - Defamation
+            - Discrimination
+            - Illegal incitement to violence and hatred based on protected characteristics (hate speech)
+          - Intellectual property infringements
+            - Copyright infringement
+            - Design infringement
+            - Geographical indications infringements
+            - Patent infringement
+            - Trade secret infringement
+            - Trademark infringement
+          - Negative effects on civic discourse or elections
+            - Misinformation, disinformation, foreign information manipulation and interference
+            - Violation of EU law relevant to civic discourse or elections
+            - Violation of national law relevant to civic discourse or elections
+          - Other violation of provider's terms and conditions
+            - Adult sexual material
+            - Age-specific restrictions
+            - Geographical requirements
+            - Goods/services not permitted to be offered on the platform
+            - Language requirements
+            - Nudity
+          - Protection of minors
+            - Age-specific restrictions concerning minors
+            - Child sexual abuse material
+            - Child sexual abuse material containing deepfake or similar technology
+            - Grooming/sexual enticement of minors
+            - Unsafe challenges
+          - Risk for public security
+            - Illegal organizations
+            - Risk for environmental damage
+            - Risk for public health
+            - Terrorist content
+          - Scams and/or fraud
+            - Impersonation or account hijacking
+            - Inauthentic accounts
+            - Inauthentic listings
+            - Inauthentic user reviews
+            - Phishing
+            - Pyramid schemes
+          - Self-harm
+            - Content promoting eating disorders
+            - Self-mutilation
+            - Suicide
+          - Type of alleged illegal content not specified by the notifier
+          - Unsafe, non-compliant or prohibited products
+            - Prohibited or restricted products
+            - Unsafe or non-compliant products
+          - Violence
+            - Coordinated harm
+            - General calls or incitement to violence and/or hatred
+            - Human exploitation
+            - Human trafficking
+            - Trafficking in women and girls
         TEXT
 
         def initialize(
