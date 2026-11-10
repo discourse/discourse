@@ -146,6 +146,17 @@ module ::Blog
       )
     end
 
+    # Rebakes leave published articles alone, so bulk imports that rebake after
+    # publishing copy the discussion post's new HTML across explicitly.
+    def refresh_article!
+      post = discussion_topic&.first_post
+      return false if !published_revision_id || post.blank? || post.cooked.blank?
+      update_columns(
+        cooked: post.cooked,
+        image_url: Revision.image_url_for(discussion_topic.image_upload),
+      )
+    end
+
     def url
       "#{Configuration.base_url}#{published_revision&.data&.fetch("path") || path}"
     end
