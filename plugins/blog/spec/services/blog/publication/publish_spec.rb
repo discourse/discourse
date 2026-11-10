@@ -200,7 +200,7 @@ RSpec.describe Blog::Publication::Publish do
       let(:params) { { topic_id: topic.id, revision_id: revision.id } }
 
       before do
-        SiteSetting.blog_path_format = "year_month_slug"
+        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
         freeze_time Time.utc(2026, 10, 30)
         approve_blog_revision(publication, revision, acting_user)
         freeze_time Time.utc(2026, 11, 2)
@@ -245,6 +245,15 @@ RSpec.describe Blog::Publication::Publish do
           guardian: acting_user.guardian,
         )
         expect(publication.reload.path).to eq("/2020/03/#{topic.slug}")
+      end
+
+      it "renders the path from the approved title, not a later rename" do
+        topic.update!(title: "A working title changed after the approval")
+
+        result
+        expect(publication.reload.path).to eq(
+          "/2026/11/#{Slug.for(publication.published_revision.title)}",
+        )
       end
 
       it "keeps the path of an article that was published before" do

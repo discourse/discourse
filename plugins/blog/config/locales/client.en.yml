@@ -79,12 +79,16 @@ en:
         identity_description: The name, introduction, About content, and article addresses shared by all blog themes.
         article_urls: Article URLs
         path_format: Address format
-        path_format_description: Applies to new articles. Published articles keep their addresses, and dated addresses use the day an article goes live.
+        path_format_description: Applies to new articles. Until an article is first published, its address follows its title and the day it goes live. Published articles keep their addresses.
         path_format_sample_slug: my-article
         path_formats:
           slug: Article name
           year_month_slug: Month and name
           year_month_day_slug: Date and name
+          custom: Custom
+        custom_path_format: Custom format
+        custom_path_format_description: "Use {year}, {month}, {day}, {slug} and {id}, and include {slug} or {id} so every address is unique."
+        custom_path_format_invalid: "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
         themes_index_description: Choose the design readers see. Customize an included theme or edit your own; changes stay private until you activate them.
         thumbnail:
           journal: The journal
@@ -305,11 +309,13 @@ en:
       path: Article path
       path_hint:
         Start with / and use lowercase letters, numbers, hyphens, and optional
-        path segments. Old paths redirect automatically after a change.
+        path segments. Until the article is first published, a path you haven't
+        edited follows its title. Old paths redirect automatically after a change.
       path_hint_dated:
         Start with / and use lowercase letters, numbers, hyphens, and optional
-        path segments. Until the article is first published, a dated path follows
-        its publication date. Old paths redirect automatically after a change.
+        path segments. Until the article is first published, a path you haven't
+        edited follows its title and publication date. Old paths redirect
+        automatically after a change.
       excerpt: Excerpt
       excerpt_hint:
         A short introduction for article cards and search previews. Leave

@@ -129,9 +129,9 @@ export default class BlogPublicationPanel extends Component {
   }
 
   get pathHint() {
-    return this.siteSettings.blog_path_format === "slug"
-      ? i18n("blog.path_hint")
-      : i18n("blog.path_hint_dated");
+    return /\{(year|month|day)\}/.test(this.siteSettings.blog_path_format)
+      ? i18n("blog.path_hint_dated")
+      : i18n("blog.path_hint");
   }
 
   // Always relative ("6 days ago"); the exact time is in the tooltip.

@@ -112,7 +112,7 @@ RSpec.describe Blog::Publication::RunSchedule do
 
     context "with a dated path format scheduled into the next month" do
       let(:publication) do
-        SiteSetting.blog_path_format = "year_month_slug"
+        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
         freeze_time Time.utc(2026, 10, 31, 22)
         Blog::Publication.for_topic(topic)
       end

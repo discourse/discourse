@@ -207,9 +207,8 @@ RSpec.describe "Blog publication", type: :request do
   describe "GET blog articles and feeds" do
     let!(:publication) do
       publication = Blog::Publication.for_topic(topic)
-      publication.path = "/private-to-public"
+      update_blog_metadata(publication, admin, path: "/private-to-public")
       publish_blog_draft(publication, admin)
-      publication
     end
 
     it "preserves historical canonical paths through publishing and corrections" do

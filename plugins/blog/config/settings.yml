@@ -30,10 +30,9 @@ blog:
     default: ""
     textarea: true
   blog_path_format:
-    type: enum
-    default: slug
+    default: "/{slug}"
     client: true
-    enum: "Blog::PathFormatSiteSetting"
+    validator: "Blog::PathFormatValidator"
   blog_posts_per_page:
     default: 10
     min: 1

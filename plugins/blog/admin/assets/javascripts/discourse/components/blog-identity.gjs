@@ -12,11 +12,13 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 const SETTINGS = ["blog_title", "blog_description", "blog_about"];
-const PATH_FORMATS = {
-  slug: null,
-  year_month_slug: "YYYY/MM",
-  year_month_day_slug: "YYYY/MM/DD",
+const PATH_PRESETS = {
+  slug: "/{slug}",
+  year_month_slug: "/{year}/{month}/{slug}",
+  year_month_day_slug: "/{year}/{month}/{day}/{slug}",
 };
+const PATH_TOKEN = /\{(\w+)\}/g;
+const PATH_TOKENS = ["year", "month", "day", "slug", "id"];
 
 export default class BlogIdentity extends Component {
   @service site;
@@ -26,22 +28,29 @@ export default class BlogIdentity extends Component {
 
   get formData() {
     const settings = this.args.settings;
+    const format = settings.blog_path_format || PATH_PRESETS.slug;
+    const preset = Object.keys(PATH_PRESETS).find(
+      (key) => PATH_PRESETS[key] === format
+    );
     return {
       ...Object.fromEntries(SETTINGS.map((key) => [key, settings[key] || ""])),
-      blog_path_format: settings.blog_path_format || "slug",
+      path_format: preset || "custom",
+      custom_path_format: preset ? "" : format,
     };
   }
 
   get pathFormats() {
-    const today = moment.utc();
-    const base = this.#blogBase();
-    const slug = i18n("blog.admin.path_format_sample_slug");
-    return Object.entries(PATH_FORMATS).map(([value, dateFormat]) => ({
+    return Object.entries(PATH_PRESETS).map(([value, template]) => ({
       value,
-      base,
-      date: dateFormat ? `/${today.format(dateFormat)}` : "",
-      slug: `/${slug}`,
+      example: this.pathExample(template),
     }));
+  }
+
+  get blogBase() {
+    // On the forum's own host the path is enough; a separate blog domain is worth showing.
+    const url = new URL(this.site.blog_base_url, window.location.origin);
+    const path = url.pathname.replace(/\/$/, "");
+    return url.host === window.location.host ? path : `${url.host}${path}`;
   }
 
   get safeUrl() {
@@ -49,12 +58,53 @@ export default class BlogIdentity extends Component {
   }
 
   @action
+  pathExample(template) {
+    const today = moment.utc();
+    const values = {
+      year: today.format("YYYY"),
+      month: today.format("MM"),
+      day: today.format("DD"),
+      slug: i18n("blog.admin.path_format_sample_slug"),
+      id: "123",
+    };
+    return (template || "").replace(
+      PATH_TOKEN,
+      (match, token) => values[token] ?? match
+    );
+  }
+
+  @action
+  validate(data, { addError, removeError }) {
+    if (data.path_format !== "custom") {
+      removeError("custom_path_format");
+      return;
+    }
+    const template = data.custom_path_format || "";
+    const tokens = [...template.matchAll(PATH_TOKEN)].map((match) => match[1]);
+    const valid =
+      template.startsWith("/") &&
+      tokens.every((token) => PATH_TOKENS.includes(token)) &&
+      (tokens.includes("slug") || tokens.includes("id"));
+    if (valid) {
+      removeError("custom_path_format");
+    } else {
+      addError("custom_path_format", {
+        title: i18n("blog.admin.custom_path_format"),
+        message: i18n("blog.admin.custom_path_format_invalid"),
+      });
+    }
+  }
+
+  @action
   async save(data) {
+    const { path_format, custom_path_format, ...settings } = data;
+    settings.blog_path_format =
+      path_format === "custom" ? custom_path_format : PATH_PRESETS[path_format];
     this.saving = true;
     try {
       await SiteSetting.bulkUpdate(
         Object.fromEntries(
-          Object.entries(data).map(([key, value]) => [key, { value }])
+          Object.entries(settings).map(([key, value]) => [key, { value }])
         )
       );
       this.toasts.success({
@@ -66,13 +116,6 @@ export default class BlogIdentity extends Component {
     } finally {
       this.saving = false;
     }
-  }
-
-  // On the forum's own host the path is enough; a separate blog domain is worth showing.
-  #blogBase() {
-    const url = new URL(this.site.blog_base_url, window.location.origin);
-    const path = url.pathname.replace(/\/$/, "");
-    return url.host === window.location.host ? path : `${url.host}${path}`;
   }
 
   <template>
@@ -102,7 +145,8 @@ export default class BlogIdentity extends Component {
         @commitOnSubmit={{false}}
         @data={{this.formData}}
         @onSubmit={{this.save}}
-        as |form|
+        @validate={{this.validate}}
+        as |form data|
       >
         <AdminConfigAreaCard @heading="blog.admin.identity">
           <:content>
@@ -140,7 +184,7 @@ export default class BlogIdentity extends Component {
                 <form.Field
                   @description={{i18n "blog.admin.path_format_description"}}
                   @format="full"
-                  @name="blog_path_format"
+                  @name="path_format"
                   @title={{i18n "blog.admin.path_format"}}
                   @type="radio-group"
                   @validation="required"
@@ -153,19 +197,40 @@ export default class BlogIdentity extends Component {
                             (concat "blog.admin.path_formats." format.value)
                           }}</radio.Title>
                         <radio.Description>
-                          <span class="blog-identity__path-example">
-                            <span
+                          <span class="blog-identity__path-example"><span
                               class="blog-identity__path-base"
-                            >{{format.base}}</span><span
-                              class="blog-identity__path-date"
-                            >{{format.date}}</span><span>{{format.slug}}</span>
-                          </span>
+                            >{{this.blogBase}}</span>{{format.example}}</span>
                         </radio.Description>
                       </radioGroup.Radio>
                     {{/each}}
+                    <radioGroup.Radio @value="custom" as |radio|>
+                      <radio.Title>{{i18n
+                          "blog.admin.path_formats.custom"
+                        }}</radio.Title>
+                      <radio.Description>
+                        <span class="blog-identity__path-example"><span
+                            class="blog-identity__path-base"
+                          >{{this.blogBase}}</span>{{this.pathExample
+                            data.custom_path_format
+                          }}</span>
+                      </radio.Description>
+                    </radioGroup.Radio>
                   </field.Control>
                 </form.Field>
               </div>
+              {{#if (eq data.path_format "custom")}}
+                <form.Field
+                  @description={{i18n
+                    "blog.admin.custom_path_format_description"
+                  }}
+                  @format="large"
+                  @name="custom_path_format"
+                  @title={{i18n "blog.admin.custom_path_format"}}
+                  @type="input"
+                  @validation="required"
+                  as |field|
+                ><field.Control placeholder="/news/{slug}" /></form.Field>
+              {{/if}}
             </form.Section>
           </:content>
         </AdminConfigAreaCard>
