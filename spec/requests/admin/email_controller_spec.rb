@@ -335,6 +335,65 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to eq("email has been received and is queued for processing")
       end
 
+      it "keeps cross-group email references from granting access to private conversations" do
+        SiteSetting.email_in = true
+        receiving_group =
+          Fabricate(
+            :group,
+            incoming_email: "inbox@example.com",
+            allow_unknown_sender_topic_replies: true,
+          )
+        victim_group = Fabricate(:group, allow_unknown_sender_topic_replies: false)
+        private_post = Fabricate(:private_message_post, raw: "Confidential victim conversation")
+        private_post.topic.allowed_groups << victim_group
+        message_id = "discourse/post/#{private_post.id}@#{Discourse.current_hostname}"
+        Fabricate(
+          :incoming_email,
+          post: private_post,
+          topic: private_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        sign_in(user)
+        get "/t/#{private_post.topic_id}.json"
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(private_post.raw)
+
+        attacker_mail = <<~MAIL
+          From: #{user.email}
+          To: #{receiving_group.incoming_email}
+          Subject: Re: Support request
+          Date: #{Time.current.rfc2822}
+          Message-ID: <outsider-reply@example.com>
+          In-Reply-To: <#{message_id}>
+          Content-Type: text/plain; charset=UTF-8
+
+          Please add this reply to the conversation.
+        MAIL
+
+        sign_in(admin)
+        Jobs.run_immediately!
+        post "/admin/email/handle_mail.json",
+             params: {
+               email_encoded: Base64.strict_encode64(attacker_mail),
+             }
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("email has been received and is queued for processing")
+
+        incoming = IncomingEmail.find_by!(message_id: "outsider-reply@example.com")
+        expect(incoming.rejection_message).to be_blank
+        expect(incoming.post_id).to be_present
+
+        sign_in(user)
+        get "/t/#{private_post.topic_id}.json"
+        expect(response.body).not_to include(private_post.raw)
+        expect(response.status).to eq(404)
+        expect(private_post.topic.topic_allowed_users.exists?(user_id: user.id)).to eq(false)
+        expect(private_post.topic.posts.count).to eq(1)
+        expect(Post.last.topic.allowed_groups).to contain_exactly(receiving_group)
+      end
+
       it "normalizes invalid UTF-8 bytes before enqueueing" do
         post "/admin/email/handle_mail.json",
              params: {
