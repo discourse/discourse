@@ -409,7 +409,6 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       // eslint-disable-next-line no-console
       console.error(error);
 
-      // The editor keeps working as plain text.
       if (load === this.#languageLoads) {
         this.view?.dispatch({ effects: this.#language.reconfigure([]) });
       }
