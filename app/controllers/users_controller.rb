@@ -194,6 +194,7 @@ class UsersController < ApplicationController
         :primary_email,
         :user_status,
       )
+    users = users.where(active: true) if !guardian.is_staff?
 
     users = users.filter { |u| guardian.can_see_profile?(u) }
 
