@@ -1586,7 +1586,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = @topic_view.topic.plain_text_excerpt || @topic_view.summary
+        @description_meta = @topic_view.first_post_excerpt || @topic_view.summary
         if set_layout == "application"
           store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         end
