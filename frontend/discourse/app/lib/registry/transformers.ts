@@ -1,8 +1,11 @@
-import type { HomeLogoMinimizedTransformer } from "discourse/components/header/contents-transformers";
-import type { SearchMenuSearchShortcutsEnabledTransformer } from "discourse/components/search-menu/results/initial-options-transformers";
-import type { DraftIconTransformer } from "discourse/components/topic-drafts-dropdown-transformers";
-import type { TopicListItemClassTransformer } from "discourse/components/topic-list/item-transformers";
-import type { PreferencesSaveAttributesTransformer } from "discourse/controllers/preferences/transformers";
+import type { DraftIconTransformer } from "discourse/lib/registry/transformers/types/drafts";
+import type { HomeLogoMinimizedTransformer } from "discourse/lib/registry/transformers/types/header";
+import type { PreferencesSaveAttributesTransformer } from "discourse/lib/registry/transformers/types/preferences";
+import type { SearchMenuSearchShortcutsEnabledTransformer } from "discourse/lib/registry/transformers/types/search-menu";
+import type { TopicListItemClassTransformer } from "discourse/lib/registry/transformers/types/topic-list";
+import type { PostCanEditTransformer } from "discourse/models/post";
+import type { TopicReplyCountTransformer } from "discourse/models/topic";
+import type { UserPathTransformer } from "discourse/models/user";
 
 /** Opaque marker for a known hook that retains generic value and context inference. */
 declare const untypedBrand: unique symbol;
@@ -36,9 +39,8 @@ type EntriesOf<Hooks> = {
  * They are invoked at key points to allow customization of the application behavior.
  *
  * Each key is a hook name (USE ONLY lowercase names). The value is `untyped`, or `typed<Contract>()` where
- * `Contract` is `{ result: R; context: C | undefined }`. Declare a contract in a types-only `.ts` file next to the
- * code that applies the hook: `<owner>-transformers.ts` beside a single owner, or `transformers.ts` in a directory
- * whose files share the hook.
+ * `Contract` is `{ result: R; context: C | undefined }`. When a single TypeScript file applies the hook, export the
+ * contract from that file. Otherwise declare it in `lib/registry/transformers/types/<area>.ts`.
  */
 const BEHAVIOR_HOOKS = {
   "admin-user-unsilence": untyped,
@@ -150,7 +152,7 @@ const VALUE_HOOKS = {
   "post-avatar-class": untyped,
   "post-avatar-size": untyped,
   "post-avatar-template": untyped,
-  "post-can-edit": untyped,
+  "post-can-edit": typed<PostCanEditTransformer>(),
   "post-class": untyped,
   "post-event-listener": untyped,
   "post-flag-available-flags": untyped,
@@ -201,7 +203,7 @@ const VALUE_HOOKS = {
   "topic-list-item-style": untyped,
   "topic-list-topics-from": untyped,
   "topic-navigation-render-timeline": untyped,
-  "topic-reply-count": untyped,
+  "topic-reply-count": typed<TopicReplyCountTransformer>(),
   "topic-show-footer-buttons": untyped,
   "user-field-components": untyped,
   "user-list-display-name": untyped,
@@ -209,7 +211,7 @@ const VALUE_HOOKS = {
   "user-location": untyped,
   "user-menu-notification-item-acting-user-avatar": untyped,
   "user-notes-modal-subtitle": untyped,
-  "user-path": untyped,
+  "user-path": typed<UserPathTransformer>(),
   "welcome-banner-display-for-route": untyped,
   "welcome-banner-location": untyped,
 };

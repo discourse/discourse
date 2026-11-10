@@ -76,7 +76,7 @@ If multiple transformers are registered against a single name, then they will be
 
 ## Finding Transformers
 
-All core transformer names are listed in [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). Typed hooks point to a contract declared next to the code that applies them, describing the value, context, and return types. For the others, search for the name in the core codebase to find where it's applied, its context and value, and the expected return type. Editors set up as described in [Types](27-types.md) complete hook names when you call `applyValueTransformer`, `api.registerValueTransformer`, and their behavior counterparts, including in plain JavaScript files. The plugin API is defined in a `.gjs` file, so its hints need an editor that can read `.gjs` files.
+All core transformer names are listed in [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). Typed hooks point to a contract that describes the value, context, and return types. For the others, search for the name in the core codebase to find where it's applied, its context and value, and the expected return type. Editors set up as described in [Types](27-types.md) complete hook names when you call `applyValueTransformer`, `api.registerValueTransformer`, and their behavior counterparts, including in plain JavaScript files. The plugin API is defined in a `.gjs` file, so its hints need an editor that can read `.gjs` files.
 
 ## Introducing new Transformers
 
@@ -150,7 +150,7 @@ const addClass: ValueTransformerFor<"topic-list-item-class"> = ({ value }) => [
 api.registerValueTransformer("topic-list-item-class", addClass);
 ```
 
-Core hooks without a contract yet are marked `untyped` and keep the loose typing described below. A core contract is a types-only `.ts` file next to the code that applies the hook, for example `components/topic-list/item-transformers.ts`, referenced from the registry with `typed<Contract>()`. Value contracts have the shape `{ value: V; context: C | undefined; mutable: true | false }`, and behavior contracts `{ result: R; context: C | undefined }`. Include `undefined` in `context` when the context is optional, or use `context: undefined` when a hook has none. Contracts that don't match these shapes make the hook unusable until they are fixed.
+Core hooks without a contract yet are marked `untyped` and keep the loose typing described below. A core contract is an exported interface, referenced from the registry with `typed<Contract>()`. When a single TypeScript file applies the hook, the contract lives in that file, as `PostCanEditTransformer` does in `models/post.ts`. Otherwise it goes in `lib/registry/transformers/types/`, grouped by area, as `TopicListItemClassTransformer` does in `types/topic-list.ts`. Value contracts have the shape `{ value: V; context: C | undefined; mutable: true | false }`, and behavior contracts `{ result: R; context: C | undefined }`. Include `undefined` in `context` when the context is optional, or use `context: undefined` when a hook has none. Contracts that don't match these shapes make the hook unusable until they are fixed.
 
 A plugin or theme can type its own hooks by adding entries from a TypeScript file. The name still needs `api.addValueTransformerName` or `api.addBehaviorTransformerName` at runtime:
 

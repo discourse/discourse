@@ -245,6 +245,13 @@ export type PostCreateAttrs<M> = RestModelAttrs<Omit<M, "actions_summary">> & {
   actions_summary?: (PostActionSummaryData | ActionSummary)[];
 };
 
+/** Contract for the `post-can-edit` value transformer. */
+export interface PostCanEditTransformer {
+  value: boolean | undefined;
+  context: { post: Post };
+  mutable: false;
+}
+
 type PostMungePayload = RestPayload & {
   actions_summary?: (Partial<ActionSummaryFields> & { id: number })[];
   actionByName?: PostFields["actionByName"];

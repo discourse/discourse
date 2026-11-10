@@ -334,6 +334,13 @@ type TopicOperationPromise = globalThis.Promise<RestPayload | undefined> & {
   reject(error: Error): void;
 };
 
+/** Contract for the `topic-reply-count` value transformer. */
+export interface TopicReplyCountTransformer {
+  value: number;
+  context: { topic: Topic };
+  mutable: false;
+}
+
 export function _addTrackedTopicProperty(propertyKey: string): void {
   stampModelClass(Topic, "topic");
   registerModelField("topic", propertyKey);

@@ -6,7 +6,9 @@ import {
   type ValueTransformerFor,
 } from "discourse/lib/transformer";
 import type Category from "discourse/models/category";
+import type Post from "discourse/models/post";
 import type Topic from "discourse/models/topic";
+import type User from "discourse/models/user";
 import type UserDraft from "discourse/models/user-draft";
 
 type PreferencesPage =
@@ -23,6 +25,8 @@ type PreferencesPage =
 declare const topic: Topic;
 declare const category: Category;
 declare const draft: UserDraft;
+declare const post: Post;
+declare const user: User;
 
 const apply = applyValueTransformer;
 const itemContext = { topic, index: 0, listContext: "discovery", category };
@@ -70,6 +74,29 @@ expectTypeOf(apply("draft-icon", "reply", { draft })).toEqualTypeOf<string>();
 // @ts-expect-error the context carries the draft
 apply("draft-icon", "reply", {});
 
+/* post-can-edit */
+expectTypeOf(apply("post-can-edit", true, { post })).toEqualTypeOf<
+  boolean | undefined
+>();
+// @ts-expect-error the value is a boolean
+apply("post-can-edit", "yes", { post });
+// @ts-expect-error the context carries the post
+apply("post-can-edit", true, { topic });
+
+/* topic-reply-count */
+expectTypeOf(apply("topic-reply-count", 3, { topic })).toEqualTypeOf<number>();
+// @ts-expect-error the value is a count
+apply("topic-reply-count", "3", { topic });
+// @ts-expect-error the context carries the topic
+apply("topic-reply-count", 3, {});
+
+/* user-path */
+expectTypeOf(apply("user-path", "/u/sam", { user })).toEqualTypeOf<string>();
+// @ts-expect-error the value is a path
+apply("user-path", 1, { user });
+// @ts-expect-error the context carries the user
+apply("user-path", "/u/sam", { post });
+
 /* Registrants see each hook's contract */
 withPluginApi((api) => {
   api.registerValueTransformer(
@@ -110,12 +137,30 @@ withPluginApi((api) => {
     return "robot";
   });
 
+  api.registerValueTransformer("post-can-edit", ({ value, context }) => {
+    expectTypeOf(value).toEqualTypeOf<boolean | undefined>();
+    expectTypeOf(context.post).toEqualTypeOf<Post>();
+    return value;
+  });
+  api.registerValueTransformer("topic-reply-count", ({ value, context }) => {
+    expectTypeOf(value).toEqualTypeOf<number>();
+    expectTypeOf(context.topic).toEqualTypeOf<Topic>();
+    return value;
+  });
+  api.registerValueTransformer("user-path", ({ value, context }) => {
+    expectTypeOf(value).toEqualTypeOf<string>();
+    expectTypeOf(context.user).toEqualTypeOf<User>();
+    return value;
+  });
+
   // @ts-expect-error these hooks are immutable, so the callback must return the value
   api.registerValueTransformer("topic-list-item-class", ({ value }) => {
     value.push("x");
   });
   // @ts-expect-error the icon is a string
   api.registerValueTransformer("draft-icon", () => 1);
+  // @ts-expect-error the reply count is a number
+  api.registerValueTransformer("topic-reply-count", () => "many");
 });
 
 /* Every seeded hook resolves to a typed callback, not the generic fallback */
@@ -133,6 +178,15 @@ expectTypeOf<
 >().returns.toEqualTypeOf<string[]>();
 expectTypeOf<
   ValueTransformerFor<"draft-icon">
+>().returns.toEqualTypeOf<string>();
+expectTypeOf<ValueTransformerFor<"post-can-edit">>().returns.toEqualTypeOf<
+  boolean | undefined
+>();
+expectTypeOf<
+  ValueTransformerFor<"topic-reply-count">
+>().returns.toEqualTypeOf<number>();
+expectTypeOf<
+  ValueTransformerFor<"user-path">
 >().returns.toEqualTypeOf<string>();
 
 /* Optional context keys and the immutable contract */
@@ -161,3 +215,5 @@ applyMut("search-menu-search-shortcuts-enabled", true, {});
 applyMut("preferences-save-attributes", [] as string[], { page: "account" });
 // @ts-expect-error immutable hook through the mutable apply
 applyMut("draft-icon", "reply", { draft });
+// @ts-expect-error immutable hook through the mutable apply
+applyMut("topic-reply-count", 3, { topic });
