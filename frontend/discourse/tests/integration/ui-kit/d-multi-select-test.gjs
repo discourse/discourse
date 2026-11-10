@@ -13,6 +13,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
+import { i18n } from "discourse-i18n";
 
 class TestComponent extends Component {
   @tracked selection = this.args.selection ?? [];
@@ -35,6 +36,7 @@ class TestComponent extends Component {
   <template>
     <DMultiSelect
       @compareFn={{@compareFn}}
+      @disabled={{@disabled}}
       @label={{@label}}
       @loadFn={{if @loadFn @loadFn this.loadFn}}
       @onChange={{this.onChange}}
@@ -311,6 +313,12 @@ module("Integration | ui-kit | DMultiSelect", function (hooks) {
       .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
       .hasText("bar");
     assert.dom(".d-multi-select__result").doesNotExist();
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .hasAria("disabled", "true");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
+      .doesNotHaveAria("disabled");
 
     // Clicking the first selected item should not remove it
     await click(".d-multi-select-trigger__selected-item:nth-child(1)");
@@ -330,6 +338,55 @@ module("Integration | ui-kit | DMultiSelect", function (hooks) {
     await click(".d-multi-select-trigger");
     assert.dom(".d-multi-select__result").exists({ count: 1 });
     assert.dom(".d-multi-select__result:nth-child(1)").hasText("bar");
+  });
+
+  test("accessible names", async function (assert) {
+    const selection = [
+      { id: 1, name: "foo", preventRemoval: true },
+      { id: 2, name: "bar" },
+    ];
+    await render(
+      <template>
+        <TestComponent @label="Pick some" @selection={{selection}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-multi-select-trigger__selection")
+      .hasAttribute("role", "group")
+      .hasAria("label", "Pick some");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .doesNotHaveAria("label", "locked chips are named by their content");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
+      .hasAria("label", i18n("multi_select.remove_item", { name: "bar" }));
+    assert
+      .dom(".d-multi-select-trigger__expand-btn")
+      .hasAria("label", "Pick some")
+      .hasAria("expanded", "false");
+
+    await click(".d-multi-select-trigger");
+    assert
+      .dom(".d-multi-select-trigger__expand-btn")
+      .hasAria("expanded", "true");
+  });
+
+  test("@disabled", async function (assert) {
+    const selection = [{ id: 1, name: "foo" }];
+    await render(
+      <template>
+        <TestComponent @disabled={{true}} @selection={{selection}} />
+      </template>
+    );
+
+    assert.dom(".d-multi-select-trigger").hasClass("--disabled");
+    assert.dom(".d-multi-select-trigger__selected-item").isDisabled();
+    assert.dom(".d-multi-select-trigger__remove-selection-icon").doesNotExist();
+
+    await click(".d-multi-select-trigger");
+    assert.dom(".d-multi-select__content").doesNotExist();
+    assert.dom(".d-multi-select-trigger__selected-item").hasText("foo");
   });
 
   test("preselect item", async function (assert) {

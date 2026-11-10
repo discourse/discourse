@@ -2996,6 +2996,7 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+      remove_item: "Remove %{name}"
     d_otp:
       screen_reader:
         one: Enter a number
