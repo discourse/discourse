@@ -173,8 +173,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     shapes; the family's modules report legacy renders.
   - ☐ Sites that need what the engine lacks stay on select-kit, opted out of the notice:
     assign's assignee picker (open on render, suggestions on an empty query, its own search
-    URL) and category groups (values that can't be removed), `DAccessControlGranteeChooser`
-    (with the ui-kit wrappers below) and the workflows group field (wave 5).
+    URL), `DAccessControlGranteeChooser` (with the ui-kit wrappers below) and the workflows
+    group field (wave 5).
+  - ☑ Assign's category groups moved to `DSelectGroup` once the engine could hold values that
+    can't be removed: the global groups are `@lockedValues` (2026-11-10).
   - ☑ Held names match in any case, through the engine's opt-in `normalizeKey` (2026-10-31).
   - ☐ `addUserSearchOption` reaches only the legacy pickers; the new ones take `searchOptions`
     through a customization.

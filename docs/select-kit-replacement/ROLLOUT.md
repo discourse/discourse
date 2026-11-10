@@ -259,12 +259,12 @@ customization ports are done.
   and wizard pickers. The ui-kit wrappers move together as one family:
   `d-time-input`, `d-relative-time-picker`, `d-future-date-input` with its
   `FutureDateInputSelector`, and `d-access-control`.
-  Status 2026-10-31: the user family has joined through `DSelectUser` and `DSelectGroup`. Four
+  Status 2026-10-31: the user family has joined through `DSelectUser` and `DSelectGroup`. Three
   sites stay on select-kit, opted out of the legacy-render notice, until the engine covers what
   they need: assign's assignee picker (opens on render, suggests on an empty query, uses its own
-  search URL), assign's category groups (held values that can't be removed),
-  `DAccessControlGranteeChooser` (moves with `d-access-control`) and the workflows group field
-  (wave 5). `addUserSearchOption` reaches only the legacy pickers; extensions set
+  search URL), `DAccessControlGranteeChooser` (moves with `d-access-control`) and the workflows
+  group field (wave 5). Assign's category groups joined on 2026-11-10, when the engine gained
+  `@lockedValues` for held values that can't be removed. `addUserSearchOption` reaches only the legacy pickers; extensions set
   `searchOptions` through a customization instead.
   The topic pickers joined the same day through `DSelectTopic`, in form fields and in modals
   alike (move to topic or message, chat to topic, boards' "Add topic as card"), so a modal keeps
