@@ -20,6 +20,7 @@ class AppearanceChange::Activate
   policy :can_edit_theme
   policy :not_applied
   policy :palettes_exist
+  only_if(:replaces_version) { policy :can_edit_versions }
   model :replaced_state
   step :record_pending_activation
   only_if(:changes_site_settings) { step :apply_site_settings }
@@ -73,6 +74,14 @@ class AppearanceChange::Activate
 
   def replaces_version(appearance_change:)
     appearance_change.kind_theme? && appearance_change.replaces_theme_id.present?
+  end
+
+  # Making a version live renames the one it replaces and may remove the one
+  # before that, so the administrator has to be able to change both.
+  def can_edit_versions(guardian:, appearance_change:)
+    appearance_change.versions_changed_on_activation.all? do |theme|
+      guardian.can_edit_theme_relations?(theme, child_theme_ids: [], parent_theme_ids: [])
+    end
   end
 
   def replace_previous_version(appearance_change:)
