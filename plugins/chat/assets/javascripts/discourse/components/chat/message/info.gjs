@@ -70,9 +70,22 @@ export default class ChatMessageInfo extends Component {
     return this.args.interactive !== false;
   }
 
-  // Jump to the reply's own position in the thread, like the in-reply-to chip.
-  get broadcastThreadLinkModels() {
-    return [...this.args.message.thread.routeModels, this.args.message.id];
+  get broadcastLink() {
+    const { message, threadContext } = this.args;
+
+    if (!message?.broadcasted) {
+      return null;
+    }
+    if (threadContext) {
+      return { route: this.route, models: this.routeModels };
+    }
+    if (message.thread) {
+      return {
+        route: "chat.channel.thread.near-message",
+        models: [...message.thread.routeModels, message.id],
+      };
+    }
+    return null;
   }
 
   get #user() {
@@ -173,32 +186,27 @@ export default class ChatMessageInfo extends Component {
           </span>
         {{/if}}
 
-        {{#if @message.broadcasted}}
-          {{#if @threadContext}}
-            <LinkTo
-              class="chat-message-info__broadcast"
-              @models={{this.routeModels}}
-              @route={{this.route}}
-            >
-              <span class="chat-message-info__broadcast__text">
-                {{i18n "chat.thread.broadcast_also_sent_to"}}
-              </span>
+        {{#if this.broadcastLink}}
+          <LinkTo
+            class="chat-message-info__broadcast"
+            @models={{this.broadcastLink.models}}
+            @route={{this.broadcastLink.route}}
+          >
+            <span class="chat-message-info__broadcast__text">
+              {{i18n
+                (if
+                  @threadContext
+                  "chat.thread.broadcast_also_sent_to"
+                  "chat.thread.broadcast_sent_from_thread"
+                )
+              }}
+            </span>
+            {{#if @threadContext}}
               <ChannelTitle @channel={{@message.channel}} />
-            </LinkTo>
-          {{else}}
-            {{#if @message.thread}}
-              <LinkTo
-                class="chat-message-info__broadcast"
-                @models={{this.broadcastThreadLinkModels}}
-                @route="chat.channel.thread.near-message"
-              >
-                <span class="chat-message-info__broadcast__text">
-                  {{i18n "chat.thread.broadcast_sent_from_thread"}}
-                </span>
-                {{dIcon "share"}}
-              </LinkTo>
+            {{else}}
+              {{dIcon "discourse-threads"}}
             {{/if}}
-          {{/if}}
+          </LinkTo>
         {{/if}}
 
         {{#if (and @message.pinned (not (eq @context "pinned")))}}

@@ -47,8 +47,8 @@ module Chat
       before_validation do
         self.auto_join_users = auto_join_users.presence || false
         self.threading_enabled = threading_enabled.presence || false
-        self.broadcast_replies_enabled = broadcast_replies_enabled.presence || false
-        self.broadcast_replies_enabled = false if !threading_enabled
+        self.broadcast_replies_enabled =
+          (broadcast_replies_enabled.presence || false) && threading_enabled
         self.emoji = emoji.presence
       end
 

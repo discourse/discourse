@@ -107,7 +107,12 @@ export default class ChatChannelSubscriptionManager {
     const message = ChatMessage.create(this.channel, data.chat_message);
     message.manager = this.channel.messagesManager;
     this.onNewMessage?.(message);
-    this.channel.lastMessage = message;
+    if (
+      !this.channel.lastMessage?.id ||
+      message.id > this.channel.lastMessage.id
+    ) {
+      this.channel.lastMessage = message;
+    }
   }
 
   handleStagedMessage(channel, messagesManager, data) {
@@ -263,14 +268,16 @@ export default class ChatChannelSubscriptionManager {
   }
 
   handleThreadOriginalMessageUpdate(data) {
-    const message = this.messagesManager.findMessage(data.original_message_id);
-    if (message?.thread) {
-      if (message.thread.preview) {
-        message.thread.preview.update(data.preview);
-      } else {
-        message.thread.preview = ChatThreadPreview.create(data.preview);
-      }
-    }
+    const threadId = parseInt(data.thread_id, 10);
+    this.messagesManager.messages
+      .filter((message) => message.thread?.id === threadId)
+      .forEach((message) => {
+        if (message.thread.preview) {
+          message.thread.preview.update(data.preview);
+        } else {
+          message.thread.preview = ChatThreadPreview.create(data.preview);
+        }
+      });
   }
 
   handlePinMessage(data) {

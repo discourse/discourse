@@ -176,13 +176,13 @@ module Chat
       # A broadcasted reply lives in both streams; each recomputes its own latest.
       if chat_message.broadcasted?
         if allow_publish_to_thread?(chat_channel, chat_message)
-          MessageBus.publish(
-            thread_message_bus_channel(chat_channel.id, chat_message.thread_id),
+          publish_to_targets!(
+            [thread_message_bus_channel(chat_channel.id, chat_message.thread_id)],
+            chat_channel,
             delete_payload(
               chat_message,
               chat_message.thread.latest_not_deleted_message_id(anchor_message_id: chat_message.id),
-            ).as_json,
-            permissions(chat_channel),
+            ),
           )
         end
         publish_to_channel!(

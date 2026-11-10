@@ -533,12 +533,7 @@ export default class ChatThread extends Component {
     this.chatApi
       .sendMessage(this.args.thread.channel.id, {
         cooked: stagedMessage.cooked,
-        message: stagedMessage.message,
-        in_reply_to_id: stagedMessage.inReplyTo?.id ?? null,
-        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-        staged_id: stagedMessage.id,
-        thread_id: this.args.thread.id,
-        broadcast: stagedMessage.broadcasted,
+        ...this.#sendMessagePayload(stagedMessage),
       })
       .catch((error) => {
         stagedMessage.setSendError(error);
@@ -546,6 +541,17 @@ export default class ChatThread extends Component {
       .finally(() => {
         this.chatThreadPane.sending = false;
       });
+  }
+
+  #sendMessagePayload(message) {
+    return {
+      message: message.message,
+      in_reply_to_id: message.inReplyTo?.id ?? null,
+      upload_ids: message.uploads.map((upload) => upload.id),
+      staged_id: message.id,
+      thread_id: this.args.thread.id,
+      broadcast: message.broadcasted,
+    };
   }
 
   async #sendNewMessage(message) {
@@ -566,12 +572,7 @@ export default class ChatThread extends Component {
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
         {
-          message: message.message,
-          in_reply_to_id: message.inReplyTo?.id ?? null,
-          staged_id: message.id,
-          upload_ids: message.uploads.map((upload) => upload.id),
-          thread_id: message.thread.id,
-          broadcast: message.broadcasted,
+          ...this.#sendMessagePayload(message),
           ...extractCurrentTopicInfo(this),
         }
       );

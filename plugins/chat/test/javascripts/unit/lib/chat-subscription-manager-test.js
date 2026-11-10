@@ -298,6 +298,61 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.false(message.expanded);
   });
 
+  test("channel manager refreshes the thread preview on the original message and on broadcasted copies", function (assert) {
+    const channel = this.fabricators.channel({ id: 15 });
+    const originalMessage = this.fabricators.message({
+      id: 300,
+      channel,
+      thread: this.fabricators.thread({ id: 224, channel }),
+    });
+    const broadcastedReply = this.fabricators.message({
+      id: 301,
+      channel,
+      broadcasted: true,
+      thread: this.fabricators.thread({ id: 224, channel }),
+    });
+    const unrelatedReply = this.fabricators.message({
+      id: 302,
+      channel,
+      broadcasted: true,
+      thread: this.fabricators.thread({ id: 225, channel }),
+    });
+    channel.messagesManager.addMessages([
+      originalMessage,
+      broadcastedReply,
+      unrelatedReply,
+    ]);
+    // each message deserializes its own thread instance from its payload
+    assert.notStrictEqual(originalMessage.thread, broadcastedReply.thread);
+    unrelatedReply.thread.preview.update({ reply_count: 5 });
+
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+
+    manager.handleThreadOriginalMessageUpdate({
+      type: "update_thread_original_message",
+      channel_id: channel.id,
+      thread_id: 224,
+      original_message_id: originalMessage.id,
+      preview: { reply_count: 8, participant_count: 2, participant_users: [] },
+    });
+
+    assert.strictEqual(
+      originalMessage.thread.preview.replyCount,
+      8,
+      "original message indicator updates"
+    );
+    assert.strictEqual(
+      broadcastedReply.thread.preview.replyCount,
+      8,
+      "broadcasted copy indicator updates"
+    );
+    assert.strictEqual(
+      unrelatedReply.thread.preview.replyCount,
+      5,
+      "messages of other threads are untouched"
+    );
+  });
+
   for (const [label, build] of [
     ["channel", (channel) => [channel, ChatChannelSubscriptionManager]],
     [

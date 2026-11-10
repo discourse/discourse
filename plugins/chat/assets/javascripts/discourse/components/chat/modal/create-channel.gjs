@@ -282,7 +282,7 @@ export default class ChatModalCreateChannel extends Component {
           @data={{this.formData}}
           @onRegisterApi={{this.registerApi}}
           @onSubmit={{this.onSubmit}}
-          as |form|
+          as |form transientData|
         >
           <form.Field
             @format="full"
@@ -402,17 +402,19 @@ export default class ChatModalCreateChannel extends Component {
             </field.Control>
           </form.Field>
 
-          <form.Field
-            @format="full"
-            @name="broadcast_replies_enabled"
-            @title={{i18n "chat.create_channel.broadcast_replies.label"}}
-            @type="checkbox"
-            as |field|
-          >
-            <field.Control>
-              {{i18n "chat.settings.channel_broadcast_replies_description"}}
-            </field.Control>
-          </form.Field>
+          {{#if transientData.threading_enabled}}
+            <form.Field
+              @format="full"
+              @name="broadcast_replies_enabled"
+              @title={{i18n "chat.create_channel.broadcast_replies.label"}}
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control>
+                {{i18n "chat.settings.channel_broadcast_replies_description"}}
+              </field.Control>
+            </form.Field>
+          {{/if}}
         </Form>
       </:body>
       <:footer>
