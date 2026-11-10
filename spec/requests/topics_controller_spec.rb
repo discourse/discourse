@@ -7484,6 +7484,30 @@ RSpec.describe TopicsController do
         expect(pm_topic.reload.public_topic_timer).to eq(nil)
       end
 
+      it "raises an error when publishing a topic the user can only read to a category" do
+        readers = Fabricate(:group)
+        readers.add(trust_level_4)
+        read_only_category =
+          Fabricate(
+            :private_category,
+            group: readers,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        read_only_topic = Fabricate(:topic, category: read_only_category)
+        sign_in(trust_level_4)
+
+        post "/t/#{read_only_topic.id}/timer.json",
+             params: {
+               time: 24,
+               status_type: "publish_to_category",
+               category_id: category.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(read_only_topic.reload.public_topic_timer).to eq(nil)
+      end
+
       it "allows a category moderator to create a delete timer" do
         user.update!(trust_level: TrustLevel[4])
         Group.user_trust_level_change!(user.id, user.trust_level)
@@ -7949,6 +7973,52 @@ RSpec.describe TopicsController do
             topic.reload
             expect(topic.shared_draft.category_id).to eq(other_cat.id)
           end
+
+          it "does not turn a topic outside the shared drafts category into a shared draft" do
+            ordinary_topic = Fabricate(:topic, category: category)
+
+            put "/t/#{ordinary_topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+
+            expect(response.status).to eq(403)
+            expect(ordinary_topic.reload.shared_draft).to be_nil
+          end
+        end
+      end
+
+      context "as a non-staff shared-draft group member" do
+        fab!(:shared_drafts_group, :group)
+        fab!(:member) { Fabricate(:user, refresh_auto_groups: true) }
+
+        before do
+          SiteSetting.shared_drafts_allowed_groups = shared_drafts_group.id.to_s
+          shared_drafts_group.add(member)
+          sign_in(member)
+        end
+
+        it "updates the destination of an existing shared draft" do
+          Fabricate(:shared_draft, topic: topic, category: category)
+
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.shared_draft.category_id).to eq(other_cat.id)
+        end
+
+        it "does not turn a topic the member can edit into a shared draft" do
+          own_topic = Fabricate(:topic, category: category, user: member)
+          Fabricate(:post, topic: own_topic, user: member)
+
+          put "/t/#{own_topic.id}/shared-draft.json", params: { category_id: category.id }
+
+          expect(response.status).to eq(403)
+          expect(own_topic.reload.shared_draft).to be_nil
+        end
+
+        it "does not turn a topic moved into the shared drafts category into a shared draft" do
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+
+          expect(response.status).to eq(403)
+          expect(topic.reload.shared_draft).to be_nil
         end
       end
     end
@@ -7969,6 +8039,8 @@ RSpec.describe TopicsController do
       end
 
       context "as staff" do
+        fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+
         before { sign_in(moderator) }
 
         it "publishes the topic" do
@@ -8010,6 +8082,97 @@ RSpec.describe TopicsController do
                 destination_category_id: shared_drafts_category.id,
               }
           expect(response.status).to eq(400)
+        end
+      end
+
+      context "as a non-staff shared-draft group member" do
+        fab!(:shared_drafts_group, :group)
+        fab!(:publisher) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+
+        before do
+          SiteSetting.shared_drafts_allowed_groups = shared_drafts_group.id.to_s
+          shared_drafts_group.add(publisher)
+          sign_in(publisher)
+        end
+
+        it "publishes the draft when the member can edit the source topic" do
+          put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+
+          expect(response.status).to eq(200)
+          topic.reload
+          expect(topic.category_id).to eq(category.id)
+          expect(topic.visible).to eq(true)
+        end
+
+        context "when the member cannot edit the source topic" do
+          fab!(:topic_timer) do
+            Fabricate(
+              :topic_timer,
+              topic: topic,
+              status_type: TopicTimer.types[:publish_to_category],
+              category_id: category.id,
+            )
+          end
+
+          before do
+            SiteSetting.editing_grace_period = 0
+            PostRevisor.new(post).revise!(post_author1, raw: "an important revision")
+            shared_drafts_category.set_permissions(shared_drafts_group => :readonly)
+            shared_drafts_category.save!
+          end
+
+          it "denies publication and leaves the draft untouched" do
+            expect(post.reload.revisions.count).to eq(1)
+
+            put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+
+            expect(response.status).to eq(403)
+            topic.reload
+            expect(topic.category_id).to eq(shared_drafts_category.id)
+            expect(topic.visible).to eq(false)
+            expect(post.reload.revisions.count).to eq(1)
+            expect(topic_timer.reload.deleted_at).to be_nil
+          end
+        end
+      end
+
+      context "when the topic is not a shared draft" do
+        fab!(:shared_drafts_group, :group)
+        fab!(:member) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:destination_cat, :category)
+        fab!(:own_topic) { Fabricate(:topic, category: category, user: member) }
+        fab!(:own_post) { Fabricate(:post, topic: own_topic, user: member) }
+
+        before do
+          SiteSetting.editing_grace_period = 0
+          SiteSetting.shared_drafts_allowed_groups = shared_drafts_group.id.to_s
+          shared_drafts_group.add(member)
+          PostRevisor.new(own_post).revise!(moderator, raw: "an important revision")
+          own_topic.update_status("visible", false, moderator)
+          sign_in(member)
+        end
+
+        it "does not publish a topic the member can edit" do
+          put "/t/#{own_topic.id}/publish.json",
+              params: {
+                destination_category_id: destination_cat.id,
+              }
+
+          expect(response.status).to eq(403)
+          own_topic.reload
+          expect(own_topic.category_id).to eq(category.id)
+          expect(own_topic.visible).to eq(false)
+          expect(own_post.reload.revisions.count).to eq(1)
+        end
+
+        it "does not publish a topic after the member requests a shared-draft destination for it" do
+          put "/t/#{own_topic.id}/shared-draft.json", params: { category_id: category.id }
+          put "/t/#{own_topic.id}/publish.json", params: { destination_category_id: category.id }
+
+          expect(response.status).to eq(403)
+          expect(own_topic.reload.visible).to eq(false)
+          expect(own_post.reload.revisions.count).to eq(1)
         end
       end
     end
