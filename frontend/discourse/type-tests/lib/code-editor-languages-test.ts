@@ -28,3 +28,14 @@ expectTypeOf(registerCodeEditorLanguage)
   .parameter(1)
   .returns.resolves.toHaveProperty("default")
   .toEqualTypeOf<CodeEditorLanguageBuilder>();
+
+// A grammar's parser and lint source must come from the editor's own copies.
+expectTypeOf<CodeEditorParams["lezerLr"]["LRParser"]>().toEqualTypeOf<
+  typeof import("@lezer/lr").LRParser
+>();
+expectTypeOf<CodeEditorParams["lezerCommon"]["parseMixed"]>().toEqualTypeOf<
+  typeof import("@lezer/common").parseMixed
+>();
+expectTypeOf<CodeEditorParams["cmLint"]["linter"]>().toEqualTypeOf<
+  typeof import("@codemirror/lint").linter
+>();

@@ -11,12 +11,22 @@ export interface CodeEditorParams {
   cmAutocomplete: typeof import("@codemirror/autocomplete");
   /** The `@codemirror/language` module. */
   cmLanguage: typeof import("@codemirror/language");
+  /** The `@codemirror/lint` module, for reporting diagnostics. */
+  cmLint: typeof import("@codemirror/lint");
   /** The `@codemirror/state` module. */
   cmState: typeof import("@codemirror/state");
   /** The `@codemirror/view` module. */
   cmView: typeof import("@codemirror/view");
+  /** The `@lezer/common` module, for tree walking and mixed-language parsing. */
+  lezerCommon: typeof import("@lezer/common");
   /** The `@lezer/highlight` module, for styling a grammar's tokens. */
   lezerHighlight: typeof import("@lezer/highlight");
+  /**
+   * The `@lezer/lr` module, for loading a grammar compiled with
+   * `lezer-generator`. Pass its `LRParser` to the generated parser instead of
+   * letting the generated file import it.
+   */
+  lezerLr: typeof import("@lezer/lr");
   /**
    * Helpers for expression editors whose grammar is compiled in core.
    *
