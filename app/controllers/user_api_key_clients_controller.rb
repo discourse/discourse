@@ -58,7 +58,7 @@ class UserApiKeyClientsController < ApplicationController
 
   def validate_params
     raise Discourse::InvalidAccess unless UserApiKeyClientScope.allowed.superset?(Set.new(@scopes))
-    OpenSSL::PKey::RSA.new(params[:public_key])
+    UserApiKey::DeviceAuth::Crypto.parse_public_key!(params[:public_key])
   end
 
   def ensure_new_client
