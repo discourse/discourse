@@ -32,7 +32,7 @@ writeResolverConfig(
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 
 const aliases = [
-  { find: "pretty-text", replacement: "pretty-text/addon" },
+  { find: "pretty-text", replacement: "discourse/pretty-text" },
   {
     find: "ember-buffered-proxy/helpers",
     replacement: "ember-buffered-proxy/addon/helpers",

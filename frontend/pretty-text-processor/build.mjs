@@ -36,7 +36,7 @@ const bundle = await rolldown({
         })),
         {
           find: /^pretty-text\//,
-          replacement: `${FRONTEND}pretty-text/addon/`,
+          replacement: `${FRONTEND}discourse/pretty-text/`,
         },
       ],
     }),
