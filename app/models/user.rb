@@ -1547,8 +1547,8 @@ class User < ActiveRecord::Base
       single_sign_on_record&.external_email&.downcase == email
   end
 
-  def activate
-    email_token = email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
+  def activate(activation_email = email)
+    email_token = email_tokens.create!(email: activation_email, scope: EmailToken.scopes[:signup])
     EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
     reload
   end
