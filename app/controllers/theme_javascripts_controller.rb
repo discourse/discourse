@@ -20,7 +20,7 @@ class ThemeJavascriptsController < ApplicationController
     return head :not_modified if not_modified?
 
     # Security: safe due to route constraint
-    cache_file = "#{DISK_CACHE_PATH}/#{params[:digest]}.js"
+    cache_file = "#{site_disk_cache_path}/#{params[:digest]}.js"
 
     write_if_not_cached(cache_file) do
       content, has_source_map = query.pick(:content, "source_map IS NOT NULL")
@@ -39,7 +39,7 @@ class ThemeJavascriptsController < ApplicationController
     return head :not_modified if not_modified?
 
     # Security: safe due to route constraint
-    cache_file = "#{DISK_CACHE_PATH}/#{params[:digest]}.map"
+    cache_file = "#{site_disk_cache_path}/#{params[:digest]}.map"
 
     write_if_not_cached(cache_file) { query.pick(:source_map) }
 
@@ -65,6 +65,10 @@ class ThemeJavascriptsController < ApplicationController
   end
 
   private
+
+  def site_disk_cache_path
+    File.join(DISK_CACHE_PATH, "sites", RailsMultisite::ConnectionManagement.current_db)
+  end
 
   def query
     @query ||= JavascriptCache.where(digest: params[:digest]).limit(1)
