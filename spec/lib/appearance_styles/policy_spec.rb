@@ -463,6 +463,34 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
 
+    it "treats a color-mix() under 100% as see-through" do
+      expect_error(
+        {
+          rules: [
+            {
+              area: "post_body",
+              declarations: {
+                "color" => "color-mix(in srgb, var(--primary) 0.001%, var(--primary) 0.001%)",
+              },
+            },
+          ],
+        },
+        "text needs an opaque color",
+      )
+      expect_valid(
+        {
+          rules: [
+            {
+              area: "post_body",
+              declarations: {
+                "color" => "color-mix(in srgb, var(--primary) 60%, var(--primary-high))",
+              },
+            },
+          ],
+        },
+      )
+    end
+
     it "checks the draft's value for variables that are also palette colors" do
       expect_error(
         { variables: { "--d-selected-text-color" => "transparent" } },
