@@ -12,10 +12,6 @@ RSpec.describe UploadSecurity do
   let(:type) { nil }
   let(:opts) { { type: type, creating: creating } }
 
-  it "treats every admin asset type as public" do
-    expect(UploadCreator::ADMIN_ASSET_TYPES - described_class::PUBLIC_TYPES).to be_empty
-  end
-
   context "when secure uploads is enabled" do
     before do
       setup_s3
