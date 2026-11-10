@@ -82,6 +82,15 @@ module AppearanceStyles
       "--d-selected-hover" => ["selected", "secondary", 0.2, 0.2],
     }.freeze
 
+    # variable => [diff in a light palette, diff in a dark palette], as
+    # dark-light-choose of two dark-light-diffs.
+    DIFF_CHOICES = {
+      "--tertiary-hover" => [
+        ["tertiary", "secondary", -0.25, -0.25],
+        ["tertiary", "primary", 0.2, 0.7],
+      ],
+    }.freeze
+
     # variable => percentage of header_primary blended into header_background.
     HEADER_BLENDS = {
       "--header_primary-low" => 10,
@@ -155,6 +164,9 @@ module AppearanceStyles
         @named[palette_key(variable)]
       elsif (diff = DIFFS[variable])
         color, compared_with, lightness, darkness = diff
+        ColorMath.dark_light_diff(@named[color], @named[compared_with], lightness, darkness)
+      elsif (choice = DIFF_CHOICES[variable])
+        color, compared_with, lightness, darkness = light? ? choice.first : choice.last
         ColorMath.dark_light_diff(@named[color], @named[compared_with], lightness, darkness)
       elsif (percent = HEADER_BLENDS[variable])
         blend(@named["header_primary"], @named["header_background"], percent)
