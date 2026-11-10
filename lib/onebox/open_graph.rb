@@ -11,13 +11,14 @@ module Onebox
     end
 
     def title_attr
-      !title.nil? ? "title='#{title}'" : ""
+      text = title
+      text.nil? ? "" : "title='#{ERB::Util.html_escape(text)}'"
     end
 
     def secure_image_url
       secure_url = URI(get(:image))
       secure_url.scheme = "https"
-      secure_url.to_s
+      Onebox::Helpers.normalize_url_for_output(secure_url.to_s)
     end
 
     private
