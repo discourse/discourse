@@ -51,6 +51,7 @@ describe Jobs::DiscoursePostEventSendReminder do
 
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    SiteSetting.enable_improved_event_reminders = false
   end
 
   describe "#execute" do
