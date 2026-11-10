@@ -237,6 +237,43 @@ RSpec.describe AppearanceStyles::Policy do
       expect_valid(declare("background-color 150ms ease-in-out", property: "transition"))
     end
 
+    it "bounds the length a value works out to, whatever form it takes" do
+      expect_error(declare("0", property: "font-size"), "outside 11px to 48px")
+      expect_error(declare("calc(16px * 4)", property: "font-size"), "outside 11px to 48px")
+      expect_error(declare("max(12px, 60px)", property: "font-size"), "outside 11px to 48px")
+      expect_error(declare("50%", property: "font-size"), "outside 11px to 48px")
+      expect_error(declare("var(--font-down-5)", property: "font-size"), "outside 11px to 48px")
+      expect_error(declare("var(--d-max-width)", property: "font-size"), "outside 11px to 48px")
+      expect_error(declare("10%", property: "padding"), "percentages aren't allowed")
+      expect_error(declare("calc(100% - 4px)", property: "padding"), "can't be known")
+      expect_error(
+        { variables: { "--d-topic-list-title-font-size" => "calc(var(--font-up-6) * 3)" } },
+        "outside 11px to 48px",
+      )
+
+      expect_valid(declare("calc(var(--font-up-1) * 1.2)", property: "font-size"))
+      expect_valid(declare("clamp(14px, 1.1em, 20px)", property: "font-size"))
+      expect_valid(declare("var(--space-4) var(--space-2)", property: "padding"))
+      expect_valid(declare("0", property: "margin"))
+      expect_valid(declare("50%", property: "border-radius"))
+    end
+
+    it "checks background and text variables a rule overrides" do
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "--d-button-primary-text-color" => "var(--tertiary)",
+              },
+            },
+          ],
+        },
+        "rules[0]: --d-button-primary-text-color on --d-button-primary-bg-color is",
+      )
+    end
+
     it "rejects text that would be unreadable on its background" do
       unreadable = {
         rules: [
