@@ -312,15 +312,17 @@ export default class ChatDrawer extends Component {
             }}
           />
 
-          <this.chatDrawerRouter.component
-            @close={{this.close}}
-            @drawerActions={{this.drawerActions}}
-            @model={{this.chatDrawerRouter.model}}
-            @openInFullPage={{this.openInFullPage}}
-            @openURL={{this.openURL}}
-            @params={{this.chatDrawerRouter.params}}
-            @toggleExpand={{this.toggleExpand}}
-          />
+          {{#if this.chatDrawerRouter.component}}
+            <this.chatDrawerRouter.component
+              @close={{this.close}}
+              @drawerActions={{this.drawerActions}}
+              @model={{this.chatDrawerRouter.model}}
+              @openInFullPage={{this.openInFullPage}}
+              @openURL={{this.openURL}}
+              @params={{this.chatDrawerRouter.params}}
+              @toggleExpand={{this.toggleExpand}}
+            />
+          {{/if}}
         </div>
       </div>
     {{/if}}

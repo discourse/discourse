@@ -1,5 +1,6 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import GifsModal from "discourse/components/modal/gifs";
 import { bind } from "discourse/lib/decorators";
@@ -15,7 +16,6 @@ import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-typ
 import richEditorExtension from "../../lib/rich-editor-extension.js";
 import ChatHeaderIcon from "../components/chat/header/icon.gjs";
 import StartChattingStep from "../components/chat/onboarding/start-chatting-step.gjs";
-import chatStyleguide from "../components/styleguide/organisms/chat.gjs";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
@@ -243,11 +243,21 @@ class ChatSetupInit {
         });
       }
 
-      api.addStyleguideSection?.({
-        component: chatStyleguide,
-        category: "organisms",
-        id: "chat",
-      });
+      // Only the styleguide plugin defines this, and the section is a sizeable tree of
+      // demo components. Don't make every page carry it.
+      if (api.addStyleguideSection) {
+        waitForPromise(
+          import("../components/styleguide/organisms/chat.gjs").then(
+            ({ default: chatStyleguide }) => {
+              api.addStyleguideSection({
+                component: chatStyleguide,
+                category: "organisms",
+                id: "chat",
+              });
+            }
+          )
+        );
+      }
 
       api.registerRichEditorExtension(richEditorExtension);
     });

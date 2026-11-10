@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import CategoryChat from "discourse/plugins/chat/discourse/components/upsert-category/chat";
+import LazyCategoryChat from "discourse/plugins/chat/discourse/components/upsert-category/lazy-chat";
 
 export default {
   name: "chat-category-tab",
@@ -10,7 +10,7 @@ export default {
       api.registerEditCategoryTab({
         id: "chat",
         name: i18n("chat.edit_category.tab_title"),
-        component: CategoryChat,
+        component: LazyCategoryChat,
         condition: ({ category, siteSettings }) =>
           siteSettings.chat_enabled && category.id,
       });

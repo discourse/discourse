@@ -1,15 +1,15 @@
 import { hash } from "@ember/helper";
+import { trackedObject } from "@ember/reactive/collections";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import AiChatModelLabel from "discourse/plugins/discourse-ai/discourse/components/ai-chat-model-label";
 
 module("Integration | Component | AiChatModelLabel", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows model attribution when it arrives after the reply", async function (assert) {
-    this.message = ChatMessage.create({}, { id: 1 });
+    this.message = trackedObject({ aiLlmName: null });
     await render(
       <template>
         <AiChatModelLabel @outletArgs={{hash message=this.message}} />

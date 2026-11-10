@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class ChatMessageCreatorSearchInput extends Component {
@@ -17,6 +18,7 @@ export default class ChatMessageCreatorSearchInput extends Component {
         <Input
           class="chat-message-creator__search-input__input"
           placeholder={{this.filterPlaceholder}}
+          {{dAutoFocus}}
           {{on "input" @onFilter}}
         />
       </div>
