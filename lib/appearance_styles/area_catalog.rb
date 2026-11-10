@@ -20,6 +20,7 @@ module AppearanceStyles
         :hover_background,
         :paints_background,
         :within,
+        :inherits_color,
       )
 
     PAGE_BACKGROUND = "var(--secondary)"
@@ -48,6 +49,7 @@ module AppearanceStyles
                 hover_background: entry["hover_background"],
                 paints_background: entry.key?("background"),
                 within: Array(entry["within"]).freeze,
+                inherits_color: entry["inherits_color"] == true,
               ),
             ]
           end
