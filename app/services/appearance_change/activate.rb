@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # Makes a saved appearance change live and records what it replaces so
-# AppearanceChange::Revert can switch back.
+# AppearanceChange::Revert can switch back. A new version of a theme takes its
+# name, and the version it replaces is kept as the previous one.
 #
 # What it replaces is recorded before anything changes. Site settings can't
 # be rolled back with the palettes, so if a later step fails after they were
@@ -26,6 +27,7 @@ class AppearanceChange::Activate
   transaction do
     only_if(:changes_palettes) { step :assign_palettes }
     step :record_activation
+    only_if(:replaces_version) { step :replace_previous_version }
   end
 
   private
@@ -67,6 +69,14 @@ class AppearanceChange::Activate
 
   def record_activation(appearance_change:, replaced_state:)
     appearance_change.update!(previous_state: replaced_state, activated_at: Time.zone.now)
+  end
+
+  def replaces_version(appearance_change:)
+    appearance_change.kind_theme? && appearance_change.replaces_theme_id.present?
+  end
+
+  def replace_previous_version(appearance_change:)
+    appearance_change.replace_previous_version!
   end
 
   def changes_site_settings(appearance_change:)

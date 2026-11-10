@@ -161,6 +161,92 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     end
   end
 
+  context "with a new theme with styles" do
+    let(:kind) { "theme" }
+    let(:styles) do
+      {
+        "variables" => {
+          "--d-border-radius" => "12px",
+        },
+        "rules" => [
+          {
+            "area" => "topic_list_item",
+            "state" => "hover",
+            "declarations" => {
+              "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+            },
+          },
+        ],
+      }
+    end
+    let(:draft_attributes) do
+      {
+        kind:,
+        name: "Acme",
+        light_colors: palettes.light,
+        dark_colors: palettes.dark,
+        site_settings: {
+        },
+        styles:,
+      }
+    end
+
+    it "shows the styles on the approval card" do
+      labels = tool.approval_changes.map { |row| row[:label] }
+
+      expect(labels).to include("--d-border-radius", "Topic list rows (hover) box-shadow")
+    end
+
+    it "saves the theme with the CSS written from the styles" do
+      approve_as(other_admin, build_reviewable)
+
+      appearance_change = AppearanceChange.last
+      expect(appearance_change.styles).to eq(styles)
+      expect(appearance_change.theme.theme_fields.sole.value).to eq(appearance_change.css)
+      expect(appearance_change.css).to include("--d-border-radius: 12px;")
+    end
+
+    it "saves a new version of a theme the assistant made as a draft" do
+      live =
+        AppearanceChange::DraftTheme.call(
+          params: {
+            name: "Acme",
+            light_colors: palettes.light,
+            dark_colors: palettes.dark,
+            styles:,
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      draft_attributes[:replaces_theme_id] = live.theme_id
+
+      approve_as(other_admin, build_reviewable)
+
+      appearance_change = AppearanceChange.last
+      expect(appearance_change.replaces_theme).to eq(live.theme)
+      expect(appearance_change.theme.name).to eq("Acme (draft)")
+    end
+
+    it "doesn't save styles a plugin keeps off" do
+      plugin = Plugin::Instance.new
+      modifier =
+        proc do |decision, request|
+          decision.deny!("No styles here.") if request.feature == :style_authoring
+          decision
+        end
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      expect { approve_as(other_admin, build_reviewable) }.not_to change { Theme.count }
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+  end
+
   context "with palettes the site already has" do
     let(:horizon) { Theme.horizon_theme }
     let(:clover) { ColorScheme.find_by(theme: horizon, name: "Clover") }

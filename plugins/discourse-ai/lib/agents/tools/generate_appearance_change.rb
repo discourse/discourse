@@ -4,9 +4,10 @@ module DiscourseAi
   module Agents
     module Tools
       # Builds readable light and dark palettes, and picks fonts, from brand
-      # colors or from the administrator's own website. Nothing changes on the
-      # site: the result is a signed draft that save_appearance_change saves
-      # once an administrator approves it.
+      # colors or from the administrator's own website, and styles for a new
+      # theme from a description. Nothing changes on the site: the result is a
+      # signed draft that save_appearance_change saves once an administrator
+      # approves it.
       class GenerateAppearanceChange < Tool
         MAX_NAME_LENGTH = 60
         WEBSITE_LOOKUPS_PER_HOUR = 10
@@ -65,6 +66,12 @@ module DiscourseAi
                 description: "The font for headings. One of: #{fonts}",
               },
               {
+                name: "styles",
+                type: "string",
+                description:
+                  "Changes beyond colors and fonts, in the administrator's words, such as rounder corners, a shadow on topic rows, bigger topic titles or hiding the share button. They go in a new theme.",
+              },
+              {
                 name: "new_theme",
                 type: "boolean",
                 description:
@@ -76,7 +83,7 @@ module DiscourseAi
 
         def self.custom_system_message
           <<~TEXT
-            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. When the result has a note, the site can't have new palettes, so it uses the closest palettes the site already has: pass the note on and name the palettes. If it returns no_change, tell the administrator nothing needs to change. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. These tools only change colors and fonts. A new theme starts from Foundation, core's default design, so warn a site using another theme that its layout will change.
+            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. When the result has a note, the site can't have new palettes, so it uses the closest palettes the site already has: pass the note on and name the palettes. If it returns no_change, tell the administrator nothing needs to change. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. For other cosmetic changes, such as corners, shadows, borders, sizes, spacing or hiding minor elements, describe them in the styles parameter; they need a new theme. Pass the brand colors too when the administrator also wants new colors; otherwise the current colors are kept. Report the style_changes it returns, and anything under not_supported, which these tools can't do. Never write CSS yourself. A new theme starts from Foundation, core's default design, so warn a site using another theme that its layout will change.
           TEXT
         end
 
@@ -90,6 +97,7 @@ module DiscourseAi
               user: context.user,
               phase: :generation,
               new_theme: new_theme?,
+              styles: style_request.present?,
             )
           return error_response(refusal) if refusal
 
@@ -99,7 +107,7 @@ module DiscourseAi
           design = website_design
 
           brand = colors[:brand_color]
-          if brand.nil?
+          if brand.nil? && !(style_request.present? && design.nil?)
             return brand_color_question(design) if !confident_brand?(design)
             brand = design.brand
           end
@@ -124,24 +132,44 @@ module DiscourseAi
             )
           end
 
-          palettes = ColorSchemes::Action::BuildFromBrand.call(brand:, accent:, header:)
+          palettes =
+            if brand
+              ColorSchemes::Action::BuildFromBrand.call(brand:, accent:, header:)
+            else
+              current_palettes
+            end
+          authored = authored_styles(light: palettes.light, dark: palettes.dark)
+          edited = edited_change if authored
+          styles =
+            theme_styles(
+              authored,
+              website: (website_styles(design) if theme.nil?),
+              palettes: {
+                light: palettes.light,
+                dark: palettes.dark,
+              },
+            )
           draft = {
             kind: theme ? "palettes" : "theme",
             theme_id: theme&.id,
-            name:,
+            replaces_theme_id: edited&.theme_id,
+            name: edited&.name || name,
             light_colors: palettes.light,
             dark_colors: palettes.dark,
             site_settings:,
+            styles: styles&.styles,
           }.compact
 
           {
             status: "success",
             draft_token: AppearanceAuthoring::Draft.sign(draft, user: context.user),
             name: draft[:name],
-            saves_as: saves_as(theme),
+            saves_as: edited ? new_version_target(edited) : saves_as(theme),
             colors: key_colors(light: palettes.light, dark: palettes.dark),
             readability_adjustments: palettes.adjustments.map { |adjustment| describe(adjustment) },
             fonts: site_settings.transform_values { |key| AppearanceAuthoring.font_name(key) },
+            style_changes: styles&.changes&.map { |change| "#{change.label}: #{change.value}" },
+            not_supported: authored&.unsupported,
             website: website_summary(design),
           }.compact_blank
         rescue Refusal => refusal
@@ -154,8 +182,120 @@ module DiscourseAi
           raise Refusal, message
         end
 
+        # Styles only go in a theme of their own.
         def new_theme?
-          ActiveModel::Type::Boolean.new.cast(parameters[:new_theme]) == true
+          ActiveModel::Type::Boolean.new.cast(parameters[:new_theme]) == true ||
+            style_request.present?
+        end
+
+        def style_request
+          parameters[:styles].to_s.strip
+        end
+
+        # Styles from the administrator's description, checked against the
+        # palettes they'll be shown with.
+        def authored_styles(light:, dark:)
+          return if style_request.blank?
+
+          llm = website_llm
+          refuse(I18n.t("discourse_ai.appearance_authoring.styles_failed")) if llm.nil?
+
+          result =
+            AppearanceAuthoring::StyleAuthor.new(
+              llm:,
+              user: context.user,
+              feature_name: context.feature_name,
+            ).call(
+              style_request,
+              palettes: {
+                light:,
+                dark:,
+              },
+              current_styles: edited_change&.styles,
+            )
+          if result.is_a?(AppearanceAuthoring::StyleAuthor::Failure)
+            refuse(I18n.t("discourse_ai.appearance_authoring.styles_failed"))
+          end
+          if result.styles.blank?
+            refuse(
+              I18n.t(
+                "discourse_ai.appearance_authoring.styles_unsupported",
+                requests: result.unsupported.join("; "),
+              ),
+            )
+          end
+          result
+        end
+
+        # The change that made the live theme, when the assistant still
+        # manages that theme, so styles become a new version of it rather
+        # than a separate theme.
+        def edited_change
+          return @edited_change if defined?(@edited_change)
+
+          current = Theme.find_default
+          @edited_change =
+            if !ActiveModel::Type::Boolean.new.cast(parameters[:new_theme]) &&
+                 AppearanceChange.replaceable?(current) &&
+                 context.user.guardian.can_edit_theme?(current)
+              AppearanceChange.kind_theme.where(theme_id: current.id).order(:id).last
+            end
+        end
+
+        def new_version_target(appearance_change)
+          I18n.t(
+            "discourse_ai.appearance_authoring.new_version_target",
+            name: appearance_change.name,
+          )
+        end
+
+        Styles = Data.define(:styles, :changes)
+
+        # The draft's styles: the ones written for the administrator's
+        # request, plus the website's button shape unless they set it
+        # themselves. Checked again as a whole; without the website's part
+        # when that doesn't pass.
+        def theme_styles(authored, website:, palettes:)
+          if website.nil?
+            return authored && Styles.new(styles: authored.styles, changes: authored.changes)
+          end
+
+          combined = (authored&.styles || {}).deep_dup
+          combined["variables"] = website["variables"].merge(combined["variables"] || {})
+          result = AppearanceStyles::Policy.call(combined, palettes:)
+          if result.valid?
+            Styles.new(styles: combined, changes: result.changes)
+          elsif authored
+            Styles.new(styles: authored.styles, changes: authored.changes)
+          end
+        end
+
+        # The website's button shape, when a new theme with styles is allowed.
+        def website_styles(design)
+          radius = design&.button_radius
+          return if radius.nil?
+          return if AppearanceAuthoring.denial(user: context.user, phase: :generation, styles: true)
+
+          value =
+            if radius >= AppearanceAuthoring::WebsiteDesign::PILL_RADIUS
+              "var(--d-border-radius-pill)"
+            else
+              "#{radius.clamp(0, 32)}px"
+            end
+          { "variables" => { "--d-button-border-radius" => value } }
+        end
+
+        # A new theme for styles alone keeps the colors the site shows now.
+        def current_palettes
+          current = AppearanceAuthoring.theme_palettes(Theme.find_default)
+          ColorSchemes::Action::BuildFromBrand::Result.new(
+            light: AppearanceAuthoring.complete_palette(current[:light]),
+            dark:
+              AppearanceAuthoring.complete_palette(
+                current[:dark] || ColorScheme::BUILT_IN_SCHEMES[:Dark],
+              ),
+            adjustments: [],
+          )
         end
 
         def draft_name
@@ -402,6 +542,7 @@ module DiscourseAi
             domain: URI(design.url).host,
             brand_color_confidence: design.confidence,
             dark_website: design.dark,
+            button_radius: design.button_radius && "#{design.button_radius}px",
             closest_available_fonts: closest_fonts.to_h.presence,
           }.compact
         end

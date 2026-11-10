@@ -324,6 +324,45 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
       )
     end
 
+    it "gives a new theme the website's button shape" do
+      result =
+        invoke_with_design(
+          design.merge("button_radius" => "8"),
+          name: "Acme",
+          website_url: "brand.example.com",
+          new_theme: true,
+        )
+
+      expect(result[:style_changes]).to eq(["--d-button-border-radius: 8px"])
+      expect(result[:website]).to include(button_radius: "8px")
+      expect(draft(result)[:styles]).to eq("variables" => { "--d-button-border-radius" => "8px" })
+    end
+
+    it "uses core's pill shape for fully rounded buttons" do
+      result =
+        invoke_with_design(
+          design.merge("button_radius" => "9999"),
+          name: "Acme",
+          website_url: "brand.example.com",
+          new_theme: true,
+        )
+
+      expect(draft(result)[:styles]["variables"]).to eq(
+        "--d-button-border-radius" => "var(--d-border-radius-pill)",
+      )
+    end
+
+    it "only changes colors and fonts on the current theme" do
+      result =
+        invoke_with_design(
+          design.merge("button_radius" => "8"),
+          name: "Acme",
+          website_url: "brand.example.com",
+        )
+
+      expect(draft(result)).not_to have_key(:styles)
+    end
+
     it "asks which color is the brand when the website doesn't point clearly at one" do
       answer = design.merge("confidence" => "medium", "candidates" => %w[#635bff #0066cc])
 
@@ -389,6 +428,145 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
           error: I18n.t("discourse_ai.appearance_authoring.website_rate_limited"),
         )
       end
+    end
+  end
+
+  context "with styles" do
+    fab!(:llm_model)
+
+    let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+    let(:styles_answer) do
+      {
+        "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+        "rules" => [],
+        "unsupported" => ["Add a shop link to the header"],
+      }
+    end
+
+    def invoke_with_styles(answers = [styles_answer], **parameters)
+      DiscourseAi::Completions::Llm.with_prepared_responses(answers) do
+        described_class.new(parameters, bot_user: Discourse.system_user, llm:, context:).invoke
+      end
+    end
+
+    it "drafts a new theme with checked styles, keeping the current colors" do
+      result = invoke_with_styles(name: "Acme", styles: "Rounder corners, and a shop link")
+
+      expect(result).to include(
+        status: "success",
+        style_changes: ["--d-border-radius: 12px"],
+        not_supported: ["Add a shop link to the header"],
+      )
+      expect(draft(result)).to include(
+        kind: "theme",
+        styles: {
+          "variables" => {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+      expect(draft(result)[:light_colors]).to eq(
+        DiscourseAi::Agents::AppearanceAuthoring.complete_palette(
+          DiscourseAi::Agents::AppearanceAuthoring.theme_palettes(Theme.foundation_theme)[:light],
+        ),
+      )
+    end
+
+    it "uses new palettes too when given a brand color" do
+      result = invoke_with_styles(name: "Acme", brand_color: "#e8590c", styles: "Rounder corners")
+
+      expect(draft(result)[:light_colors]).to eq(
+        ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c").light,
+      )
+    end
+
+    it "says when no styles pass the checks" do
+      bad = {
+        "variables" => [{ "name" => "--d-border-radius", "value" => "url(x)" }],
+        "rules" => [],
+        "unsupported" => [],
+      }
+
+      result = invoke_with_styles([bad] * 3, name: "Acme", styles: "Rounder corners")
+
+      expect(result[:error]).to eq(I18n.t("discourse_ai.appearance_authoring.styles_failed"))
+    end
+
+    it "says when the styles can't make any of the change" do
+      none = { "variables" => [], "rules" => [], "unsupported" => ["Add a carousel"] }
+
+      result = invoke_with_styles([none], name: "Acme", styles: "Add a carousel")
+
+      expect(result[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.styles_unsupported", requests: "Add a carousel"),
+      )
+    end
+
+    context "when the live theme is one the assistant made" do
+      let(:live_styles) { { "variables" => { "--d-border-radius" => "8px" } } }
+      let!(:live_change) do
+        theme = Fabricate(:theme)
+        css = AppearanceStyles::Policy.call(live_styles).css
+        theme.set_field(target: :common, name: :scss, value: css)
+        theme.save!
+        theme.set_default!
+        Fabricate(:theme_appearance_change, name: "Acme", theme:, styles: live_styles, css:)
+      end
+
+      it "drafts a new version of it from its current styles" do
+        result = nil
+        DiscourseAi::Completions::Llm.with_prepared_responses([styles_answer]) do |_, _, prompts|
+          result =
+            described_class.new(
+              { name: "Something else", styles: "Rounder corners" },
+              bot_user: Discourse.system_user,
+              llm:,
+              context:,
+            ).invoke
+          request = prompts.first.messages.find { |message| message[:type] == :user }
+          expect(request[:content]).to include('{"variables":{"--d-border-radius":"8px"}}')
+        end
+
+        expect(result[:saves_as]).to eq(
+          I18n.t("discourse_ai.appearance_authoring.new_version_target", name: "Acme"),
+        )
+        expect(draft(result)).to include(
+          kind: "theme",
+          name: "Acme",
+          replaces_theme_id: live_change.theme_id,
+        )
+      end
+
+      it "makes a separate theme when asked for a new one" do
+        result = invoke_with_styles(name: "Other", styles: "Rounder corners", new_theme: true)
+
+        expect(draft(result)).not_to have_key(:replaces_theme_id)
+      end
+
+      it "makes a separate theme once someone has edited the live one by hand" do
+        live_change.theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+        live_change.theme.save!
+
+        result = invoke_with_styles(name: "Other", styles: "Rounder corners")
+
+        expect(draft(result)).not_to have_key(:replaces_theme_id)
+      end
+    end
+
+    it "lets a plugin keep styles off" do
+      plugin = Plugin::Instance.new
+      modifier = access_modifier(:style_authoring, "Styles aren't available here.")
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      expect(invoke_with_styles(name: "Acme", styles: "Rounder corners")[:error]).to eq(
+        "Styles aren't available here.",
+      )
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
     end
   end
 end

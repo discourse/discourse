@@ -11,6 +11,8 @@ module DiscourseAi
       FEATURE = :appearance_authoring
       PALETTE_FEATURE = :palette_authoring
       THEME_FEATURE = :theme_authoring
+      # Styles beyond colors and fonts, which always come in a new theme.
+      STYLE_FEATURE = :style_authoring
 
       # The colors approval cards compare, as [palette, color name].
       KEY_COLORS = [
@@ -38,8 +40,9 @@ module DiscourseAi
       end
 
       # Returns why the user can't change the site's appearance, or nil when
-      # they can. A new theme comes with new palettes.
-      def self.denial(user:, phase:, new_theme: false, new_palettes: false)
+      # they can. A new theme comes with new palettes, and styles come with a
+      # new theme.
+      def self.denial(user:, phase:, new_theme: false, new_palettes: false, styles: false)
         return I18n.t("discourse_ai.appearance_authoring.not_allowed") if !user&.admin?
 
         access = access(user:, phase:)
@@ -47,7 +50,9 @@ module DiscourseAi
           return access.message.presence || I18n.t("discourse_ai.appearance_authoring.unavailable")
         end
 
-        refusal = theme_denial(user:, phase:) if new_theme
+        refusal = style_denial(user:, phase:) if styles
+        new_theme ||= styles
+        refusal ||= theme_denial(user:, phase:) if new_theme
         refusal || (palette_denial(user:, phase:) if new_theme || new_palettes)
       end
 
@@ -65,6 +70,14 @@ module DiscourseAi
           I18n.t("discourse_ai.appearance_authoring.palettes_unavailable")
         end
       end
+
+      def self.style_denial(user:, phase:)
+        access = access(user:, phase:, feature: STYLE_FEATURE)
+        return if access.allowed
+
+        access.message.presence || I18n.t("discourse_ai.appearance_authoring.styles_unavailable")
+      end
+      private_class_method :style_denial
 
       def self.theme_denial(user:, phase:)
         access = access(user:, phase:, feature: THEME_FEATURE)
@@ -104,6 +117,15 @@ module DiscourseAi
         }
       end
 
+      # Every color a palette needs, filling in the ones core derives (hover
+      # and selected) or falls back to.
+      def self.complete_palette(colors)
+        resolved = AppearanceStyles::PaletteColors.new(colors.to_h)
+        AppearanceStyles::PaletteColors::BASE_NAMES.index_with do |name|
+          resolved[AppearanceStyles::PaletteColors::BASE_VARIABLES[name] || "--#{name}"]
+        end
+      end
+
       def self.palette_colors(color_scheme)
         normalize_colors(color_scheme.resolved_colors) if color_scheme
       end
@@ -141,6 +163,27 @@ module DiscourseAi
               after: font_name(key),
             }
           end
+      end
+
+      MAX_STYLE_ROWS = 12
+
+      # Approval card rows for a draft's styles, as the policy describes them.
+      def self.style_changes(styles, palettes:)
+        return [] if styles.blank?
+
+        changes = AppearanceStyles::Policy.call(styles, palettes:).changes
+        rows =
+          changes
+            .first(MAX_STYLE_ROWS)
+            .map { |change| { label: change.label, before: empty_value, after: change.value } }
+        if changes.size > MAX_STYLE_ROWS
+          rows << {
+            label: I18n.t("discourse_ai.appearance_authoring.more_styles"),
+            before: empty_value,
+            after: (changes.size - MAX_STYLE_ROWS).to_s,
+          }
+        end
+        rows
       end
 
       def self.default_theme_change(from:, to:)
