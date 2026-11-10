@@ -5,28 +5,73 @@ import {
   replacements,
   tonableEmojis,
   translations,
-} from "./emoji/data.js";
-import { IMAGE_VERSION } from "./emoji/version.js";
+} from "./emoji/data.ts";
+import { IMAGE_VERSION } from "./emoji/version.ts";
 
-const extendedEmojiMap = new Map();
+/** Options for building, rendering and resolving emojis. */
+export interface EmojiOptions {
+  /** Turns a path into a full url. Standard emoji urls need it. */
+  getURL?: (url: string) => string;
+  /** The standard emoji set, such as `twitter`. Standard emoji urls need it. */
+  emojiSet?: string;
+  /** The base url of the standard emoji images. Defaults to `/images/emoji`. */
+  emojiCDNUrl?: string | null;
+  /** The custom emojis by name. Each one is a url or an object with a url. */
+  customEmoji?: Record<string, string | { url: string }>;
+  /** Extra emoticon translations, such as `":)"` to `"slight_smile"`. */
+  customEmojiTranslation?: Record<string, string> | null;
+  /** Whether `performEmojiUnescape` renders emoticons such as `:)`. */
+  enableEmojiShortcuts?: boolean;
+  /** Whether `performEmojiEscape` turns emoticons into emoji codes. */
+  emojiShortcuts?: boolean;
+  /** Whether emoji codes are also replaced inside words. */
+  inlineEmoji?: boolean;
+  /** The emoji names that are never rendered. */
+  emojiDenyList?: string[] | null;
+  /** Extra classes for the rendered image. */
+  class?: string;
+  /** The title of the rendered image. Defaults to the emoji name. */
+  title?: string;
+  /** The alt text of the rendered image. Defaults to the title. */
+  alt?: string;
+  /** The tab index of the rendered image. Zero adds none. */
+  tabIndex?: number;
+  /** Whether the rendered image has no title. */
+  skipTitle?: boolean;
+  /** Whether the rendered image loads lazily. */
+  lazy?: boolean;
+}
 
-export function registerEmoji(code, url, group) {
+const extendedEmojiMap = new Map<string, { url: string; group?: string }>();
+
+/**
+ * Registers a custom emoji.
+ *
+ * @param code - The emoji name. It is lowercased.
+ * @param url - The url of the emoji image.
+ * @param group - The group the emoji is listed under.
+ */
+export function registerEmoji(code: string, url: string, group?: string) {
   code = code.toLowerCase();
   extendedEmojiMap.set(code, { url, group });
 }
 
 export { emojiReplacementRegex };
 
-function textEmojiRegex(inlineEmoji) {
+function textEmojiRegex(inlineEmoji?: boolean) {
   return inlineEmoji ? /:[^\s:]+(?::t\d)?:?/g : /\B:[^\s:]+(?::t\d)?:?\B/g;
 }
 
-const aliasMap = new Map();
+const aliasMap = new Map<string, string>();
 Object.entries(aliases).forEach(([name, list]) => {
   list.forEach((alias) => aliasMap.set(alias, name));
 });
 
-function isReplaceableInlineEmoji(string, index, inlineEmoji) {
+function isReplaceableInlineEmoji(
+  string: string,
+  index: number,
+  inlineEmoji?: boolean
+) {
   if (inlineEmoji) {
     return true;
   }
@@ -42,7 +87,17 @@ function isReplaceableInlineEmoji(string, index, inlineEmoji) {
   );
 }
 
-export function performEmojiUnescape(string, opts) {
+/**
+ * Renders the emoji codes, unicode emojis and emoticons in a text as images.
+ *
+ * @param string - The text to render.
+ * @param opts - The emoji options.
+ * @returns The rendered HTML, or `undefined` when the text is empty.
+ */
+export function performEmojiUnescape(
+  string: string | null | undefined,
+  opts: EmojiOptions
+): string | undefined {
   if (!string) {
     return;
   }
@@ -53,10 +108,10 @@ export function performEmojiUnescape(string, opts) {
     opts.customEmojiTranslation || {}
   );
 
-  const replacementFunction = (m, index) => {
+  const replacementFunction = (m: string, index: number) => {
     const isEmoticon = opts.enableEmojiShortcuts && !!allTranslations[m];
     const isUnicodeEmoticon = !!replacements[m] || !!replacements[m[0]];
-    let emojiVal;
+    let emojiVal: string;
 
     if (isEmoticon) {
       emojiVal = allTranslations[m];
@@ -101,14 +156,22 @@ export function performEmojiUnescape(string, opts) {
     .replace(textEmojiRegex(opts.inlineEmoji), replacementFunction);
 }
 
-export function performEmojiEscape(string, opts) {
+/**
+ * Turns the unicode emojis in a text into emoji codes, and its emoticons too
+ * when `emojiShortcuts` is set.
+ *
+ * @param string - The text to escape.
+ * @param opts - The emoji options.
+ * @returns The escaped text.
+ */
+export function performEmojiEscape(string: string, opts: EmojiOptions): string {
   const allTranslations = Object.assign(
     {},
     translations,
     opts.customEmojiTranslation || {}
   );
 
-  const replacementFunction = (m, index) => {
+  const replacementFunction = (m: string, index: number) => {
     if (isReplaceableInlineEmoji(string, index, opts.inlineEmoji)) {
       if (allTranslations[m]) {
         return opts.emojiShortcuts ? `:${allTranslations[m]}:` : m;
@@ -127,21 +190,45 @@ export function performEmojiEscape(string, opts) {
     .replace(textEmojiRegex(opts.inlineEmoji), replacementFunction);
 }
 
-export function isCustomEmoji(code, opts) {
+/**
+ * Checks whether an emoji is a registered or custom one.
+ *
+ * @param code - The emoji name.
+ * @param opts - The emoji options with the custom emojis.
+ * @returns `true` when it is custom, otherwise `false` or `undefined`.
+ */
+export function isCustomEmoji(
+  code: string,
+  opts?: EmojiOptions
+): boolean | undefined {
   code = code.toLowerCase();
   return extendedEmojiMap.has(code) || opts?.customEmoji?.hasOwnProperty(code);
 }
 
-export function buildEmojiUrl(code, opts) {
-  let url;
+/**
+ * Builds the image url of an emoji.
+ *
+ * @param code - The emoji name, with an optional skin tone such as `:t3`.
+ * @param opts - The emoji options.
+ * @returns The url, or `undefined` when the emoji is unknown or the options
+ *   lack what a standard emoji url needs.
+ */
+export function buildEmojiUrl(
+  code: string,
+  opts: EmojiOptions
+): string | undefined {
+  let url: string | undefined;
   code = String(code).toLowerCase();
 
   if (extendedEmojiMap.has(code)) {
-    url = extendedEmojiMap.get(code).url;
+    url = extendedEmojiMap.get(code)!.url;
   }
 
   if (opts.customEmoji?.[code]) {
-    url = opts.customEmoji[code].url || opts.customEmoji[code];
+    // A custom emoji is either a url or an object with a url.
+    url =
+      (opts.customEmoji[code] as { url?: string }).url ||
+      (opts.customEmoji[code] as string);
   }
 
   if (!url && opts.emojiSet) {
@@ -155,8 +242,19 @@ export function buildEmojiUrl(code, opts) {
   return url;
 }
 
-// Only some standard emojis are animated, so this URL may not exist.
-export function buildAnimatedEmojiUrl(code, opts) {
+/**
+ * Builds the animated image url of a standard emoji.
+ *
+ * Only some standard emojis are animated, so this URL may not exist.
+ *
+ * @param code - The emoji name.
+ * @param opts - The emoji options.
+ * @returns The url, or `undefined` for a custom or unknown emoji.
+ */
+export function buildAnimatedEmojiUrl(
+  code: string,
+  opts: EmojiOptions
+): string | undefined {
   code = String(code).toLowerCase();
 
   if (isCustomEmoji(code, opts)) {
@@ -169,7 +267,12 @@ export function buildAnimatedEmojiUrl(code, opts) {
   }
 }
 
-function standardEmojiUrl(code, set, extension, opts) {
+function standardEmojiUrl(
+  code: string,
+  set: string,
+  extension: string,
+  opts: EmojiOptions
+) {
   const noToneMatch = code.match(/([^:]+):?/);
 
   if (
@@ -184,12 +287,18 @@ function standardEmojiUrl(code, set, extension, opts) {
   }
 }
 
-export function emojiExists(code) {
+export function emojiExists(code: string): boolean {
   code = code.toLowerCase();
   return extendedEmojiMap.has(code) || emojis.has(code) || aliasMap.has(code);
 }
 
-export function normalizeEmoji(code) {
+/**
+ * Resolves an emoji name or alias to the emoji's name.
+ *
+ * @param code - The emoji name or alias.
+ * @returns The emoji name, or `undefined` when the emoji is unknown.
+ */
+export function normalizeEmoji(code: string): string | undefined {
   code = code.toLowerCase();
   if (extendedEmojiMap.get(code) || emojis.has(code)) {
     return code;
@@ -197,8 +306,29 @@ export function normalizeEmoji(code) {
   return aliasMap.get(code);
 }
 
-let toSearch;
-export function emojiSearch(term, options) {
+let toSearch: string[] | undefined;
+
+/**
+ * Finds the emojis whose name contains a term. Names that start with the term
+ * come first.
+ *
+ * @param term - The text to find.
+ * @param options - The search options.
+ * @returns The matching emoji names.
+ */
+export function emojiSearch(
+  term: string,
+  options?: {
+    /** The maximum number of results. Zero returns none. */
+    maxResults?: number;
+    /** The skin tone to append to the emojis that take one. 1 appends none. */
+    diversity?: number;
+    /** The emoji names to leave out. */
+    exclude?: string[] | null;
+    /** Extra search terms by emoji name. */
+    searchAliases?: Record<string, string[]>;
+  }
+): string[] {
   const maxResults = options?.maxResults;
   const diversity = options?.diversity;
   const exclude = options?.exclude || [];
@@ -210,9 +340,9 @@ export function emojiSearch(term, options) {
     toSearch = [...emojis.keys(), ...extendedEmojiMap.keys()].sort();
   }
 
-  const results = [];
+  const results: string[] = [];
 
-  function addResult(t) {
+  function addResult(t: string) {
     const val = aliasMap.get(t) || t;
     // don't add skin tone variations or alias of denied emoji to search results
     if (!results.includes(val) && !exclude.includes(val)) {
@@ -262,10 +392,10 @@ export function emojiSearch(term, options) {
  *
  * If the emoji already has a tone modifier, it is not considered skin tonable.
  *
- * @param {string} term The emoji term to check, with or without colons or tone modifiers.
- * @returns {boolean} True if the emoji is skin tonable, false otherwise.
+ * @param term - The emoji term to check, with or without colons or tone modifiers.
+ * @returns True if the emoji is skin tonable, false otherwise.
  */
-export function isSkinTonableEmoji(term) {
+export function isSkinTonableEmoji(term: string): boolean {
   // Check if the emoji term already has a tone modifier
   if (/:t[1-6]:?$/.test(term)) {
     return false;
