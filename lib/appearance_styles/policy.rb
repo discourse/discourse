@@ -860,6 +860,8 @@ module AppearanceStyles
       second_percent ||= 100 - first_percent
       total = first_percent + second_percent
       return if total <= 0 || total > 100
+      # percentages under 100% leave the mix partly transparent
+      return :translucent if total < 100
 
       weight = first_percent / total.to_f
       ColorMath::Converters.rgb_to_hex(
