@@ -116,6 +116,24 @@ RSpec.describe Chat::GuardianExtensions do
     end
   end
 
+  describe "#can_broadcast_chat_message?" do
+    fab!(:thread) { Fabricate(:chat_thread, channel:) }
+    fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user:, thread:) }
+    fab!(:member) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
+
+    it "allows the message author" do
+      expect(guardian.can_broadcast_chat_message?(message)).to eq(true)
+    end
+
+    it "allows channel moderators" do
+      expect(staff_guardian.can_broadcast_chat_message?(message)).to eq(true)
+    end
+
+    it "disallows other members" do
+      expect(Guardian.new(member).can_broadcast_chat_message?(message)).to eq(false)
+    end
+  end
+
   describe "chat channel" do
     it "only staff can create channels" do
       expect(guardian.can_create_chat_channel?).to eq(false)

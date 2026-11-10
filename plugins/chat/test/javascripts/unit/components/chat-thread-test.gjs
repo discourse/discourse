@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render, settled } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -96,5 +96,48 @@ module("Unit | Components | ChatThread", function (hooks) {
       requestsAfterMount,
       "no additional request when targetMessageId stays null"
     );
+  });
+
+  test("broadcast option follows the channel setting and toggles the draft", async function (assert) {
+    const channel = this.fabricators.channel({ id: 1 });
+    channel.currentUserMembership = UserChatChannelMembership.create({
+      following: true,
+    });
+    const thread = this.fabricators.thread({ id: 1, channel });
+    this.thread = thread;
+
+    await render(
+      <template>
+        <ChatThread @targetMessageId={{null}} @thread={{this.thread}} />
+      </template>
+    );
+    assert.dom(".chat-composer__broadcast-option").doesNotExist();
+
+    channel.broadcastRepliesEnabled = true;
+    await settled();
+    assert.dom(".chat-composer__broadcast-option").exists();
+    assert.dom(".chat-composer__broadcast-option input").isNotChecked();
+
+    await click(".chat-composer__broadcast-option input");
+    assert.true(thread.draft.broadcasted, "toggling marks the staged draft");
+    assert.dom(".chat-composer__broadcast-option input").isChecked();
+  });
+
+  test("broadcast option uses DM wording in direct message channels", async function (assert) {
+    const channel = this.fabricators.directMessageChannel({ id: 1 });
+    channel.currentUserMembership = UserChatChannelMembership.create({
+      following: true,
+    });
+    channel.broadcastRepliesEnabled = true;
+    const thread = this.fabricators.thread({ id: 1, channel });
+    this.thread = thread;
+
+    await render(
+      <template>
+        <ChatThread @targetMessageId={{null}} @thread={{this.thread}} />
+      </template>
+    );
+
+    assert.dom(".chat-composer__broadcast-option").hasText("Also reply in DM");
   });
 });

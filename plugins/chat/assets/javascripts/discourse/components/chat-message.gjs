@@ -210,6 +210,11 @@ export default class ChatMessage extends Component {
       return false;
     }
 
+    // Broadcast replies carry their own provenance annotation; never group them.
+    if (message.broadcasted) {
+      return false;
+    }
+
     const previousMessage = message.previousMessage;
 
     if (!previousMessage) {

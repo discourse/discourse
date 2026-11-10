@@ -124,6 +124,25 @@ RSpec.describe Chat::CreateCategoryChannel do
           end
         end
 
+        describe "broadcast_replies_enabled" do
+          context "when set without threading" do
+            it "stays disabled" do
+              params[:broadcast_replies_enabled] = true
+              result
+              expect(result.channel.broadcast_replies_enabled).to eq(false)
+            end
+          end
+
+          context "when set alongside threading" do
+            it "is enabled" do
+              params[:threading_enabled] = true
+              params[:broadcast_replies_enabled] = true
+              result
+              expect(result.channel.broadcast_replies_enabled).to eq(true)
+            end
+          end
+        end
+
         describe "emoji" do
           context "when selected" do
             it "sets emoji" do

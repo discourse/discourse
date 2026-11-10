@@ -124,6 +124,7 @@ en:
       original_message_not_found: "The ancestor of the message you are replying to cannot be found or has been deleted."
       thread_invalid_for_channel: "Thread is not part of the provided channel."
       thread_does_not_match_parent: "Thread does not match parent message."
+      broadcast_not_allowed: "This message cannot be shown in the channel."
       invalid_direct_message: "You are not allowed to create this direct message."
       pin_limit_reached: "This channel has reached the maximum number of pinned messages (%{limit})."
       message_already_pinned: "This message is already pinned."

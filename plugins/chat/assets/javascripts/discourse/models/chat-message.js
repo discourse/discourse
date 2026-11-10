@@ -67,6 +67,7 @@ export default class ChatMessage {
   @tracked isAction;
   @tracked blocks;
   @tracked aiLlmName;
+  @tracked broadcasted;
   @autoTrackedArray reactions;
 
   @tracked _deletedAt;
@@ -114,6 +115,7 @@ export default class ChatMessage {
     this.aiLlmName = args.ai_llm_name;
     this.threadTitle = args.thread_title;
     this.threadId = args.thread_id;
+    this.broadcasted = args.broadcasted ?? false;
 
     if (args.thread) {
       this.thread = args.thread;
@@ -285,6 +287,10 @@ export default class ChatMessage {
 
     if (this.message?.length > 0) {
       data.message = this.message;
+    }
+
+    if (this.broadcasted) {
+      data.broadcasted = true;
     }
 
     if (this.inReplyTo) {

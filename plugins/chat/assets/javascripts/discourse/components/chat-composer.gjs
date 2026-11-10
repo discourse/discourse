@@ -123,6 +123,21 @@ export default class ChatComposer extends Component {
     return !this.currentUser || this.args.disabled;
   }
 
+  get showBroadcastOption() {
+    return false;
+  }
+
+  get broadcastChecked() {
+    return false;
+  }
+
+  get broadcastOptionLabel() {
+    return "";
+  }
+
+  @action
+  toggleBroadcast() {}
+
   @action
   persistDraft() {}
 
@@ -866,6 +881,17 @@ export default class ChatComposer extends Component {
             />
           {{/if}}
         </div>
+
+        {{#if this.showBroadcastOption}}
+          <label class="chat-composer__broadcast-option checkbox-label">
+            <input
+              checked={{this.broadcastChecked}}
+              type="checkbox"
+              {{on "change" this.toggleBroadcast}}
+            />
+            <span>{{this.broadcastOptionLabel}}</span>
+          </label>
+        {{/if}}
       </div>
 
       {{#if this.canAttachUploads}}

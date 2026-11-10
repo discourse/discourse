@@ -249,7 +249,12 @@ module Chat
         WHERE chat_channel_id = :channel_id
         AND deleted_at IS NULL
         -- this is so only the original message of a thread is counted not all thread replies
-        AND (chat_messages.thread_id IS NULL OR original_message_threads.id IS NOT NULL)
+        -- (broadcasted thread replies are counted, they show in the channel stream)
+        AND (
+          chat_messages.thread_id IS NULL OR
+          chat_messages.broadcasted OR
+          original_message_threads.id IS NOT NULL
+        )
         #{anchor_message_id ? "AND chat_messages.id < :anchor_message_id" : ""}
         ORDER BY chat_messages.created_at DESC, chat_messages.id DESC
         LIMIT 1
@@ -324,6 +329,7 @@ end
 #  id                          :bigint           not null, primary key
 #  allow_channel_wide_mentions :boolean          default(TRUE), not null
 #  auto_join_users             :boolean          default(FALSE), not null
+#  broadcast_replies_enabled   :boolean          default(FALSE), not null
 #  chatable_type               :string           not null
 #  delete_after_seconds        :integer
 #  deleted_at                  :datetime

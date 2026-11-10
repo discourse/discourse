@@ -32,6 +32,7 @@ module Chat
             thread_title
             pinned
             is_action
+            broadcasted
           ]
       ),
     )
@@ -220,11 +221,15 @@ module Chat
     end
 
     def include_thread?
-      include_thread_id? && object.thread_om? && object.thread.present?
+      include_thread_id? && (object.thread_om? || object.broadcasted?) && object.thread.present?
     end
 
     def include_thread_title?
-      include_thread_id? && !object.thread_om? && object.thread.present?
+      include_thread_id? && (!object.thread_om? || object.broadcasted?) && object.thread.present?
+    end
+
+    def include_broadcasted?
+      object.broadcasted?
     end
 
     def thread_title

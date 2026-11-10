@@ -244,6 +244,32 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.false(message.expanded);
   });
 
+  test("channel manager removes the message from the stream when a broadcast is revoked, even for moderators", function (assert) {
+    const channel = this.fabricators.channel({
+      id: 19,
+      meta: { can_moderate: true },
+    });
+    const message = this.fabricators.message({
+      id: 204,
+      channel,
+      broadcasted: true,
+      user: { id: 2, username: "other_user" },
+    });
+    channel.messagesManager.addMessages([message]);
+
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+    manager.currentUser = { id: 1, staff: false };
+
+    manager.handleDeleteMessage({
+      deleted_id: message.id,
+      deleted_at: null,
+      broadcast_removed: true,
+    });
+
+    assert.strictEqual(channel.messagesManager.messages.length, 0);
+    assert.strictEqual(message.deletedAt, undefined);
+  });
+
   test("thread manager keeps deleted messages visible for category moderators", function (assert) {
     const channel = this.fabricators.channel({
       id: 14,

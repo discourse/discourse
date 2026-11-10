@@ -56,6 +56,12 @@ export default class ChatRouteChannelInfoSettings extends Component {
   toggleThreadingDescription = i18n(
     "chat.settings.channel_threading_description"
   );
+  toggleBroadcastRepliesLabel = i18n(
+    "chat.settings.channel_broadcast_replies_label"
+  );
+  toggleBroadcastRepliesDescription = i18n(
+    "chat.settings.channel_broadcast_replies_description"
+  );
   muteSectionLabel = i18n("chat.settings.mute");
   channelWideMentionsLabel = i18n("chat.settings.channel_wide_mentions_label");
   autoJoinLabel = i18n("chat.settings.auto_join_users_label");
@@ -110,8 +116,21 @@ export default class ChatRouteChannelInfoSettings extends Component {
     return this.args.channel.isCategoryChannel && this.args.channel.isOpen;
   }
 
+  // Broadcast replies build on threads, so only offer the option with them on.
+  get toggleBroadcastRepliesCategoryChannel() {
+    return (
+      this.toggleThreadingCategoryChannel && this.args.channel.threadingEnabled
+    );
+  }
+
   get toggleThreadingDirectMessage() {
     return this.args.channel.isDirectMessageChannel && this.args.channel.isOpen;
+  }
+
+  get toggleBroadcastRepliesDirectMessage() {
+    return (
+      this.toggleThreadingDirectMessage && this.args.channel.threadingEnabled
+    );
   }
 
   get channelWideMentionsDescription() {
@@ -285,6 +304,22 @@ export default class ChatRouteChannelInfoSettings extends Component {
         !value
       );
       this.args.channel.threadingEnabled = result.channel.threading_enabled;
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async onToggleBroadcastRepliesEnabled(value) {
+    try {
+      this.args.channel.broadcastRepliesEnabled = !value;
+      const result = await this._updateChannelProperty(
+        this.args.channel,
+        "broadcast_replies_enabled",
+        !value
+      );
+      this.args.channel.broadcastRepliesEnabled =
+        result.channel.broadcast_replies_enabled;
     } catch (error) {
       popupAjaxError(error);
     }
@@ -471,6 +506,28 @@ export default class ChatRouteChannelInfoSettings extends Component {
                   </:description>
                 </section.row>
               {{/if}}
+
+              {{#if this.toggleBroadcastRepliesDirectMessage}}
+                <section.row @label={{this.toggleBroadcastRepliesLabel}}>
+                  <:action>
+                    <DToggleSwitch
+                      class="c-channel-settings__broadcast-replies-switch"
+                      @state={{@channel.broadcastRepliesEnabled}}
+                      {{on
+                        "click"
+                        (fn
+                          this.onToggleBroadcastRepliesEnabled
+                          @channel.broadcastRepliesEnabled
+                        )
+                      }}
+                    />
+                  </:action>
+
+                  <:description>
+                    {{this.toggleBroadcastRepliesDescription}}
+                  </:description>
+                </section.row>
+              {{/if}}
             </form.section>
           {{/if}}
 
@@ -551,6 +608,28 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
                   <:description>
                     {{this.toggleThreadingDescription}}
+                  </:description>
+                </section.row>
+              {{/if}}
+
+              {{#if this.toggleBroadcastRepliesCategoryChannel}}
+                <section.row @label={{this.toggleBroadcastRepliesLabel}}>
+                  <:action>
+                    <DToggleSwitch
+                      class="c-channel-settings__broadcast-replies-switch"
+                      @state={{@channel.broadcastRepliesEnabled}}
+                      {{on
+                        "click"
+                        (fn
+                          this.onToggleBroadcastRepliesEnabled
+                          @channel.broadcastRepliesEnabled
+                        )
+                      }}
+                    />
+                  </:action>
+
+                  <:description>
+                    {{this.toggleBroadcastRepliesDescription}}
                   </:description>
                 </section.row>
               {{/if}}

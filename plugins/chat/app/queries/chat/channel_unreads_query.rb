@@ -51,12 +51,13 @@ module Chat
         FROM limited_channels lc
         LEFT JOIN LATERAL (
           SELECT
-            -- (1) Standalone channel messages (not in any thread).
+            -- (1) Standalone channel messages (not in any thread), plus
+            -- broadcasted thread replies
             (
               SELECT COUNT(*)
               FROM chat_messages cm
               WHERE cm.chat_channel_id = lc.chat_channel_id
-                AND cm.thread_id IS NULL
+                AND (cm.thread_id IS NULL OR cm.broadcasted)
                 AND cm.id > COALESCE(lc.last_read_message_id, 0)
                 AND cm.deleted_at IS NULL
             )
@@ -86,6 +87,7 @@ module Chat
               WHERE ct.channel_id = lc.chat_channel_id
                 AND NOT lc.threading_enabled
                 AND NOT ct.force
+                AND NOT cm.broadcasted
                 AND cm.id != ct.original_message_id
                 AND cm.id > COALESCE(lc.last_read_message_id, 0)
                 AND cm.user_id != :user_id
@@ -107,6 +109,7 @@ module Chat
               -- that render inline, are read via the channel's marker. Piece
               -- (3) of unread_count above draws the same line.
               ((cm.thread_id IS NULL
+                 OR cm.broadcasted
                  OR cm.id = ct.original_message_id
                  OR (NOT lc.threading_enabled AND NOT ct.force))
                 AND cm.id > COALESCE(lc.last_read_message_id, 0))

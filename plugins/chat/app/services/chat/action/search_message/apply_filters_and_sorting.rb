@@ -43,9 +43,10 @@ module Chat
         def apply_thread_exclusion(messages, exclude_threads)
           return messages unless exclude_threads
 
-          # Exclude messages that have a thread_id unless they are the original message of the thread
+          # Exclude messages that have a thread_id unless they are the original
+          # message of the thread or broadcasted into the channel stream.
           messages.where(
-            "chat_messages.thread_id IS NULL OR chat_messages.id IN (
+            "chat_messages.thread_id IS NULL OR chat_messages.broadcasted OR chat_messages.id IN (
               SELECT ct.original_message_id
               FROM chat_threads ct
               WHERE ct.id = chat_messages.thread_id

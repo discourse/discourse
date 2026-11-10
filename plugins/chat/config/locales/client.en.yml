@@ -87,6 +87,10 @@ en:
       no_pinned_messages: "No pinned messages in this channel."
       pin_message: "Pin message"
       unpin_message: "Unpin message"
+      broadcast_to_channel: "Send to #%{channelName}"
+      remove_broadcast_from_channel: "Remove from #%{channelName}"
+      broadcast_to_dm: "Also send in main DM"
+      remove_broadcast_from_dm: "Remove from main DM"
       pinned: "Pinned"
       browse_all_channels: "Browse all channels"
       see_in: "See in"
@@ -505,6 +509,8 @@ en:
       create_channel:
         threading:
           label: "Enable threading"
+        broadcast_replies:
+          label: "Enable broadcast replies"
         auto_join_users:
           public_category_warning: "%{category} is a public category. Automatically add all recently active users to this channel?"
           warning_1_group:
@@ -582,6 +588,8 @@ en:
         bold_text: "strong text"
         code_text: "code text"
         send: "Send"
+        broadcast_label: "Also send to #%{channelName}"
+        broadcast_label_dm: "Also send in main DM"
 
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
@@ -600,6 +608,8 @@ en:
         channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
         channel_threading_label: "Threading"
         channel_threading_description: "When threading is enabled, replies to a chat message will create a separate conversation, which will exist alongside the main channel."
+        channel_broadcast_replies_label: "Broadcast replies"
+        channel_broadcast_replies_description: "When enabled, users can optionally send a thread reply to the main channel as well, so everyone in the channel sees it."
         auto_join_users_label: "Automatically add users"
         auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
         auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
@@ -798,6 +808,8 @@ en:
           one: "%{count} reply"
           other: "%{count} replies"
         label: Thread
+        broadcast_also_sent_to: "Sent to"
+        broadcast_sent_from_thread: "Sent from thread"
         close: "Close Thread"
         original_message:
           started_by: "Started by"

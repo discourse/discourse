@@ -70,6 +70,11 @@ export default class ChatMessageInfo extends Component {
     return this.args.interactive !== false;
   }
 
+  // Jump to the reply's own position in the thread, like the in-reply-to chip.
+  get broadcastThreadLinkModels() {
+    return [...this.args.message.thread.routeModels, this.args.message.id];
+  }
+
   get #user() {
     return this.args.message?.user;
   }
@@ -166,6 +171,34 @@ export default class ChatMessageInfo extends Component {
           <span class="chat-message-info__bookmark">
             <BookmarkIcon @bookmark={{@message.bookmark}} />
           </span>
+        {{/if}}
+
+        {{#if @message.broadcasted}}
+          {{#if @threadContext}}
+            <LinkTo
+              class="chat-message-info__broadcast"
+              @models={{this.routeModels}}
+              @route={{this.route}}
+            >
+              <span class="chat-message-info__broadcast__text">
+                {{i18n "chat.thread.broadcast_also_sent_to"}}
+              </span>
+              <ChannelTitle @channel={{@message.channel}} />
+            </LinkTo>
+          {{else}}
+            {{#if @message.thread}}
+              <LinkTo
+                class="chat-message-info__broadcast"
+                @models={{this.broadcastThreadLinkModels}}
+                @route="chat.channel.thread.near-message"
+              >
+                <span class="chat-message-info__broadcast__text">
+                  {{i18n "chat.thread.broadcast_sent_from_thread"}}
+                </span>
+                {{dIcon "share"}}
+              </LinkTo>
+            {{/if}}
+          {{/if}}
         {{/if}}
 
         {{#if this.siteSettings.chat_pinned_messages}}

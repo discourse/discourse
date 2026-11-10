@@ -164,6 +164,7 @@ export default class ChatChannelSubscriptionManager {
       message.aiLlmName = data.chat_message.ai_llm_name;
       message.blocks = data.chat_message.blocks;
       message.isAction = data.chat_message.is_action;
+      message.broadcasted = data.chat_message.broadcasted ?? false;
     }
   }
 
@@ -192,9 +193,10 @@ export default class ChatChannelSubscriptionManager {
     }
 
     if (
-      this.currentUser?.staff ||
-      this.channel.canModerate ||
-      this.currentUser?.id === targetMsg.user.id
+      !data.broadcast_removed &&
+      (this.currentUser?.staff ||
+        this.channel.canModerate ||
+        this.currentUser?.id === targetMsg.user.id)
     ) {
       targetMsg.deletedAt = data.deleted_at;
       targetMsg.deletedById = data.deleted_by_id;

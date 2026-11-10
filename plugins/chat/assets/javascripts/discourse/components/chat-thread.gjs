@@ -538,6 +538,7 @@ export default class ChatThread extends Component {
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
         staged_id: stagedMessage.id,
         thread_id: this.args.thread.id,
+        broadcast: stagedMessage.broadcasted,
       })
       .catch((error) => {
         stagedMessage.setSendError(error);
@@ -570,6 +571,7 @@ export default class ChatThread extends Component {
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.id,
+          broadcast: message.broadcasted,
           ...extractCurrentTopicInfo(this),
         }
       );

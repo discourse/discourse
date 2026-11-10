@@ -36,8 +36,36 @@ export default class ChatComposerThread extends ChatComposer {
     return i18n("chat.placeholder_thread");
   }
 
+  get showBroadcastOption() {
+    // threading-off implies the option off, enforced by UpdateChannel.
+    return Boolean(this.args.thread?.channel?.broadcastRepliesEnabled);
+  }
+
+  get broadcastChecked() {
+    return this.draft?.broadcasted ?? false;
+  }
+
+  get broadcastOptionLabel() {
+    const channel = this.args.thread?.channel;
+    if (channel?.isDirectMessageChannel) {
+      return i18n("chat.composer.broadcast_label_dm");
+    }
+    return i18n("chat.composer.broadcast_label", {
+      channelName: channel?.title,
+    });
+  }
+
   get lastMessage() {
     return this.args.thread.messagesManager.findLastMessage();
+  }
+
+  @action
+  toggleBroadcast() {
+    if (!this.draft) {
+      return;
+    }
+    this.draft.broadcasted = !this.draft.broadcasted;
+    this.persistDraft();
   }
 
   @debounce(2000)

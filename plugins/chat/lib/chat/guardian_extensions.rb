@@ -303,6 +303,11 @@ module Chat
       (message.user_id == @user.id && !@user.silenced?) || is_admin?
     end
 
+    def can_broadcast_chat_message?(message)
+      can_post_in_chatable?(message.chat_channel.chatable) &&
+        (can_edit_chat?(message) || can_moderate_chat?(message.chat_channel.chatable))
+    end
+
     def can_react?
       can_create_chat_message?
     end

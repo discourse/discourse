@@ -514,6 +514,7 @@ end
 #
 #  id              :bigint           not null, primary key
 #  blocks          :jsonb
+#  broadcasted     :boolean          default(FALSE), not null
 #  cooked          :text
 #  cooked_version  :integer
 #  created_by_sdk  :boolean          default(FALSE), not null

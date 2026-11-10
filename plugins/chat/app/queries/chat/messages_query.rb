@@ -70,7 +70,7 @@ module Chat
         end
       else
         messages = messages.where(<<~SQL, channel_id: channel.id)
-          chat_messages.thread_id IS NULL OR chat_messages.id IN (
+          chat_messages.thread_id IS NULL OR chat_messages.broadcasted OR chat_messages.id IN (
             SELECT original_message_id
             FROM chat_threads
             WHERE chat_threads.channel_id = :channel_id

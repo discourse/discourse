@@ -40,6 +40,10 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/pins/read" => "channel_pins#mark_read"
     post "/channels/:channel_id/messages/:message_id/pin" => "channel_pins#create"
     delete "/channels/:channel_id/messages/:message_id/pin" => "channel_pins#destroy"
+    post "/channels/:channel_id/messages/:message_id/broadcast" =>
+           "channel_message_broadcast#create"
+    delete "/channels/:channel_id/messages/:message_id/broadcast" =>
+             "channel_message_broadcast#destroy"
 
     # Category chatables controller hints. Only used by staff members, we don't want to leak category permissions.
     get "/category-chatables/:id/permissions" => "category_chatables#permissions",

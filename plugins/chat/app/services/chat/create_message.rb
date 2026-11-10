@@ -16,6 +16,7 @@ module Chat
     #   @option params [String] :message
     #   @option params [Integer] :in_reply_to_id ID of a message to reply to
     #   @option params [Integer] :thread_id ID of a thread to reply to
+    #   @option params [Boolean] :broadcast Also expose the message in the channel stream
     #   @option params [Array<Integer>] :upload_ids IDs of uploaded documents
     #   @option params [Integer] :context_topic_id ID of the currently visible topic in drawer mode
     #   @option params [Array<Integer>] :context_post_ids IDs of the currently visible posts in drawer mode
@@ -46,6 +47,7 @@ module Chat
       attribute :upload_ids, :array
       attribute :thread_id, :string
       attribute :blocks, :array
+      attribute :broadcast, :boolean, default: false
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? && blocks.blank? }
@@ -180,6 +182,7 @@ module Chat
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
         blocks: params.blocks,
+        broadcasted: params.broadcast && channel.broadcast_replies_enabled? && thread.present?,
       )
     end
 
@@ -216,12 +219,12 @@ module Chat
     end
 
     def update_channel_last_message(channel:, message_instance:)
-      return if message_instance.in_thread?
+      return if message_instance.in_thread? && !message_instance.broadcasted?
       channel.update!(last_message: message_instance)
     end
 
     def update_membership_last_read(membership:, message_instance:)
-      return if message_instance.in_thread?
+      return if message_instance.in_thread? && !message_instance.broadcasted?
       membership.update!(last_read_message: message_instance)
     end
 
@@ -275,8 +278,9 @@ module Chat
 
     def publish_user_tracking_state(message_instance:, channel:, membership:, guardian:)
       message_to_publish = message_instance
-      message_to_publish =
-        membership.last_read_message || message_instance if message_instance.in_thread?
+      if message_instance.in_thread? && !message_instance.broadcasted?
+        message_to_publish = membership.last_read_message || message_instance
+      end
       Chat::Publisher.publish_user_tracking_state!(guardian.user, channel, message_to_publish)
     end
 
