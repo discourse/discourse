@@ -177,7 +177,10 @@ RSpec.describe AppearanceStyles::Policy do
       expect_error(declare("#ff0000", property: "color"), "must be inside light-dark")
       expect_error(declare("red", property: "color"), "is not a palette color")
       expect_error(declare("rgb(255, 0, 0)", property: "color"), "must use a palette variable")
-      expect_valid(declare("light-dark(red, #400)", property: "color"))
+      expect_error(
+        declare("light-dark(red, #400)", property: "color"),
+        "light-dark() takes hex colors",
+      )
       expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "color"))
     end
 
@@ -256,6 +259,59 @@ RSpec.describe AppearanceStyles::Policy do
       expect_valid(declare("var(--space-4) var(--space-2)", property: "padding"))
       expect_valid(declare("0", property: "margin"))
       expect_valid(declare("50%", property: "border-radius"))
+    end
+
+    it "checks a new text color against the background core gives the area" do
+      expect_error(
+        { rules: [{ area: "primary_button", declarations: { "color" => "var(--tertiary)" } }] },
+        "rules[0]: text on background is",
+      )
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              state: "hover",
+              declarations: {
+                "color" => "var(--d-button-primary-bg-color--hover)",
+              },
+            },
+          ],
+        },
+        "rules[0]: text on background is",
+      )
+      expect_valid(
+        {
+          rules: [
+            { area: "primary_button", declarations: { "color" => "light-dark(#000000, #000000)" } },
+          ],
+        },
+      )
+      expect_valid(declare("var(--primary)", property: "color"))
+    end
+
+    it "only accepts colors whose readability can be checked" do
+      expect_error(
+        declare("light-dark(rgb(255, 0, 0), #400)", property: "color"),
+        "light-dark() takes hex colors",
+      )
+      expect_error(
+        {
+          rules: [
+            { area: "primary_button", declarations: { "color" => "rgb(var(--tertiary-rgb))" } },
+          ],
+        },
+        "rules[0]: text on background is",
+      )
+      expect_error(
+        {
+          rules: [
+            { area: "primary_button", declarations: { "background-color" => "currentcolor" } },
+          ],
+        },
+        "can't tell how readable",
+      )
+      expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "background-color"))
     end
 
     it "checks background and text variables a rule overrides" do

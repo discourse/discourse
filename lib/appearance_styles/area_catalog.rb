@@ -6,7 +6,20 @@ module AppearanceStyles
   class AreaCatalog
     CONFIG_PATH = Rails.root.join("config/appearance_styles/areas.yml")
 
-    Area = Data.define(:key, :label, :selector, :states, :hideable, :sizeable, :text_color)
+    Area =
+      Data.define(
+        :key,
+        :label,
+        :selector,
+        :states,
+        :hideable,
+        :sizeable,
+        :text_color,
+        :background,
+        :hover_background,
+      )
+
+    PAGE_BACKGROUND = "var(--secondary)"
 
     def self.instance
       @instance ||= new
@@ -27,6 +40,8 @@ module AppearanceStyles
                 hideable: entry["hideable"] == true,
                 sizeable: entry["sizeable"] == true,
                 text_color: entry["text_color"],
+                background: entry["background"] || PAGE_BACKGROUND,
+                hover_background: entry["hover_background"],
               ),
             ]
           end

@@ -353,7 +353,7 @@ module AppearanceStyles
         )
       end
       return [] if rendered.size != declarations.size
-      return [] if !readable?(declarations, path, area)
+      return [] if !readable?(declarations, path, area, state)
       return [] if overrides.any? && !readable_variables?(overrides, path)
 
       css = block(scope_selector(area.selector, state, page), rendered)
@@ -422,22 +422,37 @@ module AppearanceStyles
       end
     end
 
-    # When a rule sets a background, check the text on it stays readable in
-    # light and dark mode: the text color the rule sets, or the one core gives
-    # the area. Every color of a gradient is checked. Translucent colors
-    # depend on what is behind them, so they aren't checked.
-    def readable?(declarations, path, area)
-      text = declarations["color"] || area.text_color
-      backgrounds = background_values(declarations)
-      return true if !text || backgrounds.empty?
+    # When a rule sets a background or a text color, check the text stays
+    # readable in light and dark mode: against the rule's own background, or
+    # the one core gives the area. Every color of a gradient is checked.
+    # Translucent colors depend on what is behind them, so they aren't
+    # checked; any other color the rule sets has to be one that can be.
+    def readable?(declarations, path, area, state = nil)
+      own_text = declarations["color"]
+      text = own_text || area.text_color
+      own_backgrounds = background_values(declarations)
+      backgrounds = own_backgrounds
+      if backgrounds.empty?
+        return true if !own_text
+        default = (state == "hover" && area.hover_background) || area.background
+        backgrounds = CssValue.parse(default)
+      end
+      return true if !text
 
       %w[light dark].all? do |mode|
         text_hex = resolve_color(text, mode)
-        next true if !text_hex
+        next unreadable_unknown(path, "color") if text_hex.nil? && own_text
+        next true if !text_hex.is_a?(String)
 
         backgrounds.all? do |background|
+          own = own_backgrounds.include?(background)
           background_hex = resolve_node(background, mode)
-          next true if !background_hex
+          next unreadable_unknown(path, "background") if background_hex.nil? && own
+          # an area core leaves see-through shows the page behind it
+          if background_hex == :translucent && !own
+            background_hex = resolve_color(AreaCatalog::PAGE_BACKGROUND, mode)
+          end
+          next true if !background_hex.is_a?(String)
 
           ratio = contrast(text_hex, background_hex)
           next true if ratio >= MINIMUM_CONTRAST
@@ -447,6 +462,13 @@ module AppearanceStyles
           )
         end
       end
+    end
+
+    def unreadable_unknown(path, what)
+      error(
+        path,
+        "can't tell how readable this #{what} is; use palette variables, color-mix() of them, or hex colors in light-dark()",
+      )
     end
 
     # The colors a rule paints behind its text, as value nodes.
@@ -517,13 +539,17 @@ module AppearanceStyles
         %w[light dark].all? do |mode|
           background_hex = resolve_variable(background, mode)
           text_hex = resolve_variable(text, mode)
-          next true if !background_hex || !text_hex
+          if background_hex.nil? && variables.key?(background)
+            next unreadable_unknown(path, background)
+          end
+          next unreadable_unknown(path, text) if text_hex.nil? && variables.key?(text)
+          next true if !background_hex.is_a?(String) || !text_hex.is_a?(String)
 
           ratio = contrast(text_hex, background_hex)
           required = text.include?("icon") ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
           default_background = resolve_variable(background, mode, use_draft: false)
           default_text = resolve_variable(text, mode, use_draft: false)
-          if default_background && default_text
+          if default_background.is_a?(String) && default_text.is_a?(String)
             required = [required, contrast(default_text, default_background)].min
           end
           next true if ratio >= required
@@ -539,8 +565,16 @@ module AppearanceStyles
       ColorMath.contrast_ratio(color, other_color).floor(2)
     end
 
+    # core's surface tokens, which areas paint behind their text
+    TOKEN_COLORS = {
+      "--token-color-surface" => "--secondary",
+      "--token-color-surface-hovered" => "--primary-100",
+      "--token-color-surface-pressed" => "--primary-200",
+    }.freeze
+
     def resolve_variable(name, mode, depth = 0, use_draft: true)
       return if depth > 8
+      name = TOKEN_COLORS.fetch(name, name)
       return @palette_colors[mode][name] if @registry.palette_variable?(name)
 
       value = (use_draft ? (@draft_variables || {})[name] : nil) || @registry[name]&.default
@@ -555,8 +589,12 @@ module AppearanceStyles
       nil
     end
 
+    # Returns the hex color a value shows, :translucent when it depends on
+    # what is behind it, or nil when it can't be told.
     def resolve_node(node, mode, depth = 0, use_draft: true)
       case node.type
+      when :ident
+        :translucent if node.value.downcase == "transparent"
       when :hash
         PaletteColors.normalize(node.value) if node.value.match?(/\A(\h{3}|\h{6})\z/)
       when :function
@@ -569,6 +607,8 @@ module AppearanceStyles
           part&.size == 1 ? resolve_node(part.first, mode, depth, use_draft:) : nil
         when "color-mix"
           resolve_mix(node, mode, depth, use_draft:)
+        when "rgb", "rgba"
+          resolve_rgb(node, mode, depth, use_draft:)
         end
       end
     end
@@ -585,6 +625,7 @@ module AppearanceStyles
           [color && resolve_node(color, mode, depth + 1, use_draft:), percent]
         end
       return if colors.any? { |hex, _| hex.nil? }
+      return :translucent if colors.any? { |hex, _| hex == :translucent }
 
       (first, first_percent), (second, second_percent) = colors
       first_percent ||= second_percent ? 100 - second_percent : 50
@@ -599,6 +640,46 @@ module AppearanceStyles
           .zip(ColorMath::Converters.hex_to_rgb(second))
           .map { |a, b| ((a * weight) + (b * (1 - weight))).round },
       )
+    end
+
+    # rgb(var(--name-rgb)) with an optional alpha, as either syntax allows.
+    def resolve_rgb(node, mode, depth, use_draft:)
+      name, opacity = palette_rgb(node)
+      return if name.nil?
+      return :translucent if opacity < 1
+      resolve_variable(name.delete_suffix("-rgb"), mode, depth + 1, use_draft:)
+    end
+
+    # The palette variable and opacity of rgb(var(--name-rgb)),
+    # rgba(var(--name-rgb), 0.1) or rgb(var(--name-rgb) / 10%), or nil.
+    def palette_rgb(node)
+      return if !%w[rgb rgba].include?(node.value)
+
+      parts = CssValue.split_commas(node.children)
+      slash = node.children.index { |n| n.type == :delim && n.value == "/" }
+      color, alpha =
+        if parts.size == 1 && slash
+          [node.children[0...slash], node.children[(slash + 1)..]]
+        elsif parts.size <= 2
+          parts
+        end
+      return if color&.size != 1 || color.first.type != :function || color.first.value != "var"
+      name = color.first.children.first&.value.to_s
+      return if !name.end_with?("-rgb") || !@registry.palette_variable?(name)
+
+      opacity = 1
+      if alpha
+        return if alpha.size != 1
+        value = alpha.first
+        opacity =
+          if value.type == :dimension && value.unit == "%"
+            value.value / 100.0
+          elsif value.type == :number
+            value.value
+          end
+        return if opacity.nil? || opacity.negative? || opacity > 1
+      end
+      [name, opacity]
     end
 
     # The palettes styles are checked against, or core's light and dark ones.
@@ -671,8 +752,8 @@ module AppearanceStyles
     def color_expression?(node, path, inside_light_dark:)
       case node.type
       when :ident
-        return true if COLOR_KEYWORDS.include?(node.value.downcase)
-        return true if inside_light_dark && node.value.match?(/\A[a-z]+\z/i)
+        return true if COLOR_KEYWORDS.include?(node.value.downcase) && !inside_light_dark
+        return error(path, "light-dark() takes hex colors") if inside_light_dark
         error(path, "#{node.value} is not a palette color; use var(--...) or light-dark()")
       when :hash
         return true if inside_light_dark
@@ -697,14 +778,11 @@ module AppearanceStyles
               colors.size == 1 && color_expression?(colors.first, path, inside_light_dark:)
             end
         when *RAW_COLOR_FUNCTIONS
-          uses_variable = false
-          CssValue.each_node(node.children) do |child|
-            uses_variable ||= child.type == :function && child.value == "var"
-          end
-          return true if uses_variable || inside_light_dark
+          return error(path, "light-dark() takes hex colors") if inside_light_dark
+          return true if palette_rgb?(node)
           error(
             path,
-            "raw color #{node.value}() must use a palette variable or be inside light-dark()",
+            "raw color #{node.value}() must use a palette variable, as rgb(var(--primary-rgb)) or rgba(var(--primary-rgb), 0.1), or be hex inside light-dark()",
           )
         else
           error(path, "#{node.value}() is not a color")
@@ -712,6 +790,10 @@ module AppearanceStyles
       else
         error(path, "expected a color")
       end
+    end
+
+    def palette_rgb?(node)
+      !palette_rgb(node).nil?
     end
 
     def check_gradient(nodes, path)
