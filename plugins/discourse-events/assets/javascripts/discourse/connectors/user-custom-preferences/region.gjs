@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import RegionInput from "../../components/region-input";
-import { TIME_ZONE_TO_REGION } from "../../lib/regions";
+import RegionInput from "../../components/region-input.js";
+import { TIME_ZONE_TO_REGION } from "../../lib/regions.js";
 
 export default class Region extends Component {
   static shouldRender(args, { siteSettings }) {
@@ -26,22 +26,22 @@ export default class Region extends Component {
   <template>
     <div class="control-group region">
       <label class="control-label">
-        {{i18n "discourse_calendar.region.title"}}
+        {{i18n "discourse_events.region.title"}}
       </label>
 
       <div class="controls">
         <RegionInput
-          @value={{@outletArgs.model.custom_fields.holidays-region}}
           @allowNoneRegion={{true}}
           @onChange={{this.onChange}}
+          @value={{@outletArgs.model.custom_fields.holidays-region}}
         />
       </div>
 
       <DButton
-        @icon="globe"
-        @label="discourse_calendar.region.use_current_region"
-        @action={{this.useCurrentRegion}}
         class="btn-default"
+        @action={{this.useCurrentRegion}}
+        @icon="globe"
+        @label="discourse_events.region.use_current_region"
       />
     </div>
   </template>

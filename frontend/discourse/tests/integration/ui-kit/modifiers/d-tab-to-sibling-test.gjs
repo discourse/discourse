@@ -10,7 +10,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     await render(
       <template>
         <div class="container">
-          <div class="first-item" {{dTabToSibling}} tabindex="0">First</div>
+          <div class="first-item" tabindex="0" {{dTabToSibling}}>First</div>
           <div class="second-item" tabindex="0">Second</div>
           <div class="third-item" tabindex="0">Third</div>
         </div>
@@ -35,7 +35,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
       <template>
         <div class="container">
           <div class="first-item" tabindex="0">First</div>
-          <div class="second-item" {{dTabToSibling}} tabindex="0">Second</div>
+          <div class="second-item" tabindex="0" {{dTabToSibling}}>Second</div>
           <div class="third-item" tabindex="0">Third</div>
         </div>
       </template>
@@ -58,7 +58,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     await render(
       <template>
         <div class="container">
-          <div class="first-item" {{dTabToSibling}} tabindex="0">First</div>
+          <div class="first-item" tabindex="0" {{dTabToSibling}}>First</div>
           <div class="non-focusable">Non-focusable</div>
           <div class="disabled-item" tabindex="-1">Disabled</div>
           <div class="third-item" tabindex="0">Third</div>
@@ -80,7 +80,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
         <div class="container">
           <button class="first-button" {{dTabToSibling}}>First Button</button>
           <input class="input-field" type="text" />
-          <a href="#" class="link-element">Link</a>
+          <a class="link-element" href="#">Link</a>
         </div>
       </template>
     );
@@ -97,7 +97,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     await render(
       <template>
         <div class="container">
-          <div class="first-item" {{dTabToSibling}} tabindex="0">First</div>
+          <div class="first-item" tabindex="0" {{dTabToSibling}}>First</div>
           <div class="second-item" tabindex="0">Second</div>
         </div>
       </template>

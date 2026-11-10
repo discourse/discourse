@@ -32,7 +32,8 @@ module DiscourseWorkflows
         DiscourseWorkflows::Execution
           .for_workflow(params.workflow_id)
           .order(id: :desc)
-          .includes(:execution_data, workflow: :active_version)
+          .with_snapshot_summary
+          .includes(workflow: :active_version)
       scope = scope.where("discourse_workflows_executions.id < ?", params.cursor) if params.cursor
 
       scope.limit(params.effective_limit + 1).to_a

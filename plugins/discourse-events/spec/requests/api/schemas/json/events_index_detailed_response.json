@@ -107,6 +107,41 @@
               "avatar_template"
             ]
           },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "avatar_template": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "username",
+                "avatar_template"
+              ]
+            }
+          },
           "custom_fields": {
             "type": [
               "object",
@@ -246,6 +281,15 @@
           },
           "is_zoom_livestream": {
             "type": "boolean"
+          },
+          "recording_url": {
+            "type": "string"
+          },
+          "recording_onebox": {
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "max_attendees": {
             "type": [

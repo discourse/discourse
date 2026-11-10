@@ -1,7 +1,9 @@
 import { module, test } from "qunit";
+import CategoryControl from "discourse/components/setting-field/category";
 import CategoryListControl from "discourse/components/setting-field/category-list";
 import CompactListControl from "discourse/components/setting-field/compact-list";
 import DurationControl from "discourse/components/setting-field/duration";
+import GroupControl from "discourse/components/setting-field/group";
 import GroupListControl from "discourse/components/setting-field/group-list";
 import {
   resolveSettingFieldType,
@@ -76,7 +78,18 @@ module("Unit | Lib | setting-field-registry", function () {
       );
     });
 
-    test("the text field family is admin-ready, the fallback never is", function (assert) {
+    test("a single-value type does not shadow its list counterpart", function (assert) {
+      assert.strictEqual(
+        resolveSettingFieldType({ type: "category" }).renderer,
+        CategoryControl
+      );
+      assert.strictEqual(
+        resolveSettingFieldType({ type: "group" }).renderer,
+        GroupControl
+      );
+    });
+
+    test("the converted types are admin-ready, the fallback never is", function (assert) {
       for (const type of [
         "string",
         "float",
@@ -86,6 +99,11 @@ module("Unit | Lib | setting-field-registry", function () {
         "password",
         "enum",
         "locale_enum",
+        "category",
+        "group",
+        "tag_list",
+        "tag_group_list",
+        "icon",
       ]) {
         assert.true(
           resolveSettingFieldType({ type }).adminReady,

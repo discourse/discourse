@@ -351,7 +351,12 @@ module Email
     end
 
     def format_custom
-      custom_styles.each { |selector, value| style(selector, value) }
+      custom_styles.each do |selector, value|
+        style(selector, value)
+      rescue Nokogiri::CSS::SyntaxError, Nokogiri::XML::XPath::SyntaxError
+        # Custom selectors that cannot be inlined must not prevent email delivery.
+        next
+      end
     end
 
     # this method is reserved for styles specific to plugin
@@ -444,6 +449,7 @@ module Email
     def to_html
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
       replace_relative_urls
+      make_all_links_absolute
       deduplicate_styles
 
       @fragment.to_html
@@ -481,14 +487,9 @@ module Email
     end
 
     def make_all_links_absolute
-      site_uri = URI(Discourse.base_url)
       @fragment
-        .css("a")
-        .each do |link|
-          link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
-        rescue URI::Error
-          # leave it
-        end
+        .css("a[href]")
+        .each { |link| link["href"] = UrlHelper.absolute_without_cdn(link["href"]) }
     end
 
     private

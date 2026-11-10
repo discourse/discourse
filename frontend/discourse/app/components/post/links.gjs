@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
@@ -64,12 +63,12 @@ export default class PostLinks extends Component {
             <li>
               <DButton
                 class="btn-transparent expand-links"
+                @action={{this.expandList}}
+                @title="post_links.about"
                 @translatedLabel={{i18n
                   "post_links.title"
                   count=this.remainingCount
                 }}
-                @title="post_links.about"
-                @action={{this.expandList}}
               />
             </li>
           {{/if}}

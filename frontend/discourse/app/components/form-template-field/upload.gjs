@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
@@ -22,7 +21,7 @@ export default class FormTemplateFieldUpload extends Component {
   @autoTrackedArray uploadedFiles = [];
   fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: this.args.id,
     type: "composer",
     uploadDone: this.uploadDone,
@@ -36,6 +35,16 @@ export default class FormTemplateFieldUpload extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
+  }
+
+  get uploadStatusLabel() {
+    return this.uppyUpload.uploading || this.uppyUpload.processing
+      ? "form_templates.upload_field.uploading"
+      : "form_templates.upload_field.upload";
+  }
+
+  get disabled() {
+    return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
 
   @action
@@ -55,16 +64,6 @@ export default class FormTemplateFieldUpload extends Component {
     schedule("afterRender", () => {
       this.args.onChange?.();
     });
-  }
-
-  get uploadStatusLabel() {
-    return this.uppyUpload.uploading || this.uppyUpload.processing
-      ? "form_templates.upload_field.uploading"
-      : "form_templates.upload_field.upload";
-  }
-
-  get disabled() {
-    return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
 
   /**
@@ -149,17 +148,17 @@ export default class FormTemplateFieldUpload extends Component {
       {{/if}}
 
       <DPickFilesButton
-        @registerFileInput={{this.uppyUpload.setup}}
-        @fileInputClass="form-template-field__upload"
-        @fileInputId={{this.fileUploadElementId}}
+        @acceptedFileTypesString={{@attributes.file_types}}
+        @acceptedFormatsOverride={{@attributes.file_types}}
         @allowMultiple={{@attributes.allow_multiple}}
-        @showButton={{true}}
-        @onFilesPicked={{true}}
+        @fileInputClass="form-template-field__upload"
+        @fileInputDisabled={{this.disabled}}
+        @fileInputId={{this.fileUploadElementId}}
         @icon="upload"
         @label={{this.uploadStatusLabel}}
-        @fileInputDisabled={{this.disabled}}
-        @acceptedFormatsOverride={{@attributes.file_types}}
-        @acceptedFileTypesString={{@attributes.file_types}}
+        @onFilesPicked={{true}}
+        @registerFileInput={{this.uppyUpload.setup}}
+        @showButton={{true}}
       />
 
       {{#if this.uploadedFiles}}
@@ -169,8 +168,8 @@ export default class FormTemplateFieldUpload extends Component {
               {{dIcon "file"}}
               <a
                 href={{file.url}}
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >{{file.file_name}}</a>
               <span>{{file.human_filesize}}</span>
             </li>
@@ -179,13 +178,13 @@ export default class FormTemplateFieldUpload extends Component {
       {{/if}}
 
       <input
-        type="text"
-        name={{@id}}
-        value={{this.uploadValue}}
-        required={{if @validations.required "required" ""}}
-        class="form-template-field__upload-hidden-input"
-        tabindex="-1"
         aria-hidden="true"
+        class="form-template-field__upload-hidden-input"
+        name={{@id}}
+        required={{if @validations.required "required" ""}}
+        tabindex="-1"
+        type="text"
+        value={{this.uploadValue}}
       />
     </div>
   </template>

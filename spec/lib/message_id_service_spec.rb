@@ -57,6 +57,7 @@ RSpec.describe Email::MessageIdService do
     let(:gmail_format_message_id) do
       "<CAPGrNgZ7QEFuPcsxJBRZLhBhAYPO_ruYpCANSdqiQEbc9Otpiw@mail.gmail.com>"
     end
+
     it "finds a post based only on a discourse-format message id" do
       expect(described_class.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
     end

@@ -6,11 +6,11 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import { searchForTerm } from "discourse/lib/search";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import { i18n } from "discourse-i18n";
 
 export default class ChooseMessage extends Component {
+  /** @type {string | null} */
   @tracked messageTitle = null;
 
   @action
@@ -50,10 +50,10 @@ export default class ChooseMessage extends Component {
       </label>
 
       <input
-        {{on "input" this.setSearchTerm}}
-        type="text"
-        placeholder={{i18n "choose_message.title.placeholder"}}
         id="choose-message-title"
+        placeholder={{i18n "choose_message.title.placeholder"}}
+        type="text"
+        {{on "input" this.setSearchTerm}}
       />
 
       <div class="choose-message__search-results">
@@ -80,10 +80,10 @@ export default class ChooseMessage extends Component {
               <div class="controls existing-message">
                 <label class="radio">
                   <input
-                    {{on "click" (fn @setSelectedTopicId message)}}
-                    type="radio"
-                    name="choose_message_id"
                     checked={{eq message.id @selectedTopicId}}
+                    name="choose_message_id"
+                    type="radio"
+                    {{on "click" (fn @setSelectedTopicId message)}}
                   />
                   <span class="message-title">
                     {{message.title}}

@@ -499,7 +499,12 @@ class TopicUser < ActiveRecord::Base
           )
 SQL
 
-    DB.exec(sql, user_id: user_id, count: count)
+    DB.exec(
+      sql,
+      user_id: user_id,
+      count: count,
+      logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
+    )
   end
 
   def self.ensure_consistency!(topic_id = nil)
@@ -568,4 +573,5 @@ end
 #  index_topic_users_on_topic_id_and_notification_level  (topic_id,notification_level)
 #  index_topic_users_on_topic_id_and_user_id             (topic_id,user_id) UNIQUE
 #  index_topic_users_on_user_id_and_topic_id             (user_id,topic_id) UNIQUE
+#  index_topic_users_on_user_id_and_topic_id_tracked     (user_id,topic_id) WHERE (notification_level >= 2)
 #

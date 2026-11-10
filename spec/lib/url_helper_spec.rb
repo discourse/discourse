@@ -176,7 +176,7 @@ RSpec.describe UrlHelper do
     let(:url) { "/#{Discourse.store.upload_path}/1X/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png" }
     let(:asset_host) { "//my.awesome.cdn" }
 
-    it "should return correct cdn url for local relative urls" do
+    it "returns CDN URLs for local relative URLs" do
       set_cdn_url asset_host
       cdn_url = UrlHelper.local_cdn_url(url)
       expect(cdn_url).to eq("#{asset_host}#{url}")
@@ -271,42 +271,42 @@ RSpec.describe UrlHelper do
   end
 
   describe ".is_valid_url?" do
-    it "should return true for a valid HTTP URL" do
+    it "accepts a valid HTTP URL" do
       expect(described_class.is_valid_url?("http://www.example.com")).to eq(true)
     end
 
-    it "should return true for a valid HTTPS URL" do
+    it "accepts a valid HTTPS URL" do
       expect(described_class.is_valid_url?("https://www.example.com")).to eq(true)
     end
 
-    it "should return true for a valid FTP URL" do
+    it "accepts a valid FTP URL" do
       expect(described_class.is_valid_url?("ftp://example.com")).to eq(true)
     end
 
-    it "should return true for a valid mailto URL" do
+    it "accepts a valid mailto URL" do
       expect(described_class.is_valid_url?("mailto:someone@discourse.org")).to eq(true)
     end
 
-    it "should return true for a valid LDAP URL" do
+    it "accepts a valid LDAP URL" do
       expect(described_class.is_valid_url?("ldap://ldap.example.com/dc=example;dc=com?quer")).to eq(
         true,
       )
     end
 
-    it "should return true for a path" do
+    it "accepts a path" do
       expect(described_class.is_valid_url?("/some/path")).to eq(true)
     end
 
-    it "should return true for a path with query params" do
+    it "accepts a path with query parameters" do
       expect(described_class.is_valid_url?("/some/path?query=param")).to eq(true)
     end
 
-    it "should return true for anchor links" do
+    it "accepts anchor links" do
       expect(described_class.is_valid_url?("#anchor")).to eq(true)
       expect(described_class.is_valid_url?("#")).to eq(true)
     end
 
-    it "should return false for invalid urls" do
+    it "rejects invalid URLs" do
       expect(described_class.is_valid_url?("")).to eq(false)
       expect(described_class.is_valid_url?("http//www.example.com")).to eq(false)
       expect(described_class.is_valid_url?("http:/www.example.com")).to eq(false)

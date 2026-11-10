@@ -5,6 +5,46 @@ RSpec.describe PostActionUsersController do
   let(:post) { Fabricate(:post, user: sign_in(user)) }
 
   describe "#index" do
+    it "only shows TL4 members their own private flags and hides the total" do
+      user.update!(trust_level: TrustLevel[4])
+      notify_mod = PostActionType.types[:notify_moderators]
+      flagger = Fabricate(:user, refresh_auto_groups: true)
+      expect(
+        PostActionCreator.new(flagger, post, notify_mod, message: "Private report").perform,
+      ).to be_success
+      expect(
+        PostActionCreator.new(user, post, notify_mod, message: "My report").perform,
+      ).to be_success
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: notify_mod,
+            limit: 1,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |actor| actor["id"] }).to eq([user.id])
+      expect(response.parsed_body["total_rows_post_action_users"]).to be_nil
+    end
+
+    it "still shows TL4 members who liked a post" do
+      user.update!(trust_level: TrustLevel[4])
+      liker = Fabricate(:user)
+      PostActionCreator.like(liker, post)
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: PostActionType.types[:like],
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |actor| actor["id"] }).to eq(
+        [liker.id],
+      )
+    end
+
     describe "when limit params is invalid" do
       include_examples "invalid limit params",
                        "/post_action_users.json",
@@ -116,7 +156,7 @@ RSpec.describe PostActionUsersController do
     expect(response).to be_forbidden
   end
 
-  it "succeeds" do
+  it "returns 200 when listing users who liked the post" do
     get "/post_action_users.json",
         params: {
           id: post.id,
@@ -126,7 +166,7 @@ RSpec.describe PostActionUsersController do
     expect(response.status).to eq(200)
   end
 
-  it "will return an unknown attribute for muted users" do
+  it "returns an unknown attribute for muted users" do
     muted_user = Fabricate(:user)
     PostActionCreator.like(muted_user, post)
     regular_user = Fabricate(:user)

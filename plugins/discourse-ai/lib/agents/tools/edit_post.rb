@@ -83,6 +83,52 @@ module DiscourseAi
         def description_args
           { post_id: parameters[:post_id] }
         end
+
+        def approval_title
+          return super if !previewable?(post)
+
+          label =
+            I18n.t(
+              "discourse_ai.ai_bot.chat_tool_approval.post_reference",
+              topic: post.topic.title,
+              number: post.post_number,
+            )
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.post_title",
+            post: DiscourseAi::AiBot::ChatToolApproval.format_link(label, post.url),
+          )
+        end
+
+        def approval_changes
+          return [] if !previewable?(post)
+
+          changes = []
+          if parameters[:raw].present?
+            changes << {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.post_content_label"),
+              before: post.raw,
+              after: parameters[:raw],
+            }
+          end
+          if parameters[:title].present? && post.is_first_post?
+            changes << {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.post_topic_title_label"),
+              before: post.topic.title,
+              after: parameters[:title],
+            }
+          end
+          changes
+        end
+
+        def approval_parameters
+          []
+        end
+
+        private
+
+        def post
+          @post ||= Post.find_by(id: parameters[:post_id])
+        end
       end
     end
   end

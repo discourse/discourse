@@ -7,7 +7,7 @@ import StyleguideComponent from "discourse/plugins/styleguide/discourse/componen
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import CalendarDateTimeInputExample from "../examples/atoms/date-time-inputs/calendar-date-time-input";
+import CalendarDateTimeInputExample from "../examples/atoms/date-time-inputs/calendar-date-time-input.gjs";
 import calendarDateTimeInputSource from "../examples/atoms/date-time-inputs/calendar-date-time-input?source=file";
 
 export default class StyleguideCalendarDateTimeInput extends Component {
@@ -27,16 +27,16 @@ export default class StyleguideCalendarDateTimeInput extends Component {
 
   <template>
     <StyleguideExample
-      @title="CalendarDateTimeInput"
       @code={{calendarDateTimeInputSource}}
+      @title="CalendarDateTimeInput"
     >
       <StyleguideComponent>
         <CalendarDateTimeInputExample
           @date={{this.date}}
-          @time={{this.time}}
           @minDate={{this.minDate}}
           @onChangeDate={{this.changeDate}}
           @onChangeTime={{this.changeTime}}
+          @time={{this.time}}
         />
       </StyleguideComponent>
 
@@ -51,11 +51,11 @@ export default class StyleguideCalendarDateTimeInput extends Component {
 
         <Row @name="Time">
           <Input
+            class="time-picker"
             maxlength={{5}}
             placeholder="hh:mm"
             @type="time"
             @value={{this.time}}
-            class="time-picker"
           />
         </Row>
       </Controls>

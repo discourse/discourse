@@ -10,35 +10,41 @@ describe Chat::Seeder do
     Jobs.run_immediately!
   end
 
-  def assert_channel_was_correctly_seeded(channel, group, category)
+  def assert_channel_was_correctly_seeded(channel, users, category)
     expect(channel).to be_present
     expect(channel.auto_join_users).to eq(true)
     expect(channel.name).to eq(category.name)
 
     expect(category.custom_fields[Chat::HAS_CHAT_ENABLED]).to eq(true)
 
-    expected_members_count = GroupUser.where(group: group).count
-    memberships_count =
-      Chat::UserChatChannelMembership.automatic.where(chat_channel: channel, following: true).count
+    member_ids =
+      Chat::UserChatChannelMembership
+        .automatic
+        .where(chat_channel: channel, following: true)
+        .pluck(:user_id)
 
-    expect(memberships_count).to eq(expected_members_count)
+    expect(member_ids).to contain_exactly(*users.map(&:id))
   end
 
   it "seeds default channels" do
     last_seen_at = 1.minute.ago
 
-    # By default, `chat_allowed_groups` is set to admins, moderators, and TL1
-    Fabricate(:user, last_seen_at:, groups: [Group[:everyone], Group[:admins]])
-    Fabricate(:user, last_seen_at:, groups: [Group[:everyone], Group[:moderators]])
-    Fabricate(:user, last_seen_at:, groups: [Group[:everyone], Group[:trust_level_1]])
+    admin = Fabricate(:admin, last_seen_at:, refresh_auto_groups: true)
+    moderator = Fabricate(:moderator, last_seen_at:, refresh_auto_groups: true)
+    tl0_user = Fabricate(:user, last_seen_at:, trust_level: 0)
+    tl1_user = Fabricate(:user, last_seen_at:, trust_level: 1)
 
     Chat::Seeder.new.execute
 
     staff_channel = Chat::Channel.find_by(chatable_id: staff_category)
     general_channel = Chat::Channel.find_by(chatable_id: general_category)
 
-    assert_channel_was_correctly_seeded(staff_channel, Group[:staff], staff_category)
-    assert_channel_was_correctly_seeded(general_channel, Group[:everyone], general_category)
+    assert_channel_was_correctly_seeded(staff_channel, [admin, moderator], staff_category)
+    assert_channel_was_correctly_seeded(
+      general_channel,
+      [admin, moderator, tl0_user, tl1_user],
+      general_category,
+    )
 
     expect(SiteSetting.needs_chat_seeded).to eq(false)
   end

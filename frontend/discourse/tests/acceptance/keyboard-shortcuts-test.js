@@ -2,6 +2,8 @@ import {
   click,
   currentURL,
   fillIn,
+  find,
+  settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -301,6 +303,25 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
         );
     });
 
+    test("C key opens composer with a fresh draft in new topic mode from a regular topic", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await triggerKeyEvent(document, "keypress", "C");
+
+      assert
+        .dom(".composer-action-create-topic")
+        .exists("opens the composer in new topic mode");
+      const composerModel = this.owner.lookup("service:composer").model;
+      assert.true(
+        /^new_topic_\d+$/.test(composerModel.draftKey),
+        "uses a unique draft key"
+      );
+      assert.strictEqual(
+        composerModel.draftSequence,
+        0,
+        "starts a fresh draft sequence"
+      );
+    });
+
     test("C key opens composer in new PM mode from messages list", async function (assert) {
       await visit("/my/messages");
       await triggerKeyEvent(document, "keypress", "C");
@@ -397,13 +418,13 @@ acceptance("Keyboard Shortcuts Help Modal - Search", function () {
 
   test("alternative key groups don't satisfy tokens across alternatives", async function (assert) {
     await openHelpModal();
-    await fillIn(".filter-input", "ctrl /");
+    await fillIn(".filter-input", "alt /");
 
-    // application.search has alternatives "/" or Ctrl+Alt+F. "ctrl /" must not
-    // match because "ctrl" lives in one alternative and "/" in the other.
+    // application.search has alternatives "/" or Ctrl+Alt+F. "alt /" must not
+    // match because "alt" lives in one alternative and "/" in the other.
     assert
-      .dom(".shortcut-category-application tbody")
-      .doesNotIncludeText(description("application.search"));
+      .dom(".shortcut-category-application")
+      .doesNotExist("tokens don't match across alternative key groups");
   });
 
   test("plugin-registered shortcut with raw 'esc' key matches escape alias", async function (assert) {
@@ -421,5 +442,53 @@ acceptance("Keyboard Shortcuts Help Modal - Search", function () {
     await fillIn(".filter-input", "escape");
 
     assert.dom(".shortcut-category-esc_test tbody tr").exists({ count: 1 });
+  });
+});
+
+acceptance("Keyboard Shortcuts - Topic pagination", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/latest.json", (request) => {
+      const response = cloneJSON(DiscoveryFixtures["/latest.json"]);
+      const page = Number(request.queryParams.page || 0);
+      response.topic_list.topics = response.topic_list.topics.slice(
+        page * 3,
+        (page + 1) * 3
+      );
+      response.topic_list.more_topics_url = page ? null : "/latest?page=1";
+      return helper.response(response);
+    });
+  });
+
+  test("bulk select keeps keyboard selection when more topics load", async function (assert) {
+    await visit("/latest");
+    await click("button.bulk-select");
+    await triggerKeyEvent(document, "keypress", "J");
+    await triggerKeyEvent(document, "keypress", "J");
+
+    const selected = find(".topic-list-item.selected");
+    assert.dom(selected).isFocused("the keyboard-selected topic has focus");
+
+    await this.owner.lookup("service:session").topicList.loadMore();
+    await settled();
+
+    assert
+      .dom(".topic-list-item")
+      .exists({ count: 6 }, "the next page is appended");
+    assert.dom(selected).isFocused("focus stays on the same topic");
+    assert
+      .dom(selected)
+      .hasClass("selected", "the keyboard selection survives pagination");
+
+    await triggerKeyEvent(document, "keypress", "J");
+    assert
+      .dom(selected.nextElementSibling)
+      .isFocused("J moves to the next topic");
+    assert
+      .dom(selected)
+      .doesNotHaveClass("selected", "the previous selection is cleared");
+
+    await triggerKeyEvent(document, "keypress", "K");
+    assert.dom(selected).isFocused("K returns to the original topic");
   });
 });

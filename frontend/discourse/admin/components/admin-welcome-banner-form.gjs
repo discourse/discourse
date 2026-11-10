@@ -360,32 +360,32 @@ export default class AdminWelcomeBannerForm extends Component {
   <template>
     <DConditionalLoadingSpinner @condition={{this.isLoading}}>
       <Form
-        @onSubmit={{this.save}}
+        class="admin-welcome-banner-form"
         @data={{this.formData}}
         @onRegisterApi={{this.registerApi}}
-        class="admin-welcome-banner-form"
+        @onSubmit={{this.save}}
         as |form|
       >
         <form.Field
-          @name="enabledThemes"
-          @title={{i18n
-            "admin.config.welcome_banner.form.enabled_themes.label"
-          }}
           @description={{i18n
             "admin.config.welcome_banner.form.enabled_themes.description"
           }}
           @format="large"
+          @name="enabledThemes"
+          @title={{i18n
+            "admin.config.welcome_banner.form.enabled_themes.label"
+          }}
           @type="custom"
           as |field|
         >
           <field.Control>
             <DMultiSelect
-              @loadFn={{this.loadThemes}}
-              @selection={{field.value}}
               @label={{i18n
                 "admin.config.welcome_banner.form.enabled_themes.select_label"
               }}
+              @loadFn={{this.loadThemes}}
               @onChange={{field.set}}
+              @selection={{field.value}}
             >
               <:selection as |theme|>
                 {{theme.name}}
@@ -398,14 +398,14 @@ export default class AdminWelcomeBannerForm extends Component {
         </form.Field>
 
         <form.Field
-          @name="welcomeBannerImage"
-          @title={{i18n
-            "admin.config.welcome_banner.form.background_image.label"
-          }}
           @description={{i18n
             "admin.config.welcome_banner.form.background_image.description"
           }}
+          @name="welcomeBannerImage"
           @onSet={{fn this.handleUpload "welcomeBannerImage"}}
+          @title={{i18n
+            "admin.config.welcome_banner.form.background_image.label"
+          }}
           @type="image"
           as |field|
         >
@@ -413,12 +413,12 @@ export default class AdminWelcomeBannerForm extends Component {
         </form.Field>
 
         <form.Field
-          @name="welcomeBannerTextColor"
-          @title={{i18n "admin.config.welcome_banner.form.text_color.label"}}
           @description={{i18n
             "admin.config.welcome_banner.form.text_color.description"
           }}
           @format="large"
+          @name="welcomeBannerTextColor"
+          @title={{i18n "admin.config.welcome_banner.form.text_color.label"}}
           @type="color"
           as |field|
         >
@@ -426,12 +426,12 @@ export default class AdminWelcomeBannerForm extends Component {
         </form.Field>
 
         <form.Field
+          @description={{i18n
+            "admin.config.welcome_banner.form.page_visibility.description"
+          }}
           @name="welcomeBannerPageVisibility"
           @title={{i18n
             "admin.config.welcome_banner.form.page_visibility.label"
-          }}
-          @description={{i18n
-            "admin.config.welcome_banner.form.page_visibility.description"
           }}
           @type="select"
           as |field|
@@ -453,11 +453,11 @@ export default class AdminWelcomeBannerForm extends Component {
         </form.Field>
 
         <form.Field
-          @name="welcomeBannerLocation"
-          @title={{i18n "admin.config.welcome_banner.form.location.label"}}
           @description={{i18n
             "admin.config.welcome_banner.form.location.description"
           }}
+          @name="welcomeBannerLocation"
+          @title={{i18n "admin.config.welcome_banner.form.location.label"}}
           @type="select"
           as |field|
         >
@@ -475,41 +475,41 @@ export default class AdminWelcomeBannerForm extends Component {
           @title={{i18n "admin.config.welcome_banner.form.text_section.title"}}
         >
           <form.Field
+            @format="large"
             @name="localeSelector"
             @title={{i18n
               "admin.config.welcome_banner.form.text_section.locale_label"
             }}
-            @format="large"
-            @validation="required"
             @type="custom"
+            @validation="required"
             as |field|
           >
             <field.Control>
               <ComboBox
-                @valueProperty="value"
+                class="translation-selector"
                 @content={{this.availableLocales}}
-                @value={{this.locale}}
                 @onChange={{this.updateLocale}}
                 @options={{hash filterable=true}}
-                class="translation-selector"
+                @value={{this.locale}}
+                @valueProperty="value"
               />
             </field.Control>
           </form.Field>
 
           <form.Field
-            @name="headerNewMembers"
-            @title={{i18n
-              "admin.config.welcome_banner.form.header_new_members.label"
-            }}
             @description={{trustHTML
               (i18n
                 "admin.config.welcome_banner.form.header_new_members.description"
               )
             }}
-            @format="large"
-            @validation="required"
             @disabled={{this.isLoadingLocale}}
+            @format="large"
+            @name="headerNewMembers"
+            @title={{i18n
+              "admin.config.welcome_banner.form.header_new_members.label"
+            }}
             @type="input"
+            @validation="required"
             as |field|
           >
             <field.Control
@@ -522,19 +522,19 @@ export default class AdminWelcomeBannerForm extends Component {
           </form.Field>
 
           <form.Field
-            @name="headerLoggedInMembers"
-            @title={{i18n
-              "admin.config.welcome_banner.form.header_logged_in.label"
-            }}
             @description={{trustHTML
               (i18n
                 "admin.config.welcome_banner.form.header_logged_in.description"
               )
             }}
-            @format="large"
-            @validation="required"
             @disabled={{this.isLoadingLocale}}
+            @format="large"
+            @name="headerLoggedInMembers"
+            @title={{i18n
+              "admin.config.welcome_banner.form.header_logged_in.label"
+            }}
             @type="input"
+            @validation="required"
             as |field|
           >
             <field.Control
@@ -547,19 +547,19 @@ export default class AdminWelcomeBannerForm extends Component {
           </form.Field>
 
           <form.Field
-            @name="headerAnonymousMembers"
-            @title={{i18n
-              "admin.config.welcome_banner.form.header_anonymous.label"
-            }}
             @description={{trustHTML
               (i18n
                 "admin.config.welcome_banner.form.header_anonymous.description"
               )
             }}
-            @format="large"
-            @validation="required"
             @disabled={{this.isLoadingLocale}}
+            @format="large"
+            @name="headerAnonymousMembers"
+            @title={{i18n
+              "admin.config.welcome_banner.form.header_anonymous.label"
+            }}
             @type="input"
+            @validation="required"
             as |field|
           >
             <field.Control
@@ -571,15 +571,15 @@ export default class AdminWelcomeBannerForm extends Component {
           </form.Field>
 
           <form.Field
+            @description={{i18n
+              "admin.config.welcome_banner.form.subheader_logged_in.description"
+            }}
+            @disabled={{this.isLoadingLocale}}
+            @format="large"
             @name="subheaderLoggedInMembers"
             @title={{i18n
               "admin.config.welcome_banner.form.subheader_logged_in.label"
             }}
-            @description={{i18n
-              "admin.config.welcome_banner.form.subheader_logged_in.description"
-            }}
-            @format="large"
-            @disabled={{this.isLoadingLocale}}
             @type="textarea"
             as |field|
           >
@@ -587,15 +587,15 @@ export default class AdminWelcomeBannerForm extends Component {
           </form.Field>
 
           <form.Field
+            @description={{i18n
+              "admin.config.welcome_banner.form.subheader_anonymous.description"
+            }}
+            @disabled={{this.isLoadingLocale}}
+            @format="large"
             @name="subheaderAnonymousMembers"
             @title={{i18n
               "admin.config.welcome_banner.form.subheader_anonymous.label"
             }}
-            @description={{i18n
-              "admin.config.welcome_banner.form.subheader_anonymous.description"
-            }}
-            @format="large"
-            @disabled={{this.isLoadingLocale}}
             @type="textarea"
             as |field|
           >
@@ -603,17 +603,17 @@ export default class AdminWelcomeBannerForm extends Component {
           </form.Field>
 
           <form.Field
+            @description={{i18n
+              "admin.config.welcome_banner.form.search_placeholder.description"
+            }}
+            @disabled={{this.isLoadingLocale}}
+            @format="large"
             @name="searchPlaceholder"
             @title={{i18n
               "admin.config.welcome_banner.form.search_placeholder.label"
             }}
-            @description={{i18n
-              "admin.config.welcome_banner.form.search_placeholder.description"
-            }}
-            @format="large"
-            @validation="required"
-            @disabled={{this.isLoadingLocale}}
             @type="input"
+            @validation="required"
             as |field|
           >
             <field.Control

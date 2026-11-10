@@ -43,24 +43,24 @@ export default class DLightDarkImg extends Component {
     {{#if this.isDarkImageAvailable}}
       <picture>
         <source
-          srcset={{this.darkImgCdnSrc}}
-          width={{@darkImg.width}}
           height={{@darkImg.height}}
           media={{this.darkMediaQuery}}
+          srcset={{this.darkImgCdnSrc}}
+          width={{@darkImg.width}}
         />
         <DCdnImg
           ...attributes
+          @height={{this.defaultImg.height}}
           @src={{this.defaultImg.url}}
           @width={{this.defaultImg.width}}
-          @height={{this.defaultImg.height}}
         />
       </picture>
     {{else if @lightImg.url}}
       <DCdnImg
         ...attributes
+        @height={{@lightImg.height}}
         @src={{@lightImg.url}}
         @width={{@lightImg.width}}
-        @height={{@lightImg.height}}
       />
     {{/if}}
   </template>

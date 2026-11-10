@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
 
@@ -8,11 +8,6 @@ export default class FKControlCode extends FKBaseControl {
   static controlType = "code";
 
   initialValue = this.args.field.value || "";
-
-  @action
-  handleInput(content) {
-    this.args.field.set(content);
-  }
 
   get style() {
     if (!this.args.height) {
@@ -22,20 +17,25 @@ export default class FKControlCode extends FKBaseControl {
     return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
+  @action
+  handleInput(content) {
+    this.args.field.set(content);
+  }
+
   <template>
-    <AceEditor
-      @content={{this.initialValue}}
-      @onChange={{this.handleInput}}
-      @mode={{@lang}}
-      @disabled={{@field.disabled}}
-      @resizable={{true}}
+    <CodeEditor
       class="form-kit__control-code"
-      style={{this.style}}
-      id={{@field.id}}
       name={{@field.name}}
-      aria-invalid={{if @field.error "true"}}
-      aria-describedby={{@field.describedBy}}
+      style={{this.style}}
       ...attributes
+      @describedBy={{@field.describedBy}}
+      @disabled={{@field.disabled}}
+      @inputId={{@field.id}}
+      @invalid={{if @field.error true}}
+      @language={{@lang}}
+      @onChange={{this.handleInput}}
+      @resizable={{true}}
+      @value={{this.initialValue}}
     />
   </template>
 }

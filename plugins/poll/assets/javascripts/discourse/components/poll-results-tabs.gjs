@@ -2,11 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import PollResultsRankedChoice from "./poll-results-ranked-choice";
-import PollResultsStandard from "./poll-results-standard";
+import PollResultsRankedChoice from "./poll-results-ranked-choice.gjs";
+import PollResultsStandard from "./poll-results-standard.gjs";
 
 export default class TabsComponent extends Component {
   @tracked activeTab;
@@ -56,17 +55,17 @@ export default class TabsComponent extends Component {
       <div class="tab-content">
         {{#if (eq this.activeTab this.tabOne)}}
           <PollResultsStandard
+            @fetchVoters={{@fetchVoters}}
+            @isPublic={{@isPublic}}
+            @isRankedChoice={{@isRankedChoice}}
             @options={{@options}}
             @pollName={{@pollName}}
             @pollType={{@pollType}}
-            @isPublic={{@isPublic}}
-            @isRankedChoice={{@isRankedChoice}}
             @postId={{@postId}}
+            @showTally={{@showTally}}
             @vote={{@vote}}
             @voters={{@voters}}
             @votersCount={{@votersCount}}
-            @fetchVoters={{@fetchVoters}}
-            @showTally={{@showTally}}
           />
         {{/if}}
 

@@ -159,10 +159,10 @@ export default class NestedActivityLog extends Component {
 
   <template>
     <DModal
-      @title={{i18n "nested_replies.activity_log.title"}}
+      class="nested-activity-log-modal"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="nested-activity-log-modal"
+      @title={{i18n "nested_replies.activity_log.title"}}
     >
       <:body>
         <DConditionalLoadingSpinner @condition={{this.loading}}>
@@ -171,10 +171,10 @@ export default class NestedActivityLog extends Component {
               {{#each this.smallActions as |sa|}}
                 <NestedActivityLogItem
                   @action={{sa}}
-                  @topicId={{@model.topic.id}}
-                  @editPost={{this.editPost}}
                   @deletePost={{this.deletePost}}
+                  @editPost={{this.editPost}}
                   @recoverPost={{this.recoverPost}}
+                  @topicId={{@model.topic.id}}
                 />
               {{/each}}
             </ul>

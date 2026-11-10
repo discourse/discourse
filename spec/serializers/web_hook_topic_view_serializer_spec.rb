@@ -10,7 +10,7 @@ RSpec.describe WebHookTopicViewSerializer do
 
   before { SiteSetting.tagging_enabled = true }
 
-  it "should only include the keys that are sent out in the webhook" do
+  it "includes only the webhook keys" do
     expected_keys = %i[
       id
       title

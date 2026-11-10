@@ -4,7 +4,7 @@ import { cloneJSON } from "discourse/lib/object";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
+import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers.js";
 
 function solvedTopicFixture(overrides = {}) {
   const topic = cloneJSON(postStreamWithAcceptedAnswerExcerpt("an answer"));

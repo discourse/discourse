@@ -13,10 +13,10 @@ import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
 import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
-import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
-import MergeUsersProgressModal from "../../components/modal/merge-users-progress";
-import MergeUsersPromptModal from "../../components/modal/merge-users-prompt";
+import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation.gjs";
+import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation.gjs";
+import MergeUsersProgressModal from "../../components/modal/merge-users-progress.gjs";
+import MergeUsersPromptModal from "../../components/modal/merge-users-prompt.gjs";
 
 export default class AdminUserIndexController extends Controller {
   @service router;
@@ -25,13 +25,27 @@ export default class AdminUserIndexController extends Controller {
   @service siteSettings;
   @service modal;
 
+  /** @type {number[] | null} */
   @tracked customGroupIdsBuffer = null;
+
+  /** @type {number | null | undefined} */
   originalPrimaryGroupId = null;
+
+  /** @type {{ id: number, name: string, full_name?: string, display_name?: string, automatic: boolean, flair_url?: string | null, flair_bg_color?: string | null, flair_color?: string | null }[] | null} */
   availableGroups = null;
   userTitleValue = null;
+
+  /** @type {string | null} */
   ssoExternalEmail = null;
+
+  /** @type {string | null} */
   ssoLastPayload = null;
   isLoading = false;
+
+  @computed("model.id")
+  get isBot() {
+    return Number.isInteger(this.model?.id) && this.model.id <= 0;
+  }
 
   @computed("siteSettings.enable_badges")
   get showBadges() {
@@ -164,6 +178,15 @@ export default class AdminUserIndexController extends Controller {
     ).canAdminCheckEmails;
   }
 
+  @computed("ssoLastPayload")
+  get ssoPayload() {
+    return this.ssoLastPayload.split("&");
+  }
+
+  get deleteUserOptions() {
+    return this.adminTools.deleteUserOptions;
+  }
+
   groupAdded(added) {
     return this.model
       .groupAdded(added)
@@ -179,11 +202,6 @@ export default class AdminUserIndexController extends Controller {
         }
       })
       .catch(() => this.dialog.alert(i18n("generic_error")));
-  }
-
-  @computed("ssoLastPayload")
-  get ssoPayload() {
-    return this.ssoLastPayload.split("&");
   }
 
   @action
@@ -232,11 +250,6 @@ export default class AdminUserIndexController extends Controller {
   @action
   approve() {
     return this.model.approve(this.currentUser);
-  }
-
-  @action
-  _formatError(event) {
-    return `http: ${event.status} - ${event.body}`;
   }
 
   @action
@@ -313,7 +326,12 @@ export default class AdminUserIndexController extends Controller {
 
   @action
   grantModeration() {
-    return this.model.grantModeration();
+    return this.dialog.yesNoConfirm({
+      message: i18n("admin.user.grant_moderation_confirm", {
+        username: this.model.username,
+      }),
+      didConfirm: () => this.model.grantModeration(),
+    });
   }
 
   @action
@@ -442,10 +460,6 @@ export default class AdminUserIndexController extends Controller {
       .catch(popupAjaxError);
   }
 
-  get deleteUserOptions() {
-    return this.adminTools.deleteUserOptions;
-  }
-
   @action
   destroyUser(optionId) {
     const postCount = this.model.post_count;
@@ -531,6 +545,11 @@ export default class AdminUserIndexController extends Controller {
   @action
   showSilenceModal() {
     this.adminTools.showSilenceModal(this.model);
+  }
+
+  @action
+  toggleEditing(field) {
+    this.toggleProperty(field);
   }
 
   @action
@@ -660,5 +679,10 @@ export default class AdminUserIndexController extends Controller {
         deleteAllPosts: () => this.adminTools.deletePostsDecider(this.model),
       },
     });
+  }
+
+  @action
+  _formatError(event) {
+    return `http: ${event.status} - ${event.body}`;
   }
 }

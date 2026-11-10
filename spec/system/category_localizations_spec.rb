@@ -36,7 +36,7 @@ describe "Category Localizations" do
   context "when content localization setting is disabled" do
     before { SiteSetting.content_localization_enabled = false }
 
-    it "should not show the localization tab" do
+    it "hides the localization tab" do
       sign_in(admin)
 
       category_page.visit_settings(category)
@@ -68,16 +68,18 @@ describe "Category Localizations" do
     describe "Category Settings" do
       before { sign_in(admin) }
 
-      it "should show the localization tab" do
+      it "shows the localization tab" do
         category_page.visit_settings(category)
         expect(category_page).to have_setting_tab("localizations")
       end
 
-      it "defaults to site locale when category has no locale" do
+      it "shows no language when category has no locale" do
         category_without_locale = Fabricate(:category, locale: nil)
         category_page.visit_edit_localizations(category_without_locale)
 
-        expect(form.field("locale")).to have_value(SiteSetting.default_locale)
+        expect(form.field("locale")).to have_value(
+          PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+        )
       end
 
       it "loads the saved locale correctly" do
@@ -93,18 +95,26 @@ describe "Category Localizations" do
         form.field("locale").select("ja")
         category_page.save_settings
 
-        expect(category_without_locale.reload.locale).to eq("ja")
+        page.refresh
+        expect(form.field("locale")).to have_value("ja")
+
+        form.field("locale").select_none
+        category_page.save_settings
+        page.refresh
+        expect(form.field("locale")).to have_value(
+          PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+        )
       end
 
       describe "when editing a category with no category localizations" do
         fab!(:mono_category, :category)
 
-        it "should show info hint to add new localizations" do
+        it "shows a hint to add new localizations" do
           category_page.visit_edit_localizations(mono_category)
           expect(form).to have_an_alert(I18n.t("js.category.localization.hint"))
         end
 
-        it "should allow you to add new localizations" do
+        it "allows adding new localizations" do
           category_page.visit_edit_localizations(mono_category)
           category_page.find(".edit-category-tab-localizations .add-localization").click
           form.field("localizations.0.locale").select("es")

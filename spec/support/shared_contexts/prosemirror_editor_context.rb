@@ -9,13 +9,6 @@ RSpec.shared_context "with prosemirror editor" do
     )
   end
 
-  fab!(:tag)
-  fab!(:category_with_emoji) do
-    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
-  end
-  fab!(:category_with_icon) { Fabricate(:category, icon: "bell", style_type: "icon") }
-  fab!(:category_without_icon, :category)
-
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }

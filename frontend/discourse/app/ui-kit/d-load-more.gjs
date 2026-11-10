@@ -122,6 +122,8 @@ export default class DLoadMore extends Component {
       <div ...attributes>
         {{yield}}
         <div
+          aria-hidden="true"
+          class="load-more-sentinel"
           {{dObserveIntersection
             this.onIntersection
             threshold=this.threshold
@@ -129,12 +131,13 @@ export default class DLoadMore extends Component {
             root=this.root
             isLoading=@isLoading
           }}
-          class="load-more-sentinel"
-          aria-hidden="true"
         />
       </div>
     {{else}}
       <div
+        aria-hidden="true"
+        class="load-more-sentinel"
+        ...attributes
         {{dObserveIntersection
           this.onIntersection
           threshold=this.threshold
@@ -142,9 +145,6 @@ export default class DLoadMore extends Component {
           root=this.root
           isLoading=@isLoading
         }}
-        class="load-more-sentinel"
-        aria-hidden="true"
-        ...attributes
       />
     {{/if}}
   </template>

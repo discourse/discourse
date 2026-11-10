@@ -37,13 +37,13 @@ export default class ExpandPost extends Component {
   <template>
     {{#if @item.truncated}}
       <DButton
-        @action={{this.toggleItem}}
-        @icon={{if this.expanded "chevron-up" "chevron-down"}}
-        @title="post.expand_collapse"
         class={{dConcatClass
           "btn-transparent"
           (if this.expanded "collapse-item" "expand-item")
         }}
+        @action={{this.toggleItem}}
+        @icon={{if this.expanded "chevron-up" "chevron-down"}}
+        @title="post.expand_collapse"
       />
     {{/if}}
   </template>

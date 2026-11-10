@@ -48,6 +48,8 @@ describe ReadOnlyMixin do
       [SessionController, :create],
       # Allows staff to reset their password (part 1/2)
       [SessionController, :forgot_password],
+      # Allows staff to redeem the verification code when resetting their password
+      [SessionController, :redeem_password_reset_code],
       # Allows staff to log in via an emailed one-time code (part 1/2)
       [SessionController, :create_login_code],
       # Allows staff to log in via an emailed one-time code (part 2/2)

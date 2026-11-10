@@ -91,6 +91,15 @@ module DiscourseAi
       def done
         @queue << :done
         @worker_thread.join
+        if @client_id
+          ChatSDK::Channel.stop_reply(
+            channel_id: @message.chat_channel_id,
+            client_id: @client_id,
+            guardian: @guardian,
+            thread_id: @thread_id,
+          )
+          @client_id = nil
+        end
         ChatSDK::Message.stop_stream(message_id: @reply.id, guardian: @guardian) if @reply
         @reply
       end

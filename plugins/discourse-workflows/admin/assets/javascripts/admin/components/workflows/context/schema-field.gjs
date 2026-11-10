@@ -2,16 +2,23 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { and, not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { WORKFLOW_VARIABLE_MIME } from "../../../lib/workflows/expression-context";
+import { WORKFLOW_VARIABLE_MIME } from "../../../lib/workflows/expression-context.js";
 
 export default class SchemaField extends Component {
   @tracked collapsed = true;
 
   get hasChildren() {
     return this.args.field.children?.length > 0;
+  }
+
+  get fieldId() {
+    const { field, parentPath } = this.args;
+    if (field.id?.startsWith?.("$")) {
+      return field.id;
+    }
+    return parentPath ? `${parentPath}.${field.id}` : field.id;
   }
 
   typeIcon(type) {
@@ -32,14 +39,6 @@ export default class SchemaField extends Component {
   toggleChildren(event) {
     event.preventDefault();
     this.collapsed = !this.collapsed;
-  }
-
-  get fieldId() {
-    const { field, parentPath } = this.args;
-    if (field.id?.startsWith?.("$")) {
-      return field.id;
-    }
-    return parentPath ? `${parentPath}.${field.id}` : field.id;
   }
 
   @action
@@ -96,8 +95,8 @@ export default class SchemaField extends Component {
         <ul class="workflows-schema-field-list is-nested">
           {{#each @field.children as |child|}}
             <SchemaField
-              @field={{child}}
               @draggable={{@draggable}}
+              @field={{child}}
               @parentPath={{this.fieldId}}
             />
           {{/each}}

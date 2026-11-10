@@ -17,8 +17,6 @@ en:
     errors:
       invalid_badge_repo: "You must provide a GitHub URL or the repository name in the format github_user/repository_name"
       invalid_badge_repo_value: "'%{repo}' is not a valid GitHub URL or repository name. Use the format github_user/repository_name."
-      invalid_github_linkback_access_token: "You must provide a valid GitHub linkback access token which has access to the badge repositories you have provided."
-      invalid_github_linkback_access_token_for_repo: "The GitHub linkback access token could not access the '%{repo}' repository. Make sure the token is valid and that the repository name is correct and accessible."
 
   github_linkback:
     commit_template: |
@@ -33,31 +31,8 @@ en:
       This issue has been mentioned on **%{title}**. There might be relevant details there:
 
       %{post_url}
-  github_commits_populator:
-    errors:
-      repository_identifier_invalid_pm_title: "Action required for discourse-github plugin"
-      repository_identifier_invalid_pm: |
-        A repository specified in the discourse-github plugin is invalid:
-        %{repo_name}
-
-        They should be specified as `user/repo`.
-
-        Badges will not be awarded until the name is corrected in
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Settings</a>
-        and "github_badges_enabled" is turned back on.
-      repository_not_found_pm_title: "Action required for discourse-github plugin"
-      repository_not_found_pm: |
-        A repository specified in the discourse-github plugin returned a "Not Found"
-        error: %{repo_name}
-
-        Badges will not be awarded until the name is corrected in
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Settings</a>
-        and "github_badges_enabled" is turned back on.
-      invalid_octokit_credentials_pm_title: "Action required for discourse-github plugin"
-      invalid_octokit_credentials_pm: |
-        The GitHub credentials provided to the discourse-github plugin are invalid. The "github badges enabled\ site
-        setting has been disabled, and commits will no longer be populated until the issue is resolved.
-
-        Check your "github linkback access token" site setting to ensure the token is correct and has permission to all
-        repos via
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Settings</a>.
+  dashboard:
+    problem:
+      github_linkback_access_token_invalid: "GitHub rejected the {{setting:github_linkback_access_token}}. Generate a new token and update the setting."
+      github_badges_repo_not_found: "The GitHub repository <code>%{repo}</code> in {{setting:github_badges_repos}} doesn't exist or the {{setting:github_linkback_access_token}} can't access it, so its contributions aren't counted for badges."
+      github_badges_repo_moved: "The GitHub repository <code>%{repo}</code> has moved to <code>%{new_name}</code>. Update {{setting:github_badges_repos}} to use the new name."

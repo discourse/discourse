@@ -22,8 +22,6 @@ pl_PL:
     errors:
       invalid_badge_repo: "Należy podać adres URL serwisu GitHub lub nazwę repozytorium w formacie użytkownik_github/nazwa_repozytorium"
       invalid_badge_repo_value: "„%{repo}” nie jest prawidłowym adresem URL ani nazwą repozytorium GitHub. Użyj formatu github_user/repository_name."
-      invalid_github_linkback_access_token: "Musisz podać prawidłowy token dostępu GitHub Linkback, który umożliwia dostęp do dostarczonych przez Ciebie repozytoriów odznak."
-      invalid_github_linkback_access_token_for_repo: "Token dostępu GitHub Linkback nie mógł uzyskać dostępu do repozytorium „%{repo}”. Upewnij się, że token jest prawidłowy, a nazwa repozytorium jest poprawna i dostępna."
   github_linkback:
     commit_template: |
       Ten commit został wspomniany w **%{title}**. Mogą tam być istotne szczegóły:
@@ -37,31 +35,8 @@ pl_PL:
       Ten problem został wspomniany na **%{title}**. Mogą tam być istotne szczegóły:
 
       %{post_url}
-  github_commits_populator:
-    errors:
-      repository_identifier_invalid_pm_title: "Wymagane działanie dla wtyczki discourse-github"
-      repository_identifier_invalid_pm: |
-        Repozytorium określone we wtyczce discourse-github jest nieprawidłowe:
-        %{repo_name}
-
-        Należy je określić jako `user/repo`.
-
-        Odznaki nie zostaną przyznane, dopóki nazwa nie zostanie poprawiona w
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Ustawieniach witryny discourse-github</a>
-        i opcja „github_badges_enabled” nie zostanie ponownie włączona.
-      repository_not_found_pm_title: "Wymagane działanie dla wtyczki discourse-github"
-      repository_not_found_pm: |
-        Repozytorium określone we wtyczce discourse-github zwróciło błąd „Nie znaleziono”
-        : %{repo_name}
-
-        Odznaki nie zostaną przyznane, dopóki nazwa nie zostanie poprawiona w
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Ustawieniach witryny discourse-github</a>
-        i opcja „github_badges_enabled” nie zostanie ponownie włączona.
-      invalid_octokit_credentials_pm_title: "Wymagane działanie dla wtyczki discourse-github"
-      invalid_octokit_credentials_pm: |
-        Dane uwierzytelniające GitHub podane wtyczce discourse-github są nieprawidłowe. Ustawienie „włączone odznaki GitHub\ site
-        ” zostało wyłączone, a zatwierdzenia nie będą już uzupełniane do czasu rozwiązania problemu.
-
-        Sprawdź ustawienie witryny „token dostępu do linków GitHub”, aby upewnić się, że token jest poprawny i ma uprawnienia do wszystkich repozytoriów
-        za pośrednictwem
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Ustawienia witryny</a>.
+  dashboard:
+    problem:
+      github_linkback_access_token_invalid: "GitHub odrzucił {{setting:github_linkback_access_token}}. Wygeneruj nowy token i zaktualizuj ustawienie."
+      github_badges_repo_not_found: "Repozytorium GitHub <code>%{repo}</code> w {{setting:github_badges_repos}} nie istnieje lub {{setting:github_linkback_access_token}} nie ma do niego dostępu, więc jego wkład nie jest liczony do odznak."
+      github_badges_repo_moved: "Repozytorium GitHub <code>%{repo}</code> zostało przeniesione do <code>%{new_name}</code>. Zaktualizuj {{setting:github_badges_repos}} , aby używać nowej nazwy."

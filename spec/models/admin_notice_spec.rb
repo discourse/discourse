@@ -14,6 +14,12 @@ RSpec.describe AdminNotice do
       expect(notice.message).to eq("Something is wrong with the world")
     end
 
+    it "keeps allowed tags and strips the others" do
+      store_problem_translation("Rename <code>%{old}</code> <b>now</b>")
+      notice = Fabricate(:admin_notice, identifier: "test", details: { old: "a/b" })
+      expect(notice.message).to eq("Rename <code>a/b</code> now")
+    end
+
     it "expands setting markers into links that survive sanitization" do
       store_problem_translation("Configure {{setting:title}} to fix this")
       notice = Fabricate(:admin_notice, identifier: "test")

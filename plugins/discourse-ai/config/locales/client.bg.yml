@@ -8,6 +8,10 @@ bg:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Дата"
+          outcomes:
+            failed: "Провалени"
         reports:
           filters:
             sort_by:
@@ -38,6 +42,13 @@ bg:
       ai_decoded_transcript:
         type: "Тип"
         error: "Грешка"
+      discourse_workflows:
+        classify:
+          text: "Текст"
+          upload_ids: "Изображения"
+          name: "Име"
+          type: "Тип"
+          type_score: "Точки"
       ai_tool_approval:
         loading: "Зарежда се..."
         tool: "Действия"
@@ -63,6 +74,8 @@ bg:
         filters:
           all: "Всички"
           reset: "Нулиране"
+        sentiment:
+          enabled: "Да е включен"
         search:
           name: "Търсене"
         image_caption:
@@ -104,6 +117,8 @@ bg:
             other: "%{count} публикации"
       spam:
         short_title: "Спам"
+        no_llm_selected: "Без"
+        no_decision_model_selected: "Без"
         last_seven_days: "Последните 7 дни"
         enable: "Позволи"
         test_modal:
@@ -121,8 +136,6 @@ bg:
         apply: "Приложи"
         failed: "Провалени"
         unknown: "Неизвестно"
-        topic_id: "Тема ID "
-        post_id: "Публикация ID "
         time: "Време "
         when: "Кога "
         request: "Заявка"
@@ -133,6 +146,7 @@ bg:
         post_short: "Публикация %{id} "
         duration: "Продължителност"
         actions: "Действия"
+        view_details: "Детайли"
         periods:
           day: "Последните 24 часа"
           week: "Последните 7 дни"
@@ -189,6 +203,11 @@ bg:
         edit: "Редактирай"
         delete: "Изтрий"
         embedding: "Ембедване"
+      decision_models:
+        no_preset: "Без"
+        display_name: "Име"
+        edit: "Редактирай"
+        delete: "Изтрий"
       mcp_servers:
         name: "Име "
         description: "Описание"
@@ -200,6 +219,14 @@ bg:
         delete: "Изтрий"
         tools_modal:
           required: "Задъжителни"
+      models:
+        name: "Име"
+        type: "Тип"
+        edit: "Редактирай"
+        types:
+          embedding: "Ембедване"
+        filters:
+          all: "Всички видове"
       llms:
         display_name: "Име"
         vision_modes:
@@ -244,6 +271,13 @@ bg:
         providers:
           google: "Google"
           fake: "По избор"
+      ai_artifact:
+        editor:
+          version: "Версия"
+          default: "По подразбиране"
+          apply: "Приложи"
+        share: "Споделяне"
+        filter_all: "Всички"
       ai_bot:
         debug_ai_modal:
           duration_label: "Продължителност:"
@@ -269,9 +303,18 @@ bg:
       summarization:
         chat:
           summarize: "Обобщаване"
+      ai_search:
+        related_replies:
+          one: "%{count} отговор"
+          other: "%{count} отговора"
+        tabs:
+          topics: "Теми"
+          messages: "Съобщения"
       discobot_discoveries:
-        regular_results: "Теми"
-        collapse: "Намали"
-        tooltip:
-          actions:
-            disable: "Деактивиране"
+        legacy:
+          regular_results: "Теми"
+          collapse: "Намали"
+          tooltip:
+            actions:
+              disable: "Деактивиране"
+        search_messages: "Съобщения"

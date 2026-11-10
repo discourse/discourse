@@ -88,3 +88,6 @@ e41897a3066199f3b7f4c019fb638615dfe1f007
 
 # MT: Switch to nested module style across migrations/ (#38564)
 89f26da39d8c977c3dde7ef7e0a5c3f2a4b58e44
+
+# DEV: Bump rubocop-discourse to 3.20.0 (#43365)
+14f29ac2106c19dbee5f39ae2abf09b7d7643e71

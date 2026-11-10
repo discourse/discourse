@@ -4,7 +4,7 @@
   padding: 1rem 10%;
 
   @include viewport.until(lg) {
-    padding: 1rem;
+    padding: 0;
   }
 }
 
@@ -43,17 +43,8 @@
     color: var(--secondary);
   }
 
-  .search-page-heading {
-    font-size: var(--font-up-3);
-
-    // spans can be in different orders depending of locale
-    span + span {
-      margin-left: 0.25em;
-    }
-
-    span.term {
-      background: var(--tertiary-low);
-    }
+  .search-types {
+    margin-block-end: var(--space-3);
   }
 
   .search-bar {
@@ -62,7 +53,29 @@
     align-items: stretch;
     gap: 0.5em 1em;
 
+    &__field {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input.search-query {
+        width: 100%;
+        padding-inline-end: 2em;
+      }
+
+      .clear-search {
+        position: absolute;
+        inset-inline-end: 0.5em;
+        display: flex;
+        color: var(--primary-medium);
+      }
+    }
+
     @include viewport.from(sm) {
+      &__field {
+        flex: 1 1 60%;
+      }
+
       input.search-query {
         width: auto;
         flex: 1 1 60%;
@@ -103,23 +116,44 @@
 
     .search-results {
       @include search-page-spacing;
-      padding-top: 0;
 
       @include viewport.until(md) {
         padding: 1rem 0.5rem 1rem 0.25rem;
       }
     }
 
+    .result-count {
+      margin: 0 10%;
+      padding-block-start: var(--space-4);
+      font-size: var(--font-up-2);
+      font-weight: var(--token-font-weight-semibold);
+
+      @include viewport.until(lg) {
+        margin: 0;
+        padding-inline: 0;
+      }
+
+      // spans can be in different orders depending of locale
+      span + span {
+        margin-left: 0.25em;
+      }
+
+      span.term {
+        background: var(--tertiary-low);
+      }
+    }
+
     .search-info {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       margin: 0 10%;
       padding-block: var(--space-4);
       background: var(--secondary); // needs background for bulk select sticky
       border-top: 1px solid var(--content-border-color);
 
       @include viewport.until(lg) {
-        padding: 1rem 1rem 0 1rem;
+        padding: 1rem 0 0 0;
         margin: 0;
       }
 
@@ -205,6 +239,10 @@
       .badge-notification {
         background: var(--tertiary);
         top: 0;
+      }
+
+      .d-icon {
+        font-size: var(--font-down-1);
       }
 
       &:hover {

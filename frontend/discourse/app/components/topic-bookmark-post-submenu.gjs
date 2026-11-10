@@ -34,9 +34,9 @@ export default class TopicBookmarkPostSubmenu extends Component {
         data-menu-option-id="jump"
       >
         <DButton
-          @icon="arrow-right"
-          @action={{this.jumpToPost}}
           class="bookmark-menu__row-btn"
+          @action={{this.jumpToPost}}
+          @icon="arrow-right"
         >
           <span class="bookmark-menu__row-label">
             {{i18n
@@ -51,10 +51,10 @@ export default class TopicBookmarkPostSubmenu extends Component {
         data-menu-option-id="edit"
       >
         <DButton
+          class="bookmark-menu__row-btn"
+          @action={{this.editBookmark}}
           @icon="pencil"
           @label="edit"
-          @action={{this.editBookmark}}
-          class="bookmark-menu__row-btn"
         />
       </dropdown.item>
       <dropdown.item
@@ -62,10 +62,10 @@ export default class TopicBookmarkPostSubmenu extends Component {
         data-menu-option-id="delete"
       >
         <DButton
+          class="bookmark-menu__row-btn --danger"
+          @action={{this.deleteBookmark}}
           @icon="trash-can"
           @label="delete"
-          @action={{this.deleteBookmark}}
-          class="bookmark-menu__row-btn --danger"
         />
       </dropdown.item>
     </DDropdownMenu>

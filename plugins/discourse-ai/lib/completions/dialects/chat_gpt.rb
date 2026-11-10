@@ -61,7 +61,7 @@ module DiscourseAi
           !legacy_reasoning_model? && llm_model.provider == "open_ai" &&
             (
               llm_model.name.start_with?("o1") || llm_model.name.start_with?("o3") ||
-                llm_model.name.start_with?("gpt-5")
+                llm_model.name.start_with?("gpt-5") || llm_model.name.start_with?("gpt-6")
             )
         end
 

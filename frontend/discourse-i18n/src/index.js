@@ -39,10 +39,6 @@ export class I18n {
   // shortcut
   t = this.translate;
 
-  currentLocale() {
-    return this.locale || this.defaultLocale;
-  }
-
   get currentBcp47Locale() {
     return this.currentLocale().replace("_", "-");
   }
@@ -52,6 +48,10 @@ export class I18n {
       return "pt_PT";
     }
     return this.currentLocale().replace(/[_-].*/, "");
+  }
+
+  currentLocale() {
+    return this.locale || this.defaultLocale;
   }
 
   enableVerboseLocalization() {
@@ -68,27 +68,6 @@ export class I18n {
   disableVerboseLocalizationSession() {
     sessionStorage.removeItem("verbose_localization");
     return "Verbose localization disabled. Reload the page.";
-  }
-
-  _translate(scope, options) {
-    options = this.prepareOptions(options);
-    options.needsPluralization = typeof options.count === "number";
-    options.ignoreMissing = !this.noFallbacks;
-
-    const translation = this.findTranslationWithFallback(scope, options);
-
-    try {
-      return this.interpolate(translation, options, scope);
-    } catch (error) {
-      if (error instanceof I18nMissingInterpolationArgument) {
-        throw error;
-      } else {
-        return (
-          options.translatedFallback ||
-          this.missingTranslation(scope, null, options)
-        );
-      }
-    }
   }
 
   toNumber(number, options) {
@@ -448,22 +427,6 @@ export class I18n {
     }
   }
 
-  _verboseTranslate(scope, options) {
-    const result = this._translate(scope, options);
-    let i = this.verboseIndices.get(scope);
-    if (!i) {
-      i = this.verboseIndices.size + 1;
-      this.verboseIndices.set(scope, i);
-    }
-    let message = `Translation #${i}: ${scope}`;
-    if (options && Object.keys(options).length > 0) {
-      message += `, parameters: ${JSON.stringify(options)}`;
-    }
-    // eslint-disable-next-line no-console
-    console.info(message);
-    return `${result} (#${i})`;
-  }
-
   loadData() {
     const localeData = window._discourse_locale_data;
 
@@ -540,6 +503,43 @@ export class I18n {
         this.translations[lang].js.theme_translations[themeId] = langData;
       }
     }
+  }
+
+  _translate(scope, options) {
+    options = this.prepareOptions(options);
+    options.needsPluralization = typeof options.count === "number";
+    options.ignoreMissing = !this.noFallbacks;
+
+    const translation = this.findTranslationWithFallback(scope, options);
+
+    try {
+      return this.interpolate(translation, options, scope);
+    } catch (error) {
+      if (error instanceof I18nMissingInterpolationArgument) {
+        throw error;
+      } else {
+        return (
+          options.translatedFallback ||
+          this.missingTranslation(scope, null, options)
+        );
+      }
+    }
+  }
+
+  _verboseTranslate(scope, options) {
+    const result = this._translate(scope, options);
+    let i = this.verboseIndices.get(scope);
+    if (!i) {
+      i = this.verboseIndices.size + 1;
+      this.verboseIndices.set(scope, i);
+    }
+    let message = `Translation #${i}: ${scope}`;
+    if (options && Object.keys(options).length > 0) {
+      message += `, parameters: ${JSON.stringify(options)}`;
+    }
+    // eslint-disable-next-line no-console
+    console.info(message);
+    return `${result} (#${i})`;
   }
 }
 

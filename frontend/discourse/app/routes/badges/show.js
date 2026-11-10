@@ -64,4 +64,8 @@ export default class BadgesShow extends DiscourseRoute {
     controller.set("userBadgesGrantCount", this.userBadgesGrant.grant_count);
     controller.set("userBadgesAll", this.userBadgesAll);
   }
+
+  resetController(controller) {
+    controller.showTitlePicker = false;
+  }
 }

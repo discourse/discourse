@@ -5,10 +5,114 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    assign_enabled: "啟用 Assign 外掛"
+    assigns_public: "允許一般大眾查看主題指派"
+    assigns_user_url_path: "使用者已指派主題的路徑（使用 {username} 代入使用者名稱）"
+    assigns_by_staff_mention: "工作人員提及另一位工作人員時，自動指派主題"
+    unassign_creates_tracking_post: "取消指派主題時，會建立密語或小型動作以追蹤變更"
+    assign_self_regex: "自行指派時必須通過的規則運算式。例如「my list」"
+    assign_other_regex: "透過提及將主題指派給其他人時必須通過的規則運算式。例如「your list」。"
+    unassign_on_group_archive: "群組封存訊息時取消指派該訊息（若移回收件匣則重新指派）"
+    unassign_on_close: "主題關閉時自動取消指派。注意：不會建立追蹤貼文。"
+    reassign_on_open: "主題開啟時，重新指派先前獲指派的使用者／群組"
+    invite_on_assign: "私人訊息指派給使用者或群組時，若其尚未參與，請邀請其加入私人訊息。"
+    assign_mailer: "何時傳送指派通知電子郵件"
+    remind_assigns: "提醒使用者尚待處理的指派。"
+    remind_assigns_frequency: "提醒使用者已指派主題的頻率。"
+    pending_assign_reminder_threshold: "觸發提醒通知的待處理指派數量。"
+    max_assigned_topics: "可指派給一位使用者的主題數量上限。"
+    assign_allowed_on_groups: "這些群組中的使用者可指派主題。可在分類設定中指定其他具有指派權限的群組。"
+    enable_assign_status: "為每項指派新增可自訂的狀態欄位。"
+    assign_statuses: "每項指派可用的狀態清單。第一個狀態是套用至每項新指派的預設狀態。"
+    ignore_solved_topics_in_assigned_reminder: "避免指派提醒包含已解決的主題。僅在使用 discourse-solved 外掛時適用。"
+    assignment_status_on_solve: "主題解決時，將所有指派更新為此狀態"
+    assignment_status_on_unsolve: "主題取消解決時，將所有指派更新為此狀態"
+    errors:
+      assign_statuses:
+        too_few: "必須至少有兩個不同的可用狀態。"
+        duplicate: "狀態值有重複。"
+        removed_in_use: "若現有指派正在使用某個狀態，就無法將該狀態從清單中移除。"
   discourse_assign:
+    assigned_to: "主題已指派給 @%{username}"
+    unassigned: "已取消指派主題"
+    filter:
+      description:
+        assigned: "篩選指派給特定使用者或群組的主題"
+        nobody: "篩選尚未指派給任何人的主題"
+        anyone: "篩選已指派給任何人的主題"
+    already_claimed: "該主題已被認領。"
+    no_assignee: "未選擇受指派者。"
+    already_assigned: "主題已指派給 @%{username}"
+    too_many_assigns: "@%{username} 已達獲指派主題數量上限（%{max}）。"
+    too_many_assigns_for_topic: "已達每個主題 %{limit} 項指派的限制。"
+    assignment_note_too_long: "指派備註不得超過 %{note_max} 個字元。"
+    forbidden_assigner_not_allowed: "你只能指派群組獲准分類中的主題。"
+    forbidden_assign_to: "無法指派 @%{username}，因為其不屬於允許獲指派的群組。"
+    forbidden_assignee_not_pm_participant: "無法指派 @%{username}，因為其無權存取此私人訊息。你可以邀請 @%{username} 加入此私人訊息以授予存取權。"
+    forbidden_assignee_cant_see_topic: "無法指派 @%{username}，因為其無權存取此主題。"
+    group_already_assigned: "主題已指派給 @%{group}"
+    forbidden_group_assign_to: "無法指派 @%{group}，因為該群組不屬於允許獲指派的群組。"
+    forbidden_group_assignee_not_pm_participant: "無法指派 @%{group}，因為並非所有成員都有權存取此私人訊息。"
+    forbidden_group_assignee_cant_see_topic: "無法指派 @%{group}，因為並非所有成員都有權存取此主題。"
+    flag_assigned: "很抱歉，該標記的主題已指派給其他使用者"
+    flag_unclaimed: "你必須先認領該主題，才能處理標記"
+    topic_assigned_excerpt: "將主題「%{title}」指派給你"
+    topic_group_assigned_excerpt: "將主題「%{title}」指派給 @%{group}"
     reminders_frequency:
       never: "永不"
       daily: "每天"
       weekly: "每週"
-      monthly: "月"
-      quarterly: "季度"
+      monthly: "每月"
+      quarterly: "每季"
+    discourse_workflows:
+      assign_topic:
+        error: "指派失敗：%{reason}"
+      check_assignment:
+        unknown_target_type: "未知的指派目標類型：%{target_type}"
+  assign_mailer:
+    title: "指派郵件通知"
+    subject_template: "[%{email_prefix}] %{assignee_name} 將「%{topic_title}」指派給你！"
+    subject_template_improved: "%{email_prefix}：%{assignee_name} 將「%{topic_title}」指派給你！"
+    text_body_template: |
+      嗨，%{assignee_name} **指派**你參與一項討論
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      如果你有興趣，請點擊下方連結：
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "你有 %{pending_assignments} 項待處理的指派"
+    body: |
+      你目前有 [%{pending_assignments} 項待處理的指派](%{assignments_link})。
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      若你有超過一個已指派主題，此提醒將依 %{frequency} 的頻率傳送。
+    newest: |
+      ### 最新
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### 最舊
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: 隨機指派
+        no_one: "嘗試從 `@%{group}` 中隨機指派一位成員，但沒有任何人可供指派。"
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} 指派給你"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "所選狀態無效（不包含在 assigned_status 網站設定中）。"

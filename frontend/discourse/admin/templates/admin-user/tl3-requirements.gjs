@@ -7,11 +7,11 @@ export default <template>
   <div class="admin-controls">
     <nav>
       <ul class="nav nav-pills">
-        <li><LinkTo @route="adminUser" @model={{@controller.model}}>{{dIcon
+        <li><LinkTo @model={{@controller.model}} @route="adminUser">{{dIcon
               "angle-left"
             }}
             &nbsp;{{@controller.model.username}}</LinkTo></li>
-        <li><LinkTo @route="adminUsersList.show" @model="member">{{i18n
+        <li><LinkTo @model="member" @route="adminUsersList.show">{{i18n
               "admin.user.trust_level_2_users"
             }}</LinkTo></li>
       </ul>

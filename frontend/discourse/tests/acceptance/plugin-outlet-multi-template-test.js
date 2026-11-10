@@ -2,7 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { registerTemporaryModule } from "../helpers/temporary-module-helper";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper.js";
 
 const HELLO =
   "discourse/plugins/my-plugin/templates/connectors/user-profile-primary/hello";

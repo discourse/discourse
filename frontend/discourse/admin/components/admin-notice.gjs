@@ -9,13 +9,13 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 export default class AdminNotice extends Component {
   @service currentUser;
 
+  get canDismiss() {
+    return this.currentUser.admin;
+  }
+
   @action
   dismiss() {
     this.args.dismissCallback(this.args.problem);
-  }
-
-  get canDismiss() {
-    return this.currentUser.admin;
   }
 
   <template>
@@ -26,10 +26,10 @@ export default class AdminNotice extends Component {
       </div>
       {{#if this.canDismiss}}
         <DButton
+          class="btn-default"
           @action={{this.dismiss}}
           @icon="eye-slash"
           @label="admin.dashboard.dismiss_notice"
-          class="btn-default"
         />
       {{/if}}
     </div>

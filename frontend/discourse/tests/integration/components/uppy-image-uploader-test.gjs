@@ -10,10 +10,10 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
     await render(
       <template>
         <UppyImageUploader
-          @type="avatar"
           @id="uploader"
           @imageUrl="/images/avatar.png"
           @placeholderUrl="/not/used.png"
+          @type="avatar"
         />
       </template>
     );
@@ -34,7 +34,7 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
   test("without image", async function (assert) {
     await render(
       <template>
-        <UppyImageUploader @type="site_setting" @id="uploader" />
+        <UppyImageUploader @id="uploader" @type="site_setting" />
       </template>
     );
 
@@ -50,9 +50,9 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
     await render(
       <template>
         <UppyImageUploader
-          @type="composer"
           @id="uploader"
           @placeholderUrl="/images/avatar.png"
+          @type="composer"
         />
       </template>
     );
@@ -70,8 +70,8 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
   test("when dragging image", async function (assert) {
     await render(
       <template>
-        <UppyImageUploader @type="composer" @id="uploader1" />
-        <UppyImageUploader @type="composer" @id="uploader2" />
+        <UppyImageUploader @id="uploader1" @type="composer" />
+        <UppyImageUploader @id="uploader2" @type="composer" />
       </template>
     );
 
@@ -114,7 +114,7 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
   test("accepts only images when allowVideo is unset", async function (assert) {
     await render(
       <template>
-        <UppyImageUploader @type="composer" @id="uploader-without-video" />
+        <UppyImageUploader @id="uploader-without-video" @type="composer" />
       </template>
     );
 
@@ -131,9 +131,9 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
     await render(
       <template>
         <UppyImageUploader
-          @type="composer"
-          @id="uploader-with-video"
           @allowVideo={{true}}
+          @id="uploader-with-video"
+          @type="composer"
         />
       </template>
     );
@@ -151,10 +151,10 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
     await render(
       <template>
         <UppyImageUploader
-          @type="composer"
+          @allowVideo={{true}}
           @id="uploader"
           @imageUrl="/images/video.mp4"
-          @allowVideo={{true}}
+          @type="composer"
         />
       </template>
     );

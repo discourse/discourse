@@ -1,8 +1,8 @@
 import {
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
-} from "./graph-constants";
-import { latestRunWithOutput, outputForRun } from "./run-data";
+} from "./graph-constants.js";
+import { latestRunWithOutput, outputForRun } from "./run-data.js";
 
 export function nodeOutputFirstJsonPath(nodeName, { outputIndex = 0 } = {}) {
   const branchArg = outputIndex === 0 ? "" : outputIndex;

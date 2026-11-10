@@ -156,6 +156,17 @@ RSpec.describe SiteSetting::Update do
       end
     end
 
+    context "when the expected value is stale" do
+      let(:options) do
+        { allow_changing_hidden:, expected_values: { setting_name => "a stale value" } }
+      end
+
+      it "does not update the setting" do
+        expect { result }.to not_change { SiteSetting.title }
+        expect(result["result.try.default"].exception).to be_a(SiteSetting::Update::Conflict)
+      end
+    end
+
     context "when one setting is having invalid value" do
       let(:settings) do
         [

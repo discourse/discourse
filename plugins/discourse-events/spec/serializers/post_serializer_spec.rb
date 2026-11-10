@@ -45,11 +45,11 @@ describe PostSerializer do
 
   it "groups calendar events correctly" do
     user = Fabricate(:user)
-    user.upsert_custom_fields(DiscourseCalendar::REGION_CUSTOM_FIELD => "ar")
+    user.upsert_custom_fields(DiscourseEvents::REGION_CUSTOM_FIELD => "ar")
     user.user_option.update!(timezone: "America/Buenos_Aires")
 
     user2 = Fabricate(:user)
-    user2.upsert_custom_fields(DiscourseCalendar::REGION_CUSTOM_FIELD => "ar")
+    user2.upsert_custom_fields(DiscourseEvents::REGION_CUSTOM_FIELD => "ar")
     user2.user_option.update!(timezone: "America/Buenos_Aires")
 
     post = create_post(raw: "[calendar]\n[/calendar]")

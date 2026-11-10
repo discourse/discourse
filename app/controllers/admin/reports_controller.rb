@@ -102,6 +102,16 @@ class Admin::ReportsController < Admin::StaffController
     filters = nil
     filters = report_params[:filters] if report_params.has_key?(:filters)
 
-    { start_date: start_date, end_date: end_date, filters: filters, facets: facets, limit: limit }
+    include_related_items =
+      ActiveModel::Type::Boolean.new.cast(report_params[:include_related_items])
+
+    {
+      start_date: start_date,
+      end_date: end_date,
+      filters: filters,
+      facets: facets,
+      limit: limit,
+      include_related_items: include_related_items,
+    }
   end
 end

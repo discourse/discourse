@@ -1,9 +1,11 @@
 import type { ComponentLike } from "@glint/template";
-import BlockDebugButton from "./block-debug/button";
-import PluginOutletDebugButton from "./plugin-outlet-debug/button";
-import SafeModeButton from "./safe-mode/button";
-import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
-import VerboseLocalizationButton from "./verbose-localization/button";
+import BlockDebugButton from "./block-debug/button.gts";
+import BundleAnalyzerButton from "./bundle-analyzer/button.gjs";
+import PluginOutletDebugButton from "./plugin-outlet-debug/button.gjs";
+import SafeModeButton from "./safe-mode/button.gjs";
+import StyleguideButton from "./styleguide/button.gts";
+import UpcomingChangesDebugButton from "./upcoming-changes-debug/button.gjs";
+import VerboseLocalizationButton from "./verbose-localization/button.gjs";
 
 interface DevTool {
   id: string;
@@ -23,4 +25,6 @@ export const CORE_TOOLS: readonly DevTool[] = [
   { id: "upcoming-changes-debug", component: UpcomingChangesDebugButton },
   { id: "safe-mode", component: SafeModeButton },
   { id: "verbose-localization", component: VerboseLocalizationButton },
+  { id: "styleguide", component: StyleguideButton },
+  { id: "bundle-analyzer", component: BundleAnalyzerButton },
 ];

@@ -146,6 +146,14 @@ function setupPostVoting(needs) {
       return helper.response(postVotingEnabledTopicResponse());
     });
 
+    server.get("/t/280/2.json", () => {
+      const response = cloneJSON(postVotingEnabledTopicResponse());
+      response.post_stream.posts = response.post_stream.posts.filter(
+        (post) => post.post_number !== 1
+      );
+      return helper.response(response);
+    });
+
     server.get("/post_voting/comments", () => {
       return helper.response({
         comments: [
@@ -214,6 +222,29 @@ function setupPostVoting(needs) {
     });
   });
 }
+
+acceptance("anon user on mobile", function (needs) {
+  setupPostVoting(needs);
+  needs.mobileView();
+
+  test("deep linking past the first post keeps the topic class and removes it on navigation", async function (assert) {
+    await visit("/t/internationalization-localization/280/2");
+
+    assert.dom("#post_1").doesNotExist("the first post is not loaded");
+    assert
+      .dom("#post_2 .post-voting-post")
+      .exists("the answer has voting controls");
+    assert
+      .dom(document.body)
+      .hasClass("post-voting-topic", "keeps the mobile content offset enabled");
+
+    await visit("/t/130");
+
+    assert
+      .dom(document.body)
+      .doesNotHaveClass("post-voting-topic", "removes the voting topic class");
+  });
+});
 
 acceptance("anon user", function (needs) {
   setupPostVoting(needs);

@@ -1,8 +1,8 @@
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PostAvatar from "./avatar";
-import PostCookedHtml from "./cooked-html";
-import PostMetaDataPosterName from "./meta-data/poster-name";
+import PostAvatar from "./avatar.gjs";
+import PostCookedHtml from "./cooked-html.gjs";
+import PostMetaDataPosterName from "./meta-data/poster-name.gjs";
 
 const PostEmbedded = <template>
   <div ...attributes class="reply" data-post-id={{@post.id}}>
@@ -13,11 +13,11 @@ const PostEmbedded = <template>
           <PostMetaDataPosterName @post={{@post}} />
           <div class="post-link-arrow">
             <a
-              class="post-info arrow"
               aria-label={{i18n
                 "topic.jump_reply_aria"
                 username=@post.username
               }}
+              class="post-info arrow"
               href={{@post.shareUrl}}
               title={{i18n "topic.jump_reply"}}
             >
@@ -31,8 +31,8 @@ const PostEmbedded = <template>
           </div>
         </div>
         <PostCookedHtml
-          @post={{@post}}
           @highlightTerm={{@highlightTerm}}
+          @post={{@post}}
           @streamElement={{@streamElement}}
         />
       </div>

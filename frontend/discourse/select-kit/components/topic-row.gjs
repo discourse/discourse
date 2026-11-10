@@ -7,7 +7,7 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 @classNames("topic-row")
 export default class TopicRow extends SelectKitRowComponent {
   <template>
-    <TopicStatus @topic={{this.item}} @disableActions={{true}} />
+    <TopicStatus @disableActions={{true}} @topic={{this.item}} />
     <div class="topic-title">{{dReplaceEmoji this.item.title}}</div>
     <div class="topic-categories">
       {{dBoundCategoryLink

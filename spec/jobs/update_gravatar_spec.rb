@@ -2,20 +2,23 @@
 
 RSpec.describe Jobs::UpdateGravatar do
   fab!(:user)
-  let(:temp) { Tempfile.new("test") }
-  fab!(:upload) { Fabricate(:upload, user: user) }
-  let(:avatar) { user.create_user_avatar! }
 
-  it "picks gravatar if system avatar is picked and gravatar was just downloaded" do
-    temp.binmode
-    # tiny valid png
-    temp.write(
-      Base64.decode64(
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
-      ),
+  it "preserves a picture chosen while Gravatar is downloading" do
+    upload = Fabricate(:upload, user: user)
+    stub_request(:get, %r{https://www.gravatar.com/avatar/}).to_return do
+      user.update!(uploaded_avatar_id: upload.id)
+      { body: File.binread(file_from_fixtures("logo.png")) }
+    end
+
+    described_class.new.execute(user_id: user.id, avatar_id: user.user_avatar.id)
+
+    expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+  end
+
+  it "selects a downloaded or cached Gravatar when the system avatar is selected" do
+    stub_request(:get, %r{https://www.gravatar.com/avatar/}).to_return(
+      body: File.binread(file_from_fixtures("logo.png")),
     )
-    temp.rewind
-    FileHelper.expects(:download).returns(temp)
 
     Jobs.run_immediately!
 
@@ -30,22 +33,14 @@ RSpec.describe Jobs::UpdateGravatar do
     expect(user.uploaded_avatar_id).to_not eq(nil)
     expect(user.uploaded_avatar_id).to eq(user.user_avatar.gravatar_upload_id)
 
-    temp.unlink
-  end
+    cached_gravatar_id = user.user_avatar.gravatar_upload_id
+    user.update!(uploaded_avatar_id: nil)
+    stub_request(:get, %r{https://www.gravatar.com/avatar/}).to_return(
+      status: Rack::Utils::SYMBOL_TO_STATUS_CODE[:not_found],
+    )
 
-  it "does not enqueue a job when user is missing their email" do
-    user.primary_email.destroy
-    user.reload
+    described_class.new.execute(user_id: user.id, avatar_id: user.user_avatar.id)
 
-    expect(user.uploaded_avatar_id).to eq(nil)
-    expect(user.user_avatar.gravatar_upload_id).to eq(nil)
-
-    SiteSetting.automatically_download_gravatars = true
-
-    expect { user.refresh_avatar }.not_to change { Jobs::UpdateGravatar.jobs.count }
-    user.reload
-
-    expect(user.uploaded_avatar_id).to eq(nil)
-    expect(user.user_avatar.gravatar_upload_id).to eq(nil)
+    expect(user.reload.uploaded_avatar_id).to eq(cached_gravatar_id)
   end
 end

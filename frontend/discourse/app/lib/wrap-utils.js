@@ -4,7 +4,7 @@ import { parseBBCodeTag } from "discourse-markdown-it/features/bbcode-block";
 /**
  * Parse an attributes string into flat object (matches server behavior)
  * @param {string} attrsString - The attributes string to parse
- * @returns {Object} Flat object like {wrap: "toc", id: "123"}
+ * @returns {Record<string, string>} Flat object like {wrap: "toc", id: "123"}
  */
 export function parseAttributesString(attrsString) {
   if (!attrsString.trim()) {
@@ -25,7 +25,7 @@ export function parseAttributesString(attrsString) {
 
 /**
  * Serialize flat object back to BBCode format
- * @param {Object} data - Flat object like {wrap: "toc", id: "123"}
+ * @param {Record<string, string | number | boolean | null | undefined> | null | undefined} data - Flat object like {wrap: "toc", id: "123"}
  * @returns {string} Serialized attributes string
  */
 export function serializeAttributes(data) {

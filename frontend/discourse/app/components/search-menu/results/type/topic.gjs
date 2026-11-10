@@ -37,10 +37,10 @@ export default class Results extends Component {
     <span class="topic">
       <span class="first-line">
         <TopicStatus
-          @topic={{@result.topic}}
-          @disableActions={{true}}
           @context="topic-view-title"
+          @disableActions={{true}}
           @showPrivateMessageIcon={{this.shouldShowPrivateMessageIcon}}
+          @topic={{@result.topic}}
         />
         <span class="topic-title" data-topic-id={{@result.topic.id}}>
           <MaybeAnchor @href={{if @withTopicUrl @result.url}}>
@@ -62,7 +62,12 @@ export default class Results extends Component {
           link=(if @withTopicUrl true false)
         }}
         {{#if this.siteSettings.tagging_enabled}}
-          {{dDiscourseTags @result.topic tagName="span"}}
+          <PluginOutlet
+            @name="search-menu-results-topic-tags-wrapper"
+            @outletArgs={{lazyHash topic=@result.topic tags=@result.topic.tags}}
+          >
+            {{dDiscourseTags @result.topic tagName="span"}}
+          </PluginOutlet>
         {{/if}}
       </span>
     </span>

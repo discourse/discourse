@@ -47,6 +47,7 @@ export default class InvitesShow extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.accountUsername = model.username;
+    controller.codeInviteStep = "email";
 
     if (model.user_fields) {
       controller.userFields.forEach((userField) => {

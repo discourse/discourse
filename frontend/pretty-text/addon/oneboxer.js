@@ -8,7 +8,7 @@ import {
   resetLocalCache,
   setFailedCache,
   setLocalCache,
-} from "./oneboxer-cache";
+} from "./oneboxer-cache.js";
 
 let timeout;
 const loadingQueue = [];
@@ -64,6 +64,16 @@ function loadNext(ajax) {
   let removeLoading = true;
   const { url, refresh, elem, categoryId, topicId, onResolve } =
     loadingQueue.shift();
+
+  // an earlier entry for the same url may have resolved while this one waited
+  const cached = !refresh && lookupCache(url);
+  if (cached) {
+    const node = domFromString(cached)[0];
+    onResolve?.(cached);
+    elem.replaceWith(node);
+    applySquareGenericOnebox(node);
+    return loadNext(ajax);
+  }
 
   // Retrieve the onebox
   return ajax("/onebox", {

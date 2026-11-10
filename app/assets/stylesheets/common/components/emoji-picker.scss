@@ -127,6 +127,7 @@
 
   &__sections-nav-wrap {
     --fade-color: var(--primary-low);
+    background: var(--primary-low);
     flex: 0 0 auto;
 
     @include viewport.until(sm) {
@@ -142,9 +143,6 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: 250px;
-    background: var(--primary-low);
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
     overscroll-behavior: contain;
 
     @include viewport.until(sm) {
@@ -156,10 +154,6 @@
       overflow-y: hidden;
       overflow-x: auto;
     }
-  }
-
-  &__sections-nav::-webkit-scrollbar {
-    display: none;
   }
 
   &__section-btn {

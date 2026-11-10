@@ -20,6 +20,48 @@ describe "Topic page" do
     expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
   end
 
+  context "with links to an anchor in another topic" do
+    fab!(:source_topic, :topic)
+
+    before do
+      filler = (1..40).map { |i| "<p>Filler paragraph #{i}</p>" }.join
+      topic.first_post.update!(cooked: <<~HTML)
+        #{filler}
+        <a name="deep-anchor"></a>
+        <h2 id="deep-heading">Deep heading</h2>
+      HTML
+      Fabricate(:post, topic: source_topic, cooked: <<~HTML)
+        <p><a class="slugged-link" href="/t/#{topic.slug}/#{topic.id}#deep-anchor">slugged</a></p>
+        <p><a class="slugless-link" href="/t/#{topic.id}#deep-anchor">slugless</a></p>
+      HTML
+    end
+
+    def expect_anchor_in_view
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#deep-anchor}, url: true)
+      expect(page).to have_css("#deep-heading")
+      top =
+        page.evaluate_script("document.querySelector('#deep-heading').getBoundingClientRect().top")
+      height = page.evaluate_script("window.innerHeight")
+      expect(top).to be_between(0, height)
+    end
+
+    it "keeps the anchor in the URL and scrolls to it" do
+      visit("/t/#{source_topic.slug}/#{source_topic.id}")
+
+      find("a.slugged-link").click
+
+      expect_anchor_in_view
+    end
+
+    it "keeps the anchor through the slugless topic redirect" do
+      visit("/t/#{source_topic.slug}/#{source_topic.id}")
+
+      find("a.slugless-link").click
+
+      expect_anchor_in_view
+    end
+  end
+
   context "with a subfolder setup" do
     before { set_subfolder "/forum" }
 

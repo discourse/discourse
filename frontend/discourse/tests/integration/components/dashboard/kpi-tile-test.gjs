@@ -12,10 +12,10 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -28,10 +28,10 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @reportQuery={{reportQuery}}
+          @reportType="dau_by_mau"
           @type="dau_mau"
           @value={{21.6}}
-          @reportType="dau_by_mau"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -44,10 +44,10 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{null}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -59,11 +59,11 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @percentChange={{null}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @percentChange={{null}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -75,11 +75,11 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @percentChange={{12.02}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @percentChange={{12.02}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -92,11 +92,11 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @percentChange={{0.4}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @percentChange={{0.4}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -109,11 +109,11 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @percentChange={{-0.4}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @percentChange={{-0.4}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -126,11 +126,11 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @percentChange={{0}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @percentChange={{0}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -142,11 +142,11 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @percentChange={{-38.5}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{142}}
-          @percentChange={{-38.5}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -159,10 +159,10 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -186,11 +186,11 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @percentChange={{12}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @percentChange={{12}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -204,10 +204,10 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
         />
       </template>
     );
@@ -225,12 +225,12 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     await render(
       <template>
         <KpiTile
+          @comparisonLabel="vs last 30 days"
+          @percentChange={{12}}
+          @reportQuery={{reportQuery}}
+          @reportType="signups"
           @type="new_signups"
           @value={{1100}}
-          @percentChange={{12}}
-          @reportType="signups"
-          @reportQuery={{reportQuery}}
-          @comparisonLabel="vs last 30 days"
         />
       </template>
     );

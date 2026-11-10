@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 
@@ -47,7 +47,7 @@ export default class extends DiscourseRoute {
 
     // When landing on the route from a full page load
     this.router
-      .replaceWith(`discovery.${defaultHomepage()}`)
+      .replaceWith(homepageNavigationDestination())
       .followRedirects()
       .then(() => {
         if (this.currentUser.can_create_topic) {

@@ -1,21 +1,21 @@
 import { i18n } from "discourse-i18n";
-import PostListExample from "../../examples/organisms/post-list";
+import PostListExample from "../../examples/organisms/post-list.gjs";
 import postListSource from "../../examples/organisms/post-list?source=file";
-import PostListEmptyExample from "../../examples/organisms/post-list-empty";
+import PostListEmptyExample from "../../examples/organisms/post-list-empty.gjs";
 import postListEmptySource from "../../examples/organisms/post-list-empty?source=file";
-import StyleguideExample from "../../styleguide-example";
+import StyleguideExample from "../../styleguide-example.gjs";
 
 export default <template>
   <StyleguideExample
-    @title={{i18n "styleguide.sections.post_list.empty_example"}}
     @code={{postListEmptySource}}
+    @title={{i18n "styleguide.sections.post_list.empty_example"}}
   >
     <PostListEmptyExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.post_list.populated_example"}}
     @code={{postListSource}}
+    @title={{i18n "styleguide.sections.post_list.populated_example"}}
   >
     <PostListExample @posts={{@dummy.postList}} />
   </StyleguideExample>

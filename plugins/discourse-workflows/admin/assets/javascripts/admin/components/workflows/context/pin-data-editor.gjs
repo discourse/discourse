@@ -2,13 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import CodeEditor from "discourse/components/code-editor";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import loadCodemirrorEditor from "discourse/lib/load-codemirror";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import buildJsonEditorExtensions from "../../../lib/workflows/json-editor-extensions";
 
 const EMPTY_SEED = [{}];
 const DEFAULT_MAX_BYTES = 1_048_576;
@@ -78,7 +76,6 @@ function validateUnwrappedShape(value) {
 export default class PinDataEditor extends Component {
   @service siteSettings;
 
-  @tracked Editor;
   @tracked buffer;
   @tracked bufferBaseline;
   @tracked enteredFromEmpty = false;
@@ -168,23 +165,6 @@ export default class PinDataEditor extends Component {
   }
 
   @action
-  async loadEditor() {
-    const Editor = await loadCodemirrorEditor();
-
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-    this.Editor = Editor;
-  }
-
-  @action
-  buildEditExtensions(cmParams) {
-    return buildJsonEditorExtensions(cmParams, {
-      onChange: (value) => this.updateBuffer(value),
-    });
-  }
-
-  @action
   updateBuffer(value) {
     this.buffer = value;
     this.#recomputeValidity();
@@ -271,24 +251,21 @@ export default class PinDataEditor extends Component {
 
   <template>
     {{#if this.showEditor}}
-      <div
-        class="workflows-context-panel__editor"
-        {{didInsert this.loadEditor}}
-      >
+      <div class="workflows-context-panel__editor">
         {{#if this.isDirty}}
           <div class="workflows-context-panel__editor-toolbar">
             <button
-              type="button"
               class="btn btn-primary btn-small workflows-context-panel__editor-save"
               disabled={{this.saveDisabled}}
+              type="button"
               {{on "click" this.save}}
             >
               {{dIcon "check"}}
               {{i18n "discourse_workflows.pin_data.save"}}
             </button>
             <button
-              type="button"
               class="btn btn-default btn-small workflows-context-panel__editor-cancel"
+              type="button"
               {{on "click" this.cancel}}
             >
               {{i18n "discourse_workflows.pin_data.cancel"}}
@@ -309,18 +286,13 @@ export default class PinDataEditor extends Component {
           </div>
         {{/if}}
 
-        {{#if this.Editor}}
-          <this.Editor
-            @value={{this.buffer}}
-            @extensions={{this.buildEditExtensions}}
-            @class="workflows-context-panel__editor-codemirror"
-            @lineWrapping={{true}}
-          />
-        {{else}}
-          <div class="workflows-context-panel__editor-loading">
-            {{i18n "discourse_workflows.pin_data.loading_editor"}}
-          </div>
-        {{/if}}
+        <CodeEditor
+          class="workflows-context-panel__code-editor"
+          @language="json"
+          @lineWrapping={{true}}
+          @onChange={{this.updateBuffer}}
+          @value={{this.buffer}}
+        />
 
         {{#if this.isDirty}}
           {{#if this.parseError}}
@@ -356,8 +328,8 @@ export default class PinDataEditor extends Component {
           {{i18n "discourse_workflows.pin_data.empty_title"}}
         </h4>
         <button
-          type="button"
           class="btn btn-primary workflows-context-panel__empty-state-btn"
+          type="button"
           {{on "click" this.startFromEmpty}}
         >
           {{i18n "discourse_workflows.pin_data.add_sample_data"}}

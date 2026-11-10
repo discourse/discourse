@@ -67,8 +67,8 @@ export default class DiscourseBanner extends Component {
             <div class="floated-buttons">
               {{#if this.currentUser.staff}}
                 <a
-                  href={{this.banner.url}}
                   class="btn btn-transparent edit-banner"
+                  href={{this.banner.url}}
                 >
                   {{dIcon "pencil"}}
                   {{#if this.site.desktopView}}
@@ -78,11 +78,11 @@ export default class DiscourseBanner extends Component {
               {{/if}}
 
               <DButton
+                class="btn-transparent close"
                 @action={{this.dismiss}}
+                @ariaLabel="banner.close"
                 @icon="xmark"
                 @title="banner.close"
-                @ariaLabel="banner.close"
-                class="btn-transparent close"
               />
             </div>
 

@@ -11,6 +11,7 @@ export default [
   {
     ignores: [
       "plugins/**/lib/javascripts/locale",
+      "plugins/blog/vendor/",
       "plugins/discourse-math/public",
       "public/",
       "vendor/",
@@ -18,6 +19,7 @@ export default [
       "spec/",
       "frontend/discourse/dist/",
       "**/*.d.ts",
+      "**/*.d.*.ts",
       "frontend/discourse-types/external-types",
       "frontend/discourse-types/dts-generator.{js,ts}",
       "tmp/",

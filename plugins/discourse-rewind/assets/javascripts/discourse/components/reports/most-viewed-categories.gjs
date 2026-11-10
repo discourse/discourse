@@ -4,7 +4,6 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import getURL from "discourse/lib/get-url";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -43,30 +42,28 @@ export default class MostViewedCategories extends Component {
   }
 
   <template>
-    {{#if @report.data.length}}
-      <div class="rewind-report-page --most-viewed-categories">
-        <h2 class="rewind-report-title">
-          {{this.titleText}}
-        </h2>
-        <div class="rewind-report-container">
-          {{#each @report.data as |data|}}
-            <a
-              class={{dConcatClass
-                "folder-wrapper"
-                (if (eq this.openedCategoryId data.category_id) "--opened" "")
-              }}
-              href={{getURL (concat "/c/-/" data.category_id)}}
-              {{on "click" (fn this.handleFolderClick data.category_id)}}
-            >
-              <span class="folder-tab"></span>
-              <div class="rewind-card">
-                <p class="most-viewed-categories__category">#{{data.name}}</p>
-              </div>
-              <span class="folder-bg"></span>
-            </a>
-          {{/each}}
-        </div>
+    <div class="rewind-report-page --most-viewed-categories">
+      <h2 class="rewind-report-title">
+        {{this.titleText}}
+      </h2>
+      <div class="rewind-report-container">
+        {{#each @report.data as |data|}}
+          <a
+            class={{dConcatClass
+              "folder-wrapper"
+              (if (eq this.openedCategoryId data.category_id) "--opened" "")
+            }}
+            href={{getURL (concat "/c/-/" data.category_id)}}
+            {{on "click" (fn this.handleFolderClick data.category_id)}}
+          >
+            <span class="folder-tab"></span>
+            <div class="rewind-card">
+              <p class="most-viewed-categories__category">#{{data.name}}</p>
+            </div>
+            <span class="folder-bg"></span>
+          </a>
+        {{/each}}
       </div>
-    {{/if}}
+    </div>
   </template>
 }

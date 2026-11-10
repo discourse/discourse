@@ -1,5 +1,3 @@
-import { or } from "discourse/truth-helpers";
-
 const Component = <template>
   <div class="styleguide__component">
     {{#if @tag}}

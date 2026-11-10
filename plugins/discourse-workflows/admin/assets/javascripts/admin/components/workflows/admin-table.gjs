@@ -4,7 +4,6 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -113,13 +112,13 @@ export default class AdminTable extends Component {
                       class="d-table__header-cell workflows-admin-table__checkbox-cell"
                     >
                       <input
-                        type="checkbox"
                         checked={{this.allSelected}}
+                        class="workflows-admin-table__checkbox"
+                        type="checkbox"
                         {{indeterminate
                           (eq this.headerCheckboxState "indeterminate")
                         }}
                         {{on "change" this.toggleAllSelection}}
-                        class="workflows-admin-table__checkbox"
                       />
                     </th>
                   {{/if}}
@@ -137,10 +136,10 @@ export default class AdminTable extends Component {
                         class="d-table__cell workflows-admin-table__checkbox-cell"
                       >
                         <input
-                          type="checkbox"
                           checked={{this.isRowSelected item}}
-                          {{on "click" (fn this.toggleRowSelection item)}}
                           class="workflows-admin-table__checkbox"
+                          type="checkbox"
+                          {{on "click" (fn this.toggleRowSelection item)}}
                         />
                       </td>
                     {{/if}}

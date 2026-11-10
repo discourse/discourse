@@ -1,5 +1,4 @@
 import { fn } from "@ember/helper";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -15,9 +14,9 @@ const Member = <template>
   >
     {{#if (eq @member.type "user")}}
       <ChatUserAvatar
-        @user={{@member.model}}
         @interactive={{false}}
         @showPresence={{false}}
+        @user={{@member.model}}
       />
       <span class="chat-message-creator__member-username">
         {{@member.model.username}}

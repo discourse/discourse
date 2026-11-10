@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import Pretender from "pretender";
+import { TOO_MANY_REQUESTS } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { cloneJSON } from "discourse/lib/object";
 import User from "discourse/models/user";
@@ -49,6 +50,45 @@ export function success() {
 
 export function OK(resp = {}, headers = {}) {
   return [200, headers, resp];
+}
+
+export { TOO_MANY_REQUESTS };
+
+export function middlewareRateLimit(
+  retryAfterSeconds = 10,
+  errorCode = "user_10_secs_limit"
+) {
+  const headers = { "Content-Type": "text/plain" };
+
+  if (retryAfterSeconds !== null) {
+    headers["Retry-After"] = String(retryAfterSeconds);
+    headers["Discourse-Rate-Limit-Error-Code"] = errorCode;
+  }
+
+  return [
+    TOO_MANY_REQUESTS,
+    headers,
+    "Slow down, you're making too many requests.\n" +
+      `Please retry again in ${retryAfterSeconds} seconds.\n` +
+      `Error code: ${errorCode}.\n`,
+  ];
+}
+
+export function controllerRateLimit(waitSeconds = 10) {
+  const headers = {
+    "Content-Type": "application/json",
+    "Retry-After": String(waitSeconds),
+  };
+
+  return [
+    TOO_MANY_REQUESTS,
+    headers,
+    {
+      errors: ["You've performed this action too many times."],
+      error_type: "rate_limit",
+      extras: { wait_seconds: waitSeconds },
+    },
+  ];
 }
 
 const loggedIn = () => !!User.current();
@@ -484,14 +524,14 @@ export function applyDefaultHandlers() {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "consectetur visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.last_read_post_number = 1;
+      obj.topics[0].last_read_post_number = 1;
       return response(obj);
     } else if (
       request.queryParams.q === "consectetur in:personal" ||
       request.queryParams.q === "consectetur in:messages"
     ) {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.archetype = "private_message";
+      obj.topics[0].archetype = "private_message";
       return response(obj);
     } else {
       return response({});
@@ -678,6 +718,13 @@ export function applyDefaultHandlers() {
 
     return response({ category });
   });
+
+  pretender.post("/categories/evaluate_permissions.json", () =>
+    response({
+      success: "OK",
+      current_user_will_lose_access: false,
+    })
+  );
 
   pretender.post("/categories", () =>
     response(fixturesByUrl["/c/11/show.json"])
@@ -1524,6 +1571,13 @@ export function applyDefaultHandlers() {
 }
 
 export function resetPretender() {
+  // A response still pending here, e.g. to a request sent while the app was torn down,
+  // would land in the next test, possibly before its app has booted
+  for (const { request } of pretender.requestReferences) {
+    // Stops pretender's progress polling without dispatching events
+    request.aborted = true;
+  }
+  pretender.requestReferences = [];
   pretender.handlers = [];
   pretender.handledRequests = [];
   pretender.unhandledRequests = [];

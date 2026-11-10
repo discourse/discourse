@@ -144,6 +144,40 @@ RSpec.describe Middleware::AnonymousCache do
 
         expect(new_helper(env).cache_key).to include("l=#{Discourse.anonymous_locale(request)}")
       end
+
+      it "keys locale param URLs on the locale the plain URL serves when crawler URLs are localized" do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_accept_language_header = true
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "ja"
+        path = "http://test.com/path?#{Discourse::LOCALE_PARAM}=en"
+
+        key_for = ->(opts = {}) { new_helper(path:, **opts).cache_key }
+
+        expect(key_for.call).to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "ja"))
+
+        SiteSetting.content_localization_crawler_param = true
+
+        expect(key_for.call).not_to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "ja"))
+        expect(key_for.call).to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "en"))
+        expect(new_helper.cache_key).to eq(new_helper("HTTP_ACCEPT_LANGUAGE" => "en").cache_key)
+      end
+
+      it "keys blank locale param URLs on the locale the plain URL serves when crawler URLs are localized" do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_accept_language_header = true
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_crawler_param = true
+        SiteSetting.content_localization_supported_locales = "ja"
+        path = "http://test.com/path?#{Discourse::LOCALE_PARAM}="
+
+        key_for = ->(opts = {}) { new_helper(path:, **opts).cache_key }
+
+        expect(key_for.call).not_to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "ja"))
+        expect(key_for.call).to eq(key_for.call("HTTP_ACCEPT_LANGUAGE" => "en"))
+      end
     end
 
     it "handles old browsers" do
@@ -292,7 +326,7 @@ RSpec.describe Middleware::AnonymousCache do
   end
 
   describe "background request rate limit" do
-    it "will rate limit background requests" do
+    it "rate limits background requests" do
       app = Middleware::AnonymousCache.new(lambda { |env| [200, {}, ["ok"]] })
 
       global_setting :background_requests_max_queue_length, "0.5"
@@ -332,7 +366,7 @@ RSpec.describe Middleware::AnonymousCache do
   describe "#force_anonymous!" do
     before { RateLimiter.enable }
 
-    it "will revert to anonymous once we reach the limit" do
+    it "reverts to anonymous when the limit is reached" do
       is_anon = false
 
       app =
@@ -404,6 +438,44 @@ RSpec.describe Middleware::AnonymousCache do
 
       expect(status).to eq(413)
       expect(headers["Cache-Control"]).to eq("private, max-age=0, must-revalidate")
+    end
+
+    it "returns 413 for GET request with a whitespace-prefixed payload" do
+      status, headers, _ =
+        middleware.call(
+          env.tap do |environment|
+            environment[Rack::RACK_INPUT].write(%(  {"injected":true}))
+            environment[Rack::RACK_INPUT].rewind
+          end,
+        )
+
+      expect(status).to eq(413)
+      expect(headers["Cache-Control"]).to eq("private, max-age=0, must-revalidate")
+    end
+
+    it "does not let a whitespace-prefixed GET body poison the shared anonymous cache" do
+      global_setting :anon_cache_store_threshold, 1
+
+      app =
+        Middleware::AnonymousCache.new(
+          lambda do |environment|
+            input = environment[Rack::RACK_INPUT]
+            input.rewind
+            [200, {}, ["body=#{input.read}"]]
+          end,
+        )
+
+      attacker_env =
+        env("ANON_CACHE_DURATION" => 10).tap do |environment|
+          environment[Rack::RACK_INPUT].write("  poisoned-content")
+          environment[Rack::RACK_INPUT].rewind
+        end
+
+      attacker_status, _, _ = app.call(attacker_env)
+      expect(attacker_status).to eq(413)
+
+      _, _, victim_body = app.call(env("ANON_CACHE_DURATION" => 10))
+      expect(victim_body.join).not_to include("poisoned-content")
     end
   end
 
@@ -485,7 +557,7 @@ RSpec.describe Middleware::AnonymousCache do
       expect(@status).to eq(200)
     end
 
-    it "should never block robots.txt" do
+    it "allows robots.txt requests" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/robots.txt",
@@ -496,7 +568,7 @@ RSpec.describe Middleware::AnonymousCache do
       expect(@status).to eq(200)
     end
 
-    it "should never block srv/status" do
+    it "allows srv/status requests" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/srv/status",

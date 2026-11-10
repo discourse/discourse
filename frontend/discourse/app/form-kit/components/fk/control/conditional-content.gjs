@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import FKControlConditionalDisplayCondition from "./conditional-content/condition";
-import FKControlConditionalContentContent from "./conditional-content/content";
+import FKControlConditionalDisplayCondition from "./conditional-content/condition.gjs";
+import FKControlConditionalContentContent from "./conditional-content/content.gjs";
 
 const Conditions = <template>
   <div class="form-kit__inline-radio">
@@ -25,6 +25,7 @@ const Contents = <template>
 </template>;
 
 export default class FKControlConditionalContent extends Component {
+  /** @type {string | null | undefined} */
   @tracked manuallySetName = null;
   // Bumped after `onChange` settles to re-sync the radios with `activeName`,
   // so a rejected change doesn't leave the clicked radio selected.

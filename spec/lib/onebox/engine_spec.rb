@@ -85,6 +85,7 @@ RSpec.describe Onebox::Engine do
         https://attacker.example/path.example.com/player
         https://attacker.example?.example.com/
         https://attacker.example#.example.com/
+        https://attacker.example\\@embed.example.com/player
         https://embed.example.com.attacker.example/player
       ].each { |url| expect(url).not_to match(regex) }
     end
@@ -131,11 +132,11 @@ RSpec.describe Onebox::Engine do
 
     let(:onebox_name) { ScopeForTemplateName::TemplateNameOnebox.onebox_name }
 
-    it "should not include the scope" do
+    it "omits the scope" do
       expect(onebox_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
     end
 
-    it "should not include the word Onebox" do
+    it "omits the word Onebox" do
       expect(onebox_name).not_to include("onebox", "Onebox")
     end
   end

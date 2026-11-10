@@ -39,22 +39,22 @@ export default class SchemaSettingNewEditorChildTree extends Component {
       <ul>
         {{#each @objects as |object index|}}
           <ChildTreeNode
+            data-test-parent-index={{@parentNodeIndex}}
+            @generateSchemaTitle={{@generateSchemaTitle}}
             @index={{index}}
             @object={{object}}
             @onChildClick={{fn this.onChildClick index}}
             @schema={{@schema}}
-            @generateSchemaTitle={{@generateSchemaTitle}}
-            data-test-parent-index={{@parentNodeIndex}}
           />
         {{/each}}
 
         <li class="schema-setting-editor__tree-node --child --add-button">
           <DButton
-            @action={{fn @addChildItem @name @parentNodeIndex}}
-            @translatedLabel={{@schema.name}}
-            @icon="plus"
             class="btn-transparent schema-setting-editor__tree-add-button --child"
             data-test-parent-index={{@parentNodeIndex}}
+            @action={{fn @addChildItem @name @parentNodeIndex}}
+            @icon="plus"
+            @translatedLabel={{@schema.name}}
           />
         </li>
       </ul>

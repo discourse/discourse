@@ -7,11 +7,11 @@ export default class Text extends Component {
   <template>
     <div ...attributes>
       <Input
-        id={{this.field.id}}
-        @value={{this.field.value}}
         class="wizard-container__text-input"
+        id={{this.field.id}}
         placeholder={{this.field.placeholder}}
         tabindex="9"
+        @value={{this.field.value}}
       />
     </div>
   </template>

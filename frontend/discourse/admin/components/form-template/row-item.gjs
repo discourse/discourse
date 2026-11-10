@@ -56,22 +56,22 @@ export default class FormTemplateRowItem extends Component {
       </td>
       <td class="col action">
         <DButton
-          @title="admin.form_templates.list_table.actions.view"
-          @icon="far-eye"
-          @action={{fn (mut this.showViewTemplateModal) true}}
           class="btn-default btn-view-template"
+          @action={{fn (mut this.showViewTemplateModal) true}}
+          @icon="far-eye"
+          @title="admin.form_templates.list_table.actions.view"
         />
         <DButton
-          @title="admin.form_templates.list_table.actions.edit"
-          @icon="pencil"
-          @action={{this.editTemplate}}
           class="btn-default btn-edit-template"
+          @action={{this.editTemplate}}
+          @icon="pencil"
+          @title="admin.form_templates.list_table.actions.edit"
         />
         <DButton
-          @title="admin.form_templates.list_table.actions.delete"
-          @icon="trash-can"
-          @action={{this.deleteTemplate}}
           class="btn-danger btn-delete-template"
+          @action={{this.deleteTemplate}}
+          @icon="trash-can"
+          @title="admin.form_templates.list_table.actions.delete"
         />
       </td>
     </tr>

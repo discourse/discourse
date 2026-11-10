@@ -15,6 +15,7 @@ import { cached } from "@glimmer/tracking";
 import type Owner from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
+import type deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
 import BlockOutletInlineError from "discourse/lib/blocks/-internals/components/block-outlet-inline-error";
 import BlockOutletRootContainer from "discourse/lib/blocks/-internals/components/block-outlet-root-container";
@@ -372,7 +373,10 @@ interface BlockOutletSignature {
     // Arguments to pass to blocks rendered in this outlet.
     outletArgs?: Record<string, unknown>;
     // Deprecated args with deprecation warnings.
-    deprecatedArgs?: Record<string, unknown>;
+    deprecatedArgs?: Record<
+      string,
+      ReturnType<typeof deprecatedOutletArgument>
+    >;
   };
   Blocks: {
     // Yields hasLayout flag before content.
@@ -391,6 +395,9 @@ interface OutletInfoSignature {
     blockCount: number;
     outletArgs: Record<string, unknown>;
     error: Error | null;
+  };
+  Blocks: {
+    default: [];
   };
 }
 
@@ -545,13 +552,11 @@ export default class BlockOutlet extends Component<BlockOutletSignature> {
     if (!this.args.deprecatedArgs) {
       return this.args.outletArgs || {};
     }
-    // `buildArgsWithDeprecations` is authored in untyped `.js`; its actual
-    // runtime return is a plain object keyed by the combined arg names.
     return buildArgsWithDeprecations(
       this.args.outletArgs || {},
       this.args.deprecatedArgs,
       { outletName: this.#name }
-    ) as Record<string, unknown>;
+    );
   }
 
   <template>

@@ -32,34 +32,34 @@ export default class AddColumnModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_workflows.data_tables.add_column"}}
-      @closeModal={{@closeModal}}
       class="data-table-add-column-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_workflows.data_tables.add_column"}}
     >
       <:body>
         <Form
+          class="workflows-configurator-form"
           @data={{this.formData}}
           @onSubmit={{this.handleSubmit}}
-          class="workflows-configurator-form"
           as |form|
         >
           <form.Field
+            @format="full"
             @name="name"
             @title={{i18n "discourse_workflows.data_tables.column_name"}}
             @type="input"
-            @format="full"
-            @validation="required"
             @validate={{this.validateColumnName}}
+            @validation="required"
             as |field|
           >
             <field.Control placeholder="column_name" />
           </form.Field>
 
           <form.Field
+            @format="full"
             @name="type"
             @title={{i18n "discourse_workflows.data_tables.column_type"}}
             @type="select"
-            @format="full"
             @validation="required"
             as |field|
           >

@@ -3,6 +3,7 @@
 describe "DiscourseRewind | user preferences" do
   fab!(:current_user) { Fabricate(:user, created_at: DateTime.parse("2020-01-01")) }
   let(:rewind_page) { PageObjects::Pages::Rewind.new }
+  let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before do
     SiteSetting.discourse_rewind_enabled = true
@@ -16,13 +17,6 @@ describe "DiscourseRewind | user preferences" do
       it "shows the rewind tab" do
         rewind_page.visit_my_activity
         expect(rewind_page).to have_rewind_tab
-      end
-
-      it "shows the rewind profile link" do
-        rewind_page.visit_my_activity
-        rewind_page.open_user_menu
-        rewind_page.click_profile_tab
-        expect(rewind_page).to have_rewind_profile_link
       end
 
       it "shows the rewind preferences nav link" do
@@ -41,8 +35,7 @@ describe "DiscourseRewind | user preferences" do
 
       it "does not show the rewind profile link" do
         rewind_page.visit_my_activity
-        rewind_page.open_user_menu
-        rewind_page.click_profile_tab
+        user_menu.open.click_profile_tab
         expect(rewind_page).to have_no_rewind_profile_link
       end
     end

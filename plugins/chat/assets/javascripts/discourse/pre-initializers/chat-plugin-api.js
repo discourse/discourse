@@ -5,6 +5,15 @@ import {
 } from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import { removeChatComposerSecondaryActions } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import {
+  registerTranscriptSourceType,
+  resetTranscriptSourceTypes,
+} from "discourse/plugins/chat/discourse/lib/transcript-source-types";
+import {
+  registerChatSound,
+  resetChatSounds,
+  setDefaultChatSound,
+} from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
 
 /**
@@ -16,9 +25,9 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * Callback used to decorate a chat message
  *
  * @callback PluginApi~decorateChatMessageCallback
- * @param {ChatMessage} chatMessage - model
  * @param {HTMLElement} messageContainer - DOM node
- * @param {ChatChannel} chatChannel - model
+ * @param {Object} helper - decorated HTML helper
+ * @param {ChatMessage} chatMessage - model
  */
 
 /**
@@ -39,7 +48,7 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * @param {PluginApi~decorateChatMessageCallback} decorator
  * @example
  *
- * api.decorateChatMessage((chatMessage, messageContainer) => {
+ * api.decorateChatMessage((messageContainer, _helper, chatMessage) => {
  *   messageContainer.dataset.foo = chatMessage.id;
  * });
  */
@@ -125,6 +134,61 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * api.removeChatComposerSecondaryActions("copyLink", "select");
  */
 
+/**
+ * Registers how chat transcripts quoted in posts present a non-channel source,
+ * named by the transcript's `sourceType` attribute
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function registerChatTranscriptSourceType
+ * @param {string} type - value of the `sourceType` attribute
+ * @param {Object} options
+ * @param {string} options.icon - icon shown before the source name
+ * @param {string} [options.label] - translation key for the header label
+ * @example
+ *
+ * api.registerChatTranscriptSourceType("meeting", {
+ *   icon: "users",
+ *   label: "my_plugin.meeting_transcript",
+ * });
+ */
+
+/**
+ * Registers a chat notification sound users can pick in their preferences.
+ * Registering a built-in name (eg: "classic") replaces that sound.
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function registerChatSound
+ * @param {string} name - stored in the user's `chat_sound` option
+ * @param {Object} options
+ * @param {string|function} options.incoming - audio file URL, or a function receiving `(audioContext, startTime)` that schedules Web Audio nodes
+ * @param {string|function} [options.mention] - played for mentions, defaults to `incoming`
+ * @param {string} [options.label] - translation key for the preference option
+ * @param {string} [options.translatedLabel] - preference option text
+ * @example
+ *
+ * api.registerChatSound("ping", {
+ *   incoming: settings.theme_uploads.ping,
+ *   mention: settings.theme_uploads.ping_mention,
+ *   label: themePrefix("chat_sounds.ping"),
+ * });
+ */
+
+/**
+ * Sets the sound used when a user hasn't picked one for new messages in the
+ * open channel, or picked one that no longer exists. Users who haven't opted
+ * into notification sounds stay silent.
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function setDefaultChatSound
+ * @param {string} name - a built-in or registered sound
+ * @example
+ *
+ * api.setDefaultChatSound("ping");
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -174,6 +238,34 @@ export default {
         });
       }
 
+      if (!apiPrototype.hasOwnProperty("registerChatTranscriptSourceType")) {
+        Object.defineProperty(
+          apiPrototype,
+          "registerChatTranscriptSourceType",
+          {
+            value(type, options) {
+              registerTranscriptSourceType(type, options);
+            },
+          }
+        );
+      }
+
+      if (!apiPrototype.hasOwnProperty("registerChatSound")) {
+        Object.defineProperty(apiPrototype, "registerChatSound", {
+          value(name, options) {
+            registerChatSound(name, options);
+          },
+        });
+      }
+
+      if (!apiPrototype.hasOwnProperty("setDefaultChatSound")) {
+        Object.defineProperty(apiPrototype, "setDefaultChatSound", {
+          value(name) {
+            setDefaultChatSound(name);
+          },
+        });
+      }
+
       if (!apiPrototype.hasOwnProperty("removeChatComposerSecondaryActions")) {
         Object.defineProperty(
           apiPrototype,
@@ -190,5 +282,7 @@ export default {
 
   teardown() {
     resetChatMessageDecorators();
+    resetTranscriptSourceTypes();
+    resetChatSounds();
   },
 };

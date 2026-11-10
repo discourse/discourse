@@ -57,7 +57,8 @@ export default class SiteSettingFilter {
       all = {
         nameKey: "all_results",
         name: i18n("admin.site_settings.categories.all_results"),
-        siteSettings: [],
+        siteSettings:
+          /** @type {import("discourse/admin/models/site-setting").default[]} */ ([]),
       };
 
       matchesGroupedByCategory.push(all);
@@ -127,9 +128,13 @@ export default class SiteSettingFilter {
           return false;
         }
       );
+      // An inline dependent is displayed as its parent, which may belong to an
+      // earlier category that already lists it.
       const siteSettings = opts.dependsOn
         ? matchedSiteSettings
-        : this.displaySettingsFor(matchedSiteSettings);
+        : this.displaySettingsFor(matchedSiteSettings).filter(
+            (setting) => !matches.includes(setting)
+          );
 
       if (siteSettings.length > 0) {
         matches.push(...siteSettings);

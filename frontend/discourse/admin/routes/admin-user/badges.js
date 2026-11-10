@@ -20,7 +20,7 @@ export default class AdminUserBadgesRoute extends DiscourseRoute {
       if (badges.length > 0) {
         let grantableBadges = controller.availableBadges;
         if (grantableBadges.length > 0) {
-          controller.selectedBadgeId = grantableBadges[0].get("id");
+          controller.selectedBadgeId = grantableBadges[0].id;
         }
       }
     } finally {

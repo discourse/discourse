@@ -51,7 +51,51 @@ module DiscourseWorkflows
       @context.key?(name_str)
     end
 
+    def nearest_upstream_metadata(key, item_index: 0)
+      source = current_input_source
+      return [] if source.blank?
+
+      trace_upstream_metadata(
+        source["node_name"],
+        source["output_index"].to_i,
+        item_index,
+        key,
+        Set.new,
+      )&.uniq
+    end
+
     private
+
+    def trace_upstream_metadata(node_name, output_index, item_index, metadata_key, visited)
+      key = [node_name, output_index, item_index]
+      return if visited.include?(key)
+      visited = visited.dup.add(key)
+      run = node_run(node_name)
+      item = run&.dig("outputs", output_index, item_index)
+      return unless item
+
+      metadata = run.dig("metadata", metadata_key)
+      return [metadata] if metadata.present?
+      return [] if Array(run["input_sources"]).all?(&:blank?)
+
+      pairs = normalized_paired_items(item)
+      return if pairs.blank?
+
+      matches =
+        pairs.map do |pair|
+          source = run.dig("input_sources", pair["input"])
+          next if source.blank?
+          trace_upstream_metadata(
+            source["node_name"],
+            source["output_index"].to_i,
+            pair["item"],
+            metadata_key,
+            visited,
+          )
+        end
+      return if matches.any?(&:nil?)
+      matches.flatten(1)
+    end
 
     def blocked_node_name?(name)
       name.start_with?("_") || BLOCKED_NODE_NAMES.include?(name)

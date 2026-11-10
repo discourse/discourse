@@ -81,10 +81,6 @@
     outline: none;
   }
 
-  kbd:first-child {
-    margin-left: 0;
-  }
-
   @for $i from 1 through 25 {
     .span-#{$i} {
       grid-row-end: span $i;
@@ -113,28 +109,9 @@
     text-align: right;
     white-space: nowrap;
 
-    span {
-      border-radius: 3px;
-      display: inline-flex;
-      padding: 2px 1px 4px;
-    }
-
-    span:first-child {
-      margin-right: 0;
-    }
-
-    span:last-child {
-      margin-left: auto;
-    }
-
     .delimiter-newline {
-      display: revert;
+      display: block;
       text-align: right;
     }
-  }
-
-  kbd {
-    font-family: var(--d-font-family--monospace);
-    font-weight: bold;
   }
 }

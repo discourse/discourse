@@ -126,7 +126,6 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
         WHERE bpe.created_at >= :start_date
           AND bpe.created_at < :end_date
           AND #{CrawlerScorer.likely_crawler_condition(table: "bpe")}
-          AND #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
           AND #{ELIGIBLE_TOPICS}
         GROUP BY 1, 2
       )
@@ -188,7 +187,6 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
         FROM browser_pageview_events
         WHERE created_at >= :start_date
           AND created_at < :end_date
-          AND #{BrowserPageviewEvent.rollup_source_condition}
       SQL
 
     scope = where(date: start_date..end_date).where("likely_crawler_page_views > 0")

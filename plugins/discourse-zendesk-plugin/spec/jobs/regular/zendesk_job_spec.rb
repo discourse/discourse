@@ -167,4 +167,59 @@ RSpec.describe Jobs::ZendeskJob do
       end
     end
   end
+
+  describe "#execute" do
+    context "when only OAuth credentials are configured" do
+      let(:zendesk_enabled) { true }
+      let(:zendesk_jobs_email) { "" }
+      let(:zendesk_jobs_api_token) { "" }
+      let(:zendesk_api_url) { "https://your-url.zendesk.com/api/v2" }
+      let(:zendesk_comment_request) do
+        stub_request(:put, "#{zendesk_api_url}/tickets/#{ticket_id}").with(
+          headers: {
+            "Authorization" => "Bearer oauth-access-token",
+          },
+        ).to_return(
+          status: 200,
+          body: {
+            ticket: {
+              id: ticket_id,
+            },
+            audit: {
+              events: [{ id: "comment-id", type: "Comment" }],
+            },
+          }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+      end
+
+      before do
+        SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
+        SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
+        stub_request(:post, "https://your-url.zendesk.com/oauth/tokens").to_return(
+          status: 200,
+          body: { access_token: "oauth-access-token", expires_in: 1800 }.to_json,
+        )
+        stub_request(:get, "#{zendesk_api_url}/users/search?query=#{post.user.email}").to_return(
+          status: 200,
+          body: { users: [{ id: "zendesk-user-id" }] }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+        zendesk_comment_request
+      end
+
+      it "pushes the post with OAuth authentication" do
+        execute
+
+        expect(zendesk_comment_request).to have_been_requested.once
+        expect(post.reload.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]).to eq(
+          "comment-id",
+        )
+      end
+    end
+  end
 end

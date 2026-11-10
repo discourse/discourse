@@ -14,6 +14,7 @@ hy:
       create:
         form:
           insert: Մուտքագրել
+          save: Պահպանել
           timezones_title: Ցուցադրվող ժամային գոտիներ
           timezones_description: 'Ժամային գոտիները կօգտագործվեն նախադիտման և վերադարձի ժամանակ ամսաթվի ցուցադրման համար:'
           recurring_title: Կրկնություն

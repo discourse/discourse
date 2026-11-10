@@ -9,6 +9,10 @@ describe "OAuth2 Overrides Email", type: :request do
   end
 
   before do
+    SiteSetting.oauth2_client_id = "id"
+    SiteSetting.oauth2_client_secret = "secret"
+    SiteSetting.oauth2_authorize_url = "https://provider.com/authorize"
+    SiteSetting.oauth2_token_url = "https://provider.com/token"
     SiteSetting.oauth2_enabled = true
     SiteSetting.oauth2_callback_user_id_path = "uid"
     SiteSetting.oauth2_fetch_user_details = false

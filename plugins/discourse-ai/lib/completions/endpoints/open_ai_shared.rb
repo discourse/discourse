@@ -20,7 +20,11 @@ module DiscourseAi
           gpt-5.5
           gpt-5.5-pro
         ].freeze
+        # GPT-6 Astra and GPT-6.1 Sol reject none/minimal; low is the lowest
+        # effort they support.
+        OPEN_AI_LOW_EFFORT_FLOOR_MODELS = %w[gpt-6-astra gpt-6.1-sol].freeze
         OPEN_AI_MODEL_SNAPSHOT_SUFFIX = /-\d{4}-\d{2}-\d{2}\z/
+        OPEN_AI_REASONING_MODEL_NAME = /\A(o\d|gpt-[5-9])/
         OPEN_AI_REASONING_OUTPUT_RESERVATION = 25_000
         # "minimal" isn't a distinct tier on every OpenAI reasoning model and can
         # be rejected outright, so collapse it into "low".
@@ -69,6 +73,20 @@ module DiscourseAi
           model_params
         end
 
+        protected
+
+        def output_stop_reason
+          processor.stop_reason
+        end
+
+        def output_limit_reached?
+          processor.output_limit_reached
+        end
+
+        def reported_reasoning_tokens
+          processor.reasoning_tokens
+        end
+
         private
 
         def disable_streaming?
@@ -80,6 +98,9 @@ module DiscourseAi
             DiscourseAi::Completions::ThinkingConfig.normalize_effort(
               model_params[:thinking_effort],
             )
+          # Non-reasoning models (and OpenAI-compatible hosts) reject the parameter,
+          # so agent-level efforts only apply where the model can reason.
+          effort = nil if !reasoning_model?
           effort ||= legacy_reasoning_effort
 
           if effort.blank?
@@ -89,6 +110,7 @@ module DiscourseAi
 
           provider_effort = OPEN_AI_EFFORT_ALIASES[effort] || effort
           provider_effort = "xhigh" if provider_effort == "max" && max_effort_maps_to_xhigh?
+          provider_effort = "low" if provider_effort == "none" && low_effort_floor_model?
           if !OPEN_AI_REASONING_EFFORTS.include?(provider_effort)
             return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
           end
@@ -148,8 +170,20 @@ module DiscourseAi
         end
 
         def max_effort_maps_to_xhigh?
-          model_name = llm_model.name.to_s.sub(OPEN_AI_MODEL_SNAPSHOT_SUFFIX, "")
-          OPEN_AI_MAX_TO_XHIGH_MODELS.include?(model_name)
+          OPEN_AI_MAX_TO_XHIGH_MODELS.include?(normalized_model_name)
+        end
+
+        def reasoning_model?
+          legacy_reasoning_effort.present? || reasoning_mode.present? ||
+            normalized_model_name.match?(OPEN_AI_REASONING_MODEL_NAME)
+        end
+
+        def low_effort_floor_model?
+          OPEN_AI_LOW_EFFORT_FLOOR_MODELS.include?(normalized_model_name)
+        end
+
+        def normalized_model_name
+          llm_model.name.to_s.sub(OPEN_AI_MODEL_SNAPSHOT_SUFFIX, "")
         end
 
         def legacy_reasoning_effort

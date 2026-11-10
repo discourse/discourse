@@ -5,6 +5,34 @@
 # https://translate.discourse.org/
 
 te:
+  markdown_endpoints:
+    latest: "తాజా"
+    categories: "వర్గాలు"
+    tags: "ట్యాగులు"
+    previous_page: "గత పుట"
+    next_page: "తరువాతి పుట"
+    replies: "ప్రత్యుత్తరాలు"
+    event:
+      location: "ప్రాంతం"
+      link: "లింక్"
+  mcp:
+    errors:
+      topic_not_found: "విషయం కనిపించలేదు"
+    oauth:
+      deny: "తిరస్కరించండి"
+      approve: "అధికారం ఇవ్వండి"
+  llms_txt:
+    sections:
+      optional: "ఐచ్ఛికం"
+    links:
+      search:
+        label: "వెతుకు"
+      categories:
+        label: "వర్గాలు"
+      about:
+        label: "మా సంఘం గురించి"
+      guidelines:
+        label: "మార్గదర్శకాలు"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -617,7 +645,7 @@ te:
   uploads:
     marked_insecure_from_theme_component_reason: "థీమ్ భాగంలో ఉపయోగించిన అప్లోడ్"
   unsubscribe:
-    title: "చందాను తీసివేయండి"
+    unsubscribe: "చందాను తీసివేయండి"
     stop_watching_topic: "ఈ విషయాన్నీ అనుసరించటం ఆపివేయండి, %{link}"
     unwatch_category: "%{category} లో అన్ని విషయాలను అనుసరించడం ఆపివేయండి"
     mailing_list_mode: "మెయిలింగ్ జాబితా మోడ్ను ఆపివేయండి"
@@ -727,6 +755,11 @@ te:
         share: "షేర్ చేయండి"
       types:
         staff: "సిబ్బంది"
+    posters_by_member_type_members:
+      labels:
+        user: "సభ్యుడు"
+        count: "పోస్ట్‌లు"
+        share: "షేర్ చేయండి"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1378,7 +1411,6 @@ te:
     user_profile_view_duration_hours: "ప్రతి IP/యూజర్‌కి ప్రతి N గంటలకు ఒకసారి కొత్త వినియోగదారు ప్రొఫైల్ వీక్షణను లెక్కించండి"
     levenshtein_distance_spammer_emails: "స్పామర్ ఇమెయిల్‌లను సరిపోల్చేటప్పుడు, అస్పష్టమైన సరిపోలికను అనుమతించే అక్షరాల సంఖ్య తేడా."
     max_new_accounts_per_registration_ip: "ఈ IP నుండి ఇప్పటికే (n) ట్రస్ట్ లెవల్ 0 ఖాతాలు ఉంటే (మరియు ఎవరూ స్టాఫ్ మెంబర్ లేదా TL2 లేదా అంతకంటే ఎక్కువ వద్ద), ఆ IP నుండి కొత్త సైన్అప్‌లను ఆమోదించడాన్ని ఆపివేయండి. పరిమితిని నిలిపివేయడానికి 0కి సెట్ చేయండి."
-    min_ban_entries_for_roll_up: "రోల్ అప్ బటన్‌ను క్లిక్ చేసినప్పుడు, కనీసం (N) ఎంట్రీలు ఉంటే కొత్త సబ్‌నెట్ బ్యాన్ ఎంట్రీని సృష్టిస్తుంది."
     max_age_unmatched_emails: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన ఇమెయిల్ ఎంట్రీలను తొలగించండి."
     max_age_unmatched_ips: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన IP ఎంట్రీలను తొలగించండి."
     num_flaggers_to_close_topic: "జోక్యం కోసం టాపిక్‌ను ఆటోమేటిక్‌గా పాజ్ చేయడానికి అవసరమైన కనిష్ట సంఖ్యలో ప్రత్యేకమైన ఫ్లాగర్‌లు అవసరం"
@@ -1506,7 +1538,6 @@ te:
     enable_names: "వినియోగదారు పూర్తి పేరును వారి ప్రొఫైల్, వినియోగదారు కార్డ్ మరియు ఇమెయిల్‌లలో చూపండి. పూర్తి పేరును ప్రతిచోటా దాచడానికి నిలిపివేయండి."
     display_name_on_posts: "వారి @usernameకి అదనంగా వారి పోస్ట్‌లలో వినియోగదారు పూర్తి పేరును చూపండి."
     show_time_gap_days: "చాలా రోజుల వ్యవధిలో రెండు పోస్ట్‌లు చేసినట్లయితే, టాపిక్‌లో టైమ్ గ్యాప్‌ని ప్రదర్శించండి."
-    short_progress_text_threshold: "టాపిక్‌లోని పోస్ట్‌ల సంఖ్య ఈ సంఖ్య కంటే ఎక్కువగా ఉన్న తర్వాత, ప్రోగ్రెస్ బార్ ప్రస్తుత పోస్ట్ నంబర్‌ను మాత్రమే చూపుతుంది. మీరు ప్రోగ్రెస్ బార్ వెడల్పును మార్చినట్లయితే, మీరు ఈ విలువను మార్చవలసి రావచ్చు."
     show_copy_button_on_codeblocks: "బ్లాక్ కంటెంట్‌లను వినియోగదారు క్లిప్‌బోర్డ్‌కు కాపీ చేయడానికి కోడ్‌బ్లాక్‌లకు బటన్‌ను జోడించండి."
     embed_any_origin: "మూలాధారంతో సంబంధం లేకుండా పొందుపరచదగిన కంటెంట్‌ను అనుమతించండి. స్టాటిక్ HTMLతో మొబైల్ యాప్‌లకు ఇది అవసరం."
     embed_set_canonical_url: "పొందుపరిచిన అంశాల కోసం నియమానుగుణ URLని పొందుపరిచిన కంటెంట్ యొక్క URLకి సెట్ చేయండి."
@@ -1588,7 +1619,6 @@ te:
     suppress_overlapping_tags_in_list: "టాపిక్ టైటిల్స్‌లో ట్యాగ్‌లు ఖచ్చితమైన పదాలతో సరిపోలితే, ట్యాగ్‌ని చూపవద్దు"
     remove_muted_tags_from_latest: "తాజా టాపిక్ లిస్ట్‌లో మ్యూట్ చేయబడిన ట్యాగ్‌లతో మాత్రమే ట్యాగ్ చేయబడిన అంశాలను చూపవద్దు."
     force_lowercase_tags: "అన్ని కొత్త ట్యాగ్‌లను పూర్తిగా చిన్న అక్షరంగా ఉండేలా ఒత్తిడి చేయండి."
-    company_name: "మీ కంపెనీ లేదా సంస్థ పేరు. ఖాళీగా ఉంచినట్లయితే, బాయిలర్‌ప్లేట్ సేవా నిబంధనలు లేదా గోప్యతా నోటీసు అందించబడవు."
     shared_drafts_category: "టాపిక్ డ్రాఫ్ట్‌ల కోసం వర్గాన్ని కేటాయించడం ద్వారా షేర్డ్ డ్రాఫ్ట్‌ల లక్షణాన్ని ప్రారంభించండి. సిబ్బంది వినియోగదారుల కోసం టాపిక్ జాబితాల నుండి ఈ వర్గంలోని అంశాలు అణచివేయబడతాయి."
     shared_drafts_allowed_groups: "షేర్డ్ డ్రాఫ్ట్‌లను చూడటానికి మరియు సవరించడానికి ఈ సమూహాలలోని వినియోగదారులను అనుమతించండి."
     push_notifications_icon: "నోటిఫికేషన్ మూలలో కనిపించే బ్యాడ్జ్ చిహ్నం. పారదర్శకతతో 96×96 మోనోక్రోమటిక్ PNG సిఫార్సు చేయబడింది."
@@ -1598,9 +1628,6 @@ te:
     enable_sitemap: "మీ సైట్ కోసం సైట్‌మ్యాప్‌ను రూపొందించండి మరియు దానిని robots.txt ఫైల్‌లో చేర్చండి."
     sitemap_page_size: "ప్రతి సైట్‌మ్యాప్ పేజీలో చేర్చాల్సిన URLల సంఖ్య. గరిష్టంగా 50,000"
     enable_user_tips: "వినియోగదారులకు ముఖ్య లక్షణాలను వివరించే కొత్త వినియోగదారు చిట్కాలను ప్రారంభించండి"
-    dashboard_hidden_reports: "డాష్‌బోర్డ్ నుండి పేర్కొన్న నివేదికలను దాచడానికి అనుమతించండి."
-    dashboard_visible_tabs: "ఏ డ్యాష్‌బోర్డ్ ట్యాబ్‌లు కనిపించాలో ఎంచుకోండి."
-    dashboard_general_tab_activity_metrics: "సాధారణ ట్యాబ్‌లో కార్యాచరణ కొలమానాలుగా ప్రదర్శించబడే నివేదికలను ఎంచుకోండి."
     share_quote_buttons: "కోట్ షేరింగ్ విడ్జెట్‌లో ఏ అంశాలు కనిపిస్తాయో మరియు ఏ క్రమంలో కనిపించాలో నిర్ణయించండి."
     share_quote_visibility: "కోట్ షేరింగ్ బటన్‌లను ఎప్పుడు చూపించాలో నిర్ణయించండి: ఎప్పుడూ, అనామక వినియోగదారులకు మాత్రమే లేదా వినియోగదారులందరికీ. "
     allow_changing_staged_user_tracking: "నిర్వాహక వినియోగదారు ద్వారా దశలవారీ వినియోగదారు వర్గం మరియు ట్యాగ్ నోటిఫికేషన్ ప్రాధాన్యతలను మార్చడానికి అనుమతించండి."
@@ -1614,7 +1641,6 @@ te:
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
       valid_username: "ఆ సభ్యనామంతో ఒక సభ్యుడు ఉన్నారు."
-      invalid_group: "ఆ పేరుతో సమూహం లేదు."
       invalid_integer_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
       invalid_integer_min: "విలువ %{min} లేదా అంతకంటే ఎక్కువ ఉండాలి."
       invalid_integer_max: "విలువ %{max} కంటే ఎక్కువగా ఉండకూడదు."
@@ -1710,6 +1736,7 @@ te:
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
     reserved_username: "ఆ సభ్యనామం అనుమతించబడదు."
+    missing_username: "దయచేసి సభ్యనామం నమోదు చేయండి"
     click_to_continue: "కొనసాగించడానికి ఇక్కడ క్లిక్ చేయండి."
     second_factor_title: "రెండు-కారకాల ప్రమాణీకరణ"
     second_factor_backup_description: "దయచేసి మీ బ్యాకప్ కోడ్‌లలో ఒకదానిని నమోదు చేయండి:"
@@ -2054,7 +2081,7 @@ te:
         ఒక సిబ్బంది మీ ఖాతాను %{site_name}లో ఆమోదించారు.
 
         మీరు ఇప్పుడు ఇక్కడ లాగిన్ చేయడం ద్వారా మీ కొత్త ఖాతాను యాక్సెస్ చేయవచ్చు:
-        %{base_url}
+        %{login_url}
 
         పై లింక్ క్లిక్ చేయలేకపోతే, దాన్ని కాపీ చేసి మీ వెబ్ బ్రౌజర్ చిరునామా బార్‌లో అతికించడానికి ప్రయత్నించండి.
 
@@ -2410,7 +2437,13 @@ te:
   design_wizard:
     palette_pairs:
       default: "అప్రమేయ"
+      neutral: "తటస్థ"
+      shades_of_blue: "నీలి రంగు షేడ్స్"
+      summer: "వేసవి"
       dracula: "డ్రాక్యులా"
+      grey_amber: "గ్రే అంబర్"
+      latte: "లాట్టే"
+      dark_rose: "ముదురు గులాబీ"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:
@@ -2436,11 +2469,22 @@ te:
     graph_title: "శోధన గణన"
   onebox:
     discourse:
+      recurrence:
+        weekdays:
+          sunday: "ఆదివారం"
+          monday: "సోమవారం"
+          tuesday: "మంగళవారం"
+          wednesday: "బుధవారం"
+          thursday: "గురువారం"
+          friday: "శుక్రవారం"
+          saturday: "శనివారం"
       user_joined_community: "%{date} లో చేరారు"
     gitlab:
       truncated_file: "ఈ ఫైల్ కుదించబడింది."
       show_original: "అసలైనదాన్ని చూపండి"
     github:
+      header:
+        success: "విజయం"
       truncated_file: "ఈ ఫైల్ కుదించబడింది."
       show_original: "అసలైనదాన్ని చూపండి"
       requires_iframe: "వీక్షకుడికి iframe అవసరం."
@@ -2450,10 +2494,10 @@ te:
       commit_by: "ద్వారా కట్టుబడి"
       comment_by: "ద్వారా వ్యాఖ్యా"
       review_by: "ద్వారా సమీక్ష"
-      status_date:
-        open: "తెరిచినవి"
+      pr_status:
+        draft: "చిత్తుప్రతి"
         approved: "ఆమోదించబడింది"
-        closed: "మూసివేయబడింది"
+        closed: "మూసివేయబడినవి"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} మిమ్మల్ని "%{topic}" లో ప్రస్తావించారు - %{site_title}'
@@ -2517,6 +2561,8 @@ te:
         title: "పోస్ట్ మరియు ప్రత్యుత్తరాలను తొలగించండి"
       disagree_and_restore:
         title: "పోస్ట్‌ని పునరుద్ధరించండి"
+      disagree_and_keep_deleted:
+        title: "పోస్ట్‌ను తొలగించి ఉంచండి"
       disagree_bundle:
         title: "లేదు"
       disagree:
@@ -2558,12 +2604,6 @@ te:
         title: "అవును"
       approve_and_unhide:
         title: "అవును"
-      delete_post:
-        title: "పోస్ట్ తొలగించండి"
-      hide_post:
-        title: "పోస్ట్ను దాచండి"
-      restore_post:
-        title: "పోస్ట్‌ని పునరుద్ధరించండి"
       silence_user:
         title: "సభ్యుని నిశ్శబ్దం చేయండి"
       suspend_user:

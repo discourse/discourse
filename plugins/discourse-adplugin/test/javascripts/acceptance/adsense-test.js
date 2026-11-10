@@ -46,7 +46,7 @@ acceptance(`AdSense`, function (needs) {
     updateCurrentUser({
       staff: false,
       trust_level: 1,
-      groups: [AUTO_GROUPS.trust_level_1],
+      visibleGroups: [AUTO_GROUPS.trust_level_1],
       show_adsense_ads: true,
       show_to_groups: true,
     });
@@ -77,7 +77,7 @@ acceptance(`AdSense`, function (needs) {
     updateCurrentUser({
       staff: false,
       trust_level: 3,
-      groups: [AUTO_GROUPS.trust_level_3],
+      visibleGroups: [AUTO_GROUPS.trust_level_3],
     });
     await visit("/t/280");
     assert
@@ -89,7 +89,7 @@ acceptance(`AdSense`, function (needs) {
     updateCurrentUser({
       staff: false,
       trust_level: 1,
-      groups: [groupFixtures["/groups/discourse.json"].group],
+      visibleGroups: [groupFixtures["/groups/discourse.json"].group],
     });
     await visit("/t/280");
     assert

@@ -107,6 +107,10 @@ sr:
           latest: "Poslednje"
       channel_list:
         title: "Kanali"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Spominjanja"
       incoming_webhooks:
         back: "Nazad"
         description: "Opis"

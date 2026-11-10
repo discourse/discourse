@@ -10,10 +10,10 @@ export default <template>
       @titleLabel={{i18n "admin.config.logo.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/config/logo"
           @label={{i18n "admin.config.logo.title"}}
+          @path="/admin/config/logo"
         />
       </:breadcrumbs>
     </DPageHeader>

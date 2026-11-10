@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -6,6 +7,7 @@ import Owner, { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import {
+  type FloatCloseOptions,
   type FloatKitTrigger,
   MENU,
   type MenuOptions,
@@ -13,18 +15,15 @@ import {
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import { animateClosing } from "discourse/lib/animation-utils";
-import type ModalService from "discourse/services/modal";
 
 /**
  * The concrete float instance backing a menu. It holds the menu's options,
  * open/close state, and portal outlet, and implements the trigger and lifecycle
  * hooks that `FloatKitInstance` orchestrates. A menu refocuses its trigger when
- * it closes and, on mobile, closes through the modal service when it was shown
- * as a modal.
+ * it closes.
  */
 export default class DMenuInstance extends FloatKitInstance {
   @service declare menu: MenuService;
-  @service declare modal: ModalService;
 
   /** Whether the menu is currently open. */
   @tracked expanded = false;
@@ -52,7 +51,7 @@ export default class DMenuInstance extends FloatKitInstance {
   @tracked options: MenuOptions;
   @tracked portalOutletOverrideElement?: HTMLElement | null;
 
-  @tracked _trigger: FloatKitTrigger;
+  @tracked _trigger?: FloatKitTrigger;
 
   constructor(owner: Owner, options: Partial<MenuOptions> = {}) {
     super();
@@ -72,15 +71,14 @@ export default class DMenuInstance extends FloatKitInstance {
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
-  get portalOutletElement() {
-    return (
-      this.portalOutletOverrideElement ||
-      document.getElementById("d-menu-portals")
-    );
-  }
-
-  get trigger() {
-    return this._trigger;
+  /**
+   * Set when the trigger registers, which comes before the float can show or
+   * hand out its API. A read before then is a bug, so it asserts.
+   */
+  get trigger(): FloatKitTrigger {
+    const trigger = this._trigger;
+    assert("DMenuInstance: the trigger is read before it registered", trigger);
+    return trigger;
   }
 
   set trigger(element: FloatKitTrigger) {
@@ -88,6 +86,13 @@ export default class DMenuInstance extends FloatKitInstance {
     this.id =
       (element instanceof HTMLElement && element.id) || guidFor(element);
     this.setupListeners();
+  }
+
+  get portalOutletElement() {
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-menu-portals")
+    );
   }
 
   get shouldTrapPointerDown() {
@@ -103,8 +108,29 @@ export default class DMenuInstance extends FloatKitInstance {
     return !!this.content?.contains(document.activeElement);
   }
 
+  /**
+   * Where focus goes once the menu has closed. `focusTarget` is resolved here rather than when
+   * the menu opened, so an action that replaces or removes the element it named still returns
+   * focus to whatever now stands in its place. The trigger element is the fallback, and is
+   * `null` for a menu anchored to a virtual reference — which is exactly the case `focusTarget`
+   * exists to serve.
+   */
+  get #focusReturnTarget(): HTMLElement | null {
+    const { focusTarget } = this.options;
+
+    // An absent thunk means "no opinion", so the trigger is the fallback. A thunk that returns
+    // `null` is an opinion — the caller looked and decided nothing should take focus — so it is
+    // honoured rather than falling through to the trigger.
+    return focusTarget ? focusTarget() : this.triggerElement;
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
+  }
+
   @action
-  async close(options = { focusTrigger: true }) {
+  async close(options: FloatCloseOptions = {}) {
     this.resetHoverCloseState();
     this.openedByDelayedHover = false;
 
@@ -116,26 +142,20 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await animateClosing(this.content);
 
-    if (this.renderInModal && this.expanded) {
-      await this.modal.close();
-    }
-
     await this.menu.close(this);
 
     // A caller that closes without asking for the trigger to be refocused (a click outside,
     // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
     // closing is animated, so by now the click may have deliberately focused something else,
     // and only focus left with no owner is ours to restore.
-    if (options.focusTrigger || (ownedFocus && this.#focusIsUnowned)) {
-      this.triggerElement?.focus();
+    if (
+      (options.focusTrigger ?? true) ||
+      (ownedFocus && this.#focusIsUnowned)
+    ) {
+      this.#focusReturnTarget?.focus();
     }
 
     await super.close(options);
-  }
-
-  get #focusIsUnowned(): boolean {
-    const { activeElement } = document;
-    return !activeElement || activeElement === document.body;
   }
 
   @action

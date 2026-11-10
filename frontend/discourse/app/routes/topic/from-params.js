@@ -17,6 +17,7 @@ import {
   isValidNestedViewCacheSnapshot,
   NESTED_VIEW_CACHE_FORMAT_VERSION,
 } from "discourse/lib/nested-view-cache-snapshot";
+import resolvePermalink from "discourse/lib/permalink-check";
 import PreloadStore from "discourse/lib/preload-store";
 import { registerPostInTopicPostStream } from "discourse/lib/process-node";
 import DiscourseURL from "discourse/lib/url";
@@ -33,6 +34,15 @@ export function nestedQueryString(params) {
   }
 
   return query.toString();
+}
+
+function originalTopicPath(topic, params) {
+  let path = `/t/${topic.slug}/${topic.id}`;
+  const nearPost = params.nearPost;
+  if (nearPost && nearPost !== "last" && nearPost !== 999999999) {
+    path += `/${nearPost}`;
+  }
+  return path;
 }
 
 // This route is used for retrieving a topic based on params
@@ -89,11 +99,25 @@ export default class TopicFromParams extends DiscourseRoute {
         }
         return params;
       })
-      .catch((e) => {
+      .catch(async (e) => {
         if (!isTesting()) {
           // eslint-disable-next-line no-console
           console.log("Could not view topic", e);
         }
+
+        // The id-only topic JSON drops the slug, so the server can't match a
+        // permalink for the original URL; resolve it here instead.
+        if (topic.errorHtml) {
+          const result = await resolvePermalink(
+            originalTopicPath(topic, params),
+            transition,
+            this.router
+          ).catch(() => null);
+          if (result?.type === "redirect") {
+            return params;
+          }
+        }
+
         params._loading_error = true;
         return params;
       });
@@ -152,23 +176,24 @@ export default class TopicFromParams extends DiscourseRoute {
     const topic = this.modelFor("topic");
     const postStream = topic.postStream;
 
-    // TODO we are seeing errors where closest post is null and this is exploding
-    // we need better handling and logging for this condition.
-
     // there are no closestPost for hidden topics
     if (topic.view_hidden) {
       return;
     }
 
-    // The post we requested might not exist. Let's find the closest post
+    // The post we requested might not exist. Let's find the closest post —
+    // a topic with no posts at all has none, so everything keyed off a post
+    // is skipped below while the route itself still sets up.
     const closestPost = postStream.closestPostForPostNumber(
       params.nearPost || 1
     );
-    const closest = closestPost.post_number;
+    const closest = closestPost?.post_number;
 
     topicController.setProperties({
       "model.currentPost": closest,
-      enteredIndex: topic.postStream.progressIndexOfPost(closestPost),
+      enteredIndex: closestPost
+        ? topic.postStream.progressIndexOfPost(closestPost)
+        : undefined,
       enteredAt: Date.now().toString(),
       userLastReadPostNumber: topic.last_read_post_number,
       highestPostNumber: topic.highest_post_number,
@@ -181,23 +206,25 @@ export default class TopicFromParams extends DiscourseRoute {
       this.screenTrack.start(topic.id, topicController);
     }
 
-    // Highlight our post after the next render
-    schedule("afterRender", () =>
-      this.appEvents.trigger("post:highlight", closest)
-    );
+    if (closestPost) {
+      // Highlight our post after the next render
+      schedule("afterRender", () =>
+        this.appEvents.trigger("post:highlight", closest)
+      );
 
-    const opts = {};
-    if (document.location.hash) {
-      opts.anchor = document.location.hash.slice(1);
-    } else if (_discourse_anchor) {
-      opts.anchor = _discourse_anchor;
-    }
-    DiscourseURL.jumpToPost(closest, opts);
+      const opts = {};
+      if (document.location.hash) {
+        opts.anchor = document.location.hash.slice(1);
+      } else if (_discourse_anchor) {
+        opts.anchor = _discourse_anchor;
+      }
+      DiscourseURL.jumpToPost(closest, opts);
 
-    // completely clear out all the bookmark related attributes
-    // because they are not in the response if bookmarked == false
-    if (closestPost && !closestPost.bookmarked) {
-      closestPost.clearBookmark();
+      // completely clear out all the bookmark related attributes
+      // because they are not in the response if bookmarked == false
+      if (!closestPost.bookmarked) {
+        closestPost.clearBookmark();
+      }
     }
 
     if (!isEmpty(topic.draft) && !EmbedMode.enabled) {
@@ -209,6 +236,23 @@ export default class TopicFromParams extends DiscourseRoute {
         topic,
       });
     }
+  }
+
+  @action
+  willTransition(transition) {
+    this.controllerFor("topic").set("previousURL", document.location.pathname);
+
+    transition.followRedirects().finally(() => {
+      const routeName = this.router.currentRouteName;
+
+      if (!routeName?.startsWith("topic.")) {
+        this.header.clearTopic();
+      }
+    });
+
+    // NOTE: omitting this return can break the back button when transitioning quickly between
+    // topics and the latest page.
+    return true;
   }
 
   async #loadNestedModel(topic, params, queryParams) {
@@ -501,22 +545,5 @@ export default class TopicFromParams extends DiscourseRoute {
 
   #truthyQueryParam(value) {
     return value === true || value === "true" || value === "1" || value === 1;
-  }
-
-  @action
-  willTransition(transition) {
-    this.controllerFor("topic").set("previousURL", document.location.pathname);
-
-    transition.followRedirects().finally(() => {
-      const routeName = this.router.currentRouteName;
-
-      if (!routeName?.startsWith("topic.")) {
-        this.header.clearTopic();
-      }
-    });
-
-    // NOTE: omitting this return can break the back button when transitioning quickly between
-    // topics and the latest page.
-    return true;
   }
 }

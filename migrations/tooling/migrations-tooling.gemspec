@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.files = Dir["lib/**/*", "config/**/*", "scripts/**/*"]
 
   s.add_dependency "migrations-core"
-  s.add_dependency "activerecord"
   s.add_dependency "activesupport"
   s.add_dependency "colored2"
   s.add_dependency "i18n"

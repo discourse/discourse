@@ -40,25 +40,6 @@ export default class BulkUserDeleteConfirmation extends Component {
     );
   }
 
-  #logError(line) {
-    this.#log(line, "error");
-  }
-
-  #logSuccess(line) {
-    this.#log(line, "success");
-  }
-
-  #logNeutral(line) {
-    this.#log(line, "neutral");
-  }
-
-  #log(line, type) {
-    this.logs.push({
-      line,
-      type,
-    });
-  }
-
   @bind
   onDeleteProgress(data) {
     if (data.success) {
@@ -143,6 +124,25 @@ export default class BulkUserDeleteConfirmation extends Component {
     this.blockIpAndEmail = event.target.checked;
   }
 
+  #logError(line) {
+    this.#log(line, "error");
+  }
+
+  #logSuccess(line) {
+    this.#log(line, "success");
+  }
+
+  #logNeutral(line) {
+    this.#log(line, "neutral");
+  }
+
+  #log(line, type) {
+    this.logs.push({
+      line,
+      type,
+    });
+  }
+
   <template>
     <DModal
       class="bulk-user-delete-confirmation"
@@ -175,14 +175,14 @@ export default class BulkUserDeleteConfirmation extends Component {
           </p>
           <input
             class="confirmation-phrase"
-            type="text"
             placeholder={{this.confirmDeletePhrase}}
+            type="text"
             {{on "input" this.onPromptInput}}
           />
           <label class="checkbox-label">
             <input
-              type="checkbox"
               class="block-ip-and-email"
+              type="checkbox"
               {{on "change" this.toggleBlockIpAndEmail}}
             />
             {{i18n
@@ -194,15 +194,15 @@ export default class BulkUserDeleteConfirmation extends Component {
       <:footer>
         <DButton
           class="confirm-delete btn-danger"
+          @action={{this.startDelete}}
+          @disabled={{this.confirmButtonDisabled}}
           @icon="trash-can"
           @label="admin.users.bulk_actions.delete.confirmation_modal.confirm"
-          @disabled={{this.confirmButtonDisabled}}
-          @action={{this.startDelete}}
         />
         <DButton
           class="btn-default"
-          @label="admin.users.bulk_actions.delete.confirmation_modal.close"
           @action={{this.closeModal}}
+          @label="admin.users.bulk_actions.delete.confirmation_modal.close"
         />
       </:footer>
     </DModal>

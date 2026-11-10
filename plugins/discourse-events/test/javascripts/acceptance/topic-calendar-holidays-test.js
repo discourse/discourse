@@ -2,7 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import { acceptance, fakeTime } from "discourse/tests/helpers/qunit-helpers";
-import eventTopicFixture from "../helpers/event-topic-fixture";
+import eventTopicFixture from "../helpers/event-topic-fixture.js";
 
 acceptance("Topic Calendar Holidays", function (needs) {
   needs.hooks.beforeEach(function () {

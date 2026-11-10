@@ -3,6 +3,8 @@
 RSpec.describe DiscourseAi::Completions::Endpoints::GoogleVertexAi do
   subject(:endpoint) { described_class.new(model) }
 
+  fab!(:user)
+
   let(:model) do
     Fabricate(
       :llm_model,
@@ -55,6 +57,88 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GoogleVertexAi do
     request = endpoint.send(:prepare_request, "{}")
 
     expect(request["Authorization"]).to eq("Bearer vertex-token")
+  end
+
+  it "strips unsupported generation parameters for Gemini 3.8" do
+    SiteSetting.ai_llm_temperature_top_p_enabled = true
+    model.update!(
+      name: "google/gemini-3.8-flash",
+      api_key: "vertex-token",
+      provider_params: {
+        project_id: "discourse-project",
+        region: "global",
+      },
+    )
+    request_body = nil
+    url =
+      "https://aiplatform.googleapis.com/v1/projects/discourse-project/locations/global/publishers/google/models/gemini-3.8-flash:generateContent"
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body: {
+        candidates: [
+          { content: { parts: [{ text: "Done" }], role: "model" }, finishReason: "STOP" },
+        ],
+      }.to_json,
+    )
+
+    expect(
+      DiscourseAi::Completions::Llm.proxy(model).generate(
+        "Think",
+        user:,
+        temperature: 0.4,
+        top_p: 0.8,
+        extra_model_params: {
+          topK: 40,
+          thinkingConfig: {
+            thinkingBudget: 1_000,
+          },
+        },
+      ),
+    ).to eq("Done")
+    expect(request_body[:generationConfig]).to be_empty
+  end
+
+  it "omits legacy thinking budgets for Gemini 3.8" do
+    model.update!(
+      name: "google/gemini-3.8-flash",
+      api_key: "vertex-token",
+      provider_params: {
+        project_id: "discourse-project",
+        region: "global",
+        enable_thinking: true,
+        thinking_tokens: 10_000,
+      },
+    )
+    request_bodies = []
+    url =
+      "https://aiplatform.googleapis.com/v1/projects/discourse-project/locations/global/publishers/google/models/gemini-3.8-flash:generateContent"
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_bodies << JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body: {
+        candidates: [
+          { content: { parts: [{ text: "Done" }], role: "model" }, finishReason: "STOP" },
+        ],
+      }.to_json,
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    expect(llm.generate("Think", user:)).to eq("Done")
+    expect(llm.generate("Think", user:, thinking_effort: "none")).to eq("Done")
+    expect(request_bodies.map { |body| body[:generationConfig] }).to eq(
+      [{}, { thinkingConfig: { thinkingLevel: "low" } }],
+    )
   end
 
   describe "credential resolution" do

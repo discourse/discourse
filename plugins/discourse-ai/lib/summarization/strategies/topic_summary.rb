@@ -108,15 +108,18 @@ module DiscourseAi
               .where("post_type = ?", Post.types[:regular])
               .where("NOT hidden")
               .order(:post_number)
+              .select(:post_number)
 
-          post_numbers = posts.limit(5).pluck(:post_number)
-          post_numbers += posts.reorder("posts.score desc").limit(50).pluck(:post_number)
-          post_numbers += posts.reorder("post_number desc").limit(5).pluck(:post_number)
+          opening = posts.limit(5)
+          highest_scored = posts.reorder("posts.score desc").limit(50)
+          latest = posts.reorder("post_number desc").limit(5)
 
           Post
             .where(topic_id: target.id)
             .joins(:user)
-            .where("post_number in (?)", post_numbers)
+            .where(
+              "post_number IN ((#{opening.to_sql}) UNION (#{highest_scored.to_sql}) UNION (#{latest.to_sql}))",
+            )
             .order(:post_number)
         end
       end

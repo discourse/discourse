@@ -7,6 +7,8 @@
 fr:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "Test"
       missing_token: "Veuillez résoudre le défi captcha."
       verification_failed: "La vérification du captcha a échoué. Veuillez réessayer."
       placeholder: espace réservé

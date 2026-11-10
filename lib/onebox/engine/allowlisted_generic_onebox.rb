@@ -229,13 +229,18 @@ module Onebox
 
       def is_embedded?
         return false if data[:html].blank?
-        provider_hosts = AllowlistedGenericOnebox.html_providers[data[:provider_name]]
-        return true if provider_hosts && AllowlistedGenericOnebox.host_matches(uri, provider_hosts)
-        return false unless data[:html]["iframe"]
+        return true if trusted_html_provider?
 
-        fragment = Nokogiri::HTML5.fragment(data[:html])
-        src = fragment.at_css("iframe")&.[]("src")
-        options[:allowed_iframe_regexes]&.any? { |r| src =~ r }
+        iframes = Nokogiri::HTML5.fragment(data[:html]).css("iframe")
+        iframes.present? &&
+          iframes.all? do |iframe|
+            options[:allowed_iframe_regexes]&.any? { |regex| iframe["src"] =~ regex }
+          end
+      end
+
+      def trusted_html_provider?
+        provider_hosts = AllowlistedGenericOnebox.html_providers[data[:provider_name]]
+        !!provider_hosts && AllowlistedGenericOnebox.host_matches(uri, provider_hosts)
       end
 
       def force_article_html?
@@ -297,15 +302,20 @@ module Onebox
 
       def embedded_html
         fragment = Nokogiri::HTML5.fragment(data[:html])
-        fragment.css("img").each { |img| img["class"] = "thumbnail" }
-        if iframe = fragment.at_css("iframe")
+        if trusted_html_provider?
+          fragment.css("img").each { |img| img["class"] = "thumbnail" }
+          return fragment.to_html
+        end
+
+        iframes = fragment.css("iframe")
+        iframes.each do |iframe|
           iframe.remove_attribute("style")
           iframe["width"] = data[:width] || "100%"
           iframe["height"] = data[:height] if data[:height].present?
           iframe["scrolling"] = "no"
           iframe["frameborder"] = "0"
         end
-        fragment.to_html
+        iframes.to_html
       end
     end
   end

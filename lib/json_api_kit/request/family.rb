@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+
+module JsonApiKit
+  class Request
+    class Family
+      LIST_ITEM = /\A(?<direction>-?)(?<name>.*)\z/m
+
+      def initialize(glossary:, resource:)
+        @glossary = glossary
+        @resource = resource
+      end
+
+      private
+
+      attr_reader :glossary, :resource
+
+      def type = glossary.member_type(resource.type)
+
+      def names(value, path, &name_for)
+        case value
+        when Array
+          value.map { names(it, path, &name_for) }
+        when String, Symbol
+          value.to_s.split(LIST, -1).map { list_item(it, path, &name_for) }.join(LIST)
+        else
+          value
+        end
+      end
+
+      def list_item(value, path)
+        direction, name = LIST_ITEM.match(value).captures
+        "#{direction}#{declared_name(yield(name), path)}"
+      end
+
+      def declared_name(name, path) = declared_names(name, path).sole
+
+      def declared_names(name, path)
+        glossary.declared_names(name).map(&:value)
+      rescue Glossary::NotAMemberName => error
+        raise error.at(ParameterName.new(*path).to_s)
+      end
+    end
+  end
+end

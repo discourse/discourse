@@ -101,9 +101,26 @@ export const SWIPE_VELOCITY_THRESHOLD = 0.12;
 export const MINIMUM_SWIPE_DISTANCE = 5;
 export const MAX_ANIMATION_TIME = 200;
 
+/**
+ * @typedef {object} SwipeState
+ * @property {{ x: number, y: number }} center
+ * @property {{ x: number, y: number }} startLocation
+ * @property {number} velocityX
+ * @property {number} velocityY
+ * @property {number} deltaX
+ * @property {number} deltaY
+ * @property {boolean} start
+ * @property {number} timestamp
+ * @property {"left" | "right" | "up" | "down" | null} direction
+ * @property {HTMLElement} element
+ * @property {() => boolean} goingUp
+ * @property {() => boolean} goingDown
+ * @property {TouchEvent} [originalEvent]
+ */
 export default class SwipeEvents {
   //velocity is pixels per ms
 
+  /** @type {SwipeState | null} */
   swipeState = null;
   animationPending = false;
 

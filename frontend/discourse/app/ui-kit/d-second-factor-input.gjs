@@ -13,20 +13,20 @@ export default class DSecondFactorInput extends Component {
   <template>
     {{#if this.isTotp}}
       <DOtp
-        @onFill={{@onFill}}
-        @onChange={{@onChange}}
         class="second-factor-token-input"
         ...attributes
+        @onChange={{@onChange}}
+        @onFill={{@onFill}}
       />
     {{else}}
       <input
-        type="text"
-        pattern="[a-z0-9]{16}"
-        maxlength="32"
         autocapitalize="off"
         autocorrect="off"
         autofocus="autofocus"
         class="second-factor-token-input"
+        maxlength="32"
+        pattern="[a-z0-9]{16}"
+        type="text"
         ...attributes
         {{on "input" (withEventValue @onChange)}}
         {{dAutoFocus}}

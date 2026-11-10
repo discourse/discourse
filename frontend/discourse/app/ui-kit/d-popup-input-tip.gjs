@@ -17,15 +17,11 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 export default class DPopupInputTip extends Component {
   @service composer;
 
+  /** @type {import("@ember/template").TrustedHTML | null} */
   tipReason = null;
   tabindex = "0";
 
   @tracked _badOverride;
-
-  @computed("shownAt", "validation.lastShownAt")
-  get lastShownAt() {
-    return this.shownAt || this.validation?.lastShownAt;
-  }
 
   @computed("validation.failed")
   get bad() {
@@ -37,6 +33,11 @@ export default class DPopupInputTip extends Component {
 
   set bad(value) {
     this._badOverride = value;
+  }
+
+  @computed("shownAt", "validation.lastShownAt")
+  get lastShownAt() {
+    return this.shownAt || this.validation?.lastShownAt;
   }
 
   @computed("bad")

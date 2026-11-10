@@ -50,48 +50,6 @@ export default class AiFullPageSearch extends Component {
     );
   }
 
-  @action
-  onSearch() {
-    if (!this.searchEnabled) {
-      return;
-    }
-
-    this.searching = true;
-    this.hasCompletedSearch = false;
-    this.autoEnabledForZeroResults = false;
-    this.shouldAutoEnableWhenAiReady = false;
-    this.resetAiResults();
-    return this.performHyDESearch();
-  }
-
-  @action
-  onSearchResultsLoaded() {
-    // enable AI results if we have zero regular results and AI results are ready
-    if (
-      this.hasZeroRegularResults &&
-      !this.showingAiResults &&
-      !this.autoEnabledForZeroResults &&
-      this.AiResults.length > 0
-    ) {
-      this.autoEnabledForZeroResults = true;
-      this.showingAiResults = true;
-      this.args.addSearchResults(this.AiResults, "topic_id");
-      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
-        enabled: true,
-        autoEnabled: true,
-      });
-    }
-    // AI results not ready yet, auto-enable when ready
-    else if (
-      this.hasZeroRegularResults &&
-      !this.showingAiResults &&
-      !this.autoEnabledForZeroResults &&
-      this.AiResults.length === 0
-    ) {
-      this.shouldAutoEnableWhenAiReady = true;
-    }
-  }
-
   get disableToggleSwitch() {
     if (
       this.searching ||
@@ -200,6 +158,48 @@ export default class AiFullPageSearch extends Component {
   }
 
   @action
+  onSearch() {
+    if (!this.searchEnabled) {
+      return;
+    }
+
+    this.searching = true;
+    this.hasCompletedSearch = false;
+    this.autoEnabledForZeroResults = false;
+    this.shouldAutoEnableWhenAiReady = false;
+    this.resetAiResults();
+    return this.performHyDESearch();
+  }
+
+  @action
+  onSearchResultsLoaded() {
+    // enable AI results if we have zero regular results and AI results are ready
+    if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length > 0
+    ) {
+      this.autoEnabledForZeroResults = true;
+      this.showingAiResults = true;
+      this.args.addSearchResults(this.AiResults, "topic_id");
+      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
+        enabled: true,
+        autoEnabled: true,
+      });
+    }
+    // AI results not ready yet, auto-enable when ready
+    else if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length === 0
+    ) {
+      this.shouldAutoEnableWhenAiReady = true;
+    }
+  }
+
+  @action
   toggleAiResults() {
     this.appEvents.trigger(AI_RESULTS_TOGGLED, {
       enabled: !this.showingAiResults,
@@ -282,9 +282,9 @@ export default class AiFullPageSearch extends Component {
   <template>
     {{bodyClass (if this.searching "ai-semantic-search-loading")}}
     <div
-      {{didUpdate this.sortChanged @sortOrder}}
       class="semantic-search__container search-results"
       role="region"
+      {{didUpdate this.sortChanged @sortOrder}}
     >
       <div class="semantic-search__results">
         {{#if this.tooltipIdentifier}}
@@ -297,9 +297,9 @@ export default class AiFullPageSearch extends Component {
                 }}
               >
                 <DToggleSwitch
+                  class="semantic-search__results-toggle"
                   disabled={{this.disableToggleSwitch}}
                   @state={{this.showingAiResults}}
-                  class="semantic-search__results-toggle"
                   {{on "click" this.toggleAiResults}}
                 />
                 <div class="semantic-search__searching-text">
@@ -324,9 +324,9 @@ export default class AiFullPageSearch extends Component {
             class={{dConcatClass "semantic-search__searching" this.searchClass}}
           >
             <DToggleSwitch
+              class="semantic-search__results-toggle"
               disabled={{this.disableToggleSwitch}}
               @state={{this.showingAiResults}}
-              class="semantic-search__results-toggle"
               {{on "click" this.toggleAiResults}}
             />
             <div class="semantic-search__searching-text">

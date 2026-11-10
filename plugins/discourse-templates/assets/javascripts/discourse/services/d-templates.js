@@ -1,8 +1,8 @@
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
-import { replaceVariables } from "../../lib/replace-variables";
-import extractVariablesFromComposerModel from "../../lib/variables-composer";
+import { replaceVariables } from "../../lib/replace-variables.js";
+import extractVariablesFromComposerModel from "../../lib/variables-composer.js";
 
 export default class DTemplatesService extends Service {
   @service appEvents;
@@ -11,6 +11,19 @@ export default class DTemplatesService extends Service {
   @service currentUser;
   @service dTemplatesModal;
   @service composer;
+
+  get isComposerFocused() {
+    const activeElement = document.activeElement;
+
+    const composerModel = getOwner(this).lookup("service:composer").model;
+    const composerElement = document.querySelector(".d-editor");
+
+    return composerModel && composerElement?.contains(activeElement);
+  }
+
+  get isTextAreaFocused() {
+    return this.#isTextArea(document.activeElement);
+  }
 
   showComposerUI() {
     const onInsertTemplate = this.#insertTemplateIntoComposer.bind(this);
@@ -43,19 +56,6 @@ export default class DTemplatesService extends Service {
         onInsertTemplate(textarea, template, extractVariables())
       );
     }
-  }
-
-  get isComposerFocused() {
-    const activeElement = document.activeElement;
-
-    const composerModel = getOwner(this).lookup("service:composer").model;
-    const composerElement = document.querySelector(".d-editor");
-
-    return composerModel && composerElement?.contains(activeElement);
-  }
-
-  get isTextAreaFocused() {
-    return this.#isTextArea(document.activeElement);
   }
 
   #isTextArea(element) {

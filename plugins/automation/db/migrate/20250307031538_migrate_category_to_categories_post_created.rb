@@ -33,6 +33,7 @@ class MigrateCategoryToCategoriesPostCreated < ActiveRecord::Migration[7.2]
       AND a.trigger = 'post_created_edited'
     SQL
   end
+
   def down
     raise ActiveRecord::IrreversibleMigration
   end

@@ -311,7 +311,6 @@ be:
       zh_CN:
         name: Кітайская спрошчаная
     share:
-      topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       post: "допіс №%{postNumber} ад карыстальніка @%{username}"
       close: "закрыць"
       twitter: "Абагуліць у X"
@@ -414,11 +413,6 @@ be:
       few: "не больш за %{count}"
       many: "не больш за %{count}"
       other: "не больш за %{count}"
-    character_count:
-      one: "%{count} сімвал"
-      few: "%{count} сімвалы"
-      many: "%{count} сімвалаў"
-      other: "%{count} сімвалаў"
     related_messages:
       title: "Звязаныя паведамленні"
       pill: "Звязаныя паведамленні"
@@ -431,11 +425,9 @@ be:
       back: "Назад"
       next: "Далей"
       sections:
-        theme: "Тэма"
         homepage: "Галоўная старонка"
-      colors:
-        light: "Светлая"
-        dark: "Цёмная"
+      fonts:
+        base_font: "Тэкст"
       homepage:
         topics: "тэмы"
         categories: "катэгорыі"
@@ -652,6 +644,8 @@ be:
       title:
         search: "Пошук паведамлення"
         placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар паведамлення"
+    dsa_statements:
+      category: "Катэгорыя"
     review:
       show_more: "Паказаць больш"
       show_less: "Паказаць менш"
@@ -737,6 +731,9 @@ be:
         reviewable_ai_post:
           noun: "пост"
       user_label: "Карыстальнік"
+      author_penalty:
+        toast:
+          undo: "Адрабіць"
       notes:
         delete: "выдаляць"
       topic_label: "Тэма"
@@ -991,6 +988,12 @@ be:
       users: "Карыстальнікі"
       muted_users: "Адключаныя"
       apps: "Праграмы"
+      mcp_authorizations:
+        details: "Падрабязнасці"
+        never: "Ніколі"
+        status: "Статус"
+        statuses:
+          active: "Актыўныя"
       api_approved: "Ухвалена:"
       api_expires_never: "ніколі"
       theme: "Тэма"
@@ -1348,6 +1351,10 @@ be:
       required_at_signup: "Абавязкова"
     welcome_banner_page_visibility:
       homepage: "Галоўная старонка"
+    shortcut_modifier_key:
+      option: "Варыянт"
+      delete: "Выдаліць"
+      home: "Галоўная старонка"
     category_row:
       subcategories: "+ Падкатэгорыі"
     select_kit:
@@ -1364,6 +1371,7 @@ be:
       flags: Сцягі
     filter_controls:
       reset: "Скінуць"
+      sort_label: "сартаваць па"
     composer:
       options: "Параметры"
       posting_not_on_topic: "У якой тэме вы хочаце адказаць?"
@@ -1376,8 +1384,7 @@ be:
       reply: "Адказаць"
       cancel: "Скасаваць"
       create_topic: "Стварыць тэму"
-      title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
-      title_placeholder_redesign: "Загаловак"
+      title_placeholder: "Загаловак"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
       edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
@@ -1455,6 +1462,7 @@ be:
       categories: "Катэгорыі"
       tags: "Тэгі"
       type:
+        default: "Допісаў"
         users: "Карыстальнікі"
         categories: "Катэгорыі"
       context:
@@ -1683,8 +1691,6 @@ be:
           previous: "Папярэдняя версія"
           next: "Наступная версія"
           last: "Апошняя версія"
-          hide: "Схаваць версію"
-          show: "Паказаць версію"
         displays:
           inline:
             title: "Паказаць атрыманы вынік з дададзенымі і выдаленымі элементамі ў радку"
@@ -1695,7 +1701,6 @@ be:
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
-      choose: "Катэгорыя&hellip;"
       edit: "Рэдагаваць"
       view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
@@ -1727,6 +1732,7 @@ be:
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўнены, што хочаце выдаліць гэту катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
+      latest_topics: "Апошнія тэмы"
       description_expand: "Паказаць больш"
       description_collapse: "Паказаць менш"
       already_used: "Гэты колер ужо выкарыстоўваецца іншай катэгорыяй"
@@ -1813,6 +1819,7 @@ be:
     categories_list: "Спіс катэгорый"
     filters:
       filter:
+        reset: "скінуць"
         button:
           label: "Фільтр"
       latest:
@@ -2047,14 +2054,6 @@ be:
         type_mismatch:
           default: "Увядзіце правільнае значэнне."
           email: "Увядзіце правільны адрас электроннай пошты."
-    table_builder:
-      edit:
-        modal:
-          cancel: "скасаваць"
-          create: "Захаваць"
-          reason: "Чаму вы рэдагуеце допіс?"
-      spreadsheet:
-        about: "Пра сайт"
     filter:
       description:
         yesterday: "Учора"
@@ -2075,6 +2074,11 @@ be:
         group_traffic: "Трафік"
         group_members: "Члены"
         group_other: "Іншае"
+        related_items:
+          users:
+            title: "карыстальнікаў"
+          labels:
+            user: "Карыстальнік"
       config_sections:
         account:
           title: "Уліковы запіс"
@@ -2106,9 +2110,57 @@ be:
           impact_role_admins: "Адміністратары"
           impact_role_moderators: "Мадэратары"
           impact_role_staff: "Персанал"
+        sort:
+          status: "Статус"
+          name: "Імя"
       config:
         developer:
           title: "Распрацоўшчык"
+        mcp:
+          tabs:
+            access: "Доступ"
+            activity: "актыўнасць"
+          overview:
+            status: "Статус"
+          access:
+            title: "Доступ"
+            group: "Група"
+            groups: "Груп"
+            actions: "Дзеянні"
+            edit: "Рэдагаваць"
+            delete: "Выдаліць"
+          primitives:
+            group_by_options:
+              kind: "Тып"
+            kind: "Тып"
+          clients:
+            actions: "Дзеянні"
+            block: "Заблакіраваць"
+          authorizations:
+            user: "Карыстальнік"
+            status: "Статус"
+            actions: "Дзеянні"
+          activity:
+            user: "Карыстальнік"
+          values:
+            server_status:
+              disabled: "Адключаныя"
+            client_trust:
+              approved: "Ухвалены"
+            authorization_status:
+              active: "Актыўныя"
+            activity_outcome:
+              success: "Поспех"
+              error: "памылка"
+            primitive_state:
+              disabled: "Адключаныя"
+            primitive_risk:
+              moderation: "Мадэрацыя"
+            filter:
+              all: "Усе"
+          never: "Ніколі"
+          actions:
+            revoke: "Адклікаць"
         emojis:
           title: "Эмодзі"
         flags:
@@ -2219,53 +2271,27 @@ be:
       search:
         title: "Пошук"
       site_traffic_explorer:
-        pageviews: "Прагляды"
+        metric_information: "Пра %{metric}"
+        apply: "Прымяніць"
         view_more: "Паказаць больш"
         cards:
           visitors: "Наведвальнікі"
-        columns:
-          top_urls: "URL-адрас"
-          browsers: "браўзэр"
-          ip_addresses: "IP-адрас"
         filters:
           browser: "браўзэр"
           ip: "IP-адрас"
-        metrics:
-          pageviews:
-            label: "Прагляды"
         series:
           anonymous_human: "ананімны"
       dashboard:
         title: "Панэль кіравання"
-        last_updated: "Панэль кіравання абноўлена:"
         version: "Версія"
         up_to_date: "У вас апошняя версія!"
         updates_available: "Даступны абнаўленні."
-        no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
-        stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
-        installed_version: "Усталяваная"
         dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."
-        last_checked: "Апошняя праверка"
         refresh_problems: "Абнавіць"
-        no_problems: "Праблем не выяўлена."
-        moderators: "Мадэратары:"
-        admins: "Адміністратары:"
-        silenced: "Заглушаныя:"
-        suspended: "Прыпыненыя:"
-        private_messages_short: "Павед."
-        private_messages_title: "Паведамленні"
-        mobile_title: "Мабільны"
         uploads: "Запампоўкі"
         backups: "Рэзервовыя копіі"
-        traffic_short: "Трафік"
-        page_views: "Прагляды старонак"
-        page_views_short: "Прагляды"
-        general_tab: "Агульныя"
-        moderation_tab: "Мадэрацыя"
-        security_tab: "Бяспека"
-        reports_tab: "Справаздачы"
         report_filter_any: "любы"
         disabled: Адключана
         sections:
@@ -2279,6 +2305,8 @@ be:
               share: "Абагуліць"
             whos_posting:
               staff: "Персанал"
+              modal:
+                apply: "Захаваць"
             trust_level_pipeline:
               trust_levels:
                 "0": "Новы"
@@ -2291,6 +2319,9 @@ be:
             table:
               searches: "Пошукавых запытаў"
               status: "Статус"
+          system:
+            title: "сістэма"
+            status: "Статус"
         reports_section:
           modal:
             apply: "Прымяніць"
@@ -2298,6 +2329,7 @@ be:
           series:
             anonymous: "ананімны"
             crawlers: "Краўлеры пошукавых сістэм"
+          crawler_learn_more: "Даведацца больш"
         reports:
           today: "сёння"
           yesterday: "учора"
@@ -2312,6 +2344,17 @@ be:
           monthly: Штомесяц
           weekly: Штотыдзень
           groups: "Усе групы"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} карыстальнік"
+              few: "%{count} карыстальнікі"
+              many: "%{count} карыстальнікаў"
+              other: "%{count} карыстальнікаў"
+            posts_count:
+              one: "%{count} допіс"
+              few: "%{count} допісы"
+              many: "%{count} допісаў"
+              other: "%{count} допісу"
           filters:
             group:
               label: Група
@@ -2787,6 +2830,9 @@ be:
           suspended: "Прыпыненыя"
           silenced: "Заглушаныя"
         approved: "Ухвалены?"
+        bots:
+          name: "Імя"
+          username: "Імя карыстальніка"
         titles:
           staff: "Персанал"
           moderators: "Мадэратары"
@@ -2901,10 +2947,10 @@ be:
           confirm: "пацвярджэнне"
           dropdown: "Выпадаючы спіс"
       site_text:
+        search_label: "Пошук"
+        theme_disabled: "Адключаныя"
         edit: "рэдагаваць"
-        revert: "Вярнуць змяненні"
         revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
-        go_back: "Вярнуцца да пошуку"
         show_overriden: "Паказваць толькі перавызначаны"
       settings:
         show_overriden: "Паказваць толькі перавызначаны"

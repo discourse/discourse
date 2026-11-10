@@ -4,7 +4,6 @@ import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
@@ -16,7 +15,7 @@ import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import RagUploadProgress from "./rag-upload-progress";
+import RagUploadProgress from "./rag-upload-progress.gjs";
 
 @tagName("")
 export default class RagUploader extends Component {
@@ -27,7 +26,7 @@ export default class RagUploader extends Component {
   @tracked ragIndexingStatuses = null;
   @autoTrackedArray ragUploads = null;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "discourse-ai-rag-uploader",
     maxFiles: 20,
     type: "discourse_ai_rag_upload",
@@ -46,10 +45,18 @@ export default class RagUploader extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off(
-      `upload-mixin:${this.uppyUpload.config}:all-uploads-complete`,
+      `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`,
       this,
       "_updateTargetWithUploads"
     );
+  }
+
+  get acceptedFileTypes() {
+    if (this.args?.allowImages) {
+      return ".txt,.md,.png,.jpg,.jpeg";
+    } else {
+      return ".txt,.md,.pdf";
+    }
   }
 
   didReceiveAttrs() {
@@ -76,18 +83,6 @@ export default class RagUploader extends Component {
       this,
       "_updateTargetWithUploads"
     );
-  }
-
-  _updateTargetWithUploads() {
-    this.updateUploads(this.ragUploads);
-  }
-
-  get acceptedFileTypes() {
-    if (this.args?.allowImages) {
-      return ".txt,.md,.png,.jpg,.jpeg";
-    } else {
-      return ".txt,.md,.pdf";
-    }
   }
 
   @action
@@ -129,6 +124,10 @@ export default class RagUploader extends Component {
     this.debouncedSearch();
   }
 
+  _updateTargetWithUploads() {
+    this.updateUploads(this.ragUploads);
+  }
+
   <template>
     <div class="rag-uploader" ...attributes>
       {{#if @allowImages}}
@@ -165,15 +164,15 @@ export default class RagUploader extends Component {
                 {{upload.original_filename}}
               </td>
               <RagUploadProgress
-                @upload={{upload}}
                 @ragIndexingStatuses={{this.ragIndexingStatuses}}
+                @upload={{upload}}
               />
               <td class="rag-uploader__remove-file">
                 <DButton
+                  class="btn-flat"
+                  @action={{fn this.removeUpload upload}}
                   @icon="xmark"
                   @title="discourse_ai.rag.uploads.remove"
-                  @action={{fn this.removeUpload upload}}
-                  class="btn-flat"
                 />
               </td>
             </tr>
@@ -191,10 +190,10 @@ export default class RagUploader extends Component {
               </td>
               <td class="rag-uploader__remove-file">
                 <DButton
+                  class="btn-flat"
+                  @action={{fn this.cancelUploading upload}}
                   @icon="xmark"
                   @title="discourse_ai.rag.uploads.remove"
-                  @action={{fn this.cancelUploading upload}}
-                  class="btn-flat"
                 />
               </td>
             </tr>
@@ -203,19 +202,19 @@ export default class RagUploader extends Component {
       </table>
 
       <input
-        {{didInsert this.uppyUpload.setup}}
+        accept={{this.acceptedFileTypes}}
         class="hidden-upload-field"
         disabled={{this.uploading}}
-        type="file"
         multiple="multiple"
-        accept={{this.acceptedFileTypes}}
+        type="file"
+        {{didInsert this.uppyUpload.setup}}
       />
       <DButton
-        @label="discourse_ai.rag.uploads.button"
-        @icon="plus"
-        @title="discourse_ai.rag.uploads.button"
-        @action={{this.submitFiles}}
         class="btn-default"
+        @action={{this.submitFiles}}
+        @icon="plus"
+        @label="discourse_ai.rag.uploads.button"
+        @title="discourse_ai.rag.uploads.button"
       />
     </div>
   </template>

@@ -1,7 +1,3 @@
-.fk-d-menu[data-identifier="usercard"] {
-  z-index: z("usercard");
-}
-
 .full-page-chat {
   &.full-page-chat-sidebar-enabled {
     grid-template-columns: 1fr;
@@ -79,12 +75,5 @@
 
   &.has-sidebar-page .full-page-chat {
     border-left: 0;
-  }
-}
-
-.chat-form {
-  &__description.-autojoin,
-  &__description.-channel-wide-mentions {
-    max-width: 50%;
   }
 }

@@ -60,6 +60,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
         expect(result["username"]).to eq(user.username)
         expect(result["badge_id"]).to eq(badge.id)
         expect(result["badge_name"]).to eq(badge.name)
+        expect(result["changed"]).to be(true)
         expect(UserBadge.exists?(user: user, badge: badge)).to be(true)
         expect(result).to match_node_output_schema(described_class)
       end
@@ -73,9 +74,25 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           "badge_id" => badge.id.to_s,
         }
 
-        expect { execute_node(configuration: config, item: item) }.not_to change {
+        result = nil
+        expect { result = execute_node(configuration: config, item: item) }.not_to change {
           UserBadge.where(user: user, badge: badge).count
         }
+        expect(result["changed"]).to be(false)
+      end
+
+      it "reports no change when the badge is disabled" do
+        badge.update!(enabled: false)
+
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["changed"]).to be(false)
       end
 
       it "raises when granting as the anonymous actor" do
@@ -102,9 +119,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           "badge_id" => badge.id.to_s,
         }
 
-        execute_node(configuration: config, item: item)
+        result = execute_node(configuration: config, item: item)
 
         expect(UserBadge.exists?(user: user, badge: badge)).to be(false)
+        expect(result["changed"]).to be(true)
       end
 
       it "is idempotent when user does not have the badge" do
@@ -124,6 +142,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           "username" => user.username,
           "badge_id" => badge.id,
           "badge_name" => badge.name,
+          "changed" => false,
         )
       end
     end
@@ -137,7 +156,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nonexistent_user' not found",
+        node_error_message(:not_found, scope: :actor, username: "nonexistent_user"),
       )
     end
 

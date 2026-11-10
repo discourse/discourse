@@ -1,15 +1,42 @@
-import { visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  settled,
+  visit,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import { JSON_API_VERSION } from "discourse/data/handlers/json-api";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from "discourse-i18n";
+
+function listDocument(id, name) {
+  return {
+    data: [
+      {
+        type: "queries",
+        id,
+        attributes: { name, description: "", tags: [] },
+        relationships: { user: { data: null }, groups: { data: [] } },
+      },
+    ],
+  };
+}
 
 acceptance("List Queries", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
+  let lastRequest;
+
+  needs.hooks.beforeEach(() => {
+    lastRequest = null;
+  });
+
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/discourse-data-explorer.json", () => {
-      return helper.response({
+    server.get("/admin/plugins/discourse-data-explorer.json", () =>
+      helper.response({
         id: "discourse-data-explorer",
         name: "discourse-data-explorer",
         enabled: true,
@@ -21,71 +48,90 @@ acceptance("List Queries", function (needs) {
           location: "discourse-data-explorer",
           use_new_show_route: true,
         },
-      });
-    });
-
-    server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
-      return helper.response([]);
-    });
-
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
-      return helper.response({
-        queries: [
-          {
-            id: -6,
-            name: "Top 100 Likers",
-            description:
-              "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            username: "system",
-            group_ids: [],
-            last_run_at: "2021-02-11T08:29:59.337Z",
-            user_id: -1,
-          },
-          {
-            id: -5,
-            name: "Top 100 Active Topics",
-            description:
-              "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            username: "system",
-            group_ids: [],
-            last_run_at: "2021-02-08T15:37:49.188Z",
-            user_id: -1,
-          },
-        ],
-        total_rows_queries: 2,
-      });
+      })
+    );
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "staff"])
+    );
+    server.get("/api/data-explorer/queries", (request) => {
+      lastRequest = request;
+      return helper.response(listDocument("1", "Initial query"));
     });
   });
 
-  test("renders the page with the list of queries", async function (assert) {
+  test("requests the JSON:API endpoint with its version and sort", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
+    assert.strictEqual(
+      lastRequest.requestHeaders["Api-Version"],
+      JSON_API_VERSION
+    );
+    assert.deepEqual(lastRequest.queryParams.include, ["groups", "user"]);
+    assert.strictEqual(lastRequest.queryParams.sort, "-lastRunAt");
+
+    await click("#table-header-toggle-username");
+    assert.strictEqual(lastRequest.queryParams.sort, "-user.username");
+
+    await click("#table-header-toggle-username");
+    assert.strictEqual(lastRequest.queryParams.sort, "user.username");
+  });
+
+  test("sends the tag filter and search as JSON:API filters", async function (assert) {
+    await visit(
+      "/admin/plugins/discourse-data-explorer/queries?tags=default,staff"
+    );
+
+    assert.deepEqual(lastRequest.queryParams["filter[tag]"], [
+      "default",
+      "staff",
+    ]);
+
+    await fillIn(".d-filter-controls__input", "likers");
+
+    assert.deepEqual(lastRequest.queryParams["filter[tag]"], [
+      "default",
+      "staff",
+    ]);
+    assert.strictEqual(lastRequest.queryParams["filter[search]"], "likers");
+  });
+
+  test("ignores an older tag-filter response that finishes last", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+
+    const requests = [];
+    pretender.get(
+      "/api/data-explorer/queries",
+      (request) => {
+        requests.push(request);
+        if (request.queryParams["filter[tag]"]?.includes("default")) {
+          return response(listDocument("2", "Top 100 Likers"));
+        }
+        return response(listDocument("3", "Staff activity"));
+      },
+      true
+    );
+
+    const controller = this.owner.lookup(
+      "controller:adminPlugins.show.explorer.index"
+    );
+    controller.onTagFilterChange([{ id: "default", name: "default" }]);
+    controller.onTagFilterChange([{ id: "staff", name: "staff" }]);
+
+    await waitUntil(() => requests.length === 2);
+    pretender.resolve(requests[1]);
+    await waitUntil(() =>
+      find(".recent-queries tbody tr td")?.textContent.includes(
+        "Staff activity"
+      )
+    );
+    pretender.resolve(requests[0]);
+    await settled();
+
     assert
-      .dom(".d-filter-controls__input")
-      .hasAttribute(
-        "placeholder",
-        i18n("explorer.search_placeholder"),
-        "the search box was rendered"
+      .dom(".recent-queries tbody tr td")
+      .hasText(
+        /^\s*Staff activity/,
+        "the latest filter results remain visible"
       );
-
-    assert
-      .dom(".d-page-subheader .btn-primary")
-      .exists("the add query button was rendered");
-
-    assert
-      .dom(".d-page-subheader .d-page-action-wrapped-button")
-      .hasText(i18n("explorer.import.label"), "the import button was rendered");
-
-    assert
-      .dom("div.container table.recent-queries tbody tr")
-      .exists({ count: 2 }, "the list of queries was rendered");
-
-    assert
-      .dom("div.container table.recent-queries tbody tr:nth-child(1) td")
-      .hasText(/^\s*Top 100 Likers/, "The first query was rendered");
-
-    assert
-      .dom("div.container table.recent-queries tbody tr:nth-child(2) td")
-      .hasText(/^\s*Top 100 Active Topics/, "The second query was rendered");
   });
 });

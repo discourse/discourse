@@ -126,6 +126,11 @@ module("Integration | Component | BookmarkIcon", function (hooks) {
   `{ stubRouter: true }` to stub `service:router`.
 - Interact with `@ember/test-helpers`: `click`, `fillIn`, `triggerKeyEvent`, `settled`; query
   the rendered DOM with `find` (first match) / `findAll` (all matches).
+- To change an argument after render, hold it in a standalone `tracked()` (from
+  `@glimmer/tracking`) instead of a test-only class with `@tracked` fields:
+  `const title = tracked("a")`, pass `@title={{title.value}}`, then `title.value = "b"` and
+  `await settled()`. Start empty values as `tracked(undefined)`, since a bare `tracked()`
+  returns a decorator. Writing an equal value (`Object.is`) does not re-render.
 - For select-kit and FormKit widgets, use `discourse/tests/helpers/select-kit-helper` and
   `discourse/tests/helpers/form-kit-helper` rather than poking the DOM directly.
 
@@ -194,8 +199,7 @@ import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 - **DOM lookup helpers**: `query()`, `exists()`, `count()`, `visible()`, `invisible()`,
   `fixture()`. **Prefer `assert.dom(...)` for assertions and `find()` / `findAll()` for
   elements in new tests** — reach for these only when matching existing style.
-- **Deprecated, do not use**: `queryAll()` — use `findAll()` or `assert.dom(...)` instead;
-  `discourseModule` — use QUnit's `module` instead.
+- **Deprecated, do not use**: `queryAll()` — use `findAll()` or `assert.dom(...)` instead.
 
 ## Custom assertions
 
@@ -204,7 +208,7 @@ Beyond [qunit-dom](https://github.com/mainmatter/qunit-dom/blob/master/API.md)'s
 - `assert.present(value, msg)` / `assert.blank(value, msg)` — Ember `isEmpty` checks.
 - `assert.containsInstance(collection, klass, msg)`.
 - Domain assertions registered at import time: `assert.form()` (FormKit, see
-  `form-kit-assertions.js`), `assert.dselect()` (`d-select-assertions.js`),
+  `form-kit-assertions.js`), `assert.dnativeselect()` (`d-native-select-assertions.js`),
   `assert.notificationsTracking()` (`notifications-tracking-assertions.js`).
 
 ## Running tests

@@ -5,26 +5,13 @@ import { action } from "@ember/object";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import decoratePollOption from "../modifiers/decorate-poll-option";
-import PollOptionRankedChoice from "./poll-option-ranked-choice";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
+import PollOptionRankedChoice from "./poll-option-ranked-choice.gjs";
 
 export default class PollOptionsComponent extends Component {
   isChosen = (option) => {
     return this.args.votes.includes(option.id);
   };
-
-  @action
-  sendClick(option, event) {
-    if (event.target.closest(".discourse-local-date")) {
-      return;
-    }
-    this.args.sendOptionSelect(option);
-  }
-
-  @action
-  sendRank(option, rank = 0) {
-    this.args.sendOptionSelect(option, rank);
-  }
 
   get rankedChoiceDropdownContent() {
     let rankedChoiceDropdownContent = [];
@@ -53,6 +40,19 @@ export default class PollOptionsComponent extends Component {
     });
 
     return rankedChoiceDropdownContent;
+  }
+
+  @action
+  sendClick(option, event) {
+    if (event.target.closest(".discourse-local-date")) {
+      return;
+    }
+    this.args.sendOptionSelect(option);
+  }
+
+  @action
+  sendRank(option, rank = 0) {
+    this.args.sendOptionSelect(option, rank);
   }
 
   <template>

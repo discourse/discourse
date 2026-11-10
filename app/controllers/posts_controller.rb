@@ -51,49 +51,20 @@ class PostsController < ApplicationController
 
     if params[:id] == "private_posts"
       raise Discourse::NotFound if current_user.nil?
-
-      allowed_private_topics = TopicAllowedUser.where(user_id: current_user.id).select(:topic_id)
-
-      allowed_groups = GroupUser.where(user_id: current_user.id).select(:group_id)
-      allowed_private_topics_by_group =
-        TopicAllowedGroup.where(group_id: allowed_groups).select(:topic_id)
-
-      all_allowed =
-        Topic
-          .where(id: allowed_private_topics)
-          .or(Topic.where(id: allowed_private_topics_by_group))
-          .select(:id)
-
       posts =
-        Post
-          .private_posts
-          .where(post_type: Topic.visible_post_types(current_user))
-          .order(id: :desc)
-          .includes(topic: :category)
-          .includes(user: %i[primary_group flair_group])
-          .includes(:reply_to_user)
-          .limit(50)
+        LatestPostsQuery.new(user: current_user, guardian:).private_posts(
+          before_post_id: last_post_id,
+        )
       rss_description = I18n.t("rss_description.private_posts")
-
-      posts = posts.where(topic_id: all_allowed) if !current_user.admin?
     else
       posts =
-        Post
-          .public_posts
-          .visible
-          .where(post_type: Post.types[:regular])
-          .order(id: :desc)
-          .includes(topic: :category)
-          .includes(user: %i[primary_group flair_group])
-          .includes(:reply_to_user)
-          .where("categories.id" => Category.secured(guardian).select(:id))
-          .limit(50)
+        LatestPostsQuery.new(user: current_user, guardian:).public_posts(
+          before_post_id: last_post_id,
+        )
 
       rss_description = I18n.t("rss_description.posts")
       @use_canonical = true
     end
-
-    posts = posts.where("posts.id < ?", last_post_id) if last_post_id
 
     posts = posts.to_a
 
@@ -269,6 +240,7 @@ class PostsController < ApplicationController
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
 
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
+        guardian.ensure_can_edit_topic!(post.topic)
         category = Category.find_by(id: changes[:category_id])
         if category || (changes[:category_id].to_i == 0)
           guardian.ensure_can_move_topic_to_category!(category)
@@ -499,7 +471,12 @@ class PostsController < ApplicationController
     raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
 
     render_json_dump(
-      PostRevisionSerializer.new(find_post_revision_from_params, scope: guardian, root: false),
+      PostRevisionSerializer.new(
+        find_post_revision_from_params,
+        scope: guardian,
+        root: false,
+        include_unlisted: include_unlisted_revisions?,
+      ),
     )
   end
 
@@ -512,6 +489,7 @@ class PostsController < ApplicationController
         find_latest_post_revision_from_params,
         scope: guardian,
         root: false,
+        include_unlisted: include_unlisted_revisions?,
       ),
     )
   rescue ONPDiff::DiffLimitExceeded
@@ -585,6 +563,35 @@ class PostsController < ApplicationController
     post.publish_change_to_clients!(:revised)
 
     render body: nil
+  end
+
+  def unlist_revision
+    PostRevision::Unlist.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 400)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::NotFound }
+      on_model_not_found(:post_revision) { raise Discourse::NotFound }
+      on_failed_policy(:can_unlist_post_revision) { raise Discourse::InvalidAccess }
+      on_failed_policy(:post_revision_not_hidden) do
+        render_json_error(I18n.t("cannot_unlist_hidden_revision"), status: 422)
+      end
+    end
+  end
+
+  def relist_revision
+    PostRevision::Relist.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 400)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:can_see_post) { raise Discourse::NotFound }
+      on_model_not_found(:post_revision) { raise Discourse::NotFound }
+      on_failed_policy(:can_relist_post_revision) { raise Discourse::InvalidAccess }
+    end
   end
 
   def revert
@@ -725,6 +732,8 @@ class PostsController < ApplicationController
 
     post.revise(current_user, wiki: params[:wiki])
 
+    return render_json_error(post) if post.errors.present?
+
     render body: nil
   end
 
@@ -739,6 +748,14 @@ class PostsController < ApplicationController
 
     if post.is_first_post? && post_type == Post.types[:whisper]
       raise Discourse::InvalidParameters.new(:post_type)
+    end
+
+    if post_type == Post.types[:whisper] && !guardian.can_create_whisper?
+      raise Discourse::InvalidAccess.new(
+              "invalid_whisper_access",
+              nil,
+              custom_message: "invalid_whisper_access",
+            )
     end
 
     post.revise(current_user, post_type: post_type)
@@ -786,8 +803,16 @@ class PostsController < ApplicationController
     user = fetch_user_from_params
     raise Discourse::NotFound unless guardian.can_edit_user?(user)
 
+    pending_posts = user.pending_posts
+    if user != current_user
+      # viewable_by joins category moderation groups, which repeats rows for categories
+      # moderated by several of the viewer's groups, so filter by id instead of merging
+      pending_posts =
+        pending_posts.where(id: Reviewable.viewable_by(current_user, preload: false).select(:id))
+    end
+
     render_serialized(
-      user.pending_posts.order(created_at: :desc),
+      pending_posts.reorder(created_at: :desc),
       PendingPostSerializer,
       root: :pending_posts,
     )
@@ -797,6 +822,7 @@ class PostsController < ApplicationController
 
   def markdown(post)
     if post && guardian.can_see?(post)
+      add_topic_noindex_header(post.topic)
       render plain: post.raw
     else
       raise Discourse::NotFound
@@ -841,9 +867,8 @@ class PostsController < ApplicationController
   def find_latest_post_revision_from_params
     post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post.id).order(:number)
-    finder = finder.where(hidden: false) unless guardian.is_staff?
-    post_revision = finder.last
+    post_revision =
+      PostRevision.latest_for(post, guardian, include_unlisted: include_unlisted_revisions?)
 
     raise Discourse::NotFound unless post_revision
 
@@ -866,14 +891,21 @@ class PostsController < ApplicationController
 
     post_revision.post = post
     guardian.ensure_can_see!(post_revision)
+    guardian.ensure_can_view_post_version!(post, revision)
 
     post_revision
   end
 
   private
 
+  def include_unlisted_revisions?
+    params[:include_unlisted] == "true"
+  end
+
   def markdown_for_revision
-    find_post_revision_from_topic_id.modifications[:raw].last
+    post_revision = find_post_revision_from_topic_id
+    add_topic_noindex_header(post_revision.post.topic)
+    post_revision.modifications[:raw].last
   end
 
   def markdown_for_post
@@ -889,6 +921,7 @@ class PostsController < ApplicationController
         page: params[:page],
         limit: MARKDOWN_TOPIC_PAGE_SIZE,
       )
+    add_topic_noindex_header(topic_view.topic)
     topic_view.posts.select { |post| guardian.can_see?(post) }.map { |post| <<~MD }.join
         #{post.user.username} | #{post.updated_at} | ##{post.post_number}
 
@@ -1031,6 +1064,9 @@ class PostsController < ApplicationController
 
     PostRevisor.tracked_topic_fields.each_key do |f|
       if f == :tags
+        if params[f].present? && !params[f].is_a?(Array)
+          raise Discourse::InvalidParameters.new(:tags)
+        end
         params.permit(tags: %i[id name])
       else
         params.permit(f => [])
@@ -1124,9 +1160,12 @@ class PostsController < ApplicationController
   end
 
   def find_post_from_params_by_date
+    topic = Topic.with_deleted.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless guardian.can_see?(topic)
+
     by_date_finder =
       TopicView
-        .new(params[:topic_id], current_user)
+        .new(topic, current_user)
         .filtered_posts
         .where("created_at >= ?", Time.zone.parse(params[:date]))
         .order("created_at ASC")
@@ -1146,7 +1185,7 @@ class PostsController < ApplicationController
       raise Discourse::NotFound unless guardian.can_moderate_topic?(post.topic)
     end
 
-    guardian.ensure_can_see!(post)
+    raise Discourse::NotFound unless guardian.can_see?(post)
 
     post
   end

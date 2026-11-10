@@ -76,7 +76,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       it "gets products" do
         ::Stripe::Product
           .expects(:list)
-          .with({ ids: product_ids, active: true }, DiscourseSubscriptions::Stripe.request_opts)
+          .with(
+            { ids: product_ids, active: true, limit: 100 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(data: [product])
 
         get "/s.json"
@@ -102,7 +105,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         ::Stripe::Product
           .expects(:list)
-          .with({ ids: product_ids, active: true }, DiscourseSubscriptions::Stripe.request_opts)
+          .with(
+            { ids: product_ids, active: true, limit: 100 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(data: [product])
 
         get "/s.json"
@@ -114,7 +120,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
         DiscourseSubscriptions::Customer.delete_all
         ::Stripe::Product
           .expects(:list)
-          .with({ ids: product_ids, active: true }, DiscourseSubscriptions::Stripe.request_opts)
+          .with(
+            { ids: product_ids, active: true, limit: 100 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(data: [product])
 
         get "/s.json"
@@ -136,6 +145,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           customer_id: "y",
         )
       end
+
       context "when not showing contributors" do
         it "returns nothing if not set to show contributors" do
           SiteSetting.discourse_subscriptions_campaign_show_contributors = false
@@ -670,7 +680,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
               }.to change { DiscourseSubscriptions::Customer.count }
             end
 
-            it "applies promo code to one time purchase" do
+            it "preserves promotion-code restrictions for a one-time purchase" do
               ::Stripe::Price
                 .expects(:retrieve)
                 .with(anything, DiscourseSubscriptions::Stripe.request_opts)
@@ -691,7 +701,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
                 {
                   customer: "cus_1234",
                   price: "plan_1234",
-                  discounts: [{ coupon: "c123" }],
+                  discounts: [{ promotion_code: "promo123" }],
                   invoice: "in_123",
                 },
                 DiscourseSubscriptions::Stripe.request_opts,
@@ -725,6 +735,66 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
                        promo: "123",
                      }
               }.to change { DiscourseSubscriptions::Customer.count }
+
+              expect(response).to have_http_status(:ok)
+              expect(response.parsed_body).to include("status" => "paid")
+            end
+
+            it "preserves promotion code restrictions for a one time paid group purchase" do
+              group = Fabricate(:group, name: "awesome")
+
+              ::Stripe::Price
+                .expects(:retrieve)
+                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .returns(
+                  type: "one_time",
+                  product: "product_12345",
+                  metadata: {
+                    group_name: "awesome",
+                  },
+                )
+              ::Stripe::Invoice
+                .expects(:create)
+                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .returns(status: "open", id: "in_123")
+              ::Stripe::InvoiceItem.expects(:create).with(
+                {
+                  customer: "cus_1234",
+                  price: "plan_1234",
+                  discounts: [{ promotion_code: "promo123" }],
+                  invoice: "in_123",
+                },
+                DiscourseSubscriptions::Stripe.request_opts,
+              )
+              ::Stripe::Invoice
+                .expects(:finalize_invoice)
+                .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+                .returns(id: "in_123", status: "open", payment_intent: "pi_123")
+              ::Stripe::Invoice
+                .expects(:retrieve)
+                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .returns(id: "in_123", status: "open", payment_intent: "pi_123")
+              ::Stripe::PaymentIntent
+                .expects(:retrieve)
+                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .returns(status: "successful")
+              ::Stripe::Invoice
+                .expects(:pay)
+                .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+                .returns(status: "paid", customer: "cus_1234")
+              expect {
+                post "/s/create.json",
+                     params: {
+                       plan: "plan_1234",
+                       source: "tok_1234",
+                       promo: "123",
+                     }
+              }.to change { DiscourseSubscriptions::Customer.count }.by(1).and change {
+                      group.users.count
+                    }.by(1)
+
+              expect(response).to have_http_status(:ok)
+              expect(response.parsed_body["status"]).to eq("paid")
             end
           end
         end

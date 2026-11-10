@@ -12,6 +12,7 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
       )
     raise Discourse::NotFound unless guardian.public_can_see_profiles?
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user)
 
     offset = [0, params[:offset].to_i].max
     limit = params.fetch(:limit, 30).to_i

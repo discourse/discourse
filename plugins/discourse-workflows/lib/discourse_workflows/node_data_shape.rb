@@ -10,6 +10,8 @@ module DiscourseWorkflows
       "continueOnFail" => :continue_on_fail,
     }.freeze
 
+    CONTINUE_ON_ERROR_MODES = %w[continueRegularOutput continueErrorOutput].freeze
+
     FORM_TRIGGER_TYPE = "trigger:form"
     FORM_TRIGGER_WEBHOOK_ID_KEY = "webhookId"
 

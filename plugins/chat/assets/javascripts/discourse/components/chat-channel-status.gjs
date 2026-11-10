@@ -5,7 +5,7 @@ import {
   CHANNEL_STATUSES,
   channelStatusIcon,
 } from "discourse/plugins/chat/discourse/models/chat-channel";
-import ChatChannelArchiveStatus from "./chat-channel-archive-status";
+import ChatChannelArchiveStatus from "./chat-channel-archive-status.gjs";
 
 export default class ChatChannelStatus extends Component {
   LONG_FORMAT = "long";

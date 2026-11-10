@@ -430,6 +430,7 @@ RSpec.describe Admin::WebHooksController do
           headers
         end
       end
+
       it "modifies the headers & saves the updated headers to the webhook event" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:web_hook_event_headers, &modifier_block)

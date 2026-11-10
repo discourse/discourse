@@ -1,43 +1,54 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import DTimeInput from "discourse/ui-kit/d-time-input";
 
-@tagName("")
 export default class DDateTimeInput extends Component {
-  date = null;
-  relativeDate = null;
-  showTime = true;
-  clearable = false;
-
-  @computed("date", "showTime")
-  get hours() {
-    return this.date && this.get("showTime") ? this.date.hours() : null;
+  // Subclasses read the inputs by name (`this.date`), so they stay getters.
+  get date() {
+    return this.args.date;
   }
 
-  @computed("date", "showTime")
+  get relativeDate() {
+    return this.args.relativeDate;
+  }
+
+  get showTime() {
+    return this.args.showTime ?? true;
+  }
+
+  get clearable() {
+    return this.args.clearable ?? false;
+  }
+
+  get hours() {
+    return this.date && this.showTime ? this.date.hours() : null;
+  }
+
   get minutes() {
-    return this.date && this.get("showTime") ? this.date.minutes() : null;
+    return this.date && this.showTime ? this.date.minutes() : null;
+  }
+
+  get resolvedTimezone() {
+    return this.args.timezone || moment.tz.guess();
   }
 
   @action
   onClear() {
-    this.onChange(null);
+    this.args.onChange(null);
   }
 
   @action
   onChangeTime(time) {
-    if (this.onChange) {
+    if (this.args.onChange) {
       const date = this.date
         ? this.date
         : this.relativeDate
           ? this.relativeDate
           : moment.tz(this.resolvedTimezone);
 
-      this.onChange(
+      this.args.onChange(
         moment.tz(
           {
             year: date.year(),
@@ -59,7 +70,7 @@ export default class DDateTimeInput extends Component {
       return;
     }
 
-    this.onChange?.(
+    this.args.onChange?.(
       moment.tz(
         {
           year: date.year(),
@@ -73,46 +84,41 @@ export default class DDateTimeInput extends Component {
     );
   }
 
-  @computed("timezone")
-  get resolvedTimezone() {
-    return this.timezone || moment.tz.guess();
-  }
-
   <template>
     <div class="d-date-time-input" ...attributes>
-      {{#unless this.timeFirst}}
+      {{#unless @timeFirst}}
         <DDateInput
           @date={{this.date}}
-          @placeholder={{this.placeholder}}
-          @relativeDate={{this.relativeDate}}
           @onChange={{this.onChangeDate}}
-          @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
+          @placeholder={{@placeholder}}
+          @relativeDate={{this.relativeDate}}
+          @useGlobalPickerContainer={{@useGlobalPickerContainer}}
         />
       {{/unless}}
 
       {{#if this.showTime}}
         <DTimeInput
           @date={{this.date}}
-          @relativeDate={{this.relativeDate}}
           @onChange={{this.onChangeTime}}
+          @relativeDate={{this.relativeDate}}
         />
       {{/if}}
 
-      {{#if this.timeFirst}}
+      {{#if @timeFirst}}
         <DDateInput
           @date={{this.date}}
-          @placeholder={{this.placeholder}}
-          @relativeDate={{this.relativeDate}}
           @onChange={{this.onChangeDate}}
-          @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
+          @placeholder={{@placeholder}}
+          @relativeDate={{this.relativeDate}}
+          @useGlobalPickerContainer={{@useGlobalPickerContainer}}
         />
       {{/if}}
 
       {{#if this.clearable}}
         <DButton
-          @icon="xmark"
-          @action={{this.onClear}}
           class="btn-default clear-date-time"
+          @action={{this.onClear}}
+          @icon="xmark"
         />
       {{/if}}
     </div>

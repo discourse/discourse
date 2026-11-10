@@ -112,12 +112,18 @@ class NestedTopic::ShowContext
     context[:siblings_map] = loader.batch_load_siblings(ancestors, params.sort)
   end
 
-  def expand_reply_trees(params:, loader:, target_post:)
+  def expand_reply_trees(params:, loader:, target_post:, ancestors:)
+    starting_depth = ancestors.length
+    remaining_depth = [
+      NestedReplies::TreeLoader::PRELOAD_DEPTH,
+      loader.configured_max_depth - starting_depth,
+    ].min
     tree_data =
       loader.batch_preload_tree(
         [target_post],
         params.sort,
-        max_depth: NestedReplies::TreeLoader::PRELOAD_DEPTH,
+        max_depth: [remaining_depth, 0].max,
+        starting_depth: starting_depth,
       )
     context[:children_map] = tree_data[:children_map]
     context[:tree_posts] = tree_data[:all_posts]

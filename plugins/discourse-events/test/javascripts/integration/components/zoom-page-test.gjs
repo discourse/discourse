@@ -4,7 +4,7 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import LivestreamZoomPage from "../../discourse/components/livestream/zoom-page";
+import LivestreamZoomPage from "discourse/plugins/discourse-events/discourse/components/livestream/zoom-page";
 
 const FALLBACK_SELECTOR = ".discourse-calendar-livestream-zoom-page__fallback";
 const FRAME_SELECTOR = ".discourse-calendar-livestream-zoom-page__frame";

@@ -3,9 +3,9 @@ import FutureDateInputSelector from "discourse/select-kit/components/future-date
 
 export default <template>
   <FutureDateInputSelector
-    @input="2017-10-18 18:00"
-    @includeWeekend={{true}}
     @includeForever={{true}}
+    @includeWeekend={{true}}
+    @input="2017-10-18 18:00"
     @options={{hash none="time_shortcut.select_timeframe"}}
   />
 </template>

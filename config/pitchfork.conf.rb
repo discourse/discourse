@@ -79,28 +79,23 @@ after_mold_fork do |server, mold|
   end
 
   Discourse.redis.close
+  DiscourseVips::Client.use_shared_worker
   Discourse.before_fork
+  Process.warmup
 end
-
-oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
 
 after_worker_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
-
-  GC.config(rgengc_allow_full_mark: false) if oob_gc_enabled
-end
-
-if oob_gc_enabled
-  after_request_complete do |_server, _worker, _rack_env|
-    GC.start if GC.latest_gc_info(:need_major_by)
-  end
 end
 
 before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
+
+  require "demon/discourse_vips"
+  Demon::DiscourseVips.start(logger: server.logger) if GlobalSetting.enable_vips_image_processing
 
   if sidekiqs > 0
     server.logger.info "starting #{sidekiqs} supervised sidekiqs"
@@ -147,22 +142,31 @@ before_service_worker_ready do |server, service_worker|
     STDOUT.puts "Pitchfork ready on http://localhost:#{ENV["UNICORN_PORT"] || 3000} (#{parts.join(", ")})"
   end
 
+  check_demon =
+    lambda do |&check|
+      check.call
+    rescue => e
+      Rails.logger.warn("Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}")
+    end
+
   Thread.new do
     while true
-      begin
-        sleep 60
+      sleep 60
 
-        if sidekiqs > 0
+      if sidekiqs > 0
+        check_demon.call do
           Demon::Sidekiq.ensure_running
           Demon::Sidekiq.heartbeat_check
           Demon::Sidekiq.rss_memory_check
         end
+      end
 
-        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
-      rescue => e
-        Rails.logger.warn(
-          "Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}",
-        )
+      if GlobalSetting.enable_vips_image_processing
+        check_demon.call { Demon::DiscourseVips.ensure_running }
+      end
+
+      DiscoursePluginRegistry.demon_processes.each do |demon_class|
+        check_demon.call { demon_class.ensure_running }
       end
     end
   end
@@ -175,6 +179,7 @@ after_worker_timeout do |server, worker, timeout_info|
   MSG
 
   Rails.logger.error(message)
+  DiscourseEvent.trigger(:web_worker_timeout, continue_on_error: true)
 end
 
 if RUBY_PLATFORM.include?("darwin") && ENV["RAILS_ENV"] != "production"

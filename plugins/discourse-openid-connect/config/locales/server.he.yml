@@ -20,6 +20,7 @@ he:
     openid_connect_authorize_parameters: "משתני הכתובת שיתווספו להפניה מ־‎/auth/oidc לנקודת הקצה לאימות של ספק הזהות"
     openid_connect_claims: "הגדרת הטענות במפורש לשימוש מול ספקים שלא מעבירים נתונים בחזרה על סמך תחומים. (JSON)"
     openid_connect_match_by_email: "להשתמש בכתובת דוא״ל כדי לתאם את אימותי OpenID Connect לחשבונות משתמש קיימים ב־Discourse."
+    openid_connect_email_claim: "הטענה מכילה את כתובת הדוא״ל של המשתמש. תוחזר לברירת המחדל שהיא דוא״ל. יש לבחור רק בטענה שמכילה כתובת דוא״ל שאומתה על ידי ספק האימות שלך, כיוון שהיא יכול לקשר משתמשים לחשבונות קיימים."
     openid_connect_use_pkce: "הפעלת מפתח הוכחה לחילופי קודים (PKCE) עבור אימות OpenID Connect."
   login:
     omniauth_error:

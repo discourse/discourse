@@ -9,6 +9,8 @@ module Discourse
     DEFAULT_ACCEPT = "application/vnd.github+json"
     TIMEOUT = 5
     ETAG_MAX_BYTES = 512.kilobytes
+    MAX_REDIRECTS = 3
+    REDIRECT_STATUSES = [301, 302, 307, 308].freeze
 
     class Error < StandardError
       attr_reader :status
@@ -45,13 +47,11 @@ module Discourse
     end
 
     def get(path, accept: DEFAULT_ACCEPT, **params)
-      body = request(:get, path, params:, accept:)
-      body.present? ? ::MultiJson.load(body) : nil
+      parse(request(:get, path, params:, accept:))
     end
 
     def post(path, body = nil, accept: DEFAULT_ACCEPT)
-      response_body = request(:post, path, body:, accept:)
-      response_body.present? ? ::MultiJson.load(response_body) : nil
+      parse(request(:post, path, body:, accept:))
     end
 
     def raw_get(path, accept: DEFAULT_ACCEPT)
@@ -60,20 +60,19 @@ module Discourse
 
     private
 
+    def parse(body)
+      body.present? ? ::MultiJson.load(body) : nil
+    end
+
     def request(method, path, params: {}, body: nil, accept:, cache_etag: true)
       raise RateLimited, "GitHub rate limit backoff active" if backing_off?
 
       url = path.start_with?("http") ? path : "#{API_ROOT}#{path}"
-      host = URI.parse(url).host
-      if ALLOWED_HOSTS.exclude?(host)
-        raise ArgumentError, "Refusing to call non-GitHub host: #{host.inspect}"
-      end
-
       etag_key = (etag_cache_key(url, params, accept) if cache_etag && method == :get)
       cached = (Discourse.cache.read(etag_key) if etag_key)
 
-      response = perform(method, url, params:, body:, accept:, etag: cached&.dig(:etag))
-      backed_off = GithubRateLimit.note_response_headers(response.headers, token: @token)
+      response, backed_off =
+        perform_following_redirects(method, url, params:, body:, accept:, etag: cached&.dig(:etag))
 
       case response.status
       when 200..299
@@ -89,6 +88,29 @@ module Discourse
         raise RateLimited.new("GitHub rate limited", status: response.status) if backed_off
         raise Error.new(status: response.status)
       end
+    end
+
+    def perform_following_redirects(method, url, **)
+      (MAX_REDIRECTS + 1).times do
+        ensure_allowed_url!(url)
+        response = perform(method, url, **)
+        backed_off = GithubRateLimit.note_response_headers(response.headers, token: @token)
+        location = response.headers["location"]
+        if backed_off || REDIRECT_STATUSES.exclude?(response.status) || location.blank?
+          return response, backed_off
+        end
+        url = URI.join(url, location).to_s
+      end
+
+      raise Error, "GitHub API redirect limit exceeded"
+    rescue URI::Error => e
+      raise Error, "Invalid GitHub API URL: #{e.message}"
+    end
+
+    def ensure_allowed_url!(url)
+      uri = URI.parse(url)
+      return if uri.scheme == "https" && ALLOWED_HOSTS.include?(uri.host&.downcase)
+      raise Error, "Refusing to call non-GitHub host: #{uri.host.inspect}"
     end
 
     def perform(method, url, params:, body:, accept:, etag:)

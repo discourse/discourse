@@ -65,6 +65,7 @@ describe "API keys scoped to chat#create_message" do
              "Api-Username" => admin.username,
            },
            params: {
+             chat_channel_id: chat_channel_2.id,
              message: "asdfasdf asdfasdf",
            }
     }.not_to change { Chat::Message.where(chat_channel: chat_channel).count }

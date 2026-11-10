@@ -5,10 +5,25 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  discourse_captcha:
+    configuration_test:
+      v3_success: "你的 reCAPTCHA v3 密钥有效。该测试得分为 %{score}，达到了 %{threshold} 的注册门槛。"
+      v3_low_score: "你的 reCAPTCHA v3 密钥有效，但是这个测试得分为 %{score}，低于 %{threshold} 的注册门槛。"
+      success: "验证成功。您保存的验证码密钥可在本网站上使用。"
+      errors:
+        not_configured: "选择一个验证码提供商，并在测试前将两个密钥保存在设置中。"
+        configuration_changed: "验证码配置已更改。请重新加载此页面并重试。"
+        invalid_secret: "验证码提供商拒绝了密钥。请在“设置”中检查已保存的密钥。"
+        key_mismatch: "站点密钥和私钥不匹配。请检查这两个密钥是否属于您服务提供商提供的同一配置。"
+        invalid_response: "验证码响应无效。请重新测试并重试。"
+        expired: "挑战已过期或已被验证。请重新开始测试并再次完成。"
+        unavailable: "无法联系验证码提供商，或提供商返回了意外响应。请稍后再试。"
+        verification_failed: "验证码提供商拒绝了此次验证。请检查您保存的密钥和提供商配置，然后重试。"
   dashboard:
     problem:
       hcaptcha_configuration: "您的 hCaptcha `site_key` 或 `secret_key` 配置存在问题"
       recaptcha_configuration: "您的 ReCaptcha `site_key` 或 `secret_key` 配置存在问题"
+      recaptcha_v3_configuration: "您的 ReCaptcha v3 `site_key` 或 `secret_key` 配置有问题"
   admin:
     site_settings:
       categories:
@@ -18,7 +33,10 @@ zh_CN:
     discourse_captcha_provider: "选择人机验证提供商。这需要您拥有所选提供商的帐户。"
     hcaptcha_site_key: "来自您的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帐户的 hCaptcha 网站密钥"
     hcaptcha_secret_key: "来自您的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帐户的 hCaptcha 密钥"
-    recaptcha_site_key: "来自您的 <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帐户的 ReCaptcha 网站密钥"
-    recaptcha_secret_key: "来自您的 <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帐户的 ReCaptcha 密钥"
+    recaptcha_v2_site_key: "来自您的<a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>账户的 ReCaptcha v2 站点密钥。仅当验证码提供商设置为 ReCaptcha v2 时使用。"
+    recaptcha_v2_secret_key: "ReCaptcha v2 密钥来自您的 <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帐户。仅当验证码提供商设置为 reCaptcha v2 时使用。"
+    recaptcha_v3_site_key: "来自你的 <a target='blank' href='https://www.google.com/recaptcha'>reCAPTCHA</a> 账户的 reCAPTCHA v3 网站密钥"
+    recaptcha_v3_secret_key: "来自你的 <a target='blank' href='https://www.google.com/recaptcha'>reCAPTCHA</a> 账户的 reCAPTCHA v3 密钥"
+    recaptcha_v3_score_threshold: "reCaptcha v3 验证任务必须达到的最低分数，才能使注册申请被接受。数值越低，通过门槛越高；数值越高，对机器人防护的效果越强。"
   captcha_verification_failed: "人机验证失败"
   captcha_not_configured: "人机验证已启用，但未正确配置。请联系网站管理员。"

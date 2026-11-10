@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Agents::Tools::ReadSiteSetting do
   fab!(:llm_model)
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
   before do
@@ -23,7 +23,11 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadSiteSetting do
   it "returns the current value for an administrator" do
     SiteSetting.min_post_length = 42
 
-    expect(tool("min_post_length").invoke).to eq(setting_name: "min_post_length", value: 42)
+    expect(tool("min_post_length").invoke).to eq(
+      setting_name: "min_post_length",
+      value: 42,
+      url: "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=min_post_length",
+    )
   end
 
   it "returns an error when the acting user is not an administrator" do

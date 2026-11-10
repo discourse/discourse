@@ -32,8 +32,8 @@ module(
       await render(
         <template>
           <AdminConfigAreaCardSection
-            @heading="test heading"
             @collapsable={{true}}
+            @heading="test heading"
           ><:content>test</:content></AdminConfigAreaCardSection>
         </template>
       );
@@ -64,9 +64,9 @@ module(
       await render(
         <template>
           <AdminConfigAreaCardSection
-            @heading="test heading"
             @collapsable={{true}}
             @collapsed={{true}}
+            @heading="test heading"
           ><:content>test</:content></AdminConfigAreaCardSection>
         </template>
       );

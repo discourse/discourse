@@ -32,6 +32,22 @@ module(
   }
 );
 
+module("Component | ChatUserDisplayName | names disabled", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("does not display a user's name", async function (assert) {
+    this.siteSettings.enable_names = false;
+    this.siteSettings.prioritize_username_in_ux = false;
+    this.set("user", { username: "bob", name: "Bobcat" });
+
+    await render(
+      <template><ChatUserDisplayName @user={{this.user}} /></template>
+    );
+
+    assert.dom(".chat-user-display-name").hasText("bob");
+  });
+});
+
 module(
   "Component | ChatUserDisplayName | prioritize name in UX",
   function (hooks) {

@@ -4,6 +4,8 @@ class TagsController < ::ApplicationController
   include TopicListResponder
   include TopicQueryParams
 
+  MAX_CSV_ROWS = 5_000
+
   before_action :ensure_tags_enabled
 
   def self.show_methods
@@ -96,6 +98,7 @@ class TagsController < ::ApplicationController
       format.html { render :index }
 
       format.json { render json: { tags: @tags, extras: @extras } }
+      format.md { render_markdown(MarkdownEndpoint::DirectoryRenderer.new.tags(@tags, @extras)) }
     end
   end
 
@@ -202,7 +205,12 @@ class TagsController < ::ApplicationController
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_slug, :tag_id)
       canonical_method = url_method(canonical_params)
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *canonical_params.values.map { |t| t.force_encoding("UTF-8") })}"
+      canonical_list_url(
+        public_send(
+          canonical_method,
+          *canonical_params.values.map { |t| t.force_encoding("UTF-8") },
+        ),
+      )
 
       if @list.topics.size == 0 && @tag_name != "none" && !Tag.where_name(@tag_name).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -236,6 +244,7 @@ class TagsController < ::ApplicationController
     updater_params =
       params.require(:tag_settings).permit(
         :name,
+        :locale,
         :slug,
         :description,
         removed_synonym_ids: [],
@@ -304,8 +313,18 @@ class TagsController < ::ApplicationController
     file = params[:file] || params[:files].first
 
     hijack do
+      rows = 0
+
       Tag.transaction do
         CSV.foreach(file.tempfile) do |row|
+          rows += 1
+
+          if rows > MAX_CSV_ROWS
+            raise Discourse::InvalidParameters.new(
+                    I18n.t("tags.upload_too_many_rows", count: MAX_CSV_ROWS),
+                  )
+          end
+
           if row.length > 2
             raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
           end
@@ -454,6 +473,12 @@ class TagsController < ::ApplicationController
       new_synonym_names = params[:synonyms]
     end
 
+    new_synonym_names =
+      DiscourseTagging.tags_for_saving(new_synonym_names, Guardian.new(Discourse.system_user)) || []
+    synonyms = Tag.where(id: synonym_tag_ids).or(Tag.where_name(new_synonym_names))
+    synonym_tag_ids = DiscourseTagging.editable_synonym_ids(synonyms, guardian)
+    new_synonym_names -= synonyms.map(&:name)
+
     value = DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:, new_synonym_names:)
     if value.is_a?(Hash)
       render json: failed_json.merge(failed_tags: value)
@@ -537,7 +562,14 @@ class TagsController < ::ApplicationController
     end
 
     url += ".json" if request.format.json?
-    url += "?#{request.query_string}" if request.query_string.present?
+    if request.format.md?
+      url += ".md"
+      query =
+        request.query_parameters.slice(*MarkdownEndpoint::ControllerSupport::SAFE_QUERY_PARAMETERS)
+      url += "?#{query.to_query}" if query.present?
+    elsif request.query_string.present?
+      url += "?#{request.query_string}"
+    end
     redirect_to url, status: :moved_permanently
   end
 

@@ -19,9 +19,11 @@ cs:
         countdown:
           passed: datum uplynulo
       title: Vložit datum / čas
+      edit_date: Upravit %{date}
       create:
         form:
           insert: Vložit
+          save: Uložit
           format_description: "Formát použitý pro zobrazení data uživateli. Použijte Z pro zobrazení posunu a zz pro název časové zóny."
           timezones_title: Časová pásma k zobrazení
           timezones_description: Pro zobrazení dat v náhledu a záložním zobrazení se použijí časová pásma.

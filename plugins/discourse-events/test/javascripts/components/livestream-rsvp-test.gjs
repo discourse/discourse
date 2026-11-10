@@ -64,7 +64,7 @@ module("Events | Component | LivestreamRsvp", function (hooks) {
 
     assert
       .dom(".livestream-rsvp__message")
-      .hasText(i18n("discourse_calendar.livestream.chat.rsvp_to_event"));
+      .hasText(i18n("discourse_events.livestream.chat.rsvp_to_event"));
     assert.dom(".livestream-rsvp__message a").doesNotExist();
   });
 

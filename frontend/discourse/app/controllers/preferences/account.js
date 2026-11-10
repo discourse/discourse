@@ -20,15 +20,34 @@ export default class AccountController extends Controller {
   @controller user;
 
   canSaveUser = true;
+
+  /** @type {string | null | undefined} */
   newNameInput = null;
+
+  /** @type {string | null | undefined} */
   newTitleInput = null;
+
+  /** @type {number | null | undefined} */
   newPrimaryGroupInput = null;
+
+  /** @type {{ description: string, emoji: string, ends_at?: string | null, message_bus_last_id?: number } | null | undefined} */
   newStatus = null;
+
+  /** @type {Record<string, boolean> | null} */
   revoking = null;
 
   init() {
     super.init(...arguments);
     this.set("revoking", {});
+  }
+
+  @computed("user.viewingSelf")
+  get canDownloadPosts() {
+    return this.user?.viewingSelf;
+  }
+
+  set canDownloadPosts(value) {
+    set(this, "user.viewingSelf", value);
   }
 
   @computed("siteSettings.enable_names")
@@ -44,15 +63,6 @@ export default class AccountController extends Controller {
   @computed("siteSettings.moderators_view_emails")
   get canModeratorsViewEmails() {
     return this.siteSettings.moderators_view_emails;
-  }
-
-  @computed("user.viewingSelf")
-  get canDownloadPosts() {
-    return this.user?.viewingSelf;
-  }
-
-  set canDownloadPosts(value) {
-    set(this, "user.viewingSelf", value);
   }
 
   @computed("currentUser.can_delete_account")
@@ -86,10 +96,6 @@ export default class AccountController extends Controller {
       ["name", "title", "primary_group_id", "flair_group_id", "status"],
       { page: "account" }
     );
-  }
-
-  reset() {
-    this.set("passwordProgress", null);
   }
 
   @computed("model.id", "currentUser.id")
@@ -190,6 +196,10 @@ export default class AccountController extends Controller {
     );
   }
 
+  reset() {
+    this.set("passwordProgress", null);
+  }
+
   @action
   resendConfirmationEmail(email, event) {
     event?.preventDefault();
@@ -208,6 +218,7 @@ export default class AccountController extends Controller {
   showUserStatusModal(status) {
     this.modal.show(UserStatusModal, {
       model: {
+        user: this.model,
         status,
         hidePauseNotifications: true,
         saveAction: (s) => this.set("newStatus", s),

@@ -15,9 +15,9 @@ module("Integration | Component | AiPayloadViewer", function (hooks) {
     await render(
       <template>
         <AiPayloadViewer
-          @payload={{payload}}
           @copyLabel="Copy payload"
           @emptyMessage="Payload not available"
+          @payload={{payload}}
         />
       </template>
     );
@@ -56,9 +56,9 @@ module("Integration | Component | AiPayloadViewer", function (hooks) {
     await render(
       <template>
         <AiPayloadViewer
+          @emptyMessage="Payload not available"
           @payload="payload"
           @unbounded={{true}}
-          @emptyMessage="Payload not available"
         />
       </template>
     );
@@ -84,9 +84,9 @@ module("Integration | Component | AiPayloadViewer", function (hooks) {
     await render(
       <template>
         <AiPayloadViewer
-          @payload=""
           @copyLabel="Copy payload"
           @emptyMessage="Payload not available"
+          @payload=""
         />
       </template>
     );
@@ -97,9 +97,9 @@ module("Integration | Component | AiPayloadViewer", function (hooks) {
     await render(
       <template>
         <AiPayloadViewer
-          @payload={{null}}
           @copyLabel="Copy payload"
           @emptyMessage="Payload not available"
+          @payload={{null}}
         />
       </template>
     );
@@ -110,10 +110,10 @@ module("Integration | Component | AiPayloadViewer", function (hooks) {
     await render(
       <template>
         <AiPayloadViewer
-          @payload="partial"
-          @truncated={{true}}
           @copyLabel="Copy payload"
           @emptyMessage="Payload not available"
+          @payload="partial"
+          @truncated={{true}}
           @truncatedMessage="Payload truncated"
         />
       </template>

@@ -1,6 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import getVideoAttributes from "../../lib/lazy-video-attributes";
+import getVideoAttributes from "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes";
 
 module("Unit | Lib | lazy-video-attributes", function (hooks) {
   setupTest(hooks);

@@ -4,7 +4,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { avatarImg } from "discourse/lib/avatar-utils";
 import { userPath } from "discourse/lib/url";
-import { gt } from "discourse/truth-helpers";
 import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
 import DUserLink from "discourse/ui-kit/d-user-link";
 
@@ -61,10 +60,10 @@ export default class TopicParticipant extends Component {
     >
       <div class={{this.participantClasses}}>
         <DUserLink
-          @username={{@participant.username}}
-          @href={{this.userUrl}}
           class={{this.linkClasses}}
           title={{@participant.username}}
+          @href={{this.userUrl}}
+          @username={{@participant.username}}
         >
 
           {{this.avatarImage}}

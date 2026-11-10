@@ -3,10 +3,18 @@
 module DiscourseAi
   module Completions
     class Prompt
+      include UploadEncoding
+
       INVALID_TURN = Class.new(StandardError)
 
       attr_reader :messages, :tools, :system_message_text
-      attr_accessor :topic_id, :post_id, :max_pixels, :tool_choice, :skip_trim, :native_tools
+      attr_accessor :topic_id,
+                    :post_id,
+                    :max_pixels,
+                    :tool_choice,
+                    :skip_trim,
+                    :native_tools,
+                    :upload_skips
 
       def self.text_only(message)
         if message[:content].is_a?(Array)
@@ -168,6 +176,10 @@ module DiscourseAi
         native_tools.include?(id)
       end
 
+      def record_upload_skip(upload_id:, filename:, message:)
+        record_skip(upload_skips, upload_id: upload_id, filename: filename, message: message)
+      end
+
       def encoded_uploads(
         message,
         allow_images: true,
@@ -194,12 +206,7 @@ module DiscourseAi
               .compact
           if !upload_ids.empty?
             encoded_uploads.concat(
-              UploadEncoder.encode(
-                upload_ids: upload_ids,
-                max_pixels: max_pixels,
-                allowed_kinds: allowed_kinds,
-                allowed_attachment_types: allowed_attachment_types,
-              ),
+              encode_upload_ids(upload_ids, allowed_kinds, allowed_attachment_types),
             )
           end
           return encoded_uploads
@@ -218,12 +225,17 @@ module DiscourseAi
           allowed_upload_kinds(allow_images: allow_images, allow_documents: allow_documents)
         return if allowed_kinds.empty?
 
+        encode_upload_ids([upload_id], allowed_kinds, allowed_attachment_types).first
+      end
+
+      def encode_upload_ids(upload_ids, allowed_kinds, allowed_attachment_types)
         UploadEncoder.encode(
-          upload_ids: [upload_id],
+          upload_ids: upload_ids,
           max_pixels: max_pixels,
           allowed_kinds: allowed_kinds,
           allowed_attachment_types: allowed_attachment_types,
-        ).first
+          skips: upload_skips,
+        )
       end
 
       def content_with_encoded_uploads(
@@ -360,7 +372,9 @@ module DiscourseAi
           raise INVALID_TURN
         end
 
-        raise INVALID_TURN if new_turn[:type] == :tool && last_turn[:type] != :tool_call
+        if new_turn[:type] == :tool && !%i[tool_call tool].include?(last_turn[:type])
+          raise INVALID_TURN
+        end
         raise INVALID_TURN if new_turn[:type] == :model && last_turn[:type] == :model
       end
     end

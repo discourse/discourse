@@ -13,10 +13,36 @@ module DiscourseAi
           "xhigh" => 32_768,
           "max" => 32_768,
         }.freeze
-        DEFAULT_VISIBLE_OUTPUT_TOKENS = 30_000
-        DEFAULT_ADAPTIVE_OUTPUT_TOKENS = 32_000
         MIN_THINKING_BUDGET = 1024
         MIN_VISIBLE_OUTPUT_TOKENS = 1024
+        # Models we cannot identify get a generous assumed cap so an
+        # undersized guess surfaces as an error when an admin tests the
+        # model, instead of silently truncating every response.
+        UNKNOWN_MODEL_MAX_OUTPUT_TOKENS = 64_000
+        # Friendly or legacy names mapped to the canonical Anthropic API
+        # model name. Dated canonical names pass through unchanged.
+        CLAUDE_MODEL_ALIASES = {
+          "claude-2" => "claude-2.1",
+          "claude-instant-1" => "claude-instant-1.2",
+          "claude-instant" => "claude-instant-1.2",
+          "claude-3-haiku" => "claude-3-haiku-20240307",
+          "claude-3-sonnet" => "claude-3-sonnet-20240229",
+          "claude-3-opus" => "claude-3-opus-20240229",
+          "claude-3-5-sonnet" => "claude-3-5-sonnet-20241022",
+          "claude-3-5-sonnet-latest" => "claude-3-5-sonnet-20241022",
+          "claude-3-5-haiku" => "claude-3-5-haiku-20241022",
+          "claude-3-5-haiku-latest" => "claude-3-5-haiku-20241022",
+          "claude-3-7-sonnet" => "claude-3-7-sonnet-20250219",
+          "claude-3-7-sonnet-latest" => "claude-3-7-sonnet-20250219",
+          "claude-4-opus" => "claude-opus-4-20250514",
+          "claude-4-sonnet" => "claude-sonnet-4-20250514",
+          "claude-opus-4" => "claude-opus-4-20250514",
+          "claude-sonnet-4" => "claude-sonnet-4-20250514",
+          "claude-opus-4-1" => "claude-opus-4-1-20250805",
+          "claude-opus-4-5" => "claude-opus-4-5-20251101",
+          "claude-sonnet-4-5" => "claude-sonnet-4-5-20250929",
+          "claude-haiku-4-5" => "claude-haiku-4-5-20251001",
+        }.freeze
 
         def normalize_model_params(model_params)
           model_params = model_params.dup
@@ -97,6 +123,20 @@ module DiscourseAi
           end
         end
 
+        protected
+
+        def output_stop_reason
+          processor.stop_reason
+        end
+
+        def output_limit_reached?
+          processor.output_limit_reached
+        end
+
+        def reported_reasoning_tokens
+          processor.reasoning_tokens
+        end
+
         private
 
         def supports_anthropic_thinking?
@@ -139,46 +179,154 @@ module DiscourseAi
           end
         end
 
+        # Canonical Anthropic API name for the configured model, accepting
+        # friendly aliases and Bedrock-style IDs (profile prefixes and
+        # version suffixes are stripped).
+        def canonical_claude_model_name
+          raw = llm_model.name.to_s.strip
+          return "claude-2.1" if raw.match?(/claude-v2(?::1)?\z/i)
+          return "claude-instant-1.2" if raw.match?(/claude-instant-v1\z/i)
+
+          stripped = raw.sub(/\A(?:[a-z]{2,}\.)?anthropic\./i, "").sub(/-v\d+(?::\d+)?\z/i, "")
+
+          CLAUDE_MODEL_ALIASES[stripped.downcase] || stripped
+        end
+
+        # Bedrock model ID for the configured model. Already-qualified
+        # Bedrock IDs, inference profile IDs and ARNs pass through
+        # unchanged, as do non-Claude models.
+        def bedrock_model_id
+          raw = llm_model.name.to_s.strip
+          return raw if raw.start_with?("arn:") || raw.match?(/\A(?:[a-z]{2,}\.)?anthropic\./i)
+
+          canonical = canonical_claude_model_name
+
+          case canonical
+          when "claude-2.1"
+            "anthropic.claude-v2:1"
+          when "claude-instant-1.2"
+            "anthropic.claude-instant-v1"
+          when "claude-3-5-sonnet-20241022"
+            "anthropic.claude-3-5-sonnet-20241022-v2:0"
+          when "claude-opus-4-6"
+            "anthropic.claude-opus-4-6-v1"
+          when /\Aclaude-.+-\d{8}\z/
+            "anthropic.#{canonical}-v1:0"
+          when /\Aclaude-/
+            "anthropic.#{canonical}"
+          else
+            raw
+          end
+        end
+
+        def bedrock_provider?
+          %w[aws_bedrock aws_bedrock_converse].include?(llm_model.provider)
+        end
+
+        # A configured limit always wins. When it is missing we fall back to
+        # the known cap for the model, and to a generous assumed cap for
+        # models we do not recognise.
+        def effective_max_output_tokens
+          configured = llm_model.max_output_tokens.to_i
+          return configured if configured.positive?
+
+          known_model_max_output_tokens || UNKNOWN_MODEL_MAX_OUTPUT_TOKENS
+        end
+
+        def enforce_max_output_tokens(value)
+          return super if !supports_anthropic_thinking?
+
+          limit = effective_max_output_tokens
+          value = limit if (value.to_i > limit) || (value.to_i <= 0)
+          value
+        end
+
+        def known_model_max_output_tokens
+          name = canonical_claude_model_name.to_s.downcase
+
+          case name
+          when /claude-(?:fable|mythos|opus|sonnet|haiku)-5(?:-|\z)/,
+               /claude-opus-4-(?:[6-9]|\d{2,})(?:-|\z)/
+            128_000
+          when /claude-sonnet-4-6(?:-|\z)/
+            # Bedrock caps Sonnet 4.6 at 64k; the Anthropic API allows 128k.
+            bedrock_provider? ? 64_000 : 128_000
+          when /claude-(?:opus|sonnet|haiku)-4-5(?:-|\z)/, /claude-sonnet-4(?:-|\z)/,
+               /claude-4-sonnet(?:-|\z)/, /claude-3-7(?:-|\z)/
+            64_000
+          when /claude-opus-4-1(?:-|\z)/, /claude-opus-4(?:-|\z)/, /claude-4-opus(?:-|\z)/
+            32_000
+          when /claude-3-5(?:-|\z)/
+            8_192
+          when /claude-3(?:-|\z)/, /claude-(?:v2|2)(?:[-.:]|\z)/, /claude-instant/
+            4_096
+          end
+        end
+
+        # Prompt admission must reserve what this endpoint can actually
+        # send: the explicit ceiling when given, otherwise the effective
+        # cap. Thinking configs already reserve their provider total.
+        def apply_thinking_config_to_model_params(model_params)
+          result = super
+          if supports_anthropic_thinking? && result[:reserved_output_tokens].blank?
+            result[:reserved_output_tokens] = model_params[:max_tokens].presence ||
+              effective_max_output_tokens
+          end
+          result
+        end
+
         def adaptive_total_output_tokens(model_params)
           requested_output_tokens = model_params[:max_tokens].presence&.to_i
-          output_token_limit = llm_model.max_output_tokens.to_i
+          output_token_limit = effective_max_output_tokens
 
-          if output_token_limit.positive?
-            if requested_output_tokens&.positive?
-              [requested_output_tokens, output_token_limit].min
-            else
-              output_token_limit
-            end
+          if requested_output_tokens&.positive?
+            [requested_output_tokens, output_token_limit].min
           else
-            if requested_output_tokens&.positive?
-              requested_output_tokens
-            else
-              DEFAULT_ADAPTIVE_OUTPUT_TOKENS
-            end
+            output_token_limit
           end
         end
 
         def budget_thinking_config(canonical_effort:, budget:, model_params:)
           requested_visible_output_tokens = model_params[:max_tokens].presence&.to_i
-          output_token_limit = llm_model.max_output_tokens.to_i
+          output_token_limit = effective_max_output_tokens
 
-          if output_token_limit.positive?
-            provider_output_tokens = output_token_limit
-            return if provider_output_tokens <= MIN_THINKING_BUDGET
+          if model_params[:max_tokens_is_total] && requested_visible_output_tokens&.positive?
+            provider_output_tokens = requested_visible_output_tokens
+            if output_token_limit.positive?
+              provider_output_tokens = [provider_output_tokens, output_token_limit].min
+            end
+            # Budget thinking needs at least 1024 reasoning tokens and some visible output.
+            # Small work allocations disable optional thinking instead of inflating the request.
+            if provider_output_tokens <= MIN_THINKING_BUDGET
+              return DiscourseAi::Completions::ThinkingConfig.explicit_none
+            end
+            visible_floor = [
+              MIN_VISIBLE_OUTPUT_TOKENS,
+              provider_output_tokens - MIN_THINKING_BUDGET,
+            ].min
+            budget = [budget, provider_output_tokens - visible_floor].min
+            visible_output_tokens = provider_output_tokens - budget
+          elsif output_token_limit.positive?
+            return if output_token_limit <= MIN_THINKING_BUDGET
 
-            max_visible_output_tokens = provider_output_tokens - MIN_THINKING_BUDGET
+            max_visible_output_tokens = output_token_limit - MIN_THINKING_BUDGET
             visible_output_floor = [MIN_VISIBLE_OUTPUT_TOKENS, max_visible_output_tokens].min
 
-            visible_output_tokens = provider_output_tokens - budget
+            # The requested thinking budget stays authoritative: visible
+            # output and thinking together form the provider total, shrunk
+            # only when that total would exceed the effective cap.
             visible_output_tokens =
-              requested_visible_output_tokens if requested_visible_output_tokens&.positive?
+              if requested_visible_output_tokens&.positive?
+                requested_visible_output_tokens
+              else
+                output_token_limit - budget
+              end
             visible_output_tokens = [visible_output_tokens, visible_output_floor].max
             visible_output_tokens = [visible_output_tokens, max_visible_output_tokens].min
 
-            budget = provider_output_tokens - visible_output_tokens
+            budget = [budget, output_token_limit - visible_output_tokens].min
             return if budget < MIN_THINKING_BUDGET
-          else
-            visible_output_tokens = requested_visible_output_tokens || DEFAULT_VISIBLE_OUTPUT_TOKENS
+
             provider_output_tokens = visible_output_tokens + budget
           end
 

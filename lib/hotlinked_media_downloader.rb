@@ -5,6 +5,10 @@
 # chat-side Jobs::Chat::PullHotlinkedImages so the download/retry/secure-upload
 # handling lives in one place.
 class HotlinkedMediaDownloader
+  TOO_MANY_REQUESTS = 429
+  MIN_RETRY_AFTER_SECONDS = 1.minute.to_i
+  MAX_RETRY_AFTER_SECONDS = 1.hour.to_i
+
   class ImageTooLargeError < StandardError
   end
 
@@ -12,6 +16,15 @@ class HotlinkedMediaDownloader
   end
 
   class UploadCreateError < StandardError
+  end
+
+  class RateLimitedError < StandardError
+    attr_reader :retry_after
+
+    def initialize(retry_after)
+      @retry_after = retry_after.to_i.clamp(MIN_RETRY_AFTER_SECONDS, MAX_RETRY_AFTER_SECONDS)
+      super("Rate limited, retry in #{@retry_after}s")
+    end
   end
 
   # Downloads +src+ and creates an Upload owned by +user_id+.
@@ -70,6 +83,10 @@ class HotlinkedMediaDownloader
     rescue StandardError => e
       if SiteSetting.verbose_upload_logging
         Rails.logger.warn("Verbose Upload Logging: Error '#{e.message}' while downloading #{src}")
+      end
+
+      if e.is_a?(OpenURI::HTTPError) && e.io&.status&.first.to_i == TOO_MANY_REQUESTS
+        raise RateLimitedError.new(e.io.meta.to_h["retry-after"])
       end
 
       if (retries -= 1) > 0 && !Rails.env.test?

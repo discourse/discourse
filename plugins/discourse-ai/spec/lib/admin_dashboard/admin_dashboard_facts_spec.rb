@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
+  fab!(:user)
+  fab!(:admin)
+  fab!(:moderator)
+
   before do
     kpis = [
       { type: :new_signups, value: 100, previous_value: 50, percent_change: 100.0 },
@@ -13,6 +17,63 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
 
   def compute(start_date: 30.days.ago.to_date.to_s, end_date: Date.current.to_s)
     described_class.compute(start_date: start_date, end_date: end_date)
+  end
+
+  def create_metric_topics(count, user:, **attributes)
+    timestamp = Time.current
+    Topic.insert_all!(
+      Array.new(count) do
+        Fabricate
+          .build(
+            :topic,
+            user: user,
+            last_post_user_id: user.id,
+            bumped_at: timestamp,
+            created_at: timestamp,
+            updated_at: timestamp,
+            **attributes,
+          )
+          .attributes
+          .slice(*Topic.column_names)
+          .except("id")
+      end,
+    )
+  end
+
+  def create_landing_events(count, topic:)
+    BrowserPageviewEvent.insert_all!(
+      Array.new(count) do
+        Fabricate
+          .build(
+            :browser_pageview_event,
+            topic_id: topic.id,
+            normalized_referrer: "example.com",
+            created_at: 1.day.ago,
+          )
+          .attributes
+          .except("id")
+      end,
+    )
+  end
+
+  def create_ratio_posts(count, topic:, author:)
+    first_post_number = topic.posts.maximum(:post_number).to_i + 1
+    timestamp = 1.day.ago
+    Post.insert_all!(
+      Array.new(count) do |index|
+        {
+          topic_id: topic.id,
+          user_id: author.id,
+          post_number: first_post_number + index,
+          post_type: Post.types[:regular],
+          raw: "Staff ratio fixture",
+          cooked: "<p>Staff ratio fixture</p>",
+          created_at: timestamp,
+          updated_at: timestamp,
+          last_version_at: timestamp,
+        }
+      end,
+    )
   end
 
   it "returns tile-consistent metrics with friendly labels" do
@@ -37,7 +98,7 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   end
 
   it "flags an unanswered-topics signal once it clears the threshold" do
-    Fabricate.times(6, :post) # 6 topics, each with a single post (no replies)
+    create_metric_topics(6, user: user, posts_count: 1)
 
     headlines = compute(start_date: 1.day.ago.to_date.to_s).fetch(:signals).map { |s| s[:headline] }
 
@@ -47,19 +108,10 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   end
 
   it "excludes staff-created topics from the unanswered signal" do
-    user = Fabricate(:user)
-    admin = Fabricate(:admin)
-    moderator = Fabricate(:moderator)
-
-    Fabricate.times(6, :post, user: user, created_at: 1.day.ago)
-    Fabricate.times(3, :post, user: admin, created_at: 1.day.ago)
-    Fabricate.times(3, :post, user: moderator, created_at: 1.day.ago)
-
-    4.times do
-      topic = Fabricate(:topic, user: user, created_at: 1.day.ago)
-      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
-      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
-    end
+    create_metric_topics(6, user: user, posts_count: 1, created_at: 1.day.ago)
+    create_metric_topics(3, user: admin, posts_count: 1, created_at: 1.day.ago)
+    create_metric_topics(3, user: moderator, posts_count: 1, created_at: 1.day.ago)
+    create_metric_topics(4, user: user, posts_count: 2, created_at: 1.day.ago)
 
     unanswered_gap =
       compute(start_date: 2.days.ago.to_date.to_s)
@@ -74,8 +126,8 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   it "reports when new-topic volume changes sharply" do
     start_date = Date.parse("2030-01-08")
     end_date = Date.parse("2030-01-14")
-    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(6, :topic, created_at: start_date)
+    Fabricate(:topic, user: user, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(6, user: user, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -91,8 +143,8 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   it "reports when new-topic volume drops sharply from meaningful previous volume" do
     start_date = Date.parse("2030-01-08")
     end_date = Date.parse("2030-01-14")
-    Fabricate.times(20, :topic, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(4, :topic, created_at: start_date)
+    create_metric_topics(20, user: user, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(4, user: user, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -110,9 +162,9 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     end_date = Date.parse("2030-01-14")
     private_category = Fabricate(:private_category, group: Fabricate(:group))
 
-    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(6, :topic, category: private_category, created_at: start_date)
-    Fabricate.times(6, :private_message_topic, created_at: start_date)
+    Fabricate(:topic, user: user, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(6, user: user, category: private_category, created_at: start_date)
+    Fabricate.times(6, :private_message_topic, user: user, recipient: admin, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -128,9 +180,9 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     private_category = Fabricate(:private_category, group: Fabricate(:group))
     SiteSetting.ai_admin_dashboard_highlights_category_scope = "all"
 
-    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(6, :topic, category: private_category, created_at: start_date)
-    Fabricate.times(6, :private_message_topic, created_at: start_date)
+    Fabricate(:topic, user: user, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(6, user: user, category: private_category, created_at: start_date)
+    Fabricate.times(6, :private_message_topic, user: user, recipient: admin, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -151,8 +203,8 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     SiteSetting.ai_admin_dashboard_highlights_category_scope = "include"
     SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
 
-    Fabricate(:topic, category: subcategory, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
+    Fabricate(:topic, user: user, category: subcategory, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(6, user: user, category: subcategory, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -173,8 +225,8 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     SiteSetting.ai_admin_dashboard_highlights_category_scope = "include_strict"
     SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
 
-    Fabricate(:topic, category: subcategory, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
+    Fabricate(:topic, user: user, category: subcategory, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(6, user: user, category: subcategory, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -193,9 +245,9 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     SiteSetting.ai_admin_dashboard_highlights_category_scope = "exclude"
     SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
 
-    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
-    Fabricate.times(6, :topic, category: private_category, created_at: start_date)
+    Fabricate(:topic, user: user, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(6, user: user, category: subcategory, created_at: start_date)
+    create_metric_topics(6, user: user, category: private_category, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -216,8 +268,8 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     SiteSetting.ai_admin_dashboard_highlights_category_scope = "exclude_strict"
     SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
 
-    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
-    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
+    Fabricate(:topic, user: user, created_at: Date.parse("2030-01-01"))
+    create_metric_topics(6, user: user, category: subcategory, created_at: start_date)
 
     topic_volume =
       compute(start_date: start_date.to_s, end_date: end_date.to_s)
@@ -240,14 +292,8 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   end
 
   it "reports the top external landing topic for three-month date ranges" do
-    topic = Fabricate(:topic, title: "Welcome topic for visitors")
-    Fabricate.times(
-      50,
-      :browser_pageview_event,
-      topic_id: topic.id,
-      normalized_referrer: "example.com",
-      created_at: 1.day.ago,
-    )
+    topic = Fabricate(:topic, user: user, title: "Welcome topic for visitors")
+    create_landing_events(50, topic: topic)
 
     landing_topic =
       compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)
@@ -263,34 +309,22 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   it "reports landing topics from included categories only" do
     unselected_category = Fabricate(:category)
     private_category = Fabricate(:private_category, group: Fabricate(:group))
-    selected_topic = Fabricate(:topic, title: "Selected landing topic")
+    selected_topic = Fabricate(:topic, user: user, title: "Selected landing topic")
     unselected_topic =
-      Fabricate(:topic, category: unselected_category, title: "Unselected landing topic")
-    private_topic = Fabricate(:topic, category: private_category, title: "Private landing topic")
+      Fabricate(
+        :topic,
+        user: user,
+        category: unselected_category,
+        title: "Unselected landing topic",
+      )
+    private_topic =
+      Fabricate(:topic, user: user, category: private_category, title: "Private landing topic")
     SiteSetting.ai_admin_dashboard_highlights_category_scope = "include"
     SiteSetting.ai_admin_dashboard_highlights_categories = selected_topic.category_id.to_s
 
-    Fabricate.times(
-      50,
-      :browser_pageview_event,
-      topic_id: selected_topic.id,
-      normalized_referrer: "example.com",
-      created_at: 1.day.ago,
-    )
-    Fabricate.times(
-      55,
-      :browser_pageview_event,
-      topic_id: unselected_topic.id,
-      normalized_referrer: "example.com",
-      created_at: 1.day.ago,
-    )
-    Fabricate.times(
-      60,
-      :browser_pageview_event,
-      topic_id: private_topic.id,
-      normalized_referrer: "example.com",
-      created_at: 1.day.ago,
-    )
+    create_landing_events(50, topic: selected_topic)
+    create_landing_events(55, topic: unselected_topic)
+    create_landing_events(60, topic: private_topic)
 
     landing_topic =
       compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)
@@ -313,10 +347,9 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   end
 
   it "reports staff post ratio for three-month date ranges" do
-    admin = Fabricate(:admin)
-    user = Fabricate(:user)
-    Fabricate.times(12, :post, user: admin, created_at: 1.day.ago)
-    Fabricate.times(8, :post, user: user, created_at: 1.day.ago)
+    topic = Fabricate(:topic, user: user)
+    create_ratio_posts(12, topic: topic, author: admin)
+    create_ratio_posts(8, topic: topic, author: user)
 
     staff_ratio =
       compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)
@@ -330,14 +363,13 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   end
 
   it "uses public categories for staff ratio by default" do
-    admin = Fabricate(:admin)
-    user = Fabricate(:user)
     private_category = Fabricate(:private_category, group: Fabricate(:group))
-    private_topic = Fabricate(:topic, category: private_category)
+    private_topic = Fabricate(:topic, user: user, category: private_category)
 
-    Fabricate.times(6, :post, topic: private_topic, user: admin, created_at: 1.day.ago)
-    Fabricate.times(8, :post, topic: private_topic, user: user, created_at: 1.day.ago)
-    Fabricate.times(6, :private_message_post, user: admin, created_at: 1.day.ago)
+    create_ratio_posts(6, topic: private_topic, author: admin)
+    create_ratio_posts(8, topic: private_topic, author: user)
+    pm = Fabricate(:private_message_topic, user: admin, recipient: user)
+    create_ratio_posts(6, topic: pm, author: admin)
 
     staff_ratio =
       compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)

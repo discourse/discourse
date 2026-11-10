@@ -23,6 +23,7 @@ module SiteSettings
           db
           dm
           dns
+          dsa
           eu
           faq
           fg
@@ -146,6 +147,10 @@ module SiteSettings
       def description(setting)
         desc = I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
         expand_setting_links(desc)
+      end
+
+      def setting_markers(settings)
+        Array(settings).map { "{{setting:#{it}}}" }.join(", ")
       end
 
       def settings_filter_href(filter)

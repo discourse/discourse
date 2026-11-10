@@ -305,7 +305,7 @@ acceptance("Composer Actions", function (needs) {
       admin: false,
       trust_level: 3,
       whisperer: false,
-      groups: [{ id: 13, name: "tl3_group" }],
+      visibleGroups: [{ id: 13, name: "tl3_group" }],
     });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
@@ -326,7 +326,7 @@ acceptance("Composer Actions", function (needs) {
       admin: false,
       trust_level: 4,
       whisperer: false,
-      groups: [{ id: 13, name: "tl4_group" }],
+      visibleGroups: [{ id: 13, name: "tl4_group" }],
     });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");

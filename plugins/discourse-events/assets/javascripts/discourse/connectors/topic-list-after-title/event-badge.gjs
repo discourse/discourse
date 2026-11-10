@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import EventDate from "../../components/event-date";
+import EventDate from "../../components/event-date.gjs";
 
 export default class EventBadge extends Component {
   @service siteSettings;

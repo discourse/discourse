@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { bind } from "discourse/lib/decorators";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import EnumInfo from "./enum-info";
+import EnumInfo from "./enum-info.gjs";
 
 export default class OneTable extends Component {
   @tracked open = this.args.table.open;

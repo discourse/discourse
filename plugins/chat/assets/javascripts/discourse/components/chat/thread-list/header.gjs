@@ -30,7 +30,7 @@ export default class ChatThreadListHeader extends Component {
         />
       {{/if}}
 
-      <navbar.Title @title={{this.title}} @icon="discourse-threads" />
+      <navbar.Title @icon="discourse-threads" @title={{this.title}} />
 
       <navbar.Actions as |action|>
         <action.CloseThreadsButton @channel={{@channel}} />

@@ -817,6 +817,12 @@
     border-top: 1px solid var(--content-border-color) !important;
     border-bottom: 1px solid var(--content-border-color) !important;
     margin: 1em 0 2em;
+
+    @include viewport.until(sm) {
+      .badge-category__wrapper {
+        width: 100%;
+      }
+    }
   }
 
   .category-topics-count a {

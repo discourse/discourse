@@ -1,23 +1,31 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import {
   birthday,
   birthdayTitle,
   cakeday,
   cakedayTitle,
 } from "discourse/plugins/discourse-cakeday/discourse/lib/cakeday";
-import EmojiImages from "../../components/emoji-images";
+import EmojiImages from "../../components/emoji-images.gjs";
 
-@tagName("")
 export default class UserCardCakeday extends Component {
-  init() {
-    super.init(...arguments);
-    const { user } = this;
-    this.set("isCakeday", cakeday(user.cakedate));
-    this.set("isBirthday", birthday(user.birthdate));
-    this.set("cakedayTitle", cakedayTitle(user, this.currentUser));
-    this.set("birthdayTitle", birthdayTitle(user, this.currentUser));
+  @service currentUser;
+  @service siteSettings;
+
+  get isCakeday() {
+    return cakeday(this.args.user.cakedate);
+  }
+
+  get isBirthday() {
+    return birthday(this.args.user.birthdate);
+  }
+
+  get cakedayTitle() {
+    return cakedayTitle(this.args.user, this.currentUser);
+  }
+
+  get birthdayTitle() {
+    return birthdayTitle(this.args.user, this.currentUser);
   }
 
   <template>

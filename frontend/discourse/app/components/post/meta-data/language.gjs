@@ -95,8 +95,8 @@ export default class PostMetaDataLanguage extends Component {
         </:trigger>
         <:content>
           <button
-            type="button"
             class="post-language__original-language"
+            type="button"
             {{on "click" this.translate}}
           >{{this.tooltipText}}</button>
           <div class="post-language__disclaimer">{{i18n

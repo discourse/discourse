@@ -63,7 +63,7 @@ module DiscourseAi
       # if the user filtered the results or index is a bit out of date
       OVER_SELECTION_FACTOR = 4
 
-      def search_for_topics(query, page = 1, hyde: true)
+      def search_for_topics(query, page = 1, hyde: true, private_messages: false)
         max_results_per_page = 100
         limit = [Search.per_filter, max_results_per_page].min + 1
         offset = (page - 1) * limit
@@ -73,6 +73,7 @@ module DiscourseAi
         if search_term.blank? || search_term.length < SiteSetting.min_search_term_length
           return Post.none
         end
+        return Post.none if private_messages && guardian.user.nil?
 
         search_embedding = nil
         if hyde
@@ -86,24 +87,64 @@ module DiscourseAi
         schema = DiscourseAi::Embeddings::Schema.for(Topic)
 
         candidate_topic_ids =
-          schema.asymmetric_similarity_search(
-            search_embedding,
-            limit: over_selection_limit,
-            offset: offset,
-          ).map(&:topic_id)
+          schema
+            .asymmetric_similarity_search(
+              search_embedding,
+              limit: over_selection_limit,
+              offset: offset,
+            ) do |builder|
+              builder.join("topics ON topics.id = #{Schema::TOPICS_TABLE}.topic_id")
+              builder.where("topics.deleted_at IS NULL AND topics.visible")
+
+              if private_messages
+                builder.where(
+                  <<~SQL,
+                  topics.archetype = :private_message
+                  AND (
+                    topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_USER})
+                    OR topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_GROUP})
+                  )
+                SQL
+                  private_message: Archetype.private_message,
+                  user_id: guardian.user.id,
+                )
+              else
+                builder.where(
+                  "topics.archetype <> :private_message",
+                  private_message: Archetype.private_message,
+                )
+              end
+            end
+            .map(&:topic_id)
 
         semantic_results =
           ::Post
             .where(post_type: ::Topic.visible_post_types(guardian.user))
-            .public_posts
+            .joins(:topic)
             .where("topics.visible")
+            .where(hidden: false)
             .where(topic_id: candidate_topic_ids, post_number: 1)
             .order("array_position(ARRAY#{candidate_topic_ids}, posts.topic_id)")
             .limit(limit)
 
+        semantic_results =
+          if private_messages
+            semantic_results.where(
+              topics: {
+                archetype: Archetype.private_message,
+              },
+            ).private_posts_for_user(guardian.user)
+          else
+            semantic_results.where.not(topics: { archetype: Archetype.private_message })
+          end
+
         query_filter_results = search.apply_filters(semantic_results)
 
-        guardian.filter_allowed_categories(query_filter_results)
+        if private_messages
+          query_filter_results
+        else
+          guardian.filter_allowed_categories(query_filter_results)
+        end
       end
 
       def similar_topic_ids_to(query, candidates:)

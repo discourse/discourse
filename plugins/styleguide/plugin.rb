@@ -18,6 +18,12 @@ require_relative "lib/styleguide/engine"
 Discourse::Application.routes.append { mount Styleguide::Engine, at: "/styleguide" }
 
 after_initialize do
+  add_to_class(:guardian, :can_see_styleguide?) do
+    SiteSetting.styleguide_enabled && in_any_groups?(SiteSetting.styleguide_allowed_groups_map)
+  end
+
+  add_to_serializer(:site, :can_see_styleguide) { scope.can_see_styleguide? }
+
   register_asset_filter do |type, request, opts|
     path = opts[:path]
 

@@ -16,8 +16,11 @@ import { i18n } from "discourse-i18n";
 export default class AdminLogsScreenedIpAddressesController extends Controller {
   @service dialog;
 
+  /** @type {string | null} */
   @tracked filter = null;
   @tracked loading = false;
+
+  /** @type {string | null} */
   @tracked savedIpAddress = null;
   @autoTrackedArray model;
 

@@ -136,7 +136,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     expect(post.post_policy.accepted_by).to contain_exactly(user2)
   end
 
-  %w[monthly quarterly yearly].each do |how_often|
+  shared_examples "scheduling policy renewal from its start date" do |how_often:|
     it "sets correctly next_renew_at for #{how_often} when renew-start is set" do
       period =
         case how_often
@@ -176,7 +176,19 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  %w[monthly quarterly yearly].each do |how_often|
+  context "with a monthly renewal period and a specified start date" do
+    include_examples "scheduling policy renewal from its start date", how_often: "monthly"
+  end
+
+  context "with a quarterly renewal period and a specified start date" do
+    include_examples "scheduling policy renewal from its start date", how_often: "quarterly"
+  end
+
+  context "with a yearly renewal period and a specified start date" do
+    include_examples "scheduling policy renewal from its start date", how_often: "yearly"
+  end
+
+  shared_examples "expiring a renewable policy" do |how_often:|
     it "expires policies when #{how_often}" do
       period =
         case how_often
@@ -216,7 +228,19 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  it "will correctly notify users with high priority notifications" do
+  context "with a monthly renewal period and no specified start date" do
+    include_examples "expiring a renewable policy", how_often: "monthly"
+  end
+
+  context "with a quarterly renewal period and no specified start date" do
+    include_examples "expiring a renewable policy", how_often: "quarterly"
+  end
+
+  context "with a yearly renewal period and no specified start date" do
+    include_examples "expiring a renewable policy", how_often: "yearly"
+  end
+
+  it "sends high-priority notifications to users" do
     Jobs.run_immediately!
     freeze_time
 
@@ -297,7 +321,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  it "will delete the existing policy reminder notification before creating a new one" do
+  it "replaces the existing policy reminder notification" do
     Jobs.run_immediately!
     freeze_time
 

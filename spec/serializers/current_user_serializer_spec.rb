@@ -6,8 +6,56 @@ RSpec.describe CurrentUserSerializer do
 
   let(:guardian) { user.guardian }
 
+  describe "#can_use_dsa_account_email" do
+    before { enable_dsa_reporting }
+
+    it "allows a reporter to use their confirmed account email" do
+      user.activate
+
+      expect(serializer.as_json[:can_use_dsa_account_email]).to eq(true)
+    end
+
+    it "requires email verification when the account email is unconfirmed" do
+      Fabricate(:email_token, user:)
+
+      expect(serializer.as_json[:can_use_dsa_account_email]).to eq(false)
+    end
+
+    it "requires a contact email for a shadow account after anonymous mode is disabled" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      reporter = Fabricate(:user, trust_level: TrustLevel[3])
+      shadow = AnonymousShadowCreator.get(reporter)
+      SiteSetting.allow_anonymous_mode = false
+
+      payload = described_class.new(shadow, scope: shadow.guardian, root: false).as_json
+
+      expect(payload[:can_use_dsa_account_email]).to eq(false)
+    end
+
+    it "omits the capability when DSA reporting is disabled" do
+      SiteSetting.dsa_reporting_enabled = false
+
+      expect(serializer.as_json).not_to have_key(:can_use_dsa_account_email)
+    end
+  end
+
+  it "includes notification types with remaining read or unread notifications" do
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+    notification =
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        read: true,
+      )
+    expect(serializer.as_json[:available_notification_types]).to eq([Notification.types[:liked]])
+    notification.destroy!
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+  end
+
   context "when SSO is not enabled" do
-    it "should not include the external_id field" do
+    it "does not include external_id" do
       payload = serializer.as_json
       expect(payload).not_to have_key(:external_id)
     end
@@ -20,7 +68,7 @@ RSpec.describe CurrentUserSerializer do
       user
     end
 
-    it "should include the external_id" do
+    it "includes external_id" do
       SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
       SiteSetting.discourse_connect_secret = "12345678910"
       SiteSetting.enable_discourse_connect = true
@@ -34,12 +82,12 @@ RSpec.describe CurrentUserSerializer do
     fab!(:category2, :category)
     fab!(:category3, :category)
 
-    it "should include empty top_category_ids array" do
+    it "includes an empty top_category_ids array" do
       payload = serializer.as_json
       expect(payload[:top_category_ids]).to eq([])
     end
 
-    it "should include correct id in top_category_ids array" do
+    it "includes the correct ID in top_category_ids" do
       _category = Category.first
       CategoryUser.create!(
         user_id: user.id,
@@ -107,7 +155,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#groups" do
-    it "should only show visible groups" do
+    it "shows only visible groups" do
       Fabricate(:group, visibility_level: Group.visibility_levels[:public])
       hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
       public_group =
@@ -309,11 +357,11 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "should not include associated account ids by default" do
+    it "does not include associated account IDs by default" do
       expect(serializer.as_json[:associated_account_ids]).to be_nil
     end
 
-    it "should include associated account ids when site setting enabled" do
+    it "includes associated account IDs when enabled" do
       SiteSetting.include_associated_account_ids = true
       expect(serializer.as_json[:associated_account_ids]).to eq({ "twitter" => "1" })
     end
@@ -507,6 +555,73 @@ RSpec.describe CurrentUserSerializer do
       admin.save!
       payload = admin_serializer.as_json
       expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+  end
+
+  describe "#can_run_design_wizard" do
+    fab!(:admin)
+
+    let(:admin_serializer) { described_class.new(admin, scope: Guardian.new(admin), root: false) }
+
+    it "is not included for non-admin users" do
+      expect(serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is true for an admin on a site that still uses a core theme" do
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "remains available when Concord is installed and selected as the default" do
+      SiteSetting.concord_in_wizard = true
+      concord =
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+
+      concord.set_default!
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+
+      SiteSetting.concord_in_wizard = false
+
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included once a theme is installed" do
+      Fabricate(:theme)
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included once a component is installed" do
+      Fabricate(:theme, component: true)
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included when the default theme is not a core theme" do
+      custom_theme = Fabricate(:theme)
+      custom_theme.set_default!
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is true while the only other theme is an appearance change's palette theme" do
+      Fabricate(:theme_appearance_change).theme.set_default!
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "is not included once files are added to an appearance change's theme" do
+      theme = Fabricate(:theme_appearance_change).theme
+      theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+      theme.save!
+
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
     end
   end
 

@@ -225,10 +225,6 @@
   transform: skew(3deg);
   font-size: var(--font-down-1);
 
-  &.rewind__share-btn {
-    right: 78px;
-  }
-
   &.rewind__exit-fullscreen-btn {
     right: 24px;
   }
@@ -249,20 +245,6 @@
       transform: skew(3deg) translateX(-1px) translateY(1px);
     }
   }
-}
-
-.rewind__prev-btn {
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  z-index: 1;
-}
-
-.rewind__next-btn {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  z-index: 1;
 }
 
 .rewind-loader {

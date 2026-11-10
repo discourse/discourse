@@ -1,7 +1,7 @@
 import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
-import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation";
+import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation.gjs";
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 

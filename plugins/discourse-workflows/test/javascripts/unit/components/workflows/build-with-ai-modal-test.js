@@ -35,6 +35,31 @@ module("Unit | Component | Workflows | BuildWithAiModal", function (hooks) {
     );
   });
 
+  test("proposal with failing scripts offers a fix", function (assert) {
+    const modal = Object.create(BuildWithAiModal.prototype);
+
+    modal.aiResponse = {
+      status: "proposed_patch",
+      response: {
+        proposal: {
+          operations: [{ op: "rename_node", node_id: "node-1", name: "Wait" }],
+          script_validations: [{ valid: true }],
+        },
+      },
+    };
+    assert.false(modal.aiProposalHasFailedScripts, "passing scripts");
+
+    modal.aiResponse.response.proposal.script_validations.push({
+      valid: false,
+    });
+    modal.aiResponse = { ...modal.aiResponse };
+    assert.true(modal.aiProposalHasFailedScripts, "failing scripts");
+    assert.true(
+      modal.aiShowingProposalReview,
+      "the proposal stays reviewable so it can still be applied"
+    );
+  });
+
   test("proposal exposes created agent resources", function (assert) {
     const modal = Object.create(BuildWithAiModal.prototype);
 

@@ -61,7 +61,7 @@ export default class SettingFieldEnum extends Component {
       as |select|
     >
       {{#if this.hasInvalidSelection}}
-        <option value={{this.selectedValue}} selected disabled>
+        <option disabled selected value={{this.selectedValue}}>
           {{i18n "admin.settings.none"}}
         </option>
       {{/if}}

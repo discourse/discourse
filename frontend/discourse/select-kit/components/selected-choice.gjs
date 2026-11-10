@@ -12,9 +12,16 @@ import { i18n } from "discourse-i18n";
 @tagName("")
 @selectKitPropUtils
 export default class SelectedChoice extends Component {
+  /** @type {unknown} */
   item = null;
+
+  /** @type {import("discourse/select-kit/components/select-kit").SelectKitState | null} */
   selectKit = null;
+
+  /** @type {string | null | undefined} */
   extraClass = null;
+
+  /** @type {string | null} */
   id = null;
 
   init() {
@@ -38,6 +45,11 @@ export default class SelectedChoice extends Component {
     return this.get("mandatoryValues")?.split("|") || [];
   }
 
+  @computed("itemValue", "selectKit.options.lockedValues.[]")
+  get locked() {
+    return this.selectKit.options.lockedValues?.includes(this.itemValue);
+  }
+
   @computed("item")
   get readOnly() {
     if (typeof this.item === "string") {
@@ -54,20 +66,32 @@ export default class SelectedChoice extends Component {
   }
 
   <template>
-    {{#if this.readOnly}}
+    {{#if this.locked}}
+      <button
+        class="btn btn-default disabled selected-choice tag-choice"
+        data-name={{this.itemName}}
+        data-value={{this.itemValue}}
+        disabled
+        title={{this.readOnlyTitle}}
+        type="button"
+      >
+        {{dIcon "lock"}}
+        <span class="d-button-label">{{this.itemName}}</span>
+      </button>
+    {{else if this.readOnly}}
       <button
         class="btn btn-default disabled tag-choice"
         title={{this.readOnlyTitle}}
       >{{this.itemName}}</button>
     {{else}}
       <button
-        {{on "click" (fn this.selectKit.deselect this.item)}}
         aria-label={{i18n "select_kit.delete_item" name=this.itemName}}
-        data-value={{this.itemValue}}
-        data-name={{this.itemName}}
-        type="button"
-        id="{{this.id}}-choice"
         class="btn btn-default selected-choice tag-choice {{this.extraClass}}"
+        data-name={{this.itemName}}
+        data-value={{this.itemValue}}
+        id="{{this.id}}-choice"
+        type="button"
+        {{on "click" (fn this.selectKit.deselect this.item)}}
       >
         {{dIcon "xmark"}}
         {{#if (has-block)}}

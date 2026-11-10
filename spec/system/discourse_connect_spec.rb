@@ -46,6 +46,7 @@ describe "Discourse Connect" do
 
         context "when visiting /" do
           before { visit "/" }
+
           it_behaves_like "shows the homepage"
         end
 
@@ -60,6 +61,7 @@ describe "Discourse Connect" do
 
         context "when visiting /login" do
           before { visit "/login" }
+
           it_behaves_like "redirects to SSO"
         end
       end
@@ -69,6 +71,7 @@ describe "Discourse Connect" do
 
         context "when visiting /" do
           before { visit "/" }
+
           it_behaves_like "shows the homepage"
         end
 
@@ -83,6 +86,7 @@ describe "Discourse Connect" do
 
         context "when visiting /login" do
           before { visit "/login" }
+
           it_behaves_like "redirects to SSO"
         end
 
@@ -106,6 +110,7 @@ describe "Discourse Connect" do
 
         context "when visiting /" do
           before { visit "/" }
+
           it_behaves_like "shows the login splash"
         end
 
@@ -120,6 +125,7 @@ describe "Discourse Connect" do
 
         context "when visiting /login" do
           before { visit "/login" }
+
           it_behaves_like "redirects to SSO"
         end
       end
@@ -129,11 +135,13 @@ describe "Discourse Connect" do
 
         context "when visiting /" do
           before { visit "/" }
+
           it_behaves_like "redirects to SSO"
         end
 
         context "when visiting /login" do
           before { visit "/login" }
+
           it_behaves_like "redirects to SSO"
         end
       end

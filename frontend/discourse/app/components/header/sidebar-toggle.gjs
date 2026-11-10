@@ -31,13 +31,13 @@ export default class SidebarToggle extends Component {
   <template>
     <span class="header-sidebar-toggle">
       <button
-        title={{i18n "sidebar.title"}}
+        aria-controls="d-sidebar"
+        aria-expanded={{if @showSidebar "true" "false"}}
         class={{dConcatClass
           "btn btn-flat btn-sidebar-toggle no-text btn-icon"
           (if this.site.narrowDesktopView "narrow-desktop")
         }}
-        aria-expanded={{if @showSidebar "true" "false"}}
-        aria-controls="d-sidebar"
+        title={{i18n "sidebar.title"}}
         {{on "click" this.toggle}}
       >
         {{dIcon @icon}}

@@ -36,14 +36,12 @@ module EmberDeprecations
 
   # Formatted error for the first fatal JS deprecation in the logs, or nil.
   def self.fatal_error(logs)
-    logs
-      &.filter_map do |log|
-        if log[:level] == "trace"
-          error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
-          "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
-        end
-      end
-      &.first
+    log = logs&.find { |entry| entry[:level] == "trace" }
+    return if log.nil?
+
+    error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
+    error = BrowserErrorStack.resolve([error]).first
+    "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
   end
 
   # Count non-fatal deprecation_id counts into the example metadata, excluding
@@ -59,6 +57,29 @@ module EmberDeprecations
 
       deprecations = metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1
+    end
+  end
+
+  # Collect the JS call stack captured for each distinct deprecation, so the CI
+  # report can point at the code which needs fixing rather than just a count.
+  def self.record_details(logs, metadata)
+    expected = metadata[:expected_js_deprecations] || []
+
+    logs&.each do |log|
+      payload = log[:message][/^deprecation_detail:(\{.*\})$/m, 1]
+      next if payload.nil?
+
+      detail =
+        begin
+          JSON.parse(payload)
+        rescue JSON::ParserError
+          next
+        end
+
+      next if expected.include?(detail["id"])
+
+      details = metadata[:js_deprecation_details] ||= []
+      details << detail
     end
   end
 end

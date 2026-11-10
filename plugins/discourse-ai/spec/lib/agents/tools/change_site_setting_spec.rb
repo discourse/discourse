@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::ChangeSiteSetting do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:context) { DiscourseAi::Agents::BotContext.new }
 
@@ -14,6 +14,55 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeSiteSetting do
   def tool(params = nil, **kwargs)
     params ||= kwargs
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
+  end
+
+  describe "#approval_changes" do
+    it "previews the current and proposed values without applying the change" do
+      SiteSetting.enable_badges = true
+      setting_tool = tool(setting_name: "enable_badges", value: false, reason: "Testing")
+
+      title = Nokogiri::HTML5.fragment(Chat::Message.cook(setting_tool.approval_title))
+      expect(title.at_css("code").text).to eq("enable_badges")
+      expect(setting_tool.approval_changes).to eq(
+        [{ label: "Changing value:", before: "true", after: "false" }],
+      )
+      expect(setting_tool.approval_parameters).to be_empty
+      expect(SiteSetting.enable_badges).to eq(true)
+      expect(setting_tool.approval_question).to eq(
+        I18n.t("discourse_ai.ai_bot.chat_tool_approval.question"),
+      )
+    end
+
+    it "preserves markup as text and labels empty values" do
+      SiteSetting.site_description = "<b>Old description</b>"
+      setting_tool = tool(setting_name: "site_description", value: "", reason: "Testing")
+      expect(setting_tool.approval_changes).to eq(
+        [{ label: "Changing value:", before: "<b>Old description</b>", after: "Empty" }],
+      )
+    end
+
+    it "previews the coerced value that would be saved" do
+      SiteSetting.min_post_length = 20
+      setting_tool = tool(setting_name: "min_post_length", value: "2.5", reason: "Testing")
+
+      expect(setting_tool.approval_changes).to eq(
+        [{ label: "Changing value:", before: "20", after: "25" }],
+      )
+    end
+
+    it "omits previews for secret and unknown settings" do
+      secret_setting = SiteSetting.secret_settings.first
+      expect(
+        tool(setting_name: secret_setting, value: "x", reason: "Testing").approval_changes,
+      ).to be_empty
+      expect(
+        tool(
+          setting_name: "definitely_not_a_setting",
+          value: "x",
+          reason: "Testing",
+        ).approval_changes,
+      ).to be_empty
+    end
   end
 
   it "changes the setting and logs a staff action" do
@@ -115,6 +164,34 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeSiteSetting do
   end
 
   describe "#validation_error" do
+    it "returns a plugin rejection with the setting, proposed value, and acting user" do
+      plugin = Plugin::Instance.new
+      modifier =
+        proc do |error, setting_name, value, guardian|
+          error || "#{setting_name}=#{value} is restricted for #{guardian.user.username}"
+        end
+      plugin.register_modifier(:ai_bot_site_setting_change_error, &modifier)
+
+      setting_tool = tool(setting_name: "min_post_length", value: "42", reason: "Test")
+      expected_error = {
+        status: "error",
+        error: "min_post_length=42 is restricted for #{bot_user.username}",
+      }
+
+      expect {
+        expect(setting_tool.validation_error).to eq(expected_error)
+        expect(setting_tool.invoke).to eq(expected_error)
+      }.to not_change { SiteSetting.min_post_length }.and not_change {
+              UserHistory.where(action: UserHistory.actions[:change_site_setting]).count
+            }
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :ai_bot_site_setting_change_error,
+        &modifier
+      )
+    end
+
     it "returns nil for a valid request without changing the setting" do
       t = tool(setting_name: "min_post_length", value: "42", reason: "Test")
 

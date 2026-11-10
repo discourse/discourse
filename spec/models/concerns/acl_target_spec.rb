@@ -13,6 +13,10 @@ RSpec.describe AclTarget do
     end
   end
 
+  around do |example|
+    stub_const(target_class, :ACL_PERMISSIONS, Acl::Permissions.new(:view, :edit)) { example.run }
+  end
+
   it "adds mandatory acl class methods" do
     expect(target_class).to respond_to(:has_mandatory_acl?, :acl_is_mandatory?)
   end
@@ -62,6 +66,40 @@ RSpec.describe AclTarget do
       expect(target_class.acl_is_mandatory?({ type: :group, id: 1, permission: "edit" })).to eq(
         false,
       )
+    end
+  end
+
+  describe "permission scopes" do
+    fab!(:acl_user, :user)
+    fab!(:owned_post, :post)
+    fab!(:viewable_post, :post)
+    fab!(:other_post, :post)
+
+    before do
+      Fabricate(
+        :access_control_list_with_users,
+        target: owned_post.becomes(target_class),
+        permission: "owner",
+        users: [acl_user],
+      )
+      Fabricate(
+        :access_control_list_with_users,
+        target: viewable_post.becomes(target_class),
+        permission: "view",
+        users: [acl_user],
+      )
+    end
+
+    it "includes owned targets in a single-permission scope" do
+      expect(target_class.with_acl_permission(acl_user.guardian, "view").pluck(:id)).to(
+        contain_exactly(owned_post.id, viewable_post.id),
+      )
+    end
+
+    it "includes owned targets in a multi-permission scope" do
+      expect(
+        target_class.with_any_acl_permissions(acl_user.guardian, %w[view edit]).pluck(:id),
+      ).to contain_exactly(owned_post.id, viewable_post.id)
     end
   end
 end

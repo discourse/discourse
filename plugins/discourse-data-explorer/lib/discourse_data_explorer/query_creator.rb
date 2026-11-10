@@ -9,12 +9,16 @@ module DiscourseDataExplorer
       attrs = { name: name, user_id: user.id, last_run_at: Time.now }
       attrs[:description] = query_params[:description] if query_params[:description].present?
       attrs[:sql] = query_params[:sql] if query_params[:sql].present?
+      tag_names = query_params[:tags] if query_params.key?(:tags)
 
-      query = Query.create!(attrs)
+      Query.transaction do
+        query = Query.create!(attrs)
+        QueryTag.sync!(query:, names: tag_names) if tag_names
 
-      group_ids&.each { |group_id| query.query_groups.find_or_create_by!(group_id: group_id) }
+        group_ids&.each { |group_id| query.query_groups.find_or_create_by!(group_id: group_id) }
 
-      query
+        query
+      end
     end
   end
 end

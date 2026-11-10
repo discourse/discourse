@@ -4,7 +4,7 @@ RSpec.describe "Redis rake tasks", type: :multisite do
   let(:redis) { Discourse.redis.without_namespace }
 
   describe "clean up" do
-    it "should clean up orphan Redis keys" do
+    it "cleans up orphan Redis keys" do
       active_keys = %w[
         __mb_backlog_id_n_/users/someusername$|$default
         default:user-last-seen:607

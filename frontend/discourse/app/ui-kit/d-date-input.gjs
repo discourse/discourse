@@ -9,6 +9,14 @@ import { on as onEvent } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {Object} DateInputPicker
+ * @property {(date: import("moment").Moment | Date | string | null, preventOnSelect?: boolean) => void} setDate
+ * @property {(date: import("moment").Moment | Date | string | null | undefined) => void} setMinDate
+ * @property {() => void} hide
+ * @property {() => void} destroy
+ */
+
 function isInputDateSupported() {
   const input = document.createElement("input");
   const value = "a";
@@ -19,9 +27,21 @@ function isInputDateSupported() {
 
 @classNames("d-date-input")
 export default class DDateInput extends Component {
+  /** @type {import("moment").Moment | Date | string | null | undefined} */
   date = null;
   useNativePicker = isInputDateSupported();
+
+  /** @type {DateInputPicker | null} */
   _picker = null;
+
+  @computed("_placeholder")
+  get placeholder() {
+    return this._placeholder || i18n("dates.placeholder");
+  }
+
+  set placeholder(value) {
+    this.set("_placeholder", value);
+  }
 
   @computed("site.mobileView")
   get inputType() {
@@ -36,7 +56,7 @@ export default class DDateInput extends Component {
     super.didInsertElement(...arguments);
 
     schedule("afterRender", () => {
-      if (!this.element || this.isDestroying || this.isDestroying) {
+      if (!this.element || this.isDestroying) {
         return;
       }
 
@@ -70,18 +90,19 @@ export default class DDateInput extends Component {
       this._picker.setDate(parsedDate, true);
     }
 
-    if (this._picker && this.relativeDate) {
-      const parsedRelativeDate =
-        this.relativeDate instanceof moment
-          ? this.relativeDate
-          : moment(this.relativeDate);
-
-      this._picker.setMinDate(parsedRelativeDate, true);
+    if (this._picker) {
+      this._picker.setMinDate(this.relativeDate);
     }
 
     if (this._picker && !this.date) {
       this._picker.setDate(null);
     }
+  }
+
+  @action
+  onChangeDate(event) {
+    this._toggleHasValueClass(event.target.value);
+    this._handleSelection(event.target.value);
   }
 
   async _loadPikadayPicker(container) {
@@ -107,7 +128,12 @@ export default class DDateInput extends Component {
       defaultOptions.minDate = moment(this.relativeDate).toDate();
     }
 
-    return new Pikaday({ ...defaultOptions, ...this._opts() });
+    const picker = new Pikaday({ ...defaultOptions, ...this._opts() });
+    const pikadaySetMinDate = picker.setMinDate.bind(picker);
+    picker.setMinDate = (date) =>
+      pikadaySetMinDate(date ? moment(date).toDate() : null);
+
+    return picker;
   }
 
   _loadNativePicker(container) {
@@ -124,18 +150,22 @@ export default class DDateInput extends Component {
       picker.value = date ? moment(date).format("YYYY-MM-DD") : null;
     };
     picker.setMinDate = (date) => {
-      picker.min = date;
+      picker.min = date ? moment(date).format("YYYY-MM-DD") : "";
     };
 
     if (this.date) {
       picker.setDate(this.date);
     }
 
+    if (this.relativeDate) {
+      picker.setMinDate(this.relativeDate);
+    }
+
     return Promise.resolve(picker);
   }
 
   _handleSelection(value) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -150,15 +180,6 @@ export default class DDateInput extends Component {
       this._picker.destroy();
       this._picker = null;
     }
-  }
-
-  @computed("_placeholder")
-  get placeholder() {
-    return this._placeholder || i18n("dates.placeholder");
-  }
-
-  set placeholder(value) {
-    this.set("_placeholder", value);
   }
 
   _opts() {
@@ -178,21 +199,15 @@ export default class DDateInput extends Component {
     }
   }
 
-  @action
-  onChangeDate(event) {
-    this._toggleHasValueClass(event.target.value);
-    this._handleSelection(event.target.value);
-  }
-
   <template>
     <Input
-      @type={{this.inputType}}
       class="date-picker"
-      placeholder={{this.placeholder}}
-      @value={{readonly this.value}}
       id={{this.inputId}}
-      {{on "input" this.onChangeDate}}
+      placeholder={{this.placeholder}}
       ...attributes
+      @type={{this.inputType}}
+      @value={{readonly this.value}}
+      {{on "input" this.onChangeDate}}
     />
 
     {{#unless this.useGlobalPickerContainer}}

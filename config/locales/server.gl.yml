@@ -5,6 +5,35 @@
 # https://translate.discourse.org/
 
 gl:
+  markdown_endpoints:
+    latest: "Últimos"
+    categories: "Categorías"
+    tags: "Etiquetas"
+    previous_page: "Páxina anterior"
+    next_page: "Páxina seguinte"
+    replies: "Réplicas"
+    event:
+      location: "Localización"
+      link: "Ligazón"
+  mcp:
+    errors:
+      category_not_found: "Non foi posíbel atopar a categoría"
+      topic_not_found: "Non foi posíbel atopar o tema"
+    oauth:
+      deny: "Rexeitar"
+      approve: "Autorizar"
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Buscar"
+      categories:
+        label: "Categorías"
+      about:
+        label: "Verbo de"
+      guidelines:
+        label: "Directrices"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -665,6 +694,7 @@ gl:
       windows: "Microsoft Windows"
       unknown: "sistema operativo descoñecido"
   admin_site_traffic_explorer:
+    unknown: "Descoñecido"
     traffic_types:
       anonymous: "Anónimo"
   change_email:
@@ -789,7 +819,7 @@ gl:
   uploads:
     marked_insecure_from_theme_component_reason: "subida utilizada no compoñente do tema"
   unsubscribe:
-    title: "Cancelar subscrición"
+    unsubscribe: "Cancelar subscrición"
     stop_watching_topic: "Deixar de seguir este tema, %{link}"
     mute_topic: "Silenciar todas as notificacións para este tema, %{link}"
     unwatch_category: "Deixar de seguir todos os temas en %{category}"
@@ -918,6 +948,11 @@ gl:
         share: "Compartir"
       types:
         staff: "Equipo"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuario"
+        count: "Publicacións"
+        share: "Compartir"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1240,12 +1275,6 @@ gl:
       host_names: "O ficheiro config/database.yml está a usar o nome do servidor predeterminado. Actualíceo para utilizar o nome do servidor do seu sitio."
       queue_size: "O número de tarefas na cola é de %{queue_size}, que é unha cifra alta. Isto pode indicar un problema co(s) proceso(s) de Sidekiq ou ten que engadir máis traballadores de Sidekiq."
       ram: "O seu servidor está a funcionar con menos de 1 GB de memoria total. Recoméndase polo menos unha memoria de 1 GB."
-      google_oauth2_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Google OAuth2 (enable_google_oauth2_logins) pero o id do cliente e os valores secretos de cliente non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulte esta guía para saber máis</a>.'
-      facebook_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Facebook (enable_facebook_logins) pero o id da aplicación e os valores secretos da aplicación non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consulte esta guía para saber máis</a>.'
-      twitter_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Twitter (enable_twitter_logins), pero a clave e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consulte esta guía para saber máis</a>.'
-      github_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con GitHub (enable_github_logins), pero o id do cliente e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte esta guía para saber máis</a>.'
-      s3_upload_config: 'O servidor está configurado para subir ficheiros a S3, pero polo menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vaia a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revise esta guía para saber máis</a>.'
-      s3_backup_config: 'O servidor está configurado para subir copias de seguranza a S3, pero polo menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vaia a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revise esta guía para saber máis</a>.'
       s3_cdn: 'O servidor está configurado para cargar ficheiros en S3, pero non hai ningún CDN S3 configurado. Isto pode supoñer elevados custos de S3 e un rendemento do sitio máis lento. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Vexa «Usar o almacenamento de obxectos para cargas» para saber máis</a>.'
       image_magick: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instáleo utilizando o administrador de paquetes que lle guste ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descargue a última versión</a>.'
       failing_emails: 'Hai %{num_failed_jobs} procesos de correo electrónico que fallaron. Comprobe o seu app.yml e asegúrese de que a configuración do servidor de correo é correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Revise os procesos que fallaron en Sidekiq</a>.'
@@ -1541,7 +1570,6 @@ gl:
     topic_view_duration_hours: "Contar unha visita a un novo tema por IP/usuario cada N horas"
     user_profile_view_duration_hours: "Contar unha visita de perfil por IP/usuario cada N horas"
     levenshtein_distance_spammer_emails: "Ao revisar coincidencias en correos electrónicos de remitentes non desexados, número de caracteres diferentes que permiten una coincidencia parcial."
-    min_ban_entries_for_roll_up: "Ao premer no botón Pregar, crearase unha nova entrada de veto de subrede se hai polo menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que non coincidan despois de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidas que non coincidan despois de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos necesario para pausar automaticamente un tema co fin de intervilo"
@@ -1648,7 +1676,6 @@ gl:
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Desactivar para agochar o nome completo en todas as partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
-    short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
@@ -1718,15 +1745,11 @@ gl:
     push_notifications_icon: "A icona da insignia aparece na esquina da notificación. Recoméndase un PNG monocromático de 96x96 con transparencia."
     base_font: "Tipo de letra base para empregar na maioría dos textos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--font-family»."
     heading_font: "Tipo de letra para usar nos títulos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--heading-font-family»."
-    dashboard_hidden_reports: "Permitir agochar os informes específicos do panel de control."
-    dashboard_visible_tabs: "Escolla que lapelas do panel son visíbeis."
-    dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
     share_quote_buttons: "Determinar que elementos aparecen no trebello de compartir cota e a súa orde."
     share_quote_visibility: "Determine cando amosar os botóns de compartir cota: nunca, só para usuarios anónimos ou para todos os usuarios. "
     errors:
       invalid_email: "Enderezo electrónico non válido."
       invalid_username: "Non hai un usuario con este nome."
-      invalid_group: "Non hai un grupo con este nome."
       invalid_integer_min_max: "O valor debe ser entre %{min} e %{max}."
       invalid_integer_min: "O valor debe ser %{min} ou maior."
       invalid_integer_max: "O valor non pode ser maior que %{max}."
@@ -1901,6 +1924,7 @@ gl:
     email_too_long: "O correo electrónico facilitado é demasiado longo. Os nomes dos correos electrónicos non deben superar os 254 caracteres e os nomes de dominio non deben ter máis de 253."
     wrong_invite_code: "O código de convite que introduciu era incorrecto."
     reserved_username: "Este nome de usuario non está permitido."
+    missing_username: "Escriba un nome de usuario"
     auth_complete: "Completouse a autenticación."
     click_to_continue: "Prema aquí para continuar."
     already_logged_in: "Perdoe! Esta invitación está destinada a novos usuarios, que aínda non teñen unha conta."
@@ -2824,20 +2848,12 @@ gl:
     account_suspended:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-      text_body_template: |
-        Queda suspendida a súa participación no foro ata %{suspended_till}.
-
-        Razón - %{reason}
     account_suspended_forever:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-      text_body_template: |
-        Queda silenciado no foro ata %{silenced_till}.
-
-        Razón - %{reason}
     account_silenced_forever:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
@@ -2994,7 +3010,7 @@ gl:
         Un membro do equipo aprobou a súa conta en %{site_name}.
 
         Agora pode acceder á súa nova conta iniciando sesión en:
-        %{base_url}
+        %{login_url}
 
         Se non pode premer na ligazón, probe a copiala e pegala na barra de enderezos do seu navegador.
 
@@ -3408,6 +3424,12 @@ gl:
   design_wizard:
     palette_pairs:
       default: "Predeterminado"
+      neutral: "Neutro"
+      shades_of_blue: "Azulado"
+      summer: "Verán"
+      grey_amber: "Gris ámbar"
+      latte: "Latte"
+      dark_rose: "Rosa escuro"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3425,13 +3447,30 @@ gl:
   search_logs:
     graph_title: "Análise das buscas"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Todos os días"
+        ordinals:
+          last: "último"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Luns"
+          tuesday: "Martes"
+          wednesday: "Mércores"
+          thursday: "Xoves"
+          friday: "Venres"
+          saturday: "Sábado"
     google_meet:
       meeting_code: "Código:"
     github:
+      header:
+        success: "Feito"
       closed: "pechado"
-      status_date:
-        approved: "aprobado"
-        closed: "pechado"
+      pr_status:
+        draft: "Borrador"
+        open: "Abrir"
+        approved: "Aprobado"
+        closed: "Pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'
@@ -3534,8 +3573,6 @@ gl:
         title: "Si"
       approve_and_unhide:
         title: "Si"
-      delete_post:
-        complete: "Publicación eliminada"
       delete_user:
         complete: "Usuario eliminado"
         reason: "Eliminado a través da cola de revisións"

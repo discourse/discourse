@@ -20,6 +20,7 @@ bs_BA:
     access_control:
       manage:
         access_permission_editor: "Urednik"
+        access_permission_owner: "Vlasnik"
         access_permission_remove: "Ukloni"
     number:
       format:
@@ -153,7 +154,6 @@ bs_BA:
     date_range_picker:
       apply: "Snimi"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zatvori"
       facebook: "Podijeli na Facebooku"
       email: "Pošalji putem e-maila"
@@ -189,6 +189,9 @@ bs_BA:
         enabled: "Pretvoreno u banner %{when}. Banner će biti prikazan na vrhu svake stranice dok ga korisnik ne isključi."
         disabled: "Maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
     topic_admin_menu: "akcije u vezi teme"
+    reorder:
+      removed: "Ukloljen %{label}"
+      position: "%{position} od %{total}"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
       dismiss: "Odpusti"
@@ -273,10 +276,6 @@ bs_BA:
       one: "maksimalno %{count}"
       few: "maksimalno %{count}"
       other: "maksimalno %{count}"
-    character_count:
-      one: "%{count} karakter"
-      few: "%{count} karaktera"
-      other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
       pill: "Povezane Poruke"
@@ -288,8 +287,8 @@ bs_BA:
     design_wizard:
       back: "Prethodno"
       next: "Iduće"
-      sections:
-        theme: "Izgled"
+      fonts:
+        base_font: "Tijelo"
       homepage:
         topics: "Topics"
         categories: "Kategorije"
@@ -413,6 +412,8 @@ bs_BA:
       title:
         search: "Traži poruku"
         placeholder: "ovdje ukucajte naslov poruke, url ili id"
+    dsa_statements:
+      category: "Kategorija"
     review:
       order_by: "Pordeak po"
       in_reply_to: "odgovori na"
@@ -570,6 +571,9 @@ bs_BA:
       user_label: "User"
       timeline:
         target_deleted: "Post izbrisan"
+      author_penalty:
+        toast:
+          undo: "Vrati nazad"
       notes:
         delete: "Delete"
       topic_label: "Topic"
@@ -1000,7 +1004,6 @@ bs_BA:
       admin: "%{user} je admin"
       moderator_tooltip: "Ovaj korisnik je moderator"
       admin_tooltip: "Ovaj korisnik je admin"
-      silenced_tooltip: "Ovaj korisnik je ušutkan"
       suspended_notice: "Ovaj korisnike je suspendovan sve do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendovan."
       suspended_reason: "Razlog: "
@@ -1055,6 +1058,12 @@ bs_BA:
       ignored_users_instructions: "Suzbijte sve objave, obavijesti i PM-ove od tih korisnika."
       tracked_topics_link: "Show"
       apps: "Aplikacije"
+      mcp_authorizations:
+        details: "Details"
+        never: "Nikad"
+        status: "Status"
+        statuses:
+          active: "Active"
       revoke_access: "Oduzmi pristup"
       undo_revoke_access: "Poništi oduzeti pristup"
       api_approved: "Odobreno:"
@@ -1676,6 +1685,8 @@ bs_BA:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Naprijed"
+      delete: "Delete"
+      home: "Naslovnica"
     category_row:
       subcategories: "+ Podkategorije"
     select_kit:
@@ -1719,6 +1730,7 @@ bs_BA:
       default: Sopstveni emotikoni
     filter_controls:
       reset: "Resetovati"
+      sort_label: "Sortiraj po"
     shared_drafts:
       title: "Dijeljene skice"
       destination_category: "Kategorija destinacije"
@@ -1752,8 +1764,7 @@ bs_BA:
       create_shared_draft: "Kreiraj dijeljenu skicu"
       edit_shared_draft: "Izmijeni dijeljenu skicu"
       discard: "Odbaci"
-      title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
-      title_placeholder_redesign: "Naslov"
+      title_placeholder: "Naslov"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "Zašto pravite izmjenu?"
       topic_featured_link_placeholder: "Unesite link prikazan sa nazivom"
@@ -1940,6 +1951,7 @@ bs_BA:
       categories: "Kategorije"
       tags: "Tagovi"
       type:
+        default: "Objave"
         users: "Korisnici"
         categories: "Kategorije"
       context:
@@ -2398,7 +2410,6 @@ bs_BA:
       reply_as_new_private_message: "Odgovori kao nova poruka istim primaocima"
       continue_discussion: "Nastavak diskusije od teme %{postLink}:"
       follow_quote: "idi na citiran post"
-      show_full: "Prikaži cijelu objavu"
       show_hidden: "Prikaz zanemarenog sadržaja."
       collapse: "spusti"
       expand_collapse: "digni/spusti"
@@ -2517,13 +2528,14 @@ bs_BA:
           few: "Jeste li sigurni da želite izbrisati one postove %{count}?"
           other: "Jeste li sigurni da želite izbrisati one postove %{count}?"
       revisions:
+        visibility:
+          hidden:
+            title: "Hidden"
         controls:
           first: "First revision"
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
-          hide: "Sakrij reviziju"
-          show: "Show revision"
           revert: "Vrati se na reviziju %{revision}"
           edit_wiki: "Promjni Wiki"
           edit_post: "Izmjeni objavu"
@@ -2566,7 +2578,6 @@ bs_BA:
     category:
       none: "(no category)"
       all: "Sve kategorije"
-      choose: "Kategorij i pomoć"
       edit: "Izmijeni"
       edit_dialog_title: "promjeni: %{categoryName}"
       view: "View Topics in Category"
@@ -2605,6 +2616,7 @@ bs_BA:
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       no_description: "Please add a description for this category."
+      latest_topics: "Latest topics"
       already_used: "This color has been used by another category"
       security: "Security"
       permissions:
@@ -2786,6 +2798,7 @@ bs_BA:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "reset"
         button:
           label: "Filter"
       latest:
@@ -2873,8 +2886,6 @@ bs_BA:
       content_load_error: '<a href="%url%">Sadržaj</a> nije moguće učitati.'
       image_load_error: '<a href="%url%">Slika</a> se ne može učitati.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", \\ T"
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ili %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1} / %{shortcut2}"
       title: "Kratice tipkovnice"
@@ -2925,10 +2936,6 @@ bs_BA:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Zaradio / la sam ovu oznaku %{count} time"
-        few: "Zaradili ste ovu oznaku %{count} puta"
-        other: "Zaradili ste ovu oznaku %{count} puta"
       granted_on: "Odobren %{date}"
       title: Bedž
       allow_title: "Ovu značku možete koristiti kao naslov"
@@ -3155,18 +3162,6 @@ bs_BA:
       errors:
         type_mismatch:
           default: "Molim unesite ispravnu vrijednost."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Naprijed"
-      edit:
-        modal:
-          cancel: "otkaži"
-          create: "Save"
-          reason: "Zašto pravite izmjenu?"
-      spreadsheet:
-        show: "Show"
-        about: "O nama"
     filter:
       description:
         yesterday: "Yesterday"
@@ -3191,6 +3186,11 @@ bs_BA:
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Other"
+        related_items:
+          users:
+            title: "Korisnici"
+          labels:
+            user: "User"
       config_sections:
         account:
           title: "Račun"
@@ -3226,9 +3226,65 @@ bs_BA:
           impact_role_admins: "Admins"
           impact_role_moderators: "Moderators"
           impact_role_staff: "Staff"
+        sort:
+          status: "Status"
+          name: "Ime"
       config:
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Pristup"
+            activity: "Activity"
+          overview:
+            status: "Status"
+          access:
+            title: "Pristup"
+            group: "Grupa"
+            groups: "Grupa"
+            actions: "Akcije"
+            edit: "Izmijeni"
+            delete: "Delete"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Block"
+            presets:
+              custom: "Custom"
+            automatic: "Automatsko"
+          authorizations:
+            user: "User"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Vrijeme"
+            user: "User"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Neomogućen"
+            client_trust:
+              approved: "Dozvojeno"
+            authorization_status:
+              active: "Active"
+            activity_outcome:
+              success: "Uspjeh"
+              error: "Greška"
+            primitive_state:
+              enabled: "Omogućen"
+              disabled: "Neomogućen"
+            primitive_kind:
+              all: "Sve vrste"
+            primitive_risk:
+              moderation: "Moderacija"
+            filter:
+              all: "Sve"
+          never: "Nikad"
+          actions:
+            revoke: "Revoke"
         emojis:
           title: "Emoji"
         flags:
@@ -3354,42 +3410,21 @@ bs_BA:
       search:
         title: "Pretraži"
       site_traffic_explorer:
-        pageviews: "Prikazi stranica"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP address"
+        metric_information: "O Nama %{metric}"
+        apply: "Snimi"
         filters:
           ip: "IP address"
-        metrics:
-          pageviews:
-            label: "Prikazi stranica"
         series:
           anonymous_human: "Anoniman"
       dashboard:
         title: "Dashboard"
-        last_updated: "Nadzorna ploča je ažurirana:"
-        discourse_last_updated: "Diskurs ažuriran:"
         version: "Version"
         up_to_date: "You're up to date!"
         updates_available: "Updates are available."
-        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
-        installed_version: "Installed"
-        github: "GitHub"
-        problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         dismiss_notice: "Zanemari"
         new_features:
           learn_more: "Saznaj više..."
-        last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
-        no_problems: "No problems were found."
-        moderators: "Moderators:"
-        admins: "Admins:"
-        silenced: "Stišano: "
-        suspended: "Suspended:"
-        private_messages_short: "PP"
-        private_messages_title: "Poruke"
-        mobile_title: "Mobilni"
         space_used: "%{usedSize} koristili"
         space_used_and_free: "%{usedSize} (%{freeSize} besplatno)"
         uploads: "uploadi"
@@ -3399,20 +3434,7 @@ bs_BA:
           few: "%{count} sigurnosne kopije na %{location}"
           other: "%{count} sigurnosne kopije na %{location}"
         lastest_backup: "Zadnje: %{date}"
-        traffic_short: "Promet"
-        traffic: "Web zahtjevi za aplikacije"
-        page_views: "Prikazi stranica"
-        page_views_short: "Prikazi stranica"
-        show_traffic_report: "Pokaži detaljan izvještaj prometa"
-        community_health: Zdravlje zajednice
-        moderators_activity: Aktivnost moderatora
         whats_new_in_discourse: Šta je novo u diskursu?
-        activity_metrics: Metrike aktivnosti
-        all_reports: "Svi izvještaji"
-        general_tab: "General"
-        moderation_tab: "Moderacija"
-        security_tab: "Security"
-        reports_tab: "Izvještaji"
         report_filter_any: "bilo koje"
         disabled: Neomogućen
         timeout_error: Nažalost, upit traje predugo, odaberite kraći interval
@@ -3430,6 +3452,8 @@ bs_BA:
               share: "Dijeli"
             whos_posting:
               staff: "Staff"
+              modal:
+                apply: "Sačuvaj"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novo"
@@ -3442,6 +3466,10 @@ bs_BA:
             table:
               searches: "Pretraživanja"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Diskurs ažuriran"
         reports_section:
           header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
@@ -3452,8 +3480,7 @@ bs_BA:
         site_traffic:
           series:
             anonymous: "Anoniman"
-        period:
-          custom: "Custom"
+          crawler_learn_more: "Saznaj više"
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
           today: "Today"
@@ -3477,9 +3504,15 @@ bs_BA:
           average_for_sample: "Prosjek za uzorak"
           total: "Ukupno vrijeme"
           no_data: "Nema podataka za prikaz."
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Pretraživanje dnevnika</a>'
-            disabled: 'Izvješće o pretraživanju trendova je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upite pretraživanja dnevnika</a> za prikupljanje podataka.'
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} korisnik"
+              few: "%{count} korisnika"
+              other: "%{count} korisnika"
+            posts_count:
+              one: "%{count} objava"
+              few: "%{count} objave"
+              other: "%{count} objava"
           sort_ascending: "diže se"
           sort_descending: "spužđšta se"
           filters:
@@ -3771,7 +3804,6 @@ bs_BA:
           label: "Učitavanje"
           title: "Prenesite rezervnu kopiju na ovu instancu"
           success: "'%{filename}' je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "The %{operation} failed. Please check the logs."
@@ -3898,6 +3930,7 @@ bs_BA:
           upload: "Učitavanje"
           unsaved_changes_alert: "Još niste spremili promjene, želite li ih odbaciti i krenuti dalje?"
           discard: "Odbaci"
+          leave: "Napusti"
           stay: "Ostani"
           delete_upload_confirm: "Izbrisati ovaj upload? (Tematski CSS može prestati raditi!)"
           import_web_tip: "Tema sa spremištem"
@@ -4272,6 +4305,10 @@ bs_BA:
         activation_filter:
           activated: "Aktivirano"
         approved: "Approved?"
+        source: "Izvor"
+        bots:
+          name: "Ime"
+          username: "Nadimak"
         titles:
           pending: "Users Pending Review"
           newuser: "Users at Trust Level 0 (New User)"
@@ -4295,16 +4332,13 @@ bs_BA:
         suspend_reason: "Reason"
         suspend_reason_title: "Razlog suspenzije"
         suspend_message: "Email Message"
-        suspend_message_placeholder: "Opciono, pružite više informacija o suspenziji i on će biti poslan e-poštom korisniku."
         suspended_by: "Suspended by"
         silence_reason: "Reason"
         silenced_by: "Stišao je"
         silence_modal_title: "Stišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti ućutkan?"
-        silence_reason_label: "Zašto isključujete ovog korisnika?"
         silence_reason_placeholder: "Razlog za utišanje"
         silence_message: "Email Poruka"
-        silence_message_placeholder: "(ostavite prazno za slanje zadane poruke)"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."
@@ -4479,12 +4513,10 @@ bs_BA:
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
-        search: "Potražite tekst koji želite urediti"
+        search_label: "Pretraži"
+        theme_disabled: "Neomogućen"
         edit: "Edit"
-        revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
-        go_back: "Nazad na pretragu"
-        recommended: "Preporučujemo da prilagodite sledeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Only show overridden"
         more_than_50_results: "Postoji više od 50 rezultata. Pročistite pretraživanje."
         outdated:

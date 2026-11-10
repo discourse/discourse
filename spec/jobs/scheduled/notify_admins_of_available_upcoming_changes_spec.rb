@@ -32,6 +32,7 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
   end
 
   let(:test_upcoming_change_status) { :beta }
+
   fab!(:admin_1, :admin)
   fab!(:admin_2, :admin)
 

@@ -125,6 +125,26 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
+  describe "#attach_database" do
+    it "commits pending inserts and safely quotes the database name" do
+      create_connection do |connection|
+        connection.execute("CREATE TABLE values_before_attach (id INTEGER)")
+        connection.insert("INSERT INTO values_before_attach VALUES (?)", [1])
+
+        connection.attach_database(":memory:", name: 'source"db')
+
+        expect(connection.db.transaction_active?).to be false
+        expect(connection.query_value("SELECT COUNT(*) FROM values_before_attach")).to eq(1)
+        expect(
+          connection.query_value(
+            "SELECT COUNT(*) FROM pragma_database_list WHERE name = ?",
+            'source"db',
+          ),
+        ).to eq(1)
+      end
+    end
+  end
+
   describe "#merge_database" do
     def create_schema(db)
       db.execute(<<~SQL)

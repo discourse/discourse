@@ -139,15 +139,52 @@ module DiscourseWorkflows
                 author_username: "system",
               },
             },
+            {
+              name: "Delete the trigger post",
+              parameters: {
+                operation: "delete",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Restore a deleted post",
+              parameters: {
+                operation: "recover",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
           ],
           "action:send_personal_message" => [
             {
-              name: "DM a post link to an admin",
+              name: "Send a personal message with a post link to an admin",
               parameters: {
                 recipient_usernames: ["admin"],
                 title: "=New post from @{{ $json.post.username }}",
                 raw: "=A group member posted: {{ $json.post.post_url }}",
                 sender_username: "system",
+              },
+            },
+          ],
+          "action:send_chat_message" => [
+            {
+              # Signups are inactive and TL0 when `user_created` fires, so they can't chat yet.
+              name: "Welcome a user who reached trust level 1 with a chat DM",
+              parameters: {
+                target: "user",
+                target_usernames: "={{ $json.user.username }}",
+                message: "=Welcome to the community, @{{ $json.user.username }}!",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Ping the moderators in one group chat DM about a flagged post",
+              parameters: {
+                target: "group",
+                target_usernames: %w[alice bob],
+                message: "=Please review {{ $json.post.post_url }}",
+                actor_username: "system",
               },
             },
           ],
@@ -173,6 +210,30 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:classify" => [
+            {
+              name: "Decide whether the trigger post is a support request",
+              parameters: {
+                decision_model_id: 123,
+                text: "={{ $json.post.raw }}",
+                questions: {
+                  values: [
+                    {
+                      name: "support_request",
+                      type: "yes_no",
+                      instructions: "Is the author asking for help with a problem?",
+                    },
+                    {
+                      name: "topic_area",
+                      type: "choice",
+                      instructions: "Which product area is the post about?",
+                      choices: %w[billing hosting plugins other],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
           "action:topic_tags" => [
             {
               name: "Add a tag to the trigger topic",
@@ -180,6 +241,27 @@ module DiscourseWorkflows
                 operation: "add",
                 topic_id: "={{ $json.topic.id }}",
                 tag_names: "needs-review",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:tag_group" => [
+            {
+              name: "Add tags to a tag group",
+              parameters: {
+                operation: "add",
+                tag_group_id: 123,
+                tag_names: "needs-review, escalated",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:site_setting" => [
+            {
+              name: "Set a site setting to a templated value",
+              parameters: {
+                name: "site_description",
+                value: "=The friendliest community of {{ $json.year }}",
                 actor_username: "system",
               },
             },
@@ -194,62 +276,60 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:topic_moderation" => [
+            {
+              name: "Unlist the trigger topic",
+              parameters: {
+                operation: "unlist_topic",
+                topic_id: "={{ $json.topic.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
         }.freeze
 
-        QUERY_STOP_WORDS = %w[
-          node
-          nodes
-          trigger
-          triggers
-          action
-          actions
-          condition
-          conditions
-          flow
-        ].freeze
+        MAX_TYPES = 10
+        # Longer option lists are left to workflow_resolve_entity so the model never
+        # mistakes a partial list for every possible value.
+        MAX_LISTED_OPTIONS = 25
 
-        SEARCH_ALIASES = {
-          "action:send_personal_message" => "dm direct message pm personal private message",
-          "action:send_chat_integration_message" =>
-            "external chat integration notification slack discord telegram mattermost matrix zulip rocket chat gitter groupme teams power automate webex google chat guilded",
-          "action:ai_agent" =>
-            "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
-          "action:group" => "group membership member belongs friend friends",
-          "action:flag_user" =>
-            "flag user report spammer spam suspect review queue moderation approve reject account signup",
-          "trigger:user_added_to_group" => "joined added to group membership member",
-          "trigger:user_removed_from_group" => "left removed from group membership member",
-          "trigger:user_created" => "signup sign up register registration new account joined site",
-          "trigger:user_updated" => "profile edited changed avatar name username email account",
-          "trigger:reviewable_created" =>
-            "review queue flag flagged spam moderation pending needs approval queued post akismet",
-          "trigger:badge_granted" => "badge award achievement medal granted earned",
-          "action:user" =>
-            "user profile bio title trust level lock groups fields lookup edit update",
-          "action:flag_post" =>
-            "flag spam moderation review queue reviewable hide delete silence triage report",
-          "action:topic_category" => "category recategorize move topic uncategorized",
+        NOTES = {
+          "action:classify" => [
+            "Prefer this node over action:ai_agent for labelling, routing, or gating items: it answers yes_no, choice, and score questions with probabilities instead of free text, and is cheaper and faster than an LLM agent.",
+            "Set decision_model_id to an id from load_options; do not use it when no decision model is listed.",
+            "Each question name becomes a key under $json.classification. yes_no answers expose probability (0-1); choice answers expose choice, probabilities, and confidence; score answers expose score, level, probabilities, and confidence. Call workflow_validate_patch for the exact fields.",
+            "Branch with condition:if on a threshold such as $json.classification.support_request.probability gte 0.8, or on $json.classification.topic_area.choice equals billing.",
+            "Question names must be unique identifiers such as support_request. Choice questions need 2 or more choices; score questions need 2-10 levels ordered from lowest to highest.",
+            "The model may refuse a question; its answer then has type refusal and a reason but no probability, choice, or score, so a threshold check on it fails.",
+          ],
+          "action:code" => [
+            "The default value of the code property documents the runtime variables: $input, $json, $(\"Node name\"), $vars, $workflow_vars, $site_settings, $execution, $current_user, $helpers and console.",
+            "runOnceForAllItems must return an array of items such as [{ json: { ... } }]; plain objects are normalized under json.",
+            "runOnceForEachItem must return one object per input item, not an array, and cannot use $input.first, $input.last, $input.all or $input.itemMatching.",
+            "Output items may use the reserved keys json, pairedItem, error and index; do not mix them with plain fields.",
+          ],
         }.freeze
 
         def self.signature
           {
             name: name,
             description:
-              "Lists available Discourse workflow node types with versions, parameters, capabilities, output contracts, and examples.",
-            parameters: [
-              {
-                name: "query",
-                description: "Optional search terms for node type, name, group, or parameter names",
-                type: "string",
-                required: false,
+              "Returns the full definition of the given node types: version, parameters, credentials, capabilities, the current choices for id-picker parameters (load_options, keyed by the parameter's load_options_method), output contracts, examples and notes. Pick types from the node menu in your instructions.",
+            json_schema: {
+              type: "object",
+              additionalProperties: false,
+              required: %w[types],
+              properties: {
+                types: {
+                  type: "array",
+                  description:
+                    "Exact node type identifiers, such as action:code or trigger:post_created.",
+                  items: {
+                    type: "string",
+                  },
+                },
               },
-              {
-                name: "include_examples",
-                description: "Whether to include curated examples for matching nodes",
-                type: "boolean",
-                required: false,
-              },
-            ],
+            },
           }
         end
 
@@ -260,61 +340,58 @@ module DiscourseWorkflows
         def invoke
           return not_allowed_response if !ensure_can_manage_workflows!
 
-          query_terms = self.class.query_terms(parameters[:query])
-          include_examples =
-            parameters[:include_examples].to_s == "true" || parameters[:include_examples] == true
+          requested = Array.wrap(parameters[:types]).map(&:to_s).uniq
+          types = requested.first(MAX_TYPES)
+          node_classes =
+            types.index_with { |type| DiscourseWorkflows::Registry.latest_node_type(type) }
+          node_classes.select! { |_type, node_class| node_class&.palette_visible? }
 
-          nodes =
-            DiscourseWorkflows::Registry.nodes.filter_map do |node_class|
-              next if !node_class.palette_visible?
-
-              serialize_node(node_class, query_terms, include_examples)
-            end
-
-          { status: "success", nodes: nodes }
-        end
-
-        def self.query_terms(query)
-          query
-            .to_s
-            .downcase
-            .scan(/[a-z0-9_:-]+/)
-            .map { |term| term.delete_prefix("type:") }
-            .reject { |term| QUERY_STOP_WORDS.include?(term) }
-            .uniq
+          result = {
+            status: "success",
+            nodes: node_classes.values.map { |node_class| serialize_node(node_class) },
+            unknown_types: types - node_classes.keys,
+          }
+          if requested.length > MAX_TYPES
+            result[
+              :truncated
+            ] = "Only the first #{MAX_TYPES} of #{requested.length} requested types are included."
+          end
+          result
         end
 
         private
 
-        def serialize_node(node_class, query_terms, include_examples)
-          description = node_class.description
+        def serialize_node(node_class)
           identifier = node_class.identifier
-          properties = json_safe(node_class.properties || {})
-          group = description[:group].to_s.presence
 
-          haystack = [
-            identifier,
-            group,
-            properties.keys.join(" "),
-            SEARCH_ALIASES[identifier],
-          ].compact.join(" ").downcase
-          return if query_terms.present? && query_terms.none? { |term| haystack.include?(term) }
-
-          payload = {
+          {
             type: identifier,
             version: node_class.version,
-            group: group,
+            group: node_class.description[:group].to_s.presence,
             available: node_class.available?,
-            palette_visible: node_class.palette_visible?,
             inputs: json_safe(node_class.inputs),
             outputs: json_safe(node_class.outputs),
-            properties: properties,
+            properties: json_safe(node_class.properties || {}),
             credentials: json_safe(node_class.credentials),
-            capabilities: json_safe(description[:capabilities] || {}),
+            capabilities: json_safe(node_class.description[:capabilities] || {}),
+            load_options: listed_options(node_class),
             output_contracts: serialized_output_contracts(node_class),
-          }
-          payload[:examples] = EXAMPLES[identifier] if include_examples && EXAMPLES.key?(identifier)
-          payload
+            examples: EXAMPLES[identifier],
+            notes: NOTES[identifier],
+          }.compact
+        end
+
+        def listed_options(node_class)
+          DiscourseWorkflows::PreloadedOptions
+            .for(node_class, guardian: context.user&.guardian)
+            .filter_map do |method_name, options|
+              options = Array(options)
+              next if options.empty? || options.length > MAX_LISTED_OPTIONS
+
+              [method_name, json_safe(options)]
+            end
+            .to_h
+            .presence
         end
 
         def serialized_output_contracts(node_class)

@@ -9,6 +9,11 @@ describe Chat::OneboxHandler do
   fab!(:user_3) { Fabricate(:user, staged: true) }
   fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
 
+  before do
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+  end
+
   let(:public_chat_url) { "#{Discourse.base_url}/chat/c/-/#{public_channel.id}" }
   let(:private_chat_url) { "#{Discourse.base_url}/chat/c/-/#{private_channel.id}" }
   let(:invalid_chat_url) { "#{Discourse.base_url}/chat/c/-/999" }
@@ -56,7 +61,7 @@ describe Chat::OneboxHandler do
             <article class="onebox-body chat-onebox-body">
               <h3 class="chat-onebox-title">
                 <a href="/chat/c/-/#{public_channel.id}">
-                  <img src="/images/emoji/twitter/tada.png?v=15" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20">
+                  <img src="/images/emoji/twitter/tada.png?v=#{Emoji::EMOJI_VERSION}" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20">
                   <span class="clear-badge">#{public_channel.name}</span>
                 </a>
               </h3>

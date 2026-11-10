@@ -18,6 +18,7 @@ module DiscourseWorkflows
         end
         on_model_not_found(:published_trigger) { raise Discourse::NotFound }
         on_model_not_found(:post) { raise Discourse::NotFound }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
         on_failed_policy(:can_use_post_button) { raise Discourse::InvalidAccess }
         on_failed_policy(:can_see_post) { raise Discourse::NotFound }
         on_failed_policy(:can_trigger_for_post) { raise Discourse::InvalidAccess }

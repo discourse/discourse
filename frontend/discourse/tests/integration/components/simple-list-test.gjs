@@ -47,9 +47,9 @@ module("Integration | Component | SimpleList", function (hooks) {
     await render(
       <template>
         <SimpleList
-          @values={{values}}
           @allowAny={{false}}
           @choices={{choices}}
+          @values={{values}}
         />
       </template>
     );
@@ -74,7 +74,7 @@ module("Integration | Component | SimpleList", function (hooks) {
 
     await render(
       <template>
-        <SimpleList @values={{values}} @onChange={{onChange}} />
+        <SimpleList @onChange={{onChange}} @values={{values}} />
       </template>
     );
 
@@ -102,7 +102,7 @@ module("Integration | Component | SimpleList", function (hooks) {
   test("delimiter support", async function (assert) {
     await render(
       <template>
-        <SimpleList @values="vinkas|osama" @inputDelimiter="|" />
+        <SimpleList @inputDelimiter="|" @values="vinkas|osama" />
       </template>
     );
 
@@ -119,13 +119,11 @@ module("Integration | Component | SimpleList", function (hooks) {
   });
 
   test("updates when values change", async function (assert) {
-    const state = new (class {
-      @tracked values = "vinkas|osama";
-    })();
+    const values = tracked("vinkas|osama");
 
     await render(
       <template>
-        <SimpleList @values={{state.values}} @inputDelimiter="|" />
+        <SimpleList @inputDelimiter="|" @values={{values.value}} />
       </template>
     );
 
@@ -133,7 +131,7 @@ module("Integration | Component | SimpleList", function (hooks) {
       .dom(".values .value[data-index='0'] .value-input")
       .hasValue("vinkas");
 
-    state.values = "kris|jeff";
+    values.value = "kris|jeff";
     await settled();
 
     assert.dom(".values .value[data-index='0'] .value-input").hasValue("kris");

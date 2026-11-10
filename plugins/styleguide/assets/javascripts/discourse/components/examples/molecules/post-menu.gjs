@@ -2,8 +2,8 @@ import PostMenu from "discourse/components/post/menu";
 
 export default <template>
   <PostMenu
-    @post={{@post}}
     @canCreatePost={{true}}
+    @post={{@post}}
     @showFlags={{true}}
     @showLogin={{true}}
     @showReadIndicator={{true}}

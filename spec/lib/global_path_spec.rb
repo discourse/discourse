@@ -16,12 +16,12 @@ RSpec.describe GlobalPath do
       expect(cdn_relative_path("/test")).to eq("/test")
     end
 
-    it "returns path when a cdn is defined with a path" do
+    it "includes the path from a protocol-relative CDN URL" do
       GlobalSetting.expects(:cdn_url).returns("//something.com/foo")
       expect(cdn_relative_path("/test")).to eq("/foo/test")
     end
 
-    it "returns path when a cdn is defined with a path" do
+    it "includes the path from a CDN URL with a scheme and port" do
       GlobalSetting.expects(:cdn_url).returns("https://something.com:221/foo")
       expect(cdn_relative_path("/test")).to eq("/foo/test")
     end

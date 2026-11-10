@@ -6,28 +6,28 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.themes_and_components.title"}}
     @descriptionLabel={{i18n
       "admin.config.themes_and_components.header_description"
     }}
     @learnMoreUrl="https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
+    @titleLabel={{i18n "admin.config.themes_and_components.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
     </:breadcrumbs>
 
     <:tabs>
       <DNavItem
-        @route="adminConfig.customize.themes"
         @label="admin.config.themes.title"
+        @route="adminConfig.customize.themes"
       />
       <DNavItem
-        @route="adminConfig.customize.components"
         @label="admin.config.components.title"
+        @route="adminConfig.customize.components"
       />
       <DNavItem
-        @route="adminConfig.customize.themeSiteSettings"
         @label="admin.config.theme_site_settings.title"
+        @route="adminConfig.customize.themeSiteSettings"
       />
     </:tabs>
   </DPageHeader>

@@ -85,6 +85,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       end
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_post_in_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:accept_blocks) { raise Discourse::InvalidAccess }
       on_model_not_found(:membership) { raise Discourse::NotFound }

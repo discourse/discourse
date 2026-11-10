@@ -77,11 +77,14 @@ module SystemHelpers
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
-    SiteSetting.allowed_internal_hosts =
-      (
-        SiteSetting.allowed_internal_hosts.to_s.split("|") +
-          MinioRunner.config.minio_urls.map { |url| URI.parse(url).host }
-      ).join("|")
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].present?
+      s3_host = URI(ENV.fetch("S3_SYSTEM_TEST_ENDPOINT")).host
+      s3_bucket = ENV.fetch("S3_SYSTEM_TEST_BUCKET")
+      SiteSetting.allowed_internal_hosts =
+        (
+          SiteSetting.allowed_internal_hosts.to_s.split("|") + [s3_host, "#{s3_bucket}.#{s3_host}"]
+        ).join("|")
+    end
   end
 
   def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01, reason: nil)
@@ -163,15 +166,17 @@ module SystemHelpers
 
   def select_all_content(selector)
     js = <<-JS
+      const done = arguments[arguments.length - 1];
       const el = document.querySelector(arguments[0]);
       const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(el);
+      document.addEventListener("selectionchange", () => done(), { once: true });
       selection.removeAllRanges();
       selection.addRange(range);
     JS
 
-    page.execute_script(js, selector)
+    page.evaluate_async_script(js, selector)
   end
 
   def select_text_range(selector, start = 0, offset = 5)
@@ -224,25 +229,36 @@ module SystemHelpers
 
     SiteSetting.enable_s3_uploads = true
 
-    SiteSetting.s3_upload_bucket = "discoursetest"
+    SiteSetting.s3_upload_bucket = ENV.fetch("S3_SYSTEM_TEST_BUCKET")
     SiteSetting.enable_upload_debug_mode = true
 
-    SiteSetting.s3_access_key_id = MinioRunner.config.minio_root_user
-    SiteSetting.s3_secret_access_key = MinioRunner.config.minio_root_password
-    SiteSetting.s3_endpoint = MinioRunner.config.minio_server_url
+    SiteSetting.s3_access_key_id = ENV.fetch("S3_SYSTEM_TEST_ACCESS_KEY_ID")
+    SiteSetting.s3_secret_access_key = ENV.fetch("S3_SYSTEM_TEST_SECRET_ACCESS_KEY")
+    SiteSetting.s3_endpoint = ENV.fetch("S3_SYSTEM_TEST_ENDPOINT")
 
     SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
     SiteSetting.secure_uploads = enable_secure_uploads
 
-    # On CI, the minio binary is preinstalled in the docker image so there is no need for us to check for a new binary
-    MinioRunner.start(install: ENV["CI"] ? false : true)
+    s3_options = S3Helper.s3_options(SiteSetting)
+    Aws::S3::Client.new(**s3_options, force_path_style: true).put_bucket_policy(
+      bucket: SiteSetting.s3_upload_bucket,
+      policy: {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: "*",
+            Action: "s3:GetObject",
+            Resource: "arn:aws:s3:::#{SiteSetting.s3_upload_bucket}/*",
+          },
+        ],
+      }.to_json,
+    )
   end
 
   def skip_unless_s3_system_specs_enabled!
-    if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
-      skip(
-        "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",
-      )
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].blank?
+      skip("S3 system specs require S3_SYSTEM_TEST_ENDPOINT and its related credentials.")
     end
   end
 
@@ -449,6 +465,63 @@ module SystemHelpers
       options[:steps] = steps if steps
       pw_page.drag_and_drop(source, target, **options)
     end
+  end
+
+  # A native drag that pauses over an intermediate element before dropping, for
+  # a destination that only appears once a drag has dwelt somewhere.
+  #
+  # `drag_and_drop` cannot express this. Playwright's own drag is one atomic
+  # call, so there is no point during it at which to wait.
+  #
+  # The drag is driven by hand instead. That needs CDP drag interception, or
+  # Chromium treats the press as an OS drag and stops reporting the moves after.
+  #
+  # `over:` is the element to dwell on, `to:` the one to drop on. The block runs
+  # while the drag is still open, which is where to wait for what it reveals.
+  #
+  # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
+  # through a retrying matcher rather than a value read once.
+  def drag_and_hold(from:, over:, to:, steps: 10)
+    page.driver.with_playwright_page do |pw_page|
+      session = pw_page.context.new_cdp_session(pw_page)
+      session.send_message("Input.setInterceptDrags", params: { "enabled" => true })
+
+      start_x, start_y = viewport_centre_of(pw_page, from)
+      over_x, over_y = viewport_centre_of(pw_page, over)
+
+      pw_page.mouse.move(start_x, start_y)
+      pw_page.mouse.down
+      # Stepped, so the drag is seen crossing the threshold rather than
+      # teleporting past it, and so the dwell sees more than one move.
+      pw_page.mouse.move(over_x, over_y, steps: steps)
+    end
+
+    begin
+      # Outside the driver block, so Capybara's own matchers work normally in it.
+      yield if block_given?
+      page.driver.with_playwright_page do |pw_page|
+        drop_x, drop_y = viewport_centre_of(pw_page, to)
+        pw_page.mouse.move(drop_x, drop_y, steps: steps)
+      end
+    ensure
+      # Released even when an in-drag assertion fails, so the example does not
+      # run its remaining hooks with the button still held.
+      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+    end
+  end
+
+  # Waited for rather than queried once. `query_selector` returns nil without
+  # waiting, so a missing element fails as a NoMethodError naming nothing useful.
+  def viewport_centre_of(pw_page, selector)
+    node =
+      pw_page.wait_for_selector(
+        selector,
+        state: "visible",
+        timeout: Capybara.default_max_wait_time * 1000,
+      )
+    node.scroll_into_view_if_needed
+    box = node.bounding_box
+    [box["x"] + box["width"] / 2, box["y"] + box["height"] / 2]
   end
 
   # Drives a press-drag-release with the real mouse, for the surfaces built on

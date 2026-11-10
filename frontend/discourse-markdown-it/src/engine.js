@@ -2,7 +2,7 @@ import markdownit from "markdown-it";
 import AllowLister from "pretty-text/allow-lister";
 import guid from "pretty-text/guid";
 import { sanitize } from "pretty-text/sanitizer";
-import { TextPostProcessRuler } from "./features/text-post-process";
+import { TextPostProcessRuler } from "./features/text-post-process.js";
 
 // note, this will mutate options due to the way the API is designed
 // may need a refactor
@@ -22,6 +22,7 @@ export default function makeEngine(
 
   const tlds = options.discourse.limitedSiteSettings.markdownLinkifyTlds || "";
   engine.linkify.tlds(tlds.split("|"));
+  engine.linkify.set({ fuzzyLink: true });
 
   setupUrlDecoding(engine);
   setupHoister(engine);
@@ -57,6 +58,10 @@ export default function makeEngine(
       allowLister.allowListFeature(feature, info);
     });
 
+    options.allowLister = allowLister;
+    // The identity sanitizer is for trusted input only. It also removes the
+    // premise unhoistForCooked relies on, since nothing normalizes "<" and ">"
+    // in attribute values any more.
     options.sanitizer = options.discourse.sanitizer = options.discourse.sanitize
       ? (a) => sanitize(a, allowLister)
       : (a) => a;
@@ -108,12 +113,36 @@ function renderHoisted(tokens, idx, options) {
   }
 }
 
-function unhoistForCooked(hoisted, cooked) {
+/**
+ * Restores the raw HTML that `renderHoisted` set aside, putting each value back
+ * where its placeholder stands in the sanitized output.
+ *
+ * Exported only so tests can pass a hoist map in directly. The placeholders are
+ * minted while rendering, so a value holding another value's placeholder cannot
+ * be produced through `cook`.
+ *
+ * @param {Record<string, string>} hoisted - Placeholders mapped to the raw HTML
+ *   they stand for. Emptied as the keys are consumed.
+ * @param {string} cooked - The sanitized output that holds the placeholders.
+ * @returns {string} The output with every placeholder resolved or dropped.
+ */
+export function unhoistForCooked(hoisted, cooked) {
   const keys = Object.keys(hoisted);
   if (keys.length) {
     let found = true;
 
+    // guids are hexadecimal digits and dashes, so they need no escaping here
+    const keysRegExp = new RegExp(keys.join("|"), "g");
+
     const unhoist = function (key) {
+      // A key is only safe to substitute where text may stand. The sanitizer
+      // escapes "<" and ">" in attribute values, so anything between a "<" and
+      // a ">" here is a tag, and raw HTML restored inside one would become
+      // attributes the allow-lister never saw. Earlier substitutions move the
+      // markup around the remaining keys, so where a key lands has to be
+      // re-checked before every substitution rather than once for the pass.
+      cooked = cooked.replace(/<[^>]*>/g, (tag) => tag.replace(keysRegExp, ""));
+
       cooked = cooked.replace(new RegExp(key, "g"), function () {
         found = true;
         return hoisted[key];

@@ -36,6 +36,24 @@ describe DiscourseAi::Completions::CancelManager do
     expect(cancel_manager.monitor_thread).to be_nil
   end
 
+  it "bounds transport timeouts by the time left before its deadline" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new(timeout: 20)
+
+    expect(DiscourseAi::Completions::CancelManager.new.bound_timeout(360)).to eq(360)
+    expect(cancel_manager.bound_timeout(5)).to eq(5)
+    expect(cancel_manager.bound_timeout(360)).to be_within(1).of(20)
+    expect(cancel_manager).not_to be_expired
+  end
+
+  it "keeps a minimal transport timeout once the deadline has passed" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new(timeout: 0)
+
+    expect(cancel_manager).to be_expired
+    expect(cancel_manager.bound_timeout(360)).to eq(
+      DiscourseAi::Completions::CancelManager::MIN_TRANSPORT_TIMEOUT,
+    )
+  end
+
   it "waits until timeout when not cancelled" do
     cancel_manager = DiscourseAi::Completions::CancelManager.new
 
@@ -60,7 +78,7 @@ describe DiscourseAi::Completions::CancelManager do
     waiter&.kill
   end
 
-  it "should do nothing when cancel manager is already cancelled" do
+  it "does nothing when the cancel manager is already cancelled" do
     cancel_manager = DiscourseAi::Completions::CancelManager.new
     cancel_manager.cancel!
 
@@ -75,7 +93,7 @@ describe DiscourseAi::Completions::CancelManager do
     expect(result).to be_nil
   end
 
-  it "should be able to cancel a completion" do
+  it "cancels a completion" do
     # Start an HTTP server that hangs indefinitely
     server = TCPServer.new("127.0.0.1", 0)
     port = server.addr[1]

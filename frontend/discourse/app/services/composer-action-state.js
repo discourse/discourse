@@ -13,8 +13,15 @@ export default class ComposerActionStateService extends Service {
   @service composer;
   @service dialog;
 
+  /** @type {import("discourse/models/topic").default | null} */
   topicSnapshot = null;
+
+  /** @type {import("discourse/models/post").default | null | undefined} */
   postSnapshot = null;
+
+  get snapshot() {
+    return { topic: this.topicSnapshot, post: this.postSnapshot };
+  }
 
   remember({ topic, post }) {
     if (topic && (!this.topicSnapshot || topic.id !== this.topicSnapshot.id)) {
@@ -30,10 +37,6 @@ export default class ComposerActionStateService extends Service {
   clear() {
     this.topicSnapshot = null;
     this.postSnapshot = null;
-  }
-
-  get snapshot() {
-    return { topic: this.topicSnapshot, post: this.postSnapshot };
   }
 
   async selectAction(actionId, { options, composerModel, topic, post }) {

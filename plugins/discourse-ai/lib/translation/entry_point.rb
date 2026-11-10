@@ -4,9 +4,13 @@ module DiscourseAi
   module Translation
     class EntryPoint
       def inject_into(plugin)
-        plugin.on(:post_created) do |post|
+        plugin.on(:post_created) do |post, opts|
           if DiscourseAi::Translation.enabled?
-            Jobs.enqueue(:detect_translate_post, post_id: post.id)
+            Jobs.enqueue(
+              :detect_translate_post,
+              post_id: post.id,
+              skip_workflows: opts&.dig(:skip_workflows),
+            )
           end
         end
 
@@ -28,7 +32,14 @@ module DiscourseAi
               Jobs.enqueue_in(grace, :detect_translate_topic, topic_id: post.topic_id)
             end
 
-            Jobs.enqueue_in(grace, :detect_translate_post, post_id: post.id) if raw_changed
+            if raw_changed
+              Jobs.enqueue_in(
+                grace,
+                :detect_translate_post,
+                post_id: post.id,
+                skip_workflows: revisor.opts[:skip_workflows],
+              )
+            end
           end
         end
 
@@ -70,6 +81,10 @@ module DiscourseAi
                SiteSetting.ai_translation_backfill_start_date.blank?
             SiteSetting.ai_translation_backfill_start_date = 5.days.ago.utc.to_date.iso8601
           end
+        end
+
+        plugin.add_to_serializer(:current_user, :in_any_content_localization_allowed_groups) do
+          object.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
         end
       end
     end

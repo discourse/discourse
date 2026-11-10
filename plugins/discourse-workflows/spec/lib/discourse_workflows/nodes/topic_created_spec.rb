@@ -38,6 +38,9 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
 
   describe "#output" do
     it "returns post and topic data" do
+      topic.update_column(:locale, "de")
+      first_post.update_column(:locale, "fr")
+      user.update_column(:locale, "nl")
       trigger = described_class.new(topic)
       output = trigger.output
 
@@ -48,9 +51,15 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
       expect(output[:post][:username]).to eq(user.username)
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output[:topic][:title]).to eq(topic.title)
+      expect(output[:topic][:url]).to eq(topic.url)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output[:topic][:category_id]).to eq(topic.category_id)
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)
+      expect(output[:user]).to include(id: user.id, trust_level: user.trust_level)
+      expect(output[:topic][:locale]).to eq("de")
+      expect(output[:post][:locale]).to eq("fr")
+      expect(output[:user][:locale]).to eq("nl")
+      expect(output).to match_node_output_schema(described_class)
     end
 
     it "includes assignment data when assign is available" do

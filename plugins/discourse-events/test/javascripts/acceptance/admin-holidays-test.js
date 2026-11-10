@@ -20,7 +20,7 @@ acceptance("Admin - Events - Holidays", function (needs) {
         humanized_name: "Events",
         is_discourse_owned: true,
         admin_route: {
-          label: "admin.calendar",
+          label: "discourse_events.title",
           location: "discourse-events",
           use_new_show_route: true,
         },

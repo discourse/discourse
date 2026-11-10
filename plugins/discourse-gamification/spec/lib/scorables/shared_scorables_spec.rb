@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
+# Scores are read through a materialized view that filters on PostgreSQL's
+# CURRENT_DATE, which is pinned to the start of the test transaction. Fixtures
+# created from the wall clock fall outside it when a run straddles UTC midnight,
+# so every shared example freezes the clock.
 RSpec.shared_examples "Scorable Type" do
   fab!(:leaderboard, :gamification_leaderboard)
   let(:current_user) { Fabricate(:user) }
   let(:other_user) { Fabricate(:user) }
   let(:third_user) { Fabricate(:user) }
   let(:expected_score) { expected_score }
+
+  before { freeze_time DateTime.parse("2024-01-01 12:00") }
 
   describe "#{described_class} updates gamification score" do
     it "has correct total score" do
@@ -30,9 +36,12 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
   let(:expected_score) { described_class.score_multiplier }
   let(:after_create_hook) { nil }
 
+  before { freeze_time DateTime.parse("2024-01-01 12:00") }
+
   describe "updates gamification score" do
     let!(:create_score) { class_action_fabricator }
     let!(:trigger_after_create_hook) { after_create_hook }
+
     before { DiscourseGamification::LeaderboardCachedView.create_all }
 
     it "#{described_class} updates scores for action in the category configured" do
@@ -68,6 +77,8 @@ RSpec.shared_examples "No Score Value" do
   let(:class_action_fabricator_for_wiki) { nil }
   let(:class_action_fabricator_for_themselves) { nil }
   let(:after_create_hook) { nil }
+
+  before { freeze_time DateTime.parse("2024-01-01 12:00") }
 
   describe "#{described_class} awards no score value" do
     let!(:create_score_for_deleted_object) { class_action_fabricator_for_deleted_object }

@@ -21,34 +21,6 @@ export default class AiDefaultLlmSelector extends Component {
     this.#loadData();
   }
 
-  async #loadData() {
-    try {
-      const modelsResponse = await ajax(
-        "/admin/plugins/discourse-ai/ai-llms.json"
-      );
-      this.llmModels = modelsResponse.ai_llms || [];
-
-      const { site_settings } = await ajax("/admin/config/site_settings.json", {
-        data: {
-          plugin: "discourse-ai",
-          category: "discourse_ai",
-        },
-      });
-
-      const defaultLlmSetting = site_settings.find(
-        (setting) => setting.setting === "ai_default_llm_model"
-      );
-
-      const rawValue = defaultLlmSetting?.value;
-      this.selectedValue =
-        rawValue === null || rawValue === undefined || rawValue === ""
-          ? "none"
-          : String(rawValue);
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
   get content() {
     const noneOption = {
       id: "none",
@@ -97,6 +69,34 @@ export default class AiDefaultLlmSelector extends Component {
     }
   }
 
+  async #loadData() {
+    try {
+      const modelsResponse = await ajax(
+        "/admin/plugins/discourse-ai/ai-llms.json"
+      );
+      this.llmModels = modelsResponse.ai_llms || [];
+
+      const { site_settings } = await ajax("/admin/config/site_settings.json", {
+        data: {
+          plugin: "discourse-ai",
+          category: "discourse_ai",
+        },
+      });
+
+      const defaultLlmSetting = site_settings.find(
+        (setting) => setting.setting === "ai_default_llm_model"
+      );
+
+      const rawValue = defaultLlmSetting?.value;
+      this.selectedValue =
+        rawValue === null || rawValue === undefined || rawValue === ""
+          ? "none"
+          : String(rawValue);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
   <template>
     <div class="ai-configure-default-llm">
       <div class="ai-configure-default-llm__header">
@@ -106,12 +106,12 @@ export default class AiDefaultLlmSelector extends Component {
 
       <div class="ai-configure-default-llm__setting">
         <ComboBox
-          @value={{this.selectedValue}}
           @content={{this.content}}
-          @onChange={{this.onChange}}
-          @valueProperty="id"
           @nameProperty="name"
+          @onChange={{this.onChange}}
           @options={{hash disabled=this.isSaving}}
+          @value={{this.selectedValue}}
+          @valueProperty="id"
         />
         <DConditionalLoadingSpinner
           @condition={{this.isSaving}}

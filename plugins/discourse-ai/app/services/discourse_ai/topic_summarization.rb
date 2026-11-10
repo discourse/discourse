@@ -6,12 +6,19 @@ module DiscourseAi
     def self.for(topic, user, scope: nil, locale: nil)
       scope ||= user&.guardian || Guardian.new
       locale ||= DiscourseAi::Summarization.display_locale(topic, scope:)
-      new(DiscourseAi::Summarization.topic_summary(topic, locale:), user)
+      cached_reader =
+        if SiteSetting.ai_summarization_enabled
+          strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale:)
+          DiscourseAi::Summarization::FoldContent.new(strategy)
+        end
+
+      new(cached_reader, user) { DiscourseAi::Summarization.topic_summary(topic, locale:) }
     end
 
-    def initialize(summarizer, user)
+    def initialize(summarizer, user, &build_generator)
       @summarizer = summarizer
       @user = user
+      @build_generator = build_generator
     end
 
     def cached_summary
@@ -21,7 +28,7 @@ module DiscourseAi
     end
 
     def available?
-      summarizer.present?
+      generator.present?
     end
 
     def locale
@@ -37,12 +44,18 @@ module DiscourseAi
 
       return cached_summary if !force_regenerate && use_cached?(skip_age_check)
 
-      summarizer.summarize(user, &on_partial_blk)
+      generator&.summarize(user, &on_partial_blk)
     end
 
     private
 
     attr_reader :summarizer, :user
+
+    def generator
+      return @generator if defined?(@generator)
+
+      @generator = @build_generator ? @build_generator.call : summarizer
+    end
 
     def use_cached?(skip_age_check)
       return false if !cached_summary

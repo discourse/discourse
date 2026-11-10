@@ -47,6 +47,20 @@ export default class Sidebar extends Component {
     return this.currentUser && this.sidebarState.showMainPanel;
   }
 
+  get switchPanelButtons() {
+    if (
+      !this.sidebarState.displaySwitchPanelButtons ||
+      this.sidebarState.panels.length === 1 ||
+      !this.currentUser
+    ) {
+      return [];
+    }
+
+    return this.sidebarState.panels.filter(
+      (panel) => panel !== this.sidebarState.currentPanel && !panel.hidden
+    );
+  }
+
   /**
    * The target stays registered whatever the sidebar is showing, and refuses
    * here instead, so a panel switch cannot leave a half-built registration
@@ -63,29 +77,16 @@ export default class Sidebar extends Component {
     );
   }
 
-  get switchPanelButtons() {
-    if (
-      !this.sidebarState.displaySwitchPanelButtons ||
-      this.sidebarState.panels.length === 1 ||
-      !this.currentUser
-    ) {
-      return [];
-    }
-
-    return this.sidebarState.panels.filter(
-      (panel) => panel !== this.sidebarState.currentPanel && !panel.hidden
-    );
-  }
-
   @bind
   collapseSidebar(event) {
     let shouldCollapseSidebar = false;
 
     const isClickWithinSidebar = event.composedPath().some((element) => {
-      if (
-        element?.className !== "sidebar-section-header-caret" &&
-        ["A", "BUTTON"].includes(element.nodeName)
-      ) {
+      if (element.hasAttribute?.("data-sidebar-keep-open")) {
+        return true;
+      }
+
+      if (["A", "BUTTON"].includes(element.nodeName)) {
         shouldCollapseSidebar = true;
         return true;
       }
@@ -107,6 +108,9 @@ export default class Sidebar extends Component {
         navigating to the dropped URL. No callbacks, so nothing can mistake it
         for handling the drop. }}
     <nav
+      aria-label={{i18n "sidebar.title"}}
+      class="sidebar-container"
+      id="d-sidebar"
       {{dDragAndDropExternalTarget
         accepts=WEB_LINK_KINDS
         canDrop=this.canDropLink
@@ -121,9 +125,6 @@ export default class Sidebar extends Component {
         dropEffect="none"
         indicator=false
       }}
-      id="d-sidebar"
-      class="sidebar-container"
-      aria-label={{i18n "sidebar.title"}}
     >
       {{#if this.showSwitchPanelButtonsOnTop}}
         <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
@@ -133,15 +134,15 @@ export default class Sidebar extends Component {
 
       {{#if this.sidebarState.showMainPanel}}
         <Sections
-          @currentUser={{this.currentUser}}
           @collapsableSections={{true}}
+          @currentUser={{this.currentUser}}
           @enableLinkDrop={{true}}
           @panel={{this.sidebarState.currentPanel}}
         />
       {{else}}
         <ApiPanels
-          @currentUser={{this.currentUser}}
           @collapsableSections={{true}}
+          @currentUser={{this.currentUser}}
         />
       {{/if}}
 

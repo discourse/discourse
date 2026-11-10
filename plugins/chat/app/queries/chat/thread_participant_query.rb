@@ -57,12 +57,7 @@ module Chat
       SQL
       most_recent_participants =
         most_recent_participants.reduce({}) do |hash, mrm|
-          hash[mrm.thread_id] = {
-            id: mrm.user_id,
-            username: mrm.username,
-            name: mrm.name,
-            uploaded_avatar_id: mrm.uploaded_avatar_id,
-          }
+          hash[mrm.thread_id] = user_data(mrm)
           hash
         end
 
@@ -77,14 +72,7 @@ module Chat
         # can just increase the number here.
         if thread_participants[thread_id][:users].length < (MAX_PARTICIPANTS - 1) &&
              thread_participant_stat.user_id != most_recent_participants[thread_id][:id]
-          thread_participants[thread_id][:users].push(
-            {
-              id: thread_participant_stat.user_id,
-              username: thread_participant_stat.username,
-              name: thread_participant_stat.name,
-              uploaded_avatar_id: thread_participant_stat.uploaded_avatar_id,
-            },
-          )
+          thread_participants[thread_id][:users].push(user_data(thread_participant_stat))
         end
 
         thread_participants[thread_id][:total_count] += 1
@@ -97,5 +85,17 @@ module Chat
 
       thread_participants
     end
+
+    def self.user_data(row)
+      result = {
+        id: row.user_id,
+        username: row.username,
+        uploaded_avatar_id: row.uploaded_avatar_id,
+      }
+      result[:name] = row.name if SiteSetting.enable_names?
+      result
+    end
+
+    private_class_method :user_data
   end
 end

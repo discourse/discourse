@@ -6,4 +6,5 @@ Migrations::Tooling::Schema.table :user_associated_accounts do
   column :last_used, required: false
 
   ignore :credentials, :extra, :id
+  ignore :avatar_upload_id, reason: "Downloaded from the provider's `info.image` on the next login"
 end

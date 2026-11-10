@@ -31,6 +31,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
   end
   let!(:create_score_for_user_3) { UserVisit.create(user_id: user_3.id, visited_at: 2.days.ago) }
   let!(:create_topic) { Fabricate(:topic, user: current_user) }
+
   fab!(:leaderboard) do
     Fabricate(:gamification_leaderboard, name: "test", created_by_id: current_user.id)
   end

@@ -9,7 +9,7 @@ import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import SelectKitRow from "discourse/select-kit/components/select-kit/select-kit-row";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
 
 @classNames("category-chooser")
 @selectKitOptions({
@@ -50,6 +50,27 @@ export default class CategoryChooser extends ComboBoxComponent {
   @computed("siteSettings.fixed_category_positions_on_create")
   get fixedCategoryPositionsOnCreate() {
     return this.siteSettings.fixed_category_positions_on_create;
+  }
+
+  @computed(
+    "selectKit.filter",
+    "selectKit.options.scopedCategoryId",
+    "selectKit.options.prioritizedCategoryId"
+  )
+  get content() {
+    if (!this.selectKit.filter) {
+      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
+
+      if (scopedCategoryId) {
+        return this.categoriesByScope({ scopedCategoryId });
+      }
+
+      if (prioritizedCategoryId) {
+        return this.categoriesByScope({ prioritizedCategoryId });
+      }
+    }
+
+    return this.categoriesByScope();
   }
 
   modifyComponentForRow(collection, item) {
@@ -136,27 +157,6 @@ export default class CategoryChooser extends ComboBoxComponent {
     } else {
       return this.content;
     }
-  }
-
-  @computed(
-    "selectKit.filter",
-    "selectKit.options.scopedCategoryId",
-    "selectKit.options.prioritizedCategoryId"
-  )
-  get content() {
-    if (!this.selectKit.filter) {
-      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
-
-      if (scopedCategoryId) {
-        return this.categoriesByScope({ scopedCategoryId });
-      }
-
-      if (prioritizedCategoryId) {
-        return this.categoriesByScope({ prioritizedCategoryId });
-      }
-    }
-
-    return this.categoriesByScope();
   }
 
   categoriesByScope({

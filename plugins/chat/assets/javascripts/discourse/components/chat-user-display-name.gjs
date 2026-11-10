@@ -11,7 +11,11 @@ export default class ChatUserDisplayName extends Component {
   }
 
   get hasValidName() {
-    return this.args.user?.name && this.args.user.name.trim().length > 0;
+    return (
+      this.siteSettings.enable_names &&
+      this.args.user?.name &&
+      this.args.user.name.trim().length > 0
+    );
   }
 
   get formattedUsername() {

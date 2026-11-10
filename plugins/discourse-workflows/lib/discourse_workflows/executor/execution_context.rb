@@ -96,16 +96,14 @@ module DiscourseWorkflows
         store_context(node.name, value)
       end
 
-      def store_node_run(node, inputs:, outputs:, input_sources: [])
+      def store_node_run(node, inputs:, outputs:, input_sources: [], metadata: {})
         return if node.name.blank?
 
         @context["__node_runs"] ||= {}
         @context["__node_runs"][node.name] ||= []
-        @context["__node_runs"][node.name] << {
-          "inputs" => inputs,
-          "outputs" => outputs,
-          "input_sources" => input_sources,
-        }
+        run = { "inputs" => inputs, "outputs" => outputs, "input_sources" => input_sources }
+        run["metadata"] = metadata.deep_stringify_keys if metadata.present?
+        @context["__node_runs"][node.name] << run
       end
 
       def store_waiting_input_sources(input_sources)

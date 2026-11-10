@@ -4,7 +4,6 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
-import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class SchemaSettingTypeDatetime extends Component {
@@ -15,6 +14,16 @@ export default class SchemaSettingTypeDatetime extends Component {
     ? moment(this.args.value).local().format(moment.HTML5_FMT.DATETIME_LOCAL)
     : "";
   required = this.args.spec.required;
+
+  get validationErrorMessage() {
+    if (!this.touched) {
+      return;
+    }
+
+    if (this.value.length === 0 && this.required) {
+      return i18n("admin.customize.schema.fields.required");
+    }
+  }
 
   @action
   onInput(event) {
@@ -34,23 +43,13 @@ export default class SchemaSettingTypeDatetime extends Component {
     this.value = utcValue;
   }
 
-  get validationErrorMessage() {
-    if (!this.touched) {
-      return;
-    }
-
-    if (this.value.length === 0 && this.required) {
-      return i18n("admin.customize.schema.fields.required");
-    }
-  }
-
   <template>
     <Input
-      @type="datetime-local"
       class="--datetime"
+      required={{this.required}}
+      @type="datetime-local"
       @value={{this.localTime}}
       {{on "input" this.onInput}}
-      required={{this.required}}
     />
 
     <div class="schema-field__input-supporting-text">

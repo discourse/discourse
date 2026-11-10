@@ -6,7 +6,6 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New dismiss - Mobile", function (needs) {
   needs.mobileView();
-  needs.settings({ floating_dismiss_topics_on_mobile: true });
   needs.user({ unified_new_enabled: true });
   needs.pretender((server, helper) => {
     const topicList = cloneJSON(topicFixtures["/latest.json"]);

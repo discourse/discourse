@@ -3,6 +3,7 @@
 RSpec.describe Admin::UnknownReviewablesController do
   let(:admin) { Fabricate(:admin) }
   let(:user) { Fabricate(:user) }
+
   fab!(:reviewable)
   fab!(:unknown_reviewable) { Fabricate(:reviewable, type: "ReviewablePost") }
 

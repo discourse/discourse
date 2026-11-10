@@ -23,6 +23,10 @@ fa_IR:
         add: "پسندیدن این فرسته"
         remove: "حذف واکنش پسندیدن"
         cant_remove: "شما دیگر پسندیدن خود را نمی‌توانید حذف کنید"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "اضافه شده"
+        changes_removed: "پاک شد"
     notifications:
       reaction_2_users: "%{username}، %{username2}"
       reaction_multiple_users:

@@ -790,7 +790,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -800,7 +800,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at > ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -1020,7 +1020,7 @@ class Search
           nil
         elsif word =~ /\Atopic:(\d+)\z/i
           topic_id = $1.to_i
-          if topic_id > 1
+          if topic_id > 0
             topic = Topic.find_by(id: topic_id)
             @search_context = topic if @guardian.can_see?(topic)
           end
@@ -1110,6 +1110,7 @@ class Search
     end
 
     return nil unless @guardian.can_see?(post)
+    return nil if @opts[:exclude_private_messages] && post.topic.private_message?
 
     @results.add(post)
     @results
@@ -1128,15 +1129,26 @@ class Search
     secure_category_ids
 
     categories =
-      Category
-        .includes(:category_search_data)
-        .where("category_search_data.search_data @@ #{ts_query}")
-        .references(:category_search_data)
-        .order("topics_month DESC")
-        .secured(@guardian)
-        .limit(limit)
+      Category.includes(:category_search_data).references(:category_search_data).secured(@guardian)
+    matching_categories = categories.where("category_search_data.search_data @@ #{ts_query}")
 
-    categories.each { |category| @results.add(category) }
+    if SiteSetting.content_localization_enabled
+      localizations = CategoryLocalization.matching_locale(I18n.locale)
+      if SiteSetting.content_localization_use_default_locale_when_unsupported
+        localizations =
+          localizations.or(CategoryLocalization.matching_locale(SiteSetting.default_locale))
+      end
+      localized_category_ids =
+        localizations.where(
+          "to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("category_localizations.name")}) @@ #{ts_query}",
+        ).select(:category_id)
+      matching_categories = matching_categories.or(categories.where(id: localized_category_ids))
+    end
+
+    matching_categories
+      .order("topics_month DESC")
+      .limit(limit)
+      .each { |category| @results.add(category) }
   end
 
   def user_search
@@ -1201,14 +1213,23 @@ class Search
   def tags_search
     return unless SiteSetting.tagging_enabled
 
-    Tag
-      .browsable(@guardian)
-      .includes(:tag_search_data)
-      .where("tag_search_data.search_data @@ #{ts_query}")
-      .references(:tag_search_data)
-      .order("name asc")
-      .limit(limit)
-      .each { |tag| @results.add(tag) }
+    tags = Tag.browsable(@guardian).includes(:tag_search_data).references(:tag_search_data)
+    matching_tags = tags.where("tag_search_data.search_data @@ #{ts_query}")
+
+    if SiteSetting.content_localization_enabled
+      localizations = TagLocalization.matching_locale(I18n.locale)
+      if SiteSetting.content_localization_use_default_locale_when_unsupported
+        localizations =
+          localizations.or(TagLocalization.matching_locale(SiteSetting.default_locale))
+      end
+      localized_tag_ids =
+        localizations.where(
+          "to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("tag_localizations.name")}) @@ #{ts_query}",
+        ).select(:tag_id)
+      matching_tags = matching_tags.or(tags.where(id: localized_tag_ids))
+    end
+
+    matching_tags.order("name asc").limit(limit).each { |tag| @results.add(tag) }
   end
 
   def exclude_topics_search
@@ -1276,7 +1297,8 @@ class Search
         posts = posts.where("#{user_search_fields} ILIKE ?", "%#{term_without_quote}%")
       else
         posts = posts.where(post_number: 1) if @in_title
-        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        weight_filter = weights == "ABCD" ? nil : weights
+        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter:)}")
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|
@@ -1287,6 +1309,9 @@ class Search
     end
 
     posts = apply_filters(posts)
+    if @opts[:exclude_private_messages]
+      posts = posts.where.not(topics: { archetype: Archetype.private_message })
+    end
 
     # If we have a search context, prioritize those posts first
     posts =

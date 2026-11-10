@@ -44,10 +44,8 @@ class PostsFilter
     noreplies
     single_user
   ].freeze
-  CUSTOM_FILTER_PREFIXES = [nil, ""].freeze
-  private_constant :CUSTOM_FILTER_PREFIXES
 
-  attr_reader :term, :filters, :order, :guardian, :limit, :offset, :invalid_filters
+  attr_reader :invalid_filters
 
   def self.add_filter(name, aliases: [], enabled: -> { true }, &block)
     raise ArgumentError, "block is required" if block.blank?
@@ -66,10 +64,6 @@ class PostsFilter
 
   def self.custom_filter_for(key)
     custom_filters.find { |name, config| name == key || config[:aliases].include?(key) }&.last
-  end
-
-  def self.word_to_date(str)
-    ::Search.word_to_date(str)
   end
 
   def self.category_ids_from_param(category_param, exact: false)
@@ -241,6 +235,7 @@ class PostsFilter
         name: "max_results:",
         description: I18n.t("posts_filter.description.max_results"),
         type: "number",
+        min: 1,
       },
     ]
 
@@ -266,14 +261,6 @@ class PostsFilter
     search
   end
 
-  def set_order!(order)
-    @order = order
-  end
-
-  def limit_by_user!(limit)
-    @limit = limit if limit.to_i < @limit.to_i || @limit.nil?
-  end
-
   def search
     base_relation = secure_base_relation
     filtered = filtered_relation(base_relation)
@@ -284,6 +271,10 @@ class PostsFilter
   end
 
   private
+
+  def limit_by_user!(limit)
+    @limit = limit if limit.to_i < @limit.to_i || @limit.nil?
+  end
 
   def reset_filter_state!
     @filters = []
@@ -460,13 +451,12 @@ class PostsFilter
     when "post_type"
       !parsed_filter[:exclude] && POST_TYPE_VALUES.include?(value.downcase)
     when "max_results"
-      !parsed_filter[:exclude] && value.match?(/\A\d+\z/)
+      !parsed_filter[:exclude] && value.match?(/\A[1-9]\d*\z/)
     when "order"
       !parsed_filter[:exclude] && ORDER_VALUES.include?(value.downcase)
     else
       custom_filter = self.class.custom_filter_for(key)
-      custom_filter.present? && CUSTOM_FILTER_PREFIXES.include?(parsed_filter[:prefix]) &&
-        custom_filter[:enabled].call
+      custom_filter.present? && parsed_filter[:prefix].empty? && custom_filter[:enabled].call
     end
   end
 
@@ -498,7 +488,7 @@ class PostsFilter
       limit_by_user!(parsed_filter[:value].to_i)
       relation
     when "order"
-      set_order!(order_value(parsed_filter[:value]))
+      @order = order_value(parsed_filter[:value])
       relation
     when "topics"
       filter_topics(relation, parsed_filter)
@@ -539,7 +529,7 @@ class PostsFilter
   end
 
   def filter_by_date(relation, condition, date_str)
-    if date = self.class.word_to_date(date_str)
+    if date = ::Search.word_to_date(date_str)
       relation.where(condition, date)
     else
       relation
@@ -550,7 +540,7 @@ class PostsFilter
     tag_names = split_values(parsed_filter[:value])
     return relation if tag_names.empty?
 
-    tag_ids = DiscourseTagging.filter_visible(Tag, @guardian).where_name(tag_names).pluck(:id)
+    tag_ids = DiscourseTagging.visible_tag_ids_resolving_synonyms(tag_names, @guardian)
     return relation.where("1 = 0") if tag_ids.empty? && !parsed_filter[:exclude]
     return relation if tag_ids.empty?
 

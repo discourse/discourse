@@ -3,20 +3,27 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import elementClass from "discourse/helpers/element-class";
 import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse/lib/helpers";
-import highlightHTML from "discourse/lib/highlight-html";
+import { reveal } from "discourse/lib/highlight-html";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import {
+  highlightQuote,
+  quotableText,
+  QUOTE_HIGHLIGHT_ID,
+} from "discourse/lib/quote";
+import DiscourseURL from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import PostCookedHtml from "./cooked-html";
+import PostCookedHtml from "./cooked-html.gjs";
 
 export default class PostQuotedContent extends Component {
   @service store;
@@ -50,14 +57,22 @@ export default class PostQuotedContent extends Component {
   });
 
   #quotedPost = this.args.decoratorState?.get(this.statePostId);
+  #collapsedElement;
+  #renderedText;
+  #scrollToHighlight = false;
 
   #highlightOriginalText = (cookedElement) => {
     if (!this.expanded) {
+      this.#collapsedElement = cookedElement;
       return;
     }
-    // to highlight the quoted text inside the original post content
-    highlightHTML(cookedElement, this.args.originalText, {
-      matchCase: true,
+
+    schedule("afterRender", () => {
+      const highlights = highlightQuote(cookedElement, this.#quotedText);
+      if (this.#scrollToHighlight) {
+        this.#scrollToHighlight = false;
+        this.#showHighlights(cookedElement, highlights);
+      }
     });
   };
 
@@ -129,6 +144,13 @@ export default class PostQuotedContent extends Component {
     return this.args.wrapperElement ? dElement("") : dElement("aside");
   }
 
+  get #quotedText() {
+    return (
+      this.#renderedText ||
+      (this.args.originalQuote && quotableText(this.args.originalQuote))
+    );
+  }
+
   @action
   async loadQuotedPost({ topicNumber, postNumber }) {
     if (
@@ -153,6 +175,22 @@ export default class PostQuotedContent extends Component {
   }
 
   @action
+  followQuote(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    this.#saveRenderedText();
+    document.getElementById(QUOTE_HIGHLIGHT_ID)?.removeAttribute("id");
+
+    DiscourseURL.routeTo(this.quotedPostUrl, {
+      anchor: QUOTE_HIGHLIGHT_ID,
+      highlightQuote: this.#quotedText,
+    });
+  }
+
+  @action
   onClickTitle(event) {
     if (event.target.closest("a") || event.target.closest(".quote-controls")) {
       return;
@@ -162,14 +200,38 @@ export default class PostQuotedContent extends Component {
 
   @action
   toggleExpanded() {
+    this.#saveRenderedText();
     this.expanded = !this.expanded;
+    this.#scrollToHighlight = this.expanded;
     this.args.decoratorState?.set(this.stateExpandedId, this.expanded);
+  }
+
+  #saveRenderedText() {
+    if (!this.expanded && this.#collapsedElement) {
+      this.#renderedText = quotableText(this.#collapsedElement);
+    }
+  }
+
+  #showHighlights(cookedElement, highlights) {
+    if (!highlights.length) {
+      return;
+    }
+
+    this.#finishExpandAnimation(cookedElement);
+    reveal(highlights);
+    highlights[0].scrollIntoView({ block: "center" });
+  }
+
+  #finishExpandAnimation(cookedElement) {
+    cookedElement
+      .closest(".expanded-quote")
+      ?.getAnimations()
+      .forEach((animation) => animation.finish());
   }
 
   <template>
     <this.OptionalWrapperComponent
       ...attributes
-      role="none"
       class={{dConcatClass
         "quote"
         (if @quotedPostNotFound "quote-post-not-found")
@@ -183,6 +245,7 @@ export default class PostQuotedContent extends Component {
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
       data-username={{@quotedUsername}}
+      role="none"
     >
       {{#if @wrapperElement}}
         {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
@@ -194,9 +257,9 @@ export default class PostQuotedContent extends Component {
       {{/if}}
       <div
         class="title"
-        data-has-quote-controls={{this.shouldDisplayQuoteControls}}
-        data-can-toggle-quote={{this.shouldDisplayToggleButton}}
         data-can-navigate-to-post={{this.shouldDisplayNavigateToPostButton}}
+        data-can-toggle-quote={{this.shouldDisplayToggleButton}}
+        data-has-quote-controls={{this.shouldDisplayQuoteControls}}
         {{(if
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
@@ -237,9 +300,10 @@ export default class PostQuotedContent extends Component {
             {{~#if this.shouldDisplayNavigateToPostButton~}}
               <DButton
                 class="btn-flat back"
+                @ariaLabel="post.follow_quote"
                 @href={{this.quotedPostUrl}}
                 @title="post.follow_quote"
-                @ariaLabel="post.follow_quote"
+                {{on "click" this.followQuote}}
               >
                 {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                     extra whitespace that will interfere with the text captured when quoting a quoted content }}
@@ -264,10 +328,10 @@ export default class PostQuotedContent extends Component {
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
                     @className="post__contents-cooked-quote"
-                    @post={{expandedPost}}
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
+                    @post={{expandedPost}}
                     @selectionBarrier={{false}}
                     @streamElement={{@streamElement}}
                   />
@@ -292,11 +356,11 @@ export default class PostQuotedContent extends Component {
           {{~else~}}
             <PostCookedHtml
               @className="post__contents-cooked-quote"
-              @post={{@post}}
               @cooked={{@collapsedContent}}
               @decoratorState={{@decoratorState}}
               @extraDecorators={{this.extraDecorators}}
               @highlightTerm={{@highlightTerm}}
+              @post={{@post}}
               @selectionBarrier={{false}}
               @streamElement={{@streamElement}}
             />

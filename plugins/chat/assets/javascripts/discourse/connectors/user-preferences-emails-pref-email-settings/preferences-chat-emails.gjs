@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const EMAIL_FREQUENCY_OPTIONS = [
@@ -19,11 +18,11 @@ const PreferencesChatEmails = <template>
       {{i18n "chat.email_frequency.title"}}
     </label>
     <ComboBox
-      @valueProperty="value"
       @content={{EMAIL_FREQUENCY_OPTIONS}}
-      @value={{@outletArgs.model.user_option.chat_email_frequency}}
       @id="user_chat_email_frequency"
       @onChange={{fn (mut @outletArgs.model.user_option.chat_email_frequency)}}
+      @value={{@outletArgs.model.user_option.chat_email_frequency}}
+      @valueProperty="value"
     />
     {{#if (eq @outletArgs.model.user_option.chat_email_frequency "when_away")}}
       <div class="control-instructions">

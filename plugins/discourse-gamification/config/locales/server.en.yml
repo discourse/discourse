@@ -30,3 +30,4 @@ en:
       gamification_score:
         invalid_points: "Points must be a non-zero whole number, got: %{points}"
         invalid_date: "Invalid date: %{date}"
+        invalid_category: "Category not found: %{category_id}"

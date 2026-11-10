@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Runs a migration gem's spec suite against the application's Gemfile, so the
+# specs resolve gems through the root lockfile — the same versions as `disco`
+# and CI. Run it from the gem directory:
+#
+#   cd migrations/importer && ../bin/rspec spec/lib/migrations/importer/step_spec.rb
+#
+# Specs tagged `:rails` additionally need MIGRATIONS_RAILS=1.
+
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", __dir__)
+ENV["BUNDLE_WITH"] ||= "migrations"
+
+gems_root = File.expand_path("..", __dir__)
+gem_dirs = %w[core tooling converters importer].map { |gem| File.join(gems_root, gem) }
+
+unless gem_dirs.any? { |dir| Dir.pwd == dir || Dir.pwd.start_with?("#{dir}/") }
+  abort "Run this from a gem directory, e.g. `cd migrations/importer && ../bin/rspec`"
+end
+
+exec "bundle", "exec", "rspec", *ARGV

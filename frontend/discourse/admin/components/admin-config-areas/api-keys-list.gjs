@@ -27,9 +27,9 @@ const ApiKeysList = <template>
       </table>
     {{else}}
       <AdminConfigAreaEmptyList
+        @ctaClass="admin-api_keys__add-api_key"
         @ctaLabel="admin.api_keys.add"
         @ctaRoute="adminApiKeys.new"
-        @ctaClass="admin-api_keys__add-api_key"
         @emptyLabel="admin.api_keys.no_api_keys"
       />
     {{/if}}

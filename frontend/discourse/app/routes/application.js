@@ -3,7 +3,6 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
-import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
@@ -89,19 +88,6 @@ export default class ApplicationRoute extends DiscourseRoute {
       const response = await this.currentUser.destroySession(pushSubscription);
       logout({ redirect: response["redirect_url"] });
     }
-  }
-
-  @action
-  _collectTitleTokens(tokens) {
-    tokens.push(this.siteTitle);
-    if (
-      (window.location.pathname === getURL("/") ||
-        window.location.pathname === getURL("/login")) &&
-      this.shortSiteDescription !== ""
-    ) {
-      tokens.push(this.shortSiteDescription);
-    }
-    this.documentTitle.setTitle(tokens.join(" - "));
   }
 
   @action
@@ -233,35 +219,15 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  createNewTopicViaParams(title, body, categoryId, tags) {
-    deprecated(
-      "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewTopicViaParams" }
-    );
-    this.composer.openNewTopic({
-      title,
-      body,
-      categoryId,
-      tags,
-    });
-  }
-
-  @action
-  createNewMessageViaParams({
-    recipients = "",
-    topicTitle = "",
-    topicBody = "",
-    hasGroups = false,
-  } = {}) {
-    deprecated(
-      "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewMessageViaParams" }
-    );
-    this.composer.openNewMessage({
-      recipients,
-      title: topicTitle,
-      body: topicBody,
-      hasGroups,
-    });
+  _collectTitleTokens(tokens) {
+    tokens.push(this.siteTitle);
+    if (
+      (window.location.pathname === getURL("/") ||
+        window.location.pathname === getURL("/login")) &&
+      this.shortSiteDescription !== ""
+    ) {
+      tokens.push(this.shortSiteDescription);
+    }
+    this.documentTitle.setTitle(tokens.join(" - "));
   }
 }

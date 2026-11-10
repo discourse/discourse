@@ -78,6 +78,7 @@ module Onebox
 
       uri = Addressable::URI.parse(location)
       uri = Addressable::URI.join(domain, uri) if !uri.host
+      raise FinalDestination::SSRFError unless FinalDestination.new(uri.to_s).validate_uri
 
       result = StringIO.new
       FinalDestination::HTTP.start(

@@ -26,7 +26,7 @@ module DiscourseWorkflows
             color: "deep-orange",
           },
           group: "discourse_triggers",
-          events: [:topic_category_changed],
+          event: :topic_category_changed,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
         )
 
@@ -41,7 +41,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { topic: topic_data(@topic), old_category_id: @old_category.id }
+          { topic: serialize_topic_list_item(@topic), old_category_id: @old_category.id }
         end
 
         private

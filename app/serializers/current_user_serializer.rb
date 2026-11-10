@@ -71,6 +71,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :draft_count,
              :pending_posts_count,
              :grouped_unread_notifications,
+             :available_notification_types,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
@@ -87,7 +88,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :is_impersonating,
              :impersonation_expires_at,
              :can_change_post_owner,
-             :show_site_owner_onboarding
+             :show_site_owner_onboarding,
+             :can_run_design_wizard,
+             :can_use_dsa_account_email
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -101,6 +104,14 @@ class CurrentUserSerializer < BasicUserSerializer
   def initialize(object, options = {})
     super
     options[:include_status] = true
+  end
+
+  def can_use_dsa_account_email
+    Dsa::Notice.verified_account_email(object).present?
+  end
+
+  def include_can_use_dsa_account_email?
+    SiteSetting.dsa_reporting_enabled
   end
 
   def login_method
@@ -175,6 +186,19 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
+  # Themes saved as appearance changes only hold palettes, which the wizard can
+  # replace, so they don't stop it from being offered.
+  def include_can_run_design_wizard?
+    return false if !object.admin?
+
+    theme_ids = DesignWizard::Themes.ids + AppearanceChange.palette_only_theme_ids
+    theme_ids.include?(SiteSetting.default_theme_id) && !Theme.where.not(id: theme_ids).exists?
+  end
+
+  def can_run_design_wizard
+    true
+  end
+
   def include_show_site_owner_onboarding?
     SiteSetting.enable_site_owner_onboarding && object.admin? &&
       User.where(admin: true).human_users.minimum(:id) == object.id &&
@@ -214,7 +238,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_delete_all_posts_and_topics
-    object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    scope.can_delete_all_posts_and_topics?
   end
 
   def can_upload_avatar

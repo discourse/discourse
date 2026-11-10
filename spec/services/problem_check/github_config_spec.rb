@@ -33,7 +33,7 @@ RSpec.describe ProblemCheck::GithubConfig do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.',
+          '{{setting:enable_github_logins}} is on, but {{setting:github_client_id}} must still be set. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.',
         )
       end
     end
@@ -48,7 +48,7 @@ RSpec.describe ProblemCheck::GithubConfig do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.',
+          '{{setting:enable_github_logins}} is on, but {{setting:github_client_secret}} must still be set. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.',
         )
       end
     end

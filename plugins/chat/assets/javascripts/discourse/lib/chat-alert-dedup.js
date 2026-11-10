@@ -7,6 +7,10 @@ const MAX_ENTRIES = 100;
 
 const store = new KeyValueStore(STORE_CONTEXT);
 
+// claims are read-then-written, so two tabs can both claim the same alert;
+// tagging them keeps one tab's release from dropping the other's claim
+const TAB_ID = Math.random().toString(36).slice(2);
+
 function readEntries() {
   const now = Date.now();
   return (store.getObject(STORE_KEY) || []).filter(
@@ -32,10 +36,28 @@ export function claimChatAlert(key) {
     return false;
   }
 
-  entries.push({ key, at: Date.now() });
+  entries.push({ key, at: Date.now(), tab: TAB_ID });
   writeEntries(entries);
 
   return true;
+}
+
+// for alerts this tab actually played: re-records the claim as this tab's in
+// case another tab claimed it in the same instant and later releases it
+export function confirmChatAlert(key) {
+  if (!key) {
+    return;
+  }
+
+  const entries = readEntries().filter((entry) => entry.key !== key);
+  entries.push({ key, at: Date.now(), tab: TAB_ID, played: true });
+  writeEntries(entries);
+}
+
+// a claim alone doesn't mean a sound played, a visible tab claims alerts for
+// its open channel silently
+export function chatAlertPlayed(key) {
+  return readEntries().some((entry) => entry.key === key && entry.played);
 }
 
 // for claims that turned out to be unplayable in this tab (e.g. suspended
@@ -45,7 +67,9 @@ export function releaseChatAlert(key) {
     return;
   }
 
-  writeEntries(readEntries().filter((entry) => entry.key !== key));
+  writeEntries(
+    readEntries().filter((entry) => entry.key !== key || entry.tab !== TAB_ID)
+  );
 }
 
 export function resetChatAlerts() {

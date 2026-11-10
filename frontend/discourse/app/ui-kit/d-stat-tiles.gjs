@@ -10,13 +10,13 @@ const DStatTile = <template>
       {{#if @tooltip}}
         <DTooltip
           class="d-stat-tile__tooltip"
-          @icon="circle-question"
           @content={{@tooltip}}
+          @icon="circle-question"
         />
       {{/if}}
     </div>
     {{#if @url}}
-      <a href={{@url}} class="d-stat-tile__value" title={{@value}}>
+      <a class="d-stat-tile__value" href={{@url}} title={{@value}}>
         {{if @formattedValue @formattedValue (number @value)}}
       </a>
     {{else}}

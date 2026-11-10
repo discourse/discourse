@@ -6,6 +6,7 @@ module DiscourseGamification
 
     self.table_name = "gamification_leaderboards"
 
+    belongs_to :created_by, class_name: "User", foreign_key: :created_by_id, optional: true
     has_many :leaderboard_scores,
              class_name: "DiscourseGamification::GamificationLeaderboardScore",
              foreign_key: :leaderboard_id,

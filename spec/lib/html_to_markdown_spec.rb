@@ -231,10 +231,28 @@ RSpec.describe HtmlToMarkdown do
     ).to eq("![|200x100](https://www.discourse.org/logo.svg)")
   end
 
-  (1..6).each do |n|
-    it "converts <h#{n}>" do
-      expect(html_to_markdown("<h#{n}>Header #{n}</h#{n}>")).to eq("#" * n + " Header #{n}")
-    end
+  it "converts <h1>" do
+    expect(html_to_markdown("<h1>Header 1</h1>")).to eq("#" * 1 + " Header 1")
+  end
+
+  it "converts <h2>" do
+    expect(html_to_markdown("<h2>Header 2</h2>")).to eq("#" * 2 + " Header 2")
+  end
+
+  it "converts <h3>" do
+    expect(html_to_markdown("<h3>Header 3</h3>")).to eq("#" * 3 + " Header 3")
+  end
+
+  it "converts <h4>" do
+    expect(html_to_markdown("<h4>Header 4</h4>")).to eq("#" * 4 + " Header 4")
+  end
+
+  it "converts <h5>" do
+    expect(html_to_markdown("<h5>Header 5</h5>")).to eq("#" * 5 + " Header 5")
+  end
+
+  it "converts <h6>" do
+    expect(html_to_markdown("<h6>Header 6</h6>")).to eq("#" * 6 + " Header 6")
   end
 
   it "converts <br>" do
@@ -243,6 +261,34 @@ RSpec.describe HtmlToMarkdown do
 
   it "skips <br> inside <p> if next character is \n" do
     expect(html_to_markdown("<p>Before<br>\nInside<br>After</p>")).to eq("Before\nInside\nAfter")
+  end
+
+  it "splits every inline ancestor around <br>" do
+    expect(html_to_markdown("<div><span><b>a<br>b</b></span></div>")).to eq("**a**\n**b**")
+  end
+
+  it "hoists <br> out of deeply nested inline elements in bounded time" do
+    html = "<div>#{"a<br>b<br>c<br>d<span>" * 300}x#{"</span>" * 300}</div>"
+
+    expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
+  end
+
+  it "hoists many <br> out of a single inline element in linear time" do
+    html = "<div><span>#{"a<br>" * 20_000}</span></div>"
+
+    expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
+  end
+
+  it "hoists many <br> out of deeply nested inline elements in bounded time" do
+    html = "<div>#{"<span>" * 300}#{"<br>" * 20_000}x#{"</span>" * 300}</div>"
+
+    expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
+  end
+
+  it "keeps formatting around every line of a long message in nested inline elements" do
+    html = "<div><b>#{"<span>" * 8}<i>#{"line<br>" * 200}</i>#{"</span>" * 8}</b></div>"
+
+    expect(html_to_markdown(html)).to eq((["__*line*__"] * 200).join("\n"))
   end
 
   it "converts <hr>" do
@@ -260,6 +306,7 @@ RSpec.describe HtmlToMarkdown do
   end
 
   describe "when HTML is used within Markdown" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     HtmlToMarkdown::ALLOWED.each do |tag|
       it "keeps mandatory HTML entities in text of <#{tag}>" do
         expect(html_to_markdown("<#{tag}>Less than: &lt;</#{tag}>")).to eq(
@@ -286,6 +333,7 @@ RSpec.describe HtmlToMarkdown do
         )
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   it "supports <ins>" do
@@ -465,7 +513,7 @@ RSpec.describe HtmlToMarkdown do
     ).to eq("> ```\n> var foo = 'bar';\n> ```")
   end
 
-  it "works" do
+  it "converts a blockquote nested in a list item" do
     expect(
       html_to_markdown(
         "<ul><li><p>A list item with a blockquote:</p><blockquote><p>This is a <strong>blockquote</strong><br>inside a list item.</p></blockquote></li></ul>",
@@ -550,7 +598,7 @@ RSpec.describe HtmlToMarkdown do
       )
     end
 
-    it "works" do
+    it "converts nested bold and italic text with line breaks" do
       expect(html_to_markdown("<div>A <b> B <i> C <br> D </i> E <br> F </b> G</div>")).to eq(
         "A __B *C*__\n__*D* E__\n**F** G",
       )

@@ -33,4 +33,15 @@ RSpec.describe Jobs::SendEmailLoginCode do
     expect(email.subject).to include("123456")
     expect(email.body.to_s).to include("123456")
   end
+
+  it "sends the password reset template when requested" do
+    described_class.new.execute(to_address: "foo@example.com", code: "123456", password_reset: true)
+
+    email = ActionMailer::Base.deliveries.last
+    expect(email.to).to contain_exactly("foo@example.com")
+    expect(email.subject).to eq(
+      I18n.t("password_reset_code_mailer.subject_template", code: "123456"),
+    )
+    expect(email.body.to_s).to include("123456", "reset your password")
+  end
 end

@@ -6,15 +6,15 @@ module DiscourseWorkflows
 
     def index
       DiscourseWorkflows::DataTable::List.call(service_params) do |result|
-        on_success do |data_tables:, total_rows:, table_sizes:, load_more_url:|
+        on_success do |data_tables:, total_rows:, table_stats:, load_more_url:|
           render json: {
                    data_tables:
                      serialize_data(
                        data_tables,
                        DiscourseWorkflows::DataTableSerializer,
-                       table_sizes: table_sizes,
+                       table_stats:,
                      ),
-                   meta: { total_rows: total_rows, load_more_url: load_more_url }.compact,
+                   meta: { total_rows:, load_more_url: }.compact,
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }

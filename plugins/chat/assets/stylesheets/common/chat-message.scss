@@ -24,18 +24,6 @@
   }
 }
 
-[data-content][data-identifier="chat-message-reaction-tooltip"] {
-  font-size: var(--font-down-1);
-
-  .fk-d-tooltip__inner-content {
-    display: block;
-  }
-
-  .emoji {
-    padding-left: 0.25rem;
-  }
-}
-
 .chat-message {
   align-items: flex-start;
   padding: 0.25em 0.5em 0.25em 0.75em;

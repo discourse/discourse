@@ -33,8 +33,18 @@ de:
           title: "Datum/Uhrzeit"
         menus:
           title: "Menüs"
+        context_menu:
+          actions:
+            duplicate: "Duplizieren"
+            delete: "Löschen"
         multi_select:
           title: "Mehrfachauswahl"
+        reorderable_list:
+          policies_pinned: "Angeheftet"
+          policies_required: "Erforderlich"
+          table_field: "Feld"
+          table_type: "Typ"
+          cross_list_primary: "Primär"
         toasts:
           title: "Toasts"
         font_scale:
@@ -100,6 +110,30 @@ de:
           title: "Weitere Themen"
         post_menu:
           title: "Beitrag-Aktionen"
+        roving_focus:
+          toolbar:
+            bold: "Fett"
+            italic: "Kursiv"
+            copy: "Kopieren"
+          tags:
+            remove: "%{tag} entfernen"
+            design: "Design"
+            support: "Support"
+          adjacent:
+            label: "Filter"
+            field: "Suche"
+            open: "Offen"
+            recent: "Aktuell"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Täglich"
+            weekly: "Wöchentlich"
+            monthly: "Monatlich"
+            never: "Nie"
+          tree:
+            components: "Komponenten"
+            select: "Auswählen"
         docked_composer:
           title: "Angedockter Editor"
         modal:

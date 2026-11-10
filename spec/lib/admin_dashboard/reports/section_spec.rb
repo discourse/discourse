@@ -54,8 +54,8 @@ RSpec.describe AdminDashboard::Reports::Section do
     expect(result[:items].map { |item| item[:identifier] }).to eq(%w[b a c])
   end
 
-  it "serializes the resolved metadata along with a composite key" do
-    AdminDashboardReport.create!(source: "fake", identifier: "x", position: 0)
+  it "serializes the resolved metadata along with a composite key and the row's rows/cols" do
+    AdminDashboardReport.create!(source: "fake", identifier: "x", position: 0, rows: 3, cols: 2)
 
     item = described_class.build(guardian: guardian)[:items].first
     expect(item).to eq(
@@ -66,6 +66,8 @@ RSpec.describe AdminDashboard::Reports::Section do
       label: "Fake",
       url: "/fake/x",
       key: "fake:x",
+      rows: 3,
+      cols: 2,
     )
   end
 

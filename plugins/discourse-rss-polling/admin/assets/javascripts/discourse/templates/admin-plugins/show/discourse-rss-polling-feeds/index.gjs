@@ -6,23 +6,23 @@ import RssPollingFeedRow from "discourse/plugins/discourse-rss-polling/discourse
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/plugins/discourse-rss-polling/feeds"
     @label={{i18n "admin.rss_polling.feeds.title"}}
+    @path="/admin/plugins/discourse-rss-polling/feeds"
   />
 
   <section class="admin-detail">
     <DPageSubheader
-      @titleLabel={{i18n "admin.rss_polling.feeds.title"}}
       @descriptionLabel={{i18n "admin.rss_polling.feeds.description"}}
+      @titleLabel={{i18n "admin.rss_polling.feeds.title"}}
     >
       <:actions as |actions|>
         {{#if @controller.feeds.length}}
           <actions.Primary
-            @route="adminPlugins.show.discourse-rss-polling-feeds.new"
+            class="rss-polling-feeds__add"
             @icon="plus"
             @label="admin.rss_polling.feeds.add"
+            @route="adminPlugins.show.discourse-rss-polling-feeds.new"
             @title="admin.rss_polling.feeds.add"
-            class="rss-polling-feeds__add"
           />
         {{/if}}
       </:actions>
@@ -33,18 +33,18 @@ export default <template>
         <tbody class="d-table__body">
           {{#each @controller.feeds as |feed|}}
             <RssPollingFeedRow
-              @feed={{feed}}
               @deleteFeed={{@controller.deleteFeed}}
+              @feed={{feed}}
             />
           {{/each}}
         </tbody>
       </table>
     {{else}}
       <AdminConfigAreaEmptyList
-        @emptyLabel="admin.rss_polling.feeds.empty"
+        @ctaClass="rss-polling-feeds__add"
         @ctaLabel="admin.rss_polling.feeds.add"
         @ctaRoute="adminPlugins.show.discourse-rss-polling-feeds.new"
-        @ctaClass="rss-polling-feeds__add"
+        @emptyLabel="admin.rss_polling.feeds.empty"
       />
     {{/if}}
   </section>

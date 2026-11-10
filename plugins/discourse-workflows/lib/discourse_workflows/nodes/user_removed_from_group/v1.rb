@@ -12,7 +12,7 @@ module DiscourseWorkflows
             color: "grey",
           },
           group: "discourse_triggers",
-          events: [:user_removed_from_group],
+          event: :user_removed_from_group,
           output_contracts: [{ schema: Schema::USER_REMOVED_FROM_GROUP_SCHEMA }],
           properties: {
             group_id: {
@@ -58,7 +58,7 @@ module DiscourseWorkflows
         def output
           {
             user: serialize_user(@user),
-            group: group_data,
+            group: serialize_basic_group(@group),
             membership: {
               action: "removed",
               automatic: nil,
@@ -69,17 +69,6 @@ module DiscourseWorkflows
         def matches?(trigger_ctx)
           group_id = trigger_ctx.get_node_parameter("group_id")
           group_id.present? && @group.id == group_id.to_i
-        end
-
-        private
-
-        def group_data
-          {
-            id: @group.id,
-            name: @group.name,
-            full_name: @group.full_name,
-            automatic: @group.automatic?,
-          }
         end
       end
     end

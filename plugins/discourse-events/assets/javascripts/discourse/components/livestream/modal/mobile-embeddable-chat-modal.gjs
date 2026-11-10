@@ -5,7 +5,7 @@ import { modifier } from "ember-modifier";
 import bodyClass from "discourse/helpers/body-class";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import DModal from "discourse/ui-kit/d-modal";
-import EmbeddableChatChannel from "../embeddable-chat-channel";
+import EmbeddableChatChannel from "../embeddable-chat-channel.gjs";
 
 export default class MobileEmbeddableChatModal extends Component {
   @service embeddableChat;
@@ -71,8 +71,8 @@ export default class MobileEmbeddableChatModal extends Component {
     {{bodyClass "livestream-chat-modal-active"}}
 
     <DModal
-      @closeModal={{@closeModal}}
       class="livestream-chat-modal"
+      @closeModal={{@closeModal}}
       @hideHeader={{true}}
       {{didUpdate this.checkAndCloseModal this.capabilities.viewport.lg}}
       {{this.lockChatScroller}}

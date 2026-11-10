@@ -2,6 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
   let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
+
   after { sandbox.dispose }
 
   def build_exec_ctx(items, resolver_context: nil, parameters: {}, **kwargs)
@@ -83,6 +84,16 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
         execute_code("return { name: $json.name };", items: [{ "json" => { "name" => "Alice" } }])
 
       expect(result.first["json"]["name"]).to eq("Alice")
+    end
+
+    it "exposes $helpers.absoluteUrl for converting a relative path" do
+      result =
+        execute_code(
+          "return { url: $helpers.absoluteUrl($json.path) };",
+          items: [{ "json" => { "path" => "/t/some-slug/123/4" } }],
+        )
+
+      expect(result.first["json"]["url"]).to eq("#{Discourse.base_url}/t/some-slug/123/4")
     end
 
     it "captures console.log output" do

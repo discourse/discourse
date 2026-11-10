@@ -1,5 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { registerDestructor } from "@ember/destroyable";
+import {
+  associateDestroyableChild,
+  registerDestructor,
+} from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -19,7 +22,28 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * Used to ensure consistency between trigger detection and completion position calculation.
  */
 export const EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP =
-  /[\s.?,@/#!%&*;:\[\]{}=\-_()+]/;
+  /[\s.…?,@/#!%&*;:\[\]{}=\-_()+]/;
+
+/**
+ * @template [T=unknown]
+ * @typedef {Object} AutocompleteOptions
+ * @property {string} [key]
+ * @property {(term: string) => T[] | "skip" | "__CANCELLED" | null | undefined | PromiseLike<T[] | "skip" | "__CANCELLED" | null | undefined>} [dataSource]
+ * @property {(data: { options: T[] }) => string} [template]
+ * @property {unknown} [component]
+ * @property {(result: T, event: Event | undefined) => string | null | undefined | PromiseLike<string | null | undefined>} [transformComplete]
+ * @property {(text: string, event: Event | undefined) => void} [afterComplete]
+ * @property {boolean} [debounced]
+ * @property {boolean} [preserveKey]
+ * @property {boolean} [autoSelectFirstSuggestion]
+ * @property {(element: HTMLElement, context: { backSpace?: boolean, inCodeBlock: () => boolean | Promise<boolean>, inLink: () => boolean | Promise<boolean> }) => boolean | undefined | PromiseLike<boolean | undefined>} [triggerRule]
+ * @property {(text: string, caretPosition: number) => string[] | null | undefined} [onKeyUp]
+ * @property {boolean} [fixedTextareaPosition]
+ * @property {number} [offset]
+ * @property {boolean} [forceRefresh]
+ * @property {(results: T[]) => void} [onRender]
+ * @property {() => void} [onClose]
+ */
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -44,16 +68,18 @@ export default class DAutocompleteModifier extends Modifier {
   /**
    * Static helper function to set up autocomplete on any element
    *
-   * @param {Object} owner - Ember owner
+   * @template T
+   * @param {import("@ember/owner").default} owner - Ember owner
    * @param {HTMLElement} element - The element to modify with autocomplete functionality
-   * @param {Object} autocompleteHandler - Handler for text operations
-   * @param {Object} options - Autocomplete options
+   * @param {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} autocompleteHandler - Handler for text operations
+   * @param {AutocompleteOptions<T>} options - Autocomplete options
    */
   static setupAutocomplete(owner, element, autocompleteHandler, options) {
     const modifier = new DAutocompleteModifier(owner, {
       named: {},
       positional: [],
     });
+    associateDestroyableChild(owner, modifier);
 
     const modifierOptions = {
       ...options,
@@ -71,13 +97,22 @@ export default class DAutocompleteModifier extends Modifier {
   @tracked results = [];
   @tracked selectedIndex = -1;
   @tracked searchTerm = "";
+
+  /** @type {number | null} */
   @tracked completeStart = null;
+
+  /** @type {number | null} */
   @tracked completeEnd = null;
   @tracked pendingSpaceSearch = false;
 
   // Internal state
+  /** @type {string | null} */
   previousTerm = null;
+
+  /** @type {import("@ember/runloop").Timer | null} */
   debouncedSearch = null;
+
+  /** @type {HTMLElement | null} */
   targetElement = null;
 
   // Constants
@@ -88,6 +123,24 @@ export default class DAutocompleteModifier extends Modifier {
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
+  }
+
+  get shouldDebounce() {
+    return this.options.debounced ?? false;
+  }
+
+  // [introduced in https://github.com/discourse/discourse/commit/e02cc98092f5a889d0313cd741b29926be7430ab]
+  // By default, when the autocomplete popup is rendered it has the
+  // first suggestion 'selected', and pressing enter key inserts
+  // the first suggestion into the input box.
+  // If you want to stop that behavior, i.e. have the popup renders
+  // with no suggestions selected, set the `autoSelectFirstSuggestion`
+  // option to false.
+  // With this option set to false, users will have to select
+  // a suggestion via the up/down arrow keys and then press enter
+  // to insert it.
+  get autoSelectFirstSuggestion() {
+    return this.options.autoSelectFirstSuggestion ?? true;
   }
 
   @action
@@ -237,24 +290,6 @@ export default class DAutocompleteModifier extends Modifier {
     this.menu.close("d-autocomplete");
   }
 
-  get shouldDebounce() {
-    return this.options.debounced ?? false;
-  }
-
-  // [introduced in https://github.com/discourse/discourse/commit/e02cc98092f5a889d0313cd741b29926be7430ab]
-  // By default, when the autocomplete popup is rendered it has the
-  // first suggestion 'selected', and pressing enter key inserts
-  // the first suggestion into the input box.
-  // If you want to stop that behavior, i.e. have the popup renders
-  // with no suggestions selected, set the `autoSelectFirstSuggestion`
-  // option to false.
-  // With this option set to false, users will have to select
-  // a suggestion via the up/down arrow keys and then press enter
-  // to insert it.
-  get autoSelectFirstSuggestion() {
-    return this.options.autoSelectFirstSuggestion ?? true;
-  }
-
   async performAutocomplete() {
     const caretPosition = this.getCaretPosition();
     const value = this.getValue();
@@ -342,7 +377,7 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   async performSearch(term) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -573,11 +608,12 @@ export default class DAutocompleteModifier extends Modifier {
     let completeEnd;
     let completeStart;
 
-    if (pos.completeStart !== undefined && pos.completeEnd !== undefined) {
+    if (pos.completeStart != null && pos.completeEnd != null) {
       completeStart = pos.completeStart;
       completeEnd = pos.completeEnd;
     } else {
-      completeStart = completeEnd = this.getCaretPosition();
+      completeStart = this.getCaretPosition();
+      completeEnd = completeStart - 1;
     }
 
     // Use textHandler's replaceTerm method for consistent behavior

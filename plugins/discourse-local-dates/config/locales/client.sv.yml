@@ -14,9 +14,11 @@ sv:
         countdown:
           passed: datumet har passerats
       title: Ange datum/tid
+      edit_date: Redigera %{date}
       create:
         form:
           insert: Ange
+          save: Spara
           format_description: "Format som används för att visa datumet för användaren. Använd Z för att visa förskjutningen och zz för tidszonens namn."
           timezones_title: Tidszon att visa
           timezones_description: Tidszon kommer att användas för att visa datum i förhandsgranskning och reserv.

@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import MinimalGamificationLeaderboardRow from "../discourse/components/minimal-gamification-leaderboard-row";
+import MinimalGamificationLeaderboardRow from "discourse/plugins/discourse-gamification/discourse/components/minimal-gamification-leaderboard-row";
 
 module(
   "Discourse Gamification | Component | MinimalGamificationLeaderboardRow",

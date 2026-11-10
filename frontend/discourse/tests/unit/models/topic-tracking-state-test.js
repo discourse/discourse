@@ -83,6 +83,21 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
         tags: null,
         notification_level: NotificationLevels.TRACKING,
       },
+      {
+        topic_id: 7,
+        deleted: true,
+        last_read_post_number: null,
+        tags: ["random"],
+        created_in_new_period: true,
+      },
+      {
+        topic_id: 8,
+        deleted: true,
+        last_read_post_number: 1,
+        highest_post_number: 7,
+        category_id: 7,
+        notification_level: NotificationLevels.TRACKING,
+      },
     ]);
 
     let randomUnread = 0;
@@ -412,14 +427,45 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 111,
         deleted: false,
+        last_read_post_number: null,
+        notification_level: NotificationLevels.TRACKING,
+        category_id: 1,
+        created_in_new_period: true,
       },
     ]);
+    trackingState.trackIncoming("all");
+    trackingState.notifyIncoming({
+      topic_id: 111,
+      message_type: "new_topic",
+      payload: { category_id: 1 },
+    });
+
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1 }),
+      1,
+      "counts the topic as new"
+    );
+    assert.strictEqual(
+      trackingState.incomingCount,
+      1,
+      "counts the topic as incoming"
+    );
 
     await publishToMessageBus("/delete", { topic_id: 111 });
 
     assert.true(
       trackingState.findState(111).deleted,
       "marks the topic as deleted"
+    );
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1 }),
+      0,
+      "removes the deleted topic from the new count"
+    );
+    assert.strictEqual(
+      trackingState.incomingCount,
+      0,
+      "removes the deleted topic from incoming"
     );
     assert.strictEqual(
       trackingState.messageCount,

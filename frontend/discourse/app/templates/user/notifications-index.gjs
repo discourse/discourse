@@ -19,16 +19,16 @@ export default <template>
   {{else if @controller.doesNotHaveNotifications}}
     <PluginOutlet @name="user-notifications-empty-state">
       <DEmptyState
-        @title={{i18n "user.no_notifications_page_title"}}
         @body={{@controller.emptyStateBody}}
+        @title={{i18n "user.no_notifications_page_title"}}
       />
     </PluginOutlet>
   {{else}}
     <PluginOutlet @name="user-notifications-above-filter" />
     <div class="user-notifications-filter">
       <NotificationsFilter
-        @value={{@controller.filter}}
         @onChange={{@controller.updateFilter}}
+        @value={{@controller.filter}}
       />
       <PluginOutlet
         @name="user-notifications-after-filter"

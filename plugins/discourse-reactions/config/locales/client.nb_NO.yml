@@ -11,6 +11,10 @@ nb_NO:
         all: "Alle"
       main_reaction:
         add: "Liker dette innlegget"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "La til"
+        changes_removed: "Fjernet"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:

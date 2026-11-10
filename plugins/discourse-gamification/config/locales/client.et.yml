@@ -28,9 +28,7 @@ et:
       close: "Sulge"
       delete: "Kustuta"
       edit: "Muuda"
-      back: "Tagasi"
       save: "Salvesta"
-      apply: "Rakenda"
       update_range:
         all_time: "Alates algusest"
       custom_range_from: "Kellelt"
@@ -41,3 +39,4 @@ et:
         username: "Kasutaja"
         date: "Kuupäev"
         description: "Kirjeldus"
+        category_id: "Kategooriad"

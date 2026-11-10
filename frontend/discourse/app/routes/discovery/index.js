@@ -2,9 +2,11 @@ import { service } from "@ember/service";
 import {
   homepageDestination,
   homepageRewriteParam,
+  serverSideHomepage,
 } from "discourse/lib/homepage-router-overrides";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import DiscourseRoute from "../discourse";
+import DiscourseURL from "discourse/lib/url";
+import DiscourseRoute from "../discourse.js";
 
 @disableImplicitInjections
 export default class DiscoveryIndex extends DiscourseRoute {
@@ -13,6 +15,11 @@ export default class DiscoveryIndex extends DiscourseRoute {
   @service siteSettings;
 
   beforeModel(transition) {
+    if (serverSideHomepage()) {
+      DiscourseURL.redirectTo("/");
+      return;
+    }
+
     const url = transition.intent.url;
     const params = url?.split("?", 2)[1];
     let destination = homepageDestination();

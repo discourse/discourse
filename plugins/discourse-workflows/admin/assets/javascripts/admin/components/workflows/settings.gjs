@@ -7,8 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
-import ErrorWorkflowChooser from "./error-workflow-chooser";
-import InUseDialog from "./in-use-dialog";
+import confirmDeleteWorkflow from "../../lib/workflows/confirm-delete-workflow.js";
+import ErrorWorkflowChooser from "./error-workflow-chooser.js";
 
 export default class WorkflowSettings extends Component {
   @service router;
@@ -32,33 +32,9 @@ export default class WorkflowSettings extends Component {
 
   @action
   async deleteWorkflow() {
-    await this.dialog.deleteConfirm({
-      message: i18n("discourse_workflows.delete_confirm", {
-        name: this.args.workflow.name,
-      }),
-      didConfirm: async () => {
-        try {
-          await this.args.workflow.destroyRecord();
-          this.router.transitionTo(
-            "adminPlugins.show.discourse-workflows.index"
-          );
-        } catch (e) {
-          const body = e.jqXHR?.responseJSON;
-          if (body?.type === "workflow_called_by_other_workflows") {
-            this.dialog.alert({
-              title: i18n("discourse_workflows.in_use_title"),
-              bodyComponent: InUseDialog,
-              bodyComponentModel: {
-                description: i18n("discourse_workflows.in_use_description"),
-                workflows: body.referencing_workflows,
-                close: () => this.dialog.cancel(),
-              },
-            });
-          } else {
-            popupAjaxError(e);
-          }
-        }
-      },
+    await confirmDeleteWorkflow(this.dialog, this.args.workflow, {
+      onDeleted: () =>
+        this.router.transitionTo("adminPlugins.show.discourse-workflows.index"),
     });
   }
 
@@ -89,59 +65,59 @@ export default class WorkflowSettings extends Component {
 
   <template>
     <Form
-      @onSet={{this.submitForm}}
-      @data={{this.formData}}
       class="workflows-settings"
+      @data={{this.formData}}
+      @onSet={{this.submitForm}}
       as |form|
     >
       <form.Field
-        @name="errorWorkflowId"
-        @title={{i18n "discourse_workflows.settings.error_workflow"}}
         @description={{i18n
           "discourse_workflows.settings.error_workflow_description"
         }}
-        @type="custom"
         @format="full"
+        @name="errorWorkflowId"
+        @title={{i18n "discourse_workflows.settings.error_workflow"}}
+        @type="custom"
         as |field|
       >
         <field.Control>
           <ErrorWorkflowChooser
             @content={{this.errorWorkflowContent}}
-            @value={{field.value}}
             @onChange={{field.set}}
             @options={{hash
               none="discourse_workflows.settings.error_workflow_none"
               excludeWorkflowId=@workflow.id
             }}
+            @value={{field.value}}
           />
         </field.Control>
       </form.Field>
 
       <form.Field
-        @name="timezone"
-        @title={{i18n "discourse_workflows.settings.timezone"}}
         @description={{i18n
           "discourse_workflows.settings.timezone_description"
         }}
-        @type="custom"
         @format="full"
+        @name="timezone"
+        @title={{i18n "discourse_workflows.settings.timezone"}}
+        @type="custom"
         as |field|
       >
         <field.Control>
-          <TimezoneInput @value={{field.value}} @onChange={{field.set}} />
+          <TimezoneInput @onChange={{field.set}} @value={{field.value}} />
         </field.Control>
       </form.Field>
 
       <form.Emphasis
-        @title={{i18n "discourse_workflows.settings.danger_zone"}}
         @subtitle={{i18n "discourse_workflows.settings.delete_description"}}
+        @title={{i18n "discourse_workflows.settings.danger_zone"}}
         @type="error"
       >
         <form.Actions>
           <form.Button
-            @label="discourse_workflows.delete"
-            @action={{this.deleteWorkflow}}
             class="btn-danger"
+            @action={{this.deleteWorkflow}}
+            @label="discourse_workflows.delete"
           />
         </form.Actions>
       </form.Emphasis>

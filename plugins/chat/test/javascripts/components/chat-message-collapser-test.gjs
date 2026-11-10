@@ -106,7 +106,6 @@ module("Component | chat message collapser youtube", function (hooks) {
   });
 
   test("shows all user written text", async function (assert) {
-    youtubeCooked.youtubeid;
     this.set("cooked", youtubeCooked);
 
     await render(

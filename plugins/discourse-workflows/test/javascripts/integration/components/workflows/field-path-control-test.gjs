@@ -64,12 +64,12 @@ module(
       await render(
         <template>
           <FieldPathControl
+            @connections={{this.connections}}
             @field={{this.field}}
-            @schema={{this.schema}}
             @node={{this.node}}
             @nodes={{this.nodes}}
             @nodeTypes={{this.nodeTypes}}
-            @connections={{this.connections}}
+            @schema={{this.schema}}
             @session={{this.session}}
           />
         </template>
@@ -106,12 +106,12 @@ module(
       await render(
         <template>
           <FieldPathControl
+            @connections={{this.connections}}
             @field={{this.field}}
-            @schema={{this.schema}}
             @node={{this.node}}
             @nodes={{this.nodes}}
             @nodeTypes={{this.nodeTypes}}
-            @connections={{this.connections}}
+            @schema={{this.schema}}
             @session={{this.session}}
           />
         </template>
@@ -141,12 +141,12 @@ module(
       await render(
         <template>
           <FieldPathControl
+            @connections={{this.connections}}
             @field={{this.field}}
-            @schema={{this.schema}}
             @node={{this.node}}
             @nodes={{this.nodes}}
             @nodeTypes={{this.nodeTypes}}
-            @connections={{this.connections}}
+            @schema={{this.schema}}
             @session={{this.session}}
           />
         </template>

@@ -6,9 +6,7 @@ module Styleguide
     skip_before_action :check_xhr
 
     def index
-      if !guardian.in_any_groups?(SiteSetting.styleguide_allowed_groups_map)
-        return raise Discourse::NotFound
-      end
+      return raise Discourse::NotFound if !guardian.can_see_styleguide?
 
       render "default/empty"
     end

@@ -27,11 +27,19 @@ const DOLLAR_VAR_DOCS = {
   },
   $vars: {
     detail: "object",
+    infoKey: "discourse_workflows.expression_docs.vars.global_vars",
+  },
+  $workflow_vars: {
+    detail: "object",
     infoKey: "discourse_workflows.expression_docs.vars.workflow_vars",
   },
   $execution: {
     detail: "object",
     infoKey: "discourse_workflows.expression_docs.vars.execution",
+  },
+  $helpers: {
+    detail: "object",
+    infoKey: "discourse_workflows.expression_docs.vars.helpers",
   },
 };
 
@@ -51,7 +59,14 @@ export function buildDollarVars(scope, sections) {
       boost: (name) => (name === "$json" ? 10 : 5),
     },
     {
-      names: ["$site_settings", "$current_user", "$vars", "$execution"],
+      names: [
+        "$site_settings",
+        "$current_user",
+        "$vars",
+        "$workflow_vars",
+        "$execution",
+        "$helpers",
+      ],
       section: sections.metadata,
     },
   ];

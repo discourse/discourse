@@ -3,6 +3,7 @@
 describe "DiscourseRewind | dismiss" do
   fab!(:user) { Fabricate(:user, created_at: DateTime.parse("2020-01-01")) }
   let(:rewind_page) { PageObjects::Pages::Rewind.new }
+  let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before do
     SiteSetting.discourse_rewind_enabled = true
@@ -14,7 +15,7 @@ describe "DiscourseRewind | dismiss" do
     rewind_page.visit_my_activity
     expect(rewind_page).to have_rewind_notification_active
 
-    rewind_page.open_user_menu
+    user_menu.open
     expect(rewind_page).to have_callout
     rewind_page.click_callout
 
@@ -32,7 +33,7 @@ describe "DiscourseRewind | dismiss" do
     rewind_page.visit_my_activity
     expect(rewind_page).to have_no_rewind_notification_active
 
-    rewind_page.open_user_menu
+    user_menu.open
     expect(rewind_page).to have_no_callout
   end
 

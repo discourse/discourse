@@ -1,6 +1,6 @@
 import { isTesting } from "discourse/lib/environment";
 import I18n, { i18n } from "discourse-i18n";
-import guessDateFormat from "./guess-best-date-format";
+import guessDateFormat from "./guess-best-date-format.js";
 
 export function buildEventPreview(eventContainer) {
   eventContainer.innerHTML = "";

@@ -9,7 +9,7 @@ module DiscourseAi
             {
               name: name,
               description:
-                "Will search topics in the current discourse instance, when rendering always prefer to link to the topics you find",
+                "Searches meta.discourse.org for general Discourse knowledge. Do not use for official Discourse hosting pricing or billing, or for questions about the current site's configuration and content.",
               parameters: [
                 {
                   name: "search_query",

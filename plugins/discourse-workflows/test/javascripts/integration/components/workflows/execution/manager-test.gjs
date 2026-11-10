@@ -22,6 +22,16 @@ class MessageBusStub extends Service {
   }
 }
 
+class WorkflowsNodeTypesStub extends Service {
+  nodeTypes = [];
+
+  load() {}
+
+  findNodeType(identifier) {
+    return identifier === "trigger:topic_created" ? { icon: "plus" } : null;
+  }
+}
+
 module(
   "Integration | Component | Workflows | Execution | ExecutionsManager",
   function (hooks) {
@@ -30,6 +40,11 @@ module(
     hooks.beforeEach(function () {
       this.owner.unregister("service:message-bus");
       this.owner.register("service:message-bus", MessageBusStub);
+      this.owner.unregister("service:workflows-node-types");
+      this.owner.register(
+        "service:workflows-node-types",
+        WorkflowsNodeTypesStub
+      );
       this.clock = fakeTime("2026-08-13T05:00:02Z", "UTC", true);
       this.executionStatus = "running";
       this.requestCount = 0;
@@ -46,6 +61,9 @@ module(
                 workflow_id: 30,
                 workflow_name: "Running workflow",
                 status: this.executionStatus,
+                execution_mode: this.executionMode,
+                trigger: this.trigger,
+                error: this.executionError,
                 run_time_ms: null,
                 started_at: "2026-08-13T05:00:00Z",
                 finished_at: null,
@@ -157,6 +175,46 @@ module(
       assert
         .dom(".d-table__row:first-child .workflows-executions-manager__status")
         .hasText("Pending", "the newer execution is placed first");
+    });
+
+    test("identifies each execution", async function (assert) {
+      this.executionStatus = "error";
+      this.executionMode = "manual";
+      this.executionError = "Something went wrong";
+      this.trigger = { name: "New topic", type: "trigger:topic_created" };
+
+      await render(
+        <template><ExecutionsManager @workflowId={{30}} /></template>
+      );
+      await waitFor(".workflows-executions-manager__status");
+
+      assert
+        .dom(".d-table__overview-link")
+        .hasText("#11473", "the id matches the detail page breadcrumb");
+      assert
+        .dom(".workflows-executions-manager__trigger-name")
+        .hasText("New topic", "the trigger that started the run is shown");
+      assert
+        .dom(".workflows-executions-manager__trigger .d-icon-plus")
+        .exists("the trigger uses its node type icon");
+      assert
+        .dom(".workflows-executions-manager__mode.--manual")
+        .hasText("Manual", "manual runs are labelled");
+      assert
+        .dom(".workflows-executions-manager__error")
+        .hasText("Something went wrong", "the error is shown in the list");
+    });
+
+    test("does not label normal executions", async function (assert) {
+      this.executionMode = "normal";
+
+      await render(
+        <template><ExecutionsManager @workflowId={{30}} /></template>
+      );
+      await waitFor(".workflows-executions-manager__status");
+
+      assert.dom(".workflows-executions-manager__mode").doesNotExist();
+      assert.dom(".workflows-executions-manager__error").doesNotExist();
     });
 
     test("distinguishes queued executions from active processing", async function (assert) {

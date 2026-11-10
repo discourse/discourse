@@ -41,7 +41,7 @@ function mentionLinkFor(code, who) {
   ) {
     return `<a class="mention-group" href="${groupPath(encodeURIComponent(who))}">@${escaped}</a>`;
   }
-  return `<a class="mention" href="${userPath(who)}">@${escaped}</a>`;
+  return `<a class="mention" href="${userPath(encodeURIComponent(who))}">@${escaped}</a>`;
 }
 
 export default class NestedActivityLogItem extends Component {
@@ -72,7 +72,7 @@ export default class NestedActivityLogItem extends Component {
       }}
     >
       {{#if this.isSynthetic}}
-        <span class="nested-activity-log-modal__icon" aria-hidden="true">
+        <span aria-hidden="true" class="nested-activity-log-modal__icon">
           {{dIcon "plus"}}
         </span>
         <div class="nested-activity-log-modal__content">
@@ -90,10 +90,10 @@ export default class NestedActivityLogItem extends Component {
       {{else}}
         <PostSmallAction
           class="nested-activity-log-modal__post"
+          @deletePost={{fn @deletePost @action}}
+          @editPost={{fn @editPost @action}}
           @elementId="nested-activity-log-post-{{@action.id}}"
           @post={{@action}}
-          @editPost={{fn @editPost @action}}
-          @deletePost={{fn @deletePost @action}}
           @recoverPost={{fn @recoverPost @action}}
         />
       {{/if}}

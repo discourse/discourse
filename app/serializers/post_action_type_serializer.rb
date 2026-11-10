@@ -12,6 +12,7 @@ class PostActionTypeSerializer < ApplicationSerializer
     :enabled,
     :applies_to,
     :is_used,
+    :system,
   )
 
   include ConfigurableUrls
@@ -61,6 +62,12 @@ class PostActionTypeSerializer < ApplicationSerializer
   def is_used
     PostAction.exists?(post_action_type_id: object.id) ||
       ReviewableScore.exists?(reviewable_score_type: object.id)
+  end
+
+  def system
+    # Flags serialized here come from registered flag settings rather than the
+    # flags table, so there is no record for the admin UI to edit or delete.
+    true
   end
 
   private

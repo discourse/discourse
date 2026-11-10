@@ -55,6 +55,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
 
   def update
     ::Chat::UpdateThread.call(service_params) do
+      on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_thread) { raise Discourse::InvalidAccess }
@@ -72,6 +73,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
 
   def create
     ::Chat::CreateThread.call(service_params) do
+      on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
       on_success do |thread:|
         render_serialized(
           thread,

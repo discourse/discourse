@@ -60,4 +60,69 @@ module("Integration | Component | AdminPluginConfigPage", function (hooks) {
 
     assert.dom(".admin-plugin-config-page__top-nav-item").exists({ count: 2 });
   });
+
+  test("renders tabs for @plugin when the nav manager has moved on to another plugin", async function (assert) {
+    registerAdminPluginConfigNav("discourse-other-plugin", [
+      {
+        route: "adminPlugins.show.discourse-other-plugin.one",
+        label: "admin.title",
+      },
+      {
+        route: "adminPlugins.show.discourse-other-plugin.two",
+        label: "admin.back_to_forum",
+      },
+    ]);
+    const plugin = new AdminPlugin({
+      id: PLUGIN_ID,
+      name: PLUGIN_ID,
+      humanized_name: "Test plugin",
+    });
+    getOwner(this).lookup("service:admin-plugin-nav-manager").currentPlugin =
+      new AdminPlugin({
+        id: "discourse-other-plugin",
+        name: "discourse-other-plugin",
+      });
+
+    await render(
+      <template>
+        <AdminPluginConfigPage @plugin={{plugin}}>
+          Test content
+        </AdminPluginConfigPage>
+      </template>
+    );
+
+    assert.dom(".d-nav-submenu").doesNotExist();
+  });
+
+  test("links tabs to @plugin explicitly", async function (assert) {
+    registerAdminPluginConfigNav(PLUGIN_ID, [
+      {
+        route: "adminPlugins.show.settings",
+        label: "admin.plugins.change_settings_short",
+      },
+      {
+        route: "adminPlugins.show.discourse-test-plugin.one",
+        label: "admin.title",
+      },
+    ]);
+    const plugin = new AdminPlugin({
+      id: PLUGIN_ID,
+      name: PLUGIN_ID,
+      humanized_name: "Test plugin",
+    });
+    getOwner(this).lookup("service:admin-plugin-nav-manager").currentPlugin =
+      plugin;
+
+    await render(
+      <template>
+        <AdminPluginConfigPage @plugin={{plugin}}>
+          Test content
+        </AdminPluginConfigPage>
+      </template>
+    );
+
+    assert
+      .dom(".admin-plugin-config-page__top-nav-item a")
+      .hasAttribute("href", `/admin/plugins/${PLUGIN_ID}/settings`);
+  });
 });

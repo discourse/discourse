@@ -16,9 +16,6 @@ register_asset "stylesheets/patreon.scss"
 register_svg_icon "fab-patreon"
 register_svg_icon "patreon-new"
 
-# Site setting validators must be loaded before initialize
-require_relative "lib/validators/patreon_login_enabled_validator"
-
 module ::Patreon
   PLUGIN_NAME = "discourse-patreon"
 end
@@ -65,14 +62,8 @@ after_initialize do
 
     if filters.present? && patreon_id.present?
       begin
-        reward_id =
-          Patreon::RewardUser.all.except("0").detect { |_k, v| v.include? patreon_id }&.first
-
-        group_ids = filters.select { |_k, v| v.include?(reward_id) || v.include?("0") }.keys
-
-        Group.where(id: group_ids).each { |group| group.add user }
-
         Patreon::Patron.update_local_user(user, patreon_id, true)
+        Patreon::Patron.sync_groups_by(patreon_id: patreon_id)
       rescue => e
         Rails.logger.warn(
           "Patreon group membership callback failed for new user #{id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
@@ -113,7 +104,8 @@ class ::OmniAuth::Strategies::Patreon < ::OmniAuth::Strategies::OAuth2
   option :client_options,
          site: "https://www.patreon.com",
          authorize_url: "https://www.patreon.com/oauth2/authorize",
-         token_url: "https://api.patreon.com/oauth2/token"
+         token_url: "https://api.patreon.com/oauth2/token",
+         auth_scheme: :request_body
 
   option :authorize_params, response_type: "code"
 
@@ -194,8 +186,12 @@ class Auth::PatreonAuthenticator < Auth::ManagedAuthenticator
     result
   end
 
-  def enabled?
-    SiteSetting.patreon_login_enabled
+  def enable_setting
+    :patreon_login_enabled
+  end
+
+  def required_settings
+    %i[patreon_client_id patreon_client_secret patreon_creator_discourse_username]
   end
 
   def primary_email_verified?(auth_token)

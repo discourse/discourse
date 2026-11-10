@@ -75,16 +75,16 @@ module("Component | PollResultsTabs", function (hooks) {
     await render(
       <template>
         <PollResultsTabs
+          @fetchVoters={{this.fetchVoters}}
+          @isPublic={{this.isPublic}}
+          @isRankedChoice={{this.isRankedChoice}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
-          @isPublic={{this.isPublic}}
-          @isRankedChoice={{this.isRankedChoice}}
           @postId={{this.postId}}
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -110,17 +110,17 @@ module("Component | PollResultsTabs", function (hooks) {
     await render(
       <template>
         <PollResultsTabs
+          @fetchVoters={{this.fetchVoters}}
+          @isPublic={{this.isPublic}}
+          @isRankedChoice={{this.isRankedChoice}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
-          @isPublic={{this.isPublic}}
-          @isRankedChoice={{this.isRankedChoice}}
-          @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
           @postId={{this.postId}}
+          @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -146,17 +146,17 @@ module("Component | PollResultsTabs", function (hooks) {
     await render(
       <template>
         <PollResultsTabs
+          @fetchVoters={{this.fetchVoters}}
+          @isPublic={{this.isPublic}}
+          @isRankedChoice={{this.isRankedChoice}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
-          @isPublic={{this.isPublic}}
-          @isRankedChoice={{this.isRankedChoice}}
-          @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
           @postId={{this.postId}}
+          @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );

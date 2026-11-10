@@ -15,7 +15,7 @@ RSpec.describe ProblemCheck::HcaptchaConfiguration do
     it { expect(check).to be_chill_about_it }
   end
 
-  context "when discourse_captcha_provider siteSetting is HCaptcha" do
+  context "when hCaptcha is enabled and configured as the provider" do
     before do
       SiteSetting.discourse_captcha_enabled = true
       SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::HCAPTCHA
@@ -42,11 +42,12 @@ RSpec.describe ProblemCheck::HcaptchaConfiguration do
         SiteSetting.hcaptcha_secret_key = "just a string"
         SiteSetting.hcaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end
 
-  context "when discourse_captcha_provider siteSetting is HCaptcha" do
+  context "when hCaptcha is configured as the provider but disabled" do
     before { SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::HCAPTCHA }
 
     describe "`hcaptcha_site_key` is not set" do
@@ -70,6 +71,7 @@ RSpec.describe ProblemCheck::HcaptchaConfiguration do
         SiteSetting.hcaptcha_secret_key = "just a string"
         SiteSetting.hcaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end

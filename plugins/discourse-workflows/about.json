@@ -1,0 +1,10 @@
+{
+  "frontend": {
+    "staticModules": true
+  },
+  "tests": {
+    "requiredPlugins": [
+      "boards"
+    ]
+  }
+}

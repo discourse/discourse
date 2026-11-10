@@ -17,7 +17,7 @@ export default class VariableInput extends Component {
       this.workflowsNodeTypes.loadWorkflowVars(),
     ]);
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -31,14 +31,14 @@ export default class VariableInput extends Component {
     >
       {{#if this.Editor}}
         <this.Editor
-          @value={{@value}}
-          @change={{@onChange}}
-          @extensions={{@extensions}}
           @class="workflows-variable-input"
+          @extensions={{@extensions}}
           @lineWrapping={{true}}
+          @onChange={{@onChange}}
+          @onFocusIn={{@onFocusIn}}
+          @onFocusOut={{@onFocusOut}}
           @onSetup={{@onSetup}}
-          @focusIn={{@onFocusIn}}
-          @focusOut={{@onFocusOut}}
+          @value={{@value}}
         />
       {{/if}}
     </div>

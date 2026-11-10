@@ -1,8 +1,8 @@
 import { trustHTML } from "@ember/template";
 import DiscourseMarkdownIt from "discourse-markdown-it";
-import loadPluginFeatures from "./features";
-import MentionsParser from "./mentions-parser";
-import buildOptions from "./options";
+import loadPluginFeatures from "./features.js";
+import MentionsParser from "./mentions-parser.js";
+import buildOptions from "./options.js";
 
 export function buildEngine(options, omitFromDefault) {
   return DiscourseMarkdownIt.withCustomFeatures(
@@ -23,6 +23,11 @@ export function generateCookFunction(options) {
   return (text) => engine.cook(text);
 }
 
+/**
+ * Builds the engine for `options` and returns its link matcher.
+ *
+ * @returns {import("discourse/lib/link-matcher").LinkMatcher}
+ */
 export function generateLinkifyFunction(options) {
   const engine = buildEngine(options);
   return engine.linkify;

@@ -29,9 +29,7 @@ da:
       close: "Luk"
       delete: "Slet"
       edit: "Rediger"
-      back: "Tilbage"
       save: "Gem"
-      apply: "Anvend"
       update_range:
         last_10_days: "Seneste 10 dage"
         last_30_days: "Seneste 30 dage"
@@ -40,8 +38,10 @@ da:
       custom_range_from: "Fra"
       admin:
         name: "Navn"
+        created_by: "Oprettet af"
     discourse_workflows:
       gamification_score:
         username: "Bruger"
         date: "Dato"
         description: "Beskrivelse"
+        category_id: "Kategori"

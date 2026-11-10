@@ -5,6 +5,8 @@
 # Configure sensitive parameters which will be filtered from the log file.
 Rails.application.config.filter_parameters += %i[
   password
+  token
+  verification_code
   pop3_polling_password
   api_key
   s3_secret_access_key

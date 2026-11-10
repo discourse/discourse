@@ -39,7 +39,9 @@ describe "Composer - Event location" do
     composer.create
 
     expect(page).to have_css(".event-location a", text: "RSVP")
-    expect(DiscoursePostEvent::Event.find(topic.first_post.id).location).to eq(markdown_location)
+    expect(DiscourseEvents::Events::Event.find(topic.first_post.id).location).to eq(
+      markdown_location,
+    )
   end
 
   it "shows the link affordance for scheme-less urls, matching what the card links" do

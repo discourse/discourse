@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ChannelErrorModal from "../../../../components/modal/channel-error";
-import EditRuleModal from "../../../../components/modal/edit-rule";
-import TestModal from "../../../../components/modal/test-integration";
+import ChannelErrorModal from "../../../../components/modal/channel-error.gjs";
+import EditRuleModal from "../../../../components/modal/edit-rule.gjs";
+import TestModal from "../../../../components/modal/test-integration.gjs";
 
 export default class DiscourseChatIntegrationProvidersShow extends Controller {
   @service modal;

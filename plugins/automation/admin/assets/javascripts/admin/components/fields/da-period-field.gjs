@@ -7,9 +7,9 @@ import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class PeriodField extends BaseField {
   @tracked interval = 1;
@@ -57,26 +57,26 @@ export default class PeriodField extends BaseField {
 
   <template>
     <div class="field period-field control-group">
-      <DAFieldLabel @label={{@label}} @field={{@field}} />
+      <DAFieldLabel @field={{@field}} @label={{@label}} />
 
       <div class="controls">
         {{this.recurringLabel}}
 
         <Input
-          @type="number"
           defaultValue="1"
-          @value={{this.interval}}
           disabled={{@field.isDisabled}}
           required={{@field.isRequired}}
+          @type="number"
+          @value={{this.interval}}
           {{on "input" this.mutInterval}}
         />
 
         <ComboBox
-          @value={{this.frequency}}
           @content={{this.replacedContent}}
           @onChange={{this.mutFrequency}}
           @options={{hash allowAny=false disabled=@field.isDisabled}}
           @required={{@field.isRequired}}
+          @value={{this.frequency}}
         />
 
         <DAFieldDescription @description={{@description}} />

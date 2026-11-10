@@ -118,7 +118,7 @@ class RandomAssignUtils
     users =
       group
         .users
-        .where(id: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(topic))
+        .where(id: DiscourseAssign::AssignmentPermissions.assignable_user_ids(topic))
         .where.not(
           id:
             User

@@ -196,32 +196,74 @@
   }
 
   &__card {
-    display: flex;
-    flex-direction: column;
+    all: unset; // reset browser button styles
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: auto 1fr;
     align-items: start;
-    text-align: left;
+    gap: 0 var(--space-6);
     width: 100%;
     padding: var(--space-4);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
-    background: var(--secondary);
+    text-align: left;
+    cursor: pointer;
 
-    &:focus-visible,
-    &:hover {
-      outline: 2px solid var(--tertiary);
+    @include viewport.from(sm) {
+      gap: 0 var(--space-8);
+    }
 
-      .predefined-topic-options-modal__title {
-        color: var(--tertiary);
+    &:hover,
+    &:focus-visible {
+      border-color: var(--tertiary);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+
+      > * {
+        opacity: 0.5;
+      }
+
+      &:hover {
+        border-color: var(--primary-low);
       }
     }
   }
 
-  &__title {
-    display: block;
-    font-weight: bold;
+  &__icon {
+    font-size: 2.75em;
+    line-height: 1;
   }
 
-  &__body {
-    max-width: var(--modal-max-width);
+  // Mirrors the topic list's title cell, where the category and excerpt
+  // scale down from the title size.
+  &__content {
+    font-size: var(--d-topic-list-title-font-size);
+  }
+
+  &__title {
+    display: block;
+    font-weight: var(--topic-title-font-weight);
+    line-height: var(--line-height-medium);
+    color: var(--title-color);
+    overflow-wrap: break-word;
+  }
+
+  &__category {
+    display: flex;
+    align-items: center;
+    margin-top: var(--d-topic-list-metadata-top-space);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+  }
+
+  &__description {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--excerpt-color);
+    overflow-wrap: break-word;
   }
 }

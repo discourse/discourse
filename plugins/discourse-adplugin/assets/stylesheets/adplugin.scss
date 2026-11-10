@@ -129,6 +129,11 @@
   margin: 0 auto;
 }
 
+.house-creative.house-above-site-header {
+  margin: 10px 0;
+  text-align: center;
+}
+
 .house-creative.house-post-bottom {
   margin: 0 0 10px 52px;
   clear: both;
@@ -199,6 +204,14 @@
 .adbutler-topic-list-top,
 .adbutler-topic-above-suggested {
   margin: 10px;
+  text-align: center;
+}
+
+.adbutler-above-site-header,
+.adsense-above-site-header,
+.dfp-above-site-header,
+.amazon-above-site-header {
+  margin: 10px 0;
   text-align: center;
 }
 

@@ -455,6 +455,18 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       expect(response.parsed_body["output"]).to eq("hi there")
     end
 
+    it "rejects output in the wrong shape from a tool used as an Ask AI source" do
+      SiteSetting.ai_ask_ai_external_sources = ai_tool.id.to_s
+      ai_tool.update!(script: "function invoke() { return [{ title: 'No link' }]; }")
+
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        [I18n.t("discourse_ai.ask_ai.external_sources.invalid_result", position: 1)],
+      )
+    end
+
     it "returns an error for invalid tool_id" do
       post "/admin/plugins/discourse-ai/ai-tools/-1/test.json",
            params: {

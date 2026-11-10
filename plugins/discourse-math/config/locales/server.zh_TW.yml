@@ -6,4 +6,11 @@
 
 zh_TW:
   site_settings:
-    discourse_math_enabled: "啟動Discourse Math的插件（將會新增特殊的處理過程到$和$$的區塊）"
+    discourse_math_enabled: "啟用 Discourse Math 外掛（將對 $ 和 $$ 區塊進行特殊處理）"
+    discourse_math_provider: "預設數學式轉譯器"
+    discourse_math_enable_latex_delimiters: "啟用 LaTeX 樣式的分隔符號：行內數學式使用 \\(...\\)，區塊數學式使用 \\[...\\]"
+    discourse_math_mathjax_output: "MathJax 輸出格式（僅限 MathJax）"
+    discourse_math_enable_menu: "啟用快顯功能表（僅限 MathJax）"
+    discourse_math_enable_accessibility: "啟用無障礙功能（僅限已啟用選單的 MathJax）"
+    discourse_math_zoom_on_click: "按住 Alt 並點選時放大至 175%（僅限已啟用選單的 MathJax）"
+    discourse_math_enable_asciimath: "啟用 AsciiMath（將對以 % 分隔的輸入進行特殊處理；僅支援 MathJax）"

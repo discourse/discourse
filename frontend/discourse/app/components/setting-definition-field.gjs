@@ -36,21 +36,21 @@ export default class SettingDefinitionField extends Component {
 
   <template>
     <@form.Field
-      @name={{@definition.key}}
-      @title={{@definition.label}}
-      @showTitle={{@showTitle}}
-      @showControlTitle={{@showControlTitle}}
       @description={{this.description}}
-      @placeholder={{@definition.placeholder}}
-      @validation={{this.validation}}
       @disabled={{@disabled}}
-      @type={{this.entry.type}}
       @format={{this.format}}
       @labelFormat={{this.entry.labelFormat}}
+      @name={{@definition.key}}
+      @placeholder={{@definition.placeholder}}
+      @showControlTitle={{@showControlTitle}}
+      @showTitle={{@showTitle}}
+      @title={{@definition.label}}
+      @type={{this.entry.type}}
+      @validation={{this.validation}}
       as |field|
     >
       {{#if this.renderer}}
-        <this.renderer @field={{field}} @definition={{@definition}} />
+        <this.renderer @definition={{@definition}} @field={{field}} />
       {{else}}
         <field.Control placeholder={{field.placeholder}} />
       {{/if}}

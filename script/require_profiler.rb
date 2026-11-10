@@ -78,8 +78,7 @@ module RequireProfiler
       @stack ||= []
       self.stats ||= {}
 
-      stat =
-        self.stats.fetch(path) { |key| self.stats[key] = { calls: 0, time: 0, parent_time: 0 } }
+      stat = stats.fetch(path) { |key| stats[key] = { calls: 0, time: 0, parent_time: 0 } }
 
       @stack << stat
 

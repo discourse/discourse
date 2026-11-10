@@ -1,5 +1,9 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import {
   acceptance,
@@ -115,7 +119,9 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.dom(".d-icon-far-face-smile").exists("empty status icon is shown");
+    assert
+      .dom(".modal-user-status.--default-emoji")
+      .exists("default status emoji is shown");
 
     await pickEmoji(userStatusEmoji);
 
@@ -236,17 +242,20 @@ acceptance("User Status", function (needs) {
     assert.dom(".btn-primary").isDisabled("the save button is disabled");
   });
 
-  test("sets default status emoji automatically after user started inputting  status description", async function (assert) {
+  test("saves the speech balloon emoji when no emoji was picked", async function (assert) {
     this.siteSettings.enable_user_status = true;
-    const defaultStatusEmoji = "speech_balloon";
+
+    pretender.put("/user-status.json", (request) => {
+      assert.step(parsePostData(request.requestBody).emoji);
+      return response({ success: true });
+    });
 
     await visit("/");
     await openUserStatusModal();
     await fillIn(".user-status-description", "some status");
+    await click(".btn-primary");
 
-    assert
-      .dom(`.btn-emoji img.emoji[title=${defaultStatusEmoji}]`)
-      .exists("default status emoji is shown");
+    assert.verifySteps(["speech_balloon"]);
   });
 
   test("shows actual status on the modal after canceling the modal and opening it again", async function (assert) {
@@ -308,7 +317,9 @@ acceptance("User Status", function (needs) {
     await click(".btn.delete-status");
     await openUserStatusModal();
 
-    assert.dom(".d-icon-far-face-smile").exists("empty status icon is shown");
+    assert
+      .dom(".modal-user-status.--default-emoji")
+      .exists("default status emoji is shown");
     assert
       .dom(".user-status-description")
       .hasValue("", "no status description is shown");

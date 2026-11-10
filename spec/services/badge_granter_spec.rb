@@ -154,7 +154,7 @@ RSpec.describe BadgeGranter do
       b.badge_id = Badge::FirstLike
     end
 
-    it "should grant missing badges" do
+    it "grants missing badges" do
       nice_topic = Badge.find(Badge::NiceTopic)
       good_topic = Badge.find(Badge::GoodTopic)
 
@@ -181,7 +181,7 @@ RSpec.describe BadgeGranter do
       expect(good_topic.grant_count).to eq(1)
     end
 
-    it "should grant badges in the user locale" do
+    it "grants badges in the user's locale" do
       SiteSetting.allow_user_locale = true
 
       nice_topic = Badge.find(Badge::NiceTopic)
@@ -377,6 +377,27 @@ RSpec.describe BadgeGranter do
 
       expect(user_badge.granted_at).to eq_time(1.year.ago)
       expect(Notification.where(user:).count).to eq(0)
+    end
+
+    it "suppresses notifications without changing grant side effects" do
+      events =
+        DiscourseEvent.track_events { BadgeGranter.grant(badge, user, suppress_notification: true) }
+
+      expect(UserBadge.exists?(badge:, user:)).to eq(true)
+      expect(badge.reload.grant_count).to eq(1)
+      expect(user.user_stat.reload.distinct_badge_count).to eq(1)
+      expect(Notification.where(user:)).to be_empty
+      expect(events.map { |event| event[:event_name] }).to include(:user_badge_granted)
+    end
+
+    it "does not override existing notification suppression when false" do
+      freeze_time
+      bronze_badge = Fabricate(:badge, badge_type: BadgeType.find(BadgeType::Bronze))
+
+      BadgeGranter.grant(bronze_badge, user, created_at: 1.year.ago, suppress_notification: false)
+
+      expect(UserBadge.exists?(badge: bronze_badge, user:)).to eq(true)
+      expect(Notification.where(user:)).to be_empty
     end
 
     it "handles deleted badge" do

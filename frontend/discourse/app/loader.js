@@ -16,9 +16,9 @@ function dict() {
 //   requirejs: requirejs,
 // };
 
-window.requirejs =
-  window.require =
-  window.requireModule =
+globalThis.requirejs =
+  globalThis.require =
+  globalThis.requireModule =
     function (id) {
       let pending = [];
       let mod = findModule(id, "(require)", pending);
@@ -30,7 +30,7 @@ window.requirejs =
       return mod.module.exports;
     };
 
-window.loader = {
+globalThis.loader = {
   noConflict: function (aliases) {
     // var oldName, newName;
     // for (oldName in aliases) {
@@ -103,8 +103,8 @@ Module.prototype.exports = function () {
     return this.module.exports;
   }
 
-  if (window.loader.wrapModules) {
-    this.callback = window.loader.wrapModules(this.id, this.callback);
+  if (globalThis.loader.wrapModules) {
+    this.callback = globalThis.loader.wrapModules(this.id, this.callback);
   }
 
   this.reify();
@@ -116,7 +116,7 @@ Module.prototype.exports = function () {
   if (!(this.hasExportsAsDep && result === undefined)) {
     this.module.exports = result;
   }
-  if (window.loader.makeDefaultExport) {
+  if (globalThis.loader.makeDefaultExport) {
     this.makeDefaultExport();
   }
   return this.module.exports;
@@ -179,7 +179,7 @@ Module.prototype.findDeps = function (pending) {
 Module.prototype.makeRequire = function () {
   let id = this.id;
   let r = function (dep) {
-    return window.require(resolve(dep, id));
+    return globalThis.require(resolve(dep, id));
   };
   r["default"] = r;
   r.moduleId = id;
@@ -189,7 +189,7 @@ Module.prototype.makeRequire = function () {
   return r;
 };
 
-window.define = function (id, deps, callback) {
+globalThis.define = function (id, deps, callback) {
   let module = registry[id];
 
   // If a module for this id has already been defined and is in any state
@@ -215,7 +215,7 @@ window.define = function (id, deps, callback) {
   }
 };
 
-window.define.exports = function (name, defaultExport) {
+globalThis.define.exports = function (name, defaultExport) {
   let module = registry[name];
 
   // If a module for this name has already been defined and is in any state
@@ -241,9 +241,9 @@ function Alias(id) {
   this.id = id;
 }
 
-window.define.alias = function (id, target) {
+globalThis.define.alias = function (id, target) {
   if (arguments.length === 2) {
-    return window.define(target, new Alias(id));
+    return globalThis.define(target, new Alias(id));
   }
 
   return new Alias(id);
@@ -304,14 +304,17 @@ function has(id) {
   return !!(registry[id] || registry[id + "/index"]);
 }
 
-window.requirejs.entries = window.requirejs._eak_seen = registry;
-window.requirejs.has = has;
-window.requirejs.unsee = function (id) {
+globalThis.requirejs.entries = globalThis.requirejs._eak_seen = registry;
+globalThis.requirejs.has = has;
+globalThis.requirejs.unsee = function (id) {
   findModule(id, "(unsee)", false).unsee();
 };
 
-window.requirejs.clear = function () {
-  window.requirejs.entries = window.requirejs._eak_seen = registry = dict();
+globalThis.requirejs.clear = function () {
+  globalThis.requirejs.entries =
+    globalThis.requirejs._eak_seen =
+    registry =
+      dict();
   seen = dict();
 };
 

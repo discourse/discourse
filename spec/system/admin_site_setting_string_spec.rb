@@ -2,6 +2,7 @@
 
 describe "Admin site setting string" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
   fab!(:admin)
 
   before { sign_in(admin) }

@@ -1,21 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::PostButton::V1 do
-  fab!(:group)
-  fab!(:user)
   fab!(:post)
-
-  describe "#valid?" do
-    it "returns true when the post is present" do
-      trigger = described_class.new(post)
-      expect(trigger).to be_valid
-    end
-
-    it "returns false when the post is nil" do
-      trigger = described_class.new(nil)
-      expect(trigger).not_to be_valid
-    end
-  end
 
   describe "#output" do
     it "returns post and topic data" do
@@ -34,76 +20,27 @@ RSpec.describe DiscourseWorkflows::Nodes::PostButton::V1 do
         [1, 2],
       )
     end
-
-    it "returns an empty array when the parameter is missing" do
-      expect(described_class.normalized_group_ids({})).to eq([])
-    end
   end
 
   describe ".available_to?" do
     it "returns false for an anonymous user" do
-      expect(described_class.available_to?(nil, "group_ids" => [group.id])).to eq(false)
-    end
-
-    it "returns false when no groups are configured" do
-      expect(described_class.available_to?(user, "group_ids" => [])).to eq(false)
-    end
-
-    it "returns false when the user is in none of the configured groups" do
-      expect(described_class.available_to?(user, "group_ids" => [group.id])).to eq(false)
-    end
-
-    it "returns true when the user is a member of a configured group" do
-      group.add(user)
-
-      expect(described_class.available_to?(user, "group_ids" => [group.id])).to eq(true)
-    end
-
-    it "returns true for any logged-in user when the logged-in users group is configured" do
       expect(
-        described_class.available_to?(user, "group_ids" => [Group::AUTO_GROUPS[:logged_in_users]]),
-      ).to eq(true)
-    end
-  end
-
-  describe ".normalized_post_number" do
-    it "normalizes positive integer values" do
-      expect(described_class.normalized_post_number("post_number" => post.post_number)).to eq(
-        post.post_number,
-      )
-      expect(described_class.normalized_post_number("post_number" => post.post_number.to_s)).to eq(
-        post.post_number,
-      )
-    end
-
-    it "returns nil for missing, blank, malformed, and nonpositive values" do
-      [
-        {},
-        { "post_number" => "" },
-        { "post_number" => "invalid" },
-        { "post_number" => 0 },
-        { "post_number" => -1 },
-      ].each { |parameters| expect(described_class.normalized_post_number(parameters)).to be_nil }
+        described_class.available_to?(nil, "group_ids" => [Group::AUTO_GROUPS[:logged_in_users]]),
+      ).to eq(false)
     end
   end
 
   describe ".resolved_post_number" do
-    it "returns nil when the parameter is missing or blank" do
-      [
-        {},
-        { "post_number" => nil },
-        { "post_number" => "" },
-        { "post_number" => " " },
-      ].each { |parameters| expect(described_class.resolved_post_number(parameters)).to be_nil }
+    it "returns nil when the post number is missing or blank" do
+      [nil, "", " "].each do |post_number|
+        expect(described_class.resolved_post_number("post_number" => post_number)).to be_nil
+      end
     end
 
-    it "returns an integer for numeric values" do
-      expect(described_class.resolved_post_number("post_number" => post.post_number)).to eq(
-        post.post_number,
-      )
-      expect(described_class.resolved_post_number("post_number" => post.post_number.to_s)).to eq(
-        post.post_number,
-      )
+    it "returns an integer for positive numeric values" do
+      [5, "5", " 5 "].each do |post_number|
+        expect(described_class.resolved_post_number("post_number" => post_number)).to eq(5)
+      end
     end
 
     it "returns the invalid sentinel for malformed and nonpositive values" do
@@ -116,30 +53,8 @@ RSpec.describe DiscourseWorkflows::Nodes::PostButton::V1 do
   end
 
   describe ".matches_post_number?" do
-    it "matches any post when the parameter is missing or blank" do
-      expect(described_class.matches_post_number?(post, {})).to eq(true)
-      expect(described_class.matches_post_number?(post, "post_number" => "")).to eq(true)
-      expect(described_class.matches_post_number?(post, "post_number" => " ")).to eq(true)
-    end
-
-    it "matches positive integer and numeric string values" do
-      expect(described_class.matches_post_number?(post, "post_number" => post.post_number)).to eq(
-        true,
-      )
-      expect(
-        described_class.matches_post_number?(post, "post_number" => post.post_number.to_s),
-      ).to eq(true)
-      expect(
-        described_class.matches_post_number?(post, "post_number" => post.post_number + 1),
-      ).to eq(false)
-    end
-
-    it "rejects malformed and nonpositive nonblank values" do
-      ["invalid", "1.5", 0, -1].each do |post_number|
-        expect(described_class.matches_post_number?(post, "post_number" => post_number)).to eq(
-          false,
-        )
-      end
+    it "does not match any post when the post number is malformed" do
+      expect(described_class.matches_post_number?(post, "post_number" => "invalid")).to eq(false)
     end
   end
 

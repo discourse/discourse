@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import DPostAccordion from "discourse/ui-kit/d-post-accordion";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import SolvedAccordionItemMetadata from "./solved-accordion-item-metadata";
+import SolvedAccordionItemMetadata from "./solved-accordion-item-metadata.gjs";
 
 const CHARS_PER_LINE = 90;
 
@@ -44,10 +44,10 @@ export default class SolvedAcceptedAnswers extends Component {
 
   <template>
     <DPostAccordion
-      @posts={{this.acceptedAnswers}}
+      class="accepted-answers"
       @decoratorState={{@decoratorState}}
       @linesDisplayed={{this.linesDisplayed}}
-      class="accepted-answers"
+      @posts={{this.acceptedAnswers}}
     >
       <:header>
         <h3 class="accepted-answers__title">

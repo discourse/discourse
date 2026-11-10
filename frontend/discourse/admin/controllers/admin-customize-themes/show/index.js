@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ChangeThemeSourceModal from "discourse/admin/components/modal/change-theme-source";
+import { alertSkippedComponents } from "discourse/admin/components/skipped-theme-components";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -15,7 +16,7 @@ import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import ThemeUploadAddModal from "../../../components/theme-upload-add";
+import ThemeUploadAddModal from "../../../components/theme-upload-add.gjs";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -27,6 +28,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @service toasts;
 
   editRouteName = "adminCustomizeThemes.edit";
+  parentThemesSaved = false;
 
   @computed("model.id")
   get downloadUrl() {
@@ -121,6 +123,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @computed("model.themeable_site_settings")
   get themeSiteSettings() {
     return this.model?.themeable_site_settings;
+  }
+
+  get pendingSettings() {
+    return [
+      ...(this.settings ?? []),
+      ...(this.themeSiteSettings ?? []),
+      ...(this.translations ?? []),
+      this.model.component
+        ? this.relativesSelectorSettingsForComponent
+        : this.relativesSelectorSettingsForTheme,
+    ].filter((setting) => setting.hasPendingChanges);
   }
 
   @computed("model.component", "model.remote_theme")
@@ -234,7 +247,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     });
   }
 
-  @computed("model.childThemesNames.[]")
+  @computed("model.childThemes.[]")
   get relativesSelectorSettingsForTheme() {
     return SiteSetting.create({
       list_type: "compact",
@@ -299,6 +312,29 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     return this.model?.remoteError && !this.updatingRemote;
   }
 
+  @computed("model.user.id", "model.default")
+  get showConvert() {
+    return this.model?.user?.id > 0 && !this.model?.default;
+  }
+
+  get exportAction() {
+    return attachmentDownloadStrategy() === "native"
+      ? undefined
+      : this.exportTheme;
+  }
+
+  get availableLocales() {
+    return this.siteSettings.available_locales;
+  }
+
+  get locale() {
+    return (
+      this.get("model.locale") ||
+      this.userLocale ||
+      this.siteSettings.default_locale
+    );
+  }
+
   editedFieldsForTarget(target) {
     return this.get("model.editedFields").filter(
       (field) => field.target === target
@@ -355,17 +391,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     );
   }
 
-  @computed("model.user.id", "model.default")
-  get showConvert() {
-    return this.model?.user?.id > 0 && !this.model?.default;
-  }
-
-  get exportAction() {
-    return attachmentDownloadStrategy() === "native"
-      ? undefined
-      : this.exportTheme;
-  }
-
   @action
   async exportTheme() {
     try {
@@ -407,8 +432,9 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     this.modal.show(ChangeThemeSourceModal, {
       model: {
         theme: this.model,
-        onSuccess: () => {
+        onSuccess: (result) => {
           this.send("routeRefreshModel");
+          alertSkippedComponents(this.dialog, result);
         },
       },
     });
@@ -429,18 +455,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     let model = this.model;
     model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
     model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
-  }
-
-  get availableLocales() {
-    return this.siteSettings.available_locales;
-  }
-
-  get locale() {
-    return (
-      this.get("model.locale") ||
-      this.userLocale ||
-      this.siteSettings.default_locale
-    );
   }
 
   @action
@@ -538,6 +552,11 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
+  markParentThemesSaved() {
+    this.parentThemesSaved = true;
+  }
+
+  @action
   removeChildTheme(theme) {
     this.model.removeChildTheme(theme).then(() => this.store.findAll("theme"));
   }
@@ -550,7 +569,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       }),
       didConfirm: () => {
         const model = this.model;
-        model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           removeValueFromArray(this.allThemes, model);
 

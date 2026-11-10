@@ -4,10 +4,10 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 const UserIdInput = <template>
   <@Control id={{@field.id}}>
     <EmailGroupUserChooser
-      @value={{@field.value}}
-      @options={{hash maximum=1}}
-      @onChange={{@field.set}}
       name={{@info.identifier}}
+      @onChange={{@field.set}}
+      @options={{hash maximum=1}}
+      @value={{@field.value}}
     />
   </@Control>
 </template>;

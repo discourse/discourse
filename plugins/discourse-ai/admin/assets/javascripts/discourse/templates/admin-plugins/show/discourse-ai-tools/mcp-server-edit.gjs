@@ -1,4 +1,4 @@
-import AiMcpServerEditor from "../../../../../discourse/components/ai-mcp-server-editor";
+import AiMcpServerEditor from "discourse/plugins/discourse-ai/discourse/components/ai-mcp-server-editor";
 
 export default <template>
   <section class="ai-agent-tool-editor__current admin-detail pull-left">

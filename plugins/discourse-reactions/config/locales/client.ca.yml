@@ -11,5 +11,8 @@ ca:
         all: "Tots"
       main_reaction:
         add: "M'agrada aquesta publicació"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Afegit"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

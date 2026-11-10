@@ -1,5 +1,5 @@
-import { readDiscourseImportMode } from "./discourse-import-attribute";
-import rollupVirtualImports from "./rollup-virtual-imports";
+import { readDiscourseImportMode } from "./discourse-import-attribute.js";
+import rollupVirtualImports from "./rollup-virtual-imports.js";
 
 export default function (babel) {
   const { types: t } = babel;
@@ -29,8 +29,18 @@ export default function (babel) {
         // Core imports are required unless explicitly marked optional.
         const optional = readDiscourseImportMode(path) === "optional";
 
-        const lookup = () =>
-          t.callExpression(
+        const lookup = (exportNames = []) => {
+          const args = [
+            t.stringLiteral(moduleName),
+            t.booleanLiteral(optional),
+          ];
+          if (exportNames.length) {
+            args.push(
+              t.arrayExpression(exportNames.map((n) => t.stringLiteral(n)))
+            );
+          }
+
+          return t.callExpression(
             t.memberExpression(
               t.memberExpression(
                 t.identifier("window"),
@@ -38,13 +48,13 @@ export default function (babel) {
               ),
               t.identifier("lookup")
             ),
-            optional
-              ? [t.stringLiteral(moduleName), t.booleanLiteral(true)]
-              : [t.stringLiteral(moduleName)]
+            args
           );
+        };
 
         const replacements = [];
         const properties = [];
+        const exportNames = [];
 
         for (const specifier of path.node.specifiers) {
           if (specifier.type === "ImportNamespaceSpecifier") {
@@ -56,6 +66,7 @@ export default function (babel) {
               specifier.type === "ImportDefaultSpecifier"
                 ? "default"
                 : specifier.imported.name;
+            exportNames.push(exportedName);
             properties.push(
               t.objectProperty(
                 t.identifier(exportedName),
@@ -66,7 +77,9 @@ export default function (babel) {
         }
 
         if (properties.length) {
-          replacements.unshift(declare(t.objectPattern(properties), lookup()));
+          replacements.unshift(
+            declare(t.objectPattern(properties), lookup(exportNames))
+          );
         }
 
         path.replaceWithMultiple(replacements);

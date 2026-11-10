@@ -300,19 +300,45 @@ begin
 
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
-  def get_mem(pid)
-    YAML.safe_load `ruby script/memstats.rb #{pid} --yaml`
+  # Workers are forked from the mold, so most of their pages are shared
+  # copy-on-write. Summing RSS across processes counts every shared page once
+  # per process; PSS divides shared pages by the number of sharers, so the sum
+  # of PSS across the cluster is the true aggregate footprint.
+  memory = {}
+  processes = `ps -p #{pid} -o pid=,args=`.lines
+  processes.each do |line|
+    proc_pid, title = line.strip.split(" ", 2)
+    processes.concat(`pgrep -P #{proc_pid} -fa pitchfork`.lines)
+    role =
+      case title
+      when /worker\[(\d+)\]/
+        "worker[#{$1}]"
+      when /mold/
+        "mold"
+      when /service/
+        "service"
+      when /monitor/
+        "monitor"
+      end
+    next if !role
+
+    stats = YAML.safe_load `ruby script/memstats.rb #{proc_pid} --yaml`
+    memory[role] = { "rss_kb" => stats["rss_kb"], "pss_kb" => stats["pss_kb"] }
   end
 
-  mem = get_mem(pid)
+  worker_rss = memory.filter_map { |k, v| v["rss_kb"] if k.start_with?("worker") }
+  cluster_rss = memory.values.sum { |v| v["rss_kb"] }
+  cluster_pss = memory.values.sum { |v| v["pss_kb"] }
+  memory["worker_avg_rss_kb"] = worker_rss.sum / worker_rss.size if worker_rss.any?
+  memory["cluster_rss_kb"] = cluster_rss
+  memory["cluster_pss_kb"] = cluster_pss
 
   results =
     results.merge(
       "timings" => @timings,
       "ruby-version" => "#{RUBY_DESCRIPTION}",
       "yjit" => RubyVM::YJIT.enabled?,
-      "rss_kb" => mem["rss_kb"],
-      "pss_kb" => mem["pss_kb"],
+      "memory" => memory,
     ).merge(facts)
 
   puts results.to_yaml

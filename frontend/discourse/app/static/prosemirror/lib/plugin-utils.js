@@ -1,7 +1,7 @@
 import { InputRule } from "prosemirror-inputrules";
 import { StepMap } from "prosemirror-transform";
 
-export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
+export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it.js";
 
 export { buildBBCodeAttrs } from "discourse/lib/text";
 
@@ -17,7 +17,7 @@ export { buildBBCodeAttrs } from "discourse/lib/text";
  *
  * @param {RegExp} regexp
  * @param {import("prosemirror-model").MarkType} markType
- * @param {Function} [getAttrs]
+ * @param {Record<string, unknown> | ((match: RegExpMatchArray) => Record<string, unknown> | null | undefined)} [getAttrs]
  *
  * @returns {import("prosemirror-inputrules").InputRule}
  */
@@ -132,6 +132,15 @@ export function atBlockStart(state, view) {
 }
 
 // https://github.com/discourse/discourse/pull/31933#discussion_r2019739410
+/**
+ * Calls `f` for each node in `cur` that is not shared with `old`, descending into
+ * changed nodes. `f` also serves as a `nodesBetween` callback, hence its return type.
+ *
+ * @param {import("prosemirror-model").Node} old
+ * @param {import("prosemirror-model").Node} cur
+ * @param {(node: import("prosemirror-model").Node, pos: number) => boolean | void} f
+ * @param {number} [offset]
+ */
 export function changedDescendants(old, cur, f, offset = 0) {
   const oldSize = old.childCount,
     curSize = cur.childCount;
@@ -162,7 +171,7 @@ export function changedDescendants(old, cur, f, offset = 0) {
  * @param type
  *    {import("prosemirror-model").MarkType} - The type of mark to find.
  * @param attrs
- *    {Object} - Optional attributes to match against the mark.
+ *    {Record<string, unknown>} - Optional attributes to match against the mark.
  * @returns {{ from: number, to: number, mark: import("prosemirror-model").Mark } | undefined}
  */
 export function getMarkRange($pos, type, attrs = {}) {
@@ -215,7 +224,7 @@ export function getMarkRange($pos, type, attrs = {}) {
  * @param type
  *   {import("prosemirror-model").MarkType} - The type of mark to find.
  * @param attrs
- *  {Object} - Optional attributes to match against the mark.
+ *  {Record<string, unknown>} - Optional attributes to match against the mark.
  * @returns {import("prosemirror-model").Mark | undefined}
  */
 export function findMarkOfType(marks, type, attrs = {}) {

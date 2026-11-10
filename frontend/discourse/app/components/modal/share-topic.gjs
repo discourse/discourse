@@ -39,10 +39,67 @@ export default class ShareTopicModal extends Component {
     return this.model?.allowInvites;
   }
 
+  @computed("post.shareUrl", "topic.shareUrl")
+  get url() {
+    if (this.post?.shareUrl) {
+      return getAbsoluteURL(this.post?.shareUrl);
+    } else if (this.topic?.shareUrl) {
+      return getAbsoluteURL(this.topic?.shareUrl);
+    }
+  }
+
+  @computed("post.created_at", "post.wiki", "post.last_wiki_edit")
+  get displayDate() {
+    const date =
+      this.post?.wiki && this.post?.last_wiki_edit
+        ? this.post?.last_wiki_edit
+        : this.post?.created_at;
+    return longDateNoYear(new Date(date));
+  }
+
+  @computed("topic.{isPrivateMessage,invisible,category.read_restricted}")
+  get sources() {
+    const privateContext =
+      this.siteSettings.login_required ||
+      this.topic?.isPrivateMessage ||
+      this.topic?.invisible ||
+      this.topic?.category?.read_restricted;
+
+    return Sharing.activeSources(this.siteSettings.share_links, privateContext);
+  }
+
   didInsertElement() {
     this._showRestrictedGroupWarning();
     this._selectUrl();
     super.didInsertElement();
+  }
+
+  @action
+  share(source) {
+    Sharing.shareSource(source, {
+      title: this.topic.title,
+      url: this.url,
+    });
+  }
+
+  @action
+  inviteUsers() {
+    showCreateInviteModal(this, {
+      model: {
+        inviteToTopic: true,
+        topics: [this.topic],
+        topicId: this.topic.id,
+        topicTitle: this.topic.title,
+      },
+    });
+  }
+
+  @action
+  async replyAsNewTopic() {
+    const post = this.post || (await this.topic.firstPost());
+    const topicController = getOwner(this).lookup("controller:topic");
+    topicController.actions.replyAsNewTopic.call(topicController, post);
+    this.closeModal();
   }
 
   @afterRender
@@ -74,77 +131,18 @@ export default class ShareTopicModal extends Component {
     }
   }
 
-  @computed("post.shareUrl", "topic.shareUrl")
-  get url() {
-    if (this.post?.shareUrl) {
-      return getAbsoluteURL(this.post?.shareUrl);
-    } else if (this.topic?.shareUrl) {
-      return getAbsoluteURL(this.topic?.shareUrl);
-    }
-  }
-
-  @computed("post.created_at", "post.wiki", "post.last_wiki_edit")
-  get displayDate() {
-    const date =
-      this.post?.wiki && this.post?.last_wiki_edit
-        ? this.post?.last_wiki_edit
-        : this.post?.created_at;
-    return longDateNoYear(new Date(date));
-  }
-
-  @computed("topic.{isPrivateMessage,invisible,category.read_restricted}")
-  get sources() {
-    const privateContext =
-      this.siteSettings.login_required ||
-      this.topic?.isPrivateMessage ||
-      this.topic?.invisible ||
-      this.topic?.category?.read_restricted;
-
-    return Sharing.activeSources(this.siteSettings.share_links, privateContext);
-  }
-
-  @action
-  share(source) {
-    Sharing.shareSource(source, {
-      title: this.topic.title,
-      url: this.url,
-    });
-  }
-
-  @action
-  inviteUsers() {
-    showCreateInviteModal(this, {
-      model: {
-        inviteToTopic: true,
-        topics: [this.topic],
-        topicId: this.topic.id,
-        topicTitle: this.topic.title,
-      },
-    });
-  }
-
-  @action
-  replyAsNewTopic() {
-    const postStream = this.topic.postStream;
-    const postId = this.post?.id || postStream.findPostIdForPostNumber(1);
-    const post = postStream.findLoadedPost(postId);
-    const topicController = getOwner(this).lookup("controller:topic");
-    topicController.actions.replyAsNewTopic.call(topicController, post);
-    this.closeModal();
-  }
-
   <template>
     <DModal
+      class="share-topic-modal"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+      @subtitle={{if this.post this.displayDate}}
       @title={{if
         this.post
         (i18n "post.share.title" post_number=this.post.post_number)
         (i18n "topic.share.title")
       }}
-      @subtitle={{if this.post this.displayDate}}
-      @closeModal={{@closeModal}}
-      @flash={{this.flash}}
-      @flashType={{this.flashType}}
-      class="share-topic-modal"
     >
       <form>
         <div class="input-group invite-link">
@@ -157,50 +155,50 @@ export default class ShareTopicModal extends Component {
           </label>
           <div class="link-share-container">
             <Input
+              class="invite-link"
               id="invite-link"
               name="invite-link"
-              class="invite-link"
-              @value={{this.url}}
               readonly={{true}}
               size="200"
+              @value={{this.url}}
             />
-            <DCopyButton @selector="input.invite-link" @ariaLabel="share.url" />
+            <DCopyButton @ariaLabel="share.url" @selector="input.invite-link" />
           </div>
         </div>
 
         <div class="link-share-actions">
           <div class="sources">
             {{#each this.sources as |source|}}
-              <ShareSource @source={{source}} @action={{this.share}} />
+              <ShareSource @action={{this.share}} @source={{source}} />
             {{/each}}
 
             {{#if this.allowInvites}}
               <DButton
-                @label="topic.share.invite_users"
-                @icon="user-plus"
-                @action={{this.inviteUsers}}
                 class="btn-default invite"
+                @action={{this.inviteUsers}}
+                @icon="user-plus"
+                @label="topic.share.invite_users"
               />
             {{/if}}
 
             {{#if this.topic.details.can_reply_as_new_topic}}
               {{#if this.topic.isPrivateMessage}}
                 <DButton
-                  @action={{this.replyAsNewTopic}}
-                  @icon="plus"
-                  @ariaLabel="post.reply_as_new_private_message"
-                  @title="post.reply_as_new_private_message"
-                  @label="user.new_private_message"
                   class="btn-default new-topic"
+                  @action={{this.replyAsNewTopic}}
+                  @ariaLabel="post.reply_as_new_private_message"
+                  @icon="plus"
+                  @label="user.new_private_message"
+                  @title="post.reply_as_new_private_message"
                 />
               {{else}}
                 <DButton
-                  @action={{this.replyAsNewTopic}}
-                  @icon="plus"
-                  @ariaLabel="post.reply_as_new_topic"
-                  @title="post.reply_as_new_topic"
-                  @label="topic.create"
                   class="btn-default new-topic"
+                  @action={{this.replyAsNewTopic}}
+                  @ariaLabel="post.reply_as_new_topic"
+                  @icon="plus"
+                  @label="topic.create"
+                  @title="post.reply_as_new_topic"
                 />
               {{/if}}
             {{/if}}

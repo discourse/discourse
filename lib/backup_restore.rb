@@ -65,7 +65,7 @@ module BackupRestore
     MessageBus.backlog(LOGS_CHANNEL, id).map { |m| m.data }
   end
 
-  def self.current_version
+  def self.current_database_version
     ActiveRecord::Migrator.current_version
   end
 

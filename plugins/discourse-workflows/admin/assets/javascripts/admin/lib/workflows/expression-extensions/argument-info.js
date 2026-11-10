@@ -1,4 +1,4 @@
-import { lookupWorkflowMethodDoc, walkScope } from "../expression-context";
+import { lookupWorkflowMethodDoc, walkScope } from "../expression-context.js";
 
 export function buildArgumentInfo(
   { cmAutocomplete, cmLanguage, cmState, cmView, utils },

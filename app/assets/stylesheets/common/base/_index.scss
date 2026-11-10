@@ -44,6 +44,8 @@
 @import "reorder-categories";
 @import "review";
 @import "reviewables";
+@import "dsa-classification";
+@import "dsa-notice";
 @import "revise-and-reject-post-reviewable";
 @import "rtl";
 @import "search";
@@ -56,6 +58,7 @@
 @import "sidebar-more-section-links";
 @import "sidebar-section";
 @import "sidebar-section-link";
+@import "sidebar-user-nav";
 @import "static-login";
 @import "tagging";
 @import "tag-settings";
@@ -69,3 +72,4 @@
 @import "user-badges";
 @import "user-tips";
 @import "embed-mode";
+@import "_mcp";

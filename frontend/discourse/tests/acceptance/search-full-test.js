@@ -5,6 +5,7 @@ import {
   SEARCH_TYPE_DEFAULT,
   SEARCH_TYPE_USERS,
 } from "discourse/controllers/full-page-search";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance, selectDate } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -118,6 +119,61 @@ acceptance("Search - Full Page", function (needs) {
     await click(".search-cta");
 
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
+  });
+
+  test("starting a new topic from no results opens a fresh draft", async function (assert) {
+    pretender.get("/search", () =>
+      response({
+        grouped_search_result: { term: "none", can_create_topic: true },
+      })
+    );
+
+    await visit("/search?q=none");
+    await click(".no-results-suggestion a");
+
+    assert
+      .dom(".composer-action-create-topic")
+      .exists("opens the composer in new topic mode");
+    const composerModel = this.owner.lookup("service:composer").model;
+    assert.true(
+      /^new_topic_\d+$/.test(composerModel.draftKey),
+      "uses a unique draft key"
+    );
+    assert.strictEqual(
+      composerModel.draftSequence,
+      0,
+      "starts a fresh draft sequence"
+    );
+  });
+
+  test("unknown search types fall back to post results", async function (assert) {
+    await visit("/search?q=consectetur&search_type=unavailable_type");
+
+    assert
+      .dom(".fps-topic")
+      .exists({ count: 1 }, "shows indexed results for a stale search URL");
+    assert
+      .dom('.search-types__type[data-search-type="topics_posts"]')
+      .hasClass("active", "shows that the post search type is in effect");
+  });
+
+  test("a URL change to both the term and the type searches the new term", async function (assert) {
+    await visit(`/search?q=dev&search_type=${SEARCH_TYPE_USERS}`);
+    await visit("/search?q=consectetur");
+
+    assert.dom(".search-query").hasValue("consectetur", "shows the new term");
+    assert
+      .dom(".fps-topic")
+      .exists({ count: 1 }, "shows results for the new term");
+  });
+
+  test("picking a type after the URL drops the term keeps what was typed", async function (assert) {
+    await visit("/search?q=dev");
+    await visit("/search");
+    await fillIn(".search-query", "consectetur");
+    await click(`.search-types__type[data-search-type="${SEARCH_TYPE_USERS}"]`);
+
+    assert.dom(".search-query").hasValue("consectetur");
   });
 
   test("search for personal messages", async function (assert) {
@@ -545,14 +601,11 @@ acceptance("Search - Full Page", function (needs) {
   test("search for users", async function (assert) {
     await visit("/search");
 
-    const typeSelector = selectKit(".search-bar .select-kit#search-type");
-
     await fillIn(".search-query", "admin");
     assert.dom(".fps-user-item").doesNotExist("has no user results");
 
     await click(".advanced-filters__toggle");
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_USERS);
+    await click(`.search-types__type[data-search-type="${SEARCH_TYPE_USERS}"]`);
 
     assert.dom(".search-filters").doesNotExist("has no filters");
 
@@ -560,8 +613,9 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.dom(".fps-user-item").exists({ count: 1 }, "has one user result");
 
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_DEFAULT}"]`
+    );
 
     assert
       .dom(".search-filters")
@@ -573,25 +627,62 @@ acceptance("Search - Full Page", function (needs) {
     await visit("/search");
 
     await fillIn(".search-query", "none");
-    const typeSelector = selectKit(".search-bar .select-kit#search-type");
-
     assert.dom(".fps-tag-item").doesNotExist("has no category/tag results");
 
     await click(".advanced-filters__toggle");
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_CATS_TAGS);
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_CATS_TAGS}"]`
+    );
     await click(".search-cta");
 
     assert.dom(".search-filters").doesNotExist("has no filters");
     assert.dom(".fps-tag-item").exists({ count: 4 }, "has four tag results");
 
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_DEFAULT}"]`
+    );
 
     assert
       .dom(".search-filters")
       .exists("returning to topic/posts shows filters");
     assert.dom(".fps-tag-item").doesNotExist("has no tag results");
+  });
+
+  test("the field can be cleared without leaving the page", async function (assert) {
+    await visit("/search?q=dev");
+
+    assert
+      .dom(".search-bar .clear-search")
+      .exists("the field offers a way out");
+
+    await click(".search-bar .clear-search");
+
+    assert.dom("input.search-query").hasValue("", "the term is cleared");
+    assert.dom("input.search-query").isFocused("with the caret back in it");
+    assert
+      .dom(".search-bar .clear-search")
+      .doesNotExist("and nothing left to clear");
+  });
+
+  test("picking a type with an empty field puts the caret in it", async function (assert) {
+    await visit("/search");
+
+    await click(`.search-types__type[data-search-type="${SEARCH_TYPE_USERS}"]`);
+
+    assert
+      .dom("input.search-query")
+      .isFocused("with nothing typed, the type is the start of a search");
+
+    await fillIn(".search-query", "admin");
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_DEFAULT}"]`
+    );
+
+    assert
+      .dom("input.search-query")
+      .isNotFocused(
+        "but a term already typed is not interrupted by the choice"
+      );
   });
 
   test("filters expand/collapse as expected", async function (assert) {

@@ -6,18 +6,6 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import UserControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/user-control";
 
-class TestField {
-  @tracked value;
-
-  constructor(value) {
-    this.value = value;
-  }
-
-  set(newValue) {
-    this.value = newValue;
-  }
-}
-
 module("Integration | Component | Workflows | UserControl", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -33,7 +21,7 @@ module("Integration | Component | Workflows | UserControl", function (hooks) {
   });
 
   test("stores one username by default", async function (assert) {
-    this.field = new TestField("");
+    this.field = tracked("");
 
     await render(
       <template>
@@ -50,7 +38,7 @@ module("Integration | Component | Workflows | UserControl", function (hooks) {
   });
 
   test("stores all selected usernames when configured as multiple", async function (assert) {
-    this.field = new TestField([]);
+    this.field = tracked([]);
     this.schema = { ui: { multiple: true } };
 
     await render(

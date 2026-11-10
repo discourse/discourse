@@ -7,7 +7,6 @@ import { trustHTML } from "@ember/template";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import { userPath } from "discourse/lib/url";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
@@ -108,10 +107,10 @@ export default class PostListItem extends Component {
         {{#if @bulkSelectEnabled}}
           <div class="post-list-item__bulk-select">
             <input
-              type="checkbox"
               checked={{this.isSelected}}
-              {{on "click" this.toggleSelection}}
               class="bulk-select-checkbox"
+              type="checkbox"
+              {{on "click" this.toggleSelection}}
             />
           </div>
         {{/if}}
@@ -122,9 +121,9 @@ export default class PostListItem extends Component {
           </div>
         {{else}}
           <a
-            href={{userPath this.user.username}}
-            data-user-card={{this.user.username}}
             class="avatar-link"
+            data-user-card={{this.user.username}}
+            href={{userPath this.user.username}}
           >
             <div class="avatar-wrapper">
               {{dAvatar
@@ -138,14 +137,14 @@ export default class PostListItem extends Component {
         {{/if}}
 
         <PostListItemDetails
+          @isDraft={{this.isDraft}}
           @post={{@post}}
+          @resumeDraft={{@resumeDraft}}
+          @showUserInfo={{@showUserInfo}}
           @titleAriaLabel={{@titleAriaLabel}}
           @titlePath={{@titlePath}}
           @urlPath={{@urlPath}}
           @user={{this.user}}
-          @showUserInfo={{@showUserInfo}}
-          @isDraft={{this.isDraft}}
-          @resumeDraft={{@resumeDraft}}
         />
 
         {{#unless @post.draftType}}
@@ -155,16 +154,16 @@ export default class PostListItem extends Component {
         {{#if @post.editableDraft}}
           <div class="user-stream-item-draft-actions">
             <DButton
+              class="btn-default resume-draft"
               @action={{fn @resumeDraft @post}}
               @icon="pencil"
               @title="drafts.resume"
-              class="btn-default resume-draft"
             />
             <DButton
+              class="btn-danger remove-draft"
               @action={{fn @removeDraft @post}}
               @icon="trash-can"
               @title="drafts.remove"
-              class="btn-danger remove-draft"
             />
           </div>
         {{/if}}
@@ -175,14 +174,14 @@ export default class PostListItem extends Component {
       {{yield to="abovePostItemExcerpt"}}
 
       <div
-        data-topic-id={{@post.topic_id}}
-        data-post-id={{this.postId}}
-        data-user-id={{@post.user_id}}
         class="excerpt"
+        data-post-id={{this.postId}}
+        data-topic-id={{@post.topic_id}}
+        data-user-id={{@post.user_id}}
       >
         <DDecoratedHtml
-          @html={{trustHTML (or @post.expandedExcerpt @post.excerpt)}}
           @className="cooked"
+          @html={{trustHTML (or @post.expandedExcerpt @post.excerpt)}}
         />
       </div>
 

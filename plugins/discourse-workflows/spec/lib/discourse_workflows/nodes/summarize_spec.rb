@@ -108,6 +108,35 @@ RSpec.describe DiscourseWorkflows::Nodes::Summarize::V1 do
 
       expect(json(result)).to eq([{ "topic_id" => 7, "count" => 1 }])
     end
+
+    it "writes colliding dotted group keys under their full path" do
+      input = [{ "json" => { "topic" => { "id" => 7 }, "user" => { "id" => 3 } } }]
+      config = {
+        "fields_to_split_by" => "topic.id, user.id",
+        "fields_to_summarize" => aggregations({ "aggregation" => "count" }),
+      }
+
+      result = execute(input, config)
+
+      expect(json(result)).to eq([{ "topic_id" => 7, "user_id" => 3, "count" => 1 }])
+      expect(json(result).first).to match_node_output_schema(described_class, configuration: config)
+    end
+
+    it "names colliding derived aggregates after their full path" do
+      input = [{ "json" => { "topic" => { "id" => 7 }, "user" => { "id" => 3 } } }]
+      config = {
+        "fields_to_summarize" =>
+          aggregations(
+            { "aggregation" => "count", "field" => "topic.id" },
+            { "aggregation" => "count", "field" => "user.id" },
+          ),
+      }
+
+      result = execute(input, config)
+
+      expect(json(result)).to eq([{ "count_topic_id" => 1, "count_user_id" => 1 }])
+      expect(json(result).first).to match_node_output_schema(described_class, configuration: config)
+    end
   end
 
   describe "collect" do
@@ -330,10 +359,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Summarize::V1 do
   end
 
   describe ".output_schemas" do
-    it "names the editor-side resolver so both sides derive the same keys" do
-      expect(described_class.output_schema_resolver).to eq("summarize")
-    end
-
     it "derives properties from the configured aggregations and group keys" do
       schema =
         described_class.output_schemas(

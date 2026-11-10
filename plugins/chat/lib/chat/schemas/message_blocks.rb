@@ -146,6 +146,101 @@ module Chat
       additionalProperties: false,
     }
 
-    MessageBlocks = { type: "array", maxItems: 5, items: { oneOf: [ActionsV1, InformativeV1] } }
+    ConfirmationV1 = {
+      type: "object",
+      properties: {
+        **ActionsV1[:properties],
+        type: {
+          type: "string",
+          enum: ["confirmation"],
+        },
+        title: {
+          type: "string",
+          maxLength: 1000,
+        },
+        description_label: {
+          type: "string",
+          maxLength: 255,
+        },
+        show_description: {
+          type: "boolean",
+        },
+        question: {
+          type: "string",
+          maxLength: 1000,
+        },
+        status: {
+          type: "string",
+          maxLength: 1000,
+        },
+        error: {
+          type: "string",
+          maxLength: 1000,
+        },
+        changes: {
+          type: "array",
+          maxItems: 20,
+          items: {
+            type: "object",
+            properties: {
+              label: {
+                type: "string",
+                maxLength: 255,
+              },
+              before: {
+                type: "string",
+                maxLength: Confirmation::VALUE_MAX_LENGTH,
+              },
+              after: {
+                type: "string",
+                maxLength: Confirmation::VALUE_MAX_LENGTH,
+              },
+              before_color: {
+                type: "string",
+                pattern: "^[0-9a-fA-F]{6}$",
+              },
+              after_color: {
+                type: "string",
+                pattern: "^[0-9a-fA-F]{6}$",
+              },
+            },
+            required: %w[label before after],
+            additionalProperties: false,
+          },
+        },
+        parameters: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              label: {
+                type: "string",
+                maxLength: 255,
+              },
+              value: {
+                type: "string",
+                maxLength: Confirmation::VALUE_MAX_LENGTH,
+              },
+              color: {
+                type: "string",
+                pattern: "^[0-9a-fA-F]{6}$",
+              },
+            },
+            required: %w[label value],
+            additionalProperties: false,
+          },
+        },
+      },
+      required: %w[schema_version type title question parameters elements],
+      additionalProperties: false,
+    }
+
+    MessageBlocks = {
+      type: "array",
+      maxItems: 5,
+      items: {
+        oneOf: [ActionsV1, InformativeV1, ConfirmationV1],
+      },
+    }
   end
 end

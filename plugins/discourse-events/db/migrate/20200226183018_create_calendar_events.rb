@@ -35,7 +35,9 @@ class CreateCalendarEvents < ActiveRecord::Migration[5.2]
       # this is not ideal we should be using SQL here but this will work around bad schema
       ActiveRecord::Base.connection.query_cache.clear
       Post.reset_column_information # rubocop:disable Discourse/NoResetColumnInformationInMigrations
-      Post.where(topic_id: calendar_topic_ids).each { |post| CalendarEvent.update(post) }
+      Post
+        .where(topic_id: calendar_topic_ids)
+        .each { |post| DiscourseEvents::Calendar::Event.update(post) }
 
       execute "DELETE FROM post_custom_fields WHERE name = 'calendar-details' OR name = 'calendar-holidays'"
     rescue => e

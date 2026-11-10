@@ -3,7 +3,6 @@ import { LinkTo } from "@ember/routing";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import slice from "discourse/helpers/slice";
-import { gt } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -44,13 +43,13 @@ const SENT_FILTERS = [
 
 export default <template>
   <EmailLogsList
-    @status="sent"
-    @logType="sent"
     @ccAddressDisplayThreshold={{CC_ADDRESS_DISPLAY_THRESHOLD}}
-    @headers={{SENT_HEADERS}}
-    @filters={{SENT_FILTERS}}
     {{! empty alignment placeholder}}
     @extraFilterCells={{array (hash)}}
+    @filters={{SENT_FILTERS}}
+    @headers={{SENT_HEADERS}}
+    @logType="sent"
+    @status="sent"
   >
     <:default as |emailLog ccThreshold sortWithAddressFilter|>
       <tr class="sent-email-item" data-test-email-log-row-id={{emailLog.id}}>
@@ -58,7 +57,7 @@ export default <template>
         <td class="sent-email-username">
           {{#if emailLog.user}}
             <span class="email-logs-user">
-              <LinkTo @route="adminUser" @model={{emailLog.user}}>
+              <LinkTo @model={{emailLog.user}} @route="adminUser">
                 {{dAvatar emailLog.user imageSize="tiny"}}
                 {{emailLog.user.username}}
               </LinkTo>
@@ -85,10 +84,10 @@ export default <template>
                 <a href="mailto:{{cc}}" title="CC">{{cc}}</a>
               {{/each}}
               <DTooltip
-                @placement="right-start"
                 @arrow={{true}}
                 @identifier="email-log-cc-addresses"
                 @interactive={{true}}
+                @placement="right-start"
               >
                 <:trigger>
                   {{i18n "admin.email.logs.email_addresses.see_more"}}
@@ -115,8 +114,8 @@ export default <template>
         <td class="sent-email-type">{{emailLog.email_type}}</td>
         <td class="sent-email-reply-key">
           <span
-            title={{emailLog.reply_key}}
             class="reply-key"
+            title={{emailLog.reply_key}}
           >{{emailLog.reply_key}}</span>
         </td>
         <td class="sent-email-post-link-with-smtp-response">

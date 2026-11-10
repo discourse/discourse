@@ -1,5 +1,9 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import pretender, {
+  middlewareRateLimit,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Service | screen-track", function (hooks) {
   setupTest(hooks);
@@ -27,6 +31,89 @@ module("Unit | Service | screen-track", function (hooks) {
       4,
       "caches highest read post number for second topic"
     );
+  });
+
+  test("keeps re-queuing timings once the failure delays are exhausted", async function (assert) {
+    const tracker = this.owner.lookup("service:screen-track");
+    pretender.post("/topics/timings", () => response(500, {}));
+
+    tracker.consolidateTimings({ 1: 10 }, 10, 1);
+
+    for (let attempt = 0; attempt < 6; attempt++) {
+      tracker._blockSendingToServerTill = null;
+      await tracker.sendNextConsolidatedTiming();
+    }
+
+    assert.deepEqual(
+      tracker._consolidatedTimings,
+      [{ timings: { 1: 10 }, topicTime: 10, topicId: 1 }],
+      "the read timings are never dropped"
+    );
+  });
+
+  test("waits the advertised Retry-After before sending timings again", async function (assert) {
+    const tracker = this.owner.lookup("service:screen-track");
+    pretender.post("/topics/timings", () => middlewareRateLimit(60));
+
+    tracker.consolidateTimings({ 1: 10 }, 10, 1);
+    const before = Date.now();
+    await tracker.sendNextConsolidatedTiming();
+
+    assert.true(
+      tracker._blockSendingToServerTill - before >= 60000,
+      "the server's Retry-After beats the local backoff ladder"
+    );
+  });
+
+  test("does not track a deleted topic", function (assert) {
+    const tracker = this.owner.lookup("service:screen-track");
+
+    tracker.start(1, {
+      get() {
+        return { deleted: true };
+      },
+    });
+
+    assert.strictEqual(
+      tracker._topicId,
+      undefined,
+      "deleted topic tracking is not started"
+    );
+  });
+
+  test("does not track a post in a deleted topic", function (assert) {
+    const tracker = this.owner.lookup("service:screen-track");
+
+    tracker.start(1, {
+      get(property) {
+        return property === "topic.deleted" ? true : undefined;
+      },
+    });
+
+    assert.strictEqual(
+      tracker._topicId,
+      undefined,
+      "post tracking in a deleted topic is not started"
+    );
+  });
+
+  test("stops tracking when entering a deleted topic", function (assert) {
+    const tracker = this.owner.lookup("service:screen-track");
+    const liveTopicController = {
+      get() {
+        return undefined;
+      },
+    };
+
+    tracker.start(1, liveTopicController);
+    tracker.start(2, {
+      get(property) {
+        return property === "model.deleted";
+      },
+    });
+
+    assert.strictEqual(tracker._topicId, null, "tracking is stopped");
+    assert.strictEqual(tracker._interval, null, "tracking interval is cleared");
   });
 
   test("appEvent topic:timings-sent is triggered after posting consolidated timings", async function (assert) {

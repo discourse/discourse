@@ -2,12 +2,49 @@
 
 RSpec.describe Chat::AutoLeaveChannels do
   describe ".call" do
-    subject(:result) { described_class.call(params: { event: :generic_event }) }
+    subject(:result) { described_class.call(params:) }
 
+    let(:params) { { event: :generic_event } }
     let!(:previous_events) { DiscourseEvent.events.dup }
 
     before { DiscourseEvent.events.clear }
     after { previous_events.each { |event, handlers| DiscourseEvent.events[event] = handlers } }
+
+    context "with logged-in category permissions" do
+      fab!(:user) { Fabricate(:user, trust_level: 1) }
+
+      let(:params) { { event: :generic_event, user_id: user.id } }
+
+      before { SiteSetting.chat_enabled = true }
+
+      shared_examples "retaining memberships with logged in posting access" do |enabled:|
+        it "retains only memberships with posting access regardless of granular permissions #{enabled}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+          channels =
+            %i[readonly create_post full].map do |permission|
+              category = Fabricate(:category, permissions: { logged_in_users: permission })
+              channel = Fabricate(:chat_channel, chatable: category)
+              Fabricate(:user_chat_channel_membership, user:, chat_channel: channel)
+              channel
+            end
+
+          expect(result).to run_successfully
+
+          expect(user.user_chat_channel_memberships.pluck(:chat_channel_id)).to contain_exactly(
+            channels[1].id,
+            channels[2].id,
+          )
+        end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "retaining memberships with logged in posting access", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "retaining memberships with logged in posting access", enabled: true
+      end
+    end
 
     context "when chat is disabled" do
       before { SiteSetting.chat_enabled = false }
@@ -111,6 +148,7 @@ RSpec.describe Chat::AutoLeaveChannels do
 
           context "with another category/channel/user" do
             let(:params) { { event: :generic_event } }
+
             fab!(:user_2) { Fabricate(:user, trust_level: 1) }
             fab!(:category_2) { Fabricate(:private_category, group:) }
             fab!(:chat_channel_2) { Fabricate(:chat_channel, chatable: category_2) }

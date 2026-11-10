@@ -203,7 +203,7 @@ months:
     observed: to_weekday_if_weekend(date)
   11:
   - name: Election Day
-    regions: [us_il, us_la, us_ny]
+    regions: [us_il, us_la, us_ny, us_ri, us_va]
     mday: 3
   - name: Veterans Day
     regions: [us]

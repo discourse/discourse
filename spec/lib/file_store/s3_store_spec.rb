@@ -15,11 +15,51 @@ RSpec.describe FileStore::S3Store do
   fab!(:optimized_image)
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
+
   fab!(:upload) { Fabricate(:upload, sha1: Digest::SHA1.hexdigest("secret image string")) }
 
   before do
     setup_s3
     SiteSetting.s3_region = "us-west-1"
+  end
+
+  describe "#download_file" do
+    it "propagates single-request download failures without leaving a file behind" do
+      helper = S3Helper.new("s3-upload-bucket", "", client: client)
+      store = described_class.new(helper)
+      client.stub_responses(:get_object, "NoSuchKey")
+
+      Dir.mktmpdir do |directory|
+        path = File.join(directory, "download")
+
+        expect { store.download_file(upload, path, mode: "single_request") }.to raise_error(
+          RuntimeError,
+          /Failed to download/,
+        )
+        expect(Dir.children(directory)).to be_empty
+        expect(client.api_requests.map { |request| request[:operation_name] }).to include(
+          :get_object,
+        )
+      end
+    end
+
+    it "keeps automatic downloads by default" do
+      helper = S3Helper.new("s3-upload-bucket", "", client: client)
+      store = described_class.new(helper)
+      client.stub_responses(:head_object, content_length: 13)
+      client.stub_responses(:get_object, body: "file contents", content_length: 13)
+
+      Dir.mktmpdir do |directory|
+        path = File.join(directory, "download")
+        store.download_file(upload, path)
+
+        expect(File.read(path)).to eq("file contents")
+        expect(client.api_requests.map { |request| request[:operation_name] }).to include(
+          :head_object,
+          :get_object,
+        )
+      end
+    end
   end
 
   describe "uploading to s3" do
@@ -1068,7 +1108,7 @@ RSpec.describe FileStore::S3Store do
   describe "#create_multipart" do
     before { store.s3_helper.stub_client_responses! }
 
-    it "should create a multipart upload with the ACL parameter set to private canned ACL when `s3_use_acls` site setting is enabled" do
+    it "creates a multipart upload with a private canned ACL when `s3_use_acls` is enabled" do
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
       create_multipart_request =
@@ -1081,7 +1121,7 @@ RSpec.describe FileStore::S3Store do
       )
     end
 
-    it "should create a multipart upload with the ACL parameter set to nil when `s3_use_acls` site setting is disabled" do
+    it "creates a multipart upload without an ACL when `s3_use_acls` is disabled" do
       SiteSetting.s3_use_acls = false
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
@@ -1093,7 +1133,7 @@ RSpec.describe FileStore::S3Store do
       expect(create_multipart_request[:context].params[:acl]).to eq(nil)
     end
 
-    it "should create a multipart upload with the tagging parameter set to visibility tags when `s3_enable_access_control_tags` site setting is enabled" do
+    it "creates a multipart upload with visibility tags when access-control tags are enabled" do
       SiteSetting.s3_enable_access_control_tags = true
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 

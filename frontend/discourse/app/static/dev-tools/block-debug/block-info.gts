@@ -6,8 +6,8 @@ import type {
   BlockEntry,
 } from "discourse/lib/blocks/-internals/types";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import ArgsTable from "../shared/args-table";
-import ConditionsTree from "./conditions-tree";
+import ArgsTable from "../shared/args-table.gjs";
+import ConditionsTree from "./conditions-tree.gts";
 
 interface BlockInfoSignature {
   Args: {
@@ -115,15 +115,16 @@ export default class BlockInfo extends Component<BlockInfoSignature> {
   <template>
     <div class="block-debug-info --rendered" data-block-name={{@blockName}}>
       <DTooltip
+        @hoverGracePeriod={{150}}
         @identifier="block-debug-info"
         @interactive={{true}}
-        @placement="bottom-start"
         @maxWidth={{500}}
+        @placement="bottom-start"
         @triggers={{hash
           mobile=(array "click")
           desktop=(array "hover" "click")
         }}
-        @untriggers={{hash mobile=(array "click") desktop=(array "mouseleave")}}
+        @untriggers={{hash mobile=(array "click") desktop=(array "hover")}}
       >
         <:trigger>
           <span class="block-debug-badge">

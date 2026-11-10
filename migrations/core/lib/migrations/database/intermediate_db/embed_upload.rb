@@ -10,6 +10,7 @@ module Migrations
       module EmbedUpload
         SQL = <<~SQL
           INSERT INTO embed_uploads (
+            external_host,
             original_markdown,
             owner_id,
             owner_type,
@@ -17,13 +18,14 @@ module Migrations
             upload_id
           )
           VALUES (
-            ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_uploads` record in the IntermediateDB.
         #
+        # @param external_host       [String, nil]
         # @param original_markdown   [String, nil]
         # @param owner_id            [Integer, String]
         # @param owner_type          [Integer]
@@ -35,6 +37,7 @@ module Migrations
         #
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         def self.create(
+          external_host: nil,
           original_markdown: nil,
           owner_id:,
           owner_type:,
@@ -43,6 +46,7 @@ module Migrations
         )
           Migrations::Database::IntermediateDB.insert(
             SQL,
+            external_host,
             original_markdown,
             owner_id,
             owner_type,

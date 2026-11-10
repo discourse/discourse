@@ -41,6 +41,16 @@ RSpec.describe UserApiKey::DeviceAuth::CreateRequest do
       expect(grant).to be_unregistered_client
     end
 
+    context "when a scope is repeated" do
+      let(:params) { super().merge(scopes: "read,notifications,read") }
+
+      it "stores it only once in the grant" do
+        grant = UserApiKey::DeviceAuth::GrantStore.load(result[:device_request][:device_code])
+
+        expect(grant.scopes).to eq(%w[read notifications])
+      end
+    end
+
     context "with missing required parameters" do
       let(:params) { { scopes: "read", client_id: "device-client" } }
 

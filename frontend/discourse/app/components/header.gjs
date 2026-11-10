@@ -9,14 +9,13 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import { and, eq, not, or } from "discourse/truth-helpers";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
-import AuthButtons from "./header/auth-buttons";
-import Contents from "./header/contents";
-import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
-import Icons from "./header/icons";
-import SearchMenuWrapper from "./header/search-menu-wrapper";
-import UserMenuWrapper from "./header/user-menu-wrapper";
+import AuthButtons from "./header/auth-buttons.gjs";
+import Contents from "./header/contents.gjs";
+import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper.gjs";
+import Icons from "./header/icons.gjs";
+import SearchMenuWrapper from "./header/search-menu-wrapper.gjs";
+import UserMenuWrapper from "./header/user-menu-wrapper.gjs";
 
 export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";
@@ -145,7 +144,7 @@ export default class GlimmerHeader extends Component {
 
   @action
   toggleSearchMenu(_, value) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (!this.site.can_search || this.isDestroying) {
       return;
     }
 
@@ -175,7 +174,6 @@ export default class GlimmerHeader extends Component {
     this.search.visible = value ?? !this.search.visible;
     if (!this.search.visible) {
       this.search.highlightTerm = "";
-      this.search.inTopicContext = false;
       document.getElementById(SEARCH_BUTTON_ID)?.focus();
     }
   }
@@ -228,12 +226,12 @@ export default class GlimmerHeader extends Component {
     <header class="d-header" {{this.appEventsListeners}}>
       <div class="wrap">
         <Contents
+          @narrowDesktop={{this.site.narrowDesktopView}}
+          @showSidebar={{@showSidebar}}
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleNavigationMenu={{this.toggleNavigationMenu}}
-          @showSidebar={{@showSidebar}}
           @topicInfo={{@topicInfo}}
           @topicInfoVisible={{@topicInfoVisible}}
-          @narrowDesktop={{this.site.narrowDesktopView}}
         >
           {{! WARNING: Do not modify the order of `div.header-buttons` and the `<Icons />` component.
           These components have DAG plugin APIs for the header, and changing their order will break
@@ -242,10 +240,10 @@ export default class GlimmerHeader extends Component {
             {{#each (headerButtons.resolve) as |entry|}}
               {{#if (and (eq entry.key "auth") (not this.currentUser))}}
                 <AuthButtons
-                  @topicInfoVisible={{@topicInfoVisible}}
+                  @canSignUp={{@canSignUp}}
                   @showCreateAccount={{@showCreateAccount}}
                   @showLogin={{@showLogin}}
-                  @canSignUp={{@canSignUp}}
+                  @topicInfoVisible={{@topicInfoVisible}}
                 />
               {{else if entry.value}}
                 <entry.value />
@@ -257,18 +255,20 @@ export default class GlimmerHeader extends Component {
             (not (and this.siteSettings.login_required (not this.currentUser)))
           }}
             <Icons
-              @sidebarEnabled={{@sidebarEnabled}}
-              @toggleSearchMenu={{this.toggleSearchMenu}}
-              @toggleNavigationMenu={{this.toggleNavigationMenu}}
-              @toggleUserMenu={{this.toggleUserMenu}}
-              @topicInfoVisible={{@topicInfoVisible}}
               @narrowDesktop={{this.site.narrowDesktopView}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
+              @sidebarEnabled={{@sidebarEnabled}}
+              @toggleNavigationMenu={{this.toggleNavigationMenu}}
+              @toggleSearchMenu={{this.toggleSearchMenu}}
+              @toggleUserMenu={{this.toggleUserMenu}}
+              @topicInfoVisible={{@topicInfoVisible}}
             />
           {{/if}}
 
           {{#if this.search.visible}}
             <SearchMenuWrapper
+              @closeSearchMenu={{this.toggleSearchMenu}}
+              @searchInputId="icon-search-input"
               {{this.handleFocus}}
               {{dCloseOnClickOutside
                 this.toggleSearchMenu
@@ -277,13 +277,11 @@ export default class GlimmerHeader extends Component {
                   secondaryTargetSelector=".search-dropdown"
                 )
               }}
-              @closeSearchMenu={{this.toggleSearchMenu}}
-              @searchInputId="icon-search-input"
             />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
-              @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @sidebarEnabled={{@sidebarEnabled}}
+              @toggleNavigationMenu={{this.toggleNavigationMenu}}
               {{this.handleFocus}}
             />
           {{else if this.header.userVisible}}

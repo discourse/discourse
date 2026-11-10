@@ -45,7 +45,6 @@ module LocalizedFancyTopicTitleMixin
   end
 
   def translated_title
-    ContentLocalization.show_translated_topic?(_topic, scope) &&
-      _topic.get_localization&.fancy_title.presence
+    ContentLocalization.translated_topic_fancy_title(_topic, scope)
   end
 end

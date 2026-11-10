@@ -13,6 +13,7 @@
   <%- end %>
 
   <%= yield(:no_ember_head) %>
+  <%= markdown_alternate_link_tag %>
 
   <%- if allow_plugins? %>
     <%= build_plugin_html 'server:before-head-close' %>

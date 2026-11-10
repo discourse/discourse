@@ -86,6 +86,27 @@ describe Chat::Api::CurrentUserChannelsController do
         expect(response.parsed_body["public_channels"][0]["id"]).to eq(channel.id)
       end
 
+      it "escapes legacy upload filenames in last-message excerpts" do
+        channel = Fabricate(:category_channel)
+        channel.add(current_user)
+        upload =
+          Fabricate(
+            :upload,
+            original_filename: "<svg data-chat-channel-list-filename-xss='true'></svg>.png",
+          )
+        message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+        message.update!(excerpt: upload.original_filename)
+        channel.update!(last_message: message)
+
+        get "/chat/api/me/channels"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["public_channels"][0].dig("last_message", "excerpt")).to eq(
+          "&lt;svg data-chat-channel-list-filename-xss=&#39;true&#39;&gt;&lt;/svg&gt;.png",
+        )
+        expect(response.body).not_to include(upload.original_filename)
+      end
+
       context "with multiple direct messages" do
         fab!(:user_1, :user)
         fab!(:user_2, :user)

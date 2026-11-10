@@ -93,6 +93,29 @@ export default class Blocks extends Service {
   #lastKnownRegistrySize = 0;
 
   /*
+   * Debug Methods
+   */
+
+  /**
+   * Returns whether the debug visual overlay is enabled.
+   *
+   * Container blocks can use this to conditionally render ghost blocks
+   * for children they choose not to display.
+   *
+   * @returns True if the visual overlay (ghost blocks) is enabled.
+   *
+   * @example
+   * ```javascript
+   * if (this.blocks.showGhosts) {
+   *   // Render ghost blocks for hidden children
+   * }
+   * ```
+   */
+  get showGhosts(): boolean {
+    return debugHooks.isGhostBlocksEnabled;
+  }
+
+  /*
    * Block Outlet Methods
    */
 
@@ -258,57 +281,6 @@ export default class Blocks extends Service {
     return !isBlockFactory(entry);
   }
 
-  /*
-   * Condition Evaluation Methods
-   */
-
-  /**
-   * Lazily initializes condition instances from the registry.
-   *
-   * This deferred initialization pattern handles the timing issue where:
-   * 1. Service is instantiated early (e.g., during plugin API usage)
-   * 2. Core conditions are registered later by the pre-initializer
-   * 3. Service needs to pick up the newly registered conditions
-   *
-   * Called at the start of validate(), evaluate(), and other condition methods.
-   */
-  #lazilyInitializeConditionInstances(): void {
-    const entries = getAllConditionTypeEntries();
-
-    // Only rebuild if registry has grown since last check
-    if (entries.length === this.#lastKnownRegistrySize) {
-      return;
-    }
-
-    // Create instances for any new condition types
-    for (const [type, ConditionClass] of entries) {
-      if (!this.#conditionInstances.has(type)) {
-        this.#createConditionInstance(type, ConditionClass);
-      }
-    }
-
-    this.#lastKnownRegistrySize = entries.length;
-  }
-
-  /**
-   * Creates an instance of a condition class and stores it in the instances map.
-   * Sets the owner on the instance to enable service injection.
-   *
-   * @param type - The condition type name.
-   * @param ConditionClass - The condition class.
-   */
-  #createConditionInstance(
-    type: string,
-    ConditionClass: typeof BlockCondition
-  ): void {
-    const instance = new ConditionClass();
-    // This service instance is always Ember-owned (services are only ever
-    // instantiated through the DI container), so `getOwner(this)` is never
-    // undefined here.
-    setOwner(instance, getOwner(this)!);
-    this.#conditionInstances.set(type, instance);
-  }
-
   /**
    * Validates condition specs at block registration time.
    * Recursively validates nested conditions in `any` and `not` combinators.
@@ -362,25 +334,53 @@ export default class Blocks extends Service {
   }
 
   /*
-   * Debug Methods
+   * Condition Evaluation Methods
    */
 
   /**
-   * Returns whether the debug visual overlay is enabled.
+   * Lazily initializes condition instances from the registry.
    *
-   * Container blocks can use this to conditionally render ghost blocks
-   * for children they choose not to display.
+   * This deferred initialization pattern handles the timing issue where:
+   * 1. Service is instantiated early (e.g., during plugin API usage)
+   * 2. Core conditions are registered later by the pre-initializer
+   * 3. Service needs to pick up the newly registered conditions
    *
-   * @returns True if the visual overlay (ghost blocks) is enabled.
-   *
-   * @example
-   * ```javascript
-   * if (this.blocks.showGhosts) {
-   *   // Render ghost blocks for hidden children
-   * }
-   * ```
+   * Called at the start of validate(), evaluate(), and other condition methods.
    */
-  get showGhosts(): boolean {
-    return debugHooks.isGhostBlocksEnabled;
+  #lazilyInitializeConditionInstances(): void {
+    const entries = getAllConditionTypeEntries();
+
+    // Only rebuild if registry has grown since last check
+    if (entries.length === this.#lastKnownRegistrySize) {
+      return;
+    }
+
+    // Create instances for any new condition types
+    for (const [type, ConditionClass] of entries) {
+      if (!this.#conditionInstances.has(type)) {
+        this.#createConditionInstance(type, ConditionClass);
+      }
+    }
+
+    this.#lastKnownRegistrySize = entries.length;
+  }
+
+  /**
+   * Creates an instance of a condition class and stores it in the instances map.
+   * Sets the owner on the instance to enable service injection.
+   *
+   * @param type - The condition type name.
+   * @param ConditionClass - The condition class.
+   */
+  #createConditionInstance(
+    type: string,
+    ConditionClass: typeof BlockCondition
+  ): void {
+    const instance = new ConditionClass();
+    // This service instance is always Ember-owned (services are only ever
+    // instantiated through the DI container), so `getOwner(this)` is never
+    // undefined here.
+    setOwner(instance, getOwner(this)!);
+    this.#conditionInstances.set(type, instance);
   }
 }

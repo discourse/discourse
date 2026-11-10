@@ -36,18 +36,14 @@ module DiscourseRewind
         return FakeData if should_use_fake_data?
 
         best_posts =
-          Post
-            .public_posts
-            .visible
-            .joins(topic: :category)
-            .where(user_id: user.id)
-            .where(posts: { created_at: date, deleted_at: nil })
+          self
+            .class
+            .publicly_visible_posts
+            .where(user_id: user.id, created_at: date)
             .where("post_number > 1")
-            .where("NOT categories.read_restricted")
-            .where.not(post_type: Post.types[:whisper])
-            .order("like_count DESC NULLS LAST, posts.created_at ASC")
+            .order("posts.like_count DESC NULLS LAST, posts.created_at ASC")
             .limit(3)
-            .select(:post_number, :topic_id, :like_count, :reply_count, :raw, :cooked)
+            .select(:post_number, :topic_id, :like_count, :reply_count, :cooked)
             .map do |post|
               {
                 post_number: post.post_number,
@@ -60,6 +56,22 @@ module DiscourseRewind
             end
 
         { data: best_posts, identifier: "best-posts" }
+      end
+
+      def self.filter_for_viewer(report, guardian:, **)
+        topic_ids = guardian.can_see_topic_ids(topic_ids: report[:data].pluck(:topic_id))
+        eligible_post_keys =
+          publicly_visible_posts.where(
+            topic_id: topic_ids,
+            post_number: report[:data].pluck(:post_number),
+          ).pluck(:topic_id, :post_number)
+
+        report.merge(
+          data:
+            report[:data].select do |post|
+              [post[:topic_id], post[:post_number]].in?(eligible_post_keys)
+            end,
+        )
       end
     end
   end

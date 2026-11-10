@@ -4,8 +4,8 @@ import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
 import CategoryRow from "discourse/select-kit/components/category-row";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
-import SelectedChoiceCategory from "./selected-choice-category";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
+import SelectedChoiceCategory from "./selected-choice-category.gjs";
 
 @classNames("category-selector")
 @selectKitOptions({
@@ -17,7 +17,10 @@ import SelectedChoiceCategory from "./selected-choice-category";
 })
 @pluginApiIdentifiers(["category-selector"])
 export default class CategorySelector extends MultiSelectComponent {
+  /** @type {Array<import("discourse/models/category").default | { id: number, name: string }> | null | undefined} */
   categories = null;
+
+  /** @type {import("discourse/models/category").default[] | null | undefined} */
   blockedCategories = null;
 
   init() {

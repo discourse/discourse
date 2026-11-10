@@ -5,6 +5,12 @@ module DiscourseWorkflows
     module Group
       class V1 < NodeType
         OPERATIONS = %w[add remove get check_membership].freeze
+        GROUP_ACTION_SCHEMA =
+          Schema.merge(
+            Schema::GROUP_SCHEMA,
+            Schema::USER_SCHEMA,
+            Schema.document("changed" => { "type" => "boolean" }),
+          )
 
         description(
           name: "action:group",
@@ -21,7 +27,7 @@ module DiscourseWorkflows
             {
               variants: [
                 {
-                  schema: Schema.merge(Schema::GROUP_SCHEMA, Schema::BASIC_USER_SCHEMA),
+                  schema: GROUP_ACTION_SCHEMA,
                   display_options: {
                     show: {
                       operation: %w[add remove],
@@ -78,14 +84,21 @@ module DiscourseWorkflows
                 filterable: true,
               },
             },
-            actor_username: {
-              type: :string,
+            set_primary_group: {
+              type: :boolean,
               required: false,
-              default: "system",
+              default: false,
               ui: {
-                control: :actor,
+                control: :boolean,
+                expression: true,
+              },
+              display_options: {
+                show: {
+                  operation: ["add"],
+                },
               },
             },
+            **actor_property,
           },
         )
 
@@ -107,6 +120,8 @@ module DiscourseWorkflows
                 "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "add"),
                 "username" => exec_ctx.get_node_parameter("username", item_index),
                 "group_id" => exec_ctx.get_node_parameter("group_id", item_index),
+                "set_primary_group" =>
+                  exec_ctx.get_node_parameter("set_primary_group", item_index, default: false),
               }
 
               if config["operation"] == "check_membership"
@@ -126,9 +141,8 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           guardian = actor.guardian
           guardian.ensure_can_see_group!(group)
-          serialized_group = group_data(group, guardian)
 
-          return { group: serialized_group } if config["operation"] == "get"
+          return { group: serialize_group(group, guardian) } if config["operation"] == "get"
 
           guardian.ensure_can_edit_group!(group)
 
@@ -138,14 +152,28 @@ module DiscourseWorkflows
 
           case config["operation"]
           when "remove"
-            group.remove(user)
+            changed = group.remove(user)
             logger.log_remove_user_from_group(user)
           else
-            group.add(user)
+            changed = GroupManager.new(group).add([user.id]).present?
             logger.log_add_user_to_group(user)
+            changed = set_primary_group(user, group, guardian) || changed if config[
+              "set_primary_group"
+            ]
           end
 
-          { group: serialized_group, user: user_data(user, guardian) }
+          {
+            group: serialize_group(group.reload, guardian),
+            user: serialize_user(user.reload, guardian:),
+            changed:,
+          }
+        end
+
+        def set_primary_group(user, group, guardian)
+          guardian.ensure_can_change_primary_group!(user, group)
+          return false if user.primary_group_id == group.id
+
+          user.update!(primary_group_id: group.id)
         end
 
         def check_membership(exec_ctx, item, config, item_index)
@@ -169,12 +197,8 @@ module DiscourseWorkflows
           )
         end
 
-        def group_data(group, guardian)
+        def serialize_group(group, guardian)
           serialize_record(group, WebHookGroupSerializer, scope: guardian)
-        end
-
-        def user_data(user, guardian)
-          serialize_record(user, BasicUserSerializer, scope: guardian)
         end
       end
     end

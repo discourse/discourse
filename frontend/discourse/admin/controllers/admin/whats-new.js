@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 
 export default class AdminWhatsNewController extends Controller {
+  /** @type {string | null} */
   @tracked scrollTo = null;
   queryParams = ["scrollTo"];
 

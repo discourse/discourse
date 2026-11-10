@@ -2,6 +2,8 @@
 
 require "sidekiq/web"
 require "mini_scheduler/web"
+require_relative "../lib/markdown_endpoint/accept_header"
+require_relative "../lib/markdown_endpoint/request_constraint"
 
 # The following constants have been replaced with `RouteFormat` and are deprecated.
 USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined?(USERNAME_ROUTE_FORMAT)
@@ -10,6 +12,61 @@ BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined?(BACKUP_ROUTE_
 Discourse::Application.routes.draw do
   def patch(*)
   end # Disable PATCH requests
+
+  constraints MarkdownEndpoint::RequestConstraint.new do
+    get "/",
+        to: "list#latest",
+        format: false,
+        defaults: {
+          format: :md,
+        },
+        constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+
+    scope format: false,
+          constraints: {
+            topic_id: /\d+/,
+            post_number: /\d+/,
+            tag_id: /\d+/,
+            category_slug_path_with_id: %r{.+/\d+},
+          } do
+      {
+        "latest" => "list#latest",
+        "new" => "list#new",
+        "unread" => "list#unread",
+        "hot" => "list#hot",
+        "top" => "list#top",
+        "categories" => "categories#index",
+        "tags" => "tags#index",
+        "c/*category_slug_path_with_id" => "list#category_default",
+        "tag/:tag_slug/:tag_id" => "tags#show",
+        "tag/:tag_name" => "tags#show",
+        "t/:topic_id/:post_number" => "topics#show",
+        "t/:topic_id" => "topics#show",
+        "t/:slug/:topic_id/:post_number" => "topics#show",
+        "t/:slug/:topic_id" => "topics#show",
+      }.each do |path, action|
+        # Require the format so HTML URL generation cannot select a Markdown route.
+        get "#{path}.:format", to: action, constraints: { format: /md/ }
+        get path,
+            to: action,
+            defaults: {
+              format: :md,
+            },
+            constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+      end
+    end
+  end
+
+  # Defined outside the format-constrained scope: with `format: false` that
+  # scope's constraint would apply to the Accept header and reject media loads.
+  # The extension stays inside `path` because optional dotted segments after a
+  # glob make route recognition cubic in the number of dots.
+  #
+  # NOTE: secure-media-uploads is the old form, all new URLs generated for
+  # secure uploads will be secure-uploads, this is left in for backwards
+  # compat without needing to rebake all posts for each site.
+  get "secure-media-uploads/*path" => "uploads#_show_secure_deprecated", :format => false
+  get "secure-uploads/*path" => "uploads#show_secure", :format => false
 
   scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     relative_url_root =
@@ -124,6 +181,11 @@ Discourse::Application.routes.draw do
         collection { put "automatic_membership_count" => "groups#automatic_membership_count" }
       end
       resources :groups, only: [:destroy], constraints: AdminConstraint.new
+
+      get "users/bots/new" => "users#new_bot"
+      get "users/bots/username_suggestion" => "users#bot_username_suggestion",
+          :constraints => AdminConstraint.new
+      post "users/bots" => "users#create_bot", :constraints => AdminConstraint.new
 
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
@@ -334,15 +396,15 @@ Discourse::Application.routes.draw do
       put "dashboard/sections/:section_id/settings/:setting_key" =>
             "dashboard#update_section_settings",
           :constraints => AdminConstraint.new
-      get "dashboard/general" => "dashboard#general"
-      get "dashboard/moderation" => "dashboard#moderation"
-      get "dashboard/security" => "dashboard#security"
-      get "dashboard/reports" => "dashboard#reports"
       post "dashboard/reports/bulk" => "dashboard#bulk_reports"
       get "dashboard/reports/available" => "dashboard#available_reports",
           :constraints => AdminConstraint.new
       put "dashboard/reports/layout" => "dashboard#update_reports_section",
           :constraints => AdminConstraint.new
+      post "dashboard/reports/mount" => "dashboard#mount_report",
+           :constraints => AdminConstraint.new
+      delete "dashboard/reports/mount" => "dashboard#unmount_report",
+             :constraints => AdminConstraint.new
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"
@@ -394,7 +456,6 @@ Discourse::Application.routes.draw do
           put "readonly" => "backups#readonly"
           get "upload" => "backups#check_backup_chunk"
           post "upload" => "backups#upload_backup_chunk"
-          get "upload_url" => "backups#create_upload_url"
         end
       end
 
@@ -425,6 +486,8 @@ Discourse::Application.routes.draw do
         get "content/posts-and-topics" => "site_settings#index"
         get "content/stats-and-thresholds" => "site_settings#index"
         get "developer" => "site_settings#index"
+        get "mcp" => "site_settings#index"
+        get "mcp/*path" => "site_settings#index"
         get "files" => "site_settings#index"
         get "interface" => "site_settings#index"
         get "legal" => "site_settings#index"
@@ -478,6 +541,7 @@ Discourse::Application.routes.draw do
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
           put "reorder/:direction" => "flags#reorder"
+          put "move"
           member { get "/" => "flags#edit" }
         end
 
@@ -565,6 +629,10 @@ Discourse::Application.routes.draw do
     get "review/settings" => "reviewables#settings"
     get "review/user-menu-list" => "reviewables#user_menu_list", :format => :json
     put "review/settings" => "reviewables#settings"
+    put "review/:reviewable_id/dsa-classification" => "dsa_statements#classify",
+        :constraints => {
+          reviewable_id: /\d+/,
+        }
     put "review/:reviewable_id/perform/:action_id" => "reviewables#perform",
         :constraints => {
           reviewable_id: /\d+/,
@@ -601,6 +669,7 @@ Discourse::Application.routes.draw do
     post "session/email-login/:token" => "session#email_login"
     post "session/login-code" => "session#create_login_code"
     post "session/login-code/verify" => "session#verify_login_code"
+    post "session/password-reset-code/verify" => "session#redeem_password_reset_code"
     get "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     post "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     get "session/2fa" => "session#second_factor_auth_show"
@@ -626,6 +695,10 @@ Discourse::Application.routes.draw do
     get "password-reset" => "static#show", :id => "password_reset"
     get "privacy" => "static#show", :id => "privacy", :as => "privacy"
     get "tos" => "static#show", :id => "tos", :as => "tos"
+    get "dsa/report-illegal-content" => "dsa_notices#index"
+    post "dsa/report-illegal-content" => "dsa_notices#create"
+    post "dsa/report-illegal-content/verify-email" => "dsa_notices#verify_email"
+    post "dsa/report-illegal-content/verify-code" => "dsa_notices#verify_code"
     get "faq" => "static#show", :id => "faq"
     %w[guidelines rules conduct].each do |guidelines_alias|
       get guidelines_alias => "static#show", :id => "guidelines", :as => guidelines_alias
@@ -651,6 +724,8 @@ Discourse::Application.routes.draw do
           get "check_email"
         end
       end
+
+      get "#{root_path}/random-username" => "users#generate_random_username"
 
       get "#{root_path}/trusted-session" => "users#trusted_session"
       post "#{root_path}/confirm-session" => "users#confirm_session"
@@ -691,7 +766,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/search/users" => "users#search_users"
 
       get(
-        { "#{root_path}/account-created/" => "users#account_created" }.merge(
+        **{ "#{root_path}/account-created/" => "users#account_created" }.merge(
           index == 1 ? { as: :users_account_created } : { as: :old_account_created },
         ),
       )
@@ -699,7 +774,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/account-created/resent" => "users#account_created"
       get "#{root_path}/account-created/edit-email" => "users#account_created"
       get(
-        { "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
+        **{ "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
           index == 1 ? { as: :password_reset_token } : {},
         ),
       )
@@ -713,7 +788,7 @@ Discourse::Application.routes.draw do
             token: /[0-9a-f]+/,
           }
       put(
-        {
+        **{
           "#{root_path}/activate-account/:token" => "users#perform_account_activation",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -728,7 +803,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
-        {
+        **{
           "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -777,7 +852,7 @@ Discourse::Application.routes.draw do
             format: :json,
           }
       get(
-        {
+        **{
           "#{root_path}/:username" => "users#show",
           :constraints => {
             username: RouteFormat.username,
@@ -1187,18 +1262,6 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    # NOTE: secure-media-uploads is the old form, all new URLs generated for
-    # secure uploads will be secure-uploads, this is left in for backwards
-    # compat without needing to rebake all posts for each site.
-    get "secure-media-uploads/*path(.:extension)" => "uploads#_show_secure_deprecated",
-        :constraints => {
-          extension: /[a-z0-9\._]+/i,
-        }
-    get "secure-uploads/*path(.:extension)" => "uploads#show_secure",
-        :constraints => {
-          extension: /[a-z0-9\._]+/i,
-        }
-
     get "posts" => "posts#latest", :id => "latest_posts", :constraints => { format: /(json|rss)/ }
     get "private-posts" => "posts#latest",
         :id => "private_posts",
@@ -1302,6 +1365,14 @@ Discourse::Application.routes.draw do
       get "revisions/:revision" => "posts#revisions", :constraints => { revision: /\d+/ }
       put "revisions/:revision/hide" => "posts#hide_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
+      put "revisions/:revision/unlist" => "posts#unlist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
+      put "revisions/:revision/relist" => "posts#relist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
       delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
       get "permanently_delete_check" => "posts#permanently_delete_check",
@@ -1372,6 +1443,7 @@ Discourse::Application.routes.draw do
     get "/c", to: redirect(relative_url_root + "categories")
 
     resources :categories, only: %i[index create update destroy]
+    post "categories/evaluate_permissions" => "categories#evaluate_permissions"
     post "categories/:id/convert_nested_replies" => "categories#convert_nested_replies"
     post "categories/reorder" => "categories#reorder"
     get "categories/types" => "categories#types"
@@ -1550,6 +1622,7 @@ Discourse::Application.routes.draw do
 
     get "embed/topics" => "embed#topics"
     get "embed/comments" => "embed#comments"
+    get "embed/status" => "embed#status"
     get "embed/count" => "embed#count"
     get "embed/info" => "embed#info"
 
@@ -1888,30 +1961,80 @@ Discourse::Application.routes.draw do
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
     get "/tag_groups/filter/search" => "tag_groups#search", :format => :json
 
-    Discourse.filters.each do |filter|
-      root to: "list##{filter}",
-           constraints: HomePageConstraint.new("#{filter}"),
-           as: "list_#{filter}"
+    # Allow the controller to fall back to HTML when Markdown loses Accept negotiation.
+    scope constraints: { format: %r{(json|html|markdown|\*/\*)} } do
+      Discourse.filters.each do |filter|
+        root to: "list##{filter}",
+             constraints: HomePageConstraint.new("#{filter}"),
+             as: "list_#{filter}"
+      end
+
+      DiscoursePluginRegistry._raw_homepage_options.each do |registration|
+        option = registration[:value]
+        get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+      end
+
+      # special case for categories
+      root to: "categories#index",
+           constraints: HomePageConstraint.new("categories"),
+           as: "categories_index"
+
+      root to: "finish_installation#index",
+           constraints: HomePageConstraint.new("finish_installation"),
+           as: "installation_redirect"
+
+      root to: "home_page#custom",
+           constraints: HomePageConstraint.new("custom"),
+           as: "home_page_custom"
+
+      root to: "home_page#blank",
+           constraints: HomePageConstraint.new("blank"),
+           as: "home_page_blank"
     end
 
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
 
-    # special case for categories
-    root to: "categories#index",
-         constraints: HomePageConstraint.new("categories"),
-         as: "categories_index"
-
-    root to: "finish_installation#index",
-         constraints: HomePageConstraint.new("finish_installation"),
-         as: "installation_redirect"
-
-    root to: "home_page#custom",
-         constraints: HomePageConstraint.new("custom"),
-         as: "home_page_custom"
-
-    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
-
     get "/custom" => "home_page#custom"
+
+    post "/mcp" => "mcp#create"
+    match "/mcp" => "mcp#method_not_allowed", :via => %i[get delete put patch options]
+
+    get "/.well-known/oauth-protected-resource/mcp" => "mcp_oauth_metadata#protected_resource"
+    get "/.well-known/oauth-authorization-server" => "mcp_oauth_metadata#authorization_server"
+    get "/.well-known/openid-configuration" => "mcp_oauth_metadata#authorization_server"
+
+    get "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#show", :as => :oauth2_mcp_authorize
+    post "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#create"
+    post "/oauth2/mcp/token" => "mcp_oauth_tokens#create"
+    post "/oauth2/mcp/revoke" => "mcp_oauth_tokens#revoke"
+
+    scope "/admin/mcp", constraints: AdminConstraint.new do
+      get "/overview" => "admin/mcp#overview"
+      get "/access" => "admin/mcp#access"
+      put "/access/:group_id" => "admin/mcp#update_access"
+      delete "/access/:group_id" => "admin/mcp#destroy_access"
+      get "/capabilities" => "admin/mcp#primitives"
+      put "/capabilities" => "admin/mcp#update_primitives"
+      put "/capabilities/emergency-block" => "admin/mcp#emergency_block"
+      get "/clients" => "admin/mcp_clients#index"
+      post "/clients" => "admin/mcp_clients#create"
+      get "/clients/:id" => "admin/mcp_clients#show"
+      put "/clients/:id" => "admin/mcp_clients#update"
+      put "/clients/:id/block" => "admin/mcp_clients#block"
+      post "/clients/:id/refresh" => "admin/mcp_clients#refresh"
+      get "/authorizations" => "admin/mcp_authorizations#index"
+      delete "/authorizations/:id" => "admin/mcp_authorizations#destroy"
+      get "/activity" => "admin/mcp_activity#index"
+    end
+
+    get "/u/:username/preferences/mcp-authorizations" => "mcp_user_authorizations#index",
+        :constraints => {
+          username: RouteFormat.username,
+        }
+    delete "/u/:username/preferences/mcp-authorizations/:id" => "mcp_user_authorizations#destroy",
+           :constraints => {
+             username: RouteFormat.username,
+           }
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
@@ -1935,6 +2058,8 @@ Discourse::Application.routes.draw do
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
+
+    get "/bundle-analysis.json" => "bundle_analysis#index"
 
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
@@ -1973,6 +2098,8 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index show create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
+    put "/sidebar_sections/:id/reorder" => "sidebar_sections#reorder"
+    put "/sidebar_sections/:id/move_link" => "sidebar_sections#move_link"
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
@@ -1985,6 +2112,10 @@ Discourse::Application.routes.draw do
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
       get "/test_net_http_headers" => "test_requests#test_net_http_headers"
       get "/test_postgres_readonly" => "test_requests#test_postgres_readonly"
+    end
+
+    namespace :api do
+      resources :groups, only: :show
     end
 
     # This catch-all route should always be last

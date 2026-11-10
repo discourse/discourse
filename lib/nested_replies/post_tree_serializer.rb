@@ -43,6 +43,7 @@ module NestedReplies
 
       json[:direct_reply_count] = reply_counts[post.post_number] || 0
       json[:total_descendant_count] = descendant_counts[post.id] || 0
+      json[:avatar_color] = avatar_color(post.user)
 
       if post.deleted_at.present?
         json[:deleted_post_placeholder] = true
@@ -83,6 +84,18 @@ module NestedReplies
     end
 
     private
+
+    # Hex colour that represents the poster's avatar, used to tint thread rails.
+    # Uploaded avatars rely on the backfilled dominant colour, so this can be nil.
+    def avatar_color(user)
+      return if user.nil?
+
+      if user.uploaded_avatar_id
+        user.uploaded_avatar&.dominant_color.presence
+      elsif SiteSetting.default_avatars.blank?
+        User.letter_avatar_color(User.normalize_username(user.username))
+      end
+    end
 
     def topic_view_json
       @topic_view_json ||=

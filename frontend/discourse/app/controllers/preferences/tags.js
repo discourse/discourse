@@ -17,6 +17,7 @@ export default class TagsController extends Controller {
     );
   }
 
+  /** @returns {Array<{ id: number, name: string, slug?: string }>} */
   @computed(
     "model.watched_tags.[]",
     "model.watching_first_post_tags.[]",

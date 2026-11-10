@@ -8,6 +8,10 @@ et:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Kuupäev"
+          outcomes:
+            failed: "Ebaõnnestunud"
         reports:
           filters:
             sort_by:
@@ -39,6 +43,13 @@ et:
         type: "Tüüp"
         error: "Viga"
         response: "Vastus"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Pildid"
+          name: "Nimi"
+          type: "Tüüp"
+          type_score: "Skoor"
       ai_tool_approval:
         loading: "Laadimine..."
         tool: "Tegevus"
@@ -62,6 +73,8 @@ et:
         filters:
           all: "Kõik"
           reset: "Nulli"
+        sentiment:
+          enabled: "Sisse lülitatud"
         search:
           name: "Otsi"
         image_caption:
@@ -103,6 +116,8 @@ et:
             other: "%{count} postitust"
       spam:
         short_title: "Spämm"
+        no_llm_selected: "Pole"
+        no_decision_model_selected: "Pole"
         enable: "Luba"
         test_modal:
           spam: "Spämm"
@@ -117,8 +132,6 @@ et:
         successful: "Edukas"
         failed: "Ebaõnnestunud"
         unknown: "Teadmata"
-        topic_id: "Teema ID"
-        post_id: "Postituse ID"
         time: "Aeg"
         when: "Millal"
         request: "Taotle"
@@ -129,8 +142,7 @@ et:
         post: "Postitus"
         post_short: "Postitus %{id}"
         actions: "Tegevused"
-        filters:
-          title: "Filtrid"
+        view_details: "Üksikasjad"
         periods:
           custom: "Individuaalne"
         detail:
@@ -182,6 +194,12 @@ et:
         edit: "Muuda"
         delete: "Kustuta"
         embedding: "Sängitamine"
+      decision_models:
+        no_preset: "Pole"
+        display_name: "Nimi"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        delete: "Kustuta"
       mcp_servers:
         name: "Nimi"
         description: "Kirjeldus"
@@ -193,6 +211,13 @@ et:
         delete: "Kustuta"
         tools_modal:
           required: "Nõutud"
+      models:
+        name: "Nimi"
+        type: "Tüüp"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        types:
+          embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"
@@ -239,6 +264,13 @@ et:
         providers:
           google: "Google"
           fake: "Individuaalne"
+      ai_artifact:
+        editor:
+          version: "Versioon"
+          default: "Vaikimisi"
+          apply: "Rakenda"
+        share: "Jaga"
+        filter_all: "Kõik"
       ai_bot:
         debug_ai_modal:
           request: "Taotle"
@@ -260,9 +292,18 @@ et:
             category: "Kategooriad"
           table:
             total_count: "Kokku"
+      ai_search:
+        related_replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        tabs:
+          topics: "Teemasid"
+          messages: "Sõnumid"
       discobot_discoveries:
-        regular_results: "Teemasid"
-        collapse: "Ahenda"
-        tooltip:
-          actions:
-            disable: "Keela"
+        legacy:
+          regular_results: "Teemasid"
+          collapse: "Ahenda"
+          tooltip:
+            actions:
+              disable: "Lülita välja"
+        search_messages: "Sõnumid"

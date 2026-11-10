@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
-import SiteSettingComponent from "./site-setting";
+import SiteSettingComponent from "./site-setting.gjs";
 
 export default class ThemeTranslation extends SiteSettingComponent {
   type = "string";

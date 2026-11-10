@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
@@ -88,6 +89,9 @@ interface DPointerDragSignature {
        * A class toggled on the element for the gesture's duration. A single
        * token: a value with whitespace in it is rejected by the DOM, which costs
        * the drag its styling but leaves the gesture working.
+       *
+       * Applied when the gesture engages, so under a `threshold` it waits for
+       * the same distance `onDrag` does rather than landing on the press.
        */
       draggingClass?: string;
 
@@ -103,16 +107,24 @@ interface DPointerDragSignature {
        * Reach for a class on a shared ancestor, not this, when the target is
        * simply outside the dragged element's subtree — a sibling is still
        * reachable from the parent the two have in common.
+       *
+       * Applied when the gesture engages, on the same terms as `draggingClass`.
        */
       bodyClass?: string;
 
       /**
        * Pixels of travel, measured as a straight line from the press origin, that
-       * `onDrag` waits for before it starts firing. Reaching the distance is
-       * enough; it does not have to be exceeded. Suppresses the jitter of a click
-       * that was never meant to be a drag. Defaults to `0`. Read live until the
-       * distance is reached; only the latch is permanent, so raising it after
-       * movement has engaged will not re-suppress a gesture already under way.
+       * the gesture waits for before it engages: `onDrag` starts firing, and
+       * `draggingClass` and `bodyClass` go on. Reaching the distance is enough;
+       * it does not have to be exceeded. Suppresses the jitter of a click that
+       * was never meant to be a drag, in behaviour and in appearance alike.
+       * Defaults to `0`. Read live until the distance is reached; only the latch
+       * is permanent, so raising it after movement has engaged will not
+       * re-suppress a gesture already under way.
+       *
+       * `onDragStart` and `onDragEnd` are NOT gated by it: a press that never
+       * travels far enough still opens and commits the gesture, so read the
+       * position rather than assuming movement. `info.moved` tells the two apart.
        */
       threshold?: number;
 
@@ -262,6 +274,38 @@ export function registerPointerDrag(
     moved,
   });
 
+  /**
+   * Marks the element and the body as dragging. Called when the gesture
+   * ENGAGES rather than when it is pressed, which for a gesture carrying a
+   * `threshold` are different moments: below that distance the press is still a
+   * click, and a rule keyed on these classes must not contradict that. A class
+   * that suppresses pointer events on descendants would otherwise take every
+   * plain click on the element. Without a threshold a gesture engages at the
+   * press, so this still runs there.
+   *
+   * @param args - The gesture's args, as read for the dispatch that engaged it.
+   */
+  const applyGestureClasses = (args: DPointerDragArgs) => {
+    if (args.draggingClass) {
+      try {
+        element.classList.add(args.draggingClass);
+        // Only once it is really on the element, so `finish` never tries to
+        // remove a token the DOM rejected.
+        appliedClass = args.draggingClass;
+      } catch {
+        // A whitespace token is a caller mistake: it costs the drag its styling
+        // but must not abort the gesture.
+      }
+    }
+    if (args.bodyClass) {
+      try {
+        bodyClassLease = new ElementClassLease(document.body, args.bodyClass);
+      } catch {
+        // Same as above: a rejected token costs the page-level styling only.
+      }
+    }
+  };
+
   const finish = () => {
     const finishedPointer = pointerId;
     const classToRemove = appliedClass;
@@ -400,7 +444,7 @@ export function registerPointerDrag(
     }
 
     pointerId = event.pointerId;
-    engaged = !(args.threshold > 0);
+    engaged = !((args.threshold ?? 0) > 0);
 
     // A press bubbles, so an ancestor registration starts its own gesture from
     // the same event. Capture requested during `pointerdown` is only pending
@@ -412,23 +456,8 @@ export function registerPointerDrag(
     const superseded = pointerOwners.get(event.pointerId);
     pointerOwners.set(event.pointerId, { element, supersede: onSuperseded });
 
-    if (args.draggingClass) {
-      try {
-        element.classList.add(args.draggingClass);
-        // Only once it is really on the element, so `finish` never tries to
-        // remove a token the DOM rejected.
-        appliedClass = args.draggingClass;
-      } catch {
-        // A whitespace token is a caller mistake: it costs the drag its styling
-        // but must not abort the gesture.
-      }
-    }
-    if (args.bodyClass) {
-      try {
-        bodyClassLease = new ElementClassLease(document.body, args.bodyClass);
-      } catch {
-        // Same as above: a rejected token costs the page-level styling only.
-      }
+    if (engaged) {
+      applyGestureClasses(args);
     }
 
     // Only an accepted press is suppressed. A secondary button, a press during
@@ -456,6 +485,7 @@ export function registerPointerDrag(
         return;
       }
       engaged = true;
+      applyGestureClasses(args);
     }
     // Latched before the dispatch, so this report already counts as movement.
     moved = true;
@@ -579,7 +609,10 @@ export default class DPointerDragModifier extends Modifier<DPointerDragSignature
     // installed once and reads these live.
     this.#args = named;
 
-    this.#cleanup ??= registerPointerDrag(element, () => this.#args);
+    this.#cleanup ??= registerPointerDrag(element, () => {
+      assert("dPointerDrag: args are read before `modify`", this.#args);
+      return this.#args;
+    });
 
     // Re-reflected here rather than only at registration: the declaration has to
     // be in place before a touch begins, so a consumer that changes it between

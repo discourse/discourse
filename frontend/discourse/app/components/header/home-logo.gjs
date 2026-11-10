@@ -9,7 +9,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import HomeLogoContents from "./home-logo-contents";
+import HomeLogoContents from "./home-logo-contents.gjs";
 
 export default class HomeLogo extends Component {
   @service session;

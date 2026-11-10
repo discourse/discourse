@@ -276,6 +276,23 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
       it { is_expected.to fail_a_policy(:has_answers) }
     end
 
+    context "when the topic title contains an HTML comment opener and a script tag" do
+      fab!(:reply) { Fabricate(:post, topic:) }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        topic.update!(title: "Why does <!--<script> break my template?")
+      end
+
+      it "keeps the script element closed and the title intact" do
+        fragment = Nokogiri::HTML5.fragment("#{result[:html]}<p></p>")
+        schema = JSON.parse(fragment.at_css('script[type="application/ld+json"]').content)
+
+        expect(fragment.children.map(&:name)).to eq(%w[script p])
+        expect(schema["name"]).to eq(topic.title)
+      end
+    end
+
     context "when there is an accepted answer and suggested answers" do
       fab!(:answer_user, :user)
       fab!(:answer_post) { Fabricate(:post, topic:, user: answer_user, like_count: 3) }
@@ -296,6 +313,36 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
         expect(html).to include('"suggestedAnswer"')
         expect(html).to include(answer_user.username)
         expect(html).to include(suggested_user.username)
+      end
+    end
+
+    context "when the question and the accepted answer are longer than the excerpt limit" do
+      fab!(:long_topic) { Fabricate(:topic, user:) }
+      fab!(:question_post) do
+        Fabricate(
+          :post,
+          topic: long_topic,
+          user:,
+          raw: Array.new(120) { |i| "question#{i}" }.join(" "),
+        )
+      end
+      fab!(:answer_post) do
+        Fabricate(:post, topic: long_topic, raw: Array.new(120) { |i| "answer#{i}" }.join(" "))
+      end
+
+      let(:params) { { topic_id: long_topic.id } }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic: long_topic, answer_post:)
+      end
+
+      it "includes the full text of the question and the answer" do
+        fragment = Nokogiri::HTML5.fragment(result[:html])
+        schema = JSON.parse(fragment.at_css('script[type="application/ld+json"]').content)
+
+        expect(schema.dig("mainEntity", "text")).to eq(question_post.raw)
+        expect(schema.dig("mainEntity", "acceptedAnswer", 0, "text")).to eq(answer_post.raw)
       end
     end
   end

@@ -20,9 +20,14 @@
     flex-direction: column;
     min-width: 0;
 
-    input {
+    input,
+    textarea {
       width: 100%;
       margin-bottom: 0;
+    }
+
+    .expanding-text-area {
+      --expanding-text-area-min-height: calc(var(--space-12) * 2);
     }
 
     input[type="checkbox"] {

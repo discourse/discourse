@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { reactionsHiddenForUser } from "../lib/hidden-post";
-import DiscourseReactionsActions from "./discourse-reactions-actions";
+import { reactionsHiddenForUser } from "../lib/hidden-post.js";
+import DiscourseReactionsActions from "./discourse-reactions-actions.gjs";
 
 export default class ReactionsActionButton extends Component {
   static shouldRender(args) {

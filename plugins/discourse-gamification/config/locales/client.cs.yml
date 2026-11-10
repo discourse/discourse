@@ -64,9 +64,7 @@ cs:
       close: "Zavřít"
       delete: "Smazat"
       edit: "Upravit"
-      back: "Zpět"
       save: "Uložit"
-      apply: "Použít"
       recalculate: "Přepočítat skóre"
       recalculating: "Přepočítávání skóre..."
       completed: "Hotovo! Skóre bylo úspěšně přepočítáno."
@@ -87,9 +85,11 @@ cs:
       admin:
         title: "Gamifikace"
         name: "Název"
+        created_by: "Vytvořil/a"
         period: "Období"
     discourse_workflows:
       gamification_score:
         username: "Uživatel"
         date: "Datum"
         description: "Popis"
+        category_id: "Kategorie"

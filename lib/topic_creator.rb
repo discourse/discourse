@@ -286,7 +286,7 @@ class TopicCreator
   end
 
   def save_topic(topic)
-    topic.disable_rate_limits! if @opts[:skip_validations]
+    topic.disable_rate_limits! if @opts[:skip_validations] || @opts[:skip_rate_limits]
 
     rollback_from_errors!(topic) unless topic.save(validate: !@opts[:skip_validations])
   end
@@ -332,6 +332,7 @@ class TopicCreator
 
         if user = find_or_create_user(email, display_name)
           check_can_send_permission!(topic, user)
+          check_comm_screener_permission!(topic, user)
 
           if !@added_users.include?(user)
             @added_users << user
@@ -371,6 +372,16 @@ class TopicCreator
              )
       rollback_with!(topic, :cant_send_pm)
     end
+  end
+
+  # Recipients resolved from an email address still have ignore, mute and
+  # allowed-PM-user preferences that must be honoured, just like recipients
+  # targeted by username (which are screened in PostCreator).
+  def check_comm_screener_permission!(topic, user)
+    return if @opts[:skip_validations]
+
+    screener = UserCommScreener.new(acting_user: @user, target_user_ids: [user.id])
+    rollback_with!(topic, :cant_send_pm) if screener.preventing_actor_communication.present?
   end
 
   def find_or_create_user(email, display_name)

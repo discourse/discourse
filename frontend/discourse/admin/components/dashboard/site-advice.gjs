@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { compare } from "@ember/utils";
 import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -15,7 +14,21 @@ export default class DashboardSiteAdvice extends Component {
   @service currentUser;
 
   @tracked refreshing = false;
+
+  /** @type {number | null} */
   @tracked ignoringId = null;
+
+  get sortedProblems() {
+    return [...this.args.problems].sort(
+      (a, b) => compare(a?.priority, b?.priority) || compare(a?.id, b?.id)
+    );
+  }
+
+  get title() {
+    return i18n("admin.dashboard.site_advice.title", {
+      count: this.args.problems.length,
+    });
+  }
 
   @action
   async refresh() {
@@ -37,18 +50,6 @@ export default class DashboardSiteAdvice extends Component {
     }
   }
 
-  get sortedProblems() {
-    return [...this.args.problems].sort(
-      (a, b) => compare(a?.priority, b?.priority) || compare(a?.id, b?.id)
-    );
-  }
-
-  get title() {
-    return i18n("admin.dashboard.site_advice.title", {
-      count: this.args.problems.length,
-    });
-  }
-
   <template>
     {{#if @problems.length}}
       <section class="db-site-advice">
@@ -58,8 +59,8 @@ export default class DashboardSiteAdvice extends Component {
             class="btn-transparent btn-small"
             data-test-site-advice-refresh="true"
             @action={{this.refresh}}
-            @isLoading={{this.refreshing}}
             @icon="arrows-rotate"
+            @isLoading={{this.refreshing}}
             @label="admin.dashboard.refresh_problems"
           />
         </div>

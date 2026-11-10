@@ -7,10 +7,19 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/spoiler-alert/*": ["./assets/javascripts/*"],
-      "discourse/plugins/spoiler-alert/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/spoiler-alert/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
       ]
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../frontend/discourse"
+    }
+  ]
 }

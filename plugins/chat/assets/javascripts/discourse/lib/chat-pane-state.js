@@ -96,15 +96,6 @@ export default class ChatPaneState {
   }
 
   /**
-   * Cleanup presence tracking. Call from component teardown (e.g. willDestroy).
-   */
-  teardown() {
-    removeOnPresenceChange(this.onPresenceChangeCallback);
-    removeOnBrowserAttentionChange(this.onBrowserAttentionChange);
-    this.clearPendingMessages();
-  }
-
-  /**
    * Whether there are pending messages for this context.
    * Reads from ChatPanePendingManager (the single source of truth).
    *
@@ -121,44 +112,12 @@ export default class ChatPaneState {
   }
 
   /**
-   * Checks if the scroller element has overflow (can scroll).
-   *
-   * @param {HTMLElement | null} scroller
-   * @returns {boolean}
+   * Cleanup presence tracking. Call from component teardown (e.g. willDestroy).
    */
-  #canScroll(scroller) {
-    if (!scroller) {
-      return false;
-    }
-
-    // Use a small tolerance because scrollHeight and clientHeight can
-    // occasionally differ by subpixel rounding.
-    return scroller.scrollHeight - scroller.clientHeight > 1;
-  }
-
-  /**
-   * Computes whether the user is scrolled away from the bottom.
-   * True if there are more messages to load OR they've scrolled up past the threshold.
-   *
-   * @param {object} options
-   * @param {boolean} options.fetchedOnce - Whether initial fetch has completed
-   * @param {boolean} options.canLoadMoreFuture - Whether more future messages exist
-   * @param {number} options.distanceToBottomPixels - Current distance from bottom
-   * @param {number} [options.distanceThresholdPixels=250] - Threshold to trigger "scrolled away"
-   * @returns {boolean}
-   */
-  #computeIsScrolledAway(options) {
-    const {
-      fetchedOnce,
-      canLoadMoreFuture,
-      distanceToBottomPixels,
-      distanceThresholdPixels = 250,
-    } = options;
-
-    return (
-      (fetchedOnce && canLoadMoreFuture) ||
-      distanceToBottomPixels > distanceThresholdPixels
-    );
+  teardown() {
+    removeOnPresenceChange(this.onPresenceChangeCallback);
+    removeOnBrowserAttentionChange(this.onBrowserAttentionChange);
+    this.clearPendingMessages();
   }
 
   updateLiveEdgeFromScrollState(state) {
@@ -167,25 +126,6 @@ export default class ChatPaneState {
 
   updateLiveEdgeFromDistance(distanceToBottomPixels) {
     this.isAtLiveEdge = distanceToBottomPixels <= LIVE_EDGE_THRESHOLD_PIXELS;
-  }
-
-  /**
-   * Updates hasPendingContentBelow based on scroll position and loader state.
-   *
-   * @param {object} options
-   * @param {HTMLElement | null} options.scroller
-   * @param {boolean} options.fetchedOnce
-   * @param {boolean} options.canLoadMoreFuture
-   * @param {number} options.distanceToBottomPixels
-   * @param {number} [options.distanceThresholdPixels]
-   */
-  #updateHasPendingContentBelow(options) {
-    const { scroller } = options;
-    const isScrolledAway = this.#computeIsScrolledAway(options);
-    this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
-      scroller,
-      isScrolledAway
-    );
   }
 
   /**
@@ -274,32 +214,18 @@ export default class ChatPaneState {
     this.#handleActiveReaderTransition(wasActiveReader);
   }
 
-  #refreshDocumentAttention(attention = browserAttention()) {
-    this.isDocumentFocused = attention.focused;
-    this.isDocumentVisible = attention.visible;
-  }
-
-  #handleActiveReaderTransition(wasActiveReader) {
-    const isActiveReader = this.isActiveReader;
-
-    if (wasActiveReader && !isActiveReader) {
-      this.wasAtLiveEdge = this.isAtLiveEdge;
-    }
-
-    if (!wasActiveReader && isActiveReader) {
-      this.#onUserPresent?.();
-    }
-  }
-
   /**
    * Handle an incoming message by either auto-scrolling or preserving viewport.
    *
    * If shouldAutoScroll is true, adds the message and scrolls to show it.
    * Otherwise, preserves the current scroll position and tracks the message as pending.
+   * While newer history is still unloaded, the message is only tracked as pending:
+   * appending it would leave a gap in the list, filled in later underneath it.
    *
    * @param {object} options
    * @param {HTMLElement | null} options.scroller - The scrollable container
    * @param {boolean} options.shouldAutoScroll - Whether to auto-scroll to the new message
+   * @param {boolean} [options.canLoadMoreFuture=false] - Whether newer history is still unloaded
    * @param {Function} options.addMessage - Function that adds the message to the list
    * @param {Function} [options.onAutoAdd] - Callback after auto-adding (e.g. to scroll)
    * @param {number} [options.messageCount=1] - Number of messages being added
@@ -308,24 +234,27 @@ export default class ChatPaneState {
     const {
       scroller,
       shouldAutoScroll,
+      canLoadMoreFuture = false,
       addMessage,
       onAutoAdd,
       messageCount = 1,
     } = options;
 
-    if (shouldAutoScroll) {
+    if (shouldAutoScroll && !canLoadMoreFuture) {
       addMessage?.();
       this.clearPendingMessages();
       onAutoAdd?.();
       return;
     }
 
-    maintainScrollPosition(scroller, addMessage);
+    if (!canLoadMoreFuture) {
+      maintainScrollPosition(scroller, addMessage);
+    }
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
       const owner = getOwner(this);
-      if (owner.isDestroying || owner.isDestroyed) {
+      if (owner.isDestroying) {
         return;
       }
 
@@ -364,23 +293,6 @@ export default class ChatPaneState {
     return this.isActiveReader;
   }
 
-  #shouldContinueLiveFollowing() {
-    return this.wasAtLiveEdge;
-  }
-
-  /**
-   * Compute whether there is pending content below the current scroll position.
-   *
-   * @param {HTMLElement | null} scroller
-   * @param {boolean} isScrolledAway - Whether user is scrolled away from bottom
-   * @returns {boolean}
-   */
-  #computeHasPendingContentBelow(scroller, isScrolledAway) {
-    return (
-      this.#canScroll(scroller) && (this.hasPendingMessages || isScrolledAway)
-    );
-  }
-
   /**
    * Add pending messages to the count for this context.
    *
@@ -400,5 +312,99 @@ export default class ChatPaneState {
       this.chatPanePendingManager.clear(this.contextKey);
     }
     this.hasPendingContentBelow = false;
+  }
+
+  /**
+   * Checks if the scroller element has overflow (can scroll).
+   *
+   * @param {HTMLElement | null} scroller
+   * @returns {boolean}
+   */
+  #canScroll(scroller) {
+    if (!scroller) {
+      return false;
+    }
+
+    // Use a small tolerance because scrollHeight and clientHeight can
+    // occasionally differ by subpixel rounding.
+    return scroller.scrollHeight - scroller.clientHeight > 1;
+  }
+
+  /**
+   * Computes whether the user is scrolled away from the bottom.
+   * True if there are more messages to load OR they've scrolled up past the threshold.
+   *
+   * @param {object} options
+   * @param {boolean} options.fetchedOnce - Whether initial fetch has completed
+   * @param {boolean} options.canLoadMoreFuture - Whether more future messages exist
+   * @param {number} options.distanceToBottomPixels - Current distance from bottom
+   * @param {number} [options.distanceThresholdPixels=250] - Threshold to trigger "scrolled away"
+   * @returns {boolean}
+   */
+  #computeIsScrolledAway(options) {
+    const {
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceToBottomPixels,
+      distanceThresholdPixels = 250,
+    } = options;
+
+    return (
+      (fetchedOnce && canLoadMoreFuture) ||
+      distanceToBottomPixels > distanceThresholdPixels
+    );
+  }
+
+  /**
+   * Updates hasPendingContentBelow based on scroll position and loader state.
+   *
+   * @param {object} options
+   * @param {HTMLElement | null} options.scroller
+   * @param {boolean} options.fetchedOnce
+   * @param {boolean} options.canLoadMoreFuture
+   * @param {number} options.distanceToBottomPixels
+   * @param {number} [options.distanceThresholdPixels]
+   */
+  #updateHasPendingContentBelow(options) {
+    const { scroller } = options;
+    const isScrolledAway = this.#computeIsScrolledAway(options);
+    this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
+      scroller,
+      isScrolledAway
+    );
+  }
+
+  #refreshDocumentAttention(attention = browserAttention()) {
+    this.isDocumentFocused = attention.focused;
+    this.isDocumentVisible = attention.visible;
+  }
+
+  #handleActiveReaderTransition(wasActiveReader) {
+    const isActiveReader = this.isActiveReader;
+
+    if (wasActiveReader && !isActiveReader) {
+      this.wasAtLiveEdge = this.isAtLiveEdge;
+    }
+
+    if (!wasActiveReader && isActiveReader) {
+      this.#onUserPresent?.();
+    }
+  }
+
+  #shouldContinueLiveFollowing() {
+    return this.wasAtLiveEdge;
+  }
+
+  /**
+   * Compute whether there is pending content below the current scroll position.
+   *
+   * @param {HTMLElement | null} scroller
+   * @param {boolean} isScrolledAway - Whether user is scrolled away from bottom
+   * @returns {boolean}
+   */
+  #computeHasPendingContentBelow(scroller, isScrolledAway) {
+    return (
+      this.#canScroll(scroller) && (this.hasPendingMessages || isScrolledAway)
+    );
   }
 }

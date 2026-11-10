@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ShowUserNotes from "../../components/show-user-notes";
-import { showUserNotes } from "../../lib/user-notes";
+import ShowUserNotes from "../../components/show-user-notes.gjs";
+import { showUserNotes } from "../../lib/user-notes.js";
 
 export default class ShowNotesOnProfile extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
@@ -30,8 +30,8 @@ export default class ShowNotesOnProfile extends Component {
   <template>
     <li class="user-profile-controls-outlet show-notes-on-profile">
       <ShowUserNotes
-        @show={{this.showUserNotes}}
         @count={{this.userNotesCount}}
+        @show={{this.showUserNotes}}
       />
     </li>
   </template>

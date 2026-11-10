@@ -21,6 +21,24 @@ export default class AdComponent extends Component {
     this.trackClick();
   };
 
+  @computed("router.currentRoute.parent.attributes.tags_disable_ads")
+  get topicTagsDisableAds() {
+    return this.router?.currentRoute?.parent?.attributes?.tags_disable_ads;
+  }
+
+  set topicTagsDisableAds(value) {
+    set(this, "router.currentRoute.parent.attributes.tags_disable_ads", value);
+  }
+
+  @computed("router.currentRoute.name")
+  get currentRouteName() {
+    return this.router?.currentRoute?.name;
+  }
+
+  set currentRouteName(value) {
+    set(this, "router.currentRoute.name", value);
+  }
+
   @computed(
     "router.currentRoute.attributes.category.id",
     "router.currentRoute.parent.attributes.category_id"
@@ -43,15 +61,6 @@ export default class AdComponent extends Component {
     );
   }
 
-  @computed("router.currentRoute.parent.attributes.tags_disable_ads")
-  get topicTagsDisableAds() {
-    return this.router?.currentRoute?.parent?.attributes?.tags_disable_ads;
-  }
-
-  set topicTagsDisableAds(value) {
-    set(this, "router.currentRoute.parent.attributes.tags_disable_ads", value);
-  }
-
   @computed(
     "router.currentRoute.attributes.category.read_restricted",
     "router.currentRoute.parent.attributes.category.read_restricted"
@@ -61,15 +70,6 @@ export default class AdComponent extends Component {
       this.router?.currentRoute?.attributes?.category?.read_restricted ||
       this.router?.currentRoute?.parent?.attributes?.category?.read_restricted
     );
-  }
-
-  @computed("router.currentRoute.name")
-  get currentRouteName() {
-    return this.router?.currentRoute?.name;
-  }
-
-  set currentRouteName(value) {
-    set(this, "router.currentRoute.name", value);
   }
 
   @computed(

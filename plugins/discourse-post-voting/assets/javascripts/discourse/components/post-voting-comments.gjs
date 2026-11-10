@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import PostVotingComment from "./post-voting-comment";
-import PostVotingCommentsMenu from "./post-voting-comments-menu";
+import PostVotingComment from "./post-voting-comment.gjs";
+import PostVotingCommentsMenu from "./post-voting-comments-menu.gjs";
 
 export default class PostVotingComments extends Component {
   comments = this.args.post.comments; // post.comments is a tracked array
@@ -80,21 +80,21 @@ export default class PostVotingComments extends Component {
       {{#each this.comments as |comment|}}
         <PostVotingComment
           @comment={{comment}}
+          @disabled={{this.disabled}}
           @removeComment={{this.removeComment}}
+          @removeVote={{this.removeVote}}
           @updateComment={{this.updateComment}}
           @vote={{this.vote}}
-          @removeVote={{this.removeVote}}
-          @disabled={{this.disabled}}
         />
       {{/each}}
 
       {{#if @canCreatePost}}
         <PostVotingCommentsMenu
-          @id={{@post.id}}
-          @postNumber={{@post.post_number}}
-          @moreCommentCount={{this.moreCommentCount}}
-          @lastCommentId={{this.lastCommentId}}
           @appendComments={{this.appendComments}}
+          @id={{@post.id}}
+          @lastCommentId={{this.lastCommentId}}
+          @moreCommentCount={{this.moreCommentCount}}
+          @postNumber={{@post.post_number}}
         />
       {{/if}}
     </div>

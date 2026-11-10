@@ -9,10 +9,7 @@ de:
     chat_separate_sidebar_mode: "Zeige separate Seitenleisten-Modi für Forum und Chat."
     chat_enabled: "Chat aktivieren."
     chat_pinned_messages: "Angeheftete Nachrichten in Chat-Kanälen aktivieren."
-    enable_new_chat_reactions_popup: "Aktiviere das neu gestaltete Reaktionen-Popup für Chat-Nachrichten, das anzeigt, wer reagiert hat – mit unendlichem Bildlauf und einer nativen mobilen Benutzererfahrung."
     enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
-    chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Beachte, dass Administratoren und Moderatoren immer auf den Chat zugreifen können."
-    chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_dm_retention_days: "Chat-Nachrichten in persönlichen Chat-Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_auto_silence_duration: "Anzahl der Minuten, für die Benutzer stummgeschaltet werden, wenn sie das Limit für die Erstellung von Chat-Nachrichten überschreiten. Auf „0“ setzen, um die automatische Stummschaltung zu deaktivieren."
     chat_allowed_messages_for_trust_level_0: "Anzahl der Nachrichten, die Benutzer mit Vertrauensstufe 0 in 30 Sekunden senden dürfen. Auf „0“ setzen, um das Limit zu deaktivieren."
@@ -63,7 +60,17 @@ de:
 
         Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: gelöscht
+    crawler:
+      directory_title: "Chat-Kanäle"
+      nav_title: "Chat"
+      members_count:
+        one: "%{count} Mitglied"
+        other: "%{count} Mitglieder"
+      thread_replies:
+        one: "%{count} Antwort"
+        other: "%{count} Antworten"
     errors:
       users_cant_be_added_to_channel: "Diesem Kanal können keine Benutzer hinzugefügt werden."
       user_cant_be_removed_from_channel: "Der Benutzer kann nicht aus diesem Kanal entfernt werden."
@@ -249,13 +256,10 @@ de:
       default_deny_label: "ablehnen"
     errors:
       send_chat_message:
-        invalid_params: "Ungültige Parameter: %{errors}"
         channel_not_found: "Kanal nicht gefunden: %{channel_id}"
-        failed: "Chat-Nachricht konnte nicht gesendet werden."
       chat_approval:
         channel_not_found: "Chat-Nachricht fehlgeschlagen: Kanal „%{channel_id}“ wurde nicht gefunden."
         invalid_params: "Chat-Nachricht fehlgeschlagen: %{errors}"
-        failed: "Chat-Nachricht fehlgeschlagen: %{steps}"
         timeout_must_be_positive: "Die Zeitüberschreitungsdauer in Minuten muss größer als 0 sein."
   reviewable_score_types:
     needs_review:

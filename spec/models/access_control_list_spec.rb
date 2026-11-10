@@ -7,6 +7,12 @@ RSpec.describe AccessControlList do
   fab!(:user) { Fabricate(:user, name: "User One") }
   fab!(:other_user) { Fabricate(:user, name: "User Two") }
 
+  it "defaults the source to core" do
+    access_control_list = Fabricate(:access_control_list, source: nil, target:, permission: "view")
+
+    expect(access_control_list.source).to eq("core")
+  end
+
   describe ".expand_list_for_bulk_insert" do
     it "collapses multiple groups sharing a permission into one record" do
       list = [
@@ -24,7 +30,7 @@ RSpec.describe AccessControlList do
         allowed_user_ids: [],
         target_type: "Category",
         target_id: target.id,
-        owner: "core",
+        source: "core",
       )
     end
 
@@ -42,13 +48,13 @@ RSpec.describe AccessControlList do
       )
     end
 
-    it "accepts a symbol type and a custom owner" do
+    it "accepts a symbol type and a custom source" do
       list = [{ type: :group, id: group.id, permission: "view" }]
 
       result = described_class.expand_list_for_bulk_insert(list, target, "chat")
 
       expect(result.first[:allowed_group_ids]).to contain_exactly(group.id)
-      expect(result.first[:owner]).to eq("chat")
+      expect(result.first[:source]).to eq("chat")
     end
 
     it "collapses users and groups sharing a permission into one record" do
@@ -67,7 +73,7 @@ RSpec.describe AccessControlList do
           allowed_user_ids: contain_exactly(user.id, other_user.id),
           target_type: "Category",
           target_id: target.id,
-          owner: "core",
+          source: "core",
         },
       )
     end
@@ -229,6 +235,24 @@ RSpec.describe AccessControlList do
       )
     end
 
+    it "does not mark owner entries as mandatory" do
+      Fabricate(:access_control_list_with_users, target: target, permission: "owner", users: [user])
+      target
+        .class
+        .stubs(:acl_is_mandatory?)
+        .with({ type: :user, id: user.id, permission: "owner" })
+        .returns(true)
+
+      owner_entry = described_class.where(target: target, permission: "owner").flattened_list.first
+
+      expect(owner_entry).to include(
+        type: :user,
+        id: user.id,
+        permission: "owner",
+        mandatory: false,
+      )
+    end
+
     it "returns an empty array when there are no acls" do
       expect(described_class.where(target: Fabricate(:category)).flattened_list).to eq([])
     end
@@ -339,6 +363,15 @@ RSpec.describe AccessControlList do
 
     it "matches acls that allow the user directly" do
       expect(described_class.matching_user(user)).to include(direct_user_acl)
+    end
+
+    it "matches admin grants for the system user without an admin membership row" do
+      system_user = User.find(Discourse::SYSTEM_USER_ID)
+      system_user.group_users.where(group_id: Group::AUTO_GROUPS[:admins]).delete_all
+      admin_acl = Fabricate(:access_control_list, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+
+      expect(described_class.matching_user(system_user)).to include(admin_acl)
+      expect(described_class.matching_user(user)).not_to include(admin_acl)
     end
 
     it "does not match acls for groups the user does not belong to" do

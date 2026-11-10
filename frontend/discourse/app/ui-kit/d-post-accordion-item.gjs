@@ -96,12 +96,12 @@ export default class DPostAccordionItem extends Component {
           "quote d-post-accordion-item"
           (if this.hasContent "d-post-accordion-item--has-content")
         }}
-        style={{this.maxHeightStyle}}
         data-expanded={{@isExpanded}}
         data-overflowing={{this.overflowingAttr}}
-        data-username={{this.post.username}}
         data-post={{this.post.post_number}}
         data-topic={{this.post.topic_id}}
+        data-username={{this.post.username}}
+        style={{this.maxHeightStyle}}
       >
         {{! eslint-disable ember/template-no-invalid-interactive }}
         <div
@@ -112,16 +112,16 @@ export default class DPostAccordionItem extends Component {
             {{#if @hasItemMetadataBlock}}
               {{yield this.post to="itemMetadata"}}
             {{else}}
-              <DUserLink @username={{this.post.username}} class="user-link">
+              <DUserLink class="user-link" @username={{this.post.username}}>
                 {{dBoundAvatarTemplate this.post.avatar_template "tiny"}}
                 <span>{{this.userDisplayName}}</span>
               </DUserLink>
               <span class="dot-separator"></span>
               <a
-                href={{this.post.url}}
-                class="date-link"
-                title={{i18n "post.sr_date"}}
                 aria-label={{this.srDate}}
+                class="date-link"
+                href={{this.post.url}}
+                title={{i18n "post.sr_date"}}
               >
                 <span aria-hidden="true">
                   <DRelativeDate @date={{this.post.created_at}} />
@@ -136,16 +136,16 @@ export default class DPostAccordionItem extends Component {
                 @action={{@onToggleExpanded}}
                 @ariaExpanded={{@isExpanded}}
                 @ariaLabel={{if @isExpanded "post.collapse" "expand"}}
-                @title={{if @isExpanded "post.collapse" "expand"}}
                 @icon={{if @isExpanded "chevron-up" "chevron-down"}}
+                @title={{if @isExpanded "post.collapse" "expand"}}
               />
             {{else}}
               <DButton
                 class="btn-flat d-post-accordion-item__jump"
-                @href={{this.post.url}}
                 @ariaLabel="post.follow_quote"
-                @title="post.follow_quote"
+                @href={{this.post.url}}
                 @icon="arrow-down"
+                @title="post.follow_quote"
               />
             {{/if}}
           </div>
@@ -154,8 +154,8 @@ export default class DPostAccordionItem extends Component {
         {{#if this.hasContent}}
           <div class="d-post-accordion-item__body">
             <blockquote
-              id={{this.quoteId}}
               class="d-post-accordion-item__content"
+              id={{this.quoteId}}
               {{dOnResize this.checkOverflow}}
             >
               {{#if @hasBeforeItemContentBlock}}
@@ -163,14 +163,14 @@ export default class DPostAccordionItem extends Component {
               {{/if}}
 
               <PostCookedHtml
-                @post={{this.post}}
                 @decoratorState={{@decoratorState}}
+                @post={{this.post}}
               />
 
             </blockquote>
 
             <div class="d-post-accordion-item__read-more">
-              <a href={{this.post.url}} class="read-more-link">
+              <a class="read-more-link" href={{this.post.url}}>
                 {{i18n "read_more"}}
               </a>
             </div>

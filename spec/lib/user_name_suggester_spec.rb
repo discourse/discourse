@@ -12,6 +12,48 @@ RSpec.describe UserNameSuggester do
 
     let(:fallback_username) { I18n.t("fallback_username") + "1" }
 
+    it "suggests a valid username when the input matches a watched word" do
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+
+      suggestion = described_class.suggest("Badger")
+
+      expect(UsernameValidator.new(suggestion).valid_format?).to eq(true)
+      expect(User.username_available?(suggestion)).to eq(true)
+    end
+
+    it "checks watched words on numbered candidates" do
+      Fabricate(:user, username: "sam")
+      Fabricate(:watched_word, word: "sam1", action: WatchedWord.actions[:block])
+
+      expect(described_class.suggest("sam")).to eq("sam2")
+    end
+
+    it "uses a valid random name when named candidates are blocked" do
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+      Fabricate(:watched_word, word: "*user*", action: WatchedWord.actions[:block])
+
+      suggestion = described_class.suggest("Badger")
+
+      expect(UsernameValidator.new(suggestion).valid_format?).to eq(true)
+      expect(User.username_available?(suggestion)).to eq(true)
+    end
+
+    it "fails explicitly when watched words block every candidate" do
+      Fabricate(:watched_word, word: "*", action: WatchedWord.actions[:block])
+
+      expect { described_class.suggest("Badger") }.to raise_error(
+        Discourse::InvalidParameters,
+        "Unable to suggest a valid username",
+      )
+    end
+
+    it "preserves an existing username that now matches a watched word" do
+      Fabricate(:user, username: "Badger")
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+
+      expect(described_class.suggest("badger", current_username: "Badger")).to eq("Badger")
+    end
+
     it "keeps adding numbers to the username" do
       Fabricate(:user, username: "sam")
       Fabricate(:user, username: "sAm1")
@@ -122,7 +164,7 @@ RSpec.describe UserNameSuggester do
       expect(UserNameSuggester.suggest("Darth_-_Vader")).to eq("Darth_Vader")
     end
 
-    it "should handle typical facebook usernames" do
+    it "handles typical Facebook usernames" do
       expect(UserNameSuggester.suggest("roger.nelson.3344913")).to eq("roger.nelson.33")
     end
 
@@ -265,6 +307,25 @@ RSpec.describe UserNameSuggester do
         SiteSetting.allowed_unicode_username_characters = "[য়া]"
         expect(UserNameSuggester.suggest("aয়াb鳥c")).to eq("aয়াb_c")
       end
+    end
+  end
+
+  describe ".generic_username?" do
+    it "recognizes the generic fallback name and its numbered variants" do
+      expect(UserNameSuggester.generic_username?("user")).to eq(true)
+      expect(UserNameSuggester.generic_username?("user1")).to eq(true)
+      expect(UserNameSuggester.generic_username?("User42")).to eq(true)
+    end
+
+    it "does not flag names derived from real signup data" do
+      expect(UserNameSuggester.generic_username?("jane")).to eq(false)
+      expect(UserNameSuggester.generic_username?("newuser")).to eq(false)
+      expect(UserNameSuggester.generic_username?("QuietFalcon42")).to eq(false)
+    end
+
+    it "is blank-safe" do
+      expect(UserNameSuggester.generic_username?(nil)).to eq(false)
+      expect(UserNameSuggester.generic_username?("")).to eq(false)
     end
   end
 end

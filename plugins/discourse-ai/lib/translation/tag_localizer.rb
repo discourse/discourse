@@ -14,6 +14,7 @@ module DiscourseAi
           localization.name =
             ShortTextTranslator.new(
               text: tag.name,
+              content_description: tag.description,
               target_locale:,
               llm_model: short_text_llm_model,
             ).translate

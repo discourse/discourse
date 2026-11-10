@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import IframedHtml from "discourse/components/iframed-html";
 import Post from "discourse/models/post";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -46,34 +45,34 @@ export default class RawEmailComponent extends Component {
 
   <template>
     <DModal
-      @title={{i18n "raw_email.title"}}
       class="incoming-email-modal"
       @closeModal={{@closeModal}}
+      @title={{i18n "raw_email.title"}}
     >
       <:body>
         <div class="incoming-email-tabs">
           <DButton
+            class={{if (eq this.tab "raw") "active"}}
             @action={{this.displayRaw}}
             @label="post.raw_email.displays.raw.button"
             @title="post.raw_email.displays.raw.title"
-            class={{if (eq this.tab "raw") "active"}}
           />
 
           {{#if this.textPart}}
             <DButton
+              class={{if (eq this.tab "text_part") "active"}}
               @action={{this.displayTextPart}}
               @label="post.raw_email.displays.text_part.button"
               @title="post.raw_email.displays.text_part.title"
-              class={{if (eq this.tab "text_part") "active"}}
             />
           {{/if}}
 
           {{#if this.htmlPart}}
             <DButton
+              class={{if (eq this.tab "html_part") "active"}}
               @action={{this.displayHtmlPart}}
               @label="post.raw_email.displays.html_part.button"
               @title="post.raw_email.displays.html_part.title"
-              class={{if (eq this.tab "html_part") "active"}}
             />
           {{/if}}
         </div>
@@ -91,8 +90,8 @@ export default class RawEmailComponent extends Component {
           {{/if}}
           {{#if (eq this.tab "html_part")}}
             <IframedHtml
-              @html={{this.htmlPart}}
               class="incoming-email-html-part"
+              @html={{this.htmlPart}}
             />
           {{/if}}
         </div>

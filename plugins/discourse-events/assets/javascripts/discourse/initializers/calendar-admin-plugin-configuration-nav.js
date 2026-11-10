@@ -16,10 +16,10 @@ export default {
 
       api.addAdminPluginConfigurationNav(PLUGIN_ID, [
         {
-          label: "discourse_calendar.holidays.header_title",
+          label: "discourse_events.holidays.header_title",
           route: "adminPlugins.show.discourse-events-holidays",
           description:
-            "discourse_calendar.holidays.disabled_holidays_description",
+            "discourse_events.holidays.disabled_holidays_description",
         },
       ]);
     });

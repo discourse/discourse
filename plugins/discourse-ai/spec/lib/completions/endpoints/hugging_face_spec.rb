@@ -97,6 +97,39 @@ RSpec.describe DiscourseAi::Completions::Endpoints::HuggingFace do
 
   before { enable_current_plugin }
 
+  describe "output limit" do
+    it "passes an explicit max_tokens through" do
+      parsed_body = nil
+      stub_request(:post, "https://test.dev/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "ok" } }] }.to_json)
+
+      DiscourseAi::Completions::Llm.proxy(hf_model).generate("hello", user: user, max_tokens: 777)
+
+      expect(parsed_body[:max_tokens]).to eq(777)
+    end
+
+    it "derives the remaining context window when nothing is configured" do
+      parsed_body = nil
+      stub_request(:post, "https://test.dev/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "ok" } }] }.to_json)
+
+      DiscourseAi::Completions::Llm.proxy(hf_model).generate("hello", user: user)
+
+      expect(parsed_body[:max_tokens]).to be > 60_000
+      expect(parsed_body[:max_tokens]).to be < 64_000
+    end
+  end
+
   describe "#perform_completion!" do
     context "when using regular mode" do
       context "with simple prompts" do

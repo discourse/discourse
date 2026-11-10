@@ -159,10 +159,70 @@ acceptance(
 );
 
 acceptance(
+  "Calendar click to create - upcoming events default category",
+  function (needs) {
+    needs.user({ can_create_discourse_post_event: true });
+    needs.settings({
+      ...SETTINGS,
+      default_composer_category: 1,
+      calendar_upcoming_events_default_category: 2,
+    });
+    needs.site({
+      categories: [
+        { id: 1, name: "General", slug: "general", permission: 1 },
+        { id: 2, name: "Events", slug: "events", permission: 1 },
+        { id: 3, name: "Read only", slug: "read-only", permission: 3 },
+        { id: 4, name: "Reply only", slug: "reply-only", permission: 2 },
+      ],
+    });
+    needs.pretender(noEventsPretender);
+
+    for (const [name, setting, expectedCategory] of [
+      ["configured category", 2, "2"],
+      ["category ID as a string", "2", "2"],
+      ["unset category", "", "1"],
+      ["missing category", 9999, "1"],
+      ["read-only category", 3, "1"],
+      ["reply-only category", 4, "1"],
+    ]) {
+      test(`clicking a day uses the expected composer category with ${name}`, async function (assert) {
+        this.siteSettings.calendar_upcoming_events_default_category = setting;
+
+        await visit("/upcoming-events");
+        await waitFor(".fc-day-today");
+        await click(".fc-day-today");
+        await waitFor(".d-editor-input");
+
+        assert.strictEqual(
+          selectKit(".category-chooser").header().value(),
+          expectedCategory
+        );
+      });
+    }
+
+    test("dragging across days uses the configured category", async function (assert) {
+      await visit("/upcoming-events");
+      await waitFor(".fc-day-today");
+
+      const startDate = todayCellDate();
+      const lastDate = moment(startDate).add(1, "day").format("YYYY-MM-DD");
+
+      await dragSelect(cellFor(startDate), cellFor(lastDate));
+      await waitFor(".d-editor-input");
+
+      assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
+    });
+  }
+);
+
+acceptance(
   "Calendar click to create - category (with permission)",
   function (needs) {
     needs.user({ can_create_discourse_post_event: true });
-    needs.settings(SETTINGS);
+    needs.settings({
+      ...SETTINGS,
+      calendar_upcoming_events_default_category: 2,
+    });
     needs.pretender(noEventsPretender);
 
     test("clicking an empty day cell opens the composer prefilled with the category", async function (assert) {

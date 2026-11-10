@@ -217,13 +217,7 @@ class DiscoursePoll::Poll
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
 
-      # This payload is broadcast to every subscriber on the topic channel, so
-      # we only broadcast public data by serializing it as an anonymous user.
-      payload = {
-        post_id:,
-        polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
-      }
-      post.publish_message!("/polls/#{post.topic_id}", payload)
+      post.publish_poll_message!
 
       serialized_poll
     end
@@ -336,6 +330,8 @@ class DiscoursePoll::Poll
     if !guardian.can_create_post?(poll.post.topic)
       raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
     end
+
+    raise Discourse::InvalidParameters.new(:poll_name) if !poll.can_see_results?(user)
 
     if SiteSetting.poll_groupable_user_fields.split("|").exclude?(user_field_name)
       raise Discourse::InvalidParameters.new(:user_field_name)
@@ -553,13 +549,7 @@ class DiscoursePoll::Poll
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
 
-      # This payload is broadcast to every subscriber on the topic channel, so
-      # we only broadcast public data by serializing it as an anonymous user.
-      payload = {
-        post_id:,
-        polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
-      }
-      post.publish_message!("/polls/#{post.topic_id}", payload)
+      post.publish_poll_message!
 
       serialized_poll
     end

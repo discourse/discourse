@@ -2,7 +2,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import Collection from "../lib/collection";
+import Collection from "../lib/collection.js";
 
 /**
  * Chat API service. Provides methods to interact with the chat API.
@@ -11,7 +11,12 @@ import Collection from "../lib/collection";
  * @implements {@ember/service}
  */
 export default class ChatApi extends Service {
+  @service appEvents;
   @service chatChannelsManager;
+
+  get #basePath() {
+    return "/chat/api";
+  }
 
   channel(channelId) {
     return this.#getRequest(`/channels/${channelId}`);
@@ -185,12 +190,22 @@ export default class ChatApi extends Service {
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
-  sendMessage(channelId, data = {}) {
-    return ajax(`/chat/${channelId}`, {
+  async sendMessage(channelId, data = {}) {
+    const response = await ajax(`/chat/${channelId}`, {
       ignoreUnsent: false,
       type: "POST",
       data,
     });
+
+    // a caller that does not await the send can outlive the app in tests
+    if (!this.isDestroying) {
+      this.appEvents.trigger("chat:message-sent", {
+        channelId,
+        messageId: response.message_id,
+      });
+    }
+
+    return response;
   }
 
   /**
@@ -659,10 +674,6 @@ export default class ChatApi extends Service {
 
   markPinsAsRead(channelId) {
     return this.#putRequest(`/channels/${channelId}/pins/read`);
-  }
-
-  get #basePath() {
-    return "/chat/api";
   }
 
   #getRequest(endpoint, data = {}) {

@@ -14,6 +14,7 @@ shared_examples "login scenarios" do
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before do
+    SiteSetting.enable_local_logins_via_code = false
     SiteSetting.hide_email_address_taken = false
     Jobs.run_immediately!
   end
@@ -112,6 +113,10 @@ shared_examples "login scenarios" do
   end
 
   context "with login link" do
+    # The email login link is replaced by the code login flow when
+    # enable_local_logins_via_code is on, which has its own spec.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     it "can login" do
       login_form.open.fill_username("john").email_login_link
 
@@ -126,12 +131,15 @@ shared_examples "login scenarios" do
   context "when login is required" do
     before { SiteSetting.login_required = true }
 
-    it "cannot browse annonymously" do
+    it "keeps topics private until the user logs in" do
       visit "/"
 
       screenshot_marker(label: "login-required")
       expect(page).to have_css(".login-welcome")
       expect(page).to have_css(".site-logo")
+      expect(page.body).not_to include(topic.title)
+      expect(page.body).not_to include(topic2.title)
+
       find(".login-welcome .login-button").click
 
       screenshot_marker(label: "login-form")
@@ -167,15 +175,6 @@ shared_examples "login scenarios" do
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
       expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
-    end
-
-    it "does not leak topics" do
-      visit "/"
-
-      expect(page).to have_css(".login-welcome")
-
-      expect(page.body).not_to include(topic.title)
-      expect(page.body).not_to include(topic2.title)
     end
 
     it "does not leak category metadata if homepage is /categories" do
@@ -282,7 +281,7 @@ shared_examples "login scenarios" do
       before do
         OmniAuth.config.test_mode = true
         SiteSetting.auth_skip_create_confirm = true
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
         SiteSetting.enable_local_logins = false
       end
 
@@ -304,8 +303,11 @@ shared_examples "login scenarios" do
   end
 
   context "with two-factor authentication" do
+    let(:forgot_password_modal) { PageObjects::Modals::ForgotPassword.new }
+    let(:reset_password_page) { PageObjects::Pages::UserResetPassword.new }
     let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
     let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
+
     fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
 
     before do
@@ -361,46 +363,55 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
-    it "can login with login link and totp" do
-      login_form.open.fill_username("john").email_login_link
+    context "with login link" do
+      # The email login link is replaced by the code login flow when
+      # enable_local_logins_via_code is on, which has its own spec.
+      before { SiteSetting.enable_local_logins_via_code = false }
 
-      login_link = wait_for_email_link(user, :email_login)
-      visit login_link
-      totp = ROTP::TOTP.new(user_second_factor.data).now
-      find(".second-factor-token-input").fill_in(with: totp)
-      find(".email-login-form .btn-primary").click
+      it "can login with login link and totp" do
+        login_form.open.fill_username("john").email_login_link
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+        login_link = wait_for_email_link(user, :email_login)
+        visit login_link
+        totp = ROTP::TOTP.new(user_second_factor.data).now
+        find(".second-factor-token-input").fill_in(with: totp)
+        find(".email-login-form .btn-primary").click
+
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+
+      it "can login with login link and backup code" do
+        login_form.open.fill_username("john").email_login_link
+
+        login_link = wait_for_email_link(user, :email_login)
+        visit login_link
+        find(".toggle-second-factor-method").click
+        find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
+        find(".email-login-form .btn-primary").click
+
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
     end
 
-    it "can login with login link and backup code" do
-      login_form.open.fill_username("john").email_login_link
+    it "can reset password with an email code and TOTP" do
+      SiteSetting.enable_local_logins_via_code = true
 
-      login_link = wait_for_email_link(user, :email_login)
-      visit login_link
-      find(".toggle-second-factor-method").click
-      find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
-      find(".email-login-form .btn-primary").click
-
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-    end
-
-    it "can reset password with TOTP" do
       login_form.open.fill_username("john").forgot_password
-      find("button.forgot-password-reset").click
+      forgot_password_modal.request_reset
 
-      reset_password_link = wait_for_email_link(user, :reset_password)
-      visit reset_password_link
-      totp = ROTP::TOTP.new(user_second_factor.data).now
-      find(".second-factor-token-input").fill_in(with: totp)
-      find(".password-reset .btn-primary").click
-      find("#new-account-password").fill_in(with: "newsuperpassword")
-      find(".change-password-form .btn-primary").click
+      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.to).to contain_exactly(user.email)
+      forgot_password_modal.submit_code(mail.subject[/(\d{6})/, 1])
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(reset_password_page).to have_totp_description
+      reset_password_page.fill_in_totp(ROTP::TOTP.new(user_second_factor.data).now).submit_totp
+      reset_password_page.fill_in_new_password("newsuperpassword").submit_new_password
+
+      expect(reset_password_page).to have_logged_in_user
     end
 
-    it "shows error correctly when TOTP code is invalid" do
+    it "lets the user retry an invalid TOTP code and reset their password" do
       login_form.open.fill_username("john").forgot_password
       find("button.forgot-password-reset").click
 
@@ -414,6 +425,14 @@ shared_examples "login scenarios" do
         text: "Invalid authentication code. Each code can only be used once.",
       )
       expect(page).to have_css(".second-factor-token-input")
+
+      totp = ROTP::TOTP.new(user_second_factor.data).now
+      find(".second-factor-token-input").fill_in(with: totp)
+      find(".password-reset .btn-primary").click
+      find("#new-account-password").fill_in(with: "newsuperpassword")
+      find(".change-password-form .btn-primary").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
     it "can reset password with a backup code" do

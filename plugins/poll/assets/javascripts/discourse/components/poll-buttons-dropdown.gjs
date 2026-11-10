@@ -60,11 +60,6 @@ export default class PollButtonsDropdownComponent extends Component {
     this.getDropdownButtonState = false;
   }
 
-  @action
-  dropDownClick(dropDownAction) {
-    this.args.dropDownClick(dropDownAction);
-  }
-
   get getDropdownContent() {
     const contents = [];
     const isAdmin = this.currentUser && this.currentUser.admin;
@@ -128,6 +123,11 @@ export default class PollButtonsDropdownComponent extends Component {
     return this.getDropdownContent.length === 1;
   }
 
+  @action
+  dropDownClick(dropDownAction) {
+    this.args.dropDownClick(dropDownAction);
+  }
+
   <template>
     <div class="poll-buttons-dropdown">
       {{#if this.showDropdown}}
@@ -144,9 +144,9 @@ export default class PollButtonsDropdownComponent extends Component {
                 <dropdown.item>
                   <DButton
                     class="widget-button {{content.className}}"
+                    @action={{fn this.dropDownClick content.action}}
                     @icon={{content.icon}}
                     @label={{content.label}}
-                    @action={{fn this.dropDownClick content.action}}
                   />
                 </dropdown.item>
               {{/each}}
@@ -156,12 +156,12 @@ export default class PollButtonsDropdownComponent extends Component {
       {{else if this.showDropdownAsButton}}
         <DButton
           class="widget-button {{get this.getDropdownContent '0.className'}}"
-          @icon={{get this.getDropdownContent "0.icon"}}
-          @label={{get this.getDropdownContent "0.label"}}
           @action={{fn
             this.dropDownClick
             (get this.getDropdownContent "0.action")
           }}
+          @icon={{get this.getDropdownContent "0.icon"}}
+          @label={{get this.getDropdownContent "0.label"}}
         />
       {{/if}}
     </div>

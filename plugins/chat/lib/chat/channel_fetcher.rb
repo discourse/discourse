@@ -12,11 +12,27 @@ module Chat
     MATCH_QUALITY_PREFIX = 2
     MATCH_QUALITY_PARTIAL = 3
 
+    DEFAULT_MATCH_QUALITY_SELECT = "chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality"
+
     def self.structured(guardian, include_threads: false)
       memberships = guardian.user ? Chat::ChannelMembershipManager.all_for_user(guardian.user) : []
+
       public_channels = secured_public_channels(guardian, status: :open, following: true)
-      direct_message_channels =
-        guardian.user ? secured_direct_message_channels(guardian.user.id, guardian) : []
+      direct_message_channels = []
+
+      if guardian.user
+        direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
+
+        if public_channels.size == MAX_PUBLIC_CHANNEL_RESULTS
+          public_channels |= secured_starred_public_channels(guardian)
+        end
+
+        if direct_message_channels.size == MAX_DM_CHANNEL_RESULTS
+          direct_message_channels |=
+            secured_starred_direct_message_channels(guardian.user.id, guardian)
+        end
+      end
+
       {
         public_channels:,
         direct_message_channels:,
@@ -104,7 +120,7 @@ module Chat
 
       channels =
         Chat::Channel.includes(
-          :last_message,
+          last_message: [:uploads],
           chatable: %i[
             topic_only_relative_url
             uploaded_background
@@ -127,7 +143,8 @@ module Chat
 
       channels = channels.where(status: options[:status]) if options[:status].present?
 
-      if options[:chatable_id].present? && options[:chatable_type].present?
+      if options[:chatable_id].present? &&
+           Chat::Channel.public_channel_chatable_types.include?(options[:chatable_type])
         filter_chatable = options[:chatable_type].constantize&.find_by_id(options[:chatable_id])
         if filter_chatable.present? && guardian.can_see_chatable?(filter_chatable)
           chatable_ids =
@@ -157,7 +174,7 @@ module Chat
               filter: filter_sql,
             )
 
-          channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+          channels = channels.select(DEFAULT_MATCH_QUALITY_SELECT)
           channels = channels.order("chat_channels.name ASC, categories.name ASC")
         else
           escaped_exact = Chat::Channel.connection.quote(filter_term)
@@ -195,7 +212,7 @@ module Chat
             channels.order("match_quality ASC, chat_channels.name ASC, categories.name ASC")
         end
       else
-        channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+        channels = channels.select(DEFAULT_MATCH_QUALITY_SELECT)
         channels = channels.order("LOWER(chat_channels.name) ASC")
       end
 
@@ -212,6 +229,10 @@ module Chat
                 following: true,
               },
             )
+
+          if options[:starred]
+            channels = channels.where(user_chat_channel_memberships: { starred: true })
+          end
         else
           channels =
             channels.where(
@@ -230,6 +251,10 @@ module Chat
       channels.limit(options[:limit]).offset(options[:offset])
     end
 
+    def self.secured_starred_public_channels(guardian)
+      secured_public_channels(guardian, status: :open, following: true, starred: true)
+    end
+
     def self.secured_public_channels(guardian, options = { following: true })
       channels =
         secured_public_channel_search(
@@ -237,7 +262,7 @@ module Chat
           options.merge(include_archives: true, filter_on_category_name: true),
         )
 
-      channels = channels.includes(:pinned_messages) if SiteSetting.chat_pinned_messages
+      channels = channels.includes(:pinned_messages)
       channels = channels.to_a
       preload_custom_fields_for(channels)
       channels
@@ -254,6 +279,10 @@ module Chat
 
     def self.secured_direct_message_channels(user_id, guardian)
       secured_direct_message_channels_search(user_id, guardian, following: true)
+    end
+
+    def self.secured_starred_direct_message_channels(user_id, guardian)
+      secured_direct_message_channels_search(user_id, guardian, following: true, starred: true)
     end
 
     def self.secured_direct_message_channels_search(user_id, guardian, options = {})
@@ -280,7 +309,7 @@ module Chat
           )
 
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
-      query = query.includes(:pinned_messages) if SiteSetting.chat_pinned_messages
+      query = query.includes(:pinned_messages)
 
       if options[:filter]
         filter_term = options[:filter].downcase
@@ -317,12 +346,13 @@ module Chat
 
         query = query.select(select_sql)
       else
-        query = query.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+        query = query.select(DEFAULT_MATCH_QUALITY_SELECT)
       end
 
       if options.key?(:following)
         following_params = { user_id: }
         following_params[:following] = options[:following] if options[:following].present?
+        following_params[:starred] = true if options[:starred]
         query =
           query.joins(:user_chat_channel_memberships).where(
             user_chat_channel_memberships: following_params,

@@ -46,7 +46,6 @@ module Chat
       attribute :upload_ids, :array
       attribute :thread_id, :string
       attribute :blocks, :array
-      attribute :client_created_at, :string
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? && blocks.blank? }
@@ -64,6 +63,7 @@ module Chat
     end
 
     model :channel
+    policy :can_post_in_channel
     step :enforce_membership
     model :membership
     policy :channel_allows_message_creation, class_name: Chat::Channel::Policy::MessageCreation
@@ -100,6 +100,10 @@ module Chat
 
     def no_silenced_user(guardian:)
       !guardian.is_silenced?
+    end
+
+    def can_post_in_channel(guardian:, channel:)
+      guardian.can_post_in_chatable?(channel.chatable)
     end
 
     def fetch_channel(params:)
@@ -160,7 +164,7 @@ module Chat
     end
 
     def instantiate_message(channel:, guardian:, params:, uploads:, thread:, reply:, options:)
-      message_attrs = {
+      channel.chat_messages.new(
         user: guardian.user,
         last_editor: guardian.user,
         in_reply_to: reply,
@@ -176,20 +180,7 @@ module Chat
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
         blocks: params.blocks,
-      }
-
-      if params.client_created_at.present?
-        begin
-          client_time = Time.zone.parse(params.client_created_at)
-          # Only accept client timestamps that are reasonable (within 1 minute of server time)
-          if client_time && (Time.zone.now - client_time).abs <= 60.seconds
-            message_attrs[:created_at] = client_time
-          end
-        rescue ArgumentError
-        end
-      end
-
-      channel.chat_messages.new(message_attrs)
+      )
     end
 
     def save_message(message_instance:)

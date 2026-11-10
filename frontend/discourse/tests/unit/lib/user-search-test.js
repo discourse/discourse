@@ -1,7 +1,10 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import userSearch from "discourse/lib/user-search";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  middlewareRateLimit,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 module("Unit | Utility | user-search", function (hooks) {
@@ -97,6 +100,58 @@ module("Unit | Utility | user-search", function (hooks) {
     results = await userSearch({ term: "hello", categoryId: 2 });
     assert.strictEqual(results[0].username, "category_2");
     assert.strictEqual(results.length, 1);
+  });
+
+  test("it keeps mention search results separate from other search contexts", async function (assert) {
+    const contexts = [];
+    pretender.get("/u/search/users", (request) => {
+      const context = request.queryParams.search_context;
+      contexts.push(context);
+      return response({
+        users: [{ username: context === "mention" ? "mention_user" : "user" }],
+      });
+    });
+
+    let results = await userSearch({ term: "user" });
+    assert.strictEqual(
+      results[0].username,
+      "user",
+      "an ordinary search uses the default context"
+    );
+
+    results = await userSearch({ term: "user", searchContext: "mention" });
+    assert.strictEqual(
+      results[0].username,
+      "mention_user",
+      "mention searches do not reuse ordinary search results"
+    );
+
+    results = await userSearch({ term: "user", searchContext: "mention" });
+    assert.strictEqual(
+      results[0].username,
+      "mention_user",
+      "results are cached within the mention context"
+    );
+    assert.deepEqual(
+      contexts,
+      [undefined, "mention"],
+      "only mention searches send the mention context"
+    );
+  });
+
+  test("it searches the given url without reusing results cached for another one", async function (assert) {
+    pretender.get("/custom/search", () =>
+      response({ users: [{ username: "custom_user" }] })
+    );
+
+    let results = await userSearch({ term: "hello" });
+    assert.strictEqual(results[0].username, "TeaMoe");
+
+    results = await userSearch({ term: "hello", url: "/custom/search" });
+    assert.deepEqual(
+      results.map((r) => r.username),
+      ["custom_user"]
+    );
   });
 
   test("it returns cancel when eager completing with no results", async function (assert) {
@@ -198,6 +253,8 @@ module("Unit | Utility | user-search", function (hooks) {
           groups: [
             { name: "testers", usernames: [] }, // partial group match
             { name: "test", usernames: [] }, // exact group match
+            { name: "group_2", full_name: "Testers", usernames: [] }, // partial group match
+            { name: "group_4", full_name: "Test", usernames: [] }, // exact group match
           ],
         });
       }
@@ -210,30 +267,56 @@ module("Unit | Utility | user-search", function (hooks) {
       limit: 10,
     });
 
-    // Expected order: exact username, exact group, partial username, partial group, exact name, partial name
+    // Expected order:
+    // exact user username, exact group name,
+    // partial user username, partial group name,
+    // exact user name, partial user name
+    // exact group full_name, partial group full_name
     assert.strictEqual(
       results[0].username,
       "test",
-      "Exact username match first"
+      "First: Exact user username match"
     );
-    assert.strictEqual(results[1].name, "test", "Exact group match second");
+    assert.strictEqual(
+      results[1].name,
+      "test",
+      "Second: Exact group name match"
+    );
     assert.strictEqual(
       results[2].username,
       "testing",
-      "Partial username match third"
+      "Third: Partial user username match"
     );
     assert.strictEqual(
       results[3].name,
       "testers",
-      "Partial group match fourth"
+      "Fourth: Partial group name match"
     );
-    assert.strictEqual(results[4].username, "player", "Exact name match fifth");
+    assert.strictEqual(
+      results[4].username,
+      "player",
+      "Fifth: Exact user name match"
+    );
     assert.strictEqual(
       results[5].username,
       "gamer",
-      "Partial name match sixth"
+      "Sixth: Partial user name match"
     );
-    assert.strictEqual(results[6].username, "user123", "Metadata match last");
+    assert.strictEqual(
+      results[6].full_name,
+      "Test",
+      "Seventh: Exact group full name match"
+    );
+    assert.strictEqual(
+      results[7].full_name,
+      "Testers",
+      "Eighth: Partial group full name match"
+    );
+    assert.strictEqual(
+      results[8].username,
+      "user123",
+      "Ninth/Last: Metadata match"
+    );
   });
 
   test("it includes all matching groups when limit allows", async function (assert) {
@@ -261,6 +344,29 @@ module("Unit | Utility | user-search", function (hooks) {
         `Should include '${groupName}' group`
       );
     });
+  });
+
+  test("it stops searching while the advertised rate limit wait is running", async function (assert) {
+    let requestCount = 0;
+    pretender.get("/u/search/users", () => {
+      requestCount++;
+      return middlewareRateLimit(60);
+    });
+
+    let result = await userSearch({ term: "ratelimited" });
+    assert.strictEqual(
+      result,
+      CANCELLED_STATUS,
+      "the rejection is handled instead of bubbling up"
+    );
+
+    result = await userSearch({ term: "ratelimitedtoo" });
+    assert.strictEqual(result, CANCELLED_STATUS);
+    assert.strictEqual(
+      requestCount,
+      1,
+      "no further request is sent before the wait is over"
+    );
   });
 
   test("it protects cached results from mutation by consumers", async function (assert) {

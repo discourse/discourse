@@ -41,9 +41,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onMove={{onMove}}
             @onAfterMutation={{onAfterMutation}}
+            @onMove={{onMove}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -98,7 +98,7 @@ module(
 
       await render(
         <template>
-          <StickyNote @note={{note}} @zoom={{1}} @onMove={{onMove}} />
+          <StickyNote @note={{note}} @onMove={{onMove}} @zoom={{1}} />
         </template>
       );
 
@@ -130,7 +130,7 @@ module(
 
       await render(
         <template>
-          <StickyNote @note={{note}} @zoom={{2}} @onMove={{onMove}} />
+          <StickyNote @note={{note}} @onMove={{onMove}} @zoom={{2}} />
         </template>
       );
 
@@ -165,9 +165,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
             @onMove={{onMove}}
             @onResize={{onResize}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -211,10 +211,10 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
             @onAfterMutation={{onAfterMutation}}
             @onMove={{onMove}}
             @onTranslateSelected={{onTranslateSelected}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -270,9 +270,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
             @onAfterMutation={{onAfterMutation}}
             @onResize={{onResize}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -321,7 +321,7 @@ module(
 
       await render(
         <template>
-          <StickyNote @note={{note}} @zoom={{1}} @onResize={{onResize}} />
+          <StickyNote @note={{note}} @onResize={{onResize}} @zoom={{1}} />
         </template>
       );
 
@@ -388,9 +388,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
             @onMove={{onMove}}
             @onResize={{onResize}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -458,7 +458,7 @@ module(
 
       await render(
         <template>
-          <StickyNote @note={{note}} @zoom={{1}} @onResize={{onResize}} />
+          <StickyNote @note={{note}} @onResize={{onResize}} @zoom={{1}} />
         </template>
       );
 
@@ -498,7 +498,7 @@ module(
 
       await render(
         <template>
-          <StickyNote @note={{note}} @zoom={{1}} @onMove={{onMove}} />
+          <StickyNote @note={{note}} @onMove={{onMove}} @zoom={{1}} />
         </template>
       );
 
@@ -534,7 +534,7 @@ module(
 
       await render(
         <template>
-          <StickyNote @note={{note}} @zoom={{1}} @onResize={{onResize}} />
+          <StickyNote @note={{note}} @onResize={{onResize}} @zoom={{1}} />
         </template>
       );
 
@@ -564,21 +564,19 @@ module(
       const translates = [];
       // The note the user grabbed is replaced on every move, the way the canvas
       // replaces it, so a stale read of the previous object would show up here.
-      const state = new (class {
-        @tracked note = noteFixture();
-      })();
+      const note = tracked(noteFixture());
       const onMove = (position) => {
-        state.note = { ...state.note, position: { ...position } };
+        note.value = { ...note.value, position: { ...position } };
       };
       const onTranslateSelected = (dx, dy) => translates.push([dx, dy]);
 
       await render(
         <template>
           <StickyNote
-            @note={{state.note}}
-            @zoom={{1}}
+            @note={{note.value}}
             @onMove={{onMove}}
             @onTranslateSelected={{onTranslateSelected}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -621,7 +619,7 @@ module(
 
       await render(
         <template>
-          <StickyNote @note={{note}} @zoom={{1}} @onMove={{onMove}} />
+          <StickyNote @note={{note}} @onMove={{onMove}} @zoom={{1}} />
         </template>
       );
 
@@ -663,9 +661,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onBeforeMutation={{onBeforeMutation}}
             @onAfterMutation={{onAfterMutation}}
+            @onBeforeMutation={{onBeforeMutation}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -741,9 +739,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
             @onMove={{onMove}}
             @onResize={{onResize}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -785,9 +783,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onBeforeMutation={{onBeforeMutation}}
             @onAfterMutation={{onAfterMutation}}
+            @onBeforeMutation={{onBeforeMutation}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -830,8 +828,8 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
             @onAfterMutation={{onAfterMutation}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -885,10 +883,10 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onResize={{onResize}}
-            @onBeforeMutation={{onBeforeMutation}}
             @onAfterMutation={{onAfterMutation}}
+            @onBeforeMutation={{onBeforeMutation}}
+            @onResize={{onResize}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -947,9 +945,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onBeforeMutation={{onBeforeMutation}}
             @onAfterMutation={{onAfterMutation}}
+            @onBeforeMutation={{onBeforeMutation}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -1003,9 +1001,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onBeforeMutation={{onBeforeMutation}}
             @onAfterMutation={{onAfterMutation}}
+            @onBeforeMutation={{onBeforeMutation}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -1052,9 +1050,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onBeforeMutation={{onBeforeMutation}}
             @onAfterMutation={{onAfterMutation}}
+            @onBeforeMutation={{onBeforeMutation}}
+            @zoom={{1}}
           />
         </template>
       );
@@ -1087,9 +1085,9 @@ module(
         <template>
           <StickyNote
             @note={{note}}
-            @zoom={{1}}
-            @onMove={{onMove}}
             @onBeforeMutation={{onBeforeMutation}}
+            @onMove={{onMove}}
+            @zoom={{1}}
           />
         </template>
       );

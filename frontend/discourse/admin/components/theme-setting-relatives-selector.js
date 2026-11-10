@@ -1,13 +1,7 @@
-import SiteSettingComponent from "./site-setting";
+import SiteSettingComponent from "./site-setting.gjs";
 
 export default class ThemeSettingRelativesSelectorComponent extends SiteSettingComponent {
   trackChanges = false;
-
-  _save() {
-    return this.args.model.save({
-      [this.args.setting.setting]: this.convertNamesToIds(),
-    });
-  }
 
   convertNamesToIds() {
     return this.buffered
@@ -22,5 +16,12 @@ export default class ThemeSettingRelativesSelectorComponent extends SiteSettingC
         }
         return themeName;
       });
+  }
+
+  async _save() {
+    await this.args.model.save({
+      [this.args.setting.setting]: this.convertNamesToIds(),
+    });
+    this.args.onSave?.();
   }
 }

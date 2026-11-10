@@ -21,8 +21,8 @@ module(
       await render(
         <template>
           <AiTranslationModelProgressOverviewCard
-            @target={{target}}
             @expanded={{false}}
+            @target={{target}}
           />
         </template>
       );
@@ -64,8 +64,8 @@ module(
       await render(
         <template>
           <AiTranslationModelProgressOverviewCard
-            @target={{target}}
             @expanded={{false}}
+            @target={{target}}
           />
         </template>
       );
@@ -92,8 +92,8 @@ module(
       await render(
         <template>
           <AiTranslationModelProgressOverviewCard
-            @target={{target}}
             @expanded={{false}}
+            @target={{target}}
           />
         </template>
       );

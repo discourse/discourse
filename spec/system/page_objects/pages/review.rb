@@ -3,9 +3,11 @@
 module PageObjects
   module Pages
     class Review < PageObjects::Pages::Base
-      POST_BODY_TOGGLE_SELECTOR = ".post-body__toggle-btn"
-      POST_BODY_COLLAPSED_SELECTOR = ".post-body.is-collapsed"
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
+
+      def has_no_standalone_classification?
+        has_no_css?(".review-item__classify, .dsa-classification")
+      end
 
       def visit_reviewable(reviewable)
         page.visit("/review/#{reviewable.id}")
@@ -50,32 +52,22 @@ module PageObjects
         PageObjects::Components::Dialog.new.click_danger if confirm
       end
 
-      def click_post_body_toggle
-        find(POST_BODY_TOGGLE_SELECTOR).click
-      end
-
-      def has_post_body_toggle?
-        page.has_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_no_post_body_toggle?
-        page.has_no_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_post_body_collapsed?
-        page.has_css?(POST_BODY_COLLAPSED_SELECTOR)
-      end
-
-      def has_no_post_body_collapsed?
-        page.has_no_css?(POST_BODY_COLLAPSED_SELECTOR)
-      end
-
       def has_reviewable_action_dropdown?
         page.has_css?(REVIEWABLE_ACTION_DROPDOWN)
       end
 
       def has_no_reviewable_action_dropdown?
         page.has_no_css?(REVIEWABLE_ACTION_DROPDOWN)
+      end
+
+      def has_no_reviewable_actions?(reviewable)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_no_css?(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}")
+        end
+      end
+
+      def has_help_resources?
+        has_css?(".review-item__resources", text: I18n.t("js.review.need_help"))
       end
 
       def has_reviewable_items?(count:)
@@ -91,10 +83,6 @@ module PageObjects
 
       def has_scrub_button?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".user-scrub") }
-      end
-
-      def has_no_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".user-scrub") }
       end
 
       def click_scrub_user_button
@@ -186,6 +174,14 @@ module PageObjects
 
       def has_history_items?(count:)
         page.has_css?(".timeline-event", count: count)
+      end
+
+      def has_note?(content)
+        page.has_css?(".timeline-event__description", text: content, normalize_ws: true)
+      end
+
+      def has_no_note?(content)
+        page.has_no_css?(".timeline-event__description", text: content, normalize_ws: true)
       end
 
       def has_claimed_history_item?(user)

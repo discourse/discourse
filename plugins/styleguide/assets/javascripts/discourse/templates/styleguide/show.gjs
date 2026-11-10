@@ -10,9 +10,9 @@ export default <template>
       <SectionComponent
         @dummy={{@controller.dummy}}
         @dummyAction={{@controller.dummyAction}}
-        @siteSettings={{@controller.siteSettings}}
-        @section={{@controller.section}}
         @group={{@controller.group}}
+        @section={{@controller.section}}
+        @siteSettings={{@controller.siteSettings}}
       />
     {{/let}}
   </StyleguideSection>

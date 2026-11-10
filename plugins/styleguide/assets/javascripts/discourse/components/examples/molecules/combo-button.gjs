@@ -8,30 +8,30 @@ const noop = () => {};
 // differently for each, and an outlined regression is invisible on a filled one.
 export default <template>
   <div class="styleguide--combo-button">
-    <DComboButton @hasMenu={{true}} @btnTypeClass="btn-default" as |combo|>
-      <combo.Button @translatedLabel="New topic" @icon="far-pen-to-square" />
+    <DComboButton @btnTypeClass="btn-default" @hasMenu={{true}} as |combo|>
+      <combo.Button @icon="far-pen-to-square" @translatedLabel="New topic" />
       <combo.Menu @identifier="styleguide-combo-default">
         <DDropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
-              @translatedLabel="Resume draft"
-              @icon="reply"
               @action={{noop}}
+              @icon="reply"
+              @translatedLabel="Resume draft"
             />
           </dropdown.item>
         </DDropdownMenu>
       </combo.Menu>
     </DComboButton>
 
-    <DComboButton @hasMenu={{true}} @btnTypeClass="btn-primary" as |combo|>
-      <combo.Button @translatedLabel="New topic" @icon="far-pen-to-square" />
+    <DComboButton @btnTypeClass="btn-primary" @hasMenu={{true}} as |combo|>
+      <combo.Button @icon="far-pen-to-square" @translatedLabel="New topic" />
       <combo.Menu @identifier="styleguide-combo-primary">
         <DDropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
-              @translatedLabel="Resume draft"
-              @icon="reply"
               @action={{noop}}
+              @icon="reply"
+              @translatedLabel="Resume draft"
             />
           </dropdown.item>
         </DDropdownMenu>
@@ -39,7 +39,7 @@ export default <template>
     </DComboButton>
 
     <DComboButton @btnTypeClass="btn-default" as |combo|>
-      <combo.Button @translatedLabel="No menu" @icon="far-pen-to-square" />
+      <combo.Button @icon="far-pen-to-square" @translatedLabel="No menu" />
     </DComboButton>
   </div>
 </template>

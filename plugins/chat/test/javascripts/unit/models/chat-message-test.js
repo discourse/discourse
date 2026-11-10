@@ -7,6 +7,38 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 module("Unit | Models | chat-message", function (hooks) {
   setupTest(hooks);
 
+  test("preserves model attribution from the server", function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).channel();
+    const message = ChatMessage.create(channel, {
+      id: 1,
+      ai_llm_name: "Model 猫",
+    });
+
+    assert.strictEqual(message.aiLlmName, "Model 猫");
+  });
+
+  test(".cook ignores max_oneboxes_per_post", async function (assert) {
+    this.owner.lookup("service:site-settings").max_oneboxes_per_post = 0;
+    this.owner.lookup("service:site").markdown_additional_options = {
+      chat: {
+        limited_pretty_text_features: ["onebox"],
+        limited_pretty_text_markdown_rules: ["linkify"],
+        hashtag_configurations: { "chat-composer": [] },
+        onebox_limit: "none",
+      },
+    };
+    ChatMessage.cookFunction = null;
+    const channel = new ChatFabricators(getOwner(this)).channel();
+    const message = ChatMessage.create(channel, {
+      message: "https://www.example.com",
+    });
+
+    await message.cook();
+    ChatMessage.cookFunction = null;
+
+    assert.true(message.cooked.includes('class="onebox"'));
+  });
+
   test(".persisted", function (assert) {
     const channel = new ChatFabricators(getOwner(this)).channel();
     let message = ChatMessage.create(channel, { id: null });

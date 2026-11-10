@@ -3,6 +3,8 @@
 Migrations::Tooling::Schema.ignored do
   # Plugins — all their tables and columns on core tables are auto-ignored via manifest
   plugin :automation, "Not migrated yet"
+  plugin :blog, "Not migrated yet"
+  plugin :boards, "Not migrated yet"
   plugin :chat, "Not migrated yet"
   plugin :discourse_adplugin, "Not migrated yet"
   plugin :discourse_ai, "Not migrated yet"
@@ -74,7 +76,6 @@ Migrations::Tooling::Schema.ignored do
          :post_search_data,
          :post_stats,
          :post_timings,
-         :posts,
          :quoted_posts,
          :shared_drafts
 
@@ -82,6 +83,7 @@ Migrations::Tooling::Schema.ignored do
          :linked_topics,
          :top_topics,
          :topic_custom_fields,
+         :topic_embed_aliases,
          :topic_embeds,
          :topic_groups,
          :topic_hot_scores,
@@ -116,7 +118,8 @@ Migrations::Tooling::Schema.ignored do
          :group_requests,
          :group_tag_notification_defaults
 
-  tables :child_themes,
+  tables :appearance_changes,
+         :child_themes,
          :color_scheme_colors,
          :color_schemes,
          :remote_themes,
@@ -131,7 +134,9 @@ Migrations::Tooling::Schema.ignored do
 
   tables :incoming_domains, :incoming_emails, :incoming_links, :incoming_referers
 
-  tables :reviewable_claimed_topics,
+  tables :dsa_notices,
+         :dsa_statement_of_records,
+         :reviewable_claimed_topics,
          :reviewable_histories,
          :reviewable_notes,
          :reviewable_scores,
@@ -152,6 +157,7 @@ Migrations::Tooling::Schema.ignored do
   tables :admin_dashboard_reports,
          :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
+         :browser_pageview_entry_url_daily_rollups,
          :browser_pageview_referrer_daily_rollups,
          :category_activity_daily_rollups,
          :user_visit_daily_rollups
@@ -170,10 +176,11 @@ Migrations::Tooling::Schema.ignored do
          :bookmarks,
          :browser_pageview_crawler_daily_rollups,
          :browser_pageview_event_scores,
+         :browser_pageview_event_scores_backup,
          :browser_pageview_events,
+         :browser_pageview_events_backup,
          :browser_pageview_session_engagement_daily_rollups,
          :browser_pageview_session_engagements,
-         :custom_emojis,
          :developers,
          :directory_columns,
          :directory_items,
@@ -191,6 +198,21 @@ Migrations::Tooling::Schema.ignored do
          :invited_users,
          :invites,
          :javascript_caches,
+         :live_co_presences,
+         :live_invites,
+         :live_recordings,
+         :live_room_memberships,
+         :live_rooms,
+         :live_sessions,
+         :mcp_audit_logs,
+         :mcp_group_scopes,
+         :mcp_oauth_access_tokens,
+         :mcp_oauth_authorization_codes,
+         :mcp_oauth_authorization_scopes,
+         :mcp_oauth_authorizations,
+         :mcp_oauth_clients,
+         :mcp_oauth_refresh_tokens,
+         :mcp_primitives,
          :message_bus,
          :nested_hot_post_scores,
          :nested_hot_score_snapshots,

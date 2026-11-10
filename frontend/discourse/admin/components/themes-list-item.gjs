@@ -29,13 +29,6 @@ export default class ThemesListItem extends Component {
     return this.children.length > 0;
   }
 
-  @action
-  handleClick(event) {
-    if (!event.target.classList.contains("others-count")) {
-      this.args.navigateToTheme();
-    }
-  }
-
   get children() {
     let children = this.args.theme?.get("childThemes");
     if (this.args.theme?.get("component") || !children) {
@@ -67,6 +60,13 @@ export default class ThemesListItem extends Component {
   }
 
   @action
+  handleClick(event) {
+    if (!event.target.classList.contains("others-count")) {
+      this.args.navigateToTheme();
+    }
+  }
+
+  @action
   toggleChildrenExpanded(event) {
     event?.preventDefault();
     this.childrenExpanded = !this.childrenExpanded;
@@ -80,14 +80,14 @@ export default class ThemesListItem extends Component {
         (if @theme.selected "selected")
       }}
       role="button"
-      {{on "click" this.handleClick}}
       ...attributes
+      {{on "click" this.handleClick}}
     >
       <div class="inner-wrapper">
         <span>
           <PluginOutlet
-            @name="admin-customize-themes-list-item"
             @connectorTagName="span"
+            @name="admin-customize-themes-list-item"
             @outletArgs={{lazyHash theme=@theme}}
           />
         </span>
@@ -95,8 +95,8 @@ export default class ThemesListItem extends Component {
         <div class="info">
           {{#if @selectInactiveMode}}
             <Input
-              @checked={{@theme.markedToDelete}}
               id={{@theme.id}}
+              @checked={{@theme.markedToDelete}}
               @type="checkbox"
             />
           {{/if}}
@@ -146,9 +146,9 @@ export default class ThemesListItem extends Component {
 
             {{#if this.displayHasMore}}
               <a
+                class="others-count"
                 href
                 {{on "click" this.toggleChildrenExpanded}}
-                class="others-count"
               >
                 {{#if this.childrenExpanded}}
                   {{i18n "admin.customize.theme.collapse"}}

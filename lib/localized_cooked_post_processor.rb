@@ -14,7 +14,6 @@ class LocalizedCookedPostProcessor
     @model = @post
     @category_id = @post&.topic&.category_id
     @omit_nofollow = @post.omit_nofollow?
-    @size_cache = {}
   end
 
   def post_process

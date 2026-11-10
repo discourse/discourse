@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { bind } from "discourse/lib/decorators";
-import { or } from "discourse/truth-helpers";
 import DBreadcrumbsContainer from "discourse/ui-kit/d-breadcrumbs-container";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
@@ -39,6 +38,10 @@ export default class DPageHeader extends Component {
     this.router.off("routeDidChange", this, this.#checkIfShouldDisplay);
   }
 
+  get shouldCollapseActionsOnMobile() {
+    return this.site.mobileView && this.args.collapseActionsOnMobile !== false;
+  }
+
   @bind
   #checkIfShouldDisplay() {
     if (this.args.shouldDisplay !== undefined) {
@@ -57,10 +60,6 @@ export default class DPageHeader extends Component {
     this.shouldDisplay =
       !pathSegments.includes("admin") ||
       !HEADLESS_ACTIONS.find((segment) => pathSegments.includes(segment));
-  }
-
-  get shouldCollapseActionsOnMobile() {
-    return this.site.mobileView && this.args.collapseActionsOnMobile !== false;
   }
 
   <template>
@@ -94,10 +93,10 @@ export default class DPageHeader extends Component {
               <div class="d-page-header__actions">
                 {{#if this.shouldCollapseActionsOnMobile}}
                   <DMenu
+                    class="btn-small btn-default"
+                    @icon="ellipsis-vertical"
                     @identifier="d-page-header-mobile-actions"
                     @title={{i18n "more_options"}}
-                    @icon="ellipsis-vertical"
-                    class="btn-small btn-default"
                   >
                     <:content>
                       <DDropdownMenu class="d-page-header__mobile-actions">

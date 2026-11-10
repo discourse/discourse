@@ -3,10 +3,12 @@ import postcssLightDark from "@csstools/postcss-light-dark-function";
 import autoprefixer from "autoprefixer";
 import postcss from "postcss";
 import postcssNesting from "postcss-nesting";
-import { browsers } from "../discourse/config/targets";
-import postcssVariablePrefixer from "./postcss-variable-prefixer";
+import { browsers } from "../discourse/config/targets.js";
+import postcssVariablePrefixer from "./postcss-variable-prefixer.js";
+import postcssVariableRenamer from "./postcss-variable-renamer.js";
 
 const postCssProcessor = postcss([
+  postcssVariableRenamer(),
   autoprefixer({
     overrideBrowserslist: browsers,
   }),

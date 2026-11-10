@@ -19,7 +19,7 @@ RSpec.describe GroupArchivedMessage do
   end
 
   describe ".move_to_inbox!" do
-    it "should unarchive the topic correctly" do
+    it "unarchives the topic correctly" do
       described_class.archive!(group.id, group_message)
 
       messages =
@@ -57,7 +57,7 @@ RSpec.describe GroupArchivedMessage do
   end
 
   describe ".archive!" do
-    it "should archive the topic correctly" do
+    it "archives the topic correctly" do
       messages =
         MessageBus.track_publish(PrivateMessageTopicTrackingState.group_channel(group.id)) do
           described_class.archive!(group.id, group_message)

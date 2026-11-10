@@ -1,10 +1,7 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/ui-kit/d-button";
 
-@tagName("")
 export default class BulkInviteSampleCsvFile extends Component {
   @action
   downloadSampleCsv() {
@@ -31,8 +28,8 @@ export default class BulkInviteSampleCsvFile extends Component {
   <template>
     <div ...attributes>
       <DButton
-        @label="discourse_post_event.bulk_invite_modal.download_sample_csv"
         @action={{this.downloadSampleCsv}}
+        @label="discourse_post_event.bulk_invite_modal.download_sample_csv"
       />
     </div>
   </template>

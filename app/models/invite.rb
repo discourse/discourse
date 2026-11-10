@@ -55,6 +55,12 @@ class Invite < ActiveRecord::Base
 
   attribute :email_already_exists
 
+  def self.email_code_enabled?(user = nil)
+    UpcomingChanges.enabled_for_user?(:enable_local_logins_via_code, user) &&
+      SiteSetting.enable_local_logins && SiteSetting.enable_local_logins_via_email &&
+      !SiteSetting.enable_discourse_connect
+  end
+
   def self.emailed_status_types
     @emailed_status_types ||=
       Enum.new(not_required: 0, pending: 1, bulk_pending: 2, sending: 3, sent: 4)
@@ -237,6 +243,7 @@ class Invite < ActiveRecord::Base
     ip_address: nil,
     session: nil,
     email_token: nil,
+    email_verified: false,
     redeeming_user: nil
   )
     return if !redeemable?
@@ -251,6 +258,7 @@ class Invite < ActiveRecord::Base
       ip_address: ip_address,
       session: session,
       email_token: email_token,
+      email_verified: email_verified,
       redeeming_user: redeeming_user,
     ).redeem
   end

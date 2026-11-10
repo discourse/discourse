@@ -9,21 +9,38 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 const SCREENSHOT = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 const noop = () => {};
+const NO_PAIRS = [];
 
 const PAIRS = [
   {
     key: "default",
     name: "Default",
-    dark_only: false,
-    light: { colors: { secondary: "ffffff", tertiary: "0088cc" } },
+    light: {
+      colors: {
+        secondary: "ffffff",
+        primary: "222222",
+        tertiary: "0088cc",
+        quaternary: "e45735",
+        love: "fa6c8d",
+        highlight: "ffff4d",
+      },
+    },
+    dark: { colors: { secondary: "111111", tertiary: "00aaff" } },
   },
   {
     key: "alternate",
     name: "Alternate",
-    dark_only: false,
     light: { colors: { secondary: "eeeeee", tertiary: "ff0000" } },
+    dark: { colors: { secondary: "222222", tertiary: "ff4444" } },
   },
 ];
+
+const DRACULA_PAIR = {
+  key: "dracula",
+  name: "Dracula",
+  light: null,
+  dark: { colors: { secondary: "2d303e", tertiary: "bd93f9" } },
+};
 
 module(
   "Integration | Component | DesignWizard | ThemeSection",
@@ -49,13 +66,16 @@ module(
       await render(
         <template>
           <ThemeSection
-            @themes={{themes}}
-            @selectedThemeId={{-1}}
             @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
           />
         </template>
       );
 
+      assert
+        .dom(".design-wizard__theme-cards legend")
+        .hasText("Choose a theme", "labels the group of themes");
       assert
         .dom(
           ".design-wizard__theme-card input[type='radio'][name='design-wizard-theme']"
@@ -71,6 +91,49 @@ module(
           ".design-wizard__theme-card[data-theme-id='-2'] input[type='radio']"
         )
         .isNotChecked("leaves the other theme unchecked");
+      assert
+        .dom(
+          ".design-wizard__theme-card[data-theme-id='-2'] .design-wizard__theme-screenshot"
+        )
+        .doesNotExist(
+          "does not render an empty screenshot for a theme without one"
+        );
+      assert
+        .dom(".design-wizard__theme-card[data-theme-id='-2']")
+        .hasClass(
+          "--without-screenshot",
+          "uses a compact card without a screenshot"
+        );
+    });
+
+    test("applying a theme locks the choices while the preview loads", async function (assert) {
+      const themes = [
+        { id: -1, name: "Foundation", screenshot_light_url: SCREENSHOT },
+        { id: -2, name: "Horizon", screenshot_light_url: SCREENSHOT },
+      ];
+
+      await render(
+        <template>
+          <ThemeSection
+            @applying={{true}}
+            @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".design-wizard__theme-cards")
+        .hasAttribute("aria-busy", "true", "marks the choices as busy");
+      assert
+        .dom(".design-wizard__theme-card input[type='radio']")
+        .isDisabled("stops a second theme being picked mid-preview");
+      assert
+        .dom(
+          ".design-wizard__theme-card[data-theme-id='-1'] .design-wizard__theme-spinner"
+        )
+        .exists("shows progress on the theme being applied");
     });
   }
 );
@@ -80,84 +143,131 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("color controls expose their selected state and switch labels", async function (assert) {
+    test("palette cards expose their selected state and preview colors", async function (assert) {
+      const selections = [];
+      const select = (mode, key) => selections.push([mode, key]);
+
       await render(
         <template>
           <ColorsSection
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
-            @colorMode="light"
-            @darkOnly={{false}}
-            @userSelectable={{false}}
-            @onSelectMode={{noop}}
-            @onSelectPair={{noop}}
-            @onToggleUserSelectable={{noop}}
+            @darkPairs={{PAIRS}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{select}}
+            @paletteMode="both"
+            @selectedDarkKey="alternate"
+            @selectedLightKey="default"
+            @showsDarkPalettes={{true}}
+            @showsLightPalettes={{true}}
           />
         </template>
       );
 
+      const LIGHT = ".design-wizard__palette-row[data-mode='light']";
+      const DARK = ".design-wizard__palette-row[data-mode='dark']";
+
       assert
-        .dom(".design-wizard__color-mode.--active")
-        .hasAria("pressed", "true", "exposes the selected color mode");
+        .dom(`${LIGHT} [data-pair-key='default']`)
+        .hasAria("pressed", "true", "exposes the selected light palette");
       assert
-        .dom(".design-wizard__swatch[data-pair-key='default']")
-        .hasAria("pressed", "true", "exposes the selected palette");
+        .dom(`${LIGHT} [data-pair-key='alternate']`)
+        .hasAria("pressed", "false", "exposes an unselected light palette");
       assert
-        .dom(".design-wizard__swatch[data-pair-key='alternate']")
-        .hasAria("pressed", "false", "exposes the unselected palette");
+        .dom(`${DARK} [data-pair-key='alternate']`)
+        .hasAria("pressed", "true", "selects each row independently");
       assert
-        .dom(".design-wizard__user-selectable [role='switch']")
-        .hasAria("checked", "false", "exposes the switch state")
-        .hasAria(
-          "labelledby",
-          "design-wizard-user-selectable-title",
-          "associates the switch title"
+        .dom(`${LIGHT} .design-wizard__palette-row-selected`)
+        .hasText("Default", "names the selected light palette");
+      assert
+        .dom(`${DARK} .design-wizard__palette-row-selected`)
+        .hasText("Alternate", "names the selected dark palette");
+
+      assert
+        .dom(
+          `${LIGHT} [data-pair-key='default'] .design-wizard__palette-preview`
         )
-        .hasAria(
-          "describedby",
-          "design-wizard-user-selectable-description",
-          "associates the switch description"
+        .hasAttribute("style", /#0088cc/, "previews the palette's own colors");
+      assert
+        .dom(
+          `${DARK} [data-pair-key='default'] .design-wizard__palette-preview`
+        )
+        .hasAttribute(
+          "style",
+          /#00aaff/,
+          "the dark row previews the dark palette"
         );
+
+      await click(`${DARK} [data-pair-key='default']`);
+      assert.deepEqual(
+        selections,
+        [["dark", "default"]],
+        "reports the row and palette picked"
+      );
     });
 
-    test("the user selectable switch reflects and toggles its state", async function (assert) {
-      const state = new (class {
-        @tracked userSelectable = false;
-      })();
-      const toggle = () => (state.userSelectable = !state.userSelectable);
+    test("the color mode control picks which rows are shown", async function (assert) {
+      const darkPairs = [...PAIRS, DRACULA_PAIR];
+      const modes = [];
+      const selectMode = (mode) => modes.push(mode);
 
       await render(
         <template>
           <ColorsSection
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
-            @colorMode="light"
-            @darkOnly={{false}}
-            @userSelectable={{state.userSelectable}}
-            @onSelectMode={{noop}}
-            @onSelectPair={{noop}}
-            @onToggleUserSelectable={{toggle}}
+            @darkPairs={{darkPairs}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{noop}}
+            @onSelectPaletteMode={{selectMode}}
+            @paletteMode="dark"
+            @selectedDarkKey="dracula"
+            @showsDarkPalettes={{true}}
+            @showsLightPalettes={{false}}
           />
         </template>
       );
 
-      const SWITCH = ".design-wizard__user-selectable [role='switch']";
-      assert.dom(SWITCH).hasAria("checked", "false", "starts off");
-
-      await click(SWITCH);
-      assert.true(
-        state.userSelectable,
-        "clicking the switch notifies the caller"
-      );
-      assert.dom(SWITCH).hasAria("checked", "true", "renders the new state");
-
-      await click(SWITCH);
-      assert.false(state.userSelectable, "clicking again toggles back off");
       assert
-        .dom(SWITCH)
-        .hasAria("checked", "false", "renders the reverted state");
+        .dom(".design-wizard__palette-modes legend")
+        .hasText("Color modes", "labels the control");
+      assert
+        .dom(".design-wizard__palette-modes input[value='dark']")
+        .isChecked("reflects the selected mode");
+      assert
+        .dom(".design-wizard__palette-row[data-mode='light']")
+        .doesNotExist("hides the light row on a dark-only site");
+      assert
+        .dom(
+          ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='dracula']"
+        )
+        .hasAria("pressed", "true");
+
+      await click(".design-wizard__palette-modes input[value='both']");
+      assert.deepEqual(modes, ["both"], "reports the mode picked");
+    });
+
+    test("modes without palettes can't be picked", async function (assert) {
+      await render(
+        <template>
+          <ColorsSection
+            @darkPairs={{NO_PAIRS}}
+            @lightPairs={{PAIRS}}
+            @onSelectPalette={{noop}}
+            @onSelectPaletteMode={{noop}}
+            @paletteMode="light"
+            @selectedLightKey="default"
+            @showsDarkPalettes={{false}}
+            @showsLightPalettes={{true}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".design-wizard__palette-modes input[value='light']")
+        .isEnabled();
+      assert
+        .dom(".design-wizard__palette-modes input[value='both']")
+        .isDisabled();
+      assert
+        .dom(".design-wizard__palette-modes input[value='dark']")
+        .isDisabled();
     });
   }
 );
@@ -168,18 +278,16 @@ module(
     setupRenderingTest(hooks);
 
     test("homepage controls expose their selected state", async function (assert) {
-      const state = new (class {
-        @tracked homepage = "latest";
-      })();
+      const homepage = tracked("latest");
 
       await render(
         <template>
           <HomepageSection
-            @themeId={{-1}}
-            @homepage={{state.homepage}}
             @categoryPageStyle="categories_boxes"
-            @onSelectHomepage={{noop}}
+            @homepage={{homepage.value}}
             @onSelectCategoryPageStyle={{noop}}
+            @onSelectHomepage={{noop}}
+            @themeId={{-1}}
           />
         </template>
       );
@@ -188,13 +296,10 @@ module(
         .dom(".design-wizard__homepage-card[data-homepage='topics']")
         .hasAria("pressed", "true", "exposes the selected homepage type");
       assert
-        .dom(".design-wizard__topic-page-option[data-topic-page='latest']")
-        .hasAria("pressed", "true", "exposes the selected topic page");
-      assert
-        .dom(".design-wizard__topic-page-option[data-topic-page='new']")
-        .hasAria("pressed", "false", "exposes an unselected topic page");
+        .dom(".design-wizard__detail-group")
+        .doesNotExist("offers no further choices for a topics homepage");
 
-      state.homepage = "categories";
+      homepage.value = "categories";
       await settled();
 
       assert
@@ -203,9 +308,6 @@ module(
       assert
         .dom(".design-wizard__style-block[data-style='categories_boxes']")
         .hasAria("pressed", "true", "exposes the selected category style");
-      assert
-        .dom(".design-wizard__topic-page-option")
-        .doesNotExist("hides the topic page types for a categories homepage");
     });
   }
 );

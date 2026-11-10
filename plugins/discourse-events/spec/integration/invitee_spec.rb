@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePostEvent::Invitee do
+describe DiscourseEvents::Events::Invitee do
   before do
     freeze_time
     Jobs.run_immediately!
@@ -108,10 +108,10 @@ describe DiscoursePostEvent::Invitee do
     before do
       post_event.create_invitees(
         [
-          { user_id: regular_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] },
-          { user_id: suspended_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] },
-          { user_id: silenced_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] },
-          { user_id: staged_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] },
+          { user_id: regular_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] },
+          { user_id: suspended_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] },
+          { user_id: silenced_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] },
+          { user_id: staged_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] },
         ],
       )
     end

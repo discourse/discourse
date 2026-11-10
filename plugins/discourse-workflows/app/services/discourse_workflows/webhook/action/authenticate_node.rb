@@ -17,6 +17,7 @@ module DiscourseWorkflows
     option :node
     option :params
     option :credentials, default: -> { {} }
+    option :request, optional: true
 
     def call
       auth_mode = NodeData.resolved_parameters(node)["authentication"] || NO_AUTH
@@ -94,14 +95,16 @@ module DiscourseWorkflows
 
     def authenticate_header_auth(credential)
       cred_data = credential.data || {}
-      expected_name = ExpressionResolver.resolve(cred_data["name"])
+      header_key = ExpressionResolver.resolve(cred_data["name"]).to_s.downcase
       expected_value = ExpressionResolver.resolve(cred_data["value"])
 
-      return MISCONFIGURED if expected_name.blank? || expected_value.blank?
+      return MISCONFIGURED if header_key.blank? || expected_value.blank?
 
-      header_key = expected_name.to_s.downcase
-      provided_value = (params.headers[header_key] || params.headers[header_key.to_sym]).to_s
-      secure_compare(provided_value, expected_value) ? AUTHENTICATED : DENIED
+      provided_value = params.headers[header_key] || params.headers[header_key.to_sym]
+      return DENIED if !secure_compare(provided_value, expected_value)
+
+      request&.filter_header(header_key)
+      AUTHENTICATED
     end
 
     def secure_compare(a, b)

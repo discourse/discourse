@@ -7,7 +7,6 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import { not } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -31,10 +30,6 @@ export default class TagChooserField extends Component {
     }));
   }
 
-  _tagId(tag) {
-    return typeof tag === "object" ? tag.id : null;
-  }
-
   get filteredSelectedValues() {
     return this.tags.filter((tag) =>
       this.formattedChoices.some((choice) => choice.id === this._tagId(tag))
@@ -45,6 +40,10 @@ export default class TagChooserField extends Component {
     return this.tags.filter((tag) =>
       this.args.choices.some((choice) => choice.id === this._tagId(tag))
     );
+  }
+
+  get tags() {
+    return this.composer.get("model.tags") || [];
   }
 
   @action
@@ -79,10 +78,6 @@ export default class TagChooserField extends Component {
     } else {
       this.args.onChange(this.tags);
     }
-  }
-
-  get tags() {
-    return this.composer.get("model.tags") || [];
   }
 
   @action
@@ -137,10 +132,14 @@ export default class TagChooserField extends Component {
     );
   }
 
+  _tagId(tag) {
+    return typeof tag === "object" ? tag.id : null;
+  }
+
   <template>
     <div
-      data-field-type="multi-select"
       class="control-group form-template-field"
+      data-field-type="multi-select"
       {{didInsert this.syncWithComposerTags}}
       {{! not ideal but we would need a lot of re-architecturing to make the form dynamic }}
       {{didUpdate this.syncWithComposerTags this.composer.model.tags}}
@@ -161,24 +160,24 @@ export default class TagChooserField extends Component {
       {{/if}}
 
       <select
+        class="form-template-field__multi-select"
+        multiple={{@attributes.multiple}}
         name={{@id}}
         required={{if @validations.required "required" ""}}
-        multiple={{@attributes.multiple}}
-        class="form-template-field__multi-select"
         {{on "input" this.handleInput}}
       >
         {{#if @attributes.none_label}}
           <option
             class="form-template-field__multi-select-placeholder"
-            value=""
             disabled={{not this.selectedTags.length}}
             selected={{if this.selectedTags.length "" "selected"}}
+            value=""
           >{{@attributes.none_label}}</option>
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
           <option
-            value={{choice.display}}
             selected={{this.isSelected choice.id}}
+            value={{choice.display}}
           >{{choice.display}}</option>
         {{/each}}
       </select>

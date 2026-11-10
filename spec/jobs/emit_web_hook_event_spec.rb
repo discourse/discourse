@@ -26,7 +26,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     )
   end
 
-  it "should not destroy webhook event in case of error" do
+  it "retains the webhook event after an error" do
     stub_request(:post, post_hook.payload_url).to_return(status: 500)
 
     job.execute(
@@ -351,6 +351,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
           headers
         end
       end
+
       it "Allows for header modifications" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:web_hook_event_headers, &modifier_block)
@@ -371,6 +372,45 @@ RSpec.describe Jobs::EmitWebHookEvent do
         DiscoursePluginRegistry.unregister_modifier(
           plugin_instance,
           :web_hook_event_headers,
+          &modifier_block
+        )
+      end
+    end
+
+    context "with `web_hook_event_ssl_opts` modifier" do
+      let(:modifier_block) do
+        Proc.new do |ssl_opts, _|
+          ssl_opts[:client_cert] = "my cert"
+          ssl_opts
+        end
+      end
+
+      it "passes additional ssl options to the connection" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:web_hook_event_ssl_opts, &modifier_block)
+
+        captured_opts = nil
+        allow(Faraday).to receive(:new).and_wrap_original do |m, *args, &block|
+          captured_opts = args[1] # connection_opts
+          m.call(*args, &block)
+        end
+
+        stub_request(:post, post_hook.payload_url).to_return(body: "OK", status: 200)
+
+        topic_event_type = WebHookEventType.all.first
+        web_hook_id = Fabricate("#{topic_event_type.name.gsub("_created", "")}_web_hook").id
+
+        job.execute(
+          web_hook_id: web_hook_id,
+          event_type: topic_event_type.name,
+          payload: { test: "some payload" }.to_json,
+        )
+
+        expect(captured_opts[:ssl]).to include(client_cert: "my cert")
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :web_hook_event_ssl_opts,
           &modifier_block
         )
       end

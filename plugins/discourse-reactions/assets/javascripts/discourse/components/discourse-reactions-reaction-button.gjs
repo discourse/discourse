@@ -15,6 +15,85 @@ export default class ReactionsReactionButton extends Component {
   @service site;
   @service currentUser;
 
+  get likedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-liked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-liked";
+    }
+
+    return icon;
+  }
+
+  get unlikedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-unliked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-unliked";
+    }
+
+    // Not all icons have a far- version, so we need to check if it exists.
+    if (isExistingIconId(`far-${icon}`)) {
+      return `far-${icon}`;
+    }
+
+    return icon;
+  }
+
+  // Without emoji rendering, any reaction is shown as a like.
+  get showLikedIcon() {
+    return (
+      this.args.post.current_user_used_main_reaction ||
+      (this.args.post.current_user_reaction && !this.siteSettings.enable_emoji)
+    );
+  }
+
+  get title() {
+    if (!this.currentUser) {
+      return i18n("discourse_reactions.main_reaction.unauthenticated");
+    }
+
+    const likeAction = this.args.post.likeAction;
+    if (!likeAction) {
+      return null;
+    }
+
+    let title;
+    let options;
+    const currentUserReaction = this.args.post.current_user_reaction;
+
+    if (likeAction.canToggle && isBlank(likeAction.can_undo)) {
+      title = "discourse_reactions.main_reaction.add";
+    }
+
+    if (likeAction.canToggle && likeAction.can_undo) {
+      title = "discourse_reactions.main_reaction.remove";
+    }
+
+    if (!likeAction.canToggle) {
+      title = "discourse_reactions.main_reaction.cant_remove";
+    }
+
+    if (
+      currentUserReaction &&
+      currentUserReaction.can_undo &&
+      isBlank(likeAction.can_undo)
+    ) {
+      title = "discourse_reactions.picker.remove_reaction";
+      options = { reaction: currentUserReaction.id };
+    }
+
+    if (
+      currentUserReaction &&
+      !currentUserReaction.can_undo &&
+      isBlank(likeAction.can_undo)
+    ) {
+      title = "discourse_reactions.picker.cant_remove_reaction";
+    }
+
+    return options ? i18n(title, options) : i18n(title);
+  }
+
   @action
   click() {
     this.args.cancelCollapse();
@@ -74,91 +153,20 @@ export default class ReactionsReactionButton extends Component {
     this.args.scheduleCollapse("collapseReactionsPicker");
   }
 
-  get likedIcon() {
-    const icon = this.siteSettings.discourse_reactions_like_icon;
-    // Map "heart" to the d-liked alias to follow core replacement pattern
-    if (icon === "heart") {
-      return "d-liked";
-    }
-
-    return icon;
-  }
-
-  get unlikedIcon() {
-    const icon = this.siteSettings.discourse_reactions_like_icon;
-    // Map "heart" to the d-unliked alias to follow core replacement pattern
-    if (icon === "heart") {
-      return "d-unliked";
-    }
-
-    // Not all icons have a far- version, so we need to check if it exists.
-    if (isExistingIconId(`far-${icon}`)) {
-      return `far-${icon}`;
-    }
-
-    return icon;
-  }
-
-  get title() {
-    if (!this.currentUser) {
-      return i18n("discourse_reactions.main_reaction.unauthenticated");
-    }
-
-    const likeAction = this.args.post.likeAction;
-    if (!likeAction) {
-      return null;
-    }
-
-    let title;
-    let options;
-    const currentUserReaction = this.args.post.current_user_reaction;
-
-    if (likeAction.canToggle && isBlank(likeAction.can_undo)) {
-      title = "discourse_reactions.main_reaction.add";
-    }
-
-    if (likeAction.canToggle && likeAction.can_undo) {
-      title = "discourse_reactions.main_reaction.remove";
-    }
-
-    if (!likeAction.canToggle) {
-      title = "discourse_reactions.main_reaction.cant_remove";
-    }
-
-    if (
-      currentUserReaction &&
-      currentUserReaction.can_undo &&
-      isBlank(likeAction.can_undo)
-    ) {
-      title = "discourse_reactions.picker.remove_reaction";
-      options = { reaction: currentUserReaction.id };
-    }
-
-    if (
-      currentUserReaction &&
-      !currentUserReaction.can_undo &&
-      isBlank(likeAction.can_undo)
-    ) {
-      title = "discourse_reactions.picker.cant_remove_reaction";
-    }
-
-    return options ? i18n(title, options) : i18n(title);
-  }
-
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="discourse-reactions-reaction-button"
+      title={{this.title}}
       {{on "click" this.click}}
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}
-      title={{this.title}}
     >
-      {{#if @post.current_user_used_main_reaction}}
+      {{#if this.showLikedIcon}}
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          @translatedTitle={{this.title}}
           @icon={{this.likedIcon}}
+          @translatedTitle={{this.title}}
         />
       {{else if @post.current_user_reaction}}
         <DButton
@@ -166,16 +174,16 @@ export default class ReactionsReactionButton extends Component {
           @translatedTitle={{this.title}}
         >
           <img
+            alt={{concat ":" @post.current_user_reaction.id}}
             class="btn-toggle-reaction-emoji reaction-button"
             src={{emojiUrlFor @post.current_user_reaction.id}}
-            alt={{concat ":" @post.current_user_reaction.id}}
           />
         </DButton>
       {{else}}
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          @translatedTitle={{this.title}}
           @icon={{this.unlikedIcon}}
+          @translatedTitle={{this.title}}
         />
       {{/if}}
     </div>

@@ -10,12 +10,12 @@ export default class Icon extends Component {
 
   <template>
     <DIconGridPicker
-      @value={{@value}}
-      @onChange={{this.onChangeIcon}}
       @disabled={{@disabled}}
+      @onChange={{this.onChangeIcon}}
+      @onlyAvailable={{false}}
       @showCaret={{true}}
       @showSelectedName={{true}}
-      @onlyAvailable={{false}}
+      @value={{@value}}
     />
   </template>
 }

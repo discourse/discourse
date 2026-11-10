@@ -28,9 +28,7 @@ sl:
       close: "Zapri"
       delete: "Izbriši"
       edit: "Uredi"
-      back: "Nazaj"
       save: "Shrani"
-      apply: "Uporabi"
       update_range:
         last_10_days: "Zadnjih 10 dni"
         last_30_days: "Zadnjih 30 dni"
@@ -39,8 +37,10 @@ sl:
       custom_range_from: "Od"
       admin:
         name: "Ime"
+        created_by: "Ustvaril"
     discourse_workflows:
       gamification_score:
         username: "Uporabnik"
         date: "Datum"
         description: "Opis"
+        category_id: "Kategorija"

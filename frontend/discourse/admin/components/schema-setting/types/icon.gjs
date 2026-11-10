@@ -3,7 +3,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
-import { and, not } from "discourse/truth-helpers";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import { i18n } from "discourse-i18n";
 
@@ -11,13 +10,6 @@ export default class SchemaSettingTypeIcon extends Component {
   @tracked touched = false;
   @tracked value = this.args.value;
   required = this.args.spec.required;
-
-  @action
-  onChange(newValue) {
-    this.touched = true;
-    this.value = newValue;
-    this.args.onChange(newValue);
-  }
 
   get validationErrorMessage() {
     if (!this.touched) {
@@ -29,13 +21,20 @@ export default class SchemaSettingTypeIcon extends Component {
     }
   }
 
+  @action
+  onChange(newValue) {
+    this.touched = true;
+    this.value = newValue;
+    this.args.onChange(newValue);
+  }
+
   <template>
     <DIconGridPicker
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @allowClear={{not this.required}}
+      @onChange={{this.onChange}}
       @showCaret={{true}}
       @showSelectedName={{true}}
+      @value={{this.value}}
     />
 
     <div class="schema-field__input-supporting-text">

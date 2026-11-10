@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import { i18n } from "discourse-i18n";
 
 export default class DUserAvatarFlair extends Component {
   @service site;
@@ -33,13 +34,27 @@ export default class DUserAvatarFlair extends Component {
     }
   }
 
+  get isBot() {
+    const id = this.args.user?.id;
+    return Number.isInteger(id) && id <= 0;
+  }
+
   <template>
     {{#if this.flair}}
       <DAvatarFlair
-        @flairName={{this.flair.flairName}}
-        @flairUrl={{this.flair.flairUrl}}
         @flairBgColor={{this.flair.flairBgColor}}
         @flairColor={{this.flair.flairColor}}
+        @flairName={{this.flair.flairName}}
+        @flairUrl={{this.flair.flairUrl}}
+      />
+    {{else if this.isBot}}
+      <DAvatarFlair
+        aria-label={{i18n "user.bot_account"}}
+        class="--bot"
+        role="img"
+        title={{i18n "user.bot_account"}}
+        @flairName="bot"
+        @flairUrl="robot"
       />
     {{/if}}
   </template>

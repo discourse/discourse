@@ -18,7 +18,7 @@ export default class TrackSelected extends Component {
 
   <template>
     <span class={{@class}} ...attributes>
-      <input {{on "input" this.onToggle}} type="checkbox" />
+      <input type="checkbox" {{on "input" this.onToggle}} />
     </span>
   </template>
 }

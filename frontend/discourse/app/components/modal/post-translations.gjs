@@ -10,13 +10,15 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Composer from "discourse/models/composer";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ id: number, post_id: number, post_version: number, locale: string, raw: string, languageName: string, topic_localization?: { id: number, topic_id: number, locale: string, title: string, fancy_title: string } }} PostLocalizationWithLanguage
+ */
 export default class PostTranslationsModal extends Component {
   @service composer;
   @service dialog;
@@ -24,6 +26,7 @@ export default class PostTranslationsModal extends Component {
   @service siteSettings;
   @service toasts;
 
+  /** @type {PostLocalizationWithLanguage[] | null} */
   @tracked postLocalizations = null;
   @tracked loading = false;
   @tracked savingPostLocale = false;
@@ -64,6 +67,10 @@ export default class PostTranslationsModal extends Component {
     }));
   }
 
+  get canLocalizePost() {
+    return this.post.can_localize_post;
+  }
+
   localeLabel(locale) {
     return `${this.languageNameLookup.getLanguageName(locale)} (${locale})`;
   }
@@ -85,10 +92,6 @@ export default class PostTranslationsModal extends Component {
     } finally {
       this.loading = false;
     }
-  }
-
-  get canLocalizePost() {
-    return this.post.can_localize_post;
   }
 
   @action
@@ -209,28 +212,28 @@ export default class PostTranslationsModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "post.localizations.modal.title"}}
+      class="post-translations-modal"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="post-translations-modal"
+      @title={{i18n "post.localizations.modal.title"}}
     >
       <:body>
-        <DConditionalLoadingSpinner @size="large" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @condition={{this.loading}} @size="large" />
 
         <div class="post-translations-modal__language-settings">
           {{#if this.post.firstPost}}
             <Form
-              @data={{this.topicLocaleFormData}}
               class="post-translations-modal__language-form post-translations-modal__topic-language"
+              @data={{this.topicLocaleFormData}}
               as |form topicData|
             >
               <form.Field
+                @disabled={{this.savingTopicLocale}}
+                @format="full"
                 @name="locale"
+                @showOptional={{false}}
                 @title={{i18n "post.localizations.modal.topic_language"}}
                 @type="select"
-                @format="full"
-                @showOptional={{false}}
-                @disabled={{this.savingTopicLocale}}
                 as |field|
               >
                 <div class="post-translations-modal__language-control">
@@ -256,30 +259,30 @@ export default class PostTranslationsModal extends Component {
                     }}
                   >
                     <form.Button
+                      class="btn-primary --save"
                       @action={{fn
                         this.saveTopicLocale
                         topicData.locale
                         form.commitField
                       }}
+                      @ariaLabel="post.localizations.modal.save_topic_language"
+                      @disabled={{this.savingTopicLocale}}
                       @icon="check"
                       @isLoading={{this.savingTopicLocale}}
-                      @disabled={{this.savingTopicLocale}}
                       @title="post.localizations.modal.save_topic_language"
-                      @ariaLabel="post.localizations.modal.save_topic_language"
-                      class="btn-primary --save"
                     />
                     <form.Button
+                      class="btn-default --discard"
                       @action={{fn
                         this.discardLocale
                         form.set
                         form.commitField
                         this.savedTopicLocale
                       }}
-                      @icon="xmark"
-                      @disabled={{this.savingTopicLocale}}
-                      @title="post.localizations.modal.discard_language_change"
                       @ariaLabel="post.localizations.modal.discard_language_change"
-                      class="btn-default --discard"
+                      @disabled={{this.savingTopicLocale}}
+                      @icon="xmark"
+                      @title="post.localizations.modal.discard_language_change"
                     />
                   </div>
                 </div>
@@ -288,18 +291,18 @@ export default class PostTranslationsModal extends Component {
           {{/if}}
 
           <Form
-            @data={{this.postLocaleFormData}}
             class="post-translations-modal__language-form post-translations-modal__post-language"
+            @data={{this.postLocaleFormData}}
             as |form postData|
           >
             <form.Field
-              @name="locale"
-              @title={{i18n "post.localizations.modal.post_language"}}
-              @type="select"
+              @disabled={{this.savingPostLocale}}
               @format="full"
               @helpText={{i18n "post.localizations.modal.language_notice"}}
+              @name="locale"
               @showOptional={{false}}
-              @disabled={{this.savingPostLocale}}
+              @title={{i18n "post.localizations.modal.post_language"}}
+              @type="select"
               as |field|
             >
               <div class="post-translations-modal__language-control">
@@ -323,30 +326,30 @@ export default class PostTranslationsModal extends Component {
                   }}
                 >
                   <form.Button
+                    class="btn-primary --save"
                     @action={{fn
                       this.savePostLocale
                       postData.locale
                       form.commitField
                     }}
+                    @ariaLabel="post.localizations.modal.save_post_language"
+                    @disabled={{this.savingPostLocale}}
                     @icon="check"
                     @isLoading={{this.savingPostLocale}}
-                    @disabled={{this.savingPostLocale}}
                     @title="post.localizations.modal.save_post_language"
-                    @ariaLabel="post.localizations.modal.save_post_language"
-                    class="btn-primary --save"
                   />
                   <form.Button
+                    class="btn-default --discard"
                     @action={{fn
                       this.discardLocale
                       form.set
                       form.commitField
                       this.savedPostLocale
                     }}
-                    @icon="xmark"
-                    @disabled={{this.savingPostLocale}}
-                    @title="post.localizations.modal.discard_language_change"
                     @ariaLabel="post.localizations.modal.discard_language_change"
-                    class="btn-default --discard"
+                    @disabled={{this.savingPostLocale}}
+                    @icon="xmark"
+                    @title="post.localizations.modal.discard_language_change"
                   />
                 </div>
               </div>
@@ -372,9 +375,9 @@ export default class PostTranslationsModal extends Component {
                     {{#if this.canLocalizePost}}
                       <DButton
                         class="btn-transparent --primary"
+                        @action={{fn this.editLocalization localization}}
                         @icon="pencil"
                         @label="post.localizations.table.edit"
-                        @action={{fn this.editLocalization localization}}
                       />
                     {{/if}}
                   </td>
@@ -382,9 +385,9 @@ export default class PostTranslationsModal extends Component {
                     {{#if this.canLocalizePost}}
                       <DButton
                         class="btn-transparent --danger"
+                        @action={{fn this.delete localization.locale}}
                         @icon="trash-can"
                         @label="post.localizations.table.delete"
-                        @action={{fn this.delete localization.locale}}
                       />
                     {{/if}}
                   </td>

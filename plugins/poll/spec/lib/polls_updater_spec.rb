@@ -100,7 +100,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         expect(poll.post.custom_fields[DiscoursePoll::HAS_POLLS]).to eq(true)
 
         expect(message.data[:post_id]).to eq(post.id)
-        expect(message.data[:polls][0][:name]).to eq(poll.name)
+        expect(message.data).to eq(post_id: post.id)
       end
     end
 
@@ -141,6 +141,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         expect(digests.size).to eq(2)
         expect(poll_record.poll_votes.count).to eq(1)
       end
+
       describe "when there are no votes" do
         it "at any time" do
           post # create the post
@@ -165,7 +166,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
           expect(poll.post.custom_fields[DiscoursePoll::HAS_POLLS]).to eq(true)
 
           expect(message.data[:post_id]).to eq(post.id)
-          expect(message.data[:polls][0][:name]).to eq(poll.name)
+          expect(message.data).to eq(post_id: post.id)
         end
       end
 
@@ -196,7 +197,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
             expect(poll.post.custom_fields[DiscoursePoll::HAS_POLLS]).to eq(true)
 
             expect(message.data[:post_id]).to eq(post.id)
-            expect(message.data[:polls][0][:name]).to eq(poll.name)
+            expect(message.data).to eq(post_id: post.id)
           end
         end
 

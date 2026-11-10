@@ -190,6 +190,7 @@ module BackupRestore
       log "Reconnecting to the database..."
       RailsMultisite::ConnectionManagement.reload if RailsMultisite::ConnectionManagement.instance
       RailsMultisite::ConnectionManagement.establish_connection(db: @current_db)
+      ActiveRecord::Base.connection.reconnect!
     end
 
     def create_missing_discourse_functions

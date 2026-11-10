@@ -1,7 +1,7 @@
 import { click, find, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import userFixtures from "../fixtures/user-fixtures";
-import { acceptance } from "../helpers/qunit-helpers";
+import userFixtures from "../fixtures/user-fixtures.js";
+import { acceptance } from "../helpers/qunit-helpers.js";
 
 acceptance("User Activity / Read - bulk actions", function (needs) {
   needs.user();

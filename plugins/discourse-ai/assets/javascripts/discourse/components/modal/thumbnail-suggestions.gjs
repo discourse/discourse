@@ -11,8 +11,8 @@ import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import ThumbnailSuggestionItem from "../thumbnail-suggestion-item";
+} from "../../lib/ai-errors.js";
+import ThumbnailSuggestionItem from "../thumbnail-suggestion-item.gjs";
 
 export default class ThumbnailSuggestions extends Component {
   @tracked loading = false;
@@ -95,17 +95,17 @@ export default class ThumbnailSuggestions extends Component {
   <template>
     <DModal
       class="thumbnail-suggestions-modal"
-      @title={{i18n "discourse_ai.ai_helper.thumbnail_suggestions.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.ai_helper.thumbnail_suggestions.title"}}
     >
       <:body>
         <DConditionalLoadingSpinner @condition={{this.loading}}>
           <div class="ai-thumbnail-suggestions">
             {{#each this.thumbnails as |thumbnail|}}
               <ThumbnailSuggestionItem
-                @thumbnail={{thumbnail}}
                 @addSelection={{this.addSelection}}
                 @removeSelection={{this.removeSelection}}
+                @thumbnail={{thumbnail}}
               />
             {{/each}}
           </div>
@@ -114,18 +114,18 @@ export default class ThumbnailSuggestions extends Component {
 
       <:footer>
         <DButton
-          @action={{this.appendSelectedImages}}
-          @label="save"
-          @disabled={{this.isDisabled}}
           class="btn-primary create"
+          @action={{this.appendSelectedImages}}
+          @disabled={{this.isDisabled}}
+          @label="save"
         />
         <DModalCancel @close={{@closeModal}} />
         <DButton
+          class="regenerate"
           @action={{this.regenerateThumbnails}}
+          @disabled={{this.loading}}
           @icon="arrows-rotate"
           @label="discourse_ai.ai_helper.thumbnail_suggestions.try_again"
-          @disabled={{this.loading}}
-          class="regenerate"
         />
       </:footer>
     </DModal>

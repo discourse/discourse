@@ -1,5 +1,7 @@
+import { settled } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Unit | Service | chat", function (needs) {
@@ -52,5 +54,50 @@ acceptance("Unit | Service | chat", function (needs) {
     const count = this.chat.getDocumentTitleCount();
 
     assert.strictEqual(count, 10, "returns pending count");
+  });
+
+  test("updatePresence leaves chat presence while chat isn't open", async function (assert) {
+    const { enter, leave } = (this.chat.presenceChannel = {
+      enter: sinon.stub(),
+      leave: sinon.stub(),
+    });
+
+    this.chat.updatePresence();
+    await settled();
+
+    assert.false(enter.called, "doesn't enter");
+    assert.true(leave.calledOnce, "leaves");
+  });
+
+  test("updatePresence counts what chat-presence-active says is active", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("chat-presence-active", () => true);
+    });
+    const { enter, leave } = (this.chat.presenceChannel = {
+      enter: sinon.stub(),
+      leave: sinon.stub(),
+    });
+
+    this.chat.updatePresence();
+    await settled();
+
+    assert.true(enter.calledOnce, "enters");
+    assert.false(leave.called, "doesn't leave");
+  });
+
+  test("updatePresence still respects hidden presence", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("chat-presence-active", () => true);
+    });
+    this.currentUser.user_option.hide_presence = true;
+    const { enter } = (this.chat.presenceChannel = {
+      enter: sinon.stub(),
+      leave: sinon.stub(),
+    });
+
+    this.chat.updatePresence();
+    await settled();
+
+    assert.false(enter.called, "doesn't enter");
   });
 });

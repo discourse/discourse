@@ -14,6 +14,7 @@ module DiscourseWorkflows
     attribute :nodes, default: -> { [] }
     attribute :connections, default: -> { {} }
     attribute :settings, default: -> { {} }
+    attribute :variables_schema, default: -> { [] }
 
     validates :version_id, presence: true, length: { maximum: 36 }
     validates :workflow_id, :version_number, :name, :created_by_id, presence: true
@@ -44,19 +45,20 @@ end
 #
 # Table name: discourse_workflows_workflow_versions
 #
-#  authors        :text
-#  autosaved      :boolean          default(FALSE), not null
-#  connections    :jsonb            not null
-#  name           :string(100)      not null
-#  nodes          :jsonb            not null
-#  settings       :jsonb            not null
-#  version_number :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  created_by_id  :integer          not null
-#  updated_by_id  :integer
-#  version_id     :string(36)       not null, primary key
-#  workflow_id    :bigint           not null
+#  authors          :text
+#  autosaved        :boolean          default(FALSE), not null
+#  connections      :jsonb            not null
+#  name             :string(100)      not null
+#  nodes            :jsonb            not null
+#  settings         :jsonb            not null
+#  variables_schema :jsonb            not null
+#  version_number   :integer          not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  created_by_id    :integer          not null
+#  updated_by_id    :integer
+#  version_id       :string(36)       not null, primary key
+#  workflow_id      :bigint           not null
 #
 # Indexes
 #

@@ -42,7 +42,6 @@ he:
           label_with_count:
             one: "עריכת הגדרות (%{count})"
             two: "עריכת הגדרות (%{count})"
-            many: "עריכת הגדרות (%{count})"
             other: "עריכת הגדרות (%{count})"
         user:
           label: משתמש

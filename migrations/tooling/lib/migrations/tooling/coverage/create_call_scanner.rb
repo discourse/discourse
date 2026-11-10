@@ -12,7 +12,7 @@ module Migrations
       # Converter call sites use the bare `IntermediateDB::<Model>` receiver
       # (resolved lexically through `Conversion::Step`), but the same receiver may
       # also be written with leading qualification (e.g.
-      # `Database::IntermediateDB::Upload`). We therefore match on the trailing
+      # `Database::IntermediateDB::UploadSource`). We therefore match on the trailing
       # `IntermediateDB::<Const>` segment regardless of qualification, then resolve
       # `<Const>` against `Migrations::Database::IntermediateDB`.
       #

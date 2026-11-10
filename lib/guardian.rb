@@ -103,7 +103,10 @@ class Guardian
 
     def in_any_groups?(group_ids)
       if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
-        return group_ids.include?(Group::AUTO_GROUPS[:everyone])
+        return(
+          group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+            group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
+        )
       end
 
       group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
@@ -166,10 +169,7 @@ class Guardian
     @user &&
       (
         Rails.env.development? || (is_admin? && Developer.user_ids.include?(@user.id)) ||
-          (
-            Rails.configuration.respond_to?(:developer_emails) &&
-              Rails.configuration.developer_emails.include?(@user.email)
-          )
+          Developer.configured_email?(@user.email)
       )
   end
 
@@ -189,6 +189,14 @@ class Guardian
     @user.permission_acl.has_any_target_permission?(target, permissions)
   end
 
+  def is_acl_owner?(target)
+    has_acl_permission?(target, Acl::Permissions::OWNER)
+  end
+
+  def can_manage_acl_owner?(target)
+    authenticated? && (is_admin? || is_acl_owner?(target))
+  end
+
   def target_ids_with_acl_permission(target_klass, permission)
     @user.permission_acl.target_ids_with_permission(target_klass, permission)
   end
@@ -199,6 +207,10 @@ class Guardian
 
   def in_any_groups?(group_ids)
     @user.in_any_groups?(group_ids)
+  end
+
+  def can_search?
+    authenticated? || SiteSetting.allow_anonymous_search
   end
 
   # Can the user see the object?
@@ -254,7 +266,14 @@ class Guardian
           (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4]) && can_see_topic?(obj))
       )
   end
-  alias can_see_flags? can_moderate?
+
+  def can_see_flags?(obj)
+    is_staff? && can_moderate?(obj)
+  end
+
+  def can_delete_all_posts_and_topics?
+    @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+  end
 
   def can_tag?(topic)
     return false if topic.blank?
@@ -674,6 +693,14 @@ class Guardian
     other && authenticated? && other.is_a?(User) && @user == other
   end
 
+  def category_group_moderator_scope
+    Category.joins(category_moderation_groups: { group: :group_users }).where(
+      group_users: {
+        user_id: user.id,
+      },
+    )
+  end
+
   private
 
   def is_my_own?(obj)
@@ -718,13 +745,5 @@ class Guardian
 
   def category_group_moderation_allowed?
     authenticated? && SiteSetting.enable_category_group_moderation
-  end
-
-  def category_group_moderator_scope
-    Category.joins(category_moderation_groups: { group: :group_users }).where(
-      group_users: {
-        user_id: user.id,
-      },
-    )
   end
 end

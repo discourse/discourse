@@ -103,7 +103,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
 
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             expect(invitee_klass.count).to eq(2)
             expect(invitee_klass.find_by(user_id: invitee_1.id).status).to eq(
@@ -123,7 +123,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
               processed: 1,
             )
 
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(
               event_id: post_event_1.id,
@@ -165,7 +165,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
               current_user_id: moderator.id,
             )
 
-            expect(DiscoursePostEvent::Invitee.where(post_id: mod_post.id)).to be_empty
+            expect(DiscourseEvents::Events::Invitee.where(post_id: mod_post.id)).to be_empty
           end
         end
 
@@ -189,7 +189,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
 
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             expect(invitee_klass.count).to eq(2)
             expect(invitee_klass.find_by(user_id: invitee_1)).to eq(nil)
@@ -203,7 +203,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
           end
 
           it "skips an unrecognized attendance instead of corrupting the invitee" do
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(
               event_id: post_event_1.id,
@@ -225,6 +225,38 @@ describe Jobs::DiscoursePostEventBulkInvite do
             expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
               invitee_klass.statuses[:interested],
             )
+          end
+
+          it "updates recurrence scope when a going attendee is bulk invited again at capacity" do
+            post_event_1.update!(max_attendees: 1)
+            invitee_klass = DiscourseEvents::Events::Invitee
+            invitee_klass.create_attendance!(invitee_4.id, post_event_1.id, :going)
+
+            job_args = {
+              event_id: post_event_1.id,
+              invitees: [{ "identifier" => invitee_4.username, "attendance" => "going" }],
+              recurring: true,
+              current_user_id: user_1.id,
+            }
+
+            Jobs::DiscoursePostEventBulkInvite.new.execute(job_args)
+            expect(invitee_klass.find_by(user_id: invitee_4.id)).to be_recurring
+
+            Jobs::DiscoursePostEventBulkInvite.new.execute(job_args.merge(recurring: false))
+            expect(invitee_klass.find_by(user_id: invitee_4.id)).not_to be_recurring
+          end
+
+          it "does not mark non-going attendees as recurring" do
+            Jobs::DiscoursePostEventBulkInvite.new.execute(
+              event_id: post_event_1.id,
+              invitees: [{ "identifier" => invitee_3.username, "attendance" => "interested" }],
+              recurring: true,
+              current_user_id: user_1.id,
+            )
+
+            expect(
+              DiscourseEvents::Events::Invitee.find_by(user_id: invitee_3.id),
+            ).not_to be_recurring
           end
         end
       end

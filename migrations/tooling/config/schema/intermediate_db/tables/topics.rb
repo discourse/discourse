@@ -2,6 +2,14 @@
 
 Migrations::Tooling::Schema.table :topics do
   index :archetype
+  index :slug
+
+  # The destination regenerates its own slug from the title, but the SOURCE
+  # slug is what a slug-only `/t/<slug>` link in a post body carries — the
+  # resolver looks it up here to remap such links. Nullable because not every
+  # source has slugs; resolution then finds nothing and the link stays as
+  # written.
+  column :slug, required: false
 
   ignore :bumped_at,
          :excerpt,
@@ -26,7 +34,6 @@ Migrations::Tooling::Schema.table :topics do
          :reply_count,
          :reviewable_score,
          :score,
-         :slug,
          :spam_count,
          :word_count,
          reason: "Calculated columns"

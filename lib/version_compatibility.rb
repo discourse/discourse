@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Discourse
-  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
+  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+|-latest(\.\d+)?)?\z/
   VERSION_COMPATIBILITY_FILENAME = ".discourse-compatibility"
 
   class InvalidVersionListError < StandardError

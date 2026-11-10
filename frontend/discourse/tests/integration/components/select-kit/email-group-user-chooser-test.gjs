@@ -5,7 +5,7 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import pretender, { response } from "../../../helpers/create-pretender";
+import pretender, { response } from "../../../helpers/create-pretender.js";
 
 module(
   "Integration | Component | SelectKit | EmailGroupUserChooser",
@@ -14,6 +14,48 @@ module(
 
     hooks.beforeEach(function () {
       this.set("subject", selectKit());
+    });
+
+    test("groupsOnly searches groups including pseudogroups without searching users", async function (assert) {
+      let searchParams;
+      pretender.get("/groups/search.json", (request) => {
+        searchParams = request.queryParams;
+        return response([
+          { id: 4, name: "anonymous_users" },
+          { id: 0, name: "everyone" },
+        ]);
+      });
+      await render(
+        <template>
+          <EmailGroupUserChooser @options={{hash groupsOnly=true}} />
+        </template>
+      );
+      await this.subject.expand();
+      assert.strictEqual(searchParams.include_pseudogroups, "true");
+      assert.dom('.select-kit-row[data-value="anonymous_users"]').exists();
+      assert.dom('.select-kit-row[data-value="everyone"]').doesNotExist();
+      assert.dom(".email-group-user-chooser__user").doesNotExist();
+    });
+
+    test("groupsOnly does not create pasted usernames or emails", async function (assert) {
+      const changes = [];
+      this.set("onChange", (values) => changes.push(values));
+      pretender.get("/groups/search.json", () => response([]));
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @onChange={{this.onChange}}
+            @options={{hash groupsOnly=true allowAny=true}}
+          />
+        </template>
+      );
+      await this.subject.expand();
+      await paste(
+        ".select-kit input.filter-input",
+        "someone@example.com, a_user"
+      );
+      assert.true(changes.every((values) => values.length === 0));
+      assert.dom(".selected-choice").doesNotExist();
     });
 
     test("renders group results with group name and full name", async function (assert) {
@@ -98,6 +140,11 @@ module(
           full_name: "Team A",
           isGroup: true,
         },
+        {
+          name: "team_b",
+          full_name: null,
+          isGroup: true,
+        },
       ]);
 
       await render(
@@ -116,11 +163,23 @@ module(
       await this.subject.expand();
 
       assert
-        .dom(".email-group-user-chooser__group .identifier")
+        .dom(
+          ".email-group-user-chooser-row[data-index='0'] .email-group-user-chooser__group .identifier"
+        )
         .doesNotExist("hides the equivalent group name");
       assert
-        .dom(".email-group-user-chooser__group .name")
+        .dom(
+          ".email-group-user-chooser-row[data-index='0'] .email-group-user-chooser__group .name"
+        )
         .hasText("Team A", "keeps the full group name visible");
+      assert
+        .dom(
+          ".email-group-user-chooser-row[data-index='1'] .email-group-user-chooser__group .identifier"
+        )
+        .hasText(
+          "team_b",
+          "renders the second group identifier as expected since they have no name"
+        );
     });
 
     test("prioritizeUserNameOrdering can render the name before username", async function (assert) {
@@ -202,7 +261,15 @@ module(
     });
 
     test("pasting", async function (assert) {
-      await render(<template><EmailGroupUserChooser /></template>);
+      this.set("onChange", (value) => this.set("value", value));
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @onChange={{this.onChange}}
+            @value={{this.value}}
+          />
+        </template>
+      );
 
       await this.subject.expand();
       await paste(".filter-input", "foo,bar");

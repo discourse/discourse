@@ -6,7 +6,6 @@
 
 pt:
   site_settings:
-    chat_channel_retention_days: "As mensagens de bate-papo em canais regulares serão retidas por essa quantidade de dias. Defina como '0' para reter as mensagens para sempre."
     chat_dm_retention_days: "As conversas em canais de bate-papo pessoais serão retidas por essa quantidade de dias. Defina como '0' para reter as mensagens para sempre."
     chat_auto_silence_duration: "Quantidade de minutos que os usuários serão silenciados quando excederem o limite de taxa de criação de mensagens. Defina como '0' para desativar o silenciamento automático."
     chat_allowed_messages_for_trust_level_0: "Número de mensagens que os usuários de nível 0 de confiança podem enviar em 30 segundos. Defina como '0' para desativar o limite."
@@ -44,6 +43,10 @@ pt:
         Visite o canal em %{channel_url} para tentar de novo.
   chat:
     deleted_chat_username: eliminado
+    crawler:
+      thread_replies:
+        one: "%{count} resposta"
+        other: "%{count} respostas"
     errors:
       not_accepting_dms: "Desculpe, de momento, %{username} não está a aceitar mensagens."
     reviewables:

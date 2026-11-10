@@ -37,7 +37,7 @@ module(
       await render(
         <template>
           <Form @data={{data}} as |form|>
-            <form.Field @type="image" @name="image_url" @title="Foo" as |field|>
+            <form.Field @name="image_url" @title="Foo" @type="image" as |field|>
               <field.Control @type="site_setting" />
             </form.Field>
           </Form>
@@ -55,7 +55,7 @@ module(
       await render(
         <template>
           <Form @data={{data}} as |form|>
-            <form.Field @type="image" @name="image_url" @title="Foo" as |field|>
+            <form.Field @name="image_url" @title="Foo" @type="image" as |field|>
               <field.Control @type="site_setting" />
             </form.Field>
 
@@ -83,10 +83,10 @@ module(
         <template>
           <Form @data={{data}} as |form|>
             <form.Field
-              @type="image"
+              @disabled={{true}}
               @name="image_url"
               @title="Foo"
-              @disabled={{true}}
+              @type="image"
               as |field|
             >
               <field.Control @type="site_setting" />
@@ -103,10 +103,10 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="image" @name="image_url" @title="Foo" as |field|>
+            <form.Field @name="image_url" @title="Foo" @type="image" as |field|>
               <field.Control
-                @type="site_setting"
                 @placeholderUrl="/images/avatar.png"
+                @type="site_setting"
               />
             </form.Field>
           </Form>

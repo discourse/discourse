@@ -3,7 +3,7 @@ import EmbroiderRouter from "@embroider/router";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import Site from "discourse/models/site";
-import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
+import applyRouterHomepageOverrides from "./lib/homepage-router-overrides.js";
 
 class BareRouter extends EmbroiderRouter {
   location = isTesting() ? "none" : "history";

@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
-import RssPollingFeedSettings from "../../../../../admin/models/rss-polling-feed-settings";
+import RssPollingFeedSettings from "../../../../../admin/models/rss-polling-feed-settings.js";
 
 export default class AdminPluginsShowDiscourseRssPollingFeedsEditRoute extends DiscourseRoute {
   @service router;

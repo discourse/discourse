@@ -39,6 +39,27 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#chat_channel_list_preferences" do
+    it "includes default values" do
+      expect(serializer.as_json[:user_option]).to include(
+        chat_channel_list_filter: "all",
+        chat_channel_list_sort: "alphabetical",
+      )
+    end
+
+    it "includes changed values" do
+      current_user.user_option.update!(
+        chat_channel_list_filter: "mentions",
+        chat_channel_list_sort: "priority",
+      )
+
+      expect(serializer.as_json[:user_option]).to include(
+        chat_channel_list_filter: "mentions",
+        chat_channel_list_sort: "priority",
+      )
+    end
+  end
+
   describe "#chat_drafts" do
     context "when user can't chat" do
       before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }

@@ -21,6 +21,14 @@ RSpec.describe Onebox::Engine::GithubBlobOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
+    it "shows the preview type and repository in the header" do
+      header = Nokogiri::HTML5.fragment(html).at_css("aside > header")
+
+      expect(header.at_css(".github-onebox__label").text.strip).to eq("File")
+      expect(header.at_css("a").text.strip).to eq("discourse/onebox")
+      expect(header.at_css("a")["href"]).to eq(link)
+    end
+
     it "includes file name" do
       expect(html).to include("github_blob_onebox.rb")
     end
@@ -37,6 +45,9 @@ RSpec.describe Onebox::Engine::GithubBlobOnebox do
 
       expect(html).not_to include("module Oneboxer")
       expect(html).to include("This file is binary.")
+      expect(Nokogiri::HTML5.fragment(html).at_css(".github-onebox__label").text.strip).to eq(
+        "Binary file",
+      )
     end
 
     context "when github_onebox_access_token is configured" do

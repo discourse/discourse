@@ -8,7 +8,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -54,14 +53,35 @@ export default class UpsertCategorySecurity extends Component {
       return false;
     }
 
-    return !parentPerms.some((p) => p.group_id === AUTO_GROUPS.everyone.id);
+    return !parentPerms.some((p) =>
+      [AUTO_GROUPS.everyone.id, AUTO_GROUPS.logged_in_users.id].includes(
+        p.group_id
+      )
+    );
   }
 
   get availableGroups() {
     const permissions = this.permissions || [];
     const permissionGroupIds = new Set(permissions.map((p) => p.group_id));
 
-    let groups = this.site.groups.filter((g) => !permissionGroupIds.has(g.id));
+    let groups = (
+      this.args.category.permission_groups ?? this.site.groups
+    ).filter(
+      (group) =>
+        group.id !== AUTO_GROUPS.anonymous_users.id &&
+        !permissionGroupIds.has(group.id)
+    );
+
+    if (
+      this.parentPermissions?.some(
+        (permission) => permission.group_id === AUTO_GROUPS.logged_in_users.id
+      ) &&
+      !this.parentPermissions.some(
+        (permission) => permission.group_id === AUTO_GROUPS.everyone.id
+      )
+    ) {
+      groups = groups.filter((group) => group.id !== AUTO_GROUPS.everyone.id);
+    }
 
     if (this.isParentRestricted) {
       const parentGroupIds = new Set(
@@ -106,16 +126,13 @@ export default class UpsertCategorySecurity extends Component {
     return (this.permissions?.length ?? 0) >= 3;
   }
 
-  #setFormPermissions(permissions) {
-    this.args.form.set("permissions", permissions);
-  }
-
   @action
   onSelectGroup(groupId) {
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name: this.site.groupName(groupId),
+        group_name: this.availableGroups.find((group) => group.id === groupId)
+          ?.name,
         group_id: groupId,
         permission_type: this.minimumPermission,
       },
@@ -170,6 +187,10 @@ export default class UpsertCategorySecurity extends Component {
     this.#setFormPermissions(newPermissions);
   }
 
+  #setFormPermissions(permissions) {
+    this.args.form.set("permissions", permissions);
+  }
+
   <template>
     {{#if @category.is_special}}
       {{#if @category.isUncategorizedCategory}}
@@ -189,18 +210,18 @@ export default class UpsertCategorySecurity extends Component {
       </@form.Alert>
     {{/if}}
 
-    <@form.Alert @type="warning">
-      {{#if this.everyonePermission}}
-        {{i18n
-          this.everyoneAccessMessageKey
-          everyone_group=this.everyonePermission.group_name
-        }}
-      {{else}}
-        {{i18n "category.permissions.specific_groups_have_access"}}
-      {{/if}}
-    </@form.Alert>
-
     {{#unless @category.is_special}}
+      <@form.Alert @type="warning">
+        {{#if this.everyonePermission}}
+          {{i18n
+            this.everyoneAccessMessageKey
+            everyone_group=this.everyonePermission.group_name
+          }}
+        {{else}}
+          {{i18n "category.permissions.specific_groups_have_access"}}
+        {{/if}}
+      </@form.Alert>
+
       <@form.Container @format="full">
         <div class="category-permissions-table">
           <div class="permission-row row-header">
@@ -214,15 +235,15 @@ export default class UpsertCategorySecurity extends Component {
               <span class="cell"></span>
             </span>
           </div>
-          {{#each this.permissions as |p|}}
+          {{#each this.permissions key="group_id" as |p|}}
             <UpsertCategoryPermissionRow
+              @everyonePermission={{this.everyonePermission}}
               @groupId={{p.group_id}}
               @groupName={{p.group_name}}
-              @type={{p.permission_type}}
-              @everyonePermission={{this.everyonePermission}}
               @onChangeEveryonePermission={{this.onChangeEveryonePermission}}
               @onRemovePermission={{this.onRemovePermission}}
               @onUpdatePermission={{this.onUpdatePermission}}
+              @type={{p.permission_type}}
             />
           {{/each}}
 
@@ -233,6 +254,7 @@ export default class UpsertCategorySecurity extends Component {
           {{/unless}}
           {{#if (or this.hasAvailableGroups this.canRemoveAllPermissions)}}
             <PluginOutlet
+              @defaultGlimmer={{true}}
               @name="category-security-permissions-add-group"
               @outletArgs={{lazyHash
                 category=@category
@@ -241,18 +263,17 @@ export default class UpsertCategorySecurity extends Component {
                 canRemoveAllPermissions=this.canRemoveAllPermissions
                 onRemoveAllPermissions=this.onRemoveAllPermissions
               }}
-              @defaultGlimmer={{true}}
             >
               <div class="add-group">
                 {{#if this.hasAvailableGroups}}
                   <span class="group-name">
                     <@form.Field
-                      @name="security_add_group_id"
-                      @title={{i18n "category.security_add_group"}}
-                      @showTitle={{false}}
                       @format="max"
-                      @type="select"
+                      @name="security_add_group_id"
                       @onSet={{this.onSecurityAddGroupSet}}
+                      @showTitle={{false}}
+                      @title={{i18n "category.security_add_group"}}
+                      @type="select"
                       as |field|
                     >
                       <field.Control
@@ -272,8 +293,8 @@ export default class UpsertCategorySecurity extends Component {
                 {{#if this.canRemoveAllPermissions}}
                   <DButton
                     class="btn-default remove-all-permissions"
-                    @label="category.permissions.remove_all"
                     @action={{this.onRemoveAllPermissions}}
+                    @label="category.permissions.remove_all"
                   />
                 {{/if}}
               </div>

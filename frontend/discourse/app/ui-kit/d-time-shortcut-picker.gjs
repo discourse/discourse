@@ -46,26 +46,48 @@ const BINDINGS = {
 
 @tagName("")
 export default class DTimeShortcutPicker extends Component {
+  /** @type {string | null | undefined} */
   userTimezone = null;
 
+  /** @type {((type: string, datetime: import("moment").Moment | null | undefined) => void) | null | undefined} */
   onTimeSelected = null;
 
+  /** @type {string | null} */
   selectedShortcut = null;
   selectedTime = null;
   selectedDate = null;
+
+  /** @type {import("moment").Moment | null | undefined} */
   selectedDatetime = null;
+
+  /** @type {import("moment").Moment | Date | string | null | undefined} */
   prefilledDatetime = null;
+
+  /** @type {number | null | undefined} */
   selectedDurationMins = null;
 
+  /** @type {string[] | null | undefined} */
   hiddenOptions = null;
+
+  /** @type {unknown[] | null} */
   customOptions = null;
 
+  /** @type {string | null} */
   lastCustomDate = null;
+
+  /** @type {string | null} */
   lastCustomTime = null;
+
+  /** @type {import("moment").Moment | null} */
   parsedLastCustomDatetime = null;
+
+  /** @type {string | null} */
   customDate = null;
+
+  /** @type {string | null} */
   customTime = null;
 
+  /** @type {{ bind: (keys: string | string[], callback: (event: KeyboardEvent, combo: string) => unknown) => unknown, unbind: (keys: string | string[]) => unknown } | null} */
   _itsatrap = null;
 
   @computed("selectedShortcut")
@@ -78,99 +100,10 @@ export default class DTimeShortcutPicker extends Component {
     return this.selectedShortcut === TIME_SHORTCUT_TYPES.RELATIVE;
   }
 
+  /** @returns {string | null} */
   @computed("customDate", "customTime")
   get customDatetimeFilled() {
     return this.customDate && this.customTime;
-  }
-
-  @on("init")
-  _setupPicker() {
-    this.setProperties({
-      userTimezone: this.currentUser.user_option.timezone,
-      hiddenOptions: this.hiddenOptions || [],
-      customOptions: this.customOptions || [],
-      customLabels: this.customLabels || {},
-    });
-
-    if (this.prefilledDatetime) {
-      this.parsePrefilledDatetime();
-    }
-
-    this._bindKeyboardShortcuts();
-  }
-
-  @observes("prefilledDatetime")
-  prefilledDatetimeChanged() {
-    if (this.prefilledDatetime) {
-      this.parsePrefilledDatetime();
-    } else {
-      this.setProperties({
-        customDate: null,
-        customTime: null,
-        selectedShortcut: null,
-      });
-    }
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this._itsatrap.unbind(Object.keys(BINDINGS));
-  }
-
-  parsePrefilledDatetime() {
-    let parsedDatetime = parseCustomDatetime(
-      this.prefilledDatetime,
-      null,
-      this.userTimezone
-    );
-
-    if (parsedDatetime.isSame(laterToday())) {
-      return this.set("selectedShortcut", TIME_SHORTCUT_TYPES.LATER_TODAY);
-    }
-
-    this.setProperties({
-      customDate: parsedDatetime.format("YYYY-MM-DD"),
-      customTime: parsedDatetime.format("HH:mm"),
-      selectedShortcut: TIME_SHORTCUT_TYPES.CUSTOM,
-    });
-  }
-
-  _loadLastUsedCustomDatetime() {
-    const lastTime = this.keyValueStore.lastCustomTime;
-    const lastDate = this.keyValueStore.lastCustomDate;
-
-    if (lastTime && lastDate) {
-      let parsed = parseCustomDatetime(lastDate, lastTime, this.userTimezone);
-
-      if (!parsed.isValid() || parsed < now(this.userTimezone)) {
-        return;
-      }
-
-      this.setProperties({
-        lastCustomDate: lastDate,
-        lastCustomTime: lastTime,
-        parsedLastCustomDatetime: parsed,
-      });
-    }
-  }
-
-  _bindKeyboardShortcuts() {
-    Object.keys(BINDINGS).forEach((shortcut) => {
-      this._itsatrap.bind(shortcut, () => {
-        let binding = BINDINGS[shortcut];
-        this.send(binding.handler, ...binding.args);
-        return false;
-      });
-    });
-  }
-
-  @observes("customDate", "customTime")
-  customDatetimeChanged() {
-    if (!this.customDatetimeFilled) {
-      return;
-    }
-    this.selectShortcut(TIME_SHORTCUT_TYPES.CUSTOM);
   }
 
   @computed("timeShortcuts", "hiddenOptions", "customLabels", "userTimezone")
@@ -211,6 +144,51 @@ export default class DTimeShortcutPicker extends Component {
     this._applyCustomLabels(options, this.customLabels);
     options.forEach((o) => (o.timeFormatted = formatTime(o)));
     return options;
+  }
+
+  @observes("prefilledDatetime")
+  prefilledDatetimeChanged() {
+    if (this.prefilledDatetime) {
+      this.parsePrefilledDatetime();
+    } else {
+      this.setProperties({
+        customDate: null,
+        customTime: null,
+        selectedShortcut: null,
+      });
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this._itsatrap.unbind(Object.keys(BINDINGS));
+  }
+
+  parsePrefilledDatetime() {
+    let parsedDatetime = parseCustomDatetime(
+      this.prefilledDatetime,
+      null,
+      this.userTimezone
+    );
+
+    if (parsedDatetime.isSame(laterToday())) {
+      return this.set("selectedShortcut", TIME_SHORTCUT_TYPES.LATER_TODAY);
+    }
+
+    this.setProperties({
+      customDate: parsedDatetime.format("YYYY-MM-DD"),
+      customTime: parsedDatetime.format("HH:mm"),
+      selectedShortcut: TIME_SHORTCUT_TYPES.CUSTOM,
+    });
+  }
+
+  @observes("customDate", "customTime")
+  customDatetimeChanged() {
+    if (!this.customDatetimeFilled) {
+      return;
+    }
+    this.selectShortcut(TIME_SHORTCUT_TYPES.CUSTOM);
   }
 
   @action
@@ -274,6 +252,51 @@ export default class DTimeShortcutPicker extends Component {
     }
   }
 
+  @on("init")
+  _setupPicker() {
+    this.setProperties({
+      userTimezone: this.currentUser.user_option.timezone,
+      hiddenOptions: this.hiddenOptions || [],
+      customOptions: this.customOptions || [],
+      customLabels: this.customLabels || {},
+    });
+
+    if (this.prefilledDatetime) {
+      this.parsePrefilledDatetime();
+    }
+
+    this._bindKeyboardShortcuts();
+  }
+
+  _loadLastUsedCustomDatetime() {
+    const lastTime = this.keyValueStore.lastCustomTime;
+    const lastDate = this.keyValueStore.lastCustomDate;
+
+    if (lastTime && lastDate) {
+      let parsed = parseCustomDatetime(lastDate, lastTime, this.userTimezone);
+
+      if (!parsed.isValid() || parsed < now(this.userTimezone)) {
+        return;
+      }
+
+      this.setProperties({
+        lastCustomDate: lastDate,
+        lastCustomTime: lastTime,
+        parsedLastCustomDatetime: parsed,
+      });
+    }
+  }
+
+  _bindKeyboardShortcuts() {
+    Object.keys(BINDINGS).forEach((shortcut) => {
+      this._itsatrap.bind(shortcut, () => {
+        let binding = BINDINGS[shortcut];
+        this.send(binding.handler, ...binding.args);
+        return false;
+      });
+    });
+  }
+
   _applyCustomLabels(options, customLabels) {
     options.forEach((option) => {
       if (customLabels[option.id]) {
@@ -299,9 +322,9 @@ export default class DTimeShortcutPicker extends Component {
       {{#each this.options key="id" as |option|}}
         {{#unless option.hidden}}
           <DTapTile
-            @tileId={{option.id}}
             @activeTile={{grid.activeTile}}
             @onChange={{this.selectShortcut}}
+            @tileId={{option.id}}
           >
 
             <div class="tap-tile-title">{{i18n option.label}}</div>
@@ -315,19 +338,19 @@ export default class DTimeShortcutPicker extends Component {
               <div class="tap-tile-date-input">
                 {{dIcon "calendar-days"}}
                 <DatePickerFuture
-                  @value={{this.customDate}}
                   @defaultDate={{this.defaultCustomDate}}
-                  @onSelect={{fn (mut this.customDate)}}
                   @id="custom-date"
+                  @onSelect={{fn (mut this.customDate)}}
+                  @value={{this.customDate}}
                 />
               </div>
               <div class="tap-tile-time-input">
                 {{dIcon "far-clock"}}
                 <Input
-                  placeholder="--:--"
-                  id="custom-time"
-                  @type="time"
                   class="time-input"
+                  id="custom-time"
+                  placeholder="--:--"
+                  @type="time"
                   @value={{this.customTime}}
                 />
               </div>
@@ -339,9 +362,9 @@ export default class DTimeShortcutPicker extends Component {
                 {{i18n "relative_time_picker.relative"}}
               </label>
               <DRelativeTimePicker
+                id="bookmark-relative-time-picker"
                 @durationMinutes={{this.selectedDurationMins}}
                 @onChange={{this.relativeTimeChanged}}
-                id="bookmark-relative-time-picker"
               />
             </div>
           {{/if}}

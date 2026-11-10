@@ -68,17 +68,17 @@ export default class LivestreamZoomEntry extends Component {
       <div class="discourse-calendar-livestream-zoom-entry">
         <div class="discourse-calendar-livestream-zoom-entry__actions">
           <DButton
-            @href={{this.joinHref}}
-            @label="discourse_calendar.livestream.zoom.join"
-            @icon="video"
             class="discourse-calendar-livestream-zoom-entry__join btn-primary"
             @disabled={{this.joinDisabled}}
+            @href={{this.joinHref}}
+            @icon="video"
+            @label="discourse_events.livestream.zoom.join"
             {{on "click" this.joinZoom}}
           />
 
           {{#unless this.canJoinNow}}
             <p class="discourse-calendar-livestream-zoom-entry__waiting">
-              {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+              {{i18n "discourse_events.livestream.zoom.too_early"}}
             </p>
           {{/unless}}
         </div>

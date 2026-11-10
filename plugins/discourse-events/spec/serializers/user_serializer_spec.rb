@@ -7,7 +7,7 @@ describe UserSerializer do
 
   before do
     SiteSetting.discourse_events_enabled = true
-    user.upsert_custom_fields(DiscourseCalendar::REGION_CUSTOM_FIELD => "uk")
+    user.upsert_custom_fields(DiscourseEvents::REGION_CUSTOM_FIELD => "uk")
   end
 
   context "as another user" do
@@ -22,7 +22,7 @@ describe UserSerializer do
     let(:guardian) { user.guardian }
 
     it "returns user region" do
-      expect(json[:user][:custom_fields]).to eq(DiscourseCalendar::REGION_CUSTOM_FIELD => "uk")
+      expect(json[:user][:custom_fields]).to eq(DiscourseEvents::REGION_CUSTOM_FIELD => "uk")
     end
   end
 
@@ -30,7 +30,7 @@ describe UserSerializer do
     let(:guardian) { Fabricate(:admin).guardian }
 
     it "returns user region" do
-      expect(json[:user][:custom_fields]).to eq(DiscourseCalendar::REGION_CUSTOM_FIELD => "uk")
+      expect(json[:user][:custom_fields]).to eq(DiscourseEvents::REGION_CUSTOM_FIELD => "uk")
     end
   end
 end

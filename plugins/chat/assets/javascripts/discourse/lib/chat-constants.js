@@ -3,6 +3,8 @@ export const FUTURE = "future";
 export const READ_INTERVAL_MS = 500;
 export const DEFAULT_MESSAGE_PAGE_SIZE = 50;
 export const THREAD_TITLE_PROMPT_THRESHOLD = 5;
+export const CHANNEL_NAME_MAX_LENGTH = 80;
+export const CHANNEL_SLUG_MAX_LENGTH = 80;
 export const FOOTER_NAV_ROUTES = [
   "chat.starred-channels",
   "chat.direct-messages",
@@ -27,6 +29,18 @@ export const CHAT_ATTRS = [
   "chat_quick_reactions_custom",
 ];
 
+export const CHAT_CHANNEL_LIST_FILTERS = Object.freeze({
+  ALL: "all",
+  ACTIVE: "active",
+  UNREAD: "unread",
+  MENTIONS: "mentions",
+});
+export const CHAT_CHANNEL_LIST_SORTS = Object.freeze({
+  ALPHABETICAL: "alphabetical",
+  RECENT_ACTIVITY: "recent_activity",
+  PRIORITY: "priority",
+});
+export const CHAT_CHANNEL_LIST_ACTIVE_DAYS = 30;
 export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
@@ -41,3 +55,6 @@ export const CHAT_SEPARATE_SIDEBAR_MODE_NEVER = "never";
 export const MATCH_QUALITY_EXACT = 1;
 export const MATCH_QUALITY_PREFIX = 2;
 export const MATCH_QUALITY_PARTIAL = 3;
+export const NETWORK_ERROR = "network_error";
+export const RATE_LIMIT_ERROR = "rate_limit_error";
+export const RATE_LIMIT_COOLDOWN_ERROR = "rate_limit_cooldown_error";

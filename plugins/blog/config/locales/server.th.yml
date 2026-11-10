@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  blog:
+    home: หน้าแรก
+    posted_by: โพสต์โดย
+    time_ago: "%{time} วันก่อน"
+    archive: คลัง
+    about: เกี่ยวกับ
+    community: ชุมชน
+    preview: แสดงตัวอย่าง
+    search: ค้นหา
+    replies:
+      other: "%{count} ตอบ"

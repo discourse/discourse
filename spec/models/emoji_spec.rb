@@ -92,7 +92,7 @@ RSpec.describe Emoji do
     end
   end
 
-  describe ".lookup_unicode" do
+  describe ".lookup_unicode for ZWJ sequences" do
     before { Emoji.clear_cache }
 
     it "returns correct unicode for skin tone and gendered ZWJ sequences" do
@@ -110,7 +110,7 @@ RSpec.describe Emoji do
     end
   end
 
-  describe ".lookup_unicode" do
+  describe ".lookup_unicode for names and aliases" do
     it "returns unicode for emoji, aliases, and skin tones" do
       expect(Emoji.lookup_unicode("trade_mark")).to eq("™")
       expect(Emoji.lookup_unicode("blonde_man")).to eq("👱‍♂️")
@@ -314,6 +314,11 @@ RSpec.describe Emoji do
     it "creates emoji with group when known" do
       emoji = Emoji.create_from_db_item("name" => "scotland")
       expect(emoji.group).to eq("flags")
+    end
+
+    it "flags emojis that have an animation" do
+      expect(Emoji.create_from_db_item("name" => "wink").animated).to eq(true)
+      expect(Emoji.create_from_db_item("name" => "abacus").animated).to eq(false)
     end
 
     it "returns nil when group is unknown" do

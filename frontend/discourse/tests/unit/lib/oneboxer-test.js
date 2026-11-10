@@ -1,3 +1,4 @@
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { load } from "pretty-text/oneboxer";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
@@ -51,5 +52,22 @@ module("Unit | Utility | oneboxer", function (hooks) {
       loadOnebox(element).includes("Yet another collaboration tool"),
       "returns the html from the cache"
     );
+  });
+
+  test("load - does not refetch a url an earlier queued entry resolved", async function (assert) {
+    let requests = 0;
+    const countingAjax = (...args) => {
+      requests++;
+      return ajax(...args);
+    };
+
+    for (let i = 0; i < 2; i++) {
+      const element = document.createElement("A");
+      element.setAttribute("href", "http://somegoodurl.com");
+      load({ elem: element, refresh: false, ajax: countingAjax });
+    }
+    await settled();
+
+    assert.strictEqual(requests, 1);
   });
 });

@@ -42,8 +42,8 @@ export default class PostNoticeCustom extends Component {
       <DConditionalInElement @element={{this.createdByAnchorElement}}>
         <DUserLink
           title={{this.createdByName}}
-          @username={{@post.notice_created_by_user.username}}
           @ariaHidden={{false}}
+          @username={{@post.notice_created_by_user.username}}
         >
           {{this.createdByName}}
         </DUserLink>

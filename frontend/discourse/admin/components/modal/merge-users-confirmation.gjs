@@ -23,10 +23,10 @@ export default class MergeUsersConfirmation extends Component {
 
   <template>
     <DModal
+      @closeModal={{@closeModal}}
       @title={{trustHTML
         (i18n "admin.user.merge.confirmation.title" username=@model.username)
       }}
-      @closeModal={{@closeModal}}
     >
       <:body>
         <p>
@@ -45,8 +45,8 @@ export default class MergeUsersConfirmation extends Component {
         <DButton
           class="btn-danger"
           @action={{fn @model.merge @model.targetUsername}}
-          @icon="trash-can"
           @disabled={{this.mergeDisabled}}
+          @icon="trash-can"
           @translatedLabel={{i18n
             "admin.user.merge.confirmation.transfer_and_delete"
             username=@model.username

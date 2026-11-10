@@ -36,9 +36,9 @@ export default <template>
           </span>
         {{else}}
           <button
-            type="button"
             class={{dConcatClass "interpolation-keys__pill" (pillClass item)}}
             title={{pillTitle item}}
+            type="button"
             {{on "click" (fn @onInsertKey item.key)}}
           >
             {{item.key}}

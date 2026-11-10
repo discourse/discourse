@@ -25,10 +25,10 @@ export default class AdminStaffActionLogComponent extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.logs.staff_actions.modal_title"}}
-      @closeModal={{@closeModal}}
-      @bodyClass="theme-change-modal-body"
       class="history-modal"
+      @bodyClass="theme-change-modal-body"
+      @closeModal={{@closeModal}}
+      @title={{i18n "admin.logs.staff_actions.modal_title"}}
     >
       <:body>
         {{trustHTML this.diff}}

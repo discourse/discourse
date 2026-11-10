@@ -49,6 +49,7 @@ module Migrations
               pinned_globally: item[:pinned_globally],
               pinned_until: item[:pinned_until],
               slow_mode_seconds: item[:slow_mode_seconds],
+              slug: item[:slug],
               subtype: item[:subtype],
               title: item[:title],
               user_id: item[:user_id],

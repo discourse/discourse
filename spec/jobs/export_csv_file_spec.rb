@@ -21,6 +21,16 @@ RSpec.describe Jobs::ExportCsvFile do
         admin.uploads.each(&:destroy!)
       end
 
+      it "prefixes every exported CSV with a UTF-8 BOM" do
+        Jobs::ExportCsvFile.new.execute(user_id: admin.id, entity: "user_list")
+
+        Zip::File.open(Discourse.store.path_for(Upload.last)) do |zip_file|
+          zip_file.each { |entry| expect(zip_file.read(entry)).to start_with(Encodings::BOM.b) }
+        end
+      ensure
+        admin.uploads.each(&:destroy!)
+      end
+
       it "raises an error when the admin was demoted after enqueueing" do
         admin.revoke_admin!
 
@@ -49,7 +59,7 @@ RSpec.describe Jobs::ExportCsvFile do
       end
     end
 
-    it "works" do
+    it "uploads the staff action export and sends the admin a download link" do
       action_log
 
       begin
@@ -199,6 +209,20 @@ RSpec.describe Jobs::ExportCsvFile do
         action_log.destroy!
       end
 
+      it "hides full names from moderator exports when names are disabled" do
+        SiteSetting.enable_names = false
+        target_user = Fabricate(:user, name: "Private Export Name")
+        moderator = Fabricate(:moderator)
+        StaffActionLogger.new(admin).log_user_deletion(target_user)
+
+        Jobs::ExportCsvFile.new.execute(user_id: moderator.id, entity: "staff_action")
+
+        row =
+          parse_staff_action_rows(Upload.last).find { |record| record["action"] == "delete_user" }
+        expect(row["details"]).to include("username: #{target_user.username}")
+        expect(row["details"]).not_to include(target_user.name)
+      end
+
       it "does not redact details and context for admins" do
         post = Fabricate(:post)
         StaffActionLogger.new(admin).log_post_edit(
@@ -272,6 +296,35 @@ RSpec.describe Jobs::ExportCsvFile do
       expect(report.length).to eq(2)
       expect(report.first).to contain_exactly("Day", "Desktop", "Mobile")
       expect(report.second).to contain_exactly("2010-01-03", "1", "")
+    end
+
+    it "threads comma-separated category_ids and groups filters through for posters_by_member_type" do
+      target_category = Fabricate(:category)
+      other_category = Fabricate(:category)
+      group = Fabricate(:group)
+      member = Fabricate(:user)
+      Fabricate(:group_user, group: group, user: member)
+      Fabricate(
+        :post,
+        user: member,
+        topic: Fabricate(:topic, category: target_category),
+        created_at: "2010-06-01",
+      )
+      Fabricate(
+        :post,
+        user: member,
+        topic: Fabricate(:topic, category: other_category),
+        created_at: "2010-06-01",
+      )
+
+      exporter.extra["name"] = "posters_by_member_type"
+      exporter.extra["category_ids"] = target_category.id.to_s
+      exporter.extra["groups"] = Report.group_token(group.id)
+
+      report = export_report
+
+      expect(report.first).to contain_exactly("Member type", "Posts", "Share")
+      expect(report.second).to contain_exactly(group.name, "1", "100.0%")
     end
 
     it "works with single-column reports with default label" do
@@ -485,7 +538,8 @@ RSpec.describe Jobs::ExportCsvFile do
     rows = []
     Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
       zip_file.each do |entry|
-        csv_rows = CSV.parse(zip_file.read(entry), headers: true)
+        content = zip_file.read(entry).force_encoding(Encoding::UTF_8)
+        csv_rows = CSV.parse(content.delete_prefix(Encodings::BOM), headers: true)
         rows.concat(csv_rows.map(&:to_h))
       end
     end
@@ -524,7 +578,7 @@ RSpec.describe Jobs::ExportCsvFile do
 
     user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
-    expect(user["location"]).to eq('"La,La Land"')
+    expect(user["location"]).to eq("La,La Land")
     expect(user["external_id"]).to eq("123")
     expect(user["external_email"]).to eq("test@test.com")
   end

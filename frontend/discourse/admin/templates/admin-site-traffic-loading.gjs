@@ -17,29 +17,29 @@ export default <template>
     {{didInsert replaceSplash}}
   >
     <DPageHeader
-      @titleLabel={{i18n "admin.site_traffic_explorer.title"}}
-      @hideTabs={{true}}
       @collapseActionsOnMobile={{false}}
+      @hideTabs={{true}}
+      @titleLabel={{i18n "admin.site_traffic_explorer.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin"
           @label={{i18n "admin.dashboard.title"}}
+          @path="/admin"
         />
         <DBreadcrumbsItem
-          @path="/admin/dashboard/site-traffic-explorer"
           @label={{i18n "admin.site_traffic_explorer.title"}}
+          @path="/admin/dashboard/site-traffic-explorer"
         />
       </:breadcrumbs>
     </DPageHeader>
 
     <div class="admin-container site-traffic-explorer__content">
       <div
-        class="db-skeleton --animation site-traffic-explorer__skeleton"
-        role="status"
         aria-label={{i18n "admin.site_traffic_explorer.loading"}}
+        class="db-skeleton --animation site-traffic-explorer__skeleton"
         data-test-site-traffic-skeleton
+        role="status"
       >
         <div class="db-skeleton__section-wrapper">
           <div class="db-skeleton__subheader">

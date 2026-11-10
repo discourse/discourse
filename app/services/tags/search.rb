@@ -124,6 +124,7 @@ class Tags::Search
 
     context[:tags] = TagsController.tag_counts_json(tags_with_counts, guardian)
     context[:required_tag_group] = filter_result_context[:required_tag_group]
+    context[:remaining_required_tag_count] = filter_result_context[:remaining_required_tag_count]
     context[:forbidden] = nil
     context[:forbidden_message] = nil
   end
@@ -136,9 +137,16 @@ class Tags::Search
     Tag.recently_used_by(guardian.user).presence
   end
 
-  def append_disabled_tags(params:, category:, tags:, guardian:)
-    selected_ids = params.resolved_selected_tag_ids
-    skip_ids = tags.map { |t| t[:id] } | selected_ids
+  def append_disabled_tags(
+    params:,
+    category:,
+    tags:,
+    guardian:,
+    required_tag_group:,
+    remaining_required_tag_count:
+  )
+    selected_tag_ids = params.resolved_selected_tag_ids
+    skip_ids = tags.map { |tag| tag[:id] } | selected_tag_ids
 
     candidate_tags =
       visible_tags(guardian)
@@ -149,15 +157,43 @@ class Tags::Search
 
     return if candidate_tags.empty?
 
-    excluded_tags = reject_allowed_tags(candidate_tags, params:, category:, tags:, guardian:)
+    excluded_tags = tags_excluded_by_filter(candidate_tags, params:, category:, tags:, guardian:)
+    return if excluded_tags.empty?
 
-    disabled =
-      excluded_tags.map do |tag|
-        reason = explain_exclusion(tag, params, selected_ids, guardian)
-        { id: tag.id, name: tag.name, text: tag.name, count: 0, disabled: true, title: reason }
+    allowed_without_required_tag_groups =
+      if remaining_required_tag_count&.positive?
+        DiscourseTagging
+          .filter_allowed_tags(
+            guardian,
+            **params.filter_options.merge(
+              category:,
+              only_tag_names: excluded_tags.map(&:name),
+              limit: nil,
+              ignore_required_tag_groups: true,
+            ),
+          )
+          .map(&:name)
+          .to_set
+      else
+        Set.new
       end
 
-    context[:tags] = tags.concat(disabled) if disabled.present?
+    disabled_tags =
+      excluded_tags.map do |tag|
+        title =
+          if allowed_without_required_tag_groups.include?(tag.name)
+            I18n.t(
+              "tags.forbidden.required_tag_group",
+              count: remaining_required_tag_count,
+              tag_group_name: required_tag_group[:name],
+            )
+          else
+            explain_exclusion(tag, params:, selected_tag_ids:, guardian:)
+          end
+        { id: tag.id, name: tag.name, text: tag.name, count: 0, disabled: true, title: }
+      end
+
+    tags.concat(disabled_tags)
   end
 
   def detect_forbidden_tag(params:, category:, tags:, guardian:)
@@ -165,124 +201,142 @@ class Tags::Search
 
     tag = visible_tags(guardian).where_name(params.term).first
     return unless tag
-    return if reject_allowed_tags([tag], params:, category:, tags:, guardian:).empty?
+    return if tags_excluded_by_filter([tag], params:, category:, tags:, guardian:).empty?
 
     context[:forbidden] = params.q
     context[:forbidden_message] = explain_exclusion(
       tag,
-      params,
-      params.resolved_selected_tag_ids,
-      guardian,
+      params:,
+      selected_tag_ids: params.resolved_selected_tag_ids,
+      guardian:,
     )
   end
 
-  def reject_allowed_tags(candidates, params:, category:, tags:, guardian:)
-    return candidates unless params.capped_limit && tags.size >= params.capped_limit
+  def tags_excluded_by_filter(candidates, params:, category:, tags:, guardian:)
+    limit = params.capped_limit
+    return candidates unless limit && tags.size >= limit
 
-    only_tag_names = candidates.map(&:name)
-
-    allowed_names =
+    allowed_tag_names =
       DiscourseTagging
         .filter_allowed_tags(
           guardian,
-          **params.filter_options.merge(category:, only_tag_names:, limit: nil),
+          **params.filter_options.merge(
+            category:,
+            only_tag_names: candidates.map(&:name),
+            limit: nil,
+          ),
         )
         .map(&:name)
         .to_set
 
-    candidates.reject { |tag| allowed_names.include?(tag.name) }
+    candidates.reject { |tag| allowed_tag_names.include?(tag.name) }
   end
 
-  def explain_exclusion(tag, params, selected_ids, guardian)
-    if params.excludeSynonyms && tag.synonym? && tag_visible?(tag.target_tag_id, guardian)
-      return I18n.t("tags.forbidden.synonym", tag_name: tag.target_tag.name)
+  def explain_exclusion(tag, params:, selected_tag_ids:, guardian:)
+    synonym_exclusion_reason(tag, params:, guardian:) ||
+      has_synonyms_exclusion_reason(tag, params:) ||
+      one_per_topic_group_exclusion_reason(tag, selected_tag_ids:, guardian:) ||
+      missing_parent_tag_exclusion_reason(tag, params:, selected_tag_ids:, guardian:) ||
+      category_restriction_exclusion_reason(tag, params:, guardian:)
+  end
+
+  def synonym_exclusion_reason(tag, params:, guardian:)
+    unless params.excludeSynonyms && tag.synonym? && tag_visible?(tag.target_tag_id, guardian)
+      return
     end
 
-    if params.excludeHasSynonyms && tag.synonyms.exists?
-      return I18n.t("tags.forbidden.has_synonyms", tag_name: tag.name)
-    end
+    I18n.t("tags.forbidden.synonym", tag_name: tag.target_tag.name)
+  end
 
-    if selected_ids.present?
-      group =
-        TagGroup
-          .joins(:tag_group_memberships)
-          .where(one_per_topic: true, tag_group_memberships: { tag_id: tag.id })
-          .where(id: TagGroupMembership.where(tag_id: selected_ids).select(:tag_group_id))
-          .first
+  def has_synonyms_exclusion_reason(tag, params:)
+    return unless params.excludeHasSynonyms && tag.synonyms.exists?
 
-      if group
-        conflicting_tag_names =
-          visible_tags(guardian)
-            .where(id: selected_ids)
-            .joins(:tag_group_memberships)
-            .where(tag_group_memberships: { tag_group_id: group.id })
-            .order(:name)
-            .pluck(:name)
+    I18n.t("tags.forbidden.has_synonyms", tag_name: tag.name)
+  end
 
-        if conflicting_tag_names.present?
-          return(
-            I18n.t(
-              "tags.forbidden.one_tag_per_topic_group",
-              tag_group_name: group.name,
-              tag_names: conflicting_tag_names.join(", "),
-            )
-          )
-        end
+  def one_per_topic_group_exclusion_reason(tag, selected_tag_ids:, guardian:)
+    return if selected_tag_ids.blank?
 
-        return I18n.t("tags.forbidden.one_tag_per_topic_group_without_names")
-      end
-    end
+    group =
+      TagGroup
+        .joins(:tag_group_memberships)
+        .where(one_per_topic: true, tag_group_memberships: { tag_id: tag.id })
+        .where(id: TagGroupMembership.where(tag_id: selected_tag_ids).select(:tag_group_id))
+        .first
+    return unless group
 
-    if params.filterForInput
-      group =
-        TagGroup
-          .joins(:tag_group_memberships)
-          .where(tag_group_memberships: { tag_id: tag.id })
-          .where.not(parent_tag_id: [nil, *selected_ids])
-          .includes(:parent_tag)
-          .first
-
-      if group&.parent_tag && tag_visible?(group.parent_tag_id, guardian)
-        return(
-          I18n.t(
-            "tags.forbidden.missing_parent_tag",
-            parent_tag_name: group.parent_tag.name,
-            tag_group_name: group.name,
-          )
-        )
-      end
-    end
-
-    category_names = tag.categories.where(id: guardian.allowed_category_ids).pluck(:name)
-    category_names +=
-      Category
-        .joins(tag_groups: :tags)
-        .where(id: guardian.allowed_category_ids, "tags.id": tag.id)
+    conflicting_tag_names =
+      visible_tags(guardian)
+        .where(id: selected_tag_ids)
+        .joins(:tag_group_memberships)
+        .where(tag_group_memberships: { tag_group_id: group.id })
+        .order(:name)
         .pluck(:name)
 
-    if category_names.present?
-      category_names.uniq!
-      category_names.sort!
+    if conflicting_tag_names.blank?
+      return I18n.t("tags.forbidden.one_tag_per_topic_group_without_names")
+    end
 
-      if category_names.size > 3
+    I18n.t(
+      "tags.forbidden.one_tag_per_topic_group",
+      tag_group_name: group.name,
+      tag_names: conflicting_tag_names.join(", "),
+    )
+  end
+
+  def missing_parent_tag_exclusion_reason(tag, params:, selected_tag_ids:, guardian:)
+    return unless params.filterForInput
+
+    group =
+      TagGroup
+        .joins(:tag_group_memberships)
+        .where(tag_group_memberships: { tag_id: tag.id })
+        .where.not(parent_tag_id: [nil, *selected_tag_ids])
+        .includes(:parent_tag)
+        .first
+    return unless group&.parent_tag && tag_visible?(group.parent_tag_id, guardian)
+
+    I18n.t(
+      "tags.forbidden.missing_parent_tag",
+      parent_tag_name: group.parent_tag.name,
+      tag_group_name: group.name,
+    )
+  end
+
+  def category_restriction_exclusion_reason(tag, params:, guardian:)
+    allowed_category_ids = guardian.allowed_category_ids
+    category_names =
+      tag.categories.where(id: allowed_category_ids).pluck(:name) +
+        Category
+          .joins(tag_groups: :tags)
+          .where(id: allowed_category_ids, "tags.id": tag.id)
+          .pluck(:name)
+    category_names = category_names.uniq.sort
+
+    if category_names.empty?
+      if params.categoryId.present?
+        return I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
+      end
+
+      return I18n.t("tags.forbidden.not_allowed", tag_name: tag.name)
+    end
+
+    if category_names.size > 3
+      return(
         I18n.t(
           "tags.forbidden.restricted_to_truncated",
           tag_name: tag.name,
           category_names: category_names.first(3).join(", "),
           more_count: category_names.size - 3,
         )
-      else
-        I18n.t(
-          "tags.forbidden.restricted_to",
-          count: category_names.count,
-          tag_name: tag.name,
-          category_names: category_names.join(", "),
-        )
-      end
-    elsif params.categoryId.present?
-      I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
-    else
-      I18n.t("tags.forbidden.not_allowed", tag_name: tag.name)
+      )
     end
+
+    I18n.t(
+      "tags.forbidden.restricted_to",
+      count: category_names.size,
+      tag_name: tag.name,
+      category_names: category_names.join(", "),
+    )
   end
 end

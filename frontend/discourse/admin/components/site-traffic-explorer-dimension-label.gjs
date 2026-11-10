@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
-import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const BROWSER_ICONS = {
@@ -37,8 +36,8 @@ export default class SiteTrafficExplorerDimensionLabel extends Component {
     <span class="site-traffic-explorer__dimension-label">
       {{#if (eq @dimension "countries")}}
         <span
-          class="site-traffic-explorer__dimension-prefix"
           aria-hidden="true"
+          class="site-traffic-explorer__dimension-prefix"
         >{{this.countryFlag @row.value}}</span>
       {{else if (eq @dimension "browsers")}}
         {{dIcon

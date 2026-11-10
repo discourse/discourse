@@ -17,6 +17,25 @@ module DiscourseAi
       def detect
         return nil if !SiteSetting.ai_translation_enabled
         return nil if @text.blank?
+
+        if (decision_model = DecisionLocaleDetector.decision_model)
+          begin
+            locale = DecisionLocaleDetector.new(decision_model).detect(@text)
+            return locale if locale
+          rescue DiscourseAi::Decisions::CreditLimitExceeded
+            # falling back would move the spend to the LLM; detection resumes when credits reset
+            return nil
+          rescue DiscourseAi::Decisions::Error => e
+            VerboseLogger.log("Decision model locale detection failed: #{e.message}")
+          end
+        end
+
+        detect_with_agent
+      end
+
+      private
+
+      def detect_with_agent
         if (
              ai_agent =
                AiAgent.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_agent)
@@ -48,11 +67,13 @@ module DiscourseAi
           )
 
         result = +""
-        bot.reply(context) do |partial|
-          next if partial.strip.blank?
+        bot.reply(context) do |partial, _, type|
+          next if type == :thinking || partial.strip.blank?
+
           result << partial
         end
 
+        result = result.strip.delete_suffix("\\")
         result.match?(LANGUAGE_TAG_REGEXP) ? result : nil
       end
     end

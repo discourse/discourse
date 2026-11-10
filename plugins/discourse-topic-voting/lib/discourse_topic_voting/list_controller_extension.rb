@@ -12,6 +12,8 @@ module DiscourseTopicVoting
     def voted_by
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
+      raise Discourse::NotFound unless guardian.can_see_profile?(target_user)
+      raise Discourse::NotFound unless guardian.can_see_user_actions?(target_user)
       list = generate_list_for("voted_by", target_user, list_opts)
       list.more_topics_url = url_for(construct_url_with(:next, list_opts))
       list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))

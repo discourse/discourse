@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
-import decorateCookedContent from "../modifiers/decorate-cooked-content";
-import decoratePollOption from "../modifiers/decorate-poll-option";
+import decorateCookedContent from "../modifiers/decorate-cooked-content.js";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
 
 export default class PollResultsRankedChoiceComponent extends Component {
   get rankedChoiceWinnerText() {

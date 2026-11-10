@@ -27,6 +27,16 @@ RSpec.describe DiscourseReactions::ReactionManager do
       end
     end
 
+    it "triggers an event with the reaction each toggle replaced" do
+      events =
+        DiscourseEvent.track_events(:post_reaction_toggled) do
+          described_class.new(reaction_value: "hugs", user:, post:).toggle!
+          described_class.new(reaction_value: "-1", user:, post:).toggle!
+        end
+
+      expect(events.pluck(:params)).to eq([[post, user, nil], [post, user, "hugs"]])
+    end
+
     context "when switching to the default reaction" do
       fab!(:topic)
       fab!(:op_post) { Fabricate(:post, topic: topic) }

@@ -1146,6 +1146,74 @@ RSpec.describe SidebarSectionsController do
     end
   end
 
+  describe "anonymous site JSON cache" do
+    fab!(:admin_api_key, refind: false) { Fabricate(:api_key, user: admin) }
+    fab!(:public_section_to_make_private) do
+      Fabricate(:sidebar_section, title: "Private after update", public: true)
+    end
+    fab!(:public_section_to_delete) do
+      Fabricate(:sidebar_section, title: "Deleted after update", public: true)
+    end
+
+    it "removes sections that an admin makes private or deletes from anonymous site JSON" do
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(public_section_to_make_private.title)
+      expect(response.body).to include(public_section_to_delete.title)
+
+      put "/sidebar_sections/#{public_section_to_make_private.id}.json",
+          params: {
+            public: false,
+          },
+          headers: {
+            HTTP_API_KEY: admin_api_key.key,
+          }
+
+      expect(response.status).to eq(200)
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(public_section_to_make_private.title)
+      expect(response.body).to include(public_section_to_delete.title)
+
+      delete "/sidebar_sections/#{public_section_to_delete.id}.json",
+             headers: {
+               HTTP_API_KEY: admin_api_key.key,
+             }
+
+      expect(response.status).to eq(200)
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(public_section_to_delete.title)
+    end
+
+    it "removes reset Community section links from anonymous site JSON" do
+      community_section =
+        SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+      sidebar_url = Fabricate(:sidebar_url, name: "Removed Community link", value: "/removed")
+      Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: sidebar_url)
+      Site.clear_anon_cache!
+
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(sidebar_url.name)
+
+      put "/sidebar_sections/reset/#{community_section.id}.json",
+          headers: {
+            HTTP_API_KEY: admin_api_key.key,
+          }
+
+      expect(response.status).to eq(200)
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(sidebar_url.name)
+    end
+  end
+
   describe "#destroy" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
 
@@ -1242,6 +1310,203 @@ RSpec.describe SidebarSectionsController do
       delete "/sidebar_sections/#{community_section.id}.json"
 
       expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#reorder" do
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+    fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
+    fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
+    fab!(:section_link_1) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    end
+    fab!(:section_link_2) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+    end
+
+    it "reorders the links of the user's own section" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json",
+          params: {
+            links_order: [sidebar_url_2.id, sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["sidebar_section"]["links"].map { |link| link["id"] }).to eq(
+        [sidebar_url_2.id, sidebar_url_1.id],
+      )
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [sidebar_url_2.id, sidebar_url_1.id],
+      )
+    end
+
+    it "returns 404 for an unknown section" do
+      sign_in(user)
+
+      put "/sidebar_sections/-999/reorder.json",
+          params: {
+            links_order: [sidebar_url_2.id, sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "doesn't allow to reorder another user's section" do
+      sign_in(moderator)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json",
+          params: {
+            links_order: [sidebar_url_2.id, sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(403)
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id],
+      )
+    end
+
+    it "returns 400 when links_order is missing" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json"
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
+    it "says which parameter was wrong when the order misses a link" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json",
+          params: {
+            links_order: [sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].join).to include("links_order")
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id],
+      )
+    end
+  end
+
+  describe "#move_link" do
+    fab!(:source_section) { Fabricate(:sidebar_section, title: "Source section", user: user) }
+    fab!(:target_section) { Fabricate(:sidebar_section, title: "Target section", user: user) }
+    fab!(:moved_url) { Fabricate(:sidebar_url, name: "moved", value: "/moved") }
+    fab!(:target_url) { Fabricate(:sidebar_url, name: "existing", value: "/existing") }
+    fab!(:moved_link) do
+      Fabricate(:sidebar_section_link, sidebar_section: source_section, linkable: moved_url)
+    end
+    fab!(:target_link) do
+      Fabricate(:sidebar_section_link, sidebar_section: target_section, linkable: target_url)
+    end
+
+    it "moves the link between the user's own sections and returns both serialized sections" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+            position: 0,
+          }
+
+      expect(response.status).to eq(200)
+
+      sections = response.parsed_body["sidebar_sections"]
+      expect(sections.map { |section| section["id"] }).to eq([source_section.id, target_section.id])
+      expect(sections.first["links"]).to eq([])
+      expect(sections.last["links"].map { |link| link["id"] }).to eq([moved_url.id, target_url.id])
+      expect(moved_link.reload.sidebar_section_id).to eq(target_section.id)
+    end
+
+    it "returns 404 for an unknown source section" do
+      sign_in(user)
+
+      put "/sidebar_sections/-999/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when the link is not in the source section" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: target_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "doesn't allow to move links of another user's section" do
+      sign_in(moderator)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(403)
+      expect(moved_link.reload.sidebar_section_id).to eq(source_section.id)
+    end
+
+    it "returns 400 for a negative position" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+            position: -1,
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
+    it "names the limit when the target section is full" do
+      SiteSetting.max_sidebar_section_links = 1
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        [
+          I18n.t(
+            "activerecord.errors.models.sidebar_section.attributes.base.too_many_sidebar_urls",
+            limit: 1,
+            count: 2,
+          ),
+        ],
+      )
+      expect(moved_link.reload.sidebar_section_id).to eq(source_section.id)
+    end
+
+    it "returns 400 when the target section is the source section" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: source_section.id,
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
     end
   end
 end

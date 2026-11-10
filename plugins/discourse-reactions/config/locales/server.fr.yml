@@ -13,7 +13,6 @@ fr:
     discourse_reactions_enabled_reactions: "Définit une liste de réactions activées, n'importe quel émoji est autorisé ici."
     discourse_reactions_desaturated_reaction_panel: "Réduit le bruit visuel des réactions en les affichant désaturées lorsqu'elles ne sont pas survolées."
     discourse_reactions_excluded_from_like: "Les réactions qui ne sont pas considérées comme des « J'aime ». Toute réaction ne figurant pas sur cette liste sera considérée comme un J'aime pour les badges, les rapports et à d'autres fins."
-    discourse_reactions_like_sync_enabled: "Si ce paramètre est activé, des mentions J'aime correspondantes seront créées pour les réactions existantes, à l'exception de celles définies dans {{setting:discourse_reactions_excluded_from_like}}. Cette synchronisation s'effectuera régulièrement en arrière-plan, ainsi que lors de toute modification de {{setting:discourse_reactions_excluded_from_like}}."
     discourse_reactions_allow_any_emoji: "Lorsque ce paramètre est activé, un bouton permet aux utilisateurs de sélectionner n'importe quel émoji dans le sélecteur de réactions. Les membres peuvent choisir n'importe quel émoji, y compris des émojis personnalisés, pour réagir. Pour limiter les réactions disponibles, utilisez le paramètre de site {{setting:emoji_deny_list}}."
     enable_discourse_reactions_by_default: "Lorsque cette modification à venir est activée, la valeur par défaut du paramètre {{setting:discourse_reactions_enabled}} passe de « désactivé » à « activé »."
     errors:

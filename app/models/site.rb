@@ -219,7 +219,7 @@ class Site
         @guardian.user,
         "groups.name ASC",
         include_everyone: !SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
-        include_pseudogroups: SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+        include_pseudogroups: true,
       ).includes(:flair_upload)
     query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
 
@@ -247,6 +247,7 @@ class Site
         {
           periods: TopTopic.periods.map(&:to_s),
           filters: Discourse.filters.map(&:to_s),
+          anonymous_list_filters: Discourse.anonymous_list_filters.map(&:to_s),
           user_fields:
             UserField
               .includes(:user_field_options)

@@ -7,6 +7,8 @@
 ar:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "اختبار"
       missing_token: "يُرجى إكمال تحدي Captcha."
       verification_failed: "فشل تحقُّق Captcha. يُرجى إعادة المحاولة."
       placeholder: عنصر نائب

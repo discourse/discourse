@@ -1,5 +1,5 @@
-import LoginRequired from "../../components/login-required";
-import ProductList from "../../components/product-list";
+import LoginRequired from "../../components/login-required.gjs";
+import ProductList from "../../components/product-list.gjs";
 
 export default <template>
   {{#unless @controller.isLoggedIn}}
@@ -7,7 +7,7 @@ export default <template>
   {{/unless}}
 
   <ProductList
-    @products={{@controller.model}}
     @isLoggedIn={{@controller.isLoggedIn}}
+    @products={{@controller.model}}
   />
 </template>

@@ -17,20 +17,21 @@ jobs:
     name: publish
     runs-on: ubuntu-latest
     if: github.repository == 'discourse/discourse'
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
+          token: ${{ secrets.GH_PUSH_TOKEN }}
 
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4"
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
 
@@ -51,6 +52,7 @@ jobs:
           package_version="${discourse_version}-${commit_hash}"
 
           echo "@discourse/types version: ${package_version}"
+          echo "package_version=${package_version}" >> "$GITHUB_ENV"
           sed -i -E  "s/\"version\": \"0\.0\.0\"/\"version\": \"${package_version}\"/" frontend/discourse-types/package.json
 
       - name: Publish the package

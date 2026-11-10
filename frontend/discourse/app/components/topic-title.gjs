@@ -44,19 +44,19 @@ export default class TopicTitle extends Component {
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
+      class="container"
+      id="topic-title"
       {{on "keydown" this.keyDown}}
       {{dObserveIntersection this.handleIntersectionChange}}
       {{willDestroy this.handleTitleDestroy}}
-      id="topic-title"
-      class="container"
     >
       <div class="title-wrapper">
         {{yield}}
       </div>
 
       <PluginOutlet
-        @name="topic-title"
         @connectorTagName="div"
+        @name="topic-title"
         @outletArgs={{lazyHash model=@model}}
       />
     </div>

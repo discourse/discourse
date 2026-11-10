@@ -3,7 +3,12 @@ module DiscourseAi::Completions
   class OpenAiResponsesMessageProcessor
     PROVIDER_KEY = :open_ai_responses
 
-    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
+    attr_reader :prompt_tokens,
+                :completion_tokens,
+                :cache_read_tokens,
+                :cache_write_tokens,
+                :stop_reason,
+                :reasoning_tokens
 
     def initialize(partial_tool_calls: false, output_thinking: false)
       @tool = nil # currently streaming ToolCall
@@ -21,6 +26,10 @@ module DiscourseAi::Completions
       @has_first_summary_part = false
       @response_output_items = []
       @emitted_response_output_items = false
+    end
+
+    def output_limit_reached
+      @stop_reason == "max_output_tokens"
     end
 
     # @param json [Hash] full JSON response from responses.create / retrieve
@@ -57,6 +66,7 @@ module DiscourseAi::Completions
         end
       end
 
+      update_stop_reason(json[:response] || json)
       update_usage(json)
       result
     end
@@ -108,6 +118,7 @@ module DiscourseAi::Completions
         track_completed_response(json[:response])
       end
 
+      update_stop_reason(json[:response] || json)
       update_usage(json)
       rval
     end
@@ -281,18 +292,29 @@ module DiscourseAi::Completions
       # leave arguments empty; caller can decide how to handle
     end
 
+    def update_stop_reason(response)
+      if response[:status] == "incomplete"
+        @stop_reason = response.dig(:incomplete_details, :reason)
+      elsif response[:status] == "completed"
+        @stop_reason = "completed"
+      end
+    end
+
     def update_usage(json)
       usage = json.dig(:response, :usage) || json[:usage]
       return if !usage
 
+      @reasoning_tokens = usage.dig(:output_tokens_details, :reasoning_tokens) if usage[
+        :output_tokens_details
+      ]&.key?(:reasoning_tokens)
       token_details = usage[:input_tokens_details] || {}
       cached_tokens = token_details[:cached_tokens].to_i
       cache_write_tokens = token_details[:cache_write_tokens].to_i
 
-      @prompt_tokens ||= usage[:input_tokens] - cached_tokens - cache_write_tokens
-      @completion_tokens ||= usage[:output_tokens]
-      @cache_read_tokens ||= cached_tokens
-      @cache_write_tokens ||= cache_write_tokens
+      @prompt_tokens = usage[:input_tokens] - cached_tokens - cache_write_tokens
+      @completion_tokens = usage[:output_tokens]
+      @cache_read_tokens = cached_tokens
+      @cache_write_tokens = cache_write_tokens
     end
 
     def build_partial_reasoning_delta(json, prefix: nil)

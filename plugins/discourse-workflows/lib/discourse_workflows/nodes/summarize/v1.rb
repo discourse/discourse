@@ -58,7 +58,6 @@ module DiscourseWorkflows
           },
           group: "data",
           previewable: true,
-          output_schema_resolver: "summarize",
           capabilities: {
             run_scope: "all_items",
           },
@@ -145,8 +144,8 @@ module DiscourseWorkflows
           split_fields = split_field_list(config["fields_to_split_by"])
 
           properties = {}
-          split_fields.each { |field| properties[leaf_name(field)] = ANY_TYPE }
-          rows.each { |row| properties[output_key(row)] = schema_type_for(row) }
+          split_fields.each { |field| properties[field_key(field, split_fields)] = ANY_TYPE }
+          rows.each { |row| properties[output_key(row, rows)] = schema_type_for(row) }
 
           [Schema.document(properties)]
         end
@@ -160,7 +159,14 @@ module DiscourseWorkflows
           field.split(".").last
         end
 
-        def self.output_key(row)
+        def self.field_key(field, fields)
+          leaf = leaf_name(field)
+          return leaf if fields.count { |other| leaf_name(other) == leaf } < 2
+
+          sanitize_key(field)
+        end
+
+        def self.output_key(row, rows)
           row = row.deep_stringify_keys
           explicit = row["output_field_name"].to_s.strip
           return explicit if explicit.present?
@@ -169,7 +175,18 @@ module DiscourseWorkflows
           field = row["field"].to_s.strip
           return prefix.chomp("_") if field.empty?
 
-          "#{prefix}#{sanitize_key(leaf_name(field))}"
+          "#{prefix}#{sanitize_key(field_key(field, derived_fields(rows, row["aggregation"])))}"
+        end
+
+        def self.derived_fields(rows, aggregation)
+          rows.filter_map do |row|
+            row = row.deep_stringify_keys
+            if row["aggregation"] != aggregation || row["output_field_name"].to_s.strip.present?
+              next
+            end
+
+            row["field"].to_s.strip.presence
+          end
         end
 
         def self.sanitize_key(name)
@@ -196,10 +213,13 @@ module DiscourseWorkflows
             self.class.split_field_list(
               exec_ctx.get_node_parameter("fields_to_split_by", 0, default: ""),
             )
+          split_keys = split_fields.map { |field| self.class.field_key(field, split_fields) }
           rows = normalized_rows(exec_ctx)
+          keyed_rows = rows.map { |row| [self.class.output_key(row, rows), row] }
+          validate_unique_output_keys!(keyed_rows.map(&:first))
           groups = group_items(exec_ctx.input_items, split_fields)
 
-          [separate_items(groups, split_fields, rows, exec_ctx)]
+          [separate_items(groups, split_keys, keyed_rows, exec_ctx)]
         end
 
         private
@@ -218,7 +238,6 @@ module DiscourseWorkflows
           end
 
           rows.each { |row| validate_aggregation!(row) }
-          validate_unique_output_keys!(rows)
           rows
         end
 
@@ -234,8 +253,7 @@ module DiscourseWorkflows
           )
         end
 
-        def validate_unique_output_keys!(rows)
-          keys = rows.map { |row| self.class.output_key(row) }
+        def validate_unique_output_keys!(keys)
           duplicate = keys.tally.find { |_key, count| count > 1 }&.first
           return if duplicate.nil?
 
@@ -253,24 +271,16 @@ module DiscourseWorkflows
             .map { |keys, items| { keys: keys, items: items } }
         end
 
-        def separate_items(groups, split_fields, rows, exec_ctx)
+        def separate_items(groups, split_keys, keyed_rows, exec_ctx)
           groups.map do |group|
-            json = {}
-
-            split_fields.each_with_index do |field, index|
-              json[self.class.leaf_name(field)] = group[:keys][index]
-            end
-
-            json.merge!(aggregate(group[:items], rows))
+            json = split_keys.zip(group[:keys]).to_h.merge!(aggregate(group[:items], keyed_rows))
 
             wrap(json, paired_item: paired_items_for(group[:items], exec_ctx))
           end
         end
 
-        def aggregate(items, rows)
-          rows.each_with_object({}) do |row, result|
-            result[self.class.output_key(row)] = compute(row, items)
-          end
+        def aggregate(items, keyed_rows)
+          keyed_rows.to_h { |key, row| [key, compute(row, items)] }
         end
 
         def compute(row, items)

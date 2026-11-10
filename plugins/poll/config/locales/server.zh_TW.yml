@@ -6,26 +6,59 @@
 
 zh_TW:
   site_settings:
+    poll_enabled: "允許投票？"
     poll_maximum_options: "投票允許的最大選項數。"
     poll_edit_window_mins: "投票創建後多少分鐘內可以編輯？"
+    poll_minimum_trust_level_to_create: "定義建立投票所需的最低信任等級。"
+    poll_create_allowed_groups: "可建立投票的群組。"
+    poll_groupable_user_fields: "可用來群組與篩選投票結果的一組使用者欄位名稱。"
+    poll_export_data_explorer_query_id: "匯出投票結果時使用的資料瀏覽器查詢 ID（設為 0 可停用）。"
+    poll_export_ranked_choice_data_explorer_query_id: "匯出即時淘汰制投票結果時使用的資料瀏覽器查詢 ID。"
+    poll_default_public: "建立新投票時，預設啟用「顯示誰投了票」選項。"
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "投票"
+    invalid_argument: "引數 '%{argument}' 的值 '%{value}' 無效。"
+    multiple_polls_without_name: "建立多個投票時，請在 <code>[poll]</code> 標籤中加入 <code>name=example</code>，以指定不重複的名稱。"
     multiple_polls_with_same_name: "有多個投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”屬性區分各投票。"
+    default_poll_must_have_at_least_1_option: "投票必須至少有 1 個選項。"
+    named_poll_must_have_at_least_1_option: "名為 <strong>%{name}</strong> 的投票必須至少有 1 個選項。"
     default_poll_must_have_less_options:
       other: "投票選項必須少於%{count}個。"
     named_poll_must_have_less_options:
       other: "“<strong>%{name}</strong>”投票的選項必須少於%{count}個。"
     default_poll_must_have_different_options: "投票必須有不同的選項。"
     named_poll_must_have_different_options: "投票“<strong>%{name}</strong>”的選項必須有不同的選項。"
+    default_poll_must_not_have_any_empty_options: "投票不能有空白選項。"
+    named_poll_must_not_have_any_empty_options: "名為 <strong>%{name}</strong> 的投票不能有空白選項。"
     default_poll_with_multiple_choices_has_invalid_parameters: "多選投票有無效選項。"
     named_poll_with_multiple_choices_has_invalid_parameters: "“<strong>%{name}</strong>”多選投票有無效參數。"
     requires_at_least_1_valid_option: "你必須選擇至少 1 個有效的選項。"
+    requires_that_at_least_one_option_is_ranked: "在順位選擇投票中，您必須至少排序一個選項。"
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "前 %{minutes} 分鐘過後，便無法變更投票。"
+      cannot_edit_named_poll_with_votes: "前 %{minutes} 分鐘過後，便無法變更名為 <strong>${name}</strong> 的投票。"
+    dynamic_poll:
+      enabled_hint: "可以新增或移除選項。"
     no_poll_with_this_name: "投票“<strong>%{name}</strong>”沒有被關聯到帖子。"
     post_is_deleted: "帖子已經刪除，無法操作。"
+    user_cant_post_in_topic: "由於您無法在此主題中發文，因此無法投票。"
     topic_must_be_open_to_vote: "主題必須未被鎖定才能投票。"
     poll_must_be_open_to_vote: "投票必須開啟。"
+    one_vote_per_user: "此投票只能投 1 票。"
+    max_vote_per_user:
+      other: 此投票最多可投 %{count} 票。
+    min_vote_per_user:
+      other: 此投票至少必須投 %{count} 票。
+    ranked_choice:
+      vote_options_mismatch: "對於即時淘汰制，投票中的選擇數必須與選項數相符。選項數為 %{count}，實際選擇數為 %{provided}。"
+      no_group_results_support: "投票類型無效：ranked_choice 不支援群組結果。"
     topic_must_be_open_to_toggle_status: "主題必須未被鎖定才能改變狀態。"
     only_staff_or_op_can_toggle_status: "只有管理人員或者發佈投票的人才能改變投票狀態。"
+    errors:
+      poll_not_found: "找不到投票，請確認參數。"
+    insufficient_rights_to_create: "您沒有建立投票的權限。"
     email:
       link_to_poll: "點擊查看投票。"
     user_field:

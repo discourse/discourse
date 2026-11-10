@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import decoratePollOption from "../modifiers/decorate-poll-option";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
 
 export default class PollVotedChoicesComponent extends Component {
   get chosenOptions() {

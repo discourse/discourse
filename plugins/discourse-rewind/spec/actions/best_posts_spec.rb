@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseRewind::Action::BestPosts do
-  fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
   fab!(:post_1) { Fabricate(:post, created_at: random_datetime, user: user, post_number: 3) }
   fab!(:post_2) { Fabricate(:post, created_at: random_datetime, user: user, post_number: 2) }
@@ -18,139 +17,52 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
       post_5.update!(like_count: 7)
 
       expect(call_report[:data]).to eq(
-        [
+        [post_4, post_3, post_1].map do |post|
           {
-            post_number: post_4.post_number,
-            topic_id: post_4.topic_id,
-            like_count: post_4.like_count,
-            reply_count: post_4.reply_count,
-            excerpt:
-              post_4.excerpt(200, { strip_links: true, remap_emoji: true, keep_images: true }),
-          },
-          {
-            post_number: post_3.post_number,
-            topic_id: post_3.topic_id,
-            like_count: post_3.like_count,
-            reply_count: post_3.reply_count,
-            excerpt:
-              post_3.excerpt(200, { strip_links: true, remap_emoji: true, keep_images: true }),
-          },
-          {
-            post_number: post_1.post_number,
-            topic_id: post_1.topic_id,
-            like_count: post_1.like_count,
-            reply_count: post_1.reply_count,
-            excerpt:
-              post_1.excerpt(200, { strip_links: true, remap_emoji: true, keep_images: true }),
-          },
-        ],
+            post_number: post.post_number,
+            topic_id: post.topic_id,
+            like_count: post.like_count,
+            reply_count: post.reply_count,
+            excerpt: post.excerpt(200, { strip_links: true, remap_emoji: true, keep_images: true }),
+          }
+        end,
       )
     end
 
-    context "when a post is deleted" do
-      before { post_1.trash!(Discourse.system_user) }
+    it "only includes the user's publicly visible posts" do
+      post_1.update!(user: Fabricate(:user))
+      post_2.update!(topic: Fabricate(:private_message_topic, user:))
 
-      it "is not included" do
-        expect(call_report[:data].map { |d| d[:post_number] }).not_to include(post_1.post_number)
-      end
+      expect(call_report[:data].pluck(:topic_id)).to contain_exactly(
+        post_3.topic_id,
+        post_4.topic_id,
+      )
     end
+  end
 
-    context "when a post is made by another user" do
-      before { post_1.update!(user: Fabricate(:user)) }
+  describe ".filter_for_viewer" do
+    it "only keeps public posts the viewer can see" do
+      posts = [
+        Fabricate(:post, hidden: true),
+        Fabricate(:post, topic: Fabricate(:shared_draft).topic),
+        post_1,
+      ]
+      report = {
+        data: posts.map { |post| { topic_id: post.topic_id, post_number: post.post_number } },
+        identifier: "best-posts",
+      }
 
-      it "is not included" do
-        expect(call_report[:data].map { |d| d[:post_number] }).not_to include(post_1.post_number)
-      end
-    end
-
-    context "when a post is in a private message" do
-      fab!(:pm_topic) { Fabricate(:private_message_topic, user: user) }
-      fab!(:pm_post) do
-        Fabricate(
-          :post,
-          created_at: random_datetime,
-          user: user,
-          post_number: 2,
-          topic: pm_topic,
-          like_count: 99,
+      filtered =
+        described_class.filter_for_viewer(
+          report,
+          guardian: Fabricate(:user).guardian,
+          for_user: user,
         )
-      end
 
-      it "is not included" do
-        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(pm_topic.id)
-      end
-    end
-
-    context "when a post is in a private category" do
-      fab!(:private_category) { Fabricate(:category, read_restricted: true) }
-      fab!(:private_topic) { Fabricate(:topic, category: private_category, user: user) }
-      fab!(:private_category_post) do
-        Fabricate(
-          :post,
-          created_at: random_datetime,
-          user: user,
-          post_number: 2,
-          topic: private_topic,
-          like_count: 99,
-        )
-      end
-
-      it "is not included" do
-        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(private_topic.id)
-      end
-    end
-
-    context "when public content is hidden from normal viewers" do
-      fab!(:public_category, :category)
-      fab!(:hidden_post_topic) { Fabricate(:topic, user: user, category: public_category) }
-      fab!(:hidden_post) do
-        Fabricate(
-          :post,
-          created_at: random_datetime,
-          user: user,
-          post_number: 2,
-          topic: hidden_post_topic,
-          hidden: true,
-          like_count: 99,
-        )
-      end
-      fab!(:unlisted_topic) do
-        Fabricate(:topic, user: user, category: public_category, visible: false)
-      end
-      fab!(:unlisted_topic_post) do
-        Fabricate(
-          :post,
-          created_at: random_datetime,
-          user: user,
-          post_number: 2,
-          topic: unlisted_topic,
-          like_count: 98,
-        )
-      end
-
-      it "does not include hidden posts or posts in unlisted topics" do
-        topic_ids = call_report[:data].map { |d| d[:topic_id] }
-
-        expect(topic_ids).not_to include(hidden_post_topic.id)
-        expect(topic_ids).not_to include(unlisted_topic.id)
-      end
-    end
-
-    context "when a post is a whisper" do
-      fab!(:whisper_post) do
-        Fabricate(
-          :post,
-          created_at: random_datetime,
-          user: user,
-          post_number: 2,
-          post_type: Post.types[:whisper],
-          like_count: 99,
-        )
-      end
-
-      it "is not included" do
-        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(whisper_post.topic_id)
-      end
+      expect(filtered[:data]).to contain_exactly(
+        topic_id: post_1.topic_id,
+        post_number: post_1.post_number,
+      )
     end
   end
 end

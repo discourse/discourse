@@ -15,7 +15,6 @@ class BrowserPageviewCrawlerDailyRollup < ActiveRecord::Base
       WHERE created_at >= :start_date
         AND created_at < :end_date
         AND score > :threshold
-        AND #{BrowserPageviewEvent.rollup_source_condition}
       GROUP BY date, logged_in
       ON CONFLICT (date, logged_in) DO UPDATE
       SET count = EXCLUDED.count

@@ -17,6 +17,7 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :top_p,
              :default_llm_id,
              :user_id,
+             :can_have_bot_user?,
              :vision_enabled,
              :vision_max_pixels,
              :rag_chunk_tokens,

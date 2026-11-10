@@ -108,7 +108,7 @@ module("Integration | ui-kit | DEditor", function (hooks) {
 
       await render(
         <template>
-          <DEditor @value={{this.value}} @composerEvents={{true}} />
+          <DEditor @composerEvents={{true}} @value={{this.value}} />
         </template>
       );
 
@@ -504,7 +504,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -527,7 +527,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -573,12 +573,32 @@ third line`
       await click(`button.list`);
       await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, `hello world.\n\n* ${example}`);
-      assert.strictEqual(textarea.selectionStart, 14);
+      assert.strictEqual(textarea.selectionStart, 16);
       assert.strictEqual(textarea.selectionEnd, 16 + example.length);
 
       await click(`button.list`);
       await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, `hello world.\n\n${example}`);
+      assert.strictEqual(textarea.selectionStart, 14);
+      assert.strictEqual(textarea.selectionEnd, 14 + example.length);
+
+      this.set("value", "hello world.");
+      await settled();
+      jumpEnd(textarea);
+      await click(`button.list`);
+      await click('.btn[data-name="list-bullet"]');
+
+      textarea.setRangeText(
+        "First item",
+        textarea.selectionStart,
+        textarea.selectionEnd,
+        "end"
+      );
+      await triggerEvent(textarea, "input", {
+        inputType: "insertText",
+        data: "First item",
+      });
+      assert.strictEqual(this.value, "hello world.\n\n* First item");
     }
   );
 
@@ -632,7 +652,7 @@ third line`
       await click(`button.list`);
       await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, `hello world.\n\n1. ${example}`);
-      assert.strictEqual(textarea.selectionStart, 14);
+      assert.strictEqual(textarea.selectionStart, 17);
       assert.strictEqual(textarea.selectionEnd, 17 + example.length);
 
       await click(`button.list`);
@@ -1152,7 +1172,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -1169,7 +1189,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -1601,7 +1621,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
 
     await render(
       <template>
-        <DEditor @value={{context.value}} @onSetup={{context.onSetup}} />
+        <DEditor @onSetup={{context.onSetup}} @value={{context.value}} />
       </template>
     );
     await click(".composer-toggle-switch");

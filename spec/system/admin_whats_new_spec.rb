@@ -3,6 +3,7 @@
 describe "Admin What's New Page" do
   let(:whats_new_page) { PageObjects::Pages::AdminWhatsNew.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+
   fab!(:admin)
 
   before do

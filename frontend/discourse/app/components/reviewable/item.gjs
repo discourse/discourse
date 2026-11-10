@@ -8,7 +8,6 @@ import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
-import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -31,14 +30,15 @@ import { bind } from "discourse/lib/decorators";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { showAlert } from "discourse/lib/post-action-feedback";
+import { survivingPenalty } from "discourse/lib/reviewable-penalty";
 import { resolveReviewableComponent } from "discourse/lib/reviewable-registry";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
-import { eq, not } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
@@ -47,6 +47,8 @@ import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const PENALTY_TOAST_KEY = "reviewable-author-penalty";
 
 const fieldComponents = {
   category: ReviewableFieldCategory,
@@ -105,6 +107,7 @@ export default class ReviewableItem extends Component {
   @service store;
   @service toasts;
   @service messageBus;
+  @service reviewableDsa;
   @optionalService adminTools;
 
   @tracked disabled = false;
@@ -122,10 +125,11 @@ export default class ReviewableItem extends Component {
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
   }
 
+  /** @returns {{ activeTab: string, insightsOpened: boolean, updates: Record<string, unknown> | null }} */
   @cached
   get state() {
     // reading the argument is what ties this cache to a single reviewable
-    this.args.reviewable;
+    manuallyTrack(this.args.reviewable);
 
     return trackedObject({
       activeTab: "timeline",
@@ -136,11 +140,6 @@ export default class ReviewableItem extends Component {
 
   get editing() {
     return this.state.updates !== null;
-  }
-
-  @bind
-  resolveReviewableComponent(type) {
-    return resolveReviewableComponent(getOwner(this), type);
   }
 
   get customClasses() {
@@ -171,8 +170,7 @@ export default class ReviewableItem extends Component {
     return (
       (reviewable?.created_from_flag &&
         reviewable?.status === PENDING &&
-        (this.claimOptional ||
-          (this.claimRequired && reviewable?.claimed_by !== null))) ||
+        (!this.claimRequired || reviewable?.claimed_by !== null)) ||
       this.isAiReviewable
     );
   }
@@ -204,13 +202,6 @@ export default class ReviewableItem extends Component {
     );
   }
 
-  get claimOptional() {
-    return (
-      !this.claimEnabled ||
-      this.siteSettings?.reviewable_claiming === "optional"
-    );
-  }
-
   get claimRequired() {
     return (
       this.claimEnabled && this.siteSettings?.reviewable_claiming === "required"
@@ -234,6 +225,18 @@ export default class ReviewableItem extends Component {
     return this.siteSettings?.reviewable_claiming !== "required";
   }
 
+  get primaryBundles() {
+    return (this.args.reviewable?.bundled_actions ?? []).filter(
+      (bundle) => !bundle.secondary
+    );
+  }
+
+  get secondaryBundles() {
+    return (this.args.reviewable?.bundled_actions ?? []).filter(
+      (bundle) => bundle.secondary
+    );
+  }
+
   get tagCategoryId() {
     return (
       this.state.updates?.category_id || this.args.reviewable?.category?.id
@@ -241,34 +244,28 @@ export default class ReviewableItem extends Component {
   }
 
   get scoreSummary() {
-    const scoreData = this.args.reviewable?.reviewable_scores?.reduce(
-      (acc, score) => {
-        if (!acc[score.score_type.type]) {
-          acc[score.score_type.type] = {
-            title: score.score_type.title,
-            type: score.score_type.type,
-            count: 0,
-          };
-        }
+    const scores = this.args.reviewable?.reviewable_scores ?? [];
+    const summaries = {};
 
-        acc[score.score_type.type].count += 1;
-        return acc;
-      },
-      {}
-    );
+    for (const { score_type } of scores) {
+      summaries[score_type.type] ??= {
+        title: score_type.title,
+        type: score_type.type,
+        count: 0,
+      };
+      summaries[score_type.type].count += 1;
+    }
 
-    return Object.values(scoreData);
+    return Object.values(summaries);
   }
 
   get reviewableTypeLabel() {
     const { reviewable } = this.args;
 
-    // handle plugin types
     if (reviewableTypeLabels[reviewable?.type]) {
       return reviewableTypeLabels[reviewable?.type];
     }
 
-    // core types
     if (reviewable?.type === "ReviewableUser") {
       return "review.user_label";
     }
@@ -288,142 +285,16 @@ export default class ReviewableItem extends Component {
       return "review.post_flagged_as";
     }
 
-    // fallback
     return "review.flagged_as";
   }
 
-  @bind
-  _updateClaimedBy(data) {
-    if (data.topic_id !== this.topicId) {
-      return;
-    }
-
-    const { reviewable } = this.args;
-    const user = this.store.createRecord("user", data.user);
-
-    reviewable.claimed_by = data.claimed
-      ? { user, automatic: data.automatic }
-      : null;
-
-    if (data.automatic || reviewable.status !== PENDING) {
-      return;
-    }
-
-    reviewable.reviewable_histories = [
-      ...reviewable.reviewable_histories,
-      {
-        reviewable_history_type: data.claimed ? CLAIMED : UNCLAIMED,
-        created_at: new Date().toISOString(),
-        created_by: user,
-      },
-    ];
+  get permalink() {
+    return getAbsoluteURL(`/review/${this.args.reviewable.id}`);
   }
 
   @bind
-  _updateStatus(data) {
-    const { reviewable } = this.args;
-
-    if (data.remove_reviewable_ids?.includes(reviewable.id)) {
-      delete data.remove_reviewable_ids;
-      this._performResult(data, {}, reviewable);
-    }
-  }
-
-  @bind
-  async _performConfirmed(performableAction, additionalData = {}) {
-    let reviewable = this.args.reviewable;
-
-    let performAction = async () => {
-      this.disabled = true;
-
-      let version = reviewable.version;
-      this.updating = true;
-
-      const data = {
-        send_email: reviewable.sendEmail,
-        reject_reason: reviewable.rejectReason,
-        ...additionalData,
-      };
-
-      (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
-        if (reviewable[param]) {
-          data[param] = reviewable[param];
-        }
-      });
-
-      return ajax(
-        `/review/${reviewable.id}/perform/${performableAction.server_action}?version=${version}`,
-        {
-          type: "PUT",
-          dataType: "json",
-          data,
-        }
-      )
-        .then((result) =>
-          this._performResult(
-            result.reviewable_perform_result,
-            performableAction,
-            reviewable
-          )
-        )
-        .finally(() => {
-          this.updating = false;
-          this.disabled = false;
-        });
-    };
-
-    try {
-      if (performableAction.client_action) {
-        let actionMethod =
-          this[`client${classify(performableAction.client_action)}`];
-        if (actionMethod) {
-          if (await this.#claimReviewable()) {
-            await actionMethod.call(this, reviewable, performAction);
-          }
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(
-            `No handler for ${performableAction.client_action} found`
-          );
-        }
-      } else {
-        await performAction();
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    }
-
-    return this.#unclaimAutomaticReviewable();
-  }
-
-  _performResult(result, performableAction, reviewable) {
-    // "fast track" to update the current user's reviewable count before the message bus finds out.
-    if (result.reviewable_count !== undefined) {
-      this.currentUser.updateReviewableCount(result.reviewable_count);
-    }
-
-    if (result.unseen_reviewable_count !== undefined) {
-      this.currentUser.set(
-        "unseen_reviewable_count",
-        result.unseen_reviewable_count
-      );
-    }
-
-    if (performableAction.completed_message) {
-      this.toasts.success({
-        data: { message: performableAction.completed_message },
-      });
-    }
-
-    if (this.args.remove && result.remove_reviewable_ids?.length > 0) {
-      this.args.remove(result.remove_reviewable_ids);
-    } else {
-      if (this.args.updateStatuses && result.reviewable_updates) {
-        this.args.updateStatuses(result.reviewable_updates);
-      }
-
-      return this.store.find("reviewable", reviewable.id);
-    }
+  resolveReviewableComponent(type) {
+    return resolveReviewableComponent(getOwner(this), type);
   }
 
   @action
@@ -447,103 +318,48 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  clientSuspend(reviewable, performAction) {
-    return this._penalize("showSuspendModal", reviewable, performAction);
+  clientSuspend(reviewable, performAction, dsaClassification) {
+    return this._penalize(
+      "showSuspendModal",
+      reviewable,
+      performAction,
+      dsaClassification
+    );
   }
 
-  clientSilence(reviewable, performAction) {
-    return this._penalize("showSilenceModal", reviewable, performAction);
+  clientSilence(reviewable, performAction, dsaClassification) {
+    return this._penalize(
+      "showSilenceModal",
+      reviewable,
+      performAction,
+      dsaClassification
+    );
   }
 
   async clientEdit(reviewable, performAction) {
     if (!this.currentUser) {
       return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     }
-    const post = await this.store.find("post", reviewable.post_id);
-    const topic_json = await Topic.find(post.topic_id, {});
 
-    const topic = Topic.create(topic_json);
-    post.set("topic", topic);
+    const post = await this.store.find("post", reviewable.post_id);
 
     if (!post.can_edit) {
       return false;
     }
 
-    const opts = {
+    const topic = Topic.create(await Topic.find(post.topic_id, {}));
+    post.set("topic", topic);
+
+    return this.composer.open({
       post,
       action: Composer.EDIT,
-      draftKey: post.get("topic.draft_key"),
-      draftSequence: post.get("topic.draft_sequence"),
+      draftKey: topic.draft_key,
+      draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-    };
-
-    this.composer.open(opts);
-
-    return performAction();
-  }
-
-  _penalize(adminToolMethod, reviewable, performAction) {
-    let adminTools = this.adminTools;
-    if (adminTools) {
-      let createdBy = reviewable.target_created_by;
-      let postId = reviewable.post_id;
-      let postEdit = reviewable.raw ?? reviewable.payload?.raw;
-
-      return adminTools[adminToolMethod](createdBy, {
-        postId,
-        postEdit,
-        reviewableId: reviewable.id,
-        before: performAction,
-      });
-    }
-  }
-
-  async #claimReviewable() {
-    const { reviewable } = this.args;
-
-    if (!reviewable.topic) {
-      // We can't claim a reviewable without a topic, so treat it as claimed
-      return true;
-    }
-
-    if (!reviewable.claimed_by) {
-      const claim = this.store.createRecord("reviewable-claimed-topic");
-
-      try {
-        await claim.save({ topic_id: reviewable.topic.id, automatic: true });
-        reviewable.claimed_by = { user: this.currentUser, automatic: true };
-      } catch (e) {
-        popupAjaxError(e);
-        return false;
-      }
-    }
-
-    return reviewable.claimed_by?.user?.id === this.currentUser.id;
-  }
-
-  async #unclaimAutomaticReviewable() {
-    const { reviewable } = this.args;
-
-    if (!reviewable.topic || !reviewable.claimed_by?.automatic) {
-      return;
-    }
-
-    try {
-      await ajax(`/reviewable_claimed_topics/${reviewable.topic.id}`, {
-        type: "DELETE",
-        data: { automatic: true },
-      });
-      reviewable.claimed_by = null;
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  explainReviewable(reviewable, event) {
-    event.preventDefault();
-    this.modal.show(ExplainReviewableModal, {
-      model: { reviewable },
+      onSaved: (result) =>
+        performAction({ post_version: result.payload.version }).catch(
+          popupAjaxError
+        ),
     });
   }
 
@@ -589,17 +405,6 @@ export default class ReviewableItem extends Component {
     this.#updateField(fieldId, event.target.value);
   }
 
-  #updateField(fieldId, value) {
-    const [key, nestedKey] = fieldId.split(".");
-    const updates = this.state.updates;
-
-    if (nestedKey) {
-      updates[key] = { ...updates[key], [nestedKey]: value };
-    } else {
-      updates[key] = value;
-    }
-  }
-
   @action
   async perform(performableAction) {
     if (this.updating) {
@@ -611,6 +416,22 @@ export default class ReviewableItem extends Component {
     const actionModalClass = requireRejectReason
       ? RejectReasonReviewableModal
       : actionModalClassMap[performableAction.server_action];
+
+    if (
+      this.reviewableDsa.handlesConfirmation({
+        action: performableAction,
+        options: this.args.classificationOptions,
+        modalClass: actionModalClass,
+      })
+    ) {
+      return this._performConfirmed(
+        performableAction,
+        {},
+        {
+          modalClass: actionModalClass,
+        }
+      );
+    }
 
     if (message) {
       if (await this.#claimReviewable()) {
@@ -647,10 +468,6 @@ export default class ReviewableItem extends Component {
     this.args.reviewable.claimed_by = claimedBy;
   }
 
-  get permalink() {
-    return getAbsoluteURL(`/review/${this.args.reviewable.id}`);
-  }
-
   @action
   async copyPermalink(event) {
     const button = event.currentTarget;
@@ -675,12 +492,297 @@ export default class ReviewableItem extends Component {
     }
   }
 
+  #showCompletedToast(performableAction, reviewable) {
+    const penalty = survivingPenalty(
+      performableAction,
+      reviewable.author_penalties
+    );
+    const author = reviewable.target_created_by;
+
+    if (!penalty || !author) {
+      this.toasts.success({
+        data: { message: performableAction.completed_message },
+      });
+      return;
+    }
+
+    this.toasts.success({
+      autoClose: false,
+      key: `${PENALTY_TOAST_KEY}-${author.id}`,
+      data: {
+        title: performableAction.completed_message,
+        message: i18n("review.author_penalty.toast.still_silenced", {
+          username: author.username,
+        }),
+        actions: [
+          {
+            label: i18n("review.author_penalty.toast.undo"),
+            class: "btn-transparent reviewable-undo-penalty",
+            action: ({ close }) => this.#liftPenalty(author, close),
+          },
+        ],
+      },
+    });
+  }
+
+  async #liftPenalty(author, close) {
+    try {
+      await ajax(`/admin/users/${author.id}/unsilence`, { type: "PUT" });
+    } catch (error) {
+      return popupAjaxError(error);
+    }
+
+    close();
+
+    this.toasts.success({
+      data: {
+        message: i18n("review.author_penalty.toast.undone", {
+          username: author.username,
+        }),
+      },
+    });
+
+    this.store.find("reviewable", this.args.reviewable.id);
+  }
+
+  async #claimReviewable() {
+    const { reviewable } = this.args;
+
+    if (!reviewable.topic) {
+      // We can't claim a reviewable without a topic, so treat it as claimed
+      return true;
+    }
+
+    if (!reviewable.claimed_by) {
+      const claim = this.store.createRecord("reviewable-claimed-topic");
+
+      try {
+        await claim.save({ topic_id: reviewable.topic.id, automatic: true });
+        reviewable.claimed_by = { user: this.currentUser, automatic: true };
+      } catch (e) {
+        popupAjaxError(e);
+        return false;
+      }
+    }
+
+    return reviewable.claimed_by?.user?.id === this.currentUser.id;
+  }
+
+  async #unclaimAutomaticReviewable() {
+    const { reviewable } = this.args;
+
+    if (!reviewable.topic || !reviewable.claimed_by?.automatic) {
+      return;
+    }
+
+    try {
+      await ajax(`/reviewable_claimed_topics/${reviewable.topic.id}`, {
+        type: "DELETE",
+        data: { automatic: true },
+      });
+      reviewable.claimed_by = null;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  #updateField(fieldId, value) {
+    const [key, nestedKey] = fieldId.split(".");
+    const updates = this.state.updates;
+
+    if (nestedKey) {
+      updates[key] = { ...updates[key], [nestedKey]: value };
+    } else {
+      updates[key] = value;
+    }
+  }
+
+  @bind
+  _updateClaimedBy(data) {
+    if (data.topic_id !== this.topicId) {
+      return;
+    }
+
+    const { reviewable } = this.args;
+    const user = this.store.createRecord("user", data.user);
+
+    reviewable.claimed_by = data.claimed
+      ? { user, automatic: data.automatic }
+      : null;
+
+    if (data.automatic || reviewable.status !== PENDING) {
+      return;
+    }
+
+    reviewable.reviewable_histories = [
+      ...reviewable.reviewable_histories,
+      {
+        reviewable_history_type: data.claimed ? CLAIMED : UNCLAIMED,
+        created_at: new Date().toISOString(),
+        created_by: user,
+      },
+    ];
+  }
+
+  @bind
+  _updateStatus(data) {
+    const { reviewable } = this.args;
+
+    if (data.remove_reviewable_ids?.includes(reviewable.id)) {
+      delete data.remove_reviewable_ids;
+      this._performResult(data, {}, reviewable);
+    }
+  }
+
+  @bind
+  async _performConfirmed(
+    performableAction,
+    additionalData = {},
+    { modalClass } = {}
+  ) {
+    let reviewable = this.args.reviewable;
+
+    let performAction = async (actionData = {}) => {
+      this.disabled = true;
+
+      let version = reviewable.version;
+      this.updating = true;
+
+      const data = {
+        send_email: reviewable.sendEmail,
+        reject_reason: reviewable.rejectReason,
+        ...additionalData,
+        ...actionData,
+      };
+
+      (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
+        if (reviewable[param]) {
+          data[param] = reviewable[param];
+        }
+      });
+
+      return ajax(
+        `/review/${reviewable.id}/perform/${performableAction.server_action}?version=${version}`,
+        {
+          type: "PUT",
+          dataType: "json",
+          data,
+        }
+      )
+        .then((result) =>
+          this._performResult(
+            result.reviewable_perform_result,
+            performableAction,
+            reviewable
+          )
+        )
+        .finally(() => {
+          this.updating = false;
+          this.disabled = false;
+        });
+    };
+
+    const classificationOptions = this.reviewableDsa.optionsFor({
+      action: performableAction,
+      options: this.args.classificationOptions,
+    });
+
+    const dispatch = async (perform) => {
+      if (!performableAction.client_action) {
+        return perform();
+      }
+
+      const actionMethod =
+        this[`client${classify(performableAction.client_action)}`];
+      if (actionMethod) {
+        if (await this.#claimReviewable()) {
+          return actionMethod.call(
+            this,
+            reviewable,
+            perform,
+            classificationOptions
+          );
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(
+          `No handler for ${performableAction.client_action} found`
+        );
+      }
+    };
+
+    try {
+      if (classificationOptions) {
+        await this.reviewableDsa.perform({
+          action: performableAction,
+          reviewable,
+          options: classificationOptions,
+          modalClass,
+          claim: () => this.#claimReviewable(),
+          dispatch,
+          performAction,
+        });
+      } else {
+        await dispatch(performAction);
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
+
+    return this.#unclaimAutomaticReviewable();
+  }
+
+  _performResult(result, performableAction, reviewable) {
+    // "fast track" to update the current user's reviewable count before the message bus finds out.
+    if (result.reviewable_count !== undefined) {
+      this.currentUser.updateReviewableCount(result.reviewable_count);
+    }
+
+    if (result.unseen_reviewable_count !== undefined) {
+      this.currentUser.set(
+        "unseen_reviewable_count",
+        result.unseen_reviewable_count
+      );
+    }
+
+    if (performableAction.completed_message) {
+      this.#showCompletedToast(performableAction, reviewable);
+    }
+
+    if (this.args.remove && result.remove_reviewable_ids?.length > 0) {
+      this.args.remove(result.remove_reviewable_ids);
+    } else {
+      if (this.args.updateStatuses && result.reviewable_updates) {
+        this.args.updateStatuses(result.reviewable_updates);
+      }
+
+      return this.store.find("reviewable", reviewable.id);
+    }
+  }
+
+  _penalize(adminToolMethod, reviewable, performAction, dsaClassification) {
+    if (!this.adminTools) {
+      return;
+    }
+
+    return this.adminTools[adminToolMethod](
+      reviewable.target_created_by ?? reviewable.target_user,
+      {
+        postId: reviewable.post_id,
+        postEdit: reviewable.raw ?? reviewable.payload?.raw,
+        reviewableId: reviewable.id,
+        dsaClassification,
+        perform: performAction,
+      }
+    );
+  }
+
   <template>
     <div class="review-container">
 
       <div
-        data-reviewable-id={{@reviewable.id}}
         class="review-item {{this.customClasses}}"
+        data-reviewable-id={{@reviewable.id}}
       >
         <div class="review-item__primary-content">
           <div class="review-item__flag-summary">
@@ -698,10 +800,10 @@ export default class ReviewableItem extends Component {
               </div>
 
               <button
+                class="btn btn-transparent reviewable-permalink-copy"
+                title={{i18n "review.copy_permalink_title"}}
                 type="button"
                 {{on "click" this.copyPermalink}}
-                title={{i18n "review.copy_permalink_title"}}
-                class="btn btn-transparent reviewable-permalink-copy"
               >
                 {{dIcon "link"}}
               </button>
@@ -719,11 +821,11 @@ export default class ReviewableItem extends Component {
                   <div class="editable-field {{dDasherize f.id}}">
                     {{#let (get fieldComponents f.type) as |FieldComponent|}}
                       <FieldComponent
+                        @categoryChanged={{this.categoryChanged}}
+                        @tagCategoryId={{this.tagCategoryId}}
                         @tagName=""
                         @value={{editableValue @reviewable f.id}}
-                        @tagCategoryId={{this.tagCategoryId}}
                         @valueChanged={{fn this.valueChanged f.id}}
-                        @categoryChanged={{this.categoryChanged}}
                       />
                     {{/let}}
                   </div>
@@ -752,8 +854,8 @@ export default class ReviewableItem extends Component {
           <div class="review-item__insights">
             <div class="d-nav-submenu">
               <DHorizontalOverflowNav
-                @ariaLabel="Review tabs"
                 class="d-nav-submenu__tabs"
+                @ariaLabel="Review tabs"
               >
                 <li
                   class={{dConcatClass
@@ -762,8 +864,8 @@ export default class ReviewableItem extends Component {
                   }}
                 >
                   <a
-                    href="#"
                     class={{if (eq this.state.activeTab "timeline") "active"}}
+                    href="#"
                     {{on "click" (fn this.switchTab "timeline")}}
                   >
                     {{i18n "review.timeline_and_notes"}}
@@ -776,8 +878,8 @@ export default class ReviewableItem extends Component {
                   }}
                 >
                   <a
-                    href="#"
                     class={{if (eq this.state.activeTab "insights") "active"}}
+                    href="#"
                     {{on "click" (fn this.switchTab "insights")}}
                   >
                     {{i18n "review.insights.title"}}
@@ -793,15 +895,14 @@ export default class ReviewableItem extends Component {
             {{/if}}
             {{#if (eq this.state.activeTab "timeline")}}
               <ReviewableTimeline
-                @reviewable={{@reviewable}}
                 @historyEvents={{@reviewable.reviewable_histories}}
+                @reviewable={{@reviewable}}
               />
             {{/if}}
           </div>
         </div>
 
         <div class="review-item__aside">
-
           {{#unless @reviewable.last_performing_username}}
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
@@ -818,35 +919,49 @@ export default class ReviewableItem extends Component {
                 </h3>
                 {{#if this.editing}}
                   <DButton
+                    class="btn-primary reviewable-action save-edit"
+                    @action={{this.saveEdit}}
                     @disabled={{this.disabled}}
                     @icon="check"
-                    @action={{this.saveEdit}}
                     @label="review.save"
-                    class="btn-primary reviewable-action save-edit"
                   />
                   <DButton
+                    class="btn-danger reviewable-action cancel-edit"
+                    @action={{this.cancelEdit}}
                     @disabled={{this.disabled}}
                     @icon="xmark"
-                    @action={{this.cancelEdit}}
                     @label="review.cancel"
-                    class="btn-danger reviewable-action cancel-edit"
                   />
                 {{else}}
-                  {{#each @reviewable.bundled_actions as |bundle|}}
+                  {{#each this.primaryBundles as |bundle|}}
                     <ReviewableBundledAction
+                      @authorPenalties={{@reviewable.author_penalties}}
                       @bundle={{bundle}}
                       @performAction={{this.perform}}
                       @reviewableUpdating={{this.disabled}}
                     />
                   {{/each}}
 
-                  {{#if @reviewable.can_edit}}
-                    <DButton
-                      @disabled={{this.disabled}}
-                      @action={{this.edit}}
-                      @label="review.edit"
-                      class="reviewable-action btn-default edit"
-                    />
+                  {{#if (or this.secondaryBundles.length @reviewable.can_edit)}}
+                    <div class="review-item__secondary-actions">
+                      {{#each this.secondaryBundles as |bundle|}}
+                        <ReviewableBundledAction
+                          @authorPenalties={{@reviewable.author_penalties}}
+                          @bundle={{bundle}}
+                          @performAction={{this.perform}}
+                          @reviewableUpdating={{this.disabled}}
+                        />
+                      {{/each}}
+
+                      {{#if @reviewable.can_edit}}
+                        <DButton
+                          class="reviewable-action btn-default edit"
+                          @action={{this.edit}}
+                          @disabled={{this.disabled}}
+                          @label="review.edit"
+                        />
+                      {{/if}}
+                    </div>
                   {{/if}}
                 {{/if}}
               </div>
@@ -859,16 +974,16 @@ export default class ReviewableItem extends Component {
                 <div class="review-item__assigned">
                   {{dIcon "user-plus"}}
                   <ReviewableCreatedBy
-                    @showUsername={{true}}
                     @avatarSize="small"
+                    @showUsername={{true}}
                     @user={{@reviewable.claimed_by.user}}
                   />
                 </div>
               {{/if}}
               <ReviewableClaimedTopic
-                @topicId={{this.topicId}}
                 @claimedBy={{@reviewable.claimed_by}}
                 @onClaim={{this.claimedByChanged}}
+                @topicId={{this.topicId}}
               />
             </div>
           {{/if}}

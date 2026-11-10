@@ -5,10 +5,14 @@ import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
+import { resetLocalCache, setLocalCache } from "pretty-text/oneboxer-cache";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse/lib/object";
 import DiscourseMarkdownIt from "discourse-markdown-it";
-import { extractDataAttribute } from "discourse-markdown-it/engine";
+import {
+  extractDataAttribute,
+  unhoistForCooked,
+} from "discourse-markdown-it/engine";
 import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
 
 const rawOpts = {
@@ -443,6 +447,45 @@ eviltrout</p>
       "handles nested quotes properly"
     );
 
+    assert.cooked(
+      `[b]hi[/b]\n[quote]\nx\n[/quote]\n\n> [quote]\n> y\n> [/quote]`,
+      `<p><span class="bbcode-b">hi</span></p>
+<aside class="quote no-group">
+<blockquote>
+<p>x</p>
+</blockquote>
+</aside>
+<blockquote>
+<aside class="quote no-group">
+<blockquote>
+<p>y</p>
+</blockquote>
+</aside>
+</blockquote>`,
+      "handles quotes nested inside blockquotes"
+    );
+
+    assert.cooked(
+      `- [quote]\n  y\n  [/quote]\n- [quote]\n  z\n  [/quote]`,
+      `<ul>
+<li>
+<aside class="quote no-group">
+<blockquote>
+<p>y</p>
+</blockquote>
+</aside>
+</li>
+<li>
+<aside class="quote no-group">
+<blockquote>
+<p>z</p>
+</blockquote>
+</aside>
+</li>
+</ul>`,
+      "handles quotes in separate list items"
+    );
+
     assert.cookedOptions(
       `[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`,
       { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
@@ -516,8 +559,8 @@ eviltrout</p>
 
     assert.cooked(
       "robin@email.host",
-      "<p>robin@email.host</p>",
-      "won't add mention class to an email address"
+      '<p><a href="mailto:robin@email.host">robin@email.host</a></p>',
+      "allows any TLD for emails"
     );
 
     assert.cooked(
@@ -1153,6 +1196,58 @@ eviltrout</p>
     );
   });
 
+  test("hoisted raw HTML is not restored inside an attribute value", function (assert) {
+    const onebox = document.createElement("aside");
+    onebox.className = "onebox";
+    onebox.title = "injected=1 y=";
+    setLocalCache("http://test.com", onebox);
+
+    try {
+      assert.true(
+        build().cook("http://test.com").includes('title="injected=1 y="'),
+        "restores a cached onebox that stands where text may stand"
+      );
+
+      assert.false(
+        build()
+          .cook("<div data-x='\n\nhttp://test.com\n\n</div '>hello</div>")
+          .includes("injected=1"),
+        "leaves the cached onebox out of the attribute value the post placed it in"
+      );
+    } finally {
+      resetLocalCache();
+    }
+  });
+
+  test("hoisted raw HTML is not restored inside a tag during nested substitution", function (assert) {
+    // A hoisted value may itself hold another key, which is how a nested block
+    // is restored. Where that inner key lands is decided by the outer value, so
+    // it has to be re-checked between substitutions rather than once up front.
+    const outer = "1b4e28ba-2fa1-4d9b-b3f8-2e1dd3f7a0c1";
+    const inner = "9f2c17e5-8b3d-4a62-91c4-6d0ab5e7f3d2";
+
+    assert.strictEqual(
+      unhoistForCooked(
+        {
+          [outer]: `<div class="wrap">${inner}</div>`,
+          [inner]: "<p>nested</p>",
+        },
+        outer
+      ),
+      '<div class="wrap"><p>nested</p></div>',
+      "restores a nested key that stands where text may stand"
+    );
+
+    assert.strictEqual(
+      unhoistForCooked(
+        { [outer]: `<div data-x="${inner}">`, [inner]: '" id="pwn" y="' },
+        outer
+      ),
+      '<div data-x="">',
+      "drops a nested key that the outer value put inside a tag"
+    );
+  });
+
   test("basic bbcode", function (assert) {
     assert.cookedPara(
       "[b]strong[/b]",
@@ -1565,6 +1660,22 @@ var bar = 'bar';
       `<p><div class="onebox-placeholder-container" data-orig-src-id="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">
         <span class="placeholder-icon video"></span>
       </div></p>`
+    );
+  });
+
+  test("image controls add only identifying attributes when previewing", function (assert) {
+    assert.cookedOptions(
+      "![cat|690x313](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.png)",
+      { previewing: true },
+      `<p><img src="/images/transparent.png" alt="cat" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.png" data-image-index="0" data-scale="100" data-image-run="1" width="690" height="313" class="resizable"></p>`
+    );
+  });
+
+  test("button tags are stripped when previewing", function (assert) {
+    assert.cookedOptions(
+      `<button class="delete-image-button">delete</button>`,
+      { previewing: true },
+      `<p>delete</p>`
     );
   });
 

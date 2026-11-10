@@ -42,10 +42,51 @@ RSpec.describe Email::Styles do
       expect(frag.at("img")["src"]).to eq("#{Discourse.base_url}/some-image.png")
     end
 
+    it "converts relative links to absolute links" do
+      frag = basic_fragment("<a href='/u/someone'>someone</a><a href='mailto:a@b.com'>mail</a>")
+
+      expect(frag.css("a").map { |link| link["href"] }).to eq(
+        ["#{Discourse.base_url}/u/someone", "mailto:a@b.com"],
+      )
+    end
+
     it "preserves classes and ids" do
       raw = '<div class="foo" id="bar"><div class="foo" id="bar"></div></div>'
       frag = basic_fragment(raw)
       expect(frag.to_html).to eq(raw)
+    end
+  end
+
+  describe "custom formatter" do
+    shared_examples "applying CSS beside an unsupported selector" do |selector:|
+      it "skips the unsupported selector and applies supported styles" do
+        SiteSetting.email_custom_css_compiled = <<~CSS
+          p { color: red; }
+          #{selector}, a:first-child { letter-spacing: 3px; }
+          a { background-color: green; }
+        CSS
+
+        frag =
+          html_fragment(
+            '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
+          )
+
+        expect(frag.at("p")["style"]).to include("color:red")
+        expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
+        expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
+      end
+    end
+
+    context "with the a:visited selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:visited"
+    end
+
+    context "with the a:hover selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:hover"
+    end
+
+    context "with the a[ selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a["
     end
   end
 
@@ -79,14 +120,14 @@ RSpec.describe Email::Styles do
       expect(frag.at("a")["href"]).to eq(iframe_url)
     end
 
-    it "won't allow non URLs in iframe src, strips them with no link" do
+    it "strips non-URL iframe sources without adding a link" do
       iframe_url = "alert('xss hole')"
       frag = html_fragment("<iframe src=\"#{iframe_url}\"></iframe>")
       expect(frag.at("iframe")).to be_blank
       expect(frag.at("a")).to be_blank
     end
 
-    it "won't allow empty iframe src, strips them with no link" do
+    it "strips empty iframe sources without adding a link" do
       frag = html_fragment("<iframe src=''></iframe>")
       expect(frag.at("iframe")).to be_blank
       expect(frag.at("a")).to be_blank
@@ -313,6 +354,7 @@ RSpec.describe Email::Styles do
     end
 
     let(:attachments) { { "testimage.png" => stub(url: "email/test.png") } }
+
     it "replaces secure uploads within a link with a placeholder" do
       frag =
         html_fragment(
@@ -534,6 +576,7 @@ RSpec.describe Email::Styles do
   <div style="clear: both"></div>
 </aside>
           HTML
+
         it "keeps the special onebox styles" do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")

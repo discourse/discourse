@@ -15,6 +15,7 @@ export default class AdminWatchedWordsActionController extends Controller {
   @service modal;
   @controller adminWatchedWords;
 
+  /** @type {string | null} */
   @tracked actionNameKey = null;
 
   @dependentKeyCompat
@@ -76,6 +77,12 @@ export default class AdminWatchedWordsActionController extends Controller {
     );
   }
 
+  get downloadAction() {
+    return attachmentDownloadStrategy() === "native"
+      ? undefined
+      : this.download;
+  }
+
   @action
   recordAdded(arg) {
     const currentAction = this.currentAction;
@@ -119,12 +126,6 @@ export default class AdminWatchedWordsActionController extends Controller {
   @action
   async uploadComplete() {
     return this.adminWatchedWords.updateAllWords();
-  }
-
-  get downloadAction() {
-    return attachmentDownloadStrategy() === "native"
-      ? undefined
-      : this.download;
   }
 
   @action

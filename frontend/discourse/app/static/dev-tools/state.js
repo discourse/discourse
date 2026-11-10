@@ -32,48 +32,6 @@ class DevToolsState {
   }
 
   /**
-   * Load persisted state from sessionStorage.
-   *
-   * @returns {Object} Parsed state object or empty object if not found
-   */
-  #loadPersistedState() {
-    try {
-      const stored = window.sessionStorage?.getItem(
-        DevToolsState.#SESSION_STORAGE_KEY
-      );
-      return stored ? JSON.parse(stored) : {};
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        "[DevTools] Failed to parse persisted state from sessionStorage. " +
-          "Using defaults.",
-        e
-      );
-      return {};
-    }
-  }
-
-  /**
-   * Save current state to sessionStorage.
-   */
-  #persistState() {
-    try {
-      window.sessionStorage?.setItem(
-        DevToolsState.#SESSION_STORAGE_KEY,
-        JSON.stringify({
-          pluginOutletDebug: this._pluginOutletDebug,
-          blockDebug: this._blockDebug,
-          blockVisualOverlay: this._blockVisualOverlay,
-          blockGhostBlocks: this._blockGhostBlocks,
-          blockOutletBoundaries: this._blockOutletBoundaries,
-        })
-      );
-    } catch {
-      // Ignore storage errors
-    }
-  }
-
-  /**
    * Enable visual overlay showing plugin outlet debug information.
    * When enabled, plugin outlets display badges and tooltips with outlet details.
    *
@@ -143,6 +101,48 @@ class DevToolsState {
   set blockOutletBoundaries(value) {
     this._blockOutletBoundaries = value;
     this.#persistState();
+  }
+
+  /**
+   * Load persisted state from sessionStorage.
+   *
+   * @returns {Object} Parsed state object or empty object if not found
+   */
+  #loadPersistedState() {
+    try {
+      const stored = window.sessionStorage?.getItem(
+        DevToolsState.#SESSION_STORAGE_KEY
+      );
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[DevTools] Failed to parse persisted state from sessionStorage. " +
+          "Using defaults.",
+        e
+      );
+      return {};
+    }
+  }
+
+  /**
+   * Save current state to sessionStorage.
+   */
+  #persistState() {
+    try {
+      window.sessionStorage?.setItem(
+        DevToolsState.#SESSION_STORAGE_KEY,
+        JSON.stringify({
+          pluginOutletDebug: this._pluginOutletDebug,
+          blockDebug: this._blockDebug,
+          blockVisualOverlay: this._blockVisualOverlay,
+          blockGhostBlocks: this._blockGhostBlocks,
+          blockOutletBoundaries: this._blockOutletBoundaries,
+        })
+      );
+    } catch {
+      // Ignore storage errors
+    }
   }
 }
 

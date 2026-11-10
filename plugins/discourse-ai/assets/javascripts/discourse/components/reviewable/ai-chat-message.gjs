@@ -12,7 +12,7 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
   discourseImport: "optional",
 };
-import ModelAccuracies from "../model-accuracies";
+import ModelAccuracies from "../model-accuracies.gjs";
 
 export default class ReviewableRefreshAiChatMessage extends Component {
   @cached
@@ -40,12 +40,12 @@ export default class ReviewableRefreshAiChatMessage extends Component {
       <div class="review-item__meta-topic-title">
         {{#if this.channel}}
           <LinkTo
-            @route="chat.channel.near-message"
             @models={{array
               this.channel.slugifiedTitle
               this.channel.id
               @reviewable.target_id
             }}
+            @route="chat.channel.near-message"
           >
             <ChannelTitle @channel={{this.channel}} />
           </LinkTo>
@@ -57,7 +57,10 @@ export default class ReviewableRefreshAiChatMessage extends Component {
       <div class="review-item__meta-label">{{i18n "review.review_user"}}</div>
 
       <div class="review-item__meta-flagged-user">
-        <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+        <ReviewableCreatedBy
+          @penalties={{@reviewable.author_penalties}}
+          @user={{@reviewable.target_created_by}}
+        />
       </div>
     </div>
 
@@ -69,9 +72,9 @@ export default class ReviewableRefreshAiChatMessage extends Component {
           {{#if @reviewable.payload.transcript_topic_id}}
             <div class="transcript">
               <LinkTo
-                @route="topic"
-                @models={{array "-" @reviewable.payload.transcript_topic_id}}
                 class="btn btn-default btn-small"
+                @models={{array "-" @reviewable.payload.transcript_topic_id}}
+                @route="topic"
               >
                 {{i18n "review.transcript.view"}}
               </LinkTo>

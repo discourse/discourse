@@ -17,18 +17,18 @@ export default class AdminReportsShowController extends Controller {
     "chart_grouping",
     "mode",
   ]);
+
+  /** @type {string | null} */
   start_date = null;
+
+  /** @type {string | null} */
   end_date = null;
+
+  /** @type {Record<string, unknown> | null} */
   filters = null;
+
+  /** @type {string | null} */
   chart_grouping = null;
-
-  setBackLink({ route, query, label }) {
-    this.backLink = { route, query, label };
-  }
-
-  resetBackLink() {
-    this.backLink = DEFAULT_BACK_LINK;
-  }
 
   @computed("model.type")
   get reportOptions() {
@@ -51,5 +51,13 @@ export default class AdminReportsShowController extends Controller {
     options.chartGrouping = this.chart_grouping;
 
     return options;
+  }
+
+  setBackLink({ route, query, label }) {
+    this.backLink = { route, query, label };
+  }
+
+  resetBackLink() {
+    this.backLink = DEFAULT_BACK_LINK;
   }
 }

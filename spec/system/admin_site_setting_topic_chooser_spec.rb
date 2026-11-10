@@ -3,6 +3,7 @@
 describe "Admin Site Setting Topic Selector Component" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+
   fab!(:admin)
   fab!(:topic) { Fabricate(:topic, title: "Moderator guide", fancy_title: "Moderator guide") }
   fab!(:post) { Fabricate(:post, topic: topic) }

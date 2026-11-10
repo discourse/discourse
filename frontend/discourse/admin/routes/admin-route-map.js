@@ -1,21 +1,7 @@
 /* eslint-disable ember/route-path-style */
 export default function () {
   this.route("admin", function () {
-    this.route("dashboard", { path: "/" }, function () {
-      this.route("general", { path: "/" });
-      this.route("admin.dashboardModeration", {
-        path: "/dashboard/moderation",
-        resetNamespace: true,
-      });
-      this.route("admin.dashboardSecurity", {
-        path: "/dashboard/security",
-        resetNamespace: true,
-      });
-      this.route("admin.dashboardReports", {
-        path: "/dashboard/reports",
-        resetNamespace: true,
-      });
-    });
+    this.route("dashboard", { path: "/" });
     this.route("adminSiteTraffic", {
       path: "/dashboard/site-traffic-explorer",
       resetNamespace: true,
@@ -196,6 +182,11 @@ export default function () {
         );
       }
     );
+
+    this.route("adminBotsNew", {
+      path: "/users/bots/new",
+      resetNamespace: true,
+    });
 
     this.route(
       "adminUsers",
@@ -394,6 +385,24 @@ export default function () {
         );
         this.route("developer", function () {
           this.route("settings", { path: "/" });
+        });
+        this.route("mcp", function () {
+          this.route("index", { path: "/" });
+          this.route("access", function () {
+            this.route("index", { path: "/" });
+            this.route("new");
+            this.route("edit", { path: "/:group_id/edit" });
+          });
+          this.route("capabilities");
+          this.route("clients", function () {
+            this.route("index", { path: "/" });
+            this.route("new");
+            this.route("edit", { path: "/:id/edit" });
+            this.route("show", { path: "/:id" });
+          });
+          this.route("authorizations");
+          this.route("activity");
+          this.route("settings");
         });
         this.route("logo");
         this.route("fonts");

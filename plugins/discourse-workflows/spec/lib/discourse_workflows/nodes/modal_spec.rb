@@ -51,6 +51,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
       message = messages.first
       expect(message.user_ids).to eq([user.id])
       expect(message.data[:type]).to eq("show_modal")
+      expect(message.data[:modal_id]).to match(/\A\h{16}\z/)
       expect(message.data[:title]).to eq("Approve topic?")
       expect(message.data[:body]).to eq("Please choose an option")
 
@@ -137,6 +138,20 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
         expect(messages.size).to eq(1)
         expect(messages.first.data[:buttons]).to eq([])
       end
+    end
+  end
+
+  describe ".publish_close" do
+    it "tells every tab of the target user to close the modal" do
+      messages =
+        MessageBus.track_publish(described_class.user_channel(user.id)) do
+          described_class.publish_close(user.id, "abcd1234abcd1234")
+        end
+
+      expect(messages.size).to eq(1)
+      message = messages.first
+      expect(message.user_ids).to eq([user.id])
+      expect(message.data).to eq(type: "close_modal", modal_id: "abcd1234abcd1234")
     end
   end
 

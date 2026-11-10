@@ -39,6 +39,50 @@ RSpec.describe Chat::Api::ChannelsMessagesMovesController do
       end
     end
 
+    context "when the user is a category group moderator" do
+      fab!(:current_user, :user)
+      fab!(:moderation_group, :group)
+      fab!(:source_channel) { Fabricate(:private_category_channel, group: moderation_group) }
+      fab!(:destination_channel, :category_channel)
+      fab!(:source_message) { Fabricate(:chat_message, chat_channel: source_channel) }
+      fab!(:restricted_channel, :private_category_channel)
+      fab!(:restricted_message) { Fabricate(:chat_message, chat_channel: restricted_channel) }
+      fab!(:category_moderation_group) do
+        Fabricate(
+          :category_moderation_group,
+          category: source_channel.category,
+          group: moderation_group,
+        )
+      end
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        moderation_group.add(current_user)
+        source_channel.add(current_user)
+        sign_in(current_user)
+      end
+
+      it "does not delete a message from an inaccessible channel" do
+        expect(current_user.guardian.can_preview_chat_channel?(restricted_channel)).to eq(false)
+
+        post "/chat/api/channels/#{source_channel.id}/messages/moves",
+             params: {
+               move: {
+                 destination_channel_id: destination_channel.id,
+                 message_ids: [source_message.id, restricted_message.id],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "success" => "OK",
+          "destination_channel_id" => destination_channel.id,
+        )
+        expect(source_message.reload.deleted_at).not_to eq(nil)
+        expect(restricted_message.reload.deleted_at).to eq(nil)
+      end
+    end
+
     context "when the user is admin" do
       fab!(:current_user, :admin)
 

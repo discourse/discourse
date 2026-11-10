@@ -79,35 +79,35 @@ export default class RagDocumentSourcesModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_ai.rag.sources.modal_title"}}
+      class="rag-document-sources-modal"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="rag-document-sources-modal"
+      @title={{i18n "discourse_ai.rag.sources.modal_title"}}
     >
       <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
         <form.Field
+          @description={{i18n "discourse_ai.rag.sources.urls_description"}}
+          @format="large"
           @name="urls"
           @title={{i18n "discourse_ai.rag.sources.urls"}}
-          @description={{i18n "discourse_ai.rag.sources.urls_description"}}
           @type="textarea"
           @validate={{this.validateUrls}}
-          @format="large"
           as |field|
         >
           <field.Control
-            @height={{220}}
             class="rag-document-sources-modal__urls"
+            @height={{220}}
           />
         </form.Field>
 
         <form.Field
           @name="refresh_interval_hours"
           @title={{i18n "discourse_ai.rag.sources.refresh_interval_hours"}}
-          @validation="required"
           @type="input-number"
+          @validation="required"
           as |field|
         >
-          <field.Control @min={{1}} @max={{8760}} />
+          <field.Control @max={{8760}} @min={{1}} />
         </form.Field>
 
         <form.Actions>

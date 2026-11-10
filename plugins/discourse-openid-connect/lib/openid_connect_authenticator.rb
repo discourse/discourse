@@ -15,15 +15,24 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     SiteSetting.openid_connect_allow_association_change
   end
 
-  def enabled?
-    SiteSetting.openid_connect_enabled
+  def enable_setting
+    :openid_connect_enabled
+  end
+
+  # PKCE and mTLS client authentication each replace the client secret, so
+  # demanding it unconditionally would disable working installations.
+  def required_settings
+    settings = %i[openid_connect_discovery_document openid_connect_client_id]
+    if !SiteSetting.openid_connect_use_pkce && !mtls_configured?
+      settings << :openid_connect_client_secret
+    end
+    settings
   end
 
   def primary_email_verified?(auth)
     supplied_verified_boolean = auth["extra"]["raw_info"]["email_verified"]
-    # If the payload includes the email_verified boolean, use it. Otherwise assume true
     if supplied_verified_boolean.nil?
-      true
+      SiteSetting.openid_connect_email_verified_claim_fallback
     else
       # Many providers violate the spec, and send this as a string rather than a boolean
       supplied_verified_boolean == true ||
@@ -43,11 +52,12 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
       result.associated_groups = []
       groups =
         auth_token.extra&.dig(:raw_info, claim) || auth_token.extra&.dig(:id_token_info, claim)
+      groups = groups.split(",").map(&:strip).reject(&:empty?) if groups.is_a?(String)
 
       if groups.is_a?(Array)
         result.associated_groups = groups.map { |group_name| { id: group_name, name: group_name } }
       elsif groups.present?
-        oidc_log("groups claim '#{claim}' is not an array: #{groups.class}", error: true)
+        oidc_log("groups claim '#{claim}' is not an array or string: #{groups.class}", error: true)
       else
         oidc_log("groups claim '#{claim}' not found in auth token")
       end
@@ -163,6 +173,7 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
                             passthrough_authorize_options:
                               SiteSetting.openid_connect_authorize_parameters.split("|"),
                             claims: SiteSetting.openid_connect_claims,
+                            email_claim: SiteSetting.openid_connect_email_claim,
                             pkce: SiteSetting.openid_connect_use_pkce,
                             pkce_options: {
                               code_verifier: -> { generate_code_verifier },
@@ -206,11 +217,16 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).tr("+/", "-_").tr("=", "")
   end
 
+  def mtls_configured?
+    SiteSetting.openid_connect_mtls_client_cert.present? &&
+      SiteSetting.openid_connect_mtls_client_key.present?
+  end
+
   def mtls_ssl_options
+    return {} if !mtls_configured?
+
     cert_pem = SiteSetting.openid_connect_mtls_client_cert
     key_pem = SiteSetting.openid_connect_mtls_client_key
-    return {} if cert_pem.blank? || key_pem.blank?
-
     key_passcode = SiteSetting.openid_connect_mtls_client_key_passcode.presence
 
     {

@@ -12,8 +12,7 @@ module("Integration | Component | BulkActionsAssignUser", function (hooks) {
     pretender.get("/assign/suggestions", () =>
       response({
         suggestions: [],
-        assign_allowed_on_groups: [],
-        assign_allowed_for_groups: [],
+        groups: [],
       })
     );
   });
@@ -27,8 +26,8 @@ module("Integration | Component | BulkActionsAssignUser", function (hooks) {
     await render(
       <template>
         <BulkActionsAssignUser
-          @onRegisterAction={{onRegisterAction}}
           @onPerform={{onPerform}}
+          @onRegisterAction={{onRegisterAction}}
         />
       </template>
     );

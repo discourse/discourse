@@ -178,71 +178,92 @@ RSpec.describe SiteSerializer do
         },
       )
     end
+  end
 
-    it "serializes numeric post numbers as integers without leaking group ids" do
-      update_workflow_node(post_button_workflow, "trigger-1") do |node|
-        node.merge(
-          "parameters" => {
-            "label" => "Run workflow",
-            "group_ids" => [group.id],
-            "post_number" => 3,
-          },
-        )
-      end
-      publish_workflow!(post_button_workflow)
+  describe "#composer_paused_workflows" do
+    before { DiscourseWorkflows::WorkflowDependency.clear_cache! }
 
-      member_guardian = Guardian.new(member)
-      data =
-        described_class.new(Site.new(member_guardian), scope: member_guardian, root: false).as_json
+    fab!(:group)
+    fab!(:member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:category)
 
-      expect(data[:post_button_workflows]).to contain_exactly(
+    fab!(:everyone_workflow) do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:composer_paused",
+                 configuration: {
+                   "phrases" => ["Magic words", "bad food*"],
+                   "category_ids" => [category.id],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+    end
+
+    fab!(:group_workflow) do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:composer_paused",
+                 configuration: {
+                   "composer_actions" => ["reply"],
+                   "group_ids" => [group.id],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+    end
+
+    fab!(:draft_saved_workflow) do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:composer_paused",
+                 configuration: {
+                   "fire_on" => "draft_saved",
+                   "phrases" => ["food stand"],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+    end
+
+    def serialize(user)
+      guardian = Guardian.new(user)
+      described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    end
+
+    it "includes pause triggers for the user, as patterns and without group ids" do
+      expect(serialize(member)[:composer_paused_workflows]).to contain_exactly(
         {
           trigger_node_id: "trigger-1",
-          workflow_id: post_button_workflow.id,
-          label: "Run workflow",
-          icon: nil,
-          post_number: 3,
-          position: "last",
-          confirmation: false,
-          confirmation_message: nil,
+          workflow_id: everyone_workflow.id,
+          patterns: [
+            WordWatcher.word_to_regexp("Magic words"),
+            WordWatcher.word_to_regexp("bad food*"),
+          ],
+          composer_actions: %w[create_topic reply],
+          category_ids: [category.id],
+          include_subcategories: true,
+        },
+        {
+          trigger_node_id: "trigger-1",
+          workflow_id: group_workflow.id,
+          patterns: [],
+          composer_actions: ["reply"],
+          category_ids: [],
+          include_subcategories: true,
         },
       )
     end
 
-    it "serializes malformed and nonpositive post numbers to the invalid sentinel" do
-      ["invalid", 0].each do |post_number|
-        update_workflow_node(post_button_workflow, "trigger-1") do |node|
-          node.merge(
-            "parameters" => {
-              "label" => "Run workflow",
-              "group_ids" => [group.id],
-              "post_number" => post_number,
-            },
-          )
-        end
-        publish_workflow!(post_button_workflow)
+    it "leaves out triggers for other groups and draft-saved phrases" do
+      workflows = serialize(user)[:composer_paused_workflows]
 
-        member_guardian = Guardian.new(member)
-        data =
-          described_class.new(
-            Site.new(member_guardian),
-            scope: member_guardian,
-            root: false,
-          ).as_json
+      expect(workflows.map { |workflow| workflow[:workflow_id] }).to eq([everyone_workflow.id])
+      expect(workflows.to_json).not_to include("food stand")
+    end
 
-        expect(data[:post_button_workflows]).to contain_exactly(
-          {
-            trigger_node_id: "trigger-1",
-            workflow_id: post_button_workflow.id,
-            label: "Run workflow",
-            icon: nil,
-            post_number: DiscourseWorkflows::Nodes::PostButton::V1::INVALID_POST_NUMBER,
-            position: "last",
-            confirmation: false,
-            confirmation_message: nil,
-          },
-        )
-      end
+    it "is not included for anonymous users" do
+      expect(serialize(nil)).not_to have_key(:composer_paused_workflows)
     end
   end
 end

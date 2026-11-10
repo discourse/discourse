@@ -43,18 +43,18 @@ export default class DEditorPreview extends Component {
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="d-editor-preview-wrapper {{if @forcePreview 'force-preview'}}"
-      {{on "click" this.handlePreviewClick}}
       ...attributes
+      {{on "click" this.handlePreviewClick}}
     >
       <DDecoratedHtml
         @className="d-editor-preview"
-        @html={{trustHTML @preview}}
         @decorate={{@onPreviewUpdated}}
+        @html={{trustHTML @preview}}
       />
       <span class="d-editor-plugin">
         <PluginOutlet
-          @name="editor-preview"
           @connectorTagName="div"
+          @name="editor-preview"
           @outletArgs={{@outletArgs}}
         />
       </span>

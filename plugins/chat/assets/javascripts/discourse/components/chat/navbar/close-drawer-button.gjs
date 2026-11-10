@@ -15,10 +15,10 @@ export default class ChatNavbarCloseDrawerButton extends Component {
 
   <template>
     <DButton
-      @icon="xmark"
-      @action={{this.closeDrawer}}
-      @title="chat.close"
       class="btn-transparent no-text c-navbar__close-drawer-button"
+      @action={{this.closeDrawer}}
+      @icon="xmark"
+      @title="chat.close"
     />
   </template>
 }

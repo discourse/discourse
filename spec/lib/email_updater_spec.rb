@@ -270,7 +270,7 @@ RSpec.describe EmailUpdater do
       end
 
       context "when it was deleted before" do
-        it "works" do
+        it "restores the deleted email after confirmation" do
           expect_enqueued_with(
             job: :critical_user_email,
             args: {

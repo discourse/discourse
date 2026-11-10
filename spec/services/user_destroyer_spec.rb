@@ -15,6 +15,21 @@ RSpec.describe UserDestroyer do
   end
 
   describe "#destroy" do
+    it "transfers ownership and records the assumption during quiet deletion" do
+      freeze_time
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+
+      expect { UserDestroyer.new(admin).destroy(user, quiet: true) }.to change {
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count
+      }.by(1)
+
+      expect(user).to be_destroyed
+      expect(owner_acl.reload.allowed_user_ids).to eq([admin.id])
+      expect(UserHistory.last.context).to eq(
+        "deleted_user_id: #{user.id}\ndeleted_username: #{user.username}\ndeleted_at: #{Time.current.iso8601}",
+      )
+    end
+
     it "raises an error when user is nil" do
       expect { UserDestroyer.new(admin).destroy(nil) }.to raise_error(Discourse::InvalidParameters)
     end
@@ -32,22 +47,22 @@ RSpec.describe UserDestroyer do
     end
 
     shared_examples "successfully destroy a user" do
-      it "should delete the user" do
+      it "deletes the user" do
         expect { destroy }.to change { User.count }.by(-1)
       end
 
-      it "should return the deleted user record" do
+      it "returns the deleted user record" do
         return_value = destroy
         expect(return_value).to eq(user)
         expect(return_value).to be_destroyed
       end
 
-      it "should log the action" do
+      it "logs the action" do
         StaffActionLogger.any_instance.expects(:log_user_deletion).with(user, anything).once
         destroy
       end
 
-      it "should not log the action if quiet is true" do
+      it "does not log the action when quiet is true" do
         expect {
           UserDestroyer.new(admin).destroy(user, destroy_opts.merge(quiet: true))
         }.to_not change { UserHistory.where(action: UserHistory.actions[:delete_user]).count }
@@ -149,6 +164,44 @@ RSpec.describe UserDestroyer do
       end
     end
 
+    context "when the user flagged a post first" do
+      fab!(:other_flagger, :user)
+      fab!(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+      end
+
+      it "keeps the reviewable with the other flags and notes" do
+        Fabricate(:reviewable_note, reviewable: reviewable)
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.reviewable_scores.pluck(:user_id)).to contain_exactly(other_flagger.id)
+        expect(reviewable.reviewable_notes.count).to eq(1)
+      end
+
+      it "deletes flags that no one else raised" do
+        solo =
+          Fabricate(
+            :reviewable_flagged_post,
+            created_by: user,
+            reviewable_scores: [Fabricate.build(:reviewable_score, user: user, status: :pending)],
+          )
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(Reviewable.exists?(solo.id)).to eq(false)
+        expect(reviewable.reload).to be_pending
+      end
+    end
+
     context "with a pending reviewable targeting the user" do
       fab!(:queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
       fab!(:flagged_post) do
@@ -239,7 +292,7 @@ RSpec.describe UserDestroyer do
           user.stubs(:first_post_created_at).returns(Time.zone.now)
         end
 
-        it "should raise the right error" do
+        it "raises the expected error" do
           StaffActionLogger.any_instance.expects(:log_user_deletion).never
           expect { destroy }.to raise_error(UserDestroyer::PostsExistError)
           expect(user.reload.id).to be_present
@@ -376,7 +429,7 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user was invited" do
-      it "should delete the invite of user" do
+      it "deletes the user's invite" do
         invite = Fabricate(:invite)
         topic_invite = invite.topic_invites.create!(topic: Fabricate(:topic))
         invited_group = invite.invited_groups.create!(group: Fabricate(:group))
@@ -390,7 +443,7 @@ RSpec.describe UserDestroyer do
         expect(TopicInvite.exists?(topic_invite.id)).to eq(false)
       end
 
-      it "should delete invites matching associated account emails" do
+      it "deletes invites matching associated-account emails" do
         user = Fabricate(:user)
         invite = Fabricate(:invite, email: "oauth@example.com")
         UserAssociatedAccount.create!(
@@ -441,7 +494,7 @@ RSpec.describe UserDestroyer do
     context "when user has deleted posts" do
       let!(:deleted_post) { Fabricate(:post, user: user, deleted_at: 1.hour.ago) }
 
-      it "should mark the user's deleted posts as belonging to a nuked user" do
+      it "marks deleted posts as belonging to a nuked user" do
         expect { UserDestroyer.new(admin).destroy(user) }.to change { User.count }.by(-1)
         expect(deleted_post.reload.user_id).to eq(nil)
       end
@@ -460,7 +513,7 @@ RSpec.describe UserDestroyer do
       context "when destroy fails" do
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }
 
-        it "should not log the action" do
+        it "does not log the action" do
           user.stubs(:destroy).returns(false)
           StaffActionLogger.any_instance.expects(:log_user_deletion).never
           destroy
@@ -582,7 +635,7 @@ RSpec.describe UserDestroyer do
         PostActionCreator.like(user, @post)
       end
 
-      it "should destroy the like" do
+      it "destroys the like" do
         expect { UserDestroyer.new(admin).destroy(user, delete_posts: true) }.to change {
           PostAction.count
         }.by(-1)
@@ -634,7 +687,7 @@ RSpec.describe UserDestroyer do
         )
       end
 
-      it "should keep the staff action log and add the username" do
+      it "keeps the staff action log and adds the username" do
         username = user.username
         ids =
           UserHistory.staff_action_records(Discourse.system_user, acting_user: username).map(&:id)

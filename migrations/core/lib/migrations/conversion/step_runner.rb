@@ -14,6 +14,8 @@ module Migrations
       # How many processed items to accumulate before reporting progress.
       REPORT_INTERVAL = 1_000
 
+      MAX_LOGGED_STRING_LENGTH = 5_000
+
       # The whole source: one chunk, open at both ends. The default when no chunks
       # are given.
       WHOLE_SOURCE = [[nil, nil]].freeze
@@ -51,14 +53,18 @@ module Migrations
           # still needs.
           Database::IntermediateDB.with_connection(connection) do
             processor = @step.create_processor
-            SetupGuard.run(processor)
+            begin
+              SetupGuard.run(processor)
 
-            @chunks.each do |chunk|
-              source.chunk = chunk
-              process_items(source, processor)
+              @chunks.each do |chunk|
+                source.chunk = chunk
+                process_items(source, processor)
+              end
+
+              report_result(processor)
+            ensure
+              processor.cleanup
             end
-
-            report_result(processor)
           end
         ensure
           connection.close
@@ -70,15 +76,16 @@ module Migrations
 
       def process_items(source, processor)
         tracker = processor.tracker
+        batched = processor.class.batched?
         progress = warnings = errors = 0
 
-        source.items.each do |item|
+        units(source, processor).each do |unit|
           tracker.reset_stats!
 
-          begin
-            processor.process(item)
-          rescue StandardError => e
-            tracker.log_error("Failed to process item", exception: e, details: item)
+          if batched
+            process_batch(processor, tracker, unit)
+          else
+            process_item(processor, tracker, unit)
           end
 
           stats = tracker.stats
@@ -93,6 +100,43 @@ module Migrations
 
         return if progress.zero? && warnings.zero? && errors.zero?
         @channel.report_progress(progress:, warnings:, errors:)
+      end
+
+      # A row, or a slice of rows for a batched processor. `each_slice` reads
+      # lazily, so a worker holds one slice at a time.
+      def units(source, processor)
+        batch_size = processor.class.batch_size
+        batch_size ? source.items.each_slice(batch_size) : source.items
+      end
+
+      def process_item(processor, tracker, item)
+        processor.process(item)
+      rescue StandardError => e
+        tracker.log_error(I18n.t("converter.log.item_failed"), exception: e, details: item)
+      end
+
+      def process_batch(processor, tracker, items)
+        tracker.progress = items.size
+        processor.process_batch(items)
+      rescue StandardError => e
+        tracker.log_error(
+          I18n.t("converter.log.batch_failed"),
+          exception: e,
+          details: batch_details(items),
+        )
+      end
+
+      def batch_details(value)
+        case value
+        when Array
+          value.map { |item| batch_details(item) }
+        when Hash
+          value.transform_values { |item| batch_details(item) }
+        when String
+          value.truncate(MAX_LOGGED_STRING_LENGTH)
+        else
+          value
+        end
       end
 
       # The worker's one map/reduce message: the processor's accumulated result,

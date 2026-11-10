@@ -1,3 +1,7 @@
+import { tableChrome } from "../lib/table/chrome.js";
+import tableEditing from "../lib/table/editing.js";
+import { buildTableNodeView, TableCellView } from "../lib/table/node-view.js";
+
 // Markdown Table Example:
 //
 // | Left-aligned | Center-aligned | Right-aligned |
@@ -5,21 +9,13 @@
 // | git status   | git status     | git status    |
 // | git diff     | git diff       | git diff      |
 
-class TableNodeView {
-  constructor() {
-    const div = document.createElement("div");
-    div.classList.add("md-table");
-    const table = document.createElement("table");
-    div.appendChild(table);
-
-    this.dom = div;
-    this.contentDOM = table;
-  }
-}
-
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
-  nodeViews: { table: TableNodeView },
+  nodeViews: {
+    table: buildTableNodeView,
+    table_cell: TableCellView,
+    table_header_cell: TableCellView,
+  },
   nodeSpec: {
     table: {
       content: "table_head? table_body",
@@ -30,7 +26,7 @@ const extension = {
       draggable: true,
       parseDOM: [{ tag: "table" }],
       toDOM() {
-        return ["table", { class: "md-table" }, 0];
+        return ["div", { class: "md-table" }, ["table", 0]];
       },
     },
     table_head: {
@@ -43,7 +39,7 @@ const extension = {
       },
     },
     table_body: {
-      content: "table_row+",
+      content: "table_row*",
       tableRole: "body",
       isolating: true,
       parseDOM: [{ tag: "tbody" }],
@@ -54,6 +50,8 @@ const extension = {
     table_row: {
       content: "(table_cell | table_header_cell)+",
       tableRole: "row",
+      // Isolating cells would otherwise open gap cursor positions between them.
+      allowGapCursor: false,
       parseDOM: [{ tag: "tr" }],
       toDOM() {
         return ["tr", 0];
@@ -62,6 +60,7 @@ const extension = {
     table_header_cell: {
       content: "inline*",
       tableRole: "header_cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {
@@ -86,6 +85,7 @@ const extension = {
     table_cell: {
       content: "inline*",
       tableRole: "cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {
@@ -131,21 +131,21 @@ const extension = {
     },
   },
   serializeNode: {
-    // TODO(renato): state.renderInline should escape `|` if `state.inTable`
     table(state, node) {
+      // Checked before flushing, so the surrounding blocks stay separated.
+      if (!hasContent(node)) {
+        return;
+      }
+
       state.flushClose(1);
 
       // Normalize table structure
       node = normalizeTable(node);
 
-      if (!node.textContent.trim()) {
-        return;
-      }
-
       const prevInTable = state.inTable;
       state.inTable = true;
 
-      // leading newline, it seems to have issues in a line just below a > blockquote otherwise
+      // Keep a table following a blockquote from being parsed as part of it.
       if (state.out) {
         state.out += "\n";
       }
@@ -170,7 +170,11 @@ const extension = {
             }
             state.out += cellIndex === 0 ? "| " : " | ";
 
+            const cellStart = state.out.length;
             state.renderInline(cell);
+            state.out =
+              state.out.slice(0, cellStart) +
+              state.out.slice(cellStart).replaceAll("|", "\\|");
 
             if (headerBuffer !== undefined) {
               if (cell.attrs.alignment === "center") {
@@ -202,7 +206,12 @@ const extension = {
     table_header_cell() {},
     table_cell() {},
   },
-  plugins({ pmState: { Plugin }, pmModel: { Slice, Fragment } }) {
+  plugins(params) {
+    const {
+      pmState: { Plugin },
+      pmModel: { Slice, Fragment },
+    } = params;
+
     function hasTableNodes(fragment) {
       let found = false;
       fragment.descendants((node) => {
@@ -214,7 +223,7 @@ const extension = {
       return found;
     }
 
-    return new Plugin({
+    const pastedTables = new Plugin({
       props: {
         transformPasted(paste) {
           if (!hasTableNodes(paste.content)) {
@@ -244,6 +253,8 @@ const extension = {
         },
       },
     });
+
+    return [pastedTables, tableEditing(), tableChrome(params)];
   },
 };
 
@@ -284,6 +295,25 @@ function createBodyRows(tbody, startIndex, maxColumns, schema) {
     bodyRows.push(schema.nodes.table_row.create({}, cells));
   });
   return bodyRows;
+}
+
+/**
+ * Pasted and quoted HTML often carries empty tables. Whitespace and line
+ * breaks don't count as content.
+ */
+function hasContent(table) {
+  let found = false;
+  table.descendants((node) => {
+    if (found) {
+      return false;
+    }
+    if (node.isText) {
+      found = node.text.trim() !== "";
+    } else if (node.isInline && node.isLeaf) {
+      found = node.type.name !== "hard_break";
+    }
+  });
+  return found;
 }
 
 function normalizeTable(tableNode) {

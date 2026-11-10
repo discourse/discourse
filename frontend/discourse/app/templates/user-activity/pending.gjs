@@ -5,20 +5,20 @@ import DButton from "discourse/ui-kit/d-button";
 export default <template>
   <ul class="user-stream">
     <PostList
-      @posts={{@controller.model.content}}
-      @urlPath="postUrl"
-      @showUserInfo={{false}}
-      @additionalItemClasses="user-stream-item"
       class="user-stream"
+      @additionalItemClasses="user-stream-item"
+      @posts={{@controller.model.content}}
+      @showUserInfo={{false}}
+      @urlPath="postUrl"
     >
       <:belowPostItem as |pending|>
         {{#if @controller.canDeletePending}}
           <div class="reviewable-actions">
             <DButton
-              @label="review.delete"
-              @icon="trash-can"
-              @action={{fn @controller.deletePending pending}}
               class="btn-danger"
+              @action={{fn @controller.deletePending pending}}
+              @icon="trash-can"
+              @label="review.delete"
             />
           </div>
         {{/if}}

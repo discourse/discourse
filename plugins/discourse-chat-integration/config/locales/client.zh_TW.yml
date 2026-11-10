@@ -5,23 +5,78 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "聊天整合"
   js:
     chat_integration:
+      menu_title: "聊天整合"
       settings: "設定"
+      nav:
+        providers: "服務提供者"
+        providers_description: "設定聊天服務提供者的整合"
+      add_provider: "新增服務提供者"
+      view_provider_settings: "檢視服務提供者設定"
       more_providers: "更多"
+      confirm_setup_provider: "確定要啟用 %{provider} 服務提供者嗎？稍後可在「設定」分頁停用。"
+      setup_provider_modal:
+        title: "設定 %{provider} 服務提供者"
+        setup_instructions: "請提供下列詳細資料以設定 %{provider} 服務提供者。%{additionalInstructions}"
+        confirm_setup: "確認設定"
+        success: "已成功設定 %{provider} 服務提供者"
+        slack:
+          instructions: "必須提供存取權杖或傳出 Webhook URL。"
+          at_least_one_required: "請輸入存取權杖或傳出 Webhook URL。"
+          access_token:
+            title: "存取權杖"
+            description: "Slack 機器人的 OAuth 存取權杖"
+          outbound_webhook_url:
+            title: "傳出 Webhook URL"
+            description: "Slack 的傳出 Webhook URL"
+        telegram:
+          instructions: "儲存時將驗證存取權杖。"
+          access_token:
+            title: "存取權杖"
+            description: "從 BotFather 取得的 Telegram 機器人存取權杖"
+      empty_state:
+        title: "連線至你的聊天平台"
+        body: "將通知從 Discourse 傳送到團隊聊天室。選擇服務提供者即可開始使用。"
       channels_title: "頻道"
+      channels_description: "設定 %{provider} 服務提供者的頻道。"
+      no_channels: "尚未設定任何頻道。"
+      channel_actions: "頻道操作"
+      add_first_channel: "新增第一個 %{provider} 頻道"
+      channels_with_errors: "此服務提供者的部分頻道上次傳送訊息時失敗。按一下錯誤圖示以瞭解詳情。"
+      channel_exception: "上次傳送訊息至此頻道時發生未知錯誤。"
+      group_mention_template: "提及：@%{name}"
+      group_message_template: "傳送訊息至：@%{name}"
+      choose_group: "（選擇群組）"
       all_categories: "(所有分類)"
       all_tags: "(所有標記)"
+      create_rule: "建立規則"
+      add_channel: "新增頻道"
       delete_channel: "刪除"
       test_channel: "測試"
       edit_channel: "編輯"
+      channel_delete_confirm: "確定要刪除此頻道嗎？所有相關規則也將一併刪除。"
       test_modal:
+        title: "傳送測試訊息"
         topic: "話題"
+        send: "傳送測試訊息"
         close: "關閉"
+        error: "傳送訊息時發生未知錯誤。請查看網站記錄以取得更多資訊。"
+        success: "訊息已成功傳送"
       type:
         normal: 一般
+        group_message: 群組訊息
+        group_mention: 提及群組
       filter:
         mute: '靜音'
+        follow: '僅第一篇貼文'
+        watch: '所有貼文與回覆'
+        thread: '所有貼文及其討論串回覆'
       rule_table:
         filter: "過濾器"
         category: "分類"
@@ -29,68 +84,205 @@ zh_TW:
         edit_rule: "編輯"
         delete_rule: "刪除"
       edit_channel_modal:
+        title: "編輯頻道"
+        save: "儲存頻道"
         cancel: "取消"
+        provider: "服務提供者"
+        channel_validation:
+          ok: "有效"
+          fail: "格式無效"
       edit_rule_modal:
+        edit_title: 編輯規則
+        create_title: 建立規則
+        save: 儲存規則
         cancel: 取消
+        provider: 服務提供者
         type: 類型
+        channel: 頻道
         filter: 過濾器
         category: 分類
         group: 群組
         tags: 標記
+        instructions:
+          type: "變更類型，以針對群組訊息或提及內容觸發通知"
+          filter: "通知層級。靜音會覆寫其他符合的規則"
+          category: "此規則僅套用於指定分類中的主題"
+          group: "此規則將套用於提及此群組的貼文"
+          tags: "若有指定，此規則僅套用於至少包含其中一個標籤的主題"
       provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: 頻道
+              help: "例如 #channel 或 @username"
+          errors:
+            at_least_one_required: "請輸入存取權杖或傳出 Webhook URL。"
+            invalid_webhook_url: "傳出 Webhook URL 必須是有效的 https://hooks.slack.com/services/... 連結。"
+            auth_error: "提供的驗證權杖無效"
+            action_prohibited: "機器人沒有在該頻道發文的權限"
+            channel_not_found: "指定的頻道不存在於 Slack"
         telegram:
+          title: "Telegram"
           param:
             name:
               title: "名稱"
+              help: "用來描述頻道的名稱，不會用於連線 Telegram。"
+            chat_id:
+              title: 聊天 ID
+              help: 機器人提供給你的數字，或格式為 @channelname 的廣播頻道識別碼
+          errors:
+            access_token_required: "必須提供機器人存取權杖。"
+            webhook_setup_failed: "無法向 Telegram 註冊 Webhook。請檢查權杖後再試一次。"
+            channel_not_found: "指定的頻道不存在於 Telegram"
+            forbidden: "機器人沒有在此頻道發文的權限"
+            invalid_api_base_url: "Telegram API 基底 URL 的網站設定不是有效的 HTTPS URL。"
+            api_base_url_blocked: "對 Telegram API 基底 URL 的要求已遭封鎖。私人網路上的主機必須加入允許的內部主機網站設定。"
         discord:
           title: "Discord"
           param:
             name:
               title: "名稱"
+              help: "用來描述頻道的名稱，不會用於連線 Discord。"
+            webhook_url:
+              title: Webhook URL
+              help: 在你的 Discord 伺服器設定中建立的 Webhook URL，格式應為 https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
         guilded:
+          title: "Guilded"
           param:
             name:
               title: "名稱"
+              help: "用來描述頻道的名稱，不會用於連線 Guilded。"
+            webhook_url:
+              title: Webhook URL
+              help: 在你的 Guilded 伺服器設定中建立的 Webhook URL
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: 頻道
+              help: "例如 #channel 或 @username"
+          errors:
+            channel_not_found: "指定的頻道不存在於 Mattermost"
         matrix:
+          title: "Matrix"
           param:
             name:
               title: "名稱"
+              help: "用來描述頻道的名稱，不會用於連線 Matrix。"
+            room_id:
+              title: "房間 ID"
+              help: "該房間的「私人識別碼」，格式應類似 !abcdefghijkl"
+          errors:
+            unknown_token: "存取權杖無效"
+            unknown_room: "房間 ID 無效"
         zulip:
+          title: "Zulip"
           param:
+            stream:
+              title: "串流"
+              help: "應將訊息傳送至的 Zulip 串流名稱，例如「general」"
             subject:
               title: "主旨"
+              help: "機器人傳送的這些訊息應使用的主旨"
+          errors:
+            does_not_exist: "Zulip 上不存在該串流"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: 頻道
+              help: "例如 #channel 或 @username"
+          errors:
+            invalid_channel: "該頻道不存在於 Rocket.Chat"
         gitter:
+          title: "Gitter"
           param:
             name:
               title: "名稱"
+              help: "Gitter 聊天室的名稱，例如 gitterHQ/services"
+            webhook_url:
+              title: "Webhook URL"
+              help: "在 Gitter 聊天室中建立新整合時提供的 URL。"
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "GroupMe 執行個體名稱"
+              help: "網站設定中列出的 GroupMe 執行個體名稱。使用「all」可傳送至所有執行個體"
+          errors:
+            not_found: "找不到你嘗試傳送訊息的路徑。請檢查網站設定中的機器人 ID。"
         teams:
+          title: "Microsoft Teams"
           param:
             name:
               title: "名稱"
+              help: "Teams 頻道名稱，例如 discourse"
+            webhook_url:
+              title: "Webhook URL"
+              help: "建立新的傳入 Webhook 時提供的 URL"
+          errors:
+            invalid_channel: "該頻道不存在於 Microsoft Teams"
         powerautomate:
+          title: "Microsoft Power Automate"
           param:
             name:
               title: "名稱"
+              help: "頻道名稱（僅顯示於 Discourse 管理介面）"
+            webhook_url:
+              title: "Webhook URL"
+              help: "建立新的傳入 Webhook 時提供的 URL"
+          errors:
+            invalid_webhook: "該 Webhook URL 無效。"
         webex:
+          title: "Webex Teams"
           param:
             name:
               title: "名稱"
+              help: "Webex 空間名稱，例如 discourse"
+            webhook_url:
+              title: "Webhook URL"
+              help: "建立新的傳入 Webhook 時提供的 URL"
+          errors:
+            invalid_channel: "該頻道不存在於 Webex"
         google:
+          title: "Google Chat"
           param:
             name:
               title: "名稱"
+              help: "頻道名稱（僅顯示於 Discourse 管理介面）"
+            webhook_url:
+              title: "Webhook URL"
+              help: "建立新 Webhook 時提供的 URL"
     discourse_automation:
       scriptables:
         send_slack_message:
+          title: 傳送 Slack 訊息
           fields:
             message:
               label: 訊息
+              description: >-
+                使用 ${TOPIC} 代表主題名稱、${URL} 代表使用的 URL、${REMOVED_TAGS} 代表移除的標籤、${ADDED_TAGS} 代表新增的標籤、${ADDED_AND_REMOVED} 代表預設文字。僅在觸發條件設為「主題標籤已變更」時可用。
             url:
               label: 網址
+            channel:
+              label: 頻道
         send_chat_integration_message:
+          title: 傳送 Chat Integration 訊息
           fields:
             channel_name:
               label: 變更名稱
+              description: "你可以在聊天整合設定中找到頻道名稱"
+            provider:
+              label: 服務提供者
     discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "需要啟用 Chat Integration 外掛"
+      nodes:
+        "action:send_chat_integration_message": "傳送聊天整合訊息"
+      node_descriptions:
+        "action:send_chat_integration_message": "將通知傳送至聊天整合頻道（Slack、Discord、Telegram 等）"
       send_chat_integration_message:
+        channel_id: "頻道"
+        configure: "設定"
         message: "訊息"

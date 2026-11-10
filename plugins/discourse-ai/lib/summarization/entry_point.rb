@@ -4,6 +4,37 @@ module DiscourseAi
   module Summarization
     class EntryPoint
       def inject_into(plugin)
+        plugin.register_html_builder("server:topic-show-before-posts") do |controller, topic_view:|
+          publication =
+            DiscourseAi::Summarization::PublishedSummary.new(
+              topic_view,
+              guardian: controller.guardian,
+            )
+          next if !publication.summary&.summarized_cooked.present?
+
+          controller.render_to_string(
+            partial: "discourse_ai/summarization/published_summary",
+            locals: {
+              publication:,
+            },
+          )
+        end
+
+        # markdown is a machine format, so agents get the summary whatever their user agent
+        plugin.register_modifier(
+          :markdown_topic_header_sections,
+        ) do |sections, topic_view, guardian|
+          publication =
+            DiscourseAi::Summarization::PublishedSummary.new(
+              topic_view,
+              guardian:,
+              crawler_only: false,
+            )
+          next sections if !publication.summary
+
+          sections + [publication.markdown]
+        end
+
         plugin.add_to_serializer(:current_user, :can_request_gists) { scope.can_request_gists? }
 
         plugin.add_to_serializer(:current_user, :can_summarize) do
@@ -97,6 +128,10 @@ module DiscourseAi
                SiteSetting.ai_summary_gists_enabled && post.topic
             enqueue_gist_jobs(post.topic, minimum_target_number: post.post_number)
           end
+        end
+
+        plugin.on(:post_destroyed) do |post|
+          AiSummary.where(target_type: "Topic", target_id: post.topic_id).delete_all
         end
 
         plugin.on(:posts_moved) do |args|

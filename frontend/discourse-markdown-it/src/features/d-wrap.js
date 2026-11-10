@@ -1,4 +1,4 @@
-import { applyDataAttributes } from "./bbcode-block";
+import { applyDataAttributes } from "./bbcode-block.js";
 
 const WRAP_CLASS = "d-wrap";
 

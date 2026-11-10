@@ -5,27 +5,27 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @hideTabs={{true}}
-    @titleLabel={{i18n "admin.config.trust_levels.title"}}
     @descriptionLabel={{i18n "admin.config.trust_levels.header_description"}}
+    @hideTabs={{true}}
     @learnMoreUrl="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+    @titleLabel={{i18n "admin.config.trust_levels.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/trust-levels"
         @label={{i18n "admin.config.trust_levels.title"}}
+        @path="/admin/config/trust-levels"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
-      @showBreadcrumb={{false}}
-      @area="trust_levels"
-      @path="/admin/config/trust-levels"
-      @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+      @area="trust_levels"
+      @filter={{@controller.filter}}
+      @path="/admin/config/trust-levels"
+      @showBreadcrumb={{false}}
     />
   </div>
 </template>

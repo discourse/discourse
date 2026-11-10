@@ -11,6 +11,7 @@ import {
   triggerKeyEvent,
   visit,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -18,10 +19,10 @@ import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { translateModKey } from "discourse/lib/utilities";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
+import { capabilities } from "discourse/services/capabilities";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
@@ -250,6 +251,13 @@ acceptance(`Composer`, function (needs) {
   test("the grippie is an operable separator", async function (assert) {
     await visit("/");
     await click("#create-topic");
+
+    // The announced height follows a ResizeObserver, which `settled()` doesn't wait for.
+    await waitUntil(
+      () =>
+        find(".grippie").getAttribute("aria-valuenow") ===
+        `${find("#reply-control").offsetHeight}`
+    );
 
     const { currentHeight, minimumHeight, maximumHeight } =
       composerResizeMeasurements();
@@ -1940,6 +1948,62 @@ acceptance(`composer buttons API`, function (needs) {
     });
   });
 
+  test("gate: toolbar and save button titles carry the shortcut with a keyboard", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+
+    const bold = formatShortcut("mod+b");
+    assert
+      .dom(".toolbar__button.bold")
+      .hasAttribute("title", `${i18n("composer.bold_title")} (${bold.label})`)
+      .hasAttribute("aria-keyshortcuts", bold.aria);
+    assert.dom(".save-or-cancel .create").hasAttribute(
+      "title",
+      i18n("composer.submit_shortcut_title", {
+        shortcut: formatShortcut("mod+enter").label,
+      })
+    );
+  });
+
+  test("gate: toolbar and save button titles drop the shortcut without a keyboard", async function (assert) {
+    sinon.stub(capabilities, "hasKeyboard").get(() => false);
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+
+    assert
+      .dom(".toolbar__button.bold")
+      .hasAttribute("title", i18n("composer.bold_title"))
+      .doesNotHaveAttribute("aria-keyshortcuts");
+    assert
+      .dom(".save-or-cancel .create")
+      .doesNotHaveAttribute("title")
+      .doesNotHaveAttribute("aria-keyshortcuts");
+  });
+
+  test("gate: an option without a label keeps the shortcut in its title", async function (assert) {
+    withPluginApi((api) => {
+      api.addComposerToolbarPopupMenuOption({
+        action: () => {},
+        shortcut: "alt+b",
+        icon: "far-bold",
+        name: "icon-only",
+        title: "some_title",
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+    await click(".toolbar-menu__options-trigger");
+
+    const shortcut = formatShortcut("mod+alt+b");
+    assert
+      .dom("[data-name='icon-only']")
+      .hasAttribute("title", `${i18n("some_title")} (${shortcut.label})`)
+      .hasAttribute("aria-keyshortcuts", shortcut.aria);
+    assert.dom("[data-name='icon-only'] .d-shortcut").doesNotExist();
+  });
+
   test("buttons can support a shortcut", async function (assert) {
     withPluginApi((api) => {
       api.addComposerToolbarPopupMenuOption({
@@ -1976,21 +2040,37 @@ acceptance(`composer buttons API`, function (needs) {
 
     await click(".toolbar-menu__options-trigger");
 
+    const shortcut = formatShortcut("mod+alt+b");
     const row = find("[data-name='bold']");
     assert
       .dom(row)
       .hasAttribute(
         "title",
-        i18n("some_title") +
-          ` (${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")})`,
-        "shows the title with shortcut"
+        i18n("some_title"),
+        "keeps the shortcut out of the title, since the row draws and announces it"
       );
     assert
       .dom(row)
+      .hasAttribute(
+        "aria-keyshortcuts",
+        shortcut.aria,
+        "announces the shortcut in its localized spoken form"
+      );
+    assert
+      .dom(".d-button-label__text", row)
+      .hasText(i18n("some_label"), "shows the label");
+    assert
+      .dom(".d-shortcut__key", row)
+      .exists({ count: shortcut.keys.length }, "draws one keycap per key");
+    assert
+      .dom(".d-shortcut", row)
       .hasText(
-        i18n("some_label") +
-          ` ${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")}`,
-        "shows the label with shortcut"
+        shortcut.keys
+          .map((key) =>
+            key.name === key.label ? key.label : `${key.label} ${key.name}`
+          )
+          .join(" "),
+        "draws each key with its spoken name"
       );
   });
 
@@ -2206,5 +2286,80 @@ acceptance(`composer buttons API`, function (needs) {
         /\/images\/custom-quote-avatar\.png/,
         "Quote avatar can be customized"
       );
+  });
+});
+
+acceptance("Composer - Typing paused", function (needs) {
+  needs.user();
+  needs.settings({ allow_uncategorized_topics: true });
+
+  function trackPauses(owner) {
+    const paused = [];
+    owner
+      .lookup("service:app-events")
+      .on("composer:typing-paused", (composer) => paused.push(composer.reply));
+    return paused;
+  }
+
+  test("fires once the user pauses after an edit", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Magic words");
+    await triggerKeyEvent(".d-editor-input", "keyup", "S");
+
+    assert.deepEqual(paused, ["Magic words"], "fires after the pause");
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "ArrowLeft");
+    assert.deepEqual(paused, ["Magic words"], "ignores keys without edits");
+
+    await fillIn(".d-editor-input", "Magic words and more");
+    await triggerKeyEvent(".d-editor-input", "keyup", "E");
+    assert.deepEqual(
+      paused,
+      ["Magic words", "Magic words and more"],
+      "fires again after the next edit"
+    );
+  });
+
+  test("fires right away at the end of a sentence", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Food stand. ");
+
+    // Dispatched directly so the assertion runs before the pause timer.
+    document
+      .querySelector(".d-editor-input")
+      .dispatchEvent(new KeyboardEvent("keyup", { key: " ", bubbles: true }));
+    assert.deepEqual(paused, ["Food stand. "], "fires immediately");
+
+    await settled();
+    assert.deepEqual(
+      paused,
+      ["Food stand. "],
+      "the pause that follows doesn't fire again"
+    );
+  });
+
+  test("editing earlier text waits for the pause", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Hello world.\n");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Enter");
+
+    await fillIn(".d-editor-input", "Hey, hello world.\n");
+    document
+      .querySelector(".d-editor-input")
+      .dispatchEvent(new KeyboardEvent("keyup", { key: "y", bubbles: true }));
+    assert.deepEqual(paused, ["Hello world.\n"], "doesn't fire right away");
+
+    await settled();
+    assert.deepEqual(
+      paused,
+      ["Hello world.\n", "Hey, hello world.\n"],
+      "fires after the pause"
+    );
   });
 });

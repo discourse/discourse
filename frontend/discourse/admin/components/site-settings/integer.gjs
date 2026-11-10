@@ -20,15 +20,15 @@ export default class SiteSettingsInteger extends Component {
 
   <template>
     <input
-      {{on "keydown" preventDecimal}}
-      {{on "input" this.updateValue}}
+      class="input-setting-integer"
+      disabled={{@disabled}}
+      max={{if @setting.max @setting.max null}}
+      min={{if @setting.min @setting.min null}}
+      step="1"
       type="number"
       value={{@value}}
-      min={{if @setting.min @setting.min null}}
-      max={{if @setting.max @setting.max null}}
-      class="input-setting-integer"
-      step="1"
-      disabled={{@disabled}}
+      {{on "keydown" preventDecimal}}
+      {{on "input" this.updateValue}}
     />
   </template>
 }

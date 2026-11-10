@@ -8,6 +8,19 @@ zh_TW:
   admin_js:
     discourse_templates:
       title: "範本"
+    admin:
+      site_settings:
+        categories:
+          discourse_templates: "Discourse 範本"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "範本（文字輸入區內）"
+        insert_template: "%{shortcut} 插入範本"
     templates:
+      filter_hint: "依關鍵字篩選…"
+      insert_template: "插入範本"
+      close_templates: "關閉範本選擇器"
+      copy: "複製範本"
+      new_topic: "從範本建立新主題"
       source: "來源："

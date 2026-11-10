@@ -53,10 +53,10 @@ module("Integration | Component | workflows boolean control", function (hooks) {
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{this.formApi}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -86,10 +86,10 @@ module("Integration | Component | workflows boolean control", function (hooks) {
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{this.formApi}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -122,10 +122,10 @@ module("Integration | Component | workflows boolean control", function (hooks) {
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{this.formApi}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -157,10 +157,10 @@ module("Integration | Component | workflows boolean control", function (hooks) {
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{this.formApi}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -196,10 +196,10 @@ module("Integration | Component | workflows boolean control", function (hooks) {
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{this.formApi}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -227,9 +227,9 @@ module("Integration | Component | workflows boolean control", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <BooleanControl
-            @form={{form}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -257,10 +257,10 @@ module("Integration | Component | workflows boolean control", function (hooks) {
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{this.formApi}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -302,10 +302,10 @@ module("Integration | Component | workflows boolean control", function (hooks) {
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{this.formApi}}
             @label="Enabled"
             @schema={{this.schema}}
           />

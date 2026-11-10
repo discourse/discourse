@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class AccessControlList < ActiveRecord::Base
+  self.ignored_columns += %i[owner]
+  # TODO(04-2027): Remove with the owner column.
+
   attr_accessor :allowed_groups_preloaded, :allowed_users_preloaded
 
   # NOTE: permission column is freeform, but some common
@@ -11,7 +14,7 @@ class AccessControlList < ActiveRecord::Base
   # - view
   # - edit
   # - manage
-  # - own
+  # - owner
   #
   # For categories for example we may have:
   #
@@ -27,7 +30,7 @@ class AccessControlList < ActiveRecord::Base
 
   validates :target_id, uniqueness: { scope: %i[target_type permission] }
 
-  before_create { self.owner = "core" if owner.blank? }
+  before_create { self.source = "core" if source.blank? }
 
   def allowed_users
     @allowed_users ||= User.where(id: allowed_user_ids).to_a
@@ -78,6 +81,16 @@ class AccessControlList < ActiveRecord::Base
           else
             auto_group_ids = [Group::AUTO_GROUPS[:logged_in_users]]
 
+            if user.is_system_user?
+              auto_group_ids.concat(
+                [
+                  Group::AUTO_GROUPS[:admins],
+                  Group::AUTO_GROUPS[:staff],
+                  Group::AUTO_GROUPS[:moderators],
+                ],
+              )
+            end
+
             # TODO (martin) Remove when granular_anonymous_and_logged_in_groups_permissions becomes permanent,
             # it's similar logic to User.in_any_groups?
             if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
@@ -118,9 +131,9 @@ class AccessControlList < ActiveRecord::Base
   # [{ type: "group", id: 3, permission: "edit" }]
   #
   # Converting it to include the allowed_group_ids, allowed_user_ids,
-  # owner, and so on.
-  def self.bulk_insert_flattened_acl!(flattened_acl, target, owner)
-    bulk_insert_list = expand_list_for_bulk_insert(flattened_acl, target, owner)
+  # source, and so on.
+  def self.bulk_insert_flattened_acl!(flattened_acl, target, source)
+    bulk_insert_list = expand_list_for_bulk_insert(flattened_acl, target, source)
     insert_all!(bulk_insert_list)
   end
 
@@ -132,11 +145,11 @@ class AccessControlList < ActiveRecord::Base
   # And converts into ACL records that can be inserted into the DB with
   # .insert_all, ending up in a format like so:
   #
-  # [{ permission: "edit", allowed_group_ids: [3], target_type: "Category", target_id: 123, owner: "core" }]
+  # [{ permission: "edit", allowed_group_ids: [3], target_type: "Category", target_id: 123, source: "core" }]
   #
   # The created_at and updated_at dates are automatically added
   # by AR when .insert_all! is used
-  def self.expand_list_for_bulk_insert(list, target, owner)
+  def self.expand_list_for_bulk_insert(list, target, source)
     list = dedup_flattened_list(list)
 
     permissions_expanded =
@@ -161,7 +174,7 @@ class AccessControlList < ActiveRecord::Base
         allowed_group_ids: permission[:allowed_group_ids],
         target_type: target.class.polymorphic_name,
         target_id: target.id,
-        owner: owner,
+        source: source,
       }
     end
   end
@@ -209,7 +222,8 @@ class AccessControlList < ActiveRecord::Base
 
     def build_acl_entry(access_control_list, target_klass, type, id, allowed_object, for_target)
       mandatory =
-        target_klass.acl_is_mandatory?({ type:, id:, permission: access_control_list.permission })
+        access_control_list.permission != Acl::Permissions::OWNER &&
+          target_klass.acl_is_mandatory?({ type:, id:, permission: access_control_list.permission })
 
       list_entry = {
         type:,
@@ -353,8 +367,8 @@ end
 #  id                :bigint           not null, primary key
 #  allowed_group_ids :bigint           default([]), not null, is an Array
 #  allowed_user_ids  :bigint           default([]), not null, is an Array
-#  owner             :string(100)      not null
 #  permission        :string(100)      not null
+#  source            :string(100)      not null
 #  target_type       :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null

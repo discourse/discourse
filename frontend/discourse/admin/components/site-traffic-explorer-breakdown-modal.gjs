@@ -39,21 +39,21 @@ export default class SiteTrafficExplorerBreakdownModal extends Component {
 
   <template>
     <DModal
-      @title={{@model.title}}
-      @closeModal={{@closeModal}}
       class="site-traffic-breakdown-modal"
+      @closeModal={{@closeModal}}
+      @title={{@model.title}}
     >
       <:body>
         <ul class="site-traffic-explorer__breakdown-list">
           {{#each this.rows as |row index|}}
             <li>
               <SiteTrafficExplorerBreakdownRow
-                @row={{row}}
-                @dimension={{@model.dimension}}
-                @rowLink={{@model.rowLink row}}
-                @inputId={{concat "site-traffic-expanded-filter-" index}}
                 @checked={{this.isSelected row}}
+                @dimension={{@model.dimension}}
+                @inputId={{concat "site-traffic-expanded-filter-" index}}
                 @onToggle={{fn this.toggleFilter row}}
+                @row={{row}}
+                @rowLink={{@model.rowLink row}}
               />
             </li>
           {{/each}}
@@ -63,7 +63,7 @@ export default class SiteTrafficExplorerBreakdownModal extends Component {
         <DButton
           class="btn-primary"
           @action={{this.applyFilters}}
-          @label="admin.site_traffic_explorer.apply"
+          @label="admin.site_traffic_explorer.apply_filters"
         />
       </:footer>
     </DModal>

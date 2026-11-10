@@ -3,15 +3,33 @@
 describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
   fab!(:author, :user)
 
-  def solved_topic_in(category)
-    topic = Fabricate(:topic, category: category, user: author, created_at: 1.day.ago)
-    answer = Fabricate(:post, topic: topic, user: author, created_at: 1.day.ago)
-    Fabricate(:solved_topic, topic: topic, answer_post: answer, created_at: 1.day.ago)
+  def solved_topic_in(category, created_at: 1.day.ago)
+    topic = Fabricate(:topic, category: category, user: author, created_at:)
+    answer = Fabricate(:post, topic: topic, user: author, created_at:)
+    Fabricate(:solved_topic, topic: topic, answer_post: answer, created_at:)
     topic
   end
 
-  def build(filters: {})
-    Report.find("accepted_solutions", start_date: 2.days.ago, end_date: Time.current, filters:)
+  def build(filters: {}, guardian: Discourse.system_user.guardian, facets: nil)
+    Report.find(
+      "accepted_solutions",
+      start_date: 2.days.ago,
+      end_date: Time.current,
+      filters:,
+      guardian:,
+      facets:,
+      include_related_items: true,
+    )
+  end
+
+  it "restricts related items to admins while retaining moderator access to aggregates" do
+    solved_topic_in(Fabricate(:category))
+    moderator_guardian = Fabricate(:moderator).guardian
+    report = build(guardian: moderator_guardian)
+
+    expect(report.data.sum { |point| point[:y] }).to eq(1)
+    expect(report.related_items).to be_nil
+    expect(report.related_items_totals).to be_nil
   end
 
   it "counts accepted solutions across all categories when no filter is given" do
@@ -19,6 +37,117 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     solved_topic_in(Fabricate(:category))
 
     expect(build.total).to eq(2)
+  end
+
+  it "counts accepted solutions outside the selected date range in the total" do
+    category = Fabricate(:category)
+    solved_topic_in(category)
+    solved_topic_in(category, created_at: 3.days.ago)
+
+    expect(build.total).to eq(2)
+  end
+
+  it "only calculates requested facets" do
+    solved_topic_in(Fabricate(:category))
+
+    report = build(facets: [:related_items])
+
+    expect(report.total).to be_nil
+    expect(report.prev30Days).to be_nil
+    expect(report.related_items_totals).to eq(solved_topics: 1)
+  end
+
+  it "includes the solved topic, answer author, and category" do
+    category = Fabricate(:category)
+    topic = solved_topic_in(category)
+
+    report = build
+    item = report.related_items[:solved_topics].first
+
+    expect(report.related_items_totals).to eq(solved_topics: 1)
+    expect(item[:topic]).to eq(title: topic.title, url: topic.relative_url)
+    expect(item.dig(:solved_by_users, 0, :username)).to eq(author.username)
+    expect(item[:category]).to include(
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      color: category.color,
+    )
+  end
+
+  it "includes every accepted answer author when multiple solutions are enabled" do
+    SiteSetting.solved_allow_multiple_solutions = true
+    category = Fabricate(:category)
+    topic = solved_topic_in(category)
+    second_author = Fabricate(:user)
+    second_answer = Fabricate(:post, topic:, user: second_author, created_at: 23.hours.ago)
+    Fabricate(:topic_answer, solved_topic: topic.solved, post: second_answer, accepter: author)
+
+    item = build.related_items[:solved_topics].first
+
+    expect(item[:solved_by_users].map { |user| user[:username] }).to eq(
+      [author.username, second_author.username],
+    )
+  end
+
+  it "only includes solved topics from the selected date range" do
+    category = Fabricate(:category)
+    in_range_topic = solved_topic_in(category)
+    solved_topic_in(category, created_at: 3.days.ago)
+
+    report = build
+
+    expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
+      [in_range_topic.title],
+    )
+  end
+
+  it "skips related items when the report has no guardian" do
+    solved_topic_in(Fabricate(:category))
+
+    report = build(guardian: nil)
+
+    expect(report.total).to eq(1)
+    expect(report.related_items).to be_nil
+    expect(report.related_items_totals).to be_nil
+  end
+
+  it "only includes solved topic details visible to the report guardian" do
+    SiteSetting.suppress_secured_categories_from_admin = true
+    private_topic = solved_topic_in(Fabricate(:private_category, group: Fabricate(:group)))
+    visible_topic = solved_topic_in(Fabricate(:category))
+    admin = Fabricate(:admin)
+
+    expect(admin.guardian.can_see_topic?(private_topic)).to be(false)
+
+    report = build(guardian: admin.guardian)
+
+    expect(report.total).to eq(2)
+    expect(report.related_items_totals).to eq(solved_topics: 1)
+    expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
+      [visible_topic.title],
+    )
+  end
+
+  it "excludes shared drafts from details when the report guardian cannot see them" do
+    shared_drafts_category = Fabricate(:category)
+    SiteSetting.suppress_secured_categories_from_admin = true
+    SiteSetting.shared_drafts_category = shared_drafts_category.id
+    SiteSetting.shared_drafts_allowed_groups = Fabricate(:group).id
+    shared_draft_topic = solved_topic_in(shared_drafts_category)
+    Fabricate(:shared_draft, topic: shared_draft_topic, category: Fabricate(:category))
+    visible_topic = solved_topic_in(Fabricate(:category))
+    admin = Fabricate(:admin)
+
+    expect(admin.guardian.can_see_topic?(shared_draft_topic)).to be(false)
+
+    report = build(guardian: admin.guardian)
+
+    expect(report.total).to eq(2)
+    expect(report.related_items_totals).to eq(solved_topics: 1)
+    expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
+      [visible_topic.title],
+    )
   end
 
   it "registers the category_ids filter even when no filter is given" do

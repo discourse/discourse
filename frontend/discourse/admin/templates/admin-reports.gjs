@@ -5,15 +5,15 @@ import { i18n } from "discourse-i18n";
 export default <template>
   {{#if @controller.showHeader}}
     <DPageHeader
-      @titleLabel={{i18n "admin.config.reports.title"}}
       @descriptionLabel={{i18n "admin.config.reports.header_description"}}
       @learnMoreUrl="https://meta.discourse.org/t/-/240233"
+      @titleLabel={{i18n "admin.config.reports.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/reports"
           @label={{i18n "admin.config.reports.title"}}
+          @path="/admin/reports"
         />
       </:breadcrumbs>
     </DPageHeader>

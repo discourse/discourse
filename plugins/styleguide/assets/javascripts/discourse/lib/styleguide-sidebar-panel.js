@@ -2,8 +2,8 @@ import { cached } from "@glimmer/tracking";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { i18n } from "discourse-i18n";
-import { STYLEGUIDE_PANEL } from "../services/styleguide-sidebar";
-import { allCategories } from "./styleguide";
+import { STYLEGUIDE_PANEL } from "../services/styleguide-sidebar.js";
+import { allCategories } from "./styleguide.js";
 
 function categoryTitle(categoryId) {
   return i18n(`styleguide.categories.${categoryId}`);

@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import RagDocumentSourcesModal from "./modal/rag-document-sources-modal";
+import RagDocumentSourcesModal from "./modal/rag-document-sources-modal.gjs";
 
 const SUMMARY_URL_LIMIT = 3;
 
@@ -83,10 +83,10 @@ export default class RagDocumentSources extends Component {
 
       {{#unless @disabled}}
         <DButton
+          class="btn-default rag-document-sources__edit"
           @action={{this.openEditor}}
           @icon={{if this.sources.length "pencil" "plus"}}
           @label={{this.buttonLabel}}
-          class="btn-default rag-document-sources__edit"
         />
       {{/unless}}
     </div>

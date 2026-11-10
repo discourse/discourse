@@ -22,7 +22,14 @@ el:
       title: "Η αρχειοθέτηση καναλιού συνομιλίας απέτυχε."
       subject_template: "Η αρχειοθέτηση καναλιού συνομιλίας απέτυχε."
   chat:
+    design_wizard_homepage_name: "Συνομιλία"
     deleted_chat_username: διεγράφη
+    crawler:
+      directory_title: "Κανάλια συνομιλίας"
+      nav_title: "Συνομιλία"
+      thread_replies:
+        one: "%{count} απάντηση"
+        other: "%{count} απαντήσεις"
     errors:
       users_cant_be_added_to_channel: "Δεν είναι δυνατή η προσθήκη χρηστών σε αυτό το κανάλι."
       user_cant_be_removed_from_channel: "Δεν είναι δυνατή η αφαίρεση του χρήστη από αυτό το κανάλι"
@@ -192,13 +199,10 @@ el:
       default_deny_label: "Άρνηση"
     errors:
       send_chat_message:
-        invalid_params: "Μη έγκυρες παράμετροι: %{errors}"
         channel_not_found: "Δεν βρέθηκε το κανάλι: %{channel_id}"
-        failed: "Αποτυχία αποστολής μηνύματος συνομιλίας."
       chat_approval:
         channel_not_found: "Το μήνυμα συνομιλίας απέτυχε: το κανάλι %{channel_id} δεν βρέθηκε."
         invalid_params: "Το μήνυμα συνομιλίας απέτυχε: %{errors}"
-        failed: "Το μήνυμα συνομιλίας απέτυχε: %{steps}"
   reviewable_score_types:
     needs_review:
       title: "Χρειάζεται έλεγχο"

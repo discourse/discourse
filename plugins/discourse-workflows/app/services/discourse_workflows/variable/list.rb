@@ -20,7 +20,8 @@ module DiscourseWorkflows
     private
 
     def fetch_variables(params:)
-      scope = DiscourseWorkflows::Variable.includes(:created_by).order(id: :desc)
+      scope =
+        DiscourseWorkflows::Variable.where(workflow_id: nil).includes(:created_by).order(id: :desc)
       context[:page] = DiscourseWorkflows::Pagination.cursor_page(
         scope: scope,
         cursor: params.cursor,

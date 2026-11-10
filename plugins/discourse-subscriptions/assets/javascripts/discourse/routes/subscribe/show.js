@@ -16,4 +16,12 @@ export default class SubscribeShowRoute extends Route {
       return result;
     });
   }
+
+  setupController(controller, model) {
+    super.setupController(...arguments);
+    controller.set(
+      "selectedPlan",
+      model.plans.length === 1 ? model.plans[0].id : null
+    );
+  }
 }

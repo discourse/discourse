@@ -27,6 +27,7 @@ module BulkImport
   class UploadsImporter
     class DownloadFailedError < StandardError
     end
+
     class UploadSizeExceededError < DownloadFailedError
     end
 
@@ -45,9 +46,6 @@ module BulkImport
     end
 
     def run
-      # disable logging for EXIFR which is used by ImageOptim
-      EXIFR.logger = Logger.new(nil)
-
       if @settings[:fix_missing]
         @source_db = create_connection(@settings[:output_db_path])
 
@@ -777,6 +775,7 @@ module BulkImport
           def self.current_db_override=(value)
             @current_db_override = value
           end
+
           def self.current_db
             @current_db_override
           end

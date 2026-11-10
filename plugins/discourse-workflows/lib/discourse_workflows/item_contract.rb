@@ -2,7 +2,7 @@
 
 module DiscourseWorkflows
   module ItemContract
-    VALID_ITEM_KEYS = %w[json pairedItem error index].freeze
+    VALID_ITEM_KEYS = ["json", "pairedItem", "error", "index", Item::FAILED_KEY].freeze
 
     class Error < StandardError
     end

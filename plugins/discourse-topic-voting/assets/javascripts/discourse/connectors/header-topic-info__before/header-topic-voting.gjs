@@ -1,4 +1,4 @@
-import VoteBox from "../../components/vote-box";
+import VoteBox from "../../components/vote-box.gjs";
 
 export default <template>
   {{#if @outletArgs.topic.can_vote}}

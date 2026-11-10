@@ -17,7 +17,7 @@ module Jobs
       # guards against reopening a topic too early if the topic has
       # been auto closed because of reviewables/reports, this will
       # just update the existing topic timer and push it down the line
-      if topic.auto_close_threshold_reached?
+      if topic.auto_close_threshold_reached? || topic.first_post&.user_deleted?
         topic.set_or_create_timer(
           TopicTimer.types[:open],
           SiteSetting.num_hours_to_close_topic,

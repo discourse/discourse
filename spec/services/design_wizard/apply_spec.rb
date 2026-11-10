@@ -3,26 +3,95 @@
 RSpec.describe DesignWizard::Apply do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
-    it { is_expected.to validate_inclusion_of(:theme_id).in_array(Theme::CORE_THEMES.values) }
+    it { is_expected.to allow_values(*Theme::CORE_THEMES.values).for(:theme_id) }
+
+    it "accepts installed official themes with either repository URL format" do
+      SiteSetting.concord_in_wizard = true
+      ["", ".git"].each do |suffix|
+        theme =
+          Fabricate(
+            :theme,
+            remote_theme:
+              Fabricate(
+                :remote_theme,
+                remote_url: "https://github.com/discourse/discourse-concord-theme#{suffix}",
+              ),
+          )
+
+        expect(described_class.new(theme_id: theme.id)).to be_valid
+      end
+    end
+
+    it "rejects custom themes, similarly named repositories, and components" do
+      SiteSetting.concord_in_wizard = true
+      custom_theme = Fabricate(:theme, name: "Concord")
+      unofficial_theme =
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/other/discourse-concord-theme",
+            ),
+        )
+      component =
+        Fabricate(
+          :theme,
+          component: true,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+
+      [custom_theme, unofficial_theme, component].each do |theme|
+        contract = described_class.new(theme_id: theme.id)
+
+        expect(contract).to be_invalid
+        expect(contract.errors.of_kind?(:theme_id, :inclusion)).to eq(true)
+      end
+    end
+
     it do
       is_expected.to validate_inclusion_of(:base_font).in_array(
         BaseFontSetting.values.map { |font| font[:value] },
       ).allow_nil
     end
+
     it do
       is_expected.to validate_inclusion_of(:heading_font).in_array(
         BaseFontSetting.values.map { |font| font[:value] },
       ).allow_nil
     end
+
     it do
       is_expected.to validate_inclusion_of(:homepage).in_array(
-        %w[latest new hot categories],
+        %w[latest categories new hot top],
       ).allow_nil
     end
+
     it do
       is_expected.to validate_inclusion_of(:category_page_style).in_array(
         CategoryPageStyle.values.map { |style| style[:value] },
       ).allow_nil
+    end
+
+    it "defaults homepage settings to an empty hash" do
+      contract = described_class.new(theme_id: Theme::CORE_THEMES["foundation"])
+
+      expect(contract).to be_valid
+      expect(contract.homepage_settings).to eq({})
+    end
+
+    it "rejects non-hash and unregistered homepage settings" do
+      [nil, "invalid", [], { title: "Unexpected title" }].each do |homepage_settings|
+        contract =
+          described_class.new(theme_id: Theme::CORE_THEMES["foundation"], homepage_settings:)
+
+        expect(contract).to be_invalid
+        expect(contract.errors.of_kind?(:homepage_settings, :invalid)).to eq(true)
+      end
     end
 
     it "normalizes the base light palette id to nil" do
@@ -66,6 +135,45 @@ RSpec.describe DesignWizard::Apply do
     let(:dependencies) { { guardian: } }
     let(:theme_id) { Theme::CORE_THEMES["foundation"] }
     let(:params) { { theme_id: } }
+
+    context "when applying an installed official theme" do
+      fab!(:concord_theme) do
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+      end
+      fab!(:palette) { Fabricate(:color_scheme, theme_id: concord_theme.id) }
+
+      let(:theme_id) { concord_theme.id }
+      let(:params) { { theme_id:, light_palette_id: palette.id, palettes_user_selectable: true } }
+
+      before { SiteSetting.concord_in_wizard = true }
+
+      it "rejects the installed theme when Concord is disabled" do
+        SiteSetting.concord_in_wizard = false
+
+        expect(result).to fail_a_contract
+      end
+
+      it "selects the theme and its palette" do
+        expect(result).to run_successfully
+        expect(SiteSetting.default_theme_id).to eq(concord_theme.id)
+        expect(concord_theme.reload.color_scheme_id).to eq(palette.id)
+        expect(palette.reload.user_selectable).to eq(true)
+      end
+    end
+
+    context "when applying an unsupported theme" do
+      fab!(:custom_theme, :theme)
+      let(:theme_id) { custom_theme.id }
+
+      it { is_expected.to fail_a_contract }
+    end
 
     context "when the contract isn't valid" do
       let(:params) { { theme_id:, base_font: "not_a_font" } }
@@ -114,6 +222,77 @@ RSpec.describe DesignWizard::Apply do
       before { Theme.where(id: theme_id).delete_all }
 
       it { is_expected.to fail_to_find_a_model(:theme) }
+    end
+
+    context "when a plugin restricts editing the theme" do
+      let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { proc { false } }
+
+      before { plugin.register_modifier(:user_guardian_can_edit_theme, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:can_edit_theme) }
+
+      it "changes nothing" do
+        expect { result }.not_to change {
+          [foundation_theme.reload.color_scheme_id, ColorScheme.count]
+        }
+      end
+    end
+
+    context "when a plugin restricts palette creation" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { proc { false } }
+
+      before { plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_create_color_scheme,
+          &modifier
+        )
+      end
+
+      context "when a built-in palette has to be saved first" do
+        let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+
+        # new sites start with the built-in palettes saved, but they can be deleted
+        before do
+          ColorScheme.where(
+            base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+            via_wizard: true,
+          ).destroy_all
+        end
+
+        it { is_expected.to fail_a_policy(:can_create_needed_palettes) }
+      end
+
+      context "when offering the built-in palettes would save them" do
+        let(:params) { { theme_id:, palettes_user_selectable: true } }
+
+        it { is_expected.to fail_a_policy(:can_create_needed_palettes) }
+      end
+
+      context "when the built-in palette was saved before" do
+        let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+
+        before do
+          DesignWizard::Action::ResolvePalette.call(
+            palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+          )
+        end
+
+        it { is_expected.to run_successfully }
+      end
     end
 
     context "when a provided palette belongs to another theme" do
@@ -193,6 +372,59 @@ RSpec.describe DesignWizard::Apply do
         expect { result }.to change { SiteSetting.default_homepage }.to("categories").and change {
                 SiteSetting.desktop_category_page_style
               }.to("categories_boxes")
+      end
+    end
+
+    context "when choosing a logo" do
+      fab!(:logo_upload, :image_upload)
+
+      let(:params) { { theme_id: Theme::CORE_THEMES["horizon"], logo: } }
+
+      context "with an uploaded image" do
+        let(:logo) { logo_upload.url }
+
+        it { is_expected.to run_successfully }
+
+        it "sets the logo" do
+          expect { result }.to change { SiteSetting.logo }.to(logo_upload)
+        end
+      end
+
+      context "with a blank value" do
+        let(:logo) { "" }
+
+        before { SiteSetting.logo = logo_upload }
+
+        it "removes the logo" do
+          expect { result }.to change { SiteSetting.logo }.to(nil)
+        end
+      end
+
+      context "without a value" do
+        let(:logo) { nil }
+
+        before { SiteSetting.logo = logo_upload }
+
+        it "leaves the logo alone" do
+          expect { result }.not_to change { SiteSetting.logo }
+        end
+      end
+
+      context "when the logo setting is hidden" do
+        let(:logo) { "" }
+
+        before do
+          SiteSetting.logo = logo_upload
+          SiteSetting.hidden_settings_provider.add_hidden(:logo)
+        end
+
+        after { SiteSetting.hidden_settings_provider.remove_hidden(:logo) }
+
+        it { is_expected.to run_successfully }
+
+        it "leaves the logo alone" do
+          expect { result }.not_to change { SiteSetting.logo }
+        end
       end
     end
 
@@ -290,37 +522,188 @@ RSpec.describe DesignWizard::Apply do
       fab!(:wizard_scheme) { Fabricate(:color_scheme, via_wizard: true, user_selectable: true) }
 
       let(:theme_id) { Theme::CORE_THEMES["horizon"] }
-      let(:params) { { theme_id:, palettes_user_selectable: true } }
+      let(:light_palette) { ColorScheme.find_by(theme_id: horizon_theme.id, name: "Royal") }
+      let(:dark_palette) { ColorScheme.find_by(theme_id: horizon_theme.id, name: "Royal Dark") }
+      let(:theme_schemes) { ColorScheme.where(theme_id: horizon_theme.id) }
+      let(:params) do
+        {
+          theme_id:,
+          light_palette_id: light_palette.id,
+          dark_palette_id: dark_palette.id,
+          palettes_user_selectable: true,
+        }
+      end
 
       it { is_expected.to run_successfully }
 
-      it "makes the theme palettes user selectable and disables the others" do
-        result
+      it "makes the theme palettes user selectable and preserves selectable wizard palettes" do
+        expect(result).to run_successfully
 
-        theme_schemes = ColorScheme.where(theme_id: horizon_theme.id)
         expect(theme_schemes).to be_present
         expect(theme_schemes.pluck(:user_selectable)).to all(eq(true))
-        expect(wizard_scheme.reload.user_selectable).to eq(false)
+        expect(wizard_scheme.reload.user_selectable).to eq(true)
+      end
+
+      context "when the site is light only" do
+        let(:params) do
+          { theme_id:, light_palette_id: light_palette.id, palettes_user_selectable: true }
+        end
+
+        it "offers only the light palettes" do
+          expect(result).to run_successfully
+
+          expect(theme_schemes.where(user_selectable: true).map(&:is_dark?)).to all(eq(false))
+          expect(theme_schemes.where(user_selectable: false).map(&:is_dark?)).to all(eq(true))
+          expect(theme_schemes.where(user_selectable: false)).to be_present
+        end
+      end
+
+      context "when finishing a light-only setup" do
+        fab!(:dark_pick, :user)
+        fab!(:no_dark) { Fabricate(:user).tap { |u| u.user_option.update!(dark_scheme_id: -1) } }
+        fab!(:dark_as_light, :user)
+        fab!(:light_pick, :user)
+
+        let(:params) do
+          {
+            theme_id:,
+            light_palette_id: light_palette.id,
+            palettes_user_selectable: true,
+            finishing: true,
+          }
+        end
+
+        before do
+          dark_pick.user_option.update!(dark_scheme_id: dark_palette.id)
+          dark_as_light.user_option.update!(color_scheme_id: dark_palette.id)
+          light_pick.user_option.update!(color_scheme_id: light_palette.id)
+        end
+
+        it "clears members' dark palette choices so they follow the site's light palette" do
+          expect(result).to run_successfully
+
+          expect(dark_pick.user_option.reload.dark_scheme_id).to be_nil
+          expect(dark_as_light.user_option.reload.color_scheme_id).to be_nil
+        end
+
+        it "keeps light choices and opting out of dark mode" do
+          expect(result).to run_successfully
+
+          expect(light_pick.user_option.reload.color_scheme_id).to eq(light_palette.id)
+          expect(no_dark.user_option.reload.dark_scheme_id).to eq(-1)
+        end
+
+        it "leaves members' choices alone on a step save, which can still be reverted" do
+          described_class.call(params: params.merge(finishing: false), **dependencies)
+
+          expect(dark_pick.user_option.reload.dark_scheme_id).to eq(dark_palette.id)
+          expect(dark_as_light.user_option.reload.color_scheme_id).to eq(dark_palette.id)
+        end
+
+        it "leaves members' choices alone when the site keeps dark mode" do
+          described_class.call(
+            params: params.merge(dark_palette_id: dark_palette.id),
+            **dependencies,
+          )
+
+          expect(dark_pick.user_option.reload.dark_scheme_id).to eq(dark_palette.id)
+        end
+      end
+
+      context "when finishing a dark-only setup" do
+        fab!(:light_pick, :user)
+        fab!(:dark_as_light, :user)
+        fab!(:dark_pick, :user)
+
+        let(:params) do
+          {
+            theme_id:,
+            light_palette_id: dark_palette.id,
+            dark_palette_id: dark_palette.id,
+            palettes_user_selectable: true,
+            finishing: true,
+          }
+        end
+
+        before do
+          light_pick.user_option.update!(color_scheme_id: light_palette.id)
+          dark_as_light.user_option.update!(color_scheme_id: dark_palette.id)
+          dark_pick.user_option.update!(dark_scheme_id: dark_palette.id)
+        end
+
+        it "clears members' light palette choices so they follow the site's dark palette" do
+          expect(result).to run_successfully
+
+          expect(light_pick.user_option.reload.color_scheme_id).to be_nil
+        end
+
+        it "keeps members' dark palette choices" do
+          expect(result).to run_successfully
+
+          expect(dark_as_light.user_option.reload.color_scheme_id).to eq(dark_palette.id)
+          expect(dark_pick.user_option.reload.dark_scheme_id).to eq(dark_palette.id)
+        end
+
+        it "leaves members' choices alone on a step save, which can still be reverted" do
+          described_class.call(params: params.merge(finishing: false), **dependencies)
+
+          expect(light_pick.user_option.reload.color_scheme_id).to eq(light_palette.id)
+        end
+      end
+
+      context "when the site is dark only" do
+        let(:params) do
+          {
+            theme_id:,
+            light_palette_id: dark_palette.id,
+            dark_palette_id: dark_palette.id,
+            palettes_user_selectable: true,
+          }
+        end
+
+        it "offers only the dark palettes" do
+          expect(result).to run_successfully
+
+          expect(theme_schemes.where(user_selectable: true).map(&:is_dark?)).to all(eq(true))
+          expect(theme_schemes.where(user_selectable: false).map(&:is_dark?)).to all(eq(false))
+          expect(theme_schemes.where(user_selectable: false)).to be_present
+        end
       end
     end
 
     context "when offering built-in palettes on a theme without its own" do
-      let(:params) { { theme_id:, palettes_user_selectable: true } }
+      let(:params) do
+        {
+          theme_id:,
+          dark_palette_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+          palettes_user_selectable: true,
+        }
+      end
 
       before { ColorScheme.where(via_wizard: true).destroy_all }
 
       it { is_expected.to run_successfully }
 
       it "materializes all built-in palettes as user selectable" do
-        expect { result }.to change { ColorScheme.where(via_wizard: true).count }.by(7)
+        expect { result }.to change { ColorScheme.where(via_wizard: true).count }.by(13)
         expect(ColorScheme.where(via_wizard: true).pluck(:user_selectable)).to all(eq(true))
+      end
+
+      it "preserves selectable Horizon palettes" do
+        horizon_schemes = ColorScheme.where(theme_id: horizon_theme.id)
+        expect(horizon_schemes).to be_present
+        horizon_schemes.update_all(user_selectable: true)
+
+        expect(result).to run_successfully
+
+        expect(horizon_schemes.pluck(:user_selectable)).to all(eq(true))
       end
 
       it "disables them all when reapplied without user selectable palettes" do
         result
         described_class.call(params: params.merge(palettes_user_selectable: false), **dependencies)
 
-        expect(ColorScheme.where(via_wizard: true).count).to eq(7)
+        expect(ColorScheme.where(via_wizard: true).count).to eq(13)
         expect(ColorScheme.where(via_wizard: true).pluck(:user_selectable)).to all(eq(false))
       end
     end

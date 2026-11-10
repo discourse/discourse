@@ -62,7 +62,16 @@ links:
 
 The above schema definition states that the `link` object has a `name` property of type `string` which means that only string values will be accepted for the property. Currently the following types are supported:
 
-- `string`: Value of property is stored as a string.
+- `string`: Value of property is stored as a string. Set `textarea: true` to use an expanding text area:
+
+  ```yaml
+  description:
+    type: string
+    textarea: true
+    validations:
+      max_length: 500
+  ```
+
 - `integer`: Value of property is stored as an integer.
 - `float`: Value of property is stored as a float.
 - `boolean`: Value of property is `true` or `false`.
@@ -108,7 +117,7 @@ links:
 
 #### Required properties
 
-All properties defined are optional by default. To mark a property as required, simply annotate the property with `required: true. A property can also be marked as optional by annotating the property with `required: false`.
+All properties defined are optional by default. To mark a property as required, simply annotate the property with `required: true`. A property can also be marked as optional by annotating the property with `required: false`.
 
 ```yaml
 links:
@@ -125,6 +134,8 @@ links:
         required: false
 ```
 
+Blank `string`, `datetime` and `icon` values and empty `categories`, `groups` and `tags` lists count as missing: required properties reject them and optional properties skip their validations. `false` counts as set.
+
 #### Custom Validations
 
 For certain property types, there are built in support for custom validations which can be declared by annotating the property with the `validations` keyword.
@@ -140,8 +151,8 @@ links:
         type: string
         required: true
         validations:
-          min: 1
-          max: 2048
+          min_length: 1
+          max_length: 2048
           url: true
 ```
 

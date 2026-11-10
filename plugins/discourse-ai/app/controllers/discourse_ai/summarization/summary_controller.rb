@@ -12,8 +12,6 @@ module DiscourseAi
         guardian.ensure_can_see!(topic)
         summarization_service =
           DiscourseAi::TopicSummarization.for(topic, current_user, scope: guardian)
-        raise Discourse::NotFound if !summarization_service.available?
-
         cached_summary = summarization_service.cached_summary
 
         raise Discourse::NotFound if !cached_summary

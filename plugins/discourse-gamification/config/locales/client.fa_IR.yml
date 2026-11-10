@@ -41,9 +41,7 @@ fa_IR:
       close: "بستن"
       delete: "حذف"
       edit: "ویرایش"
-      back: "بازگشت"
       save: "ذخیره"
-      apply: "اعمال کردن"
       update_range:
         last_10_days: "۱۰ روز گذشته"
         last_30_days: "۳۰ روز گذشته"
@@ -55,9 +53,11 @@ fa_IR:
       admin:
         title: "بازی‌وارسازی"
         name: "نام"
+        created_by: "ایجاد شده توسط"
         period: "دوره زمانی"
     discourse_workflows:
       gamification_score:
         username: "کاربر"
         date: "تاریخ"
         description: "توضیح"
+        category_id: "دسته‌بندی"

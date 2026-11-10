@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { eq } from "discourse/truth-helpers";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").EmojiAutocompleteResult} EmojiAutocompleteResult
@@ -33,13 +32,13 @@ export default class EmojiAutocompleteResults extends Component {
         {{#each @results as |result index|}}
           <li>
             <a
-              href
               class={{if (eq index @selectedIndex) "selected"}}
+              href
               {{on "click" (fn this.handleResultClick result index)}}
             >
               <span class="text-content">
                 {{#if result.src}}
-                  <img src={{result.src}} class="emoji" />
+                  <img class="emoji" src={{result.src}} />
                   <span class="emoji-shortname">{{result.code}}</span>
                 {{else}}
                   {{result.label}}

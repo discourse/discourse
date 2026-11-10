@@ -160,7 +160,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post contains two keywords" do
+    context "when post contains two keywords with different letter casing" do
       it "creates an answer with both answers" do
         post = create_post(topic: topic, raw: "this is a post with FOO and bar")
         automation.trigger!("post" => post)
@@ -169,7 +169,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post doesn’t contain a keyword" do
+    context "when post contains no keyword" do
       it "doesn’t create an answer" do
         post = create_post(topic: topic, raw: "this is a post with no keyword")
 
@@ -186,7 +186,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post doesn’t contain a keyword" do
+    context "when post only contains a keyword as part of another word" do
       it "doesn’t create an answer" do
         post = create_post(topic: topic, raw: "this is a post bfoo with no keyword fooa")
 

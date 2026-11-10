@@ -13,8 +13,8 @@ export default class GroupLink extends Component {
     <a
       ...attributes
       class="user-group trigger-group-card"
-      href={{this.href}}
       data-group-card={{this.name}}
+      href={{this.href}}
     >
       {{yield}}
     </a>

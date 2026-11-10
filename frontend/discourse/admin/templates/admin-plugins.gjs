@@ -7,19 +7,19 @@ export default <template>
     <div class="d-page-header">
       <DBreadcrumbsContainer />
       <DBreadcrumbsItem
+        @label={{i18n "admin_title"}}
         @path="/admin"
         @route="admin"
-        @label={{i18n "admin_title"}}
       />
       <DBreadcrumbsItem
+        @label={{i18n "admin.plugins.title"}}
         @path="/admin/plugins"
         @route="adminPlugins"
-        @label={{i18n "admin.plugins.title"}}
       />
       {{#if @controller.currentLegacyPlugin}}
         <DBreadcrumbsItem
-          @route={{@controller.currentLegacyPlugin.adminRoute.full_location}}
           @label={{@controller.currentLegacyPlugin.nameTitleized}}
+          @route={{@controller.currentLegacyPlugin.adminRoute.full_location}}
         />
       {{/if}}
     </div>

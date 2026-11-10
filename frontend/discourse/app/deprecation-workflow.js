@@ -54,7 +54,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Gets the list of active workflows.
-   * @return {Object[]} Array of active workflow configurations
+   * @returns {Array<{ handler: string[], matchId: string | RegExp, env: string[] }>} Array of active workflow configurations
    */
   get list() {
     return this.#activeWorkflows;
@@ -62,7 +62,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Gets Ember-specific workflows formatted for Ember CLI.
-   * @return {Object[]} Array of formatted Ember workflow configurations
+   * @returns {Array<{ handler: string, matchId: string | RegExp, env: string[] }>} Array of formatted Ember workflow configurations
    */
   get emberWorkflowList() {
     return this.#activeWorkflows
@@ -80,7 +80,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Sets the current environment and updates active workflows.
-   * @param {Object} environment - Environment object
+   * @param {{ isProduction: () => boolean, isTesting: () => boolean, isRailsTesting: () => boolean } | null | undefined} environment - Environment object
    */
   setEnvironment(environment) {
     this.#environment = environment;
@@ -317,101 +317,38 @@ const workflows = [
     handler: "silence",
     matchId: "deprecate-import-meta-from-ember",
   },
+  // The component is deprecated but still under test until it is removed.
+  {
+    handler: "silence",
+    matchId: "discourse.ace-editor",
+    env: "qunit-test",
+  },
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
   ...[
-    "discourse.add-saveable-user-option-field",
-    "discourse.add-toolbar-popup-menu-options-callback",
-    "discourse.add-user-menu-glyph",
-    "discourse.application-show-footer",
-    "discourse.avatar-utils",
-    "discourse.base-url",
     "discourse.bound-date",
-    "discourse.capitalize-string",
-    "discourse.category-hashtags.categoryHashtagTriggerRule",
-    "discourse.category-list.categories",
-    "discourse.category-list.listForParent",
-    "discourse.chat.addToolbarButton",
-    "discourse.click-track.is-valid-link-jquery",
     "discourse.component-template-resolving",
-    "discourse.composer-controller.clear-popup-menu-options-callback",
-    "discourse.composer.usernames",
-    "discourse.computed-html-safe",
-    "discourse.create-store-helper",
-    "discourse.createNewMessageViaParams",
-    "discourse.createNewTopicViaParams",
-    "discourse.current-theme-key",
-    "discourse.d-editor.on-toolbar-create",
-    "discourse.d-popover",
-    "discourse.d-section",
-    "discourse.decorate-plugin-outlet",
     "discourse.deprecated-resolver-normalization",
-    "discourse.discourse-module",
-    "discourse.discovery-topics-controller",
     "discourse.ember-computed-decorators",
-    "discourse.fa-icon",
     "discourse.form-kit.legacy-field-yield",
     "discourse.format-age",
-    "discourse.formatter.update-relative-age-node-list",
-    "discourse.get-owner-with-fallback",
-    "discourse.get-url-helper",
-    "discourse.global.site",
-    "discourse.global.site-settings",
-    "discourse.global.user",
     "discourse.hbs-extension",
     "discourse.es6-extension",
-    "discourse.header-extra-info.needs-second-row-if",
-    "discourse.header-service-topic",
-    "discourse.hide-popover",
-    "discourse.html-helper",
     "discourse.html-safe-helper",
-    "discourse.icon-picker",
-    "discourse.icon-renderer-translatedtitle",
-    "discourse.inline-date",
-    "discourse.is-legacy-ember",
-    "discourse.jquery-cookie",
-    "discourse.legacy-array-like-object.proxied-array",
-    "discourse.legacy-topic-list",
-    "discourse.markdown-it.whitelist",
     "discourse.modify-class-model",
-    "discourse.nav-item.built-list-site-settings",
-    "discourse.navigation-category-controller",
-    "discourse.number-field",
-    "discourse.offset-calculator.minimumOffset",
     "discourse.plugin-outlet-args",
     "discourse.plugin-outlet-classic-args-clash",
     "discourse.plugin-outlet-classic-hooks",
-    "discourse.plugin-outlet-context-get",
-    "discourse.post-stream.trigger-new-post",
-    "discourse.pretty-text.registerOption",
+    "discourse.post-stream.first-post-id",
     "discourse.qunit-helpers.jquery-selector",
     "discourse.qunit-helpers.query-all",
-    "discourse.qunit.acceptance-function",
-    "discourse.qunit.global-exists",
     "discourse.register-connector-class-legacy",
-    "discourse.register-raw-helper",
-    "discourse.register-unbound",
     "discourse.resolver-resolutions",
-    "discourse.safari-hacks-disabled",
-    "discourse.section-link-class-arg",
     "discourse.select-kit-resolved-components",
-    "discourse.show-popover",
-    "discourse.site.is-mobile-device",
     "discourse.static-viewport-initialization",
-    "discourse.tag-show-controller",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
-    "discourse.text.cook-async",
-    "discourse.this-container",
-    "discourse.topic-list-find",
-    "discourse.topic.totalUnread",
-    "discourse.uploads.display-error-for-upload",
-    "discourse.user-menu.panel-component-class",
-    "discourse.user.resolved-timezone",
     "discourse.user.userOptions",
-    "discourse.utils-decorators-import",
-    "discourse.utils-decorators-observes",
-    "discourse.utils-decorators-on",
     /^discourse\.native-array-extensions\..+$/,
   ].map((matchId) => ({ handler: "notify-admin", matchId })),
 

@@ -7,4 +7,6 @@
 pt_BR:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "Testar"
       placeholder: espaço reservado

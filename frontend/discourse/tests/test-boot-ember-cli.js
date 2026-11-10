@@ -6,6 +6,32 @@ import { loadAdmin, loadThemesAndPlugins } from "discourse/app";
 import config from "discourse/config/environment";
 import setupTests from "discourse/tests/setup-tests";
 
+/**
+ * Resolves once the styles that computed-geometry assertions depend on are in
+ * place. `fonts.ready` only covers faces that were already requested, so the
+ * element's computed font is requested explicitly first; a face that fails to
+ * load must not block the run.
+ *
+ * @param {object} [options]
+ * @param {FontFaceSet} [options.fonts] The font set to wait on.
+ * @param {Element} [options.element] The element whose computed font is requested.
+ * @returns {Promise<void>}
+ */
+export async function awaitVisualReadiness({
+  fonts = document.fonts,
+  element = document.body,
+} = {}) {
+  const { fontWeight, fontSize, fontFamily } = getComputedStyle(element);
+
+  try {
+    await fonts.load(`${fontWeight} ${fontSize} ${fontFamily}`);
+  } catch {
+    // A missing face degrades rendering; it must not abort the test run.
+  }
+
+  await fonts.ready;
+}
+
 export async function startTests() {
   await loadAdmin();
   await loadThemesAndPlugins();
@@ -67,11 +93,31 @@ export async function startTests() {
     for (const [key, value] of Object.entries(rawModules)) {
       availableModules[key] = value.default;
     }
+  } else if (!hasThemeJs) {
+    availableModules = {};
+    for (const name of Object.keys(requirejs.entries)) {
+      if (name.startsWith("discourse/plugins/") && name.endsWith("-test")) {
+        const module = requirejs(name);
+        // Plugin test files are registered as loaders; app modules named "*-test" are namespaces.
+        if (typeof module === "function") {
+          // One broken file must not abort the rest of the run.
+          availableModules[name] = () =>
+            module().catch((error) =>
+              QUnit.module(name, () =>
+                QUnit.test("loads", () => {
+                  throw error;
+                })
+              )
+            );
+        }
+      }
+    }
   }
+
+  await awaitVisualReadiness();
 
   startEmberExam({
     setupTestContainer: false,
-    setupEmberOnerrorValidation: testingCore,
     setupTestIsolationValidation: true,
     availableModules,
   });

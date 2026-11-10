@@ -53,6 +53,7 @@ describe DiscourseAi::GuardianExtensions do
 
     context "when the topic is a PM" do
       before { assign_agent_to(:ai_summarization_agent, [group.id]) }
+
       let(:pm) { Fabricate(:private_message_topic) }
 
       it "returns false" do
@@ -95,10 +96,9 @@ describe DiscourseAi::GuardianExtensions do
 
   describe "#can_see_gists?" do
     before { assign_agent_to(:ai_summary_gists_agent, [group.id]) }
-    let(:guardian) { Guardian.new(user) }
 
     context "when access is restricted to the user's group" do
-      it "returns false when there is a user who is a member of an allowed group" do
+      it "returns true when there is a user who is a member of an allowed group" do
         expect(guardian.can_see_gists?).to eq(true)
       end
 
@@ -116,13 +116,40 @@ describe DiscourseAi::GuardianExtensions do
     context "when access is set to everyone" do
       before { assign_agent_to(:ai_summary_gists_agent, [Group::AUTO_GROUPS[:everyone]]) }
 
-      it "returns true" do
-        expect(guardian.can_see_gists?).to eq(true)
-      end
+      it "allows logged-in and anonymous users when granular permissions are disabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
 
-      it "returns false for anons" do
+        expect(guardian.can_see_gists?).to eq(true)
         expect(anon_guardian.can_see_gists?).to eq(true)
       end
+
+      it "allows only logged-in users when granular permissions are enabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+
+        expect(guardian.can_see_gists?).to eq(true)
+        expect(anon_guardian.can_see_gists?).to eq(false)
+      end
+    end
+
+    it "allows only logged-in users when access is set to logged_in_users" do
+      assign_agent_to(:ai_summary_gists_agent, [Group::AUTO_GROUPS[:logged_in_users]])
+
+      expect(guardian.can_see_gists?).to eq(true)
+      expect(anon_guardian.can_see_gists?).to eq(false)
+    end
+
+    it "allows only anonymous users when access is set to anonymous_users" do
+      assign_agent_to(:ai_summary_gists_agent, [Group::AUTO_GROUPS[:anonymous_users]])
+
+      expect(guardian.can_see_gists?).to eq(false)
+      expect(anon_guardian.can_see_gists?).to eq(true)
+    end
+
+    it "denies access when no groups are allowed" do
+      assign_agent_to(:ai_summary_gists_agent, [])
+
+      expect(guardian.can_see_gists?).to eq(false)
+      expect(anon_guardian.can_see_gists?).to eq(false)
     end
   end
 end

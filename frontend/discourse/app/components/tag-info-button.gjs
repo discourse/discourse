@@ -2,14 +2,14 @@ import DButton from "discourse/ui-kit/d-button";
 
 const TagInfoButton = <template>
   <DButton
-    @icon="circle-info"
-    @ariaLabel="tagging.info"
-    @title="tagging.info"
-    @action={{@toggleInfo}}
-    @ariaPressed={{if @active true false}}
-    @isLoading={{@loading}}
-    id="show-tag-info"
     class="btn-default"
+    id="show-tag-info"
+    @action={{@toggleInfo}}
+    @ariaLabel="tagging.info"
+    @ariaPressed={{if @active true false}}
+    @icon="circle-info"
+    @isLoading={{@loading}}
+    @title="tagging.info"
   />
 </template>;
 

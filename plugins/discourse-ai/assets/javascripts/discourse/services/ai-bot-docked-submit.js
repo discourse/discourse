@@ -11,7 +11,14 @@ export default class AiBotDockedSubmit extends Service {
 
   @tracked loading = false;
 
-  async submitReply({ topicId, raw, uploads, inProgressUploadsCount }) {
+  async submitReply({
+    topicId,
+    agentId,
+    llmModelId,
+    raw,
+    uploads,
+    inProgressUploadsCount,
+  }) {
     if (!topicId) {
       return null;
     }
@@ -63,6 +70,12 @@ export default class AiBotDockedSubmit extends Service {
           raw: rawContent,
           topic_id: topicId,
           nested_post: true,
+          ai_agent_id: agentId,
+          ai_llm_model_id: llmModelId,
+          topic_custom_fields: {
+            ai_agent_id: agentId,
+            ai_llm_model_id: llmModelId,
+          },
         },
       });
 

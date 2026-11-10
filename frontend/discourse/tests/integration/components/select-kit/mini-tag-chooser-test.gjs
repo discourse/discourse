@@ -105,13 +105,16 @@ module(
     });
 
     test("create a tag", async function (assert) {
+      this.set("onChange", (value) => this.set("value", value));
       this.set("value", [
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
       ]);
 
       await render(
-        <template><MiniTagChooser @value={{this.value}} /></template>
+        <template>
+          <MiniTagChooser @onChange={{this.onChange}} @value={{this.value}} />
+        </template>
       );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
@@ -213,6 +216,7 @@ module(
     });
 
     test("required_tag_group", async function (assert) {
+      this.set("onChange", (value) => this.set("value", value));
       this.set("value", [
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
@@ -221,8 +225,9 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
+            @onChange={{this.onChange}}
             @options={{hash categoryId=1}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -317,6 +322,7 @@ module(
     });
 
     test("displays tags and filter in header", async function (assert) {
+      this.set("onChange", (value) => this.set("value", value));
       this.set("value", [
         { id: 10, name: "apple", slug: "apple" },
         { id: 11, name: "orange", slug: "orange" },
@@ -326,8 +332,9 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
+            @onChange={{this.onChange}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -340,7 +347,12 @@ module(
       assert.dom(".select-kit-header button[data-name='potato']").exists();
 
       const filterInput = ".select-kit-header .filter-input";
-      await click(filterInput);
+      await triggerKeyEvent(".select-kit-header", "keydown", 77);
+
+      assert.dom(filterInput).isFocused();
+      assert.dom(filterInput).hasValue("m");
+
+      await this.subject.emptyFilter();
 
       await triggerKeyEvent(filterInput, "keydown", "ArrowDown");
       await triggerKeyEvent(filterInput, "keydown", "Enter");
@@ -360,6 +372,7 @@ module(
     });
 
     test("removing a tag does not display the dropdown", async function (assert) {
+      this.set("onChange", (value) => this.set("value", value));
       this.set("value", [
         { id: 10, name: "apple", slug: "apple" },
         { id: 11, name: "orange", slug: "orange" },
@@ -369,8 +382,9 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
+            @onChange={{this.onChange}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{this.value}}
           />
         </template>
       );

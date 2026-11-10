@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { apiInitializer } from "discourse/lib/api";
-import AiTopicGist from "../components/ai-topic-gist";
-import BulkActionsAiRegenSummaries from "../components/bulk-actions/ai-regen-summaries";
-import AiRegenSummariesModal from "../components/modal/ai-regen-summaries-modal";
+import AiTopicGist from "../components/ai-topic-gist.gjs";
+import BulkActionsAiRegenSummaries from "../components/bulk-actions/ai-regen-summaries.gjs";
+import AiRegenSummariesModal from "../components/modal/ai-regen-summaries-modal.gjs";
 
 export default apiInitializer((api) => {
   const settings = api.container.lookup("service:site-settings");

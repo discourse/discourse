@@ -27,7 +27,7 @@ class AiAgent < ActiveRecord::Base
   validates :description, presence: true, length: { maximum: 2000 }
   validates :system_prompt, presence: true, length: { maximum: 10_000_000 }
   validate :system_agent_unchangeable, on: :update, if: :system
-  validate :chat_preconditions
+  validate :forced_default_llm_preconditions
   validate :well_formated_examples
   validates :max_turn_tokens,
             numericality: {
@@ -60,6 +60,7 @@ class AiAgent < ActiveRecord::Base
   validate :subagent_ids_are_valid
   validate :subagents_can_not_use_spawn_agent
   validate :rag_document_sources_count_within_limit
+  validate :bot_user_supported, if: :user_id_changed?
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
   has_many :rag_document_sources, dependent: :destroy, as: :target
@@ -81,22 +82,43 @@ class AiAgent < ActiveRecord::Base
   before_validation :normalize_subagent_ids
 
   before_update :regenerate_rag_fragments
+  after_update :sync_spam_detection_model, if: :saved_change_to_default_llm_id?
   before_destroy :ensure_not_system
   after_destroy :remove_destroyed_agent_from_subagents
+  after_destroy :sync_bot_user_activation
+  after_save :sync_bot_user_activation,
+             if: -> { saved_change_to_enabled? || saved_change_to_user_id? }
 
   def self.agent_cache
     @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
   end
 
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }
+  scope :with_user, -> { where.not(user_id: nil) }
+
+  def allowed_group_ids
+    ids = super
+    return ids unless SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+
+    # Preserve stored permissions so opting out restores the original group selection.
+    ids
+      .map { |id| id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id }
+      .uniq
+  end
 
   def self.all_agents(enabled_only: true)
-    agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+    key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        :value_everyone_disallowed
+      else
+        :value_everyone_allowed
+      end
+    agents = agent_cache[key] ||= all_agent_records(enabled_only: false).map(&:class_instance)
 
     if enabled_only
-      agent_cache[:value].select { |p| p.enabled }
+      agents.select(&:enabled)
     else
-      agent_cache[:value]
+      agents
     end
   end
 
@@ -145,8 +167,14 @@ class AiAgent < ActiveRecord::Base
   end
 
   def self.agent_users(user: nil)
+    key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        :agent_users_everyone_disallowed
+      else
+        :agent_users_everyone_allowed
+      end
     agent_users =
-      agent_cache[:agent_users] ||= AiAgent
+      agent_cache[key] ||= AiAgent
         .where(enabled: true)
         .joins(:user)
         .map do |agent|
@@ -178,8 +206,14 @@ class AiAgent < ActiveRecord::Base
     allow_topic_mentions: false,
     allow_personal_messages: false
   )
+    permission_key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        "everyone_disallowed"
+      else
+        "everyone_allowed"
+      end
     index =
-      "modality-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
+      "modality-#{permission_key}-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
 
     agents =
       agent_cache[index.to_sym] ||= agent_users.select do |agent|
@@ -303,7 +337,7 @@ class AiAgent < ActiveRecord::Base
 
     instance_attributes = {}
     attributes.each do |attr|
-      value = self[attr]
+      value = attr == :allowed_group_ids ? allowed_group_ids : self[attr]
       instance_attributes[attr] = value
     end
 
@@ -332,11 +366,8 @@ class AiAgent < ActiveRecord::Base
             klass = DiscourseAi::Agents::Tools::Custom.class_instance(custom_tool_id)
           end
         else
-          inner_name = inner_name.gsub("Tool", "")
-          inner_name = "List#{inner_name}" if %w[Categories Tags Users].include?(inner_name)
-
           klass =
-            "DiscourseAi::Agents::Tools::#{inner_name}".safe_constantize ||
+            DiscourseAi::Agents::Agent.builtin_tool_by_name(inner_name) ||
               DiscourseAi::Agents::Agent.external_tool_by_name(inner_name)
           options[klass] = current_options if klass && current_options
         end
@@ -347,10 +378,14 @@ class AiAgent < ActiveRecord::Base
 
     reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
     reserved_names << DiscourseAi::Agents::Tools::SpawnAgent.name if subagent_ids.present?
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: {
+        ai_agent_mcp_servers: :ai_mcp_server,
+      },
+    ).call
     enabled_mcp_server_assignments =
-      ai_agent_mcp_servers
-        .includes(:ai_mcp_server)
-        .select { |assignment| assignment.ai_mcp_server&.enabled? }
+      ai_agent_mcp_servers.select { |assignment| assignment.ai_mcp_server&.enabled? }
     enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
     selected_tool_names_by_server =
       enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
@@ -418,43 +453,59 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
-  FIRST_AGENT_USER_ID = -1200
+  def self.automatic_user_provisioning_enabled?
+    SiteSetting.discourse_ai_enabled && SiteSetting.ai_bot_enabled
+  end
+
+  def self.ensure_users!
+    return if !automatic_user_provisioning_enabled?
+
+    where(enabled: true).find_each { |agent| agent.ensure_user! if agent.needs_user? }
+  end
+
+  def self.detach_user!(user_id)
+    return if where(user_id: user_id).update_all(user_id: nil) == 0
+
+    agent_cache.flush!
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+  end
+
+  def supports_bot_user?
+    return true if !system
+
+    !!DiscourseAi::Agents::Agent.system_agents_by_id[id]&.supports_bot_user?
+  end
+
+  def can_have_bot_user?
+    user.present? || supports_bot_user?
+  end
+
+  def needs_user?
+    self.class.automatic_user_provisioning_enabled? && enabled? && supports_bot_user? &&
+      (
+        force_default_llm? || allow_topic_mentions? || allow_personal_messages? ||
+          allow_chat_direct_messages? || allow_chat_channel_mentions?
+      )
+  end
+
+  def ensure_user!
+    with_lock do
+      reload
+      return user if user_id.present? && User.exists?(user_id)
+
+      create_user_without_lock!
+    end
+  end
 
   def create_user!
-    raise "User already exists" if user_id && User.exists?(user_id)
+    return create_user_without_lock! if new_record?
 
-    # find the first id smaller than FIRST_USER_ID that is not taken
-    id = nil
+    with_lock do
+      reload
+      raise "User already exists" if user_id && User.exists?(user_id)
 
-    id = DB.query_single(<<~SQL, FIRST_AGENT_USER_ID, FIRST_AGENT_USER_ID - 200).first
-        WITH seq AS (
-          SELECT generate_series(?, ?, -1) AS id
-          )
-        SELECT seq.id FROM seq
-        LEFT JOIN users ON users.id = seq.id
-        WHERE users.id IS NULL
-        ORDER BY seq.id DESC
-      SQL
-
-    id = DB.query_single(<<~SQL).first if id.nil?
-        SELECT min(id) - 1 FROM users
-      SQL
-
-    # note .invalid is a reserved TLD which will route nowhere
-    user =
-      User.new(
-        email: "#{SecureRandom.hex}@does-not-exist.invalid",
-        name: name.titleize,
-        username: UserNameSuggester.suggest(name + "_bot"),
-        active: true,
-        approved: true,
-        trust_level: TrustLevel[4],
-        id: id,
-      )
-    user.save!(validate: false)
-
-    update!(user_id: user.id)
-    user
+      create_user_without_lock!
+    end
   end
 
   def set_default_compression_threshold
@@ -484,6 +535,51 @@ class AiAgent < ActiveRecord::Base
   end
 
   private
+
+  def sync_bot_user_activation
+    user_ids = [user_id]
+    user_ids.concat(saved_change_to_user_id) if !destroyed? && saved_change_to_user_id?
+
+    User
+      .bot_users
+      .where(id: user_ids.compact.uniq)
+      .order(:id)
+      .lock
+      .each do |bot_user|
+        next if bot_user.is_system_user? || bot_user.staff?
+
+        active = self.class.where(user_id: bot_user.id, enabled: true).exists?
+        bot_user.update!(active:) if bot_user.active? != active
+      end
+  end
+
+  # Spam scans use an explicit model setting, so agent edits must update it too.
+  # Clearing the agent default preserves the model selected for spam detection.
+  def sync_spam_detection_model
+    return if default_llm_id.blank?
+
+    settings = AiModerationSetting.spam
+    settings.update!(llm_model_id: default_llm_id) if settings&.ai_agent_id == id
+  end
+
+  def create_user_without_lock!
+    raise I18n.t("discourse_ai.ai_bot.agents.bot_user_unsupported") if !supports_bot_user?
+
+    user =
+      User.new(
+        email: "#{SecureRandom.hex}@does-not-exist.invalid",
+        name: name.titleize,
+        username: UserNameSuggester.suggest(name + "_bot"),
+        active: enabled?,
+        approved: true,
+        trust_level: TrustLevel[4],
+        id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id,
+      )
+    user.save!(validate: false)
+
+    update!(user_id: user.id)
+    user
+  end
 
   def normalize_subagent_ids
     self[:subagent_ids] = Array(self[:subagent_ids])
@@ -552,13 +648,9 @@ class AiAgent < ActiveRecord::Base
       if tool_name.to_s.start_with?("custom-")
         AiTool.find_by(id: tool_name.to_s.split("-", 2).last.to_i)&.function_call_name
       else
-        normalized_name = tool_name.to_s.gsub("Tool", "")
-        normalized_name = "List#{normalized_name}" if %w[Categories Tags Users].include?(
-          normalized_name,
-        )
         tool_class =
-          "DiscourseAi::Agents::Tools::#{normalized_name}".safe_constantize ||
-            DiscourseAi::Agents::Agent.external_tool_by_name(normalized_name)
+          DiscourseAi::Agents::Agent.builtin_tool_by_name(tool_name) ||
+            DiscourseAi::Agents::Agent.external_tool_by_name(tool_name.to_s)
         tool_class&.signature&.[](:name)
       end
     end
@@ -571,12 +663,15 @@ class AiAgent < ActiveRecord::Base
     )
   end
 
-  def chat_preconditions
-    if (
-         allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
-           force_default_llm
-       ) && !default_llm_id
-      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
+  def bot_user_supported
+    return if user_id.blank? || supports_bot_user?
+
+    errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.bot_user_unsupported"))
+  end
+
+  def forced_default_llm_preconditions
+    if force_default_llm && default_llm_id.blank?
+      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.forced_default_llm_required"))
     end
   end
 

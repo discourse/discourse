@@ -1,0 +1,3 @@
+<% if (retention_days = SiteSetting.chat_channel_retention_days) > 0 %>
+  <p class="chat-crawler__retention"><%= t("chat.crawler.retention_notice", count: retention_days) %></p>
+<% end %>

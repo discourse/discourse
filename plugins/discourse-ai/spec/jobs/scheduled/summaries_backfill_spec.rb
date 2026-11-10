@@ -242,9 +242,41 @@ RSpec.describe Jobs::SummariesBackfill do
         )
       end
       SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 48
-      48.times do
-        Fabricate(:ai_summary, origin: AiSummary.origins[:system], created_at: 1.minute.ago)
-      end
+      completed_at = 1.minute.ago
+      completed_topics =
+        Topic.insert_all!(
+          Array.new(48) do
+            {
+              title: "Already summarized topic",
+              category_id: topic.category_id,
+              user_id: topic.user_id,
+              last_post_user_id: topic.last_post_user_id,
+              word_count: 0,
+              archetype: topic.archetype,
+              bumped_at: completed_at,
+              created_at: completed_at,
+              updated_at: completed_at,
+            }
+          end,
+          returning: %w[id],
+        )
+      AiSummary.insert_all!(
+        completed_topics.rows.map do |(topic_id)|
+          {
+            target_id: topic_id,
+            target_type: "Topic",
+            summary_type: AiSummary.summary_types[:complete],
+            origin: AiSummary.origins[:system],
+            locale: SiteSetting.default_locale,
+            summarized_text: "Already generated summary",
+            original_content_sha: "123",
+            algorithm: "test",
+            highest_target_number: 1,
+            created_at: completed_at,
+            updated_at: completed_at,
+          }
+        end,
+      )
 
       unused_tool_call = summary_tool_call("Should not be generated", id: "unused")
       DiscourseAi::Completions::Llm.with_prepared_responses(

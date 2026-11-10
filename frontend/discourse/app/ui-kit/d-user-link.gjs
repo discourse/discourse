@@ -56,10 +56,10 @@ export default class DUserLink extends Component {
     <a
       class={{if this.hideFromAnonUser "non-clickable"}}
       ...attributes
-      href={{this.href}}
-      data-user-card={{this.username}}
       aria-hidden={{this.ariaHidden}}
       aria-label={{this.ariaLabel}}
+      data-user-card={{this.username}}
+      href={{this.href}}
       tabindex={{if this.ariaHidden "-1" "0"}}
     >
       {{yield}}

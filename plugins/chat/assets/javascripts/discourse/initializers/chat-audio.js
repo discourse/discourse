@@ -2,6 +2,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { isPrimaryTab } from "discourse/lib/utilities";
 import {
   claimChatAlert,
+  confirmChatAlert,
   releaseChatAlert,
 } from "discourse/plugins/chat/discourse/lib/chat-alert-dedup";
 import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
@@ -65,7 +66,9 @@ export default {
               type: isMention ? "mention" : "incoming",
             });
 
-            if (!handled) {
+            if (handled) {
+              confirmChatAlert(data.chat_message_id);
+            } else {
               // audio is unavailable in this tab, let another tab play it
               releaseChatAlert(data.chat_message_id);
             }

@@ -50,6 +50,14 @@ RSpec.describe DiscourseWorkflows::DataTables::NodeProxy do
     )
   end
 
+  it "raises instead of inserting a row without any columns" do
+    expect { proxy.insert_rows([{ "email" => "a@example.com" }, {}], "all") }.to raise_error(
+      ArgumentError,
+      /Cannot insert a row without any column/,
+    )
+    expect(count_data_table_rows(data_table)).to eq(0)
+  end
+
   it "gets many rows and count" do
     insert_data_table_row(data_table, "email" => "a@example.com", "score" => 1)
     insert_data_table_row(data_table, "email" => "b@example.com", "score" => 2)
@@ -60,13 +68,22 @@ RSpec.describe DiscourseWorkflows::DataTables::NodeProxy do
     expect(result[:data].map { |row| row["email"] }).to eq(["b@example.com"])
   end
 
-  it "updates rows and returns updated rows" do
+  it "updates matching rows in one statement and returns them" do
     insert_data_table_row(data_table, "email" => "a@example.com", "score" => 1)
-    insert_data_table_row(data_table, "email" => "b@example.com", "score" => 2)
+    insert_data_table_row(data_table, "email" => "b@example.com", "score" => 1)
+    insert_data_table_row(data_table, "email" => "c@example.com", "score" => 2)
+    filter = {
+      "type" => "and",
+      "filters" => [{ "columnName" => "score", "condition" => "eq", "value" => "1" }],
+    }
 
-    rows = proxy.update_rows(filter: email_filter("a@example.com"), data: { "score" => "10" })
+    result = nil
+    queries =
+      track_sql_queries { result = proxy.update_rows(filter:, data: { "score" => "10" }, take: 1) }
 
-    expect(rows.map { |row| row.slice("email", "score") }).to eq(
+    expect(queries.count { |query| query.include?("UPDATE") }).to eq(1)
+    expect(result[:count]).to eq(2)
+    expect(result[:data].map { |row| row.slice("email", "score") }).to eq(
       [{ "email" => "a@example.com", "score" => 10 }],
     )
   end
@@ -85,21 +102,60 @@ RSpec.describe DiscourseWorkflows::DataTables::NodeProxy do
         },
       )
 
-    expect(updated_rows.map { |row| row.slice("email", "score") }).to eq(
+    expect(updated_rows[:data].map { |row| row.slice("email", "score") }).to eq(
       [{ "email" => "a@example.com", "score" => 10 }],
     )
-    expect(inserted_rows.map { |row| row.slice("email", "score") }).to eq(
+    expect(inserted_rows).to include(count: 1)
+    expect(inserted_rows[:data].map { |row| row.slice("email", "score") }).to eq(
       [{ "email" => "b@example.com", "score" => 2 }],
     )
+  end
+
+  context "when there are no columns to write" do
+    fab!(:row) { insert_data_table_row(data_table, "email" => "a@example.com", "score" => 1) }
+
+    it "returns the matched rows unchanged on update and upsert" do
+      %i[update_rows upsert_row].each do |method|
+        expect(proxy.public_send(method, filter: email_filter("a@example.com"), data: {})).to eq(
+          { data: [row], count: 1 },
+        ),
+        method.to_s
+      end
+      expect(find_data_table_row(data_table, row["id"])).to eq(row)
+    end
+
+    it "returns identical before and after rows on a dry run" do
+      expected = {
+        data: [row.merge("dryRunState" => "before"), row.merge("dryRunState" => "after")],
+        count: 1,
+      }
+
+      %i[update_rows upsert_row].each do |method|
+        expect(
+          proxy.public_send(method, filter: email_filter("a@example.com"), data: {}, dry_run: true),
+        ).to eq(expected),
+        method.to_s
+      end
+    end
+
+    it "raises on an upsert that matches nothing, including a dry run" do
+      [false, true].each do |dry_run|
+        expect {
+          proxy.upsert_row(filter: email_filter("b@example.com"), data: {}, dry_run:)
+        }.to raise_error(ArgumentError, /Cannot insert a row without any column/)
+      end
+      expect(count_data_table_rows(data_table)).to eq(1)
+    end
   end
 
   it "deletes rows and returns deleted rows" do
     insert_data_table_row(data_table, "email" => "a@example.com", "score" => 1)
     insert_data_table_row(data_table, "email" => "b@example.com", "score" => 2)
 
-    rows = proxy.delete_rows(filter: email_filter("a@example.com"))
+    result = proxy.delete_rows(filter: email_filter("a@example.com"))
 
-    expect(rows.map { |row| row.slice("email", "score") }).to eq(
+    expect(result[:count]).to eq(1)
+    expect(result[:data].map { |row| row.slice("email", "score") }).to eq(
       [{ "email" => "a@example.com", "score" => 1 }],
     )
     expect(count_data_table_rows(data_table)).to eq(1)

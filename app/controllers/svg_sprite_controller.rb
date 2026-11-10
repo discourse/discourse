@@ -18,7 +18,10 @@ class SvgSpriteController < ApplicationController
   def show
     no_cookies
 
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
+    RailsMultisite::ConnectionManagement.with_hostname(
+      params[:hostname],
+      raise_on_missing: false,
+    ) do
       theme_id = params[:theme_id].to_i if params[:theme_id].present?
 
       if SvgSprite.version(theme_id) != params[:version]
@@ -54,8 +57,11 @@ class SvgSpriteController < ApplicationController
     filter = permitted[:filter].to_s
     page = fetch_page_from_params(max: MAX_PAGE)
 
-    etag = [Discourse.git_version, SvgSprite.version(@theme_id), filter, only_available, page]
-    return if !stale?(etag:)
+    # A symbol source's icons can change without changing the sprite version
+    if only_available || DiscoursePluginRegistry.svg_symbol_sources.empty?
+      etag = [Discourse.git_version, SvgSprite.version(@theme_id), filter, only_available, page]
+      return if !stale?(etag:)
+    end
 
     render json:
              SvgSprite.icon_picker_search(
@@ -70,7 +76,10 @@ class SvgSpriteController < ApplicationController
   def svg_icon
     no_cookies
 
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
+    RailsMultisite::ConnectionManagement.with_hostname(
+      params[:hostname],
+      raise_on_missing: false,
+    ) do
       params.permit(:color)
       name = params.require(:name)
       icon = SvgSprite.search(name)

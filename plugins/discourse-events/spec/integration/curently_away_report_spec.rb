@@ -17,7 +17,7 @@ describe "currently_away report" do
   end
 
   context "when users_on_holiday is set" do
-    before { DiscourseCalendar.users_on_holiday = [user_1.username] }
+    before { DiscourseEvents.users_on_holiday = [user_1.username] }
 
     it "generates a correct report" do
       report = Report.find("currently_away", filters: { group: group_1.id })

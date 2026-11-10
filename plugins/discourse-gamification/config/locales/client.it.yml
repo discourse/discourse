@@ -64,9 +64,7 @@ it:
       close: "Chiudi"
       delete: "Elimina"
       edit: "Modifica"
-      back: "Indietro"
       save: "Salva"
-      apply: "Applica"
       recalculate: "Ricalcola i punteggi"
       recalculating: "Ricalcolo dei punteggi..."
       completed: "Fatto! I punteggi sono stati ricalcolati correttamente."
@@ -85,9 +83,11 @@ it:
       admin:
         title: "Gamification"
         name: "Nome"
+        created_by: "Creato da"
         period: "Periodo"
     discourse_workflows:
       gamification_score:
         username: "Utente"
         date: "Data"
         description: "Descrizione"
+        category_id: "Categoria"

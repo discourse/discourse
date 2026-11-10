@@ -94,6 +94,37 @@ RSpec.describe DiscourseWorkflows::DataTableColumnsController do
     end
   end
 
+  describe "PUT /admin/plugins/discourse-workflows/data-tables/:id/columns/:column_name/move" do
+    fab!(:data_table) do
+      Fabricate(
+        :discourse_workflows_data_table,
+        columns: [
+          { "name" => "email", "type" => "string" },
+          { "name" => "score", "type" => "number" },
+        ],
+      )
+    end
+
+    include_examples "requires admin",
+                     :put,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns/score/move.json"
+                     end,
+                     -> { { position: 0 } }
+
+    it "returns the data table with the column moved" do
+      put "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns/score/move.json",
+          params: {
+            position: 0,
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(
+        response.parsed_body["data_table"]["columns"].reject { _1["reserved"] }.map { _1["name"] },
+      ).to eq(%w[score email])
+    end
+  end
+
   describe "DELETE /admin/plugins/discourse-workflows/data-tables/:id/columns/:column_name" do
     fab!(:data_table) do
       Fabricate(

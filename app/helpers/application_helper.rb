@@ -95,10 +95,6 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
-  def is_gzip_req?
-    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
-  end
-
   def generate_import_map(plugin_assets)
     imports =
       plugin_assets
@@ -124,11 +120,20 @@ module ApplicationHelper
       end
     end
 
+    EmberAssets.import_map.each do |stable, real|
+      real_url = script_asset_path(real)
+      imports[real_url.sub(File.basename(real), File.basename(stable))] = real_url
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
   def script_asset_path(script)
-    path = ActionController::Base.helpers.asset_path("#{script}.js")
+    asset_cdn_path("#{script}.js", brotli: true)
+  end
+
+  def asset_cdn_path(logical_path, brotli: false)
+    path = ActionController::Base.helpers.asset_path(logical_path)
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       resolved_s3_asset_cdn_url =
@@ -150,11 +155,7 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      if is_brotli_req?
-        path = path.sub("/assets/js/", "/assets/br/")
-      elsif is_gzip_req?
-        path = path.sub("/assets/js/", "/assets/gz/")
-      end
+      path = path.sub("/assets/js/", "/assets/br/") if brotli && is_brotli_req?
     end
 
     path
@@ -320,6 +321,7 @@ module ApplicationHelper
   def is_crawler_homepage?
     request.path == "/" && use_crawler_layout?
   end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
@@ -406,26 +408,9 @@ module ApplicationHelper
     result.join("\n")
   end
 
-  private def generate_twitter_card_metadata(result, opts)
-    img_url = opts[:x_summary_large_image].presence || opts[:image]
-
-    # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
-    if img_url.ends_with?(".svg")
-      img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
-    end
-
-    if opts[:x_summary_large_image].present? && img_url.present?
-      result << tag(:meta, name: "twitter:card", content: "summary_large_image")
-      result << tag(:meta, name: "twitter:image", content: img_url)
-    elsif opts[:image].present? && img_url.present?
-      result << tag(:meta, name: "twitter:card", content: "summary")
-      result << tag(:meta, name: "twitter:image", content: img_url)
-    else
-      result << tag(:meta, name: "twitter:card", content: "summary")
-    end
-  end
-
   def render_sitelinks_search_tag
+    return if !guardian.can_search?
+
     if current_page?("/") || current_page?(Discourse.base_path)
       json = {
         "@context" => "http://schema.org",
@@ -443,9 +428,6 @@ module ApplicationHelper
   end
 
   def discourse_pageview_tracking_meta_tags
-    if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
-      return ""
-    end
     return "" if Rails.env.development? && ENV["TRACK_REQUESTS"].blank?
 
     tags = +""
@@ -453,13 +435,6 @@ module ApplicationHelper
       name: "discourse-track-view-session-id",
       content: track_view_session_id_placeholder,
     )
-    if UpcomingChanges.enabled?(:dashboard_improvements)
-      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
-    end
-
-    if SiteSetting.persist_browser_pageview_events
-      tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
-    end
     tags.html_safe
   end
 
@@ -578,6 +553,25 @@ module ApplicationHelper
 
   private
 
+  def generate_twitter_card_metadata(result, opts)
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
+
+    # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
+    if img_url.ends_with?(".svg")
+      img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
+    end
+
+    if opts[:x_summary_large_image].present? && img_url.present?
+      result << tag(:meta, name: "twitter:card", content: "summary_large_image")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    elsif opts[:image].present? && img_url.present?
+      result << tag(:meta, name: "twitter:card", content: "summary")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    else
+      result << tag(:meta, name: "twitter:card", content: "summary")
+    end
+  end
+
   def build_splash_screen_image
     @splash_screen_image_svg = nil
 
@@ -691,6 +685,7 @@ module ApplicationHelper
   def user_scheme_id
     return @user_scheme_id if defined?(@user_scheme_id)
     scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    return if scheme_id.nil?
 
     @user_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
       id: scheme_id,
@@ -700,6 +695,7 @@ module ApplicationHelper
 
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
+    return preview_scheme_id if preview_scheme_id
 
     if user_scheme_id
       return user_scheme_id unless theme_limits_color_schemes?
@@ -718,6 +714,7 @@ module ApplicationHelper
   def user_dark_scheme_id
     return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
     scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
+    return if scheme_id.nil?
 
     @user_dark_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
       id: scheme_id,
@@ -726,6 +723,8 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
+    return preview_dark_scheme_id if preview_dark_scheme_id
+
     if user_dark_scheme_id
       return user_dark_scheme_id unless theme_limits_color_schemes?
       return user_dark_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
@@ -736,6 +735,42 @@ module ApplicationHelper
     return dark_id if dark_id.present?
     return theme&.color_scheme_id if theme_limits_color_schemes?
     -1
+  end
+
+  # Staff can try out palettes, including ones no theme uses yet, by passing
+  # them in the URL, the same way `preview_theme_id` previews a theme.
+  def preview_scheme_id
+    return @preview_scheme_id if defined?(@preview_scheme_id)
+    @preview_scheme_id = previewed_color_scheme_id(:preview_color_scheme_id)
+  end
+
+  def preview_dark_scheme_id
+    return @preview_dark_scheme_id if defined?(@preview_dark_scheme_id)
+    @preview_dark_scheme_id = previewed_color_scheme_id(:preview_dark_color_scheme_id)
+  end
+
+  def previewed_color_scheme_id(param_name)
+    return if params[param_name].blank? || !guardian.is_staff?
+    ColorScheme.valid_id(params[param_name])
+  end
+
+  # Staff can try out fonts the same way, while the site keeps its own. Only
+  # known font keys are used, so the styles only hold trusted font data.
+  def preview_font_style_tag
+    return if !guardian.is_staff?
+
+    base_font = params[:preview_base_font].presence
+    heading_font = params[:preview_heading_font].presence
+    return if base_font.nil? && heading_font.nil?
+
+    css =
+      Stylesheet::Importer.font_definitions(
+        base_font: base_font.to_s,
+        heading_font: heading_font.to_s,
+      )
+    return if css.blank?
+
+    "<style class=\"preview-fonts\">#{css}</style>".html_safe
   end
 
   def theme_limits_color_schemes?
@@ -1088,6 +1123,10 @@ module ApplicationHelper
 
   def rss_creator(user)
     user&.display_name
+  end
+
+  def rss_cdata(value)
+    value.to_s.gsub("]]>", "]]]]><![CDATA[>").html_safe
   end
 
   def anonymous_top_menu_items

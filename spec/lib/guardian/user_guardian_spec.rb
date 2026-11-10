@@ -39,12 +39,12 @@ RSpec.describe UserGuardian do
     context "with anon user" do
       let(:guardian) { Guardian.new }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the expected value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the expected value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
       end
     end
@@ -52,12 +52,12 @@ RSpec.describe UserGuardian do
     context "with current user" do
       let(:guardian) { Guardian.new(user) }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the expected value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the expected value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
       end
     end
@@ -65,12 +65,12 @@ RSpec.describe UserGuardian do
     context "with moderator" do
       let(:guardian) { Guardian.new(moderator) }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the expected value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the expected value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
       end
     end
@@ -78,12 +78,12 @@ RSpec.describe UserGuardian do
     context "with admin" do
       let(:guardian) { Guardian.new(admin) }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the expected value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the expected value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
       end
     end
@@ -145,7 +145,7 @@ RSpec.describe UserGuardian do
     context "with anon user" do
       let(:guardian) { Guardian.new }
 
-      it "should return the right value" do
+      it "returns the expected value" do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(false)
       end
     end
@@ -439,8 +439,8 @@ RSpec.describe UserGuardian do
   end
 
   describe "#can_see_user_actions?" do
-    it "is true by default" do
-      expect(Guardian.new.can_see_user_actions?(nil, [])).to eq(true)
+    it "defaults to no action types" do
+      expect(Guardian.new.can_see_user_actions?(nil)).to eq(true)
     end
 
     context "with 'hide_user_activity_tab' setting" do
@@ -673,12 +673,14 @@ RSpec.describe UserGuardian do
 
     context "for moderators" do
       let(:guardian) { Guardian.new(moderator) }
+
       include_examples "can_delete_user examples"
       include_examples "can_delete_user staff examples"
     end
 
     context "for admins" do
       let(:guardian) { Guardian.new(admin) }
+
       include_examples "can_delete_user examples"
       include_examples "can_delete_user staff examples"
     end
@@ -694,6 +696,7 @@ RSpec.describe UserGuardian do
 
     context "for moderators" do
       let(:guardian) { Guardian.new(moderator) }
+
       include_examples "can_merge_user examples"
 
       it "isn't allowed if current_user is not an admin" do
@@ -703,7 +706,18 @@ RSpec.describe UserGuardian do
 
     context "for admins" do
       let(:guardian) { Guardian.new(admin) }
+
       include_examples "can_merge_user examples"
+    end
+  end
+
+  describe "#can_merge_users?" do
+    it "allows an admin to merge distinct users" do
+      expect(admin.guardian.can_merge_users?(user, Fabricate(:user))).to eq(true)
+    end
+
+    it "rejects merging a user into a separately loaded instance of itself" do
+      expect(admin.guardian.can_merge_users?(user, User.find(user.id))).to eq(false)
     end
   end
 
@@ -890,6 +904,147 @@ RSpec.describe UserGuardian do
       SiteSetting.moderators_view_sso_details = true
 
       expect(Guardian.new(moderator).can_check_sso_payload?(user)).to eq(false)
+    end
+  end
+
+  describe "theme permissions" do
+    fab!(:theme)
+    fab!(:locked_theme, :theme)
+    fab!(:component) { Fabricate(:theme, component: true) }
+    fab!(:locked_component) { Fabricate(:theme, component: true) }
+
+    let(:plugin) { Plugin::Instance.new }
+
+    describe "#can_edit_theme?" do
+      it "allows admins only" do
+        expect(Guardian.new(admin).can_edit_theme?(theme)).to eq(true)
+        expect(Guardian.new(moderator).can_edit_theme?(theme)).to eq(false)
+        expect(Guardian.new(user).can_edit_theme?(theme)).to eq(false)
+        expect(Guardian.new.can_edit_theme?(theme)).to eq(false)
+        expect(Guardian.new(admin).can_edit_theme?(nil)).to eq(false)
+      end
+
+      it "lets a plugin restrict which themes admins can edit" do
+        received = []
+        modifier =
+          proc do |_allowed, guardian, target|
+            received << [guardian.user, target]
+            false
+          end
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        expect(Guardian.new(admin).can_edit_theme?(theme)).to eq(false)
+        expect(received).to eq([[admin, theme]])
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
+      it "doesn't let a plugin open theme editing to non-admins" do
+        modifier = proc { true }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        expect(Guardian.new(moderator).can_edit_theme?(theme)).to eq(false)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
+      it "doesn't apply plugin restrictions to the system user" do
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        expect(Discourse.system_user.guardian.can_edit_theme?(theme)).to eq(true)
+        expect(Guardian.new(admin).can_edit_theme?(theme)).to eq(false)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+    end
+
+    describe "#can_edit_theme_relations?" do
+      let(:locked_ids) { [locked_theme.id, locked_component.id] }
+      let(:edit_modifier) do
+        proc { |allowed, _guardian, target| allowed && locked_ids.exclude?(target.id) }
+      end
+
+      before { plugin.register_modifier(:user_guardian_can_edit_theme, &edit_modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &edit_modifier
+        )
+      end
+
+      it "allows linking and unlinking editable themes" do
+        guardian = Guardian.new(admin)
+
+        expect(guardian.can_edit_theme_relations?(theme, child_theme_ids: [component.id])).to eq(
+          true,
+        )
+        expect(
+          guardian.can_edit_theme_relations?(component, parent_theme_ids: [theme.id.to_s]),
+        ).to eq(true)
+      end
+
+      it "requires every theme whose links change to be editable" do
+        guardian = Guardian.new(admin)
+
+        expect(
+          guardian.can_edit_theme_relations?(theme, child_theme_ids: [locked_component.id]),
+        ).to eq(false)
+        expect(
+          guardian.can_edit_theme_relations?(component, parent_theme_ids: [locked_theme.id]),
+        ).to(eq(false))
+        expect(guardian.can_edit_theme_relations?(locked_theme, child_theme_ids: [])).to eq(false)
+      end
+
+      it "ignores links that stay the same" do
+        theme.add_relative_theme!(:child, locked_component)
+        guardian = Guardian.new(admin)
+
+        expect(
+          guardian.can_edit_theme_relations?(
+            theme,
+            child_theme_ids: [locked_component.id, component.id],
+          ),
+        ).to eq(true)
+        expect(guardian.can_edit_theme_relations?(theme, child_theme_ids: [component.id])).to eq(
+          false,
+        )
+      end
+    end
+
+    describe "#can_create_color_scheme?" do
+      it "allows admins only" do
+        expect(Guardian.new(admin).can_create_color_scheme?).to eq(true)
+        expect(Guardian.new(moderator).can_create_color_scheme?).to eq(false)
+      end
+
+      it "lets a plugin restrict palette creation" do
+        modifier = proc { |allowed, guardian| allowed && guardian.user != admin }
+        plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier)
+
+        expect(Guardian.new(admin).can_create_color_scheme?).to eq(false)
+        expect(Guardian.new(Fabricate(:admin)).can_create_color_scheme?).to eq(true)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_create_color_scheme,
+          &modifier
+        )
+      end
     end
   end
 end

@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
@@ -24,14 +25,39 @@ import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import nestedPostUrl from "../../lib/nested-post-url";
-import processNode from "../../lib/process-node";
-import NestedPostChildren from "./post-children";
+import nestedPostUrl from "../../lib/nested-post-url.js";
+import processNode from "../../lib/process-node.js";
+import NestedPostChildren from "./post-children.gjs";
+
+const NestedPostAvatar = <template>
+  {{#if @isDeletedPlaceholder}}
+    <div class="nested-post__placeholder-avatar">
+      {{dIcon "trash-can"}}
+    </div>
+  {{else if @isIgnoredPlaceholder}}
+    <button
+      aria-label={{i18n "nested_replies.toggle_ignored_content"}}
+      class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
+      data-post-number={{@post.post_number}}
+      disabled={{@loading}}
+      type="button"
+      {{on "click" @reveal}}
+    >
+      {{#if @loading}}
+        {{dIcon "spinner" class="fa-spin"}}
+      {{else}}
+        {{dIcon "far-eye-slash"}}
+      {{/if}}
+    </button>
+  {{else}}
+    <PostAvatar @post={{@post}} @size="small" />
+  {{/if}}
+</template>;
 
 export default class NestedPost extends Component {
   @service appEvents;
@@ -140,42 +166,6 @@ export default class NestedPost extends Component {
     }
   }
 
-  #registerPost() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.#postRegistered = true;
-    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
-  }
-
-  _onChildCreated({ topicId, post: childPost, parentPostNumber, isOwnPost }) {
-    if (
-      String(topicId) !== String(this.args.topic?.id) ||
-      parentPostNumber !== this.args.post.post_number
-    ) {
-      return;
-    }
-
-    const post = this.args.post;
-    post.set("direct_reply_count", (post.direct_reply_count || 0) + 1);
-    post.set("total_descendant_count", (post.total_descendant_count || 0) + 1);
-    this._childWasCreated = true;
-
-    if (!this.expanded) {
-      this.expanded = true;
-      this.collapsed = false;
-      this.args.expansionState?.set(this.args.post.post_number, {
-        expanded: true,
-        collapsed: false,
-      });
-    }
-
-    if (isOwnPost && this.mobileFocusEnabled) {
-      this.args.focusPost(this.childPathWithNewChild(childPost));
-    }
-  }
-
   get isRoot() {
     return this.args.depth === 0;
   }
@@ -188,6 +178,13 @@ export default class NestedPost extends Component {
       above: this.args.cloakAbove,
       below: this.args.cloakBelow,
     });
+  }
+
+  get avatarColorStyle() {
+    const color = this.args.post.avatar_color;
+    if (this.isMobile && /^[0-9a-f]{6}$/i.test(color ?? "")) {
+      return trustHTML(`--nested-avatar-color: #${color}`);
+    }
   }
 
   get depthClass() {
@@ -266,32 +263,6 @@ export default class NestedPost extends Component {
     ];
   }
 
-  childPathWithChildren(children) {
-    return [
-      ...(this.args.path || []),
-      { post: this.args.post, children: children || [] },
-    ];
-  }
-
-  childPathWithNewChild(childPost) {
-    const children = this.args.children || [];
-    const hasChild = children.some(
-      (node) =>
-        node.post?.id === childPost?.id ||
-        node.post?.post_number === childPost?.post_number
-    );
-
-    return [
-      ...(this.args.path || []),
-      {
-        post: this.args.post,
-        children: hasChild
-          ? children
-          : [{ post: childPost, children: [] }, ...children],
-      },
-    ];
-  }
-
   get mobileFocusEnabled() {
     return this.site.mobileView && this.args.focusPost;
   }
@@ -346,6 +317,40 @@ export default class NestedPost extends Component {
     return i18n("nested_replies.collapse");
   }
 
+  get childCacheKey() {
+    return `${this.args.topic?.id}:${this.args.post.post_number}`;
+  }
+
+  get nestedShareUrl() {
+    return nestedPostUrl(this.args.topic, this.args.post.post_number);
+  }
+
+  childPathWithChildren(children) {
+    return [
+      ...(this.args.path || []),
+      { post: this.args.post, children: children || [] },
+    ];
+  }
+
+  childPathWithNewChild(childPost) {
+    const children = this.args.children || [];
+    const hasChild = children.some(
+      (node) =>
+        node.post?.id === childPost?.id ||
+        node.post?.post_number === childPost?.post_number
+    );
+
+    return [
+      ...(this.args.path || []),
+      {
+        post: this.args.post,
+        children: hasChild
+          ? children
+          : [{ post: childPost, children: [] }, ...children],
+      },
+    ];
+  }
+
   @action
   toggleExpanded() {
     if (!this.hasReplies) {
@@ -385,10 +390,6 @@ export default class NestedPost extends Component {
     });
   }
 
-  get childCacheKey() {
-    return `${this.args.topic?.id}:${this.args.post.post_number}`;
-  }
-
   async childrenForMobileFocus() {
     const cacheKey = this.childCacheKey;
     const identityKey = [
@@ -416,7 +417,6 @@ export default class NestedPost extends Component {
       );
       if (
         this.isDestroying ||
-        this.isDestroyed ||
         this.childCacheKey !== cacheKey ||
         [this.args.topic?.id, this.args.post.post_number, this.args.sort].join(
           ":"
@@ -440,12 +440,12 @@ export default class NestedPost extends Component {
       });
       return childNodes;
     } catch (e) {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         popupAjaxError(e);
       }
       return null;
     } finally {
-      if (!(this.isDestroying || this.isDestroyed)) {
+      if (!this.isDestroying) {
         this.loadingReplies = false;
       }
     }
@@ -460,7 +460,7 @@ export default class NestedPost extends Component {
     if (this.mobileFocusEnabled) {
       const returnAnchor = this.args.captureScrollAnchor?.();
       const children = await this.childrenForMobileFocus();
-      if (children && !(this.isDestroying || this.isDestroyed)) {
+      if (children && !this.isDestroying) {
         this.args.focusPost(this.childPathWithChildren(children), returnAnchor);
       }
       return;
@@ -513,10 +513,6 @@ export default class NestedPost extends Component {
   @action
   unhighlightLine() {
     this.lineHighlighted = false;
-  }
-
-  get nestedShareUrl() {
-    return nestedPostUrl(this.args.topic, this.args.post.post_number);
   }
 
   @action
@@ -594,6 +590,42 @@ export default class NestedPost extends Component {
     getOwner(this).lookup("route:application").send("showLogin");
   }
 
+  #registerPost() {
+    if (this.isDestroying) {
+      return;
+    }
+
+    this.#postRegistered = true;
+    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
+  }
+
+  _onChildCreated({ topicId, post: childPost, parentPostNumber, isOwnPost }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.post.post_number
+    ) {
+      return;
+    }
+
+    const post = this.args.post;
+    post.set("direct_reply_count", (post.direct_reply_count || 0) + 1);
+    post.set("total_descendant_count", (post.total_descendant_count || 0) + 1);
+    this._childWasCreated = true;
+
+    if (!this.expanded) {
+      this.expanded = true;
+      this.collapsed = false;
+      this.args.expansionState?.set(this.args.post.post_number, {
+        expanded: true,
+        collapsed: false,
+      });
+    }
+
+    if (isOwnPost && this.mobileFocusEnabled) {
+      this.args.focusPost(this.childPathWithNewChild(childPost));
+    }
+  }
+
   <template>
     <div
       class={{dConcatClass
@@ -621,40 +653,35 @@ export default class NestedPost extends Component {
       {{#unless this.cloakingData.active}}
         {{#if @collapseParent}}
           <button
-            type="button"
+            aria-label={{i18n "nested_replies.collapse_parent"}}
             class="nested-post__parent-line-btn"
+            type="button"
             {{on "click" @collapseParent}}
             {{on "mouseenter" @highlightParentLine}}
             {{on "mouseleave" @unhighlightParentLine}}
-            aria-label={{i18n "nested_replies.collapse_parent"}}
           ></button>
         {{/if}}
-        <div class="nested-post__gutter">
-          {{#if this.isDeletedPlaceholder}}
-            <div class="nested-post__placeholder-avatar">
-              {{dIcon "trash-can"}}
-            </div>
-          {{else if this.renderIgnoredPlaceholder}}
-            <button
-              type="button"
-              class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
-              data-post-number={{@post.post_number}}
-              aria-label={{i18n "nested_replies.toggle_ignored_content"}}
-              disabled={{this.loadingIgnoredContent}}
-              {{on "click" this.revealIgnoredContent}}
-            >
-              {{#if this.loadingIgnoredContent}}
-                {{dIcon "spinner" class="fa-spin"}}
-              {{else}}
-                {{dIcon "far-eye-slash"}}
-              {{/if}}
-            </button>
-          {{else}}
-            <PostAvatar @post={{@post}} @size="small" />
-          {{/if}}
+        <div
+          class={{dConcatClass
+            "nested-post__gutter"
+            (if this.avatarColorStyle "--avatar-color")
+          }}
+          style={{this.avatarColorStyle}}
+        >
+          {{! Mobile renders the avatar inline in the header so the gutter
+              only needs to be as wide as the thread rail. }}
+          {{#unless this.isMobile}}
+            <NestedPostAvatar
+              @isDeletedPlaceholder={{this.isDeletedPlaceholder}}
+              @isIgnoredPlaceholder={{this.renderIgnoredPlaceholder}}
+              @loading={{this.loadingIgnoredContent}}
+              @post={{@post}}
+              @reveal={{this.revealIgnoredContent}}
+            />
+          {{/unless}}
           {{#if (and this.showDepthLine (not this.effectiveCollapsed))}}
             <button
-              type="button"
+              aria-label={{this.depthLineLabel}}
               class={{dConcatClass
                 "nested-post__depth-line"
                 (if this.lineHighlighted "nested-post__depth-line--highlighted")
@@ -663,10 +690,10 @@ export default class NestedPost extends Component {
                   this.depthLineCollapsed "nested-post__depth-line--collapsed"
                 )
               }}
+              type="button"
               {{on "click" this.handleDepthLine}}
               {{on "mouseenter" this.highlightLine}}
               {{on "mouseleave" this.unhighlightLine}}
-              aria-label={{this.depthLineLabel}}
             >
               {{#if this.showDepthLineIcon}}
                 <span class="nested-post__depth-line-icon">
@@ -679,9 +706,9 @@ export default class NestedPost extends Component {
         <div class="nested-post__main">
           {{#if this.effectiveCollapsed}}
             <button
-              type="button"
               class="nested-post__collapsed-bar"
               data-post-number={{@post.post_number}}
+              type="button"
               {{on "click" this.toggleExpanded}}
             >
               {{dIcon "discourse-circle-plus"}}
@@ -694,13 +721,20 @@ export default class NestedPost extends Component {
                     "nested_replies.ignored_post_placeholder"
                   }}</span>
               {{else}}
+                {{! Mobile has no gutter avatar, so keep the poster
+                    recognisable once the header is collapsed away. }}
+                {{#if this.isMobile}}
+                  <span class="nested-post__collapsed-avatar">
+                    {{dBoundAvatarTemplate @post.avatar_template "small"}}
+                  </span>
+                {{/if}}
                 <span
                   class="nested-post__collapsed-username"
                 >{{@post.username}}</span>
               {{/if}}
               <span
-                class="nested-post__collapsed-separator"
                 aria-hidden="true"
+                class="nested-post__collapsed-separator"
               >&middot;</span>
               <span
                 class="nested-post__collapsed-reply-count"
@@ -712,6 +746,15 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
             >
               <div class="nested-post__placeholder-actions">
+                {{#if this.isMobile}}
+                  <NestedPostAvatar
+                    @isDeletedPlaceholder={{this.isDeletedPlaceholder}}
+                    @isIgnoredPlaceholder={{this.renderIgnoredPlaceholder}}
+                    @loading={{this.loadingIgnoredContent}}
+                    @post={{@post}}
+                    @reveal={{this.revealIgnoredContent}}
+                  />
+                {{/if}}
                 <span class="nested-post__placeholder-label">{{i18n
                     "nested_replies.deleted_post_placeholder"
                   }}</span>
@@ -719,20 +762,20 @@ export default class NestedPost extends Component {
                   <DButton
                     class="btn-flat toggle-deleted-content"
                     @action={{this.toggleDeletedContent}}
+                    @ariaLabel="post.controls.view_deleted"
                     @icon={{if
                       this.showDeletedContent
                       "far-eye-slash"
                       "far-eye"
                     }}
-                    @ariaLabel="post.controls.view_deleted"
                   />
                 {{/if}}
                 {{#if @post.can_recover}}
                   <DButton
                     class="btn-flat recover"
                     @action={{fn @recoverPost @post}}
-                    @icon="arrow-rotate-left"
                     @ariaLabel="post.controls.undelete"
+                    @icon="arrow-rotate-left"
                   />
                 {{/if}}
               </div>
@@ -752,6 +795,15 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
             >
               <div class="nested-post__placeholder-actions">
+                {{#if this.isMobile}}
+                  <NestedPostAvatar
+                    @isDeletedPlaceholder={{this.isDeletedPlaceholder}}
+                    @isIgnoredPlaceholder={{this.renderIgnoredPlaceholder}}
+                    @loading={{this.loadingIgnoredContent}}
+                    @post={{@post}}
+                    @reveal={{this.revealIgnoredContent}}
+                  />
+                {{/if}}
                 <span class="nested-post__placeholder-label">{{i18n
                     "nested_replies.ignored_post_placeholder"
                   }}</span>
@@ -778,16 +830,19 @@ export default class NestedPost extends Component {
                       <PostNotice @post={{@post}} />
                     {{/if}}
                     <div class="nested-post__header">
+                      {{#if this.isMobile}}
+                        <PostAvatar @post={{@post}} @size="small" />
+                      {{/if}}
                       <PluginOutlet
                         @name="post-metadata"
                         @outletArgs={{postOutletArgs}}
                       >
                         <PostMetaData
-                          @post={{@post}}
                           @editPost={{fn @editPost @post}}
                           @multiSelect={{@multiSelect}}
-                          @selected={{this.selected}}
+                          @post={{@post}}
                           @selectBelow={{this.selectBelow}}
+                          @selected={{this.selected}}
                           @selectReplies={{this.selectReplies}}
                           @showHistory={{fn @showHistory @post}}
                           @togglePostSelection={{this.togglePostSelection}}
@@ -803,6 +858,17 @@ export default class NestedPost extends Component {
                             "nested_replies.pinned_reply"
                           }}</span>
                       {{/if}}
+                      {{! Pointer-only shortcut for the depth line, which
+                          remains the accessible collapse control. }}
+                      {{#if (and this.isMobile this.showDepthLine)}}
+                        <button
+                          aria-hidden="true"
+                          class="nested-post__header-collapse"
+                          tabindex="-1"
+                          type="button"
+                          {{on "click" this.handleDepthLine}}
+                        ></button>
+                      {{/if}}
                     </div>
                     <div class="nested-post__content regular">
                       <PluginOutlet
@@ -814,49 +880,49 @@ export default class NestedPost extends Component {
                     </div>
                     <section class="nested-post__menu post-menu-area clearfix">
                       <PostMenu
-                        @post={{@post}}
-                        @nestedReplyView={{true}}
                         @canCreatePost={{this.canCreatePost}}
+                        @changeNotice={{fn @changeNotice @post}}
+                        @changePostOwner={{fn @changePostOwner @post}}
                         @copyLink={{this.copyLink}}
                         @deletePost={{fn @deletePost @post}}
                         @editPost={{fn @editPost @post}}
-                        @recoverPost={{fn @recoverPost @post}}
-                        @replyToPost={{fn @replyToPost @post @depth}}
-                        @share={{this.share}}
-                        @showFlags={{fn @showFlags @post}}
-                        @changeNotice={{fn @changeNotice @post}}
-                        @changePostOwner={{fn @changePostOwner @post}}
                         @grantBadge={{fn @grantBadge @post}}
                         @lockPost={{fn @lockPost @post}}
-                        @unlockPost={{fn @unlockPost @post}}
+                        @nestedReplyView={{true}}
                         @permanentlyDeletePost={{fn
                           @permanentlyDeletePost
                           @post
                         }}
+                        @post={{@post}}
                         @rebakePost={{fn @rebakePost @post}}
-                        @showPagePublish={{@showPagePublish}}
-                        @togglePostType={{fn @togglePostType @post}}
-                        @toggleWiki={{fn @toggleWiki @post}}
-                        @unhidePost={{fn @unhidePost @post}}
-                        @toggleLike={{this.toggleLike}}
-                        @toggleReplies={{unless
-                          this.atMaxDepth
-                          this.handleReplies
-                        }}
+                        @recoverPost={{fn @recoverPost @post}}
                         @repliesShown={{if
                           this.atMaxDepth
                           true
                           this.effectiveExpanded
                         }}
+                        @replyToPost={{fn @replyToPost @post @depth}}
+                        @share={{this.share}}
+                        @showFlags={{fn @showFlags @post}}
                         @showLogin={{this.showLogin}}
+                        @showPagePublish={{@showPagePublish}}
+                        @toggleLike={{this.toggleLike}}
+                        @togglePostType={{fn @togglePostType @post}}
+                        @toggleReplies={{unless
+                          this.atMaxDepth
+                          this.handleReplies
+                        }}
+                        @toggleWiki={{fn @toggleWiki @post}}
+                        @unhidePost={{fn @unhidePost @post}}
+                        @unlockPost={{fn @unlockPost @post}}
                       />
                     </section>
                     {{#if this.showExpandRepliesButton}}
                       <NestedRepliesExpandButton
-                        @replyCount={{this.replyCount}}
                         @disabled={{this.loadingReplies}}
                         @isLoading={{this.loadingReplies}}
                         @onClick={{this.handleReplies}}
+                        @replyCount={{this.replyCount}}
                       />
                     {{/if}}
                     <PluginOutlet
@@ -869,8 +935,8 @@ export default class NestedPost extends Component {
                   {{#if this.showContinueThread}}
                     <div class="nested-post__controls">
                       <a
-                        href={{this.contextUrl}}
                         class="nested-post__continue-link"
+                        href={{this.contextUrl}}
                       >
                         {{i18n "nested_replies.continue_thread"}}
                       </a>
@@ -889,47 +955,47 @@ export default class NestedPost extends Component {
             )
           }}
             <NestedPostChildren
-              @topic={{@topic}}
-              @parentPostNumber={{@post.post_number}}
-              @preloadedChildren={{@children}}
-              @directReplyCount={{@post.direct_reply_count}}
-              @totalDescendantCount={{@post.total_descendant_count}}
-              @depth={{@depth}}
-              @path={{this.childPath}}
-              @sort={{@sort}}
-              @replyToPost={{@replyToPost}}
-              @editPost={{@editPost}}
-              @deletePost={{@deletePost}}
-              @recoverPost={{@recoverPost}}
-              @showFlags={{@showFlags}}
-              @showHistory={{@showHistory}}
+              @captureScrollAnchor={{@captureScrollAnchor}}
               @changeNotice={{@changeNotice}}
               @changePostOwner={{@changePostOwner}}
-              @grantBadge={{@grantBadge}}
-              @lockPost={{@lockPost}}
-              @unlockPost={{@unlockPost}}
-              @permanentlyDeletePost={{@permanentlyDeletePost}}
-              @rebakePost={{@rebakePost}}
-              @showPagePublish={{@showPagePublish}}
-              @togglePostType={{@togglePostType}}
-              @toggleWiki={{@toggleWiki}}
-              @unhidePost={{@unhidePost}}
+              @collapseFromDepth={{@collapseFromDepth}}
               @collapseParent={{this.toggleExpanded}}
-              @highlightParentLine={{this.highlightLine}}
-              @unhighlightParentLine={{this.unhighlightLine}}
-              @parentLineHighlighted={{this.lineHighlighted}}
+              @deletePost={{@deletePost}}
+              @depth={{@depth}}
+              @directReplyCount={{@post.direct_reply_count}}
+              @editPost={{@editPost}}
               @expansionState={{@expansionState}}
               @fetchedChildrenCache={{@fetchedChildrenCache}}
-              @scrollAnchor={{@scrollAnchor}}
-              @registerPost={{@registerPost}}
-              @collapseFromDepth={{@collapseFromDepth}}
               @focusPost={{@focusPost}}
-              @captureScrollAnchor={{@captureScrollAnchor}}
+              @grantBadge={{@grantBadge}}
+              @highlightParentLine={{this.highlightLine}}
+              @lockPost={{@lockPost}}
               @multiSelect={{@multiSelect}}
-              @togglePostSelection={{@togglePostSelection}}
-              @selectReplies={{@selectReplies}}
-              @selectBelow={{@selectBelow}}
+              @parentLineHighlighted={{this.lineHighlighted}}
+              @parentPostNumber={{@post.post_number}}
+              @path={{this.childPath}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
               @postSelected={{@postSelected}}
+              @preloadedChildren={{@children}}
+              @rebakePost={{@rebakePost}}
+              @recoverPost={{@recoverPost}}
+              @registerPost={{@registerPost}}
+              @replyToPost={{@replyToPost}}
+              @scrollAnchor={{@scrollAnchor}}
+              @selectBelow={{@selectBelow}}
+              @selectReplies={{@selectReplies}}
+              @showFlags={{@showFlags}}
+              @showHistory={{@showHistory}}
+              @showPagePublish={{@showPagePublish}}
+              @sort={{@sort}}
+              @togglePostSelection={{@togglePostSelection}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @topic={{@topic}}
+              @totalDescendantCount={{@post.total_descendant_count}}
+              @unhidePost={{@unhidePost}}
+              @unhighlightParentLine={{this.unhighlightLine}}
+              @unlockPost={{@unlockPost}}
             />
           {{/if}}
         </div>

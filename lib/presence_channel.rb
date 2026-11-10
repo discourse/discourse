@@ -353,9 +353,9 @@ class PresenceChannel
 
     if config.public
       # no params required
-    elsif config.allowed_user_ids || config.allowed_group_ids
-      params[:user_ids] = config.allowed_user_ids
-      params[:group_ids] = config.allowed_group_ids
+    elsif config.allowed_user_ids.present? || config.allowed_group_ids.present?
+      params[:user_ids] = config.allowed_user_ids if config.allowed_user_ids.present?
+      params[:group_ids] = config.allowed_group_ids if config.allowed_group_ids.present?
     else
       # nobody is allowed... don't publish anything
       return

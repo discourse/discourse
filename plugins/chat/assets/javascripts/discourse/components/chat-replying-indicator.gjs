@@ -15,27 +15,6 @@ export default class ChatReplyingIndicator extends Component {
 
   @tracked presenceChannel = null;
 
-  @action
-  async updateSubscription() {
-    await this.unsubscribe();
-    await this.subscribe();
-  }
-
-  @action
-  async subscribe() {
-    this.presenceChannel = this.presence.getChannel(
-      this.args.presenceChannelName
-    );
-    await this.presenceChannel.subscribe();
-  }
-
-  @action
-  async unsubscribe() {
-    if (this.presenceChannel?.subscribed) {
-      await this.presenceChannel.unsubscribe();
-    }
-  }
-
   get users() {
     return (
       this.presenceChannel
@@ -77,6 +56,27 @@ export default class ChatReplyingIndicator extends Component {
 
   get shouldRender() {
     return isPresent(this.usernames);
+  }
+
+  @action
+  async updateSubscription() {
+    await this.unsubscribe();
+    await this.subscribe();
+  }
+
+  @action
+  async subscribe() {
+    this.presenceChannel = this.presence.getChannel(
+      this.args.presenceChannelName
+    );
+    await this.presenceChannel.subscribe();
+  }
+
+  @action
+  async unsubscribe() {
+    if (this.presenceChannel?.subscribed) {
+      await this.presenceChannel.unsubscribe();
+    }
   }
 
   <template>

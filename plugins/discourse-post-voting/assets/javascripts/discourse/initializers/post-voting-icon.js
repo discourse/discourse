@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { postUrl } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import { buildAnchorId } from "../components/post-voting-comment";
+import { buildAnchorId } from "../components/post-voting-comment.gjs";
 
 export default {
   name: "post-voting-icon",

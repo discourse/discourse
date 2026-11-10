@@ -316,12 +316,6 @@
   margin-top: 1em;
   gap: 1em;
 
-  .badge-grant-info {
-    &.hidden {
-      display: none;
-    }
-  }
-
   .grant-info-item {
     margin-bottom: 1em;
     color: var(--primary-med-or-secondary-med);

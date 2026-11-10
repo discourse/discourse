@@ -8,6 +8,10 @@ ro:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Dată"
+          outcomes:
+            failed: "Eșuată"
         reports:
           filters:
             sort_by:
@@ -53,12 +57,19 @@ ro:
     discourse_ai:
       copied: "Copiat"
       ai_decoded_transcript:
+        arguments: "Argumente"
         type: "Tip"
         error: "Eroare"
         response: "Răspuns"
       discourse_workflows:
         ai_agent:
           mode: "Mod"
+        classify:
+          text: "Text"
+          upload_ids: "Imagini"
+          name: "Nume"
+          type: "Tip"
+          type_score: "Scor"
       ai_tool_approval:
         loading: "Se încarcă..."
         tool: "Acțiune"
@@ -67,8 +78,6 @@ ro:
         reject: "Respingere"
         approved: "Aprobat"
         rejected: "Respins"
-      default_llm:
-        title: "Model LLM implicit"
       llm_selector:
         none: "Nimic"
       features:
@@ -86,6 +95,8 @@ ro:
         filters:
           all: "Toate"
           reset: "Resetare"
+        sentiment:
+          enabled: "Activate"
         search:
           name: "Caută"
         image_caption:
@@ -148,6 +159,8 @@ ro:
             other: "%{count} de postări"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Nimic"
+        no_decision_model_selected: "Nimic"
         last_seven_days: "Ultimele 7 zile"
         enable: "Activează"
         save_button: "Salvează modificări"
@@ -169,8 +182,6 @@ ro:
         successful: "Cu succes"
         failed: "Eșuată"
         unknown: "Necunoscută"
-        topic_id: "ID subiect"
-        post_id: "ID postare"
         time: "Oră"
         when: "Când"
         request: "Cere"
@@ -182,8 +193,7 @@ ro:
         post_short: "Postarea %{id}"
         duration: "Durată"
         actions: "Acțiuni"
-        filters:
-          title: "Filtre"
+        view_details: "Detalii"
         periods:
           day: "Ultimele 24 de ore"
           week: "Ultimele 7 zile"
@@ -246,6 +256,13 @@ ro:
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      decision_models:
+        no_preset: "Nimic"
+        display_name: "Nume"
+        provider: "Furnizor"
+        edit: "Editează"
+        delete: "Șterge"
+        test: "Rulează test"
       mcp_servers:
         name: "Nume"
         description: "Descriere"
@@ -258,6 +275,16 @@ ro:
         delete: "Șterge"
         tools_modal:
           required: "Obligatoriu"
+      models:
+        name: "Nume"
+        type: "Tip"
+        provider: "Furnizor"
+        edit: "Editează"
+        types:
+          embedding: "Înglobare"
+        filters:
+          all: "Toate tipurile"
+          reset: "Resetează filtre"
       llms:
         display_name: "Nume"
         provider: "Furnizor"
@@ -283,8 +310,6 @@ ro:
           ai_helper: "Ajutor (%{agent})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "Cel mai inteligent model de la Anthropic"
         next:
           title: "Următorul"
         tests:
@@ -319,6 +344,15 @@ ro:
         providers:
           google: "Google"
           fake: "Personalizat"
+      ai_artifact:
+        editor:
+          version: "Versiune"
+          default: "Implicit"
+          apply: "Aplică"
+        share: "Partajează"
+        create_link: "Creează legătură"
+        copy_link: "Copiază legătură"
+        filter_all: "Toate"
       ai_bot:
         try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
@@ -350,10 +384,20 @@ ro:
           title: "Rezumați mesajele"
           description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
           summarize: "Rezumat"
+      ai_search:
+        related_replies:
+          one: "%{count} răspuns"
+          few: "%{count} de răspunsuri"
+          other: "%{count} răspunsuri"
+        tabs:
+          topics: "Discuții"
+          messages: "Mesaje"
       discobot_discoveries:
-        regular_results: "Discuții"
-        collapse: "Colaps"
         user_setting: "Activează descoperirile de căutare IA"
-        tooltip:
-          actions:
-            disable: "Dezactivează"
+        legacy:
+          regular_results: "Discuții"
+          collapse: "Colaps"
+          tooltip:
+            actions:
+              disable: "Dezactivează"
+        search_messages: "Mesaje"

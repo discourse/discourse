@@ -142,7 +142,7 @@ RSpec.describe DirectoryItemsController do
     context "with a logged in user" do
       before { sign_in(user) }
 
-      it "succeeds" do
+      it "returns 200 when the directory has no data" do
         get "/directory_items.json", params: { period: "all" }
         expect(response.status).to eq(200)
       end

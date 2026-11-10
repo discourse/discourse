@@ -29,6 +29,14 @@ RSpec.describe CustomEmoji::Action::ParseImportManifest do
       end
     end
 
+    context "with a manifest saved with a UTF-8 BOM and non-ASCII values" do
+      let(:csv_content) { "#{Encodings::BOM}name,group,filename\nparty,晚凪,party.png\n" }
+
+      it "strips the BOM and preserves the encoding" do
+        expect(rows.map { [it.name, it.group, it.filename] }).to eq([%w[party 晚凪 party.png]])
+      end
+    end
+
     context "with names needing sanitization" do
       let(:csv_content) { "name,group,filename\nMy Emoji!,,my-emoji.png\n" }
 

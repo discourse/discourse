@@ -1,13 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { computed, set } from "@ember/object";
+import { action, computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import { and } from "discourse/truth-helpers";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
@@ -30,21 +29,6 @@ export default class ChatToTopicSelector extends Component {
   chatMessageIds = null;
   chatChannelId = null;
 
-  @computed("selection")
-  get newTopic() {
-    return this.selection === NEW_TOPIC_SELECTION;
-  }
-
-  @computed("selection")
-  get existingTopic() {
-    return this.selection === EXISTING_TOPIC_SELECTION;
-  }
-
-  @computed("selection")
-  get newMessage() {
-    return this.selection === NEW_MESSAGE_SELECTION;
-  }
-
   @computed("site.can_create_tag")
   get canAddTags() {
     return this.site?.can_create_tag;
@@ -63,6 +47,21 @@ export default class ChatToTopicSelector extends Component {
     set(this, "site.can_tag_pms", value);
   }
 
+  @computed("selection")
+  get newTopic() {
+    return this.selection === NEW_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get existingTopic() {
+    return this.selection === EXISTING_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get newMessage() {
+    return this.selection === NEW_MESSAGE_SELECTION;
+  }
+
   @computed()
   get newTopicInstruction() {
     return trustHTML(this.instructionLabels[NEW_TOPIC_SELECTION]);
@@ -78,6 +77,11 @@ export default class ChatToTopicSelector extends Component {
     return trustHTML(this.instructionLabels[NEW_MESSAGE_SELECTION]);
   }
 
+  @action
+  changeTags(tags) {
+    this.set("tags", tags);
+  }
+
   <template>
     <div class="chat-to-topic-selector" ...attributes>
       <div class="radios">
@@ -85,8 +89,8 @@ export default class ChatToTopicSelector extends Component {
           <DRadioButton
             @id="move-to-new-topic"
             @name="move-to-entity"
-            @value={{this.newTopicSelection}}
             @selection={{this.selection}}
+            @value={{this.newTopicSelection}}
           />
           <b>{{i18n "topic.split_topic.radio_label"}}</b>
         </label>
@@ -95,8 +99,8 @@ export default class ChatToTopicSelector extends Component {
           <DRadioButton
             @id="move-to-existing-topic"
             @name="move-to-entity"
-            @value={{this.existingTopicSelection}}
             @selection={{this.selection}}
+            @value={{this.existingTopicSelection}}
           />
           <b>{{i18n "topic.merge_topic.radio_label"}}</b>
         </label>
@@ -106,8 +110,8 @@ export default class ChatToTopicSelector extends Component {
             <DRadioButton
               @id="move-to-new-message"
               @name="move-to-entity"
-              @value={{this.newMessageSelection}}
               @selection={{this.selection}}
+              @value={{this.newMessageSelection}}
             />
             <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
           </label>
@@ -123,26 +127,27 @@ export default class ChatToTopicSelector extends Component {
           </label>
 
           <DTextField
-            @value={{this.topicTitle}}
-            @placeholderKey="composer.title_placeholder"
             @id="split-topic-name"
+            @placeholderKey="composer.title_placeholder"
+            @value={{this.topicTitle}}
           />
 
           <label>{{i18n "categories.category"}}</label>
 
           <CategoryChooser
-            @id="new-topic-category-selector"
-            @value={{this.categoryId}}
-            @onChange={{fn (mut this.categoryId)}}
             class="small"
+            @id="new-topic-category-selector"
+            @onChange={{fn (mut this.categoryId)}}
+            @value={{this.categoryId}}
           />
 
           {{#if this.canAddTags}}
             <label>{{i18n "tagging.tags"}}</label>
             <TagChooser
-              @tags={{this.tags}}
-              @filterable={{true}}
               @categoryId={{this.categoryId}}
+              @filterable={{true}}
+              @onChange={{this.changeTags}}
+              @tags={{this.tags}}
             />
           {{/if}}
         </form>
@@ -152,8 +157,8 @@ export default class ChatToTopicSelector extends Component {
         <p>{{this.existingTopicInstruction}}</p>
         <form>
           <ChooseTopic
-            @topicChangedCallback={{@topicChangedCallback}}
             @selectedTopicId={{@selectedTopicId}}
+            @topicChangedCallback={{@topicChangedCallback}}
           />
         </form>
       {{/if}}
@@ -167,14 +172,18 @@ export default class ChatToTopicSelector extends Component {
           </label>
 
           <DTextField
-            @value={{this.topicTitle}}
-            @placeholderKey="composer.title_placeholder"
             @id="split-message-title"
+            @placeholderKey="composer.title_placeholder"
+            @value={{this.topicTitle}}
           />
 
           {{#if this.canTagMessages}}
             <label>{{i18n "tagging.tags"}}</label>
-            <TagChooser @tags={{this.tags}} @filterable={{true}} />
+            <TagChooser
+              @filterable={{true}}
+              @onChange={{this.changeTags}}
+              @tags={{this.tags}}
+            />
           {{/if}}
         </form>
       {{/if}}

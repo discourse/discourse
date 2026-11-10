@@ -3,6 +3,35 @@
 describe DiscourseAi::Completions::AnthropicMessageProcessor do
   before { enable_current_plugin }
 
+  it "captures raw stop reasons and output limits in both modes without inventing reasoning usage" do
+    processor = described_class.new(streaming_mode: false)
+    processor.process_message(content: [], stop_reason: "max_tokens")
+    expect(processor).to have_attributes(
+      stop_reason: "max_tokens",
+      output_limit_reached: true,
+      reasoning_tokens: nil,
+    )
+
+    processor = described_class.new(streaming_mode: true)
+    processor.process_streamed_message(
+      type: "message_delta",
+      delta: {
+        stop_reason: "max_tokens",
+      },
+      usage: {
+        output_tokens: 100,
+      },
+    )
+    processor.process_streamed_message(type: "message_stop")
+    expect(processor).to have_attributes(
+      stop_reason: "max_tokens",
+      output_limit_reached: true,
+      reasoning_tokens: nil,
+    )
+    processor.process_streamed_message(type: "message_delta", delta: { stop_reason: "end_turn" })
+    expect(processor).to have_attributes(stop_reason: "end_turn", output_limit_reached: false)
+  end
+
   it "correctly handles and combines partial thinking chunks into complete thinking objects" do
     processor =
       DiscourseAi::Completions::AnthropicMessageProcessor.new(

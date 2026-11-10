@@ -5,7 +5,7 @@ RSpec.describe UserPasswordExpirer do
   fab!(:user) { Fabricate(:user, password:) }
 
   describe ".expire_user_password" do
-    it "should update `UserPassword#password_expired_at` if the user already has an existing UserPassword record with the same password hash, salt and algorithm" do
+    it "updates password_expired_at on an existing matching password record" do
       freeze_time(1.hour.ago) do
         described_class.expire_user_password(user)
 

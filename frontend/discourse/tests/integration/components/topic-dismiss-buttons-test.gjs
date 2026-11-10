@@ -26,13 +26,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -49,13 +49,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -83,13 +83,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -119,13 +119,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -163,13 +163,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="bottom"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="bottom"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -187,13 +187,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -214,13 +214,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -241,13 +241,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );
@@ -261,13 +261,13 @@ module("Integration | Component | TopicDismissButtons", function (hooks) {
     await render(
       <template>
         <TopicDismissButtons
-          @position="top"
           @model={{this.model}}
-          @selectedTopics={{this.selectedTopics}}
-          @showResetNew={{this.showResetNew}}
-          @showNewDismissCombo={{this.showNewDismissCombo}}
-          @showDismissRead={{false}}
+          @position="top"
           @resetNew={{this.resetNew}}
+          @selectedTopics={{this.selectedTopics}}
+          @showDismissRead={{false}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{this.showResetNew}}
         />
       </template>
     );

@@ -7,17 +7,11 @@ import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import ExpressionWrapper from "./expression-wrapper";
-
-function categoryIdsFromValue(value) {
-  if (value == null || value === "") {
-    return [];
-  }
-
-  return (Array.isArray(value) ? value : [value])
-    .map((id) => parseInt(id, 10))
-    .filter((id) => !isNaN(id));
-}
+import {
+  integerIdsFromValue,
+  sameIds,
+} from "../../../lib/workflows/id-values.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class CategoryControl extends Component {
   @service siteSettings;
@@ -45,7 +39,7 @@ export default class CategoryControl extends Component {
   }
 
   get categoryIds() {
-    return categoryIdsFromValue(this.args.field.value);
+    return integerIdsFromValue(this.args.field.value);
   }
 
   async updateSelectedCategories(previousRequest) {
@@ -60,11 +54,7 @@ export default class CategoryControl extends Component {
 
     await previousRequest;
 
-    if (
-      this.isDestroying ||
-      this.isDestroyed ||
-      !this.#sameIds(this.categoryIds, requestedIds)
-    ) {
+    if (this.isDestroying || !sameIds(this.categoryIds, requestedIds)) {
       return;
     }
 
@@ -75,7 +65,7 @@ export default class CategoryControl extends Component {
   hydrateSelectedCategories() {
     const ids = this.categoryIds;
     if (
-      this.#sameIds(
+      sameIds(
         ids,
         this.selectedCategories.map((category) => category.id)
       )
@@ -86,10 +76,6 @@ export default class CategoryControl extends Component {
     const previousRequest = this.pendingCategoriesRequest;
     this.pendingCategoriesRequest =
       this.updateSelectedCategories(previousRequest);
-  }
-
-  #sameIds(a, b) {
-    return a.length === b.length && a.every((id, index) => id === b[index]);
   }
 
   @action
@@ -106,25 +92,25 @@ export default class CategoryControl extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       {{#if this.multiple}}
         <CategorySelector
-          {{didUpdate this.hydrateSelectedCategories @field.value}}
           @categories={{this.selectedCategories}}
           @onChange={{this.handleMultiChange}}
           @options={{hash translatedNone=@placeholder}}
+          {{didUpdate this.hydrateSelectedCategories @field.value}}
         />
       {{else}}
         <CategoryChooser
-          @value={{if @field.value @field.value null}}
           @onChange={{this.handleChange}}
           @options={{hash clearable=this.clearable}}
+          @value={{if @field.value @field.value null}}
         />
       {{/if}}
     </ExpressionWrapper>

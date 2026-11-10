@@ -1,9 +1,9 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import PostMenuExample from "../../examples/molecules/post-menu";
+import PostMenuExample from "../../examples/molecules/post-menu.gjs";
 import postMenuSource from "../../examples/molecules/post-menu?source=file";
 
 export default <template>
-  <StyleguideExample @title="<PostMenu>" @code={{postMenuSource}}>
+  <StyleguideExample @code={{postMenuSource}} @title="<PostMenu>">
     <PostMenuExample @post={{@dummy.transformedPost}} />
   </StyleguideExample>
 </template>

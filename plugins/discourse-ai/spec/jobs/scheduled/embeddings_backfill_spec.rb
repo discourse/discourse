@@ -106,4 +106,36 @@ RSpec.describe Jobs::EmbeddingsBackfill do
 
     expect(topic_ids).to contain_exactly(first_topic.id, second_topic.id, third_topic.id)
   end
+
+  it "backfills personal messages when personal-message embeddings are enabled" do
+    personal_message = Fabricate(:private_message_post)
+    SiteSetting.ai_embeddings_generate_for_pms = true
+    SiteSetting.ai_embeddings_backfill_batch_size = 100
+
+    described_class.new.execute({})
+
+    topic_ids =
+      DB.query_single("SELECT topic_id from #{DiscourseAi::Embeddings::Schema::TOPICS_TABLE}")
+    expect(topic_ids).to include(personal_message.topic_id)
+
+    post_ids =
+      DB.query_single("SELECT post_id from #{DiscourseAi::Embeddings::Schema::POSTS_TABLE}")
+    expect(post_ids).to include(personal_message.id)
+  end
+
+  it "does not backfill personal messages when personal-message embeddings are disabled" do
+    personal_message = Fabricate(:private_message_post)
+    SiteSetting.ai_embeddings_generate_for_pms = false
+    SiteSetting.ai_embeddings_backfill_batch_size = 100
+
+    described_class.new.execute({})
+
+    topic_ids =
+      DB.query_single("SELECT topic_id from #{DiscourseAi::Embeddings::Schema::TOPICS_TABLE}")
+    expect(topic_ids).not_to include(personal_message.topic_id)
+
+    post_ids =
+      DB.query_single("SELECT post_id from #{DiscourseAi::Embeddings::Schema::POSTS_TABLE}")
+    expect(post_ids).not_to include(personal_message.id)
+  end
 end

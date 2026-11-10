@@ -11,10 +11,6 @@ class ContentLocalization
     automatically_translate_anonymously?(scope&.request&.cookies)
   end
 
-  def self.show_original?(scope)
-    !automatically_translate?(scope)
-  end
-
   # @param cookies [ActionDispatch::Cookies::CookieJar, Hash]
   # @return [Boolean]
   def self.automatically_translate_anonymously?(cookies)
@@ -39,8 +35,14 @@ class ContentLocalization
   # @param post [Post] The post object
   # @return [Boolean]
   def self.show_translated_post?(post, scope)
-    SiteSetting.content_localization_enabled && post.raw.present? && post.locale.present? &&
+    SiteSetting.content_localization_enabled && post&.raw.present? && post.locale.present? &&
       !post.in_user_locale? && automatically_translate?(scope) && !understands?(post.locale, scope)
+  end
+
+  def self.translated_post_cooked(post, scope)
+    return if !show_translated_post?(post, scope)
+
+    post.get_localization&.cooked.presence
   end
 
   # This method returns true when we should try to show the translated topic.
@@ -48,8 +50,50 @@ class ContentLocalization
   # @param topic [Topic] The topic record
   # @return [Boolean]
   def self.show_translated_topic?(topic, scope)
-    SiteSetting.content_localization_enabled && topic.locale.present? && !topic.in_user_locale? &&
+    SiteSetting.content_localization_enabled && topic&.locale.present? && !topic.in_user_locale? &&
       automatically_translate?(scope) && !understands?(topic.locale, scope)
+  end
+
+  def self.translated_topic_title(topic, scope)
+    return if !show_translated_topic?(topic, scope)
+
+    topic.get_localization&.title.presence
+  end
+
+  def self.translated_topic_fancy_title(topic, scope)
+    return if !show_translated_topic?(topic, scope)
+
+    topic.get_localization&.fancy_title.presence
+  end
+
+  # Expects I18n.locale to be the recipient's locale.
+  # @param topic [Topic, nil]
+  # @param post [Post, nil]
+  # @param scope [Guardian] The recipient's guardian
+  # @return [Hash] translated `:topic_title` and `:excerpt`, for whichever are available
+  def self.translated_notification_fields(topic:, post:, scope:)
+    fields = {}
+
+    if (title = translated_topic_title(topic, scope))
+      fields[:topic_title] = title
+    end
+
+    if show_translated_post?(post, scope)
+      localization = post.get_localization
+      # Stale translations would describe an earlier revision of the post.
+      if localization&.post_version == post.version && localization.cooked.present?
+        fields[:excerpt] = Post.excerpt(
+          localization.cooked,
+          400,
+          text_entities: true,
+          strip_links: true,
+          remap_emoji: true,
+          plain_hashtags: true,
+        )
+      end
+    end
+
+    fields
   end
 
   # This method returns true when we should try to show the translated category.
@@ -82,6 +126,19 @@ class ContentLocalization
   def self.crawler_locale_param_enabled?
     SiteSetting.content_localization_enabled && SiteSetting.content_localization_crawler_param &&
       SiteSetting.set_locale_from_param
+  end
+
+  PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV = "discourse.plain_url_serves_default_locale"
+
+  # Whether an anonymous client gets the default locale at the plain URL, so that URL can stand in
+  # for the default locale's locale param URL. A locale cookie written from the locale param can
+  # change what the plain URL serves between requests, so it is never guaranteed then.
+  # @param request [Rack::Request]
+  # @return [Boolean]
+  def self.plain_url_serves_default_locale?(request)
+    return false if SiteSetting.set_locale_from_cookie
+
+    Discourse.anonymous_locale(request, include_param: false) == SiteSetting.default_locale
   end
 
   # These are the same conditions the header renders the switcher on. Keeping the two set-equal

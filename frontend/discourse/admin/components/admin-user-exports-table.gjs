@@ -18,6 +18,7 @@ export default class extends Component {
   @service messageBus;
   @service toasts;
 
+  /** @type {import("discourse/admin/models/user-export").default | null} */
   @tracked userExport = null;
   @tracked userExportReloading = false;
 
@@ -39,6 +40,12 @@ export default class extends Component {
   @computed("userExport")
   get userExportAvailable() {
     return !isEmpty(this.userExport);
+  }
+
+  get userExportExpiry() {
+    return i18n("admin.user.exports.download.expires_in", {
+      count: this.userExport.retain_hours,
+    });
   }
 
   @bind
@@ -81,12 +88,6 @@ export default class extends Component {
     });
   }
 
-  get userExportExpiry() {
-    return i18n("admin.user.exports.download.expires_in", {
-      count: this.userExport.retain_hours,
-    });
-  }
-
   <template>
     <section class="details">
       <h1>{{i18n "admin.user.exports.title"}}</h1>
@@ -111,10 +112,10 @@ export default class extends Component {
           <DConditionalLoadingSpinner @condition={{this.userExportReloading}}>
 
             <DButton
+              class="btn-default"
               @action={{this.triggerUserExport}}
               @icon="download"
               @label="admin.user.exports.download.button"
-              class="btn-default"
             />
           </DConditionalLoadingSpinner>
         </div>

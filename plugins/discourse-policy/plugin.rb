@@ -60,7 +60,7 @@ after_initialize do
   TopicView.default_post_custom_fields << DiscoursePolicy::HAS_POLICY
 
   validate(:post, :validate_policy) do
-    return unless raw_changed?
+    return unless raw_changed? || wiki_changed?
 
     validator = DiscoursePolicy::PostValidator.new(self)
     return unless validator.validate_post
@@ -72,7 +72,8 @@ after_initialize do
     has_group = false
 
     if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
-      if policy = doc.search(".policy")&.first
+      policy = doc.search(".policy").find { |node| node.ancestors("blockquote").none? }
+      if policy
         post_policy = post.post_policy || post.build_post_policy
 
         group_names = []

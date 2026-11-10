@@ -22,14 +22,26 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class DFutureDateInput extends Component {
+  /** @type {string | null | undefined} */
   selection = null;
   includeDateTime = true;
 
+  /** @type {string | null} */
   displayLabel = null;
+
+  /** @type {string | null | undefined} */
   labelClasses = null;
+
+  /** @type {string | null | undefined} */
   userTimezone = null;
+
+  /** @type {((value: string | null) => void) | null | undefined} */
   onChangeInput = null;
+
+  /** @type {string | null} */
   _date = null;
+
+  /** @type {string | null} */
   _time = null;
 
   init() {
@@ -50,28 +62,6 @@ export default class DFutureDateInput extends Component {
   @computed("_date")
   get timeInputDisabled() {
     return isEmpty(this._date);
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (this.label) {
-      this.set("displayLabel", i18n(this.label));
-    }
-
-    if (this.input) {
-      const dateTime = moment(this.input);
-      const closestShortcut = this._findClosestShortcut(dateTime);
-      if (!this.noRelativeOptions && closestShortcut) {
-        this.set("selection", closestShortcut.id);
-      } else {
-        this.setProperties({
-          selection: TIME_SHORTCUT_TYPES.CUSTOM,
-          _date: dateTime.format("YYYY-MM-DD"),
-          _time: dateTime.format("HH:mm"),
-        });
-      }
-    }
   }
 
   @computed("customShortcuts")
@@ -106,6 +96,28 @@ export default class DFutureDateInput extends Component {
         icon: s.icon,
       };
     });
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    if (this.label) {
+      this.set("displayLabel", i18n(this.label));
+    }
+
+    if (this.input) {
+      const dateTime = moment(this.input);
+      const closestShortcut = this._findClosestShortcut(dateTime);
+      if (!this.noRelativeOptions && closestShortcut) {
+        this.set("selection", closestShortcut.id);
+      } else {
+        this.setProperties({
+          selection: TIME_SHORTCUT_TYPES.CUSTOM,
+          _date: dateTime.format("YYYY-MM-DD"),
+          _time: dateTime.format("HH:mm"),
+        });
+      }
+    }
   }
 
   @action
@@ -154,12 +166,12 @@ export default class DFutureDateInput extends Component {
               }}{{/if}}{{this.displayLabel}}
           </label>
           <FutureDateInputSelector
-            @value={{readonly this.selection}}
-            @content={{this.shortcuts}}
             @clearable={{this.clearable}}
-            @onChangeInput={{this.onChangeInput}}
+            @content={{this.shortcuts}}
             @onChange={{fn (mut this.selection)}}
+            @onChangeInput={{this.onChangeInput}}
             @options={{hash none="time_shortcut.select_timeframe"}}
+            @value={{readonly this.selection}}
           />
         </div>
       {{/unless}}
@@ -168,20 +180,20 @@ export default class DFutureDateInput extends Component {
         <div class="control-group future-date-input-date-picker">
           {{dIcon "calendar-days"}}
           <DatePickerFuture
-            @value={{this._date}}
             @defaultDate={{this._date}}
             @onSelect={{this.onChangeDate}}
+            @value={{this._date}}
           />
         </div>
 
         <div class="control-group future-date-input-time-picker">
           {{dIcon "far-clock"}}
           <Input
+            class="time-input"
+            disabled={{this.timeInputDisabled}}
             placeholder="--:--"
             @type="time"
-            class="time-input"
             @value={{this._time}}
-            disabled={{this.timeInputDisabled}}
             {{on "input" (withEventValue this.onChangeTime)}}
           />
         </div>

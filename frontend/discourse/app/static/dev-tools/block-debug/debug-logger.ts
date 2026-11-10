@@ -357,6 +357,41 @@ class BlockDebugLogger {
   }
 
   /**
+   * Log that an optional block was skipped because it's not registered.
+   * Uses standalone log (no group needed since there are no conditions to show).
+   * Format matches endGroup header: `[Blocks] ✗ SKIPPED {displayName} in {hierarchy}`
+   *
+   * @param blockName - The name of the missing optional block.
+   * @param blockId - The block's unique ID, or null if not set.
+   * @param hierarchy - The outlet/container hierarchy path.
+   */
+  logOptionalMissing(
+    blockName: string,
+    blockId: string | null,
+    hierarchy: string
+  ): void {
+    // Format display name with ID if available
+    const displayName = blockId ? `${blockName}(#${blockId})` : blockName;
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `[Blocks] %c${ICONS.failed} SKIPPED%c %c${displayName}%c in ${hierarchy} %c(optional, not registered)`,
+      STYLES.failed,
+      "",
+      STYLES.blockName,
+      "font-weight: normal",
+      STYLES.hint
+    );
+  }
+
+  /**
+   * Check if a group is currently active.
+   */
+  hasActiveGroup(): boolean {
+    return this.#currentGroup !== null;
+  }
+
+  /**
    * Check if a log entry should be rendered as a collapsible group when it has children.
    * Param groups and route state handle their own grouping internally.
    *
@@ -584,41 +619,6 @@ class BlockDebugLogger {
     const icon = result ? ICONS.passed : ICONS.failed;
     // eslint-disable-next-line no-console
     console.debug(`[Blocks] ${icon} ${type}:`, args);
-  }
-
-  /**
-   * Log that an optional block was skipped because it's not registered.
-   * Uses standalone log (no group needed since there are no conditions to show).
-   * Format matches endGroup header: `[Blocks] ✗ SKIPPED {displayName} in {hierarchy}`
-   *
-   * @param blockName - The name of the missing optional block.
-   * @param blockId - The block's unique ID, or null if not set.
-   * @param hierarchy - The outlet/container hierarchy path.
-   */
-  logOptionalMissing(
-    blockName: string,
-    blockId: string | null,
-    hierarchy: string
-  ): void {
-    // Format display name with ID if available
-    const displayName = blockId ? `${blockName}(#${blockId})` : blockName;
-
-    // eslint-disable-next-line no-console
-    console.log(
-      `[Blocks] %c${ICONS.failed} SKIPPED%c %c${displayName}%c in ${hierarchy} %c(optional, not registered)`,
-      STYLES.failed,
-      "",
-      STYLES.blockName,
-      "font-weight: normal",
-      STYLES.hint
-    );
-  }
-
-  /**
-   * Check if a group is currently active.
-   */
-  hasActiveGroup(): boolean {
-    return this.#currentGroup !== null;
   }
 }
 

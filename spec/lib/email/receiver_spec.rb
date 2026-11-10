@@ -15,6 +15,48 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  describe "MIME structure depth" do
+    it "raises a MaxMimeDepthExceededError when the message is nested too deeply" do
+      expect {
+        Email::Receiver.new(nested_mime_email(Email::Receiver::MAX_MIME_DEPTH + 10))
+      }.to raise_error(Email::Receiver::MaxMimeDepthExceededError)
+    end
+
+    it "accepts a message nested within the maximum depth" do
+      expect {
+        Email::Receiver.new(nested_mime_email(Email::Receiver::MAX_MIME_DEPTH - 1))
+      }.to_not raise_error
+    end
+  end
+
+  describe "MIME structure width" do
+    it "raises a MaxMimePartsExceededError when the message has too many parts" do
+      expect {
+        Email::Receiver.new(wide_mime_email(Email::Receiver::MAX_MIME_PARTS + 10))
+      }.to raise_error(Email::Receiver::MaxMimePartsExceededError)
+    end
+
+    it "accepts a message within the maximum number of parts" do
+      expect {
+        Email::Receiver.new(wide_mime_email(Email::Receiver::MAX_MIME_PARTS - 1))
+      }.to_not raise_error
+    end
+  end
+
+  context "when email is addressed to an automatic group" do
+    let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+    before { group.update!(incoming_email: "meat@bar.com") }
+
+    it "creates a private message in the group inbox" do
+      expect { process(:encoded_display_name) }.to change(Topic, :count).by(1)
+
+      topic = Topic.last
+      expect(topic).to be_private_message
+      expect(topic.allowed_groups).to contain_exactly(group)
+    end
+  end
+
   it "raises an EmptyEmailError when 'mail_string' is blank" do
     expect { Email::Receiver.new(nil) }.to raise_error(Email::Receiver::EmptyEmailError)
     expect { Email::Receiver.new("") }.to raise_error(Email::Receiver::EmptyEmailError)
@@ -23,6 +65,11 @@ RSpec.describe Email::Receiver do
   it "raises a ScreenedEmailError when email address is screened" do
     ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
     expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
+  end
+
+  it "raises a SiteArchivedError when the site is archived" do
+    SiteSetting.site_archived = true
+    expect { process(:new_user) }.to raise_error(Email::Receiver::SiteArchivedError)
   end
 
   it "raises EmailNotAllowed when email address is not on allowlist" do
@@ -179,6 +226,21 @@ RSpec.describe Email::Receiver do
   describe "new message to a group" do
     fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
 
+    it "delivers email when the sender's name matches a watched word" do
+      SiteSetting.enable_staged_users = true
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+      mail = Mail.read_from_string(email(:encoded_display_name))
+      mail.from = "Badger <badger@example.com>"
+
+      post = Email::Receiver.new(mail.to_s).process!
+
+      expect(post).to be_persisted
+      expect(post.topic.allowed_groups).to include(group)
+      expect(post.user).to be_staged
+      expect(post.user.email).to eq("badger@example.com")
+      expect(UsernameValidator.new(post.user.username).valid_format?).to eq(true)
+    end
+
     it "handles encoded display names" do
       expect { process(:encoded_display_name) }.to change(Topic, :count)
 
@@ -198,8 +260,35 @@ RSpec.describe Email::Receiver do
       expect(Topic.last.title).to eq("This topic needs a title")
     end
 
+    it "rejects email from a suspended sender" do
+      Fabricate(:user, email: "one@foo.com", suspended_till: 1.year.from_now)
+
+      expect { process(:email_reply_1) }.to raise_error(
+        Email::Receiver::SuspendedUserError,
+      ).and not_change(Topic, :count)
+    end
+
+    it "bounds the body of posts created without validations" do
+      SiteSetting.max_post_length = 100
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: Someone <someone@example.com>
+        To: team@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      post = Email::Receiver.new(mail).process!
+
+      expect(post.raw.length).to be <= SiteSetting.max_post_length
+    end
+
     context "with reply_by_email configured" do
       before { configure_reply_by_email }
+
       it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
         expect { process(:cc) }.to change(Topic, :count)
 
@@ -583,6 +672,7 @@ RSpec.describe Email::Receiver do
         process(:email_to_group_email_username_1)
         Topic.last
       end
+
       fab!(:user_in_group) do
         u = Fabricate(:user)
         Fabricate(:group_user, user: u, group: group)
@@ -776,6 +866,47 @@ RSpec.describe Email::Receiver do
       expect { process(:new_user) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
     end
 
+    it "bounds the body of posts from staged users" do
+      SiteSetting.max_post_length = 100
+      category.update_columns(email_in_allow_strangers: true)
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: Someone <someone@example.com>
+        To: category@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      post = Email::Receiver.new(mail).process!
+
+      expect(post.raw.length).to be <= SiteSetting.max_post_length
+    end
+
+    it "rejects oversized posts from users that require validation" do
+      SiteSetting.max_post_length = 100
+      Fabricate(
+        :user,
+        email: "existing@bar.com",
+        trust_level: TrustLevel[2],
+        refresh_auto_groups: true,
+      )
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: existing@bar.com
+        To: category@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      expect { Email::Receiver.new(mail).process! }.to raise_error(Email::Receiver::InvalidPost)
+    end
+
     it "raises an InsufficientTrustLevelError when user's trust level isn't enough" do
       Fabricate(:user, email: "existing@bar.com", trust_level: TrustLevel[3])
       SiteSetting.email_in_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
@@ -784,7 +915,7 @@ RSpec.describe Email::Receiver do
       )
     end
 
-    it "works" do
+    it "publishes the topic_created event with incoming addresses" do
       handler_calls = 0
       handler =
         proc do |topic|
@@ -824,80 +955,65 @@ RSpec.describe Email::Receiver do
       expect(handler_calls).to eq(1)
     end
 
-    it "creates visible topic for ham" do
-      SiteSetting.email_in_spam_header = "none"
-
-      Fabricate(
-        :user,
-        email: "existing@bar.com",
-        trust_level: TrustLevel[2],
-        refresh_auto_groups: true,
-      )
-      expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(true)
-
-      post = Post.last
-      expect(post.hidden).to eq(false)
-      expect(post.hidden_at).to eq(nil)
-      expect(post.hidden_reason_id).to eq(nil)
-    end
-
-    it "creates hidden topic for X-Spam-Flag" do
-      SiteSetting.email_in_spam_header = "X-Spam-Flag"
-
-      user =
+    context "with spam and Authentication-Results headers" do
+      fab!(:user) do
         Fabricate(
           :user,
           email: "existing@bar.com",
           trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
-      expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+      end
 
-    it "creates hidden topic for X-Spam-Status" do
-      SiteSetting.email_in_spam_header = "X-Spam-Status"
+      it "creates visible topic for ham" do
+        SiteSetting.email_in_spam_header = "none"
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+        expect { process(:existing_user) }.to change { Topic.count }.by(1)
 
-    it "creates hidden topic for X-SES-Spam-Verdict" do
-      SiteSetting.email_in_spam_header = "X-SES-Spam-Verdict"
+        expect(Topic.last.visible).to eq(true)
+        expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
+      end
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+      shared_examples "moderating email identified as spam" do |header:, fixture:|
+        it "queues the post and silences the sender" do
+          SiteSetting.email_in_spam_header = header
 
-    it "creates hidden topic for failed Authentication-Results header" do
-      SiteSetting.email_in_authserv_id = "example.com"
+          expect { process(fixture) }.to change { ReviewableQueuedPost.count }.by(1)
+          expect(user.reload.silenced?).to be(true)
+        end
+      end
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(false)
+      context "with the X-Spam-Flag header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Flag",
+                         fixture: :spam_x_spam_flag
+      end
+
+      context "with the X-Spam-Status header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-Spam-Status",
+                         fixture: :spam_x_spam_status
+      end
+
+      context "with the X-SES-Spam-Verdict header" do
+        include_examples "moderating email identified as spam",
+                         header: "X-SES-Spam-Verdict",
+                         fixture: :spam_x_ses_spam_verdict
+      end
+
+      it "enqueues the post for a failed Authentication-Results header" do
+        SiteSetting.email_in_authserv_id = "example.com"
+
+        expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
+        expect(user.reload.silenced?).to be(false)
+      end
+
+      it "enqueues the post when evaluating the Authentication-Results header fails" do
+        Email::AuthenticationResults.any_instance.stubs(:action).raises(StandardError)
+        Discourse.expects(:warn_exception).once
+
+        expect { process(:existing_user) }.to change { ReviewableQueuedPost.count }.by(1)
+      end
     end
 
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
@@ -1085,13 +1201,50 @@ RSpec.describe Email::Receiver do
     end
   end
 
+  describe "HTML email with many line breaks inside inline elements" do
+    fab!(:category) do
+      Fabricate(:category, email_in: "category@bar.com", email_in_allow_strangers: true)
+    end
+
+    def raw_html_email(html)
+      <<~EMAIL
+        Return-Path: <stranger@example.com>
+        From: stranger@example.com
+        To: category@bar.com
+        Subject: Line breaks inside inline elements
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+        Message-ID: <#{SecureRandom.hex}@example.com>
+        MIME-Version: 1.0
+        Content-Type: text/html; charset=UTF-8
+
+        <html><body>#{html}</body></html>
+      EMAIL
+    end
+
+    it "processes deeply nested inline elements without stalling the mail worker" do
+      html = "<div>#{"a<br>b<br>c<br>d<span>" * 100}x#{"</span>" * 100}</div>"
+
+      expect {
+        Timeout.timeout(10) { Email::Receiver.new(raw_html_email(html)).process! }
+      }.to change(Topic, :count).by(1)
+    end
+
+    it "processes a wide inline element without stalling the mail worker" do
+      html = "<div><span>#{"a<br>" * 10_000}</span></div>"
+
+      expect {
+        Timeout.timeout(10) { Email::Receiver.new(raw_html_email(html)).process! }
+      }.to change(Topic, :count).by(1)
+    end
+  end
+
   describe "#reply_by_email_address_regex" do
     before do
       SiteSetting.reply_by_email_address = ""
       SiteSetting.alternative_reply_by_email_addresses = ""
     end
 
-    it "it matches nothing if there is not reply_by_email_address" do
+    it "matches nothing when reply_by_email_address is blank" do
       expect(Email::Receiver.reply_by_email_address_regex).to eq(/$a/)
     end
 
@@ -1420,24 +1573,57 @@ RSpec.describe Email::Receiver do
 
     before { SiteSetting.block_auto_generated_emails = true }
 
-    it "should allow creating topic even when email is autogenerated" do
+    it "allows creating a topic from an autogenerated email" do
       expect { process(:mailinglist) }.to change { Topic.count }
       expect(IncomingEmail.last.is_auto_generated).to eq(false)
     end
 
-    it "should allow replying without reply key" do
+    it "allows replying without a reply key" do
       process(:mailinglist)
       topic = Topic.last
 
       expect { process(:mailinglist_reply) }.to change { topic.posts.count }
     end
 
-    it "should skip validations for staged users" do
+    it "does not use a mirror destination to reply to a private message" do
+      private_message_author = Fabricate(:user, refresh_auto_groups: true)
+      private_message_recipient = Fabricate(:user, refresh_auto_groups: true)
+      attacker_recipient = Fabricate(:user, email: "attacker-recipient@example.com")
+      private_message =
+        Fabricate(
+          :private_message_topic,
+          user: private_message_author,
+          recipient: private_message_recipient,
+        )
+      private_post = create_post(topic: private_message, user: private_message_author)
+      attacker_email = <<~EMAIL
+        From: attacker@example.com
+        To: list@example.com
+        Cc: #{attacker_recipient.email}
+        Subject: Re: private message
+        In-Reply-To: <discourse/post/#{private_post.id}@#{Email::MessageIdService.host}>
+        References: <discourse/post/#{private_post.id}@#{Email::MessageIdService.host}>
+        Message-ID: <attacker-private-message@example.com>
+        Date: Wed, 11 Mar 2026 10:00:00 +0000
+
+        Attacker-controlled private message content.
+      EMAIL
+
+      expect { Email::Receiver.new(attacker_email).process! }.not_to change {
+        private_message.posts.count
+      }
+      expect(private_message.allowed_users).to contain_exactly(
+        private_message_author,
+        private_message_recipient,
+      )
+    end
+
+    it "skips validations for staged users" do
       Fabricate(:user, email: "alice@foo.com", staged: true)
       expect { process(:mailinglist_short_message) }.to change { Topic.count }
     end
 
-    it "should skip validations for regular users" do
+    it "skips validations for regular users" do
       Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
       expect { process(:mailinglist_short_message) }.to change { Topic.count }
     end
@@ -1451,11 +1637,11 @@ RSpec.describe Email::Receiver do
         Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
       end
 
-      it "should allow creating topic within read-only category" do
+      it "allows creating a topic in the read-only category" do
         expect { process(:mailinglist) }.to change { Topic.count }
       end
 
-      it "should allow replying within read-only category" do
+      it "allows replying in the read-only category" do
         process(:mailinglist)
         topic = Topic.last
 
@@ -1586,6 +1772,64 @@ RSpec.describe Email::Receiver do
 
       Bye!
       MD
+
+    it "preserves text siblings and content in independent containers" do
+      mail = <<~EMAIL
+        Content-Type: text/html; charset=UTF-8
+
+        <div>
+          <p>Reply</p>
+          <div id="Signature">Signature</div>
+          Keep this text
+          <p>Quoted reply</p>
+        </div>
+        <div><p>Independent content</p></div>
+      EMAIL
+
+      body, elided = described_class.new(mail).select_body
+
+      expect(body).to eq("Reply\n\nKeep this text\n\nIndependent content")
+      expect(elided).to eq("Signature\n\nQuoted reply")
+    end
+
+    it "preserves Outlook trimmed content order and content following horizontal rules" do
+      mail = <<~EMAIL
+        Content-Type: text/html; charset=UTF-8
+
+        <p>Reply</p>
+        <hr>
+        <p>More reply</p>
+        <div id="Signature">Signature</div>
+        <div>
+          <p>Quoted reply</p>
+          <div id="Signature">Nested signature</div>
+          <p>Nested quote</p>
+        </div>
+        <p>Outside quote</p>
+      EMAIL
+
+      body, elided = described_class.new(mail).select_body
+
+      expect(body).to eq("Reply\n\nMore reply")
+      expect(elided).to eq(
+        "---\n\nSignature\n\nQuoted reply\n\nOutside quote\n\nNested signature\n\nNested quote",
+      )
+    end
+
+    it "preserves Apple Mail signature markers while trimming following elements" do
+      mail = <<~EMAIL
+        Content-Type: text/html; charset=UTF-8
+
+        <p>Reply</p>
+        <div id="AppleMailSignature">Signature</div>
+        <p>Quoted reply</p>
+      EMAIL
+
+      body, elided = described_class.new(mail).select_body
+
+      expect(body).to eq("Reply\n\nSignature")
+      expect(elided).to eq("Quoted reply")
+    end
 
     it "strips lines if strip_incoming_email_lines is enabled" do
       SiteSetting.strip_incoming_email_lines = true
@@ -1970,7 +2214,8 @@ RSpec.describe Email::Receiver do
           Email::Receiver::ReplyNotAllowedError,
         )
       end
-      it "works" do
+
+      it "creates the reply" do
         expect { process(:reply_user_matching) }.to change { topic.posts.count }
       end
 
@@ -2174,7 +2419,7 @@ RSpec.describe Email::Receiver do
         )
       end
 
-      it "removes the translated 'Previous Replies' marker" do
+      it "removes the translated 'Previous Replies' marker from previous-replies email" do
         expect { process(:previous_replies_de) }.to change { topic.posts.count }
         expect(topic.posts.last.raw).to eq(
           "This will not include the previous discussion that is present in this email.",
@@ -2188,7 +2433,7 @@ RSpec.describe Email::Receiver do
         )
       end
 
-      it "removes the translated 'Previous Replies' marker" do
+      it "removes the translated 'Previous Replies' marker from reply-above email" do
         expect { process(:reply_above_de) }.to change { topic.posts.count }
         expect(topic.posts.last.raw).to eq(
           "This will not include the previous discussion that is present in this email.",

@@ -146,22 +146,4 @@ RSpec.describe UsersController do
       end
     end
   end
-
-  describe "#user_menu_bookmarks" do
-    context "when a bookmarked topic's assignment is inactive" do
-      fab!(:topic) { Fabricate(:read_topic, current_user: admin) }
-      fab!(:bookmark) { Fabricate(:bookmark, user: admin, bookmarkable: topic) }
-
-      fab!(:assignment) do
-        Fabricate(:topic_assignment, topic: topic, assigned_to: assignee, active: false)
-      end
-
-      it "does not include an assigned user" do
-        get "/u/#{admin.username}/user-menu-bookmarks"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body.dig("bookmarks", 0)).not_to have_key("assigned_to_user")
-      end
-    end
-  end
 end

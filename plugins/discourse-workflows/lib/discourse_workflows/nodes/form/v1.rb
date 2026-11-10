@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Form
       class V1 < NodeType
+        COMPLETION_PAGE_TYPE = "completion"
+
         description(
           name: "action:form",
           version: "1.0",
@@ -12,6 +14,7 @@ module DiscourseWorkflows
             color: "blue",
           },
           group: "human_review",
+          output_contracts: [{ mode: :passthrough }],
           properties: {
             page_type: {
               type: :options,
@@ -125,10 +128,18 @@ module DiscourseWorkflows
           ],
         )
 
+        def self.output_schemas(configuration = {}, input_schemas: [])
+          if (configuration || {}).deep_stringify_keys["page_type"] == COMPLETION_PAGE_TYPE
+            return super
+          end
+
+          FormTrigger::V1.output_schemas(configuration)
+        end
+
         def execute(exec_ctx)
           page_type = exec_ctx.get_node_parameter("page_type", 0, default: "page")
 
-          return [exec_ctx.input_items] if page_type == "completion"
+          return [exec_ctx.input_items] if page_type == COMPLETION_PAGE_TYPE
 
           exec_ctx.put_execution_to_wait(nil)
           [exec_ctx.input_items]

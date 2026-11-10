@@ -57,6 +57,8 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
       end
     end
 
+    sync_permanent_display_states
+
     UpcomingChanges.clear_caches!
     DiscourseUpdates.clear_latest_new_feature_created_at_cache
 
@@ -84,5 +86,36 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
 
   def status_changed?(previous_status, current_status)
     previous_status&.to_sym != current_status
+  end
+
+  # Once a permanent change's setting is removed its conditional display rule is
+  # gone too, so we keep the latest result on its permanent status event for the
+  # new features feed to respect.
+  def sync_permanent_display_states
+    permanent_change_names =
+      SiteSetting.upcoming_change_site_settings.select do |change_name|
+        UpcomingChanges.change_status(change_name) == :permanent
+      end
+    return if permanent_change_names.empty?
+
+    latest_status_events =
+      UpcomingChangeEvent
+        .status_changed
+        .where(upcoming_change_name: permanent_change_names)
+        .group_by(&:upcoming_change_name)
+        .transform_values(&:last)
+
+    permanent_change_names.each do |change_name|
+      event = latest_status_events[change_name.to_s]
+      next if event&.event_data&.dig("new_value") != "permanent"
+
+      was_conditionally_displayed = UpcomingChanges::ConditionalDisplay.should_display?(change_name)
+      next if event.event_data["was_conditionally_displayed"] == was_conditionally_displayed
+
+      event.update!(
+        event_data:
+          event.event_data.merge("was_conditionally_displayed" => was_conditionally_displayed),
+      )
+    end
   end
 end

@@ -21,10 +21,10 @@ module DiscourseAi
         def default_options(dialect)
           options =
             if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
-              max_tokens = 4096
-              max_tokens = 8192 if bedrock_model_id.match?(/3.[57]/)
-
-              result = { anthropic_version: "bedrock-2023-05-31", max_tokens: max_tokens }
+              result = {
+                anthropic_version: "bedrock-2023-05-31",
+                max_tokens: effective_max_output_tokens,
+              }
               apply_anthropic_thinking_config!(result)
               apply_anthropic_effort_config!(result)
 
@@ -42,45 +42,6 @@ module DiscourseAi
 
         def supports_anthropic_thinking?
           bedrock_model_id.include?("anthropic") || bedrock_model_id.include?("claude")
-        end
-
-        def bedrock_model_id
-          case llm_model.name
-          when "claude-2"
-            "anthropic.claude-v2:1"
-          when "claude-3-haiku", "claude-3-haiku-20240307"
-            "anthropic.claude-3-haiku-20240307-v1:0"
-          when "claude-3-sonnet"
-            "anthropic.claude-3-sonnet-20240229-v1:0"
-          when "claude-instant-1"
-            "anthropic.claude-instant-v1"
-          when "claude-3-opus"
-            "anthropic.claude-3-opus-20240229-v1:0"
-          when "claude-3-5-sonnet", "claude-3-5-sonnet-20241022", "claude-3-5-sonnet-latest"
-            "anthropic.claude-3-5-sonnet-20241022-v2:0"
-          when "claude-3-5-sonnet-20240620"
-            "anthropic.claude-3-5-sonnet-20240620-v1:0"
-          when "claude-3-5-haiku", "claude-3-5-haiku-20241022", "claude-3-5-haiku-latest"
-            "anthropic.claude-3-5-haiku-20241022-v1:0"
-          when "claude-3-7-sonnet", "claude-3-7-sonnet-20250219", "claude-3-7-sonnet-latest"
-            "anthropic.claude-3-7-sonnet-20250219-v1:0"
-          when "claude-opus-4-1", "claude-opus-4-1-20250805"
-            "anthropic.claude-opus-4-1-20250805-v1:0"
-          when "claude-opus-4", "claude-opus-4-20250514"
-            "anthropic.claude-opus-4-20250514-v1:0"
-          when "claude-sonnet-4", "claude-sonnet-4-20250514"
-            "anthropic.claude-sonnet-4-20250514-v1:0"
-          when "claude-opus-4-5"
-            "anthropic.claude-opus-4-5-20250918-v1:0"
-          when "claude-sonnet-4-5"
-            "anthropic.claude-sonnet-4-5-20250514-v1:0"
-          when "claude-opus-4-6"
-            "anthropic.claude-opus-4-6-v1"
-          when "claude-sonnet-4-6"
-            "anthropic.claude-sonnet-4-6-v1"
-          else
-            llm_model.name
-          end
         end
 
         def model_uri
@@ -214,6 +175,23 @@ module DiscourseAi
             log.request_tokens = processor.input_tokens if processor.input_tokens
             log.response_tokens = processor.output_tokens if processor.output_tokens
           end
+        end
+
+        def reset_attempt_state!
+          super
+          @raw_response = nil
+        end
+
+        def output_stop_reason
+          super if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
+        end
+
+        def output_limit_reached?
+          dialect.is_a?(DiscourseAi::Completions::Dialects::Claude) && super
+        end
+
+        def reported_reasoning_tokens
+          super if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
         end
 
         def processor

@@ -144,6 +144,34 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
       expect(results2.size).to eq(3)
       expect(results2.sort).to eq([0, 1, 2])
     end
+
+    context "when work is queued behind a busy worker" do
+      let(:min_threads) { 1 }
+      let(:max_threads) { 4 }
+      let(:idle_time) { 30 }
+
+      it "finishes queued work and terminates every worker" do
+        started = Queue.new
+        release = Queue.new
+        completed = Queue.new
+        pool.post do
+          started << true
+          release.pop
+          completed << 0
+        end
+        expect(started.pop(timeout: 5)).to eq(true)
+        3.times { |index| pool.post { completed << index + 1 } }
+
+        pool.shutdown
+        release << true
+        pool.wait_for_termination(timeout: 5)
+
+        expect(4.times.map { completed.pop(timeout: 5) }).to eq([0, 1, 2, 3])
+        expect(pool.stats[:thread_count]).to eq(0)
+      ensure
+        release&.push(true)
+      end
+    end
   end
 
   describe "error handling" do

@@ -18,6 +18,27 @@ RSpec.describe DiscourseAi::Completions::Dialects::Converse do
       expect(translated.messages).to eq([{ role: "user", content: [{ text: "admin: Who am I?" }] }])
     end
 
+    it "records a skip for a document it cannot render as text" do
+      model.update!(allowed_attachment_types: ["pdf"])
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, content: ["Read this: ", { upload_id: 123 }] }],
+        )
+      prompt.upload_skips = []
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [{ kind: :document, filename: "report.pdf", mime_type: "application/pdf", base64: "eA==" }],
+      )
+
+      translated = described_class.new(prompt, model).translate
+
+      expect(translated.messages).to eq([{ role: "user", content: [{ text: "Read this: " }] }])
+      expect(prompt.upload_skips).to eq(
+        [{ upload_id: 123, filename: "report.pdf", message: "not accepted by this model" }],
+      )
+    end
+
     it "keeps participant names with text that follows an image" do
       model.update!(vision_enabled: true)
       prompt =

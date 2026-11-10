@@ -11,18 +11,18 @@ export default class AdminCancelSubscription extends Component {
 
   <template>
     <DModal
+      @closeModal={{@closeModal}}
       @title={{i18n
         "discourse_subscriptions.user.subscriptions.operations.destroy.confirm"
       }}
-      @closeModal={{@closeModal}}
     >
       <:body>
-        <Input @type="checkbox" @checked={{this.refund}} />
+        <Input @checked={{this.refund}} @type="checkbox" />
         {{i18n "discourse_subscriptions.admin.ask_refund"}}
       </:body>
       <:footer>
         <DButton
-          @label="yes_value"
+          class="btn-danger"
           @action={{fn
             @model.cancelSubscription
             (hash
@@ -33,9 +33,9 @@ export default class AdminCancelSubscription extends Component {
           }}
           @icon="xmark"
           @isLoading={{@model.subscription.loading}}
-          class="btn-danger"
+          @label="yes_value"
         />
-        <DButton @label="no_value" @action={{@closeModal}} />
+        <DButton @action={{@closeModal}} @label="no_value" />
       </:footer>
     </DModal>
   </template>

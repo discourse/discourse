@@ -1,4 +1,8 @@
 import { click, fillIn, triggerEvent, waitFor } from "@ember/test-helpers";
+import {
+  codeEditorValue,
+  fillInCodeEditor,
+} from "discourse/tests/helpers/code-editor-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -86,6 +90,7 @@ class Field {
       case "checkbox":
         return this.element.querySelector("input");
       case "code":
+        return this.element.querySelector(".cm-content");
       case "textarea":
       case "composer":
         return this.element.querySelector("textarea");
@@ -100,16 +105,24 @@ class Field {
     }
   }
 
+  get pickerElement() {
+    if (this.controlType !== "color") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    return this.element.querySelector(".form-kit__control-color-input-picker");
+  }
+
   value() {
     switch (this.resolvedControlType) {
       case "input-number":
         return parseInt(this.inputElement.value, 10);
+      case "code":
+        return codeEditorValue(this.element.querySelector(".code-editor"));
       // String-based controls fall through to return raw value
       case "input":
       case "input-text":
       case "input-email":
       case "password":
-      case "code":
       case "textarea":
       case "composer":
       case "color":
@@ -143,6 +156,11 @@ class Field {
   }
 
   async fillIn(value) {
+    if (this.controlType === "code") {
+      await fillInCodeEditor(this.element.querySelector(".code-editor"), value);
+      return;
+    }
+
     await fillIn(this.inputElement, value);
   }
 
@@ -213,13 +231,6 @@ class Field {
     return !!this.element.querySelector(
       ".form-kit__control-color-input-prefix"
     );
-  }
-
-  get pickerElement() {
-    if (this.controlType !== "color") {
-      throw new Error(`Unsupported control type: ${this.controlType}`);
-    }
-    return this.element.querySelector(".form-kit__control-color-input-picker");
   }
 
   swatches() {
@@ -333,7 +344,7 @@ class Field {
    * Triggers any event on the input element of the field.
    *
    * @param {string} eventName - The name of the event to trigger.
-   * @param {Object} [options={}] - Additional options for the event.
+   * @param {Record<string, unknown>} [options={}] - Additional options for the event.
    */
   async triggerEvent(eventName, options = {}) {
     await triggerEvent(this.inputElement, eventName, options);

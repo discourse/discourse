@@ -165,6 +165,14 @@
   z-index: z("header") - 1;
 }
 
+.pswp__video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: contain;
+  background: rgb(var(--always-black-rgb));
+}
+
 // photoswipe custom caption
 .pswp__caption {
   left: 0;

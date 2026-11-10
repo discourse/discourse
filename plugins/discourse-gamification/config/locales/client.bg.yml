@@ -28,9 +28,7 @@ bg:
       close: "Затвори"
       delete: "Изтрий"
       edit: "Редактирай"
-      back: "Назад"
       save: "Запази "
-      apply: "Приложи"
       update_range:
         last_10_days: "Последните 10 дни"
         last_30_days: "Последните 30 дни"
@@ -44,3 +42,4 @@ bg:
         username: "Потребител"
         date: "Дата"
         description: "Описание"
+        category_id: "Категория"

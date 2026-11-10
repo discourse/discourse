@@ -149,6 +149,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
         let(:tweet_content) { "I've never played Minecraft" }
         include_context "with standard tweet info"
         before { @onebox_fixture = "twitterstatus_noclient" }
+
         include_context "with engines"
 
         let(:avatar) do
@@ -169,6 +170,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       @link = "https://x.com/MKBHD/status/1625192182859632661"
       @onebox_fixture = "xstatus_noclient"
     end
+
     include_context "with engines"
 
     it_behaves_like "an engine"

@@ -27,6 +27,11 @@ tr_TR:
                 lt_1h: "< 1 saat"
                 gt_24h: "> 24 saat"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Değişiklikler"
+        changes_removed: "Kaldırıldı"
+        tag_names: "Etiketler"
     notifications:
       alt:
         solved:
@@ -97,6 +102,11 @@ tr_TR:
           solved: "çözüldü"
           unsolved: "çözülmedi"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Konu"
+            category: "Kategori"
       web_hooks:
         solved_event:
           group_name: "Çözülmüş Olay"

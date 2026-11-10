@@ -4,6 +4,7 @@ import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import {
@@ -15,23 +16,41 @@ import { makeArray } from "discourse/lib/helpers";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 
+const INDEX_KEY = "@index";
+
+/**
+ * Renders its rows through the shared reorderable list when
+ * `enable_new_reordering_controls` is on, and through the legacy rows
+ * otherwise. The branch lives here so every caller follows the change.
+ *
+ * TODO (ui-kit-reorderable-list-cleanup) delete the legacy arm and the
+ * members marked for it once the change ships.
+ */
 @classNames("value-list")
 export default class ValueList extends Component {
+  @service siteSettings;
+
+  /** @type {string[] | null} */
   @autoTrackedArray collection = null;
 
+  /** @type {string | null} */
   inputDelimiter = null;
+
+  /** @type {"array" | null} */
   inputType = null;
   newValue = "";
+
+  /** @type {string | string[] | null | undefined} */
   values = null;
+
+  /** @type {((values: string[]) => void | Promise<void>) | null} */
   onChange = null;
 
-  @tracked _noneKeyOverride;
+  valueLabel = (value) => value;
 
-  @computed("newValue")
-  get inputInvalid() {
-    return isEmpty(this.newValue);
-  }
+  @tracked _noneKeyOverride;
 
   @computed("addKey")
   get noneKey() {
@@ -43,6 +62,22 @@ export default class ValueList extends Component {
 
   set noneKey(value) {
     this._noneKeyOverride = value;
+  }
+
+  @computed("newValue")
+  get inputInvalid() {
+    return isEmpty(this.newValue);
+  }
+
+  @computed("choices.[]", "collection.[]")
+  get filteredChoices() {
+    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
+  }
+
+  // TODO (ui-kit-reorderable-list-cleanup) delete with the legacy arm below.
+  @computed("collection")
+  get showUpDownButtons() {
+    return this.collection.length - 1 ? true : false;
   }
 
   didReceiveAttrs() {
@@ -57,11 +92,6 @@ export default class ValueList extends Component {
       "collection",
       this._splitValues(this.values, this.inputDelimiter || "\n")
     );
-  }
-
-  @computed("choices.[]", "collection.[]")
-  get filteredChoices() {
-    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
   }
 
   keyDown(event) {
@@ -95,6 +125,19 @@ export default class ValueList extends Component {
     this._addValue(choice);
   }
 
+  /**
+   * Applies a committed move onto the collection and persists the new order.
+   * Wrapping and announcements are the list's own.
+   *
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<string>} move - The normalized move from the list.
+   */
+  @action
+  handleMove(move) {
+    this.collection.splice(0, this.collection.length, ...move.proposedToItems);
+    this._saveValues();
+  }
+
+  // TODO (ui-kit-reorderable-list-cleanup) delete with the legacy arm below.
   @action
   shift(operation, index) {
     let futureIndex = index + operation;
@@ -158,11 +201,6 @@ export default class ValueList extends Component {
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
   }
 
-  @computed("collection")
-  get showUpDownButtons() {
-    return this.collection.length - 1 ? true : false;
-  }
-
   _splitValues(values, delimiter) {
     if (values && values.length) {
       return values.split(delimiter).filter((x) => x);
@@ -173,46 +211,69 @@ export default class ValueList extends Component {
 
   <template>
     {{#if this.collection}}
-      <div class="values">
-        {{#each this.collection as |value index|}}
-          <div data-index={{index}} class="value">
-            <DButton
-              @action={{fn this.removeValue value}}
-              @icon="xmark"
-              class="btn-default remove-value-btn btn-small"
-            />
-
+      {{#if this.siteSettings.enable_new_reordering_controls}}
+        <DReorderableList
+          class="values"
+          @items={{this.collection}}
+          @itemTag="div"
+          @key={{INDEX_KEY}}
+          @label={{this.valueLabel}}
+          @onMove={{this.handleMove}}
+          @onRemove={{this.removeValue}}
+          @rowClass="value"
+          @tag="div"
+        >
+          <:row as |value controls|>
             <Input
+              class="value-input"
               title={{value}}
               @value={{value}}
-              class="value-input"
-              {{on "focusout" (fn this.changeValue index)}}
+              {{on "focusout" (fn this.changeValue controls.index)}}
             />
+          </:row>
+        </DReorderableList>
+      {{else}}
+        <div class="values">
+          {{#each this.collection as |value index|}}
+            <div class="value" data-index={{index}}>
+              <DButton
+                class="btn-default remove-value-btn btn-small"
+                @action={{fn this.removeValue value}}
+                @icon="xmark"
+              />
 
-            {{#if this.showUpDownButtons}}
-              <DButton
-                @action={{fn this.shift -1 index}}
-                @icon="arrow-up"
-                class="btn-default shift-up-value-btn btn-small"
+              <Input
+                class="value-input"
+                title={{value}}
+                @value={{value}}
+                {{on "focusout" (fn this.changeValue index)}}
               />
-              <DButton
-                @action={{fn this.shift 1 index}}
-                @icon="arrow-down"
-                class="btn-default shift-down-value-btn btn-small"
-              />
-            {{/if}}
-          </div>
-        {{/each}}
-      </div>
+
+              {{#if this.showUpDownButtons}}
+                <DButton
+                  class="btn-default shift-up-value-btn btn-small"
+                  @action={{fn this.shift -1 index}}
+                  @icon="arrow-up"
+                />
+                <DButton
+                  class="btn-default shift-down-value-btn btn-small"
+                  @action={{fn this.shift 1 index}}
+                  @icon="arrow-down"
+                />
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
     {{/if}}
 
     <ComboBox
-      @valueProperty={{null}}
-      @nameProperty={{null}}
-      @value={{this.newValue}}
       @content={{this.filteredChoices}}
+      @nameProperty={{null}}
       @onChange={{this.selectChoice}}
       @options={{hash allowAny=true none=this.noneKey disabled=@disabled}}
+      @value={{this.newValue}}
+      @valueProperty={{null}}
     />
   </template>
 }

@@ -78,32 +78,12 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.chat_pinned_messages = true;
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.noop = () => {};
   });
 
   test("does not render when the channel has no pins", async function (assert) {
     this.channel.pinnedMessagesCount = 0;
-
-    await render(
-      <template>
-        <ChatPinnedMessageBar
-          @channel={{this.channel}}
-          @onJumpToMessage={{this.noop}}
-        />
-      </template>
-    );
-
-    assert.dom(".chat-pinned-bar").doesNotExist();
-  });
-
-  test("does not render when the site setting is disabled", async function (assert) {
-    this.siteSettings.chat_pinned_messages = false;
-    this.channel.pinnedMessagesCount = 2;
-    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
-      pinResponse(this.channel, 2)
-    );
 
     await render(
       <template>
@@ -194,8 +174,8 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       <template>
         <ChatPinnedMessageBar
           @channel={{this.channel}}
-          @onJumpToMessage={{this.noop}}
           @hiddenMessageIds={{this.hiddenMessageIds}}
+          @onJumpToMessage={{this.noop}}
         />
       </template>
     );
@@ -219,8 +199,8 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       <template>
         <ChatPinnedMessageBar
           @channel={{this.channel}}
-          @onJumpToMessage={{this.noop}}
           @hiddenMessageIds={{this.hiddenMessageIds}}
+          @onJumpToMessage={{this.noop}}
         />
       </template>
     );
@@ -351,16 +331,14 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       pinResponse(this.channel, 3)
     );
     // message ids: 202 (excerpt 0, newest) / 201 (excerpt 1) / 200 (excerpt 2)
-    const view = new (class {
-      @tracked bottomId = null;
-    })();
+    const bottomId = tracked(null);
 
     await render(
       <template>
         <ChatPinnedMessageBar
           @channel={{this.channel}}
           @onJumpToMessage={{this.noop}}
-          @viewportBottomMessageId={{view.bottomId}}
+          @viewportBottomMessageId={{bottomId.value}}
         />
       </template>
     );
@@ -369,13 +347,13 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       .dom(".chat-pinned-bar__excerpt")
       .hasText("Pinned excerpt 0", "defaults to the newest pin");
 
-    view.bottomId = 201;
+    bottomId.value = 201;
     await settled();
     assert
       .dom(".chat-pinned-bar__excerpt")
       .hasText("Pinned excerpt 1", "follows the pin governing the view");
 
-    view.bottomId = 100; // above every pin
+    bottomId.value = 100; // above every pin
     await settled();
     assert
       .dom(".chat-pinned-bar__excerpt")

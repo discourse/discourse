@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import AiToolApproval from "../components/ai-tool-approval";
+import AiToolApproval from "../components/ai-tool-approval.gjs";
 
 function initializeAiToolApproval(api) {
   api.decorateCookedElement(

@@ -11,9 +11,8 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       DiscourseAi::Agents::Tools::Read,
       DiscourseAi::Agents::Tools::Time,
       DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog,
-      DiscourseWorkflows::Ai::Tools::WorkflowGraphContext,
+      DiscourseWorkflows::Ai::Tools::WorkflowNodeDetails,
       DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch,
-      DiscourseWorkflows::Ai::Tools::WorkflowScriptContext,
       DiscourseWorkflows::Ai::Tools::WorkflowValidateScript,
       DiscourseWorkflows::Ai::Tools::WorkflowAiAgentCatalog,
       DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult,
@@ -30,11 +29,13 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       "Use workflow_ai_agent_catalog before adding action:ai_agent nodes",
       "parameters.runner_username",
       "parameters.upload_ids",
-      "Use search_chat_channels before asking the admin to choose a chat channel",
+      'With action:send_chat_message target "user" or "group", set target_usernames to an array of usernames or an expression',
       "Use search_chat_integration_channels before asking the admin to choose an external chat integration channel",
-      "call workflow_validate_script with the exact mode and code",
+      "then test the script with workflow_validate_script",
       "Do not add a Code node only to copy trigger fields forward",
       "create_ai_agent",
+      "Node menu (type: description):\n- ",
+      "- action:code: Run custom JavaScript code",
     )
   end
 
@@ -48,6 +49,19 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
 
     SiteSetting.chat_enabled = true
     expect(described_class.new.tools).to include(DiscourseWorkflows::Ai::Tools::SearchChatChannels)
+  end
+
+  it "keeps chat channel search available when chat is enabled after the tool registry is cached" do
+    skip "Chat plugin is not available" if !defined?(::Chat::Channel)
+
+    SiteSetting.chat_enabled = false
+    described_class.instance_variable_set(:@external_registry_signature, nil)
+    described_class.new.available_tools
+
+    SiteSetting.chat_enabled = true
+    expect(described_class.new.available_tools).to include(
+      DiscourseWorkflows::Ai::Tools::SearchChatChannels,
+    )
   end
 
   it "includes external chat integration channel search only when the integration is enabled" do

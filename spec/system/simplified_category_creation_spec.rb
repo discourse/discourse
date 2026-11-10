@@ -108,6 +108,27 @@ describe "Simplified Category Creation" do
       expect(category.reload.category_groups.map(&:group_id)).to include(group.id)
     end
 
+    it "shows a warning instead of visibility options for a special category" do
+      category.set_permissions(staff: :full)
+      category.save!
+      SiteSetting.staff_category_id = category.id
+
+      category_page.visit_general(category)
+
+      expect(page).to have_content(I18n.t("js.category.special_warning"))
+      expect(page).to have_no_css("input.form-kit__control-radio[value='group_restricted']")
+
+      form.field("name").fill_in("Renamed staff")
+      category_page.save_settings
+
+      expect(category.reload.name).to eq("Renamed staff")
+
+      category_page.visit_security(category)
+
+      expect(page).to have_content(I18n.t("js.category.special_warning"))
+      expect(page).to have_no_content(I18n.t("js.category.permissions.specific_groups_have_access"))
+    end
+
     it "shows error when color is invalid" do
       category_page.visit_general(category)
 

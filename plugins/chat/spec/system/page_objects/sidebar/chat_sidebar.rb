@@ -33,7 +33,55 @@ module PageObjects
       end
 
       def open_browse
-        channels_section.find(".sidebar-section-header-button", visible: false).click
+        open_channel_list_options.option('[data-menu-option-id="browseChannels"]').click
+      end
+
+      def open_channel_list_options
+        open_list_options(PUBLIC_CHANNELS_SECTION_SELECTOR)
+      end
+
+      def open_list_options(selector)
+        find(selector).hover
+        menu =
+          PageObjects::Components::DMenu.new(
+            "#{selector} [data-sidebar-action-id='channelListOptions']",
+            "chat-channel-list-options-menu",
+          )
+        menu.expand
+        menu
+      end
+
+      def set_channel_filter(filter)
+        set_list_filter(PUBLIC_CHANNELS_SECTION_SELECTOR, filter)
+      end
+
+      def set_starred_filter(filter)
+        set_list_filter(STARRED_CHANNELS_SECTION_SELECTOR, filter)
+      end
+
+      def set_dm_filter(filter)
+        set_list_filter(DM_CHANNELS_SECTION_SELECTOR, filter)
+      end
+
+      def set_list_filter(selector, filter)
+        menu = open_list_options(selector)
+        filter_trigger = menu.option('[data-menu-option-id="filterChannels"]')
+        filter_trigger.click
+        submenu =
+          PageObjects::Components::DMenu.new(filter_trigger, "chat-channel-list-filter-menu")
+        submenu.option(%([data-menu-option-id="#{filter}"])).click
+      end
+
+      def set_channel_sort(sort)
+        menu = open_channel_list_options
+        sort_trigger = menu.option('[data-menu-option-id="sortChannels"]')
+        sort_trigger.click
+        submenu = PageObjects::Components::DMenu.new(sort_trigger, "chat-channel-list-sort-menu")
+        submenu.option(%([data-menu-option-id="#{sort}"])).click
+      end
+
+      def toggle_channel_filter
+        find("[data-sidebar-action-id='toggleChannelFilter']").click
       end
 
       def open_channel(channel)
@@ -87,6 +135,10 @@ module PageObjects
 
       def has_no_channel?(channel)
         has_no_css?(".sidebar-section-link.channel-#{channel.id}")
+      end
+
+      def channel_names
+        within(channels_section) { all(".sidebar-section-link-content-text").map(&:text) }
       end
 
       def has_user_threads_section?

@@ -61,9 +61,13 @@
 #     #   end
 #
 #     # @!scope class
-#     # @!method params(name = :default, default_values_from: nil, &block)
+#     # @!method params(name = :default, default_values_from: nil, base_class: Service::ContractBase, from_resource: nil, only: nil, except: nil, &block)
 #     # @param name [Symbol] name for this contract
 #     # @param default_values_from [Symbol] name of the model to get default values from
+#     # @param base_class [Class] base class for the contract
+#     # @param from_resource [Class] resource whose writable names and types are imported
+#     # @param only [Array<String, Symbol>] writable names to import
+#     # @param except [Array<String, Symbol>] writable names to exclude from the import
 #     # @param block [Proc] a block containing validations
 #     # Checks the validity of the input parameters.
 #     # Implements ActiveModel::Validations and ActiveModel::Attributes.

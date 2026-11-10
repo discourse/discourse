@@ -32,14 +32,14 @@ describe "Discourse Livestream - Topic Livestream with events - Authenticated" d
       topic = Fabricate(:topic, category:)
       first_post = Fabricate(:post, topic:)
       event =
-        DiscoursePostEvent::Event.create!(
+        DiscourseEvents::Events::Event.create!(
           id: first_post.id,
           original_starts_at: 1.day.from_now,
           original_ends_at: 2.days.from_now,
           livestream: true,
           location: PageObjects::Pages::TopicLivestream::LIVESTREAM_URL,
         )
-      DiscoursePostEvent::Invitee.create_attendance!(current_user.id, event.id, :going)
+      DiscourseEvents::Events::Invitee.create_attendance!(current_user.id, event.id, :going)
       25.times { Fabricate(:post, topic:) }
 
       visit "/t/#{topic.slug}/#{topic.id}/26"
@@ -49,7 +49,7 @@ describe "Discourse Livestream - Topic Livestream with events - Authenticated" d
       expect(topic_page).to have_css("body.confirmed-event-assistance", wait: 25)
     end
 
-    it "clicks going to join the chat channel for livestream topics" do
+    it "toggles attendance for a normal event" do
       topic_livestream.create_normal_event_topic(composer, topic_page)
 
       find(".going-button", wait: 25).click

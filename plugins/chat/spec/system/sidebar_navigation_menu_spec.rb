@@ -37,6 +37,24 @@ RSpec.describe "Sidebar navigation menu" do
       )
     end
 
+    context "when the channel has an emoji and emoji are disabled" do
+      before do
+        channel_1.update!(emoji: "spiral_calendar")
+        SiteSetting.enable_emoji = false
+      end
+
+      it "falls back to the hash icon prefix" do
+        visit("/")
+
+        link = ".sidebar-section-link[data-link-name='#{channel_1.slug}']"
+        expect(sidebar_page.channels_section).to have_css(
+          "#{link} .sidebar-section-link-prefix svg.prefix-icon.d-icon-d-chat",
+        )
+        expect(sidebar_page.channels_section).to have_no_css("#{link} .prefix-emoji")
+        expect(sidebar_page.channels_section).to have_no_content(":spiral_calendar:")
+      end
+    end
+
     it "channel link has the correct href" do
       visit("/")
 

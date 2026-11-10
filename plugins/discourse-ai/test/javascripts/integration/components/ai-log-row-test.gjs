@@ -6,6 +6,64 @@ import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log
 module("Integration | Component | AiLogRow", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("renders empty outcomes as warnings", async function (assert) {
+    this.log = {
+      id: 1,
+      outcome: "empty",
+      response_status: 200,
+      request_tokens: 3000,
+      response_tokens: 2000,
+      reasoning_tokens: 1900,
+    };
+    await render(
+      <template>
+        <table><tbody><AiLogRow @log={{this.log}} /></tbody></table>
+      </template>
+    );
+    assert
+      .dom(".ai-logs__status-icon.--warning.d-icon-triangle-exclamation")
+      .hasAttribute(
+        "aria-label",
+        "Empty response",
+        "warnings have an accessible label"
+      );
+    assert
+      .dom(".ai-logs__token-summary .sr-only")
+      .hasText(
+        "3,000 input tokens and 2,000 output tokens",
+        "reasoning usage is left to the detail view"
+      );
+  });
+
+  test("renders truncated outcomes as warnings", async function (assert) {
+    this.log = {
+      id: 1,
+      outcome: "truncated",
+      response_status: 200,
+      request_tokens: 3000,
+      response_tokens: 2000,
+      reasoning_tokens: 1900,
+    };
+    await render(
+      <template>
+        <table><tbody><AiLogRow @log={{this.log}} /></tbody></table>
+      </template>
+    );
+    assert
+      .dom(".ai-logs__status-icon.--warning.d-icon-triangle-exclamation")
+      .hasAttribute(
+        "aria-label",
+        "Truncated at output limit",
+        "warnings have an accessible label"
+      );
+    assert
+      .dom(".ai-logs__token-summary .sr-only")
+      .hasText(
+        "3,000 input tokens and 2,000 output tokens",
+        "reasoning usage is left to the detail view"
+      );
+  });
+
   test("renders statusless positive-token calls as successful", async function (assert) {
     this.log = {
       id: 43,
@@ -21,8 +79,12 @@ module("Integration | Component | AiLogRow", function (hooks) {
     );
 
     assert
-      .dom('.ai-logs__status-dot[title="Successful"]')
-      .hasAttribute("aria-label", "Successful", "success dot is labelled");
+      .dom(".ai-logs__status-icon.d-icon-circle-check")
+      .hasAttribute(
+        "aria-label",
+        "Successful",
+        "success uses a labelled check icon"
+      );
   });
 
   test("renders operational metadata and opens details", async function (assert) {
@@ -54,12 +116,19 @@ module("Integration | Component | AiLogRow", function (hooks) {
     );
 
     assert
-      .dom('.ai-logs__status-dot[title="Failed"]')
-      .hasAttribute("aria-label", "Failed", "failure dot is labelled");
+      .dom(".ai-logs__status-icon.d-icon-circle-xmark")
+      .hasAttribute(
+        "aria-label",
+        "Failed",
+        "failure uses a labelled xmark icon"
+      );
     assert.dom(".ai-logs__flag").exists({ count: 1 }, "retry uses an icon");
     assert
-      .dom('.ai-logs__flag[title="Retried"]')
+      .dom('.ai-logs__flag[aria-label="Retried"]')
       .exists("retry state is available to assistive technology");
+    assert
+      .dom(".ai-logs__row .fk-d-tooltip__trigger")
+      .exists({ count: 2 }, "status and retry icons surface tooltips");
     assert.dom(".ai-logs__id").doesNotExist("log ID is omitted");
     assert.dom(".ai-logs__feature").hasText("summarize");
     assert.dom(".ai-logs__model").hasText("Test model");
@@ -81,11 +150,18 @@ module("Integration | Component | AiLogRow", function (hooks) {
         "assistive text retains exact token counts"
       );
     assert
-      .dom('.ai-logs__row .btn[aria-label="View details"]')
-      .exists("details action is labelled");
+      .dom(".ai-logs__row .btn .d-icon-far-file-lines")
+      .exists("details is an icon-only button");
     assert
-      .dom(".ai-logs__row .d-icon-ellipsis")
-      .exists("details use a compact ellipsis icon");
+      .dom(".ai-logs__row .btn")
+      .hasAttribute(
+        "aria-label",
+        "Details",
+        "details icon has an accessible name"
+      );
+    assert
+      .dom(".ai-logs__row .btn")
+      .hasAttribute("title", "Details", "details icon has a tooltip");
 
     await click(".ai-logs__row .btn");
     assert.strictEqual(this.openedId, 42, "details open for the selected log");

@@ -37,6 +37,9 @@ module Email
     class InactiveUserError < ProcessingError
     end
 
+    class SuspendedUserError < ProcessingError
+    end
+
     class SilencedUserError < ProcessingError
     end
 
@@ -85,6 +88,9 @@ module Email
     class ReplyToDigestError < ProcessingError
     end
 
+    class SiteArchivedError < ProcessingError
+    end
+
     class TooManyRecipientsError < ProcessingError
       attr_reader :recipients_count
 
@@ -93,12 +99,27 @@ module Email
       end
     end
 
+    class MaxMimeDepthExceededError < ProcessingError
+    end
+
+    class MaxMimePartsExceededError < ProcessingError
+    end
+
     attr_reader :incoming_email
     attr_reader :raw_email
     attr_reader :mail
     attr_reader :message_id
+    attr_reader :from_email
 
     COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
+
+    # The mail gem walks nested MIME parts recursively, so bound the nesting
+    # before any traversal to keep one message from exhausting the stack.
+    MAX_MIME_DEPTH = 20
+
+    # Bound the total number of MIME parts so a wide message can't monopolise
+    # the mail worker.
+    MAX_MIME_PARTS = 1_000
 
     def self.formats
       @formats ||= Enum.new(plaintext: 1, markdown: 2)
@@ -119,6 +140,8 @@ module Email
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
       @destinations ||= opts[:destinations]
+
+      ensure_shallow_mime_structure!
     end
 
     def process!
@@ -163,6 +186,42 @@ module Email
       false
     end
 
+    def ensure_shallow_mime_structure!
+      pending = [[@mail, 1]]
+      part_count = 1
+
+      until pending.empty?
+        part, depth = pending.pop
+        raise MaxMimeDepthExceededError if depth > MAX_MIME_DEPTH
+
+        next unless part.multipart?
+
+        # Mail parses every sibling as soon as `parts` is called, so check the
+        # raw source first to avoid building a huge tree only to reject it.
+        raise MaxMimePartsExceededError if too_many_mime_parts?(part)
+
+        children = part.parts
+        part_count += children.size
+        raise MaxMimePartsExceededError if part_count > MAX_MIME_PARTS
+
+        pending.concat(children.map { |child| [child, depth + 1] })
+      end
+    end
+
+    def too_many_mime_parts?(part)
+      boundary = part.boundary
+      return false if boundary.blank?
+
+      count = 0
+      part
+        .raw_source
+        .scan(/(?:\A|\r?\n)--#{Regexp.escape(boundary)}(?:--)?(?=\s*$)/) do
+          count += 1
+          return true if count > MAX_MIME_PARTS
+        end
+      false
+    end
+
     def create_incoming_email
       cc_addresses = Array.wrap(@mail.cc)
       cc_addresses.concat(embedded_email.cc) if has_been_forwarded? && embedded_email&.cc
@@ -182,6 +241,7 @@ module Email
       raise NoSenderDetectedError if @from_email.blank?
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
+      raise SiteArchivedError if SiteSetting.site_archived
 
       user = @from_user
 
@@ -224,7 +284,7 @@ module Email
         # the email is a reply to *something*
         if category = post.topic&.category
           # it's a topic in a category
-          if category.mailinglist_mirror?
+          if sent_to_mailinglist_mirror?(category)
             # replies to categories that are mailing mirrors should work,
             # even if reply_by_email is not otherwise enabled
           elsif !SiteSetting.reply_by_email_enabled
@@ -290,6 +350,7 @@ module Email
       @incoming_email.update_columns(user_id: user.id)
 
       raise InactiveUserError if !user.active && !user.staged
+      raise SuspendedUserError if user.suspended?
       raise SilencedUserError if user.silenced?
     end
 
@@ -423,6 +484,10 @@ module Email
 
     def auth_res_action
       @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
+    rescue StandardError => e
+      # fail closed without losing the post: queue it for review
+      Discourse.warn_exception(e, message: "Failed to evaluate Authentication-Results")
+      @auth_res_action = :enqueue
     end
 
     def select_body
@@ -550,7 +615,12 @@ module Email
     def extract_from_outlook(doc)
       # Outlook properly identifies the signature and any replied/forwarded email
       # Use their id to remove them and anything that comes after
-      elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
+      elided =
+        remove_with_following_siblings(
+          doc,
+          predicate: "@id='Signature' or @id='divRplyFwdMsg'",
+          standalone_predicate: "local-name()='hr'",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -583,7 +653,14 @@ module Email
     def extract_from_apple_mail(doc)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
-      elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
+      elided =
+        doc
+          .children
+          .xpath(
+            ".//*[@id='AppleMailSignature'][position()=last()]/following-sibling::* | " \
+              "self::*[@id='AppleMailSignature'][not(preceding-sibling::*[@id='AppleMailSignature'][1])]/following-sibling::*",
+          )
+          .remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -591,17 +668,18 @@ module Email
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided =
-        doc.css(
-          "*[class^='moz-cite'], *[class^='moz-cite'] ~ *, " \
-            "*[class^='moz-signature'], *[class^='moz-signature'] ~ *, " \
-            "*[class^='moz-forward'], *[class^='moz-forward'] ~ *",
-        ).remove
+        remove_with_following_siblings(
+          doc,
+          predicate:
+            "starts-with(@class, 'moz-cite') or " \
+              "starts-with(@class, 'moz-signature') or starts-with(@class, 'moz-forward')",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_protonmail(doc)
       # Removes anything that has a class starting with "protonmail_" and everything after that
-      elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
+      elided = remove_with_following_siblings(doc, predicate: "starts-with(@class, 'protonmail_')")
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -852,15 +930,11 @@ module Email
         all_destinations.map { |d| Email::Receiver.check_address(d, is_bounce?) }.reject(&:blank?)
     end
 
-    def sent_to_mailinglist_mirror?
-      @sent_to_mailinglist_mirror ||=
-        begin
-          destinations.each do |destination|
-            return true if destination.is_a?(Category) && destination.mailinglist_mirror?
-          end
-
-          false
-        end
+    def sent_to_mailinglist_mirror?(category = nil)
+      destinations.any? do |destination|
+        destination.is_a?(Category) && destination.mailinglist_mirror? &&
+          (category.nil? || destination == category)
+      end
     end
 
     def self.check_address(address, include_verp = false)
@@ -1263,7 +1337,13 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      Email::MessageIdService.find_post_from_message_ids(message_ids)
+      post = Email::MessageIdService.find_post_from_message_ids(message_ids)
+      if !force && SiteSetting.find_related_post_with_key &&
+           !(post&.topic&.category && sent_to_mailinglist_mirror?(post.topic.category))
+        return
+      end
+
+      post
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)
@@ -1509,7 +1589,10 @@ module Email
 
       add_elided_to_raw!(options)
 
-      if sent_to_mailinglist_mirror?
+      topic_category = options[:topic]&.category
+      topic_category ||= Category.find_by(id: options[:category]) if options[:category]
+
+      if topic_category && sent_to_mailinglist_mirror?(topic_category)
         options[:skip_validations] = true
         options[:skip_guardian] = true
       else
@@ -1528,6 +1611,12 @@ module Email
         )
         user = Discourse.system_user
         options[:post_type] = Post.types[:whisper]
+      end
+
+      # Skipping validations also skips the max_post_length check, so bound
+      # the body here before it reaches the post or queued post records.
+      if options[:skip_validations]
+        options[:raw] = options[:raw].truncate(SiteSetting.max_post_length, omission: "")
       end
 
       # To avoid race conditions with the post alerter and Group SMTP
@@ -1685,6 +1774,16 @@ module Email
       return false if post.blank?
       num_of_days = SiteSetting.disallow_reply_by_email_after_days
       num_of_days > 0 && post.created_at < num_of_days.days.ago
+    end
+
+    private
+
+    def remove_with_following_siblings(doc, predicate:, standalone_predicate: nil)
+      matches = "descendant-or-self::*[#{predicate}]"
+      first_matches = "#{matches}[not(preceding-sibling::*[#{predicate}][1])]"
+      query = "#{matches} | #{first_matches}/following-sibling::*"
+      query += " | descendant-or-self::*[#{standalone_predicate}]" if standalone_predicate
+      doc.children.xpath(query).remove
     end
   end
 end

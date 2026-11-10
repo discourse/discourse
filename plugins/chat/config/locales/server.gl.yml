@@ -7,6 +7,10 @@
 gl:
   chat:
     deleted_chat_username: eliminado
+    crawler:
+      thread_replies:
+        one: "%{count} resposta"
+        other: "%{count} repostas"
     errors:
       not_accepting_dms: "Sentímolo, %{username} non acepta mensaxes neste momento."
     reviewables:

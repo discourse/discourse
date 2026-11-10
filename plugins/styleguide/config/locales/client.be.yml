@@ -10,6 +10,13 @@ be:
       sections:
         typography:
           example: "Сардэчна запрашаем у дыскурсе"
+        context_menu:
+          actions:
+            delete: "Выдаліць"
+        reorderable_list:
+          policies_pinned: "Замацаваныя"
+          policies_required: "Абавязкова"
+          table_type: "Тып"
         colors:
           title: "<......"
         icons:
@@ -24,6 +31,19 @@ be:
           title: "Паведамленне"
         more_topics:
           title: "Больш тэмаў"
+        roving_focus:
+          toolbar:
+            copy: "Капіраваць"
+          adjacent:
+            field: "Пошук"
+            recent: "Надаўнія"
+          combobox:
+            daily: "Штодня"
+            weekly: "Штотыдзень"
+            monthly: "Штомесяц"
+            never: "Ніколі"
+          tree:
+            select: "Выбраць"
         tooltips:
           description: "Апісанне"
           header: "Header"

@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Category from "discourse/models/category";
+import { fillInCodeEditor } from "discourse/tests/helpers/code-editor-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -37,40 +38,9 @@ acceptance("Param Input", function (needs) {
       return helper.response({});
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
-      return helper.response({
-        queries: [
-          {
-            id: -6,
-            name: "Top 100 Likers",
-            description:
-              "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            username: "system",
-            group_ids: [],
-            last_run_at: "2021-02-11T08:29:59.337Z",
-            user_id: -1,
-          },
-          {
-            id: -7,
-            name: "Invalid Query",
-            description: "",
-            username: "bianca",
-            group_ids: [],
-            last_run_at: "2022-01-14T16:47:34.244Z",
-            user_id: 1,
-          },
-          {
-            id: 3,
-            name: "Params test",
-            description: "test for params.",
-            username: "system",
-            group_ids: [41],
-            last_run_at: "2021-02-11T08:29:59.337Z",
-            user_id: -1,
-          },
-        ],
-      });
-    });
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default"])
+    );
 
     server.get("/admin/plugins/discourse-data-explorer/queries/-6", () => {
       return helper.response({
@@ -418,8 +388,8 @@ acceptance("Param Input", function (needs) {
   test("creates input boxes if has parameters when save", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
-    await fillIn(
-      ".query-editor .ace_text-input",
+    await fillInCodeEditor(
+      ".query-editor .code-editor",
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
     await click(".query-run-split__primary");

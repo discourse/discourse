@@ -16,11 +16,15 @@ class CategoryHashtagDataSource
     "category"
   end
 
+  def self.ref_for(category_id)
+    Category.find_by(id: category_id)&.slug_ref
+  end
+
   def self.category_to_hashtag_item(category)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text =
         (
-          if category.parent_category
+          if category.parent_category && !SiteSetting.enable_category_hashtag_cards
             "#{category.parent_category.name} > #{category.name}"
           else
             category.name

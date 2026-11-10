@@ -4,7 +4,7 @@ import renderTag from "discourse/lib/render-tag";
 import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
 
 @classNames("tag-category-admin-dropdown")
 @selectKitOptions({

@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { selectedRange } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
-import AiPostHelperMenu from "../../components/ai-post-helper-menu";
-import { showPostAIHelper } from "../../lib/show-ai-helper";
+import AiPostHelperMenu from "../../components/ai-post-helper-menu.gjs";
+import { showPostAIHelper } from "../../lib/show-ai-helper.js";
 
 export default class AiPostHelperTrigger extends Component {
   static shouldRender(args, context) {
@@ -146,11 +146,11 @@ export default class AiPostHelperTrigger extends Component {
 
     <div class="ai-post-helper">
       <DButton
-        @icon="discourse-sparkles"
-        @title="discourse_ai.ai_helper.post_options_menu.title"
-        @label="discourse_ai.ai_helper.post_options_menu.trigger"
-        @action={{this.showAiPostHelperMenu}}
         class="btn-flat ai-post-helper__trigger"
+        @action={{this.showAiPostHelperMenu}}
+        @icon="discourse-sparkles"
+        @label="discourse_ai.ai_helper.post_options_menu.trigger"
+        @title="discourse_ai.ai_helper.post_options_menu.title"
       />
     </div>
   </template>

@@ -54,6 +54,7 @@ module UpcomingChanges
     # local logins via email are possible. Must stay visible once enabled so
     # admins can still find and disable it.
     def self.should_display_enable_local_logins_via_code?
+      return true if SiteSetting.current[:enable_local_logins_via_code]
       return true if UpcomingChanges.enabled?(:enable_local_logins_via_code)
 
       SiteSetting.enable_local_logins && SiteSetting.enable_local_logins_via_email &&
@@ -254,6 +255,8 @@ module UpcomingChanges
     # untouched, so the change resumes when the plugin is re-enabled.
     return false if !owning_plugin_enabled?(change_setting_name)
 
+    return false if !change_dependencies_met?(change_setting_name)
+
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
     # is false.
@@ -279,13 +282,13 @@ module UpcomingChanges
   end
 
   # The `allow_enabled_for` metadata for an upcoming change, or nil if unset.
-  # When nil, every "Enabled for" dropdown option is permitted. Otherwise it
-  # is an array containing any subset of [:everyone, :staff, :specific_groups].
+  # When nil, admins can enable for everyone or select groups. Otherwise it
+  # restricts the audience to everyone, staff, specific_groups, or staff plus specific_groups.
   def self.allow_enabled_for(change_setting_name)
     change_metadata(change_setting_name)[:allow_enabled_for]
   end
 
-  # Whether a setting's `allow_enabled_for` permits a given dropdown target.
+  # Whether a setting's `allow_enabled_for` permits a given audience.
   # `:no_one` is always allowed. Returns true when the metadata is absent.
   def self.target_allowed?(change_setting_name, target)
     return true if target.to_sym == :no_one
@@ -302,12 +305,86 @@ module UpcomingChanges
     allow.include?(:staff) || allow.include?(:specific_groups)
   end
 
+  def self.group_setting_name(change_setting_name)
+    change_metadata(change_setting_name)[:group_setting]&.to_sym
+  end
+
+  def self.group_setting_data(change_setting_name)
+    name = group_setting_name(change_setting_name)
+    return unless name && settings_provider.has_setting?(name)
+    return unless settings_provider.type_supervisor.get_type(name) == :group_list
+
+    {
+      setting: name,
+      value: settings_provider.public_send(name).to_s,
+      mandatory_values: settings_provider.mandatory_values[name],
+      disallowed_groups: settings_provider.disallowed_groups[name],
+      requires_confirmation: settings_provider.requires_confirmation_settings[name],
+    }
+  end
+
+  ROLE_GROUP_KEYS = {
+    all_members: %i[logged_in_users anonymous_users],
+    staff: %i[staff],
+    admins: %i[admins],
+    developers: %i[admins],
+    moderators: %i[moderators],
+  }.freeze
+
+  # The automatic groups matching an upcoming change's `impact_role`. The admin
+  # UI shows these as the default audience, and as a locked audience when the
+  # change cannot be scoped to groups.
+  def self.role_group_ids(change_setting_name)
+    role = change_metadata(change_setting_name)[:impact_role]&.to_sym
+    Group::AUTO_GROUPS.values_at(*ROLE_GROUP_KEYS.fetch(role, ROLE_GROUP_KEYS[:all_members]))
+  end
+
+  # Selecting the full default audience is stored as no restriction, so the
+  # change keeps applying to everyone the feature itself targets.
+  def self.normalize_group_names(change_setting_name, group_names)
+    names = Array.wrap(group_names).reject(&:blank?).uniq
+    unless exists?(change_setting_name) && !group_setting_name(change_setting_name) &&
+             target_allowed?(change_setting_name, :everyone)
+      return names
+    end
+
+    everyone_groups =
+      Group.where(id: Group::AUTO_GROUPS.values_at(:logged_in_users, :anonymous_users)).pluck(:name)
+    return [] if everyone_groups.length == 2 && (everyone_groups - names).empty?
+
+    role_groups = Group.where(id: role_group_ids(change_setting_name)).pluck(:name)
+    role_groups.present? && role_groups.sort == names.sort ? [] : names
+  end
+
+  def self.group_scope_allowed?(change_setting_name, group_names)
+    allow = allow_enabled_for(change_setting_name)
+    staff_name = Group.find(Group::AUTO_GROUPS[:staff]).name
+    if allow&.include?(:staff) && allow.include?(:specific_groups) &&
+         !group_names.include?(staff_name)
+      return false
+    end
+
+    target =
+      if group_names.empty?
+        :everyone
+      elsif group_names == [staff_name]
+        :staff
+      else
+        :specific_groups
+      end
+    target_allowed?(change_setting_name, target)
+  end
+
   def self.has_groups?(change_setting_name)
-    group_ids_for(change_setting_name).present?
+    group_setting_name(change_setting_name).present? || group_ids_for(change_setting_name).present?
   end
 
   def self.group_ids_for(change_setting_name)
     change_setting_name = change_setting_name.to_sym
+    if (group_setting = group_setting_name(change_setting_name))
+      return settings_provider.public_send("#{group_setting}_map")
+    end
+    return [] if change_status(change_setting_name) == :permanent
     settings_provider.site_setting_group_ids[change_setting_name].presence || []
   end
 
@@ -324,9 +401,13 @@ module UpcomingChanges
     change_setting_name = change_setting_name.to_sym
     setting_enabled = UpcomingChanges.enabled?(change_setting_name)
 
-    # Anon users can only have upcoming changes enabled if it's set for Everyone
     if user.blank?
-      return false if UpcomingChanges.has_groups?(change_setting_name)
+      if UpcomingChanges.has_groups?(change_setting_name)
+        return(
+          setting_enabled &&
+            group_ids_for(change_setting_name).include?(Group::AUTO_GROUPS[:anonymous_users])
+        )
+      end
     else
       if UpcomingChanges.has_groups?(change_setting_name)
         return(
@@ -371,8 +452,10 @@ module UpcomingChanges
   #   #   },
   #   # ]
   def self.stats_for_user(user:, acting_guardian:)
-    guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
-    user_belonging_to_group_ids = user.belonging_to_group_ids
+    guardian_visible_group_ids =
+      Group.visible_groups(acting_guardian.user, nil, include_pseudogroups: true).pluck(:id)
+    user_belonging_to_group_ids =
+      user.belonging_to_group_ids | [Group::AUTO_GROUPS[:logged_in_users]]
 
     settings_provider.upcoming_change_site_settings.filter_map do |name|
       next if UpcomingChanges.change_status(name) == :conceptual
@@ -423,7 +506,7 @@ module UpcomingChanges
   # @example
   #   enabled_for_with_groups(:new_feature, true, { 1 => "Group 1", 2 => "Group 2" })
   def self.enabled_for_with_groups(setting_name, setting_value, upcoming_change_selected_groups)
-    group_ids_for_setting = settings_provider.site_setting_group_ids[setting_name]
+    group_ids_for_setting = group_ids_for(setting_name)
     setting_groups =
       upcoming_change_selected_groups.values_at(*group_ids_for_setting).join(
         ",",
@@ -432,6 +515,17 @@ module UpcomingChanges
     enabled_for =
       if !setting_value
         "no_one"
+      elsif group_setting_name(setting_name)
+        if (
+             Group::AUTO_GROUPS.values_at(:anonymous_users, :logged_in_users) -
+               group_ids_for_setting
+           ).empty?
+          "everyone"
+        elsif group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
       elsif setting_groups.blank?
         # When `allow_enabled_for` excludes `:everyone` and the change is enabled
         # without an admin-configured scope (typically because it was auto-promoted
@@ -440,7 +534,7 @@ module UpcomingChanges
         # option. Backend access (`enabled_for_user?`) is unchanged — until the
         # admin picks a scope, the change is still effectively on for everyone.
         allow = allow_enabled_for(setting_name)
-        if allow.nil? || allow.include?(:everyone)
+        if change_status(setting_name) == :permanent || allow.nil? || allow.include?(:everyone)
           "everyone"
         elsif allow.include?(:staff)
           # Have to do this because the staff auto group name is localized
@@ -488,7 +582,7 @@ module UpcomingChanges
             GROUP BY upcoming_change_name
             ORDER BY MAX(created_at) DESC
           )
-          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value
+          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value, (upcoming_change_events.event_data->>'was_conditionally_displayed')::boolean as was_conditionally_displayed
           FROM latest_status_changes
           INNER JOIN upcoming_change_events ON upcoming_change_events.upcoming_change_name = latest_status_changes.upcoming_change_name AND upcoming_change_events.created_at = latest_status_changes.created_at
           ORDER BY latest_status_changes.created_at DESC
@@ -498,6 +592,7 @@ module UpcomingChanges
           statuses[result.upcoming_change_name] = {
             status: result.new_value,
             changed_at: result.created_at,
+            was_conditionally_displayed: result.was_conditionally_displayed,
           }
         end
       end
@@ -557,9 +652,8 @@ module UpcomingChanges
   end
 
   # Whether the settings the change itself depends_on (in site_settings.yml)
-  # currently hold the values the change needs. Used by the admin UI to warn
-  # admins when a change's prerequisites are not met, since enabling the change
-  # would have no effect (or be rejected by a validator) until they are.
+  # currently hold the values the change needs. Unmet prerequisites prevent
+  # the change from taking effect, even after automatic promotion or opt-in.
   def self.change_dependencies_met?(change_setting_name)
     dependencies = settings_provider.type_supervisor.dependencies[change_setting_name.to_sym]
     return true if dependencies.blank?

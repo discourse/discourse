@@ -1,0 +1,110 @@
+@use "lib/viewport";
+
+.dsa-moderation-action__user {
+  white-space: nowrap;
+  vertical-align: baseline;
+
+  .avatar {
+    margin-right: var(--space-1);
+  }
+}
+
+html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
+  z-index: z("modal", "popover");
+}
+
+.dsa-moderation-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2) var(--space-6);
+  border-block-end: 1px solid var(--content-border-color);
+  color: var(--primary-medium);
+
+  @include viewport.until(sm) {
+    font-size: var(--font-down-1);
+  }
+
+  li {
+    display: flex;
+    gap: 0 var(--space-2);
+    align-items: center;
+  }
+
+  .d-icon {
+    color: var(--primary-medium);
+    font-weight: normal;
+    font-size: var(--font-down-1);
+  }
+
+  .--current {
+    color: var(--primary);
+    font-weight: bold;
+  }
+
+  &__back.btn {
+    min-height: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+
+    &:hover,
+    &:focus-visible {
+      background: transparent;
+      color: var(--primary);
+    }
+  }
+}
+
+.dsa-moderation-help {
+  color: var(--primary-medium);
+}
+
+.dsa-moderation-title-help {
+  margin-inline: var(--space-2) auto;
+}
+
+.dsa-community-rule-trigger {
+  justify-content: space-between;
+  text-align: start;
+
+  .d-button-label {
+    @include ellipsis;
+    min-width: 0;
+  }
+}
+
+.dsa-community-rules.fk-d-menu {
+  z-index: z("modal", "popover");
+
+  .fk-d-menu__inner-content {
+    max-height: 40dvh;
+  }
+}
+
+.dsa-community-rule {
+  white-space: normal;
+  text-align: start;
+
+  &__texts {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__name,
+  &__explanation {
+    display: block;
+  }
+
+  &__name {
+    font-weight: var(--token-font-weight-semibold);
+  }
+
+  &__explanation {
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+  }
+}

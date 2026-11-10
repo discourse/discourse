@@ -9,6 +9,10 @@ import * as avatarUtils from "discourse/lib/avatar-utils";
 import loadPluginFeatures from "discourse/static/markdown-it/features";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 import { resetTranslationTree } from "discourse-markdown-it/features/emoji";
+import {
+  scanHashtags,
+  spliceHashtags,
+} from "discourse-markdown-it/features/hashtag-autocomplete";
 import { runtime } from "./runtime-state.js";
 
 // Passed to the markdown pipeline as plain callbacks, so functions not methods.
@@ -138,5 +142,13 @@ export class PrettyTextRubyInterface {
 
   static performEmojiEscape(text, options) {
     return performEmojiEscape(text, options);
+  }
+
+  static scanHashtags(raw) {
+    return scanHashtags(raw).map((candidate) => candidate.ref);
+  }
+
+  static spliceHashtags(raw, replacements) {
+    return spliceHashtags(raw, replacements);
   }
 }

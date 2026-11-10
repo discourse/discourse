@@ -63,13 +63,13 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
     let(:link_renderer) { described_class.new(format: :bbcode, embeds: buffer, defer: %i[link]) }
 
-    it "defers an attributed quote, recording the linkage and preserving the body" do
+    it "defers a quote that carries a source reference, recording the linkage and preserving the body" do
       raw =
         renderer.to_markdown('[quote="John, post:12, topic:34, username:john"]quoted body[/quote]')
 
       expect(buffer.quotes.size).to eq(1)
       descriptor = buffer.quotes.first
-      # The Discourse attribution format carries coordinates: `post:` is a post
+      # The Discourse quote header carries coordinates: `post:` is a post
       # number, `topic:` a topic id.
       expect(descriptor[:quoted_post_id]).to be_nil
       expect(descriptor[:quoted_topic_id]).to eq(34)
@@ -85,8 +85,9 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include("[/quote]")
     end
 
-    it "drops an attribution number too large for an id column" do
-      # Meta really has a post titled like this; SQLite raises binding a bignum.
+    it "drops a quote id too large for an id column" do
+      # A real forum turned out to have a post titled like this; SQLite raises
+      # binding a bignum.
       raw = renderer.to_markdown('[quote="A, post:77777777777777777789999, topic:2"]q[/quote]')
 
       descriptor = buffer.quotes.first
@@ -96,7 +97,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include(descriptor[:placeholder])
     end
 
-    it "renders an unattributed quote natively (nothing to remap)" do
+    it "renders a quote with no header natively (nothing to remap)" do
       raw = renderer.to_markdown("[quote]just text[/quote]")
 
       expect(buffer).to be_empty
@@ -127,28 +128,35 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     # (deferrable) label and the fence lands as a sibling block in the raw. Only
     # code that is inline to begin with (`[tt]`, or a Code node with no `block`
     # flag) can stay in a label; the unit test further down covers that.
-    {
-      "single-line, with a language" => [
-        "[url=https://example.com][code=ruby]x = 1[/code][/url]",
-        "```ruby\nx = 1\n```",
-      ],
-      "single-line, no language" => [
-        "[url=https://example.com][code]x = 1[/code][/url]",
-        "```\nx = 1\n```",
-      ],
-      "multi-line" => [
-        "[url=https://example.com][code=ruby]a\nb[/code][/url]",
-        "```ruby\na\nb\n```",
-      ],
-    }.each do |label, (bbcode, fence)|
-      it "hoists #{label} code out of a link label instead of deferring it into text" do
-        raw = link_renderer.to_markdown(bbcode)
+    context "when a code block appears inside a link label" do
+      shared_examples "hoisting block code out of a link label" do |bbcode:, expected_fence:|
+        it "records an empty link label and preserves the code fence" do
+          raw = link_renderer.to_markdown(bbcode)
 
-        expect(buffer.links).to contain_exactly(
-          hash_including(url: "https://example.com", text: nil),
-        )
-        expect(raw).to include(buffer.links.first[:placeholder])
-        expect(raw).to include(fence)
+          expect(buffer.links).to contain_exactly(
+            hash_including(url: "https://example.com", text: nil),
+          )
+          expect(raw).to include(buffer.links.first[:placeholder])
+          expect(raw).to include(expected_fence)
+        end
+      end
+
+      context "with a single line and a language" do
+        include_examples "hoisting block code out of a link label",
+                         bbcode: "[url=https://example.com][code=ruby]x = 1[/code][/url]",
+                         expected_fence: "```ruby\nx = 1\n```"
+      end
+
+      context "with a single line and no language" do
+        include_examples "hoisting block code out of a link label",
+                         bbcode: "[url=https://example.com][code]x = 1[/code][/url]",
+                         expected_fence: "```\nx = 1\n```"
+      end
+
+      context "with multiple lines" do
+        include_examples "hoisting block code out of a link label",
+                         bbcode: "[url=https://example.com][code=ruby]a\nb[/code][/url]",
+                         expected_fence: "```ruby\na\nb\n```"
       end
     end
 
@@ -300,12 +308,12 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       token = extract.call(node, nil)
 
       expect(collector.uploads).to contain_exactly(
-        { placeholder: token, upload_id: "abc123", original_markdown: nil },
+        { placeholder: token, upload_id: "abc123", original_markdown: nil, external_host: nil },
       )
     end
 
     it "maps a Quote node's ids to quoted_post_id and quoted_user_id" do
-      # BBCode can't carry them (phpBB-style id attribution arrives via the
+      # BBCode can't carry them (phpBB-style id references arrive via the
       # TextFormatter parser), so exercise the method directly.
       _node_class, extract = renderer.embed_handlers.fetch(:quote)
       node = Markbridge::AST::Quote.new(username: "alice", post_id: 9001, user_id: 12)
@@ -398,6 +406,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
           mention_type: Migrations::Database::IntermediateDB::Enums::MentionType::USER,
           target_id: nil,
           name: "gerhard",
+          original_markdown: nil,
         },
       )
     end

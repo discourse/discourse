@@ -32,9 +32,18 @@ export default class AdminAreaSettings extends Component {
     return !this.loading && this.settings.length > 0;
   }
 
+  get filter() {
+    return this.args.filter ?? "";
+  }
+
   @action
   async reloadSettings() {
     await this.#loadSettings();
+  }
+
+  @action
+  adminSettingsFilterChangedCallback(filterData) {
+    this.args.adminSettingsFilterChangedCallback(filterData.filter);
   }
 
   @bind
@@ -67,18 +76,9 @@ export default class AdminAreaSettings extends Component {
     }
   }
 
-  get filter() {
-    return this.args.filter ?? "";
-  }
-
-  @action
-  adminSettingsFilterChangedCallback(filterData) {
-    this.args.adminSettingsFilterChangedCallback(filterData.filter);
-  }
-
   <template>
     {{#if this.showBreadcrumb}}
-      <DBreadcrumbsItem @path={{@path}} @label={{i18n "settings"}} />
+      <DBreadcrumbsItem @label={{i18n "settings"}} @path={{@path}} />
     {{/if}}
 
     <div

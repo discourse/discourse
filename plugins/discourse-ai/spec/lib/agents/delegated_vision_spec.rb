@@ -46,6 +46,20 @@ RSpec.describe DelegatedVisionTestAgent do
 
   before { enable_current_plugin }
 
+  it "does not offer view_image handles for formats view_image cannot serve" do
+    svg = Fabricate(:upload, original_filename: "logo.svg", extension: "svg")
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        messages: [{ type: :user, content: ["Compare this", { upload_id: svg.id }] }],
+      )
+
+    prompt = agent.craft_prompt(context, llm: delegated_model.to_llm)
+
+    expect(prompt.messages.last[:content]).to eq(["Compare this", { upload_id: svg.id }])
+    expect(context.image_upload_authorized?(svg.id)).to eq(false)
+  end
+
   it "exposes view_image and replaces image parts with authorized handles" do
     context =
       DiscourseAi::Agents::BotContext.new(

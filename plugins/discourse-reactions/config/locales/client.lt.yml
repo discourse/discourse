@@ -11,6 +11,30 @@ lt:
         all: "Visi"
       main_reaction:
         add: "Mėgti šį įrašą"
+    discourse_workflows:
+      node_unavailable:
+        requires_reactions: "Reikia įjungti „Reactions“ įskiepį."
+      nodes:
+        "action:post_reaction": "Reaguoti į įrašą"
+        "trigger:post_reaction_changed": "Įrašo reakcija pakeista"
+      node_descriptions:
+        "action:post_reaction": "Pridėti arba pašalinti reakciją prie įrašo"
+        "trigger:post_reaction_changed_v1": "Suveikia, kai prie įrašo pridedama, pakeičiama arba pašalinama reakcija. Vartotojas yra tas asmuo, kuris sureagavo, o ne įrašo autorius."
+      post_reaction:
+        operations:
+          add: "Pridėti reakciją"
+          remove: "Pašalinti reakciją"
+        reaction: "Reakcija"
+        if_exists: "Jei vartotojas jau sureagavo"
+        if_exists_description: "Vartotojai vienam įrašui gali priskirti tik vieną reakciją."
+        if_exists_keep: "Išsaugokite jų reakciją"
+        if_exists_replace: "Pakeiskite jų reakciją"
+      post_reaction_changed:
+        changes_added: "Pridėta"
+        changes_replaced: "Pakeista"
+        changes_removed: "Pašalintas"
+        reaction: "Reakcija"
+        reaction_description: "Suveikia tik tada, kai ši reakcija pridedama, pakeičiama arba pašalinama. Palikite tuščią, kad tiktų bet kokiai reakcijai."
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       titles:

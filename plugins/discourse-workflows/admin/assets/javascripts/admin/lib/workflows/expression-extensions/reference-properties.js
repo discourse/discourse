@@ -1,4 +1,4 @@
-import { walkScope } from "../expression-context";
+import { walkScope } from "../expression-context.js";
 
 const PLAIN_IDENTIFIER = /^[A-Za-z_$][\w$]*$/;
 

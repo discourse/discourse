@@ -6,8 +6,8 @@ import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { logArgToConsole } from "../lib/console-logger";
-import { formatValue, getTypeInfo } from "../lib/value-formatter";
+import { logArgToConsole } from "../lib/console-logger.js";
+import { formatValue, getTypeInfo } from "../lib/value-formatter.js";
 
 /**
  * Shared component for displaying outlet arguments in a formatted table.
@@ -27,7 +27,7 @@ export default class ArgsTable extends Component {
    * Transforms the raw args object into an array of entry objects for display.
    * Each entry contains the original key/value plus formatted display representations.
    *
-   * @returns {Array<{key: string, value: any, displayValue: string, typeInfo: string, isDeprecated: boolean, deprecationInfo: Object|null}>}
+   * @returns {Array<{key: string, value: unknown, displayValue: string, typeInfo: string, isDeprecated: boolean, deprecationInfo: {message: string | undefined, since: string | undefined}|null}>}
    */
   get entries() {
     const entries = [];
@@ -95,19 +95,6 @@ export default class ArgsTable extends Component {
   }
 
   /**
-   * Extracts deprecation info from a deprecated argument for display.
-   *
-   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
-   * @returns {{message: string, since: string|undefined}}
-   */
-  #getDeprecationInfo(deprecatedArg) {
-    return {
-      message: deprecatedArg.message,
-      since: deprecatedArg.options?.since,
-    };
-  }
-
-  /**
    * Logs the argument value to the console and stores it in a global variable
    * for easy inspection. The variable is named `arg1`, `arg2`, etc.
    *
@@ -122,12 +109,24 @@ export default class ArgsTable extends Component {
     });
   }
 
+  /**
+   * Extracts deprecation info from a deprecated argument for display.
+   *
+   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
+   * @returns {{message: string, since: string|undefined}}
+   */
+  #getDeprecationInfo(deprecatedArg) {
+    return {
+      message: deprecatedArg.message,
+      since: deprecatedArg.options?.since,
+    };
+  }
+
   <template>
     {{#if this.entries.length}}
       <div class="outlet-args-table">
         {{#each this.entries as |entry|}}
           <button
-            type="button"
             class={{dConcatClass
               "outlet-args-table__row"
               (if entry.isDeprecated "--deprecated")
@@ -137,6 +136,7 @@ export default class ArgsTable extends Component {
               entry.deprecationInfo.message
               "Save to global variable"
             }}
+            type="button"
             {{on "click" (fn this.logValue entry)}}
           >
             <span class="outlet-args-table__key">

@@ -14,6 +14,7 @@ describe "UserGroupMembershipThroughBadge" do
   end
 
   before { BadgeGranter.enable_queue }
+
   after do
     BadgeGranter.disable_queue
     BadgeGranter.clear_queue!

@@ -37,15 +37,18 @@ describe FinalDestination::HTTP do
 
   # A minimal HTTP server on `bind`:<ephemeral> that answers every request with "hi".
   def with_http_server(bind = "127.0.0.1")
+    started = Queue.new
     server =
       WEBrick::HTTPServer.new(
         BindAddress: bind,
         Port: 0,
         Logger: WEBrick::Log.new(File::NULL),
         AccessLog: [],
+        StartCallback: -> { started << true },
       )
     server.mount_proc("/") { |_req, res| res.body = "hi" }
     thread = Thread.new { server.start }
+    started.pop
     yield server.config[:Port]
   ensure
     server&.shutdown
@@ -261,6 +264,38 @@ describe FinalDestination::HTTP do
 
         expect(connect_line.pop(timeout: 2)).to start_with("CONNECT 93.184.216.34:443")
       end
+    end
+  end
+
+  describe "#total_timeout" do
+    it "stops reading a response that trickles in past the deadline" do
+      server = TCPServer.new("127.0.0.1", 0)
+      trickler =
+        Thread.new do
+          client = server.accept
+          client.readpartial(4096)
+          client.write("HTTP/1.1 200 OK\r\n")
+          50.times do
+            client.write("X")
+            sleep 0.1
+          end
+        rescue IOError, SystemCallError
+        ensure
+          client&.close
+        end
+      FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).returns(%w[127.0.0.1])
+
+      http = FinalDestination::HTTP.new("test.invalid", server.addr[1])
+      http.read_timeout = 2
+      http.total_timeout = 0.5
+
+      duration =
+        elapsed { expect { http.start { |h| h.get("/") } }.to raise_error(Net::ReadTimeout) }
+
+      expect(duration).to be < 2
+    ensure
+      trickler&.kill
+      server&.close
     end
   end
 

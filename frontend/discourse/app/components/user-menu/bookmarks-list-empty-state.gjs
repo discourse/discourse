@@ -5,8 +5,8 @@ import { i18n } from "discourse-i18n";
 
 const BookmarksListEmptyState = <template>
   <DEmptyState
-    @title={{i18n "user.no_bookmarks_title"}}
     @body={{trustHTML (i18n "user.no_bookmarks_body" icon=(dIcon "bookmark"))}}
+    @title={{i18n "user.no_bookmarks_title"}}
   />
 </template>;
 

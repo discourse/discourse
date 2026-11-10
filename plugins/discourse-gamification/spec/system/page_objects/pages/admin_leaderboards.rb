@@ -27,12 +27,37 @@ module PageObjects
         excluded_groups_sk.collapse
       end
 
+      def click_creator(leaderboard)
+        find("#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__creator-link").click
+        self
+      end
+
       def edit_leaderboard(leaderboard)
         find("#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__edit").click
       end
 
+      def click_leaderboard_name(leaderboard)
+        find("#leaderboard-admin__row-#{leaderboard.id} .d-table__overview-link").click
+      end
+
+      def view_leaderboard(leaderboard)
+        row_menu(leaderboard).option(".leaderboard-admin__view").click
+      end
+
       def delete_leaderboard(leaderboard)
-        find("#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__delete").click
+        row_menu(leaderboard).option(".leaderboard-admin__delete").click
+      end
+
+      private
+
+      def row_menu(leaderboard)
+        menu =
+          PageObjects::Components::DMenu.new(
+            "#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin-menu-trigger",
+            "leaderboard-admin-menu",
+          )
+        menu.expand
+        menu
       end
     end
   end

@@ -1,6 +1,8 @@
 import { click, currentURL, fillIn, select, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import reportsBulkFixtures from "discourse/tests/fixtures/reports-bulk";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Reports", function (needs) {
   needs.user();
@@ -29,6 +31,37 @@ acceptance("Reports", function (needs) {
     await visit("/admin/reports/admin_logins");
 
     assert.dom(".export-csv-btn").exists();
+  });
+});
+
+acceptance("Reports | Moderator related items", function (needs) {
+  needs.user({ admin: false, moderator: true });
+
+  let requestParams;
+  needs.hooks.beforeEach(() => (requestParams = undefined));
+
+  needs.pretender((server, helper) => {
+    server.get("/admin/reports/bulk", (request) => {
+      if (
+        Object.keys(request.queryParams).some((key) =>
+          key.startsWith("reports[signups]")
+        )
+      ) {
+        requestParams = request.queryParams;
+      }
+      return helper.response(reportsBulkFixtures["/admin/reports/bulk"]);
+    });
+  });
+
+  test("moderators request only report aggregates", async function (assert) {
+    await visit("/admin/reports/signups");
+
+    assert.strictEqual(
+      requestParams["reports[signups][include_related_items]"],
+      undefined,
+      "omits the identity-level payload"
+    );
+    assert.dom(".admin-report.signups").exists("shows the aggregate report");
   });
 });
 
@@ -219,5 +252,32 @@ acceptance("Reports | Filter query params", function (needs) {
     assert.dom(".d-filter-controls__input").hasValue("");
     assert.dom(".d-filter-controls__dropdown").hasValue("all");
     assert.dom(".admin-section-landing-item__content").exists({ count: 3 });
+  });
+});
+
+acceptance("Reports: filters", function (needs) {
+  needs.user();
+  needs.site({
+    groups: [
+      {
+        id: 88,
+        name: "tl1",
+      },
+      {
+        id: 89,
+        name: "tl2",
+      },
+    ],
+  });
+
+  test("sets the group filter from the query params", async function (assert) {
+    await visit(
+      '/admin/reports/signups_with_groups?end_date=2018-07-16&filters=%7B"group"%3A88%7D&start_date=2018-06-16'
+    );
+
+    assert.strictEqual(
+      selectKit(".group-filter .combo-box").header().value(),
+      "88"
+    );
   });
 });

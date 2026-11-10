@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -71,9 +70,9 @@ export default class AdminConfigAreaCard extends Component {
 
           {{#if @collapsable}}
             <DButton
-              @title="sidebar.toggle_section"
-              @action={{this.toggleCardDisplay}}
               class="admin-config-area-card__toggle-button btn-transparent"
+              @action={{this.toggleCardDisplay}}
+              @title="sidebar.toggle_section"
             >
               {{dIcon this.headerCaretIcon}}
             </DButton>

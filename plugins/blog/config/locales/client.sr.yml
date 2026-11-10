@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  admin_js:
+    blog:
+      admin:
+        overridden: Posebna
+        preview_archive: Arhiviraj
+        edit: Izmeni
+        export: Izvoz
+        active: Aktivni
+  js:
+    blog:
+      panel:
+        change:
+          title: naslov
+      review:
+        create: Napravi link
+        copy: Kopija
+        open: Otvori
+        status:
+          active: Aktivni
+        closed_on: "Затвара %{date}"
+        revoke: Povuci
+        message: Povratne informacije
+      editor_table:
+        edit: Izmeni
+        status: Status
+        replies: Odgovori
+      drafts: Skice

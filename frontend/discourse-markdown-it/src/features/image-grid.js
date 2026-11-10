@@ -1,4 +1,4 @@
-import { applyDataAttributes } from "./bbcode-block";
+import { applyDataAttributes } from "./bbcode-block.js";
 
 const VALID_MODES = new Set(["grid", "carousel"]);
 

@@ -37,6 +37,10 @@ ru:
         remove: "Удалить эту эмоцию"
         cant_remove: "Вы больше не можете удалить поставленный лайк"
         unauthenticated: "Чтобы поставить лайк этой публикации, зарегистрируйтесь или войдите"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Добавлено"
+        changes_removed: "Отозваны"
     notifications:
       reaction_1_user_multiple_posts:
         one: "отреагировал(-а) на %{count} вашу публикацию"

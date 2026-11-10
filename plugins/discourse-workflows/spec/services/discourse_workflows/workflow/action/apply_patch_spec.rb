@@ -199,6 +199,39 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::ApplyPatch do
     expect(node.dig("parameters", "agent_name")).to eq("Workflow summary agent")
   end
 
+  it "mirrors an existing agent onto the node it is referenced from", :aggregate_failures do
+    response_format = [{ "key" => "verdict", "type" => "string" }]
+    agent = Fabricate(:ai_agent, name: "Workflow triage agent", response_format: response_format)
+
+    result =
+      described_class.call(
+        workflow: workflow,
+        operations: [
+          {
+            op: "add_node",
+            client_id: "triage-post",
+            node: {
+              type: "action:ai_agent",
+              name: "Triage post",
+              parameters: {
+                agent_id: agent.id,
+                prompt: "={{ $json.post.raw }}",
+              },
+            },
+          },
+        ],
+        persist: true,
+        user: admin,
+      )
+    node = workflow.reload.nodes.find { |workflow_node| workflow_node["type"] == "action:ai_agent" }
+
+    expect(result).to include(valid: true, errors: [])
+    expect(node["parameters"]).to include(
+      "agent_name" => "Workflow triage agent",
+      "agent_response_format" => response_format,
+    )
+  end
+
   it "rejects unknown AI agent references" do
     result =
       described_class.call(

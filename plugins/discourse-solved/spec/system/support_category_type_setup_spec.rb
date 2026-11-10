@@ -175,8 +175,7 @@ RSpec.describe "Support Category Type Setup" do
       expect(form).to have_no_field_with_name("custom_fields.empty_box_on_unsolved")
     end
 
-    it "edits the shared issue label as a translation override when enabled" do
-      SiteSetting.enable_solved_shared_issues = true
+    it "edits the shared issue label as a translation override" do
       visit("/c/#{category.slug}/edit/support")
 
       expect(form.field("custom_fields.enable_shared_issues").value).to be_truthy
@@ -196,7 +195,6 @@ RSpec.describe "Support Category Type Setup" do
     end
 
     it "hides the shared issue label field when shared issues are disabled" do
-      SiteSetting.enable_solved_shared_issues = true
       visit("/c/#{category.slug}/edit/support")
 
       expect(form).to have_field_with_name(shared_issue_field)

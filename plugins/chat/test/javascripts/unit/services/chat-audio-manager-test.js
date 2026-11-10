@@ -1,7 +1,13 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { normalizeChatSoundName } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
+import {
+  chatSoundOptions,
+  normalizeChatSoundName,
+  registerChatSound,
+  resetChatSounds,
+  setDefaultChatSound,
+} from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
 class MockAudioContext {
   state = "running";
@@ -77,6 +83,7 @@ module("Unit | Service | chat-audio-manager", function (hooks) {
   hooks.afterEach(function () {
     this.context.state = "closed";
     window.AudioContext = this.originalAudioContext;
+    resetChatSounds();
   });
 
   test("plays the incoming variant for the selected theme", async function (assert) {
@@ -161,6 +168,104 @@ module("Unit | Service | chat-audio-manager", function (hooks) {
       normalizeChatSoundName("ding"),
       "classic",
       "uses the default theme for legacy sound names"
+    );
+  });
+
+  test("plays a registered sound sequence", async function (assert) {
+    registerChatSound("custom", {
+      incoming: (ctx) => ctx.createOscillator(),
+      translatedLabel: "Custom",
+    });
+
+    await this.subject.play("custom", { type: "mention" });
+
+    assert.strictEqual(
+      this.context.oscillators.length,
+      1,
+      "falls back to the incoming variant"
+    );
+    assert.deepEqual(
+      chatSoundOptions().at(-1),
+      { name: "Custom", value: "custom" },
+      "lists the sound as a preference option"
+    );
+    assert.strictEqual(
+      normalizeChatSoundName("custom"),
+      "custom",
+      "keeps the registered name"
+    );
+  });
+
+  test("plays a registered audio file", async function (assert) {
+    const originalAudio = window.Audio;
+    const played = [];
+    let rejectPlay = false;
+
+    window.Audio = class {
+      constructor(src) {
+        this.src = src;
+      }
+
+      play() {
+        if (rejectPlay) {
+          return Promise.reject(new Error("NotAllowedError"));
+        }
+
+        played.push(this.src);
+        return Promise.resolve();
+      }
+    };
+
+    try {
+      registerChatSound("file", {
+        incoming: "/incoming.mp3",
+        mention: "/mention.mp3",
+      });
+
+      assert.true(
+        await this.subject.play("file", { type: "mention", throttle: false })
+      );
+      assert.deepEqual(played, ["/mention.mp3"], "plays the mention file");
+
+      rejectPlay = true;
+
+      assert.false(
+        await this.subject.play("file", { throttle: false }),
+        "reports a blocked file as unplayable"
+      );
+    } finally {
+      window.Audio = originalAudio;
+    }
+  });
+
+  test("falls back to a configured default sound", function (assert) {
+    setDefaultChatSound("custom");
+
+    assert.strictEqual(
+      normalizeChatSoundName("ding"),
+      "classic",
+      "ignores a default that isn't registered"
+    );
+
+    registerChatSound("custom", { incoming() {} });
+
+    assert.strictEqual(
+      normalizeChatSoundName("ding"),
+      "custom",
+      "uses the default once it is registered"
+    );
+    assert.strictEqual(
+      normalizeChatSoundName(null),
+      null,
+      "keeps an unset sound silent"
+    );
+
+    resetChatSounds();
+
+    assert.strictEqual(
+      normalizeChatSoundName("ding"),
+      "classic",
+      "restores the built-in default on reset"
     );
   });
 });

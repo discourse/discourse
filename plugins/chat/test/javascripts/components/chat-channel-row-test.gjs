@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import DMenus from "discourse/float-kit/components/d-menus";
 import CoreFabricators from "discourse/lib/fabricators";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -16,6 +17,10 @@ function forceTouch(owner) {
   });
 }
 
+function resetTouch(owner) {
+  delete owner.lookup("service:capabilities").touch;
+}
+
 async function swipeRowToThreshold(screenX = 10000) {
   const content = find(".chat-channel-row__content");
 
@@ -26,6 +31,7 @@ async function swipeRowToThreshold(screenX = 10000) {
   ]) {
     const event = new Event(type, { bubbles: true });
     event.changedTouches = [{ screenX: x }];
+    event.touches = type === "touchend" ? [] : [{ screenX: x }];
     content.dispatchEvent(event);
   }
 
@@ -40,6 +46,11 @@ module("Component | ChatChannelRow", function (hooks) {
     this.directMessageChannel = new ChatFabricators(
       getOwner(this)
     ).directMessageChannel();
+  });
+
+  hooks.afterEach(function () {
+    resetMobile();
+    resetTouch(this.owner);
   });
 
   test("links to correct channel", async function (assert) {
@@ -300,6 +311,7 @@ module("Component | ChatChannelRow", function (hooks) {
   });
 
   test("swiping a channel with notifications clears them", async function (assert) {
+    forceMobile();
     forceTouch(this.owner);
     const markAsRead = sinon
       .stub(this.owner.lookup("service:chat-api"), "markChannelAsRead")
@@ -328,6 +340,7 @@ module("Component | ChatChannelRow", function (hooks) {
   });
 
   test("channels without notifications are not swipeable", async function (assert) {
+    forceMobile();
     forceTouch(this.owner);
 
     await render(
@@ -342,6 +355,7 @@ module("Component | ChatChannelRow", function (hooks) {
   });
 
   test("swiping a direct message reveals the remove action", async function (assert) {
+    forceMobile();
     forceTouch(this.owner);
     const markAsRead = sinon.spy(
       this.owner.lookup("service:chat-api"),
@@ -359,5 +373,41 @@ module("Component | ChatChannelRow", function (hooks) {
     assert.dom(".chat-channel-row__action-btn.--remove").exists();
     assert.dom(".chat-channel-row__action-btn .d-icon-circle-xmark").exists();
     assert.true(markAsRead.notCalled, "does not clear notifications for a DM");
+  });
+
+  test("channels are not swipeable on touch devices in desktop view", async function (assert) {
+    forceTouch(this.owner);
+
+    await render(
+      <template>
+        <ChatChannelRow @channel={{this.directMessageChannel}} />
+      </template>
+    );
+
+    await swipeRowToThreshold();
+
+    assert
+      .dom(".chat-channel-row__action-btn")
+      .doesNotExist("swiping does not reveal the action button");
+  });
+
+  test("long-pressing opens the channel menu on touch devices in desktop view", async function (assert) {
+    forceTouch(this.owner);
+
+    await render(
+      <template>
+        <ChatChannelRow @channel={{this.directMessageChannel}} />
+        <DMenus />
+      </template>
+    );
+
+    const event = new Event("touchstart", { bubbles: true });
+    event.touches = [{}];
+    find(".chat-channel-row").dispatchEvent(event);
+    await settled();
+
+    assert
+      .dom('.fk-d-menu[data-identifier="chat-direct-message-channel-menu"]')
+      .exists("long-press opens the channel menu");
   });
 });

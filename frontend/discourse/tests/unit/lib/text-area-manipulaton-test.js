@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
+import { i18n } from "discourse-i18n";
 
 module("Unit | Utility | text-area-manipulation", function (hooks) {
   setupTest(hooks);
@@ -50,6 +51,26 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     textarea.select();
     manipulation.applySurroundSelection("**", "**", "example");
     assert.strictEqual(textarea.value, "****Hello World**");
+  });
+
+  test("applyList selects a placeholder without its checklist marker", function (assert) {
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+
+    textarea.setSelectionRange(0, 0);
+    manipulation.applyList(
+      manipulation.getSelected(false, { lineVal: true }),
+      "- [ ] ",
+      "list_item"
+    );
+
+    const example = i18n("composer.list_item");
+    assert.strictEqual(textarea.value, `- [ ] ${example}`);
+    assert.strictEqual(textarea.selectionStart, 6);
+    assert.strictEqual(textarea.selectionEnd, 6 + example.length);
   });
 
   test("emojiSelected - replaces ASCII partial term", async function (assert) {
@@ -127,5 +148,53 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
 
     assert.true(prevented, "native paste is prevented for handled rich paste");
     assert.strictEqual(textarea.value, "plain fallback");
+  });
+
+  test("placeholder - restores the upload text after processing", function (assert) {
+    this.owner.lookup("service:composer").model = { reply: "" };
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+    const file = { id: "file-1", name: "notes.txt" };
+
+    try {
+      manipulation.placeholder.insert(file);
+      const uploading = textarea.value;
+
+      manipulation.placeholder.progress(file);
+      assert.notStrictEqual(textarea.value, uploading, "shows processing");
+
+      manipulation.placeholder.progressComplete(file);
+      assert.strictEqual(textarea.value, uploading, "restores uploading");
+    } finally {
+      textarea.remove();
+    }
+  });
+
+  // A preprocessor can complete a file it never reported progress for, such as
+  // the checksum step skipping every file when SubtleCrypto is unavailable.
+  test("placeholder - leaves the text alone when processing never started", function (assert) {
+    this.owner.lookup("service:composer").model = { reply: "" };
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+    const file = { id: "file-1", name: "notes.txt" };
+
+    try {
+      textarea.value = "this value is undefined ";
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      manipulation.placeholder.insert(file);
+      const uploading = textarea.value;
+
+      manipulation.placeholder.progressComplete(file);
+
+      assert.strictEqual(textarea.value, uploading);
+    } finally {
+      textarea.remove();
+    }
   });
 });

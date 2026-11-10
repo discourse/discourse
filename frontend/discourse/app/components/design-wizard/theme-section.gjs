@@ -1,20 +1,35 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const SCREENSHOT_WIDTH = 800;
+const SCREENSHOT_HEIGHT = 500;
 
 class ThemeCard extends Component {
   @service interfaceColor;
   @service session;
+
+  @tracked screenshotLoaded = false;
 
   get currentScreenshotUrl() {
     const { screenshot_dark_url, screenshot_light_url } = this.args.theme;
     return this.#showDarkScreenshot
       ? screenshot_dark_url || screenshot_light_url
       : screenshot_light_url || screenshot_dark_url;
+  }
+
+  get selected() {
+    return this.args.theme.id === this.args.selectedThemeId;
+  }
+
+  get showSkeleton() {
+    return !!this.currentScreenshotUrl && !this.screenshotLoaded;
   }
 
   get #showDarkScreenshot() {
@@ -25,36 +40,60 @@ class ThemeCard extends Component {
     );
   }
 
+  // a broken screenshot should still clear the skeleton
+  @action
+  screenshotSettled() {
+    this.screenshotLoaded = true;
+  }
+
   <template>
     <div class="design-wizard__theme-card-wrapper">
       <label
-        class="design-wizard__theme-card
-          {{if (eq @theme.id @selectedThemeId) '--selected'}}"
+        class={{dConcatClass
+          "design-wizard__theme-card"
+          (if this.selected "--selected")
+          (unless this.currentScreenshotUrl "--without-screenshot")
+        }}
         data-theme-id={{@theme.id}}
       >
         <input
-          type="radio"
-          name="design-wizard-theme"
-          value={{@theme.id}}
-          checked={{eq @theme.id @selectedThemeId}}
+          checked={{this.selected}}
           class="sr-only"
+          disabled={{@applying}}
+          name="design-wizard-theme"
+          type="radio"
+          value={{@theme.id}}
           {{on "change" (fn @onSelect @theme.id)}}
         />
-        {{#if (eq @theme.id @selectedThemeId)}}
+        {{#if (and this.selected @applying)}}
+          <span class="design-wizard__theme-enabled-badge">
+            <span class="spinner small design-wizard__theme-spinner"></span>
+            {{i18n "design_wizard.theme.applying"}}
+          </span>
+        {{else if this.selected}}
           <span class="design-wizard__theme-enabled-badge">
             {{dIcon "check"}}
             {{i18n "design_wizard.theme.selected"}}
           </span>
         {{/if}}
-        <span class="design-wizard__theme-screenshot">
-          {{#if this.currentScreenshotUrl}}
+        {{#if this.currentScreenshotUrl}}
+          <span
+            class="design-wizard__theme-screenshot
+              {{if this.showSkeleton '--loading'}}"
+          >
             <img
-              class="design-wizard__theme-screenshot-image"
-              src={{this.currentScreenshotUrl}}
               alt=""
+              class="design-wizard__theme-screenshot-image"
+              decoding="async"
+              fetchpriority="high"
+              height={{SCREENSHOT_HEIGHT}}
+              src={{this.currentScreenshotUrl}}
+              width={{SCREENSHOT_WIDTH}}
+              {{on "load" this.screenshotSettled}}
+              {{on "error" this.screenshotSettled}}
             />
-          {{/if}}
-        </span>
+          </span>
+        {{/if}}
         <span class="design-wizard__theme-name">{{@theme.name}}</span>
         <span class="design-wizard__theme-description">
           {{@theme.description}}
@@ -70,15 +109,19 @@ const DesignWizardThemeSection = <template>
       {{i18n "design_wizard.theme.custom_theme_notice" name=@currentTheme.name}}
     </p>
   {{/if}}
-  <fieldset class="design-wizard__theme-cards">
+  <fieldset
+    aria-busy={{if @applying "true"}}
+    class="design-wizard__theme-cards"
+  >
     <legend class="sr-only">
-      {{i18n "design_wizard.sections.theme"}}
+      {{i18n "design_wizard.steps.theme.title"}}
     </legend>
     {{#each @themes as |theme|}}
       <ThemeCard
-        @theme={{theme}}
-        @selectedThemeId={{@selectedThemeId}}
+        @applying={{@applying}}
         @onSelect={{@onSelect}}
+        @selectedThemeId={{@selectedThemeId}}
+        @theme={{theme}}
       />
     {{/each}}
   </fieldset>

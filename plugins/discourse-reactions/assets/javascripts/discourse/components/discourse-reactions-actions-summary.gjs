@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { reactionsHiddenForUser } from "../lib/hidden-post";
-import DiscourseReactionsActions from "./discourse-reactions-actions";
+import { reactionsHiddenForUser } from "../lib/hidden-post.js";
+import DiscourseReactionsActions from "./discourse-reactions-actions.gjs";
 
 export default class ReactionsActionSummary extends Component {
   static extraControls = true;
@@ -20,7 +20,7 @@ export default class ReactionsActionSummary extends Component {
   <template>
     {{#if @shouldRender}}
       <div class="reactions-actions-summary">
-        <DiscourseReactionsActions @post={{@post}} @position="left" />
+        <DiscourseReactionsActions @position="left" @post={{@post}} />
       </div>
     {{/if}}
   </template>

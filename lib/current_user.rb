@@ -42,6 +42,9 @@ module CurrentUser
 
   def current_user
     current_user_provider.current_user
+  rescue Discourse::InvalidAccess => e
+    e.opts[:authentication_failed] = true
+    raise
   end
 
   def impersonation_acting_user

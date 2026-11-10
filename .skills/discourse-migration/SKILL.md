@@ -14,6 +14,23 @@ Plugins mirror this: `plugins/<name>/db/migrate/` and `plugins/<name>/db/post_mi
 
 SafeMigrate is a dev/test guard only (disabled in production).
 
+## Deploy order
+
+A zero-downtime deploy, like the `/admin/upgrade` upgrader, runs in this order:
+
+1. Pre-deploy migrations (with `SKIP_POST_DEPLOYMENT_MIGRATIONS=1`), then seeds. The old code is still running.
+2. The new code starts.
+3. The old code stops.
+4. Post-deploy migrations.
+
+A plain `bin/rake db:migrate` runs both kinds together, sorted by version, and seeds at the end. Migrations have to work either way.
+
+If the new code or its seeds need some data at boot, change it in a pre-deploy migration. The app reads site settings when it starts and doesn't notice when a migration changes them later, so a setting renamed post-deploy reads as its default until the next restart. Seeds that find rows by the new name, like `BadgeGrouping.seed(:name)`, create a duplicate before a post-deploy rename gets to run.
+
+A pre-deploy migration can't depend on a post-deploy one. All pending pre-deploy migrations run first, whatever their timestamps. If you need an older post-deploy migration to run first, promote it.
+
+The old code keeps reading and writing the old data until it stops.
+
 ## Generating migrations
 
 Always use generators — never hand-write timestamps. Manual timestamps like `120000`/`120001` cause collisions.
@@ -120,6 +137,30 @@ Same pattern via `lib/migration/table_dropper.rb`:
 
 If table is already fully unused, just `drop_table` directly in a post-deploy migration.
 
+## Renaming tables
+
+When the new code needs the new table name at boot, for example after a plugin rename:
+
+1. In a pre-deploy migration, rename the table and add a view with the old name so the old code keeps working. `rename_table` handles the primary key, the id sequence and conventionally named indexes. Rename any other indexes, constraints, triggers and trigger functions yourself.
+
+   ```ruby
+   def up
+     Migration::SafeMigrate.disable!
+     rename_table :old_things, :new_things
+     execute "CREATE VIEW old_things AS SELECT * FROM new_things"
+   ensure
+     Migration::SafeMigrate.enable!
+   end
+   ```
+
+2. In a post-deploy migration, drop the view with `DROP VIEW IF EXISTS old_things`. This fails if `old_things` is still a table.
+
+Give the view the old name, not the new one, so later pre-deploy migrations can still alter the real table. The old code can only write through the view because production loads the schema cache before forking (`Discourse.preload_rails!`). A process that reads the view's schema fresh sees no primary key and no column defaults.
+
+In the same pre-deploy migration, rename the data that refers to the old names: site settings with their `site_setting_groups` and `site_setting_localizations` rows, STI `type` and polymorphic `*_type` columns, custom field names, and `plugin_store_rows.plugin_name`. The old code can still write rows with the old names before it stops, so run the same updates again in the post-deploy migration. Guard each one with `NOT EXISTS` so it can't hit a unique index.
+
+`RenameVoiceToLive` and `FinishRenameVoiceToLive` in `plugins/live` do all of this.
+
 ## Removing site settings
 
 The most common migration type. Use `execute` with `DELETE` or `UPDATE`:
@@ -132,7 +173,13 @@ execute "DELETE FROM site_settings WHERE name = 'old_setting_name'"
 execute "UPDATE site_settings SET name = 'new_name' WHERE name = 'old_name'"
 ```
 
-Always `up`/`down` with `raise ActiveRecord::IrreversibleMigration`.
+Always `up`/`down` with `raise ActiveRecord::IrreversibleMigration`. Rename settings in a pre-deploy migration so the new code starts with the right value.
+
+## Promoting post-deploy migrations
+
+After each ESR release, `script/promote_migrations` moves post-deploy migrations from before that release into `db/migrate/`. You can promote one early when a new pre-deploy migration depends on it. Move it with `git mv` and keep the filename. Sites that already ran it won't run it again, since the version doesn't change.
+
+SafeMigrate checks pre-deploy migrations that are newer than the oldest core post-deploy migration (`Migration::SafeMigrate.earliest_post_deploy_version`). That includes CI's clean migrate in `db:check_structure_dump`. So if an early-promoted migration drops a foreign key or a column, or renames a table, wrap it in `Migration::SafeMigrate.disable!` and `ensure Migration::SafeMigrate.enable!`.
 
 ## Indexing
 
@@ -282,14 +329,14 @@ The same pattern works for plugin migrations — just adjust the `require` path 
 
 ## Regenerating structure.sql and annotations
 
-After any schema-altering migration (columns, tables, indexes), regenerate both `db/structure.sql` and model annotations. CI fails if either is stale.
+After every migration change, including data-only migrations:
 
 ```bash
-bin/rake db:dump_structure   # rewrites db/structure.sql from a clean migrated DB
-bin/rake annotate:clean      # rewrites all model annotations (core + bundled plugins)
+bin/rake db:dump_structure        # includes migration versions
+bin/rake db:check_structure_dump  # checks schema, unexpected rows, and advanced sequences
 ```
 
-Both tasks spin up a disposable database and load all bundled plugins, so output is invariant to the local `plugins/` directory. Commit the regenerated files alongside the migration.
+After schema changes, also run `bin/rake annotate:clean`. These tasks use disposable databases with all bundled plugins. Include regenerated files with the migration.
 
 ## Review checklist
 
@@ -306,5 +353,7 @@ Both tasks spin up a disposable database and load all bundled plugins, so output
 11. No application code (models, `SiteSetting`) — query DB directly
 12. `execute` for SQL; `DB.exec`/`DB.query` only when param binding or return values needed
 13. No rows inserted on fresh installs — seed data lives in `db/fixtures/`; inserts that exist only to preserve behavior on upgrades are gated on `Migration::Helpers.existing_site?`
-14. After schema-altering migrations, `bin/rake db:dump_structure` and `bin/rake annotate:clean` were run and the regenerated files committed
+14. Structure dump regenerated and checked for all migrations; annotations regenerated for schema changes
 15. Transaction-disabled migrations (`disable_ddl_transaction!`) contain only the operation that requires it (concurrent index or batched backfill), no other schema changes
+16. Data the new code or its seeds need at boot is changed pre-deploy, and renamed tables get a view with the old name
+17. Pre-deploy migrations don't depend on post-deploy ones (promote those early if needed)

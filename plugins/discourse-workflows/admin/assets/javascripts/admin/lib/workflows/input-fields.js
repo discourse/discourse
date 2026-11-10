@@ -1,11 +1,10 @@
-import { schemaFieldsForNodeOutput } from "./data-preview";
-import { outputIndexForConnection } from "./expression-paths";
-import { schemaFieldsForItems } from "./schema-fields";
+import { schemaFieldsForNodeOutput } from "./data-preview.js";
+import { outputIndexForConnection } from "./expression-paths.js";
+import { schemaFieldsForItems } from "./schema-fields.js";
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
-  resolveDeclaredOutputSchemas,
-} from "./schema-graph";
+} from "./schema-graph.js";
 
 function flattenPaths(fields, prefix = "") {
   const result = [];
@@ -34,7 +33,7 @@ function flattenPaths(fields, prefix = "") {
  * node declares no schema.
  *
  * @param {object} node - the node being configured
- * @param {object} context - { nodes, connections, nodeTypes, session }
+ * @param {object} context - { nodes, connections, session }
  * @returns {Array<{path: string, type: string}>} deduplicated, in declaration order
  */
 export function inputFieldPathsForNode(node, context = {}) {
@@ -45,11 +44,10 @@ export function inputFieldPathsForNode(node, context = {}) {
   const graph = {
     nodes: context.nodes || [],
     connections: context.connections || [],
-    nodeTypes: context.nodeTypes || [],
   };
   const session = context.session;
   const runData = session?.lastExecutionRunData || {};
-  const declaredOutputSchemas = resolveDeclaredOutputSchemas(graph);
+  const declaredOutputSchemas = session?.outputSchemas;
   const seen = new Set();
   const paths = [];
 
@@ -71,8 +69,6 @@ export function inputFieldPathsForNode(node, context = {}) {
           node: previousNode,
           outputIndex,
           prefix: "",
-          graph,
-          configuration: previousNode.parameters,
           declaredOutputSchemas,
         });
 

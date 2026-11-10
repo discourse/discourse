@@ -16,11 +16,11 @@ export default class DBadgeButton extends Component {
 
   <template>
     <span
-      title={{this.title}}
-      data-badge-name={{@badge.name}}
       class="user-badge
         {{@badge.badgeTypeClassName}}
         {{unless @badge.enabled 'disabled'}}"
+      data-badge-name={{@badge.name}}
+      title={{this.title}}
       ...attributes
     >
       {{dIconOrImage @badge}}

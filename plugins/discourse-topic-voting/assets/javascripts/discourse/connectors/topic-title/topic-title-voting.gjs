@@ -1,5 +1,4 @@
-import { and, or } from "discourse/truth-helpers";
-import VoteBox from "../../components/vote-box";
+import VoteBox from "../../components/vote-box.gjs";
 
 export default <template>
   {{#let @outletArgs.model as |topic|}}

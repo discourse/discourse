@@ -6,6 +6,8 @@ import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 
 const INDENT = "  ";
 
+const PLAIN_TEXT_LANGS = ["auto", "text", "pre", "plain"];
+
 // cached hljs instance with custom plugins/languages
 let hljs;
 
@@ -195,6 +197,57 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
+const LANGUAGE_CLASS = /^lang(?:uage)?-(.+)$/;
+
+function codeBlockLanguage(...elements) {
+  for (const element of elements) {
+    for (const className of element.classList) {
+      const language = className.match(LANGUAGE_CLASS)?.[1];
+      // `auto` is a request to autodetect, not a language
+      if (language && language !== "auto") {
+        return language;
+      }
+    }
+  }
+}
+
+export function normalizeCodeBlocks(doc) {
+  let changed = false;
+
+  for (const code of doc.querySelectorAll("pre > code")) {
+    const pre = code.parentElement;
+
+    if (!pre.hasAttribute("data-params")) {
+      const language = codeBlockLanguage(code, pre, pre.parentElement);
+      if (language) {
+        pre.setAttribute("data-params", language);
+        changed = true;
+      }
+    }
+
+    const lines = [...code.childNodes];
+    if (
+      !lines.length ||
+      !lines.every(
+        (line) => line.nodeName === "DIV" && line.lastChild?.nodeName === "BR"
+      )
+    ) {
+      continue;
+    }
+
+    // The final break ends the last line; keeping it would add a blank one.
+    lines.at(-1).lastChild.remove();
+
+    // Each line already has an explicit break; block wrappers would split the code block.
+    for (const line of lines) {
+      line.replaceWith(...line.childNodes);
+    }
+    changed = true;
+  }
+
+  return changed;
+}
+
 function convertSelectionToCodeBlock(schema) {
   return (editorState, dispatch) => {
     const { from, to } = editorState.selection;
@@ -230,6 +283,7 @@ const extension = {
     },
   },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
+  transformParsedHTML: normalizeCodeBlocks,
   keymap: () => ({
     Tab: indentCodeBlock(),
     "Shift-Tab": indentCodeBlock(true),
@@ -263,22 +317,35 @@ const extension = {
       };
     },
   }),
-  async plugins({ getContext }) {
-    return highlightPlugin(
-      (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
-      ["code_block", "html_block"],
+  plugins: [
+    ({ pmState: { Plugin } }) =>
+      new Plugin({
+        props: {
+          transformPastedHTML(html) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            return normalizeCodeBlocks(doc) ? doc.body.innerHTML : html;
+          },
+        },
+      }),
+    async ({ getContext }) => {
+      const { session, siteSettings } = getContext();
 
-      // NOTE: If the language has not been set with the code block, we default to plain
-      // text rather than autodetecting. This is to work around an infinite loop issue
-      // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
-      // for > 10 seconds, for example:
-      //
-      // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
-      //
-      // We can remove this if we find some other workaround.
-      (node) => node.attrs.params || "text"
-    );
-  },
+      // Autodetection can hang the browser (https://github.com/b-kelly/prosemirror-highlightjs/issues/21)
+      const { default_code_lang } = siteSettings;
+      const defaultCodeLang =
+        !default_code_lang || PLAIN_TEXT_LANGS.includes(default_code_lang)
+          ? "text"
+          : default_code_lang;
+
+      return highlightPlugin(
+        (hljs = await ensureHighlightJs(session.highlightJsPath)),
+        ["code_block", "html_block", "preview_source"],
+        (node) =>
+          node.attrs.params ||
+          (node.type.name === "code_block" ? defaultCodeLang : "text")
+      );
+    },
+  ],
 };
 
 export default extension;

@@ -41,16 +41,6 @@ export default class DNavItem extends Component {
     }
 
     if (this.args.routeParam) {
-      // This is needed because the setting route is underneath /admin/plugins/:plugin_id,
-      // but is not a child route of the plugin routes themselves. E.g. discourse-ai
-      // for the plugin ID has its own nested routes defined in the plugin.
-      if (this.router.currentRoute.name === "adminPlugins.show.settings") {
-        return (
-          this.router.currentRoute.parent.params.plugin_id ===
-          this.args.routeParam
-        );
-      }
-
       if (this.router.currentRoute.name === "adminConfig.login.plugin-tab") {
         return (
           this.router.currentRoute.params.wildcard === this.args.routeParam
@@ -99,17 +89,17 @@ export default class DNavItem extends Component {
         <a href={{this.refreshHref}}>{{this.contents}}</a>
       {{else if @routeParam}}
         <LinkTo
-          @route={{@route}}
-          @model={{@routeParam}}
           @current-when={{this.active}}
+          @model={{@routeParam}}
+          @route={{@route}}
         >{{this.contents}}</LinkTo>
       {{else if @route}}
         <LinkTo
-          @route={{@route}}
           @current-when={{this.active}}
+          @route={{@route}}
         >{{this.contents}}</LinkTo>
       {{else}}
-        <a href={{getURL @path}} data-auto-route="true">{{this.contents}}</a>
+        <a data-auto-route="true" href={{getURL @path}}>{{this.contents}}</a>
       {{/if}}
     </li>
   </template>

@@ -209,7 +209,7 @@ module("Integration | Component | DPostAccordion", function (hooks) {
   test("post is truncated if longer than linesDisplayed", async function (assert) {
     await render(
       <template>
-        <DPostAccordion @posts={{fiveLinePost}} @linesDisplayed="2" />
+        <DPostAccordion @linesDisplayed="2" @posts={{fiveLinePost}} />
       </template>
     );
 
@@ -221,7 +221,7 @@ module("Integration | Component | DPostAccordion", function (hooks) {
   test("post is not truncated if shorter than linesDisplayed", async function (assert) {
     await render(
       <template>
-        <DPostAccordion @posts={{fiveLinePost}} @linesDisplayed="10" />
+        <DPostAccordion @linesDisplayed="10" @posts={{fiveLinePost}} />
       </template>
     );
 

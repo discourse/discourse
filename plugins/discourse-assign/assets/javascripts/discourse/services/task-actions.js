@@ -3,32 +3,19 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import AssignUser from "../components/modal/assign-user";
-import assignmentPayload from "../lib/assignment-payload";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
+import AssignUser from "../components/modal/assign-user.gjs";
+import assignmentPayload from "../lib/assignment-payload.js";
 
 export default class TaskActions extends Service {
   @service modal;
 
   @tracked suggestionsRevision = 0;
-  #allowedGroupsByTarget = new Map();
-  #allowedGroupsForAssignmentByTarget = new Map();
   #suggestionsByTarget = new Map();
   #suggestionsPromisesByTarget = new Map();
 
-  get suggestions() {
-    return this.suggestionsFor();
-  }
-
-  get allowedGroups() {
-    return this.allowedGroupsFor();
-  }
-
-  get allowedGroupsForAssignment() {
-    return this.allowedGroupsForAssignmentFor();
-  }
-
   suggestionsFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
+    manuallyTrack(this.suggestionsRevision);
     this.#ensureSuggestions(targetId, targetType);
 
     return (
@@ -38,70 +25,9 @@ export default class TaskActions extends Service {
     );
   }
 
-  allowedGroupsFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
-    this.#ensureSuggestions(targetId, targetType);
-
-    return (
-      this.#allowedGroupsByTarget.get(
-        this.#suggestionsKey(targetId, targetType)
-      ) || []
-    );
-  }
-
-  allowedGroupsForAssignmentFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
-    this.#ensureSuggestions(targetId, targetType);
-
-    return (
-      this.#allowedGroupsForAssignmentByTarget.get(
-        this.#suggestionsKey(targetId, targetType)
-      ) || []
-    );
-  }
-
-  #ensureSuggestions(targetId, targetType) {
-    const key = this.#suggestionsKey(targetId, targetType);
-
-    if (
-      this.#suggestionsByTarget.has(key) ||
-      this.#suggestionsPromisesByTarget.has(key)
-    ) {
-      return;
-    }
-
-    this.#suggestionsPromisesByTarget.set(
-      key,
-      this.#fetchSuggestions(key, targetId, targetType)
-    );
-  }
-
-  async #fetchSuggestions(key, targetId, targetType) {
-    const data = {};
-
-    if (targetId) {
-      data.target_id = targetId;
-      data.target_type = targetType;
-    }
-
-    const response = await ajax("/assign/suggestions", { data });
-
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.#suggestionsByTarget.set(key, response.suggestions);
-    this.#allowedGroupsByTarget.set(key, response.assign_allowed_on_groups);
-    this.#allowedGroupsForAssignmentByTarget.set(
-      key,
-      response.assign_allowed_for_groups
-    );
-    this.#suggestionsPromisesByTarget.delete(key);
-    this.suggestionsRevision++;
-  }
-
-  #suggestionsKey(targetId, targetType) {
-    return targetId ? `${targetType}:${targetId}` : "default";
+  searchUrlFor(targetId, targetType = "Topic") {
+    const query = new URLSearchParams(this.#targetParams(targetId, targetType));
+    return query.size ? `/assign/search?${query}` : "/assign/search";
   }
 
   unassign(targetId, targetType = "Topic") {
@@ -195,5 +121,46 @@ export default class TaskActions extends Service {
         target_type: assignment.targetType,
       },
     });
+  }
+
+  #ensureSuggestions(targetId, targetType) {
+    const key = this.#suggestionsKey(targetId, targetType);
+
+    if (
+      this.#suggestionsByTarget.has(key) ||
+      this.#suggestionsPromisesByTarget.has(key)
+    ) {
+      return;
+    }
+
+    this.#suggestionsPromisesByTarget.set(
+      key,
+      this.#fetchSuggestions(key, targetId, targetType)
+    );
+  }
+
+  async #fetchSuggestions(key, targetId, targetType) {
+    const response = await ajax("/assign/suggestions", {
+      data: this.#targetParams(targetId, targetType),
+    });
+
+    if (this.isDestroying) {
+      return;
+    }
+
+    this.#suggestionsByTarget.set(key, [
+      ...response.suggestions,
+      ...response.groups,
+    ]);
+    this.#suggestionsPromisesByTarget.delete(key);
+    this.suggestionsRevision++;
+  }
+
+  #targetParams(targetId, targetType) {
+    return targetId ? { target_id: targetId, target_type: targetType } : {};
+  }
+
+  #suggestionsKey(targetId, targetType) {
+    return targetId ? `${targetType}:${targetId}` : "default";
   }
 }

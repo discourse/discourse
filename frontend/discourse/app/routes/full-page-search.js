@@ -22,6 +22,14 @@ export default class FullPageSearch extends DiscourseRoute {
 
   category = null;
 
+  beforeModel(transition) {
+    if (this.site.can_search) {
+      return;
+    }
+
+    transition.send("showLogin");
+  }
+
   titleToken() {
     return i18n("search.results_page", {
       term: escapeExpression(

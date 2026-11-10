@@ -11,6 +11,7 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class JsonSchemaEditorModal extends Component {
+  /** @type {{ destroy: () => void, validate: () => { message: string }[], getValue: () => unknown } | null} */
   @tracked editor = null;
   @tracked value = this.args.model.value;
   @tracked flash;
@@ -51,6 +52,9 @@ export default class JsonSchemaEditorModal extends Component {
     };
     JSONEditor.defaults.options.iconlib = "discourseIcons";
 
+    // Theme settings may hold HTML; keep string values as typed.
+    JSONEditor.AbstractEditor.prototype.purify = (value) => value;
+
     this.editor = new JSONEditor(element, {
       schema: this.args.model.jsonSchema,
       disable_array_delete_all_rows: true,
@@ -68,15 +72,15 @@ export default class JsonSchemaEditorModal extends Component {
 
   <template>
     <DModal
+      class="json-schema-editor-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
-      @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @title={{i18n
         "admin.site_settings.json_schema.modal_title"
         name=@model.settingName
       }}
-      @inline={{@inline}}
-      class="json-schema-editor-modal"
     >
       <:body>
         <div
@@ -88,9 +92,9 @@ export default class JsonSchemaEditorModal extends Component {
 
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.saveChanges}}
           @label="save"
-          class="btn-primary"
         />
       </:footer>
     </DModal>

@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { smartShortDate } from "discourse/lib/formatter";
 import { cook } from "discourse/lib/text";
-import { isAiCreditLimitError, popupAiCreditLimitError } from "./ai-errors";
+import { isAiCreditLimitError, popupAiCreditLimitError } from "./ai-errors.js";
 
 export default class AiTopicSummary {
   @tracked text = "";

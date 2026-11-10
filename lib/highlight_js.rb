@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 module HighlightJs
-  HIGHLIGHTJS_DIR = "#{Rails.root.join("frontend/discourse/node_modules/@highlightjs/cdn-assets/")}"
   VERSION = 1 # bump to invalidate caches following core changes
 
+  def self.languages_dir
+    @languages_dir ||= "#{VendoredAssets.path("highlightjs/languages")}/"
+  end
+
   def self.languages
-    langs = Dir.glob(HIGHLIGHTJS_DIR + "languages/*.js").map { |path| File.basename(path)[0..-8] }
+    langs = Dir.glob(languages_dir + "*.js").map { |path| File.basename(path)[0..-8] }
 
     langs.sort
   end
@@ -13,7 +16,7 @@ module HighlightJs
   def self.bundle(langs)
     lang_js =
       langs.filter_map do |lang|
-        File.read(HIGHLIGHTJS_DIR + "languages/#{lang}.min.js")
+        File.read(languages_dir + "#{lang}.min.js")
       rescue Errno::ENOENT
         # no file, don't care
       end

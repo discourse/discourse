@@ -24,8 +24,14 @@ class PrivateMessageTopicTrackingState extends Service {
   @tracked isTracking = false;
   @tracked isTrackingIncoming = false;
   @tracked statesModificationCounter = 0;
+
+  /** @type {string | null} */
   @tracked inbox = null;
+
+  /** @type {string | null} */
   @tracked filter = null;
+
+  /** @type {import("discourse/models/group").default | null | undefined} */
   @tracked activeGroup = null;
   @tracked newIncoming = trackedArray();
   states = trackedMap();
@@ -153,7 +159,7 @@ class PrivateMessageTopicTrackingState extends Service {
 
   @bind
   _isPersonal(topic) {
-    const groups = this.currentUser?.groups;
+    const groups = this.currentUser?.visibleGroups;
 
     if (!groups || groups.length === 0) {
       return true;
@@ -166,7 +172,7 @@ class PrivateMessageTopicTrackingState extends Service {
 
   @bind
   _isGroup(topic, activeGroupName) {
-    return this.currentUser.groups.some((group) => {
+    return this.currentUser.visibleGroups.some((group) => {
       return (
         group.name === (activeGroupName || this.activeGroup.name) &&
         topic.group_ids?.includes(group.id)
@@ -237,7 +243,7 @@ class PrivateMessageTopicTrackingState extends Service {
       this._displayMessageForGroupInbox(message) ||
       (this.inbox === "user" &&
         (message.payload.group_ids.length === 0 ||
-          this.currentUser.groups.filter((group) => {
+          this.currentUser.visibleGroups.filter((group) => {
             return message.payload.group_ids.includes(group.id);
           }).length === 0))
     );

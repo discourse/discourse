@@ -17,9 +17,9 @@ class FieldControlAddonProbe extends Component {
 
   <template>
     <DButton
+      class="btn-default field-control-addon-probe"
       @action={{this.updateValue}}
       @translatedLabel={{@field.value}}
-      class="btn-default field-control-addon-probe"
     />
   </template>
 }
@@ -65,9 +65,9 @@ module(
             as |form transientData|
           >
             <Field
-              @form={{form}}
               @configuration={{transientData}}
               @fieldName="query"
+              @form={{form}}
               @label="Query"
               @node={{hash type="action:sql"}}
               @nodeParameters={{transientData}}

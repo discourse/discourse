@@ -1,5 +1,4 @@
 import { on } from "@ember/modifier";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -11,28 +10,28 @@ const QueryAiPrompt = <template>
       {{i18n "explorer.ai.prompt_label"}}
     </label>
     <DTextarea
-      @value={{@value}}
-      {{on "input" @onChange}}
+      class="query-ai-prompt__input"
+      disabled={{@disabled}}
+      id="query-ai-prompt-input"
       placeholder={{or
         @placeholder
         (i18n "explorer.ai.regenerate_placeholder")
       }}
-      id="query-ai-prompt-input"
-      class="query-ai-prompt__input"
-      disabled={{@disabled}}
+      @value={{@value}}
+      {{on "input" @onChange}}
     />
     <div class="query-ai-prompt__actions">
       <DButton
-        @action={{@onRegenerate}}
-        @icon="arrows-rotate"
-        @label={{or @actionLabel "explorer.ai.regenerate"}}
-        @disabled={{@regenerateDisabled}}
-        @isLoading={{@generating}}
         aria-busy={{@generating}}
         class={{dConcatClass
           (or @actionClass "btn-default")
           "query-ai-prompt__regenerate"
         }}
+        @action={{@onRegenerate}}
+        @disabled={{@regenerateDisabled}}
+        @icon="arrows-rotate"
+        @isLoading={{@generating}}
+        @label={{or @actionLabel "explorer.ai.regenerate"}}
       />
     </div>
   </div>

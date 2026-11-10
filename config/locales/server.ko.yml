@@ -5,6 +5,36 @@
 # https://translate.discourse.org/
 
 ko:
+  markdown_endpoints:
+    latest: "최신"
+    categories: "카테고리"
+    tags: "태그"
+    previous_page: "이전 페이지"
+    next_page: "다음 페이지"
+    replies: "댓글"
+    last_updated: "마지막 업데이트"
+    event:
+      location: "위치"
+      link: "링크"
+  mcp:
+    errors:
+      category_not_found: "카테고리를 찾을수 없습니다"
+      topic_not_found: "글을 찾을 수 없음"
+    oauth:
+      deny: "거부"
+      approve: "인증하기"
+  llms_txt:
+    sections:
+      optional: "선택 사항"
+    links:
+      search:
+        label: "검색"
+      categories:
+        label: "카테고리"
+      about:
+        label: "소개"
+      guidelines:
+        label: "가이드라인"
   dates:
     short_date_no_year: "M월 D일"
     short_date: "YYYY-M-D"
@@ -670,6 +700,7 @@ ko:
       windows: "마이크로소프트 윈도우"
       unknown: "알 수 없는 운영체제"
   admin_site_traffic_explorer:
+    unknown: "알수없음"
     traffic_types:
       anonymous: "익명"
   change_email:
@@ -803,7 +834,7 @@ ko:
   uploads:
     marked_insecure_from_theme_component_reason: "테마 구성 요소에 사용된 업로드"
   unsubscribe:
-    title: "구독 해제"
+    unsubscribe: "구독해지"
     stop_watching_topic: "이 주제 구독 중지, %{link}"
     mute_topic: "이 주제에 대한 모든 알림 뮤트, %{link}"
     unwatch_category: "%{category} 카테고리의 모든 주제 구독 중지"
@@ -932,6 +963,11 @@ ko:
         share: "공유하기"
       types:
         staff: "스태프"
+    posters_by_member_type_members:
+      labels:
+        user: "사용자"
+        count: "글"
+        share: "공유하기"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1260,11 +1296,6 @@ ko:
       host_names: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
       queue_size: "큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요."
       ram: "서버가 총 메모리 1 GB 미만으로 구동 중입니다. 최소 1 GB의 메모리를 권장합니다."
-      google_oauth2_config: '서버가 Google OAuth2 (enable_google_oauth2_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 클라이언트 ID 및 클라이언트 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
-      facebook_config: '서버는 페이스북(enable_facebook_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 앱 ID 및 앱 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
-      twitter_config: '서버가 트위터(enable_twitter_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 키 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">자세한 내용은 이 안내서를 참조하십시오</a>.'
-      github_config: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
-      s3_upload_config: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
       s3_cdn: '서버가 S3에 파일을 업로드하도록 구성되어 있지만 S3 CDN이 구성되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 성능이 저하 될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 "Using Object Storage for Uploads"을 참조하십시오</a>.'
       image_magick: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
       failing_emails: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
@@ -1581,7 +1612,6 @@ ko:
     topic_view_duration_hours: "N시간마다 IP/사용자별로 새 주제 조회수를 계산합니다."
     user_profile_view_duration_hours: "N시간마다 IP/사용자별로 신규 사용자 프로필 조회수를 계산합니다."
     levenshtein_distance_spammer_emails: "스팸 발송자 이메일을 일치시킬 때 일부 일치를 허용하는 문자 수 차이입니다."
-    min_ban_entries_for_roll_up: "롤업 버튼을 클릭하면 최소 (N)개 엔트리가 있는 경우 새 서브넷 금지 엔트리가 생성됩니다."
     max_age_unmatched_emails: "(N)일 후 일치하지 않는 스크린된 이메일 엔트리를 삭제합니다."
     max_age_unmatched_ips: "(N)일 후 일치하지 않는 스크린된 IP 엔트리를 삭제합니다."
     num_flaggers_to_close_topic: "중재를 위해 주제를 자동으로 일시 중지하기 위한 최소 고유 신고자 수"
@@ -1690,7 +1720,6 @@ ko:
     enable_names: "사용자의 전체 이름을 프로필, 사용자 카드, 이메일에서 표시합니다. 모든 곳에서 전체 이름을 숨기려면 비활성화하세요."
     display_name_on_posts: "게시물에 @아이디뿐만 아니라 사용자의 전체 이름도 표시합니다."
     show_time_gap_days: "이 정도 일 수의 간격으로 두 개의 게시물을 작성한 경우 주제에 시간 간격을 표시합니다."
-    short_progress_text_threshold: "주제의 게시물 수가 이 수를 초과하면 진행률 표시줄에 현재 게시물 번호만 표시됩니다. 진행률 표시줄의 너비를 변경하는 경우 이 값을 변경해야 할 수도 있습니다."
     show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립보드에 복사합니다."
     embed_any_origin: "출처와 상관없이 임베드 가능한 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_set_canonical_url: "임베드된 주제의 표준 URL을 임베드 콘텐츠의 URL로 설정합니다."
@@ -1763,9 +1792,6 @@ ko:
     push_notifications_icon: "알림 코너에 표시되는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG를 사용하는 것이 좋습니다."
     base_font: "사이트에서 대부분의 텍스트에 사용할 기본 글꼴입니다. 테마는 `--font-family` CSS 사용자 지정 프로퍼티를 통해 오버라이드할 수 있습니다."
     heading_font: "사이트 헤딩에 사용할 폰트입니다. 테마는 `--heading-font-family` CSS 사용자 지정 프로퍼티를 통해 재정의할 수 있습니다."
-    dashboard_hidden_reports: "대시보드에서 지정된 리포트를 숨기도록 허용합니다."
-    dashboard_visible_tabs: "표시할 대시보드 탭을 선택합니다."
-    dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시할 리포트를 선택합니다."
     share_quote_buttons: "인용 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "인용 공유 버튼을 언제 표시할지 결정합니다. 표시 안 함, 익명 사용자만, 모든 사용자 중 선택합니다. "
     errors:
@@ -1773,7 +1799,6 @@ ko:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 아이디의 사용자가 없습니다."
       valid_username: "해당 아이디의 사용자가 있습니다."
-      invalid_group: "이 이름을 가진 그룹이 없습니다."
       invalid_integer_min_max: "값은 %{min} 및 %{max} 사이여야 합니다."
       invalid_integer_min: "값은 %{min} 이상이어야 합니다."
       invalid_integer_max: "값은 %{max} 이하이어야 합니다."
@@ -1951,6 +1976,7 @@ ko:
     email_too_long: "제공한 이메일이 너무 깁니다. 메일함 이름은 254자 이하여야 하며 도메인 이름은 253자 이하여야 합니다."
     wrong_invite_code: "입력한 초대 코드가 잘못되었습니다."
     reserved_username: "이 아이디는 허용되지 않습니다."
+    missing_username: "사용자명을 입력 해주세요"
     auth_complete: "인증이 완료되었습니다."
     click_to_continue: "계속하려면 여기를 클릭하세요."
     already_logged_in: "이 초대는 기존 계정이 없는 신규 사용자를 위한 것입니다."
@@ -2916,31 +2942,15 @@ ko:
     account_suspended:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-      text_body_template: |
-        %{suspended_till}까지 포럼에서 계정이 정지되었습니다.
-
-        이유 - %{reason}
     account_suspended_forever:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-      text_body_template: |
-        포럼에서 계정이 정지되었습니다.
-
-        이유 - %{reason}
     account_silenced:
       title: "계정이 차단됨"
       subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-      text_body_template: |
-        %{suspended_till}까지 포럼에서 계정이 차단되었습니다.
-
-        이유 - %{reason}
     account_silenced_forever:
       title: "계정이 차단됨"
       subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-      text_body_template: |
-        포럼에서 계정이 차단되었습니다.
-
-        이유 - %{reason}
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -3084,18 +3094,18 @@ ko:
       text_body_template: |
         %{site_name}에 오신 것을 환영합니다!
 
-        운영진이 %{site_name} 계정을 승인했습니다.
+        %{site_name}에서 사용자님의 계정이 승인되었습니다.
 
-        아래 링크에서 새 계정에 액세스할 수 있습니다.
-        %{base_url}
+        아래 링크를 클릭하면 새 계정에 로그인 할 수 있습니다.
+        %{login_url}
 
-        위 링크를 클릭할 수 없으면 웹 브라우저의 주소 표시줄에 복사하여 붙여 넣으세요.
+        위 링크를 클릭 할 수 없으면 웹 브라우저의 주소 표시 줄에 복사하여 붙여 넣으십시오.
 
         %{new_user_tips}
 
-        [성숙한 커뮤니티 활동](%{base_url}/guidelines)을 해 주시리라 믿습니다.
+        사이트 이용은 [커뮤니티의 가이드라인](%{base_url}/guidelines)을 참고해 주시기 바랍니다.
 
-        즐거운 시간 보내세요!
+        즐거운 시간 되세요!
     signup_after_reject:
       title: "가입 거부"
       subject_template: "%{site_name}에서 가입이 거부되었습니다."
@@ -3500,6 +3510,9 @@ ko:
   performance_report:
     initial_post_raw: 이 주제에는 사이트에 대한 일일 퍼포먼스 리포트가 포함되어 있습니다.
     initial_topic_title: 웹사이트 퍼포먼스 리포트
+  watched_words:
+    upload_too_many_csv_entries:
+      other: "CSV 파일에 항목이 너무 많습니다. 항목이 %{count}개 이하인 CSV 파일을 제공하십시오."
   tags:
     title: "태그"
     restricted_tag_disallowed: '''%{tag}'' 태그를 적용할 수 없습니다.'
@@ -3536,6 +3549,12 @@ ko:
   design_wizard:
     palette_pairs:
       default: "기본"
+      neutral: "중립국"
+      shades_of_blue: "푸른 그늘"
+      summer: "여름"
+      grey_amber: "회색 호박색"
+      latte: "라떼"
+      dark_rose: "다크 로즈"
   wizard:
     title: "Discourse Setup"
     step:
@@ -3556,13 +3575,29 @@ ko:
   search_logs:
     graph_title: "검색 횟수"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "매일"
+        ordinals:
+          last: "마지막"
+        weekdays:
+          sunday: "일요일"
+          monday: "월요일"
+          tuesday: "화요일"
+          wednesday: "수요일"
+          thursday: "목요일"
+          friday: "금요일"
+          saturday: "토요일"
     google_meet:
       meeting_code: "코드:"
     github:
+      header:
+        success: "성공"
       opened: "열림"
       closed: "닫힘"
-      status_date:
-        open: "열림"
+      pr_status:
+        draft: "임시저장"
+        open: "열기"
         approved: "승인"
         closed: "닫힘"
   discourse_push_notifications:
@@ -3641,6 +3676,8 @@ ko:
         complete: "게시물 삭제됨."
       delete_and_agree_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
+      disagree_and_keep_deleted:
+        title: "게시물 삭제 유지"
       disagree_bundle:
         title: "아니오"
       ignore:
@@ -3685,8 +3722,6 @@ ko:
         title: "예"
       approve_and_unhide:
         title: "예"
-      delete_post:
-        complete: "게시물 삭제됨"
       delete_user:
         complete: "사용자 삭제됨"
         reason: "검토 대기열을 통해 삭제됨"

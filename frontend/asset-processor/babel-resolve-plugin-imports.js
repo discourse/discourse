@@ -1,4 +1,4 @@
-import { readDiscourseImportMode } from "./discourse-import-attribute";
+import { readDiscourseImportMode } from "./discourse-import-attribute.js";
 
 export default function (babel) {
   const { types: t } = babel;

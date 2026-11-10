@@ -23,14 +23,6 @@ module DiscourseWorkflows
 
     private
 
-    def column_exists(data_table:, params:)
-      data_table.columns.any? { |c| c["name"] == params.column_name }
-    end
-
-    def not_reserved_column(params:)
-      DataTables::Types::SYSTEM_COLUMN_NAMES.exclude?(params.column_name)
-    end
-
     def drop_storage_column(data_table:, params:)
       DiscourseWorkflows::DataTables::Facade.new(data_table).drop_column!(params.column_name)
     end

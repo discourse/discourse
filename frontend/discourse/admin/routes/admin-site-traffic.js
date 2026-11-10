@@ -18,10 +18,9 @@ const FILTER_KEYS = [
   "country",
   "network",
   "browser",
+  "language",
   "ip",
 ];
-
-const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
 
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
   @service loadingSlider;
@@ -37,6 +36,7 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     country: { refreshModel: true },
     network: { refreshModel: true },
     browser: { refreshModel: true },
+    language: { refreshModel: true },
     ip: { refreshModel: true },
   };
   #refreshTransition = null;
@@ -45,6 +45,7 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     return i18n("admin.site_traffic_explorer.title");
   }
 
+  /** @returns {Promise<{ traffic: import("discourse/admin/controllers/admin-site-traffic").SiteTraffic | null, fetchError: "timeout" | "unexpected" | null }>} */
   model(params) {
     const requestParams = this.#requestParams(params);
 
@@ -56,7 +57,6 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
           ...traffic,
           chart_start_date: requestParams.start_date,
           chart_end_date: requestParams.end_date,
-          chart_traffic_types: this.#selectedTrafficTypes(params.traffic_type),
         },
         fetchError: null,
       }))
@@ -146,24 +146,13 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     return requestParams;
   }
 
-  #selectedTrafficTypes(value) {
-    if (!value) {
-      return TRAFFIC_TYPES;
-    }
-
-    const selected = this.#filterValues("traffic_type", value);
-    return TRAFFIC_TYPES.filter((trafficType) =>
-      selected.includes(trafficType)
-    );
-  }
-
   #filterValues(key, value) {
     if (value === null || value === undefined) {
       return [];
     }
 
     if (value === "") {
-      return key === "referrer" ? [value] : [];
+      return ["referrer", "language"].includes(key) ? [value] : [];
     }
 
     if (value.startsWith("[")) {

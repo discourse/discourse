@@ -4,6 +4,9 @@ import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 
 /**
+ * @typedef {{ id?: number | string, post_id?: number, draft_key?: string }} SelectablePost
+ */
+/**
  * Helper class for managing bulk selection of posts
  * Similar to BulkSelectHelper but specialized for posts
  *
@@ -15,54 +18,18 @@ import { trackedArray } from "@ember/reactive/collections";
  */
 export default class PostBulkSelectHelper {
   @tracked loading = false;
+
+  /** @type {SelectablePost | null} */
   @tracked lastClickedPost = null;
   @tracked bulkSelectEnabled = false;
+
+  /** @type {SelectablePost[] | null} */
   @tracked posts = null;
   selected = trackedArray();
 
   constructor(context, posts = null) {
     setOwner(this, getOwner(context));
     this.posts = posts;
-  }
-
-  /**
-   * Update posts and clean up stale selections
-   * @param {Array} newPosts - New posts array
-   */
-  updatePosts(newPosts) {
-    this.posts = newPosts;
-    this.#cleanupStaleSelections();
-  }
-
-  /**
-   * Remove selections for posts that no longer exist
-   */
-  #cleanupStaleSelections() {
-    if (!this.posts) {
-      this.selected.length = 0;
-      return;
-    }
-
-    const validPostIds = new Set(
-      this.posts.map((post) => this.getPostId(post))
-    );
-    const validSelections = this.selected.filter((selected) =>
-      validPostIds.has(this.getPostId(selected))
-    );
-
-    // Only update if there are stale selections
-    if (validSelections.length !== this.selected.length) {
-      this.selected.length = 0;
-      this.selected.push(...validSelections);
-
-      // Clear last clicked if it's no longer valid
-      if (
-        this.lastClickedPost &&
-        !validPostIds.has(this.getPostId(this.lastClickedPost))
-      ) {
-        this.lastClickedPost = null;
-      }
-    }
   }
 
   get selectedCount() {
@@ -73,8 +40,18 @@ export default class PostBulkSelectHelper {
     return this.selected.length > 0;
   }
 
+  /** @returns {boolean | null} */
   get allSelected() {
     return this.posts && this.selected.length === this.posts.length;
+  }
+
+  /**
+   * Update posts and clean up stale selections
+   * @param {Array} newPosts - New posts array
+   */
+  updatePosts(newPosts) {
+    this.posts = newPosts;
+    this.#cleanupStaleSelections();
   }
 
   @action
@@ -188,6 +165,37 @@ export default class PostBulkSelectHelper {
       this.clearAll();
     } finally {
       this.loading = false;
+    }
+  }
+
+  /**
+   * Remove selections for posts that no longer exist
+   */
+  #cleanupStaleSelections() {
+    if (!this.posts) {
+      this.selected.length = 0;
+      return;
+    }
+
+    const validPostIds = new Set(
+      this.posts.map((post) => this.getPostId(post))
+    );
+    const validSelections = this.selected.filter((selected) =>
+      validPostIds.has(this.getPostId(selected))
+    );
+
+    // Only update if there are stale selections
+    if (validSelections.length !== this.selected.length) {
+      this.selected.length = 0;
+      this.selected.push(...validSelections);
+
+      // Clear last clicked if it's no longer valid
+      if (
+        this.lastClickedPost &&
+        !validPostIds.has(this.getPostId(this.lastClickedPost))
+      ) {
+        this.lastClickedPost = null;
+      }
     }
   }
 }

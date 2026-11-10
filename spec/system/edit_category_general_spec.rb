@@ -5,6 +5,7 @@ describe "Edit Category General" do
   fab!(:category)
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+
   before { sign_in(admin) }
 
   context "when changing background color" do

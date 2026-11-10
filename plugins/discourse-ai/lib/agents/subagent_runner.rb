@@ -52,18 +52,31 @@ module DiscourseAi
         state = @context.subagent_execution_state
         return error("cancelled", child_record) if @context.cancel_manager&.cancelled?
         return error("token_limit", child_record) if state.remaining_tokens <= 0
-        return error("call_limit", child_record) if !state.reserve_spawn
 
         yield(@prompt) if block_given?
 
         child_agent = child_class.new
-        child_context = build_child_context(child_record, model)
+        child_context = build_child_context(child_record)
         response = collect_response(child_agent, child_context, model)
         return error("completion_limit", child_record) if child_context.completion_limit_reached
 
         truncate_response(response, child_record)
       rescue => exception
         return error("cancelled", child_record) if @context.cancel_manager&.cancelled?
+
+        if exception.is_a?(DiscourseAi::Completions::ContextPreparation::Error) &&
+             exception.reason == "turn_budget_exhausted"
+          result = error("token_limit", child_record)
+          if exception.raw_context.present?
+            result.merge!(
+              truncate_response(exception.raw_context.to_json, child_record).slice(
+                :response,
+                :truncated,
+              ),
+            )
+          end
+          return result
+        end
 
         Rails.logger.error(
           "DiscourseAi: subagent failed parent=#{@parent_agent.id} child=#{@child_id}: #{exception.class}: #{exception.message}",
@@ -83,8 +96,9 @@ module DiscourseAi
         parent_record = AiAgent.find_by(id: @parent_agent.id)
         return error("unavailable_parent") if !parent_record
         return error("agent_not_allowed") if !parent_record.subagent_ids.include?(@child_id)
-        return error("call_limit") if !@context.subagent_execution_state&.spawn_available?
-        return error("completion_limit") if !@context.subagent_execution_state.completion_available?
+        if !@context.subagent_execution_state&.completion_available?
+          return error("completion_limit")
+        end
         error("token_limit") if @context.subagent_execution_state.remaining_tokens <= 0
       end
 
@@ -97,7 +111,7 @@ module DiscourseAi
         required_tools.empty? || (required_tools - Agent.all_available_tools).empty?
       end
 
-      def build_child_context(child_record, model)
+      def build_child_context(child_record)
         child_depth = @context.subagent_depth.to_i + 1
         feature_context =
           @context.feature_context.to_h.merge(
@@ -105,11 +119,12 @@ module DiscourseAi
             "subagent_agent_id" => child_record.id,
             "subagent_depth" => child_depth,
           )
-        child_budget =
-          child_record.max_turn_tokens.presence ||
-            Bot.default_max_turn_tokens(DiscourseAi::Completions::Llm.proxy(model))
+        child_budget = Bot.effective_max_turn_tokens(child_record.max_turn_tokens)
         effective_budget = [child_budget, @context.subagent_execution_state.remaining_tokens].min
 
+        child_execution = @context.execution_context.dup
+        child_execution.work_budget =
+          @context.execution_context.work_budget.child(limit: effective_budget)
         child_context =
           BotContext.new(
             messages: [{ type: :user, content: @prompt }],
@@ -132,7 +147,7 @@ module DiscourseAi
             bypass_response_format: false,
             guardian: @context.guardian,
             server_owned_tools: @context.server_owned_tools,
-            execution_context: @context.execution_context,
+            execution_context: child_execution,
             subagent_execution_state: @context.subagent_execution_state,
             subagent_depth: child_depth,
             parent_agent_id: @parent_agent.id,
@@ -155,7 +170,7 @@ module DiscourseAi
         raw_context =
           bot.reply(
             child_context,
-            execution_context: @context.execution_context,
+            execution_context: child_context.execution_context,
           ) do |partial, _, type|
             if type == :structured_output
               structured = partial

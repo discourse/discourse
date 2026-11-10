@@ -36,6 +36,23 @@ export default class ChatThreadTitlePrompt extends Component {
     return this.args.thread.currentUserMembership;
   }
 
+  get canShowToast() {
+    if (
+      !this.currentUser ||
+      this.site.desktopView ||
+      (this.args.thread.originalMessage?.user?.id !== this.currentUser.id &&
+        !this.currentUser.admin)
+    ) {
+      return false;
+    }
+    const titleNotSet = this.args.thread.title === null;
+    const hasReplies =
+      this.args.thread.replyCount >= THREAD_TITLE_PROMPT_THRESHOLD;
+    const showPrompts = this.currentUser.user_option.show_thread_title_prompts;
+    const promptNotSeen = !this.membership?.threadTitlePromptSeen;
+    return titleNotSet && hasReplies && showPrompts && promptNotSeen;
+  }
+
   @action
   async updateThreadTitlePrompt() {
     try {
@@ -61,23 +78,6 @@ export default class ChatThreadTitlePrompt extends Component {
   disableFutureThreadTitlePrompts() {
     this.currentUser.set("user_option.show_thread_title_prompts", false);
     this.currentUser.save();
-  }
-
-  get canShowToast() {
-    if (
-      !this.currentUser ||
-      this.site.desktopView ||
-      (this.args.thread.originalMessage?.user?.id !== this.currentUser.id &&
-        !this.currentUser.admin)
-    ) {
-      return false;
-    }
-    const titleNotSet = this.args.thread.title === null;
-    const hasReplies =
-      this.args.thread.replyCount >= THREAD_TITLE_PROMPT_THRESHOLD;
-    const showPrompts = this.currentUser.user_option.show_thread_title_prompts;
-    const promptNotSeen = !this.membership?.threadTitlePromptSeen;
-    return titleNotSet && hasReplies && showPrompts && promptNotSeen;
   }
 
   show() {

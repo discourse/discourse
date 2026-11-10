@@ -13,20 +13,33 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
 
   const posters = {
     total: 100,
+    groups: ["new_members", "returning", "staff"],
     rows: [
-      { type: "new_members", count: 34, share: 34 },
-      { type: "returning", count: 51, share: 51 },
-      { type: "staff", count: 15, share: 15 },
+      {
+        type: "new_members",
+        kind: "synthetic",
+        name: "New members",
+        count: 34,
+        share: 34,
+      },
+      {
+        type: "returning",
+        kind: "synthetic",
+        name: "Returning",
+        count: 51,
+        share: 51,
+      },
+      { type: "staff", kind: "synthetic", name: "Staff", count: 15, share: 15 },
     ],
   };
 
-  test("renders a bar row with label, fill and share for each bucket", async function (assert) {
+  test("renders a bar row with label, fill and share for each row", async function (assert) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{posters}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -42,13 +55,48 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       .hasText("51%");
   });
 
+  test("renders a dynamic number of rows, including added groups", async function (assert) {
+    const withGroup = {
+      total: 120,
+      groups: ["new_members", "returning", "staff", "group:5"],
+      rows: [
+        ...posters.rows,
+        {
+          type: "group:5",
+          kind: "group",
+          name: "Support",
+          count: 20,
+          share: 16.67,
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <WhosPosting
+          @endDate={{end}}
+          @posters={{withGroup}}
+          @startDate={{start}}
+        />
+      </template>
+    );
+
+    assert.dom(".db-whos-posting__bar-row").exists({ count: 4 });
+    assert
+      .dom(".db-whos-posting__bar-row:nth-child(4) .db-whos-posting__bar-label")
+      .hasText("Support");
+    assert
+      .dom(".db-whos-posting__bar-row:nth-child(4) .db-whos-posting__bar-fill")
+      .hasClass("--group-0");
+  });
+
   test("renders the section header linking to the posters_by_member_type report", async function (assert) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{posters}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -60,13 +108,27 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     assert.dom(".multiple-categories-selector").exists();
   });
 
+  test("renders an 'Add group' button", async function (assert) {
+    await render(
+      <template>
+        <WhosPosting
+          @endDate={{end}}
+          @posters={{posters}}
+          @startDate={{start}}
+        />
+      </template>
+    );
+
+    assert.dom(".db-whos-posting__add-group").exists();
+  });
+
   test("shows an 'All categories' placeholder when nothing is selected", async function (assert) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{posters}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -83,9 +145,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{withSelection}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -97,11 +159,11 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
   });
 
   test("falls back to an empty-state message when there are no posts", async function (assert) {
-    const empty = { total: 0, rows: [] };
+    const empty = { total: 0, rows: [], groups: [] };
 
     await render(
       <template>
-        <WhosPosting @posters={{empty}} @startDate={{start}} @endDate={{end}} />
+        <WhosPosting @endDate={{end}} @posters={{empty}} @startDate={{start}} />
       </template>
     );
 
@@ -109,22 +171,35 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     assert.dom(".db-whos-posting__empty").exists();
   });
 
-  test("renders a zero-share bucket with a 0% share", async function (assert) {
+  test("renders a zero-share row with a 0% share", async function (assert) {
     const noStaff = {
       total: 85,
+      groups: ["new_members", "returning", "staff"],
       rows: [
-        { type: "new_members", count: 34, share: 40 },
-        { type: "returning", count: 51, share: 60 },
-        { type: "staff", count: 0, share: 0 },
+        {
+          type: "new_members",
+          kind: "synthetic",
+          name: "New members",
+          count: 34,
+          share: 40,
+        },
+        {
+          type: "returning",
+          kind: "synthetic",
+          name: "Returning",
+          count: 51,
+          share: 60,
+        },
+        { type: "staff", kind: "synthetic", name: "Staff", count: 0, share: 0 },
       ],
     };
 
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{noStaff}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );

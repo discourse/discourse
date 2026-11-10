@@ -8,6 +8,7 @@ export default function () {
   this.route("exception-unknown", { path: "/404" });
 
   this.route("about");
+  this.route("report-illegal-content", { path: "/dsa/report-illegal-content" });
 
   this.route("post", { path: "/p/:id" });
   this.route("posts");

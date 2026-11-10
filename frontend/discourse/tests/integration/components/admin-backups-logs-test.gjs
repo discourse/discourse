@@ -18,7 +18,7 @@ module("Integration | Component | AdminBackupsLogs", function (hooks) {
 
     await render(
       <template>
-        <AdminBackupsLogs @logs={{logs}} class="custom-backup-logs" />
+        <AdminBackupsLogs class="custom-backup-logs" @logs={{logs}} />
       </template>
     );
 

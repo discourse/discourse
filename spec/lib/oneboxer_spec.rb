@@ -43,6 +43,7 @@ RSpec.describe Oneboxer do
 
   describe "#invalidate" do
     let(:url) { "http://test.com" }
+
     it "clears the cached preview for the onebox URL and the failed URL cache" do
       Discourse.cache.write(Oneboxer.onebox_cache_key(url), "test")
       Discourse.cache.write(Oneboxer.onebox_failed_cache_key(url), true)
@@ -171,7 +172,7 @@ RSpec.describe Oneboxer do
       expect(preview("/u/#{user.username}")).to include(user.name)
     end
 
-    it "should respect enable_names site setting" do
+    it "respects the enable_names site setting" do
       user = Fabricate(:user)
       user.user_stat.update!(post_count: 1)
 
@@ -385,7 +386,7 @@ RSpec.describe Oneboxer do
   end
 
   describe ".onebox_raw" do
-    it "should escape the onebox URL before processing" do
+    it "escapes the onebox URL before processing" do
       post = Fabricate(:post, raw: Discourse.base_url + "/new?'class=black")
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process_oneboxes
@@ -1308,6 +1309,50 @@ RSpec.describe Oneboxer do
         <p>Onebox</p>
         <div><svg><path></path></svg></div>
       HTML
+    end
+
+    it "gives every occurrence of a URL its own slot" do
+      url = "https://example.com"
+      html = "<p><a href='#{url}' class='onebox'>#{url}</a></p>" * 5
+
+      cooked = Oneboxer.apply(html, limit: 2) { "<div>onebox</div>" }
+
+      expect(cooked.to_html).to have_tag("div", text: "onebox", count: 2)
+      expect(cooked.to_html).to have_tag("a", without: { class: "onebox" }, count: 3)
+    end
+
+    it "claims slots in document order" do
+      inline_url = "https://example.com/inline"
+      onebox_url = "https://example.com/onebox"
+      html = <<~HTML
+        <div>
+          <a href="#{inline_url}" class="#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}">#{inline_url}</a>
+          <a href="#{onebox_url}" class="onebox">#{onebox_url}</a>
+        </div>
+      HTML
+
+      cooked =
+        Oneboxer.apply(
+          html,
+          extra_paths: ".#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}",
+          limit: 1,
+        ) { nil }
+
+      expect(cooked.to_html).to have_tag(
+        "a.#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}",
+        with: {
+          href: inline_url,
+        },
+      )
+      expect(cooked.to_html).to have_tag(
+        "a",
+        with: {
+          href: onebox_url,
+        },
+        without: {
+          class: "onebox",
+        },
+      )
     end
   end
 

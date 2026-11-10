@@ -38,9 +38,9 @@ export default class SupportWhosAnswering extends Component {
 
     {{#if this.hasData}}
       <div
+        aria-label={{this.ariaLabel}}
         class="db-whos-posting__bars"
         role="img"
-        aria-label={{this.ariaLabel}}
       >
         {{#each this.rows as |row|}}
           <div class="db-whos-posting__bar-row">

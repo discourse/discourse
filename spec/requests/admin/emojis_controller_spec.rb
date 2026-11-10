@@ -54,7 +54,7 @@ RSpec.describe Admin::EmojiController do
       before { sign_in(admin) }
 
       context "when upload is invalid" do
-        it "should publish the right error" do
+        it "publishes the expected error" do
           post "/admin/config/emoji.json",
                params: {
                  name: "test",
@@ -75,7 +75,7 @@ RSpec.describe Admin::EmojiController do
       end
 
       context "when emoji name already exists" do
-        it "should publish the right error" do
+        it "publishes the expected error" do
           CustomEmoji.create!(name: "test", upload: upload)
 
           post "/admin/config/emoji.json",
@@ -92,7 +92,7 @@ RSpec.describe Admin::EmojiController do
         end
       end
 
-      it "should allow an admin to add a custom emoji" do
+      it "allows an admin to add a custom emoji" do
         Emoji.expects(:clear_cache)
 
         post "/admin/config/emoji.json",
@@ -115,7 +115,7 @@ RSpec.describe Admin::EmojiController do
         expect(custom_emoji.user_id).to eq(admin.id)
       end
 
-      it "should log the action" do
+      it "logs the action" do
         Emoji.expects(:clear_cache)
 
         post "/admin/config/emoji.json",
@@ -131,7 +131,7 @@ RSpec.describe Admin::EmojiController do
         expect(last_log.new_value).to eq("test")
       end
 
-      it "should allow an admin to add a custom emoji with a custom group" do
+      it "allows an admin to add a custom emoji with a custom group" do
         Emoji.expects(:clear_cache)
 
         post "/admin/config/emoji.json",
@@ -147,7 +147,7 @@ RSpec.describe Admin::EmojiController do
         expect(custom_emoji.group).to eq("foo")
       end
 
-      it "should allow an admin to add a custom SVG emoji" do
+      it "allows an admin to add a custom SVG emoji" do
         Emoji.expects(:clear_cache)
 
         post "/admin/config/emoji.json",
@@ -165,7 +165,7 @@ RSpec.describe Admin::EmojiController do
         expect(upload.extension).to eq("svg")
       end
 
-      it "should allow an admin to add a custom animated GIF emoji" do
+      it "allows an admin to add a custom animated GIF emoji" do
         Emoji.expects(:clear_cache)
 
         post "/admin/config/emoji.json",
@@ -183,7 +183,7 @@ RSpec.describe Admin::EmojiController do
         expect(upload.extension).to eq("gif")
       end
 
-      it "should fix up the emoji name" do
+      it "normalizes the emoji name" do
         Emoji.expects(:clear_cache).times(3)
 
         post "/admin/config/emoji.json",
@@ -281,7 +281,9 @@ RSpec.describe Admin::EmojiController do
             expect(entries).to include("emoji-a.png")
             expect(entries).to include("emoji-b.png")
 
-            csv = zip.read("emojis.csv")
+            csv = zip.read("emojis.csv").force_encoding(Encoding::UTF_8)
+            expect(csv).to start_with(Encodings::BOM)
+            csv = csv.delete_prefix(Encodings::BOM)
             rows = CSV.parse(csv, headers: true)
             expect(rows.map { |r| r["name"] }).to contain_exactly("emoji-a", "emoji-b")
             emoji_b_row = rows.find { |r| r["name"] == "emoji-b" }
@@ -305,11 +307,13 @@ RSpec.describe Admin::EmojiController do
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       include_examples "export not allowed"
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
+
       include_examples "export not allowed"
     end
   end
@@ -446,11 +450,13 @@ RSpec.describe Admin::EmojiController do
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       include_examples "import preview not allowed"
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
+
       include_examples "import preview not allowed"
     end
   end
@@ -602,11 +608,13 @@ RSpec.describe Admin::EmojiController do
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       include_examples "import confirm not allowed"
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
+
       include_examples "import confirm not allowed"
     end
   end
@@ -615,7 +623,7 @@ RSpec.describe Admin::EmojiController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should allow an admin to delete a custom emoji" do
+      it "allows an admin to delete a custom emoji" do
         custom_emoji = CustomEmoji.create!(name: "test", upload: upload)
         Emoji.clear_cache
 
@@ -627,7 +635,7 @@ RSpec.describe Admin::EmojiController do
         expect(response.parsed_body["success"]).to eq("OK")
       end
 
-      it "should log the action" do
+      it "logs the action" do
         custom_emoji = CustomEmoji.create!(name: "test", upload: upload)
         Emoji.clear_cache
 

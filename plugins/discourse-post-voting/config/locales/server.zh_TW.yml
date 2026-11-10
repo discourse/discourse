@@ -8,22 +8,62 @@ zh_TW:
   post:
     post_voting:
       errors:
+        post_voting_not_enabled: "未啟用貼文投票。"
         replying_to_post_not_permited: "您無法建立回覆其他貼文的貼文。"
         voting_not_permitted: "你不被允許對這篇文章投票。"
         comment_cannot_be_downvoted: "您只能在評論投票。"
         self_voting_not_permitted: "您不得對自己的貼文或評論進行投票。"
+        vote_archived_topic: "您無法在已封存的主題中投票。"
+        vote_closed_topic: "您無法在已關閉的主題中投票。"
   topic:
     post_voting:
+      errors:
+        post_voting_not_enabled: "未啟用貼文投票。"
+        subtype_not_allowed: "貼文投票子類型只能用於一般主題。"
+        cannot_change_to_post_voting_subtype: "不允許將主題的子類型變更為貼文投票。"
       answer_count:
         other: "%{count} 個回答"
+  site_settings:
+    qa_tags: "可在主題上啟用貼文投票的標籤"
+    post_voting_enabled: "啟用貼文投票外掛"
+    post_voting_enable_likes_on_answers: "在貼文投票主題的回覆上啟用按讚按鈕"
+    post_voting_undo_vote_action_window: "允許使用者在貼文投票主題中撤銷投票的分鐘數（輸入 0 表示不設限制）"
+    post_voting_comment_limit_per_post: "每篇貼文允許的留言數"
+    flag_posts_voting_comments_allowed_groups: "可檢舉貼文投票留言的群組"
+    post_voting_comment_enabled: "在貼文投票主題的貼文上啟用留言"
   discourse_post_voting:
     reviewables:
       actions:
+        agree_and_keep_comment:
+          title: "保留留言"
+          description: "同意檢舉並保持留言不變。"
+        agree_and_keep_deleted:
+          title: "保持留言為已刪除"
+          description: "同意檢舉並維持留言已刪除。"
+        agree_and_restore:
+          title: "還原留言"
+          description: "還原留言，讓使用者可以看見。"
+        agree_and_delete:
+          title: "刪除留言"
+          description: "刪除留言，讓使用者無法看見。"
         agree_and_suspend:
+          title: "停權使用者"
           description: "同意檢舉並停權使用者"
         agree_and_silence:
           title: "使用者靜音"
           description: "同意檢舉並禁止使用者發文"
+        disagree_and_restore:
+          title: "不同意並還原留言"
+          description: "還原留言，讓所有使用者可以看見。"
+        disagree:
+          title: "保留留言"
+          description: "不同意檢舉並保持留言不變。"
+        ignore:
+          title: "忽略檢舉"
+          description: "將其移出佇列但不採取動作。"
+        delete_and_agree:
+          title: "忽略檢舉並刪除留言"
+          description: "從佇列中移除檢舉以忽略，並刪除留言。"
   post_action_types:
     vote:
       title: "投票"
@@ -42,18 +82,53 @@ zh_TW:
   post_voting:
     comment:
       errors:
+        post_voting_not_enabled: "不允許在非貼文投票主題的貼文上留言。"
         not_permitted: "不允許對相關貼文發表評論。"
         limit_exceeded: "已達到每篇貼文 %{limit} 條評論的限制。"
+        perform: "貼文投票留言遭檢舉，分數高到足以將使用者禁言。"
+        auto_silence_from_flags: "因檢舉而自動遭禁言。"
+        disabled: "不允許在貼文上留言。"
       reviewables:
+        comment_already_handled: "感謝，但我們已審查此留言，並判定不需要再次檢舉。"
         actions:
+          agree_and_keep_comment:
+            title: "保留留言"
+            description: "同意檢舉並保持留言不變。"
+          agree_and_keep_deleted:
+            title: "保持留言為已刪除"
+            description: "同意檢舉並維持留言已刪除。"
           agree_and_suspend:
             title: "將使用者停權"
             description: "同意檢舉並停權使用者"
           agree_and_silence:
             title: "將使用者禁言"
             description: "同意檢舉並禁止使用者發文"
+          agree_and_restore:
+            title: "還原留言"
+            description: "還原留言，讓使用者可以看見。"
+          agree_and_delete:
+            title: "刪除留言"
+            description: "刪除留言，讓使用者無法看見。"
+          delete_and_agree:
+            title: "忽略檢舉並刪除留言"
+            description: "從佇列中移除檢舉以忽略，並刪除留言。"
+          disagree_and_restore:
+            title: "不同意並還原留言"
+            description: "還原留言，讓所有使用者可以看見。"
+          disagree:
+            title: "保留留言"
+            description: "不同意檢舉並保持留言不變。"
+          ignore:
+            title: "忽略檢舉"
+            description: "將其移出佇列但不採取動作。"
+        transcript:
+          view: "查看先前的留言記錄"
       reviewable_score_types:
+        needs_review:
+          title: "需要審查"
         notify_user:
+          comment_pm_title: "您的貼文投票留言"
           comment_pm_body: "%{link}\n\n%{comment}"
         notify_moderators:
+          comment_pm_title: "有一則貼文投票留言需要工作人員處理"
           comment_pm_body: "%{link}\n\n%{comment}"
