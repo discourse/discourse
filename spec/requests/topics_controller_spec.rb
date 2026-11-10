@@ -4931,6 +4931,93 @@ RSpec.describe TopicsController do
       end
     end
 
+    context "when the first post is hidden" do
+      fab!(:hidden_topic) do
+        Fabricate(:post, user: post_author1, raw: "this is the secret hidden body text").topic
+      end
+      fab!(:visible_reply) do
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          post_number: 2,
+          raw: "this reply is perfectly visible",
+        )
+      end
+
+      let(:bot_user_agent) do
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      end
+
+      before do
+        hidden_topic.update_excerpt(hidden_topic.first_post.excerpt_for_topic)
+        hidden_topic.first_post.hide!(PostActionType.types[:off_topic])
+      end
+
+      it "does not leak the hidden first post body in the crawler meta description" do
+        get hidden_topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+      end
+
+      it "does not leak the hidden first post body when a crawler requests a visible reply" do
+        get "#{hidden_topic.relative_url}/2", env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+        expect(response.body).to include("this reply is perfectly visible")
+      end
+
+      it "does not leak the hidden first post body in the regular HTML description when requesting a visible reply" do
+        get "#{hidden_topic.relative_url}/2"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+      end
+
+      it "includes the first post excerpt for a viewer who can see hidden posts" do
+        sign_in(admin)
+
+        get hidden_topic.relative_url
+
+        expect(response.status).to eq(200)
+        description = Nokogiri.HTML5(response.body).at_css("meta[name='description']")["content"]
+        expect(description).to include("this is the secret hidden body text")
+      end
+    end
+
+    context "when a reply is hidden" do
+      fab!(:reply_topic) do
+        Fabricate(:post, user: post_author1, raw: "the first post visible body text").topic
+      end
+      fab!(:hidden_reply) do
+        Fabricate(
+          :post,
+          topic: reply_topic,
+          post_number: 2,
+          raw: "this is the secret hidden reply text",
+        )
+      end
+
+      let(:bot_user_agent) do
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      end
+
+      before do
+        reply_topic.update_excerpt(reply_topic.first_post.excerpt_for_topic)
+        hidden_reply.hide!(PostActionType.types[:off_topic])
+      end
+
+      it "keeps the visible first post excerpt but not the hidden reply in crawler metadata" do
+        get "#{reply_topic.relative_url}/2", env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden reply text")
+        description = Nokogiri.HTML5(response.body).at_css("meta[name='description']")["content"]
+        expect(description).to include("the first post visible body text")
+      end
+    end
+
     describe "image only topic" do
       it "uses image alt tag for meta description" do
         post =
@@ -5367,6 +5454,21 @@ RSpec.describe TopicsController do
       topic.trash!
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(404)
+    end
+
+    context "when the first post is hidden" do
+      fab!(:hidden_topic) do
+        Fabricate(:post, user: post_author1, raw: "this is the secret hidden body text").topic
+      end
+
+      before { hidden_topic.first_post.hide!(PostActionType.types[:off_topic]) }
+
+      it "does not leak the hidden first post body in the channel description" do
+        get "/t/foo/#{hidden_topic.id}.rss"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+      end
     end
   end
 
