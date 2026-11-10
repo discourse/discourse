@@ -18,6 +18,10 @@ const PAIRS = [
   "category-chooser",
   "category-selector",
   "category-drop",
+  "group-chooser",
+  "user-chooser",
+  "email-group-user-chooser",
+  "topic-chooser",
 ];
 
 const side = (pair, which) =>

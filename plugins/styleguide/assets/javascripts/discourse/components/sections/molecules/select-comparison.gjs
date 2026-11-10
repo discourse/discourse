@@ -7,20 +7,27 @@ import Category from "discourse/models/category";
 import CategoryChooserControl from "discourse/select-kit/components/category-chooser";
 import CategoryDropControl from "discourse/select-kit/components/category-drop";
 import CategorySelectorControl from "discourse/select-kit/components/category-selector";
+import EmailGroupUserChooserControl from "discourse/select-kit/components/email-group-user-chooser";
+import GroupChooserControl from "discourse/select-kit/components/group-chooser";
 import MiniTagChooserControl from "discourse/select-kit/components/mini-tag-chooser";
 import TagChooserControl from "discourse/select-kit/components/tag-chooser";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import TagGroupChooserControl from "discourse/select-kit/components/tag-group-chooser";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
+import TopicChooserControl from "discourse/select-kit/components/topic-chooser";
+import UserChooserControl from "discourse/select-kit/components/user-chooser";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectCategoryFilter from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import DSelectTagFilter, {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
 import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 function initialTags() {
@@ -62,8 +69,13 @@ const DemoTagsIntersectionChooser = comparisonControl(TagsIntersectionChooser);
 const CategoryChooser = comparisonControl(CategoryChooserControl);
 const CategorySelector = comparisonControl(CategorySelectorControl);
 const DemoCategoryDrop = comparisonControl(CategoryDropControl);
+const GroupChooser = comparisonControl(GroupChooserControl);
+const UserChooser = comparisonControl(UserChooserControl);
+const EmailGroupUserChooser = comparisonControl(EmailGroupUserChooserControl);
+const TopicChooser = comparisonControl(TopicChooserControl);
 
 class DemoSelection {
+  @tracked item;
   @tracked value;
 
   constructor(value) {
@@ -73,6 +85,13 @@ class DemoSelection {
   @action
   update(value) {
     this.value = value;
+  }
+
+  /** Keeps the picked record too, for a control that shows only the records it is given. */
+  @action
+  updateWithItem(value, item) {
+    this.value = value;
+    this.item = item;
   }
 
   @action
@@ -115,6 +134,15 @@ export default class SelectComparison extends Component {
   legacyCategoryFilter = new DemoSelection(null);
   newCategoryFilter = new DemoSelection(null);
 
+  legacyGroups = new DemoSelection([]);
+  newGroups = new DemoSelection([]);
+  legacyUsers = new DemoSelection([]);
+  newUsers = new DemoSelection([]);
+  legacyRecipients = new DemoSelection([]);
+  newRecipients = new DemoSelection([]);
+  legacyTopic = new DemoSelection(null);
+  newTopic = new DemoSelection(null);
+
   tags = initialTags();
 
   get topLevelCategories() {
@@ -125,6 +153,10 @@ export default class SelectComparison extends Component {
 
   get legacyFilterCategory() {
     return Category.findById(this.legacyCategoryFilter.value);
+  }
+
+  get legacyTopicContent() {
+    return this.legacyTopic.item ? [this.legacyTopic.item] : [];
   }
 
   get legacyMainTag() {
@@ -528,6 +560,188 @@ export default class SelectComparison extends Component {
               {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatCategoryFilter this.newCategoryFilter.value)
+              ~}}
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="styleguide-select-comparison__pair"
+        data-pair="group-chooser"
+      >
+        <h3>
+          {{~i18n "styleguide.sections.select_comparison.group_chooser"~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
+            "styleguide.sections.select_comparison.group_chooser_description"
+          ~}}
+        </p>
+        <div class="styleguide-select-comparison__controls">
+          <div class="styleguide-select-comparison__legacy">
+            <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
+            <GroupChooser
+              @content={{this.site.groups}}
+              @onChange={{this.legacyGroups.update}}
+              @value={{this.legacyGroups.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.legacyGroups.value)
+              ~}}
+            </small>
+          </div>
+          <div class="styleguide-select-comparison__new">
+            <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
+            <DSelectGroup
+              @multiple={{true}}
+              @onChange={{this.newGroups.update}}
+              @value={{this.newGroups.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.newGroups.value)
+              ~}}
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="styleguide-select-comparison__pair"
+        data-pair="user-chooser"
+      >
+        <h3>
+          {{~i18n "styleguide.sections.select_comparison.user_chooser"~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
+            "styleguide.sections.select_comparison.user_chooser_description"
+          ~}}
+        </p>
+        <div class="styleguide-select-comparison__controls">
+          <div class="styleguide-select-comparison__legacy">
+            <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
+            <UserChooser
+              @onChange={{this.legacyUsers.update}}
+              @options={{hash excludeCurrentUser=true}}
+              @value={{this.legacyUsers.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.legacyUsers.value)
+              ~}}
+            </small>
+          </div>
+          <div class="styleguide-select-comparison__new">
+            <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
+            <DSelectUser
+              @excludeCurrentUser={{true}}
+              @multiple={{true}}
+              @onChange={{this.newUsers.update}}
+              @value={{this.newUsers.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.newUsers.value)
+              ~}}
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="styleguide-select-comparison__pair"
+        data-pair="email-group-user-chooser"
+      >
+        <h3>
+          {{~i18n
+            "styleguide.sections.select_comparison.email_group_user_chooser"
+          ~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
+            "styleguide.sections.select_comparison.email_group_user_chooser_description"
+          ~}}
+        </p>
+        <div class="styleguide-select-comparison__controls">
+          <div class="styleguide-select-comparison__legacy">
+            <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
+            <EmailGroupUserChooser
+              @onChange={{this.legacyRecipients.update}}
+              @options={{hash allowEmails=true includeMessageableGroups=true}}
+              @value={{this.legacyRecipients.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.legacyRecipients.value)
+              ~}}
+            </small>
+          </div>
+          <div class="styleguide-select-comparison__new">
+            <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
+            <DSelectUser
+              @emails={{true}}
+              @includeGroups="messageable"
+              @multiple={{true}}
+              @onChange={{this.newRecipients.update}}
+              @value={{this.newRecipients.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.newRecipients.value)
+              ~}}
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="styleguide-select-comparison__pair"
+        data-pair="topic-chooser"
+      >
+        <h3>
+          {{~i18n "styleguide.sections.select_comparison.topic_chooser"~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
+            "styleguide.sections.select_comparison.topic_chooser_description"
+          ~}}
+        </p>
+        <div class="styleguide-select-comparison__controls">
+          <div class="styleguide-select-comparison__legacy">
+            <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
+            <TopicChooser
+              @content={{this.legacyTopicContent}}
+              @onChange={{this.legacyTopic.updateWithItem}}
+              @options={{hash castInteger=true}}
+              @value={{this.legacyTopic.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.legacyTopic.value)
+              ~}}
+            </small>
+          </div>
+          <div class="styleguide-select-comparison__new">
+            <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
+            <DSelectTopic
+              @clearable={{true}}
+              @onChange={{this.newTopic.update}}
+              @value={{this.newTopic.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.newTopic.value)
               ~}}
             </small>
           </div>
