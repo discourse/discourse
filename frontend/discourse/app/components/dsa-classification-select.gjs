@@ -36,7 +36,6 @@ export default class DsaClassificationSelect extends Component {
 
     try {
       const value = await this.args.chooseAction.choose();
-      // Staff may close the modal while the model is still answering.
       if (this.isDestroying) {
         return;
       }

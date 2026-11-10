@@ -3,8 +3,6 @@
 module DiscourseAi
   module AiModeration
     module DsaClassification
-      # The classification as decision model questions, and the way back from the labels the
-      # model picks to the ids the moderation form submits.
       class Questions
         COMMUNITY_RULE = "community_rule"
         CATEGORY = "category"
@@ -61,7 +59,6 @@ module DiscourseAi
           categories: DsaStatementOfRecord::CATEGORIES
         )
           @rule_ids_by_label = community_rules.to_h { |rule| [rule_label(rule), rule_id(rule)] }
-          # Categories are sent in English so every site asks the model the same question.
           @category_ids_by_label =
             I18n.with_locale(:en) do
               categories.index_by { |category| I18n.t("dsa_statements.categories.#{category}") }
@@ -72,8 +69,6 @@ module DiscourseAi
           [rule_question, category_question].compact
         end
 
-        # @param result [DiscourseAi::Decisions::Result]
-        # @return [Suggestion] a nil field when the model declined to answer it
         def suggestion_from(result)
           Suggestion.new(
             community_rule: only_rule_id || chosen(result, COMMUNITY_RULE, @rule_ids_by_label),
@@ -83,7 +78,6 @@ module DiscourseAi
 
         private
 
-        # A single rule needs no question: it is the only possible answer.
         def rule_question
           return if only_rule_id
 
@@ -117,7 +111,6 @@ module DiscourseAi
         def rule_label(rule)
           ground = rule.fetch(DsaStatementOfRecord::COMMUNITY_RULE_GROUND_KEY)
           explanation = rule[DsaStatementOfRecord::COMMUNITY_RULE_EXPLANATION_KEY]
-          # Decision questions strip their labels, so ours must match the stripped form.
           (explanation.present? ? "#{ground}: #{explanation}" : ground).strip
         end
 

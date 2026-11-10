@@ -56,7 +56,7 @@ RSpec.describe "DSA classification suggestion" do
 
       expect(modal).to have_selected_rule(advertising_rule[:ground])
       expect(modal).to have_focused_rule
-      expect(modal).to have_selected_category("Choose a category")
+      expect(modal).to have_selected_category("Other violation of terms and conditions")
       expect(review_page).to have_reviewable_with_pending_status(reviewable)
 
       suggestion.suggest_category

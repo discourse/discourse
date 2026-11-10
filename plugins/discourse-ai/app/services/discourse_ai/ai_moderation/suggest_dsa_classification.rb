@@ -2,8 +2,6 @@
 
 module DiscourseAi
   module AiModeration
-    # Asks a decision model to pre-fill the DSA classification of a moderation action. A
-    # failed decision surfaces as the exception of the not found `suggestion` model.
     class SuggestDsaClassification
       include Service::Base
 

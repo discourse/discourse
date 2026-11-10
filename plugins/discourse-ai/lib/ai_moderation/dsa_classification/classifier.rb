@@ -9,8 +9,6 @@ module DiscourseAi
           @questions = questions
         end
 
-        # @return [Suggestion]
-        # @raise [DiscourseAi::Decisions::Error]
         def suggest(reviewable, user:)
           result =
             @decision_model.decide(

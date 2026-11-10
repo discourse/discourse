@@ -3,8 +3,6 @@
 module DiscourseAi
   module AiModeration
     module DsaClassification
-      # What the decision model judges: why the reviewable was flagged and the public content
-      # behind it. Private account data (emails, IPs) never leaves the site.
       class State
         MAX_CONTENT_CHARS = 6000
 
@@ -44,7 +42,6 @@ module DiscourseAi
           end
         end
 
-        # A flagged post may have been deleted since it was flagged.
         def flagged_post
           if reviewable.target_type == "Post"
             Post.with_deleted.includes(:topic, :user).find_by(id: reviewable.target_id)
