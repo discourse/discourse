@@ -376,7 +376,7 @@ expectTypeOf(topic.viewsHeat).toEqualTypeOf<
   "heatmap-high" | "heatmap-med" | "heatmap-low" | null
 >();
 expectTypeOf(topic.archetypeObject).toEqualTypeOf<Archetype | undefined>();
-expectTypeOf(topic.escapedExcerpt).toEqualTypeOf<string>();
+expectTypeOf(topic.escapedExcerpt).toEqualTypeOf<string | null | undefined>();
 expectTypeOf(topic.excerptTruncated).toExtend<
   string | boolean | null | undefined
 >();
