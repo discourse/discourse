@@ -23,9 +23,10 @@ describe "Appearance change styles" do
           },
           rules: [
             {
-              area: "page",
+              area: "header",
               declarations: {
-                "background-color" => "light-dark(#ffe0f0, #330018)",
+                "background" =>
+                  "linear-gradient(90deg, var(--header_background), color-mix(in srgb, var(--header_background) 40%, var(--tertiary)))",
               },
             },
           ],
@@ -48,14 +49,14 @@ describe "Appearance change styles" do
   it "styles the forum in the preview but never the admin area" do
     visit("/latest?preview_theme_id=#{appearance_change.theme_id}")
     expect(page).to have_css(".topic-list, .no-topics-footer, #main-outlet")
-    expect(computed("body", "background-color")).to eq("rgb(255, 224, 240)")
+    expect(computed(".d-header", "background-image")).to start_with("linear-gradient")
     expect(computed(":root", "--d-button-border-radius")).to eq("20px")
 
     visit("/admin?preview_theme_id=#{appearance_change.theme_id}")
     expect(page).to have_css("body.admin-interface")
     # the theme's CSS is on the page, but doesn't apply here
     expect(page).to have_css("link[data-theme-id='#{appearance_change.theme_id}']", visible: false)
-    expect(computed("body", "background-color")).not_to eq("rgb(255, 224, 240)")
+    expect(computed(".d-header", "background-image")).to eq("none")
     expect(computed(":root", "--d-button-border-radius")).not_to eq("20px")
   end
 end
