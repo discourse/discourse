@@ -37,6 +37,7 @@ RSpec.describe "Dependency selection scenarios" do
   end
 
   it_behaves_like "a dependency selection replay", name: "owned_accessor_scalar"
+  it_behaves_like "a dependency selection replay", name: "owned_accessor_generated_description"
   it_behaves_like "a dependency selection replay",
                   name: "coarse_split_native_precise_reused_matcher_conditional"
   it_behaves_like "a dependency selection replay",

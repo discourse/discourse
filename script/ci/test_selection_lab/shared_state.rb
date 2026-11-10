@@ -161,6 +161,8 @@ module TestSelectionLab
         why =
           if @name == "owned_accessor_scalar"
             "The changed producer file also declares an unused native accessor. The declaration is unchanged and no spec reads it. The writer calls the changed method and the reader consumes its stored value, so both must run. The unrelated spec has no affected dependency and stays omitted."
+          elsif @name == "owned_accessor_generated_description"
+            "The writer stores the changed producer value and uses a change matcher with an implicit description. RSpec parses the writer source to generate that description. The writer and reader depend on the producer, while the unrelated spec stays omitted."
           elsif @name.start_with?("coarse_split_native_precise_")
             "The producer writes a native accessor field and the reader accesses it, directly or through a matcher. Collection puts the files in separate processes, so the read slot must be recorded even when the reader sees an empty cache. The writer and reader depend on the producer. The unrelated spec stays omitted."
           elsif @name == "new_setup_spec"
@@ -557,7 +559,7 @@ module TestSelectionLab
         "lib/producer.rb",
         "module SharedStateProducer; def self.value; :original; end; end",
       )
-      if @name == "owned_accessor_scalar"
+      if %w[owned_accessor_scalar owned_accessor_generated_description].include?(@name)
         File.write(
           "lib/producer.rb",
           "module SharedStateProducer; class << self; attr_reader :unused; end; def self.value; :original; end; end",
@@ -580,6 +582,16 @@ module TestSelectionLab
           end
         end
       SPEC
+      if @name == "owned_accessor_generated_description"
+        File.write("spec/1_writer_spec.rb", <<~SPEC)
+          require_relative 'helper'
+          RSpec.describe 'Shared state writer' do
+            it do
+              expect { SharedStateCache.write(SharedStateProducer.value) }.to change { SharedStateCache.value }
+            end
+          end
+        SPEC
+      end
       if @name == "compact_let_scalar"
         path = "spec/1_writer_spec.rb"
         File.write(path, File.read(path).gsub("\n", "; "))

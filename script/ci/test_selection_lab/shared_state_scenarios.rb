@@ -2,6 +2,7 @@
 module TestSelectionLab
   SHARED_STATE_SCENARIOS = [
     ["owned_accessor_scalar", "", "SharedStateProducer.value", false],
+    ["owned_accessor_generated_description", "", "SharedStateProducer.value", false],
     [
       "coarse_split_native_precise_reused_matcher_conditional",
       "",

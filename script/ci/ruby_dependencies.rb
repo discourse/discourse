@@ -662,6 +662,18 @@ module TestSelection
       end
     end
 
+    def source_introspection_path?(path)
+      @source_introspection_paths ||= {}
+      @source_introspection_paths.fetch(path) do
+        package = Gem.loaded_specs["rspec-support"]
+        @source_introspection_paths[path] = package &&
+          (
+            path == "#{package.full_gem_path}/lib/rspec/support/source.rb" ||
+              path.start_with?("#{package.full_gem_path}/lib/rspec/support/source/")
+          )
+      end
+    end
+
     def external_entry_line(event)
       return if event.event == :b_call || !event.defined_class || !event.callee_id
       method = event.defined_class.instance_method(event.callee_id)
@@ -1083,7 +1095,8 @@ module TestSelection
       direct_caller = frames.last
       external_entry =
         !native && !source && @active_test && method_name != :const_added &&
-          !test_path(event.path) && !framework_path?(event.path) &&
+          !test_path(event.path) &&
+          (!framework_path?(event.path) || source_introspection_path?(event.path)) &&
           (
             (direct_caller && (direct_caller[:source] || direct_caller.fetch(:test))) ||
               (
@@ -1196,6 +1209,9 @@ module TestSelection
             { reads: [], writes: [], unknown: true }
           end
         end
+      if external_effects && source_introspection_path?(event.path)
+        external_effects = external_effects.merge(unknown: true)
+      end
       external_state =
         external_effects &&
           (
