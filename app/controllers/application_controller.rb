@@ -845,6 +845,9 @@ class ApplicationController < ActionController::Base
     # - one_time_password scope is allowed
     if !current_user && params.has_key?(:user_api_public_key) && params.has_key?(:auth_redirect)
       begin
+        # OpenSSL::PKey::RSA.new(Integer) generates a keypair of that bit
+        # length instead of parsing one, so reject non-strings before it.
+        raise OpenSSL::PKey::RSAError if !params[:user_api_public_key].is_a?(String)
         OpenSSL::PKey::RSA.new(params[:user_api_public_key])
       rescue OpenSSL::PKey::RSAError
         return render plain: I18n.t("user_api_key.invalid_public_key")
