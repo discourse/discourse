@@ -385,6 +385,9 @@ export default async function setupTests(config) {
     removeCookie("forced_color_mode", { path: "/" });
     removeCookie("color_scheme_id", { path: "/" });
     removeCookie("dark_scheme_id", { path: "/" });
+    // Entering the login or signup route stores the test page URL here, and a
+    // later profile save would navigate to it
+    removeCookie("destination_url");
     enableLoadMoreObserver();
     enableVirtualization();
 
