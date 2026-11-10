@@ -15,6 +15,17 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  it "preserves the sender date when creating a topic by email" do
+    Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: true)
+    mail = Mail.read_from_string(email(:new_user))
+
+    Email::Receiver.new(mail.to_s).process!
+
+    expect(Post.last.post_number).to eq(1)
+    expect(Post.last.created_at).to eq_time(mail.date)
+    expect(Post.last.topic.created_at).to eq_time(mail.date)
+  end
+
   describe "MIME structure depth" do
     it "raises a MaxMimeDepthExceededError when the message is nested too deeply" do
       expect {
@@ -1410,6 +1421,39 @@ RSpec.describe Email::Receiver do
 
       let!(:post_reply_key) do
         Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
+      end
+
+      it "uses receipt time for replies and their topic activity and close timer" do
+        now = freeze_time Time.zone.now.round
+        admin = Fabricate(:admin)
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          nil,
+          by_user: admin,
+          based_on_last_post: true,
+          duration_minutes: 1440,
+        )
+        mail = Mail.read_from_string(email(:reply_user_matching))
+        mail.date = 2.days.ago
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to change { topic.posts.count }.by(1)
+
+        reply = topic.posts.order(:post_number).last
+        expect(reply.created_at).to eq_time(now)
+        expect(topic.reload.last_posted_at).to eq_time(now)
+        expect(topic.bumped_at).to eq_time(now)
+        expect(topic.public_topic_timer.reload.execute_at).to eq_time(now + 24.hours)
+      end
+
+      it "preserves historical reply dates during imports" do
+        mail = Mail.read_from_string(email(:reply_user_matching))
+        mail.date = 2.days.ago
+
+        expect { Email::Receiver.new(mail.to_s, import_mode: true).process! }.to change {
+          topic.posts.count
+        }.by(1)
+
+        expect(topic.posts.order(:post_number).last.created_at).to eq_time(mail.date)
       end
 
       context "when the email address isn't matching the one we sent the notification to" do
