@@ -581,9 +581,6 @@ importers:
       pikaday:
         specifier: ^1.8.2
         version: 1.8.2(patch_hash=ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83)
-      pretty-text:
-        specifier: workspace:1.0.0
-        version: link:../pretty-text
       prosemirror-codemark:
         specifier: ^0.4.2
         version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.3)
@@ -876,9 +873,6 @@ importers:
       markdown-it:
         specifier: ^15.0.3
         version: 15.0.3
-      pretty-text:
-        specifier: workspace:1.0.0
-        version: link:../pretty-text
       xss:
         specifier: 1.0.15
         version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
@@ -904,22 +898,6 @@ importers:
         specifier: ^1.2.2
         version: 1.2.2
 
-  frontend/pretty-text:
-    dependencies:
-      discourse:
-        specifier: workspace:*
-        version: link:../discourse
-      discourse-i18n:
-        specifier: workspace:1.0.0
-        version: link:../discourse-i18n
-      xss:
-        specifier: 1.0.15
-        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
-    devDependencies:
-      ember-source:
-        specifier: ~7.3.0
-        version: 7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2)
-
   frontend/pretty-text-processor:
     dependencies:
       core-js:
@@ -934,9 +912,6 @@ importers:
       markdown-it:
         specifier: ^15.0.3
         version: 15.0.3
-      pretty-text:
-        specifier: workspace:*
-        version: link:../pretty-text
       rolldown:
         specifier: 1.2.7
         version: 1.2.7

@@ -13,6 +13,7 @@
     "./truth-helpers/*": "./truth-helpers/*",
     "./truth-helpers": "./truth-helpers/index.js",
     "./dialog-holder/*": "./dialog-holder/*",
+    "./pretty-text/*": "./pretty-text/*",
     "./*": "./app/*"
   },
   "directories": {
@@ -93,7 +94,6 @@
     "photoswipe": "5.4.4",
     "picomatch": "^4.0.7",
     "pikaday": "^1.8.2",
-    "pretty-text": "workspace:1.0.0",
     "prosemirror-codemark": "^0.4.2",
     "prosemirror-commands": "^1.7.2",
     "prosemirror-dropcursor": "^1.8.3",
