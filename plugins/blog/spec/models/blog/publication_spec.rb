@@ -118,7 +118,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "prefixes the UTC year and month" do
-      SiteSetting.blog_path_format = "year_month_slug"
+      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
 
       expect(described_class.default_path(topic)).to eq("/2026/11/#{topic.slug}")
       expect(described_class.default_path(topic, date: Time.utc(2025, 2, 3))).to eq(
@@ -127,11 +127,17 @@ RSpec.describe Blog::Publication do
     end
 
     it "prefixes the UTC year, month and day" do
-      SiteSetting.blog_path_format = "year_month_day_slug"
+      SiteSetting.blog_path_format = "/{year}/{month}/{day}/{slug}"
 
       expect(
         described_class.default_path(topic, date: Time.zone.parse("2026-11-07 02:00 +04:00")),
       ).to eq("/2026/11/06/#{topic.slug}")
+    end
+
+    it "renders a custom format with a fixed prefix and the topic id" do
+      SiteSetting.blog_path_format = "/news/{id}-{slug}"
+
+      expect(described_class.default_path(topic)).to eq("/news/#{topic.id}-#{topic.slug}")
     end
   end
 
@@ -142,7 +148,7 @@ RSpec.describe Blog::Publication do
 
     before do
       freeze_time Time.utc(2026, 11, 6)
-      SiteSetting.blog_path_format = "year_month_slug"
+      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
     end
 
     it "moves a generated dated path to the new publication date" do
@@ -165,12 +171,12 @@ RSpec.describe Blog::Publication do
       expect(publication.path).to eq("/2020/03/#{topic.slug}")
     end
 
-    it "keeps a stored path that does not end in the topic slug" do
-      publication.update!(path: "/2026/11/hand-picked")
+    it "renders a stored path the editor never typed, such as an imported undated draft" do
+      publication.update!(path: "/imported-draft")
 
-      publication.stage_metadata(path: "/2026/11/hand-picked", published_at: "2025-03-14")
+      publication.stage_metadata(path: "/imported-draft", published_at: "2025-03-14")
 
-      expect(publication.path).to eq("/2026/11/hand-picked")
+      expect(publication.path).to eq("/2025/03/#{topic.slug}")
     end
 
     it "keeps the path when the redated one belongs to another article" do

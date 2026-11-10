@@ -13,9 +13,8 @@ RSpec.describe "Blog under /blog", type: :request do
 
   let!(:publication) do
     publication = Blog::Publication.for_topic(topic)
-    publication.path = "/first-story"
+    update_blog_metadata(publication, admin, path: "/first-story")
     publish_blog_draft(publication, admin)
-    publication
   end
 
   it "serves articles, listings and feeds under /blog" do

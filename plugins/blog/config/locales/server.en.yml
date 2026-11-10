@@ -24,9 +24,10 @@ en:
       engines.
     blog_about: Markdown content for the blog About page.
     blog_path_format:
-      The address given to new articles. Dated formats use the UTC date the
-      article is first published, or its publication date when one is set.
-      Existing articles keep their current addresses.
+      The address template for new articles, such as /{year}/{month}/{slug}. Use
+      {year}, {month}, {day}, {slug} and {id}, including {slug} or {id}. Until an
+      article is first published, an address the editor has not typed follows its
+      title and its UTC publication date. Published articles keep their addresses.
     blog_posts_per_page:
       Number of articles shown on each homepage or archive
       page.
@@ -107,6 +108,7 @@ en:
         Unpublish this topic from page publishing before publishing
         it on the blog.
       path_taken: is reserved or already belongs to another article
+      path_format: "Start the format with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used, and the first segment cannot be a reserved blog address such as /tag."
       future_date:
         must be today or earlier. Use the schedule controls to release
         an article in the future.

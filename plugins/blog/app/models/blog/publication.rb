@@ -7,7 +7,7 @@ module ::Blog
     RESERVED_SEGMENTS =
       (Routes::RESERVED_SEGMENTS + Configuration::ASSET_PREFIXES + MIDDLEWARE_SEGMENTS).freeze
     METADATA = %w[path excerpt featured published_at].freeze
-    PATH_DATE_FORMATS = { "year_month_slug" => "%Y/%m", "year_month_day_slug" => "%Y/%m/%d" }.freeze
+    PATH_PATTERN = %r{\A/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+(?:/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+)*\z}
 
     belongs_to :topic
     belongs_to :draft_topic, class_name: "Topic", optional: true
@@ -22,14 +22,7 @@ module ::Blog
     has_many :paths, dependent: :destroy
 
     validates :topic_id, uniqueness: true
-    validates :path,
-              presence: true,
-              length: {
-                maximum: 240,
-              },
-              format: {
-                with: %r{\A/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+(?:/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+)*\z},
-              }
+    validates :path, presence: true, length: { maximum: 240 }, format: { with: PATH_PATTERN }
     validates :excerpt, length: { maximum: 1000 }, exclusion: { in: [nil] }
     validates :featured, inclusion: { in: [true, false] }
     validate :available_path
@@ -80,14 +73,14 @@ module ::Blog
       publication if guardian.can_edit_blog_topic?(publication.editable_topic)
     end
 
-    def self.default_path(topic, date: nil)
-      path = "#{path_date_prefix(date || Time.current)}/#{topic.slug.presence || topic.id}"
+    def self.default_path(topic, date: nil, slug: topic.slug)
+      path =
+        PathFormat.current.render(
+          slug: slug.presence || topic.id,
+          id: topic.id,
+          date: date || Time.current,
+        )
       reserved_path?(path) ? "#{path}-#{topic.id}" : path
-    end
-
-    def self.path_date_prefix(date)
-      format = PATH_DATE_FORMATS[SiteSetting.blog_path_format]
-      format ? "/#{date.utc.strftime(format)}" : ""
     end
 
     def self.reserved_path?(path)
@@ -173,7 +166,7 @@ module ::Blog
       assign_attributes(values.slice(*METADATA))
       custom_path = staged["custom_path"] || path != staged["path"]
       if !published_revision_id && changes.key?("published_at") && !custom_path
-        self.path = redated_path(path, published_at)
+        self.path = generated_path(published_at) || path
       end
       return self if invalid?
       self.draft_metadata = attributes.slice(*METADATA).as_json.merge("custom_path" => custom_path)
@@ -214,10 +207,11 @@ module ::Blog
       )
     end
 
-    # A first release moves a generated dated path to the date the article goes live.
+    # A first release renders a path the editor did not type from the approved title
+    # and the date the article goes live.
     def release_revision(revision)
       return revision if published_revision_id || revision.data["custom_path"]
-      path = redated_path(revision.data["path"], release_date(revision))
+      path = generated_path(release_date(revision), title: revision.title) || revision.data["path"]
       return revision if path == revision.data["path"]
 
       successor =
@@ -258,20 +252,12 @@ module ::Blog
       (date && Time.zone.parse(date.to_s)) || published_at || Time.current
     end
 
-    # Callers skip paths an editor typed; this also leaves stored paths outside the dated shape.
-    def redated_path(path, date)
-      format = PATH_DATE_FORMATS[SiteSetting.blog_path_format]
-      segments = path.to_s.split("/").drop(1)
-      return path if !format || !date || segments.size != format.count("/") + 2
-      return path if !segments[..-2].join("/").match?(%r{\A\d{4}(?:/\d{2}){1,2}\z})
-      return path if generated_slugs.exclude?(segments.last)
-
-      redated = "#{self.class.path_date_prefix(date)}/#{segments.last}"
-      path_available?(redated) ? redated : path
-    end
-
-    def generated_slugs
-      [topic, editorial_topic].compact.flat_map { |source| [source.slug, source.id.to_s] }
+    # Nil when another article already holds the address, so the current path stays.
+    def generated_path(date, title: nil)
+      source = editable_topic
+      slug = title ? source.slug_for_topic(title) : source.slug
+      generated = self.class.default_path(source, date:, slug:)
+      generated if path_available?(generated)
     end
 
     def path_available?(candidate)
