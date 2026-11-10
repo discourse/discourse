@@ -46,7 +46,9 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:suspend_user)).to eq(false)
     end
 
-    it "offers the rejection as \"Yes\" before the approval as \"No\"" do
+    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
       actions = reviewable.actions_for(Guardian.new(moderator))
 
       expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")

@@ -37,9 +37,17 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
+    build_approve_action(actions, consistent_answers:) if !consistent_answers
+
     if pending?
-      reject_bundle =
-        actions.add_bundle("#{id}-reject-post", label: "reviewables.actions.answer_yes.title")
+      reject_label =
+        if consistent_answers
+          "reviewables.actions.answer_yes.title"
+        else
+          "reviewables.actions.reject_post_bundle.title"
+        end
+      reject_bundle = actions.add_bundle("#{id}-reject-post", label: reject_label)
 
       build_action(
         actions,
@@ -71,20 +79,8 @@ class ReviewableQueuedPost < Reviewable
       end
     end
 
-    unless approved?
-      # Resolved items have no question to answer, so approval is named outright.
-      label =
-        if pending?
-          "reviewables.actions.answer_no.title"
-        else
-          "reviewables.actions.approve_post.action_title"
-        end
-      if topic&.closed?
-        build_action(actions, :approve_post_closed, icon: "check", label:, confirm: true)
-      elsif target_created_by.present?
-        build_action(actions, :approve_post, icon: "check", label:)
-      end
-    end
+    # "Yes, there's a problem" comes first, so approval follows as "No".
+    build_approve_action(actions, consistent_answers:) if consistent_answers
 
     build_action(actions, :delete) if guardian.can_delete?(self)
   end
@@ -274,6 +270,26 @@ class ReviewableQueuedPost < Reviewable
   end
 
   private
+
+  def build_approve_action(actions, consistent_answers:)
+    return if approved?
+
+    label =
+      if !consistent_answers
+        nil
+      elsif pending?
+        "reviewables.actions.answer_no.title"
+      else
+        # Resolved items have no question to answer, so approval is named outright.
+        "reviewables.actions.approve_post.action_title"
+      end
+
+    if topic&.closed?
+      build_action(actions, :approve_post_closed, icon: "check", label:, confirm: true)
+    elsif target_created_by.present?
+      build_action(actions, :approve_post, icon: "check", label:)
+    end
+  end
 
   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
     case action_id

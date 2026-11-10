@@ -72,6 +72,12 @@ class Reviewable < ActiveRecord::Base
     types.select(&:approval_style?)
   end
 
+  # Whether the reviewer sees approval-style questions framed so "Yes" confirms
+  # a problem, matching flag-style ones.
+  def self.consistent_answers_for?(guardian)
+    !!guardian.user&.upcoming_change_enabled?(:review_queue_consistent_answers)
+  end
+
   # This number comes from looking at forums in the wild and what numbers work.
   # As the site accumulates real data it'll be based on the site activity instead.
   def self.typical_sensitivity
@@ -967,14 +973,10 @@ class Reviewable < ActiveRecord::Base
     actions,
     bundle = nil,
     require_reject_reason: false,
-    dsa_classification_required: false
+    dsa_classification_required: false,
+    bundle_label: "reviewables.actions.reject_user.title"
   )
-    bundle ||=
-      actions.add_bundle(
-        "#{id}-reject_user",
-        icon: "user-xmark",
-        label: "reviewables.actions.answer_yes.title",
-      )
+    bundle ||= actions.add_bundle("#{id}-reject_user", icon: "user-xmark", label: bundle_label)
 
     # The reject reason modal already acts as a confirmation step, so only ask
     # for a separate confirmation when it isn't shown.

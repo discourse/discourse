@@ -59,7 +59,11 @@ export default <template>
                   <LinkTo
                     @query={{hash
                       flagged_by=@controller.model.username
-                      status="problem_confirmed"
+                      status=(if
+                        @controller.siteSettings.review_queue_consistent_answers
+                        "problem_confirmed"
+                        "approved"
+                      )
                     }}
                     @route="review"
                   >
@@ -97,7 +101,11 @@ export default <template>
                   <LinkTo
                     @query={{hash
                       username=@controller.model.username
-                      status="problem_confirmed"
+                      status=(if
+                        @controller.siteSettings.review_queue_consistent_answers
+                        "problem_confirmed"
+                        "rejected"
+                      )
                       type="ReviewableQueuedPost"
                     }}
                     @route="review"

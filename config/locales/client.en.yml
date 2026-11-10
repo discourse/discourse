@@ -1213,8 +1213,20 @@ en:
           title: "No problem found"
         approved:
           title: "Approved"
+        approved_flag:
+          title: "Flag approved"
+        approved_user:
+          title: "User approved"
+        approved_post:
+          title: "Post approved"
         rejected:
           title: "Rejected"
+        rejected_flag:
+          title: "Flag rejected"
+        rejected_user:
+          title: "User rejected"
+        rejected_post:
+          title: "Post rejected"
         ignored:
           title: "Flag ignored"
         deleted:
@@ -1228,7 +1240,10 @@ en:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
         something_else_wrong: "Is there something wrong with this %{reviewable_type}?"
+        approve_user: "Approve this user?"
         suspect_user: "Is this user spam?"
+        approve_post: "Approve this post?"
+        approve_topic: "Approve this topic?"
         something_wrong_with_post: "Is there something wrong with this post?"
         something_wrong_with_topic: "Is there something wrong with this topic?"
         something_wrong_with_account: "Is there something wrong with this account?"

@@ -389,6 +389,10 @@ export default class Reviewable extends RestModel {
       return null;
     }
 
+    if (!this.siteSettings.review_queue_consistent_answers) {
+      return this.#approvalQuestion();
+    }
+
     // Resolved items can only be undone or scrubbed, which doesn't answer the question.
     if (this.status !== PENDING) {
       return null;
@@ -397,10 +401,7 @@ export default class Reviewable extends RestModel {
     // Framed so "Yes" means there's a problem, matching flagged reviewables.
     // A whole sentence per noun, since translations agree with the noun.
     if (this.resolvedType === "ReviewableUser") {
-      const isSuspectUser = this.reviewable_scores?.some(
-        (score) => score.reason_type === "suspect_user"
-      );
-      if (isSuspectUser) {
+      if (this.#isSuspectUser) {
         return i18n("review.context_question.suspect_user");
       }
       return i18n("review.context_question.something_wrong_with_account");
@@ -417,9 +418,16 @@ export default class Reviewable extends RestModel {
     return Category.findById(this.category_id);
   }
 
+  get #isSuspectUser(): boolean {
+    return !!this.reviewable_scores?.some(
+      (score) => score.reason_type === "suspect_user"
+    );
+  }
+
   /** Keeps the override assignable to RestModel; resolves without a save-result envelope. */
   override update(this: never, ...args: never[]): never;
   override update(updates: object): globalThis.Promise<void>;
+
   override update(updates: object): globalThis.Promise<void> {
     // If no changes, do nothing
     if (Object.keys(updates).length === 0) {
@@ -440,5 +448,22 @@ export default class Reviewable extends RestModel {
 
       this.setProperties(updated);
     });
+  }
+
+  /** The question asked before approval was framed around a problem; "Yes" approves. */
+  #approvalQuestion(): string | null {
+    if (this.resolvedType === "ReviewableUser") {
+      // in this case the only remaining action is "scrub record" so the question shouldn't show
+      if (this.status !== PENDING) {
+        return null;
+      }
+      return this.#isSuspectUser
+        ? i18n("review.context_question.suspect_user")
+        : i18n("review.context_question.approve_user");
+    }
+    if (this.resolvedType === "ReviewableQueuedTopic") {
+      return i18n("review.context_question.approve_topic");
+    }
+    return i18n("review.context_question.approve_post");
   }
 }

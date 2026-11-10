@@ -5,10 +5,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable/note-form";
-import {
-  reviewableOutcomeTimelineKey,
-  reviewableProblemConfirmed,
-} from "discourse/helpers/reviewable-status";
+import { reviewableOutcome } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
@@ -135,19 +132,16 @@ export default class ReviewableTimeline extends Component {
             let titleKey;
             switch (score.status) {
               case APPROVED:
-              case REJECTED:
-                reviewIcon = reviewableProblemConfirmed(
-                  score.status,
-                  this.args.reviewable.approval_style
-                )
-                  ? "xmark"
-                  : "check";
-                titleKey = reviewableOutcomeTimelineKey(
+              case REJECTED: {
+                const outcome = reviewableOutcome(
                   score.status,
                   this.args.reviewable.type,
                   this.args.reviewable.approval_style
                 );
+                reviewIcon = outcome.icon;
+                titleKey = outcome.timelineKey;
                 break;
+              }
               case IGNORED:
                 reviewIcon = "far-eye-slash";
                 titleKey = "review.timeline.ignored_by";

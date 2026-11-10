@@ -1223,18 +1223,33 @@ RSpec.describe Reviewable, type: :model do
     fab!(:reviewable, :reviewable_queued_post)
     fab!(:user)
 
-    it "gets the bundles and actions for a reviewable" do
+    it "gets the bundles and actions for a reviewable without consistent answers" do
+      SiteSetting.review_queue_consistent_answers = false
+
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
-      expect(
-        actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
-      ).to eq([%w[approve_post reviewables.actions.answer_no.title]])
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-approve_post", "#{reviewable.id}-reject-post"],
+      )
       expect(
         actions.bundles.find { |b| b.bundle_id == "approve_post" }.actions.map(&:action_name),
       ).to eq(["approve_post"])
       expect(
         actions.bundles.find { |b| b.bundle_id == "reject-post" }.actions.map(&:action_name),
       ).to eq(%w[reject_post revise_and_reject_post])
+    end
+
+    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
+      actions = reviewable.actions_for(user.guardian)
+
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-reject-post", "#{reviewable.id}-approve_post"],
+      )
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(actions.bundles.last.actions.map(&:label)).to eq(
+        ["reviewables.actions.answer_no.title"],
+      )
     end
 
     describe "handling empty bundles" do

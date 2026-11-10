@@ -1,8 +1,8 @@
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
-  reviewableOutcomeName,
-  reviewableOutcomeTimelineKey,
+  reviewableOutcome,
   reviewableProblemConfirmed,
 } from "discourse/helpers/reviewable-status";
 import {
@@ -15,6 +15,10 @@ import {
 module("Unit | Helper | reviewable-status", function (hooks) {
   setupTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+  });
+
   test("reviewableProblemConfirmed reads the status against the approval style", function (assert) {
     assert.true(reviewableProblemConfirmed(APPROVED, false), "agreed flag");
     assert.false(reviewableProblemConfirmed(REJECTED, false), "disagreed flag");
@@ -24,37 +28,53 @@ module("Unit | Helper | reviewable-status", function (hooks) {
     assert.strictEqual(reviewableProblemConfirmed(IGNORED, false), undefined);
   });
 
-  test("reviewableOutcomeName names the outcome the same way for every type", function (assert) {
-    assert.strictEqual(
-      reviewableOutcomeName(APPROVED, "ReviewableFlaggedPost", false),
-      "problem_confirmed"
+  test("reviewableOutcome names what was approved or rejected without consistent answers", function (assert) {
+    this.siteSettings.review_queue_consistent_answers = false;
+
+    assert.deepEqual(
+      reviewableOutcome(APPROVED, "ReviewableFlaggedPost", false),
+      {
+        name: "approved_flag",
+        icon: "check",
+        cssClass: "approved",
+        timelineKey: "review.timeline.approved_by",
+      }
     );
     assert.strictEqual(
-      reviewableOutcomeName(REJECTED, "ReviewableUser", true),
-      "problem_confirmed"
+      reviewableOutcome(APPROVED, "ReviewablePost", true).name,
+      "approved_post",
+      "a post needing approval isn't labelled as a flag"
     );
     assert.strictEqual(
-      reviewableOutcomeName(REJECTED, "ReviewableFlaggedPost", false),
-      "no_problem_found"
-    );
-    assert.strictEqual(
-      reviewableOutcomeName(APPROVED, "ReviewableQueuedPost", true),
-      "no_problem_found"
-    );
-    assert.strictEqual(
-      reviewableOutcomeName(IGNORED, "ReviewableFlaggedPost", false),
-      undefined
+      reviewableOutcome(REJECTED, "ReviewableUser", true).name,
+      "rejected_user"
     );
   });
 
-  test("reviewableOutcomeTimelineKey matches the status label", function (assert) {
-    assert.strictEqual(
-      reviewableOutcomeTimelineKey(REJECTED, "ReviewablePost", true),
-      "review.timeline.problem_confirmed_by"
+  test("reviewableOutcome describes whether a problem was confirmed with consistent answers", function (assert) {
+    this.siteSettings.review_queue_consistent_answers = true;
+
+    assert.deepEqual(
+      reviewableOutcome(APPROVED, "ReviewableFlaggedPost", false),
+      {
+        name: "problem_confirmed",
+        icon: "xmark",
+        cssClass: "problem-confirmed",
+        timelineKey: "review.timeline.problem_confirmed_by",
+      }
+    );
+    assert.deepEqual(
+      reviewableOutcome(APPROVED, "ReviewableQueuedPost", true),
+      {
+        name: "no_problem_found",
+        icon: "check",
+        cssClass: "no-problem-found",
+        timelineKey: "review.timeline.no_problem_found_by",
+      }
     );
     assert.strictEqual(
-      reviewableOutcomeTimelineKey(REJECTED, "ReviewableFlaggedPost", false),
-      "review.timeline.no_problem_found_by"
+      reviewableOutcome(IGNORED, "ReviewableFlaggedPost", false),
+      undefined
     );
   });
 });

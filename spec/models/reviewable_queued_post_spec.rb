@@ -21,7 +21,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       )
     end
 
-    it "names the approve action outright once the queued post is rejected" do
+    it "names the approve action outright once the queued post is rejected, with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
 
       actions = reviewable.actions_for(admin.guardian).to_a

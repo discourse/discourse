@@ -10,7 +10,8 @@
   .status {
     color: var(--primary-medium);
 
-    span.no-problem-found {
+    span.no-problem-found,
+    span.approved {
       color: var(--success);
 
       .d-icon {
@@ -18,7 +19,8 @@
       }
     }
 
-    span.problem-confirmed {
+    span.problem-confirmed,
+    span.rejected {
       color: var(--danger);
 
       .d-icon {
