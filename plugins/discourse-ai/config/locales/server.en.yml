@@ -1428,6 +1428,7 @@ en:
       approval_required: "This change needs an administrator's approval."
       failed: "The change couldn't be made."
       enabled: "AI apps can now build themes on this site. Connect an app to the MCP server to start."
+      enabled_except_blocked: "The rest is turned on, but AI apps can't build themes yet. These theme tools are blocked in an emergency: %{tools}. An administrator can unblock them under MCP capabilities: %{url}"
       "on": "On"
       "off": "Off"
       none: "none"

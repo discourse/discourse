@@ -68,6 +68,31 @@ RSpec.describe DiscourseAi::Agents::Tools::EnableMcpThemeAccess do
     expect(DiscourseAi::Agents::McpThemeAccess).to be_ready
   end
 
+  it "doesn't report success while a theme tool is blocked in an emergency" do
+    McpPrimitive.create!(
+      kind: "tool",
+      identifier: "discourse_update_theme",
+      enabled: false,
+      emergency_blocked: true,
+    )
+    context.user = other_admin
+    context.reviewable_id = build_reviewable.id
+
+    result = tool.invoke
+
+    expect(result).to include(
+      status: "partial",
+      message:
+        I18n.t(
+          "discourse_ai.mcp_theme_access.enabled_except_blocked",
+          tools: "Update theme",
+          url: "#{Discourse.base_url}/admin/config/mcp/capabilities",
+        ),
+    )
+    expect(SiteSetting.mcp_server_enabled).to eq(true)
+    expect(DiscourseAi::Agents::McpThemeAccess).not_to be_ready
+  end
+
   it "only runs for a review item that approved this tool" do
     context.user = other_admin
     context.reviewable_id = build_reviewable(tool_name: "change_site_setting").id

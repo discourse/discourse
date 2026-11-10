@@ -111,6 +111,24 @@ module DiscourseAi
             end
           end
 
+          # tools blocked in an emergency stay off, so apps can't build themes
+          # until an administrator unblocks them
+          blocked = McpThemeAccess.blocked_theme_tool_ids
+          if blocked.present?
+            return(
+              {
+                status: "partial",
+                message:
+                  I18n.t(
+                    "discourse_ai.mcp_theme_access.enabled_except_blocked",
+                    tools: blocked.map { |id| McpThemeAccess.tool_title(id) }.join(", "),
+                    url: "#{Discourse.base_url}/admin/config/mcp/capabilities",
+                  ),
+                mcp_url: DiscourseMcp.resource_url,
+              }
+            )
+          end
+
           {
             status: "success",
             message: I18n.t("discourse_ai.mcp_theme_access.enabled"),
