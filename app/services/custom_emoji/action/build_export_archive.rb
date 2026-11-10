@@ -41,6 +41,6 @@ class CustomEmoji::Action::BuildExportArchive < Service::ActionBase
   end
 
   def image_filename(emoji)
-    "#{emoji.name}.#{emoji.upload.extension}"
+    CGI.escape("#{emoji.name}.#{emoji.upload.extension}")
   end
 end
