@@ -90,10 +90,9 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
       prompt = assistant.craft_prompt(context)
 
       expect(prompt.system_message_text).to include(
-        "Administrators can disable installed plugins through their associated enable/disable site setting.",
-        "To disable a plugin, set its enable setting to false; to re-enable it, set it to true",
-        "call list_upcoming_changes",
-        "Do not use change_site_setting to bypass hidden-setting restrictions",
+        "Plugins can be disabled via their enable site setting (false disables, true enables)",
+        "call `list_upcoming_changes`",
+        "never bypass hidden-setting restrictions with `change_site_setting`",
       )
       expect(prompt.tools.map(&:name)).to include("list_upcoming_changes")
     end
