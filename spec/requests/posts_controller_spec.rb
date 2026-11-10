@@ -4288,6 +4288,42 @@ RSpec.describe PostsController do
         expect(data.length).to eq(0)
       end
 
+      it "doesn't return whispers for moderators outside whispers_allowed_groups" do
+        whisperers = Fabricate(:group)
+        whisperers.add(user)
+        SiteSetting.whispers_allowed_groups = whisperers.id.to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        reply = Fabricate(:post, topic: topic, user: user)
+        PostDestroyer.new(admin, whisper).destroy
+        PostDestroyer.new(admin, reply).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          reply.id,
+        )
+      end
+
+      it "returns whispers for moderators in whispers_allowed_groups" do
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        PostDestroyer.new(admin, whisper).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          whisper.id,
+        )
+      end
+
       it "returns PMs for admins who are also moderators" do
         admin.update!(moderator: true)
 
