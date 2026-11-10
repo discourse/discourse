@@ -111,6 +111,25 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
     end
   end
 
+  describe "#download" do
+    let(:store) { FileStore::BaseStore.new }
+
+    before { FileUtils.rm_rf(FileStore::BaseStore::CACHE_DIR) }
+    after { FileUtils.rm_rf(FileStore::BaseStore::CACHE_DIR) }
+
+    it "caches downloads per site" do
+      %w[default second].each do |db|
+        test_multisite_connection(db) do
+          setup_s3
+          upload = Fabricate.build(:upload_s3, sha1: upload_sha1)
+          stub_request(:get, upload.url).to_return(status: 200, body: db)
+
+          expect(File.read(store.download(upload))).to eq(db)
+        end
+      end
+    end
+  end
+
   describe "removal from s3" do
     before { setup_s3 }
 

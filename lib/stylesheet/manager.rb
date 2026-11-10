@@ -215,9 +215,9 @@ class Stylesheet::Manager
   private_class_method :fs_assets_hash
 
   def self.cache_fullpath
-    path = "#{Rails.root.join("#{CACHE_PATH}")}"
-    return path if !Rails.env.test?
-    File.join(path, "test_#{Discourse.test_env_number}")
+    path = Rails.root.join(CACHE_PATH).to_s
+    path = File.join(path, "test_#{Discourse.test_env_number}") if Rails.env.test?
+    File.join(path, RailsMultisite::ConnectionManagement.current_db)
   end
 
   if Rails.env.test?
