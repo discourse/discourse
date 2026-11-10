@@ -72,7 +72,7 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       get "/admin/plugins/discourse-ai/ai-decision-models.json"
 
       serialized = response.parsed_body["ai_decision_models"].first
-      expect(serialized).to include("seeded" => true, "url" => "********")
+      expect(serialized).to include("seeded" => true, "url" => "********", "provider" => "CDCK")
       expect(serialized).not_to have_key("custom_headers")
       expect(serialized["credit_allocation"]).to include(
         "daily_credits" => 1000,
