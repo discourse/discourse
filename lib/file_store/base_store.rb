@@ -163,7 +163,7 @@ module FileStore
     CACHE_EVICT_COUNT = 100
 
     def get_cache_path_for(filename)
-      "#{CACHE_DIR}#{filename}"
+      File.join(CACHE_DIR, RailsMultisite::ConnectionManagement.current_db, File.basename(filename))
     end
 
     def get_from_cache(filename)
@@ -178,7 +178,7 @@ module FileStore
       FileUtils.cp(file.path, path)
 
       DiskCacheEviction.evict(
-        dir: CACHE_DIR,
+        dir: File.join(CACHE_DIR, "*"),
         max_entries: CACHE_MAXIMUM_SIZE,
         evict_count: CACHE_EVICT_COUNT,
       )
