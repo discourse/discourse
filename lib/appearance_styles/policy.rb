@@ -225,7 +225,9 @@ module AppearanceStyles
         blocks << block(scope_selector(selector), declarations)
       end
 
+      @checked_rules = []
       rules.each_with_index { |rule, index| blocks.concat(check_rule(rule, "rules[#{index}]")) }
+      readable_together? if @errors.empty?
 
       css = blocks.join("\n")
       if css.bytesize > MAX_CSS_BYTES
@@ -356,6 +358,16 @@ module AppearanceStyles
       return [] if !readable?(declarations, path, area, state)
       return [] if overrides.any? && !readable_variables?(overrides, path)
 
+      @checked_rules << {
+        path:,
+        area:,
+        state:,
+        media:,
+        page:,
+        declarations: declarations.transform_keys(&:to_s),
+        overrides:,
+      }
+
       css = block(scope_selector(area.selector, state, page), rendered)
       css = "@media #{MEDIA[media]} {\n#{css.gsub(/^/, "  ")}\n}" if media
       [css]
@@ -464,6 +476,44 @@ module AppearanceStyles
       end
     end
 
+    # Rules for the same area can apply at once, so each one's text is
+    # checked against the other's background too: when their media and page
+    # match or one has none, and their states match, one has none or one is
+    # hover (a hovered row is also odd or even).
+    def readable_together?
+      @checked_rules
+        .combination(2)
+        .all? do |first, second|
+          next true if first[:area] != second[:area] || !overlap?(first, second)
+
+          state =
+            (
+              if [first[:state], second[:state]].include?("hover")
+                "hover"
+              else
+                first[:state] || second[:state]
+              end
+            )
+          path = "#{first[:path]} and #{second[:path]}"
+          global_variables = @draft_variables
+          @draft_variables = global_variables.merge(first[:overrides]).merge(second[:overrides])
+          begin
+            [[first, second], [second, first]].all? do |under, over|
+              readable?(under[:declarations].merge(over[:declarations]), path, first[:area], state)
+            end
+          ensure
+            @draft_variables = global_variables
+          end
+        end
+    end
+
+    def overlap?(first, second)
+      states = [first[:state], second[:state]]
+      return false if states.compact.size == 2 && states.uniq.size == 2 && !states.include?("hover")
+
+      %i[media page].all? { |key| first[key].nil? || second[key].nil? || first[key] == second[key] }
+    end
+
     def unreadable_unknown(path, what)
       error(
         path,
@@ -509,6 +559,11 @@ module AppearanceStyles
       "--d-sidebar-background" => "--d-sidebar-link-color",
       "--d-sidebar-highlight-hover-background" => "--d-sidebar-highlight-color",
       "--d-unread-notification-background" => "--primary",
+      "--token-color-surface" => "--token-color-text-default",
+      "--token-color-surface-hovered" => "--token-color-text-default",
+      "--token-color-surface-pressed" => "--token-color-text-default",
+      "--token-color-surface-focused" => "--token-color-text-default",
+      "--token-color-surface-selected" => "--token-color-text-default",
     }.freeze
 
     # Background and text variables that render together, found by naming
@@ -518,13 +573,16 @@ module AppearanceStyles
     def variable_pairs
       @variable_pairs ||=
         @registry.all.filter_map do |variable|
+          text = BACKGROUND_TEXT[variable.name]
           match =
             variable.name.match(/\A(.*?)(?:-bg-color|-background-color|-background)(--[a-z]+)?\z/)
-          next if !match
-          base, state = match.captures
-          text =
-            ["#{base}-text-color#{state}", "#{base}-color#{state}"].find { |name| @registry[name] }
-          text ||= BACKGROUND_TEXT[variable.name]
+          if match
+            base, state = match.captures
+            text =
+              ["#{base}-text-color#{state}", "#{base}-color#{state}"].find do |name|
+                @registry[name]
+              end || text
+          end
           [variable.name, text] if text
         end
     end
@@ -565,16 +623,8 @@ module AppearanceStyles
       ColorMath.contrast_ratio(color, other_color).floor(2)
     end
 
-    # core's surface tokens, which areas paint behind their text
-    TOKEN_COLORS = {
-      "--token-color-surface" => "--secondary",
-      "--token-color-surface-hovered" => "--primary-100",
-      "--token-color-surface-pressed" => "--primary-200",
-    }.freeze
-
     def resolve_variable(name, mode, depth = 0, use_draft: true)
       return if depth > 8
-      name = TOKEN_COLORS.fetch(name, name)
       return @palette_colors[mode][name] if @registry.palette_variable?(name)
 
       value = (use_draft ? (@draft_variables || {})[name] : nil) || @registry[name]&.default
