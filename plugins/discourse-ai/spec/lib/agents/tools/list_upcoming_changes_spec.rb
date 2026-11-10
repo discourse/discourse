@@ -49,6 +49,21 @@ RSpec.describe DiscourseAi::Agents::Tools::ListUpcomingChanges do
       expect(change[:upcoming_change][:enabled_for]).to eq("staff")
     end
 
+    it "distinguishes a site-wide rollout from a staff-only feature audience" do
+      mock_upcoming_change_metadata(
+        enable_upload_debug_mode: {
+          status: :beta,
+          impact_type: "feature",
+          impact_role: "staff",
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+
+      change = tool.invoke[:changes].find { |item| item[:setting] == :enable_upload_debug_mode }
+
+      expect(change[:upcoming_change]).to include(enabled_for: "everyone", impact_role: "staff")
+    end
+
     it "preserves the admin's last visit to Upcoming Changes" do
       expect { tool.invoke }.not_to change {
         admin.reload.custom_fields["last_visited_upcoming_changes_at"]

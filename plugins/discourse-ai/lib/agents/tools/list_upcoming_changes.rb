@@ -51,6 +51,7 @@ module DiscourseAi
                     change[:upcoming_change].slice(
                       :status,
                       :enabled_for,
+                      :impact_role,
                       :allow_enabled_for,
                       :learn_more_url,
                       :permanent_warning,
