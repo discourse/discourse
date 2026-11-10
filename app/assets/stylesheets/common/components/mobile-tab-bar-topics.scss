@@ -95,7 +95,7 @@ html.mobile-tab-bar-visible
   justify-content: center;
   margin: 0;
   bottom: calc(
-    var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-1) +
+    var(--footer-nav-height) + env(safe-area-inset-bottom) +
       var(--composer-height, 0px)
   );
 

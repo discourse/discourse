@@ -5,9 +5,10 @@ html.mobile-tab-bar-visible {
   // The controls over the tabs, kept clear of the smallest comfortable tap
   --mobile-tab-bar-item-size: 2.25rem;
 
-  // The views' bubble, around its items, and the gap below it
+  // The views' strip, around its items; the controls' row keeps the gap
+  // below it
   --mobile-tab-bar-views-height: calc(
-    var(--mobile-tab-bar-item-size) + var(--space-1) * 3
+    var(--mobile-tab-bar-item-size) + var(--space-1) * 2
   );
 
   // Room kept below the controls, and to their sides
@@ -140,25 +141,21 @@ html.mobile-tab-bar-visible {
     pointer-events: none;
   }
 
-  // A centred bubble pointing at the current section's tab, so its views
-  // read as the tab's own; sized to its content, leaving room above for the
-  // fade over the page
+  // A strip as wide as the controls below, so it reads as part of the bar
+  // rather than something laid over it to dismiss; the highlighted tab says
+  // whose views they are
   &__views {
     position: relative;
     display: flex;
     flex: none;
-    align-self: center;
     align-items: center;
-    width: max-content;
-    max-width: 100%;
-    margin-bottom: var(--space-1);
     padding: var(--space-1);
     box-sizing: border-box;
     pointer-events: auto;
 
     @include mobile-tab-bar-floating;
 
-    // Lets the arrow sit behind the views but over the bubble's own fill
+    // Lets the highlight sit behind the views but over the strip's own fill
     isolation: isolate;
     transition:
       transform 200ms ease,
@@ -173,35 +170,15 @@ html.mobile-tab-bar-visible {
       display: none;
     }
 
+    // The views lead, with any options kept to the strip's end
     > * {
       flex: 0 1 auto;
       min-width: 0;
     }
 
-    // Points at no tab on pages outside every section
-    .--no-section &::after {
-      display: none;
-    }
-
-    // Stops short of the tab it points at, clear of its fill; behind the
-    // views and their highlight, so only the part below the bubble shows
-    &::after {
-      content: "";
-      position: absolute;
-      z-index: -2;
-      bottom: -4px;
-
-      // Offset from the bar's centre, which is the bubble's too, so the
-      // bubble's width never moves it; kept clear of the rounded ends
-      left: clamp(
-        1.5rem,
-        calc(50% + var(--mobile-tab-bar-pointer-offset, 0px)),
-        calc(100% - 1.5rem)
-      );
-      width: 8px;
-      height: 8px;
-      background: var(--header_background);
-      transform: translateX(-50%) rotate(45deg);
+    // A section's views render after the highlight
+    > .mobile-tab-bar__views-highlight + * {
+      flex: 1 1 auto;
     }
   }
 
@@ -258,7 +235,7 @@ html.mobile-tab-bar-visible {
       right: calc(var(--space-1) * -1);
     }
 
-    // Holds each label's bold width, so the bubble doesn't resize as the
+    // Holds each label's bold width, so the views don't shift as the
     // current view changes
     [data-label] {
       display: inline-flex;

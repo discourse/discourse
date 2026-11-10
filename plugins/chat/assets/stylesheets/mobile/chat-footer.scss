@@ -72,7 +72,7 @@ html.mobile-tab-bar-visible {
       gap: var(--space-2);
       margin-left: auto;
 
-      // Sits inside the tab bar's bubble, shaped like the lists beside it
+      // Sits inside the tab bar's strip, shaped like the lists beside it
       .btn {
         width: var(--mobile-tab-bar-item-size);
         height: var(--mobile-tab-bar-item-size);
@@ -112,7 +112,7 @@ html.mobile-tab-bar-visible
   display: none;
 }
 
-// The tab bar's bubble is their background
+// The tab bar's strip is their background
 .mobile-tab-bar__views .c-footer.--pills {
   background: transparent;
 }

@@ -73,10 +73,9 @@ export default class MobileTabBar extends Component {
     this.mobileTabBar.viewsSlot = element;
     this.#views = element;
 
-    // The controls follow the viewport, which moves the tab it points at
+    // The controls follow the viewport, which moves the highlights
     this.#viewsObserver = new ResizeObserver(() => {
       this.#placeTabHighlight();
-      this.#pointAtActiveTab();
       this.#queueViewsHighlight();
     });
     this.#viewsObserver.observe(element.nextElementSibling);
@@ -128,7 +127,6 @@ export default class MobileTabBar extends Component {
   followActiveTab(track) {
     this.#track = track;
     this.#placeTabHighlight();
-    this.#pointAtActiveTab();
   }
 
   // Moves the highlight under the current section's tab: instantly the first
@@ -171,7 +169,7 @@ export default class MobileTabBar extends Component {
       return;
     }
 
-    // Kept to the part of the views in plain sight: inside the bubble, and
+    // Kept to the part of the views in plain sight: inside the strip, and
     // clear of the faded edges with more views past them
     const box = views.getBoundingClientRect();
     const rect = active.getBoundingClientRect();
@@ -224,7 +222,7 @@ export default class MobileTabBar extends Component {
     }
   }
 
-  // Where a list of views shows them unfaded, within the bubble. The fade
+  // Where a list of views shows them unfaded, within the strip. The fade
   // is as wide as the list's scroll padding, which keeps scrolled-to views
   // clear of it too.
   #viewsInSight(list, box) {
@@ -268,26 +266,6 @@ export default class MobileTabBar extends Component {
     }
 
     return link;
-  }
-
-  // Aims the views bubble's arrow at the current section's tab, by its
-  // offset from the bar's centre, where the bubble is centred
-  #pointAtActiveTab() {
-    const tab = this.#track?.querySelector(".mobile-tab-bar__tab.--active");
-
-    if (!tab || !this.#views) {
-      return;
-    }
-
-    const bar = this.#views.nextElementSibling.getBoundingClientRect();
-    const tabRect = tab.getBoundingClientRect();
-    const offset =
-      tabRect.left + tabRect.width / 2 - (bar.left + bar.width / 2);
-
-    this.#views.style.setProperty(
-      "--mobile-tab-bar-pointer-offset",
-      `${offset}px`
-    );
   }
 
   <template>
