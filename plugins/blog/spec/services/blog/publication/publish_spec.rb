@@ -224,12 +224,12 @@ RSpec.describe Blog::Publication::Publish do
         expect(published.paths.pluck(:path)).to contain_exactly("/2026/11/#{topic.slug}")
       end
 
-      it "keeps a path the editor typed" do
+      it "keeps a path the editor typed, even in the generated shape" do
         Blog::Publication::UpdateMetadata.call!(
           params: {
             topic_id: topic.id,
             metadata: {
-              path: "/2026/10/launch-notes",
+              path: "/2020/03/#{topic.slug}",
             },
           },
           guardian: acting_user.guardian,
@@ -244,7 +244,7 @@ RSpec.describe Blog::Publication::Publish do
           },
           guardian: acting_user.guardian,
         )
-        expect(publication.reload.path).to eq("/2026/10/launch-notes")
+        expect(publication.reload.path).to eq("/2020/03/#{topic.slug}")
       end
 
       it "keeps the path of an article that was published before" do

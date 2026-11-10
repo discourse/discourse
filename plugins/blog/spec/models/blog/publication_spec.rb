@@ -195,6 +195,14 @@ RSpec.describe Blog::Publication do
       expect(publication.path).to eq("/2026/11/my-own-path")
     end
 
+    it "keeps a typed dated path that ends in the topic slug when the date changes later" do
+      publication.stage_metadata(path: "/2020/03/#{topic.slug}")
+
+      publication.stage_metadata(path: "/2020/03/#{topic.slug}", published_at: "2025-03-14")
+
+      expect(publication.path).to eq("/2020/03/#{topic.slug}")
+    end
+
     it "keeps a stored path that does not end in the topic slug" do
       publication.update!(path: "/2026/11/hand-picked")
 

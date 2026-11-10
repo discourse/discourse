@@ -187,12 +187,13 @@ module ::Blog
       values["published_at"] = published_at if published_revision_id &&
         values["published_at"].blank?
       live = attributes.slice(*METADATA)
-      assign_attributes(values)
-      if !published_revision_id && changes.key?("published_at") && path == staged["path"]
+      assign_attributes(values.slice(*METADATA))
+      custom_path = staged["custom_path"] || path != staged["path"]
+      if !published_revision_id && changes.key?("published_at") && !custom_path
         self.path = redated_path(path, published_at)
       end
       return self if invalid?
-      self.draft_metadata = attributes.slice(*METADATA).as_json
+      self.draft_metadata = attributes.slice(*METADATA).as_json.merge("custom_path" => custom_path)
       assign_attributes(live) if published_revision_id
       self
     end
@@ -232,7 +233,7 @@ module ::Blog
 
     # A first release moves a generated dated path to the date the article goes live.
     def release_revision(revision)
-      return revision if published_revision_id
+      return revision if published_revision_id || revision.data["custom_path"]
       path = redated_path(revision.data["path"], release_date(revision))
       return revision if path == revision.data["path"]
 
@@ -274,7 +275,7 @@ module ::Blog
       (date && Time.zone.parse(date.to_s)) || published_at || Time.current
     end
 
-    # Hand-typed paths are left alone: only the site's dated shape ending in the topic slug moves.
+    # Callers skip paths an editor typed; this also leaves stored paths outside the dated shape.
     def redated_path(path, date)
       format = PATH_DATE_FORMATS[SiteSetting.blog_path_format]
       segments = path.to_s.split("/").drop(1)
