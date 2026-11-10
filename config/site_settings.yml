@@ -4861,6 +4861,7 @@ experimental:
     upcoming_change:
       status: "beta"
       impact: "other,moderators"
+      learn_more_url: "https://meta.discourse.org/t/-/417015"
   enable_composer_toolbar_customization:
     default: false
     client: true
