@@ -378,8 +378,12 @@ export interface ToastOptions {
   /** Whether to reposition automatically; an object passes floating-ui `autoUpdate` options. */
   autoUpdate: boolean | AutoUpdateOptions;
 
-  /** How long the toast stays open: a preset (`"short"`/`"long"`) or a number of milliseconds. */
-  duration: "short" | "long" | number;
+  /**
+   * How long the toast stays open: a preset, or a deprecated number of
+   * milliseconds. `"extra-long"` is for toasts that offer an action the reader
+   * needs time to take.
+   */
+  duration: "short" | "long" | "extra-long" | number;
 
   /** The component rendered as the toast body. */
   component: ToastComponent;

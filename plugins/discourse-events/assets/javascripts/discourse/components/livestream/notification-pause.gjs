@@ -9,6 +9,11 @@ import { i18n } from "discourse-i18n";
 
 const PAUSE_URL = "/discourse-calendar/livestream/notification-pause";
 
+// A reload loads the meeting again before the pause the last load ended is
+// gone, so the load that ends one leaves a note for the next to find.
+const UNLOAD_MARK_KEY = "discourse-events-livestream-notification-pause-ended";
+const UNLOAD_MARK_TTL_MS = 30000;
+
 // Pauses notifications for as long as the meeting is open, with a toast
 // offering a way out for anyone who would rather keep them.
 export default class LivestreamNotificationPause extends Component {
@@ -29,8 +34,9 @@ export default class LivestreamNotificationPause extends Component {
     // tears the component down.
     window.addEventListener("pagehide", this.resumeOnUnload);
 
-    // Someone already in do not disturb has settled this for themselves.
-    if (!this.notifications.isInDoNotDisturb) {
+    // Someone already in do not disturb has settled this for themselves,
+    // unless what they are in is the pause this meeting just ended.
+    if (this.#takeUnloadMark() || !this.notifications.isInDoNotDisturb) {
       this.#pause();
     }
   }
@@ -78,6 +84,15 @@ export default class LivestreamNotificationPause extends Component {
       keepalive: true,
       headers: { "X-CSRF-Token": this.session.csrfToken },
     });
+
+    try {
+      sessionStorage.setItem(
+        UNLOAD_MARK_KEY,
+        JSON.stringify({ topicId: this.args.topicId, at: Date.now() })
+      );
+    } catch {
+      // Without storage a reload is treated like any other arrival.
+    }
   }
 
   async #pause() {
@@ -110,7 +125,8 @@ export default class LivestreamNotificationPause extends Component {
 
   #showToast() {
     this.#toast = this.toasts.default({
-      autoClose: false,
+      duration: "extra-long",
+      showProgressBar: true,
       data: {
         icon: "bell-slash",
         message: i18n(
@@ -133,6 +149,20 @@ export default class LivestreamNotificationPause extends Component {
     if (this.#toast) {
       this.toasts.close(this.#toast);
       this.#toast = null;
+    }
+  }
+
+  #takeUnloadMark() {
+    try {
+      const mark = JSON.parse(sessionStorage.getItem(UNLOAD_MARK_KEY));
+      sessionStorage.removeItem(UNLOAD_MARK_KEY);
+
+      return (
+        mark?.topicId === this.args.topicId &&
+        Date.now() - mark.at < UNLOAD_MARK_TTL_MS
+      );
+    } catch {
+      return false;
     }
   }
 

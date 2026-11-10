@@ -4,6 +4,7 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import LivestreamZoomPage from "discourse/plugins/discourse-events/discourse/components/livestream/zoom-page";
 
 const FALLBACK_SELECTOR = ".discourse-calendar-livestream-zoom-page__fallback";
@@ -88,6 +89,16 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     stubMessageBus(this);
     stubFrameUrl(this);
     this.eventApi = stubEventApi(this);
+
+    // Joining pauses notifications for the meeting, which these tests leave aside.
+    pretender.post(
+      "/discourse-calendar/livestream/notification-pause.json",
+      () => response({ ends_at: moment().add(1, "hour").toISOString() })
+    );
+    pretender.delete(
+      "/discourse-calendar/livestream/notification-pause/:pause_key.json",
+      () => response(204, "")
+    );
 
     this.topic = {
       id: 1,

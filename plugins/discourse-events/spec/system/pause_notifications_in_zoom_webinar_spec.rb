@@ -40,6 +40,20 @@ describe "Pause notifications in a Zoom webinar" do
     expect(toasts).to have_no_message
   end
 
+  it "pauses notifications again when the meeting is reloaded" do
+    visit_meeting
+
+    expect(page).to have_css(paused_indicator)
+
+    page.refresh
+
+    expect(toasts).to have_default(
+      I18n.t("js.discourse_events.livestream.zoom.pause_notifications.paused"),
+    )
+    expect(page).to have_css(paused_indicator)
+    expect(current_user.reload.do_not_disturb?).to eq(true)
+  end
+
   it "resumes notifications from the toast" do
     visit_meeting
 
