@@ -3474,6 +3474,22 @@ RSpec.describe PostsController do
         expect(response.status).to eq(422)
       end
     end
+
+    it "cooks an unrecognized image size suffix in bounded time" do
+      sign_in(user_trust_level_0)
+      numbers = "1" * 800
+      raw = "![a|#{numbers}x#{numbers},](https://example.com/image.png)"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      post "/posts.json", params: { raw: raw, topic_id: post_by_user.topic_id }
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(response.status).to eq(200)
+      expect(elapsed).to be < 2, "request took #{elapsed.round(2)}s to cook"
+    end
   end
 
   describe "#revisions" do
