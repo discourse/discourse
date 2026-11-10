@@ -5,6 +5,8 @@ class Report
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 5
 
+  VALID_TYPE_REGEX = /\A[a-z0-9_]+\z/
+
   FILTERS = %i[
     name
     start_date
