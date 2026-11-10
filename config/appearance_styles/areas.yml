@@ -17,6 +17,8 @@
 #   color can be checked against it when a rule doesn't set a background too
 #   (var(--secondary), the page background, when not listed)
 # - hover_background: the background on hover, when it differs
+# - within: the areas this one sits inside, innermost first (every area is
+#   within the page), so its text is checked against their backgrounds
 
 page:
   label: Page background
@@ -30,6 +32,7 @@ header:
 logo:
   label: Site logo
   selector: ".d-header .title"
+  within: [header]
   text_color: "var(--header_primary)"
   background: "var(--header_background)"
 nav_pills:
@@ -45,6 +48,7 @@ welcome_banner:
 welcome_banner_title:
   label: Welcome banner title
   selector: ".welcome-banner__title"
+  within: [welcome_banner]
   text_color: "var(--primary)"
 topic_list:
   label: Topic list
@@ -53,16 +57,19 @@ topic_list:
 topic_list_header:
   label: Topic list column headings
   selector: ".topic-list-header"
+  within: [topic_list]
   text_color: "var(--d-topic-list-header-text-color)"
   background: "var(--d-topic-list-header-background-color)"
 topic_list_item:
   label: Topic list rows
   selector: ".topic-list-item"
+  within: [topic_list]
   text_color: "var(--primary)"
   states: [hover, odd, even]
 topic_list_title:
   label: Topic titles in lists
   selector: ".topic-list-item .raw-topic-link"
+  within: [topic_list_item, topic_list]
   text_color: "var(--primary)"
   states: [hover]
 category_box:
@@ -73,24 +80,29 @@ category_box:
 category_logo:
   label: Category logos
   selector: ".category-logo img"
+  within: [category_box]
   text_color: none
   sizeable: true
 category_title:
   label: Category headings on the categories page
   selector: ".category-title-link"
+  within: [category_box]
   text_color: "var(--primary-medium)"
 category_description:
   label: Category descriptions on the categories page
   selector: ".category-description"
+  within: [category_box]
   text_color: "var(--primary-high)"
   hideable: true
 category_badge:
   label: Category names, shown as badges in topic lists and on topics
   selector: ".badge-category__wrapper"
+  within: [topic_list_item, topic_list]
   text_color: "var(--primary)"
 tag:
   label: Tags
   selector: ".discourse-tag"
+  within: [topic_list_item, topic_list]
   text_color: "var(--primary)"
 topic_title:
   label: Topic title on the topic page
@@ -103,41 +115,50 @@ post:
 post_body:
   label: Post text
   selector: ".cooked"
+  within: [post]
   text_color: "var(--primary)"
 post_headings:
   label: Headings in posts
   selector: ".cooked h1, .cooked h2, .cooked h3"
+  within: [post_body, post]
   text_color: "var(--primary)"
 post_links:
   label: Links in posts
   selector: ".cooked a"
+  within: [post_body, post]
   text_color: "var(--d-link-color)"
   states: [hover]
 post_quotes:
   label: Quotes in posts
   selector: ".cooked aside.quote, .cooked blockquote"
+  within: [post_body, post]
   text_color: "var(--primary)"
 post_code:
   label: Code in posts
   selector: ".cooked pre, .cooked code"
+  within: [post_body, post]
   text_color: "var(--primary)"
   background: "var(--primary-very-low)"
 post_images:
   label: Images in posts
   selector: ".cooked img:not(.emoji)"
+  within: [post_body, post]
   text_color: none
   sizeable: true
 post_avatar:
   label: Post avatars
   selector: ".topic-avatar"
+  within: [post]
   text_color: none
 post_author:
   label: Post author names
   selector: ".topic-meta-data .names"
+  within: [post]
   text_color: "var(--primary-high-or-secondary-low)"
 mention:
   label: Mentions
   selector: ".mention"
+  within: [post_body, post]
   text_color: "var(--primary)"
   background: "var(--primary-low)"
 user_badge:
@@ -173,6 +194,7 @@ create_topic_button:
 signup_button:
   label: Sign up button
   selector: ".sign-up-button"
+  within: [header]
   text_color: "var(--d-button-primary-text-color)"
   states: [hover]
   background: "var(--d-button-primary-bg-color)"
@@ -192,11 +214,13 @@ sidebar:
 sidebar_section_header:
   label: Sidebar section headers
   selector: ".sidebar-section-header"
+  within: [sidebar]
   text_color: "var(--d-sidebar-header-color)"
   background: "var(--d-sidebar-background)"
 sidebar_link:
   label: Sidebar links
   selector: ".sidebar-section-link"
+  within: [sidebar]
   text_color: "var(--d-sidebar-link-color)"
   states: [hover]
   background: "var(--d-sidebar-background)"
@@ -218,12 +242,14 @@ suggested_topics:
 share_button:
   label: Share button on posts
   selector: ".post-action-menu__share"
+  within: [post]
   text_color: "var(--primary-low-mid)"
   icon: true
   hideable: true
 bookmark_button:
   label: Bookmark button on posts
   selector: ".post-action-menu__bookmark"
+  within: [post]
   text_color: "var(--primary-low-mid)"
   icon: true
   hideable: true
