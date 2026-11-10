@@ -417,6 +417,47 @@ RSpec.describe TopicsController do
           expect(result["url"]).to be_present
         end
 
+        describe "moving a post to a topic in a read-restricted category" do
+          fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
+          fab!(:source_topic, :topic)
+          fab!(:source_op) { Fabricate(:post, topic: source_topic) }
+          fab!(:source_reply) { Fabricate(:post, topic: source_topic) }
+          fab!(:restricted_category) { Fabricate(:private_category, group: Group[:staff]) }
+          fab!(:restricted_destination_topic) do
+            Fabricate(
+              :topic,
+              category: restricted_category,
+              title: "Top secret destination title",
+              user: admin,
+            )
+          end
+
+          it "does not disclose the restricted destination title in the source topic move notice" do
+            expect(reader.guardian.can_see?(source_topic)).to eq(true)
+            expect(reader.guardian.can_see?(restricted_destination_topic)).to eq(false)
+
+            post "/t/#{source_topic.id}/move-posts.json",
+                 params: {
+                   post_ids: [source_reply.id],
+                   destination_topic_id: restricted_destination_topic.id,
+                 }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["success"]).to eq(true)
+
+            sign_in(reader)
+            get "/t/#{source_topic.id}.json"
+            expect(response.status).to eq(200)
+
+            posts = response.parsed_body["post_stream"]["posts"]
+            move_notice = posts.find { |p| p["action_code"] == "split_topic" }
+            expect(move_notice).to be_present
+            expect(posts.map { |p| p["cooked"] }.join(" ")).not_to include(
+              restricted_destination_topic.title,
+            )
+          end
+        end
+
         describe "with freeze_original param" do
           it "duplicates post to topic and keeps original post in place" do
             expect do
