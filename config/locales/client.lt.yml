@@ -7591,30 +7591,94 @@ lt:
               title: "„OpenGraph“ vaizdo šaltinis"
               description: "Pasirinkite, kaip pateikiami „OpenGraph“ peržiūros vaizdai temoms, kurios neturi savo vaizdo."
               uploaded: "Naudokite įkeltą paveikslėlį"
+              generated: "Sukurti paveikslėlį kiekvienai temai"
+            opengraph_image:
+              title: "OpenGraph paveikslėlis"
+              description: "Numatytasis OpenGraph paveikslėlis, naudojamas, kai puslapyje nėra kito tinkamo paveikslėlio. Jei laukelis paliekamas tuščias, bus naudojamas „large_icon“."
+            generate_topic_og_image:
+              title: "Sukurti teminius OG paveikslėlius"
+              description: "Automatiškai sukuria OpenGraph peržiūros paveikslėlius temoms, kuriose nėra paveikslėlio. Naudoja temos pavadinimą, kategoriją ir svetainės spalvas."
             og_image_preview:
+              title: "Sugeneruoto OG paveikslėlio peržiūra"
+              description: "Automatiškai sukurtų OpenGraph paveikslėlių peržiūra temoms, kuriose nėra vaizdų. Įveskite temos ID, kad galėtumėte išbandyti."
               generate: "Generuoti"
               topic_id_label: "Temos ID"
+              topic_id_placeholder: "pvz., 123"
+              placeholder: "Įveskite temos ID ir spustelėkite „Sukurti“, kad peržiūrėtumėte."
+              error: "Nepavyko sukurti peržiūros. Patikrinkite temos ID ir pabandykite dar kartą."
+            x_summary_large_image:
+              title: "X santraukos didelis paveikslėlis"
+              description: "X kortelės „didelis santraukos paveikslėlis“. Jei paliekamas tuščias, įprastos kortelės metaduomenys generuojami naudojant „OpenGraph_image“, jei tai nėra .svg failas."
+              help_text: "Rekomenduojamas dydis yra bent 280 x 150 pikselių. Nenaudokite SVG formato paveikslėlio."
         fonts:
+          title: "Šriftai"
+          header_description: "Konfigūruokite visoje svetainėje naudojamus šriftus, įskaitant bazinį šriftą, antraštės šriftą ir numatytąjį teksto dydį"
           form:
+            more_fonts: "Daugiau šriftų"
+            fewer_fonts: "Mažiau šriftų"
+            saved: "Šrifto nustatymai išsaugoti."
+            base_font:
+              title: "Bazinis šriftas"
             heading_font:
               title: "Antraštės šriftas"
+            default_text_size:
+              title: "Numatytasis teksto dydis"
+              description: "Šį dydį vėliau gali koreguoti kiekvienas vartotojas pagal savo pageidavimus."
           backfill_modal:
+            title: "Taikyti naujus numatytuosius teksto nustatymus?"
+            description:
+              one: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą esamam %{count} vartotojui?"
+              few: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamiems vartotojams?"
+              many: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamų vartotojų?"
+              other: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamų vartotojų?"
             modal_yes: "Taip"
+            modal_no: "Ne, taikyti tik nuo šiol"
         welcome_banner:
+          title: "Sveikinimo reklamjuostė"
+          header_description: "Konfigūruokite reklamjuostę su paieškos lauku, rodoma lankytojams jūsų svetainėje."
+          saved: "Sveikinimo reklamjuostės nustatymai sėkmingai išsaugoti."
           form:
+            enabled_themes:
+              label: "Įjungta temose..."
+              description: "Pasirinkite, kurios temos turėtų rodyti reklamjuostę. Rodomos tik aktyvios temos."
+              select_label: "Pasirinkite temas"
+            background_image:
+              label: "Fono paveikslėlis"
+              description: "Šis paveikslėlis bus rodomas už reklamjuostės teksto."
+            text_color:
+              label: "Teksto spalva"
+              description: "Įkėlus aukščiau pateiktą „Fono paveikslėlį“, naudokite šį nustatymą, kad pakeistumėte reklamjuostės teksto spalvą ir užtikrintumėte, jog jį būtų galima įskaityti. Kai paliekamas tuščias arba fono paveikslėlis neįkeltas, spalvą valdo aktyvi tema."
             page_visibility:
+              label: "Puslapio matomumas"
+              description: "Pasirinkite, kur turėtų būti rodoma reklamjuostė."
               options:
                 top_menu_pages: "Pagrindinio meniu puslapiai"
+                homepage: "Tik pagrindinis puslapis"
                 discovery: "Atradimų puslapiai"
+                all_pages: "Visi puslapiai"
             location:
               label: "Vieta"
+              description: "Pasirinkite, kur puslapyje turėtų būti rodoma reklamjuostė."
+              options:
+                above_topic_content: "Aukščiau temos turinio"
+                below_site_header: "Žemiau svetainės antraštės"
             text_section:
+              title: "Tinkinamas tekstas"
               locale_label: "Kalba"
+            header_new_members:
+              label: "Antraštė naujiems nariams"
+              description: "Galimi kintamieji: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Sveiki atvykę, %{preferred_display_name}!"
             header_logged_in:
+              label: "Antraštė prisijungusiems nariams"
+              description: "Galimi kintamieji: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Sveikas sugrįžęs, %{preferred_display_name}!"
             header_anonymous:
+              label: "Antraštė anoniminiams lankytojams"
+              description: "Galimas kintamasis: <code>&percnt;{site_name}</code>"
               placeholder: "Sveiki atvykę į %{site_name}!"
             subheader_logged_in:
+              label: "Paantraštė prisijungusiems nariams"
               description: "Antrinis tekstas, rodomas po antrašte prisijungusiems vartotojams."
               placeholder: "Peržiūrėkite, kas naujo bendruomenėje"
             subheader_anonymous:
