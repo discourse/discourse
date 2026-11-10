@@ -721,6 +721,13 @@ class BulkImport::Generic < BulkImport::Base
     update_chat_membership_metadata
 
     import_upload_references
+
+    # These steps run application code, which inserts through the primary key
+    # sequences the COPY steps above never advanced.
+    sync_primary_key_sequences
+    import_deferred_site_settings
+    import_blog_instances
+    import_blog_publications
   end
 
   def execute_after
@@ -953,6 +960,59 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     SiteSetting.refresh! if migrated_site_flag_enabled
+  end
+
+  # Settings that hold imported ids can only be applied once the records they point to exist.
+  def import_deferred_site_settings
+    puts "", "Importing site settings that reference imported records..."
+
+    # Group lists trigger plugin syncs of the categories they go with, so categories go first.
+    rows = query(<<~SQL)
+      SELECT name, value, action
+        FROM site_settings
+       WHERE action IN ('category', 'group_list')
+       ORDER BY CASE action WHEN 'category' THEN 0 ELSE 1 END, ROWID
+    SQL
+
+    rows.each do |row|
+      name = row["name"].to_sym
+      if !SiteSetting.has_setting?(name)
+        log_import_issue("site setting skipped (unknown setting)", name)
+        next
+      end
+
+      value =
+        case row["action"]
+        when "category"
+          category_id_from_imported_id(row["value"])
+        when "group_list"
+          deferred_group_list_setting_value(name, row["value"])
+        end
+
+      if value.blank?
+        log_import_issue("site setting skipped (referenced record not imported)", name)
+        next
+      end
+
+      SiteSetting.set_and_log(name, value)
+    end
+
+    rows.close
+  end
+
+  def deferred_group_list_setting_value(name, value)
+    group_ids =
+      JSON
+        .parse(value)
+        .filter_map do |imported_id|
+          group_id = group_id_from_imported_id(imported_id)
+          if !group_id
+            log_import_issue("site setting group not imported", "#{imported_id} (#{name})")
+          end
+          group_id
+        end
+
+    group_ids.join("|")
   end
 
   def import_categories
@@ -2588,21 +2648,26 @@ class BulkImport::Generic < BulkImport::Base
       end
     end
 
-    if row["upload_ids"].present? && @uploads_db
-      upload_ids = JSON.parse(row["upload_ids"])
-      upload_ids_placeholders = (["?"] * upload_ids.size).join(",")
+    resolve_upload_placeholders(raw, row["upload_ids"])
+  end
 
-      query(
-        "SELECT id, markdown FROM uploads WHERE id IN (#{upload_ids_placeholders})",
-        upload_ids,
-        db: @uploads_db,
-      ).tap do |result_set|
-        result_set.each { |upload| raw.gsub!("[upload|#{upload["id"]}]", upload["markdown"] || "") }
-        result_set.close
-      end
+  # Replaces `[upload|id]` placeholders with the markdown the uploads importer recorded.
+  def resolve_upload_placeholders(text, upload_ids_json)
+    return text if upload_ids_json.blank? || !@uploads_db
+
+    upload_ids = JSON.parse(upload_ids_json)
+    return text if upload_ids.empty?
+
+    placeholders = (["?"] * upload_ids.size).join(",")
+    query(
+      "SELECT id, markdown FROM uploads WHERE id IN (#{placeholders})",
+      upload_ids,
+      db: @uploads_db,
+    ) do |result_set|
+      result_set.each { |upload| text.gsub!("[upload|#{upload["id"]}]", upload["markdown"] || "") }
     end
 
-    raw
+    text
   end
 
   def resolve_mentioned_name(mention)
@@ -4687,6 +4752,361 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     tag_users.close
+  end
+
+  # Rows the plugin callbacks created sit above the ids this importer wrote, so the
+  # sequences must not go back to those ids.
+  def fix_primary_keys
+    super
+    sync_primary_key_sequences
+  end
+
+  # Only ever raises a sequence: system rows have negative ids, and a sequence
+  # the importer already set stays where it is.
+  def sync_primary_key_sequences
+    connection = ActiveRecord::Base.connection
+
+    connection.tables.each do |table|
+      primary_key, sequence = connection.pk_and_sequence_for(table)
+      next if !primary_key || !sequence
+
+      DB.exec(<<~SQL)
+        SELECT setval(
+          #{connection.quote(sequence.to_s)},
+          GREATEST(
+            (SELECT COALESCE(MAX(#{connection.quote_column_name(primary_key)}), 0) FROM #{connection.quote_table_name(table)}),
+            (SELECT last_value FROM #{connection.quote_table_name(sequence)})
+          )
+        )
+      SQL
+    end
+  end
+
+  def import_blog_instances
+    puts "", "Importing blogs..."
+    @blog_mapping = {}
+
+    unless defined?(Blog::Instance)
+      puts "  Skipping import of blogs because the plugin is not installed."
+      return
+    end
+
+    if table_column_names("blog_instances").empty?
+      puts "  Skipping import of blogs because the intermediate database has none."
+      return
+    end
+
+    rows = query(<<~SQL)
+      SELECT *
+        FROM blog_instances
+       ORDER BY is_default DESC, id
+    SQL
+
+    rows.each { |row| import_blog_instance(row) }
+    rows.close
+    puts "  #{@blog_mapping.size} blogs imported"
+    return if @blog_mapping.empty?
+
+    # The group settings were applied before the blogs' categories existed.
+    Blog::ManagedCategories.sync_role_access
+    log_blog_roles_disabled
+  end
+
+  # A host can switch the role groups off per plan; the imported lists stay saved for
+  # when it is switched on.
+  def log_blog_roles_disabled
+    return if SiteSetting.blog_role_groups_enabled
+
+    log_import_issue(
+      "blog role groups disabled on this site",
+      "imported contributor, editor and publisher groups have no blog access until blog_role_groups_enabled is on",
+    )
+  end
+
+  def import_blog_instance(row)
+    blog =
+      if to_boolean(row["is_default"])
+        Blog::Instance.ensure_default!
+      else
+        Blog::Instance.find_or_initialize_by(slug: row["slug"])
+      end
+
+    if blog.new_record? && !Blog::Instance.addable?
+      log_import_issue(
+        "blog skipped (blog_max_instances reached)",
+        "blog #{row["id"]} (#{row["slug"]})",
+      )
+      return
+    end
+
+    category_id = row["category_id"] && category_id_from_imported_id(row["category_id"])
+    if row["category_id"] && !category_id
+      log_import_issue(
+        "blog category not imported",
+        "category #{row["category_id"]} (blog #{row["id"]})",
+      )
+    end
+
+    # NULL means "keep what the destination has".
+    blog.assign_attributes(
+      {
+        name: row["name"],
+        description: row["description"],
+        about: row["about"] && resolve_upload_placeholders(row["about"], row["about_upload_ids"]),
+        url: row["url"],
+        category_id:,
+        path_format: row["path_format"],
+        posts_per_page: row["posts_per_page"],
+        published: to_nullable_boolean(row["published"]),
+      }.compact,
+    )
+
+    if !blog.save
+      log_import_issue(
+        "blog skipped (invalid)",
+        "blog #{row["id"]} (#{row["slug"]}): #{blog.errors.full_messages.join(", ")}",
+      )
+      return
+    end
+
+    # Nothing else references the uploads in the About text, so the orphan upload
+    # cleanup would delete them.
+    about_upload_ids =
+      JSON.parse(row["about_upload_ids"] || "[]").filter_map { upload_id_from_original_id(it) }
+    UploadReference.ensure_exist!(upload_ids: about_upload_ids, target: blog)
+
+    @blog_mapping[row["id"]] = blog.id
+  end
+
+  def import_blog_publications
+    puts "", "Importing blog publications..."
+
+    unless defined?(Blog::Publication)
+      puts "  Skipping import of blog publications because the plugin is not installed."
+      return
+    end
+
+    if table_column_names("blog_publications").empty?
+      puts "  Skipping import of blog publications because the intermediate database has none."
+      return
+    end
+
+    if @blog_mapping.blank?
+      puts "  Skipping import of blog publications because no blog was imported."
+      return
+    end
+
+    rows = query(<<~SQL)
+      SELECT *
+        FROM blog_publications
+       ORDER BY topic_id
+    SQL
+
+    imported_count = 0
+    rows.each { |row| imported_count += 1 if import_blog_publication(row) }
+    rows.close
+    puts "  #{imported_count} publications imported"
+
+    import_blog_paths
+    create_blog_embeddable_hosts
+    report_blog_readiness
+  end
+
+  # A row at a time: a blog has at most a few thousand articles and the plugin's callbacks
+  # create the revision snapshot and link the topics.
+  def import_blog_publication(row)
+    topic_id = topic_id_from_imported_id(row["topic_id"])
+    topic = Topic.find_by(id: topic_id) if topic_id
+
+    if !topic
+      log_import_issue("blog publication skipped (topic not imported)", "topic #{row["topic_id"]}")
+      return false
+    end
+
+    blog = Blog::Instance.find_cached(@blog_mapping[row["blog_id"]])
+    if !blog
+      log_import_issue(
+        "blog publication skipped (blog not imported)",
+        "blog #{row["blog_id"]} (topic #{row["topic_id"]})",
+      )
+      return false
+    end
+
+    return false if Blog::Publication.for_topic(topic).persisted?
+
+    if [blog.category_id, SiteSetting.blog_drafts_category.to_i].exclude?(topic.category_id)
+      log_import_issue(
+        "blog publication skipped (topic is not in the blog or drafts category)",
+        "topic #{row["topic_id"]}",
+      )
+      return false
+    end
+
+    post = topic.first_post
+    if !post
+      log_import_issue(
+        "blog publication skipped (topic has no first post)",
+        "topic #{row["topic_id"]}",
+      )
+      return false
+    end
+
+    cook_blog_post(post)
+
+    cover_upload_id = upload_id_from_original_id(row["cover_upload_id"]) if row["cover_upload_id"]
+    if row["cover_upload_id"] && !cover_upload_id
+      log_import_issue(
+        "blog cover image not imported",
+        "upload #{row["cover_upload_id"]} (topic #{row["topic_id"]})",
+      )
+    end
+
+    publication =
+      Blog::Publication.new(
+        topic:,
+        blog_id: blog.id,
+        path: row["path"],
+        page: to_boolean(row["page"]),
+        excerpt: row["excerpt"].to_s,
+        meta_description: row["meta_description"].to_s,
+        canonical_url: row["canonical_url"].to_s,
+        featured: to_boolean(row["featured"]),
+        published: to_boolean(row["published"]),
+        published_at: to_datetime(row["published_at"]),
+        publisher_id: row["publisher_id"] && user_id_from_imported_id(row["publisher_id"]),
+        co_author_ids: blog_co_author_ids(row, topic),
+        cover_upload_id:,
+        cover_alt: row["cover_alt"].to_s,
+      )
+
+    if !publication.save
+      log_import_issue(
+        "blog publication skipped (invalid)",
+        "topic #{row["topic_id"]}: #{publication.errors.full_messages.join(", ")}",
+      )
+      return false
+    end
+
+    # Articles are found by their path rows; the plugin creates them when publishing.
+    publication.paths.find_or_create_by!(path: publication.path)
+
+    # The plugin stamps the import time, which would show every article as updated
+    # today. NULL falls back to the publication date.
+    publication.update_columns(last_published_at: to_datetime(row["last_published_at"]))
+
+    true
+  end
+
+  def blog_co_author_ids(row, topic)
+    return [] if row["co_author_ids"].blank?
+
+    user_ids =
+      JSON
+        .parse(row["co_author_ids"])
+        .filter_map do |imported_id|
+          user_id = user_id_from_imported_id(imported_id)
+          if !user_id
+            log_import_issue(
+              "blog co-author not imported",
+              "user #{imported_id} (topic #{row["topic_id"]})",
+            )
+          end
+          user_id
+        end
+
+    user_ids - [topic.user_id]
+  end
+
+  # The revision snapshot is the public article and `pre_cook` is only a stand-in. The
+  # Markdown pipeline takes milliseconds per post; post-processing (thumbnails, oneboxes
+  # over the network) takes seconds and is left to the rebake after the import, which
+  # `blog:refresh_articles` copies into the articles.
+  def cook_blog_post(post)
+    post.update_columns(
+      cooked: post.cook(post.raw, topic_id: post.topic_id),
+      baked_at: Time.zone.now,
+      baked_version: Post::BAKED_VERSION,
+    )
+  rescue StandardError => e
+    log_import_issue("blog article cooking failed", "post #{post.id}: #{e.message}")
+  end
+
+  def import_blog_paths
+    puts "", "Importing blog paths..."
+
+    rows = query(<<~SQL)
+      SELECT *
+        FROM blog_paths
+       ORDER BY path
+    SQL
+
+    publications_by_topic_id =
+      Blog::Publication
+        .pluck(:topic_id, :id, :blog_id)
+        .to_h { |topic_id, id, blog_id| [topic_id, [id, blog_id]] }
+    owner_ids_by_blog_path =
+      Blog::Path
+        .pluck(:blog_id, :path, :publication_id)
+        .to_h { |blog_id, path, id| [[blog_id, path], id] }
+
+    rows.each do |row|
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      publication_id, blog_id = publications_by_topic_id[topic_id]
+
+      if !publication_id
+        log_import_issue(
+          "blog path skipped (publication not imported)",
+          "#{row["path"]} (topic #{row["topic_id"]})",
+        )
+        next
+      end
+
+      path = Blog::Publication.normalize_path(row["path"])
+      if (owner_id = owner_ids_by_blog_path[[blog_id, path]])
+        next if owner_id == publication_id
+        log_import_issue(
+          "blog path skipped (path belongs to another article)",
+          "#{row["path"]} (topic #{row["topic_id"]})",
+        )
+        next
+      end
+
+      Blog::Path.create!(path:, publication_id:, blog_id:)
+      owner_ids_by_blog_path[[blog_id, path]] = publication_id
+    end
+
+    rows.close
+  end
+
+  # The discussion under an article is an embed of its topic.
+  def create_blog_embeddable_hosts
+    @blog_mapping.each_value do |blog_id|
+      blog = Blog::Instance.find_cached(blog_id)
+      next if !blog&.category_id
+
+      blog_uri = URI(Blog::Configuration.origin(blog))
+      host =
+        blog_uri.port == blog_uri.default_port ? blog_uri.host : "#{blog_uri.host}:#{blog_uri.port}"
+
+      EmbeddableHost.find_or_create_by!(host:, category_id: blog.category_id) do |embeddable_host|
+        # Under the forum's own host only that blog's pages may embed.
+        if !Blog::Configuration.custom_domain?(blog)
+          embeddable_host.allowed_paths =
+            "^#{Discourse.base_path}#{Blog::Configuration.path_prefix(blog)}(/|$)"
+        end
+      end
+    end
+  end
+
+  def report_blog_readiness
+    @blog_mapping.each_value do |blog_id|
+      blog = Blog::Instance.find_cached(blog_id)
+      problems = blog ? Blog::Readiness.new(blog).problems : []
+      next if problems.empty?
+
+      puts "", "The blog \"#{blog.name}\" can't go live yet:"
+      problems.each { |problem| puts "  #{problem.message}" }
+    end
   end
 
   def import_badge_groupings

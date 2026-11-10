@@ -2321,6 +2321,435 @@ if generic_import_dependencies_available
         }
       end
     end
+
+    describe "blog publications" do
+      fab!(:blog_category, :category)
+      fab!(:editors) { Fabricate(:group, name: "blog_editors") }
+      fab!(:drafts_category) { Fabricate(:private_category, group: editors) }
+      fab!(:other_category, :category)
+      fab!(:author) { Fabricate(:user, name: "Author Name") }
+      fab!(:co_author) { Fabricate(:user, name: "Co Author") }
+      fab!(:publisher, :user)
+      fab!(:cover, :upload)
+      fab!(:tag)
+      fab!(:article_topic) { Fabricate(:topic, category: blog_category, user: author) }
+      fab!(:article_post) do
+        Fabricate(:post, topic: article_topic, user: author, raw: "Hello **world**")
+      end
+      fab!(:draft_topic) { Fabricate(:topic, category: drafts_category, user: author) }
+      fab!(:draft_post) { Fabricate(:post, topic: draft_topic, user: author) }
+      fab!(:other_topic) { Fabricate(:topic, category: other_category, user: author) }
+      fab!(:other_post) { Fabricate(:post, topic: other_topic, user: author) }
+      fab!(:page_topic) { Fabricate(:topic, category: blog_category, user: author) }
+      fab!(:page_post) { Fabricate(:post, topic: page_topic, user: author) }
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:import_issue_log_path) { File.join(Dir.mktmpdir, "issues.log") }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(
+            :@topics,
+            { 1 => article_topic.id, 2 => draft_topic.id, 3 => other_topic.id, 5 => page_topic.id },
+          )
+          instance.instance_variable_set(:@users, { 10 => publisher.id, 11 => co_author.id })
+          instance.instance_variable_set(
+            :@categories,
+            { 1 => blog_category.id, 2 => drafts_category.id },
+          )
+          instance.instance_variable_set(:@groups, { 50 => editors.id })
+          instance.instance_variable_set(:@uploads_mapping, { "cover==" => cover.id.to_s })
+          instance.instance_variable_set(:@import_issue_log_path, import_issue_log_path)
+        end
+      end
+      let(:group_issue) { "[site setting group not imported] 51 (blog_editor_groups)" }
+
+      before do
+        skip "requires the blog plugin" unless defined?(Blog::Instance)
+
+        # The same call `enable_required_plugins` makes.
+        SiteSetting.set(:blog_enabled, true)
+        article_topic.tags = [tag]
+
+        source_db.execute("CREATE TABLE site_settings (name TEXT, value TEXT, action TEXT)")
+        source_db.execute(<<~SQL)
+          CREATE TABLE blog_instances (
+            id INTEGER PRIMARY KEY, is_default BOOLEAN, slug TEXT, name TEXT, description TEXT,
+            about TEXT, about_upload_ids TEXT, url TEXT, category_id INTEGER, path_format TEXT,
+            posts_per_page INTEGER, published BOOLEAN
+          )
+        SQL
+        source_db.execute(<<~SQL)
+          CREATE TABLE blog_publications (
+            topic_id INTEGER PRIMARY KEY, blog_id INTEGER, path TEXT, page BOOLEAN,
+            published BOOLEAN, published_at DATETIME, last_published_at DATETIME, excerpt TEXT,
+            meta_description TEXT, canonical_url TEXT, featured BOOLEAN, publisher_id INTEGER,
+            co_author_ids TEXT, cover_upload_id TEXT, cover_alt TEXT
+          )
+        SQL
+        source_db.execute("CREATE TABLE blog_paths (path TEXT PRIMARY KEY, topic_id INTEGER)")
+
+        insert_site_setting("blog_editor_groups", "[50, 51]", "group_list")
+        insert_site_setting("blog_publisher_groups", "[50]", "group_list")
+        insert_site_setting("blog_drafts_category", "2", "category")
+      end
+
+      after { source_db.close }
+
+      def insert_site_setting(name, value, action)
+        source_db.execute(
+          "INSERT INTO site_settings (name, value, action) VALUES (?, ?, ?)",
+          [name, value, action],
+        )
+      end
+
+      def insert_row(table, row)
+        source_db.execute(
+          "INSERT INTO #{table} (#{row.keys.join(", ")}) VALUES (#{(["?"] * row.size).join(", ")})",
+          row.values,
+        )
+      end
+
+      def insert_default_blog(**attributes)
+        row = {
+          id: 1,
+          is_default: 1,
+          slug: "blog",
+          name: "Imported blog",
+          description: "About us",
+          category_id: 1,
+          path_format: "/{year}/{month}/{slug}",
+          published: 1,
+        }.merge(attributes)
+        insert_row("blog_instances", row)
+      end
+
+      def insert_publication(topic_id, **attributes)
+        row = {
+          topic_id:,
+          blog_id: 1,
+          path: "/articles/#{topic_id}",
+          page: 0,
+          published: 1,
+          published_at: "2024-01-15T12:00:00Z",
+          featured: 0,
+        }.merge(attributes)
+        insert_row("blog_publications", row)
+      end
+
+      def insert_path(path, topic_id)
+        insert_row("blog_paths", { path:, topic_id: })
+      end
+
+      def import_issues
+        File.exist?(import_issue_log_path) ? File.readlines(import_issue_log_path, chomp: true) : []
+      end
+
+      def import_blogs
+        importer.import_deferred_site_settings
+        importer.import_blog_instances
+      end
+
+      def import_blog
+        import_blogs
+        importer.import_blog_publications
+      end
+
+      describe "#sync_primary_key_sequences" do
+        it "lets application code insert after rows were copied with explicit ids" do
+          next_id = CategoryGroup.maximum(:id).to_i + 1
+          DB.exec(<<~SQL, id: next_id, category_id: blog_category.id, group_id: editors.id)
+            INSERT INTO category_groups (id, category_id, group_id, permission_type, created_at, updated_at)
+            VALUES (:id, :category_id, :group_id, 1, NOW(), NOW())
+          SQL
+
+          importer.sync_primary_key_sequences
+
+          expect {
+            CategoryGroup.create!(category: other_category, group: editors, permission_type: 1)
+          }.not_to raise_error
+        end
+      end
+
+      describe "#import_deferred_site_settings" do
+        it "maps category and group list settings and logs what it can't map" do
+          insert_site_setting("no_such_setting", "1", "category")
+
+          importer.import_deferred_site_settings
+
+          expect(SiteSetting.blog_drafts_category.to_i).to eq(drafts_category.id)
+          expect(SiteSetting.blog_editor_groups).to eq(editors.id.to_s)
+          expect(SiteSetting.blog_publisher_groups).to eq(editors.id.to_s)
+          expect(import_issues).to contain_exactly(
+            group_issue,
+            "[site setting skipped (unknown setting)] no_such_setting",
+          )
+        end
+
+        it "skips a setting whose record wasn't imported" do
+          insert_site_setting("blog_contributor_groups", "[52]", "group_list")
+
+          importer.import_deferred_site_settings
+
+          expect(SiteSetting.blog_contributor_groups).to eq(
+            SiteSetting.defaults[:blog_contributor_groups],
+          )
+          expect(import_issues).to include(
+            "[site setting skipped (referenced record not imported)] blog_contributor_groups",
+          )
+        end
+      end
+
+      describe "#import_blog_instances" do
+        it "configures the default blog from the imported row" do
+          insert_default_blog
+
+          import_blogs
+
+          expect(Blog::Instance.count).to eq(1)
+          expect(Blog::Instance.default_blog).to have_attributes(
+            name: "Imported blog",
+            description: "About us",
+            category_id: blog_category.id,
+            path_format: "/{year}/{month}/{slug}",
+            published: true,
+          )
+        end
+
+        it "lets the publisher groups into the imported blog category" do
+          blog_category.set_permissions(everyone: :create_post)
+          blog_category.save!
+          insert_default_blog
+
+          import_blogs
+
+          expect(
+            CategoryGroup.where(category: blog_category, group: editors).pluck(:permission_type),
+          ).to eq([CategoryGroup.permission_types[:full]])
+          expect(import_issues).not_to include(match(/role groups disabled/))
+        end
+
+        it "logs when the site has the blog role groups switched off" do
+          SiteSetting.blog_role_groups_enabled = false
+          insert_default_blog
+
+          import_blogs
+
+          expect(import_issues).to include(match(/\A\[blog role groups disabled on this site\]/))
+        end
+
+        it "keeps the destination's values for NULL columns" do
+          insert_default_blog(name: nil, description: nil, path_format: nil, posts_per_page: nil)
+
+          import_blogs
+
+          expect(Blog::Instance.default_blog).to have_attributes(
+            name: Blog::Instance::DEFAULT_NAME,
+            description: "",
+            path_format: "/{slug}",
+            posts_per_page: 10,
+            category_id: blog_category.id,
+          )
+        end
+
+        it "logs a blog the plugin rejects" do
+          insert_default_blog(category_id: 2)
+          insert_publication(1)
+
+          import_blog
+
+          expect(Blog::Instance.default_blog.category_id).to be_nil
+          expect(Blog::Publication.count).to eq(0)
+          expect(import_issues).to include(
+            match(/\A\[blog skipped \(invalid\)\] blog 1 \(blog\): Category/),
+          )
+        end
+      end
+
+      describe "#import_blog_publications" do
+        before { insert_default_blog }
+
+        it "imports a published article with its snapshot, cover, co-author and paths" do
+          insert_publication(
+            1,
+            path: "/2024/01/hello",
+            excerpt: "A greeting",
+            meta_description: "Meta",
+            featured: 1,
+            publisher_id: 10,
+            co_author_ids: "[11, 12]",
+            cover_upload_id: "cover==",
+            cover_alt: "A cover",
+            last_published_at: "2024-02-01T08:00:00Z",
+          )
+          insert_path("/old/hello", 1)
+          insert_path("/2024/01/hello", 1)
+
+          import_blog
+
+          publication = Blog::Publication.find_by!(topic_id: article_topic.id)
+          expect(publication).to have_attributes(
+            blog_id: Blog::Instance.default_blog.id,
+            discussion_topic_id: article_topic.id,
+            draft_topic_id: nil,
+            path: "/2024/01/hello",
+            page: false,
+            excerpt: "A greeting",
+            meta_description: "Meta",
+            canonical_url: "",
+            featured: true,
+            published: true,
+            publisher_id: publisher.id,
+            co_author_ids: [co_author.id],
+            cover_upload_id: cover.id,
+            cover_alt: "A cover",
+          )
+          expect(publication.published_at).to eq_time(Time.utc(2024, 1, 15, 12))
+          expect(publication.last_published_at).to eq_time(Time.utc(2024, 2, 1, 8))
+          expect(publication.paths.pluck(:path)).to contain_exactly("/2024/01/hello", "/old/hello")
+
+          revision = publication.published_revision
+          expect(revision.creator_id).to eq(publisher.id)
+          expect(revision.approved_at).to eq_time(publication.published_at)
+          expect(revision.data).to include(
+            "title" => article_topic.title,
+            "raw" => "Hello **world**",
+            "author_name" => "Author Name",
+            "co_authors" => [{ "user_id" => co_author.id, "name" => "Co Author" }],
+            "cover_upload_id" => cover.id,
+            "meta_description" => "Meta",
+            "image_url" => cover.url,
+            "tags" => [tag.name],
+            "path" => "/2024/01/hello",
+          )
+          expect(revision.cooked).to include("<strong>world</strong>")
+          # The live copy readers see, kept in text columns so remaps reach it.
+          expect(publication).to have_attributes(cooked: revision.cooked, image_url: cover.url)
+          expect(publication.article.cooked).to eq(revision.cooked)
+
+          expect(article_post.reload.baked_version).to eq(Post::BAKED_VERSION)
+          expect(UploadReference.where(target: revision).pluck(:upload_id)).to include(cover.id)
+          expect(Blog::Publication.publicly_visible.pluck(:id)).to eq([publication.id])
+          expect(import_issues).to contain_exactly(
+            group_issue,
+            "[blog co-author not imported] user 12 (topic 1)",
+          )
+        end
+
+        it "imports pages and drafts" do
+          insert_publication(1)
+          insert_publication(5, page: 1, path: "/privacy")
+          insert_publication(2, published: 0, published_at: nil)
+
+          import_blog
+
+          article = Blog::Publication.find_by!(topic_id: article_topic.id)
+          expect(article.published_revision.data).to include("author_name" => "Author Name")
+          expect(article.last_published_at).to be_nil
+
+          page = Blog::Publication.find_by!(topic_id: page_topic.id)
+          expect(page).to have_attributes(page: true, path: "/privacy", published: true)
+          expect(Blog::Publication.pages.pluck(:id)).to eq([page.id])
+
+          draft = Blog::Publication.find_by!(topic_id: draft_topic.id)
+          expect(draft).to have_attributes(
+            draft_topic_id: draft_topic.id,
+            discussion_topic_id: nil,
+            published: false,
+            published_at: nil,
+            published_revision_id: nil,
+          )
+          expect(draft.paths.pluck(:path)).to eq(["/articles/2"])
+          expect(Blog::Publication.publicly_visible.pluck(:id)).to contain_exactly(
+            article.id,
+            page.id,
+          )
+        end
+
+        it "cooks the article with the Markdown pipeline, not the post processor" do
+          author.user_option.destroy!
+          article_post.update_columns(raw: "Hello :tada: https://example.com/page")
+          insert_publication(1)
+
+          expect { import_blog }.not_to change { OptimizedImage.count + UserBadge.count }
+
+          revision = Blog::Publication.find_by!(topic_id: article_topic.id).published_revision
+          expect(revision.cooked).to include("class=\"emoji\"")
+          expect(revision.cooked).to include("https://example.com/page")
+          expect(article_post.reload.baked_version).to eq(Post::BAKED_VERSION)
+        end
+
+        it "creates the embeddable host for the discussion embeds" do
+          insert_publication(1)
+
+          import_blog
+
+          host = EmbeddableHost.find_by!(host: URI(Discourse.base_url_no_prefix).host)
+          expect(host.category_id).to eq(blog_category.id)
+          expect(host.allowed_paths).to eq("^#{Discourse.base_path}/blog(/|$)")
+        end
+
+        it "skips rows it can't place and logs why" do
+          import_blogs
+          existing = Fabricate(:topic, category: blog_category, user: author)
+          Fabricate(:post, topic: existing, user: author)
+          Blog::Publication
+            .create!(topic: existing, path: "/taken", published: true, published_at: 1.day.ago)
+            .paths
+            .create!(path: "/taken")
+
+          insert_publication(1, path: "/taken")
+          insert_publication(2, published_at: nil)
+          insert_publication(3)
+          insert_publication(4)
+          insert_publication(5, blog_id: 9)
+          insert_path("/taken", 2)
+          insert_path("/elsewhere", 4)
+
+          importer.import_blog_publications
+
+          expect(Blog::Publication.where.not(topic_id: existing.id)).to be_empty
+          expect(import_issues).to contain_exactly(
+            group_issue,
+            "[blog publication skipped (invalid)] topic 1: Path #{I18n.t("blog.errors.path_taken")}",
+            "[blog publication skipped (invalid)] topic 2: Published at is invalid",
+            "[blog publication skipped (topic is not in the blog or drafts category)] topic 3",
+            "[blog publication skipped (topic not imported)] topic 4",
+            "[blog publication skipped (blog not imported)] blog 9 (topic 5)",
+            "[blog path skipped (publication not imported)] /taken (topic 2)",
+            "[blog path skipped (publication not imported)] /elsewhere (topic 4)",
+          )
+        end
+
+        it "logs a path that already belongs to another article" do
+          insert_publication(1)
+          insert_publication(2, published: 0, published_at: nil)
+          insert_path("/articles/1", 2)
+
+          import_blog
+
+          expect(Blog::Path.find_by!(path: "/articles/1").publication.topic_id).to eq(
+            article_topic.id,
+          )
+          expect(import_issues).to include(
+            "[blog path skipped (path belongs to another article)] /articles/1 (topic 2)",
+          )
+        end
+
+        it "leaves existing blogs and publications alone on a second run" do
+          insert_publication(1)
+
+          import_blog
+          revision_id = Blog::Publication.find_by!(topic_id: article_topic.id).published_revision_id
+          import_blog
+
+          expect(Blog::Instance.count).to eq(1)
+          expect(Blog::Publication.count).to eq(1)
+          expect(Blog::Revision.pluck(:id)).to eq([revision_id])
+          expect(Blog::Path.count).to eq(1)
+        end
+      end
+    end
   end
 
   RSpec.describe BulkImport::Base do
