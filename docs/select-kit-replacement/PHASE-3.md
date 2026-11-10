@@ -244,8 +244,17 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   recipe or `DSelect` component, behind the flag like every other call site. Check each `main`
   merge for new pickers built on `DMenu` or `DMultiSelect`, not only new select-kit uses. Known:
   - ☐ The upcoming change group control (`upcoming-change-group-control.gjs`, #45142, merged
-    2026-11-09) uses `EmailGroupUserChooser` and arrives with the next `main` merge. #45929
-    (open) moves it to `DMultiSelect`.
+    in `ebd1d84f27e`) uses `EmailGroupUserChooser` with options #45142 added: `groupsOnly`
+    (automatic and pseudogroups included), `includeEveryone`, `excludedGroupIds` and
+    `lockedValues`, groups that can't be removed. `DSelectGroup` covers all but the locked
+    groups; DSelect has no held item that can't be removed. #45929 (open) moves the control to
+    `DMultiSelect`.
+  - ☐ The DSA statement's community rule field (`dsa-moderation-details.gjs`, merged in
+    `ebd1d84f27e`): a FormKit custom field that picks one rule, shown with its explanation,
+    from a `DMenu` with a `DDropdownMenu`.
+  - Checked in `ebd1d84f27e` and not ad-hoc: the blog plugin's `DMenu`s are action menus, and
+    the new `ComboBox` in discourse-ai's spam settings is the generic select-kit control,
+    covered by the long tail.
 
 `DSelectTopicList` stays (decided 2026-11-10): it has no callers since the pickers inside modals
 moved to `DSelectTopic` (2026-11-03), and a use case for it is planned.
