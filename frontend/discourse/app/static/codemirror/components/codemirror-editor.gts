@@ -100,7 +100,6 @@ const TAB_FOCUS_WINDOW = 2000;
 const MODIFIER_KEYS = ["Alt", "CapsLock", "Control", "Meta", "Shift"];
 
 // A contenteditable isn't labelable, so `<label for>` clicks don't reach it.
-// Like native activation, clicks on controls inside the label are left alone.
 function focusFromLabel(event: MouseEvent) {
   const target = event.target as Element | null;
   const label = target?.closest?.("label");
@@ -344,9 +343,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
     const disarmTabFocus = (view: EditorView) => {
       if (tabFocusArmedAt) {
         tabFocusArmedAt = 0;
-        // A deadline in the past ends our window without switching off a Tab
-        // focus mode the user turned on themselves. Zero would still match
-        // a Tab in the same millisecond.
+        // Unlike `false`, keeps a Tab focus mode the user turned on.
         view.setTabFocusMode(-1);
       }
     };

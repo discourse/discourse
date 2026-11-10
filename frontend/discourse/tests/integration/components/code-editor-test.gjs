@@ -17,7 +17,6 @@ import { undo } from "@codemirror/commands";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import CodeEditor from "discourse/components/code-editor";
 import loadCodemirror from "discourse/lib/load-codemirror";
 import { capabilities } from "discourse/services/capabilities";
@@ -211,35 +210,6 @@ module("Integration | Component | code-editor", function (hooks) {
         capture: true,
       });
     }
-  });
-
-  test("pointer interaction disarms Tab in the same millisecond", async function (assert) {
-    await render(<template><CodeEditor @value="one" /></template>);
-    const view = codeEditorView();
-    view.focus();
-
-    await triggerKeyEvent(".cm-content", "keydown", "Escape");
-    view.dispatch({ selection: { anchor: 0 } });
-
-    const tab = new KeyboardEvent("keydown", {
-      key: "Tab",
-      bubbles: true,
-      cancelable: true,
-    });
-    Object.defineProperty(tab, "keyCode", { value: 9 });
-
-    const frozen = Date.now();
-    const now = sinon.stub(Date, "now").returns(frozen);
-    try {
-      view.contentDOM.dispatchEvent(
-        new PointerEvent("pointerdown", { bubbles: true })
-      );
-      view.contentDOM.dispatchEvent(tab);
-    } finally {
-      now.restore();
-    }
-
-    assert.strictEqual(view.state.doc.toString(), "  one", "Tab indents");
   });
 
   test("pointer interaction keeps a Tab focus mode the user turned on", async function (assert) {

@@ -39,8 +39,7 @@
     /*! rtl:ignore */
     direction: ltr;
 
-    // An outline would sit beneath the gutters and scrollbars and outside a
-    // clipping host, so the ring is an inset layer above them.
+    // Inset, so gutters, scrollbars and a clipping host don't cover it.
     &.cm-focused {
       outline: none;
 
@@ -56,14 +55,12 @@
     }
   }
 
-  // Hosts reshape their corners, so the ring takes them from the host.
   > .loading-container,
   .codemirror-editor,
   .cm-editor {
     border-radius: inherit;
   }
 
-  // The grippie closes off the bottom of the host instead.
   &:has(> .grippie) .cm-editor.cm-focused::after {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
