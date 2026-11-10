@@ -237,11 +237,9 @@ module Email
           # If an iframe is protocol relative, use SSL when displaying it
           display_src =
             "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
-          i.replace(
-            Nokogiri::HTML5.fragment(
-              "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
-            ),
-          )
+          paragraph = @fragment.document.create_element("p")
+          paragraph << @fragment.document.create_element("a", display_src, href: src_uri.to_s)
+          i.replace(paragraph)
         rescue URI::Error
           # If the URL is weird, remove the iframe
           i.remove
@@ -416,10 +414,14 @@ module Email
               calculate_width_and_height_style(div)
             end
 
-          div.add_next_sibling(<<~HTML)
-            <img src="#{url}" data-embedded-secure-image="true" style="#{style}" />
-          HTML
-          div.remove
+          div.replace(
+            @fragment.document.create_element(
+              "img",
+              src: url,
+              "data-embedded-secure-image": "true",
+              style: style,
+            ),
+          )
         end
       end
     end
@@ -527,9 +529,9 @@ module Email
     end
 
     def calculate_width_and_height_style(div)
-      width = div["data-width"]
-      height = div["data-height"]
-      if width.present? && height.present? && height.to_i < MAX_IMAGE_DIMENSION &&
+      width = div["data-width"].to_s
+      height = div["data-height"].to_s
+      if width.match?(/\A\d+\z/) && height.match?(/\A\d+\z/) && height.to_i < MAX_IMAGE_DIMENSION &&
            width.to_i < MAX_IMAGE_DIMENSION
         "width: #{width}px; height: #{height}px;"
       else

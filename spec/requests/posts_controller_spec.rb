@@ -2670,6 +2670,36 @@ RSpec.describe PostsController do
         expect(cooked.at_css("iframe")).to be_nil
       end
 
+      it "keeps an iframe URL inside the link href of notification emails" do
+        recipient = Fabricate(:user)
+        topic = Fabricate(:topic, user: recipient)
+        Fabricate(:post, topic: topic, user: recipient)
+        iframe_source = "https://www.instagram.com/p/x'style='position:fixed;inset:0'title='x"
+
+        post "/posts.json",
+             params: {
+               raw: %(Reply <iframe src="#{iframe_source}"></iframe>),
+               topic_id: topic.id,
+             }
+
+        expect(response.status).to eq(200)
+        email =
+          UserNotifications.user_replied(
+            recipient,
+            post: Post.find(response.parsed_body["id"]),
+            notification_type: "replied",
+            notification_data_hash: {
+              original_username: user.username,
+            },
+          )
+        link =
+          Nokogiri
+            .HTML5(Email::Renderer.new(email).html)
+            .css("a")
+            .find { |a| a["href"].start_with?("https://www.instagram.com") }
+        expect(link.to_h).to eq("href" => iframe_source)
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
