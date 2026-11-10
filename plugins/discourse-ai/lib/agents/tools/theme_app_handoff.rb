@@ -18,7 +18,7 @@ module DiscourseAi
           {
             name:,
             description:
-              "For theme changes beyond colors and fonts, such as layout, HTML or JavaScript: explains how to build them with the administrator's own AI app through this site's MCP server. Reports what still has to be turned on, setup steps for their app, which apps are connected and their latest theme changes, and a first message to send the app. Changes nothing.",
+              "For theme changes that generate_appearance_change can't make, such as layout, HTML or JavaScript: explains how to build them with the administrator's own AI app through this site's MCP server. Reports what still has to be turned on, setup steps for their app, which apps are connected and their latest theme changes, and a first message to send the app. Changes nothing.",
             parameters: [
               {
                 name: "app",

@@ -18,6 +18,7 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::WebsiteDesign do
       "body_font_exact" => true,
       "heading_font" => "Lora",
       "heading_font_exact" => false,
+      "button_radius" => "8",
     }
   end
 
@@ -61,6 +62,7 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::WebsiteDesign do
         candidates: %w[635bff 0a2540],
         body_font: described_class::Font.new(key: "inter", exact: true),
         heading_font: described_class::Font.new(key: "lora", exact: false),
+        button_radius: 8,
       )
     end
 
@@ -74,6 +76,7 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::WebsiteDesign do
           "dark" => "yes",
           "body_font" => "Comic Sans",
           "heading_font" => "",
+          "button_radius" => "8px; position: fixed",
         )
 
       result = DiscourseAi::Completions::Llm.with_prepared_responses([untrusted]) { read }
@@ -86,6 +89,7 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::WebsiteDesign do
         candidates: ["123456"],
         body_font: nil,
         heading_font: nil,
+        button_radius: nil,
       )
     end
 

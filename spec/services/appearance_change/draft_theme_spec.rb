@@ -74,6 +74,95 @@ RSpec.describe AppearanceChange::DraftTheme do
       it { is_expected.to fail_a_policy(:can_create_color_scheme) }
     end
 
+    context "when the styles break the rules" do
+      let(:params) do
+        {
+          name: "Acme",
+          light_colors:,
+          dark_colors:,
+          styles: {
+            rules: [{ area: "header", declarations: { position: "fixed" } }],
+          },
+        }
+      end
+
+      it { is_expected.to fail_a_step(:check_styles) }
+
+      it "saves nothing" do
+        expect { result }.not_to change { [Theme.count, ColorScheme.count, AppearanceChange.count] }
+      end
+    end
+
+    context "when the styles make text unreadable on the new palettes" do
+      let(:params) do
+        {
+          name: "Acme",
+          light_colors:,
+          dark_colors:,
+          styles: {
+            rules: [
+              {
+                area: "header",
+                declarations: {
+                  "background-color" => "var(--header_background)",
+                  "color" => "var(--primary)",
+                },
+              },
+            ],
+          },
+        }
+      end
+
+      it { is_expected.to fail_a_step(:check_styles) }
+    end
+
+    context "with styles" do
+      let(:styles) do
+        {
+          variables: {
+            "--d-border-radius" => "12px",
+          },
+          rules: [
+            {
+              area: "topic_list_item",
+              state: "hover",
+              declarations: {
+                "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+              },
+            },
+          ],
+        }
+      end
+      let(:params) { { name: "Acme", light_colors:, dark_colors:, styles: } }
+
+      it { is_expected.to run_successfully }
+
+      it "writes the CSS for the styles into the theme and records both" do
+        field = result[:theme].theme_fields.sole
+        appearance_change = result[:appearance_change]
+
+        expect(field).to have_attributes(
+          target_id: Theme.targets[:common],
+          name: "scss",
+          error: nil,
+        )
+        expect(field.value).to include("--d-border-radius: 12px;")
+        expect(field.value).to include("body:not(.admin-interface) .topic-list-item:hover")
+        expect(appearance_change.css).to eq(field.value)
+        expect(appearance_change.styles).to eq(styles.deep_stringify_keys)
+      end
+
+      it "keeps the theme managed until its styles are edited by hand" do
+        theme = result[:theme]
+        expect(AppearanceChange.managed_theme_ids).to include(theme.id)
+
+        theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+        theme.save!
+
+        expect(AppearanceChange.managed_theme_ids).not_to include(theme.id)
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

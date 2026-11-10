@@ -5621,6 +5621,8 @@ en:
 
   appearance_changes:
     dark_palette_name: "%{name} Dark"
+    draft_name: "%{name} (draft)"
+    previous_name: "%{name} (previous)"
 
   color_schemes:
     base_theme_name: "Base"
