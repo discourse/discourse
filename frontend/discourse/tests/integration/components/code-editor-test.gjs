@@ -17,6 +17,7 @@ import { undo } from "@codemirror/commands";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import CodeEditor from "discourse/components/code-editor";
 import loadCodemirror from "discourse/lib/load-codemirror";
 import { capabilities } from "discourse/services/capabilities";
@@ -224,6 +225,44 @@ module("Integration | Component | code-editor", function (hooks) {
     await triggerKeyEvent(".cm-content", "keydown", "Tab");
 
     assert.strictEqual(view.state.doc.toString(), "one", "Tab doesn't indent");
+  });
+
+  test("a slow second Escape still leaves", async function (assert) {
+    const seen = [];
+    const spy = (event) => event.key === "Escape" && seen.push(event);
+    document.documentElement.addEventListener("keydown", spy, {
+      capture: true,
+    });
+
+    try {
+      await render(<template><CodeEditor @value="one" /></template>);
+      codeEditorView().focus();
+
+      await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      const later = Date.now() + 10000;
+      sinon.stub(Date, "now").returns(later);
+      await triggerKeyEvent(".cm-content", "keydown", "Escape");
+
+      assert.strictEqual(seen.length, 1);
+    } finally {
+      document.documentElement.removeEventListener("keydown", spy, {
+        capture: true,
+      });
+    }
+  });
+
+  test("Tab indents again once focus has left and come back", async function (assert) {
+    await render(<template><CodeEditor @value="one" /></template>);
+    const view = codeEditorView();
+    view.focus();
+
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    view.contentDOM.blur();
+    view.focus();
+    view.dispatch({ selection: { anchor: 0 } });
+    await triggerKeyEvent(".cm-content", "keydown", "Tab");
+
+    assert.strictEqual(view.state.doc.toString(), "  one");
   });
 
   test("Escape leaves the bare editor even with a selection", async function (assert) {

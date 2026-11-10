@@ -95,8 +95,6 @@ export interface CodemirrorEditorSignature {
 // Specs reach the document through the element.
 type HandleElement = HTMLDivElement & { codemirrorView?: EditorView };
 
-// How long after Escape the next Tab moves focus instead of indenting.
-const TAB_FOCUS_WINDOW = 2000;
 const MODIFIER_KEYS = ["Alt", "CapsLock", "Control", "Meta", "Shift"];
 
 // A contenteditable isn't labelable, so `<label for>` clicks don't reach it.
@@ -314,11 +312,12 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
     // Settled ahead of any surrounding dialog. Propagation stops here, so the
     // editor's own Escape bindings never run.
-    let tabFocusArmedAt = 0;
+    let tabFocusArmed = false;
     const handleKeydown = (view: EditorView, event: KeyboardEvent) => {
       if (event.key !== "Escape") {
-        if (!MODIFIER_KEYS.includes(event.key)) {
-          tabFocusArmedAt = 0;
+        // Other keys end the editor's temporary Tab focus mode on their own.
+        if (event.key !== "Tab" && !MODIFIER_KEYS.includes(event.key)) {
+          tabFocusArmed = false;
         }
         return;
       }
@@ -330,19 +329,20 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
         event.preventDefault();
         return;
       } else if (!closeSearchPanel(view) && !simplifySelection(view)) {
-        if (Date.now() - tabFocusArmedAt < TAB_FOCUS_WINDOW) {
+        if (tabFocusArmed) {
           return;
         }
-        view.setTabFocusMode(TAB_FOCUS_WINDOW);
-        tabFocusArmedAt = Date.now();
+        // No expiry, so a slow second Escape still reaches the page.
+        view.setTabFocusMode(Infinity);
+        tabFocusArmed = true;
       }
       event.preventDefault();
       event.stopPropagation();
     };
 
     const disarmTabFocus = (view: EditorView) => {
-      if (tabFocusArmedAt) {
-        tabFocusArmedAt = 0;
+      if (tabFocusArmed) {
+        tabFocusArmed = false;
         // Unlike `false`, keeps a Tab focus mode the user turned on.
         view.setTabFocusMode(-1);
       }
@@ -352,7 +352,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       ViewPlugin.fromClass(
         class {
           handler: (event: KeyboardEvent) => void;
-          pointerHandler: () => void;
+          disarmHandler: () => void;
           view: EditorView;
 
           constructor(view: EditorView) {
@@ -362,9 +362,10 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
                 handleKeydown(view, event);
               }
             };
-            this.pointerHandler = () => disarmTabFocus(view);
+            this.disarmHandler = () => disarmTabFocus(view);
             window.addEventListener("keydown", this.handler, { capture: true });
-            view.dom.addEventListener("pointerdown", this.pointerHandler);
+            view.dom.addEventListener("pointerdown", this.disarmHandler);
+            view.dom.addEventListener("focusout", this.disarmHandler);
           }
 
           destroy() {
@@ -373,8 +374,9 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
             });
             this.view.dom.removeEventListener(
               "pointerdown",
-              this.pointerHandler
+              this.disarmHandler
             );
+            this.view.dom.removeEventListener("focusout", this.disarmHandler);
           }
         }
       )
