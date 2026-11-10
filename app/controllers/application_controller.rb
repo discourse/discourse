@@ -825,7 +825,11 @@ class ApplicationController < ActionController::Base
       cookies[:destination_url] = destination_url
       redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
     else
-      return if request.path == path("/") && !cookies[:authentication_data]
+      # Only the login landing page is public; other routes at the root still require login.
+      if request.path == path("/") && !cookies[:authentication_data] &&
+           controller_name == "home_page" && action_name == "blank"
+        return
+      end
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
       redirect_to path("/login")
