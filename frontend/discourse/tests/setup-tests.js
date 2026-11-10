@@ -54,6 +54,7 @@ import {
   currentSettings,
   resetSettings,
 } from "discourse/tests/helpers/site-settings";
+import setupNavigationGuard from "discourse/tests/navigation-guard";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
@@ -220,6 +221,16 @@ export default async function setupTests(config) {
 
   const headlessTestem =
     window.Testem && navigator.userAgent.includes("HeadlessChrome");
+
+  // In the browser UI, toolbar changes and manual reloads navigate on purpose
+  if (window.Testem) {
+    setupNavigationGuard({
+      qunit: QUnit,
+      navigation: window.navigation,
+      storage: window.sessionStorage,
+    });
+  }
+
   const preexistingObserved = new Set([
     ...ASYNC_OBSERVERS.keys(),
     ...SYNC_OBSERVERS.keys(),
