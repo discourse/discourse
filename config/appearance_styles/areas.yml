@@ -10,7 +10,9 @@
 # - hideable: allows `display: none`, only on non-essential areas
 # - sizeable: allows bounded width and height, for media
 # - text_color: the color core gives the area's text, so a new background can
-#   be checked against it when a rule doesn't set the text color too
+#   be checked against it when a rule doesn't set the text color too; "none"
+#   for areas that only show images. Every area has to say.
+# - icon: the area's text is icons, which need 3:1 rather than 4.5:1
 # - background: the color core paints behind the area's text, so a new text
 #   color can be checked against it when a rule doesn't set a background too
 #   (var(--secondary), the page background, when not listed)
@@ -28,6 +30,7 @@ header:
 logo:
   label: Site logo
   selector: ".d-header .title"
+  text_color: "var(--header_primary)"
   background: "var(--header_background)"
 nav_pills:
   label: Navigation tabs (Latest, New, Top)
@@ -42,9 +45,11 @@ welcome_banner:
 welcome_banner_title:
   label: Welcome banner title
   selector: ".welcome-banner__title"
+  text_color: "var(--primary)"
 topic_list:
   label: Topic list
   selector: ".topic-list"
+  text_color: "var(--primary)"
 topic_list_header:
   label: Topic list column headings
   selector: ".topic-list-header"
@@ -58,6 +63,7 @@ topic_list_item:
 topic_list_title:
   label: Topic titles in lists
   selector: ".topic-list-item .raw-topic-link"
+  text_color: "var(--primary)"
   states: [hover]
 category_box:
   label: Category boxes on the categories page
@@ -67,23 +73,29 @@ category_box:
 category_logo:
   label: Category logos
   selector: ".category-logo img"
+  text_color: none
   sizeable: true
 category_title:
   label: Category headings on the categories page
   selector: ".category-title-link"
+  text_color: "var(--primary-medium)"
 category_description:
   label: Category descriptions on the categories page
   selector: ".category-description"
+  text_color: "var(--primary-high)"
   hideable: true
 category_badge:
   label: Category names, shown as badges in topic lists and on topics
   selector: ".badge-category__wrapper"
+  text_color: "var(--primary)"
 tag:
   label: Tags
   selector: ".discourse-tag"
+  text_color: "var(--primary)"
 topic_title:
   label: Topic title on the topic page
   selector: "#topic-title .fancy-title"
+  text_color: "var(--primary)"
 post:
   label: Posts
   selector: ".topic-post"
@@ -95,37 +107,47 @@ post_body:
 post_headings:
   label: Headings in posts
   selector: ".cooked h1, .cooked h2, .cooked h3"
+  text_color: "var(--primary)"
 post_links:
   label: Links in posts
   selector: ".cooked a"
+  text_color: "var(--d-link-color)"
   states: [hover]
 post_quotes:
   label: Quotes in posts
   selector: ".cooked aside.quote, .cooked blockquote"
+  text_color: "var(--primary)"
 post_code:
   label: Code in posts
   selector: ".cooked pre, .cooked code"
+  text_color: "var(--primary)"
   background: "var(--primary-very-low)"
 post_images:
   label: Images in posts
   selector: ".cooked img:not(.emoji)"
+  text_color: none
   sizeable: true
 post_avatar:
   label: Post avatars
   selector: ".topic-avatar"
+  text_color: none
 post_author:
   label: Post author names
   selector: ".topic-meta-data .names"
+  text_color: "var(--primary-high-or-secondary-low)"
 mention:
   label: Mentions
   selector: ".mention"
+  text_color: "var(--primary)"
   background: "var(--primary-low)"
 user_badge:
   label: User badges
   selector: ".user-badge"
+  text_color: "var(--primary)"
 small_actions:
   label: Notices in topics (pinned, closed, moved)
   selector: ".small-action"
+  text_color: "var(--primary-medium)"
   hideable: true
 primary_button:
   label: Primary buttons
@@ -158,6 +180,7 @@ signup_button:
 invite_button:
   label: Invite button on topics
   selector: ".invite-topic"
+  text_color: "var(--d-button-default-text-color)"
   hideable: true
   background: "var(--d-button-default-bg-color)"
   hover_background: "var(--d-button-default-bg-color--hover)"
@@ -169,6 +192,7 @@ sidebar:
 sidebar_section_header:
   label: Sidebar section headers
   selector: ".sidebar-section-header"
+  text_color: "var(--d-sidebar-header-color)"
   background: "var(--d-sidebar-background)"
 sidebar_link:
   label: Sidebar links
@@ -189,16 +213,22 @@ topic_map:
 suggested_topics:
   label: Suggested and related topics
   selector: ".more-topics__container"
+  text_color: "var(--primary)"
   hideable: true
 share_button:
   label: Share button on posts
   selector: ".post-action-menu__share"
+  text_color: "var(--primary-low-mid)"
+  icon: true
   hideable: true
 bookmark_button:
   label: Bookmark button on posts
   selector: ".post-action-menu__bookmark"
+  text_color: "var(--primary-low-mid)"
+  icon: true
   hideable: true
 powered_by:
   label: Powered by Discourse
   selector: ".powered-by-discourse"
+  text_color: "var(--primary)"
   hideable: true
