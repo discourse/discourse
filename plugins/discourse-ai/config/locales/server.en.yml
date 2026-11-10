@@ -192,6 +192,7 @@ en:
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
+    ai_google_custom_search_url: "Endpoint for the Google Custom Search API. Change it only to use a service that serves the same API."
 
     ai_discord_search_enabled: "Enables the Discord search feature"
     ai_discord_app_id: "The ID of the Discord application you would like to connect Discord search to"
