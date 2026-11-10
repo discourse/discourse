@@ -389,6 +389,14 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
 
+    it "only passes a surrounding area's text color to areas that take it" do
+      expect_valid(
+        {
+          rules: [{ area: "header", declarations: { "color" => "light-dark(#000000, #ffffff)" } }],
+        },
+      )
+    end
+
     it "checks text color variables against the background they show on" do
       expect_error(
         { variables: { "--d-link-color" => "transparent" } },

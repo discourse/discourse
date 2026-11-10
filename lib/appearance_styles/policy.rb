@@ -529,12 +529,13 @@ module AppearanceStyles
           next true if area.text_color.nil?
           texts = [[area.text_color, nil]]
           inherited =
-            outer
-              .lazy
-              .map do |around|
-                (rules_by_area[around.key] || []).select { |rule| rule[:declarations]["color"] }
-              end
-              .find(&:any?)
+            area.inherits_color &&
+              outer
+                .lazy
+                .map do |around|
+                  (rules_by_area[around.key] || []).select { |rule| rule[:declarations]["color"] }
+                end
+                .find(&:any?)
           texts += inherited.map { |rule| [rule[:declarations]["color"], rule] } if inherited
         end
 

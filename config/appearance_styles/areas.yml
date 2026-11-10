@@ -19,6 +19,8 @@
 # - hover_background: the background on hover, when it differs
 # - within: the areas this one sits inside, innermost first (every area is
 #   within the page), so its text is checked against their backgrounds
+# - inherits_color: core doesn't color the area's text itself, so it takes
+#   the text color a rule gives an area around it
 
 page:
   label: Page background
@@ -48,6 +50,7 @@ welcome_banner:
 welcome_banner_title:
   label: Welcome banner title
   selector: ".welcome-banner__title"
+  inherits_color: true
   within: [welcome_banner]
   text_color: "var(--primary)"
 topic_list:
@@ -63,6 +66,7 @@ topic_list_header:
 topic_list_item:
   label: Topic list rows
   selector: ".topic-list-item"
+  inherits_color: true
   within: [topic_list]
   text_color: "var(--primary)"
   states: [hover, odd, even]
@@ -111,15 +115,18 @@ topic_title:
 post:
   label: Posts
   selector: ".topic-post"
+  inherits_color: true
   text_color: "var(--primary)"
 post_body:
   label: Post text
   selector: ".cooked"
+  inherits_color: true
   within: [post]
   text_color: "var(--primary)"
 post_headings:
   label: Headings in posts
   selector: ".cooked h1, .cooked h2, .cooked h3"
+  inherits_color: true
   within: [post_body, post]
   text_color: "var(--primary)"
 post_links:
@@ -131,6 +138,7 @@ post_links:
 post_quotes:
   label: Quotes in posts
   selector: ".cooked aside.quote, .cooked blockquote"
+  inherits_color: true
   within: [post_body, post]
   text_color: "var(--primary)"
 post_code:
