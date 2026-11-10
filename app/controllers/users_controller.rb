@@ -1298,6 +1298,8 @@ class UsersController < ApplicationController
 
     User.transaction do
       @user.lock!
+      raise Discourse::InvalidAccess.new if @user.active?
+
       revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
 
       primary_email = @user.primary_email
