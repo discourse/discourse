@@ -970,6 +970,7 @@ en:
         search_settings: "Searching site settings"
         search_discourse_navigation: "Searching site navigation"
         read_site_setting: "Read site setting"
+        list_upcoming_changes: "List upcoming changes"
         change_site_setting: "Change site setting"
         generate_appearance_change: "Building palettes"
         save_appearance_change: "Save appearance change"
@@ -1039,6 +1040,7 @@ en:
         search_settings: "Search site settings"
         search_discourse_navigation: "Find verified links to available pages on this site"
         read_site_setting: "Read the current value of a site setting"
+        list_upcoming_changes: "List available upcoming changes and their rollout state"
         change_site_setting: "Change the value of a site setting"
         generate_appearance_change: "Build readable palettes and pick fonts from brand colors or a website"
         save_appearance_change: "Save palettes or a new theme without making them live"
@@ -1129,6 +1131,7 @@ en:
           one: "Found %{count} destination"
           other: "Found %{count} destinations"
         read_site_setting: "Reading site setting %{setting_name}"
+        list_upcoming_changes: "Listing upcoming changes"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
         generate_appearance_change: "Built palettes"
         list_appearance_changes: "Listed appearance changes"
@@ -1362,6 +1365,10 @@ en:
           invalid_value: "Invalid value: %{error}"
           failed: "Failed to change the site setting."
         success: "Site setting %{setting_name} has been changed to '%{value}'."
+      list_upcoming_changes:
+        errors:
+          not_allowed: "Only administrators can view upcoming changes."
+          failed: "Upcoming changes could not be loaded."
       read_site_setting:
         errors:
           not_allowed: "You are not allowed to read site settings."

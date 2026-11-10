@@ -140,6 +140,7 @@ module DiscourseAi
             Tools::SearchDiscourseNavigation,
             Tools::SettingContext,
             Tools::ReadSiteSetting,
+            Tools::ListUpcomingChanges,
             Tools::ChangeSiteSetting,
             Tools::GenerateAppearanceChange,
             Tools::SaveAppearanceChange,
