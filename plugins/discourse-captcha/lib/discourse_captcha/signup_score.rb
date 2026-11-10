@@ -8,13 +8,16 @@ module DiscourseCaptcha
 
     attribute :recaptcha_v3_score
 
-    def self.persist_for(user)
+    def self.assign_to(user)
       score = recaptcha_v3_score
       return if score.nil?
 
       reset
       user.custom_fields[CUSTOM_FIELD] = score
-      user.save_custom_fields
+    end
+
+    def self.persist_for(user)
+      user.save_custom_fields if assign_to(user)
     end
   end
 end

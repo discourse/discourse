@@ -156,7 +156,6 @@ RSpec.describe SessionController do
       end
 
       it "does not carry the score of a failed signup over to another account" do
-        # Multisite drops the middleware that clears request-scoped state.
         allow_any_instance_of(ActionDispatch::Executor).to receive(:call) do |middleware, env|
           middleware.instance_variable_get(:@app).call(env)
         end

@@ -43,5 +43,5 @@ after_initialize do
 
   on(:user_created) { |user| DiscourseCaptcha::SignupScore.persist_for(user) }
   # Signing up with the email of a staged user converts that record instead of creating one.
-  on(:user_unstaged) { |user| DiscourseCaptcha::SignupScore.persist_for(user) }
+  on(:user_unstaged) { |user| DiscourseCaptcha::SignupScore.assign_to(user) }
 end

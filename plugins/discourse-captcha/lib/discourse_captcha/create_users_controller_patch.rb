@@ -8,7 +8,6 @@ module DiscourseCaptcha
       before_action :check_captcha, only: [:create]
     end
 
-    # Not every deployment clears request-scoped state between requests.
     def discard_unused_signup_score
       yield
     ensure

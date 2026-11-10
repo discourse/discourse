@@ -13,7 +13,6 @@ module DiscourseCaptcha
       @login_code_signup_captcha_verified = true if captcha_required
       super
     ensure
-      # Not every deployment clears request-scoped state between requests.
       SignupScore.reset
     end
 
