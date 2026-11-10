@@ -15,6 +15,7 @@ module AppearanceStyles
         :hideable,
         :sizeable,
         :text_color,
+        :icon,
         :background,
         :hover_background,
       )
@@ -39,13 +40,21 @@ module AppearanceStyles
                 states: Array(entry["states"]).freeze,
                 hideable: entry["hideable"] == true,
                 sizeable: entry["sizeable"] == true,
-                text_color: entry["text_color"],
+                text_color: text_color(key, entry),
+                icon: entry["icon"] == true,
                 background: entry["background"] || PAGE_BACKGROUND,
                 hover_background: entry["hover_background"],
               ),
             ]
           end
           .freeze
+    end
+
+    # Every area says what color its text is, or "none" when it only shows
+    # images, so a new background is never left unchecked by omission.
+    def text_color(key, entry)
+      color = entry.fetch("text_color") { raise ArgumentError, "area #{key} needs a text_color" }
+      color == "none" ? nil : color
     end
 
     def [](key)

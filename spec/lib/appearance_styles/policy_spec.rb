@@ -181,7 +181,11 @@ RSpec.describe AppearanceStyles::Policy do
         declare("light-dark(red, #400)", property: "color"),
         "light-dark() takes hex colors",
       )
-      expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "color"))
+      expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "background-color"))
+      expect_error(
+        declare("rgba(var(--tertiary-rgb), 0.2)", property: "color"),
+        "text needs an opaque color",
+      )
     end
 
     it "only lets var() reference palette and design variables, without fallbacks" do
@@ -312,6 +316,43 @@ RSpec.describe AppearanceStyles::Policy do
         "can't tell how readable",
       )
       expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "background-color"))
+    end
+
+    it "needs text to be opaque" do
+      expect_error(
+        { rules: [{ area: "primary_button", declarations: { "color" => "transparent" } }] },
+        "text needs an opaque color",
+      )
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "color" => "rgba(var(--secondary-rgb), 0)",
+              },
+            },
+          ],
+        },
+        "text needs an opaque color",
+      )
+      expect_error(
+        { variables: { "--d-button-primary-text-color" => "transparent" } },
+        "text needs an opaque color",
+      )
+    end
+
+    it "checks a new background against the text core shows in every text area" do
+      expect_error(
+        {
+          rules: [
+            { area: "post_headings", declarations: { "background-color" => "var(--primary)" } },
+          ],
+        },
+        "rules[0]: text on background is",
+      )
+      expect(AppearanceStyles::AreaCatalog.instance.all.map(&:key)).to include("post_images")
+      expect(AppearanceStyles::AreaCatalog.instance["post_images"].text_color).to be_nil
     end
 
     it "checks rules for the same area together when both can apply" do

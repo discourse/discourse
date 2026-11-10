@@ -454,7 +454,9 @@ module AppearanceStyles
       %w[light dark].all? do |mode|
         text_hex = resolve_color(text, mode)
         next unreadable_unknown(path, "color") if text_hex.nil? && own_text
+        next error(path, "text needs an opaque color") if text_hex == :translucent && own_text
         next true if !text_hex.is_a?(String)
+        required = area.icon ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
 
         backgrounds.all? do |background|
           own = own_backgrounds.include?(background)
@@ -467,10 +469,10 @@ module AppearanceStyles
           next true if !background_hex.is_a?(String)
 
           ratio = contrast(text_hex, background_hex)
-          next true if ratio >= MINIMUM_CONTRAST
+          next true if ratio >= required
           error(
             path,
-            "text on background is #{ratio}:1 in #{mode} mode; it needs #{MINIMUM_CONTRAST}:1. Set a readable color too.",
+            "text on background is #{ratio}:1 in #{mode} mode; it needs #{required}:1. Set a readable color too.",
           )
         end
       end
@@ -601,6 +603,9 @@ module AppearanceStyles
             next unreadable_unknown(path, background)
           end
           next unreadable_unknown(path, text) if text_hex.nil? && variables.key?(text)
+          if text_hex == :translucent && variables.key?(text)
+            next error(path, "#{text}: text needs an opaque color")
+          end
           next true if !background_hex.is_a?(String) || !text_hex.is_a?(String)
 
           ratio = contrast(text_hex, background_hex)
