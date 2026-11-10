@@ -119,6 +119,64 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
     )
   end
 
+  context "with a styled theme" do
+    let(:theme_change) do
+      save_change(
+        service: AppearanceChange::DraftTheme,
+        styles: {
+          variables: {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+    end
+
+    it "makes it live while it holds only the checked styles" do
+      expect { build_reviewable(theme_change).perform(other_admin, :approve) }.to change {
+        SiteSetting.default_theme_id
+      }.to(theme_change.theme_id)
+    end
+
+    it "refuses once someone has changed the theme by hand" do
+      theme_change.theme.set_field(
+        target: :common,
+        name: :scss,
+        value: "#{theme_change.css}\nbody { display: none; }",
+      )
+      theme_change.theme.save!
+
+      expect(build_tool(theme_change).invoke[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.theme_changed"),
+      )
+    end
+
+    it "refuses styles that no longer pass the checks" do
+      theme_change.update_columns(styles: { "variables" => { "--d-border-radius" => "500px" } })
+
+      expect(build_tool(theme_change).invoke[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.theme_changed"),
+      )
+    end
+
+    it "refuses once a plugin turns styles off" do
+      plugin = Plugin::Instance.new
+      modifier =
+        proc do |decision, request|
+          decision.deny!("No styles here.") if request.feature == :style_authoring
+          decision
+        end
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      expect(build_tool(theme_change).invoke[:error]).to eq("No styles here.")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+  end
+
   it "doesn't change anything without approval" do
     expect { expect(tool.invoke).to eq(error(:approval_required)) }.not_to change {
       Theme.foundation_theme.reload.color_scheme_id
