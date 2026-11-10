@@ -9,6 +9,17 @@ describe "Admin Onboarding Banner" do
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:category_form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
+
+  # plugins can register more category types, which adds a type step first
+  def open_category_form_from_banner
+    banner.click_step_action("create_category")
+    expect(page).to have_current_path(%r{\A/new-category/(setup|general)\z})
+    if page.current_path == "/new-category/setup"
+      category_type_card.find_type_card("discussion").click
+    end
+    expect(page).to have_current_path("/new-category/general")
+  end
 
   before do
     SiteSetting.enable_invite_modal_with_roles = false
@@ -60,8 +71,7 @@ describe "Admin Onboarding Banner" do
       visit("/")
       expect(banner.step_not_completed?("create_category")).to eq(true)
 
-      banner.click_step_action("create_category")
-      expect(page).to have_current_path("/new-category/general")
+      open_category_form_from_banner
 
       category_form.field("name").fill_in("Announcements")
       category_page.save_settings
@@ -75,8 +85,7 @@ describe "Admin Onboarding Banner" do
 
     it "stays open when the admin leaves the category setup without saving" do
       visit("/")
-      banner.click_step_action("create_category")
-      expect(page).to have_current_path("/new-category/general")
+      open_category_form_from_banner
 
       visit("/")
       expect(banner.step_not_completed?("create_category")).to eq(true)
@@ -342,7 +351,7 @@ describe "Admin Onboarding Banner" do
     it "disables onboarding when select theme is completed last" do
       visit("/")
 
-      banner.click_step_action("create_category")
+      open_category_form_from_banner
       category_form.field("name").fill_in("Announcements")
       category_page.save_settings
       expect(page).to have_current_path("/c/announcements/edit/general")
