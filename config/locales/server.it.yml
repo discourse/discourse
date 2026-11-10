@@ -4406,7 +4406,13 @@ it:
   design_wizard:
     palette_pairs:
       default: "Predefinito"
+      neutral: "Neutrale"
+      shades_of_blue: "Sfumature di blu"
+      summer: "Estate"
       dracula: "Dracula"
+      grey_amber: "Ambra grigia"
+      latte: "Color latte"
+      dark_rose: "Rosa scuro"
   wizard:
     title: "Configurazione Discourse"
     step:

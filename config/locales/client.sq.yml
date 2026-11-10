@@ -319,9 +319,8 @@ sq:
     design_wizard:
       back: "Kthehu mbrapa"
       next: "Vazhdo përpara"
-      sections:
-        theme: "Tema"
-        search: "Kërko"
+      fonts:
+        base_font: "Trupi"
       homepage:
         topics: "Topics"
         categories: "Categories"
@@ -4503,7 +4502,6 @@ sq:
         upload:
           label: "Ngarko"
           title: "Upload a backup to this instance"
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Rregullimet"
         operations:
           failed: "The %{operation} failed. Please check the logs."

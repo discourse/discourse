@@ -34,7 +34,6 @@ RSpec.describe DiscourseEvents::Livestream do
       context "when the first post is a livestream event" do
         before do
           SiteSetting.discourse_events_enabled = true
-          SiteSetting.chat_pinned_messages = true
           post = Fabricate(:post, topic: topic)
           Fabricate(
             :event,
@@ -112,7 +111,7 @@ RSpec.describe DiscourseEvents::Livestream do
           expect(Chat::Channel.count).to eq(0)
         end
 
-        it "posts a pinned message referencing the topic when pinned messages are enabled" do
+        it "posts a pinned message referencing the topic" do
           described_class.handle_topic_chat_channel_creation(topic)
 
           channel = Chat::Channel.first
@@ -152,28 +151,6 @@ RSpec.describe DiscourseEvents::Livestream do
           topic.update!(category: new_category)
 
           expect(Chat::Channel.first.chatable).to eq(new_category)
-        end
-      end
-
-      context "when the first post is a livestream event and pinned messages are disabled" do
-        before do
-          SiteSetting.discourse_events_enabled = true
-          SiteSetting.chat_pinned_messages = false
-          post = Fabricate(:post, topic: topic)
-          Fabricate(
-            :event,
-            post: post,
-            livestream: true,
-            location: "https://www.youtube.com/live/abc123",
-          )
-        end
-
-        it "posts the topic reference message without pinning it" do
-          described_class.handle_topic_chat_channel_creation(topic)
-
-          channel = Chat::Channel.first
-          expect(Chat::Message.where(chat_channel: channel, user: Discourse.system_user)).to exist
-          expect(Chat::PinnedMessage.count).to eq(0)
         end
       end
     end

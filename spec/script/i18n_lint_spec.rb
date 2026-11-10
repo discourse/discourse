@@ -40,6 +40,7 @@ RSpec.describe LocaleFileValidator do
       "{{setting:title", # no closing braces at all
     ]
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     VALID_MARKERS.each do |marker|
       it "accepts #{marker}" do
         errors = errors_for("Some text with #{marker} in it.")
@@ -47,7 +48,9 @@ RSpec.describe LocaleFileValidator do
         expect(errors[:invalid_interpolation_key_format]).to be_empty
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     MALFORMED_MARKERS.each do |marker|
       it "flags #{marker} as malformed" do
         errors = errors_for("Some text with #{marker} in it.")
@@ -57,6 +60,7 @@ RSpec.describe LocaleFileValidator do
         ).to eq(["test_key"])
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     it "still flags handlebars-style interpolation that isn't a setting marker" do
       expect(errors_for("Hello {{username}}!")[:invalid_interpolation_key_format]).to eq(
@@ -69,6 +73,7 @@ RSpec.describe LocaleFileValidator do
       expect(errors.values.flatten).to be_empty
     end
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     (VALID_MARKERS + MALFORMED_MARKERS).each do |marker|
       it "agrees with LabelFormatter about #{marker}" do
         text = "Some text with #{marker} in it."
@@ -79,5 +84,6 @@ RSpec.describe LocaleFileValidator do
         expect(lint_accepts).to eq(formatter_expands)
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 end

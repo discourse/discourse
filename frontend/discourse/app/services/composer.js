@@ -583,8 +583,7 @@ export default class ComposerService extends Service {
         ...options,
         ...customPopupMenuOptions
           .filter((option) => !option.menu)
-          .map((option) => this._setupPopupMenuOption({ ...option }))
-          .filter(Boolean),
+          .map((option) => this._setupPopupMenuOption({ ...option })),
         ...secondaryOptions,
       ];
     }
@@ -1919,16 +1918,6 @@ export default class ComposerService extends Service {
   }
 
   _setupPopupMenuOption(option) {
-    // Backwards compatibility support for when we used to accept a function.
-    // This can be dropped when `addToolbarPopupMenuOptionsCallback` is removed from `plugin-api.js`.
-    if (typeof option === "function") {
-      option = option(this);
-    }
-
-    if (typeof option === "undefined") {
-      return null;
-    }
-
     const conditionType = typeof option.condition;
 
     if (conditionType === "undefined") {

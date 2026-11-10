@@ -329,6 +329,8 @@ sk:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
         select_llm: "Vyberte si LLM"
+        no_llm_selected: "Žiadny"
+        no_decision_model_selected: "Žiadny"
         custom_instructions: "Vlastné pokyny"
         custom_instructions_help: "Prispôsobené pokyny špecifické pre vašu stránku, ktoré pomôžu umelej inteligencii identifikovať spam, napr. „Buďte agresívnejší pri skenovaní príspevkov, ktoré nie sú v angličtine“."
         last_seven_days: "Posledných 7 dní"
@@ -830,6 +832,7 @@ sk:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Vlastné"
         provider_fields:

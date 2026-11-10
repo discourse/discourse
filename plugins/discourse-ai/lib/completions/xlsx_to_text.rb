@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "nokogiri"
-require "pathname"
 require "compression/safe_zip_reader"
 
 module DiscourseAi

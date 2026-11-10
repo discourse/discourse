@@ -2358,23 +2358,5 @@ class UserStatusManager {
   }
 }
 
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-
-  Object.defineProperty(Discourse, "User", {
-    get() {
-      if (!warned) {
-        deprecated("Import the User class instead of using Discourse.User", {
-          since: "2.4.0",
-          id: "discourse.global.user",
-        });
-        warned = true;
-      }
-      return User;
-    },
-  });
-}
-
-/** Legacy globals supplied by the application, without introducing module imports. */
+/** Legacy global supplied by the application, without introducing a module import. */
 declare const moment: typeof import("moment");
-declare const Discourse: object | undefined;

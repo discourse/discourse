@@ -5,8 +5,6 @@ import ChatMessage from "../chat-message.gjs";
 import ChatModalArchiveChannel from "../chat-modal-archive-channel.gjs";
 import ChatModalCreateChannel from "../chat-modal-create-channel.gjs";
 import ChatModalDeleteChannel from "../chat-modal-delete-channel.gjs";
-import ChatModalEditChannelDescription from "../chat-modal-edit-channel-description.gjs";
-import ChatModalEditChannelName from "../chat-modal-edit-channel-name.gjs";
 import ChatModalMoveMessageToChannel from "../chat-modal-move-message-to-channel.gjs";
 import ChatModalNewMessage from "../chat-modal-new-message.gjs";
 import ChatModalThreadSettings from "../chat-modal-thread-settings.gjs";
@@ -25,8 +23,6 @@ const ChatOrganism = <template>
   <ChatModalArchiveChannel />
   <ChatModalMoveMessageToChannel />
   <ChatModalDeleteChannel />
-  <ChatModalEditChannelDescription />
-  <ChatModalEditChannelName />
   <ChatModalThreadSettings />
   <ChatModalCreateChannel />
   <ChatModalToggleChannelStatus />

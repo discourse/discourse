@@ -151,6 +151,8 @@ fa_IR:
             other: "%{count} نوشته"
       spam:
         short_title: "هرز‌نامه"
+        no_llm_selected: "هیچ‌کدام"
+        no_decision_model_selected: "هیچ‌کدام"
         last_seven_days: "۷ روز گذشته"
         enable: "فعال کردن"
         save_button: "ذخیر تغییرات"

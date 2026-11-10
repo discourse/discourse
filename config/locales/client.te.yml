@@ -317,16 +317,10 @@ te:
     design_wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      sections:
-        theme: "థీమ్"
-        search: "వెతుకు"
       theme:
         selected: "ఎంపిక చేయబడినవి"
-      colors:
-        light: "లేత"
-        dark: "డార్క్"
       fonts:
-        heading_font: "శీర్షిక ఫాంట్"
+        base_font: "బాడీ"
       homepage:
         topics: "విషయాలు"
         categories: "వర్గాలు"
@@ -5138,7 +5132,6 @@ te:
           uploading: "అప్‌లోడ్ చేయబడుతోంది…"
           uploading_progress: "అప్‌లోడ్ చేస్తోంది… %{progress}%"
           success: "'%{filename}' విజయవంతంగా అప్‌లోడ్ చేయబడింది. ఫైల్ ఇప్పుడు ప్రాసెస్ చేయబడుతోంది మరియు జాబితాలో చూపబడటానికి గరిష్టంగా ఒక నిమిషం పడుతుంది."
-          error: "'%{filename}' ఎగుమతించుటలో దోషం: %{message}"
         settings: "అమరికలు"
         operations:
           is_running: "ఒక కార్యం ప్రస్తుతం నడుస్తోంది…"

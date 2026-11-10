@@ -95,6 +95,12 @@ hr:
       assign:
         errors:
           not_found: "Tema nije pronađena."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Uzglavlje"
+      fonts:
+        heading_font: "Font zaglavlja"
     reviewables:
       ai_tool_action:
         approve:

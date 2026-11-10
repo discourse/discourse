@@ -117,6 +117,8 @@ bg:
             other: "%{count} публикации"
       spam:
         short_title: "Спам"
+        no_llm_selected: "Без"
+        no_decision_model_selected: "Без"
         last_seven_days: "Последните 7 дни"
         enable: "Позволи"
         test_modal:

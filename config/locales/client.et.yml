@@ -267,12 +267,9 @@ et:
       back: "Tagasi"
       next: "Järgmine"
       sections:
-        theme: "Kujundusteema"
         homepage: "Avaleht"
-        search: "Otsi"
-      colors:
-        light: "Hele"
-        dark: "Tume"
+      fonts:
+        base_font: "Sisu"
       homepage:
         topics: "Teemasid"
         categories: "Liigid"
@@ -3341,7 +3338,6 @@ et:
           label: "Laadi üles"
           title: "Laadi varukoopia üles sellesse instantsi"
           uploading: "Laadin üles..."
-          error: "Faili '%{filename}' üleslaadimisel tekkis viga: %{message}"
         settings: "Sätted"
         operations:
           failed: "Toiming %{operation} ebaõnnestus. Kontrolli logisid."

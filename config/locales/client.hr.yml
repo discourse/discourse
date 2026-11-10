@@ -482,19 +482,17 @@ hr:
       back: "Natrag"
       next: "Sljedeći"
       sections:
-        theme: "Tema"
         fonts: "Fontovi"
+        logo: "Logo"
         homepage: "Početna stranica"
-        welcome_banner: "Banner dobrodošlice"
-        search: "Pretraživanje"
       theme:
         selected: "Odabrano"
-      colors:
-        light: "Svjetlo"
-        dark: "Tamno"
       fonts:
-        base_font: "Osnovni font"
-        heading_font: "Font zaglavlja"
+        base_font: "Tijelo"
+        heading_font: "Naslovi"
+      logo:
+        description: "Pojavljuje se na gornjoj navigaciji web stranice, kao i na vrhu obavijesti putem e-pošte web stranice."
+        help_text: "Preporučena veličina je 600 x 80 piksela."
       homepage:
         topics: "Tema"
         categories: "Kategorije"
@@ -6463,7 +6461,6 @@ hr:
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
           uploading: "Prijenos…"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "%{operation} neuspješna. Molimo provjerite zapise."

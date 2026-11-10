@@ -61,6 +61,23 @@ RSpec.describe PresenceController do
       end
     end
 
+    it "rejects requests with too many leave channels before processing them" do
+      sign_in(user)
+      client_id = SecureRandom.hex
+      channels = Array.new(51) { |index| PresenceChannel.new("/test/public#{index}") }
+      channels.each { |channel| channel.present(user_id: user.id, client_id: client_id) }
+
+      post "/presence/update.json",
+           params: {
+             client_id: client_id,
+             leave_channels: channels.map(&:name),
+           }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+      expect(channels.map(&:user_ids)).to all(eq([user.id]))
+    end
+
     it "updates presence for the requested channels" do
       sign_in(user)
       client_id = SecureRandom.hex

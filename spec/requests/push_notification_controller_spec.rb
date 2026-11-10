@@ -77,6 +77,29 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
+    it "rate limits registering new subscriptions" do
+      RateLimiter.enable
+
+      (PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR + 1).times do |index|
+        post "/push_notifications/subscribe.json",
+             params: {
+               subscription: {
+                 endpoint: "https://fcm.googleapis.com/fcm/send/#{index}",
+                 keys: {
+                   p256dh: "256dh",
+                   auth: "auth",
+                 },
+               },
+               send_confirmation: false,
+             }
+      end
+
+      expect(response.status).to eq(429)
+      expect(user.push_subscriptions.count).to eq(
+        PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR,
+      )
+    end
+
     it "unsubscribes an existing subscription" do
       sub = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       PushSubscription.create!(user: user, data: sub.to_json)

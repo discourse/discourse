@@ -180,7 +180,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
         context "when the dsa_reporting_enabled site setting is enabled" do
           before do
-            SiteSetting.dsa_reporting_enabled = true
+            enable_dsa_reporting
             SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
           end
 
@@ -314,6 +314,20 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
           expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
           expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
+        end
+
+        it "keeps flags the user shares with other flaggers" do
+          shared =
+            Fabricate(
+              :reviewable_flagged_post,
+              created_by: reviewable.target_created_by,
+              reviewable_scores: [Fabricate.build(:reviewable_score, status: :pending)],
+            )
+
+          result = reviewable.perform(moderator, :delete_user)
+
+          expect(result.remove_reviewable_ids).not_to include(shared.id)
+          expect(shared.reload).to be_pending
         end
       end
     end
@@ -653,7 +667,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
   describe "#perform" do
     it "retains the classified decision when account deletion removes the queued review" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       recipient = Fabricate(:user)
       queued =
         Fabricate(
@@ -695,7 +709,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve_post handles the queued post reviewable" do

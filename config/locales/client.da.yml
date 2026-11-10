@@ -438,17 +438,16 @@ da:
       back: "Tilbage"
       next: "Næste"
       sections:
-        theme: "Tema"
         fonts: "Skrifttyper"
+        logo: "Logo"
         homepage: "Hjemmeside"
-        search: "Søg"
       theme:
         selected: "Valgt"
-      colors:
-        light: "Lys"
-        dark: "Mørk"
       fonts:
-        heading_font: "Overskrifts skrifttype"
+        base_font: "Brødtekst"
+        heading_font: "Overskrifter"
+      logo:
+        help_text: "Anbefalet størrelse er 600 x 80 pixels."
       homepage:
         topics: "Emner"
         categories: "Kategorier"
@@ -5270,7 +5269,6 @@ da:
           uploading: "Overfører…"
           uploading_progress: "Overfører… %{progress}%"
           success: "'%{filename}' er blevet overført. Filen behandles nu og vil tage op til et minut for at blive vist på listen."
-          error: "Der skete en fejl da filen '%{filename}' blev forsøgt overført: %{message}"
         settings: "Indstillinger"
         operations:
           failed: "%{operation} gik galt. Kig venligst i logfilerne."

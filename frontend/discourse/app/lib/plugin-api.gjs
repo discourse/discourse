@@ -58,6 +58,7 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
@@ -163,8 +164,6 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
-
-const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -1179,18 +1178,6 @@ class _PluginApi {
    **/
   addComposerToolbarPopupMenuOption(opts) {
     addPopupMenuOption(opts);
-  }
-
-  addToolbarPopupMenuOptionsCallback(opts) {
-    deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
-      {
-        id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.2",
-      }
-    );
-
-    this.addComposerToolbarPopupMenuOption(opts);
   }
 
   /**
@@ -3347,6 +3334,27 @@ class _PluginApi {
   }
 
   /**
+   * Registers a language shortcut for code editors, so a field can ask for it
+   * by name through the `language` argument.
+   *
+   * The loader is called the first time something asks for the language, and
+   * its module's default export receives the editor's modules and returns the
+   * extensions to apply.
+   *
+   * ```
+   * api.registerCodeEditorLanguage("toml", () =>
+   *   import("discourse/plugins/my-plugin/discourse/lib/toml-language")
+   * );
+   * ```
+   *
+   * @param {string} name - The name a field refers to the language by.
+   * @param {import("discourse/lib/code-editor-languages").CodeEditorLanguageLoader} loader - Returns a promise for the module.
+   */
+  registerCodeEditorLanguage(name, loader) {
+    registerCodeEditorLanguage(name, loader);
+  }
+
+  /**
    * Adds a button to the bulk topic actions modal.
    *
    * ```
@@ -3921,12 +3929,7 @@ class _PluginApi {
       return;
     }
 
-    let klass;
-    if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized) || lazyClassFor(normalized);
-    }
-
-    return klass;
+    return this.container.factoryFor(normalized) || lazyClassFor(normalized);
   }
 
   // Resolves the `model:<name>` class; `stamp` marks it so instances can

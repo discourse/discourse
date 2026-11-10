@@ -68,6 +68,7 @@ module DiscourseMcp
       register_moderation_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
+      register_theme_management_tools(registry)
       register_group_tools(registry)
       register_category_tools(registry)
       register_user_administration_tools(registry)
@@ -1787,6 +1788,204 @@ module DiscourseMcp
               },
             },
             required: %w[theme_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+    end
+
+    def register_theme_management_tools(registry)
+      theme_id = { type: "integer", minimum: 1 }
+      name = { type: "string", minLength: 1, maxLength: 255 }
+      filename = name.merge(not: { pattern: '[/\\\\\u0000\r\n]' })
+      confirmation = { type: "boolean" }
+      encoded_file = {
+        type: "string",
+        minLength: 1,
+        maxLength: Tools::ThemeManagementSupport::MAX_ENCODED_BYTES,
+      }
+
+      register_tool(
+        registry,
+        "discourse_list_themes",
+        title: "List themes",
+        description: "Lists installed themes and components. Requires administrator access.",
+        implementation: Tools::ListThemes,
+        input_schema:
+          object_schema(
+            {
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_theme",
+        title: "Delete theme",
+        description:
+          "Deletes a theme and its component links. Requires edit permission, the current name, and confirmation. Default and system themes cannot be deleted.",
+        implementation: Tools::DeleteTheme,
+        input_schema:
+          object_schema(
+            { theme_id:, expected_name: name, confirm: confirmation },
+            required: %w[theme_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_install_theme",
+        title: "Install theme",
+        description:
+          "Installs executable theme code from exactly one repository URL or base64 archive. Requires administrator access and confirmation. Repository installs always run migrations and require confirm_run_migrations. Archive migrations are opt-in. Archive component imports default to none; merge and sync require run_migrations and confirm_run_migrations. Only archives can replace an existing theme; confirm its current name before replacement. Returns a theme summary without source code and reports any archive components that could not be imported.",
+        implementation: Tools::InstallTheme,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              remote_url: {
+                type: "string",
+                minLength: 1,
+                maxLength: 10_000,
+              },
+              branch: name,
+              archive_data: encoded_file,
+              filename: filename,
+              replace_theme_id: theme_id,
+              expected_name: name,
+              confirm_replace: confirmation,
+              confirm_external_code: confirmation,
+              run_migrations: confirmation,
+              confirm_run_migrations: confirmation,
+              components: {
+                type: "string",
+                enum: %w[none merge sync],
+              },
+            },
+            required: %w[confirm_external_code],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_sync_remote_theme",
+        title: "Sync remote theme",
+        description:
+          "Checks a theme repository for updates or installs its latest code. Requires edit permission. Updating runs migrations and requires both code and migration confirmation. Checking also updates stored remote-version metadata. Returns a theme summary. When completing a pending installation, also reports skipped components with their errors.",
+        implementation: Tools::SyncRemoteTheme,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              theme_id:,
+              action: {
+                type: "string",
+                enum: %w[check update],
+              },
+              expected_remote_url: {
+                type: "string",
+                minLength: 1,
+                maxLength: 10_000,
+              },
+              confirm_external_code: confirmation,
+              confirm_run_migrations: confirmation,
+            },
+            required: %w[theme_id action],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_upload_theme_asset",
+        title: "Upload theme asset",
+        description:
+          "Uploads base64 asset data for use in a theme. Requires administrator access. Returns an unattached upload ID; use discourse_update_theme to attach it to a theme field. Site upload and MCP request-size limits apply.",
+        implementation: Tools::UploadThemeAsset,
+        defer: true,
+        input_schema:
+          object_schema({ filename:, file_data: encoded_file }, required: %w[filename file_data]),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme_setting",
+        title: "Update theme setting",
+        description:
+          "Sets a declared theme setting or restores its declared default. Requires edit permission. Use pipe-separated strings for list settings and arrays of objects for object settings. Reverting requires confirm and must omit value.",
+        implementation: Tools::UpdateThemeSetting,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              name:,
+              operation: {
+                type: "string",
+                enum: %w[set revert],
+              },
+              value: {
+                anyOf: [
+                  { type: "string", maxLength: 500_000 },
+                  { type: "number" },
+                  { type: "boolean" },
+                  { type: "array", maxItems: 100, items: { type: "object", maxProperties: 100 } },
+                ],
+              },
+              confirm: confirmation,
+            },
+            required: %w[theme_id name operation],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme_translations",
+        title: "Update theme translations",
+        description:
+          "Updates declared theme translations for one locale. Requires edit permission and the current theme name. Unknown keys reject the whole batch.",
+        implementation: Tools::UpdateThemeTranslations,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              expected_name: name,
+              locale: {
+                type: "string",
+                minLength: 1,
+                maxLength: 20,
+              },
+              translations: {
+                type: "object",
+                minProperties: 1,
+                maxProperties: 100,
+                propertyNames: {
+                  maxLength: 255,
+                },
+                additionalProperties: {
+                  type: "string",
+                  maxLength: 10_000,
+                },
+              },
+            },
+            required: %w[theme_id expected_name locale translations],
           ),
         annotations: WRITE,
         risk: :administration,

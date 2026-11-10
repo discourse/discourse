@@ -16,7 +16,7 @@ import { i18n } from "discourse-i18n";
 function initCategories(context) {
   const categories = context.site.categoriesList;
   context.setProperties({
-    category: categories.firstObject,
+    category: categories[0],
     categories,
   });
 }
@@ -179,7 +179,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     const parentRow = this.subject.rowByValue(this.parentCategory.id);
     assert.false(parentRow.exists(), "the parent row is not showing");
 
-    const childCategory = this.categories.firstObject;
+    const childCategory = this.categories[0];
     const childCategoryId = childCategory.id;
     const childRow = this.subject.rowByValue(childCategoryId);
     assert.true(childRow.exists(), "the child row is showing");
@@ -294,7 +294,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
 
     assert.strictEqual(
       this.subject.rowByIndex(0).value(),
-      this.categories.firstObject.id.toString(),
+      this.categories[0].id.toString(),
       "Shortcuts are not prepended when no category is selected"
     );
   });
@@ -338,7 +338,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
 
   test("shortcuts with parentCategory/subCategory=true:category is selected", async function (assert) {
     initCategoriesWithParentCategory(this);
-    this.set("category", this.categories.firstObject);
+    this.set("category", this.categories[0]);
 
     await render(
       <template>

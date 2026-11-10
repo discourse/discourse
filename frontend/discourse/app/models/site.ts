@@ -635,23 +635,3 @@ export default class Site extends RestModel {
     );
   }
 }
-
-/** The deprecated global namespace, present only on pages that still define it. */
-declare const Discourse: object | undefined;
-
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-
-  Object.defineProperty(Discourse, "Site", {
-    get() {
-      if (!warned) {
-        deprecated("Import the Site class instead of using Discourse.Site", {
-          since: "2.4.0",
-          id: "discourse.global.site",
-        });
-        warned = true;
-      }
-      return Site;
-    },
-  });
-}

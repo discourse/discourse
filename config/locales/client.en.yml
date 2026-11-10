@@ -27,6 +27,35 @@ en:
       any_domain: "CIMD from any domain"
     ace_editor:
       resize: "Resize code editor"
+    code_editor:
+      resize: "Resize code editor"
+      tab_hint: "Press Escape, then Tab to move focus out of the editor."
+      completions: "Completions"
+      search:
+        find: "Find"
+        replace: "Replace"
+        next: "Next"
+        previous: "Previous"
+        all: "Select all matches"
+        match_case: "Match case"
+        regexp: "Regular expression"
+        by_word: "Whole words"
+        replace_all: "Replace all"
+        close: "Close"
+        go_to_line: "Go to line"
+        go: "Go"
+        current_match: "Current match"
+        on_line: "on line"
+        replaced_match: "Replaced match on line %{line}"
+        replaced_all: "Replaced matches: %{matches}"
+      fold:
+        fold_line: "Fold line"
+        unfold_line: "Unfold line"
+        folded_code: "Folded code"
+        unfold: "Unfold"
+        folded_lines: "Folded lines"
+        unfolded_lines: "Unfolded lines"
+        to: "to"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"
@@ -620,7 +649,7 @@ en:
       dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose colors, fonts, and how your site is laid out."
+        description: "Make your site your own with logo, colors, and layout."
         action: "See options"
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
@@ -637,7 +666,7 @@ en:
         completed: "See more ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
-        predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
+        predefined_topics_subtitle: "Give members something to discuss"
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
         back: "Back"
@@ -645,88 +674,81 @@ en:
         icebreakers:
           plan_categories:
             title: "What categories should we start with?"
+            description: "Ask your team which categories to launch with."
             body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
           plan_invites:
-            title: "Which members should we invite before we launch?"
+            title: "Who should we invite before we launch?"
+            description: "Agree with your team on who to invite first."
             body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
           introduce_yourself:
             title: "Introduce yourself"
+            description: "Get members sharing a little about themselves."
             body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
           write_your_own:
             title: "Write your own"
-            body: "Start a conversation with a topic tailored to your community."
+            description: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
-      subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
       step_progress: "Step %{current}/%{total}"
       minimize: "Minimize design wizard"
       restore: "Restore design wizard"
+      collapse: "Collapse design wizard"
+      expand: "Expand design wizard"
       save: "Save and finish"
       back: "Back"
       next: "Next"
       launch: "Design wizard"
       launch_description: "Walk through your site's theme, colors, fonts, and layout again."
-      intro:
-        description: "This wizard walks you through your site's theme, colors, fonts, homepage layout, welcome banner, and search style."
-        autosave: "Each step is saved as you go, so members see the changes right away. You can put everything back when you close."
-        start: "Get started"
       close:
         message: "You have already saved some changes to your site's design. Do you want to keep them?"
         message_without_revert: "You have already saved some changes to your site's design. They cannot be undone from here."
         keep: "Keep changes"
         revert: "Revert changes"
         continue_editing: "Continue editing"
+      steps:
+        theme:
+          title: "Choose a theme"
+          description: "Pick the overall look for your site. You can fine-tune it in the next steps."
+        colors:
+          title: "Make it yours"
+          description: "Add your logo and choose your site's colors."
+        homepage:
+          title: "Look & feel"
+          description: "Choose your fonts and what members see first."
       sections:
-        theme: "Theme"
-        colors: "Default color"
+        colors: "Site color modes"
         fonts: "Fonts"
+        logo: "Logo"
         homepage: "Homepage"
-        welcome_banner: "Welcome banner"
-        search: "Search"
       theme:
         selected: "Selected"
         applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
-        light: "Light"
-        dark: "Dark"
-        dark_only: "%{name} only has a dark mode"
-        both_modes: "Each palette includes a matching light and dark mode"
-        user_selectable: "Let members switch palettes"
-        user_selectable_description: "Show these palettes in a menu members can pick from"
+        description: "Set a default palette for each mode. Members' appearance preferences determine which one they see."
+        light_palette: "Light palette"
+        dark_palette: "Dark palette"
+        modes:
+          label: "Color modes"
+          both: "Light & dark"
+          light: "Light only"
+          dark: "Dark only"
       fonts:
-        base_font: "Base font"
-        heading_font: "Heading font"
+        base_font: "Body"
+        heading_font: "Headings"
+      logo:
+        description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
+        help_text: "Recommended size is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categories"
-        topic_page_type: "Topic page type"
-        topic_pages:
-          latest: "Topics sorted by their most recent activity, newest first."
-          new: "Topics created in the last few days, newest first."
-          hot: "Topics trending right now, blending overall popularity with recent engagement."
         category_page_style: "Category page style"
         styles:
           boxes: "Boxes"
           with_topics: "Categories with topics"
           only: "Categories only"
-      welcome_banner:
-        enable: "Show a welcome banner"
-        enable_description: "Greet visitors with your site name and a search box"
-        location: "Banner location"
-        locations:
-          below_site_header: "Below the site header"
-          above_topic_content: "Above the topic list"
-      search:
-        experiences:
-          search_icon:
-            title: "Search icon"
-            description: "A magnifying glass in the header that opens search."
-          search_field:
-            title: "Search field"
-            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"
@@ -1282,6 +1304,7 @@ en:
         target_created_by: "Post created by %{username} · %{relativeDate}"
         target_deleted: "Post deleted"
         target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
+        queued_post_deleted_by: "Queued post deleted by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
@@ -3072,7 +3095,6 @@ en:
 
     learn_more: "Learn more…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Learn more…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
 
     mute: Mute
     unmute: Unmute
@@ -6940,24 +6962,29 @@ en:
         name: "Name"
         plugin: "Plugin"
         metadata: "Metadata"
-        enabled: "Enabled"
-        enabled_for: "Enabled for..."
+        enabled: "Enabled?"
+        availability: "Availability"
         show_image: "Show image"
-        edit_groups: "Edit opt-in groups"
+        feedback: "Feedback"
+        toggle: "Enable %{name}"
+        staff_always_included: "Staff is always included"
+        audience_locked: "This change can't be applied to other groups"
+        toggle_instead_of_empty_groups: "To disable this upcoming change, use the toggle instead of changing group permissions."
         groups_updated: "Groups updated!"
         save_groups: "Save groups"
         add_groups_to_enable: "Add groups to enable this feature"
         no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
-        show_related_settings: "Show related settings..."
+        settings: "Settings"
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
+        change_enabled: "You have enabled this change"
         change_disabled: "You have opted-out of this change"
         depends_on_notice: "This change requires %{dependencyLinks} to be enabled."
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
-        permanent_soon_notice: "This change will become permanent soon. You will no longer be able to opt-out."
+        permanent_soon_notice: "This change will become permanent soon. You will not be able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
@@ -6965,7 +6992,7 @@ en:
         default_warning_short: "The default for this setting has changed, read more about this in the <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming changes</a> page."
         enabled_for_options:
           no_one: "No one"
-          everyone: "Everyone"
+          eligible_users: "Eligible users"
           staff: "%{staffGroupName} only"
           specific_groups: "Specific group(s)"
           specific_groups_with_group_names:
@@ -10146,6 +10173,7 @@ en:
         grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: "Revoke Moderation"
         grant_moderation: "Grant Moderation"
+        grant_moderation_confirm: "Are you sure you want to make %{username} a moderator?"
         unsuspend: "Unsuspend"
         suspend: "Suspend"
         show_flags_received: "Show Flags Received"

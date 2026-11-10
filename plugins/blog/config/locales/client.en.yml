@@ -76,7 +76,7 @@ en:
         saved: Blog identity saved. Reload the blog to see your changes.
         identity_tab: Identity
         identity_description: The name, introduction, and About content shared by all blog themes.
-        themes_index_description: Choose a theme to edit. Draft changes stay private until you activate them.
+        themes_index_description: Choose the design readers see. Customize an included theme or edit your own; changes stay private until you activate them.
         thumbnail:
           journal: The journal
           headline: Stay curious.
@@ -87,8 +87,6 @@ en:
         preview_short: Preview draft
         new_theme_short: New theme
         git_source: Git source
-        no_themes: No saved themes yet
-        no_themes_description: Create a theme from your current design or import one from Git.
         themes: Themes
         themes_description: Keep multiple designs and iterate without changing the live blog. Readers see the last activated snapshot, not your draft edits or Git updates.
         theme_name: Theme name
@@ -97,8 +95,14 @@ en:
         preview: Preview
         theme_actions: Theme actions
         local_edits_badge: Local edits
+        preset_description: Included with the blog
+        customize: Customize
+        customized_theme_name: "%{name} (custom)"
         new_theme_name: New blog theme
-        new_theme: New theme from active design
+        start_from: Start from
+        start_from_included: Included themes
+        start_from_drafts: Saved drafts
+        start_from_confirm: "Start over from %{name}? Your changes on this page will be lost."
         import: Import
         import_description: "Import a theme from a Git repository or ZIP file. Imports create new drafts without changing the active theme."
         import_source: Import from
@@ -120,7 +124,7 @@ en:
         save_before_activate: Save your changes before activating this draft.
         activate_theme: Activate saved draft
         activate_confirm: "Activate %{name}? This replaces the design readers see. Your other saved themes remain available."
-        activated: Theme activated. The live blog now uses this saved revision.
+        activated: Theme activated. Readers now see this design.
         pull_git: Pull latest from Git
         pull_confirm: Pull the latest commit? This replaces the saved draft, including local edits. The active design will not change.
         local_edits: This draft has local edits since its last Git import.
@@ -187,6 +191,7 @@ en:
           path: path
           excerpt: excerpt
           featured: featured flag
+          tags: tags
           published_at: publication date
         show_diff: Show diff
         hide_diff: Hide diff

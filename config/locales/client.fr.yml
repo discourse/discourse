@@ -541,7 +541,6 @@ fr:
         action: "Découvrir des idées"
         choose_option: "Comment souhaitez-vous commencer ?"
         predefined_topics: "Modèles d'activités pour briser la glace"
-        predefined_topics_subtitle: "Donnez aux nouveaux membres un sujet de conversation, choisissez un modèle à modifier et créez le vôtre."
         predefined_topics_description: "Choisissez parmi une sélection de sujets de conversation pour lancer les discussions."
         use_predefined: "Parcourir les modèles"
         back: "Retour"
@@ -553,20 +552,21 @@ fr:
       title: "Personnalisez votre site"
       back: "Retour"
       next: "Suivant"
+      steps:
+        theme:
+          title: "Choisissez un thème"
       sections:
-        theme: "Thème"
         fonts: "Polices"
+        logo: "Logo"
         homepage: "Page d'accueil"
-        welcome_banner: "Bannière de bienvenue"
-        search: "Recherche"
       theme:
         selected: "Sélectionné"
-      colors:
-        light: "Clair"
-        dark: "Sombre"
       fonts:
-        base_font: "Police de base"
-        heading_font: "Police de titre"
+        base_font: "Corps"
+        heading_font: "Titres"
+      logo:
+        description: "Apparaît dans la barre de navigation supérieure du site, ainsi qu'en haut des notifications par e-mail du site."
+        help_text: "La taille recommandée est de 600 x 80 pixels."
       homepage:
         topics: "Sujets"
         categories: "Catégories"
@@ -7815,7 +7815,6 @@ fr:
           uploading: "Téléversement…"
           uploading_progress: "Téléversement : %{progress} %"
           success: "Le fichier « %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
-          error: "Une erreur est survenue lors de l'envoi du fichier « %{filename} » : %{message}"
         settings: "Paramètres"
         operations:
           is_running: "Une opération est en cours d'exécution…"

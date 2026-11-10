@@ -139,6 +139,19 @@ en:
       theme_not_found: "Theme not found"
       theme_update_failed: "The theme could not be updated"
       theme_update_required: "Provide at least one theme field to update"
+      theme_confirmation_required: "Confirm this theme operation before proceeding"
+      theme_name_mismatch: "The theme name has changed. Read the theme again before proceeding"
+      theme_delete_failed: "The theme could not be deleted. Default and system themes cannot be deleted"
+      theme_install_source_required: "Provide exactly one repository URL or base64 theme archive"
+      theme_install_options_invalid: "Provide only options that apply to the selected theme source"
+      theme_repository_migrations_required: "Repository installs run theme migrations. Do not disable migrations, and confirm that they may run"
+      theme_component_migrations_required: "Importing theme components requires migrations. Enable and confirm migrations, or choose no component imports"
+      theme_not_remote: "The theme does not have a Git repository"
+      theme_remote_mismatch: "The repository URL has changed. Read the theme again before proceeding"
+      theme_setting_value_invalid: "Provide a value when setting a theme setting and omit it when reverting"
+      theme_setting_type_invalid: "Theme setting %{name} requires a value of type %{type}"
+      theme_setting_not_found: "The theme does not declare this setting"
+      theme_translation_not_found: "The theme does not declare one or more translation keys"
       topic_not_found: "Topic not found"
       topic_update_required: "Provide at least one topic field to update"
       top_period_only_for_top_view: "Top period is only supported by the top view"
@@ -374,6 +387,7 @@ en:
       resolve_group_membership_requires_group_list: "resolve_group_membership requires list_type: group"
       resolve_group_membership_requires_groups_property: "resolve_group_membership can only be used with type: groups in object schemas. Invalid property: %{property}"
       objects:
+        invalid_objects: "Value must be an array of objects."
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
         humanize_invalid_type: "The property at JSON Pointer '%{property_json_pointer}' must be of type %{type}."
@@ -497,6 +511,7 @@ en:
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
         from_reply_by_address_error: "Happens when the From header matches the reply by email address."
         inactive_user_error: "Happens when the sender is not active."
+        suspended_user_error: "Happens when the sender has been suspended."
         silenced_user_error: "Happens when the sender has been silenced."
         bad_destination_address: "Happens when none of the email addresses in To/Cc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
@@ -582,6 +597,8 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
+      dsa_community_rules_required: "Add at least one community rule before enabling DSA reporting."
+      dsa_community_rules_in_use: "Disable DSA reporting before removing all community rules."
       site_settings_are_deprecated: "The following settings are deprecated: %{old_names}. Use %{new_names} instead"
       site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
       site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
@@ -2149,9 +2166,10 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
-    dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
-    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. Leave blank to omit appeal instructions. Requires {{setting:dsa_reporting_enabled}} to be turned on."
-    dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
+    dsa_reporting_enabled: "Enable EU Digital Services Act (DSA) reporting and moderation tools. Requires {{setting:dsa_community_rules}}."
+    dsa_notice_group: "Group receiving illegal content reports and reporter contact details. Defaults to admins."
+    dsa_moderation_appeal_email: "Email address shown in moderation emails and system messages when DSA reporting is enabled. Leave blank to omit appeal instructions from those messages."
+    dsa_community_rules: "Define rules from your Terms of Service or community guidelines. Each rule’s reference and explanation are included in DSA statements of reasons when selected by a moderator."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
@@ -3162,6 +3180,7 @@ en:
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
     enable_desktop_push_notifications: "Activate push notifications for the desktop interface. This feature enables real-time alerts from the site directly to your desktop, enhancing engagement and ensuring users are always updated. However, the effectiveness of this feature relies on browser support for push notifications."
     push_notification_time_window_mins: "Wait (n) minutes before sending push notification. Helps prevent push notifications from being sent to an active online user."
+    push_notification_trusted_hosts: "Push services whose subscriptions are delivered immediately and tolerate temporary outages. Subdomains are included. Subscriptions on other hosts are limited to two per user, delivered one at a time across the site, and removed after two failed or slow deliveries."
     push_notification_localization_max_wait_mins: "Longest time (in minutes) to hold a push notification for a new post while its translation into the recipient's language is produced. Set to 0 to send without waiting."
 
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
@@ -4414,6 +4433,17 @@ en:
 
         Your account associated with this email address is not activated. Please activate your account before sending emails in.
 
+    email_reject_suspended_user:
+      title: "Email Reject Suspended User"
+      subject_template: "[%{email_prefix}] Email issue -- Suspended User"
+      subject_template_improved: "%{email_prefix}: Email issue -- suspended user"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The account associated with this email address is suspended. Suspended accounts can't create posts or send messages by email.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
+
     email_reject_silenced_user:
       title: "Email Reject Silenced User"
       subject_template: "[%{email_prefix}] Email issue -- Silenced User"
@@ -5582,6 +5612,9 @@ en:
     group_smtp_topic_deleted: "topic has been deleted"
     group_smtp_disabled_for_group: "smtp has been disabled for the group"
 
+  appearance_changes:
+    dark_palette_name: "%{name} Dark"
+
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
@@ -6352,7 +6385,7 @@ en:
   design_wizard:
     themes:
       concord:
-        description: "Replaces the sidebar with a single channel list made of categories, chat channels and live audio/video rooms."
+        description: "A chat-first layout with a single list of categories, chat channels and voice rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."
@@ -6360,7 +6393,13 @@ en:
       default: "Default"
       wcag: "WCAG"
       solarized: "Solarized"
+      neutral: "Neutral"
+      shades_of_blue: "Shades of Blue"
+      summer: "Summer"
       dracula: "Dracula"
+      grey_amber: "Grey Amber"
+      latte: "Latte"
+      dark_rose: "Dark Rose"
   wizard:
     title: "Discourse Setup"
     step:

@@ -4561,7 +4561,13 @@ ja:
   design_wizard:
     palette_pairs:
       default: "デフォルト"
+      neutral: "ニュートラル"
+      shades_of_blue: "青系の色"
+      summer: "夏"
       dracula: "Dracula"
+      grey_amber: "グレーアンバー"
+      latte: "ラテ"
+      dark_rose: "ダークローズ"
   wizard:
     title: "Discourse のセットアップ"
     step:

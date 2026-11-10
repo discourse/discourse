@@ -108,6 +108,8 @@ sw:
             other: "%{count} machapisho"
       spam:
         short_title: "Barua Taka"
+        no_llm_selected: "Hakuna"
+        no_decision_model_selected: "Hakuna"
         enable: "Wezesha"
         test_modal:
           spam: "Barua Taka"

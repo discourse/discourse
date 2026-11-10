@@ -18,7 +18,7 @@ The upcoming changes system has three layers: a **Ruby core** that manages state
 Key methods to understand:
 
 - `enabled?(setting_name)` — Determines the *effective* value of a change. This is where auto-promotion logic lives: if a setting's status meets/exceeds `promote_upcoming_changes_on_status`, it resolves to `true` even if the DB default is `false`. Permanent settings always resolve to `true` (admins can't disable them). It returns `false` outright when the owning plugin is not configurable, or — for plugin-owned changes, unless they opt out with `requires_plugin_enabled: false` — when the owning plugin is disabled. Both take precedence over the above. See [Requiring the Owning Plugin](#requiring-the-owning-plugin).
-- `enabled_for_user?(setting_name, user)` — The primary access check. Considers: the resolved value from `enabled?`, group restrictions, anonymous users (only get access if no group restrictions).
+- `enabled_for_user?(setting_name, user)` — The primary access check. Considers: the resolved value from `enabled?`, group restrictions, anonymous users (access with no group restrictions, or when the audience includes `anonymous_users`).
 - `stats_for_user(user:, acting_guardian:)` — Returns per-change status for a user including *why* they have/don't have access (the `user_enabled_reasons` enum).
 - `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackStatusChanges` detects changes.
 - `settings_hidden_while_enabled` — Returns the set of *other* site setting names that should be hidden from admins because an enabled change declares them in its `hide_settings:` metadata. Computed live (not toggled at opt-in time) so it tracks both opt-in paths and is multisite-safe. See [Hiding Settings While Enabled](#hiding-settings-while-enabled) below.
@@ -28,13 +28,13 @@ Key methods to understand:
 
 **`app/models/upcoming_change_event.rb`** — Audit trail. Every lifecycle event (added, removed, status change, manual toggle, admin notification) is recorded here. Has unique indexes to prevent duplicate events of specific types per change.
 
-**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`. The `hide_settings:` array (if present) is normalized to an array of symbols. Also handles `upcoming_change_default_override:` metadata — see [Default Overrides](#default-overrides) below.
+**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`. The `hide_settings:` array (if present) is normalized to an array of symbols, and `group_setting:` is normalized to a setting-name symbol. Also handles `upcoming_change_default_override:` metadata — see [Default Overrides](#default-overrides) below.
 
 **`lib/site_settings/hidden_provider.rb`** — `HiddenProvider#all` (the source of `SiteSetting.hidden_settings`) unions in `UpcomingChanges.settings_hidden_while_enabled` before applying the `:hidden_site_settings` plugin modifier, so plugins can still explicitly un-hide a setting. The union is skipped entirely when no change opts in, to avoid allocating a new Set on every read. See [Hiding Settings While Enabled](#hiding-settings-while-enabled) below.
 
 **`lib/site_settings/defaults_provider.rb`** — Manages the default values for all settings, including upcoming change default overrides. Tracks which overrides are active via `@active_upcoming_change_overrides` and applies them when resolving defaults. Provides `upcoming_change_override_metadata` for the frontend to display warnings about changed defaults.
 
-**`app/models/site_setting_group.rb`** — Stores group restrictions for settings. Group IDs are pipe-separated strings (`"1|2|3"`). The `setting_group_ids` class method returns a hash used for in-memory caching.
+**`app/models/site_setting_group.rb`** — Stores rollout group restrictions for settings without `group_setting:` metadata. Changes with `group_setting:` read their audience from the linked `group_list` site setting instead. Group IDs are pipe-separated strings (`"1|2|3"`). The `setting_group_ids` class method returns a hash used for in-memory caching.
 
 ### Services Layer
 
@@ -43,7 +43,8 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 | Service | Purpose |
 |---------|---------|
 | `List` | Admin-only, fetches all changes with metadata, group data, and images. Filters out changes whose `ConditionalDisplay.should_display?` returns false. |
-| `Toggle` | Admin enable/disable — updates SiteSetting, clears groups when neither `staff` nor `specific_groups` is in `allow_enabled_for`, validates the requested target against `allow_enabled_for`, logs staff action, fires DiscourseEvent |
+| `Toggle` | Admin enable/disable — updates SiteSetting; for linked audiences, rejects `group_names` and preserves the group setting. Otherwise clears groups when neither `staff` nor `specific_groups` is in `allow_enabled_for`, validates the requested target against `allow_enabled_for`, logs staff action, fires DiscourseEvent |
+| `UpdateGroups` | Admin-only edits to a linked `group_setting` through `SiteSetting::Update`, independently of the rollout boolean; returns the saved groups and setting descriptor. |
 | `Track` | Orchestrator called by `CheckUpcomingChanges` — delegates to three action sub-services. Does not notify admins about available changes — that happens once a week in `Jobs::NotifyAdminsOfAvailableUpcomingChanges`. |
 | `TrackAddedChanges` | Compares current settings against event history, creates `added` events |
 | `TrackRemovedChanges` | Creates `removed` events for settings no longer present |
@@ -53,7 +54,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 | `NotificationDataMerger` | Consolidates multiple change notifications into one to avoid spam (used by both the weekly availability job and `NotifyPromotion`) |
 | `BackfillNotifiedEvents` | Marks the changes that already exist as notified about, at site creation and on plugin enable — see [Back-Catalogue Notification Suppression](#back-catalogue-notification-suppression) |
 
-**`SiteSetting::UpsertGroups`** — Manages group assignments for settings (upserts `SiteSettingGroup`, refreshes caches, notifies clients).
+**`SiteSetting::UpsertGroups`** — Manages rollout group assignments for settings without `group_setting:` (upserts `SiteSettingGroup`, refreshes caches, notifies clients).
 
 ### Scheduled Jobs
 
@@ -85,7 +86,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 
 **`admin/config/upcoming_changes_controller.rb`** — Three endpoints:
 - `GET index` — List changes (with `filter_statuses` param)
-- `PUT update_groups` — Set group restrictions for a setting
+- `PUT update_groups` — Dispatches to `UpcomingChanges::UpdateGroups` for linked audiences, otherwise `SiteSetting::UpsertGroups`
 - `PUT toggle_change` — Enable/disable a setting
 
 ### Problem Check
@@ -320,11 +321,45 @@ When adding a policy to `NotifyPromotion`, be clear about which of the two quest
 
 ### Group-Based Access
 
-Group restrictions use a separate `SiteSettingGroup` model rather than storing groups on the setting itself. This allows the caching layer (`site_setting_group_ids`) to work independently. Group IDs are pipe-separated in the DB for efficient single-row storage.
+By default, rollout group restrictions use a separate `SiteSettingGroup` model rather than storing groups on the setting itself. This allows the caching layer (`site_setting_group_ids`) to work independently. Group IDs are pipe-separated in the DB for efficient single-row storage.
 
 The `allow_enabled_for` metadata key on an upcoming change restricts which "Enabled for" dropdown options the admin sees. It accepts an array of any subset of `[everyone, staff, specific_groups]`; the `No one` option is always present and cannot be removed. When the key is omitted, all four options are shown (the permissive default). Rule: if `everyone` is present it must be the only value — `everyone` cannot combine with `staff` or `specific_groups`. The integrity spec enforces these rules. Server-side enforcement lives in `UpcomingChanges::Toggle` (validates the target when no groups are configured) and `SiteSetting::UpsertGroups` (validates group selection: a `[staff]`-only selection needs `staff` allowed; any other selection needs `specific_groups` allowed). When neither `staff` nor `specific_groups` is in the allow list, `Toggle` also clears any stale `SiteSettingGroup` records.
 
 **Auto-promoted display:** When `allow_enabled_for` excludes `:everyone` and a change is enabled without an explicit admin selection (typically because it reached the promotion threshold), `enabled_for_with_groups` returns the broadest allowed display target — the staff group name if `:staff` is permitted, otherwise `"groups"`. This is display-only; `enabled_for_user?` is unchanged and still treats the change as on for all users until the admin scopes it via the dropdown.
+
+### Linking an Existing Group Setting
+
+Use `upcoming_change.group_setting` when a feature already has a `type: group_list` site setting that owns its audience. This avoids maintaining a second, independent rollout audience in `SiteSettingGroup`.
+
+```yaml
+feature_allowed_groups:
+  default: "3"
+  type: group_list
+
+enable_your_feature_name:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    learn_more_url: "https://meta.discourse.org/t/-/123456"
+    group_setting: feature_allowed_groups
+```
+
+#### Resolution and Lifecycle
+
+- `group_setting_name` reads the linked name; `group_ids_for` uses that setting's generated `_map` reader and ignores stale `SiteSettingGroup` rows. `has_groups?` stays true even when the linked list is empty: an empty list means **no audience**, not everyone.
+- The rollout boolean and audience are independent. `enabled_for_user?` requires both an enabled change and membership in the linked audience; anonymous access requires `anonymous_users` in that audience. Auto-promotion and `permanent` status keep the linked restrictions, unlike ordinary rollout groups, which are ignored once a change is permanent.
+- Toggling only changes the rollout boolean and preserves the linked setting. Do not send `group_names` to `Toggle` for linked changes; its contract policy rejects that combination. Audience edits use the groups endpoint and do not enable or disable the change.
+- When removing a permanent flag, keep the feature's group-setting check if the audience restriction must continue to apply.
+
+#### Editing and Validation
+
+- `List` includes a top-level `group_setting` descriptor containing `setting`, `value`, `mandatory_values`, `disallowed_groups`, and `requires_confirmation`. The admin group control uses these constraints and the setting's confirmation flow.
+- `UpcomingChanges::UpdateGroups` requires a nonempty list of existing group names and rejects disallowed groups. It delegates persistence to `SiteSetting::Update`, preserving normal setting validation, mandatory groups, staff logging, and client notifications. The response returns the canonical saved audience, including mandatory groups. Clear the audience through the site setting itself if needed; the upcoming-changes editor rejects empty selections.
+- The integrity spec requires a nonblank name referencing a `type: group_list` setting in core or the change's own plugin. A core change cannot link a plugin setting, and a plugin change cannot link another plugin's setting.
+- `group_setting` and `allow_enabled_for` are mutually exclusive; do not set both, even if `allow_enabled_for` is empty. The linked setting owns the audience constraints.
 
 ### Event Idempotency
 
@@ -357,7 +392,7 @@ State is managed via `trackedObject` for reactivity. API calls go through `ajax(
 
 ### Restricting "Enabled for" options
 
-To constrain which dropdown options an admin can pick for a change, add `allow_enabled_for` to its `upcoming_change:` metadata:
+For changes without a linked `group_setting`, add `allow_enabled_for` to its `upcoming_change:` metadata to constrain the allowed audience:
 
 ```yaml
 my_upcoming_change_setting:
@@ -474,6 +509,12 @@ mock_upcoming_change_metadata(
 To test `hide_settings`, mock a change with a `hide_settings:` array, then assert the named settings are absent from `SiteSetting.hidden_settings` (or `HiddenProvider#all`) until the change is enabled and present once it is — remember to enable the change (`SiteSetting.<name> = true`) and clean up with `remove_override!` + `UpcomingChanges.clear_caches!`. See `spec/lib/upcoming_changes_spec.rb` (`.settings_hidden_while_enabled`) and `spec/lib/site_settings/hidden_provider_spec.rb`.
 
 To test the CSS opt-in serializer (`SiteSerializer#upcoming_changes_with_css`), mock two changes — one with `body_class: true` and one with `body_class: false` — and assert the serialized array includes the former and excludes the latter. See `spec/serializers/site_serializer_spec.rb`. System coverage for the resulting `uc-{name}` body class lives in `spec/system/member_upcoming_changes_spec.rb`.
+
+### Testing Linked Group Settings
+
+Mock metadata with `group_setting: :about_page_extra_groups` (or another real `group_list` setting), then set the linked setting's value. Cover membership, an empty audience, anonymous pseudo-groups, stale `SiteSettingGroup` rows, and permanent status. See the "linked group settings" examples in `spec/lib/upcoming_changes_spec.rb`.
+
+For writes, verify that `UpdateGroups` updates the linked setting without toggling the flag or creating `SiteSettingGroup` rows, returns mandatory groups in the saved audience, and rejects empty, unknown, or disallowed groups. Verify that `Toggle` preserves the linked audience and rejects requests that include `group_names`. Existing coverage lives in `spec/services/upcoming_changes/update_groups_spec.rb`, `toggle_spec.rb`, `list_spec.rb`, the request spec, and `spec/system/admin_upcoming_changes_spec.rb`.
 
 ### Mocking Default Overrides
 
@@ -601,6 +642,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Defaults provider | `lib/site_settings/defaults_provider.rb` (default override activation/resolution) |
 | Hidden provider | `lib/site_settings/hidden_provider.rb` (unions in `settings_hidden_while_enabled`) |
 | Services | `app/services/upcoming_changes/*.rb` |
+| Linked audience update | `app/services/upcoming_changes/update_groups.rb` |
 | Group upsert | `app/services/site_setting/upsert_groups.rb` |
 | Controller | `admin/config/upcoming_changes_controller.rb` |
 | Scheduled jobs | `app/jobs/scheduled/check_upcoming_changes.rb`, `app/jobs/scheduled/notify_admins_of_available_upcoming_changes.rb` |

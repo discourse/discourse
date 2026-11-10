@@ -793,7 +793,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(http).to have_received(:request).once
       end
 
-      ["", "Visible prefix "].each do |prefix|
+      shared_examples "settling generated tool output after streaming failure" do |prefix:|
         it "settles #{prefix.present? ? "visible and buffered" : "buffered"} tool output on failure instead of retrying generated work" do
           model.update!(provider_params: { disable_native_tools: true })
           partial = "#{prefix}<function_calls><invoke><tool_name>read</tool_name>"
@@ -825,6 +825,15 @@ RSpec.describe DiscourseAi::Completions::Llm do
           expect(execution.work_budget.used).to eq(llm.tokenizer.size(partial))
           expect(http).to have_received(:request).once
         end
+      end
+
+      context "when the stream fails before visible output" do
+        include_examples "settling generated tool output after streaming failure", prefix: ""
+      end
+
+      context "when the stream fails after visible output" do
+        include_examples "settling generated tool output after streaming failure",
+                         prefix: "Visible prefix "
       end
 
       it "retries rate limits three times" do

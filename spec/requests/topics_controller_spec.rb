@@ -416,6 +416,47 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "moving posts as a TL4 user who can only read the source category" do
+      fab!(:read_only_group, :group)
+      fab!(:private_category) do
+        Fabricate(
+          :private_category,
+          group: read_only_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic, user: post_author2) }
+
+      before do
+        GroupUser.create!(group: read_only_group, user: trust_level_4)
+        sign_in(trust_level_4)
+      end
+
+      it "does not allow posts to be moved into a new public topic" do
+        post "/t/#{private_topic.id}/move-posts.json",
+             params: {
+               title: "Leaked private topic content",
+               post_ids: [private_post.id],
+               category_id: category.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(private_post.reload.topic_id).to eq(private_topic.id)
+      end
+
+      it "does not allow posts to be moved into an existing public topic" do
+        post "/t/#{private_topic.id}/move-posts.json",
+             params: {
+               post_ids: [private_post.id],
+               destination_topic_id: dest_topic.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(private_post.reload.topic_id).to eq(private_topic.id)
+      end
+    end
+
     describe "moving to an existing topic" do
       before { sign_in(moderator) }
 
@@ -2388,6 +2429,16 @@ RSpec.describe TopicsController do
         expect(topic.reload.category_id).not_to eq(category.id)
       end
 
+      it "does not let a moderator move a topic to a category they cannot see" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        sign_in(moderator)
+
+        put "/t/#{topic.id}.json", params: { category_id: private_category.id }
+
+        expect(response.status).to eq(403)
+        expect(topic.reload.category_id).not_to eq(private_category.id)
+      end
+
       context "when updating shared drafts" do
         fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
         fab!(:shared_draft) do
@@ -3310,6 +3361,17 @@ RSpec.describe TopicsController do
       )
     end
 
+    it "omits page values treated as zero from the redirect" do
+      get "/t/external_id/asdf.json", params: { page: "0" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+
+      get "/t/external_id/asdf.json", params: { page: "00" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+
+      get "/t/external_id/asdf.json", params: { page: "abc" }
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+    end
+
     describe "when user does not have access to the topic" do
       it "returns a not-found response" do
         sign_in(user)
@@ -3523,6 +3585,58 @@ RSpec.describe TopicsController do
             "#{Discourse.base_url_no_prefix}#{public_source_topic.relative_url(public_source_post.post_number)}",
           "title" => public_source_topic.title,
         ),
+      )
+    end
+
+    it "does not expose linkbacks from hidden or whisper source posts to non-staff viewers" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+      public_post = Fabricate(:post, user: post_author1)
+      public_topic = public_post.topic
+      link_url =
+        "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}"
+
+      visible_source_topic = Fabricate(:topic, user: post_author1, title: "Visible source topic")
+      Fabricate(:post, topic: visible_source_topic, user: post_author1, raw: "op body")
+      visible_source_post =
+        Fabricate(:post, topic: visible_source_topic, user: post_author1, raw: link_url)
+
+      hidden_source_topic = Fabricate(:topic, user: post_author1, title: "Hidden source topic")
+      Fabricate(:post, topic: hidden_source_topic, user: post_author1, raw: "op body")
+      hidden_source_post =
+        Fabricate(:post, topic: hidden_source_topic, user: post_author1, raw: link_url)
+
+      whisper_source_topic = Fabricate(:topic, user: post_author1, title: "Whisper source topic")
+      Fabricate(:post, topic: whisper_source_topic, user: post_author1, raw: "op body")
+      whisper_source_post =
+        Fabricate(:post, topic: whisper_source_topic, user: post_author1, raw: link_url)
+
+      TopicLink.extract_from(visible_source_post)
+      TopicLink.extract_from(hidden_source_post)
+      TopicLink.extract_from(whisper_source_post)
+
+      hidden_source_post.hide!(PostActionType.types[:off_topic])
+      whisper_source_post.update!(post_type: Post.types[:whisper])
+
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response.parsed_body.dig("post_stream", "posts").find { |p| p["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"].map { |l| l["title"] }).to contain_exactly(
+        "Visible source topic",
+      )
+
+      sign_in(moderator)
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response.parsed_body.dig("post_stream", "posts").find { |p| p["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"].map { |l| l["title"] }).to contain_exactly(
+        "Visible source topic",
+        "Hidden source topic",
+        "Whisper source topic",
       )
     end
 
@@ -3961,6 +4075,23 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to("#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=ja")
     end
 
+    it "omits page zero when redirecting to the correct slug" do
+      get "/t/wrong-slug/#{topic.id}", params: { page: 0 }
+
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it "encodes the locale param when redirecting to the correct slug" do
+      locale = "en，但他们的解决方案"
+
+      get "/t/wrong-slug/#{topic.id}", params: { Discourse::LOCALE_PARAM => locale }
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.location).to eq(
+        "#{Discourse.base_url}#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=en%EF%BC%8C%E4%BD%86%E4%BB%96%E4%BB%AC%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88",
+      )
+    end
+
     context "with registered redirect_to_correct_topic_additional_query_parameters" do
       let(:modifier_block) { Proc.new { |allowed_params| allowed_params << :silly_param } }
 
@@ -4033,14 +4164,68 @@ RSpec.describe TopicsController do
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected, request_json:|
-        expected.each do |key, value|
-          it "returns #{value} for #{key}" do
-            slug = key == :nonexistent ? "garbage-slug" : send(key.to_s).slug
-            topic_id = key == :nonexistent ? nonexistent_topic_id : send(key.to_s).id
-            format = request_json ? ".json" : ""
-            get "/t/#{slug}/#{topic_id}#{format}"
-            expect(response.status).to eq(value)
-          end
+        it "returns #{expected.fetch(:normal_topic)} for normal_topic" do
+          slug = normal_topic.slug
+          topic_id = normal_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:normal_topic))
+        end
+
+        it "returns #{expected.fetch(:secure_topic)} for secure_topic" do
+          slug = secure_topic.slug
+          topic_id = secure_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:secure_topic))
+        end
+
+        it "returns #{expected.fetch(:private_topic)} for private_topic" do
+          slug = private_topic.slug
+          topic_id = private_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:private_topic))
+        end
+
+        it "returns #{expected.fetch(:deleted_topic)} for deleted_topic" do
+          slug = deleted_topic.slug
+          topic_id = deleted_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:deleted_topic))
+        end
+
+        it "returns #{expected.fetch(:deleted_secure_topic)} for deleted_secure_topic" do
+          slug = deleted_secure_topic.slug
+          topic_id = deleted_secure_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:deleted_secure_topic))
+        end
+
+        it "returns #{expected.fetch(:deleted_private_topic)} for deleted_private_topic" do
+          slug = deleted_private_topic.slug
+          topic_id = deleted_private_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:deleted_private_topic))
+        end
+
+        it "returns #{expected.fetch(:nonexistent)} for nonexistent" do
+          slug = "garbage-slug"
+          topic_id = nonexistent_topic_id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:nonexistent))
+        end
+
+        it "returns #{expected.fetch(:secure_accessible_topic)} for secure_accessible_topic" do
+          slug = secure_accessible_topic.slug
+          topic_id = secure_accessible_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:secure_accessible_topic))
         end
 
         expected_slug_response = expected[:secure_topic] == 200 ? 301 : expected[:secure_topic]
@@ -5404,6 +5589,54 @@ RSpec.describe TopicsController do
         admin_topic.reload
         expect(admin_topic.archetype).to eq(Archetype.default)
       end
+    end
+  end
+
+  describe "removing private message participants" do
+    fab!(:creator) { Fabricate(:user, trust_level: 2) }
+    fab!(:recipient, :user)
+    fab!(:recipient_group, :group)
+    fab!(:private_topic) do
+      Fabricate(
+        :private_message_topic,
+        user: creator,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: creator),
+          Fabricate.build(:topic_allowed_user, user: recipient),
+        ],
+        topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: recipient_group)],
+      )
+    end
+
+    before do
+      recipient_group.add(user_2)
+      sign_in(admin)
+      put "/t/#{private_topic.id}/remove-allowed-user.json", params: { username: creator.username }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(creator.guardian.can_see?(private_topic)).to eq(false)
+      sign_in(creator)
+    end
+
+    it "prevents a removed creator from removing an allowed user" do
+      put "/t/#{private_topic.id}/remove-allowed-user.json",
+          params: {
+            username: recipient.username,
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(private_topic.allowed_users.reload).to contain_exactly(recipient)
+      expect(recipient.guardian.can_see?(private_topic)).to eq(true)
+    end
+
+    it "prevents a removed creator from removing an allowed group" do
+      put "/t/#{private_topic.id}/remove-allowed-group.json", params: { name: recipient_group.name }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(private_topic.allowed_groups.reload).to contain_exactly(recipient_group)
+      expect(user_2.guardian.can_see?(private_topic)).to eq(true)
     end
   end
 
@@ -6868,6 +7101,23 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "does not let a moderator convert into a category they cannot see" do
+        own_message = Fabricate(:private_message_topic, user: moderator)
+        Fabricate(:post, user: moderator, topic: own_message)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        sign_in(moderator)
+        put "/t/#{own_message.id}/convert-topic/public.json?category_id=#{private_category.id}"
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed"),
+        )
+        own_message.reload
+        expect(own_message.archetype).to eq(Archetype.private_message)
+        expect(own_message.category_id).to be_nil
+      end
+
       context "with success" do
         it "returns success and the new url" do
           sign_in(admin)
@@ -6896,6 +7146,46 @@ RSpec.describe TopicsController do
             I18n.t("errors.messages.topic_title_already_used", url: existing_topic.url),
           )
         end
+      end
+    end
+
+    describe "converting a system message PM" do
+      fab!(:victim, :user)
+      fab!(:system_pm) { Fabricate(:system_message_topic, user: victim) }
+      fab!(:secret_post) do
+        Fabricate(
+          :post,
+          topic: system_pm,
+          user: Discourse.system_user,
+          raw: "Your data export is ready: upload://topsecretexport.zip",
+        )
+      end
+
+      it "allows a participant moderator to convert it to a public topic" do
+        system_pm.topic_allowed_users.create!(user: moderator)
+        sign_in(moderator)
+
+        put "/t/#{system_pm.id}/convert-topic/public.json", params: { category_id: category.id }
+
+        expect(response.status).to eq(200)
+        expect(system_pm.reload.archetype).to eq(Archetype.default)
+        expect(system_pm.category_id).to eq(category.id)
+      end
+
+      it "does not let a non-participant moderator publish and leak it" do
+        sign_in(moderator)
+
+        get "/t/#{system_pm.id}.json"
+        expect(response.status).to eq(404)
+
+        put "/t/#{system_pm.id}/convert-topic/public.json?category_id=#{category.id}"
+        expect(response).to be_forbidden
+        expect(system_pm.reload.archetype).to eq(Archetype.private_message)
+
+        sign_out
+        get "/t/#{system_pm.id}.json"
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include("topsecretexport.zip")
       end
     end
   end
@@ -8312,12 +8602,10 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
       end
 
-      [:user].each do |user|
-        it "denies access for #{user}" do
-          sign_in(Fabricate(user))
-          put "/t/#{topic.id}/reset-bump-date.json"
-          expect(response.status).to eq(403)
-        end
+      it "denies access for user" do
+        sign_in(Fabricate(:user))
+        put "/t/#{topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(403)
       end
 
       it "returns an error for a missing topic" do
@@ -8335,9 +8623,9 @@ RSpec.describe TopicsController do
       end
     end
 
-    %i[admin moderator trust_level_4].each do |user|
-      it "resets bumped_at as #{user}" do
-        sign_in(public_send(user))
+    shared_examples "resetting a topic bump date as an authorized user" do
+      it "resets the bump date to the post timestamp" do
+        sign_in(acting_user)
         topic.update!(bumped_at: 1.hour.ago)
         timestamp = 1.day.ago
         Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
@@ -8346,6 +8634,24 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
         expect(topic.reload.bumped_at).to eq_time(timestamp)
       end
+    end
+
+    context "when an administrator resets the bump date" do
+      let(:acting_user) { admin }
+
+      include_examples "resetting a topic bump date as an authorized user"
+    end
+
+    context "when a moderator resets the bump date" do
+      let(:acting_user) { moderator }
+
+      include_examples "resetting a topic bump date as an authorized user"
+    end
+
+    context "when a trust level 4 user resets the bump date" do
+      let(:acting_user) { trust_level_4 }
+
+      include_examples "resetting a topic bump date as an authorized user"
     end
 
     context "with a post_id parameter" do

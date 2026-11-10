@@ -372,7 +372,7 @@ RSpec.describe DiscourseVips do
 
       expect { described_class.svg_dimensions(input_path: file.path, timeout: 10) }.to raise_error(
         DiscourseVips::Error,
-        "libvips operation failed",
+        /\Alibvips operation failed/,
       ) { |error| expect(error).not_to be_a(DiscourseVips::OperationTimeout) }
 
       elapsed_seconds = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at

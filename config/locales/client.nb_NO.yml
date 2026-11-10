@@ -329,12 +329,9 @@ nb_NO:
       back: "Forrige"
       next: "Neste"
       sections:
-        theme: "Drakt"
         homepage: "Hjemmeside"
-        search: "Søk"
-      colors:
-        light: "Lys"
-        dark: "Mørk"
+      fonts:
+        base_font: "Body"
       homepage:
         topics: "Emner"
         categories: "Kategorier"
@@ -4968,7 +4965,6 @@ nb_NO:
           title: "Last opp en sikkerhetskopi til denne instansen"
           uploading: "Laster opp…"
           success: "Opplastingen av '%{filename}' var vellykket. Filen blir nå bearbeidet og det vil ta opp til et minutt før den dukker opp i listen."
-          error: "Det oppstod en feil ved opplastingen av '%{filename}': %{message}"
         settings: "Instillinger"
         operations:
           failed: " %{operation} mislyktes. Undersøk loggene."

@@ -155,9 +155,6 @@ en_GB:
         color_palettes:
           colors:
             title: "Colours"
-      backups:
-        upload:
-          error: "There has been an error whilst uploading '%{filename}': %{message}"
       customize:
         title: "Customise"
         color: "Colour"

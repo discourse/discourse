@@ -44,10 +44,11 @@ RSpec.describe ReviewablesController do
 
     describe "#index" do
       it "includes DSA classification for flagged posts without loading each statement separately" do
-        SiteSetting.dsa_reporting_enabled = true
-        SiteSetting.dsa_community_rules = [
-          { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
-        ].to_json
+        enable_dsa_reporting(
+          community_rules: [
+            { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+          ],
+        )
         first_reviewable = Fabricate(:reviewable_flagged_post)
         second_reviewable = Fabricate(:reviewable_flagged_post)
         first_statement = Fabricate(:dsa_statement_of_record, reviewable_id: first_reviewable.id)
@@ -70,6 +71,7 @@ RSpec.describe ReviewablesController do
             {
               "id" => DsaStatementOfRecord.community_rules.first["id"],
               "ground" => "Terms, section 3",
+              "explanation" => "Personal attacks are prohibited.",
             },
           ],
         )
@@ -77,6 +79,7 @@ RSpec.describe ReviewablesController do
           "id" => "STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH",
           "name" => "Illegal or harmful speech",
         )
+        expect(options["default_category"]).to eq("STATEMENT_CATEGORY_OTHER_VIOLATION_TC")
         expect(queries.count { |sql| sql.include?('FROM "dsa_statement_of_records"') }).to eq(1)
       end
 
@@ -376,6 +379,32 @@ RSpec.describe ReviewablesController do
         expect(json_review["user_id"]).to eq(user.id)
       end
 
+      it "hides full names from moderators when names are disabled" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        SiteSetting.enable_names = false
+        user = Fabricate(:user, name: "Private Review Name")
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+        moderator = Fabricate(:moderator)
+        sign_in(moderator)
+
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        json_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(json_review.dig("payload", "name")).to be_nil
+
+        sign_in(admin)
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        admin_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(admin_review.dig("payload", "name")).to eq(user.name)
+      end
+
       it "returns correct error message if ReviewableUser not found" do
         sign_in(admin)
         Jobs.run_immediately!
@@ -648,10 +677,11 @@ RSpec.describe ReviewablesController do
 
         before do
           sign_in(Fabricate(:moderator))
-          SiteSetting.dsa_reporting_enabled = true
-          SiteSetting.dsa_community_rules = [
-            { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
-          ].to_json
+          enable_dsa_reporting(
+            community_rules: [
+              { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+            ],
+          )
         end
 
         it "includes pending statement IDs and shared classification options for a flagged post" do
@@ -667,6 +697,7 @@ RSpec.describe ReviewablesController do
               {
                 "id" => DsaStatementOfRecord.community_rules.first["id"],
                 "ground" => "Terms, section 3",
+                "explanation" => "Personal attacks are prohibited.",
               },
             ],
           )
@@ -676,8 +707,8 @@ RSpec.describe ReviewablesController do
           )
         end
 
-        it "omits classification when community rules are empty" do
-          SiteSetting.dsa_community_rules = "[]"
+        it "omits classification for an existing site without community rules" do
+          SiteSetting.stubs(:dsa_community_rules).returns("[]")
 
           get "/review/#{reviewable.id}.json"
 
@@ -1609,6 +1640,21 @@ RSpec.describe ReviewablesController do
         expect(json["payload"]["extra"]).to be_blank
         expect(json["category_id"]).to eq(new_category_id.to_s)
       end
+
+      it "does not let a moderator move a queued topic to a category they cannot see" do
+        original_category_id = reviewable_topic.category_id
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        put "/review/#{reviewable_topic.id}.json?version=#{reviewable_topic.version}",
+            params: {
+              reviewable: {
+                category_id: private_category.id,
+              },
+            }
+
+        expect(response.code).to eq("403")
+        expect(reviewable_topic.reload.category_id).to eq(original_category_id)
+      end
     end
 
     describe "#destroy" do
@@ -1887,8 +1933,7 @@ RSpec.describe ReviewablesController do
       end
 
       before do
-        SiteSetting.dsa_reporting_enabled = true
-        SiteSetting.dsa_community_rules = [rule].to_json
+        enable_dsa_reporting(community_rules: [rule])
         sign_in(admin)
       end
 

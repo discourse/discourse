@@ -448,6 +448,14 @@ class Plugin::Instance
     end
   end
 
+  # Accept a scalar bot[<param_name>] when admins create a bot. The callback receives the bot
+  # and the value inside the creation transaction; raising rolls the creation back.
+  def register_bot_creation_param(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.bot_creation_params[param_name] = { plugin:, callback: }
+    end
+  end
+
   def register_upload_unused(&block)
     Upload.add_unused_callback(&block)
   end

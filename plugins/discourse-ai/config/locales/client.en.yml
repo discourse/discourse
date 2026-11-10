@@ -1646,6 +1646,7 @@ en:
           bge-large-en: "Open-source English-only model, self-hosted"
           bge-m3: "Open-source multilingual model for longer content, self-hosted"
           multilingual-e5-large: "Open-source multilingual model, self-hosted"
+          cohere-embed-v4: "Cohere's multilingual model, hosted on AWS Bedrock"
           gemini-embedding-001: "Google's hosted multilingual model"
           text-embedding-3-large: "OpenAI's most accurate embedding model"
           text-embedding-3-small: "OpenAI's faster, lower-cost embedding model"
@@ -1659,6 +1660,7 @@ en:
           failure: "Attempting to generate an embedding resulted in: %{error}"
         hints:
           dimensions_warning: "Once saved, this value can't be changed."
+          bedrock_api_key: "A Bedrock API key, or the secret access key when an access key ID is set. Leave empty to use an IAM role or the server's AWS credentials."
           matryoshka_dimensions: "Defines the size of nested embeddings used for hierarchical or multi-layered representation of data, similar to how nested dolls fit within each other."
           embed_prompt: "Task instruction prefix when generating embeddings of forum content. ONLY for embeddings models that require prefixes, like nomic-embed or stella. Not needed for most models."
           search_prompt: "Task instruction prefix when generating embeddings of search queries. ONLY for embeddings models that require prefixes, like nomic-embed or stella. Not needed for most models."
@@ -1684,10 +1686,15 @@ en:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Custom"
         provider_fields:
           model_name: "Model name"
+          model_id: "Model ID or inference profile"
+          region: "AWS region"
+          access_key_id: "AWS access key ID"
+          role_arn: "IAM role ARN"
 
         semantic_search: "Topics (Semantic)"
         semantic_search_results:

@@ -3,6 +3,7 @@
 
 require "landlock"
 require "msgpack"
+require "rbconfig"
 require "socket"
 require "tmpdir"
 require "vips"
@@ -550,7 +551,18 @@ class DiscourseVipsWorker
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
           apply_nice(request)
-          stdout.write(MessagePack.pack(operation_response(operation)))
+          if RUBY_PLATFORM.include?("darwin")
+            # Native image and font libraries cannot safely initialize in a forked child.
+            exec(
+              RbConfig.ruby,
+              "--disable-gems",
+              *$LOAD_PATH.flat_map { |path| ["-I", path] },
+              __FILE__,
+              "--operation",
+              *request.fetch("command"),
+            )
+          end
+          stdout.write(MessagePack.pack(self.class.operation_response(operation)))
         end
 
       if result.timed_out?
@@ -558,9 +570,15 @@ class DiscourseVipsWorker
       elsif result.success?
         MessagePack.unpack(result.stdout)
       else
-        { "status" => "error", "message" => "libvips operation failed" }
+        { "status" => "error", "message" => failure_message(result) }
       end
     end
+  end
+
+  def failure_message(result)
+    stderr = result.stderr.to_s.dup.force_encoding(Encoding::UTF_8).scrub.strip
+    message = stderr.empty? ? "libvips operation failed" : "libvips operation failed: #{stderr}"
+    message.byteslice(0, 4096).scrub
   end
 
   def remove_socket_directory
@@ -585,7 +603,7 @@ class DiscourseVipsWorker
     Process.setpriority(Process::PRIO_PROCESS, 0, Integer(request.fetch("nice"))) if request["nice"]
   end
 
-  def operation_response(operation)
+  def self.operation_response(operation)
     value = operation.call
     { "status" => "ok", "value" => value }
   rescue InvalidImage => error
@@ -596,6 +614,11 @@ class DiscourseVipsWorker
 end
 
 if $PROGRAM_NAME == __FILE__
-  server_fd, owner_fd = ARGV.map { |argument| Integer(argument) }
-  DiscourseVipsWorker.run(server_fd:, owner_fd:)
+  if ARGV.first == "--operation"
+    operation = DiscourseVipsWorker::Operations.build(ARGV.drop(1))
+    STDOUT.write(MessagePack.pack(DiscourseVipsWorker.operation_response(operation)))
+  else
+    server_fd, owner_fd = ARGV.map { |argument| Integer(argument) }
+    DiscourseVipsWorker.run(server_fd:, owner_fd:)
+  end
 end

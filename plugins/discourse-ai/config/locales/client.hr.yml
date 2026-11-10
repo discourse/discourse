@@ -129,6 +129,8 @@ hr:
             other: "%{count} objava"
       spam:
         short_title: "Nepoželjno"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         last_seven_days: "Zadnjih 7 dana"
         enable: "Omogućiti"
         test_modal:

@@ -185,7 +185,10 @@ RSpec.describe SvgSprite do
   end
 
   it "includes icons defined in icon type site settings" do
-    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+    SiteSetting.load_settings(
+      Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s,
+      plugin: SiteSetting::SAMPLE_TEST_PLUGIN.name,
+    )
 
     SiteSetting.reaction_flair = "dragon"
     SvgSprite.expire_cache
@@ -220,7 +223,10 @@ RSpec.describe SvgSprite do
   end
 
   it "includes icons defined in icon properties of objects type site settings" do
-    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+    SiteSetting.load_settings(
+      Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s,
+      plugin: SiteSetting::SAMPLE_TEST_PLUGIN.name,
+    )
 
     SiteSetting.reaction_list = [{ name: "party", icon: "dragon" }].to_json
     SvgSprite.expire_cache
