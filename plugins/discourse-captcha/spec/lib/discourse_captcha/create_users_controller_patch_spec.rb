@@ -207,6 +207,24 @@ RSpec.describe "Users", type: :request do
             staged_user.reload.custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
           ).to eq("0.9")
         end
+
+        it "does not carry the score of a failed signup over to another account" do
+          # Multisite drops the middleware that clears request-scoped state.
+          allow_any_instance_of(ActionDispatch::Executor).to receive(:call) do |middleware, env|
+            middleware.instance_variable_get(:@app).call(env)
+          end
+          Fabricate(:user, username: user_params[:username])
+
+          post "/captcha/recaptcha_v3/create.json", params: { token: "token-from-reCaptchaV3" }
+          post "/u.json", params: user_params
+
+          expect(response.parsed_body["success"]).to be(false)
+          expect(
+            Fabricate(:user).custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+          ).to be_nil
+        ensure
+          DiscourseCaptcha::SignupScore.reset
+        end
       end
 
       context "when site is login-required" do

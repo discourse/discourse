@@ -155,6 +155,29 @@ RSpec.describe SessionController do
         ).to eq("0.9")
       end
 
+      it "does not carry the score of a failed signup over to another account" do
+        # Multisite drops the middleware that clears request-scoped state.
+        allow_any_instance_of(ActionDispatch::Executor).to receive(:call) do |middleware, env|
+          middleware.instance_variable_get(:@app).call(env)
+        end
+        Fabricate(:user, username: "chosen_username")
+
+        post "/captcha/recaptcha_v3/create.json", params: { token: "captcha-token" }
+        post "/session/login-code/verify.json",
+             params: {
+               email:,
+               code: login_code.code,
+               username: "chosen_username",
+             }
+
+        expect(User.find_by_email(email)).to be_nil
+        expect(
+          Fabricate(:user).custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+        ).to be_nil
+      ensure
+        DiscourseCaptcha::SignupScore.reset
+      end
+
       it "stores the signup score on the account created after approval signup details" do
         SiteSetting.must_approve_users = true
         post "/session/login-code/verify.json", params: { email:, code: login_code.code }
