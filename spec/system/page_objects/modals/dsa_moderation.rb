@@ -38,15 +38,24 @@ module PageObjects
       end
 
       def has_no_rule_menu?
-        has_no_css?(".dsa-community-rules")
+        has_no_css?(".dsa-classification-options")
       end
 
       def has_rule_option?(ground, explanation:)
         has_button?("#{ground} #{explanation}", exact: true, normalize_ws: true)
       end
 
+      def has_readable_rule?(ground)
+        has_css?(".dsa-classification-option", text: ground) do |option|
+          option.evaluate_script("this.scrollHeight <= this.clientHeight")
+        end
+      end
+
       def select_category(category)
-        within(full_modal_selector) { select(category, from: "Category") }
+        within(full_modal_selector) do
+          find("[data-name='category'] .form-kit__control-menu-trigger").click
+        end
+        find(".form-kit__control-menu-content .btn", text: category, exact_text: true).click
       end
 
       def continue
@@ -108,13 +117,27 @@ module PageObjects
       end
 
       def has_accessible_rule_description?(ground)
-        has_css?("#{full_modal_selector} .dsa-community-rule-trigger") do |trigger|
-          trigger["aria-description"] == ground
-        end
+        has_css?(
+          "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select",
+        ) { |trigger| trigger["aria-description"] == ground }
+      end
+
+      def has_focused_rule?
+        has_css?(
+          "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select:focus",
+        )
+      end
+
+      def has_focused_category?
+        has_css?("#{full_modal_selector} [data-name='category'] .dsa-classification-select:focus")
       end
 
       def has_selected_category?(category)
-        within(full_modal_selector) { has_select?("Category", selected: category) }
+        has_css?(
+          "#{full_modal_selector} [data-name='category'] .d-button-label",
+          text: category,
+          exact_text: true,
+        )
       end
 
       def has_focused_step?(label)

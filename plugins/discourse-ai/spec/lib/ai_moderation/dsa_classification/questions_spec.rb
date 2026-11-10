@@ -41,6 +41,14 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassification::Questions do
         a_hash_including(
           name: "category",
           type: "choice",
+          instructions:
+            a_string_including(
+              "https://transparency.dsa.ec.europa.eu/page/documentation",
+              "Consumer information infringements: undisclosed ads",
+              "Scams and fraud: phishing",
+              "Other violation of terms and conditions",
+              "Be respectful: No personal attacks.",
+            ),
           choices: a_collection_including(scams_label, "Other violation of terms and conditions"),
         ),
       )
@@ -88,7 +96,12 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassification::Questions do
       let(:community_rules) { [respect_rule] }
 
       it "only asks for the category" do
-        expect(questions.to_a).to contain_exactly(a_hash_including(name: "category"))
+        expect(questions.to_a).to contain_exactly(
+          a_hash_including(
+            name: "category",
+            instructions: a_string_including("Be respectful: No personal attacks."),
+          ),
+        )
       end
     end
   end

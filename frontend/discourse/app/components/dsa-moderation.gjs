@@ -86,7 +86,7 @@ const Body = <template>
         @formId={{@flow.formId}}
         @onSubmit={{@flow.classify}}
         @options={{@flow.options}}
-        @reviewable={{@flow.reviewable}}
+        @reviewableId={{@flow.reviewableId}}
       />
     </div>
   {{else}}
@@ -156,8 +156,8 @@ export default class DsaModeration extends Component {
     return this.args.options;
   }
 
-  get reviewable() {
-    return this.args.reviewable;
+  get reviewableId() {
+    return this.args.reviewableId;
   }
 
   get showTitleHelp() {

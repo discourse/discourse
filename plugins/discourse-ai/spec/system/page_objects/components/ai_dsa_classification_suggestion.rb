@@ -3,15 +3,16 @@
 module PageObjects
   module Components
     class AiDsaClassificationSuggestion < PageObjects::Components::Base
-      SELECTOR = ".ai-dsa-classification-suggestion"
-
-      def suggest
-        find("#{SELECTOR}__button").click
+      def suggest_rule
+        find("[data-name='community_rule'] .form-kit__control-menu-trigger").click
+        click_button("Choose for me", exact: true)
         self
       end
 
-      def has_message?(text)
-        has_css?("#{SELECTOR}__message", text:)
+      def suggest_category
+        find("[data-name='category'] .form-kit__control-menu-trigger").click
+        click_button("Choose for me", exact: true)
+        self
       end
     end
   end

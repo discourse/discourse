@@ -12,9 +12,48 @@ module DiscourseAi
           A moderator is acting on this flagged content. Which of the community's rules does
           the content break? Each choice is a rule followed by its explanation.
         TEXT
-        CATEGORY_INSTRUCTIONS = <<~TEXT.squish
+        CATEGORY_INSTRUCTIONS = <<~TEXT
           A moderator is acting on this flagged content. Which EU Digital Services Act
-          statement of reasons category best describes why it is being moderated?
+          statement of reasons category best describes the grounds for moderation?
+          Use the community rule and its explanation to identify the grounds. Content
+          mentioning a subject is not evidence of a violation in that category.
+          Choose the most specific supported category. Do not infer fraud, illegality,
+          or protected characteristics from a general community rule violation.
+
+          EU category guidance, summarized from section 16 of
+          https://transparency.dsa.ec.europa.eu/page/documentation:
+          - Animal welfare: animal harm or unlawful sales.
+          - Consumer information infringements: undisclosed ads, trader disclosures,
+            misleading product or consumer rights information, pricing compliance.
+          - Cyber violence: bullying, harassment, stalking, incitement, nonconsensual
+            intimate material or deepfakes concerning adults.
+          - Cyber violence against women: gender targeted harassment, stalking,
+            disinformation, incitement or nonconsensual intimate material.
+          - Data protection and privacy violations: biometric breaches, falsified data,
+            missing processing grounds or erasure rights.
+          - Illegal or harmful speech: defamation, discrimination or hate speech
+            based on protected characteristics.
+          - Intellectual property infringements: copyright, design, geographical
+            indications, patents, trade secrets or trademarks.
+          - Negative effects on civic discourse or elections: misinformation,
+            disinformation, interference or relevant election law violations.
+          - Type of alleged illegal content not specified by the notifier: an illegal
+            content allegation without its type, not a fallback for uncertainty.
+          - Other violation of terms and conditions: platform restrictions including
+            adult material, age, geography, language or permitted goods and services.
+          - Protection of minors: child abuse material, grooming, unsafe challenges
+            or age restrictions concerning minors.
+          - Risk for public security: illegal organizations, terrorism, environmental
+            or public health risks.
+          - Scams and fraud: phishing, pyramid schemes, impersonation, hijacked or
+            inauthentic accounts, listings or reviews.
+          - Self harm: promoting eating disorders, self mutilation or suicide.
+          - Unsafe or prohibited products: product safety, compliance or sales restrictions.
+          - Violence: coordinated harm, violent incitement, exploitation or trafficking.
+
+          When a community rule violation falls outside the other categories, choose
+          Other violation of terms and conditions. For example, unsolicited advertising
+          without evidence of fraud should not be classified as Scams and fraud.
         TEXT
 
         def initialize(
@@ -60,7 +99,8 @@ module DiscourseAi
           {
             name: CATEGORY,
             type: "choice",
-            instructions: CATEGORY_INSTRUCTIONS,
+            instructions:
+              "#{CATEGORY_INSTRUCTIONS}\nCommunity rules:\n#{@rule_ids_by_label.keys.join("\n")}",
             choices: @category_ids_by_label.keys,
           }
         end

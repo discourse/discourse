@@ -1,14 +1,10 @@
 import Component from "@glimmer/component";
-import { array, fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
+import DsaClassificationSelect from "discourse/components/dsa-classification-select";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
-import DButton from "discourse/ui-kit/d-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const CategoryHelp = <template>
@@ -31,20 +27,16 @@ export function defaultClassification(options) {
   };
 }
 
-function ruleName(rules, ruleId) {
-  return (
-    rules.find((rule) => rule.id === ruleId)?.ground ||
-    i18n("dsa_statements.rule_prompt")
-  );
-}
-
-function selectRule(field, close, ruleId) {
-  field.set(ruleId);
-  return close({ focusTrigger: true });
-}
-
 export default class DsaModerationDetails extends Component {
   formData = defaultClassification(this.args.options);
+
+  get rules() {
+    return this.args.options.community_rules.map((rule) => ({
+      id: rule.id,
+      name: rule.ground,
+      description: rule.explanation,
+    }));
+  }
 
   <template>
     <Form
@@ -53,16 +45,8 @@ export default class DsaModerationDetails extends Component {
       ...attributes
       @data={{this.formData}}
       @onSubmit={{@onSubmit}}
-      as |form data|
+      as |form|
     >
-      <PluginOutlet
-        @name="dsa-moderation-details-before-fields"
-        @outletArgs={{lazyHash
-          form=form
-          options=@options
-          reviewable=@reviewable
-        }}
-      />
       <form.Field
         @format="full"
         @name="community_rule"
@@ -73,46 +57,22 @@ export default class DsaModerationDetails extends Component {
         as |field|
       >
         <field.Control>
-          <DMenu
-            aria-describedby={{field.describedBy}}
-            aria-description={{ruleName
-              @options.community_rules
-              data.community_rule
+          <PluginOutlet
+            @name="dsa-classification-control"
+            @outletArgs={{lazyHash
+              field=field
+              fieldName="community_rule"
+              options=this.rules
+              placeholder=(i18n "dsa_statements.rule_prompt")
+              reviewableId=@reviewableId
             }}
-            aria-invalid={{if field.error "true"}}
-            id={{field.id}}
-            @contentClass="form-kit__control-menu-content dsa-community-rules"
-            @disabled={{field.disabled}}
-            @fallbackPlacements={{array "top-start"}}
-            @label={{ruleName @options.community_rules data.community_rule}}
-            @matchTriggerWidth={{true}}
-            @modalForMobile={{true}}
-            @placement="bottom-start"
-            @triggerClass="form-kit__control-menu-trigger dsa-community-rule-trigger"
           >
-            <:trigger>{{dIcon "angle-down"}}</:trigger>
-            <:content as |menu|>
-              <DDropdownMenu as |dropdown|>
-                {{#each @options.community_rules as |rule|}}
-                  <dropdown.item>
-                    <DButton
-                      class="btn-flat dsa-community-rule --with-description"
-                      @action={{fn selectRule field menu.close rule.id}}
-                    >
-                      <span class="dsa-community-rule__texts">
-                        <span class="dsa-community-rule__name">
-                          {{rule.ground}}
-                        </span>
-                        <span class="dsa-community-rule__explanation">
-                          {{rule.explanation}}
-                        </span>
-                      </span>
-                    </DButton>
-                  </dropdown.item>
-                {{/each}}
-              </DDropdownMenu>
-            </:content>
-          </DMenu>
+            <DsaClassificationSelect
+              @field={{field}}
+              @options={{this.rules}}
+              @placeholder={{i18n "dsa_statements.rule_prompt"}}
+            />
+          </PluginOutlet>
         </field.Control>
       </form.Field>
       <form.Field
@@ -120,19 +80,27 @@ export default class DsaModerationDetails extends Component {
         @name="category"
         @title={{i18n "dsa_statements.category"}}
         @tooltip={{component CategoryHelp}}
-        @type="select"
+        @type="custom"
         @validation="required"
         as |field|
       >
-        <field.Control
-          @nonePlaceholder={{i18n "dsa_statements.category_prompt"}}
-          as |select|
-        >
-          {{#each @options.categories as |category|}}
-            <select.Option
-              @value={{category.id}}
-            >{{category.name}}</select.Option>
-          {{/each}}
+        <field.Control>
+          <PluginOutlet
+            @name="dsa-classification-control"
+            @outletArgs={{lazyHash
+              field=field
+              fieldName="category"
+              options=@options.categories
+              placeholder=(i18n "dsa_statements.category_prompt")
+              reviewableId=@reviewableId
+            }}
+          >
+            <DsaClassificationSelect
+              @field={{field}}
+              @options={{@options.categories}}
+              @placeholder={{i18n "dsa_statements.category_prompt"}}
+            />
+          </PluginOutlet>
         </field.Control>
       </form.Field>
     </Form>
