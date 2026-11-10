@@ -146,6 +146,8 @@ module DiscourseAi
             Tools::ActivateAppearanceChange,
             Tools::RevertAppearanceChange,
             Tools::ListAppearanceChanges,
+            Tools::ThemeAppHandoff,
+            Tools::EnableMcpThemeAccess,
             Tools::RandomPicker,
             Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
