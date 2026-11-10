@@ -314,6 +314,55 @@ RSpec.describe AppearanceStyles::Policy do
       expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "background-color"))
     end
 
+    it "checks rules for the same area together when both can apply" do
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "background-color" => "light-dark(#000000, #000000)",
+                "color" => "light-dark(#ffffff, #ffffff)",
+              },
+            },
+            {
+              area: "primary_button",
+              media: "mobile",
+              declarations: {
+                "color" => "light-dark(#000000, #000000)",
+              },
+            },
+          ],
+        },
+        "rules[0] and rules[1]: text on background is",
+      )
+    end
+
+    it "checks the color the draft gives a token, not the default" do
+      expect_error(
+        { variables: { "--token-color-surface" => "var(--primary)" } },
+        "--token-color-text-default on --token-color-surface is",
+      )
+      expect_error(
+        {
+          variables: {
+            "--token-color-surface" => "var(--primary)",
+            "--token-color-text-default" => "var(--secondary)",
+          },
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "background-color" => "var(--token-color-surface)",
+                "color" => "var(--primary)",
+              },
+            },
+          ],
+        },
+        "rules[0]: text on background is",
+      )
+    end
+
     it "checks background and text variables a rule overrides" do
       expect_error(
         {
