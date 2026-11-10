@@ -11,6 +11,7 @@ export default [
   {
     ignores: [
       "plugins/**/lib/javascripts/locale",
+      "plugins/blog/vendor/",
       "plugins/discourse-math/public",
       "public/",
       "vendor/",

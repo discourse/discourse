@@ -21,6 +21,21 @@ describe "Data Explorer group report query execution" do
     query
   end
 
+  it "does not disclose an admin-only query predicate in explain output to group members" do
+    query =
+      DiscourseDataExplorer::Query.create!(
+        name: "Shared report",
+        sql: "SELECT id FROM users WHERE username = 'admin-only-query-predicate'",
+      )
+    query.query_groups.create!(group: group)
+
+    post "/g/#{group.name}/reports/#{query.id}/run.json", params: { explain: "true" }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["explain"]).to be_nil
+    expect(response.body).not_to include("admin-only-query-predicate")
+  end
+
   it "rejects a group member's parameter inside a dollar-quoted literal" do
     victim =
       Fabricate(:user, username: SecureRandom.hex(8), email: "#{SecureRandom.hex(8)}@example.com")

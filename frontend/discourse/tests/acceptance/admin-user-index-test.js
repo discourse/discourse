@@ -30,6 +30,18 @@ acceptance("Admin - User Index", function (needs) {
       return helper.response({ id: 2, username: "new-sam" });
     });
 
+    server.get("/admin/users/-1234.json", () =>
+      helper.response({
+        id: -1234,
+        username: "helper_bot",
+        name: "Helper bot",
+        active: true,
+        admin: false,
+        moderator: false,
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/f0a364/{size}.png",
+      })
+    );
+
     server.get("/admin/users/3.json", () => {
       return helper.response({
         id: 3,
@@ -217,11 +229,52 @@ acceptance("Admin - User Index", function (needs) {
         post_count: 50,
       });
     });
+
+    server.get("/admin/users/13.json", () => {
+      return helper.response({
+        id: 13,
+        username: "merge_source",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_be_merged: true,
+      });
+    });
+
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "merge_target",
+            name: null,
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+          },
+        ],
+      });
+    });
   });
 
   needs.hooks.beforeEach(() => {
     deleteAndBlock = null;
     deleteData = null;
+  });
+
+  test("identifies bot accounts on the user details page", async function (assert) {
+    await visit("/admin/users/-1234/helper_bot");
+    assert
+      .dom(".admin-user__bot-indicator .value")
+      .hasText(i18n("admin.user.bot"), "the bot account is identified");
+    assert
+      .dom(".admin-user__bot-indicator .d-icon-robot")
+      .exists("the indicator includes the bot icon");
+
+    await visit("/admin/users/2/sam");
+    assert
+      .dom(".admin-user__bot-indicator")
+      .doesNotExist("human accounts have no bot indicator");
   });
 
   test("can edit username", async function (assert) {
@@ -463,5 +516,33 @@ acceptance("Admin - User Index", function (needs) {
         i18n("admin.user.delete_posts_forbidden_because_admin"),
         "moderators don't get the admin-specific message for delete posts"
       );
+  });
+
+  test("merge user - the chosen target user is carried to the confirmation", async function (assert) {
+    await visit("/admin/users/13/merge_source");
+    await click(".btn-user-merge");
+
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("cannot merge before a target user is chosen");
+
+    const targetUser = selectKit(".d-modal .email-group-user-chooser");
+    await targetUser.expand();
+    await targetUser.fillInFilter("merge_target");
+    await targetUser.selectRowByValue("merge_target");
+
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isEnabled("can merge once a target user is chosen");
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.dom(".d-modal__body").includesText(
+      i18n("admin.user.merge.confirmation.text", {
+        username: "merge_source",
+        targetUsername: "merge_target",
+      }),
+      "asks to confirm merging into the chosen user"
+    );
   });
 });

@@ -351,6 +351,8 @@ de:
         topic_id: "Themen-ID"
     discourse_post_event:
       new_event: "Neues Ereignis"
+      onebox:
+        all_day: "Ganztägig"
       notifications:
         before_event_reminder: "Ein Ereignis beginnt in Kürze"
         after_event_reminder: "Ein Ereignis wurde beendet"
@@ -454,7 +456,6 @@ de:
               one: "%{count} Benutzer eingeladen"
               other: "%{count} Benutzer eingeladen"
         event:
-          expired: "Abgelaufen"
           closed: "Geschlossen"
           full: "Voll"
           status:
@@ -467,6 +468,8 @@ de:
             private:
               title: "Privat"
               description: "An einem privaten Ereignis können nur eingeladene Benutzer teilnehmen."
+      recording_modal:
+        save: "Speichern"
       composer:
         name_placeholder: "Name des Ereignisses"
         end_date_placeholder: "Enddatum"

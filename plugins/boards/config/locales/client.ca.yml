@@ -29,7 +29,9 @@ ca:
           other: "%{count} respostes"
         assign: "Assigna"
         unassign: "Desassigna"
-        created_by: "Creat per"
+        owners:
+          one: "Propietari"
+          other: "Propietaris"
       manage:
         name: "Nom"
         constraint_categories: "Categories"

@@ -3,6 +3,53 @@
 RSpec.describe User do
   subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
+  describe "#available_notification_types" do
+    fab!(:user)
+
+    it "returns distinct types for this user's read and unread notifications" do
+      expect(user.available_notification_types).to eq([])
+      like =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:liked],
+          read: true,
+        )
+      Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
+      Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
+      Fabricate(:notification, notification_type: Notification.types[:replied])
+
+      expect(user.available_notification_types).to contain_exactly(
+        Notification.types[:liked],
+        Notification.types[:mentioned],
+      )
+
+      like.destroy!
+      expect(user.available_notification_types).to eq([Notification.types[:mentioned]])
+    end
+
+    it "excludes notifications for deleted topics" do
+      notification = Fabricate(:notification, user: user)
+      notification.topic.update!(deleted_at: Time.current)
+
+      expect(user.available_notification_types).to eq([])
+    end
+
+    it "publishes current availability after creating and deleting notifications" do
+      user.update!(last_seen_at: 1.minute.ago)
+      notification = nil
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") do
+          notification =
+            Fabricate(:notification, user: user, notification_type: Notification.types[:liked])
+        end
+      expect(messages.last.data[:available_notification_types]).to eq([Notification.types[:liked]])
+
+      messages = MessageBus.track_publish("/notification/#{user.id}") { notification.destroy! }
+      expect(messages.last.data[:available_notification_types]).to eq([])
+    end
+  end
+
   it_behaves_like "it has custom fields"
 
   describe "#reload" do
@@ -823,6 +870,28 @@ RSpec.describe User do
       expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
     end
 
+    it "keeps reviewables for posts the user flagged first" do
+      other_flagger = Fabricate(:user)
+      reviewable =
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        user.id,
+        other_flagger.id,
+      )
+    end
+
     it "does not allow non moderators to delete all posts" do
       invalid_guardian = Guardian.new(Fabricate(:user))
 
@@ -1143,59 +1212,164 @@ RSpec.describe User do
     context "when Unicode usernames are disabled" do
       before { SiteSetting.unicode_usernames = false }
 
-      %w[
-        first.last
-        first
-        first-last
-        _name
-        first_last
-        mc.hammer_nose
-        UPPERCASE
-        sgif
-      ].each do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows first.last" do
+        assert_good("first.last")
       end
 
-      %w[
-        traildot.
-        has\ space
-        double__underscore
-        with%symbol
-        Exclamation!
-        @twitter
-        my@email.com
-        .tester
-        sa$sy
-        sam.json
-        sam.xml
-        sam.html
-        sam.htm
-        sam.js
-        sam.woff
-        sam.Png
-        sam.gif
-      ].each do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows first" do
+        assert_good("first")
+      end
+
+      it "allows first-last" do
+        assert_good("first-last")
+      end
+
+      it "allows _name" do
+        assert_good("_name")
+      end
+
+      it "allows first_last" do
+        assert_good("first_last")
+      end
+
+      it "allows mc.hammer_nose" do
+        assert_good("mc.hammer_nose")
+      end
+
+      it "allows UPPERCASE" do
+        assert_good("UPPERCASE")
+      end
+
+      it "allows sgif" do
+        assert_good("sgif")
+      end
+
+      it "disallows traildot." do
+        assert_bad("traildot.")
+      end
+
+      it "disallows has space" do
+        assert_bad("has space")
+      end
+
+      it "disallows double__underscore" do
+        assert_bad("double__underscore")
+      end
+
+      it "disallows with%symbol" do
+        assert_bad("with%symbol")
+      end
+
+      it "disallows Exclamation!" do
+        assert_bad("Exclamation!")
+      end
+
+      it "disallows @twitter" do
+        assert_bad("@twitter")
+      end
+
+      it "disallows my@email.com" do
+        assert_bad("my@email.com")
+      end
+
+      it "disallows .tester" do
+        assert_bad(".tester")
+      end
+
+      it "disallows sa$sy" do
+        assert_bad("sa$sy")
+      end
+
+      it "disallows sam.json" do
+        assert_bad("sam.json")
+      end
+
+      it "disallows sam.xml" do
+        assert_bad("sam.xml")
+      end
+
+      it "disallows sam.html" do
+        assert_bad("sam.html")
+      end
+
+      it "disallows sam.htm" do
+        assert_bad("sam.htm")
+      end
+
+      it "disallows sam.js" do
+        assert_bad("sam.js")
+      end
+
+      it "disallows sam.woff" do
+        assert_bad("sam.woff")
+      end
+
+      it "disallows sam.Png" do
+        assert_bad("sam.Png")
+      end
+
+      it "disallows sam.gif" do
+        assert_bad("sam.gif")
       end
     end
 
     context "when Unicode usernames are enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      %w[Джофрэй Джо.фрэй Джофр-эй Д.жофрэй 乔夫雷 乔夫_雷 _乔夫雷].each do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows Джофрэй" do
+        assert_good("Джофрэй")
       end
 
-      %w[.Джофрэй Джофрэй. Джо\ фрэй Джоф__рэй 乔夫雷.js 乔夫雷. 乔夫%雷].each do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows Джо.фрэй" do
+        assert_good("Джо.фрэй")
+      end
+
+      it "allows Джофр-эй" do
+        assert_good("Джофр-эй")
+      end
+
+      it "allows Д.жофрэй" do
+        assert_good("Д.жофрэй")
+      end
+
+      it "allows 乔夫雷" do
+        assert_good("乔夫雷")
+      end
+
+      it "allows 乔夫_雷" do
+        assert_good("乔夫_雷")
+      end
+
+      it "allows _乔夫雷" do
+        assert_good("_乔夫雷")
+      end
+
+      it "disallows .Джофрэй" do
+        assert_bad(".Джофрэй")
+      end
+
+      it "disallows Джофрэй." do
+        assert_bad("Джофрэй.")
+      end
+
+      it "disallows Джо фрэй" do
+        assert_bad("Джо фрэй")
+      end
+
+      it "disallows Джоф__рэй" do
+        assert_bad("Джоф__рэй")
+      end
+
+      it "disallows 乔夫雷.js" do
+        assert_bad("乔夫雷.js")
+      end
+
+      it "disallows 乔夫雷." do
+        assert_bad("乔夫雷.")
+      end
+
+      it "disallows 乔夫%雷" do
+        assert_bad("乔夫%雷")
       end
     end
   end
@@ -3391,6 +3565,60 @@ RSpec.describe User do
   end
 
   describe "#destroy!" do
+    it "destroys an unsaved user without attempting an ownership handoff" do
+      user = Fabricate.build(:user)
+
+      user.destroy!
+
+      expect(user).to be_destroyed
+    end
+
+    it "transfers owned ACLs after removing the user record" do
+      user = Fabricate(:user)
+      admin = Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+
+      queries = track_sql_queries { user.destroy! }
+
+      expect(user).to be_destroyed
+      expect(owner_acl.reload.allowed_user_ids).to eq([admin.id])
+      deletion_index = queries.index { |query| query.match?(/DELETE FROM "users"/) }
+      transfer_index = queries.index { |query| query.match?(/UPDATE "access_control_lists"/) }
+      expect(deletion_index).to be < transfer_index
+    end
+
+    it "rolls back ownership and its audit entry when a later destruction callback fails" do
+      user = Fabricate(:user)
+      Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+      user.stubs(:clear_acls).raises(ActiveRecord::RecordNotDestroyed)
+      audit_count =
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count
+
+      expect { user.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+
+      expect(User.exists?(user.id)).to eq(true)
+      expect(owner_acl.reload.allowed_user_ids).to eq([user.id])
+      expect(
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count,
+      ).to eq(audit_count)
+    end
+
+    it "preserves the user and ownership if the assumption cannot be audited" do
+      user = Fabricate(:user)
+      Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+      StaffActionLogger
+        .any_instance
+        .stubs(:log_assume_access_control_ownership)
+        .raises(ActiveRecord::RecordInvalid)
+
+      expect { user.destroy! }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(User.exists?(user.id)).to eq(true)
+      expect(owner_acl.reload.allowed_user_ids).to eq([user.id])
+    end
+
     it "clears up associated data on destroy!" do
       user = Fabricate(:user)
       post = Fabricate(:post)
@@ -3758,17 +3986,25 @@ RSpec.describe User do
   end
 
   describe "#username_equals_to?" do
-    [
-      ["returns true for equal usernames", "john", "john", true],
-      ["returns false for different usernames", "john", "bill", false],
-      ["considers usernames that are different only in case as equal", "john", "JoHN", true],
-    ].each do |testcase_name, current_username, another_username, is_equal|
-      it "#{testcase_name}" do
-        user = Fabricate(:user, username: current_username)
-        result = user.username_equals_to?(another_username)
+    it "returns true for equal usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("john")
 
-        expect(result).to be(is_equal)
-      end
+      expect(result).to be(true)
+    end
+
+    it "returns false for different usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("bill")
+
+      expect(result).to be(false)
+    end
+
+    it "considers usernames that are different only in case as equal" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("JoHN")
+
+      expect(result).to be(true)
     end
 
     it "considers usernames that are equal after unicode normalization as equal" do
@@ -3780,6 +4016,44 @@ RSpec.describe User do
       result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
+    end
+  end
+
+  describe ".whisperers" do
+    subject(:whisperers) { User.whisperers.where(id: candidates) }
+
+    fab!(:group)
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:member, :user)
+    fab!(:regular_user, :user)
+
+    let(:candidates) { [admin, moderator, member, regular_user] }
+
+    before { group.add(member) }
+
+    context "when a group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = group.id.to_s }
+
+      it "returns administrators and members of the whisper groups" do
+        expect(whisperers).to contain_exactly(admin, member)
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
+    end
+
+    context "when no group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = "" }
+
+      it "returns no user" do
+        expect(whisperers).to be_empty
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
     end
   end
 
@@ -4031,6 +4305,29 @@ RSpec.describe User do
     fab!(:admin)
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+    shared_examples "including logged in categories in secured scopes" do |granular_permissions_enabled:|
+      it "includes logged in categories for users and excludes anonymous access" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
+        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+
+        expect(user.secure_category_ids).to eq([category.id])
+        expect(user.guardian.can_see_category?(category)).to eq(true)
+        expect(Category.secured(user.guardian).exists?(id: category.id)).to eq(true)
+        expect(Category.secured(Guardian.new).exists?(id: category.id)).to eq(false)
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "including logged in categories in secured scopes",
+                       granular_permissions_enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "including logged in categories in secured scopes",
+                       granular_permissions_enabled: true
+    end
 
     it "allows admin to see all secure categories" do
       expect(admin.secure_category_ids).to include(private_category.id)

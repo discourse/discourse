@@ -27,21 +27,29 @@ class AccessControlList::EvaluateModification
     AccessControlList.inject_mandatory_acl(params.new_acl, params.target_type)
   end
 
-  def fetch_acl_user_will_have(guardian:, new_acl_with_mandatory:)
-    new_acl_with_mandatory.select do |acl|
-      if acl[:type].to_s == "group"
-        guardian.user.in_any_groups?([acl[:id]])
-      else
-        acl[:id] == guardian.user.id
+  def fetch_acl_user_will_have(guardian:, new_acl_with_mandatory:, params:)
+    acl_user_will_have =
+      new_acl_with_mandatory.select do |acl|
+        if acl[:type].to_s == "group"
+          guardian.user.in_any_groups?([acl[:id]])
+        else
+          acl[:id] == guardian.user.id
+        end
       end
+
+    if params.target_id.blank?
+      acl_user_will_have << AccessControlList.flat_acl_for(guardian.user, Acl::Permissions::OWNER)
     end
+
+    acl_user_will_have
   end
 
   def user_will_not_lose_permission(target_type_klass:, acl_user_will_have:)
     return true if !target_type_klass.has_loss_warning_permissions?
-    (
-      target_type_klass.loss_warning_permissions - acl_user_will_have.map { |acl| acl[:permission] }
-    ).empty?
+    permissions = acl_user_will_have.map { |acl| acl[:permission].to_s }
+    return true if permissions.include?(Acl::Permissions::OWNER)
+
+    (target_type_klass.loss_warning_permissions - permissions).empty?
   end
 
   def user_will_have_permission(acl_user_will_have:)

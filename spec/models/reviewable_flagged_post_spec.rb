@@ -23,6 +23,25 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     expect(reviewable.reload.potentially_illegal?).to eq(true)
   end
 
+  describe "#actions_for" do
+    it "requires classification for actions that restrict the flagged content or its author" do
+      reviewable = PostActionCreator.spam(user, post).reviewable
+
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_hide",
+        "agree_and_edit",
+        "delete_and_agree",
+        "delete_and_ignore",
+        "agree_and_suspend",
+        "agree_and_silence",
+        "delete_user",
+        "delete_user_block",
+      )
+    end
+  end
+
   describe "actions" do
     let!(:result) { PostActionCreator.spam(user, post) }
     let(:reviewable) { result.reviewable }
@@ -605,7 +624,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when unsilence_user handles the flagged post reviewable" do
@@ -1486,7 +1505,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 

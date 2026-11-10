@@ -35,7 +35,12 @@ after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node { DiscourseWorkflows::Nodes::TopicReceivedVote::V1 }
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::TopicReceivedVote::V1,
+        DiscourseWorkflows::Nodes::TopicReceivedVote::V2,
+      ]
+    end
   end
 
   reloadable_patch do

@@ -3,7 +3,7 @@
 Fabricator(:access_control_list) do
   target { Fabricate(:category) }
   permission { "view" }
-  owner { "core" }
+  source { "core" }
   allowed_user_ids { [] }
   allowed_group_ids { [] }
 end

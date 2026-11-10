@@ -247,6 +247,21 @@
     padding-top: 0.5em;
     border-top: 1px solid var(--content-border-color);
   }
+
+  &__owner-avatars {
+    display: flex;
+    padding-inline-start: 0.2em;
+  }
+
+  &__owner {
+    display: flex;
+    border-radius: 50%;
+    outline: 1px solid var(--secondary);
+
+    + .discourse-boards-board-card__owner {
+      margin-inline-start: -0.2em;
+    }
+  }
 }
 
 .onebox .discourse-boards-board-card {

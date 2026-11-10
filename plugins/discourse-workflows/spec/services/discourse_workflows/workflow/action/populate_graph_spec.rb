@@ -282,18 +282,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
 
     context "when a node type has multiple versions" do
       it "uses the latest version for new nodes without a submitted typeVersion" do
-        v1 =
-          Class.new(DiscourseWorkflows::NodeType) do
-            description(name: "action:populate_versioned_test", version: "1.0")
-          end
-        v2 =
-          Class.new(DiscourseWorkflows::NodeType) do
-            description(name: "action:populate_versioned_test", version: "2.0")
-          end
-
-        DiscoursePluginRegistry.register_discourse_workflows_node(v1, Plugin::Instance.new)
-        DiscoursePluginRegistry.register_discourse_workflows_node(v2, Plugin::Instance.new)
-        DiscourseWorkflows::Registry.reset_indexes!
+        register_versioned_workflow_nodes("action:populate_versioned_test")
 
         result =
           described_class.call(
@@ -307,23 +296,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
 
         expect(result).to eq(true)
         expect(workflow.reload.nodes.first["typeVersion"]).to eq("2.0")
-      ensure
-        unregister_workflow_nodes(v1, v2)
       end
 
       it "keeps an existing versionless node on the default version" do
-        v1 =
-          Class.new(DiscourseWorkflows::NodeType) do
-            description(name: "action:populate_versionless_test", version: "1.0")
-          end
-        v2 =
-          Class.new(DiscourseWorkflows::NodeType) do
-            description(name: "action:populate_versionless_test", version: "2.0")
-          end
-        plugin = Plugin::Instance.new
-        DiscoursePluginRegistry.register_discourse_workflows_node(v1, plugin)
-        DiscoursePluginRegistry.register_discourse_workflows_node(v2, plugin)
-        DiscourseWorkflows::Registry.reset_indexes!
+        register_versioned_workflow_nodes("action:populate_versionless_test")
         workflow.update!(
           nodes: [
             {
@@ -350,8 +326,34 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
 
         expect(result).to eq(true)
         expect(workflow.reload.nodes.first["typeVersion"]).to eq("1.0")
-      ensure
-        unregister_workflow_nodes(v1, v2)
+      end
+
+      it "upgrades an existing node only to a newer non-deprecated version" do
+        register_versioned_workflow_nodes(
+          "action:populate_upgrade_test",
+          v1_deprecation: {
+            superseded_by: "2.0",
+          },
+        )
+        node = { "id" => "node-1", "type" => "action:populate_upgrade_test", "name" => "Node" }
+        save = ->(type_version, type = node["type"]) do
+          described_class.call(
+            workflow:,
+            nodes_data: [node.merge("type" => type, "typeVersion" => type_version)],
+            connections_data: {
+            },
+          )
+          workflow.reload.nodes.first["typeVersion"]
+        end
+        workflow.update!(nodes: [node.merge("typeVersion" => "1.0")], connections: {})
+
+        expect(save.call("9.0")).to eq("1.0")
+        expect(save.call("2.0")).to eq("2.0")
+        expect(save.call("1.0")).to eq("2.0")
+
+        register_versioned_workflow_nodes("action:populate_upgrade_other_test")
+        workflow.update!(nodes: [node.merge("typeVersion" => "1.0")], connections: {})
+        expect(save.call("2.0", "action:populate_upgrade_other_test")).to eq("1.0")
       end
     end
 

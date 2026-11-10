@@ -23,6 +23,18 @@ export default class LiveRoomSidebarContextMenu extends Component {
     return this.liveWebrtc.connectionStateFor(this.room.id) === "connected";
   }
 
+  get onRoomPage() {
+    const currentRoute = this.router.currentRoute;
+    return (
+      currentRoute?.name === "live-room" &&
+      currentRoute?.params?.slug === this.room.slug
+    );
+  }
+
+  get showWidgetToggle() {
+    return this.isConnected && !this.onRoomPage;
+  }
+
   @action
   openRoomPage() {
     this.router.transitionTo("live-room", this.room.slug);
@@ -79,15 +91,17 @@ export default class LiveRoomSidebarContextMenu extends Component {
         @item={{dropdown.item}}
         @room={{this.room}}
       />
-      <dropdown.item>
-        <DButton
-          class="live-room-sidebar-context-menu__open-page"
-          @action={{this.openRoomPage}}
-          @icon="expand"
-          @label="live.room.open_page"
-          @title="live.room.open_page"
-        />
-      </dropdown.item>
+      {{#unless this.onRoomPage}}
+        <dropdown.item>
+          <DButton
+            class="live-room-sidebar-context-menu__open-page"
+            @action={{this.openRoomPage}}
+            @icon="discourse-expand"
+            @label="live.room.open_page"
+            @title="live.room.open_page"
+          />
+        </dropdown.item>
+      {{/unless}}
       <dropdown.item>
         <DButton
           class="live-room-sidebar-context-menu__room-info"
@@ -128,7 +142,7 @@ export default class LiveRoomSidebarContextMenu extends Component {
           />
         </dropdown.item>
       {{/if}}
-      {{#if this.isConnected}}
+      {{#if this.showWidgetToggle}}
         <dropdown.item>
           <DButton
             class="live-room-sidebar-context-menu__toggle-widget"
@@ -146,6 +160,8 @@ export default class LiveRoomSidebarContextMenu extends Component {
             }}
           />
         </dropdown.item>
+      {{/if}}
+      {{#if this.isConnected}}
         <dropdown.item>
           <DButton
             class="live-room-sidebar-context-menu__leave-room --danger"

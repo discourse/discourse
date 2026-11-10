@@ -372,7 +372,6 @@ sv:
             going: "Kommer"
             interested: "Intresserad"
         event:
-          expired: "Utgången"
           closed: "Stängd"
           status:
             standalone:
@@ -384,6 +383,8 @@ sv:
             private:
               title: "Privat"
               description: "Endast inbjudna användare kan besöka ett privat evenemang."
+      recording_modal:
+        save: "Spara"
       composer:
         name_placeholder: "Evenemangsnamn"
         url_placeholder: "Lägg till URL"

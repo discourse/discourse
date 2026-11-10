@@ -958,14 +958,7 @@ export function validateArgValue(
             }
           } else {
             // No specific class or RestModel fallback, check RestModel + __type.
-            // `value instanceof RestModel` narrows `value` to `RestModel`,
-            // which (like `LayoutEntry`) has no index signature — the
-            // two-step cast reads its dynamic `__type` field regardless.
-            if (
-              !(value instanceof RestModel) ||
-              (value as unknown as Record<string, unknown>)["__type"] !==
-                modelType
-            ) {
+            if (!(value instanceof RestModel) || value.__type !== modelType) {
               return argValidationError(
                 argName,
                 `must be an instance of ${modelType} model.`,

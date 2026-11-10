@@ -262,21 +262,21 @@ export default class ReviewIndexController extends Controller {
 
   @action
   updateFilterReviewedBy(selected) {
-    this.set("filterReviewedBy", selected.firstObject);
+    this.set("filterReviewedBy", selected[0]);
   }
 
   @action
   updateFilterClaimedBy(selected) {
-    this.set("filterClaimedBy", selected.firstObject);
+    this.set("filterClaimedBy", selected[0]);
   }
 
   @action
   updateFilterFlaggedBy(selected) {
-    this.set("filterFlaggedBy", selected.firstObject);
+    this.set("filterFlaggedBy", selected[0]);
   }
 
   @action
   updateFilterUsername(selected) {
-    this.set("filterUsername", selected.firstObject);
+    this.set("filterUsername", selected[0]);
   }
 }

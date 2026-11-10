@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    blog:
+      admin:
+        authoring_design: Tasarım
+        overridden: Özel
+        insert: Ekle
+        array_value: Liste
+        preview_home: Ana Sayfa
+        preview_archive: Arşiv
+        desktop: Masaüstü
+        mobile: Mobil
+        back_to_themes: Temalara geri dön
+        new_theme_short: Yeni tema
+        themes: Temalar
+        theme_name: Tema adı
+        edit: Düzenle
+        activate: Etkinleştir
+        preview: Ön izle
+        import: İçe Aktar
+        export: Dışarı Aktar
+        active: Aktif
+  js:
+    blog:
+      panel:
+        badge:
+          draft: Taslak
+        preview: Ön izle
+        change:
+          title: başlık
+          body: gövde
+      review:
+        create: Bağlantı oluştur
+        copy: Kopyala
+        open: Aç
+        status:
+          active: Aktif
+          expired: Süresi doldu
+          revoked: İptal edildi
+          inactive: Aktif Değil
+        closed_on: "Kapatıldı, %{date}"
+        revoke: İptal Et
+        message: Geri bildirim
+      editor_table:
+        edit: Düzenle
+        status: Durum
+        replies: Yanıtlar
+      drafts: Taslaklar
+      preview: Ön izle
+      unpublish: Yayından kaldır
+      appearance_link: Görünüm

@@ -74,7 +74,9 @@ module Patreon
           loop do
             response = Patreon::Api.get(members_data_url(campaign_id, cursor))
 
-            if response.blank? || response["data"].blank?
+            return false unless response&.dig("data").is_a?(Array)
+
+            if response["data"].blank?
               Patreon::Pledge.save!([], false, adapter: self) if is_first_page
               break
             end
@@ -86,6 +88,12 @@ module Patreon
             break if cursor.blank?
           end
         end
+
+        true
+      end
+
+      def self.replace_pledge_on_create?
+        true
       end
 
       def self.extract(member_data)
@@ -99,6 +107,7 @@ module Patreon
 
             patron_id = entry["relationships"]["user"]["data"]["id"]
             attrs = entry["attributes"]
+            next if %w[active_patron declined_patron].exclude?(attrs["patron_status"])
 
             (entry.dig("relationships", "currently_entitled_tiers", "data") || []).each do |tier|
               (reward_users[tier["id"]] ||= []) << patron_id
@@ -106,12 +115,15 @@ module Patreon
 
             pledges[patron_id] = attrs["currently_entitled_amount_cents"]
             users[patron_id] = attrs["email"].downcase if attrs["email"].present?
-            declines[patron_id] = attrs["last_charge_date"] if attrs["last_charge_status"] ==
-              "Declined"
+            if attrs["patron_status"] == "declined_patron" ||
+                 attrs["last_charge_status"] == "Declined"
+              declines[patron_id] = attrs["last_charge_date"]
+            end
           end
 
           (member_data["included"] || []).each do |entry|
-            if entry["type"] == "user" && entry["attributes"]["email"].present?
+            if entry["type"] == "user" && entry["attributes"]["email"].present? &&
+                 pledges.key?(entry["id"])
               users[entry["id"]] ||= entry["attributes"]["email"].downcase
             end
           end
@@ -125,7 +137,7 @@ module Patreon
         patron_id = rel["user"]["data"]["id"]
 
         (rel.dig("currently_entitled_tiers", "data") || []).each do |tier|
-          (reward_users[tier["id"]] || []).reject! { |i| i == patron_id }
+          (reward_users[tier["id"]] || []).reject! { it == patron_id }
         end
 
         patron_id

@@ -15,6 +15,22 @@ RSpec.describe GroupsController do
       Fabricate(:group, name: "staff_group", visibility_level: Group.visibility_levels[:staff])
     end
 
+    it "prevents crawlers from indexing the group directory" do
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
     it "ensures that groups can be paginated" do
       50.times { Fabricate(:group) }
 
@@ -564,6 +580,22 @@ RSpec.describe GroupsController do
         with: {
           property: "og:description",
           content: "testing group bio",
+        },
+      )
+    end
+
+    it "uses the full name as entered for the HTML title" do
+      group.update!(full_name: "Utah - St. George")
+
+      get "/groups/#{group.name}.html"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag "title", text: "Utah - St. George - #{SiteSetting.title}"
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          property: "og:title",
+          content: "Utah - St. George",
         },
       )
     end
@@ -2094,6 +2126,22 @@ RSpec.describe GroupsController do
     fab!(:bot)
     let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
 
+    it "prevents crawlers from indexing group member lists" do
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
     it "lists bot members of automatic groups not created by core" do
       group.update_columns(automatic: true)
       group.add(bot)
@@ -3411,6 +3459,21 @@ RSpec.describe GroupsController do
       expect(GroupRequest.where(group: group, user: user).exists?).to eq(false)
     end
 
+    it "rejects membership requests from silenced users" do
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      new_user.update!(silenced_till: 1.year.from_now)
+      reason = "Attacker-controlled message to a non-staff owner"
+      sign_in(new_user)
+
+      post "/groups/#{group.name}/request_membership.json", params: { reason: }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      expect(GroupRequest.where(group:, user: new_user)).not_to exist
+      expect(Post.where(user: new_user, raw: reason)).not_to exist
+    end
+
     it "requires a reason" do
       sign_in(new_user)
 
@@ -3923,6 +3986,33 @@ RSpec.describe GroupsController do
 
         expect(response.status).to eq(200)
         expect(group_user.reload.notification_level).to eq(NotificationLevels.all[:muted])
+      end
+
+      it "does not reveal or update members hidden from a moderator" do
+        group.update!(members_visibility_level: Group.visibility_levels[:owners])
+        sign_in(moderator)
+        group_user = GroupUser.find_by(group:, user: target_user)
+        original_level = group_user.notification_level
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: target_user.id,
+             }
+
+        expect(response.status).to eq(403)
+        member_response = response.parsed_body
+        expect(member_response["errors"]).to be_present
+        expect(group_user.reload.notification_level).to eq(original_level)
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: non_member_user.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body).to eq(member_response)
       end
 
       it "does not allow a staff member to change notification level for a user who is not a member of the group" do

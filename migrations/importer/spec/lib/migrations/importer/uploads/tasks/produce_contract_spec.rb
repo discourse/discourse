@@ -6,12 +6,8 @@
 # and optimizer paths are not exercised on every run — so check the method
 # signatures directly.
 RSpec.describe Migrations::Importer::Uploads::Pipeline do
-  [
-    Migrations::Importer::Uploads::Tasks::Uploader,
-    Migrations::Importer::Uploads::Tasks::Optimizer,
-    Migrations::Importer::Uploads::Tasks::Fixer,
-  ].each do |task_class|
-    it "#{task_class.name.demodulize} accepts the pipeline's produce keywords" do
+  shared_examples "accepting pipeline producer keywords" do |task_class:|
+    it "accepts every pipeline keyword and requires no additional keywords" do
       parameters = task_class.instance_method(:produce).parameters
       accepted = parameters.filter_map { |type, name| name if %i[keyreq key].include?(type) }
       has_keyrest = parameters.any? { |type, _| type == :keyrest }
@@ -23,5 +19,20 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
       # …and everything the pipeline passes must be accepted.
       expect(has_keyrest || (%i[emit_work emit_result] - accepted).empty?).to be(true)
     end
+  end
+
+  context "with the uploader task" do
+    include_examples "accepting pipeline producer keywords",
+                     task_class: Migrations::Importer::Uploads::Tasks::Uploader
+  end
+
+  context "with the optimizer task" do
+    include_examples "accepting pipeline producer keywords",
+                     task_class: Migrations::Importer::Uploads::Tasks::Optimizer
+  end
+
+  context "with the fixer task" do
+    include_examples "accepting pipeline producer keywords",
+                     task_class: Migrations::Importer::Uploads::Tasks::Fixer
   end
 end

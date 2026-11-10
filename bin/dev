@@ -34,7 +34,11 @@ if (nodeModulesOutdated) {
   });
   if (result.status !== 0) {
     if (result.error && result.error.code === "ENOENT") {
-      console.error("pnpm is not installed. run `npm install -g pnpm`");
+      // npm skips pnpm's install script without this flag, and version manager shims can't
+      // run the placeholder that leaves behind
+      console.error(
+        "pnpm is not installed. run `npm install -g --allow-scripts=pnpm pnpm`"
+      );
     }
     process.exit(1);
   }

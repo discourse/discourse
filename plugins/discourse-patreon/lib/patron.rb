@@ -18,8 +18,7 @@ module Patreon
 
       local_users = get_local_users
       reward_users = Patreon::RewardUser.all
-      declined_users = Patreon::Pledge::Decline.all
-      declined_pledges_grace_period_days = SiteSetting.patreon_declined_pledges_grace_period_days
+      declined_users = Patreon::Pledge::Decline.expired
 
       filters.each_pair do |group_id, rewards|
         group = Group.find_by(id: group_id)
@@ -28,20 +27,11 @@ module Patreon
 
         patron_ids = rewards.map { |id| reward_users[id] }.compact.flatten.uniq
 
-        next if patron_ids.blank?
-
         user_ids =
           local_users
             .select do |_, patreon_id|
-              is_declined = false
-              declined_since = declined_users[patreon_id]
-
-              if declined_since.present?
-                declined_days_count = Time.now.to_date - declined_since.to_date
-                is_declined = declined_days_count > declined_pledges_grace_period_days
-              end
-
-              patreon_id.present? && patron_ids.include?(patreon_id) && !is_declined
+              patreon_id.present? && patron_ids.include?(patreon_id) &&
+                !declined_users.key?(patreon_id)
             end
             .pluck(0)
 
@@ -61,24 +51,14 @@ module Patreon
       return if user.blank?
 
       reward_users = Patreon::RewardUser.all
-      declined_since = Patreon::Pledge::Decline.all[patreon_id]
-      declined_pledges_grace_period_days = SiteSetting.patreon_declined_pledges_grace_period_days
-      is_member = true
-
-      if declined_since.present?
-        declined_days_count = Time.now.to_date - declined_since.to_date
-        is_member = false if declined_days_count > declined_pledges_grace_period_days
-      end
+      declined_users = Patreon::Pledge::Decline.expired
 
       filters.each_pair do |group_id, rewards|
         group = Group.find_by(id: group_id)
         next if group.blank?
 
-        if is_member
-          patron_ids = rewards.map { |id| reward_users[id] }.compact.flatten.uniq
-
-          is_member = false if patron_ids.blank? || patron_ids.exclude?(patreon_id)
-        end
+        patron_ids = rewards.map { |id| reward_users[id] }.compact.flatten.uniq
+        is_member = patron_ids.include?(patreon_id) && !declined_users.key?(patreon_id)
 
         is_existing_member = GroupUser.exists?(group: group, user: user)
 

@@ -252,7 +252,6 @@ module PageObjects
       end
 
       def ensure_redesigned_dashboard
-        page.refresh unless has_css?(".db-main", wait: 0)
         has_css?(".db-main [data-section-id], .db-main__empty")
         self
       end

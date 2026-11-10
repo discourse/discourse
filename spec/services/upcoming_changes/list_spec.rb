@@ -35,6 +35,66 @@ RSpec.describe UpcomingChanges::List do
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
     end
 
+    context "when a permanent change has stored group restrictions" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :permanent,
+            impact_type: "other",
+            impact_role: "developers",
+            allow_enabled_for: [:staff],
+          },
+        )
+        SiteSetting.enable_upload_debug_mode = true
+        Fabricate(
+          :site_setting_group,
+          name: "enable_upload_debug_mode",
+          group_ids: Group::AUTO_GROUPS[:staff].to_s,
+        )
+      end
+
+      it "lists the change as enabled for everyone without groups" do
+        expect(result).to run_successfully
+        setting =
+          result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+        expect(setting[:upcoming_change][:enabled_for]).to eq("everyone")
+        expect(setting[:groups]).to be_nil
+      end
+    end
+
+    context "when a change uses a linked group setting" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_upload_debug_mode: {
+            status: :experimental,
+            group_setting: :hidden_post_visible_groups,
+          },
+        )
+        Fabricate(:site_setting_group, name: "enable_upload_debug_mode", group_ids: "3")
+      end
+
+      it "lists the linked default audience and metadata rather than stale opt-in groups" do
+        expect(result).to run_successfully
+        setting =
+          result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+        expect(setting[:groups].split(",")).to contain_exactly(
+          "admins",
+          "moderators",
+          "trust_level_4",
+        )
+        expect(setting[:group_setting]).to include(
+          setting: :hidden_post_visible_groups,
+          value: SiteSetting.hidden_post_visible_groups,
+          mandatory_values: "1|2",
+          disallowed_groups: "4",
+        )
+        expect(setting[:group_setting]).to have_key(:requires_confirmation)
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
@@ -85,6 +145,50 @@ RSpec.describe UpcomingChanges::List do
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
 
         expect(mock_setting[:groups]).to eq("trust_level_0,trust_level_1")
+      end
+
+      describe "status_changed_at" do
+        before do
+          freeze_time
+
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: "enable_upload_debug_mode",
+            created_at: 2.weeks.ago,
+          )
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: "enable_upload_debug_mode",
+            created_at: 1.day.ago,
+          )
+          UpcomingChangeEvent.create!(
+            event_type: :manual_opt_in,
+            upcoming_change_name: "enable_upload_debug_mode",
+            created_at: 1.hour.ago,
+          )
+        end
+
+        it "includes the most recent status change time" do
+          mock_setting =
+            result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:upcoming_change][:status_changed_at]).to eq_time(1.day.ago)
+        end
+
+        it "is nil for changes without a status change event" do
+          mock_setting =
+            result.upcoming_changes.find { |change| change[:setting] == :allow_user_locale }
+
+          expect(mock_setting[:upcoming_change][:status_changed_at]).to be_nil
+        end
+
+        it "does not write the time into the shared upcoming change metadata" do
+          result
+
+          expect(SiteSetting.upcoming_change_metadata[:enable_upload_debug_mode]).not_to have_key(
+            :status_changed_at,
+          )
+        end
       end
 
       describe "overriding defaults setting" do

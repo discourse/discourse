@@ -21,7 +21,7 @@
     {
       "id": "bump-topic",
       "type": "action:topic",
-      "typeVersion": "1.0",
+      "typeVersion": "2.0",
       "name": "Bump topic",
       "parameters": {
         "operation": "bump",

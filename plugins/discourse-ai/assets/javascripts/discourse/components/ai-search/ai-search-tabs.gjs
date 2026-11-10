@@ -10,8 +10,8 @@ import { i18n } from "discourse-i18n";
 
 /**
  * The kinds of result a combined search fetched, as pills that switch between
- * them. Each keyword tab says how much it found, so an empty one is plain
- * before it is opened.
+ * them. Each keyword tab that isn't open says how much it found, so an empty
+ * one is plain before it is opened.
  */
 export default class AiSearchTabs extends Component {
   @service aiSearchSession;
@@ -44,10 +44,14 @@ export default class AiSearchTabs extends Component {
       empty: this.session.answerFailed,
     });
 
-    return tabs.map((tab) => ({
-      ...tab,
-      selected: this.session.selectedTab === tab.kind,
-    }));
+    const selectedTab = this.session.selectedTab;
+    return tabs.map((tab) => {
+      const selected = selectedTab === tab.kind;
+      // the count flags what was found beside the tab in view, so it waits
+      // for one to open and stays off that one
+      const showCount = selectedTab !== null && !selected;
+      return { ...tab, selected, count: showCount ? tab.count : null };
+    });
   }
 
   get tabsKey() {

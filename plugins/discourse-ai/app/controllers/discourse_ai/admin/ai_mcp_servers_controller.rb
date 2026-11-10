@@ -6,6 +6,7 @@ module DiscourseAi
       requires_plugin PLUGIN_NAME
 
       before_action :find_ai_mcp_server, only: %i[edit update destroy oauth_start oauth_disconnect]
+      before_action :ensure_interactive_session, only: %i[oauth_start oauth_callback]
       skip_before_action :check_xhr, :preload_json, only: %i[oauth_start oauth_callback]
 
       def index
@@ -164,6 +165,15 @@ module DiscourseAi
 
       def find_ai_mcp_server
         @ai_mcp_server = AiMcpServer.find(params[:id])
+      end
+
+      # The OAuth start/callback actions are interactive, browser-driven redirect
+      # flows that persist discovery state and replace the shared connection's
+      # tokens. They must never be reachable via API keys (including read-only
+      # scoped keys that are only permitted GET requests), which would otherwise
+      # let a read-only key perform these writes.
+      def ensure_interactive_session
+        raise Discourse::InvalidAccess if is_api? || is_user_api?
       end
 
       def ai_mcp_server_params

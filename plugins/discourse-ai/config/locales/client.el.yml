@@ -131,6 +131,7 @@ el:
         groups: "Ομάδες:"
         no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
+        classification_model: "Μοντέλο:"
         edit: "Ρυθμίσεις"
         expand_list:
           one: "(%{count} περισσότερο)"
@@ -144,6 +145,8 @@ el:
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
+        sentiment:
+          enabled: "Ενεργοποιημένη"
         search:
           name: "Αναζήτηση"
         admin_dashboard:
@@ -200,6 +203,8 @@ el:
             label: "Μετάφραση"
       spam:
         short_title: "Ανεπιθύμητα"
+        no_llm_selected: "Κανένα"
+        no_decision_model_selected: "Κανένα"
         last_seven_days: "Τελευταίες 7 ημέρες"
         false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"

@@ -5,7 +5,7 @@ RSpec.describe Acl::Permissions do
 
   describe "#values" do
     it "returns the permission IDs as frozen strings in a frozen array" do
-      expect(permissions.values).to eq(%w[view edit manage])
+      expect(permissions.values).to eq(%w[view edit manage owner])
       expect(permissions.values).to be_frozen
       expect(permissions.values).to all(be_frozen)
     end
@@ -13,8 +13,12 @@ RSpec.describe Acl::Permissions do
 
   describe "named readers" do
     it "returns each permission ID as a frozen string" do
-      expect([permissions.view, permissions.edit, permissions.manage]).to eq(%w[view edit manage])
-      expect([permissions.view, permissions.edit, permissions.manage]).to all(be_frozen)
+      expect([permissions.view, permissions.edit, permissions.manage, permissions.owner]).to eq(
+        %w[view edit manage owner],
+      )
+      expect([permissions.view, permissions.edit, permissions.manage, permissions.owner]).to all(
+        be_frozen,
+      )
     end
 
     it "raises for an undeclared permission" do

@@ -28,7 +28,11 @@ sl:
           two: "%{count} odgovora"
           few: "%{count} odgovori"
           other: "%{count} odgovorov"
-        created_by: "Ustvaril"
+        owners:
+          one: "Skrbnik"
+          two: "Skrbniki"
+          few: "Skrbniki"
+          other: "Skrbniki"
       manage:
         name: "Ime"
         constraint_categories: "Kategorije"

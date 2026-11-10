@@ -1,6 +1,5 @@
 import { computed } from "@ember/object";
 import { trustHTML as htmlSafeTemplateHelper } from "@ember/template";
-import deprecated from "discourse/lib/deprecated";
 import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
@@ -102,20 +101,6 @@ export function trustHTML(...args) {
       return htmlSafeTemplateHelper(this.get(path));
     },
   });
-}
-
-/**
-  @deprecated Use `trustHTML` instead.
-**/
-export function htmlSafe(...args) {
-  deprecated(
-    "`htmlSafe` from 'discourse/lib/computed' is deprecated. Use `trustHTML` instead.",
-    {
-      id: "discourse.computed-html-safe",
-      since: "2026.3.0",
-    }
-  );
-  return trustHTML(...args);
 }
 
 /**

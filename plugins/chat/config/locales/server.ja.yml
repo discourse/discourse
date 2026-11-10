@@ -56,6 +56,7 @@ ja:
 
         %{channel_url} からチャンネルにアクセスして再試行してください。
   chat:
+    design_wizard_homepage_name: "チャット"
     deleted_chat_username: 削除済み
     crawler:
       directory_title: "チャットチャンネル"

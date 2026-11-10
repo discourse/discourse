@@ -35,7 +35,8 @@ if defined?(DiscourseWorkflows)
                   acl_target_type: "Boards::Board",
                   acl_target_key: Boards::Board.acl_target_key,
                   acl_target_name: "boards.manage.board",
-                  permissions: Boards::Board::ACL_PERMISSIONS.values,
+                  permissions:
+                    Boards::Board::ACL_PERMISSIONS.values - [Boards::Board::ACL_PERMISSIONS.owner],
                 },
               },
               slug: {
@@ -92,8 +93,13 @@ if defined?(DiscourseWorkflows)
                   "unicode_name" => board.unicode_name,
                 }
               end
-              on_failed_policy(:can_manage) do
-                raise_node_error!(I18n.t("discourse_workflows.errors.create_board.forbidden"))
+              on_failed_policy(:can_create_board) do |policy|
+                raise_node_error!(
+                  I18n.t(
+                    "discourse_workflows.errors.create_board.forbidden",
+                    policy_reason: policy.reason,
+                  ),
+                )
               end
               on_failed_contract do |contract|
                 invalid_parameters!(contract.errors.full_messages.join(", "))

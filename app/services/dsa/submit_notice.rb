@@ -62,7 +62,7 @@ module Dsa
       attribute :token, :string
 
       validates :notice, presence: true
-      validates :token, presence: true, length: { is: 64 }
+      validates :token, length: { is: 64 }, allow_blank: true
     end
 
     model :verification
@@ -72,7 +72,11 @@ module Dsa
 
     private
 
-    def fetch_verification(params:)
+    def fetch_verification(guardian:, params:)
+      if params.notice.email == Dsa::Notice.verified_account_email(guardian.user)
+        return { email: params.notice.email }
+      end
+
       Dsa::NoticeVerification.consume(token: params.token, email: params.notice.email)
     end
 

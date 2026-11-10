@@ -4,6 +4,14 @@ module JsonApiKit
   module RelationshipReading
     private
 
+    def render_related_resources
+      render_relationship(relationship.related_document)
+    end
+
+    def render_linkage
+      render_relationship(relationship.linkage_document)
+    end
+
     def render_relationship(document_class)
       render_document(
         document_class.for(

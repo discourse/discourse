@@ -29,7 +29,11 @@ module DiscourseEvents
             after: "now",
             include_ongoing: true,
             limit:,
-          ).preload(post: :topic)
+          )
+        if !request_context.has_scopes?(DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ)
+          events = events.where.not(topics: { archetype: Archetype.private_message })
+        end
+        events = events.preload(post: :topic)
         values =
           events.map do |event|
             {

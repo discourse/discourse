@@ -1,18 +1,8 @@
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import OptionRow from "discourse/components/design-wizard/option-row";
 import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-
-const TOPIC_PAGES = ["latest", "new", "hot"];
-
-function topicPageLabel(page) {
-  return i18n(`filters.${page}.title`);
-}
-
-function topicPageDescription(page) {
-  return i18n(`design_wizard.homepage.topic_pages.${page}`);
-}
 
 function isHorizon(themeId) {
   return themeId === HORIZON_THEME_ID;
@@ -104,12 +94,28 @@ const CategoryStyleMock = <template>
   {{/if}}
 </template>;
 
+const ConversationMock = <template>
+  {{#each (array 1 2 3)}}
+    <span class="design-wizard__mock-message">
+      <span class="design-wizard__mock-avatar"></span>
+      <span class="design-wizard__mock-message-body">
+        <span class="design-wizard__mock-line --title"></span>
+        <span class="design-wizard__mock-line --text"></span>
+      </span>
+    </span>
+  {{/each}}
+  <span class="design-wizard__mock-composer">
+    <span class="design-wizard__mock-line --text"></span>
+    <span class="design-wizard__mock-avatar"></span>
+  </span>
+</template>;
+
 const DesignWizardHomepageSection = <template>
   <div class="design-wizard__homepage-cards">
     <button
-      aria-pressed={{if (eq @homepage "categories") "false" "true"}}
+      aria-pressed={{if (eq @homepage "latest") "true" "false"}}
       class="design-wizard__homepage-card
-        {{unless (eq @homepage 'categories') '--selected'}}"
+        {{if (eq @homepage 'latest') '--selected'}}"
       data-homepage="topics"
       type="button"
       {{on "click" (fn @onSelectHomepage "latest")}}
@@ -135,6 +141,30 @@ const DesignWizardHomepageSection = <template>
       </span>
       {{i18n "design_wizard.homepage.categories"}}
     </button>
+    {{#each @additionalHomepages as |option|}}
+      <button
+        aria-pressed={{if (eq @homepage option.id) "true" "false"}}
+        class="design-wizard__homepage-card
+          {{if (eq @homepage option.id) '--selected'}}"
+        data-homepage={{option.id}}
+        type="button"
+        {{on "click" (fn @onSelectHomepage option.id)}}
+      >
+        {{#if (eq option.illustration "conversation")}}
+          <span
+            aria-hidden="true"
+            class="design-wizard__homepage-thumbnail --conversation"
+          >
+            <ConversationMock />
+          </span>
+        {{else}}
+          <span class="design-wizard__homepage-thumbnail --icon">
+            {{dIcon option.icon}}
+          </span>
+        {{/if}}
+        {{option.name}}
+      </button>
+    {{/each}}
   </div>
 
   {{#if (eq @homepage "categories")}}
@@ -166,22 +196,11 @@ const DesignWizardHomepageSection = <template>
       </div>
     </div>
   {{else}}
-    <div class="design-wizard__detail-group">
-      <span class="design-wizard__label">
-        {{i18n "design_wizard.homepage.topic_page_type"}}
-      </span>
-      <div class="design-wizard__option-rows">
-        {{#each TOPIC_PAGES as |page|}}
-          <OptionRow
-            data-topic-page={{page}}
-            @description={{topicPageDescription page}}
-            @label={{topicPageLabel page}}
-            @onSelect={{fn @onSelectHomepage page}}
-            @selected={{eq page @homepage}}
-          />
-        {{/each}}
-      </div>
-    </div>
+    {{#each @additionalHomepages as |option|}}
+      {{#if (eq @homepage option.id)}}
+        <p class="design-wizard__detail-group">{{option.description}}</p>
+      {{/if}}
+    {{/each}}
   {{/if}}
 </template>;
 

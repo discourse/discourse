@@ -16,8 +16,10 @@ Fabricator(:boards_board, class_name: "Boards::Board") do
         .wrap(evaluator[:additional_manage_groups])
         .map { |group| AccessControlList.flat_acl_for(group, "manage") }
 
+    owner_acl = AccessControlList.flat_acl_for(board.created_by, Acl::Permissions::OWNER)
+
     AccessControlList.bulk_insert_flattened_acl!(
-      AccessControlList.inject_mandatory_acl(additional_manage_groups, board),
+      AccessControlList.inject_mandatory_acl(additional_manage_groups + [owner_acl], board),
       board,
       Boards::PLUGIN_NAME,
     )

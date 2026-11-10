@@ -141,6 +141,11 @@ module DiscourseAi
             Tools::SettingContext,
             Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
+            Tools::GenerateAppearanceChange,
+            Tools::SaveAppearanceChange,
+            Tools::ActivateAppearanceChange,
+            Tools::RevertAppearanceChange,
+            Tools::ListAppearanceChanges,
             Tools::RandomPicker,
             Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
@@ -413,9 +418,7 @@ module DiscourseAi
         return if context.subagent_depth.to_i >= SubagentRunner::MAX_SUBAGENT_DEPTH
 
         state = context.subagent_execution_state
-        if !state&.spawn_available? || !state.completion_available? || state.remaining_tokens <= 0
-          return
-        end
+        return if !state&.completion_available? || state.remaining_tokens <= 0
 
         records_by_id = AiAgent.where(id: self.class.subagent_ids, enabled: true).index_by(&:id)
         models_by_agent_id = SubagentRunner.resolve_models(records_by_id.values)

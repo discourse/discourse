@@ -1,6 +1,10 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsShowDiscourseAiAgentsEdit extends DiscourseRoute {
+  queryParams = {
+    source: {},
+  };
+
   async model(params) {
     const allAgents = this.modelFor("adminPlugins.show.discourse-ai-agents");
     const id = parseInt(params.id, 10);

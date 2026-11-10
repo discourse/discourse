@@ -196,7 +196,19 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  after_destroy :reassign_acl_ownership, unless: :new_record?
   after_destroy :clear_acls
+
+  def reassign_acl_ownership
+    AccessControlList::ReassignDeletedUserOwnership.call!(
+      guardian: Discourse.system_user.guardian,
+      params: {
+        user_id: id,
+        username: username,
+        deleted_at: Time.current,
+      },
+    )
+  end
 
   def clear_acls
     Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
@@ -737,6 +749,10 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
+  def available_notification_types
+    notifications.visible.distinct.pluck(:notification_type)
+  end
+
   MAX_UNREAD_BACKLOG = 400
   def grouped_unread_notifications
     results = DB.query(<<~SQL, user_id: id, limit: MAX_UNREAD_BACKLOG)
@@ -934,6 +950,7 @@ class User < ActiveRecord::Base
 
     payload[:all_unread_notifications_count] = all_unread_notifications_count
     payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:available_notification_types] = available_notification_types
     payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
@@ -1398,9 +1415,9 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
-    reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
+    reviewable_ids = Reviewable.created_solely_by(self).pluck(:id)
     ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
-    Reviewable.where(created_by_id: id).delete_all
+    Reviewable.where(id: reviewable_ids).delete_all
 
     posts
       .order("post_number desc")
@@ -1607,7 +1624,14 @@ class User < ActiveRecord::Base
       if admin? && !SiteSetting.suppress_secured_categories_from_admin
         Category.unscoped.where(read_restricted: true)
       else
-        secure_categories.references(:categories)
+        Category.where(id: secure_categories.select(:id)).or(
+          Category.where(
+            id:
+              CategoryGroup.where(group_id: Group::AUTO_GROUPS[:logged_in_users]).select(
+                :category_id,
+              ),
+          ),
+        )
       end
 
     cats.pluck("categories.id").sort
@@ -2113,6 +2137,7 @@ class User < ActiveRecord::Base
     if @raw_password
       # Association in model may be out-of-sync
       UserAuthToken.where(user_id: id).destroy_all
+      PushNotificationPusher.clear_subscriptions(self)
 
       email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
 

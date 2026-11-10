@@ -23,6 +23,7 @@ RSpec.describe Admin::OnboardingEventsController do
         expect(log.subject).to eq("select_theme")
       end
 
+      # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
       UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS.each do |option|
         it "logs the selected #{option} option with readable details" do
           post "/admin/onboarding/events.json",
@@ -46,6 +47,7 @@ RSpec.describe Admin::OnboardingEventsController do
           )
         end
       end
+      # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
       it "still logs posting completed outside the suggested options" do
         post "/admin/onboarding/events.json",

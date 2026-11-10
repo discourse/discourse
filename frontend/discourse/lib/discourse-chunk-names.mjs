@@ -55,12 +55,8 @@ export default function discourseChunkNamesPlugin() {
       return {
         ...options,
         chunkFileNames: (chunk) => {
-          if (!chunk.isDynamicEntry) {
-            return original.replaceAll("[name]", "chunk");
-          }
-
           if (!chunk.facadeModuleId) {
-            return original;
+            return original.replaceAll("[name]", "chunk");
           }
 
           const name =

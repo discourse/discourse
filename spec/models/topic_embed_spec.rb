@@ -1252,7 +1252,10 @@ RSpec.describe TopicEmbed do
       HTML
 
       raw = TopicEmbed.absolutize_urls(url, contents)
-      expect(raw).to eq(contents)
+      expect(raw).to eq(<<~HTML)
+        hello world new post <a href="mailto:somemail@somewhere.org&gt;">hello</a>
+        some image <img src="https:/&gt;&lt;invalidimagesrc/">
+      HTML
     end
   end
 

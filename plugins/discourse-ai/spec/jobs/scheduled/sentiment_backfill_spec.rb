@@ -10,6 +10,7 @@ RSpec.describe Jobs::SentimentBackfill do
 
     before do
       SiteSetting.ai_sentiment_enabled = true
+      SiteSetting.ai_sentiment_emotion_enabled = true
       SiteSetting.ai_sentiment_backfill_maximum_posts_per_hour = 100
       SiteSetting.ai_sentiment_model_configs =
         "[{\"model_name\":\"SamLowe/roberta-base-go_emotions\",\"endpoint\":\"http://samlowe-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"j-hartmann/emotion-english-distilroberta-base\",\"endpoint\":\"http://jhartmann-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"cardiffnlp/twitter-roberta-base-sentiment-latest\",\"endpoint\":\"http://cardiffnlp-sentiment.com\",\"api_key\":\"123\"}]"
@@ -24,6 +25,32 @@ RSpec.describe Jobs::SentimentBackfill do
       expect(ClassificationResult.where(target: post).count).to eq(expected_analysis)
     end
 
+    it "backfills only missing decision results using stable strategy keys" do
+      model = Fabricate(:decision_model)
+      SiteSetting.ai_sentiment_model_configs = ""
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
+      SiteSetting.ai_sentiment_sentiment_decision_model = model.id
+      SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
+      SiteSetting.ai_sentiment_emotion_decision_model = model.id
+      Fabricate(
+        :sentiment_classification,
+        target: post,
+        model_used: "discourse-ai/sentiment-decision",
+      )
+
+      DiscourseAi::Decisions.with_canned_answers(emotion: "joy") do |canned|
+        job.execute({})
+        job.execute({})
+
+        expect(canned.calls.map { |call| call[:feature_name] }).to eq(["emotion"])
+      end
+
+      expect(ClassificationResult.where(target: post).pluck(:model_used)).to contain_exactly(
+        "discourse-ai/sentiment-decision",
+        "discourse-ai/emotion-decision",
+      )
+    end
+
     it "does nothing when batch size is zero" do
       SiteSetting.ai_sentiment_backfill_maximum_posts_per_hour = 0
 
@@ -32,12 +59,26 @@ RSpec.describe Jobs::SentimentBackfill do
       expect(ClassificationResult.count).to be_zero
     end
 
-    it "does nothing when sentiment is disabled" do
+    it "does nothing when both capabilities are disabled" do
       SiteSetting.ai_sentiment_enabled = false
+      SiteSetting.ai_sentiment_emotion_enabled = false
 
       job.execute({})
 
       expect(ClassificationResult.count).to be_zero
+    end
+
+    it "processes only posts created today when the age limit is zero" do
+      today = DB.query_single("SELECT CURRENT_DATE::timestamp").first
+      post.update_columns(created_at: today + 1.minute)
+      yesterday_post = Fabricate(:post, created_at: today - 1.minute)
+      SiteSetting.ai_sentiment_backfill_post_max_age_days = 0
+      SentimentInferenceStubs.stub_classification(post)
+
+      job.execute({})
+
+      expect(ClassificationResult.where(target: post).count).to eq(expected_analysis)
+      expect(ClassificationResult.where(target: yesterday_post).count).to be_zero
     end
 
     it "respects the ai_sentiment_backfill_post_max_age_days setting" do

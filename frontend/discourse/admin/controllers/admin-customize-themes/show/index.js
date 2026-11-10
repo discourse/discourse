@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ChangeThemeSourceModal from "discourse/admin/components/modal/change-theme-source";
+import { alertSkippedComponents } from "discourse/admin/components/skipped-theme-components";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -246,7 +247,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     });
   }
 
-  @computed("model.childThemesNames.[]")
+  @computed("model.childThemes.[]")
   get relativesSelectorSettingsForTheme() {
     return SiteSetting.create({
       list_type: "compact",
@@ -431,8 +432,9 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     this.modal.show(ChangeThemeSourceModal, {
       model: {
         theme: this.model,
-        onSuccess: () => {
+        onSuccess: (result) => {
           this.send("routeRefreshModel");
+          alertSkippedComponents(this.dialog, result);
         },
       },
     });

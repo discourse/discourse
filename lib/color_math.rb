@@ -16,6 +16,25 @@ module ColorMath
     end
   end
 
+  # WCAG 2 relative luminance, from 0 for black to 1 for white
+  def self.relative_luminance(color)
+    red, green, blue =
+      Converters
+        .hex_to_rgb(color)
+        .map do |channel|
+          value = channel / 255.0
+          value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055)**2.4
+        end
+
+    (0.2126 * red) + (0.7152 * green) + (0.0722 * blue)
+  end
+
+  # WCAG 2 contrast ratio between two colors, from 1 to 21
+  def self.contrast_ratio(color, other_color)
+    darker, lighter = [relative_luminance(color), relative_luminance(other_color)].minmax
+    (lighter + 0.05) / (darker + 0.05)
+  end
+
   # Equivalent to scale_color(color, lightness: ) in sass
   def self.scale_color_lightness(color, adjustment)
     rgb = Converters.hex_to_rgb(color)

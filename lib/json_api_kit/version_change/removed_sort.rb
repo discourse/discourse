@@ -10,7 +10,7 @@ module JsonApiKit
       def initialize(type, name, **options)
         @type = type.to_s
         @name = "__removed_sort_#{object_id}"
-        @sort = JsonApiKit::Declarations::Sort.for(name, **options)
+        @sort = JsonApiKit::Declarations::Sort.new(name, **options)
       end
 
       def transformations

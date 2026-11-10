@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Sideload do
-  subject(:sideload) { described_class.new(relationship, paths:, rows:, request:, schema:) }
+  subject(:sideload) { described_class.new(relationship, paths:, rows:, request:, owner_resource:) }
 
   fab!(:author, :user)
   fab!(:topic) { Fabricate(:topic, user: author, title: "A topic read with its author") }
@@ -18,7 +18,11 @@ RSpec.describe JsonApiKit::Sideload do
   end
   let(:paths) { JsonApiKit::Paths.new([]) }
   let(:records) { [topic] }
-  let(:rows) { records.map { JsonApiKit::Pagination::Row.new(record: it, segment: nil) } }
+  let(:rows) do
+    records.map do
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: it, segment: nil)
+    end
+  end
   let(:params) { {} }
   let(:request) do
     JsonApiKit::Request::Collection.new(
@@ -27,7 +31,14 @@ RSpec.describe JsonApiKit::Sideload do
       edition: JsonApiKit::Edition.current,
     )
   end
-  let(:schema) { JsonApiKit::Schema.new(Topic) }
+  let(:owner_resource) do
+    Class
+      .new(JsonApiKit::Resource) do
+        model Topic
+        type :topics
+      end
+      .new(guardian: request.guardian, edition: request.edition)
+  end
 
   describe "#linkage_for" do
     subject(:linkage) { sideload.linkage_for(rows.first) }
@@ -56,20 +67,6 @@ RSpec.describe JsonApiKit::Sideload do
 
       it "holds no record" do
         expect(linkage.records).to be_empty
-      end
-    end
-
-    context "when a path goes past the relationship" do
-      let(:paths) { JsonApiKit::Paths.new(%w[user.groups]).next_for("user") }
-
-      before { allow(relationship).to receive(:listing).and_call_original }
-
-      it "gives the rest of the path to the related resource" do
-        linkage
-        expect(relationship).to have_received(:listing).with(
-          a_hash_including(include: paths),
-          any_args,
-        )
       end
     end
 

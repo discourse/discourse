@@ -4,18 +4,27 @@ module DiscourseAi
   module Discoveries
     class Synthesis
       Result =
-        Struct.new(:answerable, :source_refs, :title, :answer, :follow_up, keyword_init: true)
+        Struct.new(
+          :answerable,
+          :source_refs,
+          :title,
+          :answer,
+          :follow_up,
+          :no_answer_reason,
+          keyword_init: true,
+        )
       PLACEHOLDER_ANSWERS = %w[true false null undefined none].freeze
       SOURCE_REFERENCE_PATTERN =
         /[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\))(?:[ \t]*,[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\)))*/i
       SOURCES_SECTION_PATTERN =
         /\n{2,}(?:\#{1,6}\s*)?(?:\*\*|__)?(?:sources|references)\s*:?(?:\*\*|__)?\s*\n.*\z/im
 
-      def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
+      def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil, feature_context: {})
         @user = user
         @ai_agent = ai_agent
         @llm_model = llm_model
         @cancel_manager = cancel_manager
+        @feature_context = feature_context
       end
 
       def call(
@@ -26,11 +35,7 @@ module DiscourseAi
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       )
-        if candidates.empty?
-          return(
-            Result.new(answerable: false, source_refs: [], title: "", answer: "", follow_up: "")
-          )
-        end
+        return empty_result(:no_candidates) if candidates.empty?
         related_count = normalized_related_count(related_count)
         original_query_locale = normalized_original_query_locale(original_query_locale)
 
@@ -63,7 +68,7 @@ module DiscourseAi
           )
         values = { answerable: nil, source_refs: nil, title: +"", answer: +"", follow_up: +"" }
 
-        bot.reply(context) do |partial, _, type|
+        bot.reply(context, llm_args: { feature_context: @feature_context }) do |partial, _, type|
           next if type != :structured_output
 
           answerable = partial.read_buffered_property(:answerable)
@@ -99,10 +104,9 @@ module DiscourseAi
             answer: answer_without_source_references(values[:answer]),
             follow_up: values[:follow_up].to_s.strip,
           )
-        if !result.answerable || result.source_refs.empty? ||
-             !self.class.meaningful_answer?(result.answer)
-          return empty_result
-        end
+        return empty_result(:abstained) if !result.answerable
+        return empty_result(:unresolved_sources) if result.source_refs.empty?
+        return empty_result(:empty_answer) if !self.class.meaningful_answer?(result.answer)
 
         result
       end
@@ -136,8 +140,15 @@ module DiscourseAi
           .first(related_count)
       end
 
-      def empty_result
-        Result.new(answerable: false, source_refs: [], title: "", answer: "", follow_up: "")
+      def empty_result(no_answer_reason)
+        Result.new(
+          answerable: false,
+          source_refs: [],
+          title: "",
+          answer: "",
+          follow_up: "",
+          no_answer_reason:,
+        )
       end
 
       def answer_without_source_references(answer)
@@ -171,32 +182,49 @@ module DiscourseAi
         )
       end
 
+      # Most of each candidate is metadata rather than content, so it is kept
+      # to what the model can use: days rather than timestamps, links without
+      # the slug that repeats the title, and flags only when they are set.
+      # Whether a passage is the topic's first post shows in its post_number.
       def candidate_input(candidate)
         input =
           candidate.slice(
             "source_ref",
             "title",
-            "url",
             "username",
-            "created",
             "category",
             "likes",
             "topic_views",
             "topic_likes",
             "topic_replies",
             "tags",
-            "author_is_staff",
-            "is_topic_op",
+            "source_name",
           ).compact
+        input["url"] = slugless_url(candidate["url"]) if candidate["url"]
+        input["created"] = day(candidate["created"]) if candidate["created"]
+        input["author_is_staff"] = true if candidate["author_is_staff"]
+        input["solved"] = true if candidate["solved"]
         if candidate["passages"].present?
           input["passages"] = candidate["passages"].map do |passage|
-            passage.slice("post_number", "excerpt").compact
+            passage.slice("post_number", "excerpt", "answer").compact
           end
         else
           input["excerpt"] = candidate["excerpt"] if candidate["excerpt"]
         end
-        input["last_updated_at"] = candidate["post_updated_at"] if candidate["post_updated_at"]
-        input
+        last_updated_at = day(candidate["post_updated_at"] || candidate["published_at"])
+        input["last_updated_at"] = last_updated_at if last_updated_at != input["created"]
+        input.compact
+      end
+
+      def slugless_url(url)
+        url.sub(%r{\A(#{Regexp.escape(Discourse.base_path)}/t/)(?!\d+(?:/|\z))[^/]+/(?=\d)}, '\\1')
+      end
+
+      def day(value)
+        value = Time.iso8601(value) if value.is_a?(String)
+        value&.utc&.to_date&.iso8601
+      rescue ArgumentError
+        nil
       end
 
       def normalized_related_count(related_count)

@@ -1246,6 +1246,7 @@ acceptance("Admin - MCP", function (needs) {
       '.admin-mcp__primitive[data-primitive-id="tool:discourse_search"]';
 
     await visit("/admin/config/mcp/capabilities");
+    await click('[name="primitive_create_topic"]');
     await click(`${primitiveSelector} .admin-mcp__primitive-actions button`);
 
     assert.dom(".dialog-body").includesText(
@@ -1295,6 +1296,16 @@ acceptance("Admin - MCP", function (needs) {
         i18n("admin.config.mcp.primitives.emergency_blocked"),
         "the blocked state is removed"
       );
+
+    await click(
+      ".admin-mcp__primitive-selection-form .form-kit__actions .btn-primary"
+    );
+
+    assert.deepEqual(
+      savedPrimitiveIds,
+      ["tool:discourse_search", "tool:discourse_topic_create"],
+      "unsaved changes made before blocking are saved"
+    );
   });
 
   test("groups primitives by scope, provider, and type", async function (assert) {

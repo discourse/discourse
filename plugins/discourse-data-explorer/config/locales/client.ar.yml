@@ -55,7 +55,6 @@ ar:
         save_query: "حفظ الاستعلام"
         write_manually: "كتابة SQL يدويًا"
         sql_label: "SQL"
-        optional: "اختياري"
       import:
         unparseable_json: "ملف JSON غير قابل للتحليل"
         wrong_json: "ملف JSON خاطئ. يجب أن يحتوي ملف JSON على كائن \"استعلام\"، والذي يجب أن يحتوي على الأقل على خاصية \"sql\"."
@@ -126,7 +125,7 @@ ar:
         few: "جارٍ عرض أبرز %{count} نتائج."
         many: "جارٍ عرض أبرز %{count} نتيجةً."
         other: "جارٍ عرض أبرز %{count} نتيجة."
-      query_name: "استعلام"
+      name: "الاسم"
       query_groups: "المجموعات"
       query_tags: "الوسوم"
       link: "رابط لـ"

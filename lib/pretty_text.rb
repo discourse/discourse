@@ -19,6 +19,7 @@ module PrettyText
 
   BLOCKED_HOTLINKED_SRC_ATTR = "data-blocked-hotlinked-src"
   BLOCKED_HOTLINKED_SRCSET_ATTR = "data-blocked-hotlinked-srcset"
+  NO_ONEBOX_LIMIT = "none"
 
   VIMEO_PLAYER_HOST = "player.vimeo.com"
   VIMEO_PLAYER_PATH = %r{\A/video/(?<id>\d+)/?\z}
@@ -183,6 +184,13 @@ module PrettyText
 
     opts[:hashtag_context] ||= "topic-composer"
 
+    watched_words_replace = WordWatcher.regexps_for_action(:replace)
+    if opts[:sanitize] == false && watched_words_replace.present?
+      # HTML replacements are raw HTML, so they can only be used when the
+      # cooked output is sanitized
+      watched_words_replace = watched_words_replace.transform_values { |attrs| attrs.except(:html) }
+    end
+
     # Any addition here must also be added to buildOptions in discourse-markdown-it.
     opt_input = {
       siteSettings: SiteSetting.client_settings_hash,
@@ -192,7 +200,7 @@ module PrettyText
       customEmojiTranslation: Plugin::CustomEmoji.translations,
       emojiDenyList: Emoji.denied,
       censoredRegexp: WordWatcher.serialized_regexps_for_action(:censor),
-      watchedWordsReplace: WordWatcher.regexps_for_action(:replace),
+      watchedWordsReplace: watched_words_replace,
       watchedWordsLink: WordWatcher.regexps_for_action(:link),
       additionalOptions: Site.markdown_additional_options,
       avatar_sizes: SiteSetting.avatar_sizes,
@@ -208,6 +216,7 @@ module PrettyText
     opt_input[:topicId] = opts[:topic_id].to_i if opts[:topic_id]
     opt_input[:postId] = opts[:post_id].to_i if opts[:post_id]
     opt_input[:forceQuoteLink] = opts[:force_quote_link] if opts[:force_quote_link]
+    opt_input[:oneboxLimit] = opts[:onebox_limit] if opts[:onebox_limit]
     opt_input[:userId] = opts[:user_id].to_i if opts[:user_id]
     # Be careful disabling sanitization. We allow for custom emails
     opt_input[:disableSanitizer] = true if opts[:sanitize] == false

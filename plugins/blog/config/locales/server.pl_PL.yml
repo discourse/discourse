@@ -1,0 +1,123 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    blog_contributor_groups: Grupy, które mogą pisać i przesyłać własne szkice blogów. Udziel tym grupom również dostępu do kategorii prywatnych wersji roboczych. Nie daje to uprawnień pracownikom forum.
+    blog_editor_groups: Grupy, które mogą edytować i przesyłać dowolne widoczne dla nich szkice bloga. Udzielają również dostępu do kategorii prywatnych szkiców. Publikacja wymaga roli publikującego.
+    blog_publisher_groups: Grupy, które mogą zatwierdzać, publikować, wycofywać i planować poprawki bloga, widzą je. Wydawcy mogą zatwierdzać własne prace. Mogą również udzielać dostępu do kategorii prywatnych szkiców i uprawnień do tworzenia tematów w publicznej kategorii bloga. Administratorzy zawsze zachowują dostęp.
+    blog_enabled: "Blog zbudowany na Twojej społeczności. Pisz i recenzuj artykuły z zespołem redakcyjnym, publikuj je w /blog z własnym projektem i pozwól czytelnikom dyskutować o każdym artykule w powiązanym temacie. Skonfiguruj kategorie bloga i szkiców po ich włączeniu."
+    blog_url: Obsługuj bloga z własnego źródła HTTPS, bez ukośnika ani ścieżki, zamiast /blog na tej stronie. Nazwa musi różnić się od nazwy hosta dyskusji. Skonfiguruj tę nazwę hosta jako alias tej strony w połączeniu z serwerem proxy i bazą danych.
+    blog_category: Pojedyncza kategoria publiczna, której wyraźnie opublikowane tematy pojawiają się na blogu. Podkategorie nie są uwzględniane. Temat nigdy nie jest publikowany wyłącznie z powodu przynależności do tej kategorii.
+    blog_drafts_category: Osobna, prywatna kategoria dla szkiców redakcyjnych. Ogranicz członkostwo do redaktorów. Publikowanie powoduje skopiowanie tylko zatwierdzonego artykułu do osobnej dyskusji w {{setting:blog_category}}. Tematy redakcyjne i odpowiedzi pozostają prywatne. Adresy URL do przesyłania nie są prywatne, gdy wyłączone jest bezpieczne przesyłanie.
+    blog_title: Nazwa bloga wyświetlana w nawigacji, tytułach stron i kanałach.
+    blog_description: Krótki opis strony głównej, kanału informacyjnego i wyszukiwarek.
+    blog_about: Treść w formacie Markdown dla strony „O mnie” na blogu.
+    blog_posts_per_page: Liczba artykułów wyświetlanych na każdej stronie głównej lub stronie archiwum.
+  blog:
+    home: Home
+    continue_reading: Czytaj dalej
+    posted_by: Wysłane przez
+    permalink: Link bezpośredni
+    comments: Komentarze
+    twitter_updates: Aktualizacje na Twitterze
+    on_social: W mediach społecznościowych
+    community_activity: Aktywność społeczna
+    online_content: Treści online
+    recent_questions: Najnowsze pytania
+    recent_answers: Najnowsze odpowiedzi
+    syndication: Syndykacja
+    time_ago: "%{time} temu"
+    discussion_load_error: "Nie udało się załadować dyskusji w tekście. Odśwież tę stronę, aby spróbować ponownie, lub skorzystaj z opcji „Otwórz” w społeczności powyżej."
+    lightbox:
+      close: Zamknij obraz
+      dialog: Powiększony obraz artykułu
+      open: Wyświetl obraz
+      open_with_description: "Wyświetl obraz: %{description}"
+      original: Otwórz oryginał
+    skip_content: Przejdź do treści
+    navigation: Nawigacja bloga
+    archive: Archiwum
+    about: O stronie
+    community: Społeczność
+    rss: RSS
+    preview: Podgląd
+    preview_notice: Tylko autoryzowani redaktorzy mogą zobaczyć ten podgląd. Zapisz ustawienia publikacji przed podglądem zmian.
+    back_to_editor: Powrót do tematu
+    editor: Napisz w społeczności
+    footer: Napisane w Discourse. Zapraszamy do rozmowy.
+    from_the_blog: Notatki ze społeczności
+    tagged: Umieszczono w kategorii %{tag}
+    search: Szukaj
+    search_placeholder: Wyszukaj tytuły i fragmenty artykułów
+    featured: Polecane
+    reading_time:
+      one: "%{count} minuta czytania"
+      few: "%{count} minuty czytania"
+      many: "%{count} minut czytania"
+      other: "%{count} minut czytania"
+    replies:
+      one: "%{count} odpowiedź"
+      few: "%{count} odpowiedzi"
+      many: "%{count} odpowiedzi"
+      other: "%{count} odpowiedzi"
+    empty_title: Jeszcze nic tu nie ma
+    empty_body: Nowe historie będą się tu pojawiać po ich opublikowaniu.
+    pagination: Strony z artykułami
+    newer: Nowsze artykuły
+    older: Starsze artykuły
+    all_articles: Wszystkie artykuły
+    updated: Zaktualizowano %{date}
+    view_topic: Zobacz w społeczności
+    discussion: Rozmowa
+    open_discussion: Otwarte w społeczności
+    discussion_closed: Ta konwersacja jest zamknięta i nie można już dodawać nowych odpowiedzi. Nadal możesz przeczytać dyskusję poniżej.
+    discussion_description: Masz pomysł lub pytanie? Dołącz do dyskusji poniżej, używając swojego konta społecznościowego.
+    join_community: Dołącz do społeczności
+    not_found_title: Ta strona jest niedostępna
+    not_found_body: Być może został przeniesiony, powrócił do wersji roboczej lub nie został jeszcze opublikowany.
+    errors:
+      private_site: Blog wymaga witryny publicznej z wyłączonym bezpiecznym przesyłaniem. Tekst roboczy pozostaje prywatny, ale przesyłane pliki nie są objęte kontrolą dostępu bez bezpiecznego przesyłania.
+      anonymous_uploads: "Blog wymaga anonimowego przesyłania i pobierania plików. Wyłącz opcję prevent_anons_from_downloading_files przed publikacją lub udostępnianiem recenzji."
+      category: Wybierz jedną publiczną kategorię bloga w ustawieniach witryny bloga.
+      drafts_category: Wybierz osobną kategorię prywatnych szkiców, do której dostęp będą miały wyłącznie skonfigurowane grupy redakcyjne lub personel, odrębną od głównej kategorii współdzielonych szkiców.
+      published_page: Usuń publikację tego tematu ze strony przed opublikowaniem go na blogu.
+      path_taken: jest zarezerwowany lub należy już do innego artykułu
+      future_date: musi to być dzisiaj albo wcześniej. Skorzystaj z opcji planowania, żeby opublikować artykuł w przyszłości.
+      color: "Użyj dokładnie sześciu cyfr szesnastkowych, bez prefiksu #."
+    latest_stories: Najnowsze historie
+    explore_archive: Przeglądaj archiwum
+    customizations_disabled: W przypadku wyświetlania tej strony niestandardowy CSS i JavaScript są wyłączone.
+    themes:
+      sample_article: Przykładowy artykuł (nie wybrano artykułu publicznego)
+      sample_body: Opublikuj artykuł, aby zobaczyć jego rzeczywistą treść w tym odniesieniu.
+      preview_diagnostic: "%{template}, wiersz %{line}: %{message}"
+      template_invalid: "Podaj prawidłowy szablon Liquid o rozmiarze nie większym niż 65 536 bajtów."
+      template_parse_error: "Nieprawidłowy szablon Liquid: %{error}"
+      current: Aktualny wygląd
+      invalid: "Podaj nazwę (do 100 znaków), sześciocyfrowe kolory szesnastkowe i kod CSS/JavaScript o rozmiarze nie większym niż 65 536 bajtów każdy."
+      limit: Możesz zapisać do 30 motywów bloga. Najpierw usuń nieużywany motyw.
+      stale: Ten motyw został zmieniony. Odśwież go i sprawdź najnowszy szkic, zanim przejdziesz dalej.
+      active_delete: Przed usunięciem tego motywu aktywuj inny.
+      repository_invalid: Użyj publicznego adresu URL repozytorium Git HTTPS bez danych uwierzytelniających, parametrów zapytania ani fragmentów.
+      archive_invalid: "Plik ZIP jest nieprawidłowy, zawiera zbyt wiele plików lub zawiera zbyt duże pliki motywu."
+      manifest_invalid: Motyw musi zawierać prawidłowy manifest blog-theme.json (wersja 1 lub 2).
+      file_too_large: "%{file} przekracza dozwolony rozmiar pliku."
+      preview: "Podgląd motywu: %{name}"
+      preview_notice: Ten podgląd jest widoczny tylko za pośrednictwem tego tymczasowego linku do podglądu. Blog na żywo nie uległ zmianie.
+      exit_preview: Wyjdź z podglądu
+    review:
+      page_title: Szkic recenzji
+      javascript_required: Włącz JavaScript, aby przeczytać udostępniony szkic i zostawić opinię.
+      unavailable: Ten link do recenzji wygasł, został anulowany lub nie jest już dostępny.
+      limit: Ten szkic ma już 20 aktywnych linków do recenzji. Usuń jeden z nich przed utworzeniem kolejnego.
+      feedback_limit: Ta recenzja osiągnęła limit opinii. Skontaktuj się z redaktorem, aby uzyskać link do nowej recenzji.
+    editorial:
+      access_lost: Zaplanowana publikacja została wstrzymana, bo zmieniły się uprawnienia wydawcy albo kryteria kwalifikacyjne artykułu. Sprawdź uprawnienia i prywatne źródło, a potem zaplanuj publikację od nowa.
+      private_source: Tematy redakcyjne muszą pozostać w kategorii „prywatne szkice”. Zamiast tego opublikuj zatwierdzoną wersję.
+      stale: Ta wersja nie jest już aktualnie przesłaną lub zatwierdzoną wersją. Załaduj ją ponownie i sprawdź ponownie.
+      approval_required: Zatwierdź przesłaną wersję przed jej opublikowaniem lub zaplanowaniem.
+      schedule_time: Wybierz termin publikacji, który jest co najmniej o minutę do przodu i przypada w ciągu najbliższego roku.

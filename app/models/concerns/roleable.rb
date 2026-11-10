@@ -8,6 +8,15 @@ module Roleable
     scope :active_admins, -> { real.admins.where(active: true) }
     scope :moderators, -> { where(moderator: true) }
     scope :staff, -> { where("moderator or admin ") }
+    scope :whisperers,
+          -> do
+            group_ids = SiteSetting.whispers_allowed_groups_map
+            next none if group_ids.empty?
+
+            members = GroupUser.where(group_id: group_ids).select(:user_id)
+            # A UNION keeps each side on its own index; an OR scans the users table.
+            where("users.id IN (#{admins.select(:id).to_sql} UNION #{members.to_sql})")
+          end
   end
 
   # any user that is either a moderator or an admin

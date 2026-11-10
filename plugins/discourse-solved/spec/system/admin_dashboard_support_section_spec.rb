@@ -12,7 +12,6 @@ describe "Admin dashboard Support section" do
 
   before do
     SiteSetting.solved_enabled = true
-    SiteSetting.dashboard_improvements = true
 
     # Resolved: staff makes the first reply, which is accepted as the solution.
     resolved = Fabricate(:topic, category: support_category, user: author)

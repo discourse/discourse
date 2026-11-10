@@ -22,6 +22,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Schedule::Payload do
         "time" => "14:00:00",
       )
       expect(payload).to match_node_output_schema(DiscourseWorkflows::Nodes::Schedule::V1)
+      expect(
+        DiscourseWorkflows::Nodes::Schedule::V1::OUTPUT_SCHEMA["properties"].keys,
+      ).to match_array(payload.keys)
     end
 
     it "formats fields in the resolved workflow timezone" do

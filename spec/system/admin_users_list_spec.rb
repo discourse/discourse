@@ -280,12 +280,6 @@ describe "Admin Users Page" do
       expect(admin_users_page).to have_emails
     end
 
-    it "redirects to groups page" do
-      admin_users_page.visit
-      admin_users_page.click_tab("groups")
-      expect(page).to have_current_path("/admin/groups")
-    end
-
     it "redirect to invites page" do
       admin_users_page.visit
       admin_users_page.click_tab("settings")

@@ -20,7 +20,6 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.discourse_ai_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_ai",
             i18n_prefix: "discourse_ai.discourse_workflows",
-            output_schema_resolver: "ai-agent",
             capabilities: {
               run_scope: {
                 parameter: "mode",

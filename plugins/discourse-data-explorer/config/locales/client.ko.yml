@@ -26,7 +26,6 @@ ko:
       description_placeholder: "여기에 설명을 입력하세요"
       ai:
         generate: "API 키 생성"
-        optional: "선택 사항"
       help:
         label: "도움말"
       schema:
@@ -46,7 +45,7 @@ ko:
           bar: "바"
       result_count:
         other: "%{count}개의 결과."
-      query_name: "쿼리"
+      name: "그룹명"
       query_groups: "그룹"
       query_tags: "태그"
       link: "링크"

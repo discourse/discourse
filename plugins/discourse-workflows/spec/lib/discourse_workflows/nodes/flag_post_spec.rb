@@ -225,6 +225,22 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
       )
     end
 
+    it "returns a null reviewable_id when no review item is created", :aggregate_failures do
+      bot_post = Fabricate(:post, user: Discourse.system_user)
+
+      result =
+        execute_node(
+          configuration: {
+            "post_id" => bot_post.id.to_s,
+            "flag_type" => "spam",
+            "actor_username" => moderator.username,
+          },
+        )
+
+      expect(result["reviewable_id"]).to be_nil
+      expect(result).to match_node_output_schema(described_class)
+    end
+
     it "flags the post as spam and silences the author with spam_silence", :aggregate_failures do
       result =
         execute_node(configuration: { "post_id" => post.id.to_s, "flag_type" => "spam_silence" })

@@ -41,6 +41,13 @@ module Onebox
 
         {
           link: url,
+          layout_class: "github-onebox",
+          repository: URI(url).path.split("/")[1, 2].join("/"),
+          i18n: {
+            header: {
+              folder: I18n.t("onebox.github.header.folder"),
+            },
+          },
           title: Onebox::Helpers.truncate(title, 250),
           path: display_path,
           description: display_description,

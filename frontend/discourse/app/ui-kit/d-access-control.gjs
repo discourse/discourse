@@ -18,6 +18,7 @@ import DAccessControlGranteeChooser, {
 } from "./d-access-control-grantee-chooser.gjs";
 
 const EDIT_PERMISSION = "edit";
+const OWNER_PERMISSION = "owner";
 const READ_ONLY_PERMISSION = "view";
 const READ_ONLY_DEFAULT_AUTO_GROUPS = [
   AUTO_GROUPS.anonymous_users.id,
@@ -35,6 +36,18 @@ const REMOVE_ACTION = {
     "access_control.manage.access_permission_remove_description"
   ),
 };
+
+function ownerOption(target) {
+  return {
+    id: OWNER_PERMISSION,
+    name: i18n("access_control.manage.access_permission_owner"),
+    description: target
+      ? i18n("access_control.manage.access_permission_owner_description", {
+          target,
+        })
+      : undefined,
+  };
+}
 
 export function defaultPermissions() {
   return [
@@ -151,8 +164,6 @@ export default class DAccessControl extends Component {
     return resolvedAcl;
   }
 
-  // TODO (martin) How are we going to deal with users that have the Owner permission
-  // here if we don't want to expose that in the UI?
   get rows() {
     const mappedAcl = this.acl.map((entry) => {
       const hydratedEntry = this.#hydrateDisplayName({ ...entry });
@@ -170,7 +181,14 @@ export default class DAccessControl extends Component {
         name: hydratedEntry.name,
         avatar_template: hydratedEntry.avatar_template,
         type: hydratedEntry.type,
-        mandatory: Boolean(hydratedEntry.mandatory),
+        mandatory:
+          hydratedEntry.permission !== OWNER_PERMISSION &&
+          Boolean(hydratedEntry.mandatory),
+        owner: hydratedEntry.permission === OWNER_PERMISSION,
+        permission_menu_disabled:
+          hydratedEntry.permission === OWNER_PERMISSION
+            ? !this.args.canManageOwners
+            : Boolean(hydratedEntry.mandatory),
       };
     });
 
@@ -179,9 +197,13 @@ export default class DAccessControl extends Component {
         return a.mandatory ? -1 : 1;
       }
 
+      if (a.owner !== b.owner) {
+        return a.owner ? -1 : 1;
+      }
+
       const nameSort = (a.sort_name || "").localeCompare(b.sort_name || "");
 
-      if (a.mandatory && b.mandatory) {
+      if ((a.mandatory && b.mandatory) || (a.owner && b.owner)) {
         return nameSort;
       }
 
@@ -267,9 +289,10 @@ export default class DAccessControl extends Component {
    * Otherwise, the default permissions are used.
    */
   buildPermissionOptions() {
-    const permissions =
+    const permissions = (
       this.args.transformPermissionOptions?.(defaultPermissions()) ||
-      defaultPermissions();
+      defaultPermissions()
+    ).filter((permission) => permission.id !== OWNER_PERMISSION);
 
     return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
   }
@@ -365,6 +388,34 @@ export default class DAccessControl extends Component {
     });
   }
 
+  @action
+  permissionOptionsFor(row) {
+    const ownerOptionForTarget = ownerOption(this.args.aclTarget?.name);
+
+    if (row.owner) {
+      return this.args.canManageOwners
+        ? [ownerOptionForTarget, REMOVE_ACTION]
+        : [ownerOptionForTarget];
+    }
+
+    const permissionOptions = this.excludeBannedPermissions(
+      this.permissionOptions,
+      row
+    );
+
+    if (row.type === "user" && this.args.canManageOwners && !this.args.isNew) {
+      return [
+        ...permissionOptions.filter(
+          (permission) => permission.id !== REMOVE_ACTION.id
+        ),
+        ownerOptionForTarget,
+        REMOVE_ACTION,
+      ];
+    }
+
+    return permissionOptions;
+  }
+
   #hydrateDisplayName(entry) {
     if (!isEmpty(entry.display_name)) {
       return entry;
@@ -379,9 +430,6 @@ export default class DAccessControl extends Component {
 
     return entry;
   }
-
-  // TODO (martin) How are we going to deal with users that have the Owner permission
-  // here if we don't want to expose that in the UI?
 
   <template>
     <div class="d-access-control">
@@ -412,6 +460,7 @@ export default class DAccessControl extends Component {
                 "d-access-control__row"
                 (if (eq row.type "user") "--user" "--group")
                 (if row.mandatory "--mandatory")
+                (if row.owner "--owner")
               }}
               data-row-id={{row.id}}
               data-row-type={{row.type}}
@@ -444,12 +493,9 @@ export default class DAccessControl extends Component {
                 </span>
               </span>
               <DAccessControlPermissionMenu
-                @disabled={{row.mandatory}}
+                @disabled={{row.permission_menu_disabled}}
                 @onChange={{fn this.onRowPermissionChange row.type row.id}}
-                @options={{this.excludeBannedPermissions
-                  this.permissionOptions
-                  row
-                }}
+                @options={{this.permissionOptionsFor row}}
                 @value={{row.permission}}
               />
             </div>

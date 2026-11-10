@@ -18,8 +18,7 @@ export interface CodeEditorParams {
   /** The `@lezer/highlight` module, for styling a grammar's tokens. */
   lezerHighlight: typeof import("@lezer/highlight");
   /**
-   * Helpers for the workflows plugin's `{{ }}` expression editors, which need
-   * a grammar compiled in core.
+   * Helpers for expression editors whose grammar is compiled in core.
    *
    * @internal Moves behind a registered language; do not build on it.
    */

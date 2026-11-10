@@ -14,7 +14,6 @@ cs:
       or: "nebo"
       ai:
         generate: "Vygenerovat API klíč"
-        optional: "volitelné"
       help:
         label: "Nápověda"
       schema:
@@ -35,6 +34,7 @@ cs:
         few: "%{count} výsledky."
         many: "%{count} výsledky."
         other: "%{count} výsledků."
+      name: "Jméno"
       query_groups: "Skupiny"
       query_tags: "Tagy"
       report_name: "Sestava"

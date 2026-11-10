@@ -19,10 +19,8 @@ module CanonicalURL
       @default_canonical ||=
         begin
           canonical = +"#{Discourse.base_url_no_prefix}#{request.path}"
-          allowed_params = params.select { |key| ALLOWED_CANONICAL_PARAMS.include?(key) }
-          if allowed_params.present?
-            canonical << "?#{allowed_params.keys.zip(allowed_params.values).map { |key, value| "#{key}=#{value}" }.join("&")}"
-          end
+          allowed_params = params.to_unsafe_h.slice(*ALLOWED_CANONICAL_PARAMS)
+          canonical << "?#{allowed_params.to_query}" if allowed_params.present?
           append_content_localization_param(canonical)
         end
     end
@@ -39,6 +37,7 @@ module CanonicalURL
 
       locale = params[Discourse::LOCALE_PARAM]
       return url if locale.blank?
+      return url if locale == SiteSetting.default_locale && plain_url_serves_default_locale?
 
       supported = SiteSetting.content_localization_supported_locales.to_s.split("|")
       return url if supported.exclude?(locale)
@@ -52,6 +51,15 @@ module CanonicalURL
   module Helpers
     def canonical_link_tag(url = nil)
       tag("link", rel: "canonical", href: url || @canonical_url || default_canonical)
+    end
+
+    # Pass nil for the x-default URL.
+    def canonical_url_for_locale(locale)
+      uri = Addressable::URI.parse(@hreflang_url || @canonical_url || default_canonical)
+      query = (uri.query_values || {}).except(Discourse::LOCALE_PARAM)
+      query[Discourse::LOCALE_PARAM] = locale if locale
+      uri.query_values = query.presence
+      uri.to_s
     end
   end
 end

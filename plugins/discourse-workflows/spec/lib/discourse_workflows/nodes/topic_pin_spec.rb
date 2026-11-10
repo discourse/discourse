@@ -17,6 +17,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicPin::V1 do
 
           expect(result["pinned"]).to eq(true)
           expect(result["pinned_globally"]).to eq(false)
+          expect(result.dig("topic", "id")).to eq(topic.id)
           expect(result).to match_node_output_schema(described_class, configuration: config)
 
           topic.reload

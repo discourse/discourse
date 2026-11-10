@@ -48,9 +48,21 @@ class ReviewableQueuedPost < Reviewable
           label: "reviewables.actions.reject_post_bundle.title",
         )
 
-      build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
+      build_action(
+        actions,
+        :reject_post,
+        bundle: reject_bundle,
+        icon: "xmark",
+        dsa_classification_required: true,
+      )
       if target_created_by.present?
-        build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+        build_action(
+          actions,
+          :revise_and_reject_post,
+          bundle: reject_bundle,
+          icon: "envelope",
+          dsa_classification_required: true,
+        )
       end
 
       build_penalty_actions(
@@ -58,9 +70,12 @@ class ReviewableQueuedPost < Reviewable
         bundle: reject_bundle,
         silence: :reject_and_silence,
         suspend: :reject_and_suspend,
+        dsa_classification_required: true,
       )
 
-      delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
+      if guardian.can_delete_user?(target_created_by)
+        delete_user_actions(actions, reject_bundle, dsa_classification_required: true)
+      end
     end
 
     build_action(actions, :delete) if guardian.can_delete?(self)
@@ -224,7 +239,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_delete_user(performed_by, args)
     user = target_created_by
-    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
 
     result =
       super do |result|
@@ -238,7 +253,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_delete_and_block_user(performed_by, args)
     user = target_created_by
-    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
 
     result =
       super do |result|

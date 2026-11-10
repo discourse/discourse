@@ -246,7 +246,7 @@ export default class AiSearchDiscoveries extends Component {
       return;
     }
 
-    if (wantsNewWindow(event)) {
+    if (wantsNewWindow(event) || link.target === "_blank") {
       return;
     }
 
@@ -477,6 +477,8 @@ export default class AiSearchDiscoveries extends Component {
                     class="ai-discovery-source"
                     data-search-menu-navigation-item
                     href={{source.url}}
+                    rel={{if source.source_name "noopener noreferrer"}}
+                    target={{if source.source_name "_blank"}}
                   >
                     {{#if (and this.showSourceAvatars source.avatar_template)}}
                       <span class="ai-discovery-source__avatar">
@@ -495,6 +497,10 @@ export default class AiSearchDiscoveries extends Component {
                       <span class="ai-discovery-source__metadata">
                         {{#if source.categoryModel}}
                           {{dCategoryLink source.categoryModel link=false}}
+                        {{else if source.source_name}}
+                          <span class="ai-discovery-source__metadata-source">
+                            {{source.source_name}}
+                          </span>
                         {{/if}}
                         {{#if source.topic_replies}}
                           <span class="ai-discovery-source__metadata-replies">

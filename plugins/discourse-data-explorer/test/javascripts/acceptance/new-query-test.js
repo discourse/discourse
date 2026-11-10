@@ -68,10 +68,8 @@ acceptance("New Query", function (needs) {
       helper.response(["default", "staff"])
     );
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
-      return helper.response({
-        queries: [],
-      });
+    server.get("/api/data-explorer/queries", () => {
+      return helper.response({ data: [] });
     });
 
     server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
@@ -289,9 +287,6 @@ acceptance("New Query - AI", function (needs) {
     );
     server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
       helper.response(["default", "staff"])
-    );
-    server.get("/admin/plugins/discourse-data-explorer/queries", () =>
-      helper.response({ queries: [] })
     );
 
     server.post(
