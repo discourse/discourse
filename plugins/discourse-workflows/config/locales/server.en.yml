@@ -13,6 +13,7 @@ en:
   discourse_workflows:
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
+      generating_progress: "Generating the workflow. This can take a few minutes."
       create_summary: "Save this workflow as an unpublished draft?"
       not_allowed: "Only administrators who can manage workflows can create workflows."
       invalid_request: "The workflow request is empty, contains a secret, or is too long. Please provide a shorter description without secrets."
