@@ -71,7 +71,21 @@ RSpec.describe "DSA classification suggestion" do
 
       modal.select_category("Other violation of terms and conditions")
 
-      expect(modal).to have_selected_category("Other violation of terms and conditions")
+      PageObjects::CDP
+        .new
+        .with_paused_request("**/dsa-classifications/*/suggest") do |request|
+          suggestion.suggest_category
+          request.wait
+
+          expect(modal).to have_loading_category
+
+          modal.select_category(category)
+          modal.select_category("Other violation of terms and conditions")
+          request.resume
+
+          expect(modal).to have_no_loading_category
+          expect(modal).to have_selected_category("Other violation of terms and conditions")
+        end
 
       modal.confirm("Silence")
 

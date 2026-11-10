@@ -135,13 +135,15 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
 
       it "sends the flagged content even after the post is deleted" do
         flagged_post = reviewable.target
+        flagged_post.update!(raw: "Tom & Jerry > other deals.")
         flagged_post.trash!
         stub_request(:post, decision_model.url).to_return(body: refusal_response)
 
         post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json"
 
         expect(response.status).to eq(200)
-        expect(AiApiAuditLog.last.raw_request_payload).to include(flagged_post.raw, "Inappropriate")
+        provider_context = JSON.parse(AiApiAuditLog.last.raw_request_payload).fetch("state")
+        expect(provider_context).to include(flagged_post.raw, "Inappropriate")
       end
 
       it "sends queued post content without the original email" do

@@ -53,7 +53,7 @@ module DiscourseAi
             profile:,
             content:,
           }
-          context.compact_blank.to_json[0, MAX_CONTEXT_CHARS]
+          JSON.generate(context.compact_blank)[0, MAX_CONTEXT_CHARS]
         end
       end
     end

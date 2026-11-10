@@ -10,8 +10,10 @@ module PageObjects
       end
 
       def suggest_category
-        find("[data-name='category'] .form-kit__control-menu-trigger").click
-        click_button("Choose for me", exact: true)
+        page.driver.with_playwright_page do |browser|
+          browser.locator("[data-name='category'] .form-kit__control-menu-trigger").click
+          browser.get_by_role("button", name: "Choose for me", exact: true).click
+        end
         self
       end
     end

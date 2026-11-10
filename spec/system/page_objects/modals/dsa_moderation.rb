@@ -52,10 +52,15 @@ module PageObjects
       end
 
       def select_category(category)
-        within(full_modal_selector) do
-          find("[data-name='category'] .form-kit__control-menu-trigger").click
+        page.driver.with_playwright_page do |browser|
+          browser.locator(
+            "#{full_modal_selector} [data-name='category'] .form-kit__control-menu-trigger",
+          ).click
+          browser
+            .locator(".form-kit__control-menu-content")
+            .get_by_role("button", name: category, exact: true)
+            .click
         end
-        find(".form-kit__control-menu-content .btn", text: category, exact_text: true).click
       end
 
       def continue
@@ -130,6 +135,18 @@ module PageObjects
 
       def has_focused_category?
         has_css?("#{full_modal_selector} [data-name='category'] .dsa-classification-select:focus")
+      end
+
+      def has_loading_category?
+        has_css?(
+          "#{full_modal_selector} [data-name='category'] .dsa-classification-select[aria-busy='true']",
+        )
+      end
+
+      def has_no_loading_category?
+        has_no_css?(
+          "#{full_modal_selector} [data-name='category'] .dsa-classification-select[aria-busy='true']",
+        )
       end
 
       def has_selected_category?(category)

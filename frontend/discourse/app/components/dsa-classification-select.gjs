@@ -15,6 +15,8 @@ export default class DsaClassificationSelect extends Component {
 
   @tracked loading = false;
 
+  #manuallySelected = false;
+
   get selection() {
     return (
       this.args.options.find((option) => option.id === this.args.field.value)
@@ -24,13 +26,14 @@ export default class DsaClassificationSelect extends Component {
 
   @action
   select(menu, value) {
+    this.#manuallySelected = true;
     this.args.field.set(value);
     menu.close({ focusTrigger: true });
   }
 
   @action
   async choose(menu) {
-    const initialValue = this.args.field.value;
+    this.#manuallySelected = false;
     menu.close({ focusTrigger: true });
     this.loading = true;
 
@@ -40,7 +43,7 @@ export default class DsaClassificationSelect extends Component {
         return;
       }
 
-      if (value && this.args.field.value === initialValue) {
+      if (value && !this.#manuallySelected) {
         await this.args.field.set(value);
         this.a11y.announce(this.args.chooseAction.completed);
       }
