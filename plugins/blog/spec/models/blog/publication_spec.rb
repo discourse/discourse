@@ -127,32 +127,15 @@ RSpec.describe Blog::Publication do
 
     before { publish_blog_draft(publication, acting_user) }
 
-    it "follows a remap and rebake of the discussion post" do
-      stub_request(:any, "https://new.example.com/guide").to_return(status: 404)
-      discussion_post.revise(
-        Discourse.system_user,
-        { raw: discussion_post.raw.sub("old.example.com", "new.example.com") },
-        skip_revision: true,
-        bypass_bump: true,
-      )
-      CookedPostProcessor.new(discussion_post.reload).post_process
-
-      expect(publication.reload.article.cooked).to include("https://new.example.com/guide")
-    end
-
     it "follows a hostname remap of the database" do
       DbHelper.remap("old.example.com", "new.example.com")
 
       expect(publication.reload.article.cooked).to include("https://new.example.com/guide")
     end
 
-    it "keeps the published HTML when the discussion post is edited outside a publish" do
+    it "keeps the approved HTML when the discussion post is rebaked" do
       published_cooked = publication.article.cooked
-      discussion_post.revise(
-        acting_user,
-        { raw: "An unapproved change to the live article." },
-        force_new_version: true,
-      )
+      discussion_post.update_columns(raw: "Content that changed after approval.")
       CookedPostProcessor.new(discussion_post.reload).post_process
 
       expect(publication.reload.article.cooked).to eq(published_cooked)

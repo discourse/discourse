@@ -57,22 +57,6 @@ module ::Blog
         .first || new(topic: topic, path: default_path(topic))
     end
 
-    # Rebakes and remaps of a live article's discussion post reach readers. An edit
-    # outside a publish bumps the post's version, so it never does.
-    def self.refresh_live_article(post, cooked)
-      return if post.post_number != 1 || cooked.blank?
-      return if post.topic&.category_id != SiteSetting.blog_category.to_i
-      publication =
-        where.not(published_revision_id: nil).find_by(
-          discussion_topic_id: post.topic_id,
-          discussion_post_version: post.version,
-        )
-      return if !publication
-
-      upload = Upload.find_by(id: post.image_upload_id) if post.image_upload_id
-      publication.update_columns(cooked:, image_url: Revision.image_url_for(upload))
-    end
-
     # Editorial changes to an article serialize on its original topic's row.
     def self.lock_for_topic(topic)
       publication = for_topic(topic)
@@ -153,7 +137,7 @@ module ::Blog
       PostRevision.where(post: source.first_post).where("created_at > ?", last_published_at).count
     end
 
-    # The published revision, with the live HTML that follows rebakes of its discussion post.
+    # The published revision, read from text columns so hostname and upload remaps reach it.
     def article
       return Revision.new(data: Revision.capture(self, editable_topic)) if !published_revision
       return published_revision if cooked.nil?
@@ -267,11 +251,9 @@ module ::Blog
       end
     end
 
-    # Readers see the revision's own HTML until its discussion post is next post-processed.
     def capture_live_article
       self.cooked = published_revision&.cooked
       self.image_url = published_revision&.data&.[]("image_url")
-      self.discussion_post_version = discussion_topic&.first_post&.version
     end
 
     def capture_initial_publication
@@ -317,31 +299,30 @@ end
 #
 # Table name: blog_publications
 #
-#  id                      :bigint           not null, primary key
-#  cooked                  :text
-#  discussion_post_version :integer
-#  draft_metadata          :jsonb            not null
-#  excerpt                 :string           default(""), not null
-#  featured                :boolean          default(FALSE), not null
-#  image_url               :text
-#  last_published_at       :datetime
-#  path                    :string           not null
-#  published               :boolean          default(FALSE), not null
-#  published_at            :datetime
-#  schedule_error          :text             default(""), not null
-#  schedule_token          :string
-#  scheduled_at            :datetime
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  approved_revision_id    :bigint
-#  discussion_topic_id     :bigint
-#  draft_topic_id          :bigint
-#  published_revision_id   :bigint
-#  publisher_id            :bigint
-#  scheduled_revision_id   :bigint
-#  scheduler_id            :bigint
-#  submitted_revision_id   :bigint
-#  topic_id                :bigint           not null
+#  id                    :bigint           not null, primary key
+#  cooked                :text
+#  draft_metadata        :jsonb            not null
+#  excerpt               :string           default(""), not null
+#  featured              :boolean          default(FALSE), not null
+#  image_url             :text
+#  last_published_at     :datetime
+#  path                  :string           not null
+#  published             :boolean          default(FALSE), not null
+#  published_at          :datetime
+#  schedule_error        :text             default(""), not null
+#  schedule_token        :string
+#  scheduled_at          :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  approved_revision_id  :bigint
+#  discussion_topic_id   :bigint
+#  draft_topic_id        :bigint
+#  published_revision_id :bigint
+#  publisher_id          :bigint
+#  scheduled_revision_id :bigint
+#  scheduler_id          :bigint
+#  submitted_revision_id :bigint
+#  topic_id              :bigint           not null
 #
 # Indexes
 #

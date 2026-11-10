@@ -8,7 +8,14 @@ RSpec.describe BackfillBlogPublicationLiveArticles do
   include_context "with blog editorial setup"
 
   fab!(:topic) { Fabricate(:topic, category: drafts, user: writer) }
-  fab!(:first_post) { Fabricate(:post, topic:, user: writer) }
+  fab!(:first_post) do
+    Fabricate(
+      :post,
+      topic:,
+      user: writer,
+      raw: "Read the guide at https://old.example.com/guide today.",
+    )
+  end
 
   let(:discussion_post) { publication.discussion_topic.first_post }
 
@@ -16,31 +23,27 @@ RSpec.describe BackfillBlogPublicationLiveArticles do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
     publish_blog_draft(publication, acting_user)
-    publication.update_columns(cooked: nil, image_url: nil, discussion_post_version: nil)
+    publication.update_columns(cooked: nil, image_url: nil)
   end
 
   after { ActiveRecord::Migration.verbose = @original_verbose }
 
-  it "takes the discussion post's current HTML while it still carries the published text" do
-    discussion_post.update_columns(cooked: "<p>Rebaked on the new host.</p>")
+  it "takes the discussion post's HTML, which already has any earlier hostname remap" do
+    DbHelper.remap("old.example.com", "new.example.com")
 
     described_class.new.up
 
     expect(publication.reload).to have_attributes(
-      cooked: "<p>Rebaked on the new host.</p>",
+      cooked: include("https://new.example.com/guide"),
       image_url: "",
-      discussion_post_version: discussion_post.version,
     )
   end
 
-  it "keeps the revision snapshot and stops following a discussion post that was edited" do
-    discussion_post.update_columns(raw: "An edit made outside a publish.", cooked: "<p>Edited.</p>")
+  it "keeps the revision snapshot when the discussion post is gone" do
+    discussion_post.trash!
 
     described_class.new.up
 
-    expect(publication.reload).to have_attributes(
-      cooked: publication.published_revision.cooked,
-      discussion_post_version: nil,
-    )
+    expect(publication.reload.cooked).to eq(publication.published_revision.cooked)
   end
 end

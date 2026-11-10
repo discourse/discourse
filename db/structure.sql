@@ -2277,8 +2277,7 @@ CREATE TABLE public.blog_publications (
     schedule_error text DEFAULT ''::text NOT NULL,
     draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
     cooked text,
-    image_url text,
-    discussion_post_version integer
+    image_url text
 );
 
 
