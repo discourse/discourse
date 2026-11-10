@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 live_badge_group = "Live"
-live_badges_enabled =
-  SiteSetting.live_enabled && SiteSetting.live_badges_enabled
+live_badges_enabled = SiteSetting.live_enabled && SiteSetting.live_badges_enabled
 
 BadgeGrouping.seed(:name) do |g|
   g.name = live_badge_group
@@ -11,8 +10,7 @@ end
 
 live_grouping = BadgeGrouping.find_by(name: live_badge_group)
 
-duration_sql =
-  "EXTRACT(EPOCH FROM (COALESCE(left_at, CURRENT_TIMESTAMP) - joined_at))"
+duration_sql = "EXTRACT(EPOCH FROM (COALESCE(left_at, CURRENT_TIMESTAMP) - joined_at))"
 
 co_presence_distinct_partners = lambda { |min_count| <<~SQL }
     SELECT uid user_id, current_timestamp granted_at FROM (
@@ -72,7 +70,7 @@ end
 {
   "Rookie" => [BadgeType::Bronze, 1.hour.to_i],
   "Chatterbox" => [BadgeType::Silver, 10.hours.to_i],
-  "Silver Tongue" => [BadgeType::Gold, 100.hours.to_i]
+  "Silver Tongue" => [BadgeType::Gold, 100.hours.to_i],
 }.each do |name, (type, threshold)|
   Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "clock"
@@ -110,7 +108,7 @@ end
 
 {
   "Social Butterfly" => [BadgeType::Silver, 10],
-  "Life of the Party" => [BadgeType::Gold, 50]
+  "Life of the Party" => [BadgeType::Gold, 50],
 }.each do |name, (type, count)|
   Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "users"
@@ -132,7 +130,7 @@ end
 {
   "Familiar Face" => [BadgeType::Bronze, 2.hours.to_i],
   "Inner Circle" => [BadgeType::Silver, 10.hours.to_i],
-  "Partners in Crime" => [BadgeType::Gold, 50.hours.to_i]
+  "Partners in Crime" => [BadgeType::Gold, 50.hours.to_i],
 }.each do |name, (type, threshold)|
   Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "user-group"
@@ -154,7 +152,7 @@ end
 {
   "Explorer" => [BadgeType::Bronze, 5],
   "Nomad" => [BadgeType::Silver, 20],
-  "Omnipresent" => [BadgeType::Gold, 50]
+  "Omnipresent" => [BadgeType::Gold, 50],
 }.each do |name, (type, count)|
   Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "compass"
@@ -182,7 +180,7 @@ end
 {
   "Frequenter" => [BadgeType::Bronze, 10],
   "Barfly" => [BadgeType::Silver, 30],
-  "The Mayor" => [BadgeType::Gold, 100]
+  "The Mayor" => [BadgeType::Gold, 100],
 }.each do |name, (type, days)|
   Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "calendar"
@@ -215,7 +213,7 @@ end
 
 {
   "Crowd Puller" => [BadgeType::Silver, 50, "bullhorn"],
-  "Master of Ceremonies" => [BadgeType::Gold, 500, "star"]
+  "Master of Ceremonies" => [BadgeType::Gold, 500, "star"],
 }.each do |name, (type, count, icon)|
   Badge.seed_unless_site_has(name) do |b|
     b.default_icon = icon
@@ -255,7 +253,7 @@ end
 
 {
   "Connector" => [BadgeType::Silver, 10, "circle-nodes"],
-  "People Magnet" => [BadgeType::Gold, 50, "magnet"]
+  "People Magnet" => [BadgeType::Gold, 50, "magnet"],
 }.each do |name, (type, count, icon)|
   Badge.seed_unless_site_has(name) do |b|
     b.default_icon = icon

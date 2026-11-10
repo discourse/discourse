@@ -350,7 +350,7 @@ RSpec.describe Live::BadgeGranterHooks do
       site_badge =
         Fabricate(
           :badge,
-          name: "Regular",
+          name: "Neighborhood Watch",
           system: false,
           enabled: true,
           badge_grouping: BadgeGrouping.find_by(name: "Live"),

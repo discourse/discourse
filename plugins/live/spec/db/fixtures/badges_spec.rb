@@ -11,7 +11,7 @@ RSpec.describe Badge do
         name: "Explorer",
         system: false,
         query: "SELECT 1",
-        description: "Handed out by us"
+        description: "Handed out by us",
       )
 
     SeedFu.seed(Rails.root.join("plugins/live/db/fixtures"))
