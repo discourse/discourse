@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -195,10 +196,16 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
     const first = selectKit(".first");
     const second = selectKit(".second");
 
-    await first.expand();
-    await first.selectRowByValue(2);
-    await second.expand();
-    await second.selectRowByValue(3);
+    // This exercises the deprecated write-back on purpose
+    await withSilencedDeprecationsAsync(
+      "discourse.select-kit.implicit-mutation",
+      async () => {
+        await first.expand();
+        await first.selectRowByValue(2);
+        await second.expand();
+        await second.selectRowByValue(3);
+      }
+    );
 
     assert.strictEqual(first.header().value(), "2", "keeps the first value");
     assert.strictEqual(second.header().value(), "3", "updates the second");

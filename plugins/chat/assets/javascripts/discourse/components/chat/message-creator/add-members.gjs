@@ -60,34 +60,32 @@ export default class AddMembers extends Component {
   }
 
   <template>
-    <div class="chat-message-creator__add-members-container">
-      <div class="chat-message-creator__add-members">
+    <div class="chat-message-creator__add-members">
+      <MembersSelector
+        @cancel={{@cancel}}
+        @channel={{@channel}}
+        @close={{@close}}
+        @maxReached={{gte this.membersCount this.maxMembers}}
+        @members={{@members}}
+        @membersCount={{this.membersCount}}
+        @onChange={{@onChangeMembers}}
+      >
         <MembersCount @count={{this.membersCount}} @max={{this.maxMembers}} />
+      </MembersSelector>
 
-        <MembersSelector
-          @cancel={{@cancel}}
-          @channel={{@channel}}
-          @close={{@close}}
-          @maxReached={{gte this.membersCount this.maxMembers}}
-          @members={{@members}}
-          @membersCount={{this.membersCount}}
-          @onChange={{@onChangeMembers}}
-        />
+      {{#if @members.length}}
+        <div class="chat-message-creator__add-members-footer-container">
+          <div class="chat-message-creator__add-members-footer">
+            <DButton class="btn-flat" @action={{@cancel}} @label="cancel" />
 
-        {{#if @members.length}}
-          <div class="chat-message-creator__add-members-footer-container">
-            <div class="chat-message-creator__add-members-footer">
-              <DButton class="btn-flat" @action={{@cancel}} @label="cancel" />
-
-              <DButton
-                class="btn-primary add-to-channel"
-                @action={{this.saveGroupMembers}}
-                @label="chat.direct_message_creator.add_to_channel"
-              />
-            </div>
+            <DButton
+              class="btn-primary add-to-channel"
+              @action={{this.saveGroupMembers}}
+              @label="chat.direct_message_creator.add_to_channel"
+            />
           </div>
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   </template>
 }

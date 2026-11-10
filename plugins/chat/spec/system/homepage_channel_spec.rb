@@ -139,7 +139,6 @@ RSpec.describe "Chat channel as the homepage" do
     end
 
     it "keeps the pinned message bar and channel notices clear of the checklist" do
-      SiteSetting.chat_pinned_messages = true
       Fabricate(
         :chat_pinned_message,
         chat_message: message_1,

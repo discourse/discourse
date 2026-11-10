@@ -1613,6 +1613,12 @@ module Email
         options[:post_type] = Post.types[:whisper]
       end
 
+      # Skipping validations also skips the max_post_length check, so bound
+      # the body here before it reaches the post or queued post records.
+      if options[:skip_validations]
+        options[:raw] = options[:raw].truncate(SiteSetting.max_post_length, omission: "")
+      end
+
       # To avoid race conditions with the post alerter and Group SMTP
       # emails, we skip the jobs here and enqueue them only _after_
       # the incoming email has been updated with the post and topic.

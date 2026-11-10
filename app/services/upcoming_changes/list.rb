@@ -92,6 +92,9 @@ class UpcomingChanges::List
 
       setting[:upcoming_change][:enabled_for] = enabled_for
       setting[:groups] = setting_groups
+      if UpcomingChanges.group_setting_name(setting[:setting])
+        setting[:group_setting] = UpcomingChanges.group_setting_data(setting[:setting])
+      end
     end
   end
 
