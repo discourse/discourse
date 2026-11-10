@@ -373,21 +373,32 @@ module("Integration | Component | code-editor", function (hooks) {
       assert.dom(".code-editor .spinner").doesNotExist();
       assert.true(consoleError.calledWith(failure), "the cause is logged");
     } finally {
-      consoleError.restore();
       overrideCodemirrorImportForTesting(null);
     }
   });
 
-  test("stays a plain text editor when its language fails to load", async function (assert) {
-    registerCodeEditorLanguage("broken", () =>
-      Promise.reject(new Error("chunk failed"))
-    );
-    const state = new (class {
-      @tracked language = "sql";
-    })();
-    const consoleError = sinon.stub(console, "error");
+  [
+    ["fails to load", () => Promise.reject(new Error("chunk failed"))],
+    [
+      "fails to build",
+      async () => ({
+        default: () => {
+          throw new Error("bad options");
+        },
+      }),
+    ],
+    [
+      "builds an invalid extension",
+      async () => ({ default: () => "not an extension" }),
+    ],
+  ].forEach(([description, loader]) => {
+    test(`stays a plain text editor when its language ${description}`, async function (assert) {
+      registerCodeEditorLanguage("broken", loader);
+      const state = new (class {
+        @tracked language = "sql";
+      })();
+      const consoleError = sinon.stub(console, "error");
 
-    try {
       await render(
         <template>
           <CodeEditor @language={{state.language}} @value="select 1" />
@@ -401,48 +412,6 @@ module("Integration | Component | code-editor", function (hooks) {
 
       assert.dom(".cm-content").hasText("select 1");
       assert.deepEqual(highlightedTokens(), [], "the old language is dropped");
-    } finally {
-      consoleError.restore();
-    }
-  });
-
-  [
-    [
-      "fails to build",
-      () => {
-        throw new Error("bad options");
-      },
-    ],
-    ["builds an invalid extension", () => "not an extension"],
-  ].forEach(([description, build]) => {
-    test(`stays a plain text editor when its language ${description}`, async function (assert) {
-      registerCodeEditorLanguage("broken", async () => ({ default: build }));
-      const state = new (class {
-        @tracked language = "sql";
-      })();
-      const consoleError = sinon.stub(console, "error");
-
-      try {
-        await render(
-          <template>
-            <CodeEditor @language={{state.language}} @value="select 1" />
-          </template>
-        );
-        await waitFor(".cm-content span[class]");
-
-        state.language = "broken";
-        await waitUntil(() => consoleError.called);
-        await settled();
-
-        assert.dom(".cm-content").hasText("select 1");
-        assert.deepEqual(
-          highlightedTokens(),
-          [],
-          "the old language is dropped"
-        );
-      } finally {
-        consoleError.restore();
-      }
     });
   });
 
@@ -464,25 +433,21 @@ module("Integration | Component | code-editor", function (hooks) {
     })();
     const consoleError = sinon.stub(console, "error");
 
-    try {
-      const rendered = render(
-        <template>
-          <CodeEditor
-            @language="flaky"
-            @languageOptions={{state.options}}
-            @value="select 1"
-          />
-        </template>
-      );
-      await waitFor(".cm-content");
-      state.options = { schema: {} };
-      await rendered;
+    const rendered = render(
+      <template>
+        <CodeEditor
+          @language="flaky"
+          @languageOptions={{state.options}}
+          @value="select 1"
+        />
+      </template>
+    );
+    await waitFor(".cm-content");
+    state.options = { schema: {} };
+    await rendered;
 
-      assert.true(consoleError.called, "the stale load failed");
-      assert.true(highlightedTokens().includes("select"));
-    } finally {
-      consoleError.restore();
-    }
+    assert.true(consoleError.called, "the stale load failed");
+    assert.true(highlightedTokens().includes("select"));
   });
 
   test("disabled rejects edits but keeps the document focusable", async function (assert) {
