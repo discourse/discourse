@@ -22,32 +22,32 @@ module("Integration | Helper | reviewable-status", function (hooks) {
     {
       status: APPROVED,
       type: "ReviewableQueuedPost",
-      expectedClass: "no-problem-found",
+      expectedClass: "approved",
     },
     {
       status: APPROVED,
       type: "ReviewableUser",
-      expectedClass: "no-problem-found",
+      expectedClass: "approved",
     },
     {
       status: APPROVED,
       type: "ReviewableFlaggedPost",
-      expectedClass: "problem-confirmed",
+      expectedClass: "approved",
     },
     {
       status: REJECTED,
       type: "ReviewableQueuedPost",
-      expectedClass: "problem-confirmed",
+      expectedClass: "rejected",
     },
     {
       status: REJECTED,
       type: "ReviewableUser",
-      expectedClass: "problem-confirmed",
+      expectedClass: "rejected",
     },
     {
       status: REJECTED,
       type: "ReviewableFlaggedPost",
-      expectedClass: "no-problem-found",
+      expectedClass: "rejected",
     },
     {
       status: IGNORED,
@@ -59,9 +59,9 @@ module("Integration | Helper | reviewable-status", function (hooks) {
       type: "ReviewableQueuedPost",
       expectedClass: "deleted",
     },
-    { status: APPROVED, type: undefined, expectedClass: "problem-confirmed" },
+    { status: APPROVED, type: undefined, expectedClass: "approved" },
     { status: PENDING, type: undefined, expectedClass: "pending" },
-    { status: REJECTED, type: undefined, expectedClass: "no-problem-found" },
+    { status: REJECTED, type: undefined, expectedClass: "rejected" },
     { status: IGNORED, type: undefined, expectedClass: "ignored" },
     { status: DELETED, type: undefined, expectedClass: "deleted" },
   ];
@@ -85,29 +85,56 @@ module("Integration | Helper | reviewable-status", function (hooks) {
     }
   );
 
-  test("infers approval style from the type when it isn't passed", async function (assert) {
+  test("labels a post needing approval as a post rather than a flag", async function (assert) {
     await render(
       <template>
         <div class="legacy">{{newReviewableStatus
             APPROVED
-            "ReviewableQueuedPost"
+            "ReviewablePost"
           }}</div>
         <div class="explicit">{{newReviewableStatus
             APPROVED
             "ReviewablePost"
             true
           }}</div>
-        <div class="flag">{{newReviewableStatus
+      </template>
+    );
+
+    assert.dom(".legacy .review-item__status").hasText("Post approved");
+    assert.dom(".explicit .review-item__status").hasText("Post approved");
+  });
+
+  test("labels outcomes by problem with consistent answers", async function (assert) {
+    this.siteSettings.review_queue_consistent_answers = true;
+
+    await render(
+      <template>
+        <div class="agreed-flag">{{newReviewableStatus
             APPROVED
             "ReviewableFlaggedPost"
             false
           }}</div>
+        <div class="rejected-post">{{newReviewableStatus
+            REJECTED
+            "ReviewableQueuedPost"
+            true
+          }}</div>
+        <div class="approved-user">{{newReviewableStatus
+            APPROVED
+            "ReviewableUser"
+          }}</div>
       </template>
     );
 
-    assert.dom(".legacy .review-item__status").hasText("No problem found");
-    assert.dom(".explicit .review-item__status").hasText("No problem found");
-    assert.dom(".flag .review-item__status").hasText("Problem confirmed");
+    assert
+      .dom(".agreed-flag .review-item__status.--problem-confirmed")
+      .hasText("Problem confirmed");
+    assert
+      .dom(".rejected-post .review-item__status.--problem-confirmed")
+      .hasText("Problem confirmed");
+    assert
+      .dom(".approved-user .review-item__status.--no-problem-found")
+      .hasText("No problem found", "infers approval style from the type");
   });
 
   const edgeCaseTestCases = [

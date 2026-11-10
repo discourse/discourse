@@ -4,6 +4,9 @@ module PageObjects
   module Pages
     class Review < PageObjects::Pages::Base
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
+      ANSWERS =
+        ".review-item__moderator-actions > .reviewable-action, " \
+          ".review-item__moderator-actions > #{REVIEWABLE_ACTION_DROPDOWN}"
 
       def has_no_standalone_classification?
         has_no_css?(".review-item__classify, .dsa-classification")
@@ -231,6 +234,28 @@ module PageObjects
 
       def has_no_problem_found_item_in_timeline?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_text?("No problem found by") }
+      end
+
+      def has_reviewable_with_approved_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+      end
+
+      def has_approved_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
+      end
+
+      def has_answers_starting_with?(reviewable, labels)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(ANSWERS, minimum: labels.size) &&
+            all(ANSWERS).first(labels.size).map { |answer| answer.text.delete("\u200B").strip } ==
+              labels
+        end
+      end
+
+      def has_first_answer?(reviewable, css_class)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(ANSWERS) && all(ANSWERS).first[:class].split.include?(css_class)
+        end
       end
 
       def has_reviewables?(reviewables)

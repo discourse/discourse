@@ -42,12 +42,23 @@ class ReviewablePost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    reject =
-      actions.add_bundle(
-        "#{id}-reject-post",
-        icon: "xmark",
-        label: "reviewables.actions.answer_yes.title",
-      )
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
+    reject_label, keep_deleted_label, delete_label =
+      (
+        if consistent_answers
+          %w[answer_yes.title answer_yes.keep_post_deleted_title answer_yes.delete_post_title]
+        else
+          %w[
+            reject_post_bundle.title
+            reject_and_keep_deleted_standalone.title
+            reject_and_delete_standalone.title
+          ]
+        end
+      ).map { |key| "reviewables.actions.#{key}" }
+
+    build_approve_action(actions, guardian, consistent_answers:) if !consistent_answers
+
+    reject = actions.add_bundle("#{id}-reject-post", icon: "xmark", label: reject_label)
 
     can_penalize = guardian.can_suspend?(target_created_by)
 
@@ -67,7 +78,7 @@ class ReviewablePost < Reviewable
           dsa_classification_required: true,
         ) do |a|
           a.icon = "trash-can"
-          a.label = "reviewables.actions.answer_yes.keep_post_deleted_title"
+          a.label = keep_deleted_label
         end
       end
     elsif guardian.can_delete_post_or_topic?(post)
@@ -82,7 +93,7 @@ class ReviewablePost < Reviewable
       else
         actions.add(:reject_and_delete, bundle: reject, dsa_classification_required: true) do |a|
           a.icon = "trash-can"
-          a.label = "reviewables.actions.answer_yes.delete_post_title"
+          a.label = delete_label
         end
       end
     end
@@ -95,14 +106,8 @@ class ReviewablePost < Reviewable
       dsa_classification_required: true,
     )
 
-    no_label = "reviewables.actions.answer_no.title"
-    if post.trashed? && guardian.can_recover_post?(post)
-      build_action(actions, :approve_and_restore, icon: "check", label: no_label)
-    elsif post.hidden?
-      build_action(actions, :approve_and_unhide, icon: "check", label: no_label)
-    else
-      build_action(actions, :approve, icon: "check", label: no_label)
-    end
+    # "Yes, there's a problem" comes first, so approval follows as "No".
+    build_approve_action(actions, guardian, consistent_answers:) if consistent_answers
   end
 
   def perform_approve(performed_by, _args)
@@ -147,6 +152,18 @@ class ReviewablePost < Reviewable
   end
 
   private
+
+  def build_approve_action(actions, guardian, consistent_answers:)
+    label = "reviewables.actions.answer_no.title" if consistent_answers
+
+    if post.trashed? && guardian.can_recover_post?(post)
+      build_action(actions, :approve_and_restore, icon: "check", label:)
+    elsif post.hidden?
+      build_action(actions, :approve_and_unhide, icon: "check", label:)
+    else
+      build_action(actions, :approve, icon: "check", label:)
+    end
+  end
 
   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
     case action_id

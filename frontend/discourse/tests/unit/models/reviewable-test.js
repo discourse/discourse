@@ -7,6 +7,9 @@ module("Unit | Model | reviewable", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.siteSettings.review_queue_consistent_answers = true;
+
     // The store reuses a record for a repeated id, so each build needs its own.
     let nextId = 1;
     this.build = (attrs) =>
@@ -76,6 +79,26 @@ module("Unit | Model | reviewable", function (hooks) {
         type_source: "discourse-ai",
       }).userReviewableContextQuestion,
       null
+    );
+  });
+
+  test("userReviewableContextQuestion asks for approval without consistent answers", function (assert) {
+    this.siteSettings.review_queue_consistent_answers = false;
+
+    assert.strictEqual(
+      this.build({ type: "ReviewableQueuedPost" })
+        .userReviewableContextQuestion,
+      "Approve this topic?"
+    );
+    assert.strictEqual(
+      this.build({ type: "ReviewablePost", status: REJECTED })
+        .userReviewableContextQuestion,
+      "Approve this post?",
+      "resolved posts keep their question"
+    );
+    assert.strictEqual(
+      this.build({ type: "ReviewableUser" }).userReviewableContextQuestion,
+      "Approve this user?"
     );
   });
 });

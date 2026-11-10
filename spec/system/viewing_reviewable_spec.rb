@@ -335,6 +335,17 @@ describe "Viewing reviewable item" do
       expect(page).not_to have_text("hello world post contents.")
     end
 
+    it "asks whether the queued post has a problem, answering Yes before No" do
+      review_page.visit_reviewable(reviewable_queued_post)
+
+      expect(review_page).to have_context_question(
+        reviewable_queued_post,
+        I18n.t("js.review.context_question.something_wrong_with_post"),
+      )
+      expect(review_page).to have_answers_starting_with(reviewable_queued_post, %w[Yes No])
+      expect(review_page).to have_first_answer(reviewable_queued_post, "reviewable-action-dropdown")
+    end
+
     it "offers an explicit approve action instead of the question for a rejected queued post" do
       reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
 
@@ -415,10 +426,58 @@ describe "Viewing reviewable item" do
       reviewable = ReviewableUser.find_by_target_id(user.id)
 
       review_page.visit_reviewable(reviewable)
+
+      expect(review_page).to have_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.something_wrong_with_account"),
+      )
+      expect(review_page).to have_answers_starting_with(reviewable, %w[Yes No])
+
       review_page.click_approve_user_button
 
       expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
       expect(review_page).to have_no_problem_found_item_in_timeline(reviewable)
+    end
+  end
+
+  describe "without consistent review answers" do
+    fab!(:user)
+
+    before do
+      SiteSetting.review_queue_consistent_answers = false
+      SiteSetting.must_approve_users = true
+      Jobs.run_immediately!
+      user.update!(approved: false)
+      user.activate
+    end
+
+    it "asks for approval of a queued post, with approval first" do
+      reviewable = Fabricate(:reviewable_queued_post)
+
+      review_page.visit_reviewable(reviewable)
+
+      expect(review_page).to have_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.approve_post"),
+      )
+      expect(review_page).to have_answers_starting_with(reviewable, %w[Yes No])
+      expect(review_page).to have_first_answer(reviewable, "approve-post")
+    end
+
+    it "labels an approved user as approved" do
+      reviewable = ReviewableUser.find_by_target_id(user.id)
+
+      review_page.visit_reviewable(reviewable)
+
+      expect(review_page).to have_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.approve_user"),
+      )
+
+      review_page.click_approve_user_button
+
+      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+      expect(review_page).to have_approved_item_in_timeline(reviewable)
     end
   end
 

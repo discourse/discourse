@@ -1,4 +1,5 @@
 import { trustHTML } from "@ember/template";
+import { helperContext } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
   APPROVED,
@@ -57,50 +58,62 @@ function registeredStatusName(status, type) {
 }
 
 /**
- * Names the outcome of an approved or rejected reviewable as an i18n key
- * suffix: "problem_confirmed", "no_problem_found", or a name a plugin
- * registered for its type.
+ * How an approved or rejected reviewable is shown: its status label, icon and
+ * CSS modifier, and the timeline entry for whoever resolved it. With consistent
+ * answers these describe whether a problem was confirmed; otherwise they
+ * describe what was approved or rejected.
  *
  * @param {number} status - The reviewable's (or score's) resolved status
  * @param {string} type - The reviewable class name
  * @param {boolean} approvalStyle - Whether approving means no problem was found
- * @returns {string | undefined} undefined when the status is neither approved nor rejected
+ * @returns {{ name: string, icon: string, cssClass: string, timelineKey: string } | undefined}
+ *   undefined when the status is neither approved nor rejected
  */
-export function reviewableOutcomeName(status, type, approvalStyle) {
+export function reviewableOutcome(status, type, approvalStyle) {
   const confirmed = reviewableProblemConfirmed(status, approvalStyle);
   if (confirmed === undefined) {
     return;
   }
 
-  return (
-    registeredStatusName(status, type) ||
-    (confirmed ? "problem_confirmed" : "no_problem_found")
-  );
+  const approved = status === APPROVED;
+  const registered = registeredStatusName(status, type);
+  const genericTimelineKey = approved
+    ? "review.timeline.approved_by"
+    : "review.timeline.rejected_by";
+
+  if (!helperContext().siteSettings.review_queue_consistent_answers) {
+    return {
+      name: registered || legacyOutcomeName(approved, type, approvalStyle),
+      icon: approved ? "check" : "xmark",
+      cssClass: approved ? "approved" : "rejected",
+      timelineKey: genericTimelineKey,
+    };
+  }
+
+  let timelineKey = genericTimelineKey;
+  if (!registered) {
+    timelineKey = confirmed
+      ? "review.timeline.problem_confirmed_by"
+      : "review.timeline.no_problem_found_by";
+  }
+
+  return {
+    name: registered || (confirmed ? "problem_confirmed" : "no_problem_found"),
+    icon: confirmed ? "xmark" : "check",
+    cssClass: confirmed ? "problem-confirmed" : "no-problem-found",
+    timelineKey,
+  };
 }
 
-/**
- * The i18n key for the timeline entry recording who approved or rejected a
- * reviewable, worded to match its status label.
- *
- * @param {number} status - The reviewable's (or score's) resolved status
- * @param {string} type - The reviewable class name
- * @param {boolean} approvalStyle - Whether approving means no problem was found
- * @returns {string | undefined}
- */
-export function reviewableOutcomeTimelineKey(status, type, approvalStyle) {
-  const confirmed = reviewableProblemConfirmed(status, approvalStyle);
-  if (confirmed === undefined) {
-    return;
+// Names the item that was approved or rejected, as shown without consistent answers.
+function legacyOutcomeName(approved, type, approvalStyle) {
+  if (type === "ReviewableUser") {
+    return approved ? "approved_user" : "rejected_user";
+  } else if (approvalStyle) {
+    return approved ? "approved_post" : "rejected_post";
+  } else {
+    return approved ? "approved_flag" : "rejected_flag";
   }
-
-  if (registeredStatusName(status, type)) {
-    return status === APPROVED
-      ? "review.timeline.approved_by"
-      : "review.timeline.rejected_by";
-  }
-  return confirmed
-    ? "review.timeline.problem_confirmed_by"
-    : "review.timeline.no_problem_found_by";
 }
 
 // Callers written before approval style was serialized only pass a type.
@@ -120,12 +133,12 @@ function dataFor(
       return { name: "pending" };
     case APPROVED:
     case REJECTED: {
-      const confirmed = reviewableProblemConfirmed(status, approvalStyle);
-      return {
-        icon: confirmed ? "xmark" : "check",
-        name: reviewableOutcomeName(status, type, approvalStyle),
-        cssClass: confirmed ? "problem-confirmed" : "no-problem-found",
-      };
+      const { name, icon, cssClass } = reviewableOutcome(
+        status,
+        type,
+        approvalStyle
+      );
+      return { name, icon, cssClass };
     }
     case IGNORED:
       return {

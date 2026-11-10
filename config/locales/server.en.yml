@@ -3232,6 +3232,7 @@ en:
     enable_composer_redesign: "Enable the redesigned composer."
     enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
     enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
+    review_queue_consistent_answers: "Frame every review queue question so \"Yes\" always means there is a problem, and label reviewed items \"Problem confirmed\" or \"No problem found\" for every type."
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
@@ -6712,11 +6713,15 @@ en:
         title: "Yes"
         complete: "Post approved."
       approve_post:
+        title: "Yes"
         action_title: "Approve post"
         complete: "Post approved."
       approve_post_closed:
+        title: "Yes"
         confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
@@ -6725,8 +6730,10 @@ en:
         description: "Reset this user's profile picture to the system default"
         complete: "Avatar removed."
       approve_user:
+        title: "Yes"
         complete: "User approved."
       reject_user:
+        title: "No"
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
@@ -6756,14 +6763,20 @@ en:
       reject_and_delete:
         title: "Reject and Delete the post"
         complete: "Post rejected and deleted."
+      reject_and_delete_standalone:
+        title: "No, delete post"
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
+      reject_and_keep_deleted_standalone:
+        title: "No, keep post deleted"
       scrub:
         title: Scrub record
       approve_and_restore:
+        title: "Yes"
         complete: "Post approved and restored."
       approve_and_unhide:
+        title: "Yes"
         complete: "Post approved and unhidden"
       silence_user:
         title: "Silence user"

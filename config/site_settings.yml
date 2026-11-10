@@ -4840,6 +4840,14 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/414357"
+  review_queue_consistent_answers:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,moderators"
   enable_composer_toolbar_customization:
     default: false
     client: true

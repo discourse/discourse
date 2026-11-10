@@ -44,9 +44,11 @@ class ReviewableUser < Reviewable
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 
     suspect_pending = status == "pending" && is_a_suspect_user?
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
 
-    # "Yes, there's a problem" bundles are added before approve ("No") so the
-    # answers render in the same order across every reviewable type.
+    # For suspect users the destructive "confirm spam" bundle must be added
+    # before the approve action so it renders first in the queue UI. With
+    # consistent answers every "Yes, there's a problem" bundle goes first.
     if suspect_pending
       bundle =
         actions.add_bundle(
@@ -69,8 +71,13 @@ class ReviewableUser < Reviewable
         require_reject_reason: false,
         dsa_classification_required: true,
       )
-    elsif status == "pending"
-      delete_user_actions(actions, nil, require_reject_reason: true)
+    elsif status == "pending" && consistent_answers
+      delete_user_actions(
+        actions,
+        nil,
+        require_reject_reason: true,
+        bundle_label: "reviewables.actions.answer_yes.title",
+      )
     end
 
     if status == "pending" && target&.uploaded_avatar_id.present?
@@ -93,10 +100,16 @@ class ReviewableUser < Reviewable
         if suspect_pending
           a.label = "reviewables.actions.not_spam.title"
           a.description = "reviewables.actions.not_spam.description"
-        else
+        elsif consistent_answers
           a.label = "reviewables.actions.answer_no.title"
+        else
+          a.label = "reviewables.actions.approve_user.title"
         end
       end
+    end
+
+    if status == "pending" && !suspect_pending && !consistent_answers
+      delete_user_actions(actions, nil, require_reject_reason: true)
     end
   end
 
