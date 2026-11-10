@@ -240,6 +240,17 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).to include("New Users")
       end
 
+      it "does not leak hidden posts as the digest best post excerpt" do
+        secret = "this is the secret hidden reply body"
+        hidden_reply =
+          Fabricate(:post, topic: popular_topic, post_number: 2, raw: secret, score: 9999)
+        hidden_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(popular_topic.reload.visible).to eq(true)
+        expect(email.text_part.body.to_s).not_to include(secret)
+        expect(email.html_part.body.to_s).not_to include(secret)
+      end
+
       it "doesn't include new user count if digest_after_minutes is low" do
         user.user_option.digest_after_minutes = 60
         expect(email.html_part.body.to_s).to_not include("New Users")
