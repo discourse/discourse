@@ -269,7 +269,7 @@ module PrettyText
       buffer << "__pluginFeatures = __loadPluginFeatures();"
       buffer << "__pt = __DiscourseMarkdownIt.withCustomFeatures(__pluginFeatures).withOptions(__optInput);"
 
-      # Be careful disabling sanitization. We allow for custom emails
+      # keeps any HTML from the input, so only for input that is already safe
       buffer << "__pt.disableSanitizer();" if opts[:sanitize] == false
 
       opts = context.eval(buffer)
