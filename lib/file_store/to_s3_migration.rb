@@ -177,9 +177,12 @@ module FileStore
 
       local_files = []
       IO
-        .popen("cd #{public_directory} && find uploads/#{@current_db}/original -type f")
-        .each do |file|
-          local_files << file.chomp
+        .popen(
+          ["find", "uploads/#{@current_db}/original", "-type", "f", "-print0"],
+          chdir: public_directory,
+        )
+        .each("\0", chomp: true) do |file|
+          local_files << file
           putc "." if local_files.size % 1000 == 0
         end
 
