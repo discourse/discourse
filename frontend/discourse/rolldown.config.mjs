@@ -210,7 +210,10 @@ export function buildConfig({ devMode } = {}) {
         },
       },
       brotliAssetsPlugin({ enabled: isProduction }),
-      bundleAnalyzerPlugin({ compress: isProduction }),
+      bundleAnalyzerPlugin({
+        compress: isProduction,
+        root: import.meta.dirname,
+      }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {
