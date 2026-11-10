@@ -17,78 +17,62 @@ module ::Blog
       @page_title = I18n.t("blog.not_found_title")
       @description = I18n.t("blog.not_found_body")
       @canonical_url = "#{Configuration.base_url}#{blog_path}"
+      @template_variables = template_variables
       response.headers["Cache-Control"] = "private, no-store"
       response.headers["X-Robots-Tag"] = "noindex"
       render "blog/articles/not_found", formats: [:html], status: :not_found
     end
 
     def index
-      @page = [params[:page].to_i, 1].max
-      @query = params[:q].to_s.strip.first(100)
-      publications = Publication.publicly_visible
-      if @query.present?
-        term = "%#{ActiveRecord::Base.sanitize_sql_like(@query)}%"
-        publications =
-          publications.where(
-            "blog_revisions.data->>'title' ILIKE ? OR blog_revisions.data->>'excerpt' ILIKE ?",
-            term,
-            term,
-          )
+      Article::List.call(
+        service_params.deep_merge(params: { query: params[:q], tag_slug: params[:tag] }),
+      ) do
+        on_success do |params:, tag:, listing:|
+          @archive = params.archive
+          @page_title = tag&.name || (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
+          @description = SiteSetting.blog_description
+          @canonical_url = "#{Configuration.base_url}#{blog_path}"
+          @canonical_url += "?page=#{params.page}" if params.page > 1
+          @template_variables =
+            template_variables(
+              publications: listing[:publications],
+              page: params.page,
+              more: listing[:has_more],
+              query: params.query,
+              archive: @archive,
+              tag:,
+            )
+          response.headers["X-Robots-Tag"] = "noindex" if params.query.present?
+        end
+        on_failure { raise Discourse::NotFound }
       end
-      if params[:tag].present?
-        tag = Tag.visible(Guardian.new).find_by!(slug: params[:tag])
-        publications =
-          publications.where(discussion_topic_id: TopicTag.where(tag_id: tag.id).select(:topic_id))
-        @tag = tag
-      end
-      @archive = params[:archive].present?
-      publications = publications.order(featured: :desc) unless @archive || @query.present? || @tag
-      limit = SiteSetting.blog_posts_per_page
-      selected =
-        publications
-          .newest
-          .offset((@page - 1) * limit)
-          .limit(limit + 1)
-          .includes(:published_revision, discussion_topic: %i[first_post user image_upload tags])
-          .to_a
-      @more = selected.size > limit
-      @publications = selected.first(limit)
-      @page_title =
-        @tag&.name ||
-          (
-            if @archive
-              I18n.t("blog.archive")
-            else
-              SiteSetting.blog_title
-            end
-          )
-      @description = SiteSetting.blog_description
-      @canonical_url = "#{Configuration.base_url}#{blog_path}"
-      @canonical_url += "?page=#{@page}" if @page > 1
-      response.headers["X-Robots-Tag"] = "noindex" if @query.present?
     end
 
     def show
-      stored_path = Path.find_by!(path: blog_path)
-      @publication =
-        Publication
-          .publicly_visible
-          .includes(:published_revision, discussion_topic: %i[first_post user image_upload tags])
-          .find(stored_path.publication_id)
-      if @publication.path != blog_path
-        return(redirect_to(@publication.url, status: :moved_permanently, allow_other_host: true))
+      Article::Find.call(service_params.deep_merge(params: { path: blog_path })) do
+        on_success do |publication:|
+          @topic = publication.discussion_topic
+          @page_title = publication.article.title
+          @description = publication.display_excerpt
+          @canonical_url = publication.url
+          @article_metadata = ArticleMetadata.new(publication, description: @description)
+          @template_variables =
+            template_variables(
+              article: ArticleVariables.new(publication, preview_token: @theme_preview_token),
+            )
+        end
+        on_failed_policy(:requested_path_is_current) do |publication:|
+          redirect_to(publication.url, status: :moved_permanently, allow_other_host: true)
+        end
+        on_failure { raise Discourse::NotFound }
       end
-      @topic = @publication.discussion_topic
-      @article = @publication.article
-      @page_title = @article.title
-      @description = @publication.display_excerpt
-      @canonical_url = @publication.url
     end
 
     def about
       @page_title = I18n.t("blog.about")
       @description = SiteSetting.blog_description
       @canonical_url = "#{Configuration.base_url}/about"
+      @template_variables = template_variables
     end
 
     def feed
@@ -149,9 +133,18 @@ module ::Blog
       @blog_path ||= Configuration.relative_path(request)
     end
 
+    def template_variables(**variables)
+      TemplateVariables.new(
+        title: @page_title,
+        preview_token: @theme_preview_token,
+        path: blog_path,
+        **variables,
+      )
+    end
+
     def load_blog_theme
       if params[:blog_theme_preview].present?
-        @blog_theme = BlogTheme.from_preview(params[:blog_theme_preview])
+        @blog_theme = ThemePreview.theme_for(params[:blog_theme_preview])
         @theme_preview_token = params[:blog_theme_preview]
         response.headers.delete("X-Frame-Options")
         policy =

@@ -5,6 +5,7 @@ import {
   render,
   settled,
   triggerEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -112,6 +113,28 @@ async function scrollToEdge(edge) {
   }
 }
 
+// Touches the bottom only in passing, the way a quick scroll does, so the
+// scroll ends just above it. Dispatched directly because triggerEvent fires
+// after a tick, by which time the scroller has already moved on.
+async function skimPastBottom() {
+  const scroller = find(".chat-messages-scroller");
+  setScrollerHeight(scroller, { clientHeight: 300, scrollHeight: 3000 });
+  scroller.scrollTop = 0;
+  scroller.dispatchEvent(new Event("scroll"));
+  scroller.scrollTop = -100;
+  await settled();
+}
+
+// Not awaited through settled(), which would wait on a held request. A single
+// event can land in the scroll throttle or be the one swallowed after a fetch,
+// so keep scrolling until it registers.
+async function scrollUntil(scroller, done) {
+  await waitUntil(() => {
+    scroller.dispatchEvent(new Event("scroll"));
+    return done();
+  });
+}
+
 function renderedMessageIds() {
   return [
     ...new Set(
@@ -204,5 +227,125 @@ module("Integration | Component | ChatChannel", function (hooks) {
       [],
       `no message between the loaded window (${windowTop}) and the live one (${LIVE}) was skipped`
     );
+  });
+
+  test("held live messages stop keeping the arrow up once their page loads", async function (assert) {
+    await this.openBacklog(assert);
+    await scrollToEdge("top");
+    await this.receiveLiveMessage();
+
+    for (let i = 0; i < 40 && !renderedMessageIds().includes(LIVE); i++) {
+      await skimPastBottom();
+    }
+
+    assert.true(renderedMessageIds().includes(LIVE), "the live message loaded");
+    assert
+      .dom(".chat-scroll-to-bottom__button.visible")
+      .doesNotExist("the arrow hides near the end, as it does for history");
+  });
+
+  test("a message replayed while the channel loads is not counted as new", async function (assert) {
+    let releaseLoad;
+    pretender.get("/chat/api/channels/1/messages", async (request) => {
+      if (!request.queryParams.direction) {
+        await new Promise((resolve) => (releaseLoad = resolve));
+      }
+      return messagesHandler(request);
+    });
+
+    this.channel = this.fabricators.channel({ id: 1 });
+    this.channel.currentUserMembership.following = true;
+    this.channel.currentUserMembership.lastReadMessageId = LAST_READ;
+    const rendering = render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+    await waitUntil(() => releaseLoad);
+
+    // subscribing replays posts made while the reader was elsewhere
+    const replayed = publishToMessageBus("/chat/1", {
+      type: "sent",
+      chat_message: messageJson(LAST_READ + 1),
+    });
+
+    assert.strictEqual(
+      this.owner.lookup("service:chat-pane-pending-manager")
+        .totalPendingMessageCount,
+      0,
+      "it is not counted as a new message below"
+    );
+
+    releaseLoad();
+    await Promise.all([rendering, replayed]);
+
+    assert.true(
+      renderedMessageIds().includes(LAST_READ + 1),
+      "the message is shown from the loaded page"
+    );
+  });
+
+  test("reaching the end while an older page loads still checks for newer messages", async function (assert) {
+    // a window that ends on a full page is reported as having more ahead
+    let releasePast;
+    pretender.get("/chat/api/channels/1/messages", async ({ queryParams }) => {
+      if (queryParams.direction === "past") {
+        await new Promise((resolve) => (releasePast = resolve));
+        return response({
+          messages: [15, 16, 17].map(messageJson),
+          meta: meta({ past: false }),
+        });
+      }
+
+      if (queryParams.direction === "future") {
+        return response({ messages: [], meta: meta({ future: false }) });
+      }
+
+      return response({
+        messages: [18, 19, LAST_READ].map(messageJson),
+        meta: meta({ past: true, future: true }),
+      });
+    });
+
+    this.channel = this.fabricators.channel({ id: 1 });
+    this.channel.currentUserMembership.following = true;
+    this.channel.currentUserMembership.lastReadMessageId = LAST_READ;
+    const rendering = render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+
+    await waitUntil(() => renderedMessageIds().length === 3);
+
+    // three messages don't overflow, so a real scrollTop would clamp to the bottom
+    const scroller = find(".chat-messages-scroller");
+    setScrollerHeight(scroller, { clientHeight: 300, scrollHeight: 3000 });
+    let scrollTop = 0;
+    Object.defineProperty(scroller, "scrollTop", {
+      configurable: true,
+      get: () => scrollTop,
+      set: (value) => {
+        scrollTop = value;
+      },
+    });
+
+    scroller.scrollTop = -2700;
+    await scrollUntil(scroller, () => releasePast);
+
+    // the scroll end handler's request for newer messages is dropped meanwhile
+    scroller.scrollTop = 0;
+    triggerEvent(scroller, "scroll");
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    releasePast();
+    await rendering;
+    await settled();
+
+    assert.true(
+      pretender.handledRequests.some(
+        (request) => request.queryParams.direction === "future"
+      ),
+      "newer messages are requested once the older page is in"
+    );
+    assert
+      .dom(".chat-scroll-to-bottom__button.visible")
+      .doesNotExist("the arrow is hidden at the real end");
   });
 });

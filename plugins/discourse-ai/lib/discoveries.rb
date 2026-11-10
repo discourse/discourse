@@ -12,6 +12,7 @@ module DiscourseAi
     MAX_RELATED_DISCUSSIONS = 6
     REQUEST_ID_PATTERN =
       /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/i
+    ASK_LOG_ID_PATTERN = /\A[1-9]\d*\z/
     PRIVATE_MESSAGE_FILTER =
       /(?:\A|\s)(?:in:(?:messages|personal|personal-direct|all-pms)|(?:group|personal)_messages:\S+)(?=\s|\z)/i
     # keeps to the search menu's own check for operators and quoted phrases
@@ -82,6 +83,10 @@ module DiscourseAi
 
       def valid_request_id?(request_id)
         request_id.to_s.match?(REQUEST_ID_PATTERN)
+      end
+
+      def valid_ask_log_id?(ask_log_id)
+        ask_log_id.to_s.match?(ASK_LOG_ID_PATTERN)
       end
 
       # A scope is where the question was asked from. It narrows retrieval

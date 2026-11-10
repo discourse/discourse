@@ -41,6 +41,29 @@ export default class InterfaceColor extends Service {
     return this.colorMode === AUTO_VALUE_FOR_COOKIE;
   }
 
+  /**
+   * Whether the interface is currently shown in dark colors, resolving the
+   * site's default scheme, a mode forced from the color selector, and
+   * otherwise the device preference.
+   *
+   * @returns {boolean}
+   */
+  get darkModeActive() {
+    if (this.session.defaultColorSchemeIsDark) {
+      return true;
+    }
+    if (!this.session.darkModeAvailable) {
+      return false;
+    }
+    if (this.darkModeForced) {
+      return true;
+    }
+    if (this.lightModeForced) {
+      return false;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
   get selectorAvailableInSidebar() {
     return (
       this.selectorAvailable &&

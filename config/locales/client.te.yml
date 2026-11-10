@@ -317,16 +317,10 @@ te:
     design_wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      sections:
-        theme: "థీమ్"
-        search: "వెతుకు"
       theme:
         selected: "ఎంపిక చేయబడినవి"
-      colors:
-        light: "లేత"
-        dark: "డార్క్"
       fonts:
-        heading_font: "శీర్షిక ఫాంట్"
+        base_font: "బాడీ"
       homepage:
         topics: "విషయాలు"
         categories: "వర్గాలు"

@@ -4826,7 +4826,13 @@ es:
   design_wizard:
     palette_pairs:
       default: "Por defecto"
+      neutral: "Neutro"
+      shades_of_blue: "Matices de azul"
+      summer: "Verano"
       dracula: "Drácula"
+      grey_amber: "Gris ámbar"
+      latte: "Latte"
+      dark_rose: "Rosa oscuro"
   wizard:
     title: "Instalación de Discourse"
     step:

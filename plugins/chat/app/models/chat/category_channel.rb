@@ -25,8 +25,8 @@ module Chat
 
     def generate_auto_slug
       return if slug.present?
-      self.slug = Slug.for(title.strip, "")
-      self.slug = "" if duplicate_slug?
+      self.slug = Slug.for(title.strip, "", SLUG_MAX_LENGTH)
+      self.slug = "" if slug.length > SLUG_MAX_LENGTH || duplicate_slug?
     end
   end
 end

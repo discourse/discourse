@@ -325,12 +325,9 @@ ca:
       back: "Enrere"
       next: "Següent"
       sections:
-        theme: "Aparença"
         homepage: "Pàgina principal"
-        search: "Cerca"
-      colors:
-        light: "Clar"
-        dark: "Fosc"
+      fonts:
+        base_font: "Cos"
       homepage:
         topics: "Temes"
         categories: "Categories"

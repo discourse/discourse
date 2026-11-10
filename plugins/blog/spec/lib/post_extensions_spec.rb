@@ -11,7 +11,7 @@ RSpec.describe Blog::PostExtensions do
   before { enable_blog!(category: category, drafts: drafts) }
 
   def issue_review
-    Blog::Review.issue!(topic: topic, user: admin)
+    issue_blog_review(topic, user: admin)
   end
 
   def unrevoked_reviews

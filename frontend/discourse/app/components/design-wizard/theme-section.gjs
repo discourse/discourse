@@ -114,7 +114,7 @@ const DesignWizardThemeSection = <template>
     class="design-wizard__theme-cards"
   >
     <legend class="sr-only">
-      {{i18n "design_wizard.sections.theme"}}
+      {{i18n "design_wizard.steps.theme.title"}}
     </legend>
     {{#each @themes as |theme|}}
       <ThemeCard

@@ -11,7 +11,7 @@ RSpec.describe Blog::TopicExtensions do
   before { enable_blog!(category: category, drafts: drafts) }
 
   def issue_review
-    Blog::Review.issue!(topic: topic, user: admin)
+    issue_blog_review(topic, user: admin)
   end
 
   def unrevoked_reviews
@@ -36,12 +36,18 @@ RSpec.describe Blog::TopicExtensions do
       expect(topic.blog_editorial_draft?).to eq(true)
     end
 
-    it "is false for archived drafts, the drafts category's definition topic, and other categories" do
+    it "is false for unlisted, deleted and archived drafts, the drafts category's definition topic, and other categories" do
+      unlisted = Fabricate(:topic, category: drafts, visible: false)
+      deleted = Fabricate(:topic, category: drafts, deleted_at: Time.current)
       archived = Fabricate(:topic, category: drafts, archived: true)
       elsewhere = Fabricate(:topic, category: other_category)
       drafts.create_category_definition
 
-      expect([archived, drafts.reload.topic, elsewhere].select(&:blog_editorial_draft?)).to be_empty
+      expect(
+        [unlisted, deleted, archived, drafts.reload.topic, elsewhere].select(
+          &:blog_editorial_draft?
+        ),
+      ).to be_empty
     end
   end
 

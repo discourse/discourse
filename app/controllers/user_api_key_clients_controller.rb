@@ -52,7 +52,7 @@ class UserApiKeyClientsController < ApplicationController
 
   def require_params
     %i[client_id application_name public_key auth_redirect scopes].each { |p| params.require(p) }
-    @scopes = params[:scopes].to_s.split(",").map(&:strip).reject(&:blank?)
+    @scopes = params[:scopes].to_s.split(",").map(&:strip).reject(&:blank?).uniq
     raise Discourse::InvalidParameters.new(:scopes) if @scopes.empty?
   end
 

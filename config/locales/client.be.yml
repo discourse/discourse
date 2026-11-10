@@ -425,12 +425,9 @@ be:
       back: "Назад"
       next: "Далей"
       sections:
-        theme: "Тэма"
         homepage: "Галоўная старонка"
-        search: "Пошук"
-      colors:
-        light: "Светлая"
-        dark: "Цёмная"
+      fonts:
+        base_font: "Тэкст"
       homepage:
         topics: "тэмы"
         categories: "катэгорыі"

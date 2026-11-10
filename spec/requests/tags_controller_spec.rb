@@ -2238,6 +2238,37 @@ RSpec.describe TagsController do
                          SiteSetting.max_tag_search_results
       end
 
+      it "does not expose restricted required tag group details" do
+        otherwise_allowed_tag = Fabricate(:tag, name: "otherwise-allowed")
+        restricted_tag = Fabricate(:tag, name: "restricted-required-tag")
+        restricted_tag_group =
+          Fabricate(
+            :tag_group,
+            name: "Restricted Required Group",
+            permissions: {
+              "staff" => 1,
+            },
+            tags: [restricted_tag],
+          )
+        crtg = CategoryRequiredTagGroup.new(tag_group: restricted_tag_group, min_count: 1)
+        category = Fabricate(:category, category_required_tag_groups: [crtg])
+
+        response_bodies =
+          ["", otherwise_allowed_tag.name].map do |query|
+            get "/tags/filter/search.json",
+                params: {
+                  q: query,
+                  categoryId: category.id,
+                  filterForInput: true,
+                }
+            expect(response.status).to eq(200)
+            response.body
+          end
+
+        expect(JSON.parse(response_bodies.first)).not_to have_key("required_tag_group")
+        expect(response_bodies.join).not_to include(restricted_tag_group.name)
+      end
+
       it "includes required tag group information" do
         tag1 = Fabricate(:tag)
         tag2 = Fabricate(:tag)

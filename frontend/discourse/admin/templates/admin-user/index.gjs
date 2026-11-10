@@ -464,7 +464,7 @@ export default <template>
         {{/if}}
         {{#if @controller.model.can_grant_moderation}}
           <DButton
-            class="btn-default"
+            class="btn-default grant-moderation"
             @action={{@controller.grantModeration}}
             @icon="shield-halved"
             @label="admin.user.grant_moderation"

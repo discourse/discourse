@@ -77,10 +77,3 @@
     border-left: 0;
   }
 }
-
-.chat-form {
-  &__description.-autojoin,
-  &__description.-channel-wide-mentions {
-    max-width: 50%;
-  }
-}

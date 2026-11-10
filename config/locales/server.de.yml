@@ -5494,7 +5494,13 @@ de:
   design_wizard:
     palette_pairs:
       default: "Standard"
+      neutral: "Neutral"
+      shades_of_blue: "Blautöne"
+      summer: "Sommer"
       dracula: "Dracula"
+      grey_amber: "Grauer Bernstein"
+      latte: "Latte"
+      dark_rose: "Dunkelrosa"
   wizard:
     title: "Discourse einrichten"
     step:

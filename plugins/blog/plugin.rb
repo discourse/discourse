@@ -45,7 +45,7 @@ after_initialize do
     :blog_base_url,
     include_condition: -> { UpcomingChanges.enabled?(:blog_enabled) },
   ) { Blog::Configuration.base_url }
-  add_to_serializer(:current_user, :can_blog_edit) { Blog::Configuration.contributor?(object) }
+  add_to_serializer(:current_user, :can_blog_edit) { scope.is_blog_contributor? }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
   reloadable_patch { ::Post.prepend(Blog::PostExtensions) }
@@ -79,7 +79,16 @@ after_initialize do
     include_condition: -> { !blog_publication.nil? },
   ) do
     unless instance_variable_defined?(:@blog_publication)
-      @blog_publication = Blog::PublicationEntry.for_viewer(object.topic, scope.user)
+      publication = Blog::Publication.editable_for(object.topic, scope)
+      @blog_publication =
+        if publication
+          Blog::PublicationSerializer.new(
+            publication,
+            scope:,
+            root: false,
+            viewed_topic: object.topic,
+          ).as_json
+        end
     end
     @blog_publication
   end

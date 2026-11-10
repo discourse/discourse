@@ -1,10 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import {
-  addChatMessageDecorator,
-  resetChatMessageDecorators,
-} from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
-import { removeChatComposerSecondaryActions } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import {
   registerTranscriptSourceType,
   resetTranscriptSourceTypes,
@@ -41,6 +36,10 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
 
 /**
  * Decorate a chat message
+ *
+ * Registers the decorator on the `chat-message-decorate` behavior transformer. Decorators run in
+ * registration order, before the built-in decoration. The transformer context carries `element`,
+ * `helper`, `message` and `channel`.
  *
  * @memberof PluginApi
  * @instance
@@ -125,6 +124,9 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
 /**
  * Removes secondary actions from the chat composer
  *
+ * Registers a `chat-message-secondary-actions` value transformer that drops the given ids. The
+ * transformer context carries `message` and `context`.
+ *
  * @memberof PluginApi
  * @instance
  * @function removeChatComposerSecondaryActions
@@ -200,7 +202,13 @@ export default {
       if (!apiPrototype.hasOwnProperty("decorateChatMessage")) {
         Object.defineProperty(apiPrototype, "decorateChatMessage", {
           value(decorator) {
-            addChatMessageDecorator(decorator);
+            this.registerBehaviorTransformer(
+              "chat-message-decorate",
+              ({ next, context }) => {
+                decorator(context.element, context.helper, context.message);
+                next();
+              }
+            );
           },
         });
       }
@@ -272,7 +280,11 @@ export default {
           "removeChatComposerSecondaryActions",
           {
             value(...actionIds) {
-              removeChatComposerSecondaryActions(actionIds);
+              this.registerValueTransformer(
+                "chat-message-secondary-actions",
+                ({ value }) =>
+                  value.filter((button) => !actionIds.includes(button.id))
+              );
             },
           }
         );
@@ -281,7 +293,6 @@ export default {
   },
 
   teardown() {
-    resetChatMessageDecorators();
     resetTranscriptSourceTypes();
     resetChatSounds();
   },

@@ -519,20 +519,21 @@ pt_BR:
     design_wizard:
       back: "Voltar"
       next: "Próximo"
+      steps:
+        theme:
+          title: "Escolha um tema"
       sections:
-        theme: "Tema"
         fonts: "Fontes"
+        logo: "Logotipo"
         homepage: "Página Inicial"
-        welcome_banner: "Banner de boas-vindas"
-        search: "Pesquisar"
       theme:
         selected: "Selecionado(a)"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
       fonts:
-        base_font: "Fonte de base"
-        heading_font: "Fonte do cabeçalho"
+        base_font: "Corpo"
+        heading_font: "Cabeçalhos"
+      logo:
+        description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
+        help_text: "O tamanho recomendado é 600 x 80 pixels."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"

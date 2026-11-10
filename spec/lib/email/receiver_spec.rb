@@ -15,6 +15,34 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  describe "MIME structure depth" do
+    it "raises a MaxMimeDepthExceededError when the message is nested too deeply" do
+      expect {
+        Email::Receiver.new(nested_mime_email(Email::Receiver::MAX_MIME_DEPTH + 10))
+      }.to raise_error(Email::Receiver::MaxMimeDepthExceededError)
+    end
+
+    it "accepts a message nested within the maximum depth" do
+      expect {
+        Email::Receiver.new(nested_mime_email(Email::Receiver::MAX_MIME_DEPTH - 1))
+      }.to_not raise_error
+    end
+  end
+
+  describe "MIME structure width" do
+    it "raises a MaxMimePartsExceededError when the message has too many parts" do
+      expect {
+        Email::Receiver.new(wide_mime_email(Email::Receiver::MAX_MIME_PARTS + 10))
+      }.to raise_error(Email::Receiver::MaxMimePartsExceededError)
+    end
+
+    it "accepts a message within the maximum number of parts" do
+      expect {
+        Email::Receiver.new(wide_mime_email(Email::Receiver::MAX_MIME_PARTS - 1))
+      }.to_not raise_error
+    end
+  end
+
   context "when email is addressed to an automatic group" do
     let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
 
@@ -230,6 +258,32 @@ RSpec.describe Email::Receiver do
     it "handles email with no subject" do
       expect { process(:no_subject) }.to change(Topic, :count)
       expect(Topic.last.title).to eq("This topic needs a title")
+    end
+
+    it "rejects email from a suspended sender" do
+      Fabricate(:user, email: "one@foo.com", suspended_till: 1.year.from_now)
+
+      expect { process(:email_reply_1) }.to raise_error(
+        Email::Receiver::SuspendedUserError,
+      ).and not_change(Topic, :count)
+    end
+
+    it "bounds the body of posts created without validations" do
+      SiteSetting.max_post_length = 100
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: Someone <someone@example.com>
+        To: team@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      post = Email::Receiver.new(mail).process!
+
+      expect(post.raw.length).to be <= SiteSetting.max_post_length
     end
 
     context "with reply_by_email configured" do
@@ -812,6 +866,47 @@ RSpec.describe Email::Receiver do
       expect { process(:new_user) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
     end
 
+    it "bounds the body of posts from staged users" do
+      SiteSetting.max_post_length = 100
+      category.update_columns(email_in_allow_strangers: true)
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: Someone <someone@example.com>
+        To: category@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      post = Email::Receiver.new(mail).process!
+
+      expect(post.raw.length).to be <= SiteSetting.max_post_length
+    end
+
+    it "rejects oversized posts from users that require validation" do
+      SiteSetting.max_post_length = 100
+      Fabricate(
+        :user,
+        email: "existing@bar.com",
+        trust_level: TrustLevel[2],
+        refresh_auto_groups: true,
+      )
+      body = "This body is long enough to exceed the maximum post length. " * 20
+      mail = <<~EMAIL
+        From: existing@bar.com
+        To: category@bar.com
+        Subject: A very long email
+        Date: #{Time.now.rfc2822}
+        Content-Type: text/plain; charset=UTF-8
+
+        #{body}
+      EMAIL
+
+      expect { Email::Receiver.new(mail).process! }.to raise_error(Email::Receiver::InvalidPost)
+    end
+
     it "raises an InsufficientTrustLevelError when user's trust level isn't enough" do
       Fabricate(:user, email: "existing@bar.com", trust_level: TrustLevel[3])
       SiteSetting.email_in_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
@@ -1103,6 +1198,43 @@ RSpec.describe Email::Receiver do
         expect { process(:new_user) }.to change(Topic, :count)
         expect(Topic.last.user.email).to eq("discourse@bar.com")
       end
+    end
+  end
+
+  describe "HTML email with many line breaks inside inline elements" do
+    fab!(:category) do
+      Fabricate(:category, email_in: "category@bar.com", email_in_allow_strangers: true)
+    end
+
+    def raw_html_email(html)
+      <<~EMAIL
+        Return-Path: <stranger@example.com>
+        From: stranger@example.com
+        To: category@bar.com
+        Subject: Line breaks inside inline elements
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+        Message-ID: <#{SecureRandom.hex}@example.com>
+        MIME-Version: 1.0
+        Content-Type: text/html; charset=UTF-8
+
+        <html><body>#{html}</body></html>
+      EMAIL
+    end
+
+    it "processes deeply nested inline elements without stalling the mail worker" do
+      html = "<div>#{"a<br>b<br>c<br>d<span>" * 100}x#{"</span>" * 100}</div>"
+
+      expect {
+        Timeout.timeout(10) { Email::Receiver.new(raw_html_email(html)).process! }
+      }.to change(Topic, :count).by(1)
+    end
+
+    it "processes a wide inline element without stalling the mail worker" do
+      html = "<div><span>#{"a<br>" * 10_000}</span></div>"
+
+      expect {
+        Timeout.timeout(10) { Email::Receiver.new(raw_html_email(html)).process! }
+      }.to change(Topic, :count).by(1)
     end
   end
 
@@ -1640,6 +1772,64 @@ RSpec.describe Email::Receiver do
 
       Bye!
       MD
+
+    it "preserves text siblings and content in independent containers" do
+      mail = <<~EMAIL
+        Content-Type: text/html; charset=UTF-8
+
+        <div>
+          <p>Reply</p>
+          <div id="Signature">Signature</div>
+          Keep this text
+          <p>Quoted reply</p>
+        </div>
+        <div><p>Independent content</p></div>
+      EMAIL
+
+      body, elided = described_class.new(mail).select_body
+
+      expect(body).to eq("Reply\n\nKeep this text\n\nIndependent content")
+      expect(elided).to eq("Signature\n\nQuoted reply")
+    end
+
+    it "preserves Outlook trimmed content order and content following horizontal rules" do
+      mail = <<~EMAIL
+        Content-Type: text/html; charset=UTF-8
+
+        <p>Reply</p>
+        <hr>
+        <p>More reply</p>
+        <div id="Signature">Signature</div>
+        <div>
+          <p>Quoted reply</p>
+          <div id="Signature">Nested signature</div>
+          <p>Nested quote</p>
+        </div>
+        <p>Outside quote</p>
+      EMAIL
+
+      body, elided = described_class.new(mail).select_body
+
+      expect(body).to eq("Reply\n\nMore reply")
+      expect(elided).to eq(
+        "---\n\nSignature\n\nQuoted reply\n\nOutside quote\n\nNested signature\n\nNested quote",
+      )
+    end
+
+    it "preserves Apple Mail signature markers while trimming following elements" do
+      mail = <<~EMAIL
+        Content-Type: text/html; charset=UTF-8
+
+        <p>Reply</p>
+        <div id="AppleMailSignature">Signature</div>
+        <p>Quoted reply</p>
+      EMAIL
+
+      body, elided = described_class.new(mail).select_body
+
+      expect(body).to eq("Reply\n\nSignature")
+      expect(elided).to eq("Quoted reply")
+    end
 
     it "strips lines if strip_incoming_email_lines is enabled" do
       SiteSetting.strip_incoming_email_lines = true

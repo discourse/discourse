@@ -15,8 +15,10 @@ import {
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
 import { isTesting } from "discourse/lib/environment";
+import getURL from "discourse/lib/get-url";
 import { homepagePreviewDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
+import { deepEqual } from "discourse/lib/object";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 import DiscourseURL from "discourse/lib/url";
 
@@ -25,18 +27,22 @@ const STATE_KEY = "design_wizard_panel_state";
 // have to be put back when the wizard is closed without saving
 const PREVIEWED_SITE_SETTINGS = [
   "desktop_category_page_style",
-  "enable_welcome_banner",
-  "welcome_banner_location",
-  "search_experience",
+  "site_logo_url",
 ];
 const SELECT_THEME_STEP = "select_theme";
-const SUPPORTED_HOMEPAGES = ["latest", "new", "hot", "categories"];
+const SUPPORTED_HOMEPAGES = ["latest", "categories"];
 // the wizard as the first stop of admin onboarding, versus an admin running it
 // again later from the admin interface
 export const SOURCE_ONBOARDING = "onboarding";
 export const SOURCE_ADMIN = "admin";
 // launches the wizard on load, so it can be reached by URL from anywhere
 export const DESIGN_WIZARD_PARAM = "design_wizard";
+// which color modes the site offers; a single mode's palette is used for both
+export const PALETTE_MODES = Object.freeze({
+  both: "both",
+  light: "light",
+  dark: "dark",
+});
 // mirrors the onboarding step's own completion key so a wizard finished
 // after its caller was torn down still marks the step complete
 const STEP_COMPLETED_KEY = `onboarding_step_${SELECT_THEME_STEP}`;
@@ -63,13 +69,13 @@ export default class DesignWizardService extends Service {
   @tracked homepage;
   @tracked homepageSettings;
   @tracked categoryPageStyle;
-  @tracked welcomeBanner;
-  @tracked welcomeBannerLocation;
-  @tracked searchExperience;
+  @tracked logo;
   @tracked saving = false;
   // a theme preview replaces the whole page, so the panel stays busy until it does
   @tracked applyingTheme = false;
-  @tracked selectedPairKeys = new Map();
+  // theme id => { mode, light, dark }: the PALETTE_MODES value and each row's
+  // pair key, kept while a row is hidden so switching back restores it
+  @tracked paletteSelections = new Map();
   @tracked stepIndex = 0;
   // resuming an in-progress wizard (e.g. after a theme-preview reload)
   // should not replay the sheet's entrance animation
@@ -78,7 +84,6 @@ export default class DesignWizardService extends Service {
   @tracked returnUrl;
   // whether a step has been saved, i.e. whether the live site has changed yet
   @tracked progressSaved = false;
-  @tracked showIntro = false;
 
   #onComplete;
   #snapshot;
@@ -88,6 +93,11 @@ export default class DesignWizardService extends Service {
   #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
+  // what the server holds, so a step save only writes choices that differ from it
+  #savedSelections;
+  // until the admin or a theme switch picks one, the shown homepage may only be
+  // the fallback for one the wizard can't offer, which must not be saved
+  #homepageChosen = false;
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -102,14 +112,6 @@ export default class DesignWizardService extends Service {
     return this.data?.additional_homepages ?? [];
   }
 
-  get supportsWelcomeBanner() {
-    return this.selectedTheme?.supports_welcome_banner !== false;
-  }
-
-  get supportsSearch() {
-    return this.selectedTheme?.supports_search !== false;
-  }
-
   get #supportedHomepages() {
     return [
       ...SUPPORTED_HOMEPAGES,
@@ -117,27 +119,67 @@ export default class DesignWizardService extends Service {
     ];
   }
 
+  get #restorableHomepages() {
+    return [
+      ...this.#supportedHomepages,
+      ...(this.data?.restorable_homepages ?? []),
+    ];
+  }
+
   get pairs() {
     return this.selectedTheme?.palette_pairs ?? [];
   }
 
-  get selectedPair() {
-    const key = this.selectedPairKeys.get(this.themeId);
-    return this.pairs.find((pair) => pair.key === key) ?? this.pairs[0];
+  get lightPairs() {
+    return this.pairs.filter((pair) => pair.light);
+  }
+
+  get darkPairs() {
+    return this.pairs.filter((pair) => pair.dark);
+  }
+
+  get selectedLightPair() {
+    return this.#selectedPair(this.lightPairs, "light");
+  }
+
+  get selectedDarkPair() {
+    return this.#selectedPair(this.darkPairs, "dark");
+  }
+
+  get paletteMode() {
+    return this.paletteSelections.get(this.themeId)?.mode ?? PALETTE_MODES.both;
+  }
+
+  get showsLightPalettes() {
+    return this.paletteMode !== PALETTE_MODES.dark;
+  }
+
+  get showsDarkPalettes() {
+    return this.paletteMode !== PALETTE_MODES.light;
   }
 
   get effectiveColorMode() {
-    return this.selectedPair?.dark_only ? "dark" : this.colorMode;
+    return this.paletteMode === PALETTE_MODES.both
+      ? this.colorMode
+      : this.paletteMode;
+  }
+
+  get #lightPalette() {
+    return this.showsLightPalettes
+      ? this.selectedLightPair?.light
+      : this.selectedDarkPair?.dark;
+  }
+
+  get #darkPalette() {
+    return this.showsDarkPalettes
+      ? this.selectedDarkPair?.dark
+      : this.selectedLightPair?.light;
   }
 
   get previewPalette() {
-    const pair = this.selectedPair;
-    if (!pair) {
-      return;
-    }
     return this.effectiveColorMode === "dark"
-      ? (pair.dark ?? pair.light)
-      : (pair.light ?? pair.dark);
+      ? this.#darkPalette
+      : this.#lightPalette;
   }
 
   // Only themes offered by the wizard can be restored through its endpoint.
@@ -156,25 +198,22 @@ export default class DesignWizardService extends Service {
   get #selectionsPayload() {
     return {
       theme_id: this.themeId,
-      light_palette_id:
-        this.selectedPair?.light?.id ?? this.selectedPair?.dark?.id,
-      dark_palette_id: this.selectedPair?.dark?.id,
+      light_palette_id: this.#lightPalette?.id,
+      // a light-only site has no dark palette
+      dark_palette_id: this.showsDarkPalettes
+        ? this.selectedDarkPair?.dark?.id
+        : undefined,
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
       heading_font: this.headingFont,
-      homepage: this.homepage,
-      homepage_settings: this.homepageSettings,
       category_page_style:
         this.homepage === "categories" ? this.categoryPageStyle : null,
-      ...(this.supportsWelcomeBanner
-        ? {
-            enable_welcome_banner: this.welcomeBanner,
-            welcome_banner_location: this.welcomeBannerLocation,
-          }
+      // untouched choices are left alone rather than written back every step,
+      // so a homepage the wizard can't offer isn't replaced by its fallback
+      ...(this.#homepageChanged
+        ? { homepage: this.homepage, homepage_settings: this.homepageSettings }
         : {}),
-      ...(this.supportsSearch
-        ? { search_experience: this.searchExperience }
-        : {}),
+      ...(this.#logoChanged ? { logo: this.logo } : {}),
     };
   }
 
@@ -193,6 +232,21 @@ export default class DesignWizardService extends Service {
 
   get #currentPreviewThemeId() {
     return new URLSearchParams(window.location.search).get("preview_theme_id");
+  }
+
+  get #homepageChanged() {
+    return (
+      this.#homepageChosen &&
+      (this.homepage !== this.#savedSelections.homepage ||
+        !deepEqual(
+          this.homepageSettings ?? {},
+          this.#savedSelections.homepageSettings
+        ))
+    );
+  }
+
+  get #logoChanged() {
+    return (this.logo ?? "") !== this.#savedSelections.logo;
   }
 
   // warms the browser cache for the theme screenshots, which dominate the
@@ -254,9 +308,6 @@ export default class DesignWizardService extends Service {
       this.source = source;
       this.returnUrl = returnUrl;
       this.progressSaved = false;
-      // onboarding introduces the wizard itself; a re-run has to say what it is
-      // about to change before it changes anything
-      this.showIntro = source !== SOURCE_ONBOARDING;
       this.#initFromData();
       this.#snapshot = this.#buildSnapshot();
       // the source, the page to return to and the snapshot all have to outlive
@@ -317,10 +368,6 @@ export default class DesignWizardService extends Service {
     this.start({ onComplete, resuming: true });
   }
 
-  dismissIntro() {
-    this.showIntro = false;
-  }
-
   async selectTheme(themeId) {
     if (themeId === this.themeId || this.applyingTheme) {
       return;
@@ -352,35 +399,53 @@ export default class DesignWizardService extends Service {
         return;
       }
     }
-    // these are resolved per theme, so let the reloaded page re-seed them from
-    // the theme being previewed rather than carrying the old theme's values
-    this.welcomeBanner = undefined;
-    this.searchExperience = undefined;
+
+    const themeHomepage = theme?.default_homepage;
+    let previewPath = "/";
+
+    if (this.#supportedHomepages.includes(themeHomepage)) {
+      const homepage = themeHomepage;
+      const homepageOption = this.additionalHomepages.find(
+        ({ id }) => id === homepage
+      );
+
+      this.homepage = homepage;
+      this.#homepageChosen = true;
+      this.homepageSettings = {
+        ...this.#originalHomepageSettings,
+        ...homepageOption?.settings,
+      };
+      previewPath = homepageOption?.path ?? `/${homepage}`;
+    }
     this.#persistState();
 
     // a different theme is a different asset build, so previewing it means
     // reloading the page; state is restored from the store afterwards
-    this.#navigateToThemePreview(themeId);
+    this.#navigateToThemePreview(themeId, previewPath);
   }
 
-  async selectPair(pairKey) {
-    this.selectedPairKeys = new Map(this.selectedPairKeys).set(
-      this.themeId,
-      pairKey
-    );
-    this.#persistState();
-    await this.#previewSelections();
-  }
-
-  async selectColorMode(mode) {
+  /**
+   * Selects the palette pair used for one color mode, and previews that mode.
+   *
+   * @param {"light" | "dark"} mode
+   * @param {string} pairKey
+   */
+  async selectPalette(mode, pairKey) {
+    this.#updatePaletteSelection({ [mode]: pairKey });
     this.colorMode = mode;
     this.#persistState();
     await this.#previewSelections();
   }
 
-  toggleUserSelectable() {
-    this.palettesUserSelectable = !this.palettesUserSelectable;
+  /**
+   * Selects which color modes the site offers.
+   *
+   * @param {string} paletteMode - a PALETTE_MODES value
+   */
+  async selectPaletteMode(paletteMode) {
+    this.#updatePaletteSelection({ mode: paletteMode });
     this.#persistState();
+    await this.#previewSelections();
   }
 
   setMinimized(minimized) {
@@ -414,6 +479,7 @@ export default class DesignWizardService extends Service {
 
   selectHomepage(homepage) {
     this.homepage = homepage;
+    this.#homepageChosen = true;
     const additionalHomepage = this.additionalHomepages.find(
       ({ id }) => id === homepage
     );
@@ -443,21 +509,14 @@ export default class DesignWizardService extends Service {
     this.#refreshCategoriesPage();
   }
 
-  selectWelcomeBanner(enabled) {
-    this.welcomeBanner = enabled;
-    this.siteSettings.enable_welcome_banner = enabled;
-    this.#persistState();
-  }
-
-  selectWelcomeBannerLocation(location) {
-    this.welcomeBannerLocation = location;
-    this.siteSettings.welcome_banner_location = location;
-    this.#persistState();
-  }
-
-  selectSearchExperience(experience) {
-    this.searchExperience = experience;
-    this.siteSettings.search_experience = experience;
+  /**
+   * Selects the site logo and previews it in the header.
+   *
+   * @param {{ url: string } | null} upload - null removes the logo
+   */
+  selectLogo(upload) {
+    this.logo = upload ? getURL(upload.url) : "";
+    this.siteSettings.site_logo_url = this.logo;
     this.#persistState();
   }
 
@@ -495,7 +554,7 @@ export default class DesignWizardService extends Service {
     try {
       await ajax("/admin/config/design-wizard.json", {
         type: "PUT",
-        data: this.#selectionsPayload,
+        data: { ...this.#selectionsPayload, finishing: true },
       });
 
       this.keyValueStore.remove(STATE_KEY);
@@ -546,12 +605,15 @@ export default class DesignWizardService extends Service {
   async saveProgress() {
     this.saving = true;
 
+    const payload = this.#selectionsPayload;
+
     try {
       await ajax("/admin/config/design-wizard.json", {
         type: "PUT",
-        data: this.#selectionsPayload,
+        data: payload,
       });
 
+      this.#recordSavedSelections(payload);
       this.progressSaved = true;
       this.#persistState();
 
@@ -598,10 +660,11 @@ export default class DesignWizardService extends Service {
     this.source = SOURCE_ONBOARDING;
     this.returnUrl = undefined;
     this.progressSaved = false;
-    this.showIntro = false;
     this.#snapshot = undefined;
     this.#originalSiteSettings = undefined;
     this.#originalHomepageSettings = undefined;
+    this.#savedSelections = undefined;
+    this.#homepageChosen = false;
   }
 
   // captured before anything is previewed or saved, from the values the server
@@ -621,22 +684,13 @@ export default class DesignWizardService extends Service {
       palettes_user_selectable: this.data.palettes_user_selectable,
       base_font: this.data.base_font,
       heading_font: this.data.heading_font,
-      // a homepage the wizard cannot express is left alone rather than replaced
-      // with the one it fell back to
-      homepage: this.#supportedHomepages.includes(this.data.homepage)
+      // one the site can no longer use is left alone rather than failing the revert
+      homepage: this.#restorableHomepages.includes(this.data.homepage)
         ? this.data.homepage
         : null,
       homepage_settings: this.data.homepage_settings,
       category_page_style: settings.desktop_category_page_style,
-      welcome_banner_location: settings.welcome_banner_location,
-      ...(currentTheme.supports_welcome_banner !== false
-        ? {
-            enable_welcome_banner: settings.enable_welcome_banner,
-          }
-        : {}),
-      ...(currentTheme.supports_search !== false
-        ? { search_experience: settings.search_experience }
-        : {}),
+      logo: this.siteSettings.logo ?? "",
     };
   }
 
@@ -650,20 +704,23 @@ export default class DesignWizardService extends Service {
         ? null
         : this.data.themes.find((theme) => theme.id === HORIZON_THEME_ID));
     this.themeId = preselectedTheme?.id ?? null;
-    this.selectedPairKeys = new Map(
-      this.data.themes.map((theme) => [theme.id, this.#currentPairKey(theme)])
+    this.paletteSelections = new Map(
+      this.data.themes.map((theme) => [
+        theme.id,
+        this.#currentPaletteSelection(theme),
+      ])
     );
     this.palettesUserSelectable = this.data.palettes_user_selectable;
     this.bodyFont = this.data.base_font;
     this.headingFont = this.data.heading_font;
     this.colorMode = renderedColorMode();
     this.homepage = this.#supportedHomepage(this.data.homepage);
+    this.#homepageChosen = false;
     this.#originalHomepageSettings = this.data.homepage_settings ?? {};
     this.homepageSettings = this.#originalHomepageSettings;
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
-    this.welcomeBanner = this.siteSettings.enable_welcome_banner;
-    this.welcomeBannerLocation = this.siteSettings.welcome_banner_location;
-    this.searchExperience = this.siteSettings.search_experience;
+    this.logo = this.siteSettings.logo;
+    this.#initSavedSelections();
     this.stepIndex = 0;
   }
 
@@ -677,7 +734,7 @@ export default class DesignWizardService extends Service {
       this.#snapshot.homepage_settings = this.#availableHomepageSettings(
         this.#snapshot.homepage_settings
       );
-      if (!this.#supportedHomepages.includes(this.#snapshot.homepage)) {
+      if (!this.#restorableHomepages.includes(this.#snapshot.homepage)) {
         this.#snapshot.homepage = null;
       }
     }
@@ -686,10 +743,8 @@ export default class DesignWizardService extends Service {
         stored.snapshot?.homepage_settings ??
         this.data.homepage_settings
     );
-    // the intro is only ever shown once, before the first selection
-    this.showIntro = false;
     this.themeId = stored.themeId;
-    this.selectedPairKeys = new Map(stored.selectedPairKeys);
+    this.paletteSelections = new Map(stored.paletteSelections);
     this.colorMode = stored.colorMode ?? renderedColorMode();
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
@@ -697,20 +752,39 @@ export default class DesignWizardService extends Service {
     this.homepage = this.#supportedHomepage(
       stored.homepage ?? this.data.homepage
     );
+    this.#homepageChosen = stored.homepageChosen ?? false;
     this.homepageSettings = this.#availableHomepageSettings(
       stored.homepageSettings ?? this.data.homepage_settings
     );
     this.categoryPageStyle =
       stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
-    this.welcomeBanner =
-      stored.welcomeBanner ?? this.siteSettings.enable_welcome_banner;
-    this.welcomeBannerLocation =
-      stored.welcomeBannerLocation ?? this.siteSettings.welcome_banner_location;
-    this.searchExperience =
-      stored.searchExperience ?? this.siteSettings.search_experience;
+    this.logo = stored.logo ?? this.siteSettings.logo;
+    this.#initSavedSelections();
     // selections are restored but the flow always restarts from the first
     // step, so a resumed wizard walks the same path as a fresh one
     this.stepIndex = 0;
+  }
+
+  // `data` is fetched fresh on every start and the client copy of `logo` is
+  // never previewed, so both reflect what the server holds
+  #initSavedSelections() {
+    this.#savedSelections = {
+      homepage: this.data.homepage,
+      homepageSettings: this.#availableHomepageSettings(
+        this.data.homepage_settings
+      ),
+      logo: this.siteSettings.logo ?? "",
+    };
+  }
+
+  #recordSavedSelections(payload) {
+    if ("homepage" in payload) {
+      this.#savedSelections.homepage = payload.homepage;
+      this.#savedSelections.homepageSettings = payload.homepage_settings ?? {};
+    }
+    if ("logo" in payload) {
+      this.#savedSelections.logo = payload.logo;
+    }
   }
 
   #availableHomepageSettings(settings) {
@@ -728,18 +802,17 @@ export default class DesignWizardService extends Service {
       value: JSON.stringify({
         minimized: this.minimized,
         themeId: this.themeId,
-        selectedPairKeys: [...this.selectedPairKeys.entries()],
+        paletteSelections: [...this.paletteSelections.entries()],
         colorMode: this.colorMode,
         palettesUserSelectable: this.palettesUserSelectable,
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
         homepage: this.homepage,
+        homepageChosen: this.#homepageChosen,
         homepageSettings: this.homepageSettings,
         originalHomepageSettings: this.#originalHomepageSettings,
         categoryPageStyle: this.categoryPageStyle,
-        welcomeBanner: this.welcomeBanner,
-        welcomeBannerLocation: this.welcomeBannerLocation,
-        searchExperience: this.searchExperience,
+        logo: this.logo,
         source: this.source,
         returnUrl: this.returnUrl,
         progressSaved: this.progressSaved,
@@ -754,12 +827,8 @@ export default class DesignWizardService extends Service {
     if (this.homepage === "categories") {
       this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
     }
-    if (this.supportsWelcomeBanner) {
-      this.siteSettings.enable_welcome_banner = this.welcomeBanner;
-      this.siteSettings.welcome_banner_location = this.welcomeBannerLocation;
-    }
-    if (this.supportsSearch) {
-      this.siteSettings.search_experience = this.searchExperience;
+    if (this.#logoChanged) {
+      this.siteSettings.site_logo_url = this.logo;
     }
   }
 
@@ -769,9 +838,9 @@ export default class DesignWizardService extends Service {
     }
   }
 
-  #navigateToThemePreview(themeId) {
+  #navigateToThemePreview(themeId, path = "/") {
     DiscourseURL.redirectTo(
-      `/?preview_theme_id=${encodeURIComponent(themeId)}`
+      `${path}?preview_theme_id=${encodeURIComponent(themeId)}`
     );
   }
 
@@ -779,15 +848,39 @@ export default class DesignWizardService extends Service {
     return this.#supportedHomepages.includes(homepage) ? homepage : "latest";
   }
 
-  #currentPairKey(theme) {
-    const pair = theme.palette_pairs.find(
-      (candidate) =>
-        (theme.color_scheme_id &&
-          candidate.light?.id === theme.color_scheme_id) ||
-        (theme.dark_color_scheme_id &&
-          candidate.dark?.id === theme.dark_color_scheme_id)
-    );
-    return (pair ?? theme.palette_pairs[0])?.key;
+  #updatePaletteSelection(changes) {
+    this.paletteSelections = new Map(this.paletteSelections).set(this.themeId, {
+      ...this.paletteSelections.get(this.themeId),
+      ...changes,
+    });
+  }
+
+  #selectedPair(pairs, mode) {
+    const key = this.paletteSelections.get(this.themeId)?.[mode];
+    return pairs.find((pair) => pair.key === key) ?? pairs[0];
+  }
+
+  // A key left undefined falls back to the row's first palette, which is also
+  // what a theme without an assigned light palette renders. A theme without a
+  // dark palette renders light-only, and one using its dark palette for both
+  // modes renders dark-only.
+  #currentPaletteSelection(theme) {
+    const pairs = theme.palette_pairs ?? [];
+    const darkId = theme.dark_color_scheme_id;
+    const dark = darkId && pairs.find((pair) => pair.dark?.id === darkId)?.key;
+    const light = pairs.find(
+      (pair) =>
+        theme.color_scheme_id && pair.light?.id === theme.color_scheme_id
+    )?.key;
+
+    let mode = PALETTE_MODES.both;
+    if (!darkId) {
+      mode = PALETTE_MODES.light;
+    } else if (dark && theme.color_scheme_id === darkId) {
+      mode = PALETTE_MODES.dark;
+    }
+
+    return { mode, light, dark };
   }
 
   async #previewSelections() {

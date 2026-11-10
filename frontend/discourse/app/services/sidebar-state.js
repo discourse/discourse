@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { trackedSet } from "@ember/reactive/collections";
+import { trackedMap, trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -30,8 +30,8 @@ export default class SidebarState extends Service {
 
   panels = panels;
   activeExpandedSections = trackedSet();
-  collapsedSections = trackedSet();
   previousState = {};
+  #collapsedSections = trackedMap();
   #hiders = trackedSet();
   #revealedLinks = new WeakMap();
   @tracked _requestedPanelKey = currentPanelKey;
@@ -154,11 +154,23 @@ export default class SidebarState extends Service {
     };
   }
 
+  isSectionCollapsed(sectionKey, collapsedByDefault = false) {
+    const collapsed = this.#collapsedSections.get(sectionKey);
+    if (collapsed !== undefined) {
+      return collapsed;
+    }
+
+    const stored = this.keyValueStore.getItem(
+      getCollapsedSidebarSectionKey(sectionKey)
+    );
+    return stored == null ? collapsedByDefault : stored === "true";
+  }
+
   collapseSection(sectionKey) {
     const collapsedSidebarSectionKey =
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
-    this.collapsedSections.add(collapsedSidebarSectionKey);
+    this.#collapsedSections.set(sectionKey, true);
     // remove the section from the active expanded list if collapsed later
     this.activeExpandedSections.delete(sectionKey);
   }
@@ -167,7 +179,7 @@ export default class SidebarState extends Service {
     const collapsedSidebarSectionKey =
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
-    this.collapsedSections.delete(collapsedSidebarSectionKey);
+    this.#collapsedSections.set(sectionKey, false);
     // remove the section from the active expanded list if expanded later
     this.activeExpandedSections.delete(sectionKey);
   }

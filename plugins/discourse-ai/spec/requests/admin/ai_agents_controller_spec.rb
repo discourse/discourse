@@ -492,6 +492,79 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "PUT #update" do
+    it "preserves RAG uploads and indexed content when changing priority" do
+      upload = Fabricate(:upload)
+      RagDocumentFragment.link_target_and_uploads(ai_agent, [upload.id])
+      fragment = Fabricate(:rag_document_fragment, target: ai_agent, upload:)
+
+      expect_not_enqueued_with(job: :digest_rag_upload) do
+        put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+            params: {
+              ai_agent: {
+                priority: true,
+              },
+            },
+            as: :json
+      end
+
+      expect(response).to have_http_status(:ok)
+      expect(ai_agent.reload.priority).to eq(true)
+      expect(ai_agent.uploads.pluck(:id)).to eq([upload.id])
+      expect(RagDocumentFragment.exists?(fragment.id)).to eq(true)
+      expect(response.parsed_body.dig("ai_agent", "rag_uploads").map { |item| item["id"] }).to eq(
+        [upload.id],
+      )
+    end
+
+    it "reindexes retained RAG uploads when changing chunk settings without an upload list" do
+      upload = Fabricate(:upload)
+      UploadReference.ensure_exist!(target: ai_agent, upload_ids: [upload.id])
+
+      %i[rag_chunk_tokens rag_chunk_overlap_tokens].each do |setting|
+        fragment = Fabricate(:rag_document_fragment, target: ai_agent, upload:)
+
+        expect_enqueued_with(
+          job: :digest_rag_upload,
+          args: {
+            target_id: ai_agent.id,
+            target_type: "AiAgent",
+            upload_id: upload.id,
+          },
+        ) do
+          put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+              params: {
+                ai_agent: {
+                  setting => ai_agent.public_send(setting) + 1,
+                },
+              },
+              as: :json
+        end
+
+        expect(response).to have_http_status(:ok)
+        expect(ai_agent.reload.uploads.pluck(:id)).to eq([upload.id])
+        expect(RagDocumentFragment.exists?(fragment.id)).to eq(false)
+      end
+    end
+
+    it "removes RAG uploads and indexed content when the upload list is explicitly cleared" do
+      upload = Fabricate(:upload)
+      RagDocumentFragment.link_target_and_uploads(ai_agent, [upload.id])
+      fragment = Fabricate(:rag_document_fragment, target: ai_agent, upload:)
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_uploads: [],
+            },
+          },
+          as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(ai_agent.reload.uploads).to be_empty
+      expect(RagDocumentFragment.exists?(fragment.id)).to eq(false)
+      expect(response.parsed_body.dig("ai_agent", "rag_uploads")).to eq([])
+    end
+
     it "synchronizes the bot account activation when saving the enabled toggle" do
       bot = ai_agent.create_user!
 

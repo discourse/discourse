@@ -120,7 +120,7 @@ Chat::Engine.routes.draw do
   get base_c_route => "chat#respond", :as => "channel"
   get "#{base_c_route}/:message_id" => "chat#respond"
 
-  %w[info info/about info/members info/settings info/search].each do |route|
+  %w[info info/about info/members info/preferences info/settings info/search].each do |route|
     get "#{base_c_route}/#{route}" => "chat#respond"
   end
 
@@ -135,7 +135,7 @@ Chat::Engine.routes.draw do
 
   get base_channel_route, to: redirect(redirect_base)
 
-  %w[info info/about info/members info/settings info/search].each do |route|
+  %w[info info/about info/members info/preferences info/settings info/search].each do |route|
     get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
   end
 end

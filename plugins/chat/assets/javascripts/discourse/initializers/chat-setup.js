@@ -15,7 +15,6 @@ import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-typ
 import richEditorExtension from "../../lib/rich-editor-extension.js";
 import ChatHeaderIcon from "../components/chat/header/icon.gjs";
 import StartChattingStep from "../components/chat/onboarding/start-chatting-step.gjs";
-import chatStyleguide from "../components/styleguide/organisms/chat.gjs";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
@@ -244,7 +243,8 @@ class ChatSetupInit {
       }
 
       api.addStyleguideSection?.({
-        component: chatStyleguide,
+        component: async () =>
+          (await import("../components/styleguide/organisms/chat.gjs")).default,
         category: "organisms",
         id: "chat",
       });

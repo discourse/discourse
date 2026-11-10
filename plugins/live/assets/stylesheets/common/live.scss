@@ -1465,6 +1465,32 @@
     color: var(--danger);
   }
 
+  &__alert {
+    margin: 0.5rem 0;
+    font-size: var(--font-down-1);
+    color: var(--danger);
+  }
+
+  &__line {
+    display: block;
+  }
+
+  &__harmless {
+    margin-top: 0.5rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+
+    summary {
+      cursor: pointer;
+    }
+
+    ul {
+      margin: 0.25rem 0 0;
+      padding-left: 1.25rem;
+      overflow-wrap: anywhere;
+    }
+  }
+
   &__privacy {
     flex-basis: 100%;
     margin: 0 0 0.5rem;
