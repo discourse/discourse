@@ -6,6 +6,13 @@ RSpec.describe FileStore::BaseStore do
     Fabricate(:upload, id: 9999, sha1: Digest::SHA1.hexdigest("9999"))
   end
 
+  describe "#get_path_for" do
+    it "uses only the file name of the sha1 and extension" do
+      store = described_class.new
+      expect(store.get_path_for("original", 1, "a/b/x", ".png")).to eq("original/1X/x.png")
+    end
+  end
+
   describe "#get_path_for_upload" do
     def expect_correct_path(expected_path)
       expect(described_class.new.get_path_for_upload(upload)).to eq(expected_path)
