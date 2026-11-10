@@ -197,6 +197,7 @@ module AppearanceStyles
       error("rules", "at most #{MAX_RULES}") if rules.size > MAX_RULES
       return result(nil) if @errors.any?
 
+      @draft_variables = variables
       root_declarations = []
       scoped_declarations = Hash.new { |hash, key| hash[key] = [] }
 
@@ -216,7 +217,6 @@ module AppearanceStyles
         @changes << Change.new(label: "#{name}", value: normalize(value))
       end
 
-      @draft_variables = variables
       readable_variables?(variables) if @errors.empty?
 
       blocks = []
@@ -277,7 +277,13 @@ module AppearanceStyles
         when "color"
           check_color(nodes, path)
         when "length"
-          check_length(nodes, path, variable.min_px, variable.max_px)
+          check_length(
+            nodes,
+            path,
+            variable.min_px,
+            variable.max_px,
+            percent: length_percent(variable.name),
+          )
         when "border"
           check_border(nodes, path)
         when "keyword"
@@ -323,6 +329,12 @@ module AppearanceStyles
         return [error(path, "at most #{MAX_DECLARATIONS} declarations")].compact
       end
 
+      # Variables a rule sets apply within its area, so its checks see them.
+      overrides = declarations.select { |property, _| property.to_s.start_with?("--") }
+      overrides = overrides.transform_keys(&:to_s)
+      global_variables = @draft_variables
+      @draft_variables = global_variables.merge(overrides)
+
       rendered = []
       declarations.each do |property, value|
         property = property.to_s
@@ -342,10 +354,13 @@ module AppearanceStyles
       end
       return [] if rendered.size != declarations.size
       return [] if !readable?(declarations, path, area)
+      return [] if overrides.any? && !readable_variables?(overrides, path)
 
       css = block(scope_selector(area.selector, state, page), rendered)
       css = "@media #{MEDIA[media]} {\n#{css.gsub(/^/, "  ")}\n}" if media
       [css]
+    ensure
+      @draft_variables = global_variables if global_variables
     end
 
     def check_property(property, value, path, area)
@@ -375,11 +390,11 @@ module AppearanceStyles
       when :border
         check_border(nodes, path)
       when :length
-        check_length(nodes, path, *args)
+        check_length(nodes, path, *args, percent: property_percent(property, area))
       when :signed_length
         check_length(nodes, path, *args, allow_negative: true)
       when :length_list
-        check_length_list(nodes, path, *args)
+        check_length_list(nodes, path, *args, percent: property_percent(property, area))
       when :keyword
         check_keyword(nodes, path, args.first)
       when :shadow
@@ -495,7 +510,7 @@ module AppearanceStyles
     # Text needs 4.5:1 and icons 3:1 (WCAG non-text contrast). Core's own
     # defaults miss 4.5:1 in places, so a pair passes when it is AA or at
     # least as readable as core's default.
-    def readable_variables?(variables)
+    def readable_variables?(variables, path = "variables")
       variable_pairs.all? do |background, text|
         next true if !variables.key?(background) && !variables.key?(text)
 
@@ -513,7 +528,7 @@ module AppearanceStyles
           end
           next true if ratio >= required
           error(
-            "variables",
+            path,
             "#{text} on #{background} is #{ratio}:1 in #{mode} mode; it needs #{required}:1",
           )
         end
@@ -733,46 +748,203 @@ module AppearanceStyles
       end
     end
 
-    def check_length(nodes, path, min_px, max_px, allow_negative: false)
-      return error(path, "expected a single length") if nodes.size != 1
-      length_ok?(nodes.first, path, min_px, max_px, allow_negative:)
-    end
-
-    def length_ok?(node, path, min_px, max_px, allow_negative: false)
-      case node.type
-      when :number
-        node.value.zero? ? true : error(path, "lengths need a unit")
-      when :dimension
-        return error(path, "unit #{node.unit} is not a length") if !LENGTH_UNITS.include?(node.unit)
-        if node.unit == "%"
-          return true if node.value.between?(0, 100)
-          return error(path, "percentage must be between 0 and 100")
-        end
-        px = to_px(node)
-        return error(path, "negative values are not allowed") if px.negative? && !allow_negative
-        return true if px.between?(min_px, max_px)
-        error(path, "#{node.value}#{node.unit} is outside #{min_px}px to #{max_px}px")
-      when :function
-        if node.value == "var"
-          true
-        elsif MATH_FUNCTIONS.include?(node.value)
-          ok = true
-          CssValue.each_node(node.children) do |child|
-            next if child.type != :dimension
-            ok = length_ok?(child, path, [min_px, 0].min, max_px, allow_negative:) && ok
-          end
-          ok
-        else
-          error(path, "#{node.value}() is not a length")
-        end
-      else
-        error(path, "expected a length")
+    # What a percentage means for a length: a share of the font size, a share
+    # of the element or its container that can't exceed it, or nothing that
+    # can be bounded.
+    def property_percent(property, area)
+      if property == "font-size"
+        :font
+      elsif property == "border-radius" || (area.sizeable && SIZE_PROPERTIES.include?(property))
+        :share
       end
     end
 
-    def check_length_list(nodes, path, min_px, max_px)
+    def length_percent(variable_name)
+      if variable_name.match?(/font-size|header-size/)
+        :font
+      elsif variable_name.include?("radius")
+        :share
+      end
+    end
+
+    def check_length(nodes, path, min_px, max_px, allow_negative: false, percent: nil)
+      return error(path, "expected a single length") if nodes.size != 1
+      length_ok?(nodes.first, path, min_px, max_px, allow_negative:, percent:)
+    end
+
+    # Checks the length a value works out to, so calc(), var() and zero are
+    # bounded like any other length. Values whose size can't be known, such
+    # as percentages inside calc(), are rejected.
+    def length_ok?(node, path, min_px, max_px, allow_negative: false, percent: nil)
+      if node.type == :dimension && node.unit == "%"
+        case percent
+        when :share
+          return true if node.value.between?(0, 100)
+          return error(path, "percentage must be between 0 and 100")
+        when :font
+          px = node.value * 16 / 100.0
+        else
+          return error(path, "percentages aren't allowed here")
+        end
+      else
+        px = length_px(node)
+      end
+
+      return error(path, "negative values are not allowed") if px.negative? && !allow_negative
+      return true if px.round(2).between?(min_px, max_px)
+      error(
+        path,
+        "#{describe_length(node)} is #{px.round(1)}px, outside #{min_px}px to #{max_px}px",
+      )
+    rescue UnknownLength => e
+      error(path, e.message)
+    end
+
+    class UnknownLength < StandardError
+    end
+
+    # core's spacing scale is multiples of 4px, and its font scale steps by
+    # 2^(1/5) from 1em
+    SPACE_PX = 4
+
+    def length_px(node, depth = 0)
+      value, unit = evaluate_length(node, depth)
+      raise UnknownLength, "expected a length" if unit != :px && !(unit == :number && value.zero?)
+      value.to_f
+    end
+
+    # Returns [value, :px] or [value, :number].
+    def evaluate_length(node, depth)
+      raise UnknownLength, "the length can't be known" if depth > 8
+
+      case node.type
+      when :number
+        [node.value, :number]
+      when :dimension
+        px = to_px(node)
+        raise UnknownLength, "the length can't be known with #{node.unit}" if px.nil?
+        [px, :px]
+      when :group
+        evaluate_expression(node.children, depth + 1)
+      when :function
+        case node.value
+        when "var"
+          [variable_length_px(node.children.first&.value, depth + 1), :px]
+        when "calc"
+          evaluate_expression(node.children, depth + 1)
+        when "min", "max", "clamp"
+          values =
+            CssValue.split_commas(node.children).map { |part| evaluate_expression(part, depth + 1) }
+          if values.empty? || values.map(&:last).uniq.size != 1 ||
+               (node.value == "clamp" && values.size != 3)
+            raise UnknownLength, "#{node.value}() needs matching lengths"
+          end
+          numbers = values.map(&:first)
+          value =
+            case node.value
+            when "min"
+              numbers.min
+            when "max"
+              numbers.max
+            else
+              numbers[1].clamp(numbers[0], [numbers[0], numbers[2]].max)
+            end
+          [value, values.first.last]
+        else
+          raise UnknownLength, "#{node.value}() is not a length"
+        end
+      else
+        raise UnknownLength, "expected a length"
+      end
+    end
+
+    def evaluate_expression(nodes, depth)
+      terms = [[]]
+      operators = []
+      nodes.each do |node|
+        if node.type == :delim && %w[+ -].include?(node.value)
+          operators << node.value
+          terms << []
+        else
+          terms.last << node
+        end
+      end
+
+      values = terms.map { |term| evaluate_term(term, depth) }
+      values
+        .drop(1)
+        .zip(operators)
+        .reduce(values.first) do |(total, unit), ((value, other_unit), operator)|
+          raise UnknownLength, "can't add a length and a number" if unit != other_unit
+          [operator == "+" ? total + value : total - value, unit]
+        end
+    end
+
+    def evaluate_term(nodes, depth)
+      if nodes.empty? || nodes.size.even?
+        raise UnknownLength, "the length can't be known from this expression"
+      end
+
+      operands = nodes.each_slice(2).map(&:first)
+      operators = nodes.each_slice(2).filter_map { |_, operator| operator }
+      if operators.any? { |operator| operator.type != :delim || !%w[* /].include?(operator.value) }
+        raise UnknownLength, "the length can't be known from this expression"
+      end
+
+      values = operands.map { |operand| evaluate_length(operand, depth) }
+      values
+        .drop(1)
+        .zip(operators)
+        .reduce(values.first) { |result, (value, operator)| apply(result, operator.value, value) }
+    end
+
+    def apply((value, unit), operator, (other, other_unit))
+      if operator == "*"
+        raise UnknownLength, "can't multiply two lengths" if unit == :px && other_unit == :px
+        [value * other, unit == :px || other_unit == :px ? :px : :number]
+      else
+        if other_unit != :number || other.zero?
+          raise UnknownLength, "can only divide by a number other than 0"
+        end
+        [value / other.to_f, unit]
+      end
+    end
+
+    # The pixels a length variable works out to: core's spacing and font
+    # scales, or a design variable's value in this draft or by default.
+    def variable_length_px(name, depth)
+      raise UnknownLength, "the length can't be known" if name.nil? || depth > 8
+
+      if name == "--space"
+        SPACE_PX
+      elsif (match = name.match(/\A--space-(\d+|half)\z/))
+        match[1] == "half" ? SPACE_PX / 2.0 : SPACE_PX * match[1].to_i
+      elsif name.match?(/\A--font-0(-rem)?\z/)
+        16
+      elsif (match = name.match(/\A--font-(up|down)-(\d+)(-rem)?\z/))
+        steps = match[2].to_i * (match[1] == "up" ? 1 : -1)
+        16 * (2**(steps / 5.0))
+      else
+        variable = @registry[name]
+        if variable&.type != "length"
+          raise UnknownLength, "var(#{name}) is not a length that can be known"
+        end
+        value = (@draft_variables || {})[name] || variable.default
+        nodes = CssValue.parse(value.to_s)
+        raise UnknownLength, "var(#{name}) is not a length that can be known" if nodes.size != 1
+        length_px(nodes.first, depth + 1)
+      end
+    rescue CssValue::ParseError
+      raise UnknownLength, "var(#{name}) is not a length that can be known"
+    end
+
+    def describe_length(node)
+      node.type == :dimension ? "#{node.value}#{node.unit}" : "the value"
+    end
+
+    def check_length_list(nodes, path, min_px, max_px, percent: nil)
       return error(path, "expected 1 to 4 lengths") if nodes.empty? || nodes.size > 4
-      nodes.all? { |node| length_ok?(node, path, min_px, max_px) }
+      nodes.all? { |node| length_ok?(node, path, min_px, max_px, percent:) }
     end
 
     def check_keyword(nodes, path, keywords)
