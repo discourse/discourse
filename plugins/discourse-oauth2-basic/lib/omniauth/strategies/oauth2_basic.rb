@@ -46,7 +46,13 @@ class OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
   def recurse(obj, keys)
     return nil if !obj
     k = keys.shift
-    result = obj.respond_to?(k) ? obj.send(k) : obj[k]
+    # Configured paths may only traverse response data, never invoke Ruby methods.
+    result =
+      if obj.is_a?(::OAuth2::AccessToken)
+        k == "params" ? obj.params : obj[k]
+      elsif obj.is_a?(Hash)
+        obj[k]
+      end
     keys.empty? ? result : recurse(result, keys)
   end
 end
