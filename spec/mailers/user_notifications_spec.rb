@@ -1075,6 +1075,29 @@ RSpec.describe UserNotifications do
       )
     end
 
+    it "renders participant names as text" do
+      SiteSetting.prioritize_username_in_ux = false
+      group = Fabricate(:group, full_name: "Help](https://evil.example) <img src=x> \\[x")
+      member = Fabricate(:user, name: "<b>Bond</b>")
+      topic.allowed_users = [user, member]
+      topic.allowed_groups = [group]
+
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      links =
+        Nokogiri.HTML5(mail.html_part.body.to_s).css("a").to_h { |link| [link["href"], link.text] }
+      expect(links).to include(
+        group.full_url => "#{group.full_name} (0)",
+        member.full_url => member.name,
+      )
+    end
+
     context "when SiteSetting.group_name_in_subject is true" do
       before do
         SiteSetting.group_in_subject = true
