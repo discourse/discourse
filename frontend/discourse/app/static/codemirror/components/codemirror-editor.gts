@@ -344,9 +344,10 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
     const disarmTabFocus = (view: EditorView) => {
       if (tabFocusArmedAt) {
         tabFocusArmedAt = 0;
-        // Ends our window without switching off a Tab focus mode the user
-        // turned on themselves.
-        view.setTabFocusMode(0);
+        // A deadline in the past ends our window without switching off a Tab
+        // focus mode the user turned on themselves. Zero would still match
+        // a Tab in the same millisecond.
+        view.setTabFocusMode(-1);
       }
     };
 
