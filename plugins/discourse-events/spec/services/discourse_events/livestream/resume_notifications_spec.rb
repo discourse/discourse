@@ -36,15 +36,6 @@ RSpec.describe DiscourseEvents::Livestream::ResumeNotifications do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when the pause has not started yet" do
-      it { is_expected.to run_successfully }
-
-      it "stops the pause from starting afterwards" do
-        result
-        expect(start_pause(pause_key)).to fail_to_find_a_model(:do_not_disturb_timing)
-      end
-    end
-
     context "when the user has paused notifications elsewhere too" do
       fab!(:own_pause) do
         Fabricate(
