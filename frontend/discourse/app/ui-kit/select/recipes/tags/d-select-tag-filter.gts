@@ -16,6 +16,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   tagItemName,
   TagOption,
@@ -60,7 +61,7 @@ function nameKey(tag: { name: string; original_name?: string }) {
 
 /** A topic-list filter that leaves navigation to its caller. */
 interface DSelectTagFilterSignature {
-  Args: {
+  Args: Omit<MultiSelectRecipeArgs, "lockedValues"> & {
     /**
      * Current tag or shortcut, where none or `ALL_TAGS_ID` filters nothing; with `@multiple`, the
      * held tags in order, by id or by name.
@@ -73,22 +74,18 @@ interface DSelectTagFilterSignature {
       | null;
     /** Holds several tags, for an intersection; defaults to one. */
     multiple?: boolean;
+    /** With `@multiple`, held tags that can't be removed, by name or as held. */
+    lockedValues?: readonly (TagObject | string)[];
     /** Visible chip limit; zero shows only the selection count. */
     maxVisibleChips?: number;
     /** Category limiting the available tags. */
     categoryId?: number;
-    /** Temporary compatibility aliases for legacy customizations and CSS. */
-    legacyKind?: DSelectSignature["Args"]["legacyKind"];
     /** Local tags replacing the site's top tags and server search. */
     items?: readonly FilterTag[];
     /** Receives a full tag row or a shortcut id; with `@multiple`, the held tags in order. */
     onChange?: (
       value: TagObject | TagObject[] | typeof ALL_TAGS_ID | typeof NO_TAG_ID
     ) => void;
-    /** Call-site customization identity. */
-    identifier?: string;
-    /** Call-site state exposed to customizations. */
-    instanceContext?: object;
     /**
      * The filter's texts, over its defaults: `removeFilter` and `noTags` name the shortcuts, and
      * `maxLoaded` says to keep typing when the top tags outnumber the list.
@@ -189,6 +186,13 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return this.args.multiple
       ? this.#heldTags.map((tag) => nameKey(tag))
       : this.heldId;
+  }
+
+  /** The locked tags as the engine holds them: their name keys. */
+  get lockedKeys() {
+    return this.args.lockedValues?.map((tag) =>
+      typeof tag === "string" ? tag.toLowerCase() : nameKey(tag)
+    );
   }
 
   /** Several held tags are matched to rows by name, because a URL holds them by name. */
@@ -345,6 +349,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @legacyKind={{this.legacyKind}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
+      @lockedValues={{this.lockedKeys}}
       @maxLoaded={{this.siteSettings.max_tags_in_filter_list}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}

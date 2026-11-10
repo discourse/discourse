@@ -26,6 +26,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   TagOption,
   TagSelection,
@@ -54,13 +55,11 @@ import { i18n } from "discourse-i18n";
 
 /** The tag field's arguments; consumers keep their original held tag shapes. */
 interface DSelectTagSignature {
-  Args: {
-    /** Call-site customization identity, never assigned by the recipe. */
-    identifier?: string;
-    /** Call-site state exposed to customizations. */
-    instanceContext?: object;
+  Args: Omit<MultiSelectRecipeArgs, "lockedValues"> & {
     /** Controlled held tags, rendered without a resolver. */
     value?: readonly (TagObject | string)[] | TagObject | string | null;
+    /** Held tags that can't be removed, by name or as held. */
+    lockedValues?: readonly (TagObject | string)[];
     /** Tags excluded from search and included in server selection rules. */
     exclude?: readonly (TagObject | string)[];
     /** Category whose tag restrictions apply. */
@@ -81,8 +80,6 @@ interface DSelectTagSignature {
     suggestRecent?: boolean;
     /** Omitted uses the site limit; false removes the cap. */
     maximum?: number | false;
-    /** Temporary compatibility aliases for legacy customizations and CSS. */
-    legacyKind?: DSelectSignature["Args"]["legacyKind"];
     /** Trigger presentation. */
     variant?: DSelectSignature["Args"]["variant"];
     /** Advisory minimum, shown in the field's placeholder until it's met. */
@@ -301,6 +298,16 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
 
   get valueItems() {
     return this.#tags.map((tag) => this.#itemForTag(tag));
+  }
+
+  /** The locked tags' engine ids, matched to the held tags by name so a known id still matches. */
+  get lockedIds() {
+    const nameOf = (tag: TagObject | string) =>
+      storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase();
+    const held = new Map(this.#tags.map((tag) => [nameOf(tag), tag]));
+    return this.args.lockedValues?.map(
+      (tag) => this.#itemForTag(held.get(nameOf(tag)) ?? tag).id
+    );
   }
 
   /** The first unmet required group, as the blank search for the current context reported it. */
@@ -531,6 +538,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       @legacyKind={{if @legacyKind @legacyKind "tag-chooser"}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
+      @lockedValues={{this.lockedIds}}
       @maximum={{this.maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @minimum={{@minimum}}

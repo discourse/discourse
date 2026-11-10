@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
+import type { MultiSelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   TopicOption,
   TopicSelection,
@@ -33,7 +34,7 @@ import type {
 
 /** The persistent topic list's arguments. */
 interface DSelectTopicListSignature {
-  Args: {
+  Args: MultiSelectRecipeArgs & {
     /** Held topic ids: an array, or one id or `null` when `@multiple` is false. */
     value?: number | readonly number[] | null;
     /** Holds several topics, as a list does by default; `false` makes a pick replace the held one. */
@@ -66,12 +67,6 @@ interface DSelectTopicListSignature {
     invalid?: boolean;
     /** Disables focus, editing and selection. */
     disabled?: boolean;
-    /** Call-site customization identity. */
-    identifier?: string;
-    /** Call-site context supplied to customizations. */
-    instanceContext?: object;
-    /** Select-kit names for the deprecated customization bridge; a list has none by default. */
-    legacyKind?: string | string[];
   };
   Element: HTMLDivElement;
   Blocks: {
@@ -168,6 +163,7 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
       @legacyKind={{@legacyKind}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
+      @lockedValues={{@lockedValues}}
       @maximum={{@maximum}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}

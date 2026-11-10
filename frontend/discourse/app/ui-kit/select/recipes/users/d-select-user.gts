@@ -11,6 +11,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import { groupFields } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
 import {
   UserOption,
@@ -63,15 +64,13 @@ interface DSelectUserSignature {
     | "disabled"
     | "icon"
     | "id"
-    | "identifier"
-    | "instanceContext"
     | "invalid"
-    | "legacyKind"
     | "maximum"
     | "maxVisibleChips"
     | "onClose"
     | "specialItems"
     | "variant"
+    | MultiSelectRecipeArg
   > & {
     /** Held usernames, group names or addresses. */
     value?: string | readonly string[] | null;
@@ -342,6 +341,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @legacyKind={{this.legacyKind}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
+      @lockedValues={{@lockedValues}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}

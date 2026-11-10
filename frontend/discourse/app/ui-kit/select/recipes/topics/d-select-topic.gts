@@ -6,6 +6,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   TopicOption,
   TopicSelection,
@@ -41,14 +42,12 @@ interface DSelectTopicSignature {
     | "describedBy"
     | "disabled"
     | "id"
-    | "identifier"
-    | "instanceContext"
     | "invalid"
-    | "legacyKind"
     | "maximum"
     | "maxVisibleChips"
     | "onClose"
     | "variant"
+    | MultiSelectRecipeArg
   > & {
     /** Held topic ids. */
     value?: number | readonly number[] | null;
@@ -163,6 +162,7 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
       @legacyKind={{this.legacyKind}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
+      @lockedValues={{@lockedValues}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}

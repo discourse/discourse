@@ -12,6 +12,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
+import type { SelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   CategoryBadge,
   categoryItem,
@@ -41,7 +42,7 @@ export const NO_CATEGORIES_ID = "no-categories";
 
 /** A topic-list level selector whose caller owns routing. */
 interface DSelectCategoryFilterSignature {
-  Args: {
+  Args: SelectRecipeArgs & {
     /** Current category, caller-owned row, shortcut, or an empty level. */
     value?:
       | Category
@@ -68,12 +69,6 @@ interface DSelectCategoryFilterSignature {
     onChange?: (
       value: Category | typeof ALL_CATEGORIES_ID | typeof NO_CATEGORIES_ID
     ) => void;
-    /** Temporary compatibility identity; defaults to category-drop. */
-    legacyKind?: DSelectSignature["Args"]["legacyKind"];
-    /** Call-site customization identity. */
-    identifier?: string;
-    /** Call-site state exposed to customizations. */
-    instanceContext?: object;
   };
   Element: HTMLElement;
   Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection">;

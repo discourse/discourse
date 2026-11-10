@@ -11,6 +11,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   CategoryBadge,
   categoryItem,
@@ -48,10 +49,8 @@ interface DSelectCategorySignature {
     | "icon"
     | "variant"
     | "onClose"
-    | "identifier"
-    | "instanceContext"
-    | "legacyKind"
     | "noneRow"
+    | MultiSelectRecipeArg
   > & {
     /** Held ids, numeric strings or category records. */
     value?: CategoryValue | readonly CategoryValue[] | null;
@@ -412,6 +411,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @legacyKind={{this.legacyKind}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
+      @lockedValues={{@lockedValues}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}

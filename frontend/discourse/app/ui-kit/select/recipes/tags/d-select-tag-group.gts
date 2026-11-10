@@ -10,6 +10,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
   SelectCoreTexts,
@@ -20,13 +21,11 @@ import { i18n } from "discourse-i18n";
 
 /** Name-valued tag groups with single or multiple selection. */
 interface DSelectTagGroupSignature {
-  Args: {
+  Args: MultiSelectRecipeArgs & {
     /** Held tag group names. */
     value?: readonly string[] | string | null;
     /** Holds several groups; defaults to one, as DSelect does. */
     multiple?: boolean;
-    /** Temporary compatibility aliases for legacy customizations and CSS. */
-    legacyKind?: DSelectSignature["Args"]["legacyKind"];
     /** Receives the selected group names in order. */
     onChange?: (names: string[] | string | null) => void;
     /** Maximum number of selected groups. */
@@ -49,10 +48,6 @@ interface DSelectTagGroupSignature {
     id?: string;
     /** Ids of visible captions that name the control, replacing the default name. */
     ariaLabelledBy?: string;
-    /** Call-site customization identity. */
-    identifier?: string;
-    /** Call-site customization data. */
-    instanceContext?: object;
   };
   Element: HTMLElement;
   Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
@@ -137,6 +132,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @labelField="name"
       @legacyKind={{this.legacyKind}}
       @load={{this.load}}
+      @lockedValues={{@lockedValues}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}

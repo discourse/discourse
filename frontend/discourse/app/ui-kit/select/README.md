@@ -842,8 +842,11 @@ meant to live in `ui-kit/select/recipes/`. Recipes in this directory are the dom
 exception to the kit's domain-free primitives. A recipe:
 
 - sets `@kind`, and passes `@kindContext` with its raw state;
-- forwards the call site's `@identifier`, `@instanceContext` and `@onChange`, and its `:item`,
-  `:selection` and `:footer` blocks;
+- forwards the call site's `@identifier`, `@instanceContext`, `@legacyKind` and `@onChange`, and
+  its `:item`, `:selection` and `:footer` blocks. A recipe that can hold several values also
+  forwards `@lockedValues`, in the keys its select holds (tag recipes take names). Its signature
+  extends `SelectRecipeArgs` or `MultiSelectRecipeArgs` from `recipes/-internals/recipe-args.ts`,
+  and the recipe test `recipe-args-test.gjs` checks that each of those arguments takes effect;
 - owns its source: it takes no `@items` or `@load`, because its rules (exclusion, caps, held
   lookups) apply to the rows it loads. A customization changes the rows through `spec.load` or
   `spec.content`;
