@@ -1,0 +1,179 @@
+# Named parts of the forum that generated theme styles may restyle, with the
+# selector each one stands for. Styles name an area and never write selectors,
+# so only what is listed here can be reached.
+#
+# Critical UI is deliberately absent: header controls and the user menu, the
+# sidebar toggle, the composer, login, modals, chat and admin links.
+#
+# - selector: "&" means the page body itself
+# - states: the extra states a rule may target (hover, odd, even)
+# - hideable: allows `display: none`, only on non-essential areas
+# - sizeable: allows bounded width and height, for media
+# - text_color: the color core gives the area's text, so a new background can
+#   be checked against it when a rule doesn't set the text color too
+
+page:
+  label: Page background
+  selector: "&"
+  text_color: "var(--primary)"
+header:
+  label: Header bar
+  selector: ".d-header"
+  text_color: "var(--header_primary)"
+logo:
+  label: Site logo
+  selector: ".d-header .title"
+nav_pills:
+  label: Navigation tabs (Latest, New, Top)
+  selector: ".nav-pills"
+  text_color: "var(--d-nav-color)"
+welcome_banner:
+  label: Welcome banner
+  selector: ".welcome-banner"
+  text_color: "var(--primary)"
+welcome_banner_title:
+  label: Welcome banner title
+  selector: ".welcome-banner__title"
+topic_list:
+  label: Topic list
+  selector: ".topic-list"
+topic_list_header:
+  label: Topic list column headings
+  selector: ".topic-list-header"
+  text_color: "var(--d-topic-list-header-text-color)"
+topic_list_item:
+  label: Topic list rows
+  selector: ".topic-list-item"
+  text_color: "var(--primary)"
+  states: [hover, odd, even]
+topic_list_title:
+  label: Topic titles in lists
+  selector: ".topic-list-item .raw-topic-link"
+  states: [hover]
+category_box:
+  label: Category boxes on the categories page
+  selector: ".category-box"
+  text_color: "var(--primary)"
+  states: [hover, odd, even]
+category_logo:
+  label: Category logos
+  selector: ".category-logo img"
+  sizeable: true
+category_title:
+  label: Category headings on the categories page
+  selector: ".category-title-link"
+category_description:
+  label: Category descriptions on the categories page
+  selector: ".category-description"
+  hideable: true
+category_badge:
+  label: Category names, shown as badges in topic lists and on topics
+  selector: ".badge-category__wrapper"
+tag:
+  label: Tags
+  selector: ".discourse-tag"
+topic_title:
+  label: Topic title on the topic page
+  selector: "#topic-title .fancy-title"
+post:
+  label: Posts
+  selector: ".topic-post"
+  text_color: "var(--primary)"
+post_body:
+  label: Post text
+  selector: ".cooked"
+  text_color: "var(--primary)"
+post_headings:
+  label: Headings in posts
+  selector: ".cooked h1, .cooked h2, .cooked h3"
+post_links:
+  label: Links in posts
+  selector: ".cooked a"
+  states: [hover]
+post_quotes:
+  label: Quotes in posts
+  selector: ".cooked aside.quote, .cooked blockquote"
+post_code:
+  label: Code in posts
+  selector: ".cooked pre, .cooked code"
+post_images:
+  label: Images in posts
+  selector: ".cooked img:not(.emoji)"
+  sizeable: true
+post_avatar:
+  label: Post avatars
+  selector: ".topic-avatar"
+post_author:
+  label: Post author names
+  selector: ".topic-meta-data .names"
+mention:
+  label: Mentions
+  selector: ".mention"
+user_badge:
+  label: User badges
+  selector: ".user-badge"
+small_actions:
+  label: Notices in topics (pinned, closed, moved)
+  selector: ".small-action"
+  hideable: true
+primary_button:
+  label: Primary buttons
+  selector: ".btn-primary"
+  text_color: "var(--d-button-primary-text-color)"
+  states: [hover]
+default_button:
+  label: Default buttons
+  selector: ".btn-default"
+  text_color: "var(--d-button-default-text-color)"
+  states: [hover]
+create_topic_button:
+  label: New Topic button
+  selector: "#create-topic"
+  text_color: "var(--d-button-default-text-color)"
+  states: [hover]
+signup_button:
+  label: Sign up button
+  selector: ".sign-up-button"
+  text_color: "var(--d-button-primary-text-color)"
+  states: [hover]
+invite_button:
+  label: Invite button on topics
+  selector: ".invite-topic"
+  hideable: true
+sidebar:
+  label: Sidebar
+  selector: ".sidebar-wrapper"
+  text_color: "var(--d-sidebar-link-color)"
+sidebar_section_header:
+  label: Sidebar section headers
+  selector: ".sidebar-section-header"
+sidebar_link:
+  label: Sidebar links
+  selector: ".sidebar-section-link"
+  text_color: "var(--d-sidebar-link-color)"
+  states: [hover]
+user_card:
+  label: User cards
+  selector: ".user-card"
+  text_color: "var(--primary)"
+topic_map:
+  label: Topic summary box
+  selector: ".topic-map"
+  text_color: "var(--primary)"
+  hideable: true
+suggested_topics:
+  label: Suggested and related topics
+  selector: ".more-topics__container"
+  hideable: true
+share_button:
+  label: Share button on posts
+  selector: ".post-action-menu__share"
+  hideable: true
+bookmark_button:
+  label: Bookmark button on posts
+  selector: ".post-action-menu__bookmark"
+  hideable: true
+powered_by:
+  label: Powered by Discourse
+  selector: ".powered-by-discourse"
+  hideable: true
